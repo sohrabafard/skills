@@ -5,9 +5,9 @@
 - Current phase: Phase 1
 - Last verified result: not run
 - Blockers: none known
-- Next action: complete the plan's repository-grounding fields
+- Next action: Complete the plan's repository-grounding fields.
 - Touched surfaces: none
 - Worktree identity and last evidence snapshot: not captured
 - Updated: `{{created_at}}`
 
-Position only. The plan owns scope, phases, and acceptance criteria; the plan's handoff package owns what the work has learned. Record the actual command and what it returned under the last verified result, never a paraphrase.
+This checkpoint owns execution position. Its status snapshots the plan header; any JSON cursor derives from this checkpoint. The plan owns scope, phases, acceptance, and handoff knowledge; its selected task store owns task progress. Record the actual command and its result under last verified result, never a paraphrase.

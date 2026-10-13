@@ -8,7 +8,7 @@ An actionable implementation/execution-plan request authorizes a saved plan and 
 
 Explicit no-file, read-only, or chat-only limits prevail. Native Plan Mode uses only its host-permitted planning surface until execution is approved; then materialize the admitted artifact family before implementation. Short advisory answers, ordinary review, and small bounded single-phase edits create no workflow files unless requested. A continuing authorized fix loop follows execution admission.
 
-When an admitted family already exists, update it rather than creating another. Fill ordered phase/task checklists, dependencies, ownership, exclusions, acceptance and validation, resume context, and skill bindings before execution. `references/companion-routing.md` owns binding semantics. Report the saved plan/checkpoint paths; a prose-only plan does not satisfy admitted durable planning.
+When an admitted family exists, update it instead of creating another. Before execution, fill ordered phases and store-appropriate task mappings, dependencies, ownership, exclusions, acceptance, validation, resume context, and skill bindings. `references/task-tracking.md` owns task authority; `references/companion-routing.md` owns skill bindings. Report saved plan/checkpoint paths; prose alone does not satisfy admitted durable planning.
 
 ## Profiles
 
@@ -32,13 +32,13 @@ Merge phases or tasks sharing context, ownership and a validation barrier when s
 After finalizing tasks, dependencies and consolidation, route allocation for EVERY role through the active runtime orchestrator.
 In Codex, `/alaa-codex-orchestrator` owns `references/routing-matrix.md`.
 In Claude Code, `/alaa-cc-orchestrator` owns `references/routing-matrix.md`.
-Workflow records its task scope/complexity, priority/reason, role authority identity, explicit model AND effort, source/evidence, invocation surface, requested/effective controls, availability and limits alongside ready sets and conflict barriers; it chooses no role-based pair. Material changes reassess only affected remaining tasks; never replay completed work.
+Workflow records task scope/complexity, priority/reason, role authority identity, explicit model AND effort, source/evidence, invocation surface, requested/effective controls, availability and limits alongside conflict barriers and references to the selected store's readiness; it chooses no role-based pair. Material changes reassess only affected remaining tasks; never replay completed work.
 
 ## Dependency and concurrency plan
 
-Record dependency edges and ready sets: work is ready only with satisfied prerequisites. Each lane names disjoint write ownership, shared-resource conflicts (including fixtures, generators, ports and test environments), integration barriers and parallel/serialized rationale. Disjoint files alone do not prove independence. Keep coupled decisions together; serialize overlapping writes and conflicting resources.
+Use the selected task authority for dependency edges and ready sets through `references/task-tracking.md`. Each lane names disjoint write ownership, shared-resource conflicts (including fixtures, generators, ports and test environments), integration barriers and parallel/serialized rationale. Disjoint files alone do not prove independence. Keep coupled decisions together; serialize overlapping writes and conflicting resources.
 
-Expose independent ready work to the runtime orchestrator; impose no workflow-wide writer limit. It owns observed capacity, dispatch mechanics and resource scheduling. Update ready sets at completion, scope-change or handoff boundaries; create no second scheduler artifact.
+Expose independently ready work to the runtime orchestrator; impose no workflow-wide writer limit. It owns observed capacity, dispatch mechanics and resource scheduling. Query/reconcile readiness at completion, scope-change or handoff boundaries; keep no persistent second ready-set cache or scheduler artifact.
 
 ## Paths and correlation
 
@@ -53,7 +53,7 @@ Continue an active task's existing family and stem. Resolve companions only from
 
 `references/context-continuity.md` owns why the artifacts divide the way they do, what each handoff field means, and when a field earns a line. This file owns only where each artifact lives and what it is permitted to contain.
 
-The plan contains outcome and scope, ordered work and dependencies, acceptance criteria, validation commands and required evidence, and the handoff package.
+The plan contains outcome/scope, phase design and barriers, acceptance, validation/evidence, skill associations, and the handoff package. Task progress/dependencies follow `references/task-tracking.md`; status and cursor ownership follow `references/context-continuity.md`.
 
 The handoff package is a section inside the plan, not a separate file — knowledge is only useful next to the route it belongs to, and a fourth file is a fourth thing to keep honest. Its six fields are fixed; keep an unused one empty rather than deleting it, because a deleted field reads as a field nobody had anything to put in.
 
@@ -63,7 +63,7 @@ JSON contains only schema version, task identity, status, plan path, current pha
 
 ## Update events
 
-The write triggers are owned by `references/context-continuity.md`. On disk they resolve to two different cadences: the checkpoint and any JSON state are updated after a phase completes or fails, after a material decision or scope change, after a validation runs, and before a handoff or completion; the handoff package is appended to whenever something is learned that would be expensive to rediscover, which is learning-driven rather than phase-driven.
+`references/context-continuity.md` owns all update events, canonical status/cursor ownership and snapshot derivation. Update only the admitted artifact set; keep expensive learning in the handoff package rather than a position snapshot.
 
 Do not maintain duplicate phase checklists, review history, lane definitions, documentation status, or touched-file histories in secondary state.
 
@@ -73,7 +73,7 @@ Do not maintain duplicate phase checklists, review history, lane definitions, do
 
 ## Delegation
 
-`SKILL.md` owns which work may be delegated and what the parent stays responsible for. One artifact rule belongs here: record lane ownership in the parent plan or the delegated prompt, and never create a lane-plan file. A second plan splits the destination in two, and the parent stops being the authoritative one the moment they disagree.
+`SKILL.md` owns which work may be delegated and what the parent stays responsible for. One artifact rule belongs here: record lane ownership in the parent plan or delegated prompt, never a lane-plan file. A second plan splits the workflow destination in two; task-store ownership remains separate.
 
 ## Compatibility
 

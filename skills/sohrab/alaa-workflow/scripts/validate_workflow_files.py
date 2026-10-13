@@ -8,6 +8,7 @@ import json
 import re
 import sys
 import traceback
+from collections import deque
 from pathlib import Path
 from typing import Any, Iterable
 
@@ -51,6 +52,126 @@ SKILL_NAME_RE = re.compile(r"[a-z0-9][a-z0-9_.:-]*")
 TASK_SKILLS_RE = re.compile(r"\[skills:\s*([^\]]+)\]\s*$", re.I)
 TASK_LINE_RE = re.compile(r"^\s*(?:[-*]\s+\[[ xX-]\]|\d+[.)])\s+(.+)$", re.M)
 VAGUE_SKILLS_RE = re.compile(r"\b(?:relevant|appropriate|related|matching)\s+skills?\b", re.I)
+ISSUE_LINE_RE = re.compile(r"^\s*[-*]\s+Issue:\s*(.*?)\s*$", re.I | re.M)
+LOCAL_TASK_RE = re.compile(r"^\s*[-*]\s+\[([ xX-])\]\s+([A-Za-z][A-Za-z0-9_.-]*):\s+(.+?)\s+\[depends:\s*([^\]]*)\]\s+\[skills:\s*([^\]]+)\]\s*$", re.I)
+
+
+def task_store_headers(content: str) -> tuple[list[str], list[str]]:
+    header = re.split(r"^#{2,6}\s+", content, maxsplit=1, flags=re.M)[0]
+    return tuple(re.findall(rf"^[ \t]*[-*]?[ \t]*Task[ \t]+{label}[ \t]*:[ \t]*(.*)$", header, re.I | re.M)
+                 for label in ("store", "binding"))
+
+
+def marked_family(content: str) -> bool:
+    stores, bindings = task_store_headers(content)
+    return bool(stores or bindings)
+
+
+def clean_scalar(value: str) -> str:
+    return value.strip().strip("`").strip()
+
+
+def executing_tasks(content: str, status: str) -> bool:
+    return not is_planning_status(status) or any(
+        clean_scalar(field_value(phase, "Status") or "pending").lower() not in {"pending", "planning", "draft"}
+        for _, phase in phase_blocks(content)
+    )
+
+
+def validate_task_store(content: str, status: str) -> list[str]:
+    stores, bindings = task_store_headers(content)
+    if not stores and not bindings:
+        return []
+    if len(stores) != 1 or len(bindings) != 1:
+        return [error("plan.task-store", "Marked family requires exactly one Task store and one Task binding header.", "Restore one canonical pair in the plan header.")]
+    store, binding = clean_scalar(stores[0]), clean_scalar(bindings[0])
+    messages: list[str] = []
+    if store not in {"local", "beads"}:
+        return [error("plan.task-store", f"Unsupported task store: {store}.", "Select local or beads explicitly.")]
+    if store == "local" and binding != "not applicable":
+        messages.append(error("plan.task-binding", "Local task binding must be not applicable.", "Record the local pairing without a Beads binding."))
+    if store == "local" and ISSUE_LINE_RE.search(content):
+        messages.append(error("plan.local-issue-mapping", "Local family contains a Beads issue mapping.", "Use local task IDs and prerequisites throughout this family."))
+    if store == "beads" and (not binding or binding == "not applicable" or UNRESOLVED_RE.search(binding)
+                             or not binding.split("#", 1)[0].strip() or re.search(r"[\r\n`\\]", binding)
+                             or re.match(r"(?:/|[a-zA-Z][a-zA-Z0-9+.-]*:)", binding)):
+        messages.append(error("plan.task-binding", "Beads requires a portable project-relative binding owner reference.", "Name the adopted binding owner, optionally with an anchor."))
+    unresolved_level = error if executing_tasks(content, status) else warning
+    tasks: dict[str, tuple[bool, list[str]]] = {}
+    issues: set[str] = set()
+    for title, phase in phase_blocks(content):
+        local = list(TASK_LINE_RE.finditer(phase))
+        mappings = list(ISSUE_LINE_RE.finditer(phase))
+        if store == "beads":
+            if local:
+                messages.append(error("plan.beads-local-tasks", f"{title} contains local checkbox or numbered work tasks.", "Keep issue mappings only; Beads owns task state."))
+            if not mappings:
+                messages.append(error("plan.beads-mapping", f"{title} has no issue mapping.", "Map its executable work to issue IDs with skills."))
+            for mapping in mappings:
+                value = mapping.group(1)
+                skills = TASK_SKILLS_RE.search(value)
+                issue = clean_scalar(value[:skills.start()] if skills else value)
+                if not issue or re.search(r"\s|\[|\]", issue):
+                    messages.append(error("plan.beads-mapping", f"{title} has an invalid issue ID.", "Use one opaque nonempty issue ID and a skills suffix."))
+                elif UNRESOLVED_RE.search(issue):
+                    messages.append(unresolved_level("plan.beads-mapping", f"{title} has an unresolved issue mapping.", "Resolve the issue before execution."))
+                elif issue in issues:
+                    messages.append(error("plan.beads-mapping", f"Duplicate issue mapping: {issue}.", "Map each issue to one phase once."))
+                else:
+                    issues.add(issue)
+        else:
+            if not local:
+                messages.append(error("plan.local-task", f"{title} has no local work tasks.", "Add stable local IDs, dependencies and skills."))
+            for task in local:
+                parsed = LOCAL_TASK_RE.fullmatch(task.group(0))
+                if parsed is None:
+                    messages.append(error("plan.local-task", f"Malformed local task: {task.group(1)}.", "Use a checkbox, stable ID, outcome, depends field and skills suffix."))
+                    continue
+                done, identifier, outcome, dependencies, _ = parsed.groups()
+                if UNRESOLVED_RE.search(identifier + outcome + dependencies):
+                    task_level = error if done.lower() == "x" else unresolved_level
+                    messages.append(task_level("plan.local-task", f"Unresolved local task: {identifier}.", "Resolve the task before execution."))
+                if identifier in tasks:
+                    messages.append(error("plan.local-id", f"Duplicate local task ID: {identifier}.", "Keep each stable ID unique."))
+                    continue
+                deps = [] if dependencies.strip() == "none" else [clean_scalar(dep) for dep in dependencies.split(",")]
+                deps = [dependency for dependency in deps if not UNRESOLVED_RE.search(dependency)]
+                tasks[identifier] = (done.lower() == "x", deps)
+    if store == "beads":
+        messages.append(warning("plan.beads-offline", "Offline structure only; issue existence, workspace, scope and readiness are not verified.", "Verify the adopted binding and live issue state before tracking-dependent work."))
+        for issue in ISSUE_LINE_RE.finditer(content):
+            if not any(start <= issue.start() < end for _, start, end in phase_regions(content)):
+                messages.append(error("plan.skills-structure", "Issue mapping is outside a phase.", "Map each issue inside its explicit phase."))
+        return messages
+    # Index once and traverse each vertex/edge once: O(V+E), with no recursion depth limit.
+    incoming = dict.fromkeys(tasks, 0)
+    children: dict[str, list[str]] = {identifier: [] for identifier in tasks}
+    for identifier, (done, deps) in tasks.items():
+        seen: set[str] = set()
+        for dependency in deps:
+            if dependency in seen:
+                messages.append(error("plan.local-dependency", f"Task {identifier} repeats prerequisite {dependency}.", "List each prerequisite once."))
+                continue
+            seen.add(dependency)
+            if dependency not in tasks:
+                messages.append(error("plan.local-dependency", f"Task {identifier} names missing prerequisite {dependency}.", "Name an existing local task ID."))
+                continue
+            incoming[identifier] += 1
+            children[dependency].append(identifier)
+            if done and not tasks[dependency][0]:
+                messages.append(error("plan.local-progress", f"Completed task {identifier} has incomplete prerequisite {dependency}.", "Reconcile actual progress before completion."))
+    ready = deque(identifier for identifier, count in incoming.items() if count == 0)
+    visited = 0
+    while ready:
+        identifier = ready.popleft()
+        visited += 1
+        for child in children[identifier]:
+            incoming[child] -= 1
+            if incoming[child] == 0:
+                ready.append(child)
+    if visited != len(tasks):
+        messages.append(error("plan.local-cycle", "Local task prerequisites contain a cycle.", "Remove the cyclic edge before execution."))
+    return messages
 
 
 def error(invariant: str, message: str, remediation: str) -> str:
@@ -112,7 +233,7 @@ def section_block(content: str, heading: re.Pattern[str]) -> str | None:
 
 
 def field_value(block: str, label: str) -> str | None:
-    match = re.search(rf"^\s*[-*]\s*{re.escape(label)}\b[^:\n]*:\s*(.*)$", block, re.I | re.M)
+    match = re.search(rf"^[ \t]*[-*][ \t]*{re.escape(label)}\b[^:\r\n]*:[ \t]*([^\r\n]*)\r?$", block, re.I | re.M)
     return match.group(1).strip() if match else None
 
 
@@ -301,7 +422,7 @@ def validate_phases(content: str, profile: str, adaptive_plan: bool, status: str
 def validate_skill_bindings(content: str, path: Path, profile: str, status: str) -> list[str]:
     """Resolve phase/task owners without treating a conditional absence as installed."""
     block = section_block(content, SKILL_HEADING_RE)
-    historical = is_complete_status(status) and (profile == "legacy" or block is None)
+    historical = not marked_family(content) and is_complete_status(status) and (profile == "legacy" or block is None)
     level = warning if historical else error
     executing = not is_planning_status(status) or any(
         (field_value(phase, "Status") or "pending").lower() not in {"pending", "planning", "draft"}
@@ -382,6 +503,10 @@ def validate_skill_bindings(content: str, path: Path, profile: str, status: str)
         for task in TASK_LINE_RE.finditer(phase):
             mapping = TASK_SKILLS_RE.search(task.group(1))
             check_names(mapping.group(1) if mapping else None, f"{title} task '{task.group(1)}'", required)
+        if marked_family(content):
+            for issue in ISSUE_LINE_RE.finditer(phase):
+                mapping = TASK_SKILLS_RE.search(issue.group(1))
+                check_names(mapping.group(1) if mapping else None, f"{title} issue '{issue.group(1)}'", required)
     ordered = re.search(r"^##\s+Ordered Work\s*$", content, re.I | re.M)
     ordered_end = len(content)
     if ordered:
@@ -434,7 +559,64 @@ def validate_plan(path: Path, profile: str) -> list[str]:
     messages.extend(validate_workspace(content, profile, status, adaptive_plan))
     messages.extend(validate_phases(content, profile, adaptive_plan, status))
     messages.extend(validate_skill_bindings(content, path, profile, status))
+    messages.extend(validate_task_store(content, status))
     messages.extend(unresolved_messages(content, complete, "plan.placeholders"))
+    return messages
+
+
+def cursor_array(value: str) -> list[str]:
+    value = clean_scalar(value)
+    if value.lower().rstrip(".") in {"", "none", "none known", "not applicable", "n/a", "null"}:
+        return []
+    return [value]
+
+
+def validate_family_snapshots(plan_path: Path, content: str, companions: dict[str, Path | None]) -> list[str]:
+    if not marked_family(content):
+        return []
+    messages: list[str] = []
+    status = detect_status(content)
+    cursor = content
+    checkpoint = companions["checkpoint"]
+    if checkpoint and checkpoint.is_file():
+        cursor = read_text(checkpoint)
+    for kind, path in companions.items():
+        if path is None or not path.is_file():
+            continue
+        if kind == "state":
+            try:
+                data = json.loads(read_text(path))
+            except json.JSONDecodeError:
+                continue
+            if not isinstance(data, dict):
+                continue
+            declared = data.get("plan_path")
+            snapshot_status = data.get("status")
+        else:
+            companion = read_text(path)
+            declared = extract_reference(companion, ("plan",))
+            snapshot_status = detect_status(companion) if kind == "checkpoint" else status
+        if not isinstance(declared, str) or not references_selected_plan(declared, plan_path):
+            messages.append(error(f"{kind}.plan", f"{kind} does not reference the exact selected plan path.", "Restore its canonical plan reference; a matching basename is insufficient."))
+        if snapshot_status != status:
+            messages.append(error(f"{kind}.snapshot-status", f"{kind} status differs from the canonical plan status.", "Reconcile the snapshot from the plan before advancing."))
+        if kind == "state" and data.get("schema_version") == 2:
+            expected = {
+                "current_phase": clean_scalar(field_value(cursor, "Current phase") or ""),
+                "next_actions": cursor_array(field_value(cursor, "Next action") or ""),
+                "blockers": cursor_array(field_value(cursor, "Blockers") or ""),
+            }
+            for key, value in expected.items():
+                if data.get(key) != value:
+                    messages.append(error(f"state.snapshot-{key}", f"State {key} differs from the canonical execution cursor.", "Project the whole trimmed cursor scalar; do not split punctuation or edit snapshots independently."))
+    for label in ("Current phase", "Next action", "Blockers"):
+        if field_value(cursor, label) is None:
+            messages.append(error("family.cursor", f"Canonical execution cursor lacks {label}.", "Restore the field in the checkpoint, or the sole direct plan."))
+    if checkpoint and checkpoint.is_file():
+        header = re.split(r"^##\s+", content, maxsplit=1, flags=re.M)[0]
+        final_position = section_block(content, re.compile(r"^##\s+(?:Blockers and Next Action|Execution Position)\s*$", re.I | re.M)) or ""
+        if any(field_value(header + "\n" + final_position, label) is not None for label in ("Current phase", "Next action", "Blockers")):
+            messages.append(error("family.cursor-owner", "Checkpoint-bearing plan duplicates execution cursor fields.", "Point to its checkpoint instead of copying position, blockers or next action."))
     return messages
 
 
@@ -789,6 +971,9 @@ def main() -> int:
                 had_error = True
             continue
         had_error = report(kind, path, validators[kind](path)) or had_error
+
+    if plan_path:
+        had_error = report("family", plan_path, validate_family_snapshots(plan_path, content, companions)) or had_error
 
     if not had_error:
         print(f"Validation completed without blocking errors (profile: {profile}).")

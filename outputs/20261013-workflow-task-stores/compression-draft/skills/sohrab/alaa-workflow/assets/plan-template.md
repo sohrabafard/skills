@@ -1,0 +1,108 @@
+# Workflow Plan - {{task}}
+
+- Task ID: `{{task_id}}`
+- Mode: `{{mode}}`
+- Profile: `{{profile}}`
+- Task store: `{{task_store}}`
+- Task binding: {{task_binding}}
+- Status: planning
+- Created: `{{created_at}}`
+- Parent plan: {{parent_plan_display}}
+- Prompt pack: {{phase_prompts_display}}
+- Checkpoint: {{continuation_state_display}}
+- Machine state: {{state_display}}
+- Base branch and commit: NEEDS_FILL
+- Work branch: NEEDS_FILL
+- Worktree: none
+
+## Summary and Outcome
+
+- Current repository truth: NEEDS_FILL
+- Outcome: NEEDS_FILL
+- Strategy: NEEDS_FILL
+
+## Scope
+
+- In scope: NEEDS_FILL
+- Out of scope: NEEDS_FILL
+- Constraints and assumptions: NEEDS_FILL
+
+## Handoff Package
+
+Knowledge that lives only in the current agent's head and disappears on compaction. Fill a field when something is learned, not on a schedule; leave a field empty rather than padding it. Field semantics are in `alaa-workflow references/context-continuity.md`, which is in the skill, not in this repository.
+
+- Confirmed facts (verified, each with how it was verified): none yet.
+- Open assumptions (believed but unverified, each with what would verify it): none yet.
+- Ruled out (approach, reason, evidence): none yet.
+- Read first on resume (ordered exact paths): NEEDS_FILL
+- Environment notes (command shapes that work here, and ones that look right but fail): none yet.
+- Traps (looks correct, is not): none yet.
+
+## Skill Bindings
+
+| Skill | Source | Load before | When | If unavailable |
+|---|---|---|---|---|
+| NEEDS_FILL | NEEDS_FILL | NEEDS_FILL | NEEDS_FILL | NEEDS_FILL |
+
+## Ordered Work
+
+Keep only phases with a distinct decision, authority or integration barrier. Merge compatible work while retaining each acceptance outcome and evidence mapping.
+
+### Phase 1 - Ground and implement
+
+- Status: pending
+- Depends on: none
+- Reasoning and selection reason: NEEDS_FILL
+- Settled/open decisions and invariants: NEEDS_FILL
+- Risk and required observers: NEEDS_FILL
+- Owned scope: NEEDS_FILL
+- Excluded from this phase: NEEDS_FILL
+- Required skills: NEEDS_FILL
+- Work:
+{{phase_1_work}}
+- Acceptance criteria: NEEDS_FILL
+- Validation commands: NEEDS_FILL
+- Evidence observed: not run
+- Snapshot: not captured yet
+
+### Phase 2 - Validate and reconcile
+
+- Status: pending
+- Depends on: Phase 1
+- Reasoning and selection reason: NEEDS_FILL
+- Settled/open decisions and invariants: NEEDS_FILL
+- Risk and required observers: NEEDS_FILL
+- Owned scope: NEEDS_FILL
+- Excluded from this phase: NEEDS_FILL
+- Required skills: NEEDS_FILL
+- Work:
+{{phase_2_work}}
+- Acceptance criteria: required behavior and evidence agree.
+- Validation commands: NEEDS_FILL
+- Evidence observed: not run
+- Snapshot: not captured yet
+
+## Task Allocation
+
+After finalizing tasks, dependencies and consolidation, record the runtime orchestrator's all-role allocation.
+In Codex, `/alaa-codex-orchestrator` owns `references/routing-matrix.md`.
+In Claude Code, `/alaa-cc-orchestrator` owns `references/routing-matrix.md`.
+Prompting-guide supplies capability/mechanics evidence; workflow stores decisions. Unresolved controls or availability block the affected dispatch. Material changes reassess only affected remaining tasks.
+
+| Task/scope/complexity | Role authority | Priority/reason | Model | Effort | Selection/admission evidence and source date | Invocation/requested/effective controls | Availability/limits |
+|---|---|---|---|---|---|---|---|
+| NEEDS_FILL | NEEDS_FILL | NEEDS_FILL | NEEDS_FILL | NEEDS_FILL | NEEDS_FILL | NEEDS_FILL | NEEDS_FILL |
+
+## Delegation
+
+- Keep shared-context work in the main conversation.
+- Independent lane ownership, if admitted: none.
+{{task_delegation}}
+- Disjoint writes and shared-resource conflicts: NEEDS_FILL
+- Integration barriers and parallel/serialized rationale: NEEDS_FILL
+- Consolidated tasks/checks and preserved outcome/evidence mappings: NEEDS_FILL
+- Reusable evidence and invalidation conditions: NEEDS_FILL
+- Dispatches assume zero shared context: copy the relevant handoff-package facts into the dispatch text rather than referring to this conversation.
+- Lanes report changed paths; this plan's owner records the validated snapshot and handles any explicitly authorized commit.
+
+{{position_section}}

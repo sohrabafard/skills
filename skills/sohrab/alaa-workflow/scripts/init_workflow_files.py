@@ -111,6 +111,8 @@ def parse_args() -> argparse.Namespace:
         ),
     )
     parser.add_argument("--with-prompts", action="store_true", help="Create the same-stem role prompt pack.")
+    parser.add_argument("--task-store", choices=("local", "beads"), default="local", help="Task authority; default local. No live tracker access.")
+    parser.add_argument("--beads-binding", help="Portable project-relative binding owner reference for Beads.")
     parser.add_argument("--slug", help="Optional explicit slug.")
     parser.add_argument("--plan-dir", default="auto", help="Plan directory, or auto.")
     parser.add_argument("--timestamp", help="Fixed timestamp in YYYYMMDD-HHMMSS format.")
@@ -239,6 +241,46 @@ def resolve_prompt_metadata(args: argparse.Namespace, active: bool) -> dict[str,
     }
 
 
+def task_store_values(args: argparse.Namespace, checkpoint: Path | None) -> dict[str, str]:
+    binding = args.beads_binding
+    if args.task_store == "local" and binding is not None:
+        raise Misuse("--beads-binding requires --task-store beads.")
+    if args.task_store == "beads":
+        if args.state_only:
+            raise Misuse("--task-store beads cannot use --state-only; a bound plan is required.")
+        if not binding or not binding.strip():
+            raise Misuse("--task-store beads requires --beads-binding.")
+        if binding.strip() == "not applicable":
+            raise Misuse("--beads-binding cannot be 'not applicable' in Beads mode.")
+        if (re.search(r"[\r\n`\\]", binding) or re.match(r"(?:/|[a-zA-Z][a-zA-Z0-9+.-]*:)", binding.strip())
+                or re.search(r"\{\{|\}\}|NEEDS_(?:FILL|CONFIRMATION|LIVE_VERIFICATION)|\[(?:todo|question|gap)\]", binding, re.I)
+                or not binding.split("#", 1)[0].strip()):
+            raise Misuse("--beads-binding must name a portable project-relative owner reference.")
+        binding = binding.strip()
+    local_work = (
+        "  - [ ] T1: Read the named sources and verify current behavior. [depends: none] [skills: inherit]\n"
+        "  - [ ] T2: Make the smallest in-scope change. [depends: T1] [skills: inherit]",
+        "  - [ ] T3: Run the affected validation surface and repair failures. [depends: T2] [skills: inherit]\n"
+        "  - [ ] T4: Reconcile documentation, status, blockers, and remaining work. [depends: T3] [skills: inherit]",
+    )
+    beads_work = (
+        "  - Issue: NEEDS_FILL_ISSUE_1 [skills: inherit]\n  - Issue: NEEDS_FILL_ISSUE_2 [skills: inherit]",
+        "  - Issue: NEEDS_FILL_ISSUE_3 [skills: inherit]\n  - Issue: NEEDS_FILL_ISSUE_4 [skills: inherit]",
+    )
+    work = local_work if args.task_store == "local" else beads_work
+    position = (f"## Execution Position\n\n- Position owner: {display_path(checkpoint)} (current phase, blockers, next action)."
+                if checkpoint else "## Blockers and Next Action\n\n- Current phase: Phase 1\n- Blockers: none known.\n- Next action: Complete the plan's repository-grounding fields.")
+    return {
+        "task_store": args.task_store,
+        "task_binding": binding or "not applicable",
+        "phase_1_work": work[0],
+        "phase_2_work": work[1],
+        "task_delegation": ("- Dependency edges and ready sets: Local task prerequisites above own dependency edges; derive readiness before dispatch."
+                            if args.task_store == "local" else "- Dependency edges and ready sets: Beads owns issue dependencies and readiness; the plan owns phase barriers and shared-resource conflicts."),
+        "position_section": position,
+    }
+
+
 def run(args: argparse.Namespace) -> int:
     profile = resolve_profile(args)
     include_prompts = args.with_prompts or profile == "legacy"
@@ -278,6 +320,7 @@ def run(args: argparse.Namespace) -> int:
         "phase_prompts_display": display_path(prompt_path if include_prompts else None),
         "continuation_state_display": display_path(checkpoint_path if include_checkpoint else None),
         "state_display": display_path(state_path if include_state else None),
+        **task_store_values(args, checkpoint_path if include_checkpoint and not args.state_only else None),
         **prompt_metadata,
     }
 
@@ -314,6 +357,7 @@ def run(args: argparse.Namespace) -> int:
         "task": args.task,
         "mode": mode,
         "profile": profile,
+        "task_store": args.task_store,
         "outputs": [portable(path) for path, _ in planned],
     }
     print(json.dumps(payload, indent=2, ensure_ascii=True))

@@ -1,4 +1,4 @@
 interface:
   display_name: "Alaa Workflow"
-  short_description: "Adaptive plans, resume state, review, and orchestration"
-  default_prompt: "Use $alaa-workflow to choose the smallest workflow profile and coordinate this repository task."
+  short_description: "Local or Beads task tracking with resumable workflow gates"
+  default_prompt: "Use $alaa-workflow to resolve the task store, choose the smallest admitted artifact profile, and coordinate this repository task."

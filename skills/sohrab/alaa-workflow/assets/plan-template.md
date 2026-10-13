@@ -3,6 +3,8 @@
 - Task ID: `{{task_id}}`
 - Mode: `{{mode}}`
 - Profile: `{{profile}}`
+- Task store: `{{task_store}}`
+- Task binding: {{task_binding}}
 - Status: planning
 - Created: `{{created_at}}`
 - Parent plan: {{parent_plan_display}}
@@ -27,7 +29,7 @@
 
 ## Handoff Package
 
-Knowledge that lives only in the current agent's head and disappears on compaction. Fill a field when something is learned, not on a schedule; leave a field empty rather than padding it. Field semantics are in `alaa-workflow references/context-continuity.md`, which is in the skill, not in this repository.
+Knowledge held only in the current agent's head disappears on compaction. Fill a field when knowledge is learned, not on a schedule; leave unused fields empty. Field semantics are in the skill's `alaa-workflow references/context-continuity.md`, not in this repository.
 
 - Confirmed facts (verified, each with how it was verified): none yet.
 - Open assumptions (believed but unverified, each with what would verify it): none yet.
@@ -57,8 +59,7 @@ Keep only phases with a distinct decision, authority or integration barrier. Mer
 - Excluded from this phase: NEEDS_FILL
 - Required skills: NEEDS_FILL
 - Work:
-  - [ ] Read the named sources and verify current behavior. [skills: inherit]
-  - [ ] Make the smallest in-scope change. [skills: inherit]
+{{phase_1_work}}
 - Acceptance criteria: NEEDS_FILL
 - Validation commands: NEEDS_FILL
 - Evidence observed: not run
@@ -75,8 +76,7 @@ Keep only phases with a distinct decision, authority or integration barrier. Mer
 - Excluded from this phase: NEEDS_FILL
 - Required skills: NEEDS_FILL
 - Work:
-  - [ ] Run the affected validation surface and repair failures. [skills: inherit]
-  - [ ] Reconcile documentation, status, blockers, and remaining work. [skills: inherit]
+{{phase_2_work}}
 - Acceptance criteria: required behavior and evidence agree.
 - Validation commands: NEEDS_FILL
 - Evidence observed: not run
@@ -97,7 +97,7 @@ Prompting-guide supplies capability/mechanics evidence; workflow stores decision
 
 - Keep shared-context work in the main conversation.
 - Independent lane ownership, if admitted: none.
-- Dependency edges and ready sets: NEEDS_FILL
+{{task_delegation}}
 - Disjoint writes and shared-resource conflicts: NEEDS_FILL
 - Integration barriers and parallel/serialized rationale: NEEDS_FILL
 - Consolidated tasks/checks and preserved outcome/evidence mappings: NEEDS_FILL
@@ -105,7 +105,4 @@ Prompting-guide supplies capability/mechanics evidence; workflow stores decision
 - Dispatches assume zero shared context: copy the relevant handoff-package facts into the dispatch text rather than referring to this conversation.
 - Lanes report changed paths; this plan's owner records the validated snapshot and handles any explicitly authorized commit.
 
-## Blockers and Next Action
-
-- Blockers: none known.
-- Next action: replace `NEEDS_FILL` markers with repository-grounded content before execution.
+{{position_section}}

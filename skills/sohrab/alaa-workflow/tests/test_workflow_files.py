@@ -8,6 +8,7 @@ import sys
 import tempfile
 import unittest
 import uuid
+from unittest.mock import patch
 from contextlib import contextmanager
 from pathlib import Path
 
@@ -501,13 +502,13 @@ class WorkflowFilesTest(unittest.TestCase):
                 for field in ("Reasoning and selection reason", "Settled/open decisions and invariants", "Risk and required observers"):
                     self.assertIn(f"- {field}: NEEDS_FILL", block)
             for field in (
-                "Dependency edges and ready sets",
                 "Disjoint writes and shared-resource conflicts",
                 "Integration barriers and parallel/serialized rationale",
                 "Consolidated tasks/checks and preserved outcome/evidence mappings",
                 "Reusable evidence and invalidation conditions",
             ):
                 self.assertIn(f"- {field}: NEEDS_FILL", content)
+            self.assertIn("- Dependency edges and ready sets: Local task prerequisites above own dependency edges; derive readiness before dispatch.", content)
             self.run_script(VALIDATE, ["--plan", str(plan.relative_to(root))], root)
 
     def test_previous_version_plan_without_a_handoff_package_only_warns(self) -> None:
@@ -577,6 +578,8 @@ class WorkflowFilesTest(unittest.TestCase):
             plan = root / str(payload["outputs"][0])
             self.fill_skills(root, plan)
             self.edit(plan, "- Status: planning", "- Status: executing")
+            checkpoint = root / str(payload["outputs"][1])
+            self.edit(checkpoint, "- Status: planning", "- Status: executing")
             self.edit(plan, "- Base branch and commit: NEEDS_FILL", "- Base branch and commit: `main` at `abc1234`")
             self.edit(plan, "- Work branch: NEEDS_FILL", "- Work branch: `agent/adaptive-workflow`")
             self.edit(plan, "- Read first on resume (ordered exact paths): NEEDS_FILL", "- Read first on resume (ordered exact paths): `README.md`")
@@ -653,6 +656,8 @@ class WorkflowFilesTest(unittest.TestCase):
             plan = root / str(payload["outputs"][0])
             self.fill_skills(root, plan)
             self.edit(plan, "- Status: planning", "- Status: executing")
+            checkpoint = root / str(payload["outputs"][1])
+            self.edit(checkpoint, "- Status: planning", "- Status: executing")
             self.edit(plan, "- Base branch and commit: NEEDS_FILL", "- Base branch and commit: `main` at `abc1234`")
             self.edit(plan, "- Work branch: NEEDS_FILL", "- Work branch: `agent/adaptive-workflow`")
             self.edit(plan, "- Read first on resume (ordered exact paths): NEEDS_FILL", "- Read first on resume (ordered exact paths): `README.md`")
@@ -670,6 +675,8 @@ class WorkflowFilesTest(unittest.TestCase):
             plan = root / str(payload["outputs"][0])
             self.fill_skills(root, plan)
             self.edit(plan, "- Status: planning", "- Status: executing")
+            checkpoint = root / str(payload["outputs"][1])
+            self.edit(checkpoint, "- Status: planning", "- Status: executing")
             self.edit(plan, "- Base branch and commit: NEEDS_FILL", "- Base branch and commit: `main` at `abc1234`")
             self.edit(plan, "- Work branch: NEEDS_FILL", "- Work branch: `agent/adaptive-workflow`")
             self.edit(plan, "- Read first on resume (ordered exact paths): NEEDS_FILL", "- Read first on resume (ordered exact paths): `README.md`")
@@ -1124,6 +1131,386 @@ class TaskControlMetadataTest(unittest.TestCase):
         self.assertEqual([], self.validate_module.prompt_task_controls_failures(routine))
         self.assertEqual([], self.validate_module.prompt_task_controls_failures(demanding))
         self.assertEqual(routine.split("## Implementer", 1)[1], demanding.split("## Implementer", 1)[1])
+
+
+class TaskStoreFixture(unittest.TestCase):
+    run_script = WorkflowFilesTest.run_script
+    init = WorkflowFilesTest.init
+    write_files = WorkflowFilesTest.write_files
+    edit = WorkflowFilesTest.edit
+    fill_skills = WorkflowFilesTest.fill_skills
+
+    def fixture(self, root: Path, store: str = "local", profile: str = "direct") -> tuple[Path, dict[str, object]]:
+        args = ["--profile", profile, "--task-store", store]
+        if store == "beads":
+            args += ["--beads-binding", "AGENTS.md#task-binding"]
+        payload, _ = self.init(root, *args)
+        plan = root / str(payload["outputs"][0])
+        self.fill_skills(root, plan)
+        content = plan.read_text(encoding="utf-8")
+        for number in range(1, 5):
+            content = content.replace(f"NEEDS_FILL_ISSUE_{number}", f"opaque/{number}")
+        content = content.replace("NEEDS_FILL", "repository-grounded")
+        plan.write_text(content, encoding="utf-8")
+        if profile == "legacy":
+            prompt = next(root / str(path) for path in payload["outputs"] if str(path).endswith("__phase-prompts.md"))
+            prompt.write_text(prompt.read_text(encoding="utf-8").replace("NEEDS_LIVE_VERIFICATION", "resolved"), encoding="utf-8")
+        return plan, payload
+
+    def validate(self, root: Path, plan: Path, expected: int = 0, *args: str) -> str:
+        return self.run_script(VALIDATE, ["--plan", str(plan.relative_to(root)), *args], root, expected).stdout
+
+    def inventory(self, root: Path) -> dict[str, bytes]:
+        return {str(path.relative_to(root)): path.read_bytes() for path in root.rglob("*") if path.is_file()}
+
+
+class TaskStoreCliTest(TaskStoreFixture):
+    def test_profiles_both_stores(self):
+        for store in ("local", "beads"):
+            for profile in ("direct", "resumable", "orchestrated", "legacy"):
+                with self.subTest(store=store, profile=profile), workspace_tempdir() as tmp:
+                    root = Path(tmp)
+                    plan, payload = self.fixture(root, store, profile)
+                    result = self.validate(root, plan)
+                    self.assertEqual(store, payload["task_store"])
+                    self.assertIn(f"- Task store: `{store}`", plan.read_text(encoding="utf-8"))
+                    if store == "beads":
+                        self.assertIn("WARN [plan.beads-offline]", result)
+                    state = next((root / str(path) for path in payload["outputs"] if str(path).endswith(".json")), None)
+                    if state:
+                        self.assertEqual(2, json.loads(state.read_text())["schema_version"])
+                        self.assertNotIn("tasks", json.loads(state.read_text()))
+
+    def test_default_and_explicit_local(self):
+        for args in ((), ("--task-store", "local")):
+            with self.subTest(args=args), workspace_tempdir() as tmp:
+                root = Path(tmp)
+                payload, _ = self.init(root, *args)
+                plan = root / str(payload["outputs"][0])
+                self.assertEqual("local", payload["task_store"])
+                self.assertIn("[depends: T3]", plan.read_text())
+
+    def test_invalid_options_write_nothing(self):
+        invalid = (
+            ("--task-store", "unknown"), ("--task-store", "beads"),
+            ("--beads-binding", "AGENTS.md"),
+            ("--task-store", "beads", "--beads-binding", " "),
+            ("--task-store", "beads", "--beads-binding", "C:/private/AGENTS.md"),
+            ("--task-store", "beads", "--beads-binding", "/private/AGENTS.md"),
+            ("--task-store", "beads", "--beads-binding", "AGENTS.md\n- Task store: local"),
+            ("--task-store", "beads", "--beads-binding", "`AGENTS.md`"),
+            ("--task-store", "beads", "--beads-binding", "NEEDS_FILL"),
+            ("--task-store", "beads", "--beads-binding", "[todo]"),
+            ("--task-store", "beads", "--beads-binding", "AGENTS.md\n"),
+            ("--task-store", "beads", "--beads-binding", "#hub"),
+            ("--task-store", "beads", "--beads-binding", "AGENTS.md", "--state-only"),
+        )
+        for args in invalid:
+            with self.subTest(args=args), workspace_tempdir() as tmp:
+                root = Path(tmp)
+                self.write_files(root, {"keep.txt": "unchanged"})
+                before = self.inventory(root)
+                directories = set(root.rglob("*"))
+                self.run_script(INIT, ["--task", "invalid", *args], root, 2)
+                self.assertEqual(before, self.inventory(root))
+                self.assertEqual(directories, set(root.rglob("*")))
+
+    def test_collisions_are_atomic(self):
+        for store in ("local", "beads"):
+            with self.subTest(store=store), workspace_tempdir() as tmp:
+                root = Path(tmp)
+                checkpoint = f"docs/agents/{STAMP}_adaptive-workflow-state.md"
+                self.write_files(root, {checkpoint: "existing bytes"})
+                before = self.inventory(root)
+                args = ["--task", "Adaptive workflow", "--timestamp", STAMP, "--profile", "orchestrated", "--task-store", store]
+                if store == "beads":
+                    args += ["--beads-binding", "AGENTS.md#external-hub"]
+                self.run_script(INIT, args, root, 1)
+                self.assertEqual(before, self.inventory(root))
+
+    def test_no_tracker_or_network_operations(self):
+        spec = importlib.util.spec_from_file_location("offline_workflow_init", INIT)
+        module = importlib.util.module_from_spec(spec)
+        spec.loader.exec_module(module)
+        with workspace_tempdir() as tmp, patch("subprocess.run", side_effect=AssertionError("live process")), patch("socket.create_connection", side_effect=AssertionError("network")):
+            args = ["initializer", "--task", "Offline", "--task-store", "beads", "--beads-binding", "AGENTS.md#hub", "--plan-dir", str(Path(tmp) / "plans"), "--profile", "direct", "--dry-run"]
+            with patch.object(sys, "argv", args):
+                self.assertEqual(0, module.main())
+
+
+class LocalGraphTest(TaskStoreFixture):
+    def test_invalid_local_graph_properties(self):
+        mutations = (
+            ("T1:", "1bad:", "plan.local-task"),
+            ("T2:", "T1:", "plan.local-id"),
+            ("[depends: T1]", "[depends: missing]", "plan.local-dependency"),
+            ("[depends: T1]", "[depends: T1, T1]", "plan.local-dependency"),
+            ("[depends: T1]", "[depends: ]", "plan.local-dependency"),
+            ("[depends: none]", "[depends: T4]", "plan.local-cycle"),
+            ("[ ] T2:", "[x] T2:", "plan.local-progress"),
+            ("[depends: T1]", "", "plan.local-task"),
+        )
+        for old, new, diagnostic in mutations:
+            with self.subTest(diagnostic=diagnostic, new=new), workspace_tempdir() as tmp:
+                root = Path(tmp)
+                plan, _ = self.fixture(root)
+                self.validate(root, plan)
+                original = plan.read_bytes()
+                self.edit(plan, old, new)
+                self.assertIn(f"ERROR [{diagnostic}]", self.validate(root, plan, 1))
+                plan.write_bytes(original)
+                self.validate(root, plan)
+
+    def test_unresolved_work_warns_in_draft_and_blocks_active_phase(self):
+        with workspace_tempdir() as tmp:
+            root = Path(tmp)
+            plan, _ = self.fixture(root)
+            self.edit(plan, "Read the named sources", "NEEDS_FILL")
+            self.assertIn("WARN [plan.local-task]", self.validate(root, plan))
+            self.edit(plan, "- Status: pending", "- Status: in_progress")
+            self.assertIn("ERROR [plan.local-task]", self.validate(root, plan, 1))
+
+    def test_draft_placeholder_preserves_ids_and_defers_only_unknown_edges(self):
+        spec = importlib.util.spec_from_file_location("draft_workflow_validator", VALIDATE)
+        module = importlib.util.module_from_spec(spec)
+        spec.loader.exec_module(module)
+        content = "- Task store: local\n- Task binding: not applicable\n- Status: planning\n### Phase 1\n- Status: pending\n"
+        content += "- [ ] T1: NEEDS_FILL [depends: none] [skills: inherit]\n- [ ] T2: outcome [depends: T1, NEEDS_FILL] [skills: inherit]"
+        messages = module.validate_task_store(content, "planning")
+        self.assertEqual(2, len(messages))
+        self.assertTrue(all(message.startswith("WARN [plan.local-task]") for message in messages))
+        active = content.replace("- Status: pending", "- Status: in_progress")
+        self.assertTrue(all(message.startswith("ERROR [plan.local-task]") for message in module.validate_task_store(active, "planning")))
+        broken = content.replace("T1, NEEDS_FILL", "missing, NEEDS_FILL")
+        self.assertTrue(any(message.startswith("ERROR [plan.local-dependency]") for message in module.validate_task_store(broken, "planning")))
+
+    def test_task_skill_override_is_validated(self):
+        with workspace_tempdir() as tmp:
+            root = Path(tmp)
+            plan, _ = self.fixture(root)
+            self.edit(plan, "[skills: inherit]", "[skills: missing-owner]")
+            self.assertIn("ERROR [plan.skills-mapping]", self.validate(root, plan, 1))
+            self.edit(plan, "[skills: missing-owner]", "[skills: example-owner]")
+            self.validate(root, plan)
+
+    def test_completed_chain_and_large_chain_without_recursion(self):
+        spec = importlib.util.spec_from_file_location("graph_workflow_validator", VALIDATE)
+        module = importlib.util.module_from_spec(spec)
+        spec.loader.exec_module(module)
+        for size in (10, 2000):
+            content = "- Task store: local\n- Task binding: not applicable\n- Status: planning\n### Phase 1\n- Status: pending\n"
+            content += "\n".join(f"- [x] T{i}: outcome [depends: {'none' if i == 1 else 'T' + str(i - 1)}] [skills: inherit]" for i in range(1, size + 1))
+            self.assertEqual([], module.validate_task_store(content, "planning"))
+
+
+class BeadsMappingTest(TaskStoreFixture):
+    def test_opaque_ids_and_explicit_skill_override(self):
+        with workspace_tempdir() as tmp:
+            root = Path(tmp)
+            plan, _ = self.fixture(root, "beads")
+            self.edit(plan, "opaque/1", "other-prefix:987")
+            self.edit(plan, "[skills: inherit]", "[skills: example-owner]")
+            self.assertIn("WARN [plan.beads-offline]", self.validate(root, plan))
+
+    def test_duplicate_and_missing_issue_mappings(self):
+        mutations = (
+            ("opaque/3", "opaque/1"),
+            ("  - Issue: opaque/1 [skills: inherit]\n  - Issue: opaque/2 [skills: inherit]", ""),
+            ("opaque/1", ""),
+        )
+        for old, new in mutations:
+            with self.subTest(new=new), workspace_tempdir() as tmp:
+                root = Path(tmp)
+                plan, _ = self.fixture(root, "beads")
+                self.validate(root, plan)
+                original = plan.read_bytes()
+                self.edit(plan, old, new)
+                self.assertIn("ERROR [plan.beads-mapping]", self.validate(root, plan, 1))
+                plan.write_bytes(original)
+                self.validate(root, plan)
+
+    def test_mixed_stores_and_missing_skills(self):
+        for replacement, diagnostic in (
+            ("- [ ] Local work. [skills: inherit]", "plan.beads-local-tasks"),
+            ("1. Local work. [skills: inherit]", "plan.beads-local-tasks"),
+            ("- Issue: opaque/1", "plan.skills-mapping"),
+            ("- Issue: opaque/1 [skills: missing-owner]", "plan.skills-mapping"),
+        ):
+            with self.subTest(replacement=replacement), workspace_tempdir() as tmp:
+                root = Path(tmp)
+                plan, _ = self.fixture(root, "beads")
+                self.edit(plan, "- Issue: opaque/1 [skills: inherit]", replacement)
+                self.assertIn(f"ERROR [{diagnostic}]", self.validate(root, plan, 1))
+
+    def test_issue_mapping_cannot_escape_phase(self):
+        with workspace_tempdir() as tmp:
+            root = Path(tmp)
+            plan, _ = self.fixture(root, "beads")
+            with plan.open("a", encoding="utf-8") as stream:
+                stream.write("\n## Other work\n- Issue: escaped [skills: inherit]\n")
+            self.assertIn("ERROR [plan.skills-structure]", self.validate(root, plan, 1))
+
+    def test_unresolved_active_phase_despite_planning_header(self):
+        with workspace_tempdir() as tmp:
+            root = Path(tmp)
+            plan, _ = self.fixture(root, "beads")
+            self.edit(plan, "opaque/1", "NEEDS_FILL_ISSUE_1")
+            self.assertIn("WARN [plan.beads-mapping]", self.validate(root, plan))
+            self.edit(plan, "- Status: pending", "- Status: in_progress")
+            self.assertIn("ERROR [plan.beads-mapping]", self.validate(root, plan, 1))
+
+
+class FamilyConsistencyTest(TaskStoreFixture):
+    def test_headers_mark_even_legacy_families(self):
+        changes = (
+            ("- Task store: `local`\n", ""), ("- Task binding: not applicable\n", ""),
+            ("- Task store: `local`", "- Task store: `local`\n- Task store: `beads`"),
+            ("- Task binding: not applicable", "- Task binding: not applicable\n- Task binding: other"),
+            ("- Task store: `local`", "- Task store: `unknown`"),
+        )
+        for old, new in changes:
+            with self.subTest(new=new), workspace_tempdir() as tmp:
+                root = Path(tmp)
+                plan, _ = self.fixture(root, profile="legacy")
+                self.validate(root, plan)
+                self.edit(plan, old, new)
+                self.assertIn("ERROR [plan.task-store]", self.validate(root, plan, 1))
+
+    def test_binding_pair_and_local_issue_rejection(self):
+        for store, old, new, diagnostic in (
+            ("local", "not applicable", "AGENTS.md", "plan.task-binding"),
+            ("beads", "AGENTS.md#task-binding", "C:/machine/AGENTS.md", "plan.task-binding"),
+            ("local", "- Work:", "- Work:\n  - Issue: mixed [skills: inherit]", "plan.local-issue-mapping"),
+        ):
+            with self.subTest(store=store, new=new), workspace_tempdir() as tmp:
+                root = Path(tmp)
+                plan, _ = self.fixture(root, store)
+                self.edit(plan, old, new)
+                self.assertIn(f"ERROR [{diagnostic}]", self.validate(root, plan, 1))
+
+    def test_independently_stale_status_snapshots(self):
+        for target in ("plan", "checkpoint", "state"):
+            with self.subTest(target=target), workspace_tempdir() as tmp:
+                root = Path(tmp)
+                plan, payload = self.fixture(root, profile="orchestrated")
+                self.validate(root, plan)
+                path = plan if target == "plan" else next(root / str(p) for p in payload["outputs"] if str(p).endswith(".json" if target == "state" else "-state.md"))
+                self.edit(path, '"status": "planning"' if target == "state" else "- Status: planning", '"status": "draft"' if target == "state" else "- Status: draft")
+                output = self.validate(root, plan, 1)
+                self.assertIn("snapshot-status]", output)
+
+    def test_stale_cursor_fields_and_whole_scalar_projection(self):
+        for field in ("current_phase", "next_actions", "blockers"):
+            with self.subTest(field=field), workspace_tempdir() as tmp:
+                root = Path(tmp)
+                plan, payload = self.fixture(root, profile="orchestrated")
+                state = next(root / str(p) for p in payload["outputs"] if str(p).endswith(".json"))
+                data = json.loads(state.read_text())
+                original = state.read_bytes()
+                data[field] = "Wrong phase" if field == "current_phase" else ["wrong snapshot"]
+                state.write_text(json.dumps(data), encoding="utf-8")
+                self.assertIn(f"ERROR [state.snapshot-{field}]", self.validate(root, plan, 1))
+                state.write_bytes(original)
+                self.validate(root, plan)
+        with workspace_tempdir() as tmp:
+            root = Path(tmp)
+            plan, payload = self.fixture(root, profile="orchestrated")
+            checkpoint = next(root / str(p) for p in payload["outputs"] if str(p).endswith("-state.md"))
+            state = next(root / str(p) for p in payload["outputs"] if str(p).endswith(".json"))
+            action = "Inspect a, b; retain c."
+            self.edit(checkpoint, "Complete the plan's repository-grounding fields.", action)
+            data = json.loads(state.read_text())
+            data["next_actions"] = [action]
+            state.write_text(json.dumps(data), encoding="utf-8")
+            self.validate(root, plan)
+            data["next_actions"] = ["Inspect a", "b", "retain c."]
+            state.write_text(json.dumps(data), encoding="utf-8")
+            self.assertIn("ERROR [state.snapshot-next_actions]", self.validate(root, plan, 1))
+
+    def test_wrong_directory_same_basename_every_companion(self):
+        for kind in ("checkpoint", "state", "prompts"):
+            with self.subTest(kind=kind), workspace_tempdir() as tmp:
+                root = Path(tmp)
+                plan, payload = self.fixture(root, profile="legacy")
+                selected = next(root / str(p) for p in payload["outputs"] if str(p).endswith({"checkpoint": "-state.md", "state": ".json", "prompts": "__phase-prompts.md"}[kind]))
+                self.edit(selected, str(plan.relative_to(root)).replace("\\", "/"), "other/" + plan.name)
+                self.assertIn(f"ERROR [{kind}.plan]", self.validate(root, plan, 1))
+
+    def test_duplicate_cursor_owner_and_direct_fallback(self):
+        with workspace_tempdir() as tmp:
+            root = Path(tmp)
+            plan, _ = self.fixture(root, profile="resumable")
+            with plan.open("a", encoding="utf-8") as stream:
+                stream.write("\n- Next action: duplicated.\n")
+            self.assertIn("ERROR [family.cursor-owner]", self.validate(root, plan, 1))
+        with workspace_tempdir() as tmp:
+            root = Path(tmp)
+            plan, _ = self.fixture(root)
+            self.edit(plan, "- Current phase: Phase 1\n", "")
+            self.assertIn("ERROR [family.cursor]", self.validate(root, plan, 1))
+
+    def test_completed_unmarked_history_is_unchanged(self):
+        with workspace_tempdir() as tmp:
+            root = Path(tmp)
+            self.write_files(root, LEGACY_PACK)
+            plan = root / next(path for path in LEGACY_PACK if path.endswith("legacy-pack.md"))
+            before = self.inventory(root)
+            self.validate(root, plan)
+            self.assertEqual(before, self.inventory(root))
+
+
+class ReviewRepairTest(TaskStoreFixture):
+    def test_local_rejects_escaped_issue_with_known_or_unknown_skills(self):
+        for skill in ("example-owner", "missing-owner"):
+            with self.subTest(skill=skill), workspace_tempdir() as tmp:
+                root = Path(tmp)
+                plan, _ = self.fixture(root)
+                self.validate(root, plan)
+                original = plan.read_bytes()
+                with plan.open("a", encoding="utf-8") as stream:
+                    stream.write(f"\n## Other work\n- Issue: external:99 [skills: {skill}]\n")
+                self.assertIn("ERROR [plan.local-issue-mapping]", self.validate(root, plan, 1))
+                plan.write_bytes(original)
+                self.validate(root, plan)
+
+    def test_empty_cursor_fields_keep_empty_array_and_nonempty_value(self):
+        for label, key, original, value in (
+            ("Blockers", "blockers", "none known", "Waiting for source."),
+            ("Next action", "next_actions", "Complete the plan's repository-grounding fields.", "Inspect source."),
+        ):
+            with self.subTest(label=label), workspace_tempdir() as tmp:
+                root = Path(tmp)
+                plan, payload = self.fixture(root, profile="orchestrated")
+                checkpoint = next(root / str(path) for path in payload["outputs"] if str(path).endswith("-state.md"))
+                state = next(root / str(path) for path in payload["outputs"] if str(path).endswith(".json"))
+                self.validate(root, plan)
+                data = json.loads(state.read_text())
+                self.edit(checkpoint, f"- {label}: {original}", f"- {label}: {value}")
+                data[key] = [value]
+                state.write_text(json.dumps(data), encoding="utf-8")
+                self.validate(root, plan)
+                self.edit(checkpoint, f"- {label}: {value}", f"- {label}: ")
+                data[key] = []
+                state.write_text(json.dumps(data), encoding="utf-8")
+                self.validate(root, plan)
+                spec = importlib.util.spec_from_file_location("empty_field_validator", VALIDATE)
+                module = importlib.util.module_from_spec(spec)
+                spec.loader.exec_module(module)
+                self.assertEqual("", module.field_value(checkpoint.read_text(), label))
+                self.assertEqual(value, module.field_value(f"- {label}: {value}\n- Other: following field\n", label))
+
+    def test_beads_reserved_local_binding_rejects_before_any_write(self):
+        for binding in ("not applicable", "  not applicable  "):
+            with self.subTest(binding=binding), workspace_tempdir() as tmp:
+                root = Path(tmp)
+                self.write_files(root, {"keep.txt": "preserved bytes"})
+                before = self.inventory(root)
+                paths = set(root.rglob("*"))
+                result = self.run_script(INIT, ["--task", "Reserved binding", "--task-store", "beads", "--beads-binding", binding], root, 2)
+                self.assertIn("MISUSE:", result.stderr)
+                self.assertIn("not applicable", result.stderr)
+                self.assertEqual(before, self.inventory(root))
+                self.assertEqual(paths, set(root.rglob("*")))
 
 
 if __name__ == "__main__":
