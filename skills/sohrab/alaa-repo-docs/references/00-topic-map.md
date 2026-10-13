@@ -7,7 +7,7 @@ A path prefixed `<repo>/` names a file in the repository being worked on; a path
 
 | Condition | File |
 |---|---|
-| You are about to choose a document language, create a localized companion, place a topic, remove duplication, or write a link | `references/10-language-and-links.md` |
+| You are about to choose a document language, create a localized companion, place a topic, remove duplication, write a link, or edit after a link check reports `LINK-*` findings inside a directory copied from another repository | `references/10-language-and-links.md` |
 | You are about to classify, create, refresh, measure, cluster, split, exempt, or recursively route a document or one of its children | `references/15-document-size-and-clustering.md` |
 | The task touches `<repo>/README.md` or `<repo>/docs/BIG_PICTURE.md`, or the reader cannot tell which of the two a fact belongs in | `references/20-readme-big-picture-contract.md` |
 | The repository exposes HTTP routes and needs `<repo>/docs/api-summary.md`, or an OpenAPI contract and a summary sheet disagree | `references/30-api-summary-contract.md` |

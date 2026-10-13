@@ -14,7 +14,7 @@ Coordinate long work so it survives losing the conversation without making every
 3. When `/alaa-memory-os` says its trigger holds, invoke it before planning from prior context or publishing durable knowledge. Memory may contribute verified leads; it never owns this workflow's plan, checkpoint, evidence, or handoff.
 4. Before the first non-trivial repository discovery or code-evidence choice, invoke `/alaa-code-intelligence-routing` once and reuse its routed result instead of retrieving the same fact through a second surface.
 5. Pair with `/alaa-low-noise` and the narrowest domain skill needed for technical decisions.
-6. Resolve task-store selection through `references/task-tracking.md`. Apply artifact admission/profile selection through `references/artifact-lifecycle.md` before writing, and populate phase/task skill bindings through `references/companion-routing.md` before execution or handoff.
+6. Resolve task-store selection, and where task information, acceptance and evidence live, through `references/task-tracking.md`. Apply artifact admission/profile selection through `references/artifact-lifecycle.md` before writing, and populate phase/task skill bindings through `references/companion-routing.md` before execution or handoff.
 
 ## Select the profile
 
@@ -28,7 +28,7 @@ This is why the artifacts exist, and `references/context-continuity.md` owns the
 
 Three things are worth knowing without opening it.
 
-Admitted artifacts separate destination, position and learned knowledge through that reference. Issue-only work uses its canonical issue notes; direct work keeps position in its sole plan.
+Admitted artifacts separate destination, position and learned knowledge through that reference. Issue-only work keeps position, results and knowledge in its issue; direct work keeps position in its sole plan.
 
 Write when something happens — a phase ends, a decision lands, a validation runs, a handoff approaches, or something expensive is learned — never on a schedule. And do not wait for a compaction warning to record knowledge, because afterwards the same information survives only as a summary of a summary.
 
@@ -52,7 +52,7 @@ Before writing, identify the base, working branch or checkout, and unrelated cha
 
 ## Curate reusable context
 
-At a completed or failed phase, or material decision boundary, run an intermediate `/alaa-extract-agent-lessons` scan only when that boundary carries one of the seven signals in `references/context-curation.md`; record admitted candidates through that reference. Before completion, run the same skill's final full-engagement gate even when no candidates are expected, and record its outcome through that reference. Use admitted workflow artifacts or canonical issue notes for issue-only work; these recording rules do not expand artifact admission.
+At a completed or failed phase, or material decision boundary, run an intermediate `/alaa-extract-agent-lessons` scan only when that boundary carries one of the seven signals in `references/context-curation.md`; record admitted candidates through that reference. Before completion, run the same skill's final full-engagement gate even when no candidates are expected, and record its outcome through that reference. Use admitted workflow artifacts or issue comments for issue-only work; these recording rules do not expand artifact admission.
 
 This workflow owns when and where curation happens. `references/context-curation.md` owns the seven signals, what a candidate is recorded as, where publication is authorized, and what a `pipeline reopen required` verdict obliges.
 
@@ -78,7 +78,7 @@ Review the requested surface directly. Lead with actionable findings and exact e
 
 ## Validate the workflow artifacts
 
-When a workflow artifact family is admitted, run `scripts/validate_workflow_files.py --plan <path>` before handoff and completion. It correlates explicit references or the selected stem, validates marked task-store families and snapshots offline, and preserves unmarked completed history. Its structural result proves neither live Beads binding nor readiness. Issue-only work creates no plan just to run this artifact validator; required behavior validation still runs, with evidence recorded in canonical issue notes through `references/context-continuity.md`.
+When a workflow artifact family is admitted, run `scripts/validate_workflow_files.py --plan <path>` before handoff and completion. It correlates explicit references or the selected stem, validates marked task-store families and snapshots offline, and preserves unmarked completed history. Its structural result proves neither live Beads binding nor readiness. Issue-only work creates no plan just to run this artifact validator; required behavior validation still runs, with results recorded in its issue through `references/task-tracking.md`.
 
 For admitted families, exit `0` is clean; warnings alone do not fail it. Exit `1` is a blocking artifact error to repair before advancement, never report as a pass. Exit `2` means validation failed to run; a missing selected plan, uncorrelatable companion, or unreadable file is a failed gate, never evidence that artifacts are clean. No artifact validation runs for issue-only work; report that distinction without implying its required behavior validation passed.
 
@@ -92,9 +92,9 @@ This skill owns coordination and continuity, not architecture, security, data, r
 
 | You are about to | Read |
 |---|---|
-| Begin a long run, hand off, resume, or find you cannot name your own current position | `references/context-continuity.md` |
+| Begin a long run, hand off (including to another PC), resume, or find you cannot name your own current position | `references/context-continuity.md` |
 | Write the first workflow file, weigh one profile against another, or attach to an artifact family that already exists | `references/artifact-lifecycle.md` |
-| Select or migrate a task store, resolve task readiness/ownership, or encounter a Beads outage or uncertain update | `references/task-tracking.md` |
+| Select or migrate a task store, decide where task information, acceptance or evidence lives, write issue fields or a close reason, link a follow-up or cross-project dependency, resolve task readiness/ownership, or encounter a Beads outage or uncertain update | `references/task-tracking.md` |
 | Make the first write of a multi-phase or delegated run, record an evidence snapshot, exercise authorized Git integration, or state which completion states a finished run reached | `references/workspace-and-integration.md` |
 | Reach the first phase boundary of a long run, or close a plan | `references/context-curation.md` |
 | Generate a prompt pack, or resolve a runtime, model, or effort value for one | `references/phase-prompts.md` |

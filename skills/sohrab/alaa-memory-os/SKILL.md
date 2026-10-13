@@ -1,14 +1,14 @@
 ---
 name: alaa-memory-os
-description: "Use when Alaa work must record or recall durable cross-session knowledge, whichever memory store backs it: deciding what is worth remembering and in what shape, writing architecture, service-ownership, contract, operations, lesson, work-pattern, project-index, project-state, handoff or research notes, recording drift when two sources of truth disagree, setting a recall budget with a fail-open path, and separating facts worth remembering from relationships that must be derived. One adapter is active at a time and the skill body declares which; local file vault, Basic Memory, and Hindsight each get one adapter reference. Do not use for tiny deterministic code edits, as a second task system, for active execution plans or handoff contents owned by alaa-workflow, or to remember service dependency edges, which are always derived."
+description: "Use when Alaa work must record or recall durable cross-session knowledge, whichever memory store backs it: deciding what is worth remembering and in what shape, writing architecture, service-ownership, contract, operations, lesson, work-pattern, project-index, project-state, handoff or research notes, deciding whether information belongs in the memory store, a Beads hub reminder or Beads issue notes, recording drift when two sources of truth disagree, setting a recall budget with a fail-open path, and separating facts worth remembering from relationships that must be derived. One adapter is active at a time and the skill body declares which; local file vault, Basic Memory, and Hindsight each get one adapter reference. Do not use for tiny deterministic code edits, as a second task system, for active execution plans or handoff contents owned by alaa-workflow, or to remember service dependency edges, which are always derived."
 ---
 
 # Alaa Memory OS
 
 This skill owns what Alaa work remembers, when, in what shape, and what it derives instead of remembering.
-The backing store sits behind one adapter reference per store, and this body names no store command: the
-fleet routes here for the capability, not the product, so replacing the store changes one adapter file and
-leaves every rule below intact.
+The backing store sits behind one adapter reference per store, and this body names no memory-adapter store command
+(Beads surfaces are outside the adapter): the fleet routes here for the capability, not the product, so
+replacing the store changes one adapter file and leaves every rule below intact.
 
 ## Active adapter
 
@@ -57,6 +57,7 @@ that names nothing shared returns nothing and still spends the budget below.
 - Two sources of truth disagree, or you are about to establish whether they do.
 - It asks whether existing infrastructure, another repository, or a prior decision already provides a capability, or who owns it.
 - You are about to write a note, or publish curated lessons from the evidence warehouse.
+- You are about to write a Beads hub reminder (`bd remember`), or to decide whether information belongs in the memory store, a hub reminder or issue notes.
 
 ## When NOT to use
 
@@ -125,6 +126,31 @@ Any memory transport bound beyond loopback requires authentication before it sta
 ship unauthenticated and one binds every interface by default, so this is a default to override rather than
 accept, and the store's adapter reference names the exact variables. `/alaa-security-review` owns the fail-closed doctrine and any exception to it.
 
+## Beads hub reminders and issue notes
+
+Each kind of information has one owner:
+
+| Information | Owner |
+|---|---|
+| Generalizable experience usable in later work | The active adapter store |
+| A short reminder shared across the whole Beads hub | `bd remember` |
+| A task's position and next step | Beads issue `notes`; `/alaa-workflow` `references/task-tracking.md` section `## Issue fields` owns the field contract |
+| A binding rule | The owning repository or skill; memory only references it |
+
+A reminder is a short pointer every hub reader must see at session start. Experience with a reason and
+evidence goes to the active adapter store, and a reminder may point to it.
+
+Write `bd remember` without separate approval only when the repository selects Beads and its binding has
+verified the hub (`/alaa-workflow` `references/task-tracking.md`), and only for a short reminder shared across
+the hub. On an unavailable hub or an uncertain write, follow `/alaa-workflow` `references/task-tracking.md`
+section `## Outage and uncertain writes`. Reason: `bd prime` injects every memory by default (`--no-memories`
+and the caps exist), with no label or project filter, and `bd remember` takes no label or project option.
+
+- Each entry carries its source, scope and maintainer.
+- Never put task status, evidence, a project-specific lesson, or a new rule in it. A project-specific lesson goes to the active adapter store through `/alaa-extract-agent-lessons` admission, with its project scope recorded.
+- Leaving it empty is correct.
+- Per-project memory is deferred, not designed.
+
 ## References
 
 | Read this | When |
@@ -149,6 +175,7 @@ Update memory only when durable knowledge changed, then confirm each of these be
 - No raw transcript, log, source file, whole document, or secret reached the store.
 - No `/alaa-workflow` execution state was duplicated.
 - No service-to-service dependency edge was remembered.
+- Nothing forbidden in the Beads hub reminders section was written to `bd remember`.
 - Every disagreement found became a drift record, not a silent resolution.
 - Every checker run reported its exit code, and a `2` was read as "could not run", never as a pass.
 - The report names notes changed, source paths, validation result, drift recorded, memory availability, and

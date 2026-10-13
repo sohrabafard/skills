@@ -204,15 +204,66 @@ reviewing a paired document does and does not oblige.
 - Run `python $SKILL_DIR/scripts/check_markdown_links.py <repo-root>`, or
   `python $SKILL_DIR/scripts/check_markdown_links.py <repo-root> --files <paths>` for a narrow
   pass. Exit `0` is clean, `1` is findings, `2` means the check could not run and nothing was
-  proven.
+  proven, except when a declared origin is unavailable; see Mirrored directories.
 - By default the checker validates Markdown-link syntax only. Add
   `--localized-pair <base> <companion>` only when that localized companion is explicitly in scope;
   repeat the option for more explicitly scoped pairs. It does not see the inline-code path citations
   that carry most cross-skill references in this pack; those are the fleet checker
-  `skills/scripts/check_fleet_references.py`'s subject.
+  `check_fleet_references.py`'s subject (in the skill pack repository's root `scripts` directory).
+- The checker slugs a heading by lowercasing it, removing backticks, and keeping only letters,
+  digits, whitespace, `-`, and `_`. Outside code spans `_` is stripped as well. Whitespace becomes
+  hyphens, and hyphen runs collapse and trim. So `*` and `~` never survive, and `` `foo.bar` ``
+  becomes `foobar`:
+  ``## 16. `alaa-go-chi` consumer architecture`` resolves as `#16-alaa-go-chi-consumer-architecture`.
+  When the checker and the renderer disagree on an anchor, link to the document and name the section
+  in prose. Never rewrite a renderer-correct anchor to satisfy the checker.
 - If Python is unavailable, the check did not run. Verify each touched link by opening its target,
   and record in the output report that the automated check was not available — never report the
   document as validated.
 - If a link target is intentionally missing because the repository does not have that document yet,
   create the document or remove the link. Do not leave an aspirational broken link in committed
   documentation.
+
+### Mirrored directories
+
+Before running the checker, look for the repository's mirror declaration: `markdown-links.mirrors.json`
+at `<repo-root>`, plus any declaration the repository's instructions name. Pass it with
+`--mirror-config`; the checker discovers nothing.
+
+When a plain run reports `LINK-*` findings inside a directory copied from another repository, read
+this section before editing anything. Declare the mirror; never hide it with `--exclude`, which
+stops checking the directory.
+
+A mirror is a directory that copies another repository's tree, such as a contract pack copied from a
+sibling service. Its links to files outside the copy resolve only in the origin, so a plain run
+reports them as ordinary `LINK-*` findings.
+
+- Declare with `--mirror <local> <origin>` (repeatable) or `--mirror-config <path>`; the two combine.
+  `--mirror` paths and `<path>` are relative to `<repo-root>`.
+- Config shape is `{"mirrors": [{"local": "...", "origin": "...", "origin_root": "..."}]}`, a
+  non-empty array with `origin_root` optional. Entry paths are relative to the config file's directory.
+- `<local>` must be an existing directory inside `<repo-root>`; `<origin>` may lie outside it. Any
+  declaration error exits `2`.
+- Origin lookups may not leave the origin repository root: `origin_root` (config only; an ancestor of
+  or equal to `origin`), else the nearest ancestor of `origin` holding `.git`. An existing origin
+  with neither exits `2`; set `origin_root`.
+- A mirrored file maps to the origin by relative path, not by content. A link leaving `<local>` is
+  judged only in the origin. A link inside `<local>` that fails locally is re-checked in the origin.
+  A file with no counterpart in an existing origin, or a link absent from that counterpart, gets
+  ordinary local checks. Compare extracted link targets, not line numbers or formatting; a link
+  introduced only in the local copy is never attributed to the origin.
+- A declared origin that is not a directory prints a stderr warning at load time. Exit `0` does not
+  prove the origin exists when no link needed it, so fix the declared path or obtain the origin
+  before relying on the declaration, and record the warning in the report.
+
+| Code | Condition | Counted | Obligation |
+|---|---|---|---|
+| `MIRROR-ORIGIN-OK` | A link leaving the mirror is healthy in the origin. | No; informational. | None. |
+| `MIRROR-UPSTREAM` | The link is broken in the origin; for an inside link, in both trees. | Yes, as upstream. | List it in the final report as an upstream error for the origin owner. Edit neither copy unless the origin is in the task's scope. Send no external message. |
+| `MIRROR-DRIFT` | An inside link is broken locally and healthy in the origin. | Yes, as local. | Repair only the diverged link target in the local copy, or rerun the repository's copy mechanism when one owns the mirror. Never overwrite the local file with the origin file. |
+| `MIRROR-OUTSIDE-ORIGIN` | An origin lookup would leave the origin repository root. | Yes, as local. | If the origin file carries the same link, treat it as an upstream defect: follow the `MIRROR-UPSTREAM` row. If only the local copy changed the link, repair that link in the local copy, as for `MIRROR-DRIFT`. |
+| `MIRROR-ORIGIN-UNAVAILABLE` | A link needed the origin and its directory is not on disk. | Exit `2`. | Obtain the origin at the declared path or ask the user; never clone without authorization. Until then report those links unvalidated. |
+
+`2` outranks `1`. Local findings printed in a run that exits `2` are real and must be fixed; the run
+still proves nothing for the unproven links. With a mirror declared, the closing line splits the
+counts into local findings, upstream errors, healthy in origin, and origin unavailable.

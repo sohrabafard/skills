@@ -7,8 +7,7 @@ tell which ones need re-checking.
 ## What this skill owns
 
 Cross-engagement durability: what is worth remembering, in what shape, with what confidence, what is derived
-instead of remembered, and the drift protocol. Nothing else in the fleet owns this. `/alaa-workflow`
-(`$alaa-workflow`) owns continuity *within* one engagement — the plan, the checkpoint, and the handoff
+instead of remembered, and the drift protocol. Nothing else in the fleet owns this. `/alaa-workflow` owns continuity *within* one engagement — the plan, the checkpoint, and the handoff
 package — and all three are scoped to that engagement. Knowledge that must survive after the engagement ends
 is this skill's.
 
@@ -16,19 +15,20 @@ is this skill's.
 
 | Question | Owner |
 |---|---|
-| Which evidence becomes a durable candidate, and in what reusable shape | `/alaa-extract-agent-lessons` (`$alaa-extract-agent-lessons`) |
-| Active plans, phase state, continuity across compaction, and what a handoff package contains | `/alaa-workflow` (`$alaa-workflow`) |
-| What enters the context window at all, and what gets printed | `/alaa-low-noise` (`$alaa-low-noise`) |
-| Whether an observability record is required, and at what level | `/alaa-observability-soc` (`$alaa-observability-soc`) |
-| What a log field, event, code, or metric is called | `/alaa-services-contract` (`$alaa-services-contract`) |
-| Why a mechanism fails open or closed, and how to shape it | `/alaa-reliability-sla` (`$alaa-reliability-sla`) |
-| Fail-closed doctrine for a security decision, and exceptions to it | `/alaa-security-review` (`$alaa-security-review`) |
-| Complexity budgets and structure choice for a growing pass | `/alaa-algorithms-data-structures` (`$alaa-algorithms-data-structures`) |
-| Test design beyond "every assertion needs a red fixture" | `/alaa-testing-strategy` (`$alaa-testing-strategy`) |
-| Subsystem design | `/alaa-system-design` (`$alaa-system-design`) |
-| Which repository files carry authority | `/alaa-project-constitution` (`$alaa-project-constitution`) |
-| Editing shared or global configuration, including a settings file | `/alaa-controlled-ops` (`$alaa-controlled-ops`) |
-| Model and effort choice | `/alaa-prompting-guide` (`$alaa-prompting-guide`) |
+| Which evidence becomes a durable candidate, and in what reusable shape | `/alaa-extract-agent-lessons` |
+| Active plans, phase state, continuity across compaction, and what a handoff package contains | `/alaa-workflow` |
+| Task state, dependencies, next step and task evidence in Beads issues | `/alaa-workflow` `references/task-tracking.md` |
+| What enters the context window at all, and what gets printed | `/alaa-low-noise` |
+| Whether an observability record is required, and at what level | `/alaa-observability-soc` |
+| What a log field, event, code, or metric is called | `/alaa-services-contract` |
+| Why a mechanism fails open or closed, and how to shape it | `/alaa-reliability-sla` |
+| Fail-closed doctrine for a security decision, and exceptions to it | `/alaa-security-review` |
+| Complexity budgets and structure choice for a growing pass | `/alaa-algorithms-data-structures` |
+| Test design beyond "every assertion needs a red fixture" | `/alaa-testing-strategy` |
+| Subsystem design | `/alaa-system-design` |
+| Which repository files carry authority | `/alaa-project-constitution` |
+| Editing shared or global configuration, including a settings file | `/alaa-controlled-ops` |
+| Model and effort choice | `/alaa-prompting-guide` |
 | Deriving the service call graph from telemetry | `alaa-signoz-clickhouse-docs` `references/50-service-topology.md` |
 
 ## Three corrections to the previous version
@@ -42,18 +42,17 @@ context-economy decision, and the recall budget in `SKILL.md` exists partly for 
 latency.
 
 **"Concise handoff pointers" was a trespass, and the counterpart says so in its own words.** The retired
-`compact-and-handoff.md` conceded that `/alaa-workflow` (`$alaa-workflow`) is authoritative for active
+`compact-and-handoff.md` conceded that `/alaa-workflow` is authoritative for active
 execution and then defined a six-field handoff package anyway. `alaa-workflow`
 `references/artifact-lifecycle.md` says of exactly that material: "Do not restate them here." That prohibition
 is addressed to a sibling file inside `alaa-workflow`; it binds harder across a skill boundary. The two
 six-field lists did not even agree, and `alaa-workflow`'s decomposition is the better one.
 
 What survives is one sentence: **the memory store holds a pointer to the plan and its handoff package, and
-`/alaa-workflow` (`$alaa-workflow`) owns what the handoff contains.** That file is retired; this sentence
+`/alaa-workflow` owns what the handoff contains.** That file is retired; this sentence
 replaces all of it.
 
-**The curation owner was missing from the table entirely.** `/alaa-extract-agent-lessons`
-(`$alaa-extract-agent-lessons`) routes into this skill for publication and says so in its own step 4, but
+**The curation owner was missing from the table entirely.** `/alaa-extract-agent-lessons` routes into this skill for publication and says so in its own step 4, but
 nothing here pointed back, so a task could reach publication having never run admission. That is the
 shape of omission this file warns about: the rule was already enforced negatively by the do-not-store
 list, and the missing half was who produces the storable form.
@@ -82,7 +81,7 @@ existing knowledge, which is exactly the class of operation that must not run un
 Two local opinions the upstream pack does not have, and they are the reason the wrap exists:
 
 - `memory-tasks` is not an execution-state owner in Alaa coding work, and must not duplicate active
-  `/alaa-workflow` (`$alaa-workflow`) state.
+  `/alaa-workflow` state.
 - The drift detection in `memory-schema` is schema-versus-usage drift, which is metadata maintenance. It is
   not contract drift and does not open a drift record. See `references/drift-management.md`.
 

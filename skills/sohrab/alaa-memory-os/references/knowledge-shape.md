@@ -80,30 +80,29 @@ claiming language compliance.
 - Operations rules, with their requirement level routed rather than restated.
 - Durable lessons and repeated work patterns.
 - Project indexes and current-state summaries.
-- Concise pointers to plan, state, and handoff files owned by `/alaa-workflow` (`$alaa-workflow`).
+- Concise pointers to plan, state, and handoff files owned by `/alaa-workflow`.
 
 ## Never store this
 
-One list, and it is the only one. Earlier versions of this skill carried four partial lists that disagreed
+One list, and it is the only one for what may never enter the memory store. Earlier versions of this skill carried four partial lists that disagreed
 about their own membership, so an agent reading the shortest never learned that secrets were on it.
 
 - Raw session transcripts.
 - Raw logs.
 - Whole source files.
 - Whole documents.
-- Whole Postman collections; `/alaa-postman-collections` (`$alaa-postman-collections`) owns those artifacts.
+- Whole Postman collections; `/alaa-postman-collections` owns those artifacts.
 - Secrets, credentials, tokens, cookies, and private keys.
 - Personal sticky notes and private prompt drafts.
 - Draft skill contents, skill candidates as separate notes, and installed skills.
-- Active `/alaa-workflow` (`$alaa-workflow`) phase checklists and validation logs.
+- Active `/alaa-workflow` phase checklists and validation logs.
 - Whole work files from the evidence warehouse.
 - Service-to-service dependency edges. These are derived; `alaa-signoz-clickhouse-docs`
   `references/50-service-topology.md` owns the derivation. A remembered edge is wrong silently, because
   nothing fails when the call graph changes underneath it.
 
 Nothing on this list becomes storable by being summarised inline on the way in. A transcript, log, or
-document reaches the store only as a candidate that `/alaa-extract-agent-lessons`
-(`$alaa-extract-agent-lessons`) already admitted and shaped. Bulk processing of past conversations is
+document reaches the store only as a candidate that `/alaa-extract-agent-lessons` already admitted and shaped. Bulk processing of past conversations is
 that same path at volume, not an exception to it.
 
 ## Mechanics belong to the vendored pack

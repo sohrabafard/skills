@@ -56,7 +56,7 @@ Open the file whose trigger matches; if none matches, the subject may not be thi
 | a database or broker is reachable from outside the host | `50-network-dns-and-exposure/20-exposure-and-forwarded-trust.md` | — |
 | routing broke after a deploy | `50-network-dns-and-exposure/10-network-and-dns.md` | — |
 | a container restarts with nothing in its own logs | `60-resource-limits-and-load/10-container-resource-ceilings.md` | `70-container-observability.md` §3 |
-| latency rises with no CPU saturation on the host | [resource ceilings](60-resource-limits-and-load/10-container-resource-ceilings.md#1-and-do-different-jobs) | [process and PHP workers](60-resource-limits-and-load/20-process-and-php-workers.md#2-the-trap) |
+| latency rises with no CPU saturation on the host | [resource ceilings](60-resource-limits-and-load/10-container-resource-ceilings.md#1-limits-and-reservations-do-different-jobs) | [process and PHP workers](60-resource-limits-and-load/20-process-and-php-workers.md#2-the-nproc-trap) |
 | 32 worker processes appear in a 2-CPU container | `60-resource-limits-and-load/20-process-and-php-workers.md` | — |
 | `accept: too many open files` | `60-resource-limits-and-load/30-file-descriptors-and-pools.md` | — |
 | the node ran out of disk and unrelated containers failed | `70-container-observability.md` §2 | — |
