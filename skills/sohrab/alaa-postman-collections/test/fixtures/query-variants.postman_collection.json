@@ -1,0 +1,78 @@
+{
+  "info": {
+    "name": "Fixture Recorded Query Variants",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "item": [
+    {
+      "name": "List records",
+      "request": {
+        "method": "GET",
+        "url": "https://api.example.test/v1/records?limit=10",
+        "description": "Saved query variants belong to the same endpoint and retain the inputs that produce each documented response."
+      },
+      "response": [
+        {
+          "name": "200 Cursor",
+          "originalRequest": {
+            "method": "GET",
+            "url": {
+              "raw": "https://api.example.test/v1/records?cursor=fixture&limit=2",
+              "host": [
+                "api.example.test"
+              ],
+              "path": [
+                "v1",
+                "records"
+              ]
+            }
+          },
+          "code": 200,
+          "status": "OK",
+          "header": [],
+          "body": "{\"data\":[]}"
+        },
+        {
+          "name": "200 Legacy page",
+          "originalRequest": {
+            "method": "GET",
+            "url": {
+              "raw": "https://api.example.test/v1/records?page=3&per_page=20",
+              "host": [
+                "api.example.test"
+              ],
+              "path": [
+                "v1",
+                "records"
+              ]
+            }
+          },
+          "code": 200,
+          "status": "OK",
+          "header": [],
+          "body": "{\"data\":[]}"
+        },
+        {
+          "name": "200 Unpaginated",
+          "originalRequest": {
+            "method": "GET",
+            "url": {
+              "raw": "https://api.example.test/v1/records",
+              "host": [
+                "api.example.test"
+              ],
+              "path": [
+                "v1",
+                "records"
+              ]
+            }
+          },
+          "code": 200,
+          "status": "OK",
+          "header": [],
+          "body": "{\"data\":[]}"
+        }
+      ]
+    }
+  ]
+}
