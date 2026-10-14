@@ -7,9 +7,8 @@
 #   1  ran to completion, findings to report
 #   2  could not run (path unresolved, tool absent, input unreadable)
 #
-# Hook scripts are EXEMPT and must always exit 0. The Claude Code hook protocol
-# reserves exit 2 to mean "block" and treats exit 1 as a non-blocking error, so
-# applying the contract above to a hook changes its behaviour.
+# Hook scripts are EXEMPT and always exit 0. Their event-specific Claude Code
+# protocol differs from this checker contract.
 # See references/checkers-and-hooks.md.
 # =============================================================================
 
@@ -20,41 +19,33 @@ function Resolve-VaultRoot {
     Precedence, highest first:
       1. -VaultPath argument
       2. $env:ALAA_MEMORY_VAULT
-      3. $DocumentedDefault, but only if it exists on this machine
-    Returns an object with Ok, Path and Reason. It never throws and never
-    guesses: a machine-specific default that is assumed rather than tested makes
-    "could not run" indistinguishable from "wrong machine", which is the exact
-    ambiguity the exit-code contract exists to remove.
+      3. caller-supplied $DocumentedDefault
+    Select once, then validate. An invalid selected path never falls through to
+    another vault, because that changes the authority the caller selected.
   #>
   param(
     [string]$VaultPath = "",
-    [string]$DocumentedDefault = "D:\Sohrab\Project\agent-memory"
+    [string]$DocumentedDefault = ""
   )
 
-  $candidates = @()
-  if (-not [string]::IsNullOrWhiteSpace($VaultPath))            { $candidates += $VaultPath }
-  if (-not [string]::IsNullOrWhiteSpace($env:ALAA_MEMORY_VAULT)) { $candidates += $env:ALAA_MEMORY_VAULT }
-  if (-not [string]::IsNullOrWhiteSpace($DocumentedDefault))     { $candidates += $DocumentedDefault }
-
-  if ($candidates.Count -eq 0) {
+  $selected = $VaultPath
+  if ([string]::IsNullOrWhiteSpace($selected)) { $selected = $env:ALAA_MEMORY_VAULT }
+  if ([string]::IsNullOrWhiteSpace($selected)) { $selected = $DocumentedDefault }
+  if ([string]::IsNullOrWhiteSpace($selected)) {
     return [pscustomobject]@{
       Ok = $false; Path = $null
       Reason = "No vault path given. Pass -VaultPath or set ALAA_MEMORY_VAULT."
     }
   }
 
-  foreach ($c in $candidates) {
-    $item = Get-Item -LiteralPath $c -ErrorAction SilentlyContinue
-    if ($null -ne $item -and $item.PSIsContainer) {
-      return [pscustomobject]@{ Ok = $true; Path = $item.FullName; Reason = "" }
-    }
+  $item = Get-Item -LiteralPath $selected -ErrorAction SilentlyContinue
+  if ($null -ne $item -and $item.PSIsContainer) {
+    return [pscustomobject]@{ Ok = $true; Path = $item.FullName; Reason = "" }
   }
 
   return [pscustomobject]@{
     Ok = $false; Path = $null
-    # One string literal, deliberately. Splitting it across a "+" would bind -f
-    # to the second fragment only, leaving {0} unexpanded in the first.
-    Reason = ("No candidate vault path resolved to a directory. Tried: {0}. Pass -VaultPath or set ALAA_MEMORY_VAULT." -f ($candidates -join '; '))
+    Reason = "Selected vault path does not resolve to a directory. Correct the selected path before retrying."
   }
 }
 
@@ -80,9 +71,11 @@ function Invoke-Store {
     [Parameter(Mandatory)][string]$Exe,
     [string[]]$StoreArgs = @()
   )
-  Write-Host "$Exe $($StoreArgs -join ' ')"
   & $Exe @StoreArgs 2>&1 | Out-Host
-  return [int]$LASTEXITCODE
+  $code = [int]$LASTEXITCODE
+  # Do not echo caller arguments; third-party output above is not sanitized.
+  Write-Host "Store operation completed with exit $code."
+  return $code
 }
 
 function Test-Tool {

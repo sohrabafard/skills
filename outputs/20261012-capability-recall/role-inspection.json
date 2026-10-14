@@ -1,0 +1,107 @@
+{
+  "host_surface": "collaboration.spawn_agent fork_turns=none explicit model and reasoning_effort",
+  "enforcement": "unknown; obey role scope",
+  "serving_identity": "unknown",
+  "roles": [
+    {
+      "role": "alaa-researcher",
+      "model": null,
+      "effort": null,
+      "sandbox_declaration": "read-only",
+      "sha256": "8c0c7da334b619d7b549cb43ec803ce40347202c7054da03b32f81af67e9235d",
+      "control_status": "neutral",
+      "source": "skills/sohrab/alaa-codex-orchestrator/agents/alaa-researcher.toml",
+      "authority_matches_source": true
+    },
+    {
+      "role": "alaa-planner",
+      "model": null,
+      "effort": null,
+      "sandbox_declaration": "read-only",
+      "sha256": "812b76b8d7b78a3ac7156f713e92eae5cf6a9362cfe2e6763c5453ac23d2ba29",
+      "control_status": "neutral",
+      "source": "skills/sohrab/alaa-codex-orchestrator/agents/alaa-planner.toml",
+      "authority_matches_source": true
+    },
+    {
+      "role": "alaa-test-strategist",
+      "model": null,
+      "effort": null,
+      "sandbox_declaration": "read-only",
+      "sha256": "ed68072f5ea238149e72431fd0d28fd3d598404ee04a30d5f153e3d06c5c2d17",
+      "control_status": "neutral",
+      "source": "skills/sohrab/alaa-codex-orchestrator/agents/alaa-test-strategist.toml",
+      "authority_matches_source": true
+    },
+    {
+      "role": "alaa-implementer",
+      "model": null,
+      "effort": null,
+      "sandbox_declaration": "workspace-write",
+      "sha256": "685f0fe5595b25dcd681665081772a6675e5635f280ff9759819f8d025d71ac5",
+      "control_status": "neutral",
+      "source": "skills/sohrab/alaa-codex-orchestrator/agents/alaa-implementer.toml",
+      "authority_matches_source": true
+    },
+    {
+      "role": "alaa-implementer-low",
+      "model": null,
+      "effort": null,
+      "sandbox_declaration": "workspace-write",
+      "sha256": "90c2298c92a31935923825a5506ed6003a1f27ae5e20621f75fdc5b951677572",
+      "control_status": "neutral",
+      "source": "skills/sohrab/alaa-codex-orchestrator/agents/alaa-implementer-low.toml",
+      "authority_matches_source": true
+    },
+    {
+      "role": "alaa-rule-writer",
+      "model": null,
+      "effort": null,
+      "sandbox_declaration": "read-only",
+      "sha256": "a89c8a66f5b12b816a66ea6e49909df708e3d2432bb0a2a62402d93acc679d8e",
+      "control_status": "neutral",
+      "source": "skills/sohrab/alaa-prompting-guide/assets/rule-writer/codex/alaa-rule-writer.toml",
+      "authority_matches_source": true
+    },
+    {
+      "role": "alaa-instruction-reviewer",
+      "model": null,
+      "effort": null,
+      "sandbox_declaration": "read-only",
+      "sha256": "54fc06def7da6fcf1612e5dc77552ab87573cd9c4557a726ddde35a5b8eac166",
+      "control_status": "neutral",
+      "source": "skills/sohrab/alaa-codex-orchestrator/agents/alaa-instruction-reviewer.toml",
+      "authority_matches_source": true
+    },
+    {
+      "role": "alaa-verifier",
+      "model": null,
+      "effort": null,
+      "sandbox_declaration": "workspace-write",
+      "sha256": "fb7d2aed405f750bf471f2d58f72d70934116ac6c49ab12dc0b84421b4477eb9",
+      "control_status": "neutral",
+      "source": "skills/sohrab/alaa-codex-orchestrator/agents/alaa-verifier.toml",
+      "authority_matches_source": true
+    },
+    {
+      "role": "alaa-reviewer",
+      "model": null,
+      "effort": null,
+      "sandbox_declaration": "read-only",
+      "sha256": "fbfb50295c045c7f1db4458f72b7f0b720fab6fa711beeab8e764ded88ab4142",
+      "control_status": "neutral",
+      "source": "skills/sohrab/alaa-codex-orchestrator/agents/alaa-reviewer.toml",
+      "authority_matches_source": true
+    },
+    {
+      "role": "alaa-documenter",
+      "model": null,
+      "effort": null,
+      "sandbox_declaration": "workspace-write",
+      "sha256": "be069652b0e5ad2fd34185374e475c2dea4f91375c30942c3d880b9632ecdbe0",
+      "control_status": "neutral",
+      "source": "skills/sohrab/alaa-codex-orchestrator/agents/alaa-documenter.toml",
+      "authority_matches_source": true
+    }
+  ]
+}

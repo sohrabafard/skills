@@ -1,0 +1,59 @@
+{
+  "skills/sohrab/alaa-memory-os/SKILL.md": {
+    "sha256": "c38754167e5e49d77fed8c8ca5692f1d5af5aeb6413a0aff122f10981da8d638"
+  },
+  "skills/sohrab/alaa-memory-os/agents/openai.yaml": {
+    "sha256": "53219a320e796f2ce1e71bfcb9f5fec4bfc1623723b4eaddda865337d2fd08a2"
+  },
+  "skills/sohrab/alaa-memory-os/references/00-topic-map.md": {
+    "sha256": "5e514937c13214a44a68aba45492629880eb3acbf49d4ff8e504e1c235c3f2fa"
+  },
+  "skills/sohrab/alaa-memory-os/references/checkers-and-hooks.md": {
+    "sha256": "be396e89720b1b7c84d8f02c87cb0e1d3a5f4f6c15499c3c410b882ff5250dc8"
+  },
+  "skills/sohrab/alaa-memory-os/references/drift-management.md": {
+    "sha256": "8f1e86623662121cfe82c5a36368507da10eba40acf7eb6337a604508e4deb0d"
+  },
+  "skills/sohrab/alaa-memory-os/references/knowledge-shape.md": {
+    "sha256": "c97f80cbf71f400faa32a0807508832a2fc1658428738c04959c1b91566b4118"
+  },
+  "skills/sohrab/alaa-memory-os/references/prompt-3-publishing.md": {
+    "sha256": "b11d52fad36aa9db914f8725f64042621c01b8e5b386d70c1e017ec881779d22"
+  },
+  "skills/sohrab/alaa-memory-os/references/skill-boundaries.md": {
+    "sha256": "d7c56a6dbf382c2b67e25bb541ec2545e0cb0e6e7698ebb65fadbe4552dc6986"
+  },
+  "skills/sohrab/alaa-memory-os/references/store-basic-memory.md": {
+    "sha256": "b26671d27bb5dda02b2b1af5b0e4ba6f0731cdcc2d3aa1e85e2f8198e6798ddb"
+  },
+  "skills/sohrab/alaa-memory-os/references/store-hindsight.md": {
+    "sha256": "aad305636bf233db81a3d0d9f75a2c1d56c8a32c2b1cc108013af8b9562eb4c9"
+  },
+  "skills/sohrab/alaa-memory-os/references/store-local.md": {
+    "sha256": "566f732bbbbec6fbc41a7f4aa810c98f1f924e8ab7fb077224da5a962c8e712f"
+  },
+  "skills/sohrab/alaa-memory-os/references/hindsight-setup.md": {
+    "sha256": "d6d2dd54a72b0136397140a17571f0cdac0034b79fabbcb9a89849145ad7bd86"
+  },
+  "skills/sohrab/alaa-extract-agent-lessons/SKILL.md": {
+    "sha256": "b90b3bf81ba404b6f4c7796113faf00dfd4dacb19a39dba0e7d1cc81d677673a"
+  },
+  "skills/sohrab/alaa-extract-agent-lessons/agents/openai.yaml": {
+    "sha256": "882683aa3560db4b32b33045b3fea9cb7a75084bf460005f4a37e414581bc3af"
+  },
+  "skills/sohrab/alaa-codex-runtime-ops/SKILL.md": {
+    "sha256": "f82daba8978849b9d637dc50762ebbab9ba6080cbbc6286666f6e235a29c220a"
+  },
+  "skills/sohrab/alaa-codex-orchestrator/references/verification-and-gates.md": {
+    "sha256": "5c0ea06e53965f1596cc4971119775df7adc29663181fa06d97e0e475c1eeb13"
+  },
+  "skills/sohrab/alaa-cc-orchestrator/references/verification-and-gates.md": {
+    "sha256": "40c6d65af528989b5a46a9199cc042ada101af36b8f1a1e280725bf2049b58e3"
+  },
+  "skills/sohrab/alaa-workflow/references/context-curation.md": {
+    "sha256": "e44a57d14d8901f7160266af7d9037c6f9eacd9719a2eb2a563faecc677c5867"
+  },
+  "skills/sohrab/alaa-extract-agent-lessons/references/reusable-context-shapes.md": {
+    "sha256": "e74dcdb0585139a4120445fea99e762eab09cc15c0a1b626356552b2c44e015d"
+  }
+}

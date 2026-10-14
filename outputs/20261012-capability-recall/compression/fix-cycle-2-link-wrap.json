@@ -1,0 +1,34 @@
+{
+  "path": "skills/sohrab/alaa-extract-agent-lessons/SKILL.md",
+  "cause": "local_reference_paths skips local resolution only for an external owning skill on the same line; previous wrap separated owner and path",
+  "original_failure_evidence": "outputs/20261012-capability-recall/verification/verification-round1.json",
+  "before_sha256": "b90b3bf81ba404b6f4c7796113faf00dfd4dacb19a39dba0e7d1cc81d677673a",
+  "after_sha256": "14104ef0502b550770e7459c1a4140f6357c7dda717d51a798f2d44b82821008",
+  "before_block": "1. Return engagement-local candidates to the workflow-selected location under /alaa-workflow\n   `references/context-curation.md`. Link its canonical record; do not duplicate active state.",
+  "after_block": "1. Return engagement-local candidates to the workflow-selected location under\n   /alaa-workflow `references/context-curation.md`. Link its canonical record; do not duplicate active state.",
+  "token_sequence_equal": true,
+  "cwd": "D:/Sohrab/Project/skills",
+  "resource_policy": "ordinary bounded checker and scoped whitespace, sequential",
+  "commands": [
+    {
+      "argv": [
+        "python",
+        "scripts/validate_sohrab_skill_pack.py"
+      ],
+      "exit": 0,
+      "log": "fix-cycle-2-validator.log"
+    },
+    {
+      "argv": [
+        "git",
+        "diff",
+        "--check",
+        "--",
+        "skills/sohrab/alaa-extract-agent-lessons/SKILL.md"
+      ],
+      "exit": 0,
+      "log": "fix-cycle-2-diff-check.log"
+    }
+  ],
+  "after_packet_regenerated": false
+}

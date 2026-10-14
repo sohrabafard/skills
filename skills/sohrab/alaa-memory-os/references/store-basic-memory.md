@@ -102,7 +102,7 @@ curl -s https://raw.githubusercontent.com/basicmachines-co/basic-memory/main/src
 ```
 
 Bind beyond loopback only behind something that authenticates, and treat that as an exception requiring
-`/alaa-security-review` (`$alaa-security-review`). The default transport is `stdio`, which has no listening
+`/alaa-security-review`. The default transport is `stdio`, which has no listening
 socket and is the right choice unless a remote client genuinely needs HTTP.
 
 For a Codex CLI client over stdio:
@@ -115,13 +115,13 @@ codex mcp add basic-memory bash -c "uvx basic-memory mcp --project alaa-memory"
 
 The store is files on a disk, so two agents writing the same note is last-writer-wins with no warning and no
 merge. There is no locking to rely on. The practical rules: one agent owns a note during a task; an agent that
-must update a note it did not read this session re-reads it immediately before writing; and a note written by
-a hook goes to a capture directory with a unique filename rather than to an existing note.
+must update a note it did not read this session re-reads it immediately before writing; and a new authorized capture uses a unique filename rather than overwrite an existing note. The shipped
+hooks create no vault notes; `references/checkers-and-hooks.md` owns their compatibility contract.
 
 ## Vendored pack
 
 The pack is an upstream subtree under `vendor/basic-memory` and is never edited. Route into it for mechanics:
-`references/skill-boundaries.md` lists all of its skills, their paths, and which are gated.
+The selected-adapter inventory below lists its skills, paths and gates.
 
 ## Windows is the target platform
 
@@ -130,3 +130,55 @@ defects here: `Set-Content -Encoding UTF8` writes a byte-order mark on Windows P
 PowerShell 7, and a mark immediately before a YAML frontmatter delimiter can break the parse — the shipped
 scripts write frontmatter through a mark-less UTF-8 encoder instead. Path exclusion globs written with
 backslashes match nothing on a non-Windows host, so the checkers normalise separators before comparing.
+
+## Mechanics belong to the vendored pack
+
+The syntax of frontmatter, observations, and wiki-link relations is documented upstream and is not restated
+here. Route to the vendored pack by path:
+
+- `vendor/basic-memory/memory-notes/SKILL.md` — note structure, observation categories, relation syntax.
+- `vendor/basic-memory/memory-schema/SKILL.md` — schema definitions, validation, schema-versus-usage drift.
+- `vendor/basic-memory/memory-metadata-search/SKILL.md` — querying by custom frontmatter fields.
+
+The selected-adapter inventory below names every product skill and its gates.
+
+
+## The vendored Basic Memory pack
+
+The pack is an upstream git subtree. It is never edited. This skill wraps it: it owns the opinion about when a
+vendored skill applies, and routes into the vendored skill for the mechanics upstream documents well.
+
+**Recommended for normal work** — verified by reading each skill's own frontmatter:
+
+| Path | What it owns |
+|---|---|
+| `vendor/basic-memory/memory-notes/SKILL.md` | Frontmatter, observations with semantic categories, relations with wiki-links. |
+| `vendor/basic-memory/memory-schema/SKILL.md` | Schema definitions, note validation, and schema-versus-usage drift. |
+| `vendor/basic-memory/memory-metadata-search/SKILL.md` | Querying notes by custom frontmatter fields. |
+| `vendor/basic-memory/memory-capture/SKILL.md` | Capturing a thread into one note, rewritten in place rather than duplicated. |
+| `vendor/basic-memory/memory-continue/SKILL.md` | Rebuilding context from the graph when resuming. |
+
+**Gated: use only when explicitly asked.** `memory-ingest`, `memory-reflect`, `memory-defrag`,
+`memory-curate`, `memory-lifecycle`, `memory-research`, `memory-tasks`, `memory-ci-capture`, and
+`memory-literary-analysis`, each at `vendor/basic-memory/NAME/SKILL.md`. These rewrite, consolidate, or expire
+existing knowledge, which is exactly the class of operation that must not run unasked against an audit trail.
+`memory-literary-analysis` was missing from the retired list entirely.
+
+Two local opinions the upstream pack does not have, and they are the reason the wrap exists:
+
+- `memory-tasks` is not an execution-state owner in Alaa coding work, and must not duplicate active
+  `/alaa-workflow` state.
+- The drift detection in `memory-schema` is schema-versus-usage drift, which is metadata maintenance. It is
+  not contract drift and does not open a drift record. See `references/drift-management.md`.
+
+**Verify the pack inventory rather than trusting this table**, because a subtree pull changes it:
+
+```bash
+find vendor/basic-memory -name SKILL.md | sort
+```
+
+That command also exposes a live hazard: the subtree contains a **nested duplicate** directory holding a
+subset of the same skills, so some names resolve at two depths. Route to the top-level path only. Installer
+paths are owned by `install-skills.md`, not by this file — and that file has pointed at the nested duplicate,
+which is why an environment can end up with the subset installed and the rest missing. Check what is actually
+installed before assuming a gated skill is unavailable.

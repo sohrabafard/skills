@@ -1,0 +1,110 @@
+{
+  "skills/sohrab/alaa-memory-os/SKILL.md": {
+    "sha256": "05b3d47323a44107517ff7f9c2777c9678aca0754c765184f44edc659357df57",
+    "snapshot": "outputs/20261012-capability-recall/semantic-draft/files/skills/sohrab/alaa-memory-os/SKILL.md",
+    "words": 1982,
+    "bytes": 13864
+  },
+  "skills/sohrab/alaa-memory-os/agents/openai.yaml": {
+    "sha256": "53219a320e796f2ce1e71bfcb9f5fec4bfc1623723b4eaddda865337d2fd08a2",
+    "snapshot": "outputs/20261012-capability-recall/semantic-draft/files/skills/sohrab/alaa-memory-os/agents/openai.yaml",
+    "words": 51,
+    "bytes": 440
+  },
+  "skills/sohrab/alaa-memory-os/references/00-topic-map.md": {
+    "sha256": "c7f70e04eafa3b9ddb36b5c22c7dbb73a7145613e052c432b51fa1d1e0b09378",
+    "snapshot": "outputs/20261012-capability-recall/semantic-draft/files/skills/sohrab/alaa-memory-os/references/00-topic-map.md",
+    "words": 184,
+    "bytes": 1429
+  },
+  "skills/sohrab/alaa-memory-os/references/checkers-and-hooks.md": {
+    "sha256": "2e77b7d6130e8e636411090317e2a7faea58f6ed3a3ff11f621e4748f79ab9dc",
+    "snapshot": "outputs/20261012-capability-recall/semantic-draft/files/skills/sohrab/alaa-memory-os/references/checkers-and-hooks.md",
+    "words": 1234,
+    "bytes": 8490
+  },
+  "skills/sohrab/alaa-memory-os/references/drift-management.md": {
+    "sha256": "e53c16d385848fbb7119459d4b4e1fee820ea99958bad9d4d3fcc46acb68a134",
+    "snapshot": "outputs/20261012-capability-recall/semantic-draft/files/skills/sohrab/alaa-memory-os/references/drift-management.md",
+    "words": 1176,
+    "bytes": 7391
+  },
+  "skills/sohrab/alaa-memory-os/references/knowledge-shape.md": {
+    "sha256": "df87d95af1b8454b9d2df31738518b04e8533a6c6cc8183974c096996abf14c6",
+    "snapshot": "outputs/20261012-capability-recall/semantic-draft/files/skills/sohrab/alaa-memory-os/references/knowledge-shape.md",
+    "words": 930,
+    "bytes": 6473
+  },
+  "skills/sohrab/alaa-memory-os/references/prompt-3-publishing.md": {
+    "sha256": "b11d52fad36aa9db914f8725f64042621c01b8e5b386d70c1e017ec881779d22",
+    "snapshot": "outputs/20261012-capability-recall/semantic-draft/files/skills/sohrab/alaa-memory-os/references/prompt-3-publishing.md",
+    "words": 658,
+    "bytes": 4395
+  },
+  "skills/sohrab/alaa-memory-os/references/skill-boundaries.md": {
+    "sha256": "b898110e09f4d2a4b2da156e89dc800939a7cb5638d0ea5e77a3ca3db1c7ac45",
+    "snapshot": "outputs/20261012-capability-recall/semantic-draft/files/skills/sohrab/alaa-memory-os/references/skill-boundaries.md",
+    "words": 657,
+    "bytes": 4428
+  },
+  "skills/sohrab/alaa-memory-os/references/store-basic-memory.md": {
+    "sha256": "b26671d27bb5dda02b2b1af5b0e4ba6f0731cdcc2d3aa1e85e2f8198e6798ddb",
+    "snapshot": "outputs/20261012-capability-recall/semantic-draft/files/skills/sohrab/alaa-memory-os/references/store-basic-memory.md",
+    "words": 1325,
+    "bytes": 9870
+  },
+  "skills/sohrab/alaa-memory-os/references/store-hindsight.md": {
+    "sha256": "68cc40da7e4239f76d4ecda0132a3790a0001b432d4c2819d54f3513afa62b35",
+    "snapshot": "outputs/20261012-capability-recall/semantic-draft/files/skills/sohrab/alaa-memory-os/references/store-hindsight.md",
+    "words": 407,
+    "bytes": 3153
+  },
+  "skills/sohrab/alaa-memory-os/references/store-local.md": {
+    "sha256": "07e2eb111564b2abdff362265d95452899d119f85c5100d30a5bce934bf9041e",
+    "snapshot": "outputs/20261012-capability-recall/semantic-draft/files/skills/sohrab/alaa-memory-os/references/store-local.md",
+    "words": 952,
+    "bytes": 6453
+  },
+  "skills/sohrab/alaa-memory-os/references/hindsight-setup.md": {
+    "sha256": "d6d2dd54a72b0136397140a17571f0cdac0034b79fabbcb9a89849145ad7bd86",
+    "snapshot": "outputs/20261012-capability-recall/semantic-draft/files/skills/sohrab/alaa-memory-os/references/hindsight-setup.md",
+    "words": 1290,
+    "bytes": 9434
+  },
+  "skills/sohrab/alaa-extract-agent-lessons/SKILL.md": {
+    "sha256": "4a65196fbbf536268641ae8d2ebde4a6ba2e955536551003c5db9698dca8c204",
+    "snapshot": "outputs/20261012-capability-recall/semantic-draft/files/skills/sohrab/alaa-extract-agent-lessons/SKILL.md",
+    "words": 970,
+    "bytes": 6874
+  },
+  "skills/sohrab/alaa-extract-agent-lessons/agents/openai.yaml": {
+    "sha256": "882683aa3560db4b32b33045b3fea9cb7a75084bf460005f4a37e414581bc3af",
+    "snapshot": "outputs/20261012-capability-recall/semantic-draft/files/skills/sohrab/alaa-extract-agent-lessons/agents/openai.yaml",
+    "words": 66,
+    "bytes": 548
+  },
+  "skills/sohrab/alaa-codex-runtime-ops/SKILL.md": {
+    "sha256": "adb938c24f8cb9009812da7c266867fc9ac8671f6426a03de4bd0e65756b277b",
+    "snapshot": "outputs/20261012-capability-recall/semantic-draft/files/skills/sohrab/alaa-codex-runtime-ops/SKILL.md",
+    "words": 1401,
+    "bytes": 9748
+  },
+  "skills/sohrab/alaa-codex-orchestrator/references/verification-and-gates.md": {
+    "sha256": "ce9342b861fdd67b07ed3d9f52901f9eb01a13a0d6805be169d4bfd20cdca3ba",
+    "snapshot": "outputs/20261012-capability-recall/semantic-draft/files/skills/sohrab/alaa-codex-orchestrator/references/verification-and-gates.md",
+    "words": 3173,
+    "bytes": 22968
+  },
+  "skills/sohrab/alaa-cc-orchestrator/references/verification-and-gates.md": {
+    "sha256": "7c52a65d00f5c277c140a63fba23c4d4c2c5827a5ff474dfd27de3316c60a633",
+    "snapshot": "outputs/20261012-capability-recall/semantic-draft/files/skills/sohrab/alaa-cc-orchestrator/references/verification-and-gates.md",
+    "words": 3129,
+    "bytes": 22659
+  },
+  "skills/sohrab/alaa-workflow/references/context-curation.md": {
+    "sha256": "e44a57d14d8901f7160266af7d9037c6f9eacd9719a2eb2a563faecc677c5867",
+    "snapshot": "outputs/20261012-capability-recall/semantic-draft/files/skills/sohrab/alaa-workflow/references/context-curation.md",
+    "words": 462,
+    "bytes": 3158
+  }
+}

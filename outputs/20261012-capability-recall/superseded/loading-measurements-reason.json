@@ -1,0 +1,5 @@
+{
+  "superseded": "outputs/20261012-capability-recall/superseded/loading-measurements-incomplete-workflow-closure.json",
+  "sha256": "ee43d7ed4590db9ea08ee2b449f9c57a90262a47538a174faa736fa1d11dd194",
+  "reason": "Independent review found lesson closures omitted required workflow-internal and inherited owners. Preserve historical capture; replacement uses declared existing-plan local resumable states and recursive owner inclusion."
+}

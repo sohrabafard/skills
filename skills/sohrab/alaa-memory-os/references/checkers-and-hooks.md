@@ -30,10 +30,30 @@ beside the script.
 Each checker takes `-SelfTest`, which runs it against both fixtures and asserts the exit codes rather than the
 report text. Report text is prose and drifts; the exit code is the contract.
 
-`test/run-tests.ps1` runs every self-test. A target that exits `2` is recorded **BLOCKED, not FAIL**, and the
-harness then exits `2` — because "the checker could not run" and "the checker found a problem" call for
-different human actions, and collapsing them loses the distinction the contract just created.
-`/alaa-testing-strategy` (`$alaa-testing-strategy`) owns test design beyond this rule.
+`test/run-tests.ps1` runs `-SelfTest` only for `alaa_obsidian_linkcheck.ps1`,
+`alaa_memory_staleness.ps1`, `alaa_memory_health.ps1`, `alaa_memory_reindex.ps1`, and
+`alaa_memory_post_task.ps1`. It excludes the Python hook-safety, checker-input-failure and repository
+capability-contract checks below. Target exit `2` is **BLOCKED, not FAIL**; the harness exits `2` because
+unavailable checkers and reported findings require different actions. Never collapse that distinction.
+
+Run separately from the repository root:
+
+```text
+python skills/sohrab/alaa-memory-os/test/test-hook-safety.py
+python skills/sohrab/alaa-memory-os/test/test-hook-safety.py --self-test
+python skills/sohrab/alaa-memory-os/test/test-checker-input-failures.py
+python scripts/check_capability_recall.py
+python scripts/check_capability_recall.py --self-test
+```
+
+Hook-safety and checker-input-failure commands execute synthetic process/fixture regressions, proving
+neither installed hook activation nor live store behavior. The capability checker/self-test inspect
+scoped source/scenario contracts and red fixtures; they execute no model/memory operation and prove no
+runtime instruction compliance. These Python commands return `0` for covered checks passing, `1` for
+findings/assertion failures, and `2` for unavailable execution/unreadable inputs. Either nonzero blocks
+the affected claim; unrun commands never pass. Passing the PowerShell harness covers none of them. Keep
+the independent consolidated verification gate; implementation-lane focused evidence does not discharge
+it. `/alaa-testing-strategy` owns test design beyond this rule.
 
 ## Checker inventory
 
@@ -54,7 +74,10 @@ exits `1`.** Previously every path used `throw`, so both exited `1` and a CI gat
 installed" from "validation failed".
 
 They share `scripts/_common.ps1`, which owns vault-root resolution, boundary validation on that path, store
-invocation that returns only an exit code, and the exit mapping. Store invocation is the reason the module
+invocation that returns only an exit code, and the exit mapping. Root selection chooses one explicit
+`-VaultPath`, else `ALAA_MEMORY_VAULT`, else a caller-supplied documented default; an invalid selected
+path returns unavailable without trying another root. No machine-specific default is supplied. Store
+invocation emits no raw argv echo; third-party output is not thereby proven sanitized. Store invocation is the reason the module
 exists: a PowerShell function returns its whole output stream, so a helper that runs a command and then
 `return $code` hands the caller an array of output lines with the code appended. Comparing that array against
 zero is a filter, not a comparison, and it is truthy whenever the command printed anything — which made the
@@ -62,21 +85,33 @@ earlier health check report failure on every clean run.
 
 ## Hook scripts are exempt, and inverting their exit codes breaks them
 
-`scripts/precompact_checkpoint.ps1` and `scripts/session_start_context.ps1` are Claude Code hooks. The hook
-protocol assigns its own meanings, and they contradict the checker contract:
+`scripts/precompact_checkpoint.ps1` and `scripts/session_start_context.ps1` are Claude Code hooks. Their
+protocol contradicts the checker contract:
 
-- `0` — success. Stdout is parsed for the hook's JSON output; JSON is only processed on exit 0.
-- `2` — **blocking error**. Stdout and JSON are ignored and stderr is fed back to the agent as an error.
-- anything else, including `1` — non-blocking error. Execution continues and stderr surfaces as a hook error
+- `0` — success. Output handling is event-specific; never assume JSON reaches the agent.
+- `2` — **blocking error**. Stdout and JSON are ignored; stderr reaches the agent as an error.
+- anything else, including `1` — non-blocking error. Execution continues; stderr appears as a hook error
   notice to the user.
 
-So a hook must exit `0` on success, and must never exit `2` unless it intends to block. Both shipped hooks
-always exit `0`, including from their error handler. Do not "fix" them to `0/1/2`. Confirm the semantics at
+A hook must exit `0` on success and never exit `2` unless it intends to block. Both shipped hooks always
+exit `0`, including from their error handler. Do not "fix" them to `0/1/2`. Confirm semantics at
 `https://code.claude.com/docs/en/hooks` before changing either script.
 
-For `SessionStart` specifically: stdout is added to the session context — it is one of the few events where
-that happens rather than going to the debug log — and the event cannot block. Keep the hook fast, because it
-runs on every session.
+Official hook semantics were checked at https://code.claude.com/docs/en/hooks on 2026-10-12
+America/Los_Angeles (UTC date 2026-10-13): an access date, not a publication date. `SessionStart` stdout
+enters session context; the event cannot block. `PreCompact` discards `systemMessage` and `continue`;
+compatibility JSON emission proves no model reminder delivery. Refresh event-specific semantics before
+changing or registering hooks.
+
+`precompact_checkpoint.ps1` is a nonwriting compatibility entrypoint preserving `VaultPath` and exit 0.
+It reads no transcript, writes no vault/checkpoint and invokes no adapter. Its emitted owner pointer
+proves no continuity; /alaa-workflow must record continuity proactively through its own admitted artifacts.
+The old transcript-tail opt-in has no effect.
+
+`session_start_context.ps1` reads repository drift counts and emits conditional owner pointers. It copies
+no recall budgets, drift decisions, note policy or active workflow state. A missing/unreadable drift path
+is unknown, not zero drift. If the task touches counted contracts, inspect their records through
+`references/drift-management.md` before planning. Keep this hook fast; it runs every session.
 
 ## Registering the hooks
 
@@ -84,7 +119,7 @@ These two scripts previously shipped with no registration path at all, so nobody
 skill. The snippets below are the missing half.
 
 Editing a settings file is a shared-configuration change. Do not apply it on the user's behalf:
-`/alaa-controlled-ops` (`$alaa-controlled-ops`) owns that action, and the user applies it themselves.
+`/alaa-controlled-ops` owns that action, and the user applies it themselves.
 
 ```json
 {
@@ -120,7 +155,7 @@ documentation above before applying, because this schema is upstream and moves.
   the YAML parse on the reader that later loads the note.
 - Normalise path separators before comparing. Exclusion globs written with backslashes match nothing on a
   non-Windows host, which silently widens the checked set instead of failing.
-- Never build a filename from a timestamp alone. Two hook firings inside the same second produce the same name
-  and one silently overwrites the other; the shipped hook appends a short random suffix.
+- For an authorized capture outside these nonwriting hooks, use a unique filename; timestamps alone can
+  collide within a second and overwrite evidence.
 - Do not create a temporary directory inside the repository, and do not locate files by walking a fixed number
   of parent directories from the script.

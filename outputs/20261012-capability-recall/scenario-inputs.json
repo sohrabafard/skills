@@ -1,0 +1,175 @@
+{
+  "schema_version": 1,
+  "scenarios": [
+    {
+      "id": "gateway",
+      "context": "Gateway validation needs HAProxy and a pinned image. Neither is local. Host installation is forbidden. Docker reachability and remote images are unverified. ci-image may own a runtime.",
+      "request": "State the next evidence lookup and what can be claimed now."
+    },
+    {
+      "id": "reuse",
+      "context": "The exact capability, environment, constraints and owner source were verified this session; hashes and pins are unchanged. A repeated command reports the same local miss.",
+      "request": "Choose the next action and any recall calls."
+    },
+    {
+      "id": "repair_owner",
+      "context": "One cause-specific repair remains permitted. Its owner is unresolved. The failed operation has a sanitized mount-visibility error; local executable inventory was inspected.",
+      "request": "Describe a bounded inquiry before choosing the repair."
+    },
+    {
+      "id": "query_fields",
+      "context": "Need a containerized HAProxy syntax gate for gateway on Windows without host installation. Local HAProxy is absent, Docker responds, the project image is remote-only, and no owner source has been inspected. No credentials are provided.",
+      "request": "Propose the capability inquiry and information it carries."
+    },
+    {
+      "id": "page_miss",
+      "context": "Page search returned no topic. Capability-oriented reflection returned ci-image as an owner lead. Nothing in that owner repository has been inspected.",
+      "request": "State what the page miss and reflect hit prove, and the next action."
+    },
+    {
+      "id": "followup",
+      "context": "Existence inquiry began at t=0 with the owner budget. At t=45 it returned one relevant owner lead with an unresolved pin location. No follow-up has run.",
+      "request": "Choose any follow-up, its remaining time boundary, and a stop rule."
+    },
+    {
+      "id": "late",
+      "context": "Existence inquiry completed after its 60-second deadline. The late text names an image owner. No source or runtime has been inspected.",
+      "request": "Report budget evidence and safe next work."
+    },
+    {
+      "id": "empty",
+      "context": "Selected adapter returned an empty answer to the capability inquiry within its budget.",
+      "request": "Classify availability and describe unaffected work."
+    },
+    {
+      "id": "denied",
+      "context": "Selected adapter recall access was denied; canonical repository files remain readable.",
+      "request": "Classify evidence and choose further work."
+    },
+    {
+      "id": "unavailable",
+      "context": "The selected Hindsight transport is unreachable. A local Basic Memory CLI exists. No adapter switch or write was authorized.",
+      "request": "Choose recall behavior and any adapter use."
+    },
+    {
+      "id": "timeout",
+      "context": "Capability recall exceeded the owning deadline with no result; a required gate still lacks a runnable environment.",
+      "request": "State the evidence and validation status."
+    },
+    {
+      "id": "ordinary_timeout",
+      "context": "A prior-session recall for a routine code question exceeded five seconds. This is not an existence or ownership question.",
+      "request": "State whether to extend recall and how to proceed."
+    },
+    {
+      "id": "stale",
+      "context": "Memory says a runtime supports Linux-only arguments, while the current owner documents Windows constraints and changed pins. No canonical documents disagree.",
+      "request": "Assess the lead, drift status, and whether a probe is justified."
+    },
+    {
+      "id": "irrelevant",
+      "context": "Capability recall returns unrelated logging guidance with no owner for the required HAProxy gate.",
+      "request": "Choose the next bounded action and classification."
+    },
+    {
+      "id": "registry",
+      "context": "An authorized read-only registry listing found the project image tag. Its Dockerfile, installed tools and compatibility have not been inspected.",
+      "request": "State exactly which proof stage is established."
+    },
+    {
+      "id": "partial",
+      "context": "A permitted image starts compatibly and HAProxy runs. It lacks a second tool required by the exact gateway gate. The full gate was not invoked.",
+      "request": "Report capability and gate status."
+    },
+    {
+      "id": "positive",
+      "context": "Current owner files confirm contents and pins; an authorized compatible runtime started; the exact required gate completed with exit 0.",
+      "request": "Report only the supported proof stages."
+    },
+    {
+      "id": "incompatible",
+      "context": "Current owner source and a permitted probe establish that the available image architecture cannot run on this host.",
+      "request": "Classify the blocker without generalizing."
+    },
+    {
+      "id": "unauthorized",
+      "context": "A verified remedy requires installing a package, pulling an image or starting a container. None of these effects is authorized in this task.",
+      "request": "State the proposed action and any permission needed before execution."
+    },
+    {
+      "id": "actual_failure",
+      "context": "An authorized capability probe ran and returned a grounded runtime error. One cause-specific repair and one different retry remain.",
+      "request": "Classify and route recovery, including the retry boundary."
+    },
+    {
+      "id": "exhausted",
+      "context": "The repair and materially different retry already failed. Recall then names a new owner lead. No parent reassessment has occurred.",
+      "request": "Choose the next action; do not execute effects."
+    },
+    {
+      "id": "native_threshold",
+      "context": "A mandatory gate is unresolved on the first native Goal turn. The host requires the same blocking condition across at least three consecutive turns to mark blocked. Work remains.",
+      "request": "Describe workflow evidence and native status separately."
+    },
+    {
+      "id": "missing_adapter",
+      "context": "The selected adapter reference file is missing. A different adapter reference is readable.",
+      "request": "Choose the dependent action and any fallback."
+    },
+    {
+      "id": "write_pending",
+      "context": "A scoped, authorized durable candidate passed admission and deduplication, but retain reports accepted/pending only.",
+      "request": "State write status and how the candidate survives."
+    },
+    {
+      "id": "source_owned",
+      "context": "A lesson candidate is simply the current public API route and timeout value already owned by source documents.",
+      "request": "Choose its durable shape and owner."
+    },
+    {
+      "id": "lesson_reusable",
+      "context": "A reproduced path-provider mismatch recurred in two scoped checks. A source-backed correction uses a provider-qualified read before attributing absence; no secrets or raw logs are needed.",
+      "request": "Decide admission, scope and candidate fields; do not publish."
+    },
+    {
+      "id": "lesson_duplicate",
+      "context": "A reusable, source-backed candidate already has a matching stored lesson by topic and canonical path.",
+      "request": "Choose creation versus update and required evidence."
+    },
+    {
+      "id": "lesson_oneoff",
+      "context": "The only candidate is that one command transiently failed once and later worked; no causal diagnosis or reusable correction exists.",
+      "request": "Decide admission."
+    },
+    {
+      "id": "lesson_unsupported",
+      "context": "An agent guessed that a container image contains every gateway tool; no source or execution supports it.",
+      "request": "Decide admission."
+    },
+    {
+      "id": "lesson_sensitive",
+      "context": "A candidate embeds a synthetic session token and a raw transcript tail to explain a repair.",
+      "request": "Decide admission and preservation."
+    },
+    {
+      "id": "lesson_local",
+      "context": "A source-backed correction applies only to this repository pin layout; no fleet-wide evidence exists.",
+      "request": "Choose scope and whether to generalize."
+    },
+    {
+      "id": "lesson_deferred",
+      "context": "A scoped reusable correction passed admission; publication is unauthorized and the selected store is also unreachable.",
+      "request": "Preserve the candidate and report publication status."
+    },
+    {
+      "id": "workflow",
+      "context": "A task is mid-phase before compaction. Its checklist, validation logs and handoff are current workflow files; a memory note is being considered.",
+      "request": "Choose state ownership, curation timing and the maximum memory content."
+    },
+    {
+      "id": "drift",
+      "context": "Current contract docs contradict current executable code. The repository drift registry cannot be written under this task authority.",
+      "request": "Choose dependent work and how the disagreement is reported."
+    }
+  ]
+}

@@ -81,11 +81,16 @@ if ($MaxAgeDays -lt 0) {
   exit 2
 }
 
-$mdFiles = @(Get-ChildItem -LiteralPath $root -Recurse -Filter *.md -File -ErrorAction SilentlyContinue |
-  Where-Object {
-    $rel = Get-RelativeNotePath -FullName $_.FullName -Root $root
-    $rel -notmatch '(^|/)\.obsidian/' -and $rel -notmatch '(^|/)archive/'
-  })
+try {
+  $mdFiles = @(Get-ChildItem -LiteralPath $root -Recurse -Filter *.md -File -ErrorAction Stop |
+    Where-Object {
+      $rel = Get-RelativeNotePath -FullName $_.FullName -Root $root
+      $rel -notmatch '(^|/)\.obsidian/' -and $rel -notmatch '(^|/)archive/'
+    })
+} catch {
+  Write-Host "BLOCKED: vault enumeration is incomplete or unreadable."
+  exit 2
+}
 
 if ($mdFiles.Count -eq 0) {
   Write-Host "BLOCKED: no markdown notes found under $root"
@@ -100,8 +105,18 @@ $cutoff       = (Get-Date).Date.AddDays(-$MaxAgeDays)
 
 foreach ($f in $mdFiles) {
   $rel = Get-RelativeNotePath -FullName $f.FullName -Root $root
-  $raw = Get-Content -LiteralPath $f.FullName -Raw -ErrorAction SilentlyContinue
-  if ($null -eq $raw) { $raw = "" }
+  try {
+    $raw = Get-Content -LiteralPath $f.FullName -Raw -ErrorAction Stop
+  } catch {
+    Write-Host "BLOCKED: a vault note could not be read."
+    exit 2
+  }
+  if ($null -eq $raw -and $f.Length -ne 0) {
+    Write-Host "BLOCKED: a nonempty vault note returned no readable content."
+    exit 2
+  }
+  # Get-Content -Raw returns null for a successfully read zero-byte file.
+  if ([string]::IsNullOrEmpty($raw)) { continue }
   $fm = Get-NoteFrontmatter -Raw $raw
   if ($null -eq $fm) { continue }
 

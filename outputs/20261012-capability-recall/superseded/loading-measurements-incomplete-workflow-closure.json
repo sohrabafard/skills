@@ -1,0 +1,1015 @@
+{
+  "word_method": "UTF-8-sig decode then str.split whitespace words; include frontmatter",
+  "tokenizer": {
+    "tiktoken_installed": false,
+    "counts": "unavailable: no verified installed compatible model tokenizer; no downloads attempted"
+  },
+  "claim_limits": "Enumerated target-owner instruction closure, not measured model context, tool runtime or monetary cost. Includes moved references on their applicable paths. Host/global instructions, task messages, platform invocation metadata and domain/stack owners outside memory/lesson/workflow are excluded equally from both versions.",
+  "closure_conditions": {
+    "ordinary_recall": "Memory trigger admitted; Hindsight selected; routine query only.",
+    "capability_recall": "Local miss about to block or unresolved-owner permitted repair; existence/ownership query; no further effects.",
+    "no_admitted_lesson": "Workflow phase/final curation scan invoked; all candidates rejected before shaping or writing.",
+    "admitted_lesson_authorized_write": "Scoped candidate admitted, shaped, parked in workflow and authorized for selected-store write; note schema and dedup required.",
+    "canonical_drift": "Two current canonical sources disagree; selected-store pointer optional; repository drift owner required.",
+    "adapter_setup": "Hindsight selected; setup/configuration/import/maintenance explicitly in scope."
+  },
+  "baseline_head": "daaa3694c744667975d187bcdb33eaae75d9e7fd",
+  "versions": {
+    "before": {
+      "bodies": {
+        "words": 2702,
+        "bytes": 18055,
+        "tokens": null,
+        "files": [
+          {
+            "path": "skills/sohrab/alaa-memory-os/SKILL.md",
+            "sha256": "73c125983c6861d5c601c8a4f6f9e62344d1506125e5d9a21c8ce799c34311e1",
+            "words": 1654,
+            "bytes": 10779,
+            "origin": "baseline.json"
+          },
+          {
+            "path": "skills/sohrab/alaa-extract-agent-lessons/SKILL.md",
+            "sha256": "180632ebdf8260ce11d552f9d5efb90392755bcdb268e38974bfc02fd53eed77",
+            "words": 1048,
+            "bytes": 7276,
+            "origin": "baseline.json"
+          }
+        ]
+      },
+      "target_tree": {
+        "words": 19320,
+        "bytes": 140945,
+        "tokens": null,
+        "files": [
+          {
+            "path": "skills/sohrab/alaa-memory-os/agents/openai.yaml",
+            "sha256": "eecd333aadf26074bcd1ea1e8422f8fa21ca0d3d8342590306a826c3719d005f",
+            "words": 44,
+            "bytes": 363,
+            "origin": "baseline.json"
+          },
+          {
+            "path": "skills/sohrab/alaa-memory-os/references/checkers-and-hooks.md",
+            "sha256": "26498612f2d4e91c8ea9602197f8a62f84c367edf5c10f39f1d45807ae29b3c7",
+            "words": 1086,
+            "bytes": 7209,
+            "origin": "baseline.json"
+          },
+          {
+            "path": "skills/sohrab/alaa-memory-os/references/drift-management.md",
+            "sha256": "009667cb996391869eacb325663cbfe0a216272f134df7175e1f95a15d5de780",
+            "words": 1169,
+            "bytes": 7394,
+            "origin": "baseline.json"
+          },
+          {
+            "path": "skills/sohrab/alaa-memory-os/references/knowledge-shape.md",
+            "sha256": "c2fe1a6fdb5a85aa84a5ea2cd18441a3801b92f72a6f9c7408a2173df0b8cfa9",
+            "words": 974,
+            "bytes": 6824,
+            "origin": "baseline.json"
+          },
+          {
+            "path": "skills/sohrab/alaa-memory-os/references/prompt-3-publishing.md",
+            "sha256": "a346bed71ebefcfe957b1b9976a52f1bdc68cadb5a13e7a853e7ddf84465fafb",
+            "words": 649,
+            "bytes": 4379,
+            "origin": "baseline.json"
+          },
+          {
+            "path": "skills/sohrab/alaa-memory-os/references/skill-boundaries.md",
+            "sha256": "8e0f7fb8490f567fec0015f111b77098b978de7f8b4bb2460ad59999c8f409fc",
+            "words": 1003,
+            "bytes": 7205,
+            "origin": "baseline.json"
+          },
+          {
+            "path": "skills/sohrab/alaa-memory-os/references/store-basic-memory.md",
+            "sha256": "f555bb21789412af37ecfc903a9f08f86ecb8ef6e58337147a08d905e85c810d",
+            "words": 917,
+            "bytes": 6671,
+            "origin": "baseline.json"
+          },
+          {
+            "path": "skills/sohrab/alaa-memory-os/references/store-hindsight.md",
+            "sha256": "7875947c7e40c656ce459b0412509050deead75691aa2688d0b8098fca646a27",
+            "words": 1745,
+            "bytes": 12522,
+            "origin": "baseline.json"
+          },
+          {
+            "path": "skills/sohrab/alaa-memory-os/references/store-local.md",
+            "sha256": "443e490f1560037eaed7e50c76aa9007daf59b1f9e418acd2539755a2ed8c0ae",
+            "words": 959,
+            "bytes": 6341,
+            "origin": "baseline.json"
+          },
+          {
+            "path": "skills/sohrab/alaa-memory-os/scripts/_common.ps1",
+            "sha256": "d01dee02b3bd6e63508a248560474c50091c8ba634217ab900ecc7b12e2c03f2",
+            "words": 1095,
+            "bytes": 8717,
+            "origin": "baseline.json"
+          },
+          {
+            "path": "skills/sohrab/alaa-memory-os/scripts/alaa_memory_health.ps1",
+            "sha256": "70b189a87cb48dd85cd30cabd0cd1c15872deebce9b5f200787baacaefbb3e04",
+            "words": 511,
+            "bytes": 4017,
+            "origin": "baseline.json"
+          },
+          {
+            "path": "skills/sohrab/alaa-memory-os/scripts/alaa_memory_post_task.ps1",
+            "sha256": "6e44329e071e75a7ad892c85c764a0eceebc2c3d0c77eb8dacf7c8c596ee523d",
+            "words": 610,
+            "bytes": 4673,
+            "origin": "baseline.json"
+          },
+          {
+            "path": "skills/sohrab/alaa-memory-os/scripts/alaa_memory_reindex.ps1",
+            "sha256": "46e73ff71f98c6c781fbaec5599168f20709d5c6036cca0ac0cf35cded8ef9c8",
+            "words": 289,
+            "bytes": 2300,
+            "origin": "baseline.json"
+          },
+          {
+            "path": "skills/sohrab/alaa-memory-os/scripts/alaa_memory_staleness.ps1",
+            "sha256": "4a4cd90a09b0fb2102e0bcafc1b23c55831ef5cff094165ce75f3d72217551a7",
+            "words": 1033,
+            "bytes": 8616,
+            "origin": "baseline.json"
+          },
+          {
+            "path": "skills/sohrab/alaa-memory-os/scripts/alaa_obsidian_linkcheck.ps1",
+            "sha256": "481a8b42bcb6df24fb5a2c0fb87522cdda756a51f189256cb3fa8fbc7dd855dd",
+            "words": 999,
+            "bytes": 8116,
+            "origin": "baseline.json"
+          },
+          {
+            "path": "skills/sohrab/alaa-memory-os/scripts/precompact_checkpoint.ps1",
+            "sha256": "72d4097f8c1d2dcb55cbbae214f519f642922549c0162ae91bbbf08e2ee8b3b9",
+            "words": 895,
+            "bytes": 7088,
+            "origin": "baseline.json"
+          },
+          {
+            "path": "skills/sohrab/alaa-memory-os/scripts/session_start_context.ps1",
+            "sha256": "df5aed2d68d32c2dd89e4542fa36a2fadf404c63dd0f5e29690a3d5f85145b43",
+            "words": 521,
+            "bytes": 3677,
+            "origin": "baseline.json"
+          },
+          {
+            "path": "skills/sohrab/alaa-memory-os/SHA256SUMS",
+            "sha256": "53a571bd34c71b3316586aaf259317aa261f1bbffe217ac6a26541b17320a753",
+            "words": 53,
+            "bytes": 2567,
+            "origin": "baseline.json"
+          },
+          {
+            "path": "skills/sohrab/alaa-memory-os/SKILL.md",
+            "sha256": "73c125983c6861d5c601c8a4f6f9e62344d1506125e5d9a21c8ce799c34311e1",
+            "words": 1654,
+            "bytes": 10779,
+            "origin": "baseline.json"
+          },
+          {
+            "path": "skills/sohrab/alaa-memory-os/test/fixtures/green-vault/A.md",
+            "sha256": "29eb755b695100a34c7c8ea2fe5270abfe2a641016f6a9a6d2d45b85a3b68ac1",
+            "words": 47,
+            "bytes": 366,
+            "origin": "baseline.json"
+          },
+          {
+            "path": "skills/sohrab/alaa-memory-os/test/fixtures/green-vault/B.md",
+            "sha256": "31c05dedcde36f7f1f0744f974459f1e4420478ca3fe153fa06b4809288afdaa",
+            "words": 41,
+            "bytes": 299,
+            "origin": "baseline.json"
+          },
+          {
+            "path": "skills/sohrab/alaa-memory-os/test/fixtures/README.md",
+            "sha256": "95b11daa96f502150b22219394b6105dead3b39987d5f9f77c3dd80ba3a41197",
+            "words": 234,
+            "bytes": 1470,
+            "origin": "baseline.json"
+          },
+          {
+            "path": "skills/sohrab/alaa-memory-os/test/fixtures/red-vault/A.md",
+            "sha256": "cae242d5a488a0181b8b0b859be7073b3a6e0e64e43b2a59de790d5a1f294056",
+            "words": 71,
+            "bytes": 520,
+            "origin": "baseline.json"
+          },
+          {
+            "path": "skills/sohrab/alaa-memory-os/test/fixtures/red-vault/B.md",
+            "sha256": "35b4c47674a6a071846cd2f9548ed25b94e00661d06b21c460f133d77efac092",
+            "words": 66,
+            "bytes": 452,
+            "origin": "baseline.json"
+          },
+          {
+            "path": "skills/sohrab/alaa-memory-os/test/fixtures/red-vault/Orphan Note.md",
+            "sha256": "1a2f860017253e2fdebbd0de48daeb0addfb836f83159aad56a65f30493dd3ce",
+            "words": 55,
+            "bytes": 393,
+            "origin": "baseline.json"
+          },
+          {
+            "path": "skills/sohrab/alaa-memory-os/test/fixtures/stub-store/store_clean.ps1",
+            "sha256": "887f37095c0a329e686a825d0c0b575f5da7d18c3f14527553c1e583905734ea",
+            "words": 113,
+            "bytes": 638,
+            "origin": "baseline.json"
+          },
+          {
+            "path": "skills/sohrab/alaa-memory-os/test/fixtures/stub-store/store_reports_problem.ps1",
+            "sha256": "6917ff3e62cd8e0829cd60c9d5e2168f7241d907a23c2df7e3d15c79f6212f27",
+            "words": 40,
+            "bytes": 220,
+            "origin": "baseline.json"
+          },
+          {
+            "path": "skills/sohrab/alaa-memory-os/test/run-tests.ps1",
+            "sha256": "41ac4407a9015c87b0561583ae7a34f9ed703ae3ca8966e978098a22cdf430f5",
+            "words": 404,
+            "bytes": 2979,
+            "origin": "baseline.json"
+          },
+          {
+            "path": "skills/sohrab/alaa-extract-agent-lessons/agents/openai.yaml",
+            "sha256": "6b31b341500b39b05e7bd49ce802ccf3e516cc5a172a36cb4fa1330dc18a3342",
+            "words": 63,
+            "bytes": 516,
+            "origin": "baseline.json"
+          },
+          {
+            "path": "skills/sohrab/alaa-extract-agent-lessons/references/reusable-context-shapes.md",
+            "sha256": "6a9d26c70cc7927aa12d272c616931e6df1ad75eb6da5f4311433e0da1313297",
+            "words": 932,
+            "bytes": 6358,
+            "origin": "baseline.json"
+          },
+          {
+            "path": "skills/sohrab/alaa-extract-agent-lessons/SKILL.md",
+            "sha256": "180632ebdf8260ce11d552f9d5efb90392755bcdb268e38974bfc02fd53eed77",
+            "words": 1048,
+            "bytes": 7276,
+            "origin": "baseline.json"
+          }
+        ]
+      },
+      "loading_closures": {
+        "ordinary_recall": {
+          "words": 3399,
+          "bytes": 23301,
+          "tokens": null,
+          "files": [
+            {
+              "path": "skills/sohrab/alaa-memory-os/SKILL.md",
+              "sha256": "73c125983c6861d5c601c8a4f6f9e62344d1506125e5d9a21c8ce799c34311e1",
+              "words": 1654,
+              "bytes": 10779,
+              "origin": "baseline.json"
+            },
+            {
+              "path": "skills/sohrab/alaa-memory-os/references/store-hindsight.md",
+              "sha256": "7875947c7e40c656ce459b0412509050deead75691aa2688d0b8098fca646a27",
+              "words": 1745,
+              "bytes": 12522,
+              "origin": "baseline.json"
+            }
+          ]
+        },
+        "capability_recall": {
+          "words": 3399,
+          "bytes": 23301,
+          "tokens": null,
+          "files": [
+            {
+              "path": "skills/sohrab/alaa-memory-os/SKILL.md",
+              "sha256": "73c125983c6861d5c601c8a4f6f9e62344d1506125e5d9a21c8ce799c34311e1",
+              "words": 1654,
+              "bytes": 10779,
+              "origin": "baseline.json"
+            },
+            {
+              "path": "skills/sohrab/alaa-memory-os/references/store-hindsight.md",
+              "sha256": "7875947c7e40c656ce459b0412509050deead75691aa2688d0b8098fca646a27",
+              "words": 1745,
+              "bytes": 12522,
+              "origin": "baseline.json"
+            }
+          ]
+        },
+        "no_admitted_lesson": {
+          "words": 3042,
+          "bytes": 21593,
+          "tokens": null,
+          "files": [
+            {
+              "path": "skills/sohrab/alaa-extract-agent-lessons/SKILL.md",
+              "sha256": "180632ebdf8260ce11d552f9d5efb90392755bcdb268e38974bfc02fd53eed77",
+              "words": 1048,
+              "bytes": 7276,
+              "origin": "baseline.json"
+            },
+            {
+              "path": "skills/sohrab/alaa-workflow/SKILL.md",
+              "sha256": "55816de10bc9740857d94db782267ade8caccca4a180be5066e8c47cf52322ad",
+              "words": 1542,
+              "bytes": 11285,
+              "origin": "baseline HEAD (supplemental unchanged/paired owner)"
+            },
+            {
+              "path": "skills/sohrab/alaa-workflow/references/context-curation.md",
+              "sha256": "8f96abb3eec417229675f6a92506acab45b0f10689862cd7482a9f61f6bc05e7",
+              "words": 452,
+              "bytes": 3032,
+              "origin": "baseline HEAD (supplemental unchanged/paired owner)"
+            }
+          ]
+        },
+        "admitted_lesson_authorized_write": {
+          "words": 10595,
+          "bytes": 72674,
+          "tokens": null,
+          "files": [
+            {
+              "path": "skills/sohrab/alaa-extract-agent-lessons/SKILL.md",
+              "sha256": "180632ebdf8260ce11d552f9d5efb90392755bcdb268e38974bfc02fd53eed77",
+              "words": 1048,
+              "bytes": 7276,
+              "origin": "baseline.json"
+            },
+            {
+              "path": "skills/sohrab/alaa-workflow/SKILL.md",
+              "sha256": "55816de10bc9740857d94db782267ade8caccca4a180be5066e8c47cf52322ad",
+              "words": 1542,
+              "bytes": 11285,
+              "origin": "baseline HEAD (supplemental unchanged/paired owner)"
+            },
+            {
+              "path": "skills/sohrab/alaa-workflow/references/context-curation.md",
+              "sha256": "8f96abb3eec417229675f6a92506acab45b0f10689862cd7482a9f61f6bc05e7",
+              "words": 452,
+              "bytes": 3032,
+              "origin": "baseline HEAD (supplemental unchanged/paired owner)"
+            },
+            {
+              "path": "skills/sohrab/alaa-extract-agent-lessons/references/reusable-context-shapes.md",
+              "sha256": "6a9d26c70cc7927aa12d272c616931e6df1ad75eb6da5f4311433e0da1313297",
+              "words": 932,
+              "bytes": 6358,
+              "origin": "baseline.json"
+            },
+            {
+              "path": "skills/sohrab/alaa-workflow/references/context-continuity.md",
+              "sha256": "f0c2cfb78861a3a45693746c8483aa0c13513861cccc2157631a5f43addb94c4",
+              "words": 2248,
+              "bytes": 14598,
+              "origin": "baseline HEAD (supplemental unchanged/paired owner)"
+            },
+            {
+              "path": "skills/sohrab/alaa-memory-os/SKILL.md",
+              "sha256": "73c125983c6861d5c601c8a4f6f9e62344d1506125e5d9a21c8ce799c34311e1",
+              "words": 1654,
+              "bytes": 10779,
+              "origin": "baseline.json"
+            },
+            {
+              "path": "skills/sohrab/alaa-memory-os/references/store-hindsight.md",
+              "sha256": "7875947c7e40c656ce459b0412509050deead75691aa2688d0b8098fca646a27",
+              "words": 1745,
+              "bytes": 12522,
+              "origin": "baseline.json"
+            },
+            {
+              "path": "skills/sohrab/alaa-memory-os/references/knowledge-shape.md",
+              "sha256": "c2fe1a6fdb5a85aa84a5ea2cd18441a3801b92f72a6f9c7408a2173df0b8cfa9",
+              "words": 974,
+              "bytes": 6824,
+              "origin": "baseline.json"
+            }
+          ]
+        },
+        "canonical_drift": {
+          "words": 4568,
+          "bytes": 30695,
+          "tokens": null,
+          "files": [
+            {
+              "path": "skills/sohrab/alaa-memory-os/SKILL.md",
+              "sha256": "73c125983c6861d5c601c8a4f6f9e62344d1506125e5d9a21c8ce799c34311e1",
+              "words": 1654,
+              "bytes": 10779,
+              "origin": "baseline.json"
+            },
+            {
+              "path": "skills/sohrab/alaa-memory-os/references/store-hindsight.md",
+              "sha256": "7875947c7e40c656ce459b0412509050deead75691aa2688d0b8098fca646a27",
+              "words": 1745,
+              "bytes": 12522,
+              "origin": "baseline.json"
+            },
+            {
+              "path": "skills/sohrab/alaa-memory-os/references/drift-management.md",
+              "sha256": "009667cb996391869eacb325663cbfe0a216272f134df7175e1f95a15d5de780",
+              "words": 1169,
+              "bytes": 7394,
+              "origin": "baseline.json"
+            }
+          ]
+        },
+        "adapter_setup": {
+          "words": 3399,
+          "bytes": 23301,
+          "tokens": null,
+          "files": [
+            {
+              "path": "skills/sohrab/alaa-memory-os/SKILL.md",
+              "sha256": "73c125983c6861d5c601c8a4f6f9e62344d1506125e5d9a21c8ce799c34311e1",
+              "words": 1654,
+              "bytes": 10779,
+              "origin": "baseline.json"
+            },
+            {
+              "path": "skills/sohrab/alaa-memory-os/references/store-hindsight.md",
+              "sha256": "7875947c7e40c656ce459b0412509050deead75691aa2688d0b8098fca646a27",
+              "words": 1745,
+              "bytes": 12522,
+              "origin": "baseline.json"
+            }
+          ]
+        }
+      }
+    },
+    "after": {
+      "bodies": {
+        "words": 2527,
+        "bytes": 19094,
+        "tokens": null,
+        "files": [
+          {
+            "path": "skills/sohrab/alaa-memory-os/SKILL.md",
+            "sha256": "c38754167e5e49d77fed8c8ca5692f1d5af5aeb6413a0aff122f10981da8d638",
+            "words": 1654,
+            "bytes": 12564,
+            "origin": "current worktree"
+          },
+          {
+            "path": "skills/sohrab/alaa-extract-agent-lessons/SKILL.md",
+            "sha256": "b90b3bf81ba404b6f4c7796113faf00dfd4dacb19a39dba0e7d1cc81d677673a",
+            "words": 873,
+            "bytes": 6530,
+            "origin": "current worktree"
+          }
+        ]
+      },
+      "target_tree": {
+        "words": 19492,
+        "bytes": 150972,
+        "tokens": null,
+        "files": [
+          {
+            "path": "skills/sohrab/alaa-extract-agent-lessons/SKILL.md",
+            "sha256": "b90b3bf81ba404b6f4c7796113faf00dfd4dacb19a39dba0e7d1cc81d677673a",
+            "words": 873,
+            "bytes": 6530,
+            "origin": "current worktree"
+          },
+          {
+            "path": "skills/sohrab/alaa-extract-agent-lessons/agents/openai.yaml",
+            "sha256": "882683aa3560db4b32b33045b3fea9cb7a75084bf460005f4a37e414581bc3af",
+            "words": 66,
+            "bytes": 548,
+            "origin": "current worktree"
+          },
+          {
+            "path": "skills/sohrab/alaa-extract-agent-lessons/references/reusable-context-shapes.md",
+            "sha256": "e74dcdb0585139a4120445fea99e762eab09cc15c0a1b626356552b2c44e015d",
+            "words": 800,
+            "bytes": 5921,
+            "origin": "current worktree"
+          },
+          {
+            "path": "skills/sohrab/alaa-memory-os/SHA256SUMS",
+            "sha256": "0d83f0b9fb8a734a72939d5f02629a68eff545caae5960d4d5a61d69a5a058f2",
+            "words": 79,
+            "bytes": 3932,
+            "origin": "current worktree"
+          },
+          {
+            "path": "skills/sohrab/alaa-memory-os/SKILL.md",
+            "sha256": "c38754167e5e49d77fed8c8ca5692f1d5af5aeb6413a0aff122f10981da8d638",
+            "words": 1654,
+            "bytes": 12564,
+            "origin": "current worktree"
+          },
+          {
+            "path": "skills/sohrab/alaa-memory-os/agents/openai.yaml",
+            "sha256": "53219a320e796f2ce1e71bfcb9f5fec4bfc1623723b4eaddda865337d2fd08a2",
+            "words": 51,
+            "bytes": 440,
+            "origin": "current worktree"
+          },
+          {
+            "path": "skills/sohrab/alaa-memory-os/references/00-topic-map.md",
+            "sha256": "5e514937c13214a44a68aba45492629880eb3acbf49d4ff8e504e1c235c3f2fa",
+            "words": 181,
+            "bytes": 1416,
+            "origin": "current worktree"
+          },
+          {
+            "path": "skills/sohrab/alaa-memory-os/references/checkers-and-hooks.md",
+            "sha256": "4a5ed7306900dabca7dfe24b747fc0453cb1750963048b94f76de5e1fb85d875",
+            "words": 1306,
+            "bytes": 9600,
+            "origin": "current worktree"
+          },
+          {
+            "path": "skills/sohrab/alaa-memory-os/references/drift-management.md",
+            "sha256": "8f1e86623662121cfe82c5a36368507da10eba40acf7eb6337a604508e4deb0d",
+            "words": 1169,
+            "bytes": 7367,
+            "origin": "current worktree"
+          },
+          {
+            "path": "skills/sohrab/alaa-memory-os/references/hindsight-setup.md",
+            "sha256": "d6d2dd54a72b0136397140a17571f0cdac0034b79fabbcb9a89849145ad7bd86",
+            "words": 1290,
+            "bytes": 9434,
+            "origin": "current worktree"
+          },
+          {
+            "path": "skills/sohrab/alaa-memory-os/references/knowledge-shape.md",
+            "sha256": "c97f80cbf71f400faa32a0807508832a2fc1658428738c04959c1b91566b4118",
+            "words": 928,
+            "bytes": 6460,
+            "origin": "current worktree"
+          },
+          {
+            "path": "skills/sohrab/alaa-memory-os/references/prompt-3-publishing.md",
+            "sha256": "b11d52fad36aa9db914f8725f64042621c01b8e5b386d70c1e017ec881779d22",
+            "words": 658,
+            "bytes": 4395,
+            "origin": "current worktree"
+          },
+          {
+            "path": "skills/sohrab/alaa-memory-os/references/skill-boundaries.md",
+            "sha256": "d7c56a6dbf382c2b67e25bb541ec2545e0cb0e6e7698ebb65fadbe4552dc6986",
+            "words": 653,
+            "bytes": 4406,
+            "origin": "current worktree"
+          },
+          {
+            "path": "skills/sohrab/alaa-memory-os/references/store-basic-memory.md",
+            "sha256": "b26671d27bb5dda02b2b1af5b0e4ba6f0731cdcc2d3aa1e85e2f8198e6798ddb",
+            "words": 1325,
+            "bytes": 9870,
+            "origin": "current worktree"
+          },
+          {
+            "path": "skills/sohrab/alaa-memory-os/references/store-hindsight.md",
+            "sha256": "aad305636bf233db81a3d0d9f75a2c1d56c8a32c2b1cc108013af8b9562eb4c9",
+            "words": 381,
+            "bytes": 3052,
+            "origin": "current worktree"
+          },
+          {
+            "path": "skills/sohrab/alaa-memory-os/references/store-local.md",
+            "sha256": "566f732bbbbec6fbc41a7f4aa810c98f1f924e8ab7fb077224da5a962c8e712f",
+            "words": 948,
+            "bytes": 6442,
+            "origin": "current worktree"
+          },
+          {
+            "path": "skills/sohrab/alaa-memory-os/scripts/_common.ps1",
+            "sha256": "7df9fc583124f497bedc89314d25092d967b74597fbfc3f2be31999cc6c78ab3",
+            "words": 1014,
+            "bytes": 8190,
+            "origin": "current worktree"
+          },
+          {
+            "path": "skills/sohrab/alaa-memory-os/scripts/alaa_memory_health.ps1",
+            "sha256": "70b189a87cb48dd85cd30cabd0cd1c15872deebce9b5f200787baacaefbb3e04",
+            "words": 511,
+            "bytes": 4017,
+            "origin": "current worktree"
+          },
+          {
+            "path": "skills/sohrab/alaa-memory-os/scripts/alaa_memory_post_task.ps1",
+            "sha256": "6e44329e071e75a7ad892c85c764a0eceebc2c3d0c77eb8dacf7c8c596ee523d",
+            "words": 610,
+            "bytes": 4673,
+            "origin": "current worktree"
+          },
+          {
+            "path": "skills/sohrab/alaa-memory-os/scripts/alaa_memory_reindex.ps1",
+            "sha256": "46e73ff71f98c6c781fbaec5599168f20709d5c6036cca0ac0cf35cded8ef9c8",
+            "words": 289,
+            "bytes": 2300,
+            "origin": "current worktree"
+          },
+          {
+            "path": "skills/sohrab/alaa-memory-os/scripts/alaa_memory_staleness.ps1",
+            "sha256": "04d88da3ebb4076d1437a8f97a026c5b3d7dfaed4df364a22dab177a3f2a7779",
+            "words": 1095,
+            "bytes": 9036,
+            "origin": "current worktree"
+          },
+          {
+            "path": "skills/sohrab/alaa-memory-os/scripts/alaa_obsidian_linkcheck.ps1",
+            "sha256": "41cd06386c513359912a520784e61844a609d84c0c992fa1b4f110953b126c1a",
+            "words": 1063,
+            "bytes": 8489,
+            "origin": "current worktree"
+          },
+          {
+            "path": "skills/sohrab/alaa-memory-os/scripts/precompact_checkpoint.ps1",
+            "sha256": "cb3c84d6158a507d6a17ef4313c8ad2e611689343844f68d75867f5f2215f28f",
+            "words": 80,
+            "bytes": 615,
+            "origin": "current worktree"
+          },
+          {
+            "path": "skills/sohrab/alaa-memory-os/scripts/session_start_context.ps1",
+            "sha256": "5b4c32778dea8dbf7d8476622f3fb63e6f918a5c398124f78cc568c3e8c8b74e",
+            "words": 419,
+            "bytes": 3100,
+            "origin": "current worktree"
+          },
+          {
+            "path": "skills/sohrab/alaa-memory-os/test/fixtures/README.md",
+            "sha256": "95b11daa96f502150b22219394b6105dead3b39987d5f9f77c3dd80ba3a41197",
+            "words": 234,
+            "bytes": 1470,
+            "origin": "current worktree"
+          },
+          {
+            "path": "skills/sohrab/alaa-memory-os/test/fixtures/checker-empty/empty.md",
+            "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+            "words": 0,
+            "bytes": 0,
+            "origin": "current worktree"
+          },
+          {
+            "path": "skills/sohrab/alaa-memory-os/test/fixtures/green-vault/A.md",
+            "sha256": "29eb755b695100a34c7c8ea2fe5270abfe2a641016f6a9a6d2d45b85a3b68ac1",
+            "words": 47,
+            "bytes": 366,
+            "origin": "current worktree"
+          },
+          {
+            "path": "skills/sohrab/alaa-memory-os/test/fixtures/green-vault/B.md",
+            "sha256": "31c05dedcde36f7f1f0744f974459f1e4420478ca3fe153fa06b4809288afdaa",
+            "words": 41,
+            "bytes": 299,
+            "origin": "current worktree"
+          },
+          {
+            "path": "skills/sohrab/alaa-memory-os/test/fixtures/hooks/closed/archived.md",
+            "sha256": "19eb164f36374d1153bde0eed95c478b6095b42076119e716449bee32a7399ce",
+            "words": 6,
+            "bytes": 49,
+            "origin": "current worktree"
+          },
+          {
+            "path": "skills/sohrab/alaa-memory-os/test/fixtures/hooks/closed/empty.md",
+            "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+            "words": 0,
+            "bytes": 0,
+            "origin": "current worktree"
+          },
+          {
+            "path": "skills/sohrab/alaa-memory-os/test/fixtures/hooks/closed/resolved.md",
+            "sha256": "0e5ec3ecc5a5225ffdc31b7aab2a1e5416aa384369389deae6415ade6415c1cd",
+            "words": 6,
+            "bytes": 49,
+            "origin": "current worktree"
+          },
+          {
+            "path": "skills/sohrab/alaa-memory-os/test/fixtures/hooks/open/analyzed.md",
+            "sha256": "4add89e631ee84668fd17e2daf668912e8442eaac498028cd1e2f7570c65b8b8",
+            "words": 6,
+            "bytes": 49,
+            "origin": "current worktree"
+          },
+          {
+            "path": "skills/sohrab/alaa-memory-os/test/fixtures/hooks/open/records.md",
+            "sha256": "9eceb452641eb1e7887d8e46d2e0fd2cc5aa7b8b285eb911603ebc3707fc9c24",
+            "words": 7,
+            "bytes": 78,
+            "origin": "current worktree"
+          },
+          {
+            "path": "skills/sohrab/alaa-memory-os/test/fixtures/hooks/silent-store.ps1",
+            "sha256": "6945b1de64a8c16bae85c54a19eb87b6a2e00ae340393e0da4e739a7cd74fb48",
+            "words": 28,
+            "bytes": 238,
+            "origin": "current worktree"
+          },
+          {
+            "path": "skills/sohrab/alaa-memory-os/test/fixtures/hooks/transcript.jsonl",
+            "sha256": "616155c1bf5ca57cdf15f78d9c72d89290c2af33abdb8f2fa9f1803ff6b28ce6",
+            "words": 8,
+            "bytes": 117,
+            "origin": "current worktree"
+          },
+          {
+            "path": "skills/sohrab/alaa-memory-os/test/fixtures/red-vault/A.md",
+            "sha256": "cae242d5a488a0181b8b0b859be7073b3a6e0e64e43b2a59de790d5a1f294056",
+            "words": 71,
+            "bytes": 520,
+            "origin": "current worktree"
+          },
+          {
+            "path": "skills/sohrab/alaa-memory-os/test/fixtures/red-vault/B.md",
+            "sha256": "35b4c47674a6a071846cd2f9548ed25b94e00661d06b21c460f133d77efac092",
+            "words": 66,
+            "bytes": 452,
+            "origin": "current worktree"
+          },
+          {
+            "path": "skills/sohrab/alaa-memory-os/test/fixtures/red-vault/Orphan Note.md",
+            "sha256": "1a2f860017253e2fdebbd0de48daeb0addfb836f83159aad56a65f30493dd3ce",
+            "words": 55,
+            "bytes": 393,
+            "origin": "current worktree"
+          },
+          {
+            "path": "skills/sohrab/alaa-memory-os/test/fixtures/stub-store/store_clean.ps1",
+            "sha256": "887f37095c0a329e686a825d0c0b575f5da7d18c3f14527553c1e583905734ea",
+            "words": 113,
+            "bytes": 638,
+            "origin": "current worktree"
+          },
+          {
+            "path": "skills/sohrab/alaa-memory-os/test/fixtures/stub-store/store_reports_problem.ps1",
+            "sha256": "6917ff3e62cd8e0829cd60c9d5e2168f7241d907a23c2df7e3d15c79f6212f27",
+            "words": 40,
+            "bytes": 220,
+            "origin": "current worktree"
+          },
+          {
+            "path": "skills/sohrab/alaa-memory-os/test/run-tests.ps1",
+            "sha256": "41ac4407a9015c87b0561583ae7a34f9ed703ae3ca8966e978098a22cdf430f5",
+            "words": 404,
+            "bytes": 2979,
+            "origin": "current worktree"
+          },
+          {
+            "path": "skills/sohrab/alaa-memory-os/test/test-checker-input-failures.py",
+            "sha256": "6caeb3560fba4e941b5d90fb6d3229e0bd1af82446beb05d8c2d588f362a868b",
+            "words": 317,
+            "bytes": 3749,
+            "origin": "current worktree"
+          },
+          {
+            "path": "skills/sohrab/alaa-memory-os/test/test-hook-safety.py",
+            "sha256": "d82c5794ed058b29391da402d2b7f9fcf27bc3499b3a167a3b20a02ea0e044b1",
+            "words": 600,
+            "bytes": 6509,
+            "origin": "current worktree"
+          }
+        ]
+      },
+      "loading_closures": {
+        "ordinary_recall": {
+          "words": 2216,
+          "bytes": 17032,
+          "tokens": null,
+          "files": [
+            {
+              "path": "skills/sohrab/alaa-memory-os/SKILL.md",
+              "sha256": "c38754167e5e49d77fed8c8ca5692f1d5af5aeb6413a0aff122f10981da8d638",
+              "words": 1654,
+              "bytes": 12564,
+              "origin": "current worktree"
+            },
+            {
+              "path": "skills/sohrab/alaa-memory-os/references/00-topic-map.md",
+              "sha256": "5e514937c13214a44a68aba45492629880eb3acbf49d4ff8e504e1c235c3f2fa",
+              "words": 181,
+              "bytes": 1416,
+              "origin": "current worktree"
+            },
+            {
+              "path": "skills/sohrab/alaa-memory-os/references/store-hindsight.md",
+              "sha256": "aad305636bf233db81a3d0d9f75a2c1d56c8a32c2b1cc108013af8b9562eb4c9",
+              "words": 381,
+              "bytes": 3052,
+              "origin": "current worktree"
+            }
+          ]
+        },
+        "capability_recall": {
+          "words": 2216,
+          "bytes": 17032,
+          "tokens": null,
+          "files": [
+            {
+              "path": "skills/sohrab/alaa-memory-os/SKILL.md",
+              "sha256": "c38754167e5e49d77fed8c8ca5692f1d5af5aeb6413a0aff122f10981da8d638",
+              "words": 1654,
+              "bytes": 12564,
+              "origin": "current worktree"
+            },
+            {
+              "path": "skills/sohrab/alaa-memory-os/references/00-topic-map.md",
+              "sha256": "5e514937c13214a44a68aba45492629880eb3acbf49d4ff8e504e1c235c3f2fa",
+              "words": 181,
+              "bytes": 1416,
+              "origin": "current worktree"
+            },
+            {
+              "path": "skills/sohrab/alaa-memory-os/references/store-hindsight.md",
+              "sha256": "aad305636bf233db81a3d0d9f75a2c1d56c8a32c2b1cc108013af8b9562eb4c9",
+              "words": 381,
+              "bytes": 3052,
+              "origin": "current worktree"
+            }
+          ]
+        },
+        "no_admitted_lesson": {
+          "words": 2877,
+          "bytes": 20973,
+          "tokens": null,
+          "files": [
+            {
+              "path": "skills/sohrab/alaa-extract-agent-lessons/SKILL.md",
+              "sha256": "b90b3bf81ba404b6f4c7796113faf00dfd4dacb19a39dba0e7d1cc81d677673a",
+              "words": 873,
+              "bytes": 6530,
+              "origin": "current worktree"
+            },
+            {
+              "path": "skills/sohrab/alaa-workflow/SKILL.md",
+              "sha256": "55816de10bc9740857d94db782267ade8caccca4a180be5066e8c47cf52322ad",
+              "words": 1542,
+              "bytes": 11285,
+              "origin": "current worktree"
+            },
+            {
+              "path": "skills/sohrab/alaa-workflow/references/context-curation.md",
+              "sha256": "e44a57d14d8901f7160266af7d9037c6f9eacd9719a2eb2a563faecc677c5867",
+              "words": 462,
+              "bytes": 3158,
+              "origin": "current worktree"
+            }
+          ]
+        },
+        "admitted_lesson_authorized_write": {
+          "words": 9069,
+          "bytes": 64984,
+          "tokens": null,
+          "files": [
+            {
+              "path": "skills/sohrab/alaa-extract-agent-lessons/SKILL.md",
+              "sha256": "b90b3bf81ba404b6f4c7796113faf00dfd4dacb19a39dba0e7d1cc81d677673a",
+              "words": 873,
+              "bytes": 6530,
+              "origin": "current worktree"
+            },
+            {
+              "path": "skills/sohrab/alaa-workflow/SKILL.md",
+              "sha256": "55816de10bc9740857d94db782267ade8caccca4a180be5066e8c47cf52322ad",
+              "words": 1542,
+              "bytes": 11285,
+              "origin": "current worktree"
+            },
+            {
+              "path": "skills/sohrab/alaa-workflow/references/context-curation.md",
+              "sha256": "e44a57d14d8901f7160266af7d9037c6f9eacd9719a2eb2a563faecc677c5867",
+              "words": 462,
+              "bytes": 3158,
+              "origin": "current worktree"
+            },
+            {
+              "path": "skills/sohrab/alaa-extract-agent-lessons/references/reusable-context-shapes.md",
+              "sha256": "e74dcdb0585139a4120445fea99e762eab09cc15c0a1b626356552b2c44e015d",
+              "words": 800,
+              "bytes": 5921,
+              "origin": "current worktree"
+            },
+            {
+              "path": "skills/sohrab/alaa-workflow/references/context-continuity.md",
+              "sha256": "f0c2cfb78861a3a45693746c8483aa0c13513861cccc2157631a5f43addb94c4",
+              "words": 2248,
+              "bytes": 14598,
+              "origin": "current worktree"
+            },
+            {
+              "path": "skills/sohrab/alaa-memory-os/SKILL.md",
+              "sha256": "c38754167e5e49d77fed8c8ca5692f1d5af5aeb6413a0aff122f10981da8d638",
+              "words": 1654,
+              "bytes": 12564,
+              "origin": "current worktree"
+            },
+            {
+              "path": "skills/sohrab/alaa-memory-os/references/00-topic-map.md",
+              "sha256": "5e514937c13214a44a68aba45492629880eb3acbf49d4ff8e504e1c235c3f2fa",
+              "words": 181,
+              "bytes": 1416,
+              "origin": "current worktree"
+            },
+            {
+              "path": "skills/sohrab/alaa-memory-os/references/store-hindsight.md",
+              "sha256": "aad305636bf233db81a3d0d9f75a2c1d56c8a32c2b1cc108013af8b9562eb4c9",
+              "words": 381,
+              "bytes": 3052,
+              "origin": "current worktree"
+            },
+            {
+              "path": "skills/sohrab/alaa-memory-os/references/knowledge-shape.md",
+              "sha256": "c97f80cbf71f400faa32a0807508832a2fc1658428738c04959c1b91566b4118",
+              "words": 928,
+              "bytes": 6460,
+              "origin": "current worktree"
+            }
+          ]
+        },
+        "canonical_drift": {
+          "words": 3385,
+          "bytes": 24399,
+          "tokens": null,
+          "files": [
+            {
+              "path": "skills/sohrab/alaa-memory-os/SKILL.md",
+              "sha256": "c38754167e5e49d77fed8c8ca5692f1d5af5aeb6413a0aff122f10981da8d638",
+              "words": 1654,
+              "bytes": 12564,
+              "origin": "current worktree"
+            },
+            {
+              "path": "skills/sohrab/alaa-memory-os/references/00-topic-map.md",
+              "sha256": "5e514937c13214a44a68aba45492629880eb3acbf49d4ff8e504e1c235c3f2fa",
+              "words": 181,
+              "bytes": 1416,
+              "origin": "current worktree"
+            },
+            {
+              "path": "skills/sohrab/alaa-memory-os/references/store-hindsight.md",
+              "sha256": "aad305636bf233db81a3d0d9f75a2c1d56c8a32c2b1cc108013af8b9562eb4c9",
+              "words": 381,
+              "bytes": 3052,
+              "origin": "current worktree"
+            },
+            {
+              "path": "skills/sohrab/alaa-memory-os/references/drift-management.md",
+              "sha256": "8f1e86623662121cfe82c5a36368507da10eba40acf7eb6337a604508e4deb0d",
+              "words": 1169,
+              "bytes": 7367,
+              "origin": "current worktree"
+            }
+          ]
+        },
+        "adapter_setup": {
+          "words": 3506,
+          "bytes": 26466,
+          "tokens": null,
+          "files": [
+            {
+              "path": "skills/sohrab/alaa-memory-os/SKILL.md",
+              "sha256": "c38754167e5e49d77fed8c8ca5692f1d5af5aeb6413a0aff122f10981da8d638",
+              "words": 1654,
+              "bytes": 12564,
+              "origin": "current worktree"
+            },
+            {
+              "path": "skills/sohrab/alaa-memory-os/references/00-topic-map.md",
+              "sha256": "5e514937c13214a44a68aba45492629880eb3acbf49d4ff8e504e1c235c3f2fa",
+              "words": 181,
+              "bytes": 1416,
+              "origin": "current worktree"
+            },
+            {
+              "path": "skills/sohrab/alaa-memory-os/references/store-hindsight.md",
+              "sha256": "aad305636bf233db81a3d0d9f75a2c1d56c8a32c2b1cc108013af8b9562eb4c9",
+              "words": 381,
+              "bytes": 3052,
+              "origin": "current worktree"
+            },
+            {
+              "path": "skills/sohrab/alaa-memory-os/references/hindsight-setup.md",
+              "sha256": "d6d2dd54a72b0136397140a17571f0cdac0034b79fabbcb9a89849145ad7bd86",
+              "words": 1290,
+              "bytes": 9434,
+              "origin": "current worktree"
+            }
+          ]
+        }
+      }
+    }
+  },
+  "delta_words": {
+    "ordinary_recall": -1183,
+    "capability_recall": -1183,
+    "no_admitted_lesson": -165,
+    "admitted_lesson_authorized_write": -1526,
+    "canonical_drift": -1183,
+    "adapter_setup": 107
+  }
+}

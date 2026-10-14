@@ -1,0 +1,7 @@
+interface:
+  display_name: Alaa Memory OS
+  short_description: "Durable knowledge and bounded capability recall"
+  default_prompt: "Use $alaa-memory-os to reuse fresh capability evidence or query its owner before local absence becomes a validation blocker, verify leads in current sources, and retain only authorized durable knowledge through the selected adapter."
+  brand_color: "#4B6B8A"
+policy:
+  allow_implicit_invocation: true

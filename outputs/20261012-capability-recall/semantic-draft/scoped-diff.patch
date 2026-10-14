@@ -1,0 +1,1068 @@
+diff --git a/skills/sohrab/alaa-cc-orchestrator/references/verification-and-gates.md b/skills/sohrab/alaa-cc-orchestrator/references/verification-and-gates.md
+index 55aecfadf..bbbfb7f7b 100644
+--- a/skills/sohrab/alaa-cc-orchestrator/references/verification-and-gates.md
++++ b/skills/sohrab/alaa-cc-orchestrator/references/verification-and-gates.md
+@@ -32,7 +32,7 @@ Before validation dispatch, record one check list in the existing plan: required
+ 
+ ## Reusable-context owner
+ 
+-Apply `alaa-workflow references/context-curation.md` at material boundaries and closure. Workflow owns scan admission, candidate storage, authorized publication and gate reopening; consume its recorded outcome once, including when this run is a child phase.
++Apply `alaa-workflow references/context-curation.md` at material boundaries and closure. Workflow owns scan timing, candidate location and gate reopening; lessons owns admission and memory owns authorized publication; consume its recorded outcome once, including when this run is a child phase.
+ 
+ ## Phase A â€” Plan
+ 
+@@ -41,7 +41,16 @@ Always first, never skipped, at any profile. Everything after it inherits its de
+ 1. Before the first write apply `alaa-workflow references/workspace-and-integration.md`: record base/checkout identity, inspect unrelated changes and resolve overlapping ownership. Use its current-checkout or isolation decision; disjoint existing changes alone require neither refusal nor a new branch.
+ 2. Dispatch the specification, exploration, and research lanes whose conditions in `references/routing-matrix.md` hold, in parallel only when their questions are independent. Spending on `alaa-spec-analyst` here is the cheapest correctness lever in the pipeline and is wasted on a request that is already concrete.
+ 3. Reconcile observed facts and label unresolved assumptions. Resolve missing facts through retrieval/clarification, then select the planning profile through `routing-matrix.md` before making the plan; the lead ratifies an advisory planner draft.
+-4. Before the plan approves any lane that creates a new container image, toolchain, chart, CI include or template, generator, hook pack, or a script meant for reuse by more than one repository or pipeline (editing an existing artifact does not trigger this check), run the existing-infrastructure check, because one repository's tree does not show what another already provides. Ask `/alaa-memory-os` whether existing infrastructure already provides that capability, under its active adapter's rule for existence and ownership questions. When `/alaa-services-contract` provides an infrastructure registry, follow its check-before-creating rule and read the registry first. Verify every hit in the owning repository. Record the answer in the plan â€” `found` with the artifact, its owner, and the evidence, or `none` with the queries and sources checked, or `no memory evidence` with the sources checked when recall failed open â€” and put it in that lane's dispatch `<context>`. A `found` answer enters step 5 as the reuse-or-extend alternative, chosen or rejected with its reason. Rejecting a `found` artifact in favour of a parallel one needs its owner's or the user's decision.
++4. Before approving a new container image, toolchain, chart, CI include/template, generator, hook pack or
++   script reused across repositories/pipelines (not an edit to an existing artifact), apply /alaa-memory-os
++   capability inquiry because this tree cannot establish what another owner already provides. Read any
++   infrastructure registry owned by /alaa-services-contract first and reuse sufficient current evidence.
++   Record the verified owner/alternative and evidence or the memory owner's scoped unavailable/unknown
++   outcome in the workflow plan and lane `<context>`. Empty recall never justifies `none` infrastructure.
++   A verified alternative enters step 5 as reuse-or-extend; rejecting it for a parallel artifact needs its
++   owner's or user's decision. Before local absence becomes a validation blocker or a permitted additional
++   repair has an unresolved owner, use the same memory-owned inquiry and return to the runtime recovery
++   owner; lookup adds no retry or native status authority.
+ 5. Decide the solution before decomposing it. Name the chosen approach and each rejected alternative with the reason it was rejected. Where the goal stores, indexes, caches, or moves data, decide the representation and the access path with `/alaa-data-layer`. Where a path grows with tenants, rows, history, or events, state its complexity bound with `/alaa-algorithms-data-structures`. Run the design pass under `/alaa-system-design` when that skill's conditions hold; `references/routing-matrix.md` names the three conditions it adds beyond the architecture critic's own triggers.
+ 6. Trigger `alaa-architecture-critic` before implementation whenever its condition in `references/routing-matrix.md` holds, and whenever step 5 required a design pass. The critic reviews a design record with its decisions already made; a critic handed an undecided plan can only accept or reject the whole proposal. A specialist running here is pressure-testing the plan rather than gating the change, and that is the one place a specialist runs early.
+ 7. Trigger `alaa-api-contract-reviewer` here rather than in Phase D whenever its condition in `references/routing-matrix.md` already holds, so consumer impact and the deprecation path are decided before code is written rather than discovered after.
+diff --git a/skills/sohrab/alaa-codex-orchestrator/references/verification-and-gates.md b/skills/sohrab/alaa-codex-orchestrator/references/verification-and-gates.md
+index 7a8e8489b..c0044b03a 100644
+--- a/skills/sohrab/alaa-codex-orchestrator/references/verification-and-gates.md
++++ b/skills/sohrab/alaa-codex-orchestrator/references/verification-and-gates.md
+@@ -32,7 +32,7 @@ Before validation dispatch, record one check list in the existing plan: required
+ 
+ ## Reusable-context owner
+ 
+-Apply `alaa-workflow references/context-curation.md` at material boundaries and closure. Workflow owns scan admission, candidate storage, authorized publication and gate reopening; consume its recorded outcome once, including when this run is a child phase.
++Apply `alaa-workflow references/context-curation.md` at material boundaries and closure. Workflow owns scan timing, candidate location and gate reopening; lessons owns admission and memory owns authorized publication; consume its recorded outcome once, including when this run is a child phase.
+ 
+ ## Phase A â€” Plan
+ 
+@@ -41,7 +41,16 @@ Always first, never skipped, at any profile. Everything after it inherits its de
+ 1. Before the first write apply `alaa-workflow references/workspace-and-integration.md`: record base/checkout identity, inspect unrelated changes and resolve overlapping ownership. Use its current-checkout or isolation decision; disjoint existing changes alone require neither refusal nor a new branch.
+ 2. Dispatch the specification, exploration, and research lanes whose conditions in `references/routing-matrix.md` hold, in parallel only when their questions are independent. Spending on `alaa-spec-analyst` here is the cheapest correctness lever in the pipeline and is wasted on a request that is already concrete.
+ 3. Reconcile observed facts and label unresolved assumptions. Resolve missing facts through retrieval/clarification, then select the planning profile through `routing-matrix.md` before making the plan; the lead ratifies an advisory planner draft.
+-4. Before the plan approves any lane that creates a new container image, toolchain, chart, CI include or template, generator, hook pack, or a script meant for reuse by more than one repository or pipeline (editing an existing artifact does not trigger this check), run the existing-infrastructure check, because one repository's tree does not show what another already provides. Ask `/alaa-memory-os` whether existing infrastructure already provides that capability, under its active adapter's rule for existence and ownership questions. When `/alaa-services-contract` provides an infrastructure registry, follow its check-before-creating rule and read the registry first. Verify every hit in the owning repository. Record the answer in the plan â€” `found` with the artifact, its owner, and the evidence, or `none` with the queries and sources checked, or `no memory evidence` with the sources checked when recall failed open â€” and put it in that lane's dispatch `<context>`. A `found` answer enters step 5 as the reuse-or-extend alternative, chosen or rejected with its reason. Rejecting a `found` artifact in favour of a parallel one needs its owner's or the user's decision.
++4. Before approving a new container image, toolchain, chart, CI include/template, generator, hook pack or
++   script reused across repositories/pipelines (not an edit to an existing artifact), apply /alaa-memory-os
++   capability inquiry because this tree cannot establish what another owner already provides. Read any
++   infrastructure registry owned by /alaa-services-contract first and reuse sufficient current evidence.
++   Record the verified owner/alternative and evidence or the memory owner's scoped unavailable/unknown
++   outcome in the workflow plan and lane `<context>`. Empty recall never justifies `none` infrastructure.
++   A verified alternative enters step 5 as reuse-or-extend; rejecting it for a parallel artifact needs its
++   owner's or user's decision. Before local absence becomes a validation blocker or a permitted additional
++   repair has an unresolved owner, use the same memory-owned inquiry and return to the runtime recovery
++   owner; lookup adds no retry or native status authority.
+ 5. Decide the solution before decomposing it. Name the chosen approach and each rejected alternative with the reason it was rejected. Where the goal stores, indexes, caches, or moves data, decide the representation and the access path with `/alaa-data-layer`. Where a path grows with tenants, rows, history, or events, state its complexity bound with `/alaa-algorithms-data-structures`. Run the design pass under `/alaa-system-design` when that skill's conditions hold; `references/routing-matrix.md` names the three conditions it adds beyond the architecture critic's own triggers.
+ 6. Trigger `alaa-architecture-critic` before implementation whenever its condition in `references/routing-matrix.md` holds, and whenever step 5 required a design pass. The critic reviews a design record with its decisions already made; a critic handed an undecided plan can only accept or reject the whole proposal. A specialist running here is pressure-testing the plan rather than gating the change, and that is the one place a specialist runs early.
+ 7. Trigger `alaa-api-contract-reviewer` here rather than in Phase D whenever its condition in `references/routing-matrix.md` already holds, so consumer impact and the deprecation path are decided before code is written rather than discovered after.
+diff --git a/skills/sohrab/alaa-codex-runtime-ops/SKILL.md b/skills/sohrab/alaa-codex-runtime-ops/SKILL.md
+index 041458310..f53e09183 100644
+--- a/skills/sohrab/alaa-codex-runtime-ops/SKILL.md
++++ b/skills/sohrab/alaa-codex-runtime-ops/SKILL.md
+@@ -10,9 +10,14 @@ Recover from Codex environment failures while preserving the user's task scope:
+ ## Recovery procedure
+ 
+ 1. Preserve the original task scope and the last reliable evidence.
+-2. Match the error text to a failure class below and apply its smallest retry; `references/00-topic-map.md` routes each class to its reference.
+-3. Escalate only when the blocked command is necessary and the failure prevents completion, justified by the task and the lost capability.
+-4. Report the workaround briefly, then return to the task.
++2. Match the error text to a failure class below and select its smallest permitted retry; `references/00-topic-map.md` routes each class to its reference.
++3. Before a local-tool miss becomes a validation blocker, or an otherwise permitted additional repair has
++   an unresolved owner, apply /alaa-memory-os `SKILL.md` capability inquiry. Reuse its adequate current
++   evidence; its classifications distinguish missing local capability from unavailable compatible
++   infrastructure, missing authority, actual failure and unknown availability. Return verified leads to
++   this recovery procedure; recall does not add an attempt or change native blocked thresholds.
++4. Apply the selected permitted recovery under its existing attempt budget. Escalate only when the blocked command is necessary and the failure prevents completion, justified by the task and the lost capability.
++5. Report the workaround briefly, then return to the task.
+ 
+ Read `references/40-project-fallbacks.md` when the failing stack is Node, Vite, Vitest, Quasar, or a Yarn gate, and `references/90-source-map.md` before giving durable guidance about Codex, shell, or OS behavior.
+ 
+diff --git a/skills/sohrab/alaa-extract-agent-lessons/SKILL.md b/skills/sohrab/alaa-extract-agent-lessons/SKILL.md
+index 13b645056..930196ba3 100644
+--- a/skills/sohrab/alaa-extract-agent-lessons/SKILL.md
++++ b/skills/sohrab/alaa-extract-agent-lessons/SKILL.md
+@@ -1,6 +1,6 @@
+ ---
+ name: alaa-extract-agent-lessons
+-description: "Reusable-context curation for substantial agent work and conversations. Use at signal-bearing phase boundaries and before final handoff to extract evidence-backed decision interfaces, judgment rubrics, and durable knowledge cards from explicit user or team decisions, accepted or rejected work with reasons, non-obvious product or team knowledge, verified surprises, costly detours, validation failures, or coordination bottlenecks. Keep active candidates in alaa-workflow and publish only authorized durable knowledge through alaa-memory-os. Do not use for raw logs, status, active plans, speculative advice, obvious repository facts, or one-off workarounds."
++description: "Reusable-context curation for substantial agent work and conversations. Use when /alaa-workflow invokes a curation scan or the user requests reusable lessons to extract evidence-backed decision interfaces, judgment rubrics, and durable knowledge cards from explicit user or team decisions, accepted or rejected work with reasons, non-obvious product or team knowledge, verified surprises, costly detours, validation failures, or coordination bottlenecks. Keep active candidates in alaa-workflow and publish only authorized durable knowledge through alaa-memory-os. Do not use for raw logs, status, active plans, speculative advice, obvious repository facts, or one-off workarounds."
+ ---
+ 
+ # Alaa Extract Agent Lessons
+@@ -12,22 +12,15 @@ chronology that merely happened once.
+ Valuable does not mean merely interesting or new. Without the candidate, a future agent must be likely to
+ make a worse decision, misjudge acceptable work, miss consequential context, or repeat expensive discovery.
+ 
+-## Lifecycle
++## Scan contract
+ 
+-1. **Intermediate scan:** at a phase or decision boundary, scan only the evidence accumulated since the
+-   previous boundary when a signal below occurred. When `$alaa-workflow` / `/alaa-workflow` is active, keep
+-   admitted candidates in the matching handoff-package fields. Record a judgment there as the confirmed fact
+-   that a named user or team chose something for a stated reason; never rewrite it as a universal fact.
+-2. **Final gate:** after implementation, validation, review, and documentation evidence are stable, scan the
+-   whole engagement, merge duplicates, resolve provisional candidates, and decide each destination before the
+-   handoff closes.
+-3. **Empty result:** when nothing passes admission, report that outcome and stop. Never manufacture a lesson
+-   to make the gate look productive.
++/alaa-workflow `references/context-curation.md` owns scan timing, the intermediate/final distinction,
++evidence stability, candidate location and reopening consequences. Consume its selected scan scope and
++recording destination; do not create a second phase schedule, handoff schema or task state here.
+ 
+-Signals are an explicit correction, choice, approval or rejection with a reason, an accepted tradeoff, an
+-accepted or rejected example whose rationale exposes a judgment boundary, a verified surprise, a costly
+-detour, a validation failure that changed the method, a coordination bottleneck, a high-fidelity reference
+-that resolves repeated ambiguity, or non-obvious product, team, or domain knowledge future work will need.
++For an intermediate scan, assess only evidence since the previous recorded boundary. For a final scan,
++reconcile the engagement evidence and provisional candidates, merge duplicates and return each disposition.
++If nothing passes admission, return an empty result; never manufacture a lesson to satisfy a gate.
+ 
+ ## When NOT to use
+ 
+@@ -66,27 +59,26 @@ stays advisory and says it is inferred.
+ - **Knowledge card:** a non-obvious fact or operating context changes reasoning but does not itself prescribe a
+   procedure or quality judgment.
+ 
+-Read `references/reusable-context-shapes.md` after a candidate passes admission. It owns the common provenance
+-envelope, the three compact shapes, compression rules, and the classification test. These are candidate shapes,
+-not memory-note schemas.
++| You are about to | Read | Decision owned there |
++|---|---|---|
++| Shape a candidate that passed admission | `references/reusable-context-shapes.md` | Common provenance, three reusable forms, compression and classification; not a memory-note schema. |
+ 
+ ## Route the result
+ 
+-1. Keep engagement-local candidates in the `$alaa-workflow` / `/alaa-workflow` handoff package. Do not copy
+-   active phase state or validation logs into memory.
+-2. When repository code, docs, an instruction file, or an existing skill already owns the knowledge, update or
+-   promote through that owner only when the task authorizes it; otherwise report a promotion candidate and the
+-   owning surface.
+-   When the final gate discovers a repository promotion after evidence was declared stable, return
+-   `pipeline reopen required`; do not mutate the evidence underneath completion.
+-3. Before drafting a promotion into a prompt, skill, agent definition, `AGENTS.md`, or `CLAUDE.md`, load
+-   `$alaa-prompting-guide` / `/alaa-prompting-guide`. It owns model, runtime, trigger, and artifact-authoring
+-   behavior.
+-4. Before durable publication, load `$alaa-memory-os` / `/alaa-memory-os`, search before creating, and follow
+-   its note shape, curation labels, adapters, drift rules, and prohibited-content list. This skill selects and
+-   shapes candidates; it does not own storage mechanics or memory authority.
+-5. If publication is unauthorized or memory is unavailable, return the curated candidates in the handoff and
+-   state that they were not persisted. Memory unavailability does not erase a valid candidate.
++1. Return engagement-local candidates to the workflow-selected location under /alaa-workflow
++   `references/context-curation.md`. Link its canonical record rather than duplicating active state.
++2. When repository code, docs, an instruction file or an existing skill owns the knowledge, promote through
++   that owner only within task authority; otherwise return a source pointer or promotion candidate with its
++   owner. An ordinary source-owned fact is not a competing durable explanation. If a final scan discovers an
++   authorized repository promotion after evidence freeze, return `pipeline reopen required` to workflow
++   instead of changing closed evidence.
++3. Before drafting controlling content for a prompt, skill, agent, `AGENTS.md` or `CLAUDE.md`, invoke
++   /alaa-prompting-guide for authoring and compression. This lane grants no new promotion authority.
++4. Before authorized durable publication invoke /alaa-memory-os. It alone owns search-before-create, note
++   shape, adapters, write authority, drift and prohibited content. Candidate deduplication within the scan
++   remains here; do not repeat a sufficient memory search performed for admission.
++5. If publication is unauthorized, unavailable or fails to reach terminal confirmation, return admitted
++   candidates to workflow as not persisted with the reason. Keep valid candidates despite a store outage.
+ 
+ ## Output and stop conditions
+ 
+@@ -95,8 +87,8 @@ each; candidates merged or rejected with a short reason; notes created, updated,
+ and promotion or drift that still needs an owner.
+ 
+ Stop successfully when every admitted candidate has one form, one scoped authority, one source pointer, one
+-destination, no prohibited content, and no unresolved `pipeline reopen required` result, including when the
+-retained set is empty. Return `pipeline reopen required` when an authorized canonical repository change remains
++destination, no prohibited content, and a reported disposition, including when the retained set is empty. A returned reopening verdict
++is unresolved work, not completion. Return `pipeline reopen required` when an authorized canonical repository change remains
+ after evidence freeze. Stop blocked only when a required source cannot be inspected, an authorized drift record
+-cannot be written, or a mandatory owner rejects the handoff. Perform at most one search-before-create pass; do
+-not loop through repeated extraction or memory searches for reassurance.
++cannot be written, or a mandatory owner rejects the handoff. Do not loop extraction or memory searches for reassurance; /alaa-memory-os owns the bounded
++search-before-create pass.
+diff --git a/skills/sohrab/alaa-extract-agent-lessons/agents/openai.yaml b/skills/sohrab/alaa-extract-agent-lessons/agents/openai.yaml
+index e2b15bd34..2948e495a 100644
+--- a/skills/sohrab/alaa-extract-agent-lessons/agents/openai.yaml
++++ b/skills/sohrab/alaa-extract-agent-lessons/agents/openai.yaml
+@@ -1,4 +1,4 @@
+ interface:
+   display_name: "Curate Reusable Agent Context"
+   short_description: "Extract reusable judgment, knowledge, and decision interfaces"
+-  default_prompt: "Use $alaa-extract-agent-lessons at this task boundary to retain only evidence-backed context whose absence would worsen a future decision, judgment, reasoning, or discovery cost; shape it as a decision interface, judgment rubric, or durable knowledge card, keep active candidates in the workflow handoff, and publish only authorized durable knowledge."
++  default_prompt: "Use $alaa-extract-agent-lessons for the workflow-selected or requested scan scope to retain only evidence-backed context whose absence would worsen a future decision, judgment, reasoning, or discovery cost; shape it as a decision interface, judgment rubric, or durable knowledge card, keep active candidates in the workflow handoff, and publish only authorized durable knowledge."
+diff --git a/skills/sohrab/alaa-memory-os/SKILL.md b/skills/sohrab/alaa-memory-os/SKILL.md
+index 136e7a6d2..b7b721855 100644
+--- a/skills/sohrab/alaa-memory-os/SKILL.md
++++ b/skills/sohrab/alaa-memory-os/SKILL.md
+@@ -1,14 +1,14 @@
+ ---
+ name: alaa-memory-os
+-description: "Use when Alaa work must record or recall durable cross-session knowledge, whichever memory store backs it: deciding what is worth remembering and in what shape, writing architecture, service-ownership, contract, operations, lesson, work-pattern, project-index, project-state, handoff or research notes, recording drift when two sources of truth disagree, setting a recall budget with a fail-open path, and separating facts worth remembering from relationships that must be derived. One adapter is active at a time and the skill body declares which; local file vault, Basic Memory, and Hindsight each get one adapter reference. Do not use for tiny deterministic code edits, as a second task system, for active execution plans or handoff contents owned by alaa-workflow, or to remember service dependency edges, which are always derived."
++description: "Store-neutral durable knowledge and bounded capability recall for Alaa work. Use for prior decisions, shared contracts, ownership, source disagreement, durable notes or lessons, and before a local-tool miss becomes a validation blocker or an otherwise permitted environment repair has an unknown owner. Reuse sufficient fresh evidence, verify recalled leads in their canonical owner, and distinguish local absence, incompatibility, missing authority, actual failure and unknown availability. One selected adapter supplies store mechanics. Do not use for tiny deterministic edits, derived service dependency edges, or active plans, checkpoints and handoff contents owned by /alaa-workflow; /alaa-extract-agent-lessons owns candidate admission."
+ ---
+ 
+ # Alaa Memory OS
+ 
+ This skill owns what Alaa work remembers, when, in what shape, and what it derives instead of remembering.
+ The backing store sits behind one adapter reference per store, and this body names no store command: the
+-fleet routes here for the capability, not the product, so replacing the store changes one adapter file and
+-leaves every rule below intact.
++fleet routes here for the capability, not the product. Knowledge and drift rules remain store-neutral;
++selected-store policy stays owned here and applies only while that store is selected.
+ 
+ ## Active adapter
+ 
+@@ -19,20 +19,16 @@ ACTIVE_ADAPTER: hindsight
+ **This line is the selection.** Read it before the first recall or write of a task, load only
+ `references/store-<value>.md`, and use that adapter's mechanics for every store operation in the task.
+ 
+-| Value | Adapter | Store |
+-|---|---|---|
+-| `local` | `references/store-local.md` | the `agent-memory` markdown vault under git, read and written with ordinary file tools |
+-| `basic-memory` | `references/store-basic-memory.md` | the Basic Memory CLI indexing that same vault |
+-| `hindsight` | `references/store-hindsight.md` | Hindsight |
+-
+ Exactly one adapter is active. Two adapters used in one task write the same knowledge through two
+ mechanisms with different assumptions about indexing, commit, and concurrency, and the disagreement surfaces
+ later as a note that exists twice or not at all.
+ 
+-**To switch stores, change the value on that line and nothing else.** No rule in this skill, and no rule in
+-`references/knowledge-shape.md` or `references/drift-management.md`, is store-specific â€” that separation is
+-the reason a switch is one line. A switch that seems to require editing a policy file means the policy has
+-leaked a store assumption; fix the leak rather than forking the policy.
++**The selector is the only adapter selection.** For a supported store switch, change its value without
++rewriting the store-neutral knowledge and drift rules in this body, `references/knowledge-shape.md` or
++`references/drift-management.md`. Conditional selected-store policy, including Hindsight bank and admission
++policy, remains owned by this body and applies only to its selected store; product commands stay in that
++adapter. A store assumption in a neutral knowledge or drift rule is a policy leak to repair, not a reason
++to fork those rules.
+ 
+ Handle these failure modes separately; never switch adapters to work around either:
+ 
+@@ -56,6 +52,7 @@ that names nothing shared returns nothing and still spends the budget below.
+ - It will outlive one context window: it has phases, it is a migration, or it reviews a system.
+ - Two sources of truth disagree, or you are about to establish whether they do.
+ - It asks whether existing infrastructure, another repository, or a prior decision already provides a capability, or who owns it.
++- A local-tool miss is about to become a required validation blocker, or an otherwise permitted additional environment repair has an unresolved owner. Reuse sufficient fresh capability evidence instead of repeating recall for each failed command.
+ - You are about to write a note, or publish curated lessons from the evidence warehouse.
+ 
+ ## When NOT to use
+@@ -93,54 +90,90 @@ rather than refreshing it. Every pass over a store that grows with history needs
+ before it ships; `/alaa-algorithms-data-structures` owns that budget, and
+ each shipped checker states its own.
+ 
+-## Recall fails open on a budget; drift recording fails closed
++## Recall policy and capability inquiry
+ 
+-Recall is a contributor: proceeding without it lets nothing through that must not get through. Budget five
+-seconds; when that is exceeded or the store is unreachable, continue from repository truth alone and report
+-that memory was unavailable and which step ran without it. The deep recall that the active adapter assigns to
+-existence and ownership questions synthesizes over raw memories and gets sixty seconds instead; past that it
+-fails open the same way, and the answer is recorded as no memory evidence, never as absence. Never implement from memory alone: separate
+-memory facts, repository facts, assumptions, and open questions before acting.
++Recall is a contributor, not a gate or authorization source. Ordinary recall has five seconds. Existence
++and ownership inquiry has sixty seconds, including at most one focused follow-up on a returned owner lead.
++Start one deadline before the initial inquiry; paraphrasing or following a lead never restarts it. Reuse
++sufficient fresh evidence for the same capability, environment and constraints before any new lookup.
+ 
+-Drift recording is a gate. If the drift record cannot be written, stop and report; do not continue past an
+-unrecorded disagreement. `/alaa-reliability-sla` owns why a mechanism fails open
+-or closed; this skill states only which of the two each operation is.
++For existence or ownership, query the capability rather than only a proposed artifact name through the
++selected adapter. Page search/listing can miss knowledge without a page; an empty or irrelevant page result
++never proves absence. Supply the required capability, target repository/check, execution environment,
++constraints, sanitized failure class and evidence already attempted. Exclude raw logs, credentials,
++private session text and unrelated user data.
+ 
+-## Drift
++A timeout, unreachable store, denied access, empty, irrelevant or stale answer is no memory evidence.
++Continue authorized canonical-source inspection and unaffected work; disclose which step ran without memory.
++A late response is not retroactive within-budget proof. Separate recalled claims, repository facts,
++assumptions and open questions before acting; never implement from memory alone.
+ 
+-When two sources of truth disagree, never silently pick a side. Record the disagreement, keep working on the
+-safest verified behaviour, and let the human decide. The drift registry lives in repository files under version
+-control, never in the memory store; `references/drift-management.md` owns the record shape, the lifecycle, the
+-separation of powers, and the reason the registry is outside the store.
++Verify useful leads in the current owning repository: tool contents, version/pin source, supported invocation,
++environment fit and limitations. Only then perform a proportionate probe within existing authorization.
++Distinguish finding an image/registry entry, verifying its contents, starting a compatible runtime and
++completing the exact required gate. Each stage needs its own observed evidence; earlier stages prove no later
++stage. Keep capability, environment, constraints, owner/source and attempted evidence in the workflow-owned
++record when admitted, never as a second task state in memory.
+ 
+-Severity, and whether an observability record is required at all, belong to `/alaa-observability-soc`; field, event, and metric names belong to `/alaa-services-contract`. This skill sets neither, so a drift note about a log contract routes its
+-severity question to SOC rather than answering it.
++| Classification | Evidence and response |
++|---|---|
++| Local capability absent | A local executable/image is missing. Inspect a verified owner/runtime lead; do not infer infrastructure-wide absence. |
++| Compatible infrastructure unavailable | Current owner evidence or an authorized probe establishes incompatibility for this environment. Report that scope and required change. |
++| Authorization blocker | The supported next effect exceeds current permission. Preserve the concrete action/evidence and obtain only the missing authority. |
++| Tool or runtime error | An attempted operation returned a grounded failure. Return it to its recovery owner with the remaining retry budget. |
++| Availability unknown | Recall, source inspection or probe is stale, empty, unavailable, denied or unrun. Preserve uncertainty and continue independent safe work. |
++
++A no-host-install constraint alone does not forbid every container path; a container lead alone authorizes
++no pull or run. Recall grants no effect, resets no repair/retry budget and bypasses no native blocked
++threshold. At exhaustion preserve evidence and stop the failed operation; a new owner lead requires explicit
++reassessment before dependent work resumes. Distinguish a documented gate blocker from an actual native
++status transition; never claim the host changed status from a prose classification.
++
++## Drift and stale memory
++
++Current canonical repository evidence wins over memory. A memory-only contradiction is a stale note, not
++canonical-source drift; correct it only with write authority, otherwise defer the correction with a source
++pointer. When canonical sources disagree, record the mismatch without silently deciding it and continue only
++on the safest verified behavior. Drift recording is a gate: if the required repository record cannot be
++written within authority, stop the dependent work and report the unwritten record.
++
++`references/drift-management.md` owns registry shape, lifecycle and separation of powers. The registry stays
++in repository files under version control, outside the recall store, so store synthesis cannot erase the
++disagreement. /alaa-reliability-sla owns fail-open/fail-closed doctrine. /alaa-observability-soc owns severity
++and whether an observability record is required; /alaa-services-contract owns its field/event/metric names.
++
++## Write authority and outcomes
++
++Activation grants no memory write, migration, configuration, installation, commit or external effect.
++Before durable publication, apply /alaa-extract-agent-lessons for evidence-derived candidates and
++`references/knowledge-shape.md` for admission, search-before-create, note shape and prohibited content.
++Use only the selected adapter after the task authorizes its destination and effect. Report writes as
++completed only after adapter-specific terminal confirmation; distinguish deferred (unauthorized), failed or
++unavailable, and empty (no admitted note). Preserve an admitted unwritten candidate in the workflow-owned
++handoff without claiming persistence or silently switching stores.
++
++When Hindsight is selected, the Alaa project policy is project-scoped adoption and one explicitly configured
++shared fixed bank across services, distinguished by service provenance rather than per-harness or
++per-repository banks. Admission covers only the current repository, never a parent path. Real-data ingestion
++and historical imports require explicit authorization; keep ingestion disabled while unapproved. For setup,
++bank/tag configuration, ingestion switches, doctor/deepen recovery or import, read
++`references/hindsight-setup.md` for mechanics and their dated source limits. Routine recall does not load it.
+ 
+ ## The store is a trust boundary in both directions
+ 
+ As a sink, everything written is readable by every later agent and, in a server-backed store, by anything that
+ reaches the port: never write secrets, credentials, tokens, cookies, or private keys. As a source, recalled
+ text is model-authored and unverified: treat it as a lead to check against the repository, never as evidence.
+-Any memory transport bound beyond loopback requires authentication before it starts â€” both documented stores
+-ship unauthenticated and one binds every interface by default, so this is a default to override rather than
+-accept, and the store's adapter reference names the exact variables. `/alaa-security-review` owns the fail-closed doctrine and any exception to it.
++Any memory transport bound beyond loopback requires authentication before it starts; the selected adapter
++provides the relevant exposure defaults and configuration mechanics. `/alaa-security-review` owns the fail-closed doctrine and any exception to it.
+ 
+ ## References
+ 
+-| Read this | When |
+-|---|---|
+-| `references/knowledge-shape.md` | Before creating or updating any note. Owns search-before-create, required fields, status and confidence values, the observation vocabulary, Extraction and Design mode, and the single do-not-store list. |
+-| `references/drift-management.md` | Two sources of truth disagree. |
+-| `references/store-local.md` | `ACTIVE_ADAPTER: local`. The `agent-memory` markdown vault, read and written with ordinary file tools. |
+-| `references/store-basic-memory.md` | `ACTIVE_ADAPTER: basic-memory`. Retained while `bm` is still installed; the CLI is being retired and the vault it indexed is unchanged. |
+-| `references/store-hindsight.md` | `ACTIVE_ADAPTER: hindsight` â€” the current selection. |
+-| `references/checkers-and-hooks.md` | Running a checker, reading its exit code, or installing a hook. |
+-| `references/skill-boundaries.md` | Unsure whether this skill or another owns a decision. |
+-| `references/prompt-3-publishing.md` | Publishing curated lessons from the evidence warehouse. |
++Before selecting a conditional reference, read `references/00-topic-map.md`; it is the sole router.
+ 
+ ## Completion checks
+ 
+-Update memory only when durable knowledge changed, then confirm each of these before reporting:
++Write only authorized durable changes, then confirm each applicable item before reporting:
+ 
+ - The adapter named by `ACTIVE_ADAPTER` was the only one used, and a missing adapter file stopped the task
+   rather than falling back to another store.
+@@ -149,7 +182,7 @@ Update memory only when durable knowledge changed, then confirm each of these be
+ - No raw transcript, log, source file, whole document, or secret reached the store.
+ - No `/alaa-workflow` execution state was duplicated.
+ - No service-to-service dependency edge was remembered.
+-- Every disagreement found became a drift record, not a silent resolution.
++- Canonical-source disagreements became repository drift records; stale memory alone was corrected with authority or deferred.
+ - Every checker run reported its exit code, and a `2` was read as "could not run", never as a pass.
+ - The report names notes changed, source paths, validation result, drift recorded, memory availability, and
+   unresolved questions.
+diff --git a/skills/sohrab/alaa-memory-os/agents/openai.yaml b/skills/sohrab/alaa-memory-os/agents/openai.yaml
+index e9cdb0904..26d37f7e7 100644
+--- a/skills/sohrab/alaa-memory-os/agents/openai.yaml
++++ b/skills/sohrab/alaa-memory-os/agents/openai.yaml
+@@ -1,7 +1,7 @@
+ interface:
+   display_name: Alaa Memory OS
+-  short_description: "Durable cross-session memory and drift"
+-  default_prompt: "Use $alaa-memory-os to decide what durable knowledge to remember, in what shape, what to derive instead, and how to record drift when two sources of truth disagree."
++  short_description: "Durable knowledge and bounded capability recall"
++  default_prompt: "Use $alaa-memory-os to reuse fresh capability evidence or query its owner before local absence becomes a validation blocker, verify leads in current sources, and retain only authorized durable knowledge through the selected adapter."
+   brand_color: "#4B6B8A"
+ policy:
+   allow_implicit_invocation: true
+diff --git a/skills/sohrab/alaa-memory-os/references/checkers-and-hooks.md b/skills/sohrab/alaa-memory-os/references/checkers-and-hooks.md
+index 2a370cc7c..b6e63fa03 100644
+--- a/skills/sohrab/alaa-memory-os/references/checkers-and-hooks.md
++++ b/skills/sohrab/alaa-memory-os/references/checkers-and-hooks.md
+@@ -33,7 +33,7 @@ report text. Report text is prose and drifts; the exit code is the contract.
+ `test/run-tests.ps1` runs every self-test. A target that exits `2` is recorded **BLOCKED, not FAIL**, and the
+ harness then exits `2` â€” because "the checker could not run" and "the checker found a problem" call for
+ different human actions, and collapsing them loses the distinction the contract just created.
+-`/alaa-testing-strategy` (`$alaa-testing-strategy`) owns test design beyond this rule.
++`/alaa-testing-strategy` owns test design beyond this rule.
+ 
+ ## Checker inventory
+ 
+@@ -54,7 +54,10 @@ exits `1`.** Previously every path used `throw`, so both exited `1` and a CI gat
+ installed" from "validation failed".
+ 
+ They share `scripts/_common.ps1`, which owns vault-root resolution, boundary validation on that path, store
+-invocation that returns only an exit code, and the exit mapping. Store invocation is the reason the module
++invocation that returns only an exit code, and the exit mapping. Root selection chooses one explicit
++`-VaultPath`, else `ALAA_MEMORY_VAULT`, else a caller-supplied documented default; an invalid selected
++path returns unavailable without trying another root. No machine-specific default is supplied. Store
++invocation emits no raw argv echo; third-party output is not thereby proven sanitized. Store invocation is the reason the module
+ exists: a PowerShell function returns its whole output stream, so a helper that runs a command and then
+ `return $code` hands the caller an array of output lines with the code appended. Comparing that array against
+ zero is a filter, not a comparison, and it is truthy whenever the command printed anything â€” which made the
+@@ -65,7 +68,7 @@ earlier health check report failure on every clean run.
+ `scripts/precompact_checkpoint.ps1` and `scripts/session_start_context.ps1` are Claude Code hooks. The hook
+ protocol assigns its own meanings, and they contradict the checker contract:
+ 
+-- `0` â€” success. Stdout is parsed for the hook's JSON output; JSON is only processed on exit 0.
++- `0` â€” success. Output handling is event-specific; JSON must not be assumed to reach the agent.
+ - `2` â€” **blocking error**. Stdout and JSON are ignored and stderr is fed back to the agent as an error.
+ - anything else, including `1` â€” non-blocking error. Execution continues and stderr surfaces as a hook error
+   notice to the user.
+@@ -74,9 +77,20 @@ So a hook must exit `0` on success, and must never exit `2` unless it intends to
+ always exit `0`, including from their error handler. Do not "fix" them to `0/1/2`. Confirm the semantics at
+ `https://code.claude.com/docs/en/hooks` before changing either script.
+ 
+-For `SessionStart` specifically: stdout is added to the session context â€” it is one of the few events where
+-that happens rather than going to the debug log â€” and the event cannot block. Keep the hook fast, because it
+-runs on every session.
++Current official hook semantics were checked at https://code.claude.com/docs/en/hooks on 2026-10-12
++America/Los_Angeles (UTC date 2026-10-13). This is an access date, not a publication date. `SessionStart` stdout is added to session context and the event cannot block.
++`PreCompact` discards `systemMessage` and `continue`; compatibility JSON emission does not prove the model
++receives a reminder. Refresh those event-specific semantics before changing or registering hooks.
++
++`precompact_checkpoint.ps1` is a nonwriting compatibility entrypoint, preserving its `VaultPath` argument
++and exit 0 behavior. It reads no transcript, writes no vault/checkpoint and invokes no adapter. Its emitted
++owner pointer creates no continuity proof; /alaa-workflow must record continuity proactively through its own
++admitted artifacts. The old transcript-tail opt-in has no effect.
++
++`session_start_context.ps1` reads repository drift counts and emits conditional owner pointers. It does not
++copy recall budgets, drift decisions, note policy or active workflow state. A missing/unreadable drift path
++is unknown, not a zero-drift result. If the task touches counted contracts, inspect their records through
++`references/drift-management.md` before planning. Keep this hook fast; it runs every session.
+ 
+ ## Registering the hooks
+ 
+@@ -84,7 +98,7 @@ These two scripts previously shipped with no registration path at all, so nobody
+ skill. The snippets below are the missing half.
+ 
+ Editing a settings file is a shared-configuration change. Do not apply it on the user's behalf:
+-`/alaa-controlled-ops` (`$alaa-controlled-ops`) owns that action, and the user applies it themselves.
++`/alaa-controlled-ops` owns that action, and the user applies it themselves.
+ 
+ ```json
+ {
+@@ -120,7 +134,7 @@ documentation above before applying, because this schema is upstream and moves.
+   the YAML parse on the reader that later loads the note.
+ - Normalise path separators before comparing. Exclusion globs written with backslashes match nothing on a
+   non-Windows host, which silently widens the checked set instead of failing.
+-- Never build a filename from a timestamp alone. Two hook firings inside the same second produce the same name
+-  and one silently overwrites the other; the shipped hook appends a short random suffix.
++- For an authorized capture outside these nonwriting hooks, use a unique filename; timestamps alone can
++  collide within a second and overwrite evidence.
+ - Do not create a temporary directory inside the repository, and do not locate files by walking a fixed number
+   of parent directories from the script.
+diff --git a/skills/sohrab/alaa-memory-os/references/drift-management.md b/skills/sohrab/alaa-memory-os/references/drift-management.md
+index c852ab21c..5d55d65f5 100644
+--- a/skills/sohrab/alaa-memory-os/references/drift-management.md
++++ b/skills/sohrab/alaa-memory-os/references/drift-management.md
+@@ -1,7 +1,6 @@
+ # Drift Management
+ 
+-Drift is a recorded mismatch between two sources of truth: a document against code, memory against the
+-repository, one service against another, a shared architecture document against actual behaviour.
++Drift is a recorded mismatch between two sources of truth: a document against code, one service against another, a shared architecture document against actual behaviour.
+ 
+ ## What the rule produces
+ 
+@@ -42,9 +41,8 @@ owns the tag encoding, because only that file knows what is filterable.
+ 
+ - One record per mismatch, with a stable identifier used by every reference to it.
+ - Lifecycle: `drift_status: open` to `analyzed` to `decided` to `fixing` to `resolved`.
+-- Severity is not set here. `/alaa-observability-soc` (`$alaa-observability-soc`) owns whether an
+-  observability record is required and at what level, and `/alaa-services-contract`
+-  (`$alaa-services-contract`) owns the field, event, and metric names a drift record cites. Ask SOC for the
++- Severity is not set here. `/alaa-observability-soc` owns whether an
++  observability record is required and at what level, and `/alaa-services-contract` owns the field, event, and metric names a drift record cites. Ask SOC for the
+   level rather than assigning one, and state the answer's origin in the record.
+ - Each affected note in the store gets exactly one `[drift]` observation pointing at the record identifier,
+   and its `status` becomes `needs_review`.
+@@ -67,8 +65,8 @@ code path actually runs, record the mismatch, and continue on the code's behavio
+ during recording â€” that is the fix step, and it needs the decision first.
+ 
+ **Memory contradicts the repository.** The repository wins on fact, always. This is not a drift record by
+-itself; it is a stale note. Update the note, refresh `last_verified`, and record drift only if the
+-repository itself is internally inconsistent. Recording every stale note as drift buries the real ones.
++itself; it is a stale note. Correct the note and refresh `last_verified` only with write authority; otherwise defer a correction
++with its current source pointer. Record drift only if the repository itself is internally inconsistent. Recording every stale note as drift buries the real ones.
+ 
+ **Two services contradict each other.** Neither is authoritative. Establish what each actually does from its
+ own repository, not from a shared document, and record one drift with a record in both repositories. This is
+diff --git a/skills/sohrab/alaa-memory-os/references/knowledge-shape.md b/skills/sohrab/alaa-memory-os/references/knowledge-shape.md
+index a20658830..cf16f4661 100644
+--- a/skills/sohrab/alaa-memory-os/references/knowledge-shape.md
++++ b/skills/sohrab/alaa-memory-os/references/knowledge-shape.md
+@@ -80,7 +80,7 @@ claiming language compliance.
+ - Operations rules, with their requirement level routed rather than restated.
+ - Durable lessons and repeated work patterns.
+ - Project indexes and current-state summaries.
+-- Concise pointers to plan, state, and handoff files owned by `/alaa-workflow` (`$alaa-workflow`).
++- Concise pointers to plan, state, and handoff files owned by `/alaa-workflow`.
+ 
+ ## Never store this
+ 
+@@ -91,31 +91,24 @@ about their own membership, so an agent reading the shortest never learned that
+ - Raw logs.
+ - Whole source files.
+ - Whole documents.
+-- Whole Postman collections; `/alaa-postman-collections` (`$alaa-postman-collections`) owns those artifacts.
++- Whole Postman collections; `/alaa-postman-collections` owns those artifacts.
+ - Secrets, credentials, tokens, cookies, and private keys.
+ - Personal sticky notes and private prompt drafts.
+ - Draft skill contents, skill candidates as separate notes, and installed skills.
+-- Active `/alaa-workflow` (`$alaa-workflow`) phase checklists and validation logs.
++- Active `/alaa-workflow` phase checklists and validation logs.
+ - Whole work files from the evidence warehouse.
+ - Service-to-service dependency edges. These are derived; `alaa-signoz-clickhouse-docs`
+   `references/50-service-topology.md` owns the derivation. A remembered edge is wrong silently, because
+   nothing fails when the call graph changes underneath it.
+ 
+ Nothing on this list becomes storable by being summarised inline on the way in. A transcript, log, or
+-document reaches the store only as a candidate that `/alaa-extract-agent-lessons`
+-(`$alaa-extract-agent-lessons`) already admitted and shaped. Bulk processing of past conversations is
++document reaches the store only as a candidate that `/alaa-extract-agent-lessons` already admitted and shaped. Bulk processing of past conversations is
+ that same path at volume, not an exception to it.
+ 
+-## Mechanics belong to the vendored pack
++## Adapter serialization
+ 
+-The syntax of frontmatter, observations, and wiki-link relations is documented upstream and is not restated
+-here. Route to the vendored pack by path:
+-
+-- `vendor/basic-memory/memory-notes/SKILL.md` â€” note structure, observation categories, relation syntax.
+-- `vendor/basic-memory/memory-schema/SKILL.md` â€” schema definitions, validation, schema-versus-usage drift.
+-- `vendor/basic-memory/memory-metadata-search/SKILL.md` â€” querying by custom frontmatter fields.
+-
+-`references/skill-boundaries.md` lists every skill in that pack and which of them are gated.
++The selected adapter owns serialization and product-specific note/schema/search mechanics. These fields
++and observations remain the store-neutral contract; do not load an inactive store's upstream pack.
+ 
+ ## Human editing surface
+ 
+diff --git a/skills/sohrab/alaa-memory-os/references/prompt-3-publishing.md b/skills/sohrab/alaa-memory-os/references/prompt-3-publishing.md
+index 6fed4b1ef..be83537b9 100644
+--- a/skills/sohrab/alaa-memory-os/references/prompt-3-publishing.md
++++ b/skills/sohrab/alaa-memory-os/references/prompt-3-publishing.md
+@@ -10,11 +10,11 @@ skill does not locate. The rules below hold whatever invokes them.
+ ## Every path here is unconfirmed, and must be checked before use
+ 
+ The warehouse is on a volume this skill cannot reach from a normal session, so none of the paths below was
+-verified when this file was written. **Treat each as a candidate, not a fact.** Run the check first:
++verified when this file was written. **Treat each as a candidate, not a fact.** Resolve `$warehouseRoot` from the task or user, then run the check first:
+ 
+ ```powershell
+ # Exit 0 and a listing means the path is real. Anything else means stop.
+-Get-ChildItem -LiteralPath 'D:\Sohrab\Project\raw\processed\_global' -ErrorAction Stop
++Get-ChildItem -LiteralPath (Join-Path $warehouseRoot '_global') -ErrorAction Stop
+ ```
+ 
+ If that fails, do not proceed on the assumption that the layout matches. Ask the user for the current
+@@ -63,8 +63,7 @@ recording what should happen to it next:
+ ## A lesson is advisory until it is promoted
+ 
+ A published lesson carries no authority on its own. It becomes binding only when it is written into the
+-repository's own authority files, its documentation, or a skill â€” and `/alaa-project-constitution`
+-(`$alaa-project-constitution`) owns which files those are.
++repository's own authority files, its documentation, or a skill â€” and `/alaa-project-constitution` owns which files those are.
+ 
+ This is the rule that keeps the warehouse from becoming a second constitution. An agent that treats
+ `[advisory_lesson]` as a requirement is enforcing something no human approved; an agent that ignores
+diff --git a/skills/sohrab/alaa-memory-os/references/skill-boundaries.md b/skills/sohrab/alaa-memory-os/references/skill-boundaries.md
+index 455071462..a14ab08a7 100644
+--- a/skills/sohrab/alaa-memory-os/references/skill-boundaries.md
++++ b/skills/sohrab/alaa-memory-os/references/skill-boundaries.md
+@@ -7,8 +7,7 @@ tell which ones need re-checking.
+ ## What this skill owns
+ 
+ Cross-engagement durability: what is worth remembering, in what shape, with what confidence, what is derived
+-instead of remembered, and the drift protocol. Nothing else in the fleet owns this. `/alaa-workflow`
+-(`$alaa-workflow`) owns continuity *within* one engagement â€” the plan, the checkpoint, and the handoff
++instead of remembered, and the drift protocol. Nothing else in the fleet owns this. `/alaa-workflow` owns continuity *within* one engagement â€” the plan, the checkpoint, and the handoff
+ package â€” and all three are scoped to that engagement. Knowledge that must survive after the engagement ends
+ is this skill's.
+ 
+@@ -16,19 +15,19 @@ is this skill's.
+ 
+ | Question | Owner |
+ |---|---|
+-| Which evidence becomes a durable candidate, and in what reusable shape | `/alaa-extract-agent-lessons` (`$alaa-extract-agent-lessons`) |
+-| Active plans, phase state, continuity across compaction, and what a handoff package contains | `/alaa-workflow` (`$alaa-workflow`) |
+-| What enters the context window at all, and what gets printed | `/alaa-low-noise` (`$alaa-low-noise`) |
+-| Whether an observability record is required, and at what level | `/alaa-observability-soc` (`$alaa-observability-soc`) |
+-| What a log field, event, code, or metric is called | `/alaa-services-contract` (`$alaa-services-contract`) |
+-| Why a mechanism fails open or closed, and how to shape it | `/alaa-reliability-sla` (`$alaa-reliability-sla`) |
+-| Fail-closed doctrine for a security decision, and exceptions to it | `/alaa-security-review` (`$alaa-security-review`) |
+-| Complexity budgets and structure choice for a growing pass | `/alaa-algorithms-data-structures` (`$alaa-algorithms-data-structures`) |
+-| Test design beyond "every assertion needs a red fixture" | `/alaa-testing-strategy` (`$alaa-testing-strategy`) |
+-| Subsystem design | `/alaa-system-design` (`$alaa-system-design`) |
+-| Which repository files carry authority | `/alaa-project-constitution` (`$alaa-project-constitution`) |
+-| Editing shared or global configuration, including a settings file | `/alaa-controlled-ops` (`$alaa-controlled-ops`) |
+-| Model and effort choice | `/alaa-prompting-guide` (`$alaa-prompting-guide`) |
++| Which evidence becomes a durable candidate, and in what reusable shape | `/alaa-extract-agent-lessons` |
++| Active plans, phase state, continuity across compaction, and what a handoff package contains | `/alaa-workflow` |
++| What enters the context window at all, and what gets printed | `/alaa-low-noise` |
++| Whether an observability record is required, and at what level | `/alaa-observability-soc` |
++| What a log field, event, code, or metric is called | `/alaa-services-contract` |
++| Why a mechanism fails open or closed, and how to shape it | `/alaa-reliability-sla` |
++| Fail-closed doctrine for a security decision, and exceptions to it | `/alaa-security-review` |
++| Complexity budgets and structure choice for a growing pass | `/alaa-algorithms-data-structures` |
++| Test design beyond "every assertion needs a red fixture" | `/alaa-testing-strategy` |
++| Subsystem design | `/alaa-system-design` |
++| Which repository files carry authority | `/alaa-project-constitution` |
++| Editing shared or global configuration, including a settings file | `/alaa-controlled-ops` |
++| Model and effort choice | `/alaa-prompting-guide` |
+ | Deriving the service call graph from telemetry | `alaa-signoz-clickhouse-docs` `references/50-service-topology.md` |
+ 
+ ## Three corrections to the previous version
+@@ -42,64 +41,24 @@ context-economy decision, and the recall budget in `SKILL.md` exists partly for
+ latency.
+ 
+ **"Concise handoff pointers" was a trespass, and the counterpart says so in its own words.** The retired
+-`compact-and-handoff.md` conceded that `/alaa-workflow` (`$alaa-workflow`) is authoritative for active
++`compact-and-handoff.md` conceded that `/alaa-workflow` is authoritative for active
+ execution and then defined a six-field handoff package anyway. `alaa-workflow`
+ `references/artifact-lifecycle.md` says of exactly that material: "Do not restate them here." That prohibition
+ is addressed to a sibling file inside `alaa-workflow`; it binds harder across a skill boundary. The two
+ six-field lists did not even agree, and `alaa-workflow`'s decomposition is the better one.
+ 
+ What survives is one sentence: **the memory store holds a pointer to the plan and its handoff package, and
+-`/alaa-workflow` (`$alaa-workflow`) owns what the handoff contains.** That file is retired; this sentence
++`/alaa-workflow` owns what the handoff contains.** That file is retired; this sentence
+ replaces all of it.
+ 
+-**The curation owner was missing from the table entirely.** `/alaa-extract-agent-lessons`
+-(`$alaa-extract-agent-lessons`) routes into this skill for publication and says so in its own step 4, but
++**The curation owner was missing from the table entirely.** `/alaa-extract-agent-lessons` routes into this skill for publication and says so in its own step 4, but
+ nothing here pointed back, so a task could reach publication having never run admission. That is the
+ shape of omission this file warns about: the rule was already enforced negatively by the do-not-store
+ list, and the missing half was who produces the storable form.
+ 
+-## The vendored Basic Memory pack
++## Selected product mechanics
+ 
+-The pack is an upstream git subtree. It is never edited. This skill wraps it: it owns the opinion about when a
+-vendored skill applies, and routes into the vendored skill for the mechanics upstream documents well.
+-
+-**Recommended for normal work** â€” verified by reading each skill's own frontmatter:
+-
+-| Path | What it owns |
+-|---|---|
+-| `vendor/basic-memory/memory-notes/SKILL.md` | Frontmatter, observations with semantic categories, relations with wiki-links. |
+-| `vendor/basic-memory/memory-schema/SKILL.md` | Schema definitions, note validation, and schema-versus-usage drift. |
+-| `vendor/basic-memory/memory-metadata-search/SKILL.md` | Querying notes by custom frontmatter fields. |
+-| `vendor/basic-memory/memory-capture/SKILL.md` | Capturing a thread into one note, rewritten in place rather than duplicated. |
+-| `vendor/basic-memory/memory-continue/SKILL.md` | Rebuilding context from the graph when resuming. |
+-
+-**Gated: use only when explicitly asked.** `memory-ingest`, `memory-reflect`, `memory-defrag`,
+-`memory-curate`, `memory-lifecycle`, `memory-research`, `memory-tasks`, `memory-ci-capture`, and
+-`memory-literary-analysis`, each at `vendor/basic-memory/NAME/SKILL.md`. These rewrite, consolidate, or expire
+-existing knowledge, which is exactly the class of operation that must not run unasked against an audit trail.
+-`memory-literary-analysis` was missing from the retired list entirely.
+-
+-Two local opinions the upstream pack does not have, and they are the reason the wrap exists:
+-
+-- `memory-tasks` is not an execution-state owner in Alaa coding work, and must not duplicate active
+-  `/alaa-workflow` (`$alaa-workflow`) state.
+-- The drift detection in `memory-schema` is schema-versus-usage drift, which is metadata maintenance. It is
+-  not contract drift and does not open a drift record. See `references/drift-management.md`.
+-
+-**Verify the pack inventory rather than trusting this table**, because a subtree pull changes it:
+-
+-```bash
+-find vendor/basic-memory -name SKILL.md | sort
+-```
+-
+-That command also exposes a live hazard: the subtree contains a **nested duplicate** directory holding a
+-subset of the same skills, so some names resolve at two depths. Route to the top-level path only. Installer
+-paths are owned by `install-skills.md`, not by this file â€” and that file has pointed at the nested duplicate,
+-which is why an environment can end up with the subset installed and the rest missing. Check what is actually
+-installed before assuming a gated skill is unavailable.
+-
+-## The successor store's pack
+-
+-Whatever documentation pack backs the successor store is bound by the same rule: vendored, never edited,
+-wrapped rather than restated. `references/store-hindsight.md` names the pack for the currently documented
+-successor and routes into it.
++Read only the adapter named by `ACTIVE_ADAPTER` for product packs, note/schema syntax and search commands.
++Basic Memory's historical pack inventory is reachable only from `references/store-basic-memory.md`;
++Hindsight's upstream routing is reachable only from `references/store-hindsight.md`. An inactive adapter is
++an archive, not an additional recall or write surface.
+diff --git a/skills/sohrab/alaa-memory-os/references/store-basic-memory.md b/skills/sohrab/alaa-memory-os/references/store-basic-memory.md
+index dd2029bf3..baf51cbd3 100644
+--- a/skills/sohrab/alaa-memory-os/references/store-basic-memory.md
++++ b/skills/sohrab/alaa-memory-os/references/store-basic-memory.md
+@@ -102,7 +102,7 @@ curl -s https://raw.githubusercontent.com/basicmachines-co/basic-memory/main/src
+ ```
+ 
+ Bind beyond loopback only behind something that authenticates, and treat that as an exception requiring
+-`/alaa-security-review` (`$alaa-security-review`). The default transport is `stdio`, which has no listening
++`/alaa-security-review`. The default transport is `stdio`, which has no listening
+ socket and is the right choice unless a remote client genuinely needs HTTP.
+ 
+ For a Codex CLI client over stdio:
+@@ -115,13 +115,13 @@ codex mcp add basic-memory bash -c "uvx basic-memory mcp --project alaa-memory"
+ 
+ The store is files on a disk, so two agents writing the same note is last-writer-wins with no warning and no
+ merge. There is no locking to rely on. The practical rules: one agent owns a note during a task; an agent that
+-must update a note it did not read this session re-reads it immediately before writing; and a note written by
+-a hook goes to a capture directory with a unique filename rather than to an existing note.
++must update a note it did not read this session re-reads it immediately before writing; and a new authorized capture uses a unique filename rather than overwrite an existing note. The shipped
++hooks create no vault notes; `references/checkers-and-hooks.md` owns their compatibility contract.
+ 
+ ## Vendored pack
+ 
+ The pack is an upstream subtree under `vendor/basic-memory` and is never edited. Route into it for mechanics:
+-`references/skill-boundaries.md` lists all of its skills, their paths, and which are gated.
++The selected-adapter inventory below lists its skills, paths and gates.
+ 
+ ## Windows is the target platform
+ 
+@@ -130,3 +130,55 @@ defects here: `Set-Content -Encoding UTF8` writes a byte-order mark on Windows P
+ PowerShell 7, and a mark immediately before a YAML frontmatter delimiter can break the parse â€” the shipped
+ scripts write frontmatter through a mark-less UTF-8 encoder instead. Path exclusion globs written with
+ backslashes match nothing on a non-Windows host, so the checkers normalise separators before comparing.
++
++## Mechanics belong to the vendored pack
++
++The syntax of frontmatter, observations, and wiki-link relations is documented upstream and is not restated
++here. Route to the vendored pack by path:
++
++- `vendor/basic-memory/memory-notes/SKILL.md` â€” note structure, observation categories, relation syntax.
++- `vendor/basic-memory/memory-schema/SKILL.md` â€” schema definitions, validation, schema-versus-usage drift.
++- `vendor/basic-memory/memory-metadata-search/SKILL.md` â€” querying by custom frontmatter fields.
++
++The selected-adapter inventory below names every product skill and its gates.
++
++
++## The vendored Basic Memory pack
++
++The pack is an upstream git subtree. It is never edited. This skill wraps it: it owns the opinion about when a
++vendored skill applies, and routes into the vendored skill for the mechanics upstream documents well.
++
++**Recommended for normal work** â€” verified by reading each skill's own frontmatter:
++
++| Path | What it owns |
++|---|---|
++| `vendor/basic-memory/memory-notes/SKILL.md` | Frontmatter, observations with semantic categories, relations with wiki-links. |
++| `vendor/basic-memory/memory-schema/SKILL.md` | Schema definitions, note validation, and schema-versus-usage drift. |
++| `vendor/basic-memory/memory-metadata-search/SKILL.md` | Querying notes by custom frontmatter fields. |
++| `vendor/basic-memory/memory-capture/SKILL.md` | Capturing a thread into one note, rewritten in place rather than duplicated. |
++| `vendor/basic-memory/memory-continue/SKILL.md` | Rebuilding context from the graph when resuming. |
++
++**Gated: use only when explicitly asked.** `memory-ingest`, `memory-reflect`, `memory-defrag`,
++`memory-curate`, `memory-lifecycle`, `memory-research`, `memory-tasks`, `memory-ci-capture`, and
++`memory-literary-analysis`, each at `vendor/basic-memory/NAME/SKILL.md`. These rewrite, consolidate, or expire
++existing knowledge, which is exactly the class of operation that must not run unasked against an audit trail.
++`memory-literary-analysis` was missing from the retired list entirely.
++
++Two local opinions the upstream pack does not have, and they are the reason the wrap exists:
++
++- `memory-tasks` is not an execution-state owner in Alaa coding work, and must not duplicate active
++  `/alaa-workflow` state.
++- The drift detection in `memory-schema` is schema-versus-usage drift, which is metadata maintenance. It is
++  not contract drift and does not open a drift record. See `references/drift-management.md`.
++
++**Verify the pack inventory rather than trusting this table**, because a subtree pull changes it:
++
++```bash
++find vendor/basic-memory -name SKILL.md | sort
++```
++
++That command also exposes a live hazard: the subtree contains a **nested duplicate** directory holding a
++subset of the same skills, so some names resolve at two depths. Route to the top-level path only. Installer
++paths are owned by `install-skills.md`, not by this file â€” and that file has pointed at the nested duplicate,
++which is why an environment can end up with the subset installed and the rest missing. Check what is actually
++installed before assuming a gated skill is unavailable.
+diff --git a/skills/sohrab/alaa-memory-os/references/store-hindsight.md b/skills/sohrab/alaa-memory-os/references/store-hindsight.md
+index fb60585e9..c0218ea83 100644
+--- a/skills/sohrab/alaa-memory-os/references/store-hindsight.md
++++ b/skills/sohrab/alaa-memory-os/references/store-hindsight.md
+@@ -1,141 +1,46 @@
+ # Store Adapter: Hindsight
+ 
+-This adapter contains Hindsight mechanics only. `SKILL.md` and its policy references still decide what may be remembered, which source wins, and how failures or drift are handled.
++This adapter owns Hindsight query and write mechanics. `SKILL.md` owns recall admission, capability
++classification, deadlines, authorization, shared-bank/project policy and drift; policy references own
++knowledge shape. Use only the selected repository bank and service scope resolved from current approved
++configuration. Activation does not authorize a new bank, broader scope or setup change.
+ 
+-## Current upstream surface
+-
+-Verified 2026-09-26: the official `@vectorize-io/hindsight-coding-agents` package is `0.7.0`, and core Hindsight server is `0.10.1`. Re-check the official changelog, GitHub release, and npm registry before changing either exact pin; never infer a current version from this file alone.
+-
+-Coding Agents owns Claude Code and Codex hooks, MCP wiring, its staged runtime and companion skill, config merging/backups, install/update/uninstall, bank resolution, retain/recall/reflect tools, session write-back, optional git seeding, and optional conversation import. Its own `install`/`update`/`uninstall` commands are user-scope only: they write `~/.claude/settings.json`, register the MCP server with `claude mcp add --scope user`, and read config only from `HINDSIGHT_CONFIG` or `~/.hindsight/coding-agent.json` â€” there is no project-scope install path, no project config search, and no dotenv reader. Alaa service repositories never run those commands; each adopts Hindsight through the project-scoped launcher and hook wiring in "Installation and configuration" below, which calls the same official dist script directly. Do not add a second hook, spool, transcript parser, or MCP registration around it.
++When setup, configuration, ingestion, import, doctor/deepen recovery or self-hosted operation is in scope,
++read `references/hindsight-setup.md`; routine recall and curated writes do not need its dated setup details.
+ 
+ ## Upstream skill routing
+ 
+-This adapter keeps policy authority: it decides whether memory work is admitted, which bank and scope are
+-legal, what must be verified against repository truth, and whether an external effect is authorized. After
+-that decision, invoke at most one vendored upstream skill for the product mechanics it owns:
+-
+-- `/hindsight-docs` for current Hindsight architecture, API, SDK, deployment, configuration, debugging, or
+-  best-practice questions. Read only the references needed for the question; it does not decide what Alaa
+-  work may retain.
+-- `/hindsight-architect` when the user asks to design or review an application's Hindsight integration. It
+-  produces an implementation plan, not code; route accepted execution through `/alaa-workflow`, and verify
+-  its repository and security assumptions before implementation.
+-- `/hindsight-upgrade` only for an explicit installed-copy update request. Its network, setup, configuration,
+-  and replacement steps require the corresponding user authorization. It must never edit
+-  `vendor/hindsight-skills`; this repository updates that subtree through its vendor workflow.
+-
+-Routine Alaa recall, retention admission, durable publication, and drift handling stay in `/alaa-memory-os`;
+-none of these upstream skills replaces them. If the named upstream skill is not installed, report that
+-mechanics are unavailable and continue only where this adapter's fail-open rule permits it.
+-
+-## Installation and configuration
+-
+-Hindsight is set up per project, never globally. Use the official installer's user-scope path and its
+-`~/.hindsight/coding-agent.json` default only for a genuinely personal, cross-project setup outside any Alaa
+-service repository; every Alaa service repository uses the project-scoped pattern below instead, built from
+-official pieces where they exist and custom code only for the gaps the installer leaves.
+-
+-Project-scoped pattern (identical launcher and doctor script across repositories):
+-
+-- An exact devDependency pin on `@vectorize-io/hindsight-coding-agents` in the repository's `package.json`.
+-- `.hindsight/coding-agent.json` as the repository-committed policy file (bank, scope, opt-in paths, retain
+-  tags); it carries no token.
+-- `.hindsight/hook.cjs`, a launcher that only sets `HINDSIGHT_CONFIG` to the repository's policy file, lifts
+-  `HINDSIGHT_API_TOKEN` and `HINDSIGHT_API_URL` from the gitignored `.env`, and execs the official dist script.
+-  The launcher always passes `--preserve-symlinks-main`; it is required under pnpm â€” measured on `0.7.0`,
+-  without it the MCP server never answers `initialize` â€” and a no-op under a flat npm install. It adds no
+-  memory behavior of its own.
+-- Repository `.claude/settings.json` and `.codex/hooks.json` entries that call the launcher for the same
+-  official events and timeouts the upstream installer would wire: `SessionStart` (30s), `UserPromptSubmit`
+-  (30s), `Stop` (60s).
+-- MCP registration in `.mcp.json` and `.codex/config.toml`, through the same launcher, with
+-  `HINDSIGHT_MCP_HARNESS` set to `claude-code` or `codex`. This variable is required since `0.7.0`: without
+-  it the MCP server exits while the hooks keep running, so the failure is silent unless the doctor check below
+-  is run.
+-- `.hindsight/doctor.cjs`, exposed as the `hindsight:doctor` npm script, is the health gate. Upstream ships no
+-  doctor, only `stats`; treat a passing `hindsight:doctor` as the adoption proof this adapter requires. It also
+-  checks (g) this repo's `customPages` all exist as knowledge pages on the server, and (h) whether the shared
+-  bank's deepen lock (see below) is currently held â€” both WARN, never FAIL, since neither blocks normal use.
+-- `.hindsight/deepen.cjs`, exposed as the `hindsight:deepen` npm script, waits out a held deepen lock (polling,
+-  default 20 minutes) and then runs the official `deepen.js` engine for this repository. Use it to force-seed a
+-  repository's knowledge pages and git history on a shared bank instead of waiting on the next `SessionStart`.
+-
+-Credentials belong only in the repository's gitignored `.env`, read by the launcher, or in persistent approved
+-environment injection. Never pass a token on command argv: package managers and process surfaces may echo it.
+-Never commit or print credentials, and never put a token in `.hindsight/coding-agent.json`.
+-
+-Config layering in `0.7.0`: the environment layer applies first, then the file layer, and the file wins for
+-any key it sets. `bankId` set in the file is honored with `dynamicBankId: false`. `autoReflect` is deprecated
+-in favor of `autoInject` (`reflect` | `pages` | `recall` | `none`; unset defaults to `reflect`).
+-`retainSessions` is the Stop-hook retention kill switch (default `true`, from `raw.retainSessions ?? true`):
+-`claude-stop-hook.js` and `codex-stop-hook.js` both return early with diagnostic `retain_disabled` when it is
+-`false`, so setting it `false` suppresses session retention on `Stop` entirely. `customPages` with `tags` give
+-a service its own knowledge pages on a shared bank â€” tags match `"all"`, and seeding never deletes another
+-service's pages. Auto-injection runs once per session, and the page roster repeats every
+-`pageRefreshEveryTurns` turns.
++After the body admits the work, invoke at most one upstream mechanics owner:
+ 
+-## Scope and banks
++- /hindsight-docs for current architecture, API, SDK, deployment, configuration, debugging or best practices;
++  read only the question's references. It selects no Alaa retained content.
++- /hindsight-architect for a requested application integration design/review; it produces a plan, not code.
++  Route accepted execution to /alaa-workflow and verify repository/security assumptions.
++- /hindsight-upgrade only for an explicit installed-copy update request with authority for its effects.
++  Never edit `vendor/hindsight-skills`; the repository vendor workflow owns that subtree.
+ 
+-Alaa's decision is one shared, fixed bank across services rather than the installer's per-repository default:
+-set `bankId` explicitly in each service's `.hindsight/coding-agent.json` (with `dynamicBankId: false`) to the
+-same shared bank id, and distinguish services on that bank through `retainTags` and `retainMetadata`
+-provenance, not through separate banks. Do not use per-harness or per-repository bank names for services that
+-share this decision.
++If an upstream owner is unavailable, report the mechanics gap. The body's fail-open recall and fail-closed
++write/drift rules determine what can continue; absence grants no installation or fallback adapter.
+ 
+-`optInOnly: true` is the fail-closed admission switch, kept per this adapter's default. `optInPaths` holds only
+-the current repository's own path; approving a parent approves repositories beneath it, so do not approve
+-above the current repository. Keep a repository's path unapproved when real-data ingestion is not authorized
+-for it.
++## Query mechanics
+ 
+-`retainTags` and `retainMetadata` add fixed-shape service provenance to official session writes on the shared
+-bank; they do not replace the opt-in boundary, and remembered service dependency edges remain prohibited
+-because they are derived from live code/contracts. Every repository's `retainTags` carries its catalog tag
+-(`service:<name>` or `area:<name>`, as the hindsight project's `service-catalog.json` assigns it) plus the
+-official template `project:{gitProject}`, which resolves to the main worktree's directory name. A page about one
+-repository is tagged with that repository's unique tag â€” `service:<name>` where the catalog gives the repository
+-its own service, otherwise `project:<repo>` â€” so it is built only from that repository's memories; an area page
+-(for example octane-base's `shared libraries: â€¦`) is tagged with the area tag and asks area-wide questions. Name
+-each page distinctively, because page search is bank-wide (BM25 plus vector, no tag filter) and near-identical
+-names such as `comment:` and `content:` are confused.
++Use official MCP tools exposed by the selected harness. Ordinary recall uses bounded recall/reflect for the
++current repository scope. An existence or ownership inquiry uses `hindsight_reflect` over raw memories,
++with the capability/environment/constraint packet required by `SKILL.md`; page listing/search is not a
++replacement because it reaches only topics that already have pages. Pass the same deadline to any one
++focused owner-lead follow-up. Tool discovery, page hits and reflection results are leads, not current source
++or exact-gate proof.
+ 
+-A shared bank has one consequence the per-repository default does not: `deepen.js` (the engine that seeds
+-knowledge pages, including `customPages`, and git history) takes a single lock file keyed by bank id, stale
+-after 30 minutes, and a second run for the same bank exits immediately with no retry â€” so when the
+-`SessionStart` hook fires for two repositories on the same bank close together, only the first repo's session
+-actually seeds; the other's pages and git ingest are silently skipped. `hindsight:deepen` (above) is the
+-recovery: it waits out a lock that is fresh and whose holder process is alive (the same rule as `deepen.js`),
+-then runs `deepen.js` for that repository, and retries if it loses the race for the lock in between. `hindsight:doctor`'s checks (g)
+-and (h) surface the two symptoms (missing pages, a held lock) as WARNs pointing at `hindsight:deepen`.
++## Curated write mechanics
+ 
+-## Recall and write mechanics
++Use official retain/document-ingest tools only after body authorization and knowledge-shape admission.
++Success requires Hindsight terminal completion; an accepted or queued request is not completion. An unknown outcome is not successful persistence; reconcile it through supported official mechanics
++before repeating a possibly completed write.
++Report the exact terminal or unknown outcome and preserve unwritten admitted content through the workflow
++owner. Never substitute session retention or conversation import for a curated write.
+ 
+-When authoring source-derived candidates or checking stored-language quality, read
+-`references/knowledge-shape.md`; it owns the language policy and the boundary between candidate authoring
+-and server extraction. The policy does not set Hindsight's LLM extraction language: verify effective
+-API/worker and bank/strategy settings, then compare source-linked facts. A Reflect response must use the
++When source language or extraction quality is in question, read `references/knowledge-shape.md`. Verify
++current API/worker and bank/strategy settings against source-linked facts before claiming language
++compliance; candidate language policy does not configure server extraction. A Reflect response uses the
+ question's language. Assess page prose quality separately from fact accuracy; mixed-source pages need not
+ have one language throughout.
+-
+-Use the official MCP tools exposed by the selected harness. Start with bounded recall/reflect for the current repository bank, verify important claims against repository truth, and expand only the specific memory needed. Recall failure fails open after the skill's budget; continue from current source and disclose the missing memory evidence.
+-
+-Answer an existence or ownership question (does something already provide X, who owns X) with `hindsight_reflect`, querying the capability rather than a proposed artifact name. Page search and listing reach only topics that already have a knowledge page, so an empty or off-topic page result is not evidence of absence; this overrides the hook's page-first guidance for that question. Verify each reflect hit in the owning repository, and report an empty reflect as no memory evidence, never as absence.
+-
+-Use official retain or document-ingest tools only after the policy admission test passes. A write is successful only when Hindsight reports terminal completion. If the intended write cannot complete, report the unwritten durable note in the handoff; never claim it was stored.
+-
+-Official hook harnesses retain the completed session on `Stop` unless `retainSessions: false` disables it (see
+-Config layering above). `autoSeed`, `gitIngest`, `codebaseSurvey`, and `autoInject` (the successor to the
+-deprecated `autoReflect`) are separate automatic behaviors. While ingestion is unapproved, keep `optInOnly:
+-true` with no real paths, `gitIngest: "none"`, `autoSeed: false`, `codebaseSurvey: false`, `autoInject:
+-"none"`, and `retainSessions: false`.
+-
+-## Import and migration
+-
+-Historical import is optional. Use the upstream `--import-conversations` path only after explicit authorization and a current need; it is not a rollout prerequisite. Do not preserve or recreate a custom importer. Keep any previous store as a read-only archive until authorized migration evidence is complete.
+-
+-## Self-hosted security
+-
+-For self-hosted mode, require API authentication before any non-loopback bind. Keep the tracked default on loopback; use only a specific trusted-LAN address when explicitly selected, never `0.0.0.0`. Keep raw LLM traces disabled for normal operation. Tokens, transcripts, real sessions, and production/personal data are never test fixtures.
+-
+-## Workflow boundary
+-
+-Coding Agents session memory does not replace `alaa-workflow` plans, checkpoints, phase state, acceptance evidence, or handoffs. Store a concise durable lesson or pointer after the workflow proves it; never copy the active checklist into Hindsight.
+diff --git a/skills/sohrab/alaa-memory-os/references/store-local.md b/skills/sohrab/alaa-memory-os/references/store-local.md
+index 4232fd225..5f329333c 100644
+--- a/skills/sohrab/alaa-memory-os/references/store-local.md
++++ b/skills/sohrab/alaa-memory-os/references/store-local.md
+@@ -10,8 +10,7 @@ reinstates it. Nothing was migrated when the tool was dropped, because the tool
+ 
+ ## What the store actually is
+ 
+-`D:/Sohrab/Project/agent-memory` â€” plain markdown notes in a git repository, roughly 140 of them at the time of
+-writing. Basic Memory indexed this directory; it never owned it. The consequence worth internalising: **dropping
++`<vault-root>` â€” plain markdown notes in a git repository, with its root resolved from the task or `ALAA_MEMORY_VAULT`. Basic Memory indexed this directory; it never owned it. The consequence worth internalising: **dropping
+ the index loses search, not content**, and every note remains readable by any agent in any runtime that can read
+ a file, which is the property the server-backed adapter never had.
+ 
+@@ -34,21 +33,24 @@ archive/       superseded notes, kept rather than deleted
+ 
+ ## Recall
+ 
++Resolve `$vaultRoot` from the authorized task or `ALAA_MEMORY_VAULT`; an invalid selected root is unavailable,
++not permission to search another vault.
++
+ Search the tree, then read only the matching note. There is no ranking, so the query has to carry the
+ discrimination that a hybrid search used to.
+ 
+ ```powershell
+ # by topic, across the vault
+-rg -i -l "notification command contract" D:/Sohrab/Project/agent-memory
++rg -i -l "notification command contract" $vaultRoot
+ 
+ # by lifecycle field, which is ordinary frontmatter here
+-rg -l "^status: needs_review" D:/Sohrab/Project/agent-memory
++rg -l "^status: needs_review" $vaultRoot
+ 
+ # by relation, to walk the graph by hand
+-rg -l "\[\[Alaa System Architecture Map\]\]" D:/Sohrab/Project/agent-memory
++rg -l "\[\[Alaa System Architecture Map\]\]" $vaultRoot
+ 
+ # what changed recently, the replacement for recent-activity
+-git -C D:/Sohrab/Project/agent-memory log --oneline -20 --name-only
++git -C $vaultRoot log --oneline -20 --name-only
+ ```
+ 
+ Three recall behaviours change, and pretending they did not is how an agent reports a miss as an absence:
+@@ -75,14 +77,10 @@ index, a duplicate is harder to notice later, not easier.
+ - Write UTF-8 without a byte-order mark. A mark immediately before the YAML delimiter breaks the frontmatter
+   parse, and on Windows PowerShell 5.1 `Set-Content -Encoding UTF8` emits one.
+ 
+-**Commit every new or changed note in the same session.** This is the one operational rule that has no equivalent
+-in the server-backed adapter: with an index server, an unsynced note was still on disk; here, an uncommitted note
+-in a git-backed vault is one `git clean` away from gone, and nothing will report it missing.
+-
+-```powershell
+-git -C D:/Sohrab/Project/agent-memory add -A
+-git -C D:/Sohrab/Project/agent-memory commit -m "memory: <what changed and why>"
+-```
++Read back every authorized file write and confirm its intended content before reporting completion.
++Report changed paths and uncommitted status. Commit only with explicit permission for that separate effect;
++otherwise preserve the uncommitted note and its pointer in the authorized handoff. Git history offers
++recovery only after a permitted commit, so do not imply uncommitted content is protected by it.
+ 
+ ## What is lost, and what replaces it
+ 
+@@ -103,9 +101,8 @@ not have to carry before. Treat a note you are editing as a chance to fix its fr
+ 
+ Unchanged from the file-backed store, and now the only mechanism: two agents writing the same note is
+ last-writer-wins with no warning and no merge. One agent owns a note during a task; an agent that must update a
+-note it did not read this session re-reads it immediately before writing; a note written by a hook goes to
+-`inbox/` with a unique filename rather than into an existing note. Git makes a clobber recoverable, which is a
+-reason to commit often rather than a reason to be careless.
++note it did not read this session re-reads it immediately before writing; new authorized captures use a unique filename rather than overwrite an existing note. Repository hooks
++create no vault notes; `references/checkers-and-hooks.md` owns their nonwriting contract.
+ 
+ ## Security
+ 
+diff --git a/skills/sohrab/alaa-workflow/references/context-curation.md b/skills/sohrab/alaa-workflow/references/context-curation.md
+index aadb14040..dcb506f5a 100644
+--- a/skills/sohrab/alaa-workflow/references/context-curation.md
++++ b/skills/sohrab/alaa-workflow/references/context-curation.md
+@@ -4,7 +4,7 @@ Three skills meet here and the boundary is settled. `alaa-extract-agent-lessons`
+ 
+ ## The intermediate scan
+ 
+-At a completed or failed phase, or a material decision boundary, invoke `$alaa-extract-agent-lessons` / `/alaa-extract-agent-lessons` only when that boundary produced one of these:
++At a completed or failed phase, or a material decision boundary, invoke `/alaa-extract-agent-lessons` only when that boundary produced one of these:
+ 
+ - an explicit user or team judgment;
+ - an accepted tradeoff;
+@@ -25,7 +25,8 @@ Do not publish active plan, checkpoint, or validation state to memory. That is p
+ Run the full-engagement gate before completion, once implementation, validation, review, and documentation evidence are stable â€” and run it even when the expected result is empty, because a gate that runs only when something is expected has stopped being a gate.
+ 
+ 1. Reconcile the intermediate candidates against the final evidence.
+-2. Route authorized durable publication through `$alaa-memory-os` / `/alaa-memory-os`.
++2. Consume /alaa-extract-agent-lessons admission/routing and route authorized durable publication through
++   /alaa-memory-os; memory owns storage authority and search-before-create, not this timing reference.
+ 3. Record the outcome â€” persisted, deferred, rejected, or no admitted candidates â€” once in the admitted plan's final-phase evidence, with a reference from its checkpoint when admitted, or in canonical issue notes for issue-only work. Do not create artifacts outside admission or copy the outcome into another editable owner.
+ 
+ ## When the gate reopens the pipeline

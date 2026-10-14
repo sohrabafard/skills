@@ -1,0 +1,42 @@
+{
+  "packet_sha256": "a12bc9aac189582ba1ff0a0922d9c2e05a07e19a872f948308391b86bbad6edb",
+  "packet_rewritten": false,
+  "sources": [
+    {
+      "path": "skills/sohrab/alaa-memory-os/SKILL.md",
+      "sha256_utf8_text": "24d298fb04d8ccb367e05856d027bbb510f93a9a6f0d5a2c18a6631bea93a157",
+      "unchanged": true
+    },
+    {
+      "path": "skills/sohrab/alaa-memory-os/references/store-hindsight.md",
+      "sha256_utf8_text": "717543968d1d3b90bafb77c77f9a24f4d0e049c542b00446e2f541bf1819d427",
+      "unchanged": true
+    },
+    {
+      "path": "skills/sohrab/alaa-memory-os/references/knowledge-shape.md",
+      "sha256_utf8_text": "8b5bb074ee8ab0f26086c83492e5d37f9aba3a65cd421ccab715a39e236ec087",
+      "unchanged": true
+    },
+    {
+      "path": "skills/sohrab/alaa-memory-os/references/drift-management.md",
+      "sha256_utf8_text": "d5329726081c670838c4a1ae26f9fb33889e95471b4174395966447558ca089d",
+      "unchanged": true
+    },
+    {
+      "path": "skills/sohrab/alaa-extract-agent-lessons/SKILL.md",
+      "sha256_utf8_text": "8ed44d8ae53ad47c0468558161b23536e2fd5b09fb51ebfc0ea94010497bfa03",
+      "unchanged": true
+    },
+    {
+      "path": "skills/sohrab/alaa-extract-agent-lessons/references/reusable-context-shapes.md",
+      "sha256_utf8_text": "7dec82ea2d3dc99245fe8863dd3853f65f91f04980bb0079504f6d64eb7e4473",
+      "unchanged": true
+    },
+    {
+      "path": "skills/sohrab/alaa-memory-os/references/00-topic-map.md",
+      "sha256_utf8_text": "e5e83e00a096b68ca6665600ebb654035704707d638272e73076b5921e555dc9",
+      "unchanged": true
+    }
+  ],
+  "result": "all frozen packet source text and hashes match current worktree; W17 doc is outside packet source list"
+}

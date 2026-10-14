@@ -10,11 +10,11 @@ skill does not locate. The rules below hold whatever invokes them.
 ## Every path here is unconfirmed, and must be checked before use
 
 The warehouse is on a volume this skill cannot reach from a normal session, so none of the paths below was
-verified when this file was written. **Treat each as a candidate, not a fact.** Run the check first:
+verified when this file was written. **Treat each as a candidate, not a fact.** Resolve `$warehouseRoot` from the task or user, then run the check first:
 
 ```powershell
 # Exit 0 and a listing means the path is real. Anything else means stop.
-Get-ChildItem -LiteralPath 'D:\Sohrab\Project\raw\processed\_global' -ErrorAction Stop
+Get-ChildItem -LiteralPath (Join-Path $warehouseRoot '_global') -ErrorAction Stop
 ```
 
 If that fails, do not proceed on the assumption that the layout matches. Ask the user for the current
@@ -63,8 +63,7 @@ recording what should happen to it next:
 ## A lesson is advisory until it is promoted
 
 A published lesson carries no authority on its own. It becomes binding only when it is written into the
-repository's own authority files, its documentation, or a skill — and `/alaa-project-constitution`
-(`$alaa-project-constitution`) owns which files those are.
+repository's own authority files, its documentation, or a skill — and `/alaa-project-constitution` owns which files those are.
 
 This is the rule that keeps the warehouse from becoming a second constitution. An agent that treats
 `[advisory_lesson]` as a requirement is enforcing something no human approved; an agent that ignores

@@ -6,4 +6,4 @@ These records preserve proposals and decisions. A draft does not activate a skil
 |---|---|---|
 | [0001](0001-claude-policy-projections.md) | Reviewed | Claude policy and executable projections |
 | [0002](0002-services-contract-infrastructure-registry.md) | Implemented with open questions | Infrastructure services and shared delivery artifacts |
-| [0003](0003-capability-recall-before-environment-blocker.md) | Draft for review | Capability recall before environment blockers and additional repairs |
+| [0003](0003-capability-recall-before-environment-blocker.md) | Implemented; source verification passed | Capability recall before environment blockers and additional repairs |

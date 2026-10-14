@@ -1,0 +1,27 @@
+{
+  "source_manifest": "final-source-manifest.json",
+  "source_combined_sha256": "ecdf8fe1a3706e789a05cddbfbf7161ed687caa88823caadf0a8f9b01bde43a7",
+  "documents": [
+    {
+      "path": "docs/design/0003-capability-recall-before-environment-blocker.md",
+      "sha256": "f87c8c32aba9928528addbb18e503dcd194f4b4e1f3ebf2dff5ba81967c16898",
+      "bytes": 11935
+    },
+    {
+      "path": "docs/design/README.md",
+      "sha256": "37753f8872a201e3362a5f654cfa436a9d238b98bbea3685dff096a85352eac9",
+      "bytes": 582
+    },
+    {
+      "path": "outputs/README.md",
+      "sha256": "683644a19ef24066271cc7006e167e0c0c314c54c947093eb9abd106a98b26d8",
+      "bytes": 3561
+    },
+    {
+      "path": "outputs/20261012-capability-recall/report.md",
+      "sha256": "1b6758c664d93c04d4359560c4ce794182d70c9a37344e84d50f3d7c5b1dca42",
+      "bytes": 6404
+    }
+  ],
+  "combined_sha256": "209de36841a4feed44549046d90e3642eea0f02b81e26b3dda269d74f77c2a20"
+}

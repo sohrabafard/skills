@@ -62,11 +62,16 @@ if (-not $vault.Ok) {
 }
 $root = $vault.Path
 
-$mdFiles = @(Get-ChildItem -LiteralPath $root -Recurse -Filter *.md -File -ErrorAction SilentlyContinue |
-  Where-Object {
-    $rel = Get-RelativeNotePath -FullName $_.FullName -Root $root
-    $rel -notmatch '(^|/)\.obsidian/' -and $rel -notmatch '(^|/)archive/'
-  })
+try {
+  $mdFiles = @(Get-ChildItem -LiteralPath $root -Recurse -Filter *.md -File -ErrorAction Stop |
+    Where-Object {
+      $rel = Get-RelativeNotePath -FullName $_.FullName -Root $root
+      $rel -notmatch '(^|/)\.obsidian/' -and $rel -notmatch '(^|/)archive/'
+    })
+} catch {
+  Write-Host "BLOCKED: vault enumeration is incomplete or unreadable."
+  exit 2
+}
 
 if ($mdFiles.Count -eq 0) {
   Write-Host "BLOCKED: no markdown notes found under $root"
@@ -93,7 +98,16 @@ function Add-Target {
 
 foreach ($f in $mdFiles) {
   $id = $f.FullName
-  $raw = Get-Content -LiteralPath $id -Raw -ErrorAction SilentlyContinue
+  try {
+    $raw = Get-Content -LiteralPath $id -Raw -ErrorAction Stop
+  } catch {
+    Write-Host "BLOCKED: a vault note could not be read."
+    exit 2
+  }
+  if ($null -eq $raw -and $f.Length -ne 0) {
+    Write-Host "BLOCKED: a nonempty vault note returned no readable content."
+    exit 2
+  }
   if ($null -eq $raw) { $raw = "" }
   $base = [System.IO.Path]::GetFileNameWithoutExtension($f.Name)
 
@@ -106,7 +120,8 @@ foreach ($f in $mdFiles) {
 
   Add-Target -Key $base -NoteId $id
 
-  $fm = Get-NoteFrontmatter -Raw $raw
+  $fm = $null
+  if ($raw.Length -gt 0) { $fm = Get-NoteFrontmatter -Raw $raw }
   if ($null -ne $fm) {
     foreach ($key in @('title', 'permalink')) {
       if ($fm.ContainsKey($key) -and $fm[$key] -is [string]) { Add-Target -Key $fm[$key] -NoteId $id }

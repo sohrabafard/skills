@@ -1,0 +1,342 @@
+[
+  {
+    "id": "gateway",
+    "decision": "Use selected Hindsight capability reflection for a containerized pinned HAProxy gate on gateway Windows with no host installation; ci-image is a possible owner lead. Inspect any returned current owner source before a proportionate authorized probe.",
+    "classification": "Local capability absent; infrastructure availability unknown",
+    "proof_limits": "Only local HAProxy/image absence is established; no Docker reachability, image contents, compatibility or gate completion proof.",
+    "owner_reads": ["alaa-memory-os body", "references/00-topic-map.md", "references/store-hindsight.md", "returned owner repository contents, pin, invocation and environment constraints"],
+    "proposed_calls": ["hindsight_reflect with capability/environment/constraints/sanitized failure/attempted local evidence"],
+    "deadline": "One 60-second deadline including at most one focused returned-owner follow-up",
+    "authority_stop": "No host install; recall grants no pull/run permission. Stop dependent gate at unresolved environment or missing effect authority; continue independent work."
+  },
+  {
+    "id": "reuse",
+    "decision": "Reuse sufficient fresh same-capability evidence and its verified owner invocation. Record the repeated local miss against that evidence; do not repeat recall.",
+    "classification": "Local capability absent; previously verified owner evidence reusable within unchanged scope",
+    "proof_limits": "Unchanged hashes/pins support evidence reuse, not an unexecuted gate result.",
+    "owner_reads": ["existing workflow-owned capability record and canonical owner pointers"],
+    "proposed_calls": [],
+    "deadline": "No new recall budget",
+    "authority_stop": "Proceed only with already authorized supported action; no repair budget reset or widened authority."
+  },
+  {
+    "id": "repair_owner",
+    "decision": "Before choosing the remaining repair, inquire about ownership of the mount-visibility recovery capability with the local inventory and sanitized failure class. Verify a useful lead in its current owner.",
+    "classification": "Tool or runtime error; recovery owner unresolved",
+    "proof_limits": "Attempted failure and inventory are evidence; memory supplies leads only.",
+    "owner_reads": ["alaa-memory-os body", "references/00-topic-map.md", "references/store-hindsight.md", "verified recovery owner source"],
+    "proposed_calls": ["hindsight_reflect for mount-visibility recovery ownership in target repository/environment and remaining permitted repair scope"],
+    "deadline": "One 60-second deadline; at most one focused follow-up",
+    "authority_stop": "Recall grants no repair effect and restores no spent retries. One remaining permitted repair only after owner and supported action are grounded."
+  },
+  {
+    "id": "query_fields",
+    "decision": "Reflect on the capability, not merely an image name: containerized HAProxy syntax validation for gateway on Windows without host install, local HAProxy absent, Docker responsive, remote-only project image, current owner unknown, local inventory/Docker evidence attempted, no credentials included.",
+    "classification": "Local capability absent; contents/compatibility/gate availability unknown",
+    "proof_limits": "Docker responsiveness establishes only that observed operation; remote image presence does not establish usable contents or an exact gate.",
+    "owner_reads": ["alaa-memory-os body", "references/00-topic-map.md", "references/store-hindsight.md", "returned runtime owner source"],
+    "proposed_calls": ["hindsight_reflect with required capability, target repository/check, Windows environment, no-host-install constraint, sanitized failure class and attempted evidence"],
+    "deadline": "Single 60-second deadline including any one focused owner follow-up",
+    "authority_stop": "Exclude logs, private session text and secrets. Verify source then obtain any missing pull/run authority before effects."
+  },
+  {
+    "id": "page_miss",
+    "decision": "Treat empty page search as no absence evidence and ci-image reflection as an unverified owner lead. Inspect ci-image current contents, pins, supported invocation and constraints.",
+    "classification": "Availability unknown",
+    "proof_limits": "Neither page miss nor reflect hit proves current capability or exact-gate execution.",
+    "owner_reads": ["ci-image canonical source", "references/store-hindsight.md"],
+    "proposed_calls": ["authorized read-only current owner inspection"],
+    "deadline": "Any focused recall follow-up stays under the original 60-second deadline",
+    "authority_stop": "No installation, pull or run follows from the lead alone."
+  },
+  {
+    "id": "followup",
+    "decision": "Use at most one focused follow-up asking the returned owner lead where the canonical pin is maintained; retain original t=0 deadline.",
+    "classification": "Owner lead returned; pin unresolved",
+    "proof_limits": "Lead remains memory evidence to verify in current source.",
+    "owner_reads": ["references/store-hindsight.md", "returned owner pin source"],
+    "proposed_calls": ["hindsight_reflect focused on pin location for returned owner"],
+    "deadline": "At t=45, at most 15 seconds remain; stop recall at t=60",
+    "authority_stop": "No second follow-up or deadline reset. Continue authorized canonical inspection if no timely useful result; disclose unresolved pin."
+  },
+  {
+    "id": "late",
+    "decision": "Report inquiry exceeded 60 seconds and supplied no within-budget memory evidence. Late owner text may be a disclosed unverified lead for authorized canonical inspection, not retroactive success.",
+    "classification": "Availability unknown",
+    "proof_limits": "No contents, runtime or exact-gate proof; late response is not within-budget proof.",
+    "owner_reads": ["named owner canonical source if accessible"],
+    "proposed_calls": ["authorized canonical-source inspection"],
+    "deadline": "Original deadline exhausted; no reset or additional recall",
+    "authority_stop": "Continue independent authorized work; report step run without timely memory."
+  },
+  {
+    "id": "empty",
+    "decision": "Treat empty reflection as no memory evidence, not capability absence. Continue authorized source inspection and unaffected work.",
+    "classification": "Availability unknown",
+    "proof_limits": "Empty answer establishes no infrastructure-wide absence or gate result.",
+    "owner_reads": ["target repository canonical source", "known owner source if available"],
+    "proposed_calls": ["authorized canonical-source inspection"],
+    "deadline": "Do not restart the original inquiry or invent an owner follow-up from an empty result",
+    "authority_stop": "Disclose memory provided no evidence; dependent gate remains unresolved if environment is unverified."
+  },
+  {
+    "id": "denied",
+    "decision": "Report recall access denial as unavailable memory evidence; use readable canonical repository files for authorized work.",
+    "classification": "Availability unknown due to denied recall access",
+    "proof_limits": "Denial proves neither capability absence nor canonical-file inaccessibility.",
+    "owner_reads": ["readable canonical repository sources"],
+    "proposed_calls": ["authorized read-only canonical inspection"],
+    "deadline": "No deadline reset or denial bypass",
+    "authority_stop": "Do not broaden bank/access or switch adapters; disclose the memory step unavailable."
+  },
+  {
+    "id": "unavailable",
+    "decision": "Fail open for recall and continue from repository truth; keep Hindsight selected and do not use Basic Memory as fallback.",
+    "classification": "Availability unknown; selected transport unreachable",
+    "proof_limits": "An installed alternative CLI does not establish selected-store availability or authorize switching.",
+    "owner_reads": ["alaa-memory-os active selector", "references/store-hindsight.md", "canonical repository sources"],
+    "proposed_calls": ["authorized canonical-source inspection only"],
+    "deadline": "Stop unavailable recall within owning budget",
+    "authority_stop": "No adapter switch, setup change or write; disclose step run without memory."
+  },
+  {
+    "id": "timeout",
+    "decision": "Report capability recall timed out and the exact required gate is unrun because no runnable environment is established. Continue unaffected authorized work.",
+    "classification": "Availability unknown; documented validation blocker",
+    "proof_limits": "Timeout is no memory evidence; unexecuted gate receives no completion credit.",
+    "owner_reads": ["canonical runtime/check owner if accessible", "workflow evidence record"],
+    "proposed_calls": ["authorized canonical-source inspection"],
+    "deadline": "Owning deadline exhausted; no recall reset",
+    "authority_stop": "Preserve exact environment gap and required next action; do not infer native blocked status."
+  },
+  {
+    "id": "ordinary_timeout",
+    "decision": "Stop ordinary recall at five seconds, disclose no timely memory evidence, and proceed with current repository truth.",
+    "classification": "Memory recall unavailable for this step",
+    "proof_limits": "Routine question does not qualify for a 60-second existence/ownership budget.",
+    "owner_reads": ["current canonical source for code question"],
+    "proposed_calls": ["authorized canonical inspection"],
+    "deadline": "Five-second ordinary budget; no extension",
+    "authority_stop": "No adapter switch or new inquiry disguised as a paraphrase."
+  },
+  {
+    "id": "stale",
+    "decision": "Prefer current owner Windows constraints and changed pins. Classify recalled Linux arguments as stale memory; defer note correction without write authority. Probe only a current source-supported compatible invocation within existing authority.",
+    "classification": "Stale memory-only contradiction; no canonical-source drift",
+    "proof_limits": "Old lead provides no current compatibility or runtime proof.",
+    "owner_reads": ["references/drift-management.md", "current owner invocation, constraints and pin source"],
+    "proposed_calls": ["proportionate compatible probe only if source and existing effect authority permit"],
+    "deadline": "Reuse sufficient current source evidence; no recall needed",
+    "authority_stop": "Do not run stale arguments or create drift registry solely for stale memory; stop if no supported compatible path."
+  },
+  {
+    "id": "irrelevant",
+    "decision": "Treat unrelated logging guidance as no capability evidence. Continue bounded authorized inspection of gateway/runtime ownership without repeated recall or fabricated leads.",
+    "classification": "Availability unknown",
+    "proof_limits": "Irrelevant recall establishes no HAProxy owner, absence, compatibility or gate result.",
+    "owner_reads": ["canonical target/check sources and accessible runtime owner sources"],
+    "proposed_calls": ["authorized canonical-source inspection"],
+    "deadline": "Original inquiry budget unchanged; no owner-lead follow-up without a relevant returned lead",
+    "authority_stop": "Disclose no useful memory evidence; stop dependent gate if environment remains unknown."
+  },
+  {
+    "id": "registry",
+    "decision": "Report project image tag discovery only. Inspect current owner Dockerfile/tool contents, pin and supported host invocation before any authorized runtime probe.",
+    "classification": "Image/registry discovery established; capability availability unknown",
+    "proof_limits": "No contents verification, compatible start or exact-gate completion proof.",
+    "owner_reads": ["image owner Dockerfile, installed tools, pins and environment constraints"],
+    "proposed_calls": ["authorized owner-source inspection"],
+    "deadline": "No new recall if owner lead already sufficient",
+    "authority_stop": "Registry read authorizes no pull/run."
+  },
+  {
+    "id": "partial",
+    "decision": "Report compatible runtime start and observed HAProxy execution, with a missing second required tool and exact gate unrun.",
+    "classification": "Partial runtime capability; exact required gate unavailable in this image",
+    "proof_limits": "Observed HAProxy is no proof of full toolset or gate completion.",
+    "owner_reads": ["owner tool-content and exact gate requirements"],
+    "proposed_calls": [],
+    "deadline": "No repeated recall if fresh capability evidence suffices",
+    "authority_stop": "Preserve missing tool evidence; stop exact gate pending supported authorized environment remedy."
+  },
+  {
+    "id": "positive",
+    "decision": "Report observed owner contents/pins verification, authorized compatible runtime start, and exact required gate completion with exit 0 in the stated environment.",
+    "classification": "Exact required gate completed in scoped environment",
+    "proof_limits": "These stages do not establish other gates, hosts, release, deployment or continuing future compatibility. Registry discovery is not separately claimed without evidence.",
+    "owner_reads": ["already verified current owner files and recorded exact gate evidence"],
+    "proposed_calls": [],
+    "deadline": "No additional recall",
+    "authority_stop": "Stop capability investigation once requested stages are evidenced; no additional effects."
+  },
+  {
+    "id": "incompatible",
+    "decision": "Report that this available image architecture cannot run on this host; name the architecture/host constraint and required compatible runtime change from source evidence.",
+    "classification": "Compatible infrastructure unavailable for this image/host pair",
+    "proof_limits": "Source plus authorized probe support this scoped incompatibility, not fleet-wide absence.",
+    "owner_reads": ["current owner architecture/pin and host-support evidence"],
+    "proposed_calls": [],
+    "deadline": "No new recall needed for established evidence",
+    "authority_stop": "Stop dependent gate on this path; any alternate environment effect needs supported source and existing or newly granted authority."
+  },
+  {
+    "id": "unauthorized",
+    "decision": "Preserve the verified concrete remedy, exact package/image/pin, target and needed effect; request only missing installation, pull or container-start authority before execution.",
+    "classification": "Authorization blocker",
+    "proof_limits": "Verified remedy is a supported proposal, not an executed runtime or gate result.",
+    "owner_reads": ["already verified remedy owner/source"],
+    "proposed_calls": [],
+    "deadline": "No recall needed when remedy evidence is fresh",
+    "authority_stop": "Execute no remedy effect until explicitly authorized; continue unaffected authorized work."
+  },
+  {
+    "id": "actual_failure",
+    "decision": "Report grounded runtime error and hand recovery to its owning runtime/failure lane with exact attempted evidence and remaining one cause-specific repair plus one materially different retry.",
+    "classification": "Tool or runtime error",
+    "proof_limits": "Attempted probe proves failure for its operation, not global infrastructure absence or exact-gate completion.",
+    "owner_reads": ["current recovery owner source", "capability recall owners only if recovery ownership unresolved"],
+    "proposed_calls": ["proposed supported repair then one materially different retry, only through authorized recovery owner"],
+    "deadline": "If owner inquiry is necessary, one 60-second deadline with at most one focused follow-up",
+    "authority_stop": "Recall grants no repair and resets no budgets; stop failed operation after remaining authorized repair/retry exhaust."
+  },
+  {
+    "id": "exhausted",
+    "decision": "Stop the failed operation; preserve both failed attempts and new unverified owner lead. Return to parent for explicit reassessment before dependent work resumes.",
+    "classification": "Tool or runtime error; repair/retry budget exhausted",
+    "proof_limits": "New memory lead is not verified remedy or permission and does not erase failures.",
+    "owner_reads": ["new owner canonical source only as part of explicitly reassessed authorized work"],
+    "proposed_calls": [],
+    "deadline": "No reset of repair/retry or recall budget",
+    "authority_stop": "No third attempt; continue only independent safe work pending explicit parent reassessment."
+  },
+  {
+    "id": "native_threshold",
+    "decision": "Record mandatory gate unresolved, evidence, environment gap and next action in workflow-owned state. Keep native Goal active on first turn; work remains and three-consecutive-turn blocking threshold is unmet.",
+    "classification": "Documented gate blocker; native blocked transition not eligible",
+    "proof_limits": "Prose blocker is not a host status transition; no completion or gate result is implied.",
+    "owner_reads": ["workflow canonical state", "native Goal status rules"],
+    "proposed_calls": [],
+    "deadline": "No recall deadline applicable",
+    "authority_stop": "Execute no lifecycle transition in this evaluation. In real execution stop failed dependent operation, continue meaningful authorized work, and apply native threshold only when evidenced."
+  },
+  {
+    "id": "missing_adapter",
+    "decision": "Stop dependent memory task and report missing selected adapter reference; do not read/use another adapter as fallback.",
+    "classification": "Selected adapter mechanics missing; dependent operation blocked",
+    "proof_limits": "Readable alternate file establishes no authority to switch selected store.",
+    "owner_reads": ["alaa-memory-os active selector and missing-reference evidence"],
+    "proposed_calls": [],
+    "deadline": "No lookup or deadline reset around missing required adapter",
+    "authority_stop": "No fallback or store operation; independent unrelated work can continue without pretending missing mechanics were satisfied."
+  },
+  {
+    "id": "write_pending",
+    "decision": "Report retain accepted/pending, with persistence unconfirmed. Preserve admitted candidate and pending operation identifier in workflow-owned handoff; use supported official completion/reconciliation mechanics before a duplicate write.",
+    "classification": "Authorized write pending; no terminal persistence confirmation",
+    "proof_limits": "Acceptance is not completion; unknown outcome cannot justify repeating retain blindly.",
+    "owner_reads": ["references/store-hindsight.md", "official selected-adapter terminal/reconciliation mechanics", "workflow handoff owner"],
+    "proposed_calls": ["supported official terminal status/reconciliation inquiry within existing authority"],
+    "deadline": "Use owning operation boundary; packet supplies no completion timeout",
+    "authority_stop": "No completed-write claim until terminal confirmation; preserve candidate as not confirmed persisted."
+  },
+  {
+    "id": "source_owned",
+    "decision": "Reject a competing explanatory lesson for cheaply recoverable current route/timeout facts; retain a concise canonical source pointer if useful, with API documents/code as owner.",
+    "classification": "Ordinary source-owned fact; no new durable lesson",
+    "proof_limits": "Source pointer preserves provenance; no novel reusable correction is established.",
+    "owner_reads": ["alaa-extract-agent-lessons admission", "references/reusable-context-shapes.md", "canonical API owner documents"],
+    "proposed_calls": [],
+    "deadline": "No recall needed merely to duplicate source truth",
+    "authority_stop": "No publication or source promotion without scoped authority; report pointer disposition."
+  },
+  {
+    "id": "lesson_reusable",
+    "decision": "Admit a provisional scoped decision interface for reproduced provider ambiguity: when path-provider checks disagree, use a source-backed provider-qualified read before concluding absence. Complete novelty/deduplication and exact provenance checks before durable admission; do not publish.",
+    "classification": "Reusable correction candidate; scoped admission subject to novelty verification",
+    "proof_limits": "Two scoped reproductions support recurrence in evidenced environment, not fleet-wide causality or universal rule.",
+    "owner_reads": ["alaa-extract-agent-lessons", "references/reusable-context-shapes.md", "exact reproduction/correction source pointers", "memory topic map and knowledge-shape before any later note"],
+    "proposed_calls": ["future bounded selected-adapter deduplication search if not already sufficient; no call executed here"],
+    "deadline": "Any routine admission search uses five seconds; no setup or ownership inquiry implied",
+    "authority_stop": "Workflow candidate fields: kind, scope/trigger, inputs, provider mismatch distinction, decision/action, counterfactual discovery value, exact provenance, fact versus advisory authority, confidence/unknowns, owner/destination, freshness/invalidation, proof and stop boundary. No secrets/raw logs; no publication."
+  },
+  {
+    "id": "lesson_duplicate",
+    "decision": "Merge/refine the matching lesson rather than create a duplicate. Verify source relevance, freshness, scope and material correction; update only with authorized destination/effect.",
+    "classification": "Duplicate reusable candidate; update or unchanged disposition",
+    "proof_limits": "Topic/path match supports deduplication; update merit and current factual accuracy still require evidence.",
+    "owner_reads": ["alaa-extract-agent-lessons", "references/knowledge-shape.md", "matching lesson and canonical source", "selected adapter mechanics for any authorized update"],
+    "proposed_calls": [],
+    "deadline": "Reuse sufficient matching search; do not repeat it",
+    "authority_stop": "No new note; preserve proposed refinement in workflow if write authority is absent; terminal confirmation required for any later persistence claim."
+  },
+  {
+    "id": "lesson_oneoff",
+    "decision": "Reject durable admission; keep one transient unexplained failure in scoped task evidence only.",
+    "classification": "One-off incident history; no reusable correction",
+    "proof_limits": "Later success establishes neither cause nor generalizable advice.",
+    "owner_reads": ["alaa-extract-agent-lessons admission"],
+    "proposed_calls": [],
+    "deadline": "No recall",
+    "authority_stop": "Report empty retained set for this candidate; manufacture no lesson."
+  },
+  {
+    "id": "lesson_unsupported",
+    "decision": "Reject guessed all-tools image claim as unsupported; keep a labelled open question/source-verification need in workflow if relevant.",
+    "classification": "Unsupported impression; not admitted",
+    "proof_limits": "No contents source or execution supports toolset claim.",
+    "owner_reads": ["alaa-extract-agent-lessons admission", "current image owner contents source for any future verification"],
+    "proposed_calls": [],
+    "deadline": "No recall required to admit unsupported claim",
+    "authority_stop": "No durable fact or gate conclusion; future inspection needs its own authorized scope."
+  },
+  {
+    "id": "lesson_sensitive",
+    "decision": "Reject candidate as written because tokens and raw transcripts are prohibited. Do not retain or copy sensitive tail into memory/handoff; reconsider only a separately sanitized, evidence-backed reusable correction with safe source pointers.",
+    "classification": "Prohibited content; not admitted",
+    "proof_limits": "Synthetic framing does not make token/transcript-shaped content an admissible lesson.",
+    "owner_reads": ["alaa-extract-agent-lessons safety gate", "references/knowledge-shape.md prohibited content"],
+    "proposed_calls": [],
+    "deadline": "No memory operation",
+    "authority_stop": "Preserve safe rejection rationale and sanitized candidate only if independently admitted; no secret/raw transcript persistence."
+  },
+  {
+    "id": "lesson_local",
+    "decision": "Scope correction to this repository and current pin layout; verify recurrence/value/novelty, prefer its canonical owner or source pointer when cheaply answerable. Do not generalize to fleet policy.",
+    "classification": "Repository-scoped source-backed correction candidate",
+    "proof_limits": "Current local evidence supplies no fleet applicability.",
+    "owner_reads": ["alaa-extract-agent-lessons", "references/reusable-context-shapes.md", "repository pin-layout owner source"],
+    "proposed_calls": [],
+    "deadline": "Only later needed routine deduplication search uses five seconds",
+    "authority_stop": "Preserve exact scope, canonical pointer and invalidation on pin/layout change; publication requires destination/effect authority."
+  },
+  {
+    "id": "lesson_deferred",
+    "decision": "Keep admitted reusable candidate in workflow-selected handoff with provenance, scope, authority, owner/destination and freshness; report publication deferred for missing authority and unavailable selected store.",
+    "classification": "Admitted candidate; not persisted; unauthorized and store unavailable",
+    "proof_limits": "Admission survives outage but provides no durable-write completion.",
+    "owner_reads": ["alaa-extract-agent-lessons routing", "alaa-memory-os write outcomes", "workflow context-curation owner"],
+    "proposed_calls": [],
+    "deadline": "No write attempt or fallback lookup",
+    "authority_stop": "No alternate store or publication attempt; preserve sanitized candidate until authorized selected-store publication can be confirmed."
+  },
+  {
+    "id": "workflow",
+    "decision": "Keep checklist, validation logs and handoff in their current workflow-owned files. Follow workflow context-curation timing; do not invent a compaction-triggered final scan. Maximum permitted memory form is a concise pointer to canonical state, only with write authority.",
+    "classification": "Active execution state; workflow-owned, not durable lesson content",
+    "proof_limits": "Mid-phase state is not stable engagement evidence or completion.",
+    "owner_reads": ["alaa-workflow references/context-curation.md", "alaa-memory-os active-state boundary", "references/knowledge-shape.md"],
+    "proposed_calls": [],
+    "deadline": "No recall or write implied by compaction",
+    "authority_stop": "No phase checklist/log duplication; intermediate scan only at workflow-selected boundary and scope, final reconciliation only when workflow requires it."
+  },
+  {
+    "id": "drift",
+    "decision": "Report current docs/code canonical contradiction with exact source pointers and safe excerpts. Required repository drift record is unwritten due to authority; stop dependent work and request only authority/owner needed for that record. Continue independent work.",
+    "classification": "Canonical-source drift; mandatory record blocked by authority",
+    "proof_limits": "Executable code establishes observed behavior but does not silently settle contract intent or replace required registry record.",
+    "owner_reads": ["references/drift-management.md", "both current canonical sides", "owning repository drift registry convention", "SOC/contract owners for any required severity/field decisions"],
+    "proposed_calls": [],
+    "deadline": "No memory deadline applicable",
+    "authority_stop": "No code/doc fix, silent resolution, memory substitute or lifecycle transition. Preserve stable mismatch identifier proposal, both source pointers and unwritten record requirement for authorized recording; analysis/decision/fix remain separate."
+  }
+]

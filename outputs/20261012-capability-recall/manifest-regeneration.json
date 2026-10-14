@@ -1,0 +1,11 @@
+{
+  "method": "Sorted GNU sha256sum format: raw-file SHA256 then two spaces then ./skill-relative path; enumerate every memory skill file except SHA256SUMS and __pycache__; read back exact entries and recompute every digest. No pre-existing generator found; parent explicitly approved this reproduction method.",
+  "files": 39,
+  "manifest_sha256": "0d83f0b9fb8a734a72939d5f02629a68eff545caae5960d4d5a61d69a5a058f2",
+  "readback": "all entries and digests match",
+  "exclusions": [
+    "SHA256SUMS",
+    "__pycache__"
+  ],
+  "source": "final T2 plus T3 fix-cycle-1 and W17 documentation current worktree"
+}

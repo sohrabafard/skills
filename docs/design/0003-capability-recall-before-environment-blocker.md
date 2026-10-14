@@ -1,8 +1,8 @@
 # 0003 - Capability recall before an environment blocker
 
-Status: draft proposal for later review; no rule or skill activation
+Status: implemented; independent source verification and scoped reviews passed
 Trigger condition: a missing local tool is about to become a validation blocker or another environment repair is considered.
-Owner: skill pack maintainer; Reviewer: pending; Date: 2026-10-12
+Owner: skill pack maintainer; Review: source, correctness, instruction and security reviews passed; Date: 2026-10-13
 Supersedes: none; Related: [0002 infrastructure registry](0002-services-contract-infrastructure-registry.md)
 
 ## 1. Problem and evidence
@@ -15,7 +15,7 @@ In the current incident, page retrieval produced broad or off-topic leads. Capab
 
 ## 2. Scope and authority
 
-This document is a proposed review artifact. It changes no executable agent rules, installed skills, memory settings, tool grants or repository validation requirements. A later approved implementation must select one owning trigger location and route to the existing memory adapter and runtime owner.
+This document is a proposed review artifact. It changes no executable agent rules, installed skills, memory settings, tool grants or repository validation requirements. Original proposal text: a later implementation would select one owning trigger location and route to the existing memory adapter and runtime owner.
 
 Memory remains an untrusted lead. Existing task authorization applies; a recalled remedy grants no permission. No installation, image pull, container execution, remote mutation or configuration change follows automatically from recall. Verify the canonical owner and the permitted next effect before acting. The parent owns any Hindsight lesson and RFC pointer; this draft and raw session content are not published to memory.
 
@@ -53,7 +53,7 @@ Include attempted evidence, for example: local executable absent; Docker reachab
 
 A no-host-install constraint alone does not prove every container path is forbidden, and a container lead alone does not authorize a pull or run. Both conclusions require the current task's actual authority.
 
-## 5. Acceptance scenarios for a later implementation
+## 5. Acceptance scenarios used for verification
 
 | Scenario | Required outcome |
 |---|---|
@@ -68,7 +68,10 @@ A no-host-install constraint alone does not prove every container path is forbid
 
 Representative evaluation must include positive and negative cases and compare source-grounded owner discovery, extra tool calls, authorization violations and false blocker/success claims. This RFC reports no evaluation result.
 
-## 6. Decisions required before activation
+## 6. Draft decisions resolved in implementation
+
+The questions below are retained from the original draft. Their accepted decisions are summarized
+in [the implementation plan](../../outputs/20261012-capability-recall/20261012-220000_capability-recall.md#settled-semantic-decisions).
 
 [decision_needed] Choose the single owner for the trigger: memory routing, runtime recovery, or orchestration intake. Other owners should point to it instead of duplicating the procedure.
 
@@ -80,6 +83,19 @@ Representative evaluation must include positive and negative cases and compare s
 
 ## 7. Sources and review boundary
 
+This section records the proposal and its design rationale. For current behavior, the canonical
+owners remain `/alaa-memory-os` (capability recall, adapter boundaries and hooks),
+the selected memory adapter (store-specific query mechanics), `/alaa-codex-runtime-ops` and the
+orchestrators (recovery, retry controls and native lifecycle status), `/alaa-workflow` (active
+continuity and task evidence), and `/alaa-extract-agent-lessons` (lesson admission, shaping and
+routing). The `[proposal]` and `[decision_needed]` labels preserve the original draft; the design
+decisions they record were settled in [the accepted plan](../../outputs/20261012-capability-recall/20261012-220000_capability-recall.md#settled-semantic-decisions).
+This RFC does not activate or replace those instructions.
+
+The implementation and evidence are archived in
+[the capability-recall report](../../outputs/20261012-capability-recall/report.md). Independent
+source verification and scoped reviews passed. Release and publication were not requested.
+
 - [Active adapter and existing recall budget](../../skills/sohrab/alaa-memory-os/SKILL.md).
 - [Capability-reflect requirement and page-search limitations](../../skills/sohrab/alaa-memory-os/references/store-hindsight.md).
 - [Draft knowledge, source provenance and forbidden memory content](../../skills/sohrab/alaa-memory-os/references/knowledge-shape.md).
@@ -87,4 +103,5 @@ Representative evaluation must include positive and negative cases and compare s
 - [Scoped instruction wording review](../../skills/sohrab/alaa-prompting-guide/references/60-skill-authoring.md).
 - [Earlier infrastructure-registry RFC](0002-services-contract-infrastructure-registry.md).
 
-All proposed behavior remains draft until human review and a separate authorized implementation. No guarantee that Hindsight will retrieve the owner, or that a recalled image can run the gate, is made.
+The source change is implemented and independently verified within the stated scope. No guarantee
+that Hindsight will retrieve the owner, or that a recalled image can run the gate, is made.

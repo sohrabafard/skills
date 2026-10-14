@@ -1,7 +1,6 @@
 # Drift Management
 
-Drift is a recorded mismatch between two sources of truth: a document against code, memory against the
-repository, one service against another, a shared architecture document against actual behaviour.
+Drift is a recorded mismatch between two sources of truth: a document against code, one service against another, a shared architecture document against actual behaviour.
 
 ## What the rule produces
 
@@ -42,9 +41,8 @@ owns the tag encoding, because only that file knows what is filterable.
 
 - One record per mismatch, with a stable identifier used by every reference to it.
 - Lifecycle: `drift_status: open` to `analyzed` to `decided` to `fixing` to `resolved`.
-- Severity is not set here. `/alaa-observability-soc` (`$alaa-observability-soc`) owns whether an
-  observability record is required and at what level, and `/alaa-services-contract`
-  (`$alaa-services-contract`) owns the field, event, and metric names a drift record cites. Ask SOC for the
+- Severity is not set here. `/alaa-observability-soc` owns whether an
+  observability record is required and at what level, and `/alaa-services-contract` owns the field, event, and metric names a drift record cites. Ask SOC for the
   level rather than assigning one, and state the answer's origin in the record.
 - Each affected note in the store gets exactly one `[drift]` observation pointing at the record identifier,
   and its `status` becomes `needs_review`.
@@ -66,9 +64,10 @@ Not a severity assignment — a list of where a silent resolution costs the most
 code path actually runs, record the mismatch, and continue on the code's behaviour. Do not edit the document
 during recording — that is the fix step, and it needs the decision first.
 
-**Memory contradicts the repository.** The repository wins on fact, always. This is not a drift record by
-itself; it is a stale note. Update the note, refresh `last_verified`, and record drift only if the
-repository itself is internally inconsistent. Recording every stale note as drift buries the real ones.
+**Memory contradicts the repository.** The repository always wins on fact. This alone is a stale note, not
+a drift record. Correct the note and refresh `last_verified` only with write authority; otherwise defer
+correction with its current source pointer. Record drift only if the repository itself is internally
+inconsistent; recording every stale note buries real drift.
 
 **Two services contradict each other.** Neither is authoritative. Establish what each actually does from its
 own repository, not from a shared document, and record one drift with a record in both repositories. This is

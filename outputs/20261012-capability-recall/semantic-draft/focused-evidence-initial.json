@@ -1,0 +1,75 @@
+{
+  "cwd": "D:/Sohrab/Project/skills",
+  "resource_policy": "ordinary bounded static assertions, sequential, no CPU-heavy runner",
+  "proof": "static only; independent acceptance not discharged",
+  "checks": [
+    {
+      "assertion": "changed reference existence",
+      "definition": {
+        "rule": "Every literal references/*.md in T2 changed Markdown resolves in its own skill or the named adjacent owner",
+        "references": 103,
+        "missing": []
+      },
+      "result": "PASS"
+    },
+    {
+      "assertion": "single router",
+      "definition": "Memory has >=9 references and sole topic-map pointer/table; lessons has one body router and no topic-map; Hindsight row remains in same table",
+      "result": "PASS"
+    },
+    {
+      "assertion": "mirrored consumer parity",
+      "definition": "New capability consumer block and curation owner block are byte-equal after newline decoding across Codex/Claude",
+      "result": "PASS"
+    },
+    {
+      "assertion": "no inactive BasicMemory routing",
+      "definition": "Neutral shape/boundaries have no upstream BasicMemory skill loading paths; retained mechanics exist in selected BasicMemory adapter",
+      "result": "PASS"
+    },
+    {
+      "assertion": "draft snapshot hashes",
+      "definition": {
+        "rule": "Current T2 files and their verbatim snapshots equal manifest SHA-256",
+        "files": 18,
+        "mismatches": []
+      },
+      "result": "PASS"
+    },
+    {
+      "assertion": "scoped diff whitespace",
+      "definition": {
+        "command": [
+          "git",
+          "diff",
+          "--check",
+          "--",
+          "skills/sohrab/alaa-memory-os/SKILL.md",
+          "skills/sohrab/alaa-memory-os/agents/openai.yaml",
+          "skills/sohrab/alaa-memory-os/references/00-topic-map.md",
+          "skills/sohrab/alaa-memory-os/references/checkers-and-hooks.md",
+          "skills/sohrab/alaa-memory-os/references/drift-management.md",
+          "skills/sohrab/alaa-memory-os/references/knowledge-shape.md",
+          "skills/sohrab/alaa-memory-os/references/prompt-3-publishing.md",
+          "skills/sohrab/alaa-memory-os/references/skill-boundaries.md",
+          "skills/sohrab/alaa-memory-os/references/store-basic-memory.md",
+          "skills/sohrab/alaa-memory-os/references/store-hindsight.md",
+          "skills/sohrab/alaa-memory-os/references/store-local.md",
+          "skills/sohrab/alaa-memory-os/references/hindsight-setup.md",
+          "skills/sohrab/alaa-extract-agent-lessons/SKILL.md",
+          "skills/sohrab/alaa-extract-agent-lessons/agents/openai.yaml",
+          "skills/sohrab/alaa-codex-runtime-ops/SKILL.md",
+          "skills/sohrab/alaa-codex-orchestrator/references/verification-and-gates.md",
+          "skills/sohrab/alaa-cc-orchestrator/references/verification-and-gates.md",
+          "skills/sohrab/alaa-workflow/references/context-curation.md"
+        ],
+        "exit": 2,
+        "log": "git-diff-check.log"
+      },
+      "result": "FAIL"
+    }
+  ],
+  "failures": [
+    "scoped diff whitespace"
+  ]
+}

@@ -1,0 +1,25 @@
+{
+  "status": "measurement evidence corrected; policy and frozen probe packet unchanged",
+  "reason": "Independent review found omitted workflow-internal owners and inherited loads in both lesson scenarios.",
+  "prior_capture": "superseded/loading-measurements-incomplete-workflow-closure.json",
+  "starting_state": {
+    "workflow_active": true,
+    "plan": "Existing admitted local resumable multi-phase plan and checkpoint; no JSON consumer or prompt pack.",
+    "admission_profile_task_store": "Previously resolved and still valid; their owners remain included in the inherited total.",
+    "execution_handoff_bindings": "Phase/task bindings previously populated and loaded; existing-plan resume reconciled canonical state.",
+    "prior_memory": "Hindsight memory was already activated for prior-context planning; selected routine adapter and router remain included in inherited total.",
+    "boundary": "First signal-bearing completed-phase intermediate scan after phase validation/source identity was recorded.",
+    "results_recorded": "Scan disposition is recorded in the existing plan and checkpoint, even when no candidates pass admission.",
+    "effects": "Local workflow evidence recording is authorized; admitted-write case additionally authorizes scoped durable publication. No Beads, prompt generation, Git integration, runtime allocation, whole-task completion or workflow review."
+  },
+  "validation": [
+    "Generator exit0 after explicit parent verifier-pause/go and T2 final wrap freeze",
+    "Both lesson scenarios in both versions include workflow SKILL.md and all6 applicable internal reference owners",
+    "Word/byte totals equal per-file sums and already_loaded+incremental partitions; file paths unique",
+    "Scoped git diff --check exit0",
+    "Frozen after-probe.json SHA256 equals preceding packet-verification record"
+  ],
+  "source_manifest_combined_sha256": "ecdf8fe1a3706e789a05cddbfbf7161ed687caa88823caadf0a8f9b01bde43a7",
+  "after_probe_sha256": "a12bc9aac189582ba1ff0a0922d9c2e05a07e19a872f948308391b86bbad6edb",
+  "claims_limits": "Instruction-owner word/byte totals only; tokens unavailable; no model/context-runtime/cost claim; no broad suite rerun. Earlier partial measurements are superseded."
+}

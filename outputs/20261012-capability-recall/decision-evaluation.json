@@ -1,0 +1,539 @@
+{
+  "reviewer": "/root/correctness",
+  "requested_model": "gpt-6.1-sol",
+  "requested_effort": "medium",
+  "observed_identity": "unknown",
+  "protocol": "One fresh native proposed-decision batch per version; same34 synthetic scenarios, frozen75 oracle checks; oracle withheld from evaluated agents. No actual scenario effects.",
+  "before": {
+    "pass": 74,
+    "fail": 1,
+    "unknown": 0,
+    "failure": "gateway criterion2: generic owner-file inspection did not name ci-image and gateway pin owner as leads; strict failure retained"
+  },
+  "after": {
+    "pass": 75,
+    "fail": 0,
+    "unknown": 0,
+    "gateway_criterion2": "Explicit ci-image possible-owner lead plus current owner contents/pin/invocation/constraints reads tied to gateway gate satisfies the frozen criterion"
+  },
+  "source_applicability": "Only final packet/source divergence is lesson owner-reference physical wrap. Reviewer independently reconstructed exact change and whole-file split-token equality; other six texts unchanged. No rerun owed for token-equivalent formatting.",
+  "limits": [
+    "Proposed decisions only, not scenario tool operation",
+    "Single paired batch; no statistical or generalized model-fidelity claim",
+    "No Claude, live Hindsight, installed activation, native lifecycle effect or serving identity proof"
+  ],
+  "artifacts": {
+    "before-probe.json": "f1fe7e3f9c271ee56a8436b14b8d4cb41677f2c16f83c3085f25c2a659e03e18",
+    "after-probe.json": "a12bc9aac189582ba1ff0a0922d9c2e05a07e19a872f948308391b86bbad6edb",
+    "before-results.json": "c4655a74fbb2e20f3949dd671475ae494b8f10196c2643da2e778f3ab2d3a875",
+    "after-results.json": "708392763299c5a169688fa71131a3762f1e5a56101a592814f702e619038a13",
+    "scenario-inputs.json": "49f873bf3ab9cd762effcaee6e10f18376f4b67222228d4e65ff4ca4f624160f",
+    "scenario-oracle.json": "dd095de3ea962c5a56bd37f5cd64ae1a552a28fe208f2332510bde71942a331d"
+  },
+  "after_criterion_results": [
+    {
+      "id": "gateway",
+      "criteria": [
+        {
+          "number": 1,
+          "result": "pass"
+        },
+        {
+          "number": 2,
+          "result": "pass"
+        },
+        {
+          "number": 3,
+          "result": "pass"
+        }
+      ],
+      "support": "after-results.json record id=gateway"
+    },
+    {
+      "id": "reuse",
+      "criteria": [
+        {
+          "number": 1,
+          "result": "pass"
+        },
+        {
+          "number": 2,
+          "result": "pass"
+        }
+      ],
+      "support": "after-results.json record id=reuse"
+    },
+    {
+      "id": "repair_owner",
+      "criteria": [
+        {
+          "number": 1,
+          "result": "pass"
+        },
+        {
+          "number": 2,
+          "result": "pass"
+        }
+      ],
+      "support": "after-results.json record id=repair_owner"
+    },
+    {
+      "id": "query_fields",
+      "criteria": [
+        {
+          "number": 1,
+          "result": "pass"
+        },
+        {
+          "number": 2,
+          "result": "pass"
+        },
+        {
+          "number": 3,
+          "result": "pass"
+        }
+      ],
+      "support": "after-results.json record id=query_fields"
+    },
+    {
+      "id": "page_miss",
+      "criteria": [
+        {
+          "number": 1,
+          "result": "pass"
+        },
+        {
+          "number": 2,
+          "result": "pass"
+        }
+      ],
+      "support": "after-results.json record id=page_miss"
+    },
+    {
+      "id": "followup",
+      "criteria": [
+        {
+          "number": 1,
+          "result": "pass"
+        },
+        {
+          "number": 2,
+          "result": "pass"
+        },
+        {
+          "number": 3,
+          "result": "pass"
+        }
+      ],
+      "support": "after-results.json record id=followup"
+    },
+    {
+      "id": "late",
+      "criteria": [
+        {
+          "number": 1,
+          "result": "pass"
+        },
+        {
+          "number": 2,
+          "result": "pass"
+        },
+        {
+          "number": 3,
+          "result": "pass"
+        }
+      ],
+      "support": "after-results.json record id=late"
+    },
+    {
+      "id": "empty",
+      "criteria": [
+        {
+          "number": 1,
+          "result": "pass"
+        },
+        {
+          "number": 2,
+          "result": "pass"
+        }
+      ],
+      "support": "after-results.json record id=empty"
+    },
+    {
+      "id": "denied",
+      "criteria": [
+        {
+          "number": 1,
+          "result": "pass"
+        },
+        {
+          "number": 2,
+          "result": "pass"
+        }
+      ],
+      "support": "after-results.json record id=denied"
+    },
+    {
+      "id": "unavailable",
+      "criteria": [
+        {
+          "number": 1,
+          "result": "pass"
+        },
+        {
+          "number": 2,
+          "result": "pass"
+        }
+      ],
+      "support": "after-results.json record id=unavailable"
+    },
+    {
+      "id": "timeout",
+      "criteria": [
+        {
+          "number": 1,
+          "result": "pass"
+        },
+        {
+          "number": 2,
+          "result": "pass"
+        }
+      ],
+      "support": "after-results.json record id=timeout"
+    },
+    {
+      "id": "ordinary_timeout",
+      "criteria": [
+        {
+          "number": 1,
+          "result": "pass"
+        },
+        {
+          "number": 2,
+          "result": "pass"
+        }
+      ],
+      "support": "after-results.json record id=ordinary_timeout"
+    },
+    {
+      "id": "stale",
+      "criteria": [
+        {
+          "number": 1,
+          "result": "pass"
+        },
+        {
+          "number": 2,
+          "result": "pass"
+        },
+        {
+          "number": 3,
+          "result": "pass"
+        }
+      ],
+      "support": "after-results.json record id=stale"
+    },
+    {
+      "id": "irrelevant",
+      "criteria": [
+        {
+          "number": 1,
+          "result": "pass"
+        },
+        {
+          "number": 2,
+          "result": "pass"
+        }
+      ],
+      "support": "after-results.json record id=irrelevant"
+    },
+    {
+      "id": "registry",
+      "criteria": [
+        {
+          "number": 1,
+          "result": "pass"
+        },
+        {
+          "number": 2,
+          "result": "pass"
+        }
+      ],
+      "support": "after-results.json record id=registry"
+    },
+    {
+      "id": "partial",
+      "criteria": [
+        {
+          "number": 1,
+          "result": "pass"
+        },
+        {
+          "number": 2,
+          "result": "pass"
+        }
+      ],
+      "support": "after-results.json record id=partial"
+    },
+    {
+      "id": "positive",
+      "criteria": [
+        {
+          "number": 1,
+          "result": "pass"
+        },
+        {
+          "number": 2,
+          "result": "pass"
+        }
+      ],
+      "support": "after-results.json record id=positive"
+    },
+    {
+      "id": "incompatible",
+      "criteria": [
+        {
+          "number": 1,
+          "result": "pass"
+        },
+        {
+          "number": 2,
+          "result": "pass"
+        }
+      ],
+      "support": "after-results.json record id=incompatible"
+    },
+    {
+      "id": "unauthorized",
+      "criteria": [
+        {
+          "number": 1,
+          "result": "pass"
+        },
+        {
+          "number": 2,
+          "result": "pass"
+        },
+        {
+          "number": 3,
+          "result": "pass"
+        }
+      ],
+      "support": "after-results.json record id=unauthorized"
+    },
+    {
+      "id": "actual_failure",
+      "criteria": [
+        {
+          "number": 1,
+          "result": "pass"
+        },
+        {
+          "number": 2,
+          "result": "pass"
+        }
+      ],
+      "support": "after-results.json record id=actual_failure"
+    },
+    {
+      "id": "exhausted",
+      "criteria": [
+        {
+          "number": 1,
+          "result": "pass"
+        },
+        {
+          "number": 2,
+          "result": "pass"
+        }
+      ],
+      "support": "after-results.json record id=exhausted"
+    },
+    {
+      "id": "native_threshold",
+      "criteria": [
+        {
+          "number": 1,
+          "result": "pass"
+        },
+        {
+          "number": 2,
+          "result": "pass"
+        },
+        {
+          "number": 3,
+          "result": "pass"
+        }
+      ],
+      "support": "after-results.json record id=native_threshold"
+    },
+    {
+      "id": "missing_adapter",
+      "criteria": [
+        {
+          "number": 1,
+          "result": "pass"
+        },
+        {
+          "number": 2,
+          "result": "pass"
+        }
+      ],
+      "support": "after-results.json record id=missing_adapter"
+    },
+    {
+      "id": "write_pending",
+      "criteria": [
+        {
+          "number": 1,
+          "result": "pass"
+        },
+        {
+          "number": 2,
+          "result": "pass"
+        }
+      ],
+      "support": "after-results.json record id=write_pending"
+    },
+    {
+      "id": "source_owned",
+      "criteria": [
+        {
+          "number": 1,
+          "result": "pass"
+        },
+        {
+          "number": 2,
+          "result": "pass"
+        }
+      ],
+      "support": "after-results.json record id=source_owned"
+    },
+    {
+      "id": "lesson_reusable",
+      "criteria": [
+        {
+          "number": 1,
+          "result": "pass"
+        },
+        {
+          "number": 2,
+          "result": "pass"
+        }
+      ],
+      "support": "after-results.json record id=lesson_reusable"
+    },
+    {
+      "id": "lesson_duplicate",
+      "criteria": [
+        {
+          "number": 1,
+          "result": "pass"
+        },
+        {
+          "number": 2,
+          "result": "pass"
+        }
+      ],
+      "support": "after-results.json record id=lesson_duplicate"
+    },
+    {
+      "id": "lesson_oneoff",
+      "criteria": [
+        {
+          "number": 1,
+          "result": "pass"
+        }
+      ],
+      "support": "after-results.json record id=lesson_oneoff"
+    },
+    {
+      "id": "lesson_unsupported",
+      "criteria": [
+        {
+          "number": 1,
+          "result": "pass"
+        }
+      ],
+      "support": "after-results.json record id=lesson_unsupported"
+    },
+    {
+      "id": "lesson_sensitive",
+      "criteria": [
+        {
+          "number": 1,
+          "result": "pass"
+        },
+        {
+          "number": 2,
+          "result": "pass"
+        }
+      ],
+      "support": "after-results.json record id=lesson_sensitive"
+    },
+    {
+      "id": "lesson_local",
+      "criteria": [
+        {
+          "number": 1,
+          "result": "pass"
+        },
+        {
+          "number": 2,
+          "result": "pass"
+        }
+      ],
+      "support": "after-results.json record id=lesson_local"
+    },
+    {
+      "id": "lesson_deferred",
+      "criteria": [
+        {
+          "number": 1,
+          "result": "pass"
+        },
+        {
+          "number": 2,
+          "result": "pass"
+        },
+        {
+          "number": 3,
+          "result": "pass"
+        }
+      ],
+      "support": "after-results.json record id=lesson_deferred"
+    },
+    {
+      "id": "workflow",
+      "criteria": [
+        {
+          "number": 1,
+          "result": "pass"
+        },
+        {
+          "number": 2,
+          "result": "pass"
+        }
+      ],
+      "support": "after-results.json record id=workflow"
+    },
+    {
+      "id": "drift",
+      "criteria": [
+        {
+          "number": 1,
+          "result": "pass"
+        },
+        {
+          "number": 2,
+          "result": "pass"
+        },
+        {
+          "number": 3,
+          "result": "pass"
+        }
+      ],
+      "support": "after-results.json record id=drift"
+    }
+  ]
+}

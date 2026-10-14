@@ -1,0 +1,95 @@
+{
+  "task_controls": {
+    "model": "gpt-6.1-sol",
+    "effort": "medium",
+    "reason": "Parent-ratified T4 batch wording-only equivalence for accepted multi-owner semantics; no authority expansion.",
+    "control_resolution_evidence": "Parent role-inspection.json records neutral configured role; explicit host fork_turns=none dispatch required. Observed serving identity unavailable."
+  },
+  "items": [
+    {
+      "item_id": "hook-precompact-message",
+      "artifact_type": "rule or prompt",
+      "draft": "Before compaction of an active task, use /alaa-workflow for its checkpoint and handoff.",
+      "immutable_behavior_and_decisions": [
+        "Applies before compaction when a task is active.",
+        "Workflow owns checkpoint and handoff; this emits only an owner reminder, does not create or copy state.",
+        "Current official PreCompact discards this message; do not promise delivery. Keep JSON code/parameter/exit behavior outside wording changes."
+      ],
+      "required_sources_of_truth": [
+        "skills/sohrab/alaa-memory-os/scripts/precompact_checkpoint.ps1",
+        "skills/sohrab/alaa-memory-os/scripts/session_start_context.ps1",
+        "skills/sohrab/alaa-memory-os/references/checkers-and-hooks.md",
+        "outputs/20261012-capability-recall/hook-semantic-draft.json"
+      ],
+      "output_mode": "batch"
+    },
+    {
+      "item_id": "hook-session-owner-pointers",
+      "artifact_type": "rule or prompt",
+      "draft": "Alaa conditional owners:\n- When recall, capability ownership, durable writes or source disagreement is in scope, load /alaa-memory-os and its selected adapter.\n- For active task continuity or compaction, load /alaa-workflow.",
+      "immutable_behavior_and_decisions": [
+        "Recall/capability ownership/durable writes/source disagreement condition points to memory-os and selected adapter.",
+        "Active continuity or compaction condition points to workflow.",
+        "No copied recall/drift/write budgets or policy; owners stay canonical.",
+        "No input payload, path, file content or secret echoed; code and interpolated driftLine are outside this item."
+      ],
+      "required_sources_of_truth": [
+        "skills/sohrab/alaa-memory-os/scripts/precompact_checkpoint.ps1",
+        "skills/sohrab/alaa-memory-os/scripts/session_start_context.ps1",
+        "skills/sohrab/alaa-memory-os/references/checkers-and-hooks.md",
+        "outputs/20261012-capability-recall/hook-semantic-draft.json"
+      ],
+      "output_mode": "batch"
+    },
+    {
+      "item_id": "hook-session-positive-drift",
+      "artifact_type": "rule or prompt",
+      "draft": "- $openCount unresolved repository drift record(s). When an affected contract is in scope, read /alaa-memory-os references/drift-management.md and the records.",
+      "immutable_behavior_and_decisions": [
+        "Retain exact $openCount code interpolation and count meaning.",
+        "Only current unresolved states are counted.",
+        "Read drift owner and records when affected contract is in scope.",
+        "No supplied path or file content is printed."
+      ],
+      "required_sources_of_truth": [
+        "skills/sohrab/alaa-memory-os/scripts/precompact_checkpoint.ps1",
+        "skills/sohrab/alaa-memory-os/scripts/session_start_context.ps1",
+        "skills/sohrab/alaa-memory-os/references/checkers-and-hooks.md",
+        "outputs/20261012-capability-recall/hook-semantic-draft.json"
+      ],
+      "output_mode": "batch"
+    },
+    {
+      "item_id": "hook-session-zero-drift",
+      "artifact_type": "rule or prompt",
+      "draft": "- No unresolved records observed in the repository drift registry.",
+      "immutable_behavior_and_decisions": [
+        "Observed zero unresolved records, not global absence or full registry proof when scan unavailable.",
+        "No path or file content echo."
+      ],
+      "required_sources_of_truth": [
+        "skills/sohrab/alaa-memory-os/scripts/precompact_checkpoint.ps1",
+        "skills/sohrab/alaa-memory-os/scripts/session_start_context.ps1",
+        "skills/sohrab/alaa-memory-os/references/checkers-and-hooks.md",
+        "outputs/20261012-capability-recall/hook-semantic-draft.json"
+      ],
+      "output_mode": "batch"
+    },
+    {
+      "item_id": "hook-session-unknown-drift",
+      "artifact_type": "rule or prompt",
+      "draft": "- Repository drift registry observation unavailable.",
+      "immutable_behavior_and_decisions": [
+        "Unavailable/unreadable/incomplete observation is unknown, never zero.",
+        "No exception message or supplied path/content echo."
+      ],
+      "required_sources_of_truth": [
+        "skills/sohrab/alaa-memory-os/scripts/precompact_checkpoint.ps1",
+        "skills/sohrab/alaa-memory-os/scripts/session_start_context.ps1",
+        "skills/sohrab/alaa-memory-os/references/checkers-and-hooks.md",
+        "outputs/20261012-capability-recall/hook-semantic-draft.json"
+      ],
+      "output_mode": "batch"
+    }
+  ]
+}

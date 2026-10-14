@@ -1,0 +1,75 @@
+{
+  "commands": [
+    {
+      "command": "python skills/sohrab/alaa-repo-docs/scripts/check_markdown_links.py . --files docs/design/0003-capability-recall-before-environment-blocker.md docs/design/README.md outputs/README.md outputs/20261012-capability-recall/report.md",
+      "cwd": "D:\\Sohrab\\Project\\skills",
+      "environmentOverrides": {},
+      "priority": "ordinary",
+      "affinity": "none",
+      "timeoutSeconds": 120,
+      "start": "2026-10-13 07:43:09 UTC",
+      "end": "2026-10-13 07:43:10 UTC",
+      "exit": 0,
+      "output": "Validated links in 4 Markdown file(s) under D:\\Sohrab\\Project\\skills.\r\n",
+      "snapshotBefore": "outputs/20261012-capability-recall/final-documentation-manifest.json entries= 4 combined= 209de36841a4feed44549046d90e3642eea0f02b81e26b3dda269d74f77c2a20 expected= 209de36841a4feed44549046d90e3642eea0f02b81e26b3dda269d74f77c2a20 pin_match= True entry_match= True\r\noutputs/20261012-capability-recall/final-source-manifest.json entries= 41 combined= ecdf8fe1a3706e789a05cddbfbf7161ed687caa88823caadf0a8f9b01bde43a7 expected= ecdf8fe1a3706e789a05cddbfbf7161ed687caa88823caadf0a8f9b01bde43a7 pin_match= True entry_match= True",
+      "snapshotAfter": "outputs/20261012-capability-recall/final-documentation-manifest.json entries= 4 combined= 209de36841a4feed44549046d90e3642eea0f02b81e26b3dda269d74f77c2a20 expected= 209de36841a4feed44549046d90e3642eea0f02b81e26b3dda269d74f77c2a20 pin_match= True entry_match= True\r\noutputs/20261012-capability-recall/final-source-manifest.json entries= 41 combined= ecdf8fe1a3706e789a05cddbfbf7161ed687caa88823caadf0a8f9b01bde43a7 expected= ecdf8fe1a3706e789a05cddbfbf7161ed687caa88823caadf0a8f9b01bde43a7 pin_match= True entry_match= True",
+      "classification": "PASS",
+      "tier": "affected",
+      "proofLevel": "1-static"
+    },
+    {
+      "command": "python skills/sohrab/alaa-repo-docs/scripts/check_markdown_links.py . --line-budget --files docs/design/README.md outputs/README.md outputs/20261012-capability-recall/report.md",
+      "cwd": "D:\\Sohrab\\Project\\skills",
+      "environmentOverrides": {},
+      "priority": "ordinary",
+      "affinity": "none",
+      "timeoutSeconds": 120,
+      "start": "2026-10-13 07:43:11 UTC",
+      "end": "2026-10-13 07:43:12 UTC",
+      "exit": 0,
+      "output": "docs/design/README.md: GREEN 9 physical lines\r\noutputs/README.md: GREEN 26 physical lines\r\noutputs/20261012-capability-recall/report.md: GREEN 33 physical lines\r\nValidated links, line budgets in 3 Markdown file(s) under D:\\Sohrab\\Project\\skills.\r\n",
+      "snapshotBefore": "outputs/20261012-capability-recall/final-documentation-manifest.json entries= 4 combined= 209de36841a4feed44549046d90e3642eea0f02b81e26b3dda269d74f77c2a20 expected= 209de36841a4feed44549046d90e3642eea0f02b81e26b3dda269d74f77c2a20 pin_match= True entry_match= True\r\noutputs/20261012-capability-recall/final-source-manifest.json entries= 41 combined= ecdf8fe1a3706e789a05cddbfbf7161ed687caa88823caadf0a8f9b01bde43a7 expected= ecdf8fe1a3706e789a05cddbfbf7161ed687caa88823caadf0a8f9b01bde43a7 pin_match= True entry_match= True",
+      "snapshotAfter": "outputs/20261012-capability-recall/final-documentation-manifest.json entries= 4 combined= 209de36841a4feed44549046d90e3642eea0f02b81e26b3dda269d74f77c2a20 expected= 209de36841a4feed44549046d90e3642eea0f02b81e26b3dda269d74f77c2a20 pin_match= True entry_match= True\r\noutputs/20261012-capability-recall/final-source-manifest.json entries= 41 combined= ecdf8fe1a3706e789a05cddbfbf7161ed687caa88823caadf0a8f9b01bde43a7 expected= ecdf8fe1a3706e789a05cddbfbf7161ed687caa88823caadf0a8f9b01bde43a7 pin_match= True entry_match= True",
+      "classification": "PASS",
+      "tier": "affected",
+      "proofLevel": "1-static"
+    },
+    {
+      "command": "git diff --check",
+      "cwd": "D:\\Sohrab\\Project\\skills",
+      "environmentOverrides": {},
+      "priority": "ordinary",
+      "affinity": "none",
+      "timeoutSeconds": 120,
+      "start": "2026-10-13 07:43:13 UTC",
+      "end": "2026-10-13 07:43:13 UTC",
+      "exit": 0,
+      "output": "warning: in the working copy of 'skills/sohrab/alaa-cc-orchestrator/references/verification-and-gates.md', CRLF will be replaced by LF the next time Git touches it\nwarning: in the working copy of 'skills/sohrab/alaa-codex-orchestrator/references/verification-and-gates.md', CRLF will be replaced by LF the next time Git touches it\nwarning: in the working copy of 'skills/sohrab/alaa-codex-runtime-ops/SKILL.md', CRLF will be replaced by LF the next time Git touches it\nwarning: in the working copy of 'skills/sohrab/alaa-extract-agent-lessons/SKILL.md', CRLF will be replaced by LF the next time Git touches it\nwarning: in the working copy of 'skills/sohrab/alaa-extract-agent-lessons/agents/openai.yaml', CRLF will be replaced by LF the next time Git touches it\nwarning: in the working copy of 'skills/sohrab/alaa-extract-agent-lessons/references/reusable-context-shapes.md', CRLF will be replaced by LF the next time Git touches it\nwarning: in the working copy of 'skills/sohrab/alaa-memory-os/SHA256SUMS', CRLF will be replaced by LF the next time Git touches it\nwarning: in the working copy of 'skills/sohrab/alaa-memory-os/SKILL.md', CRLF will be replaced by LF the next time Git touches it\nwarning: in the working copy of 'skills/sohrab/alaa-memory-os/agents/openai.yaml', CRLF will be replaced by LF the next time Git touches it\nwarning: in the working copy of 'skills/sohrab/alaa-memory-os/references/checkers-and-hooks.md', CRLF will be replaced by LF the next time Git touches it\nwarning: in the working copy of 'skills/sohrab/alaa-memory-os/references/drift-management.md', CRLF will be replaced by LF the next time Git touches it\nwarning: in the working copy of 'skills/sohrab/alaa-memory-os/references/knowledge-shape.md', CRLF will be replaced by LF the next time Git touches it\nwarning: in the working copy of 'skills/sohrab/alaa-memory-os/references/prompt-3-publishing.md', CRLF will be replaced by LF the next time Git touches it\nwarning: in the working copy of 'skills/sohrab/alaa-memory-os/references/skill-boundaries.md', CRLF will be replaced by LF the next time Git touches it\nwarning: in the working copy of 'skills/sohrab/alaa-memory-os/references/store-basic-memory.md', CRLF will be replaced by LF the next time Git touches it\nwarning: in the working copy of 'skills/sohrab/alaa-memory-os/references/store-hindsight.md', CRLF will be replaced by LF the next time Git touches it\nwarning: in the working copy of 'skills/sohrab/alaa-memory-os/references/store-local.md', CRLF will be replaced by LF the next time Git touches it\nwarning: in the working copy of 'skills/sohrab/alaa-memory-os/scripts/_common.ps1', CRLF will be replaced by LF the next time Git touches it\nwarning: in the working copy of 'skills/sohrab/alaa-memory-os/scripts/alaa_memory_staleness.ps1', CRLF will be replaced by LF the next time Git touches it\nwarning: in the working copy of 'skills/sohrab/alaa-memory-os/scripts/alaa_obsidian_linkcheck.ps1', CRLF will be replaced by LF the next time Git touches it\nwarning: in the working copy of 'skills/sohrab/alaa-memory-os/scripts/precompact_checkpoint.ps1', CRLF will be replaced by LF the next time Git touches it\nwarning: in the working copy of 'skills/sohrab/alaa-memory-os/scripts/session_start_context.ps1', CRLF will be replaced by LF the next time Git touches it\nwarning: in the working copy of 'skills/sohrab/alaa-workflow/references/context-curation.md', CRLF will be replaced by LF the next time Git touches it\n",
+      "snapshotBefore": "outputs/20261012-capability-recall/final-documentation-manifest.json entries= 4 combined= 209de36841a4feed44549046d90e3642eea0f02b81e26b3dda269d74f77c2a20 expected= 209de36841a4feed44549046d90e3642eea0f02b81e26b3dda269d74f77c2a20 pin_match= True entry_match= True\r\noutputs/20261012-capability-recall/final-source-manifest.json entries= 41 combined= ecdf8fe1a3706e789a05cddbfbf7161ed687caa88823caadf0a8f9b01bde43a7 expected= ecdf8fe1a3706e789a05cddbfbf7161ed687caa88823caadf0a8f9b01bde43a7 pin_match= True entry_match= True",
+      "snapshotAfter": "outputs/20261012-capability-recall/final-documentation-manifest.json entries= 4 combined= 209de36841a4feed44549046d90e3642eea0f02b81e26b3dda269d74f77c2a20 expected= 209de36841a4feed44549046d90e3642eea0f02b81e26b3dda269d74f77c2a20 pin_match= True entry_match= True\r\noutputs/20261012-capability-recall/final-source-manifest.json entries= 41 combined= ecdf8fe1a3706e789a05cddbfbf7161ed687caa88823caadf0a8f9b01bde43a7 expected= ecdf8fe1a3706e789a05cddbfbf7161ed687caa88823caadf0a8f9b01bde43a7 pin_match= True entry_match= True",
+      "classification": "PASS",
+      "tier": "affected",
+      "proofLevel": "1-static"
+    }
+  ],
+  "sourcePin": "ecdf8fe1a3706e789a05cddbfbf7161ed687caa88823caadf0a8f9b01bde43a7",
+  "documentationPin": "209de36841a4feed44549046d90e3642eea0f02b81e26b3dda269d74f77c2a20",
+  "head": "daaa3694c744667975d187bcdb33eaae75d9e7fd",
+  "preflight": "Both manifests independently rehashed successfully; documentation manifest has 4 entries; source manifest has 41 entries.",
+  "status": "PASS for the frozen documentation snapshot; parent review noted two wording nits for the documentation owner to fix after this verification.",
+  "documentationManifest": {
+    "path": "outputs/20261012-capability-recall/final-documentation-manifest.json",
+    "entries": 4,
+    "combinedSha256": "209de36841a4feed44549046d90e3642eea0f02b81e26b3dda269d74f77c2a20"
+  },
+  "sourceManifest": {
+    "path": "outputs/20261012-capability-recall/final-source-manifest.json",
+    "entries": 41,
+    "combinedSha256": "ecdf8fe1a3706e789a05cddbfbf7161ed687caa88823caadf0a8f9b01bde43a7"
+  },
+  "pins": "Both manifests were rehashed before, between, and after checks; every listed path hash and byte count matched, and both combined hashes remained stable.",
+  "preflightNote": "Two preflight helper attempts failed before validation: the first assumed the documentation manifest used a files key and exited with KeyError; the next had a Python quoting SyntaxError. After reading the manifest schema (documents key), a corrected hash check passed. These were preflight only; no validation check ran under an unverified pin.",
+  "finalReviewNote": "Parent review identified two docs nits: stale 'rerun pending' wording and an unlabelled historical RFC paragraph. No edits occurred during this verification. Parent states documentation owner will fix and dispatch affected doc checks on a refreshed pin.",
+  "finalStatus": "Tracked docs/design/0003-capability-recall-before-environment-blocker.md, docs/design/README.md, and outputs/README.md were modified in the working tree; task source changes remain as expected. Verification wrote only this evidence file.",
+  "unrun": "Final workflow validation is intentionally pending its separate dispatch. No source gates were repeated."
+}

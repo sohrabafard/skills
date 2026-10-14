@@ -1,0 +1,41 @@
+{
+  "item_id": "W17-validation-coverage",
+  "path": "skills/sohrab/alaa-memory-os/references/checkers-and-hooks.md",
+  "source_before_sha256": "be396e89720b1b7c84d8f02c87cb0e1d3a5f4f6c15499c3c410b882ff5250dc8",
+  "draft_sha256": "d031cb4beb3ae60f4041eec2f752f23883aa405eff617097f7a276af1f975811",
+  "replacement_sha256": "b3dced2af26cda77fa4a98090c2ac885e6629bc0da9f46e383501997f8e947a2",
+  "source_after_sha256": "4a5ed7306900dabca7dfe24b747fc0453cb1750963048b94f76de5e1fb85d875",
+  "cwd": "D:/Sohrab/Project/skills",
+  "resource_policy": "ordinary bounded static assertions, sequential; no behavioral command execution",
+  "checks": [
+    {
+      "assertion": "exact anchored replacement with outside text preserved",
+      "result": "PASS"
+    },
+    {
+      "assertion": "five actual PowerShell targets named",
+      "result": "PASS"
+    },
+    {
+      "assertion": "all five exact separate root commands preserved",
+      "result": "PASS"
+    },
+    {
+      "assertion": "exit and independent proof limits preserved",
+      "result": "PASS"
+    },
+    {
+      "assertion": "scoped whitespace",
+      "result": "PASS"
+    }
+  ],
+  "diff_command": [
+    "git",
+    "diff",
+    "--check",
+    "--",
+    "skills/sohrab/alaa-memory-os/references/checkers-and-hooks.md"
+  ],
+  "diff_exit": 0,
+  "proof": "static; independent verification/equivalence acceptance remains with assigned gates"
+}

@@ -10,8 +10,7 @@ reinstates it. Nothing was migrated when the tool was dropped, because the tool 
 
 ## What the store actually is
 
-`D:/Sohrab/Project/agent-memory` — plain markdown notes in a git repository, roughly 140 of them at the time of
-writing. Basic Memory indexed this directory; it never owned it. The consequence worth internalising: **dropping
+`<vault-root>` — plain markdown notes in a git repository, with its root resolved from the task or `ALAA_MEMORY_VAULT`. Basic Memory indexed this directory; it never owned it. The consequence worth internalising: **dropping
 the index loses search, not content**, and every note remains readable by any agent in any runtime that can read
 a file, which is the property the server-backed adapter never had.
 
@@ -34,21 +33,24 @@ archive/       superseded notes, kept rather than deleted
 
 ## Recall
 
+Resolve `$vaultRoot` from the authorized task or `ALAA_MEMORY_VAULT`; an invalid selected root is unavailable,
+not permission to search another vault.
+
 Search the tree, then read only the matching note. There is no ranking, so the query has to carry the
 discrimination that a hybrid search used to.
 
 ```powershell
 # by topic, across the vault
-rg -i -l "notification command contract" D:/Sohrab/Project/agent-memory
+rg -i -l "notification command contract" $vaultRoot
 
 # by lifecycle field, which is ordinary frontmatter here
-rg -l "^status: needs_review" D:/Sohrab/Project/agent-memory
+rg -l "^status: needs_review" $vaultRoot
 
 # by relation, to walk the graph by hand
-rg -l "\[\[Alaa System Architecture Map\]\]" D:/Sohrab/Project/agent-memory
+rg -l "\[\[Alaa System Architecture Map\]\]" $vaultRoot
 
 # what changed recently, the replacement for recent-activity
-git -C D:/Sohrab/Project/agent-memory log --oneline -20 --name-only
+git -C $vaultRoot log --oneline -20 --name-only
 ```
 
 Three recall behaviours change, and pretending they did not is how an agent reports a miss as an absence:
@@ -75,14 +77,10 @@ index, a duplicate is harder to notice later, not easier.
 - Write UTF-8 without a byte-order mark. A mark immediately before the YAML delimiter breaks the frontmatter
   parse, and on Windows PowerShell 5.1 `Set-Content -Encoding UTF8` emits one.
 
-**Commit every new or changed note in the same session.** This is the one operational rule that has no equivalent
-in the server-backed adapter: with an index server, an unsynced note was still on disk; here, an uncommitted note
-in a git-backed vault is one `git clean` away from gone, and nothing will report it missing.
-
-```powershell
-git -C D:/Sohrab/Project/agent-memory add -A
-git -C D:/Sohrab/Project/agent-memory commit -m "memory: <what changed and why>"
-```
+Read back every authorized file write and confirm its intended content before reporting completion.
+Report changed paths and uncommitted status. Commit only with explicit permission for that separate effect;
+otherwise preserve the uncommitted note and its pointer in the authorized handoff. Git history offers
+recovery only after a permitted commit; never imply it protects uncommitted content.
 
 ## What is lost, and what replaces it
 
@@ -103,9 +101,8 @@ not have to carry before. Treat a note you are editing as a chance to fix its fr
 
 Unchanged from the file-backed store, and now the only mechanism: two agents writing the same note is
 last-writer-wins with no warning and no merge. One agent owns a note during a task; an agent that must update a
-note it did not read this session re-reads it immediately before writing; a note written by a hook goes to
-`inbox/` with a unique filename rather than into an existing note. Git makes a clobber recoverable, which is a
-reason to commit often rather than a reason to be careless.
+note it did not read this session re-reads it immediately before writing; new authorized captures use a unique filename rather than overwrite an existing note. Repository hooks
+create no vault notes; `references/checkers-and-hooks.md` owns their nonwriting contract.
 
 ## Security
 

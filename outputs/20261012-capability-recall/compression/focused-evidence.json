@@ -1,0 +1,79 @@
+{
+  "cwd": "D:/Sohrab/Project/skills",
+  "resource_policy": "ordinary bounded static assertions; sequential; no CPU-heavy check",
+  "proof": "static; independent equivalence not discharged",
+  "checks": [
+    {
+      "assertion": "changed reference existence",
+      "result": "PASS",
+      "definition": {
+        "rule": "literal reference resolves in own skill or adjacent named owner",
+        "count": 103,
+        "missing": []
+      }
+    },
+    {
+      "assertion": "single router",
+      "result": "PASS",
+      "definition": "sole memory topic-map pointer/table; sole lesson body router"
+    },
+    {
+      "assertion": "mirrored consumer parity",
+      "result": "PASS",
+      "definition": "exact replacement text equal for paired consumers"
+    },
+    {
+      "assertion": "no inactive BasicMemory routing",
+      "result": "PASS",
+      "definition": "neutral shapes and boundaries contain no BasicMemory upstream loading paths"
+    },
+    {
+      "assertion": "immutable draft snapshot hashes",
+      "result": "PASS",
+      "definition": "all 18 accepted semantic snapshots still match immutable manifest"
+    },
+    {
+      "assertion": "exact anchored application",
+      "result": "PASS",
+      "definition": {
+        "replacement_occurrence_mismatch": [],
+        "outside_anchor_difference": [],
+        "items": 16
+      }
+    },
+    {
+      "assertion": "scoped whitespace",
+      "result": "PASS",
+      "definition": {
+        "command": [
+          "git",
+          "diff",
+          "--check",
+          "--",
+          "skills/sohrab/alaa-memory-os/SKILL.md",
+          "skills/sohrab/alaa-memory-os/agents/openai.yaml",
+          "skills/sohrab/alaa-memory-os/references/00-topic-map.md",
+          "skills/sohrab/alaa-memory-os/references/checkers-and-hooks.md",
+          "skills/sohrab/alaa-memory-os/references/drift-management.md",
+          "skills/sohrab/alaa-memory-os/references/knowledge-shape.md",
+          "skills/sohrab/alaa-memory-os/references/prompt-3-publishing.md",
+          "skills/sohrab/alaa-memory-os/references/skill-boundaries.md",
+          "skills/sohrab/alaa-memory-os/references/store-basic-memory.md",
+          "skills/sohrab/alaa-memory-os/references/store-hindsight.md",
+          "skills/sohrab/alaa-memory-os/references/store-local.md",
+          "skills/sohrab/alaa-memory-os/references/hindsight-setup.md",
+          "skills/sohrab/alaa-extract-agent-lessons/SKILL.md",
+          "skills/sohrab/alaa-extract-agent-lessons/agents/openai.yaml",
+          "skills/sohrab/alaa-codex-runtime-ops/SKILL.md",
+          "skills/sohrab/alaa-codex-orchestrator/references/verification-and-gates.md",
+          "skills/sohrab/alaa-cc-orchestrator/references/verification-and-gates.md",
+          "skills/sohrab/alaa-workflow/references/context-curation.md",
+          "skills/sohrab/alaa-extract-agent-lessons/references/reusable-context-shapes.md"
+        ],
+        "exit": 0
+      }
+    }
+  ],
+  "failures": [],
+  "shape_outside_anchor_evidence": "W4 full original reconstructed from baseline.json, not current suffix; Design basis preserved unchanged."
+}

@@ -32,7 +32,7 @@ Before validation dispatch, record one check list in the existing plan: required
 
 ## Reusable-context owner
 
-Apply `alaa-workflow references/context-curation.md` at material boundaries and closure. Workflow owns scan admission, candidate storage, authorized publication and gate reopening; consume its recorded outcome once, including when this run is a child phase.
+Apply `alaa-workflow references/context-curation.md` at material boundaries and closure. Workflow owns scan timing, candidate location and gate reopening; lessons owns admission and memory owns authorized publication; consume its recorded outcome once, including when this run is a child phase.
 
 ## Phase A — Plan
 
@@ -41,7 +41,16 @@ Always first, never skipped, at any profile. Everything after it inherits its de
 1. Before the first write apply `alaa-workflow references/workspace-and-integration.md`: record base/checkout identity, inspect unrelated changes and resolve overlapping ownership. Use its current-checkout or isolation decision; disjoint existing changes alone require neither refusal nor a new branch.
 2. Dispatch the specification, exploration, and research lanes whose conditions in `references/routing-matrix.md` hold, in parallel only when their questions are independent. Spending on `alaa-spec-analyst` here is the cheapest correctness lever in the pipeline and is wasted on a request that is already concrete.
 3. Reconcile observed facts and label unresolved assumptions. Resolve missing facts through retrieval/clarification, then select the planning profile through `routing-matrix.md` before making the plan; the lead ratifies an advisory planner draft.
-4. Before the plan approves any lane that creates a new container image, toolchain, chart, CI include or template, generator, hook pack, or a script meant for reuse by more than one repository or pipeline (editing an existing artifact does not trigger this check), run the existing-infrastructure check, because one repository's tree does not show what another already provides. Ask `/alaa-memory-os` whether existing infrastructure already provides that capability, under its active adapter's rule for existence and ownership questions. When `/alaa-services-contract` provides an infrastructure registry, follow its check-before-creating rule and read the registry first. Verify every hit in the owning repository. Record the answer in the plan — `found` with the artifact, its owner, and the evidence, or `none` with the queries and sources checked, or `no memory evidence` with the sources checked when recall failed open — and put it in that lane's dispatch `<context>`. A `found` answer enters step 5 as the reuse-or-extend alternative, chosen or rejected with its reason. Rejecting a `found` artifact in favour of a parallel one needs its owner's or the user's decision.
+4. Before approving a new container image, toolchain, chart, CI include/template, generator, hook pack or
+   script reused across repositories/pipelines (not an existing-artifact edit), apply /alaa-memory-os
+   capability inquiry: this tree cannot establish what another owner already provides. Read any
+   /alaa-services-contract infrastructure registry first and reuse sufficient current evidence.
+   Record the verified owner/alternative and evidence, or the memory owner's scoped unavailable/unknown
+   outcome, in the workflow plan and lane `<context>`. Empty recall never justifies `none` infrastructure.
+   A verified alternative enters step 5 as reuse-or-extend; rejecting it for a parallel artifact requires
+   its owner's or user's decision. Before local absence becomes a validation blocker or a permitted
+   additional repair has an unresolved owner, use the same memory-owned inquiry and return to the runtime
+   recovery owner; lookup adds no retry or native status authority.
 5. Decide the solution before decomposing it. Name the chosen approach and each rejected alternative with the reason it was rejected. Where the goal stores, indexes, caches, or moves data, decide the representation and the access path with `/alaa-data-layer`. Where a path grows with tenants, rows, history, or events, state its complexity bound with `/alaa-algorithms-data-structures`. Run the design pass under `/alaa-system-design` when that skill's conditions hold; `references/routing-matrix.md` names the three conditions it adds beyond the architecture critic's own triggers.
 6. Trigger `alaa-architecture-critic` before implementation whenever its condition in `references/routing-matrix.md` holds, and whenever step 5 required a design pass. The critic reviews a design record with its decisions already made; a critic handed an undecided plan can only accept or reject the whole proposal. A specialist running here is pressure-testing the plan rather than gating the change, and that is the one place a specialist runs early.
 7. Trigger `alaa-api-contract-reviewer` here rather than in Phase D whenever its condition in `references/routing-matrix.md` already holds, so consumer impact and the deprecation path are decided before code is written rather than discovered after.

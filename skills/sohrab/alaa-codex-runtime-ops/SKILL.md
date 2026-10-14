@@ -9,10 +9,15 @@ Recover from Codex environment failures while preserving the user's task scope: 
 
 ## Recovery procedure
 
-1. Preserve the original task scope and the last reliable evidence.
-2. Match the error text to a failure class below and apply its smallest retry; `references/00-topic-map.md` routes each class to its reference.
-3. Escalate only when the blocked command is necessary and the failure prevents completion, justified by the task and the lost capability.
-4. Report the workaround briefly, then return to the task.
+1. Preserve the original task scope and last reliable evidence.
+2. Match the error text to a failure class below and select its smallest permitted retry; `references/00-topic-map.md` routes each class.
+3. Before a local-tool miss becomes a validation blocker, or an otherwise permitted additional repair has
+   an unresolved owner, apply /alaa-memory-os `SKILL.md` capability inquiry. Reuse its adequate current
+   evidence; its classifications distinguish missing local capability, unavailable compatible
+   infrastructure, missing authority, actual failure and unknown availability. Return verified leads here;
+   recall adds no attempt and changes no native blocked threshold.
+4. Apply the selected permitted recovery within its existing attempt budget. Escalate only when the blocked command is necessary and the failure prevents completion, justified by the task and lost capability.
+5. Report the workaround briefly, then return to the task.
 
 Read `references/40-project-fallbacks.md` when the failing stack is Node, Vite, Vitest, Quasar, or a Yarn gate, and `references/90-source-map.md` before giving durable guidance about Codex, shell, or OS behavior.
 
