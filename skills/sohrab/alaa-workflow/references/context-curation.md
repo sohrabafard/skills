@@ -16,7 +16,7 @@ At a completed or failed phase, or a material decision boundary, invoke `/alaa-e
 
 A boundary that produced none of them waits for the final gate. Scanning every boundary spends context on nothing and trains the run to skip the scan that mattered.
 
-When a plan is admitted, park each admitted candidate in its matching handoff-package field; for issue-only work, use canonical issue notes. `references/context-continuity.md` owns these locations and field semantics. Record judgments as confirmed facts about who chose what and why, never as universal facts: a preference recorded as law will be applied unchanged in another repository, where it may be wrong and its origin lost. Do not duplicate candidates between owners; link the canonical record.
+When a plan is admitted, park each admitted candidate in its matching handoff-package field; for issue-only work, use issue comments. `references/context-continuity.md` owns these locations and field semantics. Record judgments as confirmed facts about who chose what and why, never as universal facts: a preference recorded as law will be applied unchanged in another repository, where it may be wrong and its origin lost. Do not duplicate candidates between owners; link the canonical record.
 
 Do not publish active plan, checkpoint, or validation state to memory. That is position, it is stale within the hour, and a memory store has no way to learn that it went stale.
 
@@ -25,9 +25,8 @@ Do not publish active plan, checkpoint, or validation state to memory. That is p
 Run the full-engagement gate before completion, once implementation, validation, review, and documentation evidence are stable — and run it even when the expected result is empty, because a gate that runs only when something is expected has stopped being a gate.
 
 1. Reconcile the intermediate candidates against the final evidence.
-2. Consume /alaa-extract-agent-lessons admission/routing and route authorized durable publication through
-   /alaa-memory-os; memory owns storage authority and search-before-create, not this timing reference.
-3. Record the outcome — persisted, deferred, rejected, or no admitted candidates — once in the admitted plan's final-phase evidence, with a reference from its checkpoint when admitted, or in canonical issue notes for issue-only work. Do not create artifacts outside admission or copy the outcome into another editable owner.
+2. Consume /alaa-extract-agent-lessons admission/routing and Route authorized durable publication through `$alaa-memory-os` / `/alaa-memory-os`;
+3. Record the outcome — persisted, deferred, rejected, or no admitted candidates — once in the admitted plan's final-phase evidence, with a reference from its checkpoint when admitted,  or in the issue's comments for issue-only work. Do not create artifacts outside admission or copy the outcome into another editable owner.
 
 ## When the gate reopens the pipeline
 

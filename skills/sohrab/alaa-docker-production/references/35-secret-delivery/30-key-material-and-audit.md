@@ -43,7 +43,7 @@ docker service inspect --format '{{range .Spec.TaskTemplate.ContainerSpec.Env}}{
 3. The container-side loader runs before `exec`, and exits non-zero when the file is missing. ([the `_FILE` convention](10-container-file-delivery/20-file-convention.md))
 4. The source file is excluded by `.dockerignore` and `.gitignore`; see [Compose file secrets](10-container-file-delivery/30-compose-file-secrets.md).
 5. The secret name carries a version suffix so rotation has somewhere to go. See [Swarm secret creation and rotation](20-swarm-rotation.md#6-rotation-is-a-create-new-name-operation).
-6. `docker inspect` shows no credential value; see [inspect exposure](#8-what-must-never-appear-in).
+6. `docker inspect` shows no credential value; see [inspect exposure](#8-what-must-never-appear-in-docker-inspect).
 7. If any credential still appears under `environment:`, it uses `${VAR:?message}` with no default
    and the merge request names the constraint that prevented a file mount. (this skill's
    `references/25-fail-closed-interpolation.md`)

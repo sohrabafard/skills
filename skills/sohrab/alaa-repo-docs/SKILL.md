@@ -38,7 +38,8 @@ Keep this file routing-first. Load only the reference whose condition holds.
 4. For a broad or multi-document refresh, split discovery using `references/70-subagent-doc-workflows.md` before editing anything.
 5. Assign each touched topic one canonical document, then use `references/15-document-size-and-clustering.md` to classify every created or refreshed file, grade and cluster eligible narrative documents, and preserve exempt artifacts whole before following the production workflow in `references/40-sync-workflow-and-evidence.md`.
 6. Repair documentation-hub navigation and repo-local links, then run
-   `python $SKILL_DIR/scripts/check_markdown_links.py <repo-root>` and resolve every finding.
+   `python $SKILL_DIR/scripts/check_markdown_links.py <repo-root>` and resolve every finding as
+   `references/10-language-and-links.md` directs.
 
 ## Default document set
 
@@ -93,7 +94,7 @@ Route by name rather than restating. Claude Code form first, Codex form second.
 | Backend structure and terminology the documents describe | `/alaa-php-clean-code` (`$alaa-php-clean-code`), `/alaa-laravel-architecture` (`$alaa-laravel-architecture`) |
 | Frontend integration behaviour the documents describe | `/alaa-frontend-developer` (`$alaa-frontend-developer`) |
 | Ala service conventions and `/api/*` response behaviour | `/alaa-services-contract` (`$alaa-services-contract`) |
-| Whether every cross-skill path citation in `skills/sohrab/` resolves | the fleet checker `skills/scripts/check_fleet_references.py` |
+| Whether every cross-skill path citation in `skills/sohrab/` resolves | the fleet checker `check_fleet_references.py` in the skill pack repository's root `scripts` directory |
 | Release governance, version selection, changelog policy, contract classification, and repository-specific release tooling | the documented repository's own release owner. Describe what it decided; never decide it here, and never rewrite its records to remove duplication |
 
 ## Subagent strategy

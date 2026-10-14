@@ -8,7 +8,7 @@ An actionable implementation/execution-plan request authorizes a saved plan and 
 
 Explicit no-file, read-only, or chat-only limits prevail. Native Plan Mode uses only its host-permitted planning surface until execution is approved; then materialize the admitted artifact family before implementation. Short advisory answers, ordinary review, and small bounded single-phase edits create no workflow files unless requested. A continuing authorized fix loop follows execution admission.
 
-When an admitted family exists, update it instead of creating another. Before execution, fill ordered phases and store-appropriate task mappings, dependencies, ownership, exclusions, acceptance, validation, resume context, and skill bindings. `references/task-tracking.md` owns task authority; `references/companion-routing.md` owns skill bindings. Report saved plan/checkpoint paths; prose alone does not satisfy admitted durable planning.
+When an admitted family exists, update it instead of creating another. Before execution, fill ordered phases and store-appropriate task mappings, dependencies, ownership, exclusions, phase acceptance, validation, resume context, and skill bindings; task acceptance and results follow `references/task-tracking.md` `## Acceptance and evidence by level`. `references/task-tracking.md` owns task authority; `references/companion-routing.md` owns skill bindings. Report saved plan/checkpoint paths; prose alone does not satisfy admitted durable planning.
 
 ## Profiles
 
@@ -53,13 +53,13 @@ Continue an active task's existing family and stem. Resolve companions only from
 
 `references/context-continuity.md` owns why the artifacts divide the way they do, what each handoff field means, and when a field earns a line. This file owns only where each artifact lives and what it is permitted to contain.
 
-The plan contains outcome/scope, phase design and barriers, acceptance, validation/evidence, skill associations, and the handoff package. Task progress/dependencies follow `references/task-tracking.md`; status and cursor ownership follow `references/context-continuity.md`.
+The plan contains outcome/scope, phase design and barriers, phase acceptance, integrated-review evidence, skill associations, and the handoff package; task acceptance and results live per `references/task-tracking.md` `## Acceptance and evidence by level`. Task progress/dependencies follow `references/task-tracking.md`; status and cursor ownership follow `references/context-continuity.md`.
 
 The handoff package is a section inside the plan, not a separate file — knowledge is only useful next to the route it belongs to, and a fourth file is a fourth thing to keep honest. Its six fields are fixed; keep an unused one empty rather than deleting it, because a deleted field reads as a field nobody had anything to put in.
 
-The checkpoint contains only status, current phase, last verified result, blockers, next action, touched surfaces, and update time.
+The checkpoint contains only status, current phase, last verified result, blockers, next action, touched surfaces, update time, and, for a cross-PC handoff, the record `references/context-continuity.md` defines.
 
-JSON contains only schema version, task identity, status, plan path, current phase, next actions, blockers, last validation, and update time.
+JSON contains only schema version, task identity, status, plan path, current phase, next actions, blockers, last validation (a pointer to its evidence owner, not a copy), and update time.
 
 ## Update events
 

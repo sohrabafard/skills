@@ -34,7 +34,7 @@ For admitted families, the three artifacts divide the work accordingly:
 
 The handoff package is a section inside the plan rather than a separate file, because knowledge is only useful next to the route it belongs to, and because a fourth file is a fourth thing to keep honest.
 
-For issue-only Beads work, canonical issue notes own execution position, validation evidence, and learned knowledge. Record required outcomes there without creating a plan, checkpoint, or six-field handoff package. Link canonical evidence instead of keeping editable copies in issue notes and workflow artifacts.
+Issue-only Beads work creates no plan, checkpoint, or six-field handoff package; its issue owns position, results and knowledge as `## Task resume and phase resume` states.
 
 ## Status and execution position
 
@@ -62,14 +62,24 @@ Six fields. Each exists because a real resume fails without it.
 
 Write a field when you learn something that belongs in it, not on a schedule. An empty field stays empty; do not pad it.
 
+## Task resume and phase resume
+
+Task resume reads the Beads issue: `notes` for position, including blockers, and next step, comments for events, `acceptance`, and its relations. Phase resume reads the plan, the checkpoint and the handoff package through the resume protocol below. A task inside an admitted plan resumes through both: the issue gives the task's state, the plan gives the phase it serves.
+
+Task-specific learned knowledge, such as a ruled-out approach or a trap, goes to the plan's handoff package when a plan exists and to issue comments otherwise. Issue notes hold position, including blockers, and next step only.
+
+## Cross-PC handoff record
+
+A handoff to another PC records the responsible device, the sync state of Git source and, under the `beads` store, of Dolt task state, and whether the code and the evidence are available to the receiving device. A task handoff records these in issue notes; a phase handoff records them in the admitted checkpoint's position, or in the plan cursor under the direct profile. A recorded sync state grants no sync authority; `references/task-tracking.md` owns the authorization rule.
+
 ## When to write
 
 Writing continuously is a tax; writing only at the end risks losing detail. Write only at these moments, including the additional long-conversation trigger below:
 
 1. **Material task progress, or a phase completes or fails.** Update the selected task authority and affected canonical workflow fields, then derive admitted snapshots. This is the routine case and it is cheap.
 2. **A decision, blocker or scope change.** Update affected workflow owners/snapshots and, if a decision closed off an alternative, add it to *ruled out*.
-3. **A validation runs.** Record its evidence once in the admitted plan, or in canonical issue notes for issue-only work. When a checkpoint is admitted, point its last verified result to that evidence. `references/workspace-and-integration.md` owns tested identity, write isolation, and reuse; without attributable inputs, a result cannot be cited on resume.
-4. **Something is learned that would be expensive to rediscover.** Add it immediately to the matching handoff field when a plan is admitted, or to canonical issue notes for issue-only work, while details are exact.
+3. **A validation runs.** Record its evidence once at its level owner in `references/task-tracking.md` `## Acceptance and evidence by level`. When a checkpoint is admitted, point its last verified result to that evidence. `references/workspace-and-integration.md` owns tested identity, write isolation, and reuse; without attributable inputs, a result cannot be cited on resume.
+4. **Something is learned that would be expensive to rediscover.** Add it immediately to the matching handoff field when a plan is admitted, or to issue comments otherwise, while details are exact.
 5. **Before handing off, and before any long autonomous stretch.** Bring selected task/workflow owners and admitted snapshots current, then verify with the cold-start test.
 
 There is one more trigger worth naming because it is easy to miss: **when the conversation is getting long.** Do not wait for a compaction warning. If the work has run for many turns, or has just finished an expensive investigation, write the knowledge down while it is still verbatim. After compaction the same information is available only as a summary of a summary.
@@ -90,9 +100,9 @@ This test is worth running mentally before any long unattended stretch, because 
 
 First resolve the artifact family and selected task store through `references/task-tracking.md`. Before acting, read every applicable owner below in order; skip only an absent/not-admitted artifact or JSON without a consumer.
 
-1. **The current bound issue**, when Beads is selected, for actual task state and prerequisites; fresh hook guidance is no substitute for this read.
+1. **The current bound issue**, when Beads is selected, for actual task state, notes, comments and prerequisites; fresh hook guidance is no substitute for this read.
 2. **The plan**, when admitted, for destination, scope, ordered phases, acceptance and validation; in local mode it also owns tasks.
-3. **The handoff package** inside the plan, for verified facts, assumptions, rejected approaches and traps before touching code. Issue-only work reads its canonical issue notes instead.
+3. **The handoff package** inside the plan, for verified facts, assumptions, rejected approaches and traps before touching code. Issue-only work reads the issue's notes and comments instead.
 4. **The checkpoint**, when admitted, for position, last verified result, blockers and next action; direct work reads the plan cursor.
 5. **The files named in "read first on resume."**
 6. **JSON state**, only for a consumer that needs it; reconcile it with canonical owners rather than trusting it independently.

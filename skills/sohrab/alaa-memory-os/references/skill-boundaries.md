@@ -17,6 +17,7 @@ is this skill's.
 |---|---|
 | Which evidence becomes a durable candidate, and in what reusable shape | `/alaa-extract-agent-lessons` |
 | Active plans, phase state, continuity across compaction, and what a handoff package contains | `/alaa-workflow` |
+| Task state, dependencies, next step and task evidence in Beads issues | `/alaa-workflow` `references/task-tracking.md` |
 | What enters the context window at all, and what gets printed | `/alaa-low-noise` |
 | Whether an observability record is required, and at what level | `/alaa-observability-soc` |
 | What a log field, event, code, or metric is called | `/alaa-services-contract` |

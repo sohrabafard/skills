@@ -10,16 +10,35 @@ and fails on red files unless each was explicitly allowed. It does NOT see inlin
 citations such as `references/10-x.md` or
 `alaa-foo references/10-x.md`, which carry most cross-skill references in this pack; those resolve
 against a skill root rather than the citing file's directory and belong to
-skills/scripts/check_fleet_references.py. Do not widen this script to cover them.
+scripts/check_fleet_references.py. Do not widen this script to cover them.
 
-Exit codes: 0 clean, 1 findings, 2 could not run (nothing was proven).
+Mirror awareness is opt-in and never discovered. --mirror LOCAL ORIGIN (repeatable) or
+--mirror-config PATH (JSON {"mirrors": [{"local": ..., "origin": ..., "origin_root": ...}]}, paths
+resolved from the config file's directory, origin_root optional) declares LOCAL, a directory inside
+repo_root, a copy of ORIGIN, a directory that may lie outside it. Inside a mirror, a link that
+leaves LOCAL is checked in ORIGIN instead of here, and a link that breaks inside LOCAL is
+re-checked in ORIGIN to separate local drift from an upstream error. Origin lookups may not leave
+the origin repository root (origin_root, else the nearest ancestor of ORIGIN holding a .git entry;
+none found blocks the run). A file with no counterpart, or a link absent from that counterpart,
+gets ordinary local checks. An ORIGIN that does not exist is reported per link and exits 2.
+
+Exit codes: 0 clean, 1 findings, 2 could not run (nothing was proven), or a declared origin was
+unavailable for at least one link. 2 outranks 1: findings printed in a 2 run are real, and the
+run proves nothing for the unproven links.
 """
 
 from __future__ import annotations
 
 import argparse
+import contextlib
+import io
+import json
+import os
 import re
+import shutil
 import sys
+import tempfile
+from collections import Counter
 from dataclasses import dataclass
 from pathlib import Path
 from typing import Dict, Iterable, Iterator, List, Optional, Sequence, Set, Tuple
@@ -34,6 +53,18 @@ WINDOWS_ABS_RE = re.compile(r"^[A-Za-z]:[\\/]")
 SCHEME_RE = re.compile(r"^[a-zA-Z][a-zA-Z0-9+.-]+:")
 CODE_SPAN_RE = re.compile(r"``[^`]*``|`[^`]*`")
 FENCE_RE = re.compile(r"^(```+|~~~+)")
+
+CODE_MIRROR_OK = "MIRROR-ORIGIN-OK"
+CODE_MIRROR_UPSTREAM = "MIRROR-UPSTREAM"
+CODE_MIRROR_DRIFT = "MIRROR-DRIFT"
+CODE_MIRROR_UNAVAILABLE = "MIRROR-ORIGIN-UNAVAILABLE"
+CODE_MIRROR_OUTSIDE = "MIRROR-OUTSIDE-ORIGIN"
+
+FAILURE_LABELS = {
+    "LINK-MISSING": "missing file",
+    "LINK-ANCHOR": "anchor not found",
+    "LINK-ANCHOR-NON-MD": "non-md anchor",
+}
 
 DEFAULT_EXCLUDES = ("vendor", "_to_delete", "node_modules", "fixtures")
 
@@ -59,9 +90,60 @@ class Issue:
         return f"{where}: {self.code} {self.message}"
 
 
+@dataclass(frozen=True)
+class Mirror:
+    """LOCAL (resolved, inside the repository root) is a copy of ORIGIN (resolved, may be anywhere)."""
+    local: Path
+    origin: Path
+    # The origin repository root: links resolved in origin may not leave it. None only while
+    # origin is missing, where nothing is resolved in origin.
+    origin_root: Optional[Path] = None
+
+
+@dataclass(frozen=True)
+class Tally:
+    local: int
+    upstream: int
+    healthy: int
+    unavailable: int
+
+    @property
+    def counted(self) -> int:
+        return self.local + self.upstream
+
+    @property
+    def exit_code(self) -> int:
+        if self.unavailable:
+            return 2
+        return 1 if self.counted else 0
+
+    def describe(self) -> str:
+        return (f"local findings: {self.local}, upstream errors: {self.upstream}, "
+                f"healthy in origin: {self.healthy}, origin unavailable: {self.unavailable}")
+
+
+def tally_issues(issues: Sequence[Issue]) -> Tally:
+    """Classify result lines. Every code except the three mirror outcomes is an ordinary local finding."""
+    codes = [issue.code for issue in issues]
+    healthy = codes.count(CODE_MIRROR_OK)
+    upstream = codes.count(CODE_MIRROR_UPSTREAM)
+    unavailable = codes.count(CODE_MIRROR_UNAVAILABLE)
+    return Tally(len(codes) - healthy - upstream - unavailable, upstream, healthy, unavailable)
+
+
 def slugify_heading(text: str) -> str:
     """Anchor slug. Unicode letters survive, so a Persian heading resolves instead of slugging empty."""
-    text = re.sub(r"[`*_~]", "", text.strip().lower())
+    text = text.strip().lower()
+    # Code-span text survives (backticks go; the punctuation filter below still applies, keeping
+    # `-` and `_`). Outside a span, emphasis markers `*_~` are stripped as before.
+    pieces: List[str] = []
+    cursor = 0
+    for span in CODE_SPAN_RE.finditer(text):
+        pieces.append(re.sub(r"[`*_~]", "", text[cursor:span.start()]))
+        pieces.append(span.group(0).replace("`", ""))
+        cursor = span.end()
+    pieces.append(re.sub(r"[`*_~]", "", text[cursor:]))
+    text = "".join(pieces)
     kept = [ch for ch in text if ch.isalnum() or ch in "-_" or ch.isspace()]
     slug = re.sub(r"\s+", "-", "".join(kept))
     return re.sub(r"-+", "-", slug).strip("-")
@@ -124,8 +206,12 @@ def iter_markdown_files(root: Path, excludes: Sequence[str]) -> Iterator[Path]:
             yield path
 
 
-def iter_body(lines: Iterable[str]) -> Iterator[Tuple[int, str]]:
-    """Yield (line number, line with fenced blocks and inline code removed)."""
+def iter_body(lines: Iterable[str], keep_code_spans: bool = False) -> Iterator[Tuple[int, str]]:
+    """Yield (line number, line with fenced blocks removed and, by default, inline code removed).
+
+    Link extraction keeps the default so a link inside a code span stays invisible. Heading
+    collection passes keep_code_spans=True: GitHub slugs the text of a code span, and
+    slugify_heading already drops the backticks themselves."""
     fence: Optional[str] = None
     for idx, line in enumerate(lines, start=1):
         marker = FENCE_RE.match(line.strip())
@@ -137,13 +223,13 @@ def iter_body(lines: Iterable[str]) -> Iterator[Tuple[int, str]]:
             if marker and marker.group(1).startswith(fence):
                 fence = None
             continue
-        yield idx, CODE_SPAN_RE.sub(" ", line)
+        yield idx, line if keep_code_spans else CODE_SPAN_RE.sub(" ", line)
 
 
 def collect_headings(path: Path) -> Set[str]:
     slugs: Set[str] = set()
     counts: Dict[str, int] = {}
-    for _, line in iter_body(read_lines(path)):
+    for _, line in iter_body(read_lines(path), keep_code_spans=True):
         match = HEADING_RE.match(line)
         if not match:
             continue
@@ -182,8 +268,114 @@ def is_external(target: str) -> bool:
     return bool(SCHEME_RE.match(target))
 
 
+LOCAL_MESSAGES = {
+    "LINK-MISSING": "target does not exist: {target}",
+    "LINK-ANCHOR-NON-MD": "anchors are validated for Markdown only: {target}",
+    "LINK-ANCHOR": "heading anchor not found: {target}",
+}
+
+
+def is_within(path: Path, parent: Path) -> bool:
+    try:
+        path.relative_to(parent)
+    except ValueError:
+        return False
+    return True
+
+
+def posix_rel(root: Path, path: Path) -> str:
+    """Path relative to the repository root as POSIX, so no machine path is ever printed."""
+    try:
+        return Path(os.path.relpath(path, root)).as_posix()
+    except ValueError:
+        return f"<other-drive>/{path.name}"
+
+
+def resolve_from(base_file: Path, path_part: str) -> Path:
+    return base_file.resolve() if not path_part else (base_file.parent / path_part).resolve()
+
+
+def probe_resolved(resolved: Path, anchor: str, cache: Dict[Path, Set[str]]) -> Optional[str]:
+    """The one existence-and-anchor check, used for local and origin targets alike.
+
+    Returns the failing issue code, or None when the target is healthy. The heading cache is keyed
+    by the resolved path, so a local file and its origin counterpart are cached separately."""
+    if not resolved.exists():
+        return "LINK-MISSING"
+    if anchor:
+        if resolved.suffix.lower() != ".md":
+            return "LINK-ANCHOR-NON-MD"
+        slugs = cache.get(resolved)
+        if slugs is None:
+            slugs = cache[resolved] = collect_headings(resolved)
+        if anchor not in slugs:
+            return "LINK-ANCHOR"
+    return None
+
+
+def find_mirror(mirrors: Sequence[Mirror], file_path: Path) -> Optional[Mirror]:
+    """The mirror a file belongs to. A file whose origin counterpart is absent while the origin
+    directory exists is local-only: it is not mirrored and gets the ordinary checks."""
+    resolved = file_path.resolve()
+    for mirror in mirrors:
+        if is_within(resolved, mirror.local):
+            counterpart = mirror.origin / resolved.relative_to(mirror.local)
+            if mirror.origin.is_dir() and not counterpart.is_file():
+                return None
+            return mirror
+    return None
+
+
+def validate_mirrored(root: Path, file_path: Path, line_no: int, target: str, path_part: str,
+                      anchor: str, resolved: Path, mirror: Mirror,
+                      cache: Dict[Path, Set[str]],
+                      origin_targets: Dict[Path, Set[str]]) -> List[Issue]:
+    """Links in a mirrored file: outside LOCAL they are judged in ORIGIN; inside LOCAL, a local
+    failure is re-checked in ORIGIN to tell drift from an upstream error."""
+    local_failure: Optional[str] = None
+    if is_within(resolved, mirror.local):
+        local_failure = probe_resolved(resolved, anchor, cache)
+        if local_failure is None:
+            return []
+    local_label = FAILURE_LABELS[local_failure] if local_failure else "not checked locally"
+    if not mirror.origin.is_dir():
+        return [Issue(file_path, line_no, CODE_MIRROR_UNAVAILABLE,
+                      f"origin unavailable, link not proven ({local_label}): {target} "
+                      f"(origin directory {posix_rel(root, mirror.origin)} not found)")]
+    origin_file = mirror.origin / file_path.resolve().relative_to(mirror.local)
+    if mirror.origin_root is not None and not is_within(origin_file.resolve(), mirror.origin_root):
+        return [Issue(file_path, line_no, CODE_MIRROR_OUTSIDE,
+                      f"source file escapes the origin repository: {posix_rel(root, origin_file)}")]
+    targets = origin_targets.get(origin_file)
+    if targets is None:
+        targets = origin_targets[origin_file] = {link for _, link in extract_targets(origin_file)}
+    if target not in targets:
+        # A local edit has no upstream provenance; use the same ordinary checks as an undeclared file.
+        return validate_target(root, file_path, line_no, target, cache)
+    origin_resolved = resolve_from(origin_file, path_part)
+    origin_rel = posix_rel(root, origin_resolved)
+    if mirror.origin_root is not None and not is_within(origin_resolved, mirror.origin_root):
+        return [Issue(file_path, line_no, CODE_MIRROR_OUTSIDE,
+                      f"link escapes the origin repository: {target} (origin {origin_rel})")]
+    origin_failure = probe_resolved(origin_resolved, anchor, cache)
+    if origin_failure is None:
+        if local_failure is None:
+            return [Issue(file_path, line_no, CODE_MIRROR_OK,
+                          f"healthy in origin: {target} (origin {origin_rel}); not checked locally")]
+        return [Issue(file_path, line_no, CODE_MIRROR_DRIFT,
+                      f"local copy diverged from origin ({local_label}): {target} "
+                      f"(healthy in origin {origin_rel})")]
+    origin_label = FAILURE_LABELS[origin_failure]
+    broken = (f"{local_label} locally and {origin_label} in origin" if local_failure
+              else f"{origin_label} in origin")
+    return [Issue(file_path, line_no, CODE_MIRROR_UPSTREAM,
+                  f"upstream error ({broken}): {target} (origin {origin_rel})")]
+
+
 def validate_target(root: Path, file_path: Path, line_no: int, target: str,
-                    cache: Dict[Path, Set[str]]) -> List[Issue]:
+                    cache: Dict[Path, Set[str]],
+                    mirrors: Sequence[Mirror] = (),
+                    origin_targets: Optional[Dict[Path, Set[str]]] = None) -> List[Issue]:
     if not target:
         return []
     if target.startswith("file://"):
@@ -197,20 +389,16 @@ def validate_target(root: Path, file_path: Path, line_no: int, target: str,
         return []
 
     path_part, _, anchor = target.partition("#")
-    resolved = file_path.resolve() if not path_part else (file_path.parent / path_part).resolve()
-    try:
-        resolved.relative_to(root)
-    except ValueError:
+    resolved = resolve_from(file_path, path_part)
+    mirror = find_mirror(mirrors, file_path)
+    if mirror is not None:
+        return validate_mirrored(root, file_path, line_no, target, path_part, anchor, resolved,
+                                 mirror, cache, {} if origin_targets is None else origin_targets)
+    if not is_within(resolved, root):
         return [Issue(file_path, line_no, "LINK-OUTSIDE-ROOT", f"resolves outside root: {target}")]
-    if path_part and not resolved.exists():
-        return [Issue(file_path, line_no, "LINK-MISSING", f"target does not exist: {target}")]
-    if anchor:
-        if resolved.suffix.lower() != ".md":
-            return [Issue(file_path, line_no, "LINK-ANCHOR-NON-MD",
-                          f"anchors are validated for Markdown only: {target}")]
-        slugs = cache.setdefault(resolved, collect_headings(resolved))
-        if anchor not in slugs:
-            return [Issue(file_path, line_no, "LINK-ANCHOR", f"heading anchor not found: {target}")]
+    failure = probe_resolved(resolved, anchor, cache)
+    if failure:
+        return [Issue(file_path, line_no, failure, LOCAL_MESSAGES[failure].format(target=target))]
     return []
 
 
@@ -222,6 +410,112 @@ def resolve_repo_path(root: Path, path_arg: str) -> Path:
     except ValueError as exc:
         raise Blocked(f"path resolves outside repository root: {path_arg}") from exc
     return path
+
+
+def relative_arg(field: str, value: object) -> str:
+    """A declaration path must be a non-empty relative POSIX path."""
+    if not isinstance(value, str) or not value.strip():
+        raise Blocked(f"mirror {field} must be a non-empty string")
+    if WINDOWS_ABS_RE.match(value) or value.startswith("/"):
+        raise Blocked(f"mirror {field} must be a relative path: {value}")
+    if "\\" in value:
+        raise Blocked(f"mirror {field} must use forward slashes: {value}")
+    return value
+
+
+def discover_origin_root(origin: Path) -> Optional[Path]:
+    """The nearest ancestor of origin (inclusive) holding a .git entry, or None."""
+    for candidate in (origin, *origin.parents):
+        if (candidate / ".git").exists():
+            return candidate
+    return None
+
+
+def resolve_mirror(root: Path, base: Path, local_arg: object, origin_arg: object,
+                   origin_root_arg: object = None) -> Mirror:
+    """The single place a mirror declaration is validated and resolved.
+
+    LOCAL and ORIGIN are relative POSIX paths resolved from base (the repository root for --mirror,
+    the config file's directory for --mirror-config). LOCAL must be an existing directory inside
+    root. ORIGIN may lie outside root and may be missing: that is reported per link, not here.
+    When ORIGIN exists, links resolved in it are bounded by origin_root: the explicit
+    origin_root_arg, else the nearest ancestor of ORIGIN holding a .git entry."""
+    local_value = relative_arg("local", local_arg)
+    origin_value = relative_arg("origin", origin_arg)
+    local = (base / local_value).resolve()
+    origin = (base / origin_value).resolve()
+    if not is_within(local, root):
+        if is_within(Path(os.path.abspath(base / local_value)), root):
+            raise Blocked("mirror local path is a symlink or junction that resolves outside "
+                          f"repository root: {local_arg}")
+        raise Blocked(f"mirror local path resolves outside repository root: {local_arg}")
+    if not local.is_dir():
+        raise Blocked(f"mirror local path is not an existing directory: {local_arg}")
+    origin_root: Optional[Path] = None
+    if origin_root_arg is not None:
+        origin_root = (base / relative_arg("origin_root", origin_root_arg)).resolve()
+        if not is_within(origin, origin_root):
+            raise Blocked("mirror origin_root must be an ancestor of or equal to origin: "
+                          f"{origin_root_arg}")
+    elif origin.is_dir():
+        origin_root = discover_origin_root(origin)
+        if origin_root is None:
+            raise Blocked("cannot determine the origin repository root (no .git above "
+                          f"{posix_rel(root, origin)}); set origin_root in a --mirror-config entry")
+    return Mirror(local, origin, origin_root)
+
+
+def parse_mirror_config(root: Path, base: Path, text: str) -> List[Mirror]:
+    """Parse {"mirrors": [{"local": ..., "origin": ...}]}; any other shape blocks the run."""
+    try:
+        data = json.loads(text)
+    except ValueError as exc:
+        raise Blocked(f"mirror config is not valid JSON: {exc}") from exc
+    if not isinstance(data, dict) or set(data) != {"mirrors"}:
+        raise Blocked('mirror config must be an object with exactly one key, "mirrors"')
+    entries = data["mirrors"]
+    if not isinstance(entries, list) or not entries:
+        raise Blocked('mirror config "mirrors" must be a non-empty array')
+    mirrors: List[Mirror] = []
+    for index, entry in enumerate(entries):
+        if (not isinstance(entry, dict) or not {"local", "origin"} <= set(entry)
+                or set(entry) - {"local", "origin", "origin_root"}):
+            raise Blocked(f'mirror config entry {index} must have the keys "local" and "origin" '
+                          'and may add "origin_root"')
+        mirrors.append(resolve_mirror(root, base, entry["local"], entry["origin"],
+                                      entry.get("origin_root")))
+    return mirrors
+
+
+def reject_overlapping(root: Path, mirrors: Sequence[Mirror]) -> None:
+    for index, first in enumerate(mirrors):
+        for second in mirrors[index + 1:]:
+            if first.local == second.local:
+                raise Blocked(f"duplicate mirror local directory: {posix_rel(root, first.local)}")
+            if is_within(first.local, second.local) or is_within(second.local, first.local):
+                raise Blocked("overlapping mirror local directories: "
+                              f"{posix_rel(root, first.local)} and {posix_rel(root, second.local)}")
+
+
+def load_mirrors(root: Path, pairs: Sequence[Tuple[str, str]],
+                 config_arg: Optional[str]) -> List[Mirror]:
+    """Both declaration forms feed one list; nothing is ever discovered."""
+    mirrors = [resolve_mirror(root, root, local, origin) for local, origin in pairs]
+    if config_arg:
+        config = resolve_repo_path(root, config_arg)
+        if not config.is_file():
+            raise Blocked(f"mirror config is not a file: {config_arg}")
+        try:
+            text = config.read_text(encoding="utf-8")
+        except (UnicodeDecodeError, OSError) as exc:
+            raise Blocked(f"cannot read mirror config {config_arg}: {exc.__class__.__name__}") from exc
+        mirrors.extend(parse_mirror_config(root, config.parent, text))
+    reject_overlapping(root, mirrors)
+    for mirror in mirrors:
+        if not mirror.origin.is_dir():
+            print("warning: mirror origin is not an existing directory: "
+                  f"{posix_rel(root, mirror.origin)}", file=sys.stderr)
+    return mirrors
 
 
 def structure_signature(path: Path) -> Tuple[List[int], List[str]]:
@@ -271,7 +565,8 @@ def check_pairs(root: Path, pairs: Sequence[Tuple[str, str]]) -> List[Issue]:
 
 def run_checks(root: Path, files: Optional[Sequence[str]],
                excludes: Sequence[str],
-               localized_pairs: Sequence[Tuple[str, str]] = ()
+               localized_pairs: Sequence[Tuple[str, str]] = (),
+               mirrors: Sequence[Mirror] = ()
                ) -> Tuple[List[Issue], List[Path]]:
     if files:
         selected = [resolve_repo_path(root, rel) for rel in files]
@@ -282,10 +577,11 @@ def run_checks(root: Path, files: Optional[Sequence[str]],
         selected = list(iter_markdown_files(root, excludes))
     selected = [p for p in selected if p.suffix.lower() == ".md"]
     cache: Dict[Path, Set[str]] = {}
+    origin_targets: Dict[Path, Set[str]] = {}
     issues: List[Issue] = []
     for path in selected:
         for line_no, target in extract_targets(path):
-            issues.extend(validate_target(root, path, line_no, target, cache))
+            issues.extend(validate_target(root, path, line_no, target, cache, mirrors, origin_targets))
     issues.extend(check_pairs(root, localized_pairs))
     return issues, selected
 
@@ -305,6 +601,115 @@ SELF_TEST_CASES = (
     ("undecodable", 2, "a .md file that is not valid UTF-8", ()),
 )
 
+@dataclass(frozen=True)
+class ExactCase:
+    """A self-test case that asserts the exit class AND the exact multiset of result codes."""
+    name: str
+    fixture: str
+    expected_exit: int
+    expected_codes: Dict[str, int]
+    what: str
+    mirror_pairs: Tuple[Tuple[str, str], ...] = ()
+    mirror_config: Optional[str] = None
+    blocked_fragment: str = ""
+
+
+_SVC = "pkg/docs/contracts/svc"
+_SVC_ORIGIN = "../origin/svc-repo/docs/contracts/svc"
+
+EXACT_CASES = (
+    ExactCase("inline-code-anchor", "inline-code-anchor", 0, {},
+              "code-span heading text is slugged verbatim (my_func keeps its underscore), "
+              "duplicates get -1, and a link inside a code span stays invisible"),
+    ExactCase("mirror-origin-ok", "mirror/ok/consumer", 0, {CODE_MIRROR_OK: 2},
+              "links leaving the mirror resolve in origin and are informational; a link that "
+              "passes locally but would fail in origin, and a link to the mirror root, are silent",
+              mirror_config="mirror.json"),
+    ExactCase("mirror-config-valid", "mirror/ok/consumer", 0, {CODE_MIRROR_OK: 2},
+              "config paths resolve from the config file's directory, not the repository root",
+              mirror_config="conf/mirror.json"),
+    ExactCase("mirror-undeclared", "mirror/ok/consumer", 1, {"LINK-MISSING": 2},
+              "regression: the same consumer tree without a declaration reports the plain "
+              "missing-file findings"),
+    ExactCase("mirror-upstream", "mirror/upstream/consumer", 1,
+              {CODE_MIRROR_UPSTREAM: 2, "LINK-MISSING": 1},
+              "an origin-broken outside link and an inside link broken in both trees are upstream "
+              "errors; a broken link in a file outside the mirror stays an ordinary finding",
+              mirror_config="mirror.json"),
+    ExactCase("mirror-drift", "mirror/drift/consumer", 1, {CODE_MIRROR_DRIFT: 1},
+              "an inside link broken locally but healthy in origin is local drift",
+              mirror_config="mirror.json"),
+    ExactCase("mirror-escape", "mirror/escape/consumer", 1,
+              {CODE_MIRROR_OK: 1, CODE_MIRROR_OUTSIDE: 1},
+              "an origin lookup that leaves the origin repository is refused even though the "
+              "file exists there; a lookup inside the boundary stays healthy",
+              mirror_config="mirror.json"),
+    ExactCase("mirror-local-only", "mirror/local-only/consumer", 1,
+              {"LINK-MISSING": 2, "LINK-OUTSIDE-ROOT": 1},
+              "a file with no origin counterpart is not mirrored: ordinary codes, including "
+              "LINK-OUTSIDE-ROOT",
+              mirror_config="mirror.json"),
+    ExactCase("mirror-locally-added-links", "mirror/local-edit/consumer", 1,
+              {"LINK-MISSING": 3, "LINK-ANCHOR": 1, "LINK-OUTSIDE-ROOT": 1,
+               CODE_MIRROR_OK: 1},
+              "filesystem integration: links absent from the origin document remain local, "
+              "even when their targets exist in origin; shared links survive reformatting",
+              mirror_config="mirror.json"),
+    ExactCase("mirror-origin-unavailable", "mirror/unavailable/consumer", 2,
+              {CODE_MIRROR_UNAVAILABLE: 2},
+              "a declared origin that is absent proves nothing and never exits 0 or 1",
+              mirror_pairs=((_SVC, _SVC_ORIGIN),)),
+    ExactCase("mirror-unavailable-mixed", "mirror/unavailable-mixed/consumer", 2,
+              {CODE_MIRROR_UNAVAILABLE: 1, "LINK-MISSING": 1},
+              "an ordinary counted finding next to an unavailable origin still exits 2",
+              mirror_pairs=((_SVC, _SVC_ORIGIN),)),
+    ExactCase("mirror-config-malformed-file", "mirror/ok/consumer", 2, {},
+              "a malformed config file blocks the run because its JSON does not parse",
+              mirror_config="conf/mirror-malformed.json", blocked_fragment="not valid JSON"),
+)
+
+# (name, pairs, config JSON text, expected message fragment, what). Each must raise Blocked.
+MIRROR_REJECT_CASES = (
+    ("reject-local-outside-root", (("../origin", "x"),), None, "outside repository root",
+     "LOCAL must resolve inside the repository root"),
+    ("reject-local-missing", (("pkg/nope", "x"),), None, "not an existing directory",
+     "LOCAL must exist as a directory"),
+    ("reject-absolute", (("/pkg", "x"),), None, "relative path", "absolute paths are refused"),
+    ("reject-backslash", (("pkg" + chr(92) + "docs", "x"),), None, "forward slashes",
+     "backslashes are refused"),
+    ("reject-duplicate", ((_SVC, "a"), (_SVC, "b")), None, "duplicate mirror local",
+     "the same LOCAL twice is refused"),
+    ("reject-overlap", (("pkg/docs", "a"), (_SVC, "b")), None, "overlapping",
+     "nested LOCAL directories are refused"),
+    ("reject-config-json", (), "{", "not valid JSON", "unparseable JSON is refused"),
+    ("reject-config-extra-key", (), '{"mirrors": [], "extra": 1}', "exactly one key",
+     "an extra top-level key is refused"),
+    ("reject-config-entry-extra", (),
+     '{"mirrors": [{"local": "pkg", "origin": "x", "note": "y"}]}', 'may add "origin_root"',
+     "an unknown entry field is refused"),
+    ("reject-config-type", (), '{"mirrors": [{"local": 1, "origin": "x"}]}', "non-empty string",
+     "a non-string field is refused"),
+    ("reject-config-empty", (), '{"mirrors": []}', "non-empty array",
+     "an empty declaration is refused"),
+    ("reject-origin-root-not-ancestor", (),
+     '{"mirrors": [{"local": "pkg", "origin": "x", "origin_root": "pkg"}]}', "ancestor",
+     "origin_root must contain origin"),
+)
+
+# (name, argv builder key, expected return code, stderr fragment, what). See run_cli_cases.
+CLI_CASES = (
+    ("cli-mirror-discovers-git-root", "temp-git", 0, "",
+     "--mirror alone works when a .git marks the origin repository root"),
+    ("cli-mirror-no-boundary", "temp-no-git", 2, "origin_root",
+     "--mirror against an existing origin with no .git above it blocks and names origin_root"),
+    ("cli-mirror-config", "config-ok", 0, "",
+     "--mirror-config returns the shared exit code for a healthy mirror"),
+    ("cli-drift-exit", "config-drift", 1, "local findings: 1",
+     "a counted mirror finding returns 1 and reports the split summary"),
+    ("cli-unavailable-mixed-exit", "config-mixed", 2, "origin unavailable: 1",
+     "an ordinary finding plus an unavailable origin returns 2, never 1"),
+)
+
 LINE_BUDGET_SELF_TESTS = (
     (49, LINE_STATE_GREEN),
     (50, LINE_STATE_YELLOW),
@@ -313,6 +718,95 @@ LINE_BUDGET_SELF_TESTS = (
     (200, LINE_STATE_ORANGE),
     (201, LINE_STATE_RED),
 )
+
+
+def run_exact_cases(fixtures: Path) -> int:
+    """Run ExactCase entries; return the failure count. A missing fixture is a failure."""
+    failed = 0
+    for case in EXACT_CASES:
+        root = (fixtures / case.fixture).resolve()
+        observed_exit, observed_codes, message = 2, {}, ""
+        try:
+            with contextlib.redirect_stderr(io.StringIO()):
+                mirrors = load_mirrors(root, case.mirror_pairs, case.mirror_config)
+            issues, _ = run_checks(root, None, (), mirrors=mirrors)
+            observed_exit = tally_issues(issues).exit_code
+            observed_codes = dict(Counter(issue.code for issue in issues))
+        except Blocked as exc:
+            message = str(exc)
+        ok = (observed_exit == case.expected_exit and observed_codes == case.expected_codes
+              and case.blocked_fragment in message)
+        if not ok:
+            failed += 1
+        print(f"{'PASS' if ok else 'FAIL'} {case.name}: expected {case.expected_exit} "
+              f"{case.expected_codes}, observed {observed_exit} {observed_codes}"
+              f"{' ' + repr(message) if message else ''} -- {case.what}")
+    return failed
+
+
+def run_cli_cases(fixtures: Path) -> Tuple[int, int]:
+    """Drive main() itself, so the return code is proven to come from the shared tally.
+
+    Returns (failed, blocked). The no-boundary case needs a temp tree with no .git above it; a host
+    whose temp directory sits under a git checkout cannot run it, which is BLOCKED, never a verdict.
+    The discovers-git-root case is immune: the .git it plants is the nearest ancestor and wins."""
+    failed = blocked = 0
+    ok_pair = ["--mirror", _SVC, _SVC_ORIGIN]
+    with tempfile.TemporaryDirectory() as tmp:
+        copy = Path(tmp) / "ok"
+        shutil.copytree(fixtures / "mirror" / "ok", copy)
+        plans = {
+            "temp-no-git": ([str(copy / "consumer")] + ok_pair, None),
+            "temp-git": ([str(copy / "consumer")] + ok_pair, copy / "origin" / "svc-repo" / ".git"),
+            "config-ok": ([str(fixtures / "mirror" / "ok" / "consumer"),
+                           "--mirror-config", "mirror.json"], None),
+            "config-drift": ([str(fixtures / "mirror" / "drift" / "consumer"),
+                              "--mirror-config", "mirror.json"], None),
+            "config-mixed": ([str(fixtures / "mirror" / "unavailable-mixed" / "consumer")]
+                             + ok_pair, None),
+        }
+        for name, key, expected, fragment, what in CLI_CASES:
+            argv, marker = plans[key]
+            if key == "temp-no-git":
+                stray = discover_origin_root(copy / "origin" / "svc-repo" / "docs" / "contracts" / "svc")
+                if stray is not None:
+                    blocked += 1
+                    print(f"BLOCKED {name}: host condition, the temp directory has a .git ancestor "
+                          f"({stray.name}); point TMP/TEMP/TMPDIR outside any git checkout -- {what}")
+                    continue
+            if marker is not None:
+                marker.mkdir()
+            out, err = io.StringIO(), io.StringIO()
+            with contextlib.redirect_stdout(out), contextlib.redirect_stderr(err):
+                observed = main(argv)
+            if marker is not None:
+                marker.rmdir()
+            ok = observed == expected and fragment in err.getvalue()
+            if not ok:
+                failed += 1
+            print(f"{'PASS' if ok else 'FAIL'} {name}: expected {expected}, observed {observed}"
+                  f"{'' if ok else ' stderr=' + repr(err.getvalue()[-200:])} -- {what}")
+    return failed, blocked
+
+
+def run_reject_cases(fixtures: Path) -> int:
+    failed = 0
+    root = (fixtures / "mirror" / "ok" / "consumer").resolve()
+    for name, pairs, config_text, fragment, what in MIRROR_REJECT_CASES:
+        message = ""
+        try:
+            mirrors = [resolve_mirror(root, root, local, origin) for local, origin in pairs]
+            if config_text is not None:
+                mirrors.extend(parse_mirror_config(root, root, config_text))
+            reject_overlapping(root, mirrors)
+        except Blocked as exc:
+            message = str(exc)
+        ok = fragment in message
+        if not ok:
+            failed += 1
+        print(f"{'PASS' if ok else 'FAIL'} {name}: expected Blocked containing "
+              f"{fragment!r}, observed {message!r} -- {what}")
+    return failed
 
 
 def self_test(fixtures: Path) -> int:
@@ -364,6 +858,11 @@ def self_test(fixtures: Path) -> int:
         verdict, failed = "FAIL", failed + 1
     print(f"{verdict} unscoped-pair: expected 0, observed {observed} -- "
           "an unrelated drifting pair is not checked")
+    failed += run_exact_cases(fixtures)
+    failed += run_reject_cases(fixtures)
+    cli_failed, cli_blocked = run_cli_cases(fixtures)
+    failed += cli_failed
+    blocked += cli_blocked
     for line_count, expected in LINE_BUDGET_SELF_TESTS:
         observed_state = line_budget_state(line_count)
         if observed_state == expected:
@@ -378,16 +877,17 @@ def self_test(fixtures: Path) -> int:
     if failed:
         print(f"\n{failed} case(s) failed.", file=sys.stderr)
         return 1
-    print(f"\nAll {len(SELF_TEST_CASES) + 2 + len(LINE_BUDGET_SELF_TESTS)} "
-          "self-test cases passed.")
+    total = (len(SELF_TEST_CASES) + 2 + len(EXACT_CASES) + len(MIRROR_REJECT_CASES)
+             + len(CLI_CASES) + len(LINE_BUDGET_SELF_TESTS))
+    print(f"\nAll {total} self-test cases passed.")
     return 0
 
 
 def main(argv: Sequence[str]) -> int:
     parser = argparse.ArgumentParser(
         description="Validate repo-local Markdown links and anchors, with explicitly scoped "
-                    "localized-pair and line-budget checks. Inline-code path citations are out "
-                    "of scope: see skills/scripts/check_fleet_references.py.")
+                    "localized-pair, mirror and line-budget checks. Inline-code path citations "
+                    "are out of scope: see scripts/check_fleet_references.py.")
     parser.add_argument("repo_root", nargs="?", help="Repository root that links resolve within")
     parser.add_argument("--files", nargs="*", default=None,
                         help="Specific Markdown files, relative to repo_root")
@@ -398,6 +898,17 @@ def main(argv: Sequence[str]) -> int:
     parser.add_argument("--localized-pair", nargs=2, action="append", default=[],
                         metavar=("BASE", "COMPANION"),
                         help="Check one explicitly scoped localized pair; repeat for more pairs")
+    parser.add_argument("--mirror", nargs=2, action="append", default=[],
+                        metavar=("LOCAL", "ORIGIN"),
+                        help="Declare LOCAL (a directory inside repo_root) a copy of ORIGIN "
+                             "(relative to repo_root, may lie outside it). Links leaving LOCAL "
+                             "are checked in ORIGIN, bounded by the nearest ancestor of "
+                             "ORIGIN holding a .git entry; repeatable; never auto-discovered")
+    parser.add_argument("--mirror-config", default=None, metavar="PATH",
+                        help='JSON file (relative to repo_root) {"mirrors": [{"local": ..., '
+                             '"origin": ..., "origin_root": ...}]}; paths resolve from the '
+                             "config file's directory; origin_root (optional) bounds origin "
+                             "lookups and overrides .git discovery. Combines with --mirror")
     parser.add_argument("--line-budget", action="store_true",
                         help="Classify selected Markdown files by physical line count and fail red")
     parser.add_argument("--allow-red", nargs="*", default=[], metavar="PATH",
@@ -425,12 +936,15 @@ def main(argv: Sequence[str]) -> int:
         return 2
 
     try:
+        mirrors = load_mirrors(root, tuple((local, origin) for local, origin in args.mirror),
+                               args.mirror_config)
         issues, checked = run_checks(
             root,
             args.files,
             tuple(args.exclude),
             localized_pairs=tuple((base, companion)
                                   for base, companion in args.localized_pair),
+            mirrors=mirrors,
         )
         line_statuses: List[Tuple[Path, int, str]] = []
         if args.line_budget:
@@ -442,18 +956,27 @@ def main(argv: Sequence[str]) -> int:
 
     for path, line_count, state in line_statuses:
         print(f"{path.relative_to(root).as_posix()}: {state} {line_count} physical lines")
-    if issues:
-        for issue in issues:
-            print(issue.render(root))
-        print(f"\nFound {len(issues)} issue(s) in {len(checked)} file(s).", file=sys.stderr)
-        return 1
+    for issue in issues:
+        print(issue.render(root))
+    tally = tally_issues(issues)
+    detail = f" ({tally.describe()})" if mirrors else ""
+    exit_code = tally.exit_code
+    if exit_code == 2:
+        print(f"\nIncomplete: {tally.unavailable} link(s) could not be proven because a declared "
+              f"origin is unavailable; {tally.counted} issue(s) in {len(checked)} file(s)"
+              f"{detail}.", file=sys.stderr)
+        return exit_code
+    if exit_code == 1:
+        print(f"\nFound {tally.counted} issue(s) in {len(checked)} file(s){detail}.",
+              file=sys.stderr)
+        return exit_code
     scopes = ["links"]
     if args.localized_pair:
         scopes.append("localized pairs")
     if args.line_budget:
         scopes.append("line budgets")
     scope = ", ".join(scopes)
-    print(f"Validated {scope} in {len(checked)} Markdown file(s) under {root}.")
+    print(f"Validated {scope} in {len(checked)} Markdown file(s) under {root}.{detail}")
     return 0
 
 

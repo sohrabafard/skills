@@ -84,7 +84,7 @@ claiming language compliance.
 
 ## Never store this
 
-One list, and it is the only one. Earlier versions of this skill carried four partial lists that disagreed
+One list, and it is the only one for what may never enter the memory store. Earlier versions of this skill carried four partial lists that disagreed
 about their own membership, so an agent reading the shortest never learned that secrets were on it.
 
 - Raw session transcripts.

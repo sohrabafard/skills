@@ -1,6 +1,6 @@
 # Task Tracking
 
-This file owns task-store selection, task authority, readiness and migration. Artifact admission and profiles remain in `references/artifact-lifecycle.md`; execution position remains in `references/context-continuity.md`.
+This file owns task-store selection, task authority, where each kind of task information lives, issue conventions, readiness and migration. Artifact admission and profiles remain in `references/artifact-lifecycle.md`; resume and handoff remain in `references/context-continuity.md`.
 
 ## Select before tracking-dependent work
 
@@ -9,6 +9,10 @@ Task store and artifact profile are independent. Continue an existing family's r
 The project binding owns workspace identity, project scope, and authority. Record its nonempty repository-relative instruction/configuration reference, optionally with a `#anchor`, rather than copying settings or machine paths. The reference must contain no absolute machine path, multiline value, backtick, or unresolved marker. Helpers check its format, not owner existence/configuration. Resolve conflicting or incomplete adoption/binding before tracking-dependent work. Verify active workspace and project through the binding owner before reading/changing issues; a reachable wrong hub is not the configured store.
 
 For Beads mechanics, load the installed upstream Beads skill separately and reuse fresh hook/prime guidance. Neither hooks nor guidance own current task state. If the required binding or upstream owner is unavailable, report the gap and stop its dependent work. Do not copy a CLI manual, implement another client, install hooks, initialize a replacement database or silently fall back to local.
+
+## Division of labor
+
+The selected task store owns task registration, status, dependencies, ready and blocked state, discovered work, task continuation context, and the local evidence of new tasks. This skill owns whether a plan is needed and the process size, goal and phases, skill and lane choice, conflict prevention, evidence validity, phase acceptance, the four completion states, resume, handoff, and lesson selection. No Markdown file tracks tasks except a `local`-store plan, which owns task state only because Beads is not selected.
 
 ## One task authority
 
@@ -21,7 +25,52 @@ For marked local families, write each task as `- [ ] T1: <outcome> [depends: non
 
 For Beads, write `- Issue: <issue-id> [skills: inherit]`, using the actual opaque ID without assuming a prefix. Map each issue uniquely to one phase; a task override is its complete `[skills: name, name]` mapping. Keep no authoritative local checkbox/numbered task list or editable issue register alongside these mappings. Issue closure is recorded in Beads, never by ticking a plan mirror. `references/companion-routing.md` owns inherited/override skill semantics for both stores.
 
-Plans own goal/scope, phase design and acceptance, evidence, skill associations, shared-resource conflicts and integration barriers. Existing task acceptance stays in its canonical plan section and the issue links it. New issue-only work may own acceptance in its issue. Never retain editable copies of the same acceptance or evidence. Small Beads-only work can use issue notes for handoff without forcing workflow files; artifact admission still applies.
+Plans own the goal and phases, shared constraints, phase acceptance, integrated-review evidence, skill associations, shared-resource conflicts and integration barriers. Acceptance and evidence follow `## Acceptance and evidence by level`.
+
+## Where task information lives
+
+Under `local`, the plan owns the first three rows.
+
+| Information | Owner |
+|---|---|
+| Status, priority, assignee, dependency, follow-up work | Beads issue and its relations |
+| Position, next step, blockers | Issue `notes` |
+| Historical events | Issue comments |
+| Goal, shared constraints, phase acceptance | Plan |
+| Durable knowledge, shared hub reminders, binding rules | `/alaa-memory-os` `## Beads hub reminders and issue notes` |
+
+That section owns the policy for the last row and its boundary with issue notes; do not restate it here.
+
+## Acceptance and evidence by level
+
+Every criterion and every result has one owner, chosen by level:
+
+- Phase acceptance: the plan.
+- A task's acceptance and result: that task's issue. Under `local`, the plan's task entry.
+- An integrated review across several tasks: the plan's phase-evidence section.
+- Bulky output: an artifact, meaning a file under the task-artifact directory the repository's instructions name, subject to `references/artifact-lifecycle.md` admission. The evidence owner links to it and records the command, the result and the one line that mattered, per `references/context-continuity.md` `## What not to write`. When those instructions name no such directory, record that no artifact was admitted and keep only the command, the result and the one line that mattered in the evidence owner; never paste the bulky output.
+
+The plan links to task results and never copies them. Evidence is recorded once; every other site links to its owner, because a copy goes stale silently. Work without a plan keeps all of it in its issue. Existing work is not migrated automatically: plan-held task acceptance stays where it is, and its issue points to it with an exact plan reference until an explicit migration.
+
+## Issue fields
+
+Under `beads`:
+
+| Field | Holds |
+|---|---|
+| `description` | Goal, scope, output, and a link to the plan and phase |
+| `spec_id` | The repository name, a colon, then the plan's repository-relative path, e.g. `skills:docs/_agent_plans/<stem>.md` |
+| `acceptance` | The task's criterion, or an exact reference into the plan |
+| `design` | A decision affecting the task, plus its reference link |
+| `notes` | Position, including blockers, and next step |
+| comments | Events, including interim validation runs, and learned knowledge and curation outcomes when no plan exists (`references/context-continuity.md`) |
+| close reason | A closed task's result (see `## Close reason`) |
+
+When a plan exists, put its path in `spec_id` in that form; a path inside `description` prose alone does not count. The repository prefix keeps the path unambiguous on a hub shared by several projects.
+
+## Close reason
+
+Under `beads`, close with three parts: a short verdict, the reviewed version, and the evidence address. The reviewed version is the commit containing every reviewed change or, when uncommitted, the HEAD SHA plus the scoped content SHA-256 digest from `references/workspace-and-integration.md` `## Record the tested state`. Numbers are optional; label each one "at close".
 
 ## Record task prerequisites
 
@@ -29,11 +78,26 @@ At task decomposition and material changes to scope or prerequisites, identify g
 
 For Beads, inspect existing issues and edges and verify IDs and project scope through the binding before changing dependencies. Use the upstream skill and installed CLI help to apply only authorized missing or obsolete edge changes. Record each prerequisite as a blocking edge: the dependent issue is blocked by the prerequisite. Descriptions, plan references, hierarchy and related links do not establish that edge. Read back affected dependencies and query native readiness to confirm the intended direction and blocking state before proceeding; text alone cannot keep blocked work out of the ready set. If registration or verification fails, follow the outage and uncertain-write rules below.
 
+## Beads capabilities in use
+
+The `bd` behavior stated below was verified on 2026-10-13 against installed `bd` help (1.3.1) and Beads v1.3.1 source (`internal/types/types.go` `AffectsReadyWork`); recheck after a Beads upgrade.
+
+- `--spec-id` carries the plan link (see `## Issue fields`).
+- Use issue type `decision` to record a decision that other tasks cite, and `spike` for a time-boxed investigation whose output is knowledge.
+- Create each follow-up `discovered-from` its origin (`--deps discovered-from:<origin-id>` on `bd create`). The edge records provenance only and does not block, because readiness counts only blocks, parent-child, conditional-blocks and waits-for edges. Record a real prerequisite as a separate blocking edge.
+- `--if-assignee` and `--if-status` check only the local database state and prove no cross-PC exclusivity. A mismatch exits 13 (installed help: nothing is written). They require a field update in the same command and are never combined with `--claim`. On exit 13, re-read actual state and follow `## Outage and uncertain writes`; never retry blindly.
+- `bd lint` reports missing recommended sections per issue type (installed `bd lint --help`). Run it before closing or handing off an issue; a finding blocks that close or handoff until the missing section is filled or the gap is recorded in the issue. Run `bd stale` at a handoff or resume review, and `bd ready --explain` when readiness is unexpected.
+- Formulas, molecules and automatic gates are not adopted by this workflow. The verified `bd gate --help` already lists `human`, `timer`, `gh:run`, `gh:pr` and `bead`; capability availability does not change this policy. Reconsider adoption through a separately authorized workflow-policy change.
+
+## Cross-project delivery
+
+When one project needs another project's output, create a delivery task in the producer project, carrying the producer project's label, whose outcome is "the output is available to the consumer". The consumer's task depends on the delivery task through a blocking edge, per `## Record task prerequisites`. When the producer and consumer cannot be verified through the same binding or hub, stop the edge registration under the binding rule in `## Select before tracking-dependent work` and report it.
+
 ## Ready tasks and workflow gates
 
 Use the selected store's prerequisite graph for task readiness. A ready task still requires scope, authority, available deliverables/source, mapped skills, and file/environment independence before dispatch. Phase dependencies and acceptance barriers stay in the plan; native issue readiness does not satisfy them. Closing all issues proves none of the workflow lifecycle states defined in `references/workspace-and-integration.md`.
 
-A claim does not lock files, fixtures, generators, ports or test environments, and independently synced PC databases do not establish mutual exclusion. Designate task ownership and resolve shared-resource conflicts before parallel work. Before cross-PC transfer, verify that the designated owner can access the actual source and attributable evidence. Git source sync and Dolt task sync are separate actions with separate authorization; a synced issue does not make another PC's uncommitted code available.
+A claim does not lock files, fixtures, generators, ports or test environments, and independently synced PC databases do not establish mutual exclusion. Designate task ownership and resolve shared-resource conflicts before parallel work. Before cross-PC transfer, verify that the designated owner can access the actual source and attributable evidence. Git source sync and Dolt task sync are separate actions with separate authorization; run `bd dolt push` and `bd dolt pull` only with the user's explicit authorization for that action. A synced issue does not make another PC's uncommitted code available. `references/context-continuity.md` owns the handoff record for a device transfer.
 
 ## Outage and uncertain writes
 

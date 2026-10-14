@@ -111,6 +111,7 @@ narrative document and child with:
 `python $SKILL_DIR/scripts/check_markdown_links.py <repo-root> --files <paths> --line-budget`
 
 The command reports every file's state. Exit `1` on an unapproved red document is a failed gate;
-exit `2` means nothing was proven. Use `--allow-red <paths>` only after the human explicitly
-approves each named file at its current count. Yellow and orange remain reportable exceptions, not
+exit `2` is not a pass; interpret it as `references/10-language-and-links.md` directs. Use
+`--allow-red <paths>` only after the human explicitly approves each named file at its current
+count. Yellow and orange remain reportable exceptions, not
 proof that the green objective was attempted.
