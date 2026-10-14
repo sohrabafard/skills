@@ -1,6 +1,6 @@
 ---
 name: alaa-memory-os
-description: "Use when Alaa work must record or recall durable cross-session knowledge, whichever memory store backs it: deciding what is worth remembering and in what shape, writing architecture, service-ownership, contract, operations, lesson, work-pattern, project-index, project-state, handoff or research notes, deciding whether information belongs in the memory store, a Beads hub reminder or Beads issue notes, recording drift when two sources of truth disagree, setting a recall budget with a fail-open path, and separating facts worth remembering from relationships that must be derived. One adapter is active at a time and the skill body declares which; local file vault, Basic Memory, and Hindsight each get one adapter reference. Do not use for tiny deterministic code edits, as a second task system, for active execution plans or handoff contents owned by alaa-workflow, or to remember service dependency edges, which are always derived."
+description: "Use when Alaa work must record or recall durable cross-session knowledge, whichever memory store backs it: deciding what to remember and in what shape; architecture, ownership, contract, operations, lesson, project, handoff or research notes; whether information belongs in the memory store, a Beads hub reminder or Beads issue notes; drift between sources of truth; fail-open recall budgets; and capability recall before a local-tool miss becomes a validation blocker or a permitted environment repair has an unknown owner. One adapter is active at a time; local file vault, Basic Memory and Hindsight each get one adapter reference. Do not use for tiny deterministic edits, as a second task system, for active plans or handoff contents owned by alaa-workflow, for candidate admission owned by alaa-extract-agent-lessons, or for service dependency edges, which are always derived."
 ---
 
 # Alaa Memory OS
@@ -49,6 +49,9 @@ and still spends the budget below.
 - It outlives one context window: phases, migration, or system review.
 - Two sources of truth disagree, or you are about to establish whether they do.
 - It asks whether existing infrastructure, another repository, or a prior decision already provides a capability, or who owns it.
+- A local-tool miss is about to become a required validation blocker, or an otherwise permitted additional
+  environment repair has an unresolved owner. Reuse sufficient fresh capability evidence instead of
+  repeating recall for each failed command.
 - You are about to write a note, or publish curated lessons from the evidence warehouse.
 - You are about to write a Beads hub reminder (`bd remember`), or to decide whether information belongs in the memory store, a hub reminder or issue notes.
 
@@ -139,7 +142,7 @@ observability-record requirements; /alaa-services-contract owns field/event/metr
 
 Activation grants no memory write, migration, configuration, installation, commit or external effect.
 Before durable publication, apply /alaa-extract-agent-lessons for evidence-derived candidates and
-`references/knowledge-shape.md` for admission, search-before-create, note shape and prohibited content.
+`references/knowledge-shape.md` for search-before-create, note shape and prohibited content.
 Use only the selected adapter after task authorization of destination and effect. Report completed
 writes only after adapter-specific terminal confirmation; distinguish deferred (unauthorized), failed,
 unavailable and empty (no admitted note). Preserve admitted unwritten candidates in the workflow-owned
@@ -200,7 +203,8 @@ Write only authorized durable changes; before reporting, confirm each applicable
 - No `/alaa-workflow` execution state was duplicated.
 - No service-to-service dependency edge was remembered.
 - Nothing forbidden in the Beads hub reminders section was written to `bd remember`.
-- Every disagreement found became a drift record, not a silent resolution.
+- Canonical disagreements became repository drift records; stale memory alone was corrected with authority
+  or deferred.
 - Every checker run reported its exit code, and a `2` was read as "could not run", never as a pass.
 - The report names notes changed, source paths, validation result, drift recorded, memory availability, and
   unresolved questions.
