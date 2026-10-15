@@ -13,6 +13,8 @@ Expected workspace: `D:/Sohrab/Project/alaa-task-hub/.beads`
 
 User, repository, and orchestrator constraints govern. This binding overrides conflicting upstream Beads skill or hook guidance and grants no additional authority.
 
+Under Codex, read each `/name` skill reference in this block as `$name`.
+
 ### Start and resume
 
 Before planning or executing tracked work, and after compaction or session restart:
@@ -138,7 +140,8 @@ pass.
 - **Require an authoritative source for a concrete claim,** and never read a missing result as a
   negative result. Use a named placeholder rather than an invented specific.
 - **Never write a path from one machine.** A `D:\...` path is wrong in a committed file; write it
-  relative to the repository root.
+  relative to the repository root. The one exception is the `Expected workspace` line of the Beads
+  binding, which names the shared hub path.
 - **Ask before an action with an effect outside this working tree** — commit, tag, publish, deploy,
   force-push, or credential rotation.
 - **No emoji in any artifact.** When a request is ambiguous, contradictory, or unsafe, say so, ask
