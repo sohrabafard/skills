@@ -1,4 +1,2 @@
-.DS_Store
-*.swp
-*.swo
-*~
+/.venv/
+/.rumdl_cache/
