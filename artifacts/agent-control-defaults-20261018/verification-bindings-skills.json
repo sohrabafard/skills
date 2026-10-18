@@ -1,0 +1,639 @@
+{
+  "generated_utc": "2026-10-18T19:27:12.978625+00:00",
+  "source_template_sha256": "09a67ababed2b80dcde111b8fb2810cde81d01ce39f0a73f2b4643ccd6eec6b8",
+  "repositories": [
+    {
+      "name": "skills",
+      "base_head": "4c2a5bd66f18338f128423e2fbaf038a724efb1b",
+      "branch": "main",
+      "files": [
+        {
+          "path": "AGENTS.md",
+          "sha256": "72ec8817ffd24a912a3b53a8bdd95143dbd791ce6f3996a7a5c0b3583190e511",
+          "block_sha256": "fea37af86a75190d2fb2c559a46aa833d66e3618cd8464b4e0d6b93abc64dc1a",
+          "block_matches_template": true,
+          "outside_bytes_match_head": true
+        }
+      ],
+      "unchanged_import_sha256": "d11b8b58220105ed2309f207639426cd14b203c740177a5cb5e5ca97b35a897e",
+      "unrelated_tracked": [
+        {
+          "status": "A ",
+          "path": "artifacts/agent-control-defaults-20261018/actor-report.md",
+          "index_entry": "100644 f5c86c11968d2598b22c8d8ab241dc0f7118f082 0\tartifacts/agent-control-defaults-20261018/actor-report.md",
+          "sha256": "c02875725d6168e3b015a7982e8d76eec1942ee6c1fbe6fe4d915432a15f7705"
+        },
+        {
+          "status": "AM",
+          "path": "artifacts/agent-control-defaults-20261018/binding-a.md",
+          "index_entry": "100644 c5d9d684ba6ebf0113b2a55543c615f84748cc65 0\tartifacts/agent-control-defaults-20261018/binding-a.md",
+          "sha256": "aa0c30c552b350dff7bc35b904a7feea07093477315ac3016d0e08a9515ec33a"
+        },
+        {
+          "status": "AM",
+          "path": "artifacts/agent-control-defaults-20261018/binding-d.md",
+          "index_entry": "100644 e4fad9bf546df4e494a7086799800ba95348777a 0\tartifacts/agent-control-defaults-20261018/binding-d.md",
+          "sha256": "6a6347bae7150d6270ac9d4bf42bd5733f3462e4a688205d5a5cbfbf64fa4590"
+        },
+        {
+          "status": "A ",
+          "path": "artifacts/agent-control-defaults-20261018/binding-proposal.md",
+          "index_entry": "100644 38fd7464a254ff9e585e5c3eb1c85ed386a3123c 0\tartifacts/agent-control-defaults-20261018/binding-proposal.md",
+          "sha256": "68eeaedfd60d618319cfcd15547c0da378c14af04ca41b249385257f2f16e54b"
+        },
+        {
+          "status": "AM",
+          "path": "artifacts/agent-control-defaults-20261018/binding-template.md",
+          "index_entry": "100644 85fda2e238cd230eb136fc3745fc27e89810b31f 0\tartifacts/agent-control-defaults-20261018/binding-template.md",
+          "sha256": "09a67ababed2b80dcde111b8fb2810cde81d01ce39f0a73f2b4643ccd6eec6b8"
+        },
+        {
+          "status": "AM",
+          "path": "artifacts/agent-control-defaults-20261018/model-draft.md",
+          "index_entry": "100644 08d9f64e612d309f1df8c9efde057031b77c6da2 0\tartifacts/agent-control-defaults-20261018/model-draft.md",
+          "sha256": "0c197fd82aa9658996f56e673691575d8131b2dad30bf7a00db2e44989f735ed"
+        },
+        {
+          "status": "AM",
+          "path": "artifacts/agent-control-defaults-20261018/model-report.md",
+          "index_entry": "100644 2ad660dd62d5d6cc1d45cf6292083e627c23a3cd 0\tartifacts/agent-control-defaults-20261018/model-report.md",
+          "sha256": "0d441da336c022bc0bae9b55c1e78f95f5156e2810022004b8512b8d1540c924"
+        },
+        {
+          "status": "AM",
+          "path": "docs/_agent_plans/20261018-190000_agent-control-defaults.md",
+          "index_entry": "100644 3aff4b9e1708a6a79e8d484f47fdc1c6bd4dee0d 0\tdocs/_agent_plans/20261018-190000_agent-control-defaults.md",
+          "sha256": "07a74c0bd57fe96108fcfb60334e235351015fb11be9cfd165d80501e2b6b827"
+        },
+        {
+          "status": "AM",
+          "path": "docs/agents/20261018-190000_agent-control-defaults-state.md",
+          "index_entry": "100644 f962cf8ebbd3df0095f6c8ad7df1d1210fbad2b1 0\tdocs/agents/20261018-190000_agent-control-defaults-state.md",
+          "sha256": "8692c5b061cd5a973cd8b2f389143d9543fd9da8c4d356ee1322c270e6a65fd2"
+        },
+        {
+          "status": " M",
+          "path": "skills/sohrab/alaa-cc-orchestrator/SKILL.md",
+          "index_entry": "100644 d224c6711a71daa8536ee48fed227eb5414f1ebf 0\tskills/sohrab/alaa-cc-orchestrator/SKILL.md",
+          "sha256": "382b3d7bc2191a106c1523c9377ede9679f822b7c0d9e3ee9735f6b70fc6079a"
+        },
+        {
+          "status": " M",
+          "path": "skills/sohrab/alaa-cc-orchestrator/agents/alaa-accessibility-reviewer.md",
+          "index_entry": "100644 94e211bdab8d6df0dae282d28d8bf7d8ec93a8e5 0\tskills/sohrab/alaa-cc-orchestrator/agents/alaa-accessibility-reviewer.md",
+          "sha256": "6a34eb738581732bf56b7a60d71b45cddf0e217d52b7c3ce41a34caf0300fd5b"
+        },
+        {
+          "status": " M",
+          "path": "skills/sohrab/alaa-cc-orchestrator/agents/alaa-adversarial-reviewer.md",
+          "index_entry": "100644 45337edbd90d2fc02c32164b0ac599e48cdd823e 0\tskills/sohrab/alaa-cc-orchestrator/agents/alaa-adversarial-reviewer.md",
+          "sha256": "578a9b7c3766350a4284a1290e9e49f15280de069b31667ee4a04e967c448c9f"
+        },
+        {
+          "status": " M",
+          "path": "skills/sohrab/alaa-cc-orchestrator/agents/alaa-api-contract-reviewer.md",
+          "index_entry": "100644 4884a40b3fc2e3cc53caa44f048b2a2ae04f577a 0\tskills/sohrab/alaa-cc-orchestrator/agents/alaa-api-contract-reviewer.md",
+          "sha256": "377ab9bab48147b54a9fb4332f59ed1d2d0f6865e28e7530b13b95eae960141a"
+        },
+        {
+          "status": " M",
+          "path": "skills/sohrab/alaa-cc-orchestrator/agents/alaa-architecture-critic.md",
+          "index_entry": "100644 095176459e42c328488c521f4599249aed088a2d 0\tskills/sohrab/alaa-cc-orchestrator/agents/alaa-architecture-critic.md",
+          "sha256": "2d83043f476324c2135a46f92a49d862f82484ff3d7f5b7ca41fc18d522c7fb8"
+        },
+        {
+          "status": " M",
+          "path": "skills/sohrab/alaa-cc-orchestrator/agents/alaa-browser-qa.md",
+          "index_entry": "100644 9dba2a95836ced1c23e8b0c26d6e88844341be82 0\tskills/sohrab/alaa-cc-orchestrator/agents/alaa-browser-qa.md",
+          "sha256": "7374f3347f8b32aa1431638e3da6bc0ad5f48132a77e7e61b9f3c9c4c474086a"
+        },
+        {
+          "status": " M",
+          "path": "skills/sohrab/alaa-cc-orchestrator/agents/alaa-dependency-auditor.md",
+          "index_entry": "100644 d27d1c248d604dc756eb6b957734fcf10ce513c1 0\tskills/sohrab/alaa-cc-orchestrator/agents/alaa-dependency-auditor.md",
+          "sha256": "5a240269052fe745f03838675f5612aca34c140f2ce2dd3ce1e97f852eff0244"
+        },
+        {
+          "status": " M",
+          "path": "skills/sohrab/alaa-cc-orchestrator/agents/alaa-documenter.md",
+          "index_entry": "100644 9b58c2f31c690fda5c840a0acb10a2f974647191 0\tskills/sohrab/alaa-cc-orchestrator/agents/alaa-documenter.md",
+          "sha256": "8cc71e6107bdfbfc5a1c8f88fa8536c4dbb6390ec33d574dde564912143b95b4"
+        },
+        {
+          "status": " M",
+          "path": "skills/sohrab/alaa-cc-orchestrator/agents/alaa-explorer.md",
+          "index_entry": "100644 f562c81f016548bffaeae9e6a13b113c6152ae27 0\tskills/sohrab/alaa-cc-orchestrator/agents/alaa-explorer.md",
+          "sha256": "fb658d96f147098fdfcd12b264dc72730e00b8a8eab6f3c0fcbc01c02d0cb987"
+        },
+        {
+          "status": " M",
+          "path": "skills/sohrab/alaa-cc-orchestrator/agents/alaa-failure-analyst.md",
+          "index_entry": "100644 859357a91df1db0a63395750c2412645751462cc 0\tskills/sohrab/alaa-cc-orchestrator/agents/alaa-failure-analyst.md",
+          "sha256": "94295d4b222ea70fda90b87164f73bcc0c906c6a5074612462855e266a6fe562"
+        },
+        {
+          "status": " M",
+          "path": "skills/sohrab/alaa-cc-orchestrator/agents/alaa-implementer-fable.md",
+          "index_entry": "100644 2dd686248e42b421abb2f076367fd8a49c4fa94f 0\tskills/sohrab/alaa-cc-orchestrator/agents/alaa-implementer-fable.md",
+          "sha256": "745dca5b42571535ed504dcb0dd707ff910592b683bc144aad747659c75d0b09"
+        },
+        {
+          "status": " M",
+          "path": "skills/sohrab/alaa-cc-orchestrator/agents/alaa-implementer-haiku-high.md",
+          "index_entry": "100644 8e36a4fd1e8e348ee7574578c4d27f75d6ac6bae 0\tskills/sohrab/alaa-cc-orchestrator/agents/alaa-implementer-haiku-high.md",
+          "sha256": "d740eceb692e9bcb3062bfc59fa39cb5b6c5c93e76059a0101350199a1e72792"
+        },
+        {
+          "status": " M",
+          "path": "skills/sohrab/alaa-cc-orchestrator/agents/alaa-implementer-haiku.md",
+          "index_entry": "100644 eb7853718d5731880df66ccffd179f5f0cd705d7 0\tskills/sohrab/alaa-cc-orchestrator/agents/alaa-implementer-haiku.md",
+          "sha256": "c3ec4846462cbe1821ac4dd4d62a93dfcf3fd85ad02e63044beda8e1142f177d"
+        },
+        {
+          "status": " M",
+          "path": "skills/sohrab/alaa-cc-orchestrator/agents/alaa-implementer-opus-high.md",
+          "index_entry": "100644 3c5ff21c746f5cf7897f9158e575ba42eb818823 0\tskills/sohrab/alaa-cc-orchestrator/agents/alaa-implementer-opus-high.md",
+          "sha256": "fc805e0608d423e7364e8220e0a0c6c715f62291aaf2ff0eebdc01cd49c578e9"
+        },
+        {
+          "status": " M",
+          "path": "skills/sohrab/alaa-cc-orchestrator/agents/alaa-implementer-opus.md",
+          "index_entry": "100644 c5523edcf54a03264520afcdcdc5b24f6c6954f9 0\tskills/sohrab/alaa-cc-orchestrator/agents/alaa-implementer-opus.md",
+          "sha256": "3eb0c82ae7721a7332a759a9eb213d16638a54cf0cac79194a236aaa12f67052"
+        },
+        {
+          "status": " M",
+          "path": "skills/sohrab/alaa-cc-orchestrator/agents/alaa-implementer-sonnet-high.md",
+          "index_entry": "100644 985d424793cbb5a435de42b46436b8e6bcf691ee 0\tskills/sohrab/alaa-cc-orchestrator/agents/alaa-implementer-sonnet-high.md",
+          "sha256": "6d7abe7f95e40b2bea8e389b2a2f481a819d32a53f5e76242d00ad3c509e3fa8"
+        },
+        {
+          "status": " M",
+          "path": "skills/sohrab/alaa-cc-orchestrator/agents/alaa-implementer.md",
+          "index_entry": "100644 9b67f9c477631f5d91f51b3f24453cd5d99d157a 0\tskills/sohrab/alaa-cc-orchestrator/agents/alaa-implementer.md",
+          "sha256": "4a69385a72f54b8d71b2738235a5190e88aec3d023fa15b570cc0d60ec87b932"
+        },
+        {
+          "status": " M",
+          "path": "skills/sohrab/alaa-cc-orchestrator/agents/alaa-instruction-reviewer.md",
+          "index_entry": "100644 32db8775b75d0c48da6ad40ec54761f3d3f9d1c7 0\tskills/sohrab/alaa-cc-orchestrator/agents/alaa-instruction-reviewer.md",
+          "sha256": "05c485e149e2fd5acc62fa6ca0d9d17d28aef01a46e9c776d737b34f603459ed"
+        },
+        {
+          "status": " M",
+          "path": "skills/sohrab/alaa-cc-orchestrator/agents/alaa-migration-guardian.md",
+          "index_entry": "100644 b607c5bc18d0b5106d56b57a4fe19f5efb29ee16 0\tskills/sohrab/alaa-cc-orchestrator/agents/alaa-migration-guardian.md",
+          "sha256": "9de468cd80a87cae513669d9061f3c69a9fbc404c9559cd9bc0fd81c64e1b357"
+        },
+        {
+          "status": " M",
+          "path": "skills/sohrab/alaa-cc-orchestrator/agents/alaa-observability-reviewer.md",
+          "index_entry": "100644 7bd50f20b2c54f4ca1bc68020bb77eefdf97c4ba 0\tskills/sohrab/alaa-cc-orchestrator/agents/alaa-observability-reviewer.md",
+          "sha256": "e1caeed073a17dc37ff1b9b44e3238499da34d056165cd8fd25f279324f9aee8"
+        },
+        {
+          "status": " M",
+          "path": "skills/sohrab/alaa-cc-orchestrator/agents/alaa-performance-profiler.md",
+          "index_entry": "100644 76fa168ac5b01482ff982355e9b7cb29f6a109c6 0\tskills/sohrab/alaa-cc-orchestrator/agents/alaa-performance-profiler.md",
+          "sha256": "b7abee5917c99de3f9ca2472e0ffee282c9dee86ee216d6c011df14ff4ee39d8"
+        },
+        {
+          "status": " M",
+          "path": "skills/sohrab/alaa-cc-orchestrator/agents/alaa-planner-high.md",
+          "index_entry": "100644 150a77e7c4513bd4bc68fd4c27f6a1726179f548 0\tskills/sohrab/alaa-cc-orchestrator/agents/alaa-planner-high.md",
+          "sha256": "134c06ac48ab52e351f0510c2ec0a7ba048f8f6fc4c9e5b6030865967df182d5"
+        },
+        {
+          "status": " M",
+          "path": "skills/sohrab/alaa-cc-orchestrator/agents/alaa-planner.md",
+          "index_entry": "100644 b721f55cc6b5f8a2174b77bb473afcc695f8e53e 0\tskills/sohrab/alaa-cc-orchestrator/agents/alaa-planner.md",
+          "sha256": "c4bea5365ca5ff9e5aceede18e6f6bd5c083849e4a2b31d5b5ab313add9eb213"
+        },
+        {
+          "status": " M",
+          "path": "skills/sohrab/alaa-cc-orchestrator/agents/alaa-release-guardian.md",
+          "index_entry": "100644 4f0580c131b551ca6d9a16a428c26a534ecc9f0d 0\tskills/sohrab/alaa-cc-orchestrator/agents/alaa-release-guardian.md",
+          "sha256": "945ae1c29d0730da254a6ad7e9537e0204b91baad7172b00616c8ceeb9af4bd7"
+        },
+        {
+          "status": " M",
+          "path": "skills/sohrab/alaa-cc-orchestrator/agents/alaa-researcher.md",
+          "index_entry": "100644 7b2ba7cf54e3ffe2397a742c543c34d2749878ef 0\tskills/sohrab/alaa-cc-orchestrator/agents/alaa-researcher.md",
+          "sha256": "3057c79b7057d18c21e5c0c8a78228c43094b2992949fb3eab1d4992c200ed9e"
+        },
+        {
+          "status": " M",
+          "path": "skills/sohrab/alaa-cc-orchestrator/agents/alaa-reviewer.md",
+          "index_entry": "100644 909d7c28b6fbc4b1e8af1730e53b531d313b21fb 0\tskills/sohrab/alaa-cc-orchestrator/agents/alaa-reviewer.md",
+          "sha256": "c53845bb1b484054151a9748c189bd98a64951bea18b24f5f92d3f2e671b2973"
+        },
+        {
+          "status": " M",
+          "path": "skills/sohrab/alaa-cc-orchestrator/agents/alaa-security-reviewer.md",
+          "index_entry": "100644 225d051b9a30e2aeded5c281f3de29e17a7bb8e7 0\tskills/sohrab/alaa-cc-orchestrator/agents/alaa-security-reviewer.md",
+          "sha256": "419e9d94be256a72afc85ddae56ecbd0f013d20cbf6d60e60e0b4e335cc48af4"
+        },
+        {
+          "status": " M",
+          "path": "skills/sohrab/alaa-cc-orchestrator/agents/alaa-spec-analyst.md",
+          "index_entry": "100644 379c95e53732a3538d10796396ab9187081bca4f 0\tskills/sohrab/alaa-cc-orchestrator/agents/alaa-spec-analyst.md",
+          "sha256": "a775562658349e95f377bf0856546fd63e76110c07dd4b336e1ced721bf20123"
+        },
+        {
+          "status": " M",
+          "path": "skills/sohrab/alaa-cc-orchestrator/agents/alaa-test-strategist.md",
+          "index_entry": "100644 69fe20a622f881080da8c5624e23201b6d6b3aa1 0\tskills/sohrab/alaa-cc-orchestrator/agents/alaa-test-strategist.md",
+          "sha256": "b94b91499d70f5cca545969dc05a64e95137d77cce3d57d4804f73f089d17003"
+        },
+        {
+          "status": " M",
+          "path": "skills/sohrab/alaa-cc-orchestrator/agents/alaa-verifier.md",
+          "index_entry": "100644 4f5ffb0a092e2e4da2fd0c041b22f1527ea04513 0\tskills/sohrab/alaa-cc-orchestrator/agents/alaa-verifier.md",
+          "sha256": "9a82d733422fee1b189c91f2d0dcc72f7bd351d9474ef69101192d0beb67dd88"
+        },
+        {
+          "status": " M",
+          "path": "skills/sohrab/alaa-cc-orchestrator/assets/implementation-contract.md",
+          "index_entry": "100644 e34a64bf73159a23fcf9742cf356d4c1db15b390 0\tskills/sohrab/alaa-cc-orchestrator/assets/implementation-contract.md",
+          "sha256": "b62fcd925b4b52184381cf8dfcaeb3fba103418d514f65017c76d1f04c9c5d14"
+        },
+        {
+          "status": " M",
+          "path": "skills/sohrab/alaa-cc-orchestrator/assets/manifest.json",
+          "index_entry": "100644 bf02acb8c74c995ec89b4fdfbdfc447300ac8e83 0\tskills/sohrab/alaa-cc-orchestrator/assets/manifest.json",
+          "sha256": "270c8edc79c5c6230a1aef50e750b1f9e4973d66e39bfccbc7c57d271358cb61"
+        },
+        {
+          "status": " M",
+          "path": "skills/sohrab/alaa-cc-orchestrator/assets/planner-contract.md",
+          "index_entry": "100644 0da2604acc38ecedc27b849d95a8f696c3f645a7 0\tskills/sohrab/alaa-cc-orchestrator/assets/planner-contract.md",
+          "sha256": "52f4fa5e268e5040a5100969eec24bad4331b6d40ab7b3ff3f42a2245ad97f0c"
+        },
+        {
+          "status": " M",
+          "path": "skills/sohrab/alaa-cc-orchestrator/references/agent-catalog.md",
+          "index_entry": "100644 c58af206b7da258a1d9c2bd526445c1614ae9b28 0\tskills/sohrab/alaa-cc-orchestrator/references/agent-catalog.md",
+          "sha256": "2ef0877441b7bcee316337214310cf2729c923d4d0c098bc581547b7ed9df480"
+        },
+        {
+          "status": " M",
+          "path": "skills/sohrab/alaa-cc-orchestrator/references/delegation-prompts.md",
+          "index_entry": "100644 08bd597e519e7fcbc93c24063a7c79dd5e26f928 0\tskills/sohrab/alaa-cc-orchestrator/references/delegation-prompts.md",
+          "sha256": "a23d3daec956b93ed20dcfc44e749721e3b2f6dd91288fad41d76e7028dbc675"
+        },
+        {
+          "status": " M",
+          "path": "skills/sohrab/alaa-cc-orchestrator/references/model-effort-policy.md",
+          "index_entry": "100644 19678d05076b6bca497dd2e7ff3e0dff7e4504e8 0\tskills/sohrab/alaa-cc-orchestrator/references/model-effort-policy.md",
+          "sha256": "78d20c8777c7de47bc2104cc717d9265d879f0254a5b81e2b5e77ecf414110f4"
+        },
+        {
+          "status": " M",
+          "path": "skills/sohrab/alaa-cc-orchestrator/references/routing-matrix.md",
+          "index_entry": "100644 9c0168dd5fb98d84ee6a2b652c64d928679071e2 0\tskills/sohrab/alaa-cc-orchestrator/references/routing-matrix.md",
+          "sha256": "b706054f9513298c019deddcbd80c78c2ebeccd81b5a215435004fb75571abac"
+        },
+        {
+          "status": " M",
+          "path": "skills/sohrab/alaa-cc-orchestrator/scripts/check_agent_contracts.py",
+          "index_entry": "100644 17ce3b111660051d618397affd41f791c78f7a2a 0\tskills/sohrab/alaa-cc-orchestrator/scripts/check_agent_contracts.py",
+          "sha256": "253fe3790bddeebe5749916ae9102ca96298a7c68837c7505b6eee8c3e6a6a6e"
+        },
+        {
+          "status": " M",
+          "path": "skills/sohrab/alaa-codex-orchestrator/SKILL.md",
+          "index_entry": "100644 8336fb92f6f45602c7be9c9c6ce0adbc3e72ffc0 0\tskills/sohrab/alaa-codex-orchestrator/SKILL.md",
+          "sha256": "cb949cc616f879a70fdd240d0baba6dff4939601bf4a2e008b5995a0f19d2844"
+        },
+        {
+          "status": " M",
+          "path": "skills/sohrab/alaa-codex-orchestrator/agents/alaa-accessibility-reviewer.toml",
+          "index_entry": "100644 a102db2c53ce7f9ce2e3ab88c9dc5f21fb54de27 0\tskills/sohrab/alaa-codex-orchestrator/agents/alaa-accessibility-reviewer.toml",
+          "sha256": "64b8df974712e4487f94661d550262038b46d5b8a2d1940cefac62ed211e0212"
+        },
+        {
+          "status": " M",
+          "path": "skills/sohrab/alaa-codex-orchestrator/agents/alaa-adversarial-reviewer.toml",
+          "index_entry": "100644 eec75588ab9d2583b6ed8a479cb8ef48de735bb2 0\tskills/sohrab/alaa-codex-orchestrator/agents/alaa-adversarial-reviewer.toml",
+          "sha256": "f12907aeb17a640f418f229080e16bcf6f1b83615207a66a3f667b92462aced4"
+        },
+        {
+          "status": " M",
+          "path": "skills/sohrab/alaa-codex-orchestrator/agents/alaa-api-contract-reviewer.toml",
+          "index_entry": "100644 f5dc2b1b5d2634a272fcee45588ae6ff8d2d2dae 0\tskills/sohrab/alaa-codex-orchestrator/agents/alaa-api-contract-reviewer.toml",
+          "sha256": "d4287c995285a77152e7569aa456446c763b61d6a70fb18cd3aabda55a78892b"
+        },
+        {
+          "status": " M",
+          "path": "skills/sohrab/alaa-codex-orchestrator/agents/alaa-architecture-critic.toml",
+          "index_entry": "100644 e4cde63109bcd1f181ae5c071c7da770a2babf92 0\tskills/sohrab/alaa-codex-orchestrator/agents/alaa-architecture-critic.toml",
+          "sha256": "f148eb686ccd23165a1fd281f73b93f27a11ba02e95d305fbefb4ca0c163967e"
+        },
+        {
+          "status": " M",
+          "path": "skills/sohrab/alaa-codex-orchestrator/agents/alaa-browser-qa.toml",
+          "index_entry": "100644 36042612fe60db94b95ed2108498701a14571626 0\tskills/sohrab/alaa-codex-orchestrator/agents/alaa-browser-qa.toml",
+          "sha256": "6eba21e1b194a63cfc436959963b9409bcc7557605ea5717a6132ccdcaa1d1af"
+        },
+        {
+          "status": " M",
+          "path": "skills/sohrab/alaa-codex-orchestrator/agents/alaa-dependency-auditor.toml",
+          "index_entry": "100644 8ef9aae063b2c8a98304b1797a8487de86d659fc 0\tskills/sohrab/alaa-codex-orchestrator/agents/alaa-dependency-auditor.toml",
+          "sha256": "fef7f6427ca1a61591a98a12c0894ed5143a44eec18981e47d0e4b43cc142b5a"
+        },
+        {
+          "status": " M",
+          "path": "skills/sohrab/alaa-codex-orchestrator/agents/alaa-documenter.toml",
+          "index_entry": "100644 47435d1f07b4c9ec9fc793cf30802088e814e583 0\tskills/sohrab/alaa-codex-orchestrator/agents/alaa-documenter.toml",
+          "sha256": "278bd82c5734b8bd900e4cabfe13186967ac5cd620c14adc8cdf73d5dc01f13c"
+        },
+        {
+          "status": " M",
+          "path": "skills/sohrab/alaa-codex-orchestrator/agents/alaa-explorer.toml",
+          "index_entry": "100644 f0e9008867757b1915bcae6ebf8613f3f120311d 0\tskills/sohrab/alaa-codex-orchestrator/agents/alaa-explorer.toml",
+          "sha256": "75285f89003a054c70d0ff9a5531c05106f1ef0ac0cf50ba4cc0fb01d654a338"
+        },
+        {
+          "status": " M",
+          "path": "skills/sohrab/alaa-codex-orchestrator/agents/alaa-failure-analyst.toml",
+          "index_entry": "100644 3af270fcd0715f42dedbfe43e4eb42f9fbb8a083 0\tskills/sohrab/alaa-codex-orchestrator/agents/alaa-failure-analyst.toml",
+          "sha256": "9823abc5de712b6e89f570e2efcca0ece927a367a03066d30bdbbc892ab304fa"
+        },
+        {
+          "status": " M",
+          "path": "skills/sohrab/alaa-codex-orchestrator/agents/alaa-implementer-astra-medium.toml",
+          "index_entry": "100644 0d8f4169d8734d1084a9e65424ab97ea9afdf322 0\tskills/sohrab/alaa-codex-orchestrator/agents/alaa-implementer-astra-medium.toml",
+          "sha256": "e7e74ac701f0d18be3b96e385b592c2c565fe9c3ce2c93f5245372aa5c2b9fb0"
+        },
+        {
+          "status": " M",
+          "path": "skills/sohrab/alaa-codex-orchestrator/agents/alaa-implementer-astra-xhigh.toml",
+          "index_entry": "100644 27e1322f7bd4df4924e32b70bebad93f690f4049 0\tskills/sohrab/alaa-codex-orchestrator/agents/alaa-implementer-astra-xhigh.toml",
+          "sha256": "453dfe6beab56c07b5088ac97105d446580b0ed74b4af6335d18700297a64685"
+        },
+        {
+          "status": " M",
+          "path": "skills/sohrab/alaa-codex-orchestrator/agents/alaa-implementer-astra.toml",
+          "index_entry": "100644 610bb91fe7f83e0295b648e38d3b39120c1b988c 0\tskills/sohrab/alaa-codex-orchestrator/agents/alaa-implementer-astra.toml",
+          "sha256": "054d08b64facf3cd3f05d01c20f6409652059ee8daf999b419e48d35534e7444"
+        },
+        {
+          "status": " M",
+          "path": "skills/sohrab/alaa-codex-orchestrator/agents/alaa-implementer-high.toml",
+          "index_entry": "100644 5363a692055450490d0816ffc0008493144c9413 0\tskills/sohrab/alaa-codex-orchestrator/agents/alaa-implementer-high.toml",
+          "sha256": "2e17f666a59bf41aff5726f2ef643609aeeaff9a568e6a3849a2c82834614d4c"
+        },
+        {
+          "status": " M",
+          "path": "skills/sohrab/alaa-codex-orchestrator/agents/alaa-implementer-low.toml",
+          "index_entry": "100644 fa8176472ec01f32378f7805525516411d1e116a 0\tskills/sohrab/alaa-codex-orchestrator/agents/alaa-implementer-low.toml",
+          "sha256": "7a53cd446727c417b5d5cfc58d9f3276665d8096ba0515f5173a74068feb3b26"
+        },
+        {
+          "status": " M",
+          "path": "skills/sohrab/alaa-codex-orchestrator/agents/alaa-implementer-luna-high.toml",
+          "index_entry": "100644 1976714e630871dcb4cc3f6d6d2c093b4419c1a7 0\tskills/sohrab/alaa-codex-orchestrator/agents/alaa-implementer-luna-high.toml",
+          "sha256": "8528962028fcfddc2eae734147ae7b962135a7eb71c7f22bc5f6521a82e3b941"
+        },
+        {
+          "status": " M",
+          "path": "skills/sohrab/alaa-codex-orchestrator/agents/alaa-implementer-luna-low.toml",
+          "index_entry": "100644 caceb07f786684e4686468042030354310748c80 0\tskills/sohrab/alaa-codex-orchestrator/agents/alaa-implementer-luna-low.toml",
+          "sha256": "53f2f47152fe7cd4685e9301852fccbfb1d71d947e4a90ab9050e3d65fb4c783"
+        },
+        {
+          "status": " M",
+          "path": "skills/sohrab/alaa-codex-orchestrator/agents/alaa-implementer-luna.toml",
+          "index_entry": "100644 a380817e05ed62bbb2c46b6ea0c38e42439145f9 0\tskills/sohrab/alaa-codex-orchestrator/agents/alaa-implementer-luna.toml",
+          "sha256": "b4e37a08690f5f048d93b4a7a61e35d87f6f8801f60a2519308f0aae39bd82a5"
+        },
+        {
+          "status": " M",
+          "path": "skills/sohrab/alaa-codex-orchestrator/agents/alaa-implementer-xhigh.toml",
+          "index_entry": "100644 2e41e552944294ecc01dbe8b79725fae44144f15 0\tskills/sohrab/alaa-codex-orchestrator/agents/alaa-implementer-xhigh.toml",
+          "sha256": "c4253d9a54f010920adfc6a64eedba3904406b07859419f41520bdbcc0e453cd"
+        },
+        {
+          "status": " M",
+          "path": "skills/sohrab/alaa-codex-orchestrator/agents/alaa-implementer.toml",
+          "index_entry": "100644 54029e10e3e42e4a3f9045f5ed072737fb14d92c 0\tskills/sohrab/alaa-codex-orchestrator/agents/alaa-implementer.toml",
+          "sha256": "12ec954ee2ed08226f2ce8de9eec623c23f66caf189c8fbc790f859a57d830c9"
+        },
+        {
+          "status": " M",
+          "path": "skills/sohrab/alaa-codex-orchestrator/agents/alaa-instruction-reviewer.toml",
+          "index_entry": "100644 895f5e1ff8004ad466d562b00e3434f4a0be6af8 0\tskills/sohrab/alaa-codex-orchestrator/agents/alaa-instruction-reviewer.toml",
+          "sha256": "c9ccb2f4dbd080c4a5cab7d27611006d450bbda2a5013b78f3bb540dc798682e"
+        },
+        {
+          "status": " M",
+          "path": "skills/sohrab/alaa-codex-orchestrator/agents/alaa-migration-guardian.toml",
+          "index_entry": "100644 420948992042260af560e10b9a444724c52e9131 0\tskills/sohrab/alaa-codex-orchestrator/agents/alaa-migration-guardian.toml",
+          "sha256": "accd602d39a3e3102c30f63f4512111ace1a4f2b5410b12039efe2a19808a1c5"
+        },
+        {
+          "status": " M",
+          "path": "skills/sohrab/alaa-codex-orchestrator/agents/alaa-observability-reviewer.toml",
+          "index_entry": "100644 f521a03e01aecc137f341f968e10c45d0acfcb6e 0\tskills/sohrab/alaa-codex-orchestrator/agents/alaa-observability-reviewer.toml",
+          "sha256": "f1017ef81e533b13ad2a2ba81af8a0c4a8d832f32ff4bd61175da5111d0d3f70"
+        },
+        {
+          "status": " M",
+          "path": "skills/sohrab/alaa-codex-orchestrator/agents/alaa-performance-profiler.toml",
+          "index_entry": "100644 77ec8991ad7692bb166b4b065712040dd4187e1f 0\tskills/sohrab/alaa-codex-orchestrator/agents/alaa-performance-profiler.toml",
+          "sha256": "81a806f2a3663f8c96123dc5b862d61969a9ef4cf1ac7d8c9e16ca27078d7001"
+        },
+        {
+          "status": " M",
+          "path": "skills/sohrab/alaa-codex-orchestrator/agents/alaa-planner-high.toml",
+          "index_entry": "100644 cf0f2d520d7165384e212867932ecbfeb33d99e1 0\tskills/sohrab/alaa-codex-orchestrator/agents/alaa-planner-high.toml",
+          "sha256": "6d3cde3cfe7c9b7c564f77e83ea2352cff7ed93aa5b61cf6da2695b4275885e8"
+        },
+        {
+          "status": " M",
+          "path": "skills/sohrab/alaa-codex-orchestrator/agents/alaa-planner.toml",
+          "index_entry": "100644 6088491ecf5f31182099b0db97820e10221ed76c 0\tskills/sohrab/alaa-codex-orchestrator/agents/alaa-planner.toml",
+          "sha256": "5c5f953f708d91443e8099a136cae304915072f5ea24e938e605fa6991b0fcaf"
+        },
+        {
+          "status": " M",
+          "path": "skills/sohrab/alaa-codex-orchestrator/agents/alaa-release-guardian.toml",
+          "index_entry": "100644 8f0472c7ab32036b68e8e261313054f92c95e90c 0\tskills/sohrab/alaa-codex-orchestrator/agents/alaa-release-guardian.toml",
+          "sha256": "c9c5a914bb35d65518cbc6b96d288b8d2daac2dbfacc401f889bcec2113c1349"
+        },
+        {
+          "status": " M",
+          "path": "skills/sohrab/alaa-codex-orchestrator/agents/alaa-researcher.toml",
+          "index_entry": "100644 15a472a0b3fb43e6e9113fb94682f83e46d7562d 0\tskills/sohrab/alaa-codex-orchestrator/agents/alaa-researcher.toml",
+          "sha256": "845b0c06ad39dd4dad645c9a5731e994428a4e102d266edc3e8c7009dcf97fad"
+        },
+        {
+          "status": " M",
+          "path": "skills/sohrab/alaa-codex-orchestrator/agents/alaa-reviewer-deep.toml",
+          "index_entry": "100644 291219e98e0ec0eeabff355534965a2634a6997b 0\tskills/sohrab/alaa-codex-orchestrator/agents/alaa-reviewer-deep.toml",
+          "sha256": "ff5493afa999f9817355bdcdfeb59ff1cba8a5c1c32f1ec8da448e7dab340b7c"
+        },
+        {
+          "status": " M",
+          "path": "skills/sohrab/alaa-codex-orchestrator/agents/alaa-reviewer.toml",
+          "index_entry": "100644 21aa89672f35d5cb81c5f334d6b46bd383d327e1 0\tskills/sohrab/alaa-codex-orchestrator/agents/alaa-reviewer.toml",
+          "sha256": "169003528bf35727614c66b669ff5547f1f8aec3ce63e1656e457bf131dd4ef4"
+        },
+        {
+          "status": " M",
+          "path": "skills/sohrab/alaa-codex-orchestrator/agents/alaa-security-reviewer.toml",
+          "index_entry": "100644 0ddc3738b509842a75e11831dfb13fcddf0a2da1 0\tskills/sohrab/alaa-codex-orchestrator/agents/alaa-security-reviewer.toml",
+          "sha256": "cdef66c749e4ecb18097ad62ef374a6b6095a6d9fdd9c43e77e29117551c6f4f"
+        },
+        {
+          "status": " M",
+          "path": "skills/sohrab/alaa-codex-orchestrator/agents/alaa-spec-analyst.toml",
+          "index_entry": "100644 e0cc3c7e086a087238b6ea0425852f2524ae428b 0\tskills/sohrab/alaa-codex-orchestrator/agents/alaa-spec-analyst.toml",
+          "sha256": "bf35b948828557f4ebc1a105ef063f97d8eccf5f7897499535891501df4e9310"
+        },
+        {
+          "status": " M",
+          "path": "skills/sohrab/alaa-codex-orchestrator/agents/alaa-test-strategist.toml",
+          "index_entry": "100644 4227bd056075cb45b19780a58841e541c14aff31 0\tskills/sohrab/alaa-codex-orchestrator/agents/alaa-test-strategist.toml",
+          "sha256": "e24091246d3ee4090dde4b77cc09ad36d565790c6b783a811345abc68dafd899"
+        },
+        {
+          "status": " M",
+          "path": "skills/sohrab/alaa-codex-orchestrator/agents/alaa-verifier.toml",
+          "index_entry": "100644 2f531a6ae378336023ce411b817eb20b198dc290 0\tskills/sohrab/alaa-codex-orchestrator/agents/alaa-verifier.toml",
+          "sha256": "255f2a46c747821e34bdebc39d73c01e22214c329522268531d9a56d8d481e3e"
+        },
+        {
+          "status": " M",
+          "path": "skills/sohrab/alaa-codex-orchestrator/assets/implementation-contract.md",
+          "index_entry": "100644 b5187544ef8375c23d468f84c560c4fc4f0400eb 0\tskills/sohrab/alaa-codex-orchestrator/assets/implementation-contract.md",
+          "sha256": "d72f30d31eb7b91a1ebcbdaa891714385cd7859b7bbcf34e0be94ef259679162"
+        },
+        {
+          "status": " M",
+          "path": "skills/sohrab/alaa-codex-orchestrator/assets/manifest.json",
+          "index_entry": "100644 09efc254bb46dbc20e35f8521e073449541cf2c0 0\tskills/sohrab/alaa-codex-orchestrator/assets/manifest.json",
+          "sha256": "176ef6d528f82a77878dff25f60d26d6cce49066d614ebc78f150ea321742fb9"
+        },
+        {
+          "status": " M",
+          "path": "skills/sohrab/alaa-codex-orchestrator/assets/planner-contract.md",
+          "index_entry": "100644 1847a1864bc78fa30936bc73ffafbdd18071fa80 0\tskills/sohrab/alaa-codex-orchestrator/assets/planner-contract.md",
+          "sha256": "8714bc7aacc351df61c6bb4a552ba6f563bc32eb49fd0db193c39a06ea89ac8f"
+        },
+        {
+          "status": " M",
+          "path": "skills/sohrab/alaa-codex-orchestrator/assets/reviewer-contract.md",
+          "index_entry": "100644 c34967fccb0164196d11df9e7cf09ba11e392d7a 0\tskills/sohrab/alaa-codex-orchestrator/assets/reviewer-contract.md",
+          "sha256": "5819bb9245386d5034609499d0e1078365a737c6735425e2c169813631987268"
+        },
+        {
+          "status": " M",
+          "path": "skills/sohrab/alaa-codex-orchestrator/references/agent-catalog.md",
+          "index_entry": "100644 dfced827135f050e3396009c7eefa9628df63d18 0\tskills/sohrab/alaa-codex-orchestrator/references/agent-catalog.md",
+          "sha256": "dda08846c0f6af9eb429db920d811d172bb27fd9966bdda801e8fb17865c84fc"
+        },
+        {
+          "status": " M",
+          "path": "skills/sohrab/alaa-codex-orchestrator/references/delegation-prompts.md",
+          "index_entry": "100644 08bd597e519e7fcbc93c24063a7c79dd5e26f928 0\tskills/sohrab/alaa-codex-orchestrator/references/delegation-prompts.md",
+          "sha256": "a23d3daec956b93ed20dcfc44e749721e3b2f6dd91288fad41d76e7028dbc675"
+        },
+        {
+          "status": " M",
+          "path": "skills/sohrab/alaa-codex-orchestrator/references/model-effort-policy.md",
+          "index_entry": "100644 f4939e6b815a4b859c98c942de08f8f6596b009a 0\tskills/sohrab/alaa-codex-orchestrator/references/model-effort-policy.md",
+          "sha256": "36dd3441178eab552d332ba891f8da679698c56f031696a967d7cbb66c12cba3"
+        },
+        {
+          "status": " M",
+          "path": "skills/sohrab/alaa-codex-orchestrator/references/routing-matrix.md",
+          "index_entry": "100644 d1986a194569f0c8f79758b717bc025c0e47bd36 0\tskills/sohrab/alaa-codex-orchestrator/references/routing-matrix.md",
+          "sha256": "5fadd81dc52d58df471a6c7ac47aca543dd445d75f67626b50f0666b5c2dc9b3"
+        },
+        {
+          "status": " M",
+          "path": "skills/sohrab/alaa-codex-orchestrator/scripts/check_agent_contracts.py",
+          "index_entry": "100644 cffc9e1dca3866326e9fdb67652b73f063b96655 0\tskills/sohrab/alaa-codex-orchestrator/scripts/check_agent_contracts.py",
+          "sha256": "c46f0c562b1ae71310ddfe5c0c23e169728ba2f8436c089edf0fac2272ef2938"
+        },
+        {
+          "status": " M",
+          "path": "skills/sohrab/alaa-prompting-guide/assets/rule-writer/dispatch.md",
+          "index_entry": "100644 ef1dc5a9ece3004f24d221f86a787365e0d709ca 0\tskills/sohrab/alaa-prompting-guide/assets/rule-writer/dispatch.md",
+          "sha256": "824291208c881194828859ef9d92f94ec77a873617c8c82dcfc75a603baf0725"
+        },
+        {
+          "status": " M",
+          "path": "skills/sohrab/alaa-prompting-guide/references/50-effort-and-thinking.md",
+          "index_entry": "100644 7f1384978a2c07e48805dceaa9a11eefd73c0b08 0\tskills/sohrab/alaa-prompting-guide/references/50-effort-and-thinking.md",
+          "sha256": "c5e137676f45a8e5787bd76e7f7b2026c273ca87e0f6e48953f8ebda711e55cf"
+        },
+        {
+          "status": " M",
+          "path": "skills/sohrab/alaa-prompting-guide/references/80-subagent-authoring.md",
+          "index_entry": "100644 25a2871fddd5c05a941a73e6d4e801f561603abe 0\tskills/sohrab/alaa-prompting-guide/references/80-subagent-authoring.md",
+          "sha256": "e3b04b9ab2e5af34a63c4746dd3437fcc7e1409ceb77fd6cf3ce924f56d19424"
+        },
+        {
+          "status": " M",
+          "path": "skills/sohrab/alaa-prompting-guide/references/90-model-selection.md",
+          "index_entry": "100644 4b4285c54afecce0eeac8ed9b0625f02d90288eb 0\tskills/sohrab/alaa-prompting-guide/references/90-model-selection.md",
+          "sha256": "88965a796e42d8cca618e5c34c205f244fb53101f57b4c1e2357127665c5b961"
+        },
+        {
+          "status": " M",
+          "path": "skills/sohrab/alaa-workflow/SKILL.md",
+          "index_entry": "100644 7c771a59d11c233737a7482fc63c8d29c322f96b 0\tskills/sohrab/alaa-workflow/SKILL.md",
+          "sha256": "24b18283a9251ee1a14c727c47ce13b570095298fafac4811827b3c6f2184b28"
+        },
+        {
+          "status": " M",
+          "path": "skills/sohrab/alaa-workflow/assets/phase-prompts-template.md",
+          "index_entry": "100644 a2d9d2d437cbb67e91e6e43096f66e09aac5e055 0\tskills/sohrab/alaa-workflow/assets/phase-prompts-template.md",
+          "sha256": "3740c7557039a29fd932d695005204bcc1305c81c7afa6efd068e41eafea3520"
+        },
+        {
+          "status": " M",
+          "path": "skills/sohrab/alaa-workflow/references/context-continuity.md",
+          "index_entry": "100644 74c8756ac93dc08be9ce8dadc29983eb547f0a1e 0\tskills/sohrab/alaa-workflow/references/context-continuity.md",
+          "sha256": "4008760d2726b8bfd2a73f13dd8c2cacd973ec84e272e8afb29d8879743d7e68"
+        },
+        {
+          "status": " M",
+          "path": "skills/sohrab/alaa-workflow/references/phase-prompts.md",
+          "index_entry": "100644 0428b2f7213c57180e3ec19c030e99af93537698 0\tskills/sohrab/alaa-workflow/references/phase-prompts.md",
+          "sha256": "da605e2cc22206910b9f711f265c041034102c64e6e115e4f5af6b6e6109187c"
+        },
+        {
+          "status": " M",
+          "path": "skills/sohrab/alaa-workflow/references/task-tracking.md",
+          "index_entry": "100644 2a3c5793eb171489323898bb15c590b46ac06418 0\tskills/sohrab/alaa-workflow/references/task-tracking.md",
+          "sha256": "a5f31c74eee5df9eaa069774f88bbd4376e38c4481580087601c4bd7594b009c"
+        }
+      ],
+      "staged_unrelated_sha256": "46b7fbe4abbc0442c8a82210cf3a429f443a30f64393c99a143112aac01e52c2",
+      "untracked_paths": [
+        "artifacts/agent-control-defaults-20261018/audit_bindings.ps1",
+        "artifacts/agent-control-defaults-20261018/audit_bindings.py",
+        "artifacts/agent-control-defaults-20261018/binding-b.md",
+        "artifacts/agent-control-defaults-20261018/binding-c.md",
+        "artifacts/agent-control-defaults-20261018/commit_bindings.py",
+        "artifacts/agent-control-defaults-20261018/review.md",
+        "artifacts/agent-control-defaults-20261018/verification-bindings.json",
+        "artifacts/agent-control-defaults-20261018/verification-core.json",
+        "artifacts/agent-control-defaults-20261018/verification-repair-rerun.json",
+        "artifacts/agent-control-defaults-20261018/verification-source-sha256.json",
+        "artifacts/agent-control-defaults-20261018/verification.md"
+      ]
+    }
+  ],
+  "counts": {
+    "repositories": 1,
+    "physical_changed_binding_files": 1,
+    "logical_binding_paths": 1,
+    "preserved_symlinks": 0,
+    "unchanged_imports": 1
+  },
+  "findings": []
+}

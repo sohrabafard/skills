@@ -1,0 +1,17 @@
+{
+  "repository": "ci-image",
+  "branch": "main",
+  "base_head": "728504485339f003d0da2c434e2cc7fed54184e2",
+  "paths": [
+    "AGENTS.md"
+  ],
+  "subject": "fix(beads): standardize per-agent ownership binding",
+  "commit_exit": 0,
+  "timestamp_utc": "2026-10-18T19:28:37.326849+00:00",
+  "output": "[main 9c030f2] fix(beads): standardize per-agent ownership binding\n 1 file changed, 17 insertions(+), 11 deletions(-)\n",
+  "verified": true,
+  "commit": "9c030f2b37543d1edff8e4cd4aeff3cacbd11a0b",
+  "unrelated_staged_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+  "unrelated_tracked_preserved": 0,
+  "post_status": ""
+}

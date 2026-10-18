@@ -1,0 +1,17 @@
+{
+  "repository": "client",
+  "branch": "feat/sentry_setup",
+  "base_head": "0a041e9546088f4381a74899ba20d1e6c6476c7c",
+  "paths": [
+    "AGENTS.md"
+  ],
+  "subject": "fix(beads): standardize per-agent ownership binding",
+  "commit_exit": 0,
+  "timestamp_utc": "2026-10-18T19:30:31.637298+00:00",
+  "output": "[feat/sentry_setup 6debede] fix(beads): standardize per-agent ownership binding\n 1 file changed, 17 insertions(+), 11 deletions(-)\n",
+  "verified": true,
+  "commit": "6debede3a604e3ff29be717bcec34706f2d02201",
+  "unrelated_staged_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+  "unrelated_tracked_preserved": 0,
+  "post_status": ""
+}

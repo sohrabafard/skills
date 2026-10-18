@@ -78,7 +78,7 @@ The router below selects role/dispatch/gate owners. `references/verification-and
 
 ## 4. Model and role routing
 
-For EVERY dispatch apply task model AND effort allocation and role triggers in `references/routing-matrix.md`; `references/agent-catalog.md` owns authority/output. `references/model-effort-policy.md` routes capability/control mechanics to /alaa-prompting-guide.
+For EVERY dispatch apply task model AND effort allocation and role triggers in `references/routing-matrix.md`; `references/agent-catalog.md` owns authority/output. `references/model-effort-policy.md` owns omission normalization before explicit dispatch and routes capability/control mechanics to /alaa-prompting-guide.
 
 Choose one correctness review profile for a scope. Both standard and deep review routes use the existing `alaa-reviewer`; record the deep-review trigger without creating a duplicate review lane.
 

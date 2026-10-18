@@ -1,0 +1,18 @@
+{
+  "repository": "entitlement-projector",
+  "branch": "main",
+  "base_head": "edde34874c1c7b7fc8d8646226ddeef0eab0593e",
+  "paths": [
+    "AGENTS.md",
+    "CLAUDE.md"
+  ],
+  "subject": "fix(beads): standardize per-agent ownership binding",
+  "commit_exit": 0,
+  "timestamp_utc": "2026-10-18T19:29:55.975714+00:00",
+  "output": "[main 3dc54b7] fix(beads): standardize per-agent ownership binding\n 2 files changed, 34 insertions(+), 22 deletions(-)\n",
+  "verified": true,
+  "commit": "3dc54b7a177c8a4ff955d0f67d10cf78e319b00a",
+  "unrelated_staged_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+  "unrelated_tracked_preserved": 0,
+  "post_status": ""
+}

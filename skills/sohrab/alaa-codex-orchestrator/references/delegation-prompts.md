@@ -15,14 +15,17 @@ Use the smallest applicable template. Replace placeholders with concrete reposit
 <constraints><safety, compatibility, resource, and user constraints></constraints>
 <authority>what the agent may and may not change or execute</authority>
 <cadence><whole-engagement plan, declared phase|final review boundary, final phase, current phase/task/subtask, pending review/commit and supplied task-owner acceptance authority></cadence>
-<task_controls><role authority identity; explicit model AND effort; actual task scope/complexity; priority/reason; admission/evidence; verified invocation surface and effective controls; availability or affected-lane blocker></task_controls>
+<task_controls><role authority identity; explicit model AND effort after owner normalization; actual task scope/complexity; priority/reason; admission/evidence; verified invocation surface and effective controls; availability or affected-lane blocker></task_controls>
+<beads_identity><literal unique child actor; binding reference; issue IDs; ownership action claim|retain|authorized transfer|none, or not Beads-bound></beads_identity>
 <skills><exact names, sources, activation conditions, and absence actions from the plan's phase/task bindings></skills>
 <progress>report meaningful progress under the active host contract; use bounded invocations per package or target</progress>
 <return>the shape of the return and its line bound; findings, verdicts, counts, and artifact paths only, never transcripts, full diffs, or raw logs</return>
 <output>use the agent's native output contract</output>
 ```
 
-Every dispatch carries `<task_controls>` and `<return>`. Resolve task controls through `routing-matrix.md` and verify the actual invocation through `model-effort-policy.md`; this envelope records the choice and cannot set runtime controls by prose. Every role template below inherits this requirement.
+Every dispatch carries `<task_controls>` and `<return>`. Normalize omitted controls through `model-effort-policy.md` before recording and invoking the pair. Resolve task controls through `routing-matrix.md` and verify the actual invocation through `model-effort-policy.md`; this envelope records the choice and cannot set runtime controls by prose. Every role template below inherits this requirement.
+
+For Beads-bound dispatches, resolve `<beads_identity>` through `alaa-workflow references/task-tracking.md` section `Agent identity and ownership`; pass its literal actor, binding, issue IDs and ownership action. Read-only gates use action `none` unless separately authorized to mutate issue state.
 
 For the `<return>` shape, length bound and context rationale, read `alaa-low-noise references/workflow-integration.md` section `Delegated lanes`. Workflow owns persistence; `verification-and-gates.md` owns the inherited cadence carried in `<cadence>`.
 

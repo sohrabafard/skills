@@ -86,7 +86,7 @@ This skill owns coordination and continuity, not architecture, security, data, r
 |---|---|
 | Begin a long run, hand off (including to another PC), resume, or find you cannot name your own current position | `references/context-continuity.md` |
 | Write the first workflow file, weigh one profile against another, or attach to an artifact family that already exists | `references/artifact-lifecycle.md` |
-| Select or migrate a task store, decide where task information, acceptance or evidence lives, write issue fields or a close reason, link a follow-up or cross-project dependency, resolve task readiness/ownership, or encounter a Beads outage or uncertain update | `references/task-tracking.md` |
+| Select or migrate a task store, decide where task information, acceptance or evidence lives, write issue fields or a close reason, link a follow-up or cross-project dependency, assign/resume/transfer an agent's Beads identity or issue ownership, resolve readiness, or encounter a Beads outage or uncertain update | `references/task-tracking.md` |
 | Make the first write of a multi-phase or delegated run, record an evidence snapshot, exercise authorized Git integration, or state which completion states a finished run reached | `references/workspace-and-integration.md` |
 | Reach a completed/failed phase or material decision boundary with a curation signal, or prepare completion | `references/context-curation.md` |
 | Generate a prompt pack, or resolve a runtime, model, or effort value for one | `references/phase-prompts.md` |

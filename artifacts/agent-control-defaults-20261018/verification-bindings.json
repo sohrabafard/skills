@@ -1,0 +1,360 @@
+{
+  "generated_utc": "2026-10-18T19:25:33.634434+00:00",
+  "source_template_sha256": "09a67ababed2b80dcde111b8fb2810cde81d01ce39f0a73f2b4643ccd6eec6b8",
+  "repositories": [
+    {
+      "name": "alaa-task-hub",
+      "base_head": "c04a599a1ec784fcf58e5034433349045e2211af",
+      "branch": "main",
+      "files": [
+        {
+          "path": "AGENTS.md",
+          "sha256": "c122567ae4e9501fcc1d63d6291631e6f7e13bdce0e0def2b0b594542fab24de",
+          "block_sha256": "a3bfcadabb8faa9b2315910b5ef5b7b776eedde9fb07013e705c2cb3e2c639b9",
+          "block_matches_template": true,
+          "outside_bytes_match_head": true
+        }
+      ],
+      "unrelated_tracked": [],
+      "staged_unrelated_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "untracked_paths": []
+    },
+    {
+      "name": "octane-base",
+      "base_head": "d4741e989cd959a42c496349cb91c98cdbd0b9eb",
+      "branch": "main",
+      "files": [
+        {
+          "path": "AGENTS.md",
+          "sha256": "df084fb01539139f1b680eb460951bdfd3c422bc473ebeb2d6d62c1a283d0ace",
+          "block_sha256": "02d4c713960c1840188907c78ebee91b43b13cfc56208c7aaae1f8391f03eeb2",
+          "block_matches_template": true,
+          "outside_bytes_match_head": true
+        }
+      ],
+      "unrelated_tracked": [],
+      "staged_unrelated_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "untracked_paths": []
+    },
+    {
+      "name": "ci-image",
+      "base_head": "728504485339f003d0da2c434e2cc7fed54184e2",
+      "branch": "main",
+      "files": [
+        {
+          "path": "AGENTS.md",
+          "sha256": "2ff117a87986cc49fef53878c5482432c2e4020d1633c7e290cf0f8c47c7d621",
+          "block_sha256": "7456b1271e5de352b645f1fab254f887c2ccc755c15dccc2cf14011b2884a903",
+          "block_matches_template": true,
+          "outside_bytes_match_head": true
+        }
+      ],
+      "unrelated_tracked": [],
+      "staged_unrelated_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "untracked_paths": []
+    },
+    {
+      "name": "wa",
+      "base_head": "7dbff2ecb846588f30dd1dbd66b00dd47296a59c",
+      "branch": "main",
+      "files": [
+        {
+          "path": "AGENTS.md",
+          "sha256": "d04c10961c9986c452b84a9b7c9ac6063e30a94edc1498817cc34ce12460e30d",
+          "block_sha256": "9f7bc6406761baac418c6c5968fcd7761bbfb2fd95b4fb4923c8f4b961deb6d6",
+          "block_matches_template": true,
+          "outside_bytes_match_head": true
+        }
+      ],
+      "unrelated_tracked": [],
+      "staged_unrelated_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "untracked_paths": []
+    },
+    {
+      "name": "tusd",
+      "base_head": "788de5c560ce6b8713d499f2c995abf295099f3f",
+      "branch": "main",
+      "files": [
+        {
+          "path": "AGENTS.md",
+          "sha256": "ab61d05ffbd781cc00d337184212924a63a3e288765f3ff8dbca9961da68b83c",
+          "block_sha256": "97c243179b8b44c5b6aa8e1aabff217955494b046f139594f2a3f0de837ffffb",
+          "block_matches_template": true,
+          "outside_bytes_match_head": true
+        }
+      ],
+      "unrelated_tracked": [],
+      "staged_unrelated_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "untracked_paths": []
+    },
+    {
+      "name": "gateway",
+      "base_head": "24c4d7ae5da1947bbe759a585318252ae2d1d447",
+      "branch": "main",
+      "files": [
+        {
+          "path": "AGENTS.md",
+          "sha256": "2329d076baa477d039383b59b9fdc608b482e31056b4101303f89e32da40bf77",
+          "block_sha256": "3316d74324ffaa79c1e64549e9cb7f250661ad9b12cd70aca7da1ddbe0ce33ba",
+          "block_matches_template": true,
+          "outside_bytes_match_head": true
+        }
+      ],
+      "unrelated_tracked": [],
+      "staged_unrelated_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "untracked_paths": []
+    },
+    {
+      "name": "alaa-go-chi",
+      "base_head": "81507da77d837d66e430e73d7bff60ae33964542",
+      "branch": "main",
+      "files": [
+        {
+          "path": "AGENTS.md",
+          "sha256": "882c829e4f320595da2373d6342f5592ff92b7d19c2c737431fc4d4ef690241b",
+          "block_sha256": "96d1e34b5e721131a055e7805ef724e71324a22756717d978b11137769e61de7",
+          "block_matches_template": true,
+          "outside_bytes_match_head": true
+        },
+        {
+          "path": "CLAUDE.md",
+          "sha256": "512c9fc740dfc9f3b9bf5d282b8f51a599e5e6cabebe5d552c7d244da6300134",
+          "block_sha256": "96d1e34b5e721131a055e7805ef724e71324a22756717d978b11137769e61de7",
+          "block_matches_template": true,
+          "outside_bytes_match_head": true
+        }
+      ],
+      "unrelated_tracked": [],
+      "staged_unrelated_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "untracked_paths": []
+    },
+    {
+      "name": "authz-sidecar",
+      "base_head": "b6d2a646fea2e0515cffcdf3ead7cd77a97208a4",
+      "branch": "main",
+      "files": [
+        {
+          "path": "AGENTS.md",
+          "sha256": "33422a6525625840a918c429ccbaa0b836281a942f1e6712abb118861f4dc401",
+          "block_sha256": "1428d04035117481ce399f0e6b472fc628bb1e57f4795a4f4b5a9f033ef06817",
+          "block_matches_template": true,
+          "outside_bytes_match_head": true
+        },
+        {
+          "path": "CLAUDE.md",
+          "sha256": "4fda9f125dbebc093c6ca29ab7013d8661dbcf4d00f6860ef5751afa15fb4de7",
+          "block_sha256": "1428d04035117481ce399f0e6b472fc628bb1e57f4795a4f4b5a9f033ef06817",
+          "block_matches_template": true,
+          "outside_bytes_match_head": true
+        }
+      ],
+      "unrelated_tracked": [],
+      "staged_unrelated_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "untracked_paths": []
+    },
+    {
+      "name": "entitlement-projector",
+      "base_head": "edde34874c1c7b7fc8d8646226ddeef0eab0593e",
+      "branch": "main",
+      "files": [
+        {
+          "path": "AGENTS.md",
+          "sha256": "fdc55756d70912a5f73ec0c2f28714c8e66894d30138732cc9c5860fea5835ce",
+          "block_sha256": "116a4a606af90931f776ba2d905b9cc82972788f853447110b2c25095d5bf870",
+          "block_matches_template": true,
+          "outside_bytes_match_head": true
+        },
+        {
+          "path": "CLAUDE.md",
+          "sha256": "bc91f44826c3ed23cc32ca25c9c95cb23356324528594c57d115e76aacd737ea",
+          "block_sha256": "116a4a606af90931f776ba2d905b9cc82972788f853447110b2c25095d5bf870",
+          "block_matches_template": true,
+          "outside_bytes_match_head": true
+        }
+      ],
+      "unrelated_tracked": [],
+      "staged_unrelated_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "untracked_paths": []
+    },
+    {
+      "name": "authz-openfga",
+      "base_head": "31072f313825d6e1347b79a1e537781f8365c32c",
+      "branch": "main",
+      "files": [
+        {
+          "path": "AGENTS.md",
+          "sha256": "7716e856468421312f6b5e0f9796685cb829d7ba1f7963a1a33c89f255044d6f",
+          "block_sha256": "dc84397e9ad5cfb9bd060005d07205eb537fc60bf6d72d8a2455dfb0b344c6bd",
+          "block_matches_template": true,
+          "outside_bytes_match_head": true
+        },
+        {
+          "path": "CLAUDE.md",
+          "sha256": "eb8c8c42eb133f6efa8c5849c5f7f76b7ee3333865affa2f3a717045b68e5a72",
+          "block_sha256": "dc84397e9ad5cfb9bd060005d07205eb537fc60bf6d72d8a2455dfb0b344c6bd",
+          "block_matches_template": true,
+          "outside_bytes_match_head": true
+        }
+      ],
+      "unrelated_tracked": [],
+      "staged_unrelated_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "untracked_paths": []
+    },
+    {
+      "name": "auth",
+      "base_head": "fbe6d8a6dbf6aa743a95a6a574b16218ad3acdbd",
+      "branch": "main",
+      "files": [
+        {
+          "path": "AGENTS.md",
+          "sha256": "9cf3638d96bd633179c2a381b68ef11fee9aff973af0be4c3bec67465b3fb75f",
+          "block_sha256": "5185d0cbcdb5686972e2700aaf7a104692075985f20579b86cccc018ce8ae7f5",
+          "block_matches_template": true,
+          "outside_bytes_match_head": true
+        },
+        {
+          "path": "CLAUDE.md",
+          "sha256": "9cf3638d96bd633179c2a381b68ef11fee9aff973af0be4c3bec67465b3fb75f",
+          "block_sha256": "5185d0cbcdb5686972e2700aaf7a104692075985f20579b86cccc018ce8ae7f5",
+          "block_matches_template": true,
+          "outside_bytes_match_head": true
+        }
+      ],
+      "unrelated_tracked": [],
+      "staged_unrelated_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "untracked_paths": []
+    },
+    {
+      "name": "deploy",
+      "base_head": "f6eee3c0863494901284dca9d261306aafc579ca",
+      "branch": "main",
+      "files": [
+        {
+          "path": "AGENTS.md",
+          "sha256": "fa70a95e9e94b5b7e927f15b7ce46492ee0b9deda50ad4ca592cc2d89dd4abf7",
+          "block_sha256": "69a9699a980d27d546844e1aa40d2aba82d39ed1aab0277742d18ff5c9f11339",
+          "block_matches_template": true,
+          "outside_bytes_match_head": true
+        }
+      ],
+      "unrelated_tracked": [
+        {
+          "status": "AM",
+          "path": "docs/delivery-topology.md",
+          "index_entry": "100644 4c7c499641078c2feedef9047c99e225b62a2558 0\tdocs/delivery-topology.md",
+          "sha256": "61556042f863e7df5f32acabb5eecb5870a05b825991d7af0cdac6e624c4aa02"
+        },
+        {
+          "status": " M",
+          "path": "docs/design/0001-central-multi-target-delivery.md",
+          "index_entry": "100644 2250823409c06f2e42cb84a66239f6afa7710d11 0\tdocs/design/0001-central-multi-target-delivery.md",
+          "sha256": "27649bebddaf8824f719912fb4ef6794f8ced85c5cdc5b1c208c5f9915309e0e"
+        }
+      ],
+      "staged_unrelated_sha256": "56f3d42847d788ec100bcf29a2fd41b7453393069ad2c348668c9eeba883e239",
+      "untracked_paths": [
+        "docs/_agent_plans/20261018-180000_gitlab-native-single-host-cd.md",
+        "docs/agents/20261018-180000_gitlab-native-single-host-cd-state.md"
+      ]
+    },
+    {
+      "name": "client",
+      "base_head": "0a041e9546088f4381a74899ba20d1e6c6476c7c",
+      "branch": "feat/sentry_setup",
+      "files": [
+        {
+          "path": "AGENTS.md",
+          "sha256": "d9ea6f8785fbb279649eb764ff583544a2680edddefc55aed6ff1e22474bc5c7",
+          "block_sha256": "272940432efc185671642c28251b78304ef7aa3c42f96b5ed29d6628eb6c44e7",
+          "block_matches_template": true,
+          "outside_bytes_match_head": true
+        }
+      ],
+      "unrelated_tracked": [],
+      "staged_unrelated_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "untracked_paths": []
+    },
+    {
+      "name": "content",
+      "base_head": "1611503718bdcc3827ffc7f14eb0aed8fa3ce96f",
+      "branch": "main",
+      "files": [
+        {
+          "path": "AGENTS.md",
+          "sha256": "bdb71f37dc54fb6018c0c7b31767d84a5f4216ac4a3df0f37ff8e07e335c52aa",
+          "block_sha256": "8ddb2d6ff4c7e00695c7b0fe19f375583c079e5478c51ac22a2d7a09aabd476e",
+          "block_matches_template": true,
+          "outside_bytes_match_head": true
+        },
+        {
+          "path": "CLAUDE.md",
+          "sha256": "bdb71f37dc54fb6018c0c7b31767d84a5f4216ac4a3df0f37ff8e07e335c52aa",
+          "block_sha256": "8ddb2d6ff4c7e00695c7b0fe19f375583c079e5478c51ac22a2d7a09aabd476e",
+          "block_matches_template": true,
+          "outside_bytes_match_head": true
+        }
+      ],
+      "unrelated_tracked": [],
+      "staged_unrelated_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "untracked_paths": []
+    },
+    {
+      "name": "entitlement-api",
+      "base_head": "d18f97799420492df3e5907864be65dad46e60f5",
+      "branch": "main",
+      "files": [
+        {
+          "path": "AGENTS.md",
+          "sha256": "c1f60f66281c9ea758cb38bdea39348e5a08c5e7234eb5b3de51f91c3fad1abb",
+          "block_sha256": "b608f2d8f75e484b82ffcbc2b8346c25b00aad861e2a6837469508f5a63b32b0",
+          "block_matches_template": true,
+          "outside_bytes_match_head": true
+        },
+        {
+          "path": "CLAUDE.md",
+          "sha256": "69879808f2a9cfc0414c99eb70a9d88bb30e3999a5c9c5cede057ccd7acdab7e",
+          "block_sha256": "b608f2d8f75e484b82ffcbc2b8346c25b00aad861e2a6837469508f5a63b32b0",
+          "block_matches_template": true,
+          "outside_bytes_match_head": true
+        }
+      ],
+      "unrelated_tracked": [],
+      "staged_unrelated_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "untracked_paths": []
+    },
+    {
+      "name": "comment-service",
+      "base_head": "5880cfdbb88fd3aa793675b93ecd5857872eea5b",
+      "branch": "main",
+      "files": [
+        {
+          "path": "AGENTS.md",
+          "sha256": "ebf30a05f0a632048bc36817a348f34d621257a835aad18ec14e8d65f1a74824",
+          "block_sha256": "fb15c561e85bf2505104f3ff7db0cdb00676107a4bde79e805c64ca41e716872",
+          "block_matches_template": true,
+          "outside_bytes_match_head": true
+        },
+        {
+          "path": "CLAUDE.md",
+          "sha256": "ebf30a05f0a632048bc36817a348f34d621257a835aad18ec14e8d65f1a74824",
+          "block_sha256": "fb15c561e85bf2505104f3ff7db0cdb00676107a4bde79e805c64ca41e716872",
+          "block_matches_template": true,
+          "outside_bytes_match_head": true
+        }
+      ],
+      "unrelated_tracked": [],
+      "staged_unrelated_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "untracked_paths": []
+    }
+  ],
+  "counts": {
+    "repositories": 16,
+    "physical_changed_binding_files": 24,
+    "logical_binding_paths": 31,
+    "preserved_symlinks": 7,
+    "unchanged_imports": 2
+  },
+  "findings": [
+    "skills: import drift"
+  ]
+}

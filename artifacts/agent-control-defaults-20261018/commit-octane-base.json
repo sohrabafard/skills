@@ -1,0 +1,17 @@
+{
+  "repository": "octane-base",
+  "branch": "main",
+  "base_head": "d4741e989cd959a42c496349cb91c98cdbd0b9eb",
+  "paths": [
+    "AGENTS.md"
+  ],
+  "subject": "fix(beads): standardize per-agent ownership binding",
+  "commit_exit": 0,
+  "timestamp_utc": "2026-10-18T19:28:33.298550+00:00",
+  "output": "[main ad7475b] fix(beads): standardize per-agent ownership binding\n 1 file changed, 17 insertions(+), 11 deletions(-)\n",
+  "verified": true,
+  "commit": "ad7475b045075f19ba1f6a693ab161331064ac88",
+  "unrelated_staged_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+  "unrelated_tracked_preserved": 0,
+  "post_status": ""
+}

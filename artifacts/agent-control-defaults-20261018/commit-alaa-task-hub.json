@@ -1,0 +1,17 @@
+{
+  "repository": "alaa-task-hub",
+  "branch": "main",
+  "base_head": "c04a599a1ec784fcf58e5034433349045e2211af",
+  "paths": [
+    "AGENTS.md"
+  ],
+  "subject": "fix(beads): standardize per-agent ownership binding",
+  "commit_exit": 0,
+  "timestamp_utc": "2026-10-18T19:28:29.690670+00:00",
+  "output": "[main 21d74df] fix(beads): standardize per-agent ownership binding\n 1 file changed, 75 insertions(+), 16 deletions(-)\n",
+  "verified": true,
+  "commit": "21d74df7615a84aa79cf52e8c3e23f3d227d6d9d",
+  "unrelated_staged_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+  "unrelated_tracked_preserved": 0,
+  "post_status": ""
+}

@@ -46,9 +46,13 @@ def agent_failures(text: str) -> list[str]:
                      "Report metadata after the verdict/status or opening outcome",
                      "Effective authority:", "parent overrides", "tool/MCP grants",
                      "Task controls:", "model AND effort", "block this lane",
+                     "including defaults normalized under", "omission alone is not blocked/degraded",
+                     "missing after normalization",
                      "model choice changes no authority"):
         if required not in text:
             errors.append(f"missing metadata/authority contract: {required}")
+    if "missing, inherited, stale-pinned" in text:
+        errors.append("omission blocked before owner normalization")
     if "Identity line: begin" in text:
         errors.append("identity-first contradicts verdict/outcome-first")
     if re.search(r"AGENT:.*\| MODEL:.*\| EFFORT:", text):
@@ -89,7 +93,12 @@ def dispatch_failures(text: str) -> list[str]:
     for required in ("<skills>", "exact names, sources, activation conditions, and absence actions",
                      "alaa-workflow references/companion-routing.md",
                      "<task_controls>", "explicit model AND effort",
-                     "verified invocation surface and effective controls"):
+                     "verified invocation surface and effective controls",
+                     "explicit model AND effort after owner normalization",
+                     "<beads_identity>", "literal unique child actor", "binding reference",
+                     "issue IDs", "ownership action claim|retain|authorized transfer|none",
+                     "alaa-workflow references/task-tracking.md", "Agent identity and ownership",
+                     "Read-only gates use action `none`"):
         if required not in text:
             errors.append(f"missing dispatch skill bindings: {required}")
     if "<progress>report meaningful progress under the active host contract" not in text:
@@ -241,8 +250,41 @@ def verification_failures(gates: str, templates: list[str], roles: dict[str, str
     return errors
 
 
+# Topic: omitted dispatch controls; layer: structural source contract.
+# This checks the prose owner, never supplies controls to a live invocation.
+DEFAULT_MODEL_CLAUSES = ("model = gpt-6.1-sol", "effort = medium", "sol-6.1-medium", "https://learn.chatgpt.com/docs/models")
+DEFAULT_REQUIREMENTS = (
+    "This file alone owns orchestration defaults for this runtime",
+    "Preserve ordinary allocation when both controls are selected",
+    "retain every explicit field and fill only missing model or effort",
+    "independently",
+    "Validate the resulting pair against the capability registry and actual host before invocation",
+    "unsupported, inactive or unrealizable pairs still block the affected lane",
+    "Omission alone and a successfully resolved default are never blocked/degraded",
+    "Record the normalized model AND effort in the plan or compact dispatch",
+    "inherited controls are not normalization", "NEEDS_CONFIRMATION",
+    "never a guessed model ID", "managed wrappers remain neutral",
+)
+
+
+def default_control_failures(controls: str) -> list[str]:
+    errors = [f"missing dispatch default contract: {clause}"
+              for clause in DEFAULT_REQUIREMENTS if not contract_present(clause, controls)]
+    for clause in DEFAULT_MODEL_CLAUSES:
+        if " = " in clause:
+            key, value = clause.split(" = ", 1)
+            # Match the entire inline assignment, not a prefix of an invalid value.
+            present = re.search(r"`\s*" + re.escape(key) + r"\s*=\s*"
+                                + re.escape(value) + r"\s*`", controls) is not None
+        else:
+            present = clause in controls
+        if not present:
+            errors.append(f"missing verified default mapping: {clause}")
+    return errors
+
+
 def task_allocation_failures(routing: str, controls: str) -> list[str]:
-    errors = []
+    errors = default_control_failures(controls)
     for required in ("## All-role task allocation", "EVERY role", "balanced default",
                      "priority is not an effort value", "Role title, sensitivity, duration",
                      "second independent lens", "not model diversity", "model AND effort",
@@ -545,6 +587,34 @@ def self_test() -> int:
         cases.append((f"batch allocation {required} required", bool(economy_failures(skill, gates, routing.replace(required, "omitted")))))
     controls = (ROOT / "references/model-effort-policy.md").read_text(encoding="utf-8")
     cases.append(("all-role allocation/effective controls", not task_allocation_failures(routing, controls)))
+    cases.append(("owner-normalized defaults accepted", not default_control_failures(controls)))
+    # Topic: exact default mapping; layer: structural source contract.
+    # Exercise both callers so allocation cannot hide a malformed default.
+    for assignment in DEFAULT_MODEL_CLAUSES[:2]:
+        invalid = controls.replace(assignment, assignment + "-invalid")
+        cases.append((f"default rejects invalid suffix: {assignment}",
+                      bool(default_control_failures(invalid))))
+        cases.append((f"allocation rejects invalid suffix: {assignment}",
+                      bool(task_allocation_failures(routing, invalid))))
+        key, value = assignment.split(" = ", 1)
+        spaced = controls.replace(assignment, f"  {key} \t= \t{value}  ")
+        cases.append((f"default permits assignment whitespace: {assignment}",
+                      not default_control_failures(spaced)))
+        cases.append((f"allocation permits assignment whitespace: {assignment}",
+                      not task_allocation_failures(routing, spaced)))
+    for requirement in (*DEFAULT_REQUIREMENTS, *DEFAULT_MODEL_CLAUSES):
+        cases.append((f"default contract requires {requirement}", bool(default_control_failures(
+            controls.replace(requirement, "omitted")))))
+    for requirement in ("including defaults normalized under", "omission alone is not blocked/degraded",
+                        "missing after normalization"):
+        cases.append((f"role accepts normalization: {requirement}", bool(agent_failures(
+            good.replace(requirement, "omitted")))))
+    cases.append(("pre-normalization omission block rejected", bool(agent_failures(
+        good + "\nmissing, inherited, stale-pinned controls block this lane"))))
+    for requirement in ("<beads_identity>", "literal unique child actor", "Agent identity and ownership",
+                        "Read-only gates use action `none`"):
+        cases.append((f"dispatch actor seam requires {requirement}", bool(dispatch_failures(
+            dispatch.replace(requirement, "omitted")))))
     for requirement in BOUNDED_REQUIREMENTS:
         cases.append((f"bounded suitability requires {requirement}", bool(task_allocation_failures(routing.replace(requirement, "omitted"), controls))))
     for required in ("EVERY role", "model AND effort", "second independent lens",

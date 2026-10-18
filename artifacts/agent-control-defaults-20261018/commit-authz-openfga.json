@@ -1,0 +1,18 @@
+{
+  "repository": "authz-openfga",
+  "branch": "main",
+  "base_head": "31072f313825d6e1347b79a1e537781f8365c32c",
+  "paths": [
+    "AGENTS.md",
+    "CLAUDE.md"
+  ],
+  "subject": "fix(beads): standardize per-agent ownership binding",
+  "commit_exit": 0,
+  "timestamp_utc": "2026-10-18T19:30:01.360168+00:00",
+  "output": "[main ac5c96a] fix(beads): standardize per-agent ownership binding\n 2 files changed, 34 insertions(+), 22 deletions(-)\n",
+  "verified": true,
+  "commit": "ac5c96ae6450a1b76d1ef5d76164cb00d691c095",
+  "unrelated_staged_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+  "unrelated_tracked_preserved": 0,
+  "post_status": ""
+}

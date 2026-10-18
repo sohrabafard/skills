@@ -68,6 +68,8 @@ Write a field when you learn something that belongs in it, not on a schedule. An
 
 Task resume reads the Beads issue: `notes` for position, including blockers, and next step, comments for events, `acceptance`, and its relations. Phase resume reads the plan, the checkpoint and the handoff package through the resume protocol below. A task inside an admitted plan resumes through both: the issue gives the task's state, the plan gives the phase it serves.
 
+Before resuming Beads mutations or transferring a task to another agent/device, apply `references/task-tracking.md` `## Agent identity and ownership` to recover identity and verify ownership.
+
 Task-specific learned knowledge, such as a ruled-out approach or a trap, goes to the plan's handoff package when a plan exists and to issue comments otherwise. Issue notes hold position, including blockers, and next step only.
 
 ## Cross-PC handoff record

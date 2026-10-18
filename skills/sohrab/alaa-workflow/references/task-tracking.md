@@ -14,6 +14,22 @@ For Beads mechanics, load the installed upstream Beads skill separately and reus
 
 The selected task store owns task registration, status, dependencies, ready and blocked state, discovered work, task continuation context, and the local evidence of new tasks. This skill owns whether a plan is needed and the process size, goal and phases, skill and lane choice, conflict prevention, evidence validity, phase acceptance, the four completion states, resume, handoff, and lesson selection. No Markdown file tracks tasks except a `local`-store plan, which owns task state only because Beads is not selected.
 
+## Agent identity and ownership
+
+Before Beads mutations, give every live agent, including the parent, a distinct actor: `<runtime>:<run-id>:<agent-instance-id>`. Use exposed host IDs; allocate opaque unique IDs for missing components. Identity coordinates ownership and audit; it authenticates nobody and grants no authority. Pass the literal actor with `--actor` on every mutation; never rely on Git/user fallback or shared inherited `BEADS_ACTOR`.
+
+Keep the actor recoverable in the existing dispatch or admitted handoff. A child dispatch carries its actor, binding reference, issue IDs and ownership action; read-only lanes use action `none` unless separately authorized to mutate issues. Parents never act as children. The same live agent retains its actor through compaction/resume; a replacement gets a new actor.
+
+Before dependent implementation, read the issue and compare its actual assignee with your actor. Claim authorized unassigned work with `bd --actor <actor> update <id> --claim`, then read back that assignee and `in_progress`. Claim repetition is idempotent only for the same actor. Another actor's claim, failed claim or mismatched readback blocks dependent work; never force or take over automatically.
+
+Updates to owned issues use `--if-assignee <actor>` and, when relying on a status, `--if-status <expected-status>`. For guard mismatch/exit 13 or uncertain writes, re-read and reconcile before retrying; `## Beads capabilities in use` owns guard mechanics.
+
+Replacement or cross-device transfer requires authorized coordination, a stopped old writer and reconciled surviving files/evidence. Serialize transfer against closure and other ownership changes. The authorized transferring agent uses its own `--actor` with old-assignee/status guards and `--assignee <new-actor>`, then reads back. A refused transfer blocks dependent work; never force it. The new actor acts only after verified transfer.
+
+`bd close` has no assignee/status guard. Serialize ownership changes/transfers across pre-read, close and readback: verify your assignee and expected status, close with your actor after required acceptance/lint, then verify closure and assignee. This sequence is not atomic. Uncertain coordination blocks closure; report it rather than claiming race safety.
+
+Verified on 2026-10-18 against installed `bd` 1.3.1 help and matching upstream [update.go](https://github.com/steveyegge/beads/blob/c1c4b642ac1c/cmd/bd/update.go) and [close.go](https://github.com/steveyegge/beads/blob/c1c4b642ac1c/cmd/bd/close.go). Recheck after upgrade. These rules override actorless upstream examples; project binding still owns scope and authority.
+
 ## One task authority
 
 | Store | Task owner | Plan work entries |
