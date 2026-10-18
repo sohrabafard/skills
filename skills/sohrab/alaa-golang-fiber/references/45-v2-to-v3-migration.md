@@ -129,7 +129,8 @@ combined binding in `30-validation-testing.md`, and the unmatched-route fast pat
 4. Fix the three silent changes above, by hand, with a test for each.
 5. Fix the compile errors.
 6. Set the server bounds from `10-fiber-v3-core.md` if the v2 config lacked them.
-7. Run the focused tests, then `go test ./...`, then `go test -race ./...`.
+7. Run the focused tests, then `go test ./...` and `go test -race ./...` once on the migrated
+   tree under the `/alaa-golang` validation gate.
 8. Re-verify proxy trust, correlation headers and the error envelope against live traffic in a
    non-production environment before promoting.
 

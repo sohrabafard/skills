@@ -62,6 +62,16 @@ A wrap is the only sanctioned interim form of kit-shaped code in a consumer, and
   and the wrap is deleted, or the wrap is a governance violation to escalate.
 - On every kit upgrade, delete each wrap whose underlying request shipped in that version.
 
+## What a consumer tests
+
+The kit's own suite proves kit behaviour, so a consumer test never re-proves it: envelope rendering, trust-header
+parsing, route-posture enforcement, readiness shape, outbox relay and retry mechanics, config loading, and any
+other kit symbol's internal behaviour. Such a test passes against every consumer implementation; report it as a
+finding, and delete it only once an independent reviewer accepts that finding. A consumer tests what it decides: its domain rules, use cases, repositories and queries, handler parsing and
+status mapping, the kit options and policies it chooses, and the wiring that can be wrong. `contracttest` stays
+mandatory, because it proves this consumer's conformance to the kit, not the kit itself. `/alaa-testing-strategy`
+owns the rule; this section names where it falls for a kit consumer.
+
 ## Build flow for a new service
 
 1. Generate with `alaa-go-chi new service <name> --parent-dir <dir>`; never hand-copy another service's tree. The
@@ -90,7 +100,10 @@ A wrap is the only sanctioned interim form of kit-shaped code in a consumer, and
    infra set by platform contract — the Laravel side is `/service-runtime-kit-governance`
    (`$service-runtime-kit-governance`).
 9. Validate targeted behaviour first, then the contract, API and generator gates, then full/race/static/vuln,
-   then real-infrastructure gates, then render and smoke, in proportion to risk. Report each with an outcome word
+   then real-infrastructure gates, then render and smoke, in proportion to risk. Each gate runs once per tree state
+   and the `/alaa-golang` validation gate assigns its owner; a gate already included in a wider run of the same
+   tree, such as `contracttest` inside `go test ./...`, is cited from that run only when its output shows the gate's
+   package executed. Report each with an outcome word
    from `05-` and name the proof level reached. Update the registry row to `active` once `contracttest` passes.
 
 ## Datastore-free services

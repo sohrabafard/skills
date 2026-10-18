@@ -4,7 +4,7 @@
 
 ```xml
 <task>Design the minimal test matrix that proves: <acceptance criteria>.</task>
-<doctrine>Apply /alaa-testing-strategy, which owns the method: derive the matrix from the failure modes this change introduces, name the plausible broken implementation each test must fail against, place each behaviour at exactly one layer, bind every double that can drift, and assign each claim the proof level it requires.</doctrine>
+<doctrine>Apply /alaa-testing-strategy, which owns the method: derive the matrix from the failure modes this change introduces, drop every candidate that is not owed a test and record why, name the plausible broken implementation each test must fail against, place each behaviour at exactly one layer, bind every double that can drift, give each test its topic and layer selector and its shared setup, and assign each claim the proof level it requires.</doctrine>
 <failure_models><plausible broken implementations and failure modes to catch></failure_models>
 <repository_commands><known test commands and helpers></repository_commands>
 <action_safety>Read-only; do not write tests.</action_safety>

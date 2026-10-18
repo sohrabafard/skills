@@ -61,15 +61,20 @@ what a test must fail on, are `78-testing-binding.md`.
 
 ## Commands
 
-Read `package.json` first and prefer the repository's own scripts. The typical set:
+Read `package.json` first and prefer the repository's own scripts. The authoring lane's focused set:
 
 ```bash
-npm run typecheck        # or: npx vue-tsc --noEmit
+npm run typecheck                          # or: npx vue-tsc --noEmit
 npm run lint
-npm run test
-npx vitest run path/to/file.spec.ts
+npm run test -- related --run <changed files>   # only when the test script runs bare `vitest`
+npx vitest related --run <changed files>        # otherwise, with the test script's own config flags
 npm run build
 ```
+
+`npm run test` without a filter, the whole suite, is the exhaustive tier: the authority `/alaa-testing-strategy`
+assigns runs it, and a session with no such authority runs it once, on the final tree. Skip the separate
+typecheck only when `npm run build` runs the same `vue-tsc` invocation over the same tsconfig projects, because
+the same check would otherwise run twice on one tree.
 
 `vue-tsc --noEmit` is the typechecker for this fleet, per the TypeScript line stated in
 `24-typescript-project-and-antipatterns.md`.
@@ -79,7 +84,7 @@ the command and its failure text and say what was therefore not checked. An unru
 unrun; a check that failed is reported as failed. Do not describe an expected result as an observed one.
 
 For a change touching a published package consumed from `dist`, rebuild the package before checking the
-consumer — `/alaa-mono-package` (`$alaa-mono-package`) owns that boundary.
+consumer — `/alaa-mono-package` owns that boundary.
 
 ## Reporting
 

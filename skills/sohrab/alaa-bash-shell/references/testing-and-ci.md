@@ -29,7 +29,11 @@ Strong smoke tests also cover:
 
 ## 2. Bats patterns
 
-Use Bats when the script is important enough to deserve regression coverage.
+Use Bats when the script makes a decision a defect can break — argument parsing, branching, a file or remote
+mutation, an exit-code contract — and that decision is owed a test under `/alaa-testing-strategy`. A one-off
+script, or one that only sequences commands whose own tools are tested, gets the smoke tests above and no Bats
+suite. Keep one `.bats` file per script so a change runs only that file. Create expensive, read-only fixtures once
+in `setup_file`; create only the files a test mutates in `setup`.
 
 Typical Bats assertions:
 

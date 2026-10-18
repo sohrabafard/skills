@@ -2,7 +2,7 @@
 
 An HAProxy Lua module is ordinary Lua with one global injected. That single fact makes it unit-testable outside HAProxy, and it is the highest-leverage technique in this skill: it turns "deploy and watch the logs" into a test that runs in milliseconds.
 
-What makes a test a test, which layer a behaviour belongs at, and how strong a given proof is, are owned by `/alaa-testing-strategy`. This file states only what is specific to HAProxy Lua.
+Whether a behaviour is owed a test, what makes a test a test, which layer a behaviour belongs at, and how strong a given proof is, are owned by `/alaa-testing-strategy`. A module's own decisions are owed tests; HAProxy's parsing, fetches, and `core` API behaviour are not. This file states only what is specific to HAProxy Lua.
 
 ## Focused references
 

@@ -85,9 +85,10 @@ exists, the rule names who grants it and in what record.
   are owned by `/alaa-services-contract`.
 - **Keep `fiber` types out of `internal/domain`, `internal/application` and repository code.** The
   transport package converts; nothing below it imports Fiber.
-- **Write or update a failing test before a behavior-changing edit**, then run the focused test,
-  then `go test ./...`, and add `go test -race ./...` when the change touches shared state,
-  caches, goroutines or workers.
+- **Write or update a failing test before a behavior-changing edit that is owed one**, then run
+  the focused test and the changed packages. `go test ./...` and `go test -race ./...` run once
+  per tree state under the `/alaa-golang` validation gate; `-race` is required when the change
+  touches shared state, caches, goroutines or workers.
 - **Never edit anything under `vendor/`.**
 - **Route model, reasoning-effort and runtime-capability questions to `/alaa-prompting-guide`.** Do not name a model in this skill or in work produced from it.
 

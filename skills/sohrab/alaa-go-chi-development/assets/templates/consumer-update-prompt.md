@@ -34,9 +34,12 @@ relevant CONTRACTS.md delta.>
    generators), and resolve every `.kitnew` file an upgrade emits. Never hand-edit a generated file.
 4. Remove every `KIT-WRAP` this version resolves: <list, or "none known — search for KIT-WRAP and judge each
    against the decision record">. Do not re-implement or fork kit behaviour.
-5. Change no other behaviour. If the upgrade reveals an unrelated bug, file it separately.
-6. Validate: `go build ./...`, `go test -race ./...`, `contracttest`, `make api-contract`, the repository lint
-   gates, and the real-dependency and deploy-render gates the change touches. A failing `contracttest` you cannot
+5. Change no other behaviour. If the upgrade reveals an unrelated bug, file it separately. Add or change tests
+   only for this service's adaptation; never add a test for kit behaviour, which the kit's own suite proves.
+6. Validate once on the upgraded tree: `go vet ./...`; `go test -race ./...` with the repository's real-store build tag when
+   one exists, whose compile is the build check; cite `contracttest` from that run only when its output shows the
+   `contracttest` package executed, otherwise run `make contracttest`; `make api-contract`; the repository lint gates; and the real-dependency and deploy-render gates the
+   change touches. A failing `contracttest` you cannot
    resolve by following this prompt means the kit broke contract — stop and file a `blocking` kit change request
    rather than working around it. Never claim remote CI without a runner-executed job.
 7. Update only this service's row in the kit's `docs/CONSUMERS.md`: `kit_version`, `contracttest`, `updated`,

@@ -43,7 +43,8 @@ you did.
    contract, which the service fixes; or the kit broke a contract in a minor, which is a change request with
    `severity: blocking`. Minors never break.
 6. Run targeted behaviour tests, then the contract, API and generator drift gates, then full/race/static checks,
-   then real-infrastructure gates, then deploy-render and local CI, in proportion to what changed. Update the
+   then real-infrastructure gates, then deploy-render and local CI, in proportion to what changed, each once per
+   tree state under `10-consumer-development.md` step 9; add no test for kit behaviour. Update the
    registry row's `kit_version`, `contracttest`, and `updated` fields from verified results only.
 
 ## Migrating an existing service onto the kit

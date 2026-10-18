@@ -120,9 +120,10 @@ For any behavior change:
 2. Write the smallest change that makes it pass.
 3. Refactor names, boundaries and duplication with the test still passing.
 
-Run the focused test after each step, then `go test ./...` before calling the work done. Add
-`go test -race ./...` when the change touches shared state, caches, goroutines, workers, or any
-value copied out of a `fiber.Ctx`.
+Run the focused test after each step, then the changed packages. `go test ./...` runs once per
+tree state under the `/alaa-golang` validation gate before the work is called done; its
+`go test -race ./...` is required when the change touches shared state, caches, goroutines,
+workers, or any value copied out of a `fiber.Ctx`.
 
 Test design beyond this loop - what to test at which layer, fixture strategy, coverage policy - is
 owned by `/alaa-testing-strategy`.

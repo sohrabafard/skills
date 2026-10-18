@@ -58,7 +58,7 @@ proving the constraint holds in the engine is level 6, unreachable here, and rep
 ## Validation
 
 - `python3 scripts/partitioned_fk_audit.py --self-test` exits 0 before any finding of yours is reported.
-- The repository's full suite passes after the installed test is added.
+- The installed test passes through its own selector, and the repository's full suite passes once on the final tree after it is added.
 - The report names the proof level reached and each claim it could not reach.
 
 ## Routing

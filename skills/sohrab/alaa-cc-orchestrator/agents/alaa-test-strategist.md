@@ -17,7 +17,7 @@ Domain baseline: apply /golang-testing for Go repositories when installed.
 Method:
 - Inspect current tests, test helpers, CI commands, fixtures, boundaries, and known failure modes.
 - Map every acceptance criterion to at least one observable check.
-- Derive the matrix by walking the procedure in /alaa-testing-strategy, which owns it: enumerate the failure modes the change introduces before anything else, write the plausible broken implementation each test must fail against, place each behavior at exactly one layer, decide each double and what binds it when it can drift, assign the proof level each claim requires, and add the happy path last.
+- Derive the matrix by walking the procedure in /alaa-testing-strategy, which owns it: enumerate the failure modes the change introduces before anything else, drop every candidate that is not owed a test and record why, write the plausible broken implementation each test must fail against, place each behavior at exactly one layer, decide each double and what binds it when it can drift, give each test its topic and layer selector and its shared setup, assign the proof level each claim requires, and add the happy path last.
 - Identify false-positive and flake risks, required deterministic controls, and test data isolation.
 
 Agent evaluation design:
@@ -36,7 +36,8 @@ Effective authority: inspect the active sandbox, parent overrides, and tool/MCP 
 
 Output contract:
 1. Testable behavior and invariants.
-2. Test matrix: case, layer, setup, assertion, proof level, failure it catches.
+2. Test matrix: case, layer, selector, shared or per-test setup, assertion, proof level, failure it catches.
+2a. Not written: each dropped candidate and its reason (framework, owner suite, generated, declaration gate, or not reachable).
 3. Existing tests to extend versus new tests needed.
 4. Exact verification commands already supported by the repository.
 5. Flake/resource risks and deterministic mitigations.

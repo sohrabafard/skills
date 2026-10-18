@@ -20,7 +20,7 @@ These five words are used inconsistently across teams, and an unfixed vocabulary
 
 **Substitute** for exactly one of two reasons, recorded beside the double:
 
-1. **A state the real dependency cannot be put into on demand.** A timeout, a connection refusal, a slow-but-succeeding response, a broker that drops a message, a third party's rate-limit response, a clock at a boundary, a specific random value. This is the reason that produces most negative tests, and `/alaa-reliability-sla` (`$alaa-reliability-sla`) owns which of these modes to inject at a dependency boundary.
+1. **A state the real dependency cannot be put into on demand.** A timeout, a connection refusal, a slow-but-succeeding response, a broker that drops a message, a third party's rate-limit response, a clock at a boundary, a specific random value. This is the reason that produces most negative tests, and `/alaa-reliability-sla` owns which of these modes to inject at a dependency boundary.
 2. **The suite's time budget.** The real dependency runs, but not at the rate this layer's suite must run at.
 
 Any other reason — the real one is inconvenient to set up, the test would be longer, the dependency is owned by another team — is not a reason, because each of them trades a permanent loss of fidelity for a one-time saving.
@@ -50,7 +50,7 @@ Nothing else binds a double. A comment saying it mirrors the real one binds noth
 
 One suite, two subjects, identical assertions.
 
-- **Cases**: every case the callers rely on, plus every error and edge case the real dependency can produce — not the cases the double happens to implement.
+- **Cases**: every case the callers rely on, plus every error and edge case the real dependency can produce on the calls the callers make — not the cases the double happens to implement.
 - **Cadence**: against the double on every commit, and against the real implementation at a stated cadence the repository names (every merge to the mainline, or nightly). Both cadences are declared where the suite lives; an undeclared cadence means the second half never runs.
 - **On divergence**: the run fails and the change is blocked. The double is corrected to match the real implementation, never the reverse — the real implementation is the contract.
 - **When the real implementation cannot be run in this environment at all**, the double is unbindable. Record it as a gap at the severity of what the double stands in for, and say so in the report; do not present the double's green suite as evidence about the real dependency.
@@ -65,6 +65,6 @@ A hand-written double of a third-party API encodes a belief about a vendor's beh
 
 ## Shared fixtures and factories
 
-- A fixture shared across tests is shared state, and shared state breaks hermeticity. Build state per test through a factory that produces a fresh, independent instance.
+- Mutable data shared across tests is shared state, and shared state breaks hermeticity. Build the data a test asserts on per test through a factory that produces a fresh, independent instance. Expensive infrastructure and immutable fixture data are shared under `90-test-economy.md`.
 - A factory sets only the fields the test's assertion discriminates on, and randomises or defaults the rest. A factory that sets every field makes each test look meaningful and hides which field mattered.
-- Clean-up is by construction — a transaction rolled back, a fresh schema, a unique namespace per test — never a teardown routine that deletes named rows, because a failing test skips its teardown and poisons every test after it.
+- Clean-up is by construction — a transaction rolled back, a unique namespace per test, or a reset of the data the test touched — never a teardown routine that deletes named rows, because a failing test skips its teardown and poisons every test after it.

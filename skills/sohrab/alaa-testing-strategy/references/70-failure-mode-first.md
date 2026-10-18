@@ -4,7 +4,7 @@ Read at the start of every change, before any test is written. `SKILL.md` holds 
 
 ## One enumeration, two consumers
 
-`/alaa-observability-soc` (`$alaa-observability-soc`) requires every change to enumerate the failure modes it introduces and to name a signal for each. This skill requires every change to enumerate the failure modes it introduces and to name a test for each. **It is the same enumeration, produced once, and the enumeration table lives in that skill — `references/10-signal-model.md`, the section "Start from the diff, not from the question".**
+`/alaa-observability-soc` requires every change to enumerate the failure modes it introduces and to name a signal for each. This skill requires every change to enumerate the failure modes it introduces and to name a test for each. **It is the same enumeration, produced once, and the enumeration table lives in that skill — `references/10-signal-model.md`, the section "Start from the diff, not from the question".**
 
 Two lists would diverge, the divergence would be invisible because neither list names the other's gaps, and each list's author would assume the other had covered the mode. Producing one list with both columns makes a mode dropped from either half visible immediately, because the row exists with an empty cell.
 
@@ -24,7 +24,7 @@ mode | signal | query or alert | test that produces the mode | layer and proof l
 - **test that produces the mode** — the test that makes this mode happen on purpose and asserts what the system does. Its name, or `none` if it does not exist yet.
 - **layer and proof level** — from `20-layers.md` and `40-proof-strength.md`.
 
-A row with an empty test cell is a gap reported at the severity of the mode. A row whose test cell says "existing tests cover it" names the existing test, or it is an empty cell — an unnamed claim of coverage is how the gap ships.
+A mode that fails *Whether a test is owed* in `SKILL.md` carries `not written: <reason>` in its test cell; that is a recorded decision, not a gap. A row with an empty test cell is a gap reported at the severity of the mode. A row whose test cell says "existing tests cover it" names the existing test, or it is an empty cell — an unnamed claim of coverage is how the gap ships.
 
 ## Deriving the test from the mode
 
@@ -43,7 +43,7 @@ Three inputs, in this order, and all three are read:
 
 1. **The diff.** The enumeration table maps what a diff adds to the modes it introduces.
 2. **The incident and defect history of this surface.** Every mode that has already happened here is a mode with demonstrated probability, and a fix with no test is a fix that can be reverted silently — obligation 6 in `60-coverage.md`.
-3. **The dependencies the change touches.** Each dependency call carries the modes in `/alaa-reliability-sla` (`$alaa-reliability-sla`), `references/80-verification.md`, ordered there by how often they are missed. That skill owns which to inject; this file owns that they enter the enumeration.
+3. **The dependencies the change touches.** Each dependency call carries the modes in `/alaa-reliability-sla`, `references/80-verification.md`, ordered there by how often they are missed. That skill owns which to inject; this file owns that they enter the enumeration.
 
 ## Ordering, and what it prevents
 

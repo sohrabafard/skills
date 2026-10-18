@@ -57,8 +57,8 @@ Two shapes that are always defects, because each names a failure the suite canno
 Each layer has a budget, because a suite past its budget is run less often and eventually not at all, and an unrun test is an absent test.
 
 - The unit suite runs on every save or every commit. When it stops being fast enough for that, the cause is almost always a test doing I/O at the wrong layer — find it by placement, not by parallelism.
-- The integration suite runs on every push or merge request, against real engines started for the run.
+- The integration suite runs on every push or merge request, against real engines started once for the run and shared by its tests under `90-test-economy.md`.
 - The contract suite runs wherever its artifact changes, on both sides of the agreement.
 - The end-to-end suite runs on merge to the mainline and before release, and it holds only crossings, so its size stays bounded by the number of crossings rather than by the number of features.
 
-`/alaa-cc-orchestrator` (`$alaa-codex-orchestrator` in Codex) owns how these commands are executed and under what resource policy; this file owns which suite exists and what belongs in it.
+`/alaa-cc-orchestrator` (`/alaa-codex-orchestrator` in Codex) owns how these commands are executed and under what resource policy; this file owns which suite exists and what belongs in it.

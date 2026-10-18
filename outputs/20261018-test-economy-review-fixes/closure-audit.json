@@ -1,0 +1,17 @@
+{
+  "observed_at": "2026-10-18T10:45:04.393914+00:00",
+  "head": "76efada1200041d694b42c6d7c6a53939d364a5c",
+  "source_sha256": "224cc863d868a04725800ee2d7f6ea3ec0fbbe2a8ea6eb5c4f7c9db8813f2b6d",
+  "source_paths": 63,
+  "corrected_skill_paths": 27,
+  "unchanged_baseline_skill_paths": 36,
+  "tracked_dirty_paths": 65,
+  "unexpected_tracked_paths": [],
+  "final_workflow_file_sha256": {
+    "docs/_agent_plans/20261018-094058_stack-neutral-test-economy-doctrine.md": "6395247a00ff7e4561457aa36242284601afa5506ad7b6fd71adc4e3416877e7",
+    "docs/agents/20261018-094058_stack-neutral-test-economy-doctrine-state.md": "2a476d8297f1cefb7fb193b9e9e0f4c957dd7957c38daf5e35759dc9fcacce4b"
+  },
+  "authored_text_utf8_no_bom_lf": true,
+  "final_workflow_validation_exit": 0,
+  "final_git_diff_check_exit": 0
+}

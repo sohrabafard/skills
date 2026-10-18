@@ -6,7 +6,7 @@ Review priorities:
 3. Data loss, idempotency, rollback, migrations, partial failure, and retries.
 4. Concurrency, races, timeouts, cancellation, and degraded dependencies.
 5. Empty/null/boundary state and error propagation.
-6. Test quality against plausible broken implementations and missing integration coverage.
+6. Test quality against plausible broken implementations and missing integration coverage; tests that are not owed under /alaa-testing-strategy (framework, kit, package, vendor or generated behaviour, unreachable modes); tests with no topic selector; expensive setup created per test; and builds repeated within one pass.
 7. Observability and operational diagnosability of new failure paths.
 8. Applicable clean-code skill rules; ignore unsupported taste-only preferences.
 9. Cross-service and auth posture: in Ala-style repositories, judge contract adjacency and trust-context handling against /alaa-services-contract and /alaa-trust-gateway-auth.

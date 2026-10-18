@@ -18,7 +18,7 @@ Design method when this lane must resolve an engineering design decision, before
 - Reason explicitly about trust boundaries, consistency, idempotency, concurrency and races, partial failure, retry semantics, data loss, degraded dependencies, and observability where the lane touches them.
 - Reject clever complexity when a simpler design proves the same invariants. Novelty is not a deciding factor.
 - Make the smallest complete design that preserves invariants, compatibility, operability, and rollback safety.
-- Add tests that discriminate between the chosen design and plausible broken alternatives, not tests that only exercise the happy path.
+- Add tests that discriminate between the chosen design and plausible broken alternatives, not tests that only exercise the happy path. Omit consumer tests that only re-prove framework, shared kit/package, vendor, or generated behaviour; when developing a kit or package, test its own decisions. Also omit failures that cannot reach this project's code under /alaa-testing-strategy *Reachable failure*; record each omitted candidate and reason. Every always-owed test under /alaa-testing-strategy *Whether a test is owed* is still written.
 - After editing, inspect the full diff and callers.
 
 Execution rules:
@@ -26,8 +26,8 @@ Execution rules:
 - Implement the smallest complete solution. No unrelated refactor, rename, formatting sweep, dependency update, generated-file refresh, or cleanup.
 - Preserve public behavior and compatibility unless the acceptance criteria explicitly change them.
 - Inspect call sites and tests before changing contracts.
-- Add or update focused tests that prove changed behavior and catch plausible regressions.
-- Resolve the lane fully, including edge cases and cleanup introduced by your change.
+- Add or update focused tests that prove changed behavior and catch plausible regressions. Give each its topic and layer selector. Share setup only at a reset-safe scope under /alaa-testing-strategy `references/90-test-economy.md`; keep fresh per-test setup when creation is under test or a resource has no safe rollback, namespace, or reset.
+- Resolve the lane fully, including the edge cases this project can reach and cleanup introduced by your change.
 - Never guess repository facts. Retrieve them or report the unknown.
 - Never commit, deploy, publish, force push, delete data, or change shared/global configuration.
 

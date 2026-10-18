@@ -198,11 +198,11 @@ Documentation is part of done when behaviour, contracts, setup, env vars, reques
 
 ## Validation before done
 
-Run the relevant checks, preferring repo scripts and CI-pinned versions: style via `vendor/bin/pint --test` or the repo's formatter; static analysis via `vendor/bin/phpstan analyse` at the repo's configured level; then the targeted test filter for the changed behaviour followed by the affected suite.
+Run the relevant checks, preferring repo scripts and CI-pinned versions: style via `vendor/bin/pint --test` or the repo's formatter; static analysis via `vendor/bin/phpstan analyse` at the repo's configured level; then the targeted test selector for the changed behaviour — `--filter`, or the topic's `--group`. The affected suite is the affected tier: the authority `/alaa-testing-strategy` assigns runs it, and a session with no such authority runs it once, on the final tree.
 
-**Report only what you observed run.** If a check could not run, state the exact blocked command and the reason — a check not observed to run has no result. Pipeline-level gating belongs to `/alaa-cicd-laravel-postgres` (`$alaa-cicd-laravel-postgres`).
+**Report only what you observed run.** If a check could not run, state the exact blocked command and the reason — a check not observed to run has no result. Pipeline-level gating belongs to `/alaa-cicd-laravel-postgres`.
 
-What makes a test worth having — the broken implementation it defends against, the layer it belongs at, whether a double is honest, the proof level a claim reaches, and whether an intermittent failure is a product defect or a broken test — is owned by `/alaa-testing-strategy` (`$alaa-testing-strategy`). This skill owns only the PHP-side construct choice: Pest and PHPUnit idiom, the database-refresh trait decision, and the run-twice proof for re-runnable units, all in `references/laravel-best-practices.md` under "Tests".
+What makes a test worth having — whether it is owed at all (never for Laravel, package, or vendor behaviour, only for this application's use of it), the broken implementation it defends against, the layer it belongs at, whether a double is honest, the proof level a claim reaches, and whether an intermittent failure is a product defect or a broken test — is owned by `/alaa-testing-strategy`. This skill owns only the PHP-side construct choice: Pest and PHPUnit idiom, the database-refresh trait decision, and the run-twice proof for re-runnable units, all in `references/laravel-best-practices.md` under "Tests".
 
 ## Output contract
 

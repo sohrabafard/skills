@@ -1,13 +1,13 @@
 ---
 name: alaa-testing-strategy
-description: "Test design doctrine for services that must not fail: what makes a test a test rather than a replay of the happy path, which layer a behaviour belongs at, when to fake or stub or use the real dependency, the six proof levels and which one a claim requires, and telling a flaky test from an intermittent product defect. Use when writing, reviewing, or repairing tests; deciding where a test belongs or whether a double is honest; when a suite is slow, flaky, or green against broken code; when a route, consumer, or job has no test; and before reporting any check as passed. Do not use for framework idiom and assertion syntax, which are the per-language skills and /golang-testing. Route fault injection to /alaa-reliability-sla; security controls to /alaa-security-review; envelopes and codes to /alaa-services-contract; Postman request tests to /alaa-postman-collections; command execution to /alaa-cc-orchestrator."
+description: "Test design doctrine for services that must not fail: whether a test is owed, what makes a test catch a real defect, how tests are selected, share setup, and build once, which layer a behaviour belongs at, when to fake or stub or use the real dependency, which of six proof levels a claim requires, and telling flake from an intermittent product defect. Use when writing, reviewing, or repairing tests; deciding where a test belongs or whether a double is honest; when a suite is slow, flaky, or green against broken code; when a route, consumer, or job has no test; and before reporting any check as passed. Do not use for framework idiom and assertion syntax, which are the per-language skills and /golang-testing. Route fault injection to /alaa-reliability-sla; security controls to /alaa-security-review; envelopes and codes to /alaa-services-contract; Postman request tests to /alaa-postman-collections; command execution to /alaa-cc-orchestrator."
 ---
 
 # Alaa Testing Strategy
 
 Decide what to test, where to test it, what to substitute for a real dependency, how strong the resulting proof is, and what a reviewer may accept as evidence — so every service in the fleet ships a test suite of the same shape. Uniformity is the deliverable: a suite whose shape differs per service can be read only by whoever wrote it, so no reviewer can tell a covered service from an uncovered one, and the fleet's real coverage becomes unknowable at exactly the scale where it matters.
 
-This skill owns the decision. It owns no framework, no assertion syntax, no fixture library, and no Ala value. Companion skills are written `/name` for Claude Code and `$name` for Codex; both forms appear at every call site.
+This skill owns the decision. It owns no framework, no assertion syntax, no fixture library, and no Ala value.
 
 ## When this applies
 
@@ -15,7 +15,7 @@ Any change that adds or alters a behaviour, a control, a contract, a dependency 
 
 It does not apply to a change that alters no behaviour and no test: a comment, a formatting pass, a rename with no call-site semantics, or a docs-only edit.
 
-**No shipped surface is exempt.** Every route, queue consumer, job, scheduled task, and published request carries at least one test meeting the core rule below. The surface that issues credentials is the least exempt of all: a validator run over this platform's own API collection found 73 requests with no test at all, including the entire Auth folder — the requests that issue tokens asserted nothing. That is the failure this skill exists to prevent, because a credential surface is the one place where silent breakage grants access rather than removing it.
+**No shipped surface is exempt.** Every route, queue consumer, job, scheduled task, and published request this project ships carries at least one test meeting the core rule below; which behaviour behind it is owed a test is decided under *Whether a test is owed*. The surface that issues credentials is the least exempt of all: a validator run over this platform's own API collection found 73 requests with no test at all, including the entire Auth folder — the requests that issue tokens asserted nothing. That is the failure this skill exists to prevent, because a credential surface is the one place where silent breakage grants access rather than removing it.
 
 **A repository's own validation-policy file outranks this skill inside that repository.** Where a repository states which checks gate a change, at which moment, and what may be cited instead of re-run, that file decides and this skill supplies only what it leaves open. What follows is the fleet default for a repository that has not written its own.
 
@@ -37,6 +37,17 @@ Two properties every negative test carries:
 
 That second property and the rule against testing one behaviour at three layers do not conflict, and the discriminator is observable: **remove the mechanism at one layer and run all three tests. If only that layer's test fails, they are three tests for three independent mechanisms and all three stay. If all three fail, they are one test written three times, and two are deleted.**
 
+## Whether a test is owed
+
+**A test is owed only for a decision this project makes, against a failure that can reach it.** Check both conditions for every candidate before writing it. A candidate failing either is recorded under `Not written` with its reason and is not written, because an unowed test charges its run and maintenance cost on every future change while proving nothing about this project.
+
+- **Owned decision.** No test is owed for language, runtime, or framework behaviour; for behaviour a dependency's own suite proves — a shared kit such as alaa-go-chi, an `@alaa/*` package, a vendor library; for generated code, which its generator's suite owns; or for a declaration that a type, schema, lint, or render gate already rejects when it is wrong. The consumer tests only its own use of the dependency: the configuration it chooses, the inputs it passes, the policy it applies, and wiring that can be wrong. Record the owner instead: `covered by <owner> <suite>`. A conformance harness its owner requires the consumer to run stays required, because it tests the consumer's conformance, not the owner.
+- **Reachable failure.** A failure mode earns a test only when it cites one reachability source: a path in this diff or in the code it changes that can produce it; an incident or defect on this surface; a dependency failure mode this deployment exercises; or a contract obligation the code must honour. A mode with no source — input already refused by an owned, tested check upstream, a dependency this path never calls, a configuration that never ships — is recorded `not reachable: <reason>`.
+- **A changed file is not a reason for a test; a changed decision is.**
+- **Always owed, whatever the conditions above say:** every control `/alaa-security-review` names, every reported defect's regression test, and every boundary where untrusted input is parsed — obligations 1, 6 and 9 in `references/60-coverage.md` — plus the per-surface floor under *No shipped surface is exempt*. A check upstream never makes a mode unreachable across a trust boundary, because the downstream check is what runs when the upstream one is bypassed.
+
+`references/90-test-economy.md` lists the unowed kinds with what the consumer tests instead.
+
 ## Non-negotiables
 
 1. Every test names the failure it defends against, in the test's own name or in one comment beside it. A reader who cannot tell what a test protects can neither judge that deleting it is safe nor repair it when it breaks, so it is kept forever and skipped when inconvenient.
@@ -46,24 +57,28 @@ That second property and the rule against testing one behaviour at three layers 
 5. Every claim is reported at the proof level that actually ran, never at the level it was meant to reach. The level is what lets a reviewer decide whether to re-run a claim; a mislabelled level removes that decision.
 6. A test that fails intermittently is classified as a product defect or a broken test before any other action is taken on it. A blanket retry is never that action.
 7. Coverage obligations are named, never expressed as a percentage target. A percentage is satisfied by executing code without asserting anything.
-8. The test list is derived from the enumerated failure modes of the change; the happy path is added last, as a control proving the failure tests fail for the reason claimed, never as the starting point.
+8. The test list is derived from the enumerated failure modes of the change that pass *Whether a test is owed*; the happy path is added last, as a control proving the failure tests fail for the reason claimed, never as the starting point.
 9. A check that was not observed to run is reported as not run. An unexecuted check has no result, and reporting one invents evidence.
-10. Every test is hermetic: it creates the state it needs, asserts only on state it created, and leaves none behind. A test depending on another test's leftovers passes in one order and fails in another, and the order is not part of anyone's contract.
+10. Every test is hermetic over its mutable state: it creates the data it asserts on, asserts only on that data, and leaves none behind. A test depending on another test's leftovers passes in one order and fails in another, and the order is not part of anyone's contract. Expensive resettable infrastructure — an engine or container, a migrated schema, a booted application, a built artifact, immutable fixture data — is created once per suite, package, or worker and shared, and each test is isolated over it by transaction rollback, a unique namespace, or a reset of the data it touched. A test creates that infrastructure for itself only when creation is the behaviour under test, because per-test creation multiplies the suite's cost by its test count and buys no isolation that rollback or a namespace does not.
 11. No test synchronises on wall-clock sleeping. Time is injected as a controllable clock, and waiting is done on the condition the test is waiting for, with a bounded timeout. A sleeping test flakes on a loaded machine and charges its sleep on every run forever.
 12. Breadth is earned by a change in the tree, never by a change of phase, agent, or reviewer. A result whose four validity conditions still hold is cited, not re-run, and the exhaustive tier runs once, fresh, on the final candidate. Re-running a heavy suite against an unchanged tree buys no confidence and produces the worst evidence available, because a warm cache and a warm environment are hardest to tell apart from a real pass.
+13. Every test this change adds or changes is selectable by its topic — the behaviour or surface it defends — and by its layer, through the runner's native selector, and the repository records which command selects which topic. A test reachable only through the whole-suite command forces every change to pay for the whole suite, because the focused tier cannot select it.
+14. One build, compile, render, or image is produced per tree state and environment, and every lint, type, test, and smoke step of that pass consumes its output, cache, or image digest. A step that rebuilds what an earlier step of the same pass produced, or a separate compile that the test step already performs, is removed, because it charges the build again for no new information.
 
 ## Designing the tests for a change
 
 Walk this in order. Each step names the reference that owns its detail.
 
-1. **Enumerate the failure modes the change introduces**, from the diff rather than from the ticket. This enumeration is shared with `/alaa-observability-soc` (`$alaa-observability-soc`) and is produced once, not twice. (`references/70-failure-mode-first.md`)
-2. **Write the broken implementation for each mode**, by the four-step derivation above. (`references/10-what-makes-a-test.md`)
-3. **Place each test at one layer**, by naming the smallest set of components that must be real for that failure to be producible. (`references/20-layers.md`)
-4. **Decide the doubles**, and for each one whether it can drift and what binds it if it can. (`references/30-doubles.md`)
-5. **Assign the proof level each claim requires**, and check that the level is reachable in this environment before writing the test that assumes it. (`references/40-proof-strength.md`)
-6. **Check the named coverage obligations** and add the tests any unmet obligation requires. (`references/60-coverage.md`)
-7. **Add one happy-path test per behaviour**, last, and confirm each failure test fails when its mode is injected and passes otherwise. (`references/10-what-makes-a-test.md`)
-8. **Run, and report at the level reached**, with the blocker named for every claim whose level was not reachable. (`references/80-evidence-and-reporting.md`)
+1. **Enumerate the failure modes the change introduces**, from the diff rather than from the ticket. This enumeration is shared with `/alaa-observability-soc` and is produced once, not twice. (`references/70-failure-mode-first.md`)
+2. **Decide whether each mode is owed a test**, under *Whether a test is owed*, and record every mode that is not. (`references/90-test-economy.md`)
+3. **Write the broken implementation for each owed mode**, by the four-step derivation above. (`references/10-what-makes-a-test.md`)
+4. **Place each test at one layer**, by naming the smallest set of components that must be real for that failure to be producible. (`references/20-layers.md`)
+5. **Decide the doubles**, and for each one whether it can drift and what binds it if it can. (`references/30-doubles.md`)
+6. **Give each test its topic and layer selector and its shared setup**, reusing the suite's existing fixtures before creating one. (`references/90-test-economy.md`)
+7. **Assign the proof level each claim requires**, and check that the level is reachable in this environment before writing the test that assumes it. (`references/40-proof-strength.md`)
+8. **Check the named coverage obligations** and add the tests any unmet obligation requires. (`references/60-coverage.md`)
+9. **Add one happy-path test per behaviour**, last, and confirm each failure test fails when its mode is injected and passes otherwise. (`references/10-what-makes-a-test.md`)
+10. **Run the focused selectors, and report at the level reached**, with the blocker named for every claim whose level was not reachable. (`references/80-evidence-and-reporting.md`)
 
 ## Proof levels
 
@@ -86,8 +101,8 @@ Three tiers. Each has exactly one owner and exactly one moment, and no tier is r
 
 | Tier | What runs | Who runs it | When |
 |---|---|---|---|
-| **Focused** | the tests naming this change's failure modes, plus lint, type, and build checks scoped to the touched files | the lane that wrote the change | at the end of every subtask, before that subtask is reported complete |
-| **Affected** | every suite reachable from the changed surfaces — callers, shared fixtures, the contract tests of the touched surface — plus the acceptance criteria this phase claims | an authority other than the lane that wrote the change | once per phase, after the phase's lanes are reconciled |
+| **Focused** | the topic selectors of this change's failure-mode tests, plus lint, type, and build checks scoped to the touched files | the lane that wrote the change | at the end of every subtask, before that subtask is reported complete |
+| **Affected** | the selectors of every topic reachable from the changed surfaces — callers, shared fixtures, the contract tests of the touched surface — plus the acceptance criteria this phase claims | an authority other than the lane that wrote the change | once per phase, after the phase's lanes are reconciled |
 | **Exhaustive** | the whole suite under its normal configuration, then the race, end-to-end, and highest-level proofs the claims require | an authority other than any implementing lane | exactly once, on the final candidate tree, after every lane and every fix has landed |
 
 **The exhaustive tier is not an early-warning system.** Run on an intermediate tree it observes a combination that is about to change, so its result expires before it is read while its cost is charged in full — and the tree it was meant to judge still goes unobserved. Its whole value is that it runs on the tree that ships.
@@ -102,7 +117,7 @@ When one of them changes, say which one, and re-run every result downstream of i
 
 ### A failing tier is classified before it is repaired
 
-Classify first, then act, because a repair applied to the wrong class is how a host-environment problem becomes an edit to the product. Four classes stay separate: a defect in the product; a defect in the test harness, fixture, or runner; a host-environment block — the shell, the container runtime, a permission, a missing executable or service; and a contaminated tree, including stale build or test cache. `/alaa-cc-orchestrator` (`$alaa-codex-orchestrator` in Codex) `references/failure-taxonomy.md` owns the status vocabulary and the host sub-classes; this skill owns what each class licenses you to conclude, and no class licenses reporting the change as passed.
+Classify first, then act, because a repair applied to the wrong class is how a host-environment problem becomes an edit to the product. Four classes stay separate: a defect in the product; a defect in the test harness, fixture, or runner; a host-environment block — the shell, the container runtime, a permission, a missing executable or service; and a contaminated tree, including stale build or test cache. `/alaa-cc-orchestrator` (`/alaa-codex-orchestrator` in Codex) `references/failure-taxonomy.md` owns the status vocabulary and the host sub-classes; this skill owns what each class licenses you to conclude, and no class licenses reporting the change as passed.
 
 A tier is never made to pass by deleting an assertion, widening a tolerance, adding a retry, skipping a case, or lowering a threshold. An unreachable tier is reported unreached with its blocker named, under `references/80-evidence-and-reporting.md`.
 
@@ -111,7 +126,7 @@ A tier is never made to pass by deleting an assertion, widening a tolerance, add
 When the host is Windows and an affected- or exhaustive-tier gate is long (its last host run, or the repository's documentation, exceeds ten minutes) and process-heavy — shell suites, or many short CLI invocations — run it in a container of the Linux image the repository's CI runs that gate in, as named by its CI configuration or documentation. Process creation under Git Bash or MSYS makes such a gate several times slower, and the CI image's tool variants (for example BusyBox instead of GNU utilities) expose defects a Windows run hides.
 
 - Mount the worktree read-only and run the gate on a copy inside the container's filesystem that includes the git metadata the gate reads: a bind mount is slow, and a writable one lets the gate change the tree.
-- Run the CI job's own setup steps and services before the gate.
+- Run the CI job's own setup steps and services once per pass, and run every gate of that pass in the same container.
 - Use the gate's own parallel mode when it has one, otherwise run it sequentially; never parallelize its steps yourself.
 - Report the image reference and that the result is container evidence. Host and container are different environments under the validity rule above, so neither result is cited for the other.
 - A tool the gate invokes that behaves differently in the CI image is a product or harness defect, because CI runs that image; a setup, mount, copy, or missing-service failure stays a host-environment block.
@@ -125,10 +140,14 @@ Return these fields, in this order, for every test design, test review, or repor
 Decision: pass | pass-with-actions | blocked
 Scope: the change, and the surfaces and suites examined
 Failure modes: mode -> the test that produces it -> layer -> proof level -> signal owner
+Not written: candidate -> framework | owner suite <owner> <suite> | generated | declaration gate | not reachable: <reason>
 Broken implementations: per test, the broken implementation it defends against
 Layer placement: per behaviour, the layer and the components that had to be real
 Doubles: per double, real|fake|stub|mock|spy, the reason for substituting, can-drift yes|no, and what binds it
 Coverage obligations: each named obligation -> met by which test, or unmet
+Selectors: per test, topic selector and layer selector
+Shared setup: per expensive resource, scope (run | package | worker) and per-test isolation
+Build reuse: per build, compile, render, or image -> the steps that consumed it
 Evidence: per claim -> command run, working directory, proof level reached, observed outcome, artifact path
 Tier: focused | affected | exhaustive -> run now, or cited from an earlier run with the four validity conditions named as still holding
 Flake: any intermittent result -> classified product defect | broken test -> action taken and owner
@@ -137,7 +156,7 @@ Gaps: claims with no test, levels not reached and the blocker, quarantined tests
 
 ## Stop conditions
 
-Stop successfully when every enumerated failure mode has a test that fails when its mode is injected, every control has been proven by removal, every double that can drift is bound, every named coverage obligation is met or recorded as a gap, every reported claim carries an observed result at a stated level and tier, and the exhaustive tier has run once on the final candidate tree.
+Stop successfully when every enumerated failure mode has either a test that fails when its mode is injected or a `Not written` reason, every test this change adds or changes has a topic selector, every control has been proven by removal, every double that can drift is bound, every named coverage obligation is met or recorded as a gap, every reported claim carries an observed result at a stated level and tier, and the exhaustive tier has run once on the final candidate tree.
 
 Stop and report blocked when: a behaviour cannot be placed at any layer because its failure is not producible in any arrangement available here; a required proof level is unreachable and the claim depends on what that level alone decides; an intermittent failure cannot be classified as product or test defect after the procedure in `references/50-flake.md` has been run to completion; a control cannot be proven by removal because removing it breaks compilation of unrelated code, and no equivalent inversion exists; or a test the change requires cannot be run and the repository has no skip mechanism to record it.
 
@@ -151,27 +170,18 @@ Stop and report blocked when: a behaviour cannot be placed at any layer because 
 
 ## Reference routing
 
-Read only the files whose stated condition the task meets. Loading the whole tree means the task was not scoped.
-
-- `references/10-what-makes-a-test.md` — when writing or reviewing any individual test, and whenever an existing test's value is in question.
-- `references/20-layers.md` — when deciding where a behaviour is tested, when a suite is slow, or when the same behaviour appears to be tested more than once.
-- `references/30-doubles.md` — when substituting anything for a real dependency, when a double already exists, or when a suite passes while an integration breaks.
-- `references/40-proof-strength.md` — before reporting any claim as validated, and whenever an environment cannot reach the level a claim needs.
-- `references/50-flake.md` — when any test has produced two different outcomes on the same code, and when a retry is being proposed anywhere.
-- `references/60-coverage.md` — when coverage is being measured, gated, or cited as evidence, and when deciding what still needs a test.
-- `references/70-failure-mode-first.md` — at the start of every change, before any test is written.
-- `references/80-evidence-and-reporting.md` — when reporting a test result, when reviewing someone else's reported result, when a test cannot be run at all, and when deciding whether an earlier result may be cited instead of re-run.
+Before reading any reference, read `references/00-topic-map.md`; it names the condition under which each reference is read.
 
 ## What this skill does not own
 
-- `/alaa-reliability-sla` (`$alaa-reliability-sla`) owns fault injection doctrine, the failure modes worth injecting at a dependency boundary, the per-mechanism evidence table, load testing at saturation, production experiments, and the rule that an untested degraded path is a broken path — `references/80-verification.md`. This skill owns where those tests sit in the plan, at which layer, and at which proof level.
-- `/alaa-security-review` (`$alaa-security-review`) owns which controls must be security-tested and its own minimum negative tests for credentials and cryptography — `references/50-credentials-and-cryptography.md`. This skill generalises the method those tests are built on; it does not restate them and it names no security control.
-- `/alaa-services-contract` (`$alaa-services-contract`) owns every envelope, code, header, field name, and value a contract test asserts against. Assert what that skill declares and report drift, rather than asserting the drift.
-- `/alaa-postman-collections` (`$alaa-postman-collections`) owns API-level request tests, their five minimum assertions, examples, and scripts. This skill owns the layer that work sits at and the rule that no request is exempt.
-- `/alaa-observability-soc` (`$alaa-observability-soc`) owns the failure-mode enumeration table and the signal, query, and alert each mode needs — `references/10-signal-model.md`. This skill consumes the same enumeration to derive tests; neither skill maintains a second list.
-- `/alaa-controlled-ops` (`$alaa-controlled-ops`) owns its own package and adopter release gates and its boundary-check script. This skill owns the proof-level vocabulary those gates report in.
-- The per-language skills and the vendored `/golang-testing` (`$golang-testing`) own framework idiom, assertion syntax, fixture and mock libraries, table-driven form, and runner flags. This skill owns the decision; it names no framework construct.
-- The `alaa-verifier` role in `/alaa-cc-orchestrator` (`$alaa-codex-orchestrator` in Codex) owns command execution, resource policy, low-priority runners, artifact directories, and the status vocabulary a run is reported in — `references/failure-taxonomy.md`. This skill owns what each status licenses a reader to conclude, which tier had the right to run, and whether an earlier result is still citable.
+- `/alaa-reliability-sla` owns fault injection doctrine, the failure modes worth injecting at a dependency boundary, the per-mechanism evidence table, load testing at saturation, production experiments, and the rule that an untested degraded path is a broken path — `references/80-verification.md`. This skill owns where those tests sit in the plan, at which layer, and at which proof level.
+- `/alaa-security-review` owns which controls must be security-tested and its own minimum negative tests for credentials and cryptography — `references/50-credentials-and-cryptography.md`. This skill generalises the method those tests are built on; it does not restate them and it names no security control.
+- `/alaa-services-contract` owns every envelope, code, header, field name, and value a contract test asserts against. Assert what that skill declares and report drift, rather than asserting the drift.
+- `/alaa-postman-collections` owns API-level request tests, their five minimum assertions, examples, and scripts. This skill owns the layer that work sits at and the rule that no request is exempt.
+- `/alaa-observability-soc` owns the failure-mode enumeration table and the signal, query, and alert each mode needs — `references/10-signal-model.md`. This skill consumes the same enumeration to derive tests; neither skill maintains a second list.
+- `/alaa-controlled-ops` owns its own package and adopter release gates and its boundary-check script. This skill owns the proof-level vocabulary those gates report in.
+- The per-language skills and the vendored `/golang-testing` own framework idiom, assertion syntax, fixture and mock libraries, table-driven form, and runner flags. This skill owns the decision; it names no framework construct.
+- The `alaa-verifier` role in `/alaa-cc-orchestrator` (`/alaa-codex-orchestrator` in Codex) owns command execution, resource policy, low-priority runners, artifact directories, and the status vocabulary a run is reported in — `references/failure-taxonomy.md`. This skill owns what each status licenses a reader to conclude, which tier had the right to run, and whether an earlier result is still citable.
 - `/alaa-prompting-guide` owns model/effort capability evidence and runtime mechanics; the runtime orchestrator owns actual task allocation for every authority role. This skill names no model.
 
 ## Anti-patterns
@@ -190,4 +200,9 @@ Read only the files whose stated condition the task meets. Loading the whole tre
 - re-running the full suite, the race detector, or the acceptance set against a tree that has not changed since the last run, which charges the whole cost for no new information and produces the pass that is hardest to distinguish from a cached one;
 - an implementing lane running the exhaustive tier on its own work, which is both the wrong authority and the wrong moment;
 - repairing the product in response to a shell, container-runtime, permission, or stale-cache failure that was never classified;
-- deleting or weakening an assertion so a test can run in a constrained environment, instead of recording the level not reached and the blocker.
+- deleting or weakening an assertion so a test can run in a constrained environment, instead of recording the level not reached and the blocker;
+- a consumer test re-proving framework, kit, package, or vendor behaviour, which passes against every implementation the consumer can ship;
+- a test for a failure that cannot reach this project's code under *Reachable failure*, which charges its cost forever and defends nothing;
+- an engine, container, migration, or application boot created per test, which multiplies the suite's cost by its test count;
+- a test reachable only through the whole-suite command, which makes every change pay for the whole suite;
+- a build, compile, type check, render, or image produced twice in one pass, which charges the build again for no new information.

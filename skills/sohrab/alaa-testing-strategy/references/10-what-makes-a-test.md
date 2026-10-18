@@ -4,7 +4,7 @@ Read when writing or reviewing any individual test, and whenever an existing tes
 
 ## The catalogue of plausible broken implementations
 
-Step 2 of the derivation asks for the version a competent engineer ships by mistake. Find the row that matches the shape of the code under test and take its break; the list is the floor, not the ceiling.
+Step 2 of the derivation asks for the version a competent engineer ships by mistake. Find the row that matches the shape of the code under test and take its break. A row applies only to code this project owns and to a break that can reach it, under *Whether a test is owed* in `SKILL.md`. For a shape the table lacks, derive the break by the same four steps.
 
 | Shape of the code under test | Its characteristic break | The assertion that catches it |
 |---|---|---|

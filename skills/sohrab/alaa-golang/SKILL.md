@@ -57,11 +57,19 @@ failure budget for evidence and native gates; do not loop or claim an unrun gate
 
 ## Validation gate
 
-After any Go edit, run in order: `go build ./...`; `go vet ./...`; tests of the changed packages;
-`go test ./...`. Supplemental provider diagnostics and any required uncovered semantic property
-are governed by /alaa-code-intelligence-routing; they do not replace these native gates.
-Add `go test -race ./...` when the change touches a goroutine, channel, mutex, cache, worker pool
-or package-level variable. Run `govulncheck ./...` when `go.mod` or `go.sum` changed.
+After any Go edit, the authoring lane runs, in order: `go vet` on the changed packages; `go test`
+on the changed packages, narrowed with `-run` to the changed topic in a large package; and verify each
+shipped entrypoint links with `go build` or a matching artifact from the same tree, environment and
+build configuration. A test compile does not prove that the production entrypoint links.
+Supplemental provider diagnostics and any required uncovered semantic property are governed by
+/alaa-code-intelligence-routing; they do not replace these native gates.
+Run `govulncheck ./...` in the authoring lane when `go.mod` or `go.sum` changed.
+The whole-suite run is an affected- and exhaustive-tier gate that /alaa-testing-strategy assigns
+to an authority other than the authoring lane; when the session has no such authority, run it on
+the final tree before reporting completion. Use the real-store tag when required. Combine tagged
+and untagged selections only when reference 63's build-constraint and test-configuration check
+proves normal behavior remains covered; otherwise run both. Add `-race` to the required run or
+runs when the change touches a goroutine, channel, mutex, cache, worker pool or package-level variable.
 Report commands and outcomes using /alaa-go-chi-development
 `../alaa-go-chi-development/references/05-phase-and-source-truth.md`: `passed`, `failed`, `blocked`, `skipped`, `not run`.
 Never report an outcome for a command you did not execute. Stop successfully only when the

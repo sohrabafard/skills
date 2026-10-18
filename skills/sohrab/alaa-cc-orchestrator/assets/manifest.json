@@ -50,37 +50,37 @@
     {
       "name": "alaa-implementer-fable",
       "file": "agents/alaa-implementer-fable.md",
-      "sha256": "ea5944f96939543cbbfcd29a9373526b3753d25585858518d315408a414a64f7"
+      "sha256": "616b92b3c16caa8beb259e8c307795dd207b0df62459022618d00425a2870d35"
     },
     {
       "name": "alaa-implementer-haiku-high",
       "file": "agents/alaa-implementer-haiku-high.md",
-      "sha256": "d2a889e5e1e48a9b861b434aee1ae0b946024a56179a1c265bc89609cb2b9e92"
+      "sha256": "8ad2d1e0f48bb7f81fa244a8fef99e0816ae911c5758b2cb49e138bc374d4113"
     },
     {
       "name": "alaa-implementer-haiku",
       "file": "agents/alaa-implementer-haiku.md",
-      "sha256": "0435448b99e4d3ede70e6e5226758e9cde2e412b47893f4ca479a2359f96b6bb"
+      "sha256": "6d9c2eabfb57fc1193646b1f8a109daa5d9a92245208e23358e7b8a0641713ff"
     },
     {
       "name": "alaa-implementer-opus-high",
       "file": "agents/alaa-implementer-opus-high.md",
-      "sha256": "be1d4e46a7dd86fd2661158a9c33a175879196919624aef4d38c93a4b1a6dd9d"
+      "sha256": "a63e8c96df99228d3e0ad8728f07167b65b62b212c6ff0f3f2e80f4316e0e45d"
     },
     {
       "name": "alaa-implementer-opus",
       "file": "agents/alaa-implementer-opus.md",
-      "sha256": "de2f984fa72c46c4270e97be1c456e5a567a14e79cfd4e45d589727a3e5101d3"
+      "sha256": "31bc297f348c123b6bea4c435a50d69667009f2f5d735e89d4f1f67b803284fe"
     },
     {
       "name": "alaa-implementer-sonnet-high",
       "file": "agents/alaa-implementer-sonnet-high.md",
-      "sha256": "7617d7f972e2aec53c7807194145132c46f9566d03b3297ab8bac54c31ebaefb"
+      "sha256": "770ee5ce8e3cf5d2de2433e37a3fd2e757619a235e780eb080eac1d3c0180259"
     },
     {
       "name": "alaa-implementer",
       "file": "agents/alaa-implementer.md",
-      "sha256": "0ef91e9b83133eedbe6729029840ed6b821da9d244e8f29c07c57b14cfb5c1ef"
+      "sha256": "5f84b8ddb39d0185f8e4965f7dc3d10b3774f29a1c6b09315891edc11094efe1"
     },
     {
       "name": "alaa-instruction-reviewer",
@@ -125,7 +125,7 @@
     {
       "name": "alaa-reviewer",
       "file": "agents/alaa-reviewer.md",
-      "sha256": "c1d208e6f792dd156a66e7cd488d16fae393fcbbc1d9578276e52e8fac607c51"
+      "sha256": "a61653e05db9748bc4e4b7d9db49159f313d2feaa2f5608da466a55bd83f6537"
     },
     {
       "name": "alaa-security-reviewer",
@@ -140,7 +140,7 @@
     {
       "name": "alaa-test-strategist",
       "file": "agents/alaa-test-strategist.md",
-      "sha256": "11d2516fe970d7884856d32658c4d0b407d0f628ed6877b0766afc457cd26e66"
+      "sha256": "5aa8780e17de0c1b14f4c66530ff1dc6b901ce94361001bc55c2a03ee8bd3595"
     },
     {
       "name": "alaa-verifier",

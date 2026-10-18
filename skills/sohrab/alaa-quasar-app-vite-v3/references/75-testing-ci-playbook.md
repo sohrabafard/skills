@@ -36,10 +36,10 @@ A gate that could not run is reported as not run, with the reason. It is never r
 
 These do not exist in a generic frontend test suite, and they catch the failures this skill exists to prevent.
 
-**SSR render regression.** Build the SSR bundle, start it, request one route per layout, and assert the response status and a marker string that only server-rendered markup contains. This catches a boot file that throws only on the server, a module-global leak that appears on the second request, and a render path that a client-only test never executes. Issue the second request with a different session to catch cross-request state.
+**SSR render regression.** Reuse the SSR bundle that the mode-build gate produced in this pass after the last edit; otherwise build it here. Then start it, request one route per layout, and assert the response status and a marker string that only server-rendered markup contains. This catches a boot file that throws only on the server, a module-global leak that appears on the second request, and a render path that a client-only test never executes. Issue the second request with a different session to catch cross-request state.
 
 ```bash
-<pm> quasar build -m ssr
+<pm> quasar build -m ssr   # skip only when this pass built dist/ssr after the last edit
 node dist/ssr/index.js &
 # assert: status 2xx, expected markup present, and a second request with a
 # different session does not return the first session's data
@@ -102,8 +102,13 @@ Adapt the names to the repository's conventions, and check what CI references be
 ## 6. Commands by change type
 
 ```bash
-# Small UI change
-<pm> run lint && <pm> run typecheck && <pm> run test:unit && <pm> run build
+# Small UI change: run tests reachable from changed files; the whole suite runs
+# once on the final tree (/alaa-testing-strategy tiers). Preserve config flags
+# from the test:unit script.
+<pm> run lint && \
+  <pm> run typecheck && \
+  <pm> exec vitest related --run <changed files> <test:unit config flags> && \
+  <pm> run build
 
 # PWA change
 <pm> run lint && <pm> run typecheck && <pm> quasar build -m pwa

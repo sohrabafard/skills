@@ -22,18 +22,18 @@ A percentage that already exists in the pipeline is not evidence of anything and
 
 ## The rule that replaces it: the named obligations
 
-**Every item below has at least one test that names the broken implementation it defends against. Nothing else carries a coverage obligation, and an item with no such test is an unmet obligation reported at the severity of what the item protects.**
+**Every item below has at least one test that names the broken implementation it defends against. Nothing else carries a coverage obligation, and an item with no such test is an unmet obligation reported at the severity of what the item protects.** An item applies only to a decision this project owns and a failure that can reach it, under *Whether a test is owed* in `SKILL.md`; an item outside that is recorded under `Not written` and is not an unmet obligation. Obligations 1, 6 and 9 are always owed.
 
-1. **Every branch of every control**, in both directions — admitted and refused. Authentication, authorization, tenancy, rate limits, admission and shedding decisions, and any flag that gates access. `/alaa-security-review` (`$alaa-security-review`) names which controls a given change has.
+1. **Every branch of every control**, in both directions — admitted and refused. Authentication, authorization, tenancy, rate limits, admission and shedding decisions, and any flag that gates access. `/alaa-security-review` names which controls a given change has.
 2. **Every failure mode enumerated for the change**, each with the test that produces it. `70-failure-mode-first.md` owns the enumeration.
 3. **Every state transition of anything with states**, including the transitions that must be refused. An unrefused illegal transition is how data reaches a state no code was written to handle.
-4. **Every boundary of every bound**: the value at the limit, one inside, one outside, and the empty and maximal cases of every collection, string, and page.
-5. **Every error the code can return**, at the layer that returns it, asserted for the declared code and shape. `/alaa-services-contract` (`$alaa-services-contract`) owns the codes and shapes.
+4. **Every boundary of every bound the code enforces**: the value at the limit, one inside, one outside, and the empty and maximal cases of every collection, string, and page whose size the code branches on or limits.
+5. **Every error the code can return**, at the layer that returns it, asserted for the declared code and shape. `/alaa-services-contract` owns the codes and shapes.
 6. **Every reported defect**, with a test that fails against the code as it stood when the defect was reported, added in the same change as the fix. A fix with no such test cannot be distinguished later from a fix that was reverted.
 7. **Every contract this service publishes or consumes**, at the contract layer, on both sides where both are in this fleet.
-8. **Every mechanism whose removal must break a test** — retry, timeout, breaker, bulkhead, shed, degradation, idempotency. `/alaa-reliability-sla` (`$alaa-reliability-sla`) owns the list and the injection.
+8. **Every mechanism whose removal must break a test** — retry, timeout, breaker, bulkhead, shed, degradation, idempotency. `/alaa-reliability-sla` owns the list and the injection.
 9. **Every boundary where untrusted input is parsed, decoded, or deserialised**, with at least one malformed and one hostile input asserted to be refused.
-10. **Every published request in a shipped API artifact**, asserted at the request layer. `/alaa-postman-collections` (`$alaa-postman-collections`) owns those assertions.
+10. **Every published request in a shipped API artifact**, asserted at the request layer. `/alaa-postman-collections` owns those assertions.
 
 The obligations are the review's checklist and the report's `Coverage obligations` field. Each is met or unmet; there is no partial credit, because a partially covered control is an uncovered control on the path nobody tested.
 

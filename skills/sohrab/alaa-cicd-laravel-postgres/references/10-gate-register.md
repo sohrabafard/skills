@@ -8,10 +8,10 @@ Every check in a pipeline appears below with a class; one present in the pipelin
 |---|---|---|---|
 | Formatting | `vendor/bin/pint --test` | gate | zero files needing change |
 | Static analysis | `vendor/bin/phpstan analyse --no-progress` | gate | zero errors outside the committed baseline |
-| Tests, SQLite lane | `php artisan test` with `DB_CONNECTION=sqlite` and `DB_DATABASE=:memory:` | gate | zero failed, zero errored, zero skipped without a reason recorded in the test |
-| Tests, Postgres parity lane | a reachability probe, then `php artisan test` against production's Postgres major and minor | gate with one defined non-failure | reachable: the suite's own exit status is final. Unreachable: re-run on SQLite, exit zero, publish the `parity-unproven` artifact — except on a release-gating pipeline, where unreachable fails |
-| Coverage measurement | `php artisan test --coverage-clover=<artifact path>` | advisory artifact | none; never a pass/fail number |
-| Diff-test obligation | the diff's changed application files against its added or changed test files | gate | every changed application file is named by a test the same diff adds or changes, or carries a recorded exemption |
+| Tests, Postgres parity run | a reachability probe, then `php artisan test --coverage-clover=<artifact path>` against production's Postgres major and minor | gate with one defined fallback | reachable: the suite's own exit status is final, and the SQLite fallback does not run. Unreachable: the SQLite fallback row runs instead and the `parity-unproven` artifact is published — except on a release-gating pipeline, where unreachable fails |
+| Tests, SQLite fallback | `php artisan test --coverage-clover=<artifact path>` with `DB_CONNECTION=sqlite` and `DB_DATABASE=:memory:` | gate, only when the parity probe found Postgres unreachable | zero failed, zero errored, zero skipped without a reason recorded in the test; its exit status is final |
+| Coverage measurement | the clover artifact of whichever of the two test rows ran, never a separate run | advisory artifact | none; never a pass/fail number |
+| Diff-test obligation | the diff's changed application files against its added or changed test files | gate | every changed application file is named by a test the same diff adds or changes, matches a not-owed path pattern in the deviation register, or carries a recorded exemption |
 | Migration reversibility | `30-migration-reversibility.md` | gate | that file's predicate |
 | Test-database isolation | `20-test-database-isolation.md` | gate | that file's predicate |
 | Determinism | `scripts/check-ci-determinism.sh` | gate | exit 0 |
@@ -23,7 +23,7 @@ Every check in a pipeline appears below with a class; one present in the pipelin
 
 **Static analysis.** Level and baseline live in `phpstan.neon`; the pipeline never passes `--level`, which would let one job disagree with the repository invisibly. A Laravel repository registers the Larastan extension — without it every facade and Eloquent magic call is an error and the level gets lowered to compensate, which is how a repository ends up gating at a level that proves nothing. The baseline may only shrink: a change that adds an entry fails the gate unless that entry is recorded in the deviation register below.
 
-**Coverage.** Measured every run and published as an artifact, never a pass/fail percentage — a percentage rises when code is executed without being asserted on. The mechanical gate over test adequacy is the diff-test obligation row. An existing percentage gate stays and never substitutes for that row; `/alaa-testing-strategy` (`$alaa-testing-strategy`) owns what coverage may evidence.
+**Coverage.** Measured on every pipeline, by the Postgres parity run or its SQLite fallback, and published as an artifact, never a pass/fail percentage — a percentage rises when code is executed without being asserted on. The mechanical gate over test adequacy is the diff-test obligation row. An existing percentage gate stays and never substitutes for that row; `/alaa-testing-strategy` (`$alaa-testing-strategy`) owns what coverage may evidence.
 
 **Complexity.** Enforced by the static-analysis gate, so it fails a pipeline rather than a comment thread. The per-unit ceiling belongs to `/alaa-php-clean-code` (`$alaa-php-clean-code`), the growth bound to `/alaa-algorithms-data-structures` (`$alaa-algorithms-data-structures`).
 
@@ -39,7 +39,9 @@ Every check in a pipeline appears below with a class; one present in the pipelin
 
 ## The deviation register
 
-Three rules have an exit — a test engine that is neither SQLite nor production's Postgres, a baseline that grew, and a diff-test exemption. Each requires all three of the following, and an exit missing one is not an exit, so the gate fails: **the reason**, in one sentence naming what forced it; **the approver**, the name of the human who accepted it — any human on the team may, and **no agent may, ever**: an agent that meets a blocking finding records what it found and stops, then asks a human, because an unsigned exit is indistinguishable from one the agent wrote for itself; and **the location**, which is the repository's committed deviation register (`AGENTS.md` or the file it names) and never a merge-request comment, because a comment is not readable by the next run. A deviation is re-reviewed by the same approver when the engine version, the framework major, or the exempted file changes.
+A **not-owed path pattern** names a class of application file that `/alaa-testing-strategy` never owes a test — configuration, provider registration with no logic, generated code, framework glue — so its files pass the diff-test row without a per-change exemption. A pattern never matches a file that declares middleware, guards, gates or policies, including route files, because those declare an access decision. It is an exit and needs the same three parts below. A matched file that gains logic is owed a test whatever the pattern says, and the merge-request reviewer is the control that catches it, because a path pattern cannot see logic.
+
+Three rules have an exit — a test engine that is neither SQLite nor production's Postgres, a baseline that grew, and a diff-test exemption or not-owed path pattern. Each requires all three of the following, and an exit missing one is not an exit, so the gate fails: **the reason**, in one sentence naming what forced it; **the approver**, the name of the human who accepted it — any human on the team may, and **no agent may, ever**: an agent that meets a blocking finding records what it found and stops, then asks a human, because an unsigned exit is indistinguishable from one the agent wrote for itself; and **the location**, which is the repository's committed deviation register (`AGENTS.md` or the file it names) and never a merge-request comment, because a comment is not readable by the next run. A deviation is re-reviewed by the same approver when the engine version, the framework major, or the exempted file changes — or, for a not-owed path pattern, only when the pattern changes.
 
 ## What each script exit obliges
 
@@ -54,7 +56,7 @@ Three rules have an exit — a test engine that is neither SQLite nor production
 ```text
 Gates changed: check -> gate|advisory before -> after -> threshold -> what a non-zero exit obliges
 Evidence: exact invocation per gate, its observed exit status, and the wrapper used if any
-Parity: Postgres major.minor used, production's, how production's was read, and — when the parity lane fell back to SQLite — that it fell back, on which pipeline, and the artifact recording it
+Parity: Postgres major.minor used, production's, how production's was read, and — when the parity run fell back to SQLite — that it fell back, on which pipeline, and the artifact recording it
 Migrations: up-down-up result and the schema-comparison output
 Isolation: worker count, database-name pattern, teardown step, connection budget
 Determinism: script exit code and every finding, or why the script did not run

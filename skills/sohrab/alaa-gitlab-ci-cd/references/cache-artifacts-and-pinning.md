@@ -162,7 +162,12 @@ build:
   the project's access rules, not the data store's. Where a job produces data of
   that kind, write it to the store that owns it and publish only a reference.
   Whether the data class may be copied at all is
-  `/alaa-security-review` (`$alaa-security-review`)'s decision.
+  `/alaa-security-review`'s decision.
+- **Build once per pipeline, consume everywhere.** One job builds the artifact
+  or image for the commit; every test, scan, smoke and deploy job takes it
+  through `needs:` artifacts or the pushed image digest from `reports:dotenv`,
+  and never rebuilds it. A later environment promotes the same digest. The rule —
+  one build per tree state — is `/alaa-testing-strategy`'s; this file owns only its GitLab form.
 
 ## Pinning an image reference in each of the five places
 
