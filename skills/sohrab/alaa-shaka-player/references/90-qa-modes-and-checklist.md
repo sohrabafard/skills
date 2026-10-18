@@ -96,9 +96,10 @@ owns the reporting form; the player-specific minimum is:
 - the Shaka error **code** for any failure path exercised;
 - the browser and the value of `player.getLoadMode()` at the time.
 
-**Best practice.** Run `scripts/check-shaka-api.mjs` in CI on every change that touches player code.
-It costs one process and catches the class of bug — a call to an API removed two majors ago — that no
-amount of visual QA finds, because an optional-chained removed method produces no error at all.
+**Best practice.** Run `scripts/check-shaka-api.mjs` in CI when a player source change touches an API
+surface the checker recognizes. It costs one process and catches the class of bug — a call to an API
+removed two majors ago — that no amount of visual QA finds, because an optional-chained removed method
+produces no error at all.
 **Common mistake.** Doing a full visual pass when the defect is in a request filter, or concluding
 event correctness from a screenshot. Both waste the expensive mode on a claim it cannot prove.
 

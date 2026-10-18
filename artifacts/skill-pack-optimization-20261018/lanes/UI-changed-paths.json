@@ -1,0 +1,23 @@
+[
+  "skills/sohrab/alaa-frontend-developer/references/00-topic-map.md",
+  "skills/sohrab/alaa-frontend-developer/references/25-frontend-security.md",
+  "skills/sohrab/alaa-frontend-developer/references/30-pwa-sw-and-offline.md",
+  "skills/sohrab/alaa-frontend-developer/references/41-lighthouse-and-web-vitals.md",
+  "skills/sohrab/alaa-frontend-developer/references/47-frontend-observability.md",
+  "skills/sohrab/alaa-frontend-developer/references/48-config-and-environment.md",
+  "skills/sohrab/alaa-frontend-developer/references/50-qa-and-verification.md",
+  "skills/sohrab/alaa-frontend-developer/references/70-companion-skill-routing.md",
+  "skills/sohrab/alaa-frontend-developer/SKILL.md",
+  "skills/sohrab/alaa-frontend-devops/references/10-build-contract-and-artifacts.md",
+  "skills/sohrab/alaa-frontend-devops/references/30-serving-caching-and-public-path.md",
+  "skills/sohrab/alaa-quasar-app-vite-v3/references/00-topic-map.md",
+  "skills/sohrab/alaa-quasar-app-vite-v3/references/34-frontend-failure-and-degradation.md",
+  "skills/sohrab/alaa-quasar-app-vite-v3/references/36-client-observability-contract.md",
+  "skills/sohrab/alaa-quasar-app-vite-v3/references/75-testing-ci-playbook.md",
+  "skills/sohrab/alaa-quasar-app-vite-v3/references/91-agent-authoring-and-dual-runtime.md",
+  "skills/sohrab/alaa-quasar-app-vite-v3/SKILL.md",
+  "skills/sohrab/alaa-ui-ux-design-system/references/05-rtl-and-persian.md",
+  "skills/sohrab/alaa-ui-ux-design-system/references/45-render-and-asset-budgets.md",
+  "skills/sohrab/alaa-vue-typescript-clean-code/references/50-quasar-vite-pinia-contract.md",
+  "skills/sohrab/alaa-vue-typescript-clean-code/references/60-validation-gates.md"
+]

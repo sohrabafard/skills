@@ -2,7 +2,7 @@
 
 This file owns the object-storage behaviour that follows from the tus protocol and from one upload's identity. It does not own the bucket.
 
-**Handed to `/alaa-minio-object-storage` (`$alaa-minio-object-storage`):** bucket lifecycle policy and its rules; abandoned-multipart abort configuration; IAM policy shape and the root-credential problem; credential rotation; versioning; replication; server-side encryption; TLS to the object store; CDN origin; local MinIO topology and exposure. When a question is about the bucket rather than about one upload, that skill answers it.
+**Handed to `/alaa-minio-object-storage`:** bucket lifecycle policy and its rules; abandoned-multipart abort configuration; IAM policy shape and the root-credential problem; credential rotation; versioning; replication; server-side encryption; TLS to the object store; CDN origin; local MinIO topology and exposure. When a question is about the bucket rather than about one upload, that skill answers it.
 
 **The split on retention, stated once so it cannot drift:** retention of *unfinished uploads* — how long a started-and-abandoned upload may hold bytes, who deletes it, and what is emitted when they do — is owned here. Bucket-level lifecycle policy that expires objects by age or prefix is owned there. A plane needs both; neither substitutes for the other, because a lifecycle rule cannot see whether an upload is still in progress and a reaper cannot delete what the bucket has already tiered away.
 
@@ -27,6 +27,23 @@ Four rules follow, and each has cost a real plane an outage or a bill.
 
 ## Multipart part sizing and temp disk
 
+### Independent control planes
+
+| Control | Applies to | Authority |
+|---|---|---|
+| `STORAGE_PART_SIZE_BYTES` | application S3 client; 16 MiB is an estimate | `/alaa-minio-object-storage` `references/05-environment-contract.md` |
+| `TUSD_S3_PART_SIZE` | this skill's standalone Compose asset passes it to `-s3-part-size`, setting `PreferredPartSize` | tusd binary; an embedded consumer must configure the library field itself |
+| plan `chunkSize` | browser tus `PATCH` request bodies below ingress caps | server upload plan, not either S3 part-size setting |
+
+Setting one plane's variable does not configure the other. For Arvan, use the resolved provider
+bounds from `/alaa-arvan-object-storage` `references/15-environment-contract-deltas.md`.
+**Bound actual parts, not only the preference:** `s3store` can raise effective part size for a
+large declared upload to remain within `MaxMultipartParts`. Its `MaxPartSize`, resulting part size
+and accepted object size must fit the provider bounds. Verify the selected binary's exposed controls
+or configure the embedded library; invent no CLI flag or automatic `STORAGE_*` mapping. A preferred
+size below Arvan's ceiling alone proves no compatibility. `10-source-map.md` records the targeted
+source check; `55-tests.md` names the size-growth regression case.
+
 At upstream `s3store` defaults — `PreferredPartSize` 50 MiB, `MaxBufferedParts` 20 — each in-flight upload demands roughly **1 GiB of local temporary disk**, plus a concatenation temp file where concatenation is used. "Streams to object storage" does not mean "needs no disk".
 
 Sizing procedure:
@@ -41,12 +58,14 @@ A plane with no dedicated volume, no tmpfs and no disk-pressure guard fills the 
 
 ## Object keys
 
-Keys are generated on the server from upload and asset identity. No client-supplied segment, no client-supplied bucket, no filename.
+For generic namespace, trusted tenant-prefix and client-segment rules, apply
+`/alaa-minio-object-storage` `references/10-buckets-and-object-keys.md`. This section owns
+the upload-specific layout and collision constraints.
 
 - The tus layer owns `<prefix>/<uploadID>` with `.info` and `.part` siblings. Never place your own objects where they can collide with a `.info` or `.part` name.
 - The application layer owns keys built from its own identifiers, for example `tmp/<assetID>/<componentID>/<uploadID>`, `final/…` and `extracted/…`.
-- **Include the tenant or project in the key prefix.** The Ala service does not: its keys carry asset and component identity but no tenant, so isolation rests entirely on Postgres. That is a working control today and a fragile one, because it makes per-tenant lifecycle rules, per-tenant cost attribution and prefix-scoped credentials impossible, and it turns any future direct-listing path into a cross-tenant read. Record it as a service defect; adding a prefix later requires a migration of existing keys.
-- Include a random component in any identifier you generate. Never derive one mainly from a filename, and never let client input reach a path segment.
+- **Historical tenant-prefix gap:** the Ala source snapshot in `15-ala-service.md` records asset and component identity but no tenant in keys, so isolation rests entirely on Postgres. This prevents per-tenant lifecycle rules, cost attribution and prefix-scoped credentials, and turns any future direct-listing path into a cross-tenant read. Record it as a service defect; adding a prefix later requires a migration of existing keys. Re-read the service source before treating this dated observation as current.
+- Include a random component in any upload identifier you generate; never derive it mainly from a filename, because collisions can overwrite another upload or its sidecar.
 
 ## Two copies, and when a finished object appears
 
@@ -71,7 +90,7 @@ A complete retention rule has five parts, and a rule missing any one of them is 
 
 `Upload-Expires` is the server's statement of that threshold to the client. Send it on creation and on each `HEAD` so a resuming client can tell whether resuming is still possible instead of discovering it through a 404. A plane with a reaper and no `Upload-Expires` produces clients that retry into nothing.
 
-**Abandoned multipart uploads accrue cost invisibly.** They do not appear in a bucket listing and a filesystem janitor cannot see them. Aborting them is part of this reclamation scope; the bucket-level lifecycle rule that catches whatever the reaper misses belongs to `/alaa-minio-object-storage` (`$alaa-minio-object-storage`).
+**Abandoned multipart uploads accrue cost invisibly.** They do not appear in a bucket listing and a filesystem janitor cannot see them. Aborting them is part of this reclamation scope; the bucket-level lifecycle rule that catches whatever the reaper misses belongs to `/alaa-minio-object-storage`.
 
 ## Disk-pressure thresholds
 

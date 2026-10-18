@@ -58,12 +58,12 @@ This skill owns: the `player.configure()` surface and its safe defaults for this
 ## Implementation order
 
 1. Read `references/00-topic-map.md` and load the rows that match the task.
-2. Confirm the installed version and read `references/80-version-migration-and-release-deltas.md` for the selected target and intervening releases. Run `scripts/check-shaka-api.mjs` against the repository; its v5.2.3 rules are a historical static baseline, not proof of every newer API.
+2. When upgrading Shaka or changing a version-sensitive API, confirm the installed version and read `references/80-version-migration-and-release-deltas.md` for the selected target and intervening releases. When a change touches an API surface recognized by `scripts/check-shaka-api.mjs`, run it against the repository. Its rules cover configure and error handling, tracks, ads, offline, native HLS, gaps, UI and preferences; its v5.2.3 rules are a historical static baseline, not proof of every newer API.
 3. Write or repair the core wrapper: import, polyfill, support check, attach, `configure()`, filters, error classification, teardown (`references/20-core-lifecycle.md`, `references/15-configure-surface-and-safe-defaults.md`).
 4. Add the capability the task actually asked for, one reference file at a time.
 5. Add the resilience policy (`references/35-unstable-networks-and-resilience.md`) — it is not optional on a mobile network.
-6. Prove it with the mode `references/90-qa-modes-and-checklist.md` selects, and record the deliverables below.
+6. Choose the lightest proof mode `references/90-qa-modes-and-checklist.md` selects for the changed behavior. Exercise the scenarios that behavior can break and report the applicable deliverables below.
 
 ## Output expectations
 
-Every player change ships with: the `player.configure()` block it changed, with each non-default value traced to the reference that justifies it; the error classes it newly handles and what the user sees for each; the telemetry quantities it emits and the `/alaa-services-contract` names requested for them; and the QA evidence `references/90-qa-modes-and-checklist.md` requires. Emit `.ts` and `.vue` with `lang="ts"` following `/alaa-vue-typescript-clean-code`. If the host repository is JavaScript-only, say so and stop before generating files.
+For each changed surface, report its applicable deliverable: the changed `player.configure()` block and justification for non-default values; newly handled error classes and user outcomes; emitted telemetry quantities and requested `/alaa-services-contract` names; and the QA evidence required by `references/90-qa-modes-and-checklist.md`. Do not require unrelated deliverables for an untouched surface. Emit `.ts` and `.vue` with `lang="ts"` following `/alaa-vue-typescript-clean-code`. If the host repository is JavaScript-only, say so and stop before generating files.

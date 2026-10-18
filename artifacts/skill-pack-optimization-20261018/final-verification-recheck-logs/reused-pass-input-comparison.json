@@ -1,0 +1,51 @@
+{
+  "status": "PASS",
+  "candidate_delta_paths": [
+    "skills/sohrab/alaa-bale-provider/SKILL.md",
+    "skills/sohrab/alaa-sms-provider-mediana/SKILL.md"
+  ],
+  "covered_input_comparison": {
+    "workflow": {
+      "paths_compared": 19,
+      "drift": []
+    },
+    "codex-orchestrator": {
+      "paths_compared": 73,
+      "drift": []
+    },
+    "cc-orchestrator": {
+      "paths_compared": 60,
+      "drift": []
+    },
+    "container-pack": {
+      "paths_compared": 33,
+      "drift": []
+    },
+    "constitution": {
+      "paths_compared": 13,
+      "drift": []
+    }
+  },
+  "prior_passes_reused": [
+    5,
+    7,
+    8,
+    9,
+    10,
+    11,
+    12,
+    13,
+    14,
+    15,
+    16
+  ],
+  "observer_comparison": {
+    "branch_and_head": "matched",
+    "requested_controls": "matched gpt-6-luna/medium",
+    "configured_controls": "matched neutral/unpinned",
+    "workspace": "same task/worktree",
+    "python_runtime": "same recorded interpreter path C:/Users/Alaa/AppData/Local/Programs/Python/Python314/python.exe",
+    "observed_model_identity": "unknown in both records",
+    "container": "same content-addressed image sha256:d7d5200cf678b9439e2c1bd44bfa5c99fb90915fd9bad96a4a0c4847557d7883"
+  }
+}

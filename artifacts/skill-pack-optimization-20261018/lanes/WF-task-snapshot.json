@@ -1,0 +1,26 @@
+{
+  "head": "1a0799de71254427973f1253d80b846fea9acf10",
+  "method": "SHA-256 over sorted repository-relative UTF-8 path + NUL + file bytes",
+  "paths": [
+    "skills/sohrab/alaa-testing-strategy/SKILL.md",
+    "skills/sohrab/alaa-testing-strategy/references/60-coverage.md",
+    "skills/sohrab/alaa-testing-strategy/references/80-evidence-and-reporting.md",
+    "skills/sohrab/alaa-testing-strategy/references/90-test-economy.md",
+    "skills/sohrab/alaa-workflow/SKILL.md",
+    "skills/sohrab/alaa-workflow/assets/continuation-state-template.md",
+    "skills/sohrab/alaa-workflow/assets/phase-prompts-template.md",
+    "skills/sohrab/alaa-workflow/assets/phase-template.md",
+    "skills/sohrab/alaa-workflow/assets/plan-template.md",
+    "skills/sohrab/alaa-workflow/assets/state-template.json",
+    "skills/sohrab/alaa-workflow/references/artifact-lifecycle.md",
+    "skills/sohrab/alaa-workflow/references/companion-routing.md",
+    "skills/sohrab/alaa-workflow/references/context-continuity.md",
+    "skills/sohrab/alaa-workflow/references/phase-prompts.md",
+    "skills/sohrab/alaa-workflow/references/task-tracking.md",
+    "skills/sohrab/alaa-workflow/references/workspace-and-integration.md",
+    "skills/sohrab/alaa-workflow/scripts/init_workflow_files.py",
+    "skills/sohrab/alaa-workflow/scripts/validate_workflow_files.py",
+    "skills/sohrab/alaa-workflow/tests/test_workflow_files.py"
+  ],
+  "sha256": "f99fd769405416268aacee95418d65207cf78cdb75c9bb3a756d2b0f4b76f1d9"
+}

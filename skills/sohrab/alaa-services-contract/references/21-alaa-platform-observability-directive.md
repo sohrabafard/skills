@@ -37,6 +37,18 @@ rather than only observing OpenFGA as a dependency; and `/alaa-laravel-architect
 `/alaa-php-clean-code` for which PHP or Composer observability packages to install, which this skill does
 not decide.
 
+## Sentry configuration authority
+
+This file registers no fleet browser Sentry environment keys, defaults or runtime package set. Resolve
+browser key names and value injection from the target repository's approved build/runtime configuration;
+do not infer a browser environment fallback from a server SDK. A new shared key needs a deliberate entry
+here before it is treated as a fleet contract.
+
+The frontend owner selects browser and SSR SDKs against the target's pinned versions and current official
+documentation; /alaa-quasar-app-vite-v3 owns Quasar wiring. PHP/Composer package choices remain with
+/alaa-laravel-architecture and /alaa-php-clean-code. Requirement levels, privacy, public-DSN versus secret-token
+handling and integration evidence remain in `alaa-observability-soc references/60-sentry-and-profiling.md`.
+
 ## Current Ala service reality
 
 Use this table as the starting point, then re-check the target repository before editing, because repo

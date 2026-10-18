@@ -10,7 +10,8 @@ contract for both sides of that line: working **inside the kit repository**, and
 built on the kit**. Repository truth outranks this skill: where they disagree, follow the repository, name the
 file you followed, and log the disagreement as drift.
 
-Cross-skill names appear as `/name` (`$name`): `/name` triggers in Claude Code, `$name` in Codex.
+Write cross-skill calls once as `/name`, per the skill pack's authoring contract. For a generated prompt's
+target-runtime invocation, use `/alaa-prompting-guide` `references/06-invocation-and-composition.md`.
 
 **Do not use this skill** when the target `go.mod` does not require `git.alaatv.com/vk/alaa-go-chi`, or when the
 task changes no kit surface, generated artifact, contract document, or registry row: write the domain code and

@@ -1,0 +1,7 @@
+{
+  "command": "python -B artifacts/skill-pack-optimization-20261018/lanes/AUDIT-cli-assertion.py",
+  "cwd": ".",
+  "wall_time_seconds": 0.7130576,
+  "exit_code": 0,
+  "output": ""
+}

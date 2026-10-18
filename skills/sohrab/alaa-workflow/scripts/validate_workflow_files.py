@@ -54,6 +54,7 @@ TASK_LINE_RE = re.compile(r"^\s*(?:[-*]\s+\[[ xX-]\]|\d+[.)])\s+(.+)$", re.M)
 VAGUE_SKILLS_RE = re.compile(r"\b(?:relevant|appropriate|related|matching)\s+skills?\b", re.I)
 ISSUE_LINE_RE = re.compile(r"^\s*[-*]\s+Issue:\s*(.*?)\s*$", re.I | re.M)
 LOCAL_TASK_RE = re.compile(r"^\s*[-*]\s+\[([ xX-])\]\s+([A-Za-z][A-Za-z0-9_.-]*):\s+(.+?)\s+\[depends:\s*([^\]]*)\]\s+\[skills:\s*([^\]]+)\]\s*$", re.I)
+HIERARCHY_NODE_RE = re.compile(r"^([ \t]*)[-*][ \t]+([A-Za-z]+)[ \t]+issue:[ \t]*([^\r\n]*)$", re.I | re.M)
 
 
 def task_store_headers(content: str) -> tuple[list[str], list[str]]:
@@ -71,6 +72,199 @@ def clean_scalar(value: str) -> str:
     return value.strip().strip("`").strip()
 
 
+def plan_header(content: str) -> str:
+    return re.split(r"^#{2,6}\s+", content, maxsplit=1, flags=re.M)[0]
+
+
+def hierarchy_family(content: str) -> bool:
+    return field_value(plan_header(content), "Task hierarchy") is not None
+
+
+def phase_key(title: str) -> str:
+    match = re.match(r"Phase\s+\d+\b", title, re.I)
+    return match.group(0) if match else title
+
+
+def resolve_review_contract(path: Path) -> tuple[str, str]:
+    """Resolve declared ancestry without deriving engagement identity from local phases."""
+    seen: set[Path] = set()
+    inherited: tuple[str, str] | None = None
+    for _ in range(64):
+        selected = path.resolve()
+        if selected in seen:
+            raise ValueError("Parent plan cycle; reconcile ancestry before initialization.")
+        seen.add(selected)
+        content = read_text(path)
+        header = plan_header(content)
+
+        def scalar(label: str, optional: bool = False) -> str | None:
+            values = re.findall(rf"^[-*][ \t]+{re.escape(label)}:[ \t]*([^\r\n]*)$", header, re.I | re.M)
+            if not values and optional:
+                return None
+            if len(values) != 1 or not clean_scalar(values[0]) or UNRESOLVED_RE.search(values[0]):
+                raise ValueError(f"Invalid or duplicate {label} in {portable(path)}; explicitly reconcile legacy or malformed cadence.")
+            return clean_scalar(values[0])
+
+        boundary, final = scalar("Review boundary"), scalar("Final phase")
+        if boundary not in {"phase", "final"} or not re.fullmatch(r"Phase [1-9][0-9]*", final or ""):
+            raise ValueError(f"Malformed review boundary/final phase in {portable(path)}.")
+        pair = (boundary, final)
+        if inherited is not None and pair != inherited:
+            raise ValueError(f"Conflicting inherited review contract in {portable(path)}.")
+        inherited = pair
+        phases = [phase_key(title) for title, _ in phase_blocks(content)]
+        if not phases or len(set(phases)) != len(phases):
+            raise ValueError(f"Missing or duplicate local phases in {portable(path)}.")
+        parent = scalar("Parent plan", optional=True)
+        nested = parent is not None and parent != "not created"
+        local_final = scalar("Local final phase", optional=True)
+        if (local_final if nested else final) != phases[-1] or (not nested and local_final is not None):
+            raise ValueError(f"Final phase identity is not resolvable in {portable(path)}; preserve engagement and local identities separately.")
+        if not nested:
+            return pair
+        if re.search(r"[\\`\r\n]", parent) or re.match(r"(?:/|[a-zA-Z][a-zA-Z0-9+.-]*:)", parent):
+            raise ValueError("Parent plan must be a portable relative path without unresolved syntax.")
+        candidate = Path(parent)
+        path = candidate if candidate.exists() else path.parent / candidate
+    raise ValueError("Parent plan ancestry exceeds the supported 64-plan bound; reconcile it before initialization.")
+
+
+def boundary_validation_observed(block: str) -> bool:
+    commands = clean_scalar(field_value(block, "Validation commands") or "")
+    evidence = clean_scalar(field_value(block, "Evidence observed") or "")
+    if not commands or not evidence or UNRESOLVED_RE.search(commands + evidence):
+        return False
+    no_validation = re.fullmatch(r"none\s*\(\s*\S(?:.*\S)?\s*\)", commands, re.I)
+    inapplicable = re.fullmatch(r"not applicable\s*\(\s*\S(?:.*\S)?\s*\)", evidence, re.I)
+    if no_validation or inapplicable:
+        return bool(no_validation and inapplicable)
+    unobserved = r"(?:not[ _-]+run|unrun|not[ _-]+observed|pending|none|n/a|not applicable|not captured)(?:\b|$)"
+    return not (re.match(unobserved, commands, re.I) or re.match(unobserved, evidence, re.I))
+
+
+def hierarchy_nodes(content: str, status: str) -> tuple[dict[str, tuple[str, str | None, str]], list[str]]:
+    """Parse containment only; no offline mapping establishes a native Beads edge."""
+    nodes: dict[str, tuple[str, str | None, str]] = {}
+    messages: list[str] = []
+    unresolved = error if executing_tasks(content, status) else warning
+    regions = phase_regions(content)
+    phase_keys: set[str] = set()
+    for title, start, end in regions:
+        key = phase_key(title)
+        if key in phase_keys:
+            messages.append(error("plan.hierarchy", f"Duplicate phase identity: {key}.", "Use unique phase numbers."))
+        phase_keys.add(key)
+        phase_id: str | None = None
+        task_id: str | None = None
+        task_has_child = False
+        phase_count = 0
+        task_count = 0
+        for match in HIERARCHY_NODE_RE.finditer(content, start, end):
+            indent, level, value = match.groups()
+            level = level.lower()
+            expected_indent = {"phase": "", "task": "  ", "subtask": "    "}.get(level)
+            if expected_indent is None or indent != expected_indent:
+                messages.append(error("plan.hierarchy", f"Invalid hierarchy level or indentation: {match.group(0).strip()}.", "Use Phase/Task/Subtask issue with zero/two/four spaces."))
+                continue
+            skills = TASK_SKILLS_RE.search(value)
+            identifier = clean_scalar(value[:skills.start()] if skills else value)
+            if not identifier or re.search(r"\s|[\[\]]", identifier):
+                messages.append(error("plan.hierarchy", f"Invalid {level} issue ID in {key}.", "Use one nonempty opaque ID."))
+                continue
+            if UNRESOLVED_RE.search(identifier):
+                messages.append(unresolved("plan.hierarchy", f"Unresolved {level} issue in {key}.", "Register and map the actual issue before execution."))
+            if identifier in nodes:
+                messages.append(error("plan.hierarchy", f"Duplicate issue ID: {identifier}.", "Map every node once across the family."))
+            if level == "phase":
+                phase_count += 1
+                if skills or task_count:
+                    messages.append(error("plan.hierarchy", f"Misplaced phase mapping in {key}.", "Put the single phase ID before its tasks; phase skills use Required skills."))
+                phase_id = identifier
+                parent = None
+            elif level == "task":
+                if task_id is not None and not task_has_child:
+                    messages.append(error("plan.hierarchy", f"Task {task_id} has no subtask.", "Map at least one executable leaf per task."))
+                if phase_id is None:
+                    messages.append(error("plan.hierarchy", f"Orphan task {identifier}.", "Map its phase before its tasks."))
+                task_id, task_has_child = identifier, False
+                task_count += 1
+                parent = phase_id
+            else:
+                if task_id is None:
+                    messages.append(error("plan.hierarchy", f"Orphan subtask {identifier}.", "Map its task before its subtasks."))
+                task_has_child = True
+                parent = task_id
+            nodes[identifier] = (level, parent, key)
+        if phase_count != 1 or not task_count:
+            messages.append(error("plan.hierarchy", f"{key} requires exactly one phase issue and at least one task.", "Complete the three-level containment mapping."))
+        if task_id is not None and not task_has_child:
+            messages.append(error("plan.hierarchy", f"Task {task_id} has no subtask.", "Map at least one executable leaf per task."))
+    if not regions:
+        messages.append(error("plan.hierarchy", "Hierarchy has no phases.", "Map the ordered phases before execution."))
+    for match in HIERARCHY_NODE_RE.finditer(content):
+        if match.start() < len(plan_header(content)) and match.group(2).lower() == "root":
+            # Optional engagement-epic metadata is not an executable hierarchy node.
+            continue
+        if not any(start <= match.start() < end for _, start, end in regions):
+            messages.append(error("plan.hierarchy", "Hierarchy node is outside a phase.", "Put each node in its phase region."))
+    return nodes, messages
+
+
+def validate_hierarchy_contract(content: str, status: str) -> list[str]:
+    header = plan_header(content)
+    messages: list[str] = []
+    for label, allowed in (("Task hierarchy", {"phase-task-subtask"}), ("Review boundary", {"phase", "final"})):
+        values = re.findall(rf"^[-*][ \t]+{label}:[ \t]*([^\r\n]*)$", header, re.I | re.M)
+        if len(values) != 1 or clean_scalar(values[0]) not in allowed:
+            messages.append(error("plan.hierarchy-contract", f"Invalid or duplicate {label} header.", "Restore the declared hierarchy/review contract."))
+    stores, bindings = task_store_headers(content)
+    if len(stores) != 1 or clean_scalar(stores[0]) != "beads" or len(bindings) != 1:
+        messages.append(error("plan.hierarchy-binding", "Hierarchy requires an explicit Beads store and binding.", "Use the adopted portable binding; do not substitute local tracking."))
+    _, node_messages = hierarchy_nodes(content, status)
+    messages.extend(node_messages)
+    if TASK_LINE_RE.search(content) or ISSUE_LINE_RE.search(content):
+        messages.append(error("plan.hierarchy-mixed", "Hierarchy contains flat issues or local tasks.", "Keep only the three-level mappings in this family."))
+    phases = phase_blocks(content)
+    final_phase = clean_scalar(field_value(header, "Final phase") or "")
+    local_final = clean_scalar(field_value(header, "Local final phase") or final_phase)
+    if not phases or local_final != phase_key(phases[-1][0]):
+        messages.append(error("plan.final-phase", "Final phase is not the last declared phase.", "Name the whole engagement's actual final phase."))
+    authority = clean_scalar(field_value(header, "Commit authority") or "")
+    valid_grant = bool(re.fullmatch(r"explicit user grant:\s*\S.+", authority, re.I)) and not UNRESOLVED_RE.search(authority)
+    if authority != "not granted" and not valid_grant:
+        messages.append(error("plan.commit-authority", "Commit authority is unresolved.", "Record the explicit user grant and scope, or not granted."))
+    boundary = clean_scalar(field_value(header, "Review boundary") or "")
+    approved = {"APPROVED", "APPROVED-WITH-NITS"}
+    for title, block in phases:
+        verdict = clean_scalar(field_value(block, "Review status") or "")
+        evidence = clean_scalar(field_value(block, "Review evidence") or "")
+        if verdict not in approved | {"REVIEW_PENDING", "CHANGES-REQUESTED"}:
+            messages.append(error("plan.review-status", f"{title} lacks a valid review status.", "Record REVIEW_PENDING or the actual boundary verdict."))
+        if not evidence or (verdict in approved and (evidence == "not run" or UNRESOLVED_RE.search(evidence))):
+            messages.append(error("plan.review-evidence", f"{title} has no attributable review evidence.", "Record the boundary evidence; pending review may say not run."))
+        if boundary == "final" and (field_value(header, "Local final phase") is not None or phase_key(title) != final_phase) and verdict != "REVIEW_PENDING":
+            messages.append(error("plan.review-boundary", "Intermediate phase claims review under final-only cadence.", "Keep REVIEW_PENDING; the final phase owns independent acceptance."))
+        required_boundary = boundary == "phase" or (not field_value(header, "Local final phase") and phase_key(title) == final_phase)
+        completed_boundary = is_complete_status(status) or (is_complete_status(field_value(block, "Status") or "") and verdict in approved)
+        if required_boundary and completed_boundary and not boundary_validation_observed(block):
+            messages.append(error("plan.boundary-validation", f"{title} lacks observed required boundary validation.", "Record resolved commands and their observed evidence, or none (specific reason) with not applicable (specific reason)."))
+        if re.search(r"^[ \t]+[-*][ \t]+(?:Commit|Review status|Review evidence):", block, re.I | re.M):
+            messages.append(error("plan.node-boundary", "Task/subtask contains a review or commit field.", "Record boundary review and commit evidence at phase level."))
+        commit = clean_scalar(field_value(block, "Commit") or "")
+        if re.fullmatch(r"[0-9a-f]{7,40}", commit, re.I):
+            tested = clean_scalar(field_value(block, "Evidence observed") or "")
+            if (not valid_grant or verdict not in approved or not is_complete_status(field_value(block, "Status") or "")
+                    or not tested or tested == "not run" or UNRESOLVED_RE.search(tested)
+                    or (boundary == "final" and phase_key(title) != final_phase)):
+                messages.append(error("plan.commit-boundary", "Commit is unauthorized or precedes accepted boundary review.", "Preserve the snapshot and wait for explicit authority and accepted review/fixes/tests."))
+    if is_complete_status(status) and any(
+        clean_scalar(field_value(block, "Review status") or "") not in approved
+        for title, block in phases if boundary == "phase" or (not field_value(header, "Local final phase") and phase_key(title) == final_phase)
+    ):
+        messages.append(error("plan.final-review", "Completed engagement has pending or failed required boundary review.", "Complete every declared boundary before closing the engagement."))
+    return messages
+
+
 def executing_tasks(content: str, status: str) -> bool:
     return not is_planning_status(status) or any(
         clean_scalar(field_value(phase, "Status") or "pending").lower() not in {"pending", "planning", "draft"}
@@ -80,7 +274,7 @@ def executing_tasks(content: str, status: str) -> bool:
 
 def validate_task_store(content: str, status: str) -> list[str]:
     stores, bindings = task_store_headers(content)
-    if not stores and not bindings:
+    if not stores and not bindings and not hierarchy_family(content):
         return []
     if len(stores) != 1 or len(bindings) != 1:
         return [error("plan.task-store", "Marked family requires exactly one Task store and one Task binding header.", "Restore one canonical pair in the plan header.")]
@@ -96,6 +290,10 @@ def validate_task_store(content: str, status: str) -> list[str]:
                              or not binding.split("#", 1)[0].strip() or re.search(r"[\r\n`\\]", binding)
                              or re.match(r"(?:/|[a-zA-Z][a-zA-Z0-9+.-]*:)", binding)):
         messages.append(error("plan.task-binding", "Beads requires a portable project-relative binding owner reference.", "Name the adopted binding owner, optionally with an anchor."))
+    if hierarchy_family(content):
+        messages.extend(validate_hierarchy_contract(content, status))
+        messages.append(warning("plan.beads-offline", "Offline structure only; live binding, nodes, parent-child edges and readiness are not verified.", "Verify the bound owner before dependent execution."))
+        return messages
     unresolved_level = error if executing_tasks(content, status) else warning
     tasks: dict[str, tuple[bool, list[str]]] = {}
     issues: set[str] = set()
@@ -507,6 +705,17 @@ def validate_skill_bindings(content: str, path: Path, profile: str, status: str)
             for issue in ISSUE_LINE_RE.finditer(phase):
                 mapping = TASK_SKILLS_RE.search(issue.group(1))
                 check_names(mapping.group(1) if mapping else None, f"{title} issue '{issue.group(1)}'", required)
+        if hierarchy_family(content):
+            task_skills = required
+            for node in HIERARCHY_NODE_RE.finditer(phase):
+                node_level, value = node.group(2).lower(), node.group(3)
+                if node_level == "phase":
+                    continue
+                mapping = TASK_SKILLS_RE.search(value)
+                selected = mapping.group(1) if mapping else None
+                check_names(selected, f"{title} {node_level} '{value}'", task_skills if node_level == "subtask" else required)
+                if node_level == "task":
+                    task_skills = required if selected == "inherit" else selected
     ordered = re.search(r"^##\s+Ordered Work\s*$", content, re.I | re.M)
     ordered_end = len(content)
     if ordered:
@@ -527,6 +736,11 @@ def validate_plan(path: Path, profile: str) -> list[str]:
     status = effective_plan_status(content, path, profile)
     complete = is_complete_status(status)
     messages: list[str] = []
+    if field_value(plan_header(content), "Local final phase") is not None:
+        try:
+            resolve_review_contract(path)
+        except (ValueError, OSError, UnicodeError) as exc:
+            messages.append(error("plan.review-inheritance", str(exc), "Reconcile the canonical parent contract and separate local final phase before execution."))
 
     invariants = (
         ("plan.outcome", r"\b(summary|outcome|goal|objective)\b", "Define the intended outcome and current repository truth."),
@@ -600,22 +814,49 @@ def validate_family_snapshots(plan_path: Path, content: str, companions: dict[st
             messages.append(error(f"{kind}.plan", f"{kind} does not reference the exact selected plan path.", "Restore its canonical plan reference; a matching basename is insufficient."))
         if snapshot_status != status:
             messages.append(error(f"{kind}.snapshot-status", f"{kind} status differs from the canonical plan status.", "Reconcile the snapshot from the plan before advancing."))
-        if kind == "state" and data.get("schema_version") == 2:
+        if kind == "state" and data.get("schema_version") in {2, 3}:
             expected = {
                 "current_phase": clean_scalar(field_value(cursor, "Current phase") or ""),
                 "next_actions": cursor_array(field_value(cursor, "Next action") or ""),
                 "blockers": cursor_array(field_value(cursor, "Blockers") or ""),
             }
+            if hierarchy_family(content):
+                if data.get("schema_version") != 3:
+                    messages.append(error("state.hierarchy-schema", "Hierarchy cursor requires schema 3.", "Project task/subtask IDs in the new snapshot; retain schema 2 for existing families only."))
+                expected.update({
+                    "current_task": clean_scalar(field_value(cursor, "Current task") or ""),
+                    "current_subtask": clean_scalar(field_value(cursor, "Current subtask") or ""),
+                })
             for key, value in expected.items():
                 if data.get(key) != value:
                     messages.append(error(f"state.snapshot-{key}", f"State {key} differs from the canonical execution cursor.", "Project the whole trimmed cursor scalar; do not split punctuation or edit snapshots independently."))
     for label in ("Current phase", "Next action", "Blockers"):
         if field_value(cursor, label) is None:
             messages.append(error("family.cursor", f"Canonical execution cursor lacks {label}.", "Restore the field in the checkpoint, or the sole direct plan."))
+    if hierarchy_family(content):
+        nodes, _ = hierarchy_nodes(content, status)
+        current_phase = clean_scalar(field_value(cursor, "Current phase") or "")
+        current_task = clean_scalar(field_value(cursor, "Current task") or "")
+        current_subtask = clean_scalar(field_value(cursor, "Current subtask") or "")
+        for label in ("Current phase", "Current task", "Current subtask"):
+            if len(re.findall(rf"^[-*][ \t]+{label}:[^\r\n]*$", cursor, re.I | re.M)) != 1:
+                messages.append(error("family.hierarchy-cursor", f"Cursor requires exactly one {label} field.", "Reconcile the canonical cursor rather than editing duplicate fields."))
+        if current_phase not in {phase_key(title) for title, _ in phase_blocks(content)}:
+            messages.append(error("family.hierarchy-cursor", "Cursor phase is not mapped.", "Select an exact declared Phase N."))
+        for identifier, expected_level in ((current_task, "task"), (current_subtask, "subtask")):
+            if identifier == "none":
+                continue
+            node = nodes.get(identifier)
+            if node is None or node[0] != expected_level or node[2] != current_phase:
+                messages.append(error("family.hierarchy-cursor", f"Cursor {expected_level} is missing, wrong-level or outside its phase.", "Use the exact mapped issue ID or none."))
+        if current_subtask != "none" and current_subtask in nodes and nodes[current_subtask][1] != current_task:
+            messages.append(error("family.hierarchy-cursor", "Cursor subtask belongs to another task.", "Reconcile the complete phase/task/subtask cursor."))
+        if is_complete_status(status) and (current_task != "none" or current_subtask != "none"):
+            messages.append(error("family.hierarchy-cursor", "Completed engagement still selects an executable leaf.", "Clear completed task/subtask cursors to none."))
     if checkpoint and checkpoint.is_file():
         header = re.split(r"^##\s+", content, maxsplit=1, flags=re.M)[0]
         final_position = section_block(content, re.compile(r"^##\s+(?:Blockers and Next Action|Execution Position)\s*$", re.I | re.M)) or ""
-        if any(field_value(header + "\n" + final_position, label) is not None for label in ("Current phase", "Next action", "Blockers")):
+        if any(field_value(header + "\n" + final_position, label) is not None for label in ("Current phase", "Current task", "Current subtask", "Next action", "Blockers")):
             messages.append(error("family.cursor-owner", "Checkpoint-bearing plan duplicates execution cursor fields.", "Point to its checkpoint instead of copying position, blockers or next action."))
     return messages
 
@@ -825,7 +1066,7 @@ def validate_state(path: Path, plan_path: Path | None = None, profile: str = "au
     if not isinstance(data, dict):
         return [error("state.root", "State root is not an object.", "Use one JSON object.")]
 
-    adaptive = profile != "legacy" and (profile != "auto" or data.get("schema_version") == 2)
+    adaptive = data.get("schema_version") == 3 or (profile != "legacy" and (profile != "auto" or data.get("schema_version") == 2))
     messages: list[str] = []
     if not adaptive:
         if not any(key in data for key in ("status", "phases", "next_step", "handoff")):
@@ -836,11 +1077,13 @@ def validate_state(path: Path, plan_path: Path | None = None, profile: str = "au
                 messages.append(error("state.plan", "Legacy state points to a different plan.", "Select the matching state or correct its explicit plan reference."))
         return messages
 
-    for key in ADAPTIVE_STATE_KEYS:
+    for key in ADAPTIVE_STATE_KEYS + (("current_task", "current_subtask") if data.get("schema_version") == 3 else ()):
         if key not in data:
             messages.append(error(f"state.{key}", "Required compact state field is missing.", f"Add {key} without restoring legacy duplicate sections."))
-    if data.get("schema_version") != 2:
-        messages.append(error("state.schema-version", "Adaptive state schema_version is not 2.", "Set schema_version to 2."))
+    if data.get("schema_version") not in {2, 3}:
+        messages.append(error("state.schema-version", "Adaptive state schema_version is not 2 or 3.", "Use the schema appropriate to the family's hierarchy contract."))
+    if data.get("schema_version") == 3 and any(not isinstance(data.get(key), str) or not data[key].strip() for key in ("current_task", "current_subtask")):
+        messages.append(error("state.hierarchy-cursor", "Hierarchy task/subtask cursor must be a nonempty string.", "Use a mapped issue ID or none."))
     if "next_actions" in data and not isinstance(data["next_actions"], list):
         messages.append(error("state.next-actions", "next_actions is not an array.", "Use an array of concise executable actions."))
     if "blockers" in data and not isinstance(data["blockers"], list):

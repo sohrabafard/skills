@@ -28,8 +28,8 @@ Options
 
 Exit codes, and what a non-zero code obliges the calling agent to do
   0  No incomplete-key reference into a partitioned parent was found. Read the RESULT line
-     anyway: "parents=0" means the guard is in place and nothing was proven about a schema
-     that does not exist yet.
+     anyway: "parents=0" means no parent was found in the supplied roots; it proves neither
+     that a durable guard is installed nor how an unobserved database behaves.
   1  Usage error: a root does not exist, or no root was given. Fix the invocation and rerun;
      never report an audit result from a run that exited 1.
   2  A partitioned-table key defect was found, in one of two kinds. `incomplete-key-reference`
@@ -608,8 +608,9 @@ def report(result: dict, quiet: bool, as_json: bool, require_parents: bool) -> i
               f" — audit inconclusive; widen the roots to the file declaring that key.")
         return EXIT_UNKNOWN_KEY
     if not parents:
-        msg = ("RESULT: parents=0 no_partitioned_tables_found — this is not a clean bill of "
-               "health; it means the guard now exists before the schema does.")
+        msg = ("RESULT: parents=0 no_partitioned_tables_found — no partitioned parent was "
+               "found in the supplied roots; this scan does not verify guard installation "
+               "or database-engine behavior.")
         print(msg)
         return EXIT_NO_PARENTS if require_parents else EXIT_OK
     print(f"RESULT: parents={len(parents)} incomplete_key_references=0"

@@ -119,9 +119,8 @@ is not a readiness check.
 stops accepting it. On the kit that ordering is `runkit`'s `stop_intake` phase and you do not implement it.
 
 **Kit mode. Forbidden:** hand-writing a readiness envelope or a check registry; the kit owns both. Register your
-check with the kit's readiness surface and give it a severity. **Verified fact (`rediskit/doc.go`, read 2026-07-26):**
-the kit reports Redis readiness at degraded rather than required severity, so a Redis blip does not remove the
-instance from rotation.
+check with the kit's readiness surface and give it a severity. Before relying on Redis readiness behavior, read
+`/alaa-data-layer` `references/51-redis-golang.md` and re-verify its cited source.
 
 The path names, the envelope shape, and which dependencies are required versus degraded belong to
 `/alaa-services-contract` (`$alaa-services-contract`).

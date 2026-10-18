@@ -255,8 +255,11 @@ clean code, SOLID, and design patterns applied where they earn their place; algo
 data-structure choice with stated complexity budgets; configurability with safe defaults and
 boundary validation, failing fast on a missing required setting; speed of development and
 debuggability, naming the commands that test, run, and reproduce, including the map from each test
-topic and layer to the command that selects it, the one build every gate consumes, and the test
-setup shared once per run; and documentation of what
+topic and layer to the command that selects it, a repository-owned changed-path and change-class
+map naming mandatory gates and their applicability conditions, the one build every gate consumes,
+and the test setup shared once per run. Derive commands from canonical repository sources; a
+missing map is a factual gap, never permission to invent commands or narrow existing gates.
+The final obligation is documentation of what
 shipped, how it is operated, and how it fails.
 
 Two standing preferences cut across all ten. Prefer official framework, platform, and standard

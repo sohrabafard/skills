@@ -97,7 +97,7 @@ Audit rules, all applying to every transcript audit:
 - **Symptom.** PowerShell `ParserError`, `The term 'NAME=value' is not recognized`, a flattened inline `python -c`, or Git Bash rewriting slash-looking values.
 - **Diagnosis.** The command string does not match the shell running it; tool and paths are fine.
 - **Retry.** Switch route once: rewrite it PowerShell-native, or run Bash via `bash -lc` from the right directory.
-- **Fallback.** Scope MSYS path-conversion opt-outs to the failing command; route service-runtime env issues to `$service-runtime-kit-governance`.
+- **Fallback.** Scope MSYS path-conversion opt-outs to the failing command; route service-runtime env issues to `/service-runtime-kit-governance`.
 
 ### Port binding exclusion or reservation
 

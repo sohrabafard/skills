@@ -45,7 +45,9 @@ Deployment shapes for the sidecar:
 - It scales with the workload: a new pod brings its own agent, with no shared contention between pods.
 - It gives one natural per-application place to pre-filter and shape data, including SOC pre-filtering.
 
-Rules: the sidecar buffers to disk and forwards with retry, so a central outage is absorbed locally rather than dropped.
+Rules: the sidecar buffers to disk and forwards with retry, absorbing a central outage within its bounded capacity.
+At capacity, follow the path's explicit loss profile: product telemetry drops are counted and visible, never converted
+into application backpressure. /vector-rust-observability-pipelines owns the Vector settings that express this policy.
 Heavy trace processing — tail sampling above all — belongs at the central Collector, because the sidecar sees only one
 replica's spans and cannot make a whole-trace decision.
 

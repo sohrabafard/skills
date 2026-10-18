@@ -1,6 +1,6 @@
 ---
 name: alaa-docker-production
-description: "Use when writing or reviewing a Dockerfile, .dockerignore, Compose file, Swarm stack file, build secret, attestation flag, registry or mirror reference, healthcheck, rollout or resource-limit key, or the interpolation form of a variable in a production-shaped file. It owns how the image and runtime file are expressed and decides no gate. Not for gate policy (alaa-frontend-devops), runner expression (alaa-gitlab-ci-cd), Kubernetes or Helm (caas-arvan-kuber, alaa-k8s-helm), which generator variable exists (service-runtime-kit-governance), or proxy directives (alaa-haproxy)."
+description: "Production container authorship and review: a Dockerfile, .dockerignore, Compose file, Swarm stack file, build secret, attestation flag, registry or mirror reference, healthcheck, rollout or resource-limit key, or the interpolation form of a variable in a production-shaped file. It owns how the image and runtime file are expressed and decides no gate. Not for gate policy (alaa-frontend-devops), runner expression (alaa-gitlab-ci-cd), Kubernetes or Helm (caas-arvan-kuber, alaa-k8s-helm), which generator variable exists (service-runtime-kit-governance), or proxy directives (alaa-haproxy)."
 ---
 
 # Alaa Docker Production
@@ -37,10 +37,11 @@ it is `${VAR:?message}` with no default, whatever tracked default the generator 
    including `:-0` and bare `:-`, because an empty password and a cap of zero both mean "no
    control". Compose interpolation reads the shell and `--env-file` only, never a service's
    `env_file:` key. `references/25-fail-closed-interpolation.md`.
-2. **The final stage is the whole security posture.** Non-root `USER`, `cap_drop: [ALL]`,
-   `security_opt: [no-new-privileges:true]`, read-only root filesystem with named writable mounts,
-   and no package manager, compiler or dev dependency in the image; anything unmet is named in the
-   merge request. `references/10-dockerfile-authorship.md`.
+2. **Harden the final image and the runtime separately.** The final image has a non-root `USER`
+   and no package manager, compiler or dev dependency (`references/10-dockerfile-authorship.md`).
+   Compose supplies `cap_drop: [ALL]`, `security_opt: [no-new-privileges:true]` and a read-only root
+   filesystem with named writable mounts (`references/20-compose-authorship.md` section 6,
+   including exception evidence). Name anything unmet in the merge request.
 3. **Verify the rendered model, not the file you wrote.** Run `docker compose config` and the
    `scripts/` checkers on the generated files before `up` or `stack deploy`. Exit 0 is clean, 1 is
    a violation, 2 means the tree could not be read and is not a pass.

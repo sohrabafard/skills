@@ -1,0 +1,3 @@
+Traceback (most recent call last):
+  File "<stdin>", line 6, in <module>
+AssertionError: proposal rows unavailable; keys=['schema_version', 'artifact_kind', 'authority_note', 'source_provenance', 'set_audit', 'disposition_counts', 'proposals', 'auxiliary_coverage', 'summary_scaffold_index', 'limitations', 'legacy_alias_policy', 'consulted_owner_sources', 'parent_ratification']

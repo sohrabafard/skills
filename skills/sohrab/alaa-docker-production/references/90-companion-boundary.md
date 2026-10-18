@@ -27,7 +27,7 @@ has no owner and the gap is a finding rather than an assumption.
 | `/alaa-algorithms-data-structures` | Complexity budgets and structure choice. | A limit is being raised to compensate for a path that does not scale. |
 | `/alaa-project-constitution` | The quality bar itself, at its `references/quality-bar.md`. | The task asks what "good" means for an artifact in this repository. |
 | `/alaa-controlled-ops` | Change control and proof strength. | The change is being made against a running production system and the question is what evidence is required first. |
-| `/caas-arvan-kuber` | The Arvan Kubernetes production path, its observed vendor capabilities, and GitLab rollout mechanics there. | The target runtime is Arvan CaaS rather than Compose or Swarm. |
+| `/caas-arvan-kuber` | Arvan CaaS platform facts and observed vendor capabilities. | Only when the answer depends on a fact true of Arvan CaaS and false of stock Kubernetes at the same minor version; generic manifests and charts remain `/alaa-k8s-helm`'s, runner expression `/alaa-gitlab-ci-cd`'s, even on Arvan. |
 | `/alaa-k8s-helm` | Kubernetes manifests, Helm charts and values. | The artifact is a manifest or a chart. A Compose file is not a starting point for one. |
 | `/alaa-octane-performance` | Octane and Swoole behaviour: extension selection, long-lived-process state, reload semantics. | The task tunes the application server rather than the container around it. |
 | `/alaa-data-layer` | Query shape, indexes, schema, grants, and whether a query should hold a connection. | The task is about the database rather than the container running it. |

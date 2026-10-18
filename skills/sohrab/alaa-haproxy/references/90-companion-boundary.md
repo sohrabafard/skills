@@ -26,7 +26,7 @@ repeated here. This file is the full table.
 | Threat classification, exposure severity, fail-closed doctrine, what may be logged | `/alaa-security-review` | whenever a change alters a trust boundary, an admin surface, or what a failure lets through |
 | What a downstream may conclude from a header this proxy set | `/alaa-trust-gateway-auth` | whenever HAProxy is the component that establishes caller identity |
 | Kubernetes workload, chart, probe-object and NetworkPolicy authorship | `/alaa-k8s-helm` | whenever the artifact is a manifest or a chart rather than an HAProxy directive |
-| The same, on Arvan CaaS, where vendor capabilities must be observed | `/caas-arvan-kuber` | whenever the target is Arvan CaaS |
+| Arvan CaaS platform facts and observed vendor capabilities | `/caas-arvan-kuber` | only when the answer depends on a fact true of Arvan CaaS and false of stock Kubernetes at the same minor version; generic manifest and chart authorship stays with `/alaa-k8s-helm`, even on Arvan |
 | Image build, base image, user, capabilities, pull policy, digest pinning, Compose | `/alaa-docker-production` | whenever the artifact is a Dockerfile or a Compose file |
 | How any gate is expressed on a runner: the job graph, `rules:`, `needs:`, artifacts, runner images | `/alaa-gitlab-ci-cd` | whenever the artifact is provider pipeline YAML |
 | Making a local invocation give the same verdict as the runner | `/alaa-makefile` | whenever a gate needs a local entry point |

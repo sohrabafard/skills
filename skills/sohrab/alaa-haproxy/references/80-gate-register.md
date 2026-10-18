@@ -43,6 +43,18 @@ because it is what manufactured the boundary violation.
 
 ## Checker contract
 
+### Failed-operation boundary
+
+For one failed operation, allow at most one cause-specific repair and one materially
+different retry. A materially different retry changes a cause-relevant prerequisite
+or execution path while testing the same failed property, such as using a supported
+cached-container adapter after identifying a missing local binary. Repeating the failed
+command unchanged does not qualify and is prohibited. The retry must stay within
+existing authority and preserve the gate's predicate; a weaker check cannot pass the
+failed gate. After that budget, preserve the exact failure and report the blocker.
+
+### Checker interface
+
 The defaults-scope and examples checkers have these contracts:
 
 1. `--help` describes the rules and the exit codes.

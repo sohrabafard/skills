@@ -1,0 +1,194 @@
+{
+  "purpose": "Evidence path normalization only; historical manifests retain their observed hashes. Product bytes and command results unchanged. Use these successor evidence hashes when citing portable artifacts.",
+  "files": [
+    {
+      "path": "artifacts/skill-pack-optimization-20261018/lanes/MEMDOC-checks.json",
+      "before_sha256": "2ab05da73190a7b156dcdc585e72361792bf17af0f7bb96c2e1b4d99ef0e274c",
+      "after_sha256": "7e7c1a55b4a8e8abb72d0995625cf523496c50bdc5b8e724466eea7298283e09"
+    },
+    {
+      "path": "artifacts/skill-pack-optimization-20261018/lanes/PLATFORM-verification.json",
+      "before_sha256": "b684e7d1e58a9e5725303084ed16d3b22e67d14ebf83b372e3107946b5d4cd52",
+      "after_sha256": "80c515242e1a51ec3176f280bcecfc0dfa860add2c8f79cfe3f3acf06c5c9722"
+    },
+    {
+      "path": "artifacts/skill-pack-optimization-20261018/lanes/PLAYER-verification.json",
+      "before_sha256": "0a87e35e0b7fee52703d6363ff5902a600c5afeb511b4ed7ad40b36e94dc6248",
+      "after_sha256": "2c8d8e7535dfeb2c63b85e426be21de49b8beb54b08ff95c7aafac0ad122d39c"
+    },
+    {
+      "path": "artifacts/skill-pack-optimization-20261018/lanes/AUDIT-verification.json",
+      "before_sha256": "fa98d720b0a4138a911d7041a3b66758fd0fc4a62b586d82f3542eae5ff25bfc",
+      "after_sha256": "f816e80a394c6f66839631024d7ce6e822bc4c67b2d07f26e889c826698ece56"
+    },
+    {
+      "path": "artifacts/skill-pack-optimization-20261018/lanes/WF-FINAL-evidence.json",
+      "before_sha256": "968f36a4fce1e58c61641490e0fde9a4cc3d6a45e73a8222f7f366fe712b7401",
+      "after_sha256": "0b74c8aaaa1776598e336dd8d8cfed25d94808b917e2f286d9e54cc44e4c8e8a"
+    },
+    {
+      "path": "artifacts/skill-pack-optimization-20261018/final-verification-logs/01-validate-skill-pack.log",
+      "before_sha256": "acd5a6b4feedc974ccdbdba3b6ca4a0072a6146a22ccc007091fda4089710eeb",
+      "after_sha256": "05e815e59ccb6765722071367fc6f51446c8703ad72b5bda0f205bfd7aa39295"
+    },
+    {
+      "path": "artifacts/skill-pack-optimization-20261018/final-verification-logs/04-lifecycle-contract.log",
+      "before_sha256": "926aecc8b5ef68852d7d5250a7af0a098eca266e826e8100431cc9656d3a3ed1",
+      "after_sha256": "872ce7338af93723693f65af4baeab2598137640022a3b2b71626be46ed04c02"
+    },
+    {
+      "path": "artifacts/skill-pack-optimization-20261018/final-verification-logs/18-final-markdown-links.log",
+      "before_sha256": "6bbcad97ca1fbe8254331a33b62e530a152012e26a96c7bcb1ae0d38b1afe550",
+      "after_sha256": "db29bd97854aa33b41209c393bbbe4f617c93339086314e905c987649ef99267"
+    },
+    {
+      "path": "artifacts/skill-pack-optimization-20261018/final-verification-logs/19-change-notes-line-budget.log",
+      "before_sha256": "87c951510b88a888e381af6b051c79bf2273cd1bdafe432935b7fcb27f2abc68",
+      "after_sha256": "18d20cd9835d03f026b5dca0e4f3189d884cf84b12e1ee06e4e24055b719c1e9"
+    },
+    {
+      "path": "artifacts/skill-pack-optimization-20261018/final-verification-logs/01-validate-skill-pack.log",
+      "before_sha256": "05e815e59ccb6765722071367fc6f51446c8703ad72b5bda0f205bfd7aa39295",
+      "after_sha256": "365a6f1b82be91cea1f4f97301a6a955f42d2b98fd352cc2fda2fda5a6589df7",
+      "reason": "Owned evidence portability/newline normalization only; preserved observed results and process deviations."
+    },
+    {
+      "path": "artifacts/skill-pack-optimization-20261018/final-verification-logs/02-skill-index.log",
+      "before_sha256": "f965cc1a2b6dac77edd105a2e8ced596acda0a62f9b760ff63791557dc5acd89",
+      "after_sha256": "51440b3df3c9e5b25de081367156023255ce9c5dca511fb4cdcc3674e9a4b2b4",
+      "reason": "Owned evidence portability/newline normalization only; preserved observed results and process deviations."
+    },
+    {
+      "path": "artifacts/skill-pack-optimization-20261018/final-verification-logs/03-fleet-references.log",
+      "before_sha256": "83f0b0d93dab96f3afc8a7d39c7338d05ad3b14a7953670fae7bed9f45bb4641",
+      "after_sha256": "10c588c7d18dfa750655230a64141bae4e00928d56255ed3f91816d7845df0a1",
+      "reason": "Owned evidence portability/newline normalization only; preserved observed results and process deviations."
+    },
+    {
+      "path": "artifacts/skill-pack-optimization-20261018/final-verification-logs/04-lifecycle-contract.log",
+      "before_sha256": "872ce7338af93723693f65af4baeab2598137640022a3b2b71626be46ed04c02",
+      "after_sha256": "4e9463b1662c5d4fc8f641d3779c3c9157792c0dd690ea213a296c4b4c934d4b",
+      "reason": "Owned evidence portability/newline normalization only; preserved observed results and process deviations."
+    },
+    {
+      "path": "artifacts/skill-pack-optimization-20261018/final-verification-logs/06-validate-workflow-files.log",
+      "before_sha256": "239b5419ee7b880826f5868c6a392ad8dd1bd8491b940fa8a0468328f78bd688",
+      "after_sha256": "c780b2f5829b68062a1744df92aaa1fdc7c3c16e34c89c33b8e3618cc3533831",
+      "reason": "Owned evidence portability/newline normalization only; preserved observed results and process deviations."
+    },
+    {
+      "path": "artifacts/skill-pack-optimization-20261018/final-verification-logs/07-codex-contracts.log",
+      "before_sha256": "2b97016624fe6da070e85c438e7918e71dc4d9956500ae334c46cf87da412c56",
+      "after_sha256": "3df675fa4c81201c2388550e9374e9523448ab61d998d621a76670f3ebe8d457",
+      "reason": "Owned evidence portability/newline normalization only; preserved observed results and process deviations."
+    },
+    {
+      "path": "artifacts/skill-pack-optimization-20261018/final-verification-logs/08-codex-contracts-self-test.log",
+      "before_sha256": "72c179d861ed9244aaad9e3b3b7396290214c6bbd6d71c05a5dffa95fdc6abac",
+      "after_sha256": "c0daf77f7508c52a1ad70d29ceb5eb9fb3269ddcf24ee3cf244a3959c600a9d6",
+      "reason": "Owned evidence portability/newline normalization only; preserved observed results and process deviations."
+    },
+    {
+      "path": "artifacts/skill-pack-optimization-20261018/final-verification-logs/09-codex-validate-pack.log",
+      "before_sha256": "27d99259a3c270ed8e53000806fb453e5c9a12c25c3b084b868b2e93f917c0af",
+      "after_sha256": "4fcb49fdca29a5b9b906d75c35770201b2e0598a4e64483f3ec4c39ccea1306f",
+      "reason": "Owned evidence portability/newline normalization only; preserved observed results and process deviations."
+    },
+    {
+      "path": "artifacts/skill-pack-optimization-20261018/final-verification-logs/10-cc-contracts.log",
+      "before_sha256": "2b97016624fe6da070e85c438e7918e71dc4d9956500ae334c46cf87da412c56",
+      "after_sha256": "3df675fa4c81201c2388550e9374e9523448ab61d998d621a76670f3ebe8d457",
+      "reason": "Owned evidence portability/newline normalization only; preserved observed results and process deviations."
+    },
+    {
+      "path": "artifacts/skill-pack-optimization-20261018/final-verification-logs/11-cc-contracts-self-test.log",
+      "before_sha256": "d926e0e9eb477a312186594e1a704ee77dcd9979c75e3059433516ec84701ab1",
+      "after_sha256": "49f064608319ee33e6e54b0d93a1c8b06207088bd6b9fd9708b5868e94e729fd",
+      "reason": "Owned evidence portability/newline normalization only; preserved observed results and process deviations."
+    },
+    {
+      "path": "artifacts/skill-pack-optimization-20261018/final-verification-logs/12-cc-validate-pack.log",
+      "before_sha256": "5b3e36f7c4577f3d8e81919fe4de2d506c4bb7c03dfcb28dd14a666d84c64101",
+      "after_sha256": "bba642bc8ddbd68fafd3365e5ada2cfad9d2660e0960a556d60b9bee61e797e4",
+      "reason": "Owned evidence portability/newline normalization only; preserved observed results and process deviations."
+    },
+    {
+      "path": "artifacts/skill-pack-optimization-20261018/final-verification-logs/13-cc-validate-pack-self-test.log",
+      "before_sha256": "4ab354b64ed34cc050699c0d6cd13d68608de2dcce6d428ff0221daea136cd58",
+      "after_sha256": "c7c76950a20b2265beb4ef0f8689a54d927b7d2266dcee051d75c7bcba67830b",
+      "reason": "Owned evidence portability/newline normalization only; preserved observed results and process deviations."
+    },
+    {
+      "path": "artifacts/skill-pack-optimization-20261018/final-verification-logs/14-tusd-docker-pack.log",
+      "before_sha256": "971d45e86292277239b153d0b02d2a64776671915470431fcee5c28800389e7e",
+      "after_sha256": "464dadd60cee1c0d1f30ff7c5bc05d3ad6207160ed6ff1d40f8048e5a8c02edd",
+      "reason": "Owned evidence portability/newline normalization only; preserved observed results and process deviations."
+    },
+    {
+      "path": "artifacts/skill-pack-optimization-20261018/final-verification-logs/15-tusd-docker-pack-self-test.log",
+      "before_sha256": "2e889b3067167e5e3d7555c626fec994ed4f7010fd81646125a54c18db619642",
+      "after_sha256": "a57b0226cc6ce076d783fe4fd4b43e6c05aa0b0f65f9823f3dd9f7f7d952c8f8",
+      "reason": "Owned evidence portability/newline normalization only; preserved observed results and process deviations."
+    },
+    {
+      "path": "artifacts/skill-pack-optimization-20261018/final-verification-logs/16-validate-constitution.log",
+      "before_sha256": "f2a6d59d6c52e6e8b8aca8446ebc9c74afc3fe917faadbca02b1d62d3eb9cdbc",
+      "after_sha256": "ed52a98a3a22d7eff22081df63117e17b7991dad62a0697ef328cb1b516e3026",
+      "reason": "Owned evidence portability/newline normalization only; preserved observed results and process deviations."
+    },
+    {
+      "path": "artifacts/skill-pack-optimization-20261018/final-verification-logs/18-final-markdown-links.log",
+      "before_sha256": "db29bd97854aa33b41209c393bbbe4f617c93339086314e905c987649ef99267",
+      "after_sha256": "1dd47d10ffd8416f5ed16f1eeda5c34b645b8526e558fd977b6f43bef4107cae",
+      "reason": "Owned evidence portability/newline normalization only; preserved observed results and process deviations."
+    },
+    {
+      "path": "artifacts/skill-pack-optimization-20261018/final-verification-logs/19-change-notes-line-budget.log",
+      "before_sha256": "18d20cd9835d03f026b5dca0e4f3189d884cf84b12e1ee06e4e24055b719c1e9",
+      "after_sha256": "6a2428ff5eb26535239cb5a24f8def48d7b6c3bb9cc228ad1bc6d46c386c971e",
+      "reason": "Owned evidence portability/newline normalization only; preserved observed results and process deviations."
+    },
+    {
+      "path": "artifacts/skill-pack-optimization-20261018/final-verification-logs/final-git-status.txt",
+      "before_sha256": "88ff2923de7c11ae909f92557f480aa6836461f9155472f4b090dbd76c9e9d79",
+      "after_sha256": "3b7b4d18f9d89913b5563a51fcc190a78e354805964fb1593f9da2ff5cdf5760",
+      "reason": "Owned evidence portability/newline normalization only; preserved observed results and process deviations."
+    },
+    {
+      "path": "artifacts/skill-pack-optimization-20261018/final-verification-logs/integrity-assertions-corrected.json",
+      "before_sha256": "f6add7cf73441dae07dcea94fc7fea2580673563bc8847107d6a1171da919db8",
+      "after_sha256": "27b09395df55bef4bcb65c8ba7042e543b7d137bb45f52388008d346896828ea",
+      "reason": "Owned evidence portability/newline normalization only; preserved observed results and process deviations."
+    },
+    {
+      "path": "artifacts/skill-pack-optimization-20261018/final-verification-logs/integrity-assertions.json",
+      "before_sha256": "67bb7031214751b2e98e02ad93c36b84a1fbbd59a94261d78ab2f136e39bac48",
+      "after_sha256": "62cc7295547085465fdf68fb84c22b656049fdd0e6354738ede77f66a6788acd",
+      "reason": "Owned evidence portability/newline normalization only; preserved observed results and process deviations."
+    },
+    {
+      "path": "artifacts/skill-pack-optimization-20261018/final-verification-logs/proposal-coverage.json",
+      "before_sha256": "5a7b1f429f9da187969b447f170d3932c907f02478effc7be0b86ffa25d06b30",
+      "after_sha256": "433d74d193023149e670b9692bc946c5c28f202af48ef30c081ff96e8b979e2b",
+      "reason": "Owned evidence portability/newline normalization only; preserved observed results and process deviations."
+    },
+    {
+      "path": "artifacts/skill-pack-optimization-20261018/lanes/CITATION-FINAL-report.md",
+      "before_sha256": "ba6e533e6e324e8dd2d599ff44c9cb9dd5174a87869b7b7bd5e5427280596e3b",
+      "after_sha256": "4a461676bbd14211f512e1cb13f774f4a0597f2e14a82ef731d4802a5c039666",
+      "reason": "Owned evidence portability/newline normalization only; preserved observed results and process deviations."
+    },
+    {
+      "path": "artifacts/skill-pack-optimization-20261018/final-verification.json",
+      "before_sha256": "65c7b7e6ebcc0ecb4e124f1f138cf22410b663e7ae832c658f37601d60591569",
+      "after_sha256": "70eea1ab16ffb1bb1d187ed90e11a126d90aa444867fa3e8a91e6ba66e991001",
+      "reason": "Remaining owned evidence CRLF; discovered by full artifact inventory after capture retry stopped. Product and observed results unchanged."
+    },
+    {
+      "path": "artifacts/skill-pack-optimization-20261018/final-verification.json",
+      "before_sha256": "70eea1ab16ffb1bb1d187ed90e11a126d90aa444867fa3e8a91e6ba66e991001",
+      "after_sha256": "20d8b77985bb124833a4bc1b6b01a08e09ac38a7e3677b4364896b6342906813",
+      "reason": "Represent repository CWD as portable dot; actual observed results and initial FAIL retained."
+    }
+  ]
+}

@@ -1,0 +1,2 @@
+A1: Load /caas-arvan-kuber only when the answer depends on a fact true of Arvan CaaS and false of stock Kubernetes at the same minor version; otherwise use generic owners, including when the target happens to be Arvan. Preserve explicit Arvan-first conflict precedence after the trigger.
+A6: Use the central `/name` source convention for skill calls in skill prose. Leave `agents/openai.yaml` default_prompt runtime sigils and runtime-generated prompt rules untouched. Change only the named convention clauses and two runtime-ops references.

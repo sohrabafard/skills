@@ -41,13 +41,7 @@ Each row names where the rule is stated in this skill and what to re-read before
 | Shutdown budget and phase interfaces | `runkit/lifecycle.go`; P9 in `30-runtime-and-observability.md` |
 | Retry, backoff, deadline, and rate-limit capabilities | `jobkit/`, `mqkit/`, `rediskit/`, `httpkit/`; P7 in `20-domain-data-and-consistency.md` |
 | Provider idempotency (Bale `request_id`, Mediana none) | `/alaa-bale-provider` (`$alaa-bale-provider`), `/alaa-sms-provider-mediana` (`$alaa-sms-provider-mediana`) |
-| The active scope phase and the consumer roster | `docs/CONSUMERS.md`, `AGENTS.md`, `docs/change-requests/2026-07-14-kit-first-stabilization-scope.md` |
-
-## Snapshot taken 2026-07-26 — a snapshot, not current truth
-
-`KIT_FIRST_STABILIZATION` active. Consumers: `news` v1.6.1 active; `wa-api` v1.6.0 active and running **without
-PostgreSQL or RabbitMQ**, on ClickHouse through `chkit`; `notif`, `entitlement-api`, and `tusd` paused. Re-read
-`docs/CONSUMERS.md` before treating any of this as current — rows change without a change to this skill.
+| The active scope phase and the consumer roster | `/alaa-go-chi-development` `references/05-phase-and-source-truth.md` and its `scripts/phase-check.sh`; read the kit's current `<repo>/docs/CONSUMERS.md` for the roster |
 
 ## Freshness triggers
 

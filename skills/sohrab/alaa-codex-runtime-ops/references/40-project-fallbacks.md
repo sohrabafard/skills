@@ -2,9 +2,12 @@
 
 Read this file only when the failing stack is Node, Vite, Vitest, Quasar, or a Yarn gate. Everything below is recorded from real sessions in one workspace. Treat it as local operational fact, not as general guidance for other repositories or ecosystems.
 
-## Standing maintainer approval for unsandboxed validation gates
+## Validation candidates for the normal escalation path
 
-For Quasar/Vite app verification in this environment, the following gates have standing maintainer approval for unsandboxed execution when they are required validation gates, or when sandboxed esbuild `spawn EPERM` or local-server verification blocks completion:
+After a necessary sandboxed gate fails and prevents completion, follow
+`references/20-command-and-path-discipline.md` for its exact-command retry under task authority and harness
+approval policy. These Quasar/Vite command shapes are candidates; they record no approval, authorize no
+unsandboxed execution and replace no harness prompt.
 
 - `yarn test`
 - `yarn test:new`
@@ -16,7 +19,9 @@ For Quasar/Vite app verification in this environment, the following gates have s
 - `yarn dev`
 - `quasar dev`
 
-Scope condition: keep the command exact and scoped. The standing approval covers each command in the shape listed above and nothing else. Do not pair it with cleanup or unrelated commands; a combined command line falls outside the approval and needs its own decision.
+Keep the command exact and scoped. Do not combine it with cleanup or unrelated commands; those effects
+require their own authority decision. Record any claimed prior approval's approver, date, source and scope
+before relying on it; this file supplies none.
 
 ## `entekhabat-front` `/new` package lane
 

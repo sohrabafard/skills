@@ -9,8 +9,7 @@ business meant.
 - **Postgres owns every business fact the service must be able to state authoritatively after a total cache loss.**
   This is the default and needs no justification.
 - **Redis holds only copies Postgres can rebuild** — cache entries, locks, rate-limit counters, edge dedupe keys.
-  `rediskit/doc.go:12-13` states the same invariant for the Go kit: Redis is a cache and a cross-pod freshness
-  signal, never a source of truth.
+  For the Go kit's verified cache and freshness-signal surface, read `51-redis-golang.md`; Redis is never truth.
 - **ClickHouse holds the analytical lane**: append-heavy event and metric data read by aggregate, never read
   row-by-row to answer a request that must reflect a write that just committed. On this kit the ClickHouse lane is
   read-only by construction — `chkit/config.go:128-132` pins the session setting `readonly: 2`, the client exposes

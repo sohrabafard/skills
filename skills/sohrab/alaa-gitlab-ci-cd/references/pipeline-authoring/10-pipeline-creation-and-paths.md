@@ -34,6 +34,10 @@ Inside a job, `rules:` arms are evaluated in order and the first match wins. Giv
 a terminal arm only when it clarifies the intended fallback; no matching job rule
 omits that job.
 
+A **terminal arm** is the final unconditional rule: `- when: never` rejects all
+remaining cases, or a deliberate `- when: always` admits them. The workflow
+requires this explicit fallback; a job does not gain a mandatory terminal arm.
+
 Write predicates as `$VAR`, not `${VAR}`; inside `rules:if`, the brace form is
 not expanded. Quote literal strings: `$CI_COMMIT_BRANCH == "main"`.
 

@@ -12,7 +12,7 @@
 
 Before a gate, hold writes to its tested scope. Record the command, result, HEAD SHA, scoped paths, and a SHA-256 digest of a deterministic manifest of those paths and their file contents, including untracked files. Record the manifest method and observation time so a resumed agent can compare the same inputs. A commit SHA may replace the content digest only when the commit contains every tested change. A Git ref alone does not identify uncommitted contents.
 
-When the user explicitly authorizes commits, the parent stages only owned paths and commits after the focused check; lanes never interleave commits into one branch. Use a Conventional Commit subject and no agent attribution. A failed phase remains uncommitted unless the user expressly authorizes a partial checkpoint. When no commit is authorized, the observed snapshot is the phase's evidence identity and the uncommitted tree remains a reported recovery risk.
+Record explicit user commit authority and its scope once; a standing grant remains valid within that scope and does not require repeated approval. After successful declared boundary review, accepted fixes and required retests, the parent stages only owned paths and commits on the current branch with a Conventional Commit subject and no agent attribution. No task/subtask commit is implied. Under final-only review, intermediate phases remain uncommitted; a failed boundary remains uncommitted unless the user expressly authorizes a partial checkpoint. `alaa-codex-orchestrator` and `alaa-cc-orchestrator` `references/verification-and-gates.md` schedule the action. Without commit authority, the observed snapshot identifies evidence and the uncommitted tree remains a reported recovery risk.
 
 ## Reconcile evidence before running checks
 
@@ -22,7 +22,7 @@ Inspect aggregate coverage before consolidating: every covered outcome, input sc
 
 ## What still needs the user
 
-This skill grants no commit, merge, push, tag, publication, deployment, installation, history-rewrite, or branch-deletion authority. Each requires explicit user authorization for the concrete action. A requested implementation authorizes local edits and validation within scope; activation of this skill grants no additional effect.
+This skill grants no commit, merge, push, tag, publication, deployment, installation, history-rewrite, or branch-deletion authority. Each requires explicit user authorization covering the action; a recorded standing grant counts within its scope. A requested implementation authorizes local edits and validation within scope; activation of this skill grants no additional effect.
 
 ## The completion lifecycle
 

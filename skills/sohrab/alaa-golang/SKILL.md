@@ -27,13 +27,13 @@ Read `references/00-topic-map.md` before a Go decision; open only rows matching 
    to change. For source changes, inspect route registration. For dependency-only work, inspect
    module/workspace metadata and the native dependency recipe; source discovery applies only
    when a source or impact question needs it. Repository truth overrides this skill; report discrepancies.
-2. When `go.mod` requires `git.alaatv.com/vk/alaa-go-chi`, establish the active phase from the kit
-   repository through /alaa-go-chi-development before writing or reviewing a line. Read its
-   `../alaa-go-chi-development/references/05-phase-and-source-truth.md`. If the phase forbids consumer work, stop and report
-   the phase and decision-record filename. A consumer-shaped request, local consumer repository,
-   registry row or older record does not reactivate it; only a project-owner instruction naming
-   that consumer does. Load /alaa-golang-clean-code-principles before the first edit or review
-   comment; P1-P13 bind and this skill adds or overrides no principle.
+2. When `go.mod` requires `git.alaatv.com/vk/alaa-go-chi`, resolve the active phase through
+   /alaa-go-chi-development before writing or reviewing a line: run its
+   `../alaa-go-chi-development/scripts/phase-check.sh <kit-repo-root>` and apply the action-specific
+   matrix in `../alaa-go-chi-development/references/05-phase-and-source-truth.md`, including its
+   evidence-required, forbidden, manual-read and nonzero-exit rules. A consumer request is not
+   reactivation. Load /alaa-golang-clean-code-principles before the first edit or review comment;
+   P1-P13 bind and this skill adds or overrides no principle.
 3. Before choosing evidence, an editing surface or supplemental diagnostics, load
    /alaa-code-intelligence-routing. It alone selects providers, order, eligibility and fallback.
    Follow its rules for native continuation, missing guarantees and mutation reconciliation;

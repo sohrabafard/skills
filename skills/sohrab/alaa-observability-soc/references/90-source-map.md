@@ -44,6 +44,14 @@ that may have changed.
 
 ## Freshness triggers
 
+Browser Sentry authority refresh, 2026-10-18: the [DSN explainer](https://docs.sentry.io/concepts/key-terms/dsn-explainer/)
+distinguishes public event submission from read access and excludes a browser environment-variable fallback.
+The [Vue options](https://docs.sentry.io/platforms/javascript/guides/vue/configuration/options/) distinguish
+major-version privacy settings and per-signal hooks. Read the target pinned version's docs before choosing an
+option; the [Vue](https://docs.sentry.io/platforms/javascript/guides/vue/) and
+[Node](https://docs.sentry.io/platforms/node/) setup guides cover different runtimes. This is upstream capability
+evidence, not an Ala env/package default, installed integration or emitted-event proof.
+
 Re-check primary docs when the task mentions:
 
 - the latest or current behaviour of OpenTelemetry, the semantic conventions, Collector config, OTLP, SigNoz, Sentry,

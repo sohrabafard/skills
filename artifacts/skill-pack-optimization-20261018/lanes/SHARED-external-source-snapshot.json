@@ -1,0 +1,22 @@
+[
+  {
+    "file": "artifacts/skill-pack-optimization-20261018/lanes/SHARED-source-dsn.md",
+    "raw_sha256": "84e733d888b0074b1738517ded5317d240f2ef15f8f2c5273b9938623a30e71f",
+    "url": "https://docs.sentry.io/concepts/key-terms/dsn-explainer/"
+  },
+  {
+    "file": "artifacts/skill-pack-optimization-20261018/lanes/SHARED-source-vue.md",
+    "raw_sha256": "cbbae1fbcc31e9558dc41fa2e565d8ff5a9d92a5950852fa4367e3b94b06ca11",
+    "url": "https://docs.sentry.io/platforms/javascript/guides/vue/"
+  },
+  {
+    "file": "artifacts/skill-pack-optimization-20261018/lanes/SHARED-source-node.md",
+    "raw_sha256": "de1c8631c4f90c3f140e1a48e032d79accb52f56c8ddd0880582ae968bae3bd6",
+    "url": "https://docs.sentry.io/platforms/node/"
+  },
+  {
+    "file": "artifacts/skill-pack-optimization-20261018/lanes/SHARED-source-vue-options.md",
+    "raw_sha256": "4cf3a84a802ce471e3a769c09be4509b1ed50f9ef56f7d4d5fc287e12e0ace10",
+    "url": "https://docs.sentry.io/platforms/javascript/guides/vue/configuration/options/"
+  }
+]

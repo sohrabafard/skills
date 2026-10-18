@@ -1,0 +1,74 @@
+{
+  "evidence_kind": "focused source assertions and scoped snapshot, not independent acceptance",
+  "resource_policy": "normal priority; no CPU-heavy checks",
+  "cwd": ".",
+  "result": "pass",
+  "checks": [
+    "touched UTF-8 without BOM and LF",
+    "noun phrase and retained description triggers",
+    "eight Bash content references and preserved minimum routing cases",
+    "retired router exact bytes/hash",
+    "low-noise bound owner reachable without body duplication",
+    "tool-schema/context/replay/retry/authority split",
+    "constitution selector and applicability mapping without gate weakening",
+    "central call/count convention",
+    "unchanged policy/projection/checker inputs"
+  ],
+  "files": [
+    {
+      "path": "AGENTS.md",
+      "bytes": 11851,
+      "sha256": "dd230469f86d23bb1447d5cb1482957b56bfb4731524299dc836f46607e64aac"
+    },
+    {
+      "path": "skills/sohrab/AGENTS.md",
+      "bytes": 15962,
+      "sha256": "02ab615306aa0c1ae2047bbebcde6bf318dd59a4a2d743d2ca8b92743d3f3570"
+    },
+    {
+      "path": "skills/sohrab/alaa-prompting-guide/SKILL.md",
+      "bytes": 8102,
+      "sha256": "d9ae74eb8bf60164511360baa435272220c4c7cafed5a4f3416052442e0e9c4d"
+    },
+    {
+      "path": "skills/sohrab/alaa-prompting-guide/references/00-topic-map.md",
+      "bytes": 5607,
+      "sha256": "3e050d5edc30e716b94a479d56dac4678d11de7c00619235c6e9accf901b6d3c"
+    },
+    {
+      "path": "skills/sohrab/alaa-prompting-guide/references/11-codex-runtime-features.md",
+      "bytes": 16234,
+      "sha256": "b8f5a7225d28676b215ceb91e1a58354ca20f4ee1a13644aa47518f2701189bf"
+    },
+    {
+      "path": "skills/sohrab/alaa-prompting-guide/references/60-skill-authoring.md",
+      "bytes": 19816,
+      "sha256": "ad1d125ba134fd7450da21fdd067be8306a87678d0234b287903bddd2c4c891b"
+    },
+    {
+      "path": "skills/sohrab/alaa-low-noise/SKILL.md",
+      "bytes": 7884,
+      "sha256": "84e275739ec9022332cc0250bb83cb4ac7960e48f6f711ffd1effc343b7dc1a6"
+    },
+    {
+      "path": "skills/sohrab/alaa-project-constitution/references/evidence-and-module-selection.md",
+      "bytes": 8704,
+      "sha256": "6ea0b6368fc4ce17b7f6b4ba34bfd1724251fccdd827fcd00510c72fdc7d9646"
+    },
+    {
+      "path": "skills/sohrab/alaa-project-constitution/assets/constitution-template.md",
+      "bytes": 34785,
+      "sha256": "3ca36ba26f9382e1e71adf1baebd23e9d3b3ac6ed7c81f220656f50e649233c1"
+    },
+    {
+      "path": "skills/sohrab/alaa-bash-shell/SKILL.md",
+      "bytes": 5854,
+      "sha256": "ae7ab9b12b5f6dfb32b8adb48505d7f90ea21d2f94d060e13f129130ae0a0916"
+    },
+    {
+      "path": "_to_delete/20261018-bash-router-consolidation/skills/sohrab/alaa-bash-shell/references/00-topic-map.md",
+      "bytes": 1793,
+      "sha256": "a83df1a9104bd2af70d56a7cee8a20746c4baa68286a3605100a25a3ab7d2867"
+    }
+  ]
+}

@@ -1,0 +1,557 @@
+{
+  "head": "1a0799de71254427973f1253d80b846fea9acf10",
+  "files": [
+    {
+      "path": "skills/sohrab/alaa-data-layer/agents/openai.yaml",
+      "bytes": 310,
+      "sha256": "08b0e414182863aeb41f7e4ccd6894deb4818c43fd9edc3c1981d316faeac6c7",
+      "read": "full source: SKILL, references, phase-check code, metadata, templates, evals; bounded outputs with truncated tails completed"
+    },
+    {
+      "path": "skills/sohrab/alaa-data-layer/references/10-postgres-design-and-tenant-boundaries.md",
+      "bytes": 7786,
+      "sha256": "af1e5261be4601043ebedbb3432693894463b3809c3ef209023fb5f622ab9129",
+      "read": "full source: SKILL, references, phase-check code, metadata, templates, evals; bounded outputs with truncated tails completed"
+    },
+    {
+      "path": "skills/sohrab/alaa-data-layer/references/20-schema-migrations-and-performance.md",
+      "bytes": 5806,
+      "sha256": "c8ba5cd44ea6324841d7537b093a0d5a4b4eb764ccdc2c582726e71e364903a6",
+      "read": "full source: SKILL, references, phase-check code, metadata, templates, evals; bounded outputs with truncated tails completed"
+    },
+    {
+      "path": "skills/sohrab/alaa-data-layer/references/30-concurrency-projections-and-pooling.md",
+      "bytes": 11058,
+      "sha256": "04cb5c9e697e4fc3b785e2345adcfb601fead2179cd3a313ef68b94b24ae0d45",
+      "read": "full source: SKILL, references, phase-check code, metadata, templates, evals; bounded outputs with truncated tails completed"
+    },
+    {
+      "path": "skills/sohrab/alaa-data-layer/references/40-redis-verification-and-anti-patterns.md",
+      "bytes": 9700,
+      "sha256": "ca3bd20ebf875eecf40a1aba83ad0b950ca434956a28cb86da9dc08ca1681c2a",
+      "read": "full source: SKILL, references, phase-check code, metadata, templates, evals; bounded outputs with truncated tails completed"
+    },
+    {
+      "path": "skills/sohrab/alaa-data-layer/references/50-redis-laravel-octane.md",
+      "bytes": 17004,
+      "sha256": "6cbd7b5d10dd1baa13ed5508ec52825c18a87d9147ae3c20347c34fb482a0cff",
+      "read": "full source: SKILL, references, phase-check code, metadata, templates, evals; bounded outputs with truncated tails completed"
+    },
+    {
+      "path": "skills/sohrab/alaa-data-layer/references/51-redis-golang.md",
+      "bytes": 10997,
+      "sha256": "4f31e5e5ee70b0ef765852ba64ec5b1752a09180b0a06ca0bf8dba16de7cd022",
+      "read": "full source: SKILL, references, phase-check code, metadata, templates, evals; bounded outputs with truncated tails completed"
+    },
+    {
+      "path": "skills/sohrab/alaa-data-layer/references/60-configuration-and-kit-gaps.md",
+      "bytes": 9607,
+      "sha256": "1b4aa18775b92956a3a2528d8ef556639868f86e0f4c6460b0c41c508893e7e6",
+      "read": "full source: SKILL, references, phase-check code, metadata, templates, evals; bounded outputs with truncated tails completed"
+    },
+    {
+      "path": "skills/sohrab/alaa-data-layer/references/source-map.md",
+      "bytes": 5740,
+      "sha256": "c99df84c8e131e1f7f0ee5a019fd980a342a0482e0cf61d2a1e8bb0b1f593828",
+      "read": "full source: SKILL, references, phase-check code, metadata, templates, evals; bounded outputs with truncated tails completed"
+    },
+    {
+      "path": "skills/sohrab/alaa-data-layer/SKILL.md",
+      "bytes": 4988,
+      "sha256": "79cf5d1c7c9aabf1cd47e6d71591fc729bf0a3c97662fab5a7a218b7ecdb6dcb",
+      "read": "full source: SKILL, references, phase-check code, metadata, templates, evals; bounded outputs with truncated tails completed"
+    },
+    {
+      "path": "skills/sohrab/alaa-go-chi-development/agents/openai.yaml",
+      "bytes": 443,
+      "sha256": "965385d120451d7693004e1e67eee842307e59acaf3ebe0c5a1a160c8a18dccb",
+      "read": "full source: SKILL, references, phase-check code, metadata, templates, evals; bounded outputs with truncated tails completed"
+    },
+    {
+      "path": "skills/sohrab/alaa-go-chi-development/assets/templates/audit-report.md",
+      "bytes": 3207,
+      "sha256": "7528b8c3a8fed250f1db77c3668daffc0802670c40547ab1d00e870708aa1e70",
+      "read": "full source: SKILL, references, phase-check code, metadata, templates, evals; bounded outputs with truncated tails completed"
+    },
+    {
+      "path": "skills/sohrab/alaa-go-chi-development/assets/templates/baseline-proposal.md",
+      "bytes": 3271,
+      "sha256": "3829224100b0a09e009f558b066c24352d99d087af0a8b4292a43b2736a37d9e",
+      "read": "full source: SKILL, references, phase-check code, metadata, templates, evals; bounded outputs with truncated tails completed"
+    },
+    {
+      "path": "skills/sohrab/alaa-go-chi-development/assets/templates/consumer-update-prompt.md",
+      "bytes": 3786,
+      "sha256": "f835f026b2285abc83cba2f004143143faccf13a77bf7644dbd429f9f53a6425",
+      "read": "full source: SKILL, references, phase-check code, metadata, templates, evals; bounded outputs with truncated tails completed"
+    },
+    {
+      "path": "skills/sohrab/alaa-go-chi-development/assets/templates/consumers-registry.md",
+      "bytes": 1964,
+      "sha256": "562c8b0135a1022b046a3485c729b066e1c77328bd798f5e84e23f386f123a92",
+      "read": "full source: SKILL, references, phase-check code, metadata, templates, evals; bounded outputs with truncated tails completed"
+    },
+    {
+      "path": "skills/sohrab/alaa-go-chi-development/assets/templates/kit-change-request.md",
+      "bytes": 3623,
+      "sha256": "691b5ce118576312ac19c2c15e631ea06e0a362dcef1742db9d9746d47703e0e",
+      "read": "full source: SKILL, references, phase-check code, metadata, templates, evals; bounded outputs with truncated tails completed"
+    },
+    {
+      "path": "skills/sohrab/alaa-go-chi-development/evals/evals.json",
+      "bytes": 13140,
+      "sha256": "c59bcd3c169faa87efd36523e6594d778d8120322684c03741e9b074a244656a",
+      "read": "full source: SKILL, references, phase-check code, metadata, templates, evals; bounded outputs with truncated tails completed"
+    },
+    {
+      "path": "skills/sohrab/alaa-go-chi-development/references/05-phase-and-source-truth.md",
+      "bytes": 9514,
+      "sha256": "41c93f5873484430e51815b06fbc0544670218deba98cb36c2b39fb67ad5f8e9",
+      "read": "full source: SKILL, references, phase-check code, metadata, templates, evals; bounded outputs with truncated tails completed"
+    },
+    {
+      "path": "skills/sohrab/alaa-go-chi-development/references/10-consumer-development.md",
+      "bytes": 9494,
+      "sha256": "e6f6a29673255ba290505811b412e61021f25a1ba0943a38b19b0f599a4b09ba",
+      "read": "full source: SKILL, references, phase-check code, metadata, templates, evals; bounded outputs with truncated tails completed"
+    },
+    {
+      "path": "skills/sohrab/alaa-go-chi-development/references/12-kit-capability-map.md",
+      "bytes": 16606,
+      "sha256": "101486135129ce3dc53bcea74163af57d16e2588d4d9a6db1b8f4ec6c680388a",
+      "read": "full source: SKILL, references, phase-check code, metadata, templates, evals; bounded outputs with truncated tails completed"
+    },
+    {
+      "path": "skills/sohrab/alaa-go-chi-development/references/15-debug-upgrade-migrate.md",
+      "bytes": 5180,
+      "sha256": "8883da8324f8d4b14f508fdbd32dc6f386ea9c269db77319130fd8d949dfd581",
+      "read": "full source: SKILL, references, phase-check code, metadata, templates, evals; bounded outputs with truncated tails completed"
+    },
+    {
+      "path": "skills/sohrab/alaa-go-chi-development/references/20-change-request-workflow.md",
+      "bytes": 5040,
+      "sha256": "ab4cd4970396504b036f751a378fcfd8509c3cf2e2bc3d89fe37378280dbbdc3",
+      "read": "full source: SKILL, references, phase-check code, metadata, templates, evals; bounded outputs with truncated tails completed"
+    },
+    {
+      "path": "skills/sohrab/alaa-go-chi-development/references/30-kit-owner-workflow.md",
+      "bytes": 9681,
+      "sha256": "1041bc2e668905a5c00c41e1c5f911869e8b7f4cc607bc6b2ac8ab21627f2e21",
+      "read": "full source: SKILL, references, phase-check code, metadata, templates, evals; bounded outputs with truncated tails completed"
+    },
+    {
+      "path": "skills/sohrab/alaa-go-chi-development/references/40-platform-audit.md",
+      "bytes": 5788,
+      "sha256": "e633cb854d8ca453ddec0776886f5d4e6ed565e8f09b4422f07bc5cc1714afae",
+      "read": "full source: SKILL, references, phase-check code, metadata, templates, evals; bounded outputs with truncated tails completed"
+    },
+    {
+      "path": "skills/sohrab/alaa-go-chi-development/references/50-consumer-registry.md",
+      "bytes": 3722,
+      "sha256": "6fcfe45b301f71c353bc9659520ed431613c867aca1de740866345b3114c1fb3",
+      "read": "full source: SKILL, references, phase-check code, metadata, templates, evals; bounded outputs with truncated tails completed"
+    },
+    {
+      "path": "skills/sohrab/alaa-go-chi-development/scripts/phase-check.sh",
+      "bytes": 10141,
+      "sha256": "d1a8b2a7284f372ca8d3854f68cd9906df7fe95bfc8178b1b069cef08238c0f5",
+      "read": "full source: SKILL, references, phase-check code, metadata, templates, evals; bounded outputs with truncated tails completed"
+    },
+    {
+      "path": "skills/sohrab/alaa-go-chi-development/SKILL.md",
+      "bytes": 7653,
+      "sha256": "eeb7f8206e1dfdf8369be50fe085f470776365c175d00b12057597860b945707",
+      "read": "full source: SKILL, references, phase-check code, metadata, templates, evals; bounded outputs with truncated tails completed"
+    },
+    {
+      "path": "skills/sohrab/alaa-golang/agents/openai.yaml",
+      "bytes": 1100,
+      "sha256": "36b37167a236657abb4eb544d23b2d86370780919770c46ab4d2f9b83b8dfa29",
+      "read": "full source: SKILL, references, phase-check code, metadata, templates, evals; bounded outputs with truncated tails completed"
+    },
+    {
+      "path": "skills/sohrab/alaa-golang/references/00-topic-map.md",
+      "bytes": 7479,
+      "sha256": "6017ad08436ba283b2188611e288be42b5b747c6e99088cce5d582b2f438aa2c",
+      "read": "full source: SKILL, references, phase-check code, metadata, templates, evals; bounded outputs with truncated tails completed"
+    },
+    {
+      "path": "skills/sohrab/alaa-golang/references/05-what-this-skill-does-not-own.md",
+      "bytes": 9421,
+      "sha256": "c3357f06ad5cfbf932a2340c1ee542f917870d8624cda2af85247bded3071df1",
+      "read": "full source: SKILL, references, phase-check code, metadata, templates, evals; bounded outputs with truncated tails completed"
+    },
+    {
+      "path": "skills/sohrab/alaa-golang/references/10-installed-golang-skills.md",
+      "bytes": 8211,
+      "sha256": "7e69580044542810043badbf06f988a3abbe3305f432fb13cad427b22408d284",
+      "read": "full source: SKILL, references, phase-check code, metadata, templates, evals; bounded outputs with truncated tails completed"
+    },
+    {
+      "path": "skills/sohrab/alaa-golang/references/11-orchestration-and-overlap-guide.md",
+      "bytes": 9599,
+      "sha256": "7f80300b982892a57d0f936ae8b45fa06341100002f9aaa1a06b8f9814abb55a",
+      "read": "full source: SKILL, references, phase-check code, metadata, templates, evals; bounded outputs with truncated tails completed"
+    },
+    {
+      "path": "skills/sohrab/alaa-golang/references/20-sohrab-companions.md",
+      "bytes": 4829,
+      "sha256": "7cb2c77c05575b5b514c774a54935892bf7b7125faa4f72a4f712944cdf68924",
+      "read": "full source: SKILL, references, phase-check code, metadata, templates, evals; bounded outputs with truncated tails completed"
+    },
+    {
+      "path": "skills/sohrab/alaa-golang/references/30-http-api-framework-choice.md",
+      "bytes": 4581,
+      "sha256": "865e778f2c22179b89878434e79a65cbfb8a335109b4bfc34286c707d1e235f9",
+      "read": "full source: SKILL, references, phase-check code, metadata, templates, evals; bounded outputs with truncated tails completed"
+    },
+    {
+      "path": "skills/sohrab/alaa-golang/references/31-chi-api-guide.md",
+      "bytes": 8537,
+      "sha256": "99c787797f5f05d4427f3f8af87a04d2c78860cd34d1ffbe22e696843e8248e4",
+      "read": "full source: SKILL, references, phase-check code, metadata, templates, evals; bounded outputs with truncated tails completed"
+    },
+    {
+      "path": "skills/sohrab/alaa-golang/references/40-production-ready-package-catalog.md",
+      "bytes": 10610,
+      "sha256": "a2a73f50a913890774247428413b09ee2ed42d489b5a41f1abb0445ceaadd9f2",
+      "read": "full source: SKILL, references, phase-check code, metadata, templates, evals; bounded outputs with truncated tails completed"
+    },
+    {
+      "path": "skills/sohrab/alaa-golang/references/45-failure-behavior-at-the-call-site.md",
+      "bytes": 14861,
+      "sha256": "f2bc0a348359e01afb8299e2c06bb037ae28fa42bfc1d6c10153b3054ce93c3d",
+      "read": "full source: SKILL, references, phase-check code, metadata, templates, evals; bounded outputs with truncated tails completed"
+    },
+    {
+      "path": "skills/sohrab/alaa-golang/references/46-chi-under-load.md",
+      "bytes": 7625,
+      "sha256": "b2b1cdc15045562f14923bd3ad070620015bdbb6c0fddfeab7bc34a668ceb57d",
+      "read": "full source: SKILL, references, phase-check code, metadata, templates, evals; bounded outputs with truncated tails completed"
+    },
+    {
+      "path": "skills/sohrab/alaa-golang/references/60-service-architecture-patterns.md",
+      "bytes": 7649,
+      "sha256": "d9bd403921d4fe0b85e828f7b4c9fe7322a9307b35e05f325dda9da560a5bb50",
+      "read": "full source: SKILL, references, phase-check code, metadata, templates, evals; bounded outputs with truncated tails completed"
+    },
+    {
+      "path": "skills/sohrab/alaa-golang/references/61-redis-cache-layer.md",
+      "bytes": 7626,
+      "sha256": "bce0c516eb0bb4f643cb5cb54fa628a925e2fa0a9c3f7a441d4217b66105d95b",
+      "read": "full source: SKILL, references, phase-check code, metadata, templates, evals; bounded outputs with truncated tails completed"
+    },
+    {
+      "path": "skills/sohrab/alaa-golang/references/62-import-direction-and-boundaries.md",
+      "bytes": 3625,
+      "sha256": "a6692cd1b8f7fa5aa06370d0c6f3701b8878becf29dcbde45eda0337f8d1c856",
+      "read": "full source: SKILL, references, phase-check code, metadata, templates, evals; bounded outputs with truncated tails completed"
+    },
+    {
+      "path": "skills/sohrab/alaa-golang/references/63-tdd-and-testing-discipline.md",
+      "bytes": 6755,
+      "sha256": "517db1d405561127b16a0249e7af358f1d78473cdf51a584d274f98988289d9f",
+      "read": "full source: SKILL, references, phase-check code, metadata, templates, evals; bounded outputs with truncated tails completed"
+    },
+    {
+      "path": "skills/sohrab/alaa-golang/references/70-modern-go-baseline/10-release-status-and-changes.md",
+      "bytes": 1892,
+      "sha256": "57caedf89a7925e2120233a464d6bb1b92c0902eeef93a1f0a0c0e003efea659",
+      "read": "full source: SKILL, references, phase-check code, metadata, templates, evals; bounded outputs with truncated tails completed"
+    },
+    {
+      "path": "skills/sohrab/alaa-golang/references/70-modern-go-baseline/20-directive-language-and-toolchain.md",
+      "bytes": 3188,
+      "sha256": "c7a3b34f88fcceaf409a9b77b393d65c4f99af140170a3bfa68afd006a2836e3",
+      "read": "full source: SKILL, references, phase-check code, metadata, templates, evals; bounded outputs with truncated tails completed"
+    },
+    {
+      "path": "skills/sohrab/alaa-golang/references/70-modern-go-baseline/30-runtime-and-standard-library.md",
+      "bytes": 3190,
+      "sha256": "a7fcab122d977e09400cffaeee20e35424a9b884d2d11573a6aab6f177e94bf8",
+      "read": "full source: SKILL, references, phase-check code, metadata, templates, evals; bounded outputs with truncated tails completed"
+    },
+    {
+      "path": "skills/sohrab/alaa-golang/references/70-modern-go-baseline/40-testing-security-and-experiments.md",
+      "bytes": 2919,
+      "sha256": "480c3ec3357d6726a0774d0b6539a8d4fb0f9ac63ea69f825454c4672e796406",
+      "read": "full source: SKILL, references, phase-check code, metadata, templates, evals; bounded outputs with truncated tails completed"
+    },
+    {
+      "path": "skills/sohrab/alaa-golang/references/70-modern-go-baseline/50-adoption-rules.md",
+      "bytes": 1019,
+      "sha256": "66afa31803ac63f619b3f33bcdaabb1ff0558cedd404ea09267eb02e58d594bd",
+      "read": "full source: SKILL, references, phase-check code, metadata, templates, evals; bounded outputs with truncated tails completed"
+    },
+    {
+      "path": "skills/sohrab/alaa-golang/references/70-modern-go-baseline.md",
+      "bytes": 2981,
+      "sha256": "cf763a68b366c3dd4feec774ba1c8fd0b820fe8a5b35300b15e811f1430b0693",
+      "read": "full source: SKILL, references, phase-check code, metadata, templates, evals; bounded outputs with truncated tails completed"
+    },
+    {
+      "path": "skills/sohrab/alaa-golang/references/SOURCES.md",
+      "bytes": 4896,
+      "sha256": "e25380c5b1a5457f536eb4e75a7d8aa4dcc171e3ab8acc478d51c579409c795e",
+      "read": "full source: SKILL, references, phase-check code, metadata, templates, evals; bounded outputs with truncated tails completed"
+    },
+    {
+      "path": "skills/sohrab/alaa-golang/SKILL.md",
+      "bytes": 7246,
+      "sha256": "b2245cc63bbb6a06ae4d23d57eedbfded270faae83cea5bf2e2b40f5f5744ffd",
+      "read": "full source: SKILL, references, phase-check code, metadata, templates, evals; bounded outputs with truncated tails completed"
+    },
+    {
+      "path": "skills/sohrab/alaa-golang-clean-code-principles/agents/openai.yaml",
+      "bytes": 1126,
+      "sha256": "049ade94b63262134261b1fd6c8ad2268d37c13afac4611534ceafd386b9686f",
+      "read": "full source: SKILL, references, phase-check code, metadata, templates, evals; bounded outputs with truncated tails completed"
+    },
+    {
+      "path": "skills/sohrab/alaa-golang-clean-code-principles/evals/evals.json",
+      "bytes": 8433,
+      "sha256": "307fd41b5730afcc96d98569938fe2c554ef6fdd45f0180041c29dfd58ab187b",
+      "read": "full source: SKILL, references, phase-check code, metadata, templates, evals; bounded outputs with truncated tails completed"
+    },
+    {
+      "path": "skills/sohrab/alaa-golang-clean-code-principles/references/10-kit-and-trust-boundary.md",
+      "bytes": 7245,
+      "sha256": "643b2296e1c5aa0c1e90e2f16ec8a195f7e7e90ca0b02db90cef4f942d896802",
+      "read": "full source: SKILL, references, phase-check code, metadata, templates, evals; bounded outputs with truncated tails completed"
+    },
+    {
+      "path": "skills/sohrab/alaa-golang-clean-code-principles/references/20-domain-data-and-consistency.md",
+      "bytes": 13325,
+      "sha256": "dbce2ab2ad4b965faddbc1669fba012c95524d6c4021b5b809abb5979382e7f8",
+      "read": "full source: SKILL, references, phase-check code, metadata, templates, evals; bounded outputs with truncated tails completed"
+    },
+    {
+      "path": "skills/sohrab/alaa-golang-clean-code-principles/references/30-runtime-and-observability.md",
+      "bytes": 7779,
+      "sha256": "4aeb54f94ca451579d27226b41f83b41160e35c6c879409a6dd259cb8b8ed513",
+      "read": "full source: SKILL, references, phase-check code, metadata, templates, evals; bounded outputs with truncated tails completed"
+    },
+    {
+      "path": "skills/sohrab/alaa-golang-clean-code-principles/references/40-testing-and-contracts.md",
+      "bytes": 6367,
+      "sha256": "d04036504938178e24c09900426b8ff3edb45d82e2aa57368e80734e80305242",
+      "read": "full source: SKILL, references, phase-check code, metadata, templates, evals; bounded outputs with truncated tails completed"
+    },
+    {
+      "path": "skills/sohrab/alaa-golang-clean-code-principles/references/50-skill-boundaries.md",
+      "bytes": 6144,
+      "sha256": "e41d199ffa28ed22c5bf6f6c00b40340fde6f01f6be1fc33dd63bf5928c45692",
+      "read": "full source: SKILL, references, phase-check code, metadata, templates, evals; bounded outputs with truncated tails completed"
+    },
+    {
+      "path": "skills/sohrab/alaa-golang-clean-code-principles/references/60-design-patterns-kit-era.md",
+      "bytes": 11791,
+      "sha256": "5df0ebbd5fbdac9547e927fcc7418cf817bd23bf60ea937addf7774f2915dbb0",
+      "read": "full source: SKILL, references, phase-check code, metadata, templates, evals; bounded outputs with truncated tails completed"
+    },
+    {
+      "path": "skills/sohrab/alaa-golang-clean-code-principles/references/90-source-map.md",
+      "bytes": 5167,
+      "sha256": "d231e5584af350ab9f931bdc6f2c782d7c9f12362cfd3263e62a43ce79a1fcac",
+      "read": "full source: SKILL, references, phase-check code, metadata, templates, evals; bounded outputs with truncated tails completed"
+    },
+    {
+      "path": "skills/sohrab/alaa-golang-clean-code-principles/SKILL.md",
+      "bytes": 12530,
+      "sha256": "d73b9f8516c5a8b801ab40fec1f6b525cfb749ffc16310d9713f4bc86ba4b5cb",
+      "read": "full source: SKILL, references, phase-check code, metadata, templates, evals; bounded outputs with truncated tails completed"
+    },
+    {
+      "path": "skills/sohrab/alaa-golang-fiber/agents/openai.yaml",
+      "bytes": 1198,
+      "sha256": "c89165ea6127c736510e24a9343efa7c4b074a0fe94443fe60159fc97e3fc3be",
+      "read": "full source: SKILL, references, phase-check code, metadata, templates, evals; bounded outputs with truncated tails completed"
+    },
+    {
+      "path": "skills/sohrab/alaa-golang-fiber/evals/evals.json",
+      "bytes": 8044,
+      "sha256": "bc6e211ee626a8faee83f459e92b5a9e0c49048043d8ced1f3b8d6662e4b5de1",
+      "read": "full source: SKILL, references, phase-check code, metadata, templates, evals; bounded outputs with truncated tails completed"
+    },
+    {
+      "path": "skills/sohrab/alaa-golang-fiber/references/10-fiber-v3-core/10-version-and-import.md",
+      "bytes": 822,
+      "sha256": "214644cb614b30efff6d64f7c9cf19527f48c21efff016f0556a361b9c8a0729",
+      "read": "full source: SKILL, references, phase-check code, metadata, templates, evals; bounded outputs with truncated tails completed"
+    },
+    {
+      "path": "skills/sohrab/alaa-golang-fiber/references/10-fiber-v3-core/20-request-value-lifetime.md",
+      "bytes": 1639,
+      "sha256": "659db32d64ff171a22c6f947484350ec19ddea84fa7828f110bdd469ce6c1aec",
+      "read": "full source: SKILL, references, phase-check code, metadata, templates, evals; bounded outputs with truncated tails completed"
+    },
+    {
+      "path": "skills/sohrab/alaa-golang-fiber/references/10-fiber-v3-core/30-immutable-mode.md",
+      "bytes": 1446,
+      "sha256": "565dd9dc491a2354d6f8213ad4d62033f27d36dcd87be09eebfb5d5332c1625e",
+      "read": "full source: SKILL, references, phase-check code, metadata, templates, evals; bounded outputs with truncated tails completed"
+    },
+    {
+      "path": "skills/sohrab/alaa-golang-fiber/references/10-fiber-v3-core/40-context-cancellation.md",
+      "bytes": 1512,
+      "sha256": "a99c7d53738777846e8ee681eaed3b961813ddb1ce4eeba71f970b43925d0ec6",
+      "read": "full source: SKILL, references, phase-check code, metadata, templates, evals; bounded outputs with truncated tails completed"
+    },
+    {
+      "path": "skills/sohrab/alaa-golang-fiber/references/10-fiber-v3-core/50-server-bounds.md",
+      "bytes": 2992,
+      "sha256": "719d77427915487d71b6a12d455b2f1c7d438c91842271a745724d70ee1c0c7a",
+      "read": "full source: SKILL, references, phase-check code, metadata, templates, evals; bounded outputs with truncated tails completed"
+    },
+    {
+      "path": "skills/sohrab/alaa-golang-fiber/references/10-fiber-v3-core/60-boot-order.md",
+      "bytes": 960,
+      "sha256": "60bdb21a7647034f36edb96a1d49b21fe24af3ffeab4ff492fd056394f715a91",
+      "read": "full source: SKILL, references, phase-check code, metadata, templates, evals; bounded outputs with truncated tails completed"
+    },
+    {
+      "path": "skills/sohrab/alaa-golang-fiber/references/10-fiber-v3-core/70-listener-shutdown.md",
+      "bytes": 2111,
+      "sha256": "93f3320700f802a2c096874a29821ea273efeecea78ddbaddf26292fd2eae9bf",
+      "read": "full source: SKILL, references, phase-check code, metadata, templates, evals; bounded outputs with truncated tails completed"
+    },
+    {
+      "path": "skills/sohrab/alaa-golang-fiber/references/10-fiber-v3-core/80-hooks-and-custom-context.md",
+      "bytes": 929,
+      "sha256": "33f431880b53eadaf9e8df5e5827f3d16676e320442dfcc4768aecac08fa2be9",
+      "read": "full source: SKILL, references, phase-check code, metadata, templates, evals; bounded outputs with truncated tails completed"
+    },
+    {
+      "path": "skills/sohrab/alaa-golang-fiber/references/10-fiber-v3-core.md",
+      "bytes": 2426,
+      "sha256": "c1676347113ffdd574ebc3895d0da6cb80ca25b1005206b604c79f002b2b116e",
+      "read": "full source: SKILL, references, phase-check code, metadata, templates, evals; bounded outputs with truncated tails completed"
+    },
+    {
+      "path": "skills/sohrab/alaa-golang-fiber/references/20-routing-middleware-errors/10-route-and-middleware-order.md",
+      "bytes": 3287,
+      "sha256": "270b94eb634788d83dc8eb7d1eb2041edab263ac3c0a5104f8d517afacd9b88c",
+      "read": "full source: SKILL, references, phase-check code, metadata, templates, evals; bounded outputs with truncated tails completed"
+    },
+    {
+      "path": "skills/sohrab/alaa-golang-fiber/references/20-routing-middleware-errors/20-errors-and-correlation.md",
+      "bytes": 2317,
+      "sha256": "8f27e9fe2be162f7bb74204e01be68ed9a5644cf5446a31353a1b82902c8d000",
+      "read": "full source: SKILL, references, phase-check code, metadata, templates, evals; bounded outputs with truncated tails completed"
+    },
+    {
+      "path": "skills/sohrab/alaa-golang-fiber/references/20-routing-middleware-errors/30-proxy-trust.md",
+      "bytes": 1344,
+      "sha256": "9239efdb682bc1df187fa9671f25a28657e68d5a6e420f2f1afd88f5bd475770",
+      "read": "full source: SKILL, references, phase-check code, metadata, templates, evals; bounded outputs with truncated tails completed"
+    },
+    {
+      "path": "skills/sohrab/alaa-golang-fiber/references/20-routing-middleware-errors/40-outbound-proxy-security.md",
+      "bytes": 1763,
+      "sha256": "c9581593c1f30e97aa0d3d67757f5ef05c4955e733f318ea70c3f5d0493d4f40",
+      "read": "full source: SKILL, references, phase-check code, metadata, templates, evals; bounded outputs with truncated tails completed"
+    },
+    {
+      "path": "skills/sohrab/alaa-golang-fiber/references/20-routing-middleware-errors/50-edge-controls-and-adaptation.md",
+      "bytes": 2328,
+      "sha256": "e3cd4116a6151568ffb27e560120d174f384b081d656216d41bcd937214efa23",
+      "read": "full source: SKILL, references, phase-check code, metadata, templates, evals; bounded outputs with truncated tails completed"
+    },
+    {
+      "path": "skills/sohrab/alaa-golang-fiber/references/20-routing-middleware-errors.md",
+      "bytes": 2256,
+      "sha256": "92e0607e837ff13cf2acc298e33b6bf0e26e95c8817da4f3d0023cdb6ebbbfc2",
+      "read": "full source: SKILL, references, phase-check code, metadata, templates, evals; bounded outputs with truncated tails completed"
+    },
+    {
+      "path": "skills/sohrab/alaa-golang-fiber/references/30-validation-testing.md",
+      "bytes": 8014,
+      "sha256": "2e4b07afee7c8d2d9f20f105d5dff6c9ef4243feb281ca63893b0171d6e41afc",
+      "read": "full source: SKILL, references, phase-check code, metadata, templates, evals; bounded outputs with truncated tails completed"
+    },
+    {
+      "path": "skills/sohrab/alaa-golang-fiber/references/40-production-readiness.md",
+      "bytes": 9993,
+      "sha256": "6916d4fcdfa269e4f966f867997bf0e9781738be2e0b1f986411dda9b407899d",
+      "read": "full source: SKILL, references, phase-check code, metadata, templates, evals; bounded outputs with truncated tails completed"
+    },
+    {
+      "path": "skills/sohrab/alaa-golang-fiber/references/45-v2-to-v3-migration.md",
+      "bytes": 7843,
+      "sha256": "f0d71d9a949fda0dedbd34bef6a5c642d56a507faf31674412312ed5ef7d96c0",
+      "read": "full source: SKILL, references, phase-check code, metadata, templates, evals; bounded outputs with truncated tails completed"
+    },
+    {
+      "path": "skills/sohrab/alaa-golang-fiber/references/50-kit-conflict-register.md",
+      "bytes": 11722,
+      "sha256": "49ddeb62c2f830a2c5c186d82129b3b65a65fdf2d5a7adf166eb1e9ab92d7ab3",
+      "read": "full source: SKILL, references, phase-check code, metadata, templates, evals; bounded outputs with truncated tails completed"
+    },
+    {
+      "path": "skills/sohrab/alaa-golang-fiber/references/55-skill-boundaries.md",
+      "bytes": 3863,
+      "sha256": "dec3d691f719e67ba7a0e4dd4f02e8531fdb63244b095add4693673506ca4ec0",
+      "read": "full source: SKILL, references, phase-check code, metadata, templates, evals; bounded outputs with truncated tails completed"
+    },
+    {
+      "path": "skills/sohrab/alaa-golang-fiber/references/SOURCES.md",
+      "bytes": 5935,
+      "sha256": "6d112adc60e2247b5c22b510a098ed18ce7178b551f6c470749ad2fdca45c4ee",
+      "read": "full source: SKILL, references, phase-check code, metadata, templates, evals; bounded outputs with truncated tails completed"
+    },
+    {
+      "path": "skills/sohrab/alaa-golang-fiber/SKILL.md",
+      "bytes": 8571,
+      "sha256": "d6c112ce18467bc790155a40a3771e967fcec5c3bd117157bf358ca09b943ad9",
+      "read": "full source: SKILL, references, phase-check code, metadata, templates, evals; bounded outputs with truncated tails completed"
+    },
+    {
+      "path": "skills/sohrab/service-runtime-kit-governance/agents/openai.yaml",
+      "bytes": 373,
+      "sha256": "1aacf6332af862c7f5955b9cccc3a661b69d4bcfedbc3d6a25a8156afe3dc883",
+      "read": "full source: SKILL, references, phase-check code, metadata, templates, evals; bounded outputs with truncated tails completed"
+    },
+    {
+      "path": "skills/sohrab/service-runtime-kit-governance/references/change-routing.md",
+      "bytes": 4583,
+      "sha256": "6059eb9524afac038e63fdbe07836cd3373bd913a223d08b153c2338ea84954d",
+      "read": "full source: SKILL, references, phase-check code, metadata, templates, evals; bounded outputs with truncated tails completed"
+    },
+    {
+      "path": "skills/sohrab/service-runtime-kit-governance/references/cross-runtime-shared-infra.md",
+      "bytes": 2366,
+      "sha256": "23ad6ae73a4b13e48479eac5fe5f7b76d43c0af8ed042fed6fa698911c6f2849",
+      "read": "full source: SKILL, references, phase-check code, metadata, templates, evals; bounded outputs with truncated tails completed"
+    },
+    {
+      "path": "skills/sohrab/service-runtime-kit-governance/references/debug-playbook.md",
+      "bytes": 3318,
+      "sha256": "f7d28ef5cb7717086bee25ae63481203533af1fb89dfc26b5b653014cedeeaf2",
+      "read": "full source: SKILL, references, phase-check code, metadata, templates, evals; bounded outputs with truncated tails completed"
+    },
+    {
+      "path": "skills/sohrab/service-runtime-kit-governance/references/runtime-contract-map.md",
+      "bytes": 19175,
+      "sha256": "4c5fd0b9465165f0906e6fcf60f22f00d7bb2a1b15d18b5278a169d3c897f2a8",
+      "read": "full source: SKILL, references, phase-check code, metadata, templates, evals; bounded outputs with truncated tails completed"
+    },
+    {
+      "path": "skills/sohrab/service-runtime-kit-governance/references/source-map.md",
+      "bytes": 2338,
+      "sha256": "569375a05d2c6e2210a06ea78c10fdae99e1d1880b87f83bf77f6e710f1b06bc",
+      "read": "full source: SKILL, references, phase-check code, metadata, templates, evals; bounded outputs with truncated tails completed"
+    },
+    {
+      "path": "skills/sohrab/service-runtime-kit-governance/references/windows-git-bash-compose.md",
+      "bytes": 2435,
+      "sha256": "83516782b3612de102451322af47d28615e4e12adff39b0651a5f69c8c6446e2",
+      "read": "full source: SKILL, references, phase-check code, metadata, templates, evals; bounded outputs with truncated tails completed"
+    },
+    {
+      "path": "skills/sohrab/service-runtime-kit-governance/SKILL.md",
+      "bytes": 8657,
+      "sha256": "ef9d1fcaa0fc812e4d080116c2b3ca23f7efd1658c077c4163c83cb0f39a622c",
+      "read": "full source: SKILL, references, phase-check code, metadata, templates, evals; bounded outputs with truncated tails completed"
+    }
+  ]
+}

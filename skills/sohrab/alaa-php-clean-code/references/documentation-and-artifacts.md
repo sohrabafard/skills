@@ -4,21 +4,20 @@
 - Documentation language and boundary
 - English docblock rules
 - README and detailed docs
-- Postman collection v2.1 rules
-- Environment artifacts
+- Postman collections and environments
 - Flow diagrams
 - Alignment and stale-doc cleanup
 - When to use companion doc skills
 
 ## Documentation language and boundary
-Use `/alaa-repo-docs` (`$alaa-repo-docs`) for the deterministic workflow that keeps docs, code, and Postman aligned.
+Use `/alaa-repo-docs` for the deterministic workflow that keeps docs, code, and Postman aligned.
 
 When this skill is the active coding baseline:
 - keep resulting docs in simple, fluent English unless the user explicitly asks for another language
 - keep exact technical identifiers in the same spelling used by the codebase
 - preserve detail; do not flatten useful operational or API nuance just to shorten the docs
 
-Use `/openai-docs` (`$openai-docs`) when the documentation touches OpenAI APIs, models, prompts, tools, agent workflows, or product capabilities and you need authoritative current references or citations.
+Use `/openai-docs` when the documentation touches OpenAI APIs, models, prompts, tools, agent workflows, or product capabilities and you need authoritative current references or citations.
 
 ## English docblock rules
 Add enough docblocks to serve two goals:
@@ -63,46 +62,9 @@ Minimum expectations when the change affects external usage:
 
 Do not leave a high-level README pointing to old behavior while lower-level docs describe the new behavior.
 
-## Postman collection v2.1 rules
-Prefer one request item per operation.
+## Postman collections and environments
 
-For each operation:
-- keep one canonical request item
-- attach multiple saved response examples to that same request item for the important success and error variants
-- do not clone multiple request items only to show different response outcomes for the same operation
-
-### What to include
-- realistic dummy payloads and IDs
-- variables instead of secrets or machine-specific values
-- useful pre-request and test scripts when they help demonstrate or validate the flow
-- saved examples for the important success, validation, authorization, not-found, conflict, and server-failure cases when applicable
-- headers and bodies that match the current implementation
-
-### Response-example rule
-Model the examples as one request with many saved responses, not many duplicated requests.
-
-Good example names:
-- `200 Success`
-- `401 Unauthorized`
-- `403 Forbidden`
-- `404 Not Found`
-- `409 Conflict`
-- `422 Validation Error`
-- `500 Internal Error`
-
-## Environment artifacts
-Store a separate Postman environment file next to the collection when the collection needs variables.
-
-Typical variables:
-- `baseUrl`
-- auth token placeholders
-- sample `project_id` or other public IDs
-- reusable path or tenant variables
-
-Keep environment values safe:
-- no real secrets
-- no private tokens
-- no production-only hostnames unless explicitly intended
+When a PHP change affects a collection or environment, invoke `/alaa-postman-collections` for generation, saved success/error coverage, scripts, variables, secret hygiene, portability and validation. That owner decides completeness; this skill keeps those artifacts aligned with the changed PHP behavior and leaves PHP docblocks unchanged by that routing.
 
 ## Flow diagrams
 Keep request-flow diagrams current whenever the order of calls, auth behavior, or dependency flow matters.
@@ -139,6 +101,6 @@ A document is stale if it:
 - duplicates another document with conflicting detail
 
 ## When to use companion doc skills
-- Use `/alaa-repo-docs` (`$alaa-repo-docs`) for repo-wide documentation passes, docs consistency checks, and docs/Postman sync workflow.
+- Use `/alaa-repo-docs` for repo-wide documentation passes, docs consistency checks, and docs/Postman sync workflow.
 - While using this skill, override the docs output language to simple English unless the user explicitly requests Persian or another language.
-- Use `/openai-docs` (`$openai-docs`) when any document needs official OpenAI references, current model guidance, current prompt guidance, or up-to-date product behavior.
+- Use `/openai-docs` when any document needs official OpenAI references, current model guidance, current prompt guidance, or up-to-date product behavior.

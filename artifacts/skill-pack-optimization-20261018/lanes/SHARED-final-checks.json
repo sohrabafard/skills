@@ -1,0 +1,897 @@
+{
+  "head": "1a0799de71254427973f1253d80b846fea9acf10",
+  "scope": [
+    "alaa-services-contract",
+    "alaa-keyset-pagination",
+    "alaa-trust-gateway-auth",
+    "alaa-security-review",
+    "alaa-observability-soc",
+    "alaa-reliability-sla",
+    "vector-rust-observability-pipelines"
+  ],
+  "checks_passed": 206,
+  "checks": [
+    "Five offset guards remain in the authorizing owner",
+    "Offset guard: admin-only",
+    "Offset guard: request time",
+    "Offset guard: public gateway",
+    "Offset guard: SDK",
+    "Offset guard: maximum reachable offset",
+    "Offset guard: page size",
+    "Offset guard: 400",
+    "Offset guard: INPUT_VALIDATION_FAILED",
+    "Offset guard: pagination: offset",
+    "Offset guard: operational",
+    "Offset guard: same",
+    "Offset guard: filters",
+    "Offset guard: production-shaped",
+    "No stale offset prohibition or second numbered guard list",
+    "Existing cursor code registered with 400: INVALID_CURSOR",
+    "Existing cursor code registered with 400: CURSOR_VERSION_UNSUPPORTED",
+    "Existing cursor code registered with 400: CURSOR_EXPIRED",
+    "Existing cursor code registered with 400: INVALID_CURSOR_CONTEXT",
+    "Wire invariant: absent cursor",
+    "Wire invariant: sibling `pagination`",
+    "Wire invariant: `after`",
+    "Wire invariant: `before`",
+    "Wire invariant: Do not echo `limit`",
+    "Wire invariant: `sort` outside",
+    "Wire invariant: compatibility/deprecation stop",
+    "Existing keyset values and applicability preserved",
+    "Keyset defaults and duplicate response schema removed",
+    "Removed body destinations remain in alaa-services-contract external router",
+    "External topic map remains routed: alaa-services-contract",
+    "Removed body destinations remain in alaa-reliability-sla external router",
+    "External topic map remains routed: alaa-reliability-sla",
+    "Services duplicate router removed",
+    "No flat timeout 403 and unmapped response remains denied with explicit stop",
+    "Context case tests selected service status",
+    "AUTHZ and TOTP definitions point to their owners",
+    "Conditional telemetry requirement: Errors and rejections",
+    "Conditional telemetry requirement: Web Vitals field data",
+    "Conditional telemetry requirement: Request outcomes",
+    "Conditional telemetry requirement: Connection transitions",
+    "Conditional telemetry requirement: Service-worker lifecycle",
+    "Conditional telemetry requirement: Failed updates",
+    "Conditional telemetry requirement: conditional requirements",
+    "Conditional telemetry requirement: Error capture stays unsampled",
+    "Conditional telemetry requirement: Product analytics",
+    "Conditional telemetry requirement: source-of-truth fallbacks",
+    "Conditional telemetry requirement: latency histogram",
+    "Conditional telemetry requirement: without a cache",
+    "Conditional telemetry requirement: invents neither a family nor a label",
+    "Phone gate defaults safe and retains no subscriber digits",
+    "Sentry keeps privacy, source injection and per-signal caveat",
+    "Sentry stack authority stays explicit without invented browser env defaults",
+    "SOC forwards fail-open without bypassing required audit write",
+    "Telemetry buffering has bounded capacity and visible drops",
+    "Read-only container default retains documented exception",
+    "Contributor behavior retains accepted obligation and unknown classification stop",
+    "Vector gate owner and path consequences: SKILL.md",
+    "Vector gate owner and path consequences: references/30-buffers-acks-and-backpressure.md",
+    "Vector gate owner and path consequences: references/75-ala-ingest-pipeline.md",
+    "Historical commercial exactness/recoverability/privacy boundaries preserved",
+    "No owned file added, removed or retired",
+    "UTF8/noBOM/LF and nonempty: skills/sohrab/alaa-keyset-pagination/SKILL.md",
+    "No legacy dual call remains in changed file: skills/sohrab/alaa-keyset-pagination/SKILL.md",
+    "Untouched owned input hash preserved: skills/sohrab/alaa-keyset-pagination/agents/openai.yaml",
+    "UTF8/noBOM/LF and nonempty: skills/sohrab/alaa-keyset-pagination/references/10-route-mode-and-sort-allowlist.md",
+    "No legacy dual call remains in changed file: skills/sohrab/alaa-keyset-pagination/references/10-route-mode-and-sort-allowlist.md",
+    "Untouched owned input hash preserved: skills/sohrab/alaa-keyset-pagination/references/20-ordering-index-and-predicate.md",
+    "Untouched owned input hash preserved: skills/sohrab/alaa-keyset-pagination/references/30-cursor-format-integrity-and-context.md",
+    "UTF8/noBOM/LF and nonempty: skills/sohrab/alaa-keyset-pagination/references/40-wire-contract-limits-and-errors.md",
+    "No legacy dual call remains in changed file: skills/sohrab/alaa-keyset-pagination/references/40-wire-contract-limits-and-errors.md",
+    "Untouched owned input hash preserved: skills/sohrab/alaa-keyset-pagination/references/50-hard-cases.md",
+    "Untouched owned input hash preserved: skills/sohrab/alaa-keyset-pagination/references/60-per-stack.md",
+    "Untouched owned input hash preserved: skills/sohrab/alaa-keyset-pagination/references/70-test-list.md",
+    "Untouched owned input hash preserved: skills/sohrab/alaa-keyset-pagination/references/90-source-map.md",
+    "UTF8/noBOM/LF and nonempty: skills/sohrab/alaa-observability-soc/SKILL.md",
+    "No legacy dual call remains in changed file: skills/sohrab/alaa-observability-soc/SKILL.md",
+    "Untouched owned input hash preserved: skills/sohrab/alaa-observability-soc/agents/openai.yaml",
+    "Untouched owned input hash preserved: skills/sohrab/alaa-observability-soc/references/00-topic-map.md",
+    "Untouched owned input hash preserved: skills/sohrab/alaa-observability-soc/references/10-signal-model.md",
+    "UTF8/noBOM/LF and nonempty: skills/sohrab/alaa-observability-soc/references/20-instrumentation-gates.md",
+    "No legacy dual call remains in changed file: skills/sohrab/alaa-observability-soc/references/20-instrumentation-gates.md",
+    "Untouched owned input hash preserved: skills/sohrab/alaa-observability-soc/references/30-quantitative-budgets.md",
+    "Untouched owned input hash preserved: skills/sohrab/alaa-observability-soc/references/40-alerting-slo-retention.md",
+    "UTF8/noBOM/LF and nonempty: skills/sohrab/alaa-observability-soc/references/50-telemetry-pipeline.md",
+    "No legacy dual call remains in changed file: skills/sohrab/alaa-observability-soc/references/50-telemetry-pipeline.md",
+    "UTF8/noBOM/LF and nonempty: skills/sohrab/alaa-observability-soc/references/60-sentry-and-profiling.md",
+    "No legacy dual call remains in changed file: skills/sohrab/alaa-observability-soc/references/60-sentry-and-profiling.md",
+    "Untouched owned input hash preserved: skills/sohrab/alaa-observability-soc/references/70-soc-evidence.md",
+    "UTF8/noBOM/LF and nonempty: skills/sohrab/alaa-observability-soc/references/80-review-gates.md",
+    "No legacy dual call remains in changed file: skills/sohrab/alaa-observability-soc/references/80-review-gates.md",
+    "UTF8/noBOM/LF and nonempty: skills/sohrab/alaa-observability-soc/references/90-source-map.md",
+    "No legacy dual call remains in changed file: skills/sohrab/alaa-observability-soc/references/90-source-map.md",
+    "UTF8/noBOM/LF and nonempty: skills/sohrab/alaa-reliability-sla/SKILL.md",
+    "No legacy dual call remains in changed file: skills/sohrab/alaa-reliability-sla/SKILL.md",
+    "Untouched owned input hash preserved: skills/sohrab/alaa-reliability-sla/agents/openai.yaml",
+    "UTF8/noBOM/LF and nonempty: skills/sohrab/alaa-reliability-sla/references/00-topic-map.md",
+    "No legacy dual call remains in changed file: skills/sohrab/alaa-reliability-sla/references/00-topic-map.md",
+    "Untouched owned input hash preserved: skills/sohrab/alaa-reliability-sla/references/10-deadlines-and-timeouts.md",
+    "Untouched owned input hash preserved: skills/sohrab/alaa-reliability-sla/references/20-retries.md",
+    "Untouched owned input hash preserved: skills/sohrab/alaa-reliability-sla/references/30-breakers-and-bulkheads.md",
+    "Untouched owned input hash preserved: skills/sohrab/alaa-reliability-sla/references/40-admission-and-shedding.md",
+    "Untouched owned input hash preserved: skills/sohrab/alaa-reliability-sla/references/50-degradation.md",
+    "Untouched owned input hash preserved: skills/sohrab/alaa-reliability-sla/references/60-idempotency.md",
+    "Untouched owned input hash preserved: skills/sohrab/alaa-reliability-sla/references/70-error-budgets-and-slos.md",
+    "Untouched owned input hash preserved: skills/sohrab/alaa-reliability-sla/references/80-verification.md",
+    "Untouched owned input hash preserved: skills/sohrab/alaa-security-review/SKILL.md",
+    "Untouched owned input hash preserved: skills/sohrab/alaa-security-review/agents/openai.yaml",
+    "Untouched owned input hash preserved: skills/sohrab/alaa-security-review/references/10-fast-gate.md",
+    "Untouched owned input hash preserved: skills/sohrab/alaa-security-review/references/20-untrusted-input.md",
+    "UTF8/noBOM/LF and nonempty: skills/sohrab/alaa-security-review/references/25-browser-trust-and-output.md",
+    "No legacy dual call remains in changed file: skills/sohrab/alaa-security-review/references/25-browser-trust-and-output.md",
+    "Untouched owned input hash preserved: skills/sohrab/alaa-security-review/references/30-outbound-fetch-and-files.md",
+    "Untouched owned input hash preserved: skills/sohrab/alaa-security-review/references/40-authorization-and-tenancy.md",
+    "Untouched owned input hash preserved: skills/sohrab/alaa-security-review/references/50-credentials-and-cryptography.md",
+    "UTF8/noBOM/LF and nonempty: skills/sohrab/alaa-security-review/references/60-deep-review-and-hardening.md",
+    "No legacy dual call remains in changed file: skills/sohrab/alaa-security-review/references/60-deep-review-and-hardening.md",
+    "Untouched owned input hash preserved: skills/sohrab/alaa-security-review/references/90-source-map.md",
+    "UTF8/noBOM/LF and nonempty: skills/sohrab/alaa-services-contract/SKILL.md",
+    "No legacy dual call remains in changed file: skills/sohrab/alaa-services-contract/SKILL.md",
+    "Untouched owned input hash preserved: skills/sohrab/alaa-services-contract/agents/openai.yaml",
+    "Untouched owned input hash preserved: skills/sohrab/alaa-services-contract/references/00-topic-map.md",
+    "Untouched owned input hash preserved: skills/sohrab/alaa-services-contract/references/05-scope-service-modes-and-auth-routing.md",
+    "Untouched owned input hash preserved: skills/sohrab/alaa-services-contract/references/10-core-service-contract.md",
+    "Untouched owned input hash preserved: skills/sohrab/alaa-services-contract/references/15-deployment-and-runtime-contract.md",
+    "Untouched owned input hash preserved: skills/sohrab/alaa-services-contract/references/16-infrastructure-services-and-delivery-artifacts.md",
+    "Untouched owned input hash preserved: skills/sohrab/alaa-services-contract/references/20-operational-and-observability-contract.md",
+    "UTF8/noBOM/LF and nonempty: skills/sohrab/alaa-services-contract/references/21-alaa-platform-observability-directive.md",
+    "No legacy dual call remains in changed file: skills/sohrab/alaa-services-contract/references/21-alaa-platform-observability-directive.md",
+    "UTF8/noBOM/LF and nonempty: skills/sohrab/alaa-services-contract/references/22-failure-load-and-deprecation-contract.md",
+    "No legacy dual call remains in changed file: skills/sohrab/alaa-services-contract/references/22-failure-load-and-deprecation-contract.md",
+    "Untouched owned input hash preserved: skills/sohrab/alaa-services-contract/references/23-queue-and-exchange-registry.md",
+    "Untouched owned input hash preserved: skills/sohrab/alaa-services-contract/references/24-metric-registry.md",
+    "UTF8/noBOM/LF and nonempty: skills/sohrab/alaa-services-contract/references/25-end-to-end-flow-and-boundaries.md",
+    "No legacy dual call remains in changed file: skills/sohrab/alaa-services-contract/references/25-end-to-end-flow-and-boundaries.md",
+    "Untouched owned input hash preserved: skills/sohrab/alaa-services-contract/references/26-request-time-authorization-openfga.md",
+    "Untouched owned input hash preserved: skills/sohrab/alaa-services-contract/references/26-request-time-authorization-openfga/10-model-and-tuple-flow.md",
+    "Untouched owned input hash preserved: skills/sohrab/alaa-services-contract/references/26-request-time-authorization-openfga/20-gateway-route-and-object-id.md",
+    "Untouched owned input hash preserved: skills/sohrab/alaa-services-contract/references/26-request-time-authorization-openfga/30-sidecar-and-openfga-check.md",
+    "UTF8/noBOM/LF and nonempty: skills/sohrab/alaa-services-contract/references/26-request-time-authorization-openfga/40-decision-and-enforcement.md",
+    "No legacy dual call remains in changed file: skills/sohrab/alaa-services-contract/references/26-request-time-authorization-openfga/40-decision-and-enforcement.md",
+    "Untouched owned input hash preserved: skills/sohrab/alaa-services-contract/references/26-request-time-authorization-openfga/50-permission-mapping-and-pins.md",
+    "Untouched owned input hash preserved: skills/sohrab/alaa-services-contract/references/26-request-time-authorization-openfga/60-add-a-protected-route.md",
+    "Untouched owned input hash preserved: skills/sohrab/alaa-services-contract/references/26-request-time-authorization-openfga/70-debugging-and-source-owners.md",
+    "Untouched owned input hash preserved: skills/sohrab/alaa-services-contract/references/27-notification-service-contract.md",
+    "Untouched owned input hash preserved: skills/sohrab/alaa-services-contract/references/28-backend-permission-authorization-and-role-freeze.md",
+    "Untouched owned input hash preserved: skills/sohrab/alaa-services-contract/references/29-redis-key-registry.md",
+    "Untouched owned input hash preserved: skills/sohrab/alaa-services-contract/references/30-trusted-ingress-and-laravel-contract.md",
+    "Untouched owned input hash preserved: skills/sohrab/alaa-services-contract/references/32-auth-totp-and-step-up-contract.md",
+    "Untouched owned input hash preserved: skills/sohrab/alaa-services-contract/references/35-permission-catalog-and-service-configs.md",
+    "Untouched owned input hash preserved: skills/sohrab/alaa-services-contract/references/40-apply-checklist-and-anti-patterns.md",
+    "Untouched owned input hash preserved: skills/sohrab/alaa-services-contract/references/50-laravel-copy-baselines.md",
+    "Untouched owned input hash preserved: skills/sohrab/alaa-services-contract/references/60-frontend-sdk-consumption-contract.md",
+    "Untouched owned input hash preserved: skills/sohrab/alaa-services-contract/references/65-frontend-page-kit-and-widgets-contract.md",
+    "Untouched owned input hash preserved: skills/sohrab/alaa-services-contract/references/90-source-map.md",
+    "UTF8/noBOM/LF and nonempty: skills/sohrab/alaa-services-contract/references/95-fleet-conformance.md",
+    "No legacy dual call remains in changed file: skills/sohrab/alaa-services-contract/references/95-fleet-conformance.md",
+    "UTF8/noBOM/LF and nonempty: skills/sohrab/alaa-trust-gateway-auth/SKILL.md",
+    "No legacy dual call remains in changed file: skills/sohrab/alaa-trust-gateway-auth/SKILL.md",
+    "Untouched owned input hash preserved: skills/sohrab/alaa-trust-gateway-auth/agents/openai.yaml",
+    "Untouched owned input hash preserved: skills/sohrab/alaa-trust-gateway-auth/references/10-verification-and-ingress.md",
+    "Untouched owned input hash preserved: skills/sohrab/alaa-trust-gateway-auth/references/20-claims-headers-and-sentinels.md",
+    "UTF8/noBOM/LF and nonempty: skills/sohrab/alaa-trust-gateway-auth/references/30-fail-closed-cases.md",
+    "No legacy dual call remains in changed file: skills/sohrab/alaa-trust-gateway-auth/references/30-fail-closed-cases.md",
+    "Untouched owned input hash preserved: skills/sohrab/alaa-trust-gateway-auth/references/40-downstream-normalization.md",
+    "UTF8/noBOM/LF and nonempty: skills/sohrab/alaa-trust-gateway-auth/references/50-deny-codes.md",
+    "No legacy dual call remains in changed file: skills/sohrab/alaa-trust-gateway-auth/references/50-deny-codes.md",
+    "Untouched owned input hash preserved: skills/sohrab/alaa-trust-gateway-auth/references/60-auth-service-v3-contract.md",
+    "Untouched owned input hash preserved: skills/sohrab/alaa-trust-gateway-auth/references/70-review-and-anti-patterns.md",
+    "Untouched owned input hash preserved: skills/sohrab/alaa-trust-gateway-auth/references/90-source-map.md",
+    "Untouched owned input hash preserved: skills/sohrab/alaa-trust-gateway-auth/scripts/trust_boundary_check.py",
+    "UTF8/noBOM/LF and nonempty: skills/sohrab/vector-rust-observability-pipelines/SKILL.md",
+    "No legacy dual call remains in changed file: skills/sohrab/vector-rust-observability-pipelines/SKILL.md",
+    "Untouched owned input hash preserved: skills/sohrab/vector-rust-observability-pipelines/agents/openai.yaml",
+    "Untouched owned input hash preserved: skills/sohrab/vector-rust-observability-pipelines/assets/fixtures/green-minimal.yaml",
+    "Untouched owned input hash preserved: skills/sohrab/vector-rust-observability-pipelines/assets/fixtures/red-e651.yaml",
+    "Untouched owned input hash preserved: skills/sohrab/vector-rust-observability-pipelines/assets/fixtures/red-unconfined-template.yaml",
+    "Untouched owned input hash preserved: skills/sohrab/vector-rust-observability-pipelines/assets/fixtures/red-undersized-disk-buffer.yaml",
+    "Untouched owned input hash preserved: skills/sohrab/vector-rust-observability-pipelines/assets/fixtures/red-unsupported-ack.yaml",
+    "Untouched owned input hash preserved: skills/sohrab/vector-rust-observability-pipelines/assets/fixtures/upstream-releases.sample.json",
+    "Untouched owned input hash preserved: skills/sohrab/vector-rust-observability-pipelines/assets/fixtures/v0.58/green-http-decoding.yaml",
+    "Untouched owned input hash preserved: skills/sohrab/vector-rust-observability-pipelines/assets/fixtures/v0.58/red-http-encoding.yaml",
+    "Untouched owned input hash preserved: skills/sohrab/vector-rust-observability-pipelines/assets/fixtures/v0.58/red-uri-authority.yaml",
+    "Untouched owned input hash preserved: skills/sohrab/vector-rust-observability-pipelines/assets/templates/common.vrl",
+    "Untouched owned input hash preserved: skills/sohrab/vector-rust-observability-pipelines/assets/templates/vector-basic.yaml",
+    "Untouched owned input hash preserved: skills/sohrab/vector-rust-observability-pipelines/assets/templates/vector-clickhouse.yaml",
+    "Untouched owned input hash preserved: skills/sohrab/vector-rust-observability-pipelines/assets/templates/vector-tests.yaml",
+    "Untouched owned input hash preserved: skills/sohrab/vector-rust-observability-pipelines/references/00-topic-map.md",
+    "Untouched owned input hash preserved: skills/sohrab/vector-rust-observability-pipelines/references/10-topology-and-delivery-contract.md",
+    "Untouched owned input hash preserved: skills/sohrab/vector-rust-observability-pipelines/references/20-vrl-transforms.md",
+    "UTF8/noBOM/LF and nonempty: skills/sohrab/vector-rust-observability-pipelines/references/30-buffers-acks-and-backpressure.md",
+    "No legacy dual call remains in changed file: skills/sohrab/vector-rust-observability-pipelines/references/30-buffers-acks-and-backpressure.md",
+    "Untouched owned input hash preserved: skills/sohrab/vector-rust-observability-pipelines/references/35-pass-through-and-relay-paths.md",
+    "Untouched owned input hash preserved: skills/sohrab/vector-rust-observability-pipelines/references/40-clickhouse-sink.md",
+    "Untouched owned input hash preserved: skills/sohrab/vector-rust-observability-pipelines/references/50-validation-and-testing.md",
+    "Untouched owned input hash preserved: skills/sohrab/vector-rust-observability-pipelines/references/60-internal-monitoring.md",
+    "Untouched owned input hash preserved: skills/sohrab/vector-rust-observability-pipelines/references/65-troubleshooting.md",
+    "Untouched owned input hash preserved: skills/sohrab/vector-rust-observability-pipelines/references/70-helm-chart-operations.md",
+    "UTF8/noBOM/LF and nonempty: skills/sohrab/vector-rust-observability-pipelines/references/75-ala-ingest-pipeline.md",
+    "No legacy dual call remains in changed file: skills/sohrab/vector-rust-observability-pipelines/references/75-ala-ingest-pipeline.md",
+    "Untouched owned input hash preserved: skills/sohrab/vector-rust-observability-pipelines/references/80-version-and-upgrade-deltas.md",
+    "Untouched owned input hash preserved: skills/sohrab/vector-rust-observability-pipelines/references/81-release-coverage.md",
+    "Untouched owned input hash preserved: skills/sohrab/vector-rust-observability-pipelines/references/82-capability-surface.md",
+    "Untouched owned input hash preserved: skills/sohrab/vector-rust-observability-pipelines/references/85-security-and-secrets.md",
+    "Untouched owned input hash preserved: skills/sohrab/vector-rust-observability-pipelines/references/90-source-map.md",
+    "Untouched owned input hash preserved: skills/sohrab/vector-rust-observability-pipelines/scripts/check-upstream-version.mjs",
+    "Untouched owned input hash preserved: skills/sohrab/vector-rust-observability-pipelines/scripts/check-vector-configs.mjs"
+  ],
+  "changed_markdown": [
+    "skills/sohrab/alaa-keyset-pagination/SKILL.md",
+    "skills/sohrab/alaa-keyset-pagination/references/10-route-mode-and-sort-allowlist.md",
+    "skills/sohrab/alaa-keyset-pagination/references/40-wire-contract-limits-and-errors.md",
+    "skills/sohrab/alaa-observability-soc/SKILL.md",
+    "skills/sohrab/alaa-observability-soc/references/20-instrumentation-gates.md",
+    "skills/sohrab/alaa-observability-soc/references/50-telemetry-pipeline.md",
+    "skills/sohrab/alaa-observability-soc/references/60-sentry-and-profiling.md",
+    "skills/sohrab/alaa-observability-soc/references/80-review-gates.md",
+    "skills/sohrab/alaa-observability-soc/references/90-source-map.md",
+    "skills/sohrab/alaa-reliability-sla/SKILL.md",
+    "skills/sohrab/alaa-reliability-sla/references/00-topic-map.md",
+    "skills/sohrab/alaa-security-review/references/25-browser-trust-and-output.md",
+    "skills/sohrab/alaa-security-review/references/60-deep-review-and-hardening.md",
+    "skills/sohrab/alaa-services-contract/SKILL.md",
+    "skills/sohrab/alaa-services-contract/references/21-alaa-platform-observability-directive.md",
+    "skills/sohrab/alaa-services-contract/references/22-failure-load-and-deprecation-contract.md",
+    "skills/sohrab/alaa-services-contract/references/25-end-to-end-flow-and-boundaries.md",
+    "skills/sohrab/alaa-services-contract/references/26-request-time-authorization-openfga/40-decision-and-enforcement.md",
+    "skills/sohrab/alaa-services-contract/references/95-fleet-conformance.md",
+    "skills/sohrab/alaa-trust-gateway-auth/SKILL.md",
+    "skills/sohrab/alaa-trust-gateway-auth/references/30-fail-closed-cases.md",
+    "skills/sohrab/alaa-trust-gateway-auth/references/50-deny-codes.md",
+    "skills/sohrab/vector-rust-observability-pipelines/SKILL.md",
+    "skills/sohrab/vector-rust-observability-pipelines/references/30-buffers-acks-and-backpressure.md",
+    "skills/sohrab/vector-rust-observability-pipelines/references/75-ala-ingest-pipeline.md"
+  ],
+  "dual_form_conversions": {
+    "skills/sohrab/alaa-observability-soc/SKILL.md": 6,
+    "skills/sohrab/alaa-observability-soc/references/20-instrumentation-gates.md": 1,
+    "skills/sohrab/alaa-trust-gateway-auth/SKILL.md": 19,
+    "skills/sohrab/alaa-trust-gateway-auth/references/30-fail-closed-cases.md": 5,
+    "skills/sohrab/alaa-trust-gateway-auth/references/50-deny-codes.md": 1
+  },
+  "manifest_algorithm": "SHA256 of sorted repo-relative path plus NUL plus file bytes",
+  "manifest_sha256": "161136d0dfb7d4d45a6a8e934ef59e6813cb7fa7213b53b327d9d3af325c4974",
+  "growth": {
+    "alaa-keyset-pagination": {
+      "before_bytes": 64481,
+      "after_bytes": 59913,
+      "delta_bytes": -4568
+    },
+    "alaa-observability-soc": {
+      "before_bytes": 69854,
+      "after_bytes": 74285,
+      "delta_bytes": 4431
+    },
+    "alaa-reliability-sla": {
+      "before_bytes": 108318,
+      "after_bytes": 105872,
+      "delta_bytes": -2446
+    },
+    "alaa-security-review": {
+      "before_bytes": 103172,
+      "after_bytes": 103330,
+      "delta_bytes": 158
+    },
+    "alaa-services-contract": {
+      "before_bytes": 487249,
+      "after_bytes": 488414,
+      "delta_bytes": 1165
+    },
+    "alaa-trust-gateway-auth": {
+      "before_bytes": 137995,
+      "after_bytes": 137099,
+      "delta_bytes": -896
+    },
+    "vector-rust-observability-pipelines": {
+      "before_bytes": 215808,
+      "after_bytes": 216106,
+      "delta_bytes": 298
+    }
+  },
+  "files": [
+    {
+      "path": "skills/sohrab/alaa-keyset-pagination/SKILL.md",
+      "bytes": 14207,
+      "sha256": "3f52b626e62728ce88a153a89ca19c1b4e65b0d7917cb3af763022c7041edde4"
+    },
+    {
+      "path": "skills/sohrab/alaa-keyset-pagination/agents/openai.yaml",
+      "bytes": 2029,
+      "sha256": "726ddbb562398e427526a2eae97d237b20acf5006cc6202a2a30b5726365984b"
+    },
+    {
+      "path": "skills/sohrab/alaa-keyset-pagination/references/10-route-mode-and-sort-allowlist.md",
+      "bytes": 4223,
+      "sha256": "ede9edfe51cd417a338d94f0bb973af2a52604094cee8f9f04d9f7d98c22639d"
+    },
+    {
+      "path": "skills/sohrab/alaa-keyset-pagination/references/20-ordering-index-and-predicate.md",
+      "bytes": 5939,
+      "sha256": "41c77ca0257de841d617b7452df3190cab4e283546e939750d53a5e7377d875f"
+    },
+    {
+      "path": "skills/sohrab/alaa-keyset-pagination/references/30-cursor-format-integrity-and-context.md",
+      "bytes": 5888,
+      "sha256": "6a8043749fc35fc24af0bee711b4b25f0b30f20723781092daf4116710c22bf4"
+    },
+    {
+      "path": "skills/sohrab/alaa-keyset-pagination/references/40-wire-contract-limits-and-errors.md",
+      "bytes": 3784,
+      "sha256": "7b0decbb0e7990ee0782dccffd44f0752cad17839a778f85d3b32712e2382588"
+    },
+    {
+      "path": "skills/sohrab/alaa-keyset-pagination/references/50-hard-cases.md",
+      "bytes": 6064,
+      "sha256": "5edaee06cdc54523e33bce91671f5345cfa3f55369eb1383626a4c7d51afd9b3"
+    },
+    {
+      "path": "skills/sohrab/alaa-keyset-pagination/references/60-per-stack.md",
+      "bytes": 5366,
+      "sha256": "5146bf430adb6868808dad41533b115e32ef68892782106d33d1badae182f986"
+    },
+    {
+      "path": "skills/sohrab/alaa-keyset-pagination/references/70-test-list.md",
+      "bytes": 5992,
+      "sha256": "ee614d153edec2b3f329a5ef47385a543258a298f1661b5a1e8cbc4c5d914d0a"
+    },
+    {
+      "path": "skills/sohrab/alaa-keyset-pagination/references/90-source-map.md",
+      "bytes": 6421,
+      "sha256": "e5c8a3355a7210ff81f0514b703266d682cdb96c75aef4d3c17f60d4d974367b"
+    },
+    {
+      "path": "skills/sohrab/alaa-observability-soc/SKILL.md",
+      "bytes": 7351,
+      "sha256": "f79f879befb48b887894ed304ae91c6f1be5aafce1b6fdd57d3a3b9bff359f6a"
+    },
+    {
+      "path": "skills/sohrab/alaa-observability-soc/agents/openai.yaml",
+      "bytes": 528,
+      "sha256": "8e94551284a2a8c1fe61d539f1d27138bcf71c0113b1683eddd0e6bcdb5bad84"
+    },
+    {
+      "path": "skills/sohrab/alaa-observability-soc/references/00-topic-map.md",
+      "bytes": 2635,
+      "sha256": "33aac2d44116b2a43746126479f492e4f4c7de9f9aa09b1acdd910c1042a6b67"
+    },
+    {
+      "path": "skills/sohrab/alaa-observability-soc/references/10-signal-model.md",
+      "bytes": 6603,
+      "sha256": "db2138d63676af6f7ebbb6bb0271837b13d7717715bd54565eaa354ac79d4482"
+    },
+    {
+      "path": "skills/sohrab/alaa-observability-soc/references/20-instrumentation-gates.md",
+      "bytes": 12069,
+      "sha256": "ed255d024b7fb46ccb3723dbb843dc69bc9c0b645d34595caa8b79b1a31fc568"
+    },
+    {
+      "path": "skills/sohrab/alaa-observability-soc/references/30-quantitative-budgets.md",
+      "bytes": 7545,
+      "sha256": "deec8d941c44334ddd15e20b85609c2edcc978b3ff20bade5692f3fbb6c14b6d"
+    },
+    {
+      "path": "skills/sohrab/alaa-observability-soc/references/40-alerting-slo-retention.md",
+      "bytes": 6411,
+      "sha256": "88bff1f5096ffe4c09d4fd50a474710f959e5ffacfcfa8bdaceb41f259c00464"
+    },
+    {
+      "path": "skills/sohrab/alaa-observability-soc/references/50-telemetry-pipeline.md",
+      "bytes": 7732,
+      "sha256": "ddd3c20e79606af382a52b1833db302a76e968f5eacdae2125a2736fd5b1ef61"
+    },
+    {
+      "path": "skills/sohrab/alaa-observability-soc/references/60-sentry-and-profiling.md",
+      "bytes": 6043,
+      "sha256": "87ab780325315b6f71530b57d4a6acf688a288c4b460de231e3115e73ad99e94"
+    },
+    {
+      "path": "skills/sohrab/alaa-observability-soc/references/70-soc-evidence.md",
+      "bytes": 6387,
+      "sha256": "a74b9e0bcd2255c7a247fa2063561aa0f853df715c0c544e4151b25fa6f514f1"
+    },
+    {
+      "path": "skills/sohrab/alaa-observability-soc/references/80-review-gates.md",
+      "bytes": 6251,
+      "sha256": "a4523ec3792b96dc8a7dd9981949058ace00eb77552d678c8cfc085bf972d216"
+    },
+    {
+      "path": "skills/sohrab/alaa-observability-soc/references/90-source-map.md",
+      "bytes": 4730,
+      "sha256": "262a1a443e2b0203fc6d097371ddb373504afe6c8188f36ca8b351eaeb44abb8"
+    },
+    {
+      "path": "skills/sohrab/alaa-reliability-sla/SKILL.md",
+      "bytes": 15309,
+      "sha256": "da4bde49ea92d101e68622fa1b34e5d26162c73759758b9875ed31a471c0b480"
+    },
+    {
+      "path": "skills/sohrab/alaa-reliability-sla/agents/openai.yaml",
+      "bytes": 928,
+      "sha256": "fe770fc89db5b39d6cf881ec0ade38d82e066d73b0f29cde92df37baa05f940a"
+    },
+    {
+      "path": "skills/sohrab/alaa-reliability-sla/references/00-topic-map.md",
+      "bytes": 3195,
+      "sha256": "e6a6e170f241503f8eb5e0b50d2672813ca71e9fd2b4520ad8566fbb3326f1e3"
+    },
+    {
+      "path": "skills/sohrab/alaa-reliability-sla/references/10-deadlines-and-timeouts.md",
+      "bytes": 11413,
+      "sha256": "ef2112c9b061af21b7559bd5a8e0e02ecc293c7d711758362eec9fb21bc332c6"
+    },
+    {
+      "path": "skills/sohrab/alaa-reliability-sla/references/20-retries.md",
+      "bytes": 10496,
+      "sha256": "fca44fb3b8dc77dd51f159d4606bcc64795c96723302e9edc8e0bc89428935f2"
+    },
+    {
+      "path": "skills/sohrab/alaa-reliability-sla/references/30-breakers-and-bulkheads.md",
+      "bytes": 9935,
+      "sha256": "2c27dbd55f0d067efef182e6dea3fa51cd13aaea978a5be296b04aefa2403253"
+    },
+    {
+      "path": "skills/sohrab/alaa-reliability-sla/references/40-admission-and-shedding.md",
+      "bytes": 11034,
+      "sha256": "b1b38a930de32f8d70c3e32a2c76ad3d025aab599bbee8eeb6b0aef1e5c65352"
+    },
+    {
+      "path": "skills/sohrab/alaa-reliability-sla/references/50-degradation.md",
+      "bytes": 9762,
+      "sha256": "a749fb0160e5477eedec491c9fb46594240fb11f1d41e4c4d9e863310e794eb9"
+    },
+    {
+      "path": "skills/sohrab/alaa-reliability-sla/references/60-idempotency.md",
+      "bytes": 12757,
+      "sha256": "aaf315a96450b671f9563e69d4c47873477afee7a9b8ca573234cfb2c991aa88"
+    },
+    {
+      "path": "skills/sohrab/alaa-reliability-sla/references/70-error-budgets-and-slos.md",
+      "bytes": 8914,
+      "sha256": "722b0d32d876fb58fad13497fa80c7682a52ac1b6a8143fbf03b5e35d6223a38"
+    },
+    {
+      "path": "skills/sohrab/alaa-reliability-sla/references/80-verification.md",
+      "bytes": 12129,
+      "sha256": "e6964b0f73fc4fbc5b06da53cc1bc2e6aa3922998849cddba621608b27d55d43"
+    },
+    {
+      "path": "skills/sohrab/alaa-security-review/SKILL.md",
+      "bytes": 15823,
+      "sha256": "c996166f839a014ec56df21691a25f3d5dbc579f86bfc383e6a8a733901c357c"
+    },
+    {
+      "path": "skills/sohrab/alaa-security-review/agents/openai.yaml",
+      "bytes": 506,
+      "sha256": "7d0dc89551dca20e56d7a01380855764b1e22fee4a4604c592771560181baac2"
+    },
+    {
+      "path": "skills/sohrab/alaa-security-review/references/10-fast-gate.md",
+      "bytes": 8152,
+      "sha256": "e2c1830df6c8908c67ae1cbedaa7ae646b2651d6d05f91f2b988e01761bdb054"
+    },
+    {
+      "path": "skills/sohrab/alaa-security-review/references/20-untrusted-input.md",
+      "bytes": 11920,
+      "sha256": "e7dd342b35ab6c4a76bd0e11876667d27b071e32e1c102cd0636bf747c1400f9"
+    },
+    {
+      "path": "skills/sohrab/alaa-security-review/references/25-browser-trust-and-output.md",
+      "bytes": 8871,
+      "sha256": "bcf73f175027acb5ae463ada27f401d71cb68f07ad1b4727e10bee7bbe721d82"
+    },
+    {
+      "path": "skills/sohrab/alaa-security-review/references/30-outbound-fetch-and-files.md",
+      "bytes": 10900,
+      "sha256": "9c310dda0cd84afb7f6595b427defcc8cc3a1030fb05494e9fb4d5f0d26ef742"
+    },
+    {
+      "path": "skills/sohrab/alaa-security-review/references/40-authorization-and-tenancy.md",
+      "bytes": 15295,
+      "sha256": "5ce82c911aeb9c4ad78e729737ba850ba9ee5d8e4b34a3f5ad482c77c4e7db00"
+    },
+    {
+      "path": "skills/sohrab/alaa-security-review/references/50-credentials-and-cryptography.md",
+      "bytes": 18384,
+      "sha256": "4afdbd16ee5822606ba6efcde4733c40994ebc17d8b77a7250e7d85bfbd98d14"
+    },
+    {
+      "path": "skills/sohrab/alaa-security-review/references/60-deep-review-and-hardening.md",
+      "bytes": 10344,
+      "sha256": "f07f5aae528857141790c17a9b712a068837fadf8d1e093b9bd7e951605437c9"
+    },
+    {
+      "path": "skills/sohrab/alaa-security-review/references/90-source-map.md",
+      "bytes": 3135,
+      "sha256": "2032bb2bdcf8f3d2452903f24fa0464a874e9d394c1772c7bc777537ef622172"
+    },
+    {
+      "path": "skills/sohrab/alaa-services-contract/SKILL.md",
+      "bytes": 10476,
+      "sha256": "5032c4dbca4049ccafab13af4bc61665143fe112ab58ddab4d1238b73cc0e66d"
+    },
+    {
+      "path": "skills/sohrab/alaa-services-contract/agents/openai.yaml",
+      "bytes": 709,
+      "sha256": "24f601f8e1aa256b2a1ce01ebd79abc6d9a7fe8eedcfa36bc21e632dd3622ddc"
+    },
+    {
+      "path": "skills/sohrab/alaa-services-contract/references/00-topic-map.md",
+      "bytes": 14614,
+      "sha256": "e3c614e4f8bb71190b4b8f1936fcd812c1c9b6c5898e61e625e86a8fd5dc2f23"
+    },
+    {
+      "path": "skills/sohrab/alaa-services-contract/references/05-scope-service-modes-and-auth-routing.md",
+      "bytes": 9876,
+      "sha256": "f8fd8b505dd332efcfb20cc3c996531aaa827c05ed66f45ee1dd0ac69223bd0f"
+    },
+    {
+      "path": "skills/sohrab/alaa-services-contract/references/10-core-service-contract.md",
+      "bytes": 22950,
+      "sha256": "5f4be07668a6fb28360a180b92c90a09f0efefd5af1ac843e146a00647ee5d96"
+    },
+    {
+      "path": "skills/sohrab/alaa-services-contract/references/15-deployment-and-runtime-contract.md",
+      "bytes": 21286,
+      "sha256": "b69538fff8cc1de7438a57cfad7c54492883501b35c1568e70b197e64ef4beb7"
+    },
+    {
+      "path": "skills/sohrab/alaa-services-contract/references/16-infrastructure-services-and-delivery-artifacts.md",
+      "bytes": 30219,
+      "sha256": "3084a3c2cac908c6caab39983533cd1af78688c25af1ce2035c3c2e5ff018693"
+    },
+    {
+      "path": "skills/sohrab/alaa-services-contract/references/20-operational-and-observability-contract.md",
+      "bytes": 29228,
+      "sha256": "8fb7162801b8183534054c3a917b62650ffa4555b66629a50b9ab040ac9b7cd6"
+    },
+    {
+      "path": "skills/sohrab/alaa-services-contract/references/21-alaa-platform-observability-directive.md",
+      "bytes": 14535,
+      "sha256": "6c5bb6805faad1fa3c3bdd240ef8c9069527e6bf4b6e97767c9f01f5f9d05b6f"
+    },
+    {
+      "path": "skills/sohrab/alaa-services-contract/references/22-failure-load-and-deprecation-contract.md",
+      "bytes": 23439,
+      "sha256": "3fe88b519fe76fd32ca63b1307f153fcd98fb8b3f9ff85e925bf7a191a928aa9"
+    },
+    {
+      "path": "skills/sohrab/alaa-services-contract/references/23-queue-and-exchange-registry.md",
+      "bytes": 23471,
+      "sha256": "e61833306b734b5840d56acbb489d889a7866d966dde5508e611f0b8d33e9494"
+    },
+    {
+      "path": "skills/sohrab/alaa-services-contract/references/24-metric-registry.md",
+      "bytes": 41083,
+      "sha256": "a12ff7b35a90fbb8ebaa01364e4ecd797bcc3fb418aea80badc457a68841742d"
+    },
+    {
+      "path": "skills/sohrab/alaa-services-contract/references/25-end-to-end-flow-and-boundaries.md",
+      "bytes": 38580,
+      "sha256": "4429a4721ef8b4917a3d9d17603b4f97c54dd3155428581c3ab42ddee6122f19"
+    },
+    {
+      "path": "skills/sohrab/alaa-services-contract/references/26-request-time-authorization-openfga.md",
+      "bytes": 4079,
+      "sha256": "87c6bab4f1f357a7d853a6bacd40469fe7d96114fa7de18d133b598a9af5bebe"
+    },
+    {
+      "path": "skills/sohrab/alaa-services-contract/references/26-request-time-authorization-openfga/10-model-and-tuple-flow.md",
+      "bytes": 2509,
+      "sha256": "1f96fa6dba79d819da2889068ec4889bbab3642e27ade4247fa398d239eea667"
+    },
+    {
+      "path": "skills/sohrab/alaa-services-contract/references/26-request-time-authorization-openfga/20-gateway-route-and-object-id.md",
+      "bytes": 1625,
+      "sha256": "3c494115e7f8059b035cb33a0d8f5105f221ba873bbe5d384136ddb30c7cafa0"
+    },
+    {
+      "path": "skills/sohrab/alaa-services-contract/references/26-request-time-authorization-openfga/30-sidecar-and-openfga-check.md",
+      "bytes": 3056,
+      "sha256": "6842aeb1b67738bc2126c98db5f73865c97ac81b5d4fd55d71a458b47df00cba"
+    },
+    {
+      "path": "skills/sohrab/alaa-services-contract/references/26-request-time-authorization-openfga/40-decision-and-enforcement.md",
+      "bytes": 2110,
+      "sha256": "98b2796ed47cd1e1bb9659ff96ff9feb9ac367b6ba11fec909eb7cbb6b037c31"
+    },
+    {
+      "path": "skills/sohrab/alaa-services-contract/references/26-request-time-authorization-openfga/50-permission-mapping-and-pins.md",
+      "bytes": 2003,
+      "sha256": "62df1faaef1598dd32a909c2637dc6074d751dbf935dc6b6620f7e66840830bf"
+    },
+    {
+      "path": "skills/sohrab/alaa-services-contract/references/26-request-time-authorization-openfga/60-add-a-protected-route.md",
+      "bytes": 2537,
+      "sha256": "9892d3fbe145f2b32084c71aa2c250504fbbd7db09ee372b8cadd75527648a61"
+    },
+    {
+      "path": "skills/sohrab/alaa-services-contract/references/26-request-time-authorization-openfga/70-debugging-and-source-owners.md",
+      "bytes": 3809,
+      "sha256": "5fabff62a5b709097327a77535f665884597e30347824357ea08c275faec44b5"
+    },
+    {
+      "path": "skills/sohrab/alaa-services-contract/references/27-notification-service-contract.md",
+      "bytes": 14348,
+      "sha256": "ac32102155736ff4d7570524a320ca4f510e8c169afb9ba56147bb336122ab64"
+    },
+    {
+      "path": "skills/sohrab/alaa-services-contract/references/28-backend-permission-authorization-and-role-freeze.md",
+      "bytes": 5110,
+      "sha256": "aa06d771ad43489e1b1d4f2fe67d6433ce001402e613d22e256f4bcce16d7745"
+    },
+    {
+      "path": "skills/sohrab/alaa-services-contract/references/29-redis-key-registry.md",
+      "bytes": 14310,
+      "sha256": "dc47c696e404b765f4b65c547267a37fc8636310a1efb2af01953f4de9e3001a"
+    },
+    {
+      "path": "skills/sohrab/alaa-services-contract/references/30-trusted-ingress-and-laravel-contract.md",
+      "bytes": 13858,
+      "sha256": "4c0d77659ccfb9d629ded6665236ff73bbaf2c9b273698b2fb8d8717d742a550"
+    },
+    {
+      "path": "skills/sohrab/alaa-services-contract/references/32-auth-totp-and-step-up-contract.md",
+      "bytes": 23025,
+      "sha256": "423b05eb8c9934cb6302dc82a58ad909c7c3f17bc2e986079bc1717a1e11782c"
+    },
+    {
+      "path": "skills/sohrab/alaa-services-contract/references/35-permission-catalog-and-service-configs.md",
+      "bytes": 9765,
+      "sha256": "57cef877aa56d1b29ab9e26010f67f5f0cadac1e091f6db485fbd8b40af669ff"
+    },
+    {
+      "path": "skills/sohrab/alaa-services-contract/references/40-apply-checklist-and-anti-patterns.md",
+      "bytes": 20828,
+      "sha256": "9460d3bb1c9d1b7fb8d219c98754fd031b89322409434aadeff3c2eb0a288ac9"
+    },
+    {
+      "path": "skills/sohrab/alaa-services-contract/references/50-laravel-copy-baselines.md",
+      "bytes": 10017,
+      "sha256": "00d4ef5f36065c063f335f477ff55725dcb3420d00987fbb00e6a81d1174a30d"
+    },
+    {
+      "path": "skills/sohrab/alaa-services-contract/references/60-frontend-sdk-consumption-contract.md",
+      "bytes": 16920,
+      "sha256": "3038f3bf5d5d96260dbee6d7955535c3f5153b2469b293c971c94fda61c0c405"
+    },
+    {
+      "path": "skills/sohrab/alaa-services-contract/references/65-frontend-page-kit-and-widgets-contract.md",
+      "bytes": 7726,
+      "sha256": "ed7fb4d76fcdd2b1c282e5fc91cb9fb460f5805deb9ba46ad2cbb7a5ecda6e26"
+    },
+    {
+      "path": "skills/sohrab/alaa-services-contract/references/90-source-map.md",
+      "bytes": 2509,
+      "sha256": "2c163ac79e6284f8acbc41e6bb2568146c2aca9898bb458378e3f62b45f339e5"
+    },
+    {
+      "path": "skills/sohrab/alaa-services-contract/references/95-fleet-conformance.md",
+      "bytes": 47804,
+      "sha256": "5f490b6c3408082440983d5a84c592ba1661bc7003517b3bf62a85c9f47448b7"
+    },
+    {
+      "path": "skills/sohrab/alaa-trust-gateway-auth/SKILL.md",
+      "bytes": 8861,
+      "sha256": "196577982c36aab8bd13cb38634cd40766332833199dc9319c84f6b2f34df399"
+    },
+    {
+      "path": "skills/sohrab/alaa-trust-gateway-auth/agents/openai.yaml",
+      "bytes": 513,
+      "sha256": "51014db4f4b42976f02d449f017ff4be8d60a2f9e76f09abcee3abcaa67d5be7"
+    },
+    {
+      "path": "skills/sohrab/alaa-trust-gateway-auth/references/10-verification-and-ingress.md",
+      "bytes": 23842,
+      "sha256": "dc0e3c380df5e88752acdd3a11738f98379bc50e3c99d9b838df6be11a42bb4a"
+    },
+    {
+      "path": "skills/sohrab/alaa-trust-gateway-auth/references/20-claims-headers-and-sentinels.md",
+      "bytes": 9252,
+      "sha256": "9e381a9d6d0e39d32026b1ec1eaaa1fb06bf06cad4febfb00c2c8d5bbf52df4e"
+    },
+    {
+      "path": "skills/sohrab/alaa-trust-gateway-auth/references/30-fail-closed-cases.md",
+      "bytes": 17140,
+      "sha256": "75680936b389afe21926de4ea6a4fb1580f4e309bde93acfbc7feb77b114a1d5"
+    },
+    {
+      "path": "skills/sohrab/alaa-trust-gateway-auth/references/40-downstream-normalization.md",
+      "bytes": 13150,
+      "sha256": "eec0c54bea239474a340670ad101fb18de612596029435683fe2fea08bf0cd95"
+    },
+    {
+      "path": "skills/sohrab/alaa-trust-gateway-auth/references/50-deny-codes.md",
+      "bytes": 6207,
+      "sha256": "38ac3fa05c55760517cc66d527bb80fa9b56a32221fe1f9eb259016267670925"
+    },
+    {
+      "path": "skills/sohrab/alaa-trust-gateway-auth/references/60-auth-service-v3-contract.md",
+      "bytes": 7603,
+      "sha256": "e505f94180fdd34d2d96fb6d49d1b6f9015edcffad9076ed00925de8dbe95e46"
+    },
+    {
+      "path": "skills/sohrab/alaa-trust-gateway-auth/references/70-review-and-anti-patterns.md",
+      "bytes": 7011,
+      "sha256": "3271b906f120be89c5851530d2cb35bb7086a32c1f51e5755af0714c0257d2dd"
+    },
+    {
+      "path": "skills/sohrab/alaa-trust-gateway-auth/references/90-source-map.md",
+      "bytes": 5639,
+      "sha256": "40b210c1b828379c6a94b34d0c666b137b94b115b0d5b0d08f0dca4a081430f2"
+    },
+    {
+      "path": "skills/sohrab/alaa-trust-gateway-auth/scripts/trust_boundary_check.py",
+      "bytes": 37881,
+      "sha256": "10295d4265f80e8c8cdfe6ffdb71a27242ef6b19e56c2859d1d477d4e5dd4f52"
+    },
+    {
+      "path": "skills/sohrab/vector-rust-observability-pipelines/SKILL.md",
+      "bytes": 8238,
+      "sha256": "266261c9e14ce8b634a56df27ec7f43733339d0c0f31da79e4aa078dafecc769"
+    },
+    {
+      "path": "skills/sohrab/vector-rust-observability-pipelines/agents/openai.yaml",
+      "bytes": 430,
+      "sha256": "e524d2d846fced9b7491d4983981fc48937a2d98317e6b4a19e7b491fe94d68c"
+    },
+    {
+      "path": "skills/sohrab/vector-rust-observability-pipelines/assets/fixtures/green-minimal.yaml",
+      "bytes": 406,
+      "sha256": "3be152192322ade19c2a2fe8988e0b952292395c907f095768568280fdc5ee88"
+    },
+    {
+      "path": "skills/sohrab/vector-rust-observability-pipelines/assets/fixtures/red-e651.yaml",
+      "bytes": 545,
+      "sha256": "5a1aef5ca66a31b41b25d0ac025f5536efd07b4d590128b9985c47fb068ae032"
+    },
+    {
+      "path": "skills/sohrab/vector-rust-observability-pipelines/assets/fixtures/red-unconfined-template.yaml",
+      "bytes": 679,
+      "sha256": "556cd210d1b9e2d5ca41bc3cdf1e25d04132e0033106bc11c31faaf60ea5f274"
+    },
+    {
+      "path": "skills/sohrab/vector-rust-observability-pipelines/assets/fixtures/red-undersized-disk-buffer.yaml",
+      "bytes": 566,
+      "sha256": "787a55991e5bb553d3545ee64edd89c8ed0487bd6da27179eacaa5a113c7fa76"
+    },
+    {
+      "path": "skills/sohrab/vector-rust-observability-pipelines/assets/fixtures/red-unsupported-ack.yaml",
+      "bytes": 258,
+      "sha256": "60338979d90a469a4a90af3dcbcd99d67b12bf3f45cae44077b7f62d7bd67b3a"
+    },
+    {
+      "path": "skills/sohrab/vector-rust-observability-pipelines/assets/fixtures/upstream-releases.sample.json",
+      "bytes": 2327,
+      "sha256": "0660bb5c17ee66ddfb78ec6f6ee7df954587403046b04303a4208b7ddcc9f948"
+    },
+    {
+      "path": "skills/sohrab/vector-rust-observability-pipelines/assets/fixtures/v0.58/green-http-decoding.yaml",
+      "bytes": 308,
+      "sha256": "9839dc4b696069cd92e3614d1b6c61523a90ad5c0f126a2aa109fde8d5fa2338"
+    },
+    {
+      "path": "skills/sohrab/vector-rust-observability-pipelines/assets/fixtures/v0.58/red-http-encoding.yaml",
+      "bytes": 243,
+      "sha256": "d5c20be7fea10b58233c32c71905b0f91eef055bba3d88cdb56721f57d11ef53"
+    },
+    {
+      "path": "skills/sohrab/vector-rust-observability-pipelines/assets/fixtures/v0.58/red-uri-authority.yaml",
+      "bytes": 265,
+      "sha256": "3cbed6886abb1a40755a5d9c0c4216f17e2809156122c9e8d4602e3d7b9b40a5"
+    },
+    {
+      "path": "skills/sohrab/vector-rust-observability-pipelines/assets/templates/common.vrl",
+      "bytes": 1523,
+      "sha256": "c9c87b3e584c8e92b9741db29df3e9e5aa5c5ceb810d5ff191684aa21a50f1df"
+    },
+    {
+      "path": "skills/sohrab/vector-rust-observability-pipelines/assets/templates/vector-basic.yaml",
+      "bytes": 1035,
+      "sha256": "67a7233c2c5d5e209fc11b98e21cfff21c4e94c742f9b24d6d456d6f60892ab5"
+    },
+    {
+      "path": "skills/sohrab/vector-rust-observability-pipelines/assets/templates/vector-clickhouse.yaml",
+      "bytes": 3406,
+      "sha256": "7818de28bbaf346d26786a178a613980ee292bf422b09b8570f0229975d0111a"
+    },
+    {
+      "path": "skills/sohrab/vector-rust-observability-pipelines/assets/templates/vector-tests.yaml",
+      "bytes": 2590,
+      "sha256": "f049e4feab52e19d9906c9fa4106492f2e75d1acd16ad74a642ce75a35275360"
+    },
+    {
+      "path": "skills/sohrab/vector-rust-observability-pipelines/references/00-topic-map.md",
+      "bytes": 4379,
+      "sha256": "be694d436f58f8a94fc3925528e652f845fff5eb475a7f45232c19af4ed1ac0d"
+    },
+    {
+      "path": "skills/sohrab/vector-rust-observability-pipelines/references/10-topology-and-delivery-contract.md",
+      "bytes": 5630,
+      "sha256": "67147429e8316f42048fb8bf1ccadf2c256bae97f0fe5abc01a751513d9ea38a"
+    },
+    {
+      "path": "skills/sohrab/vector-rust-observability-pipelines/references/20-vrl-transforms.md",
+      "bytes": 6076,
+      "sha256": "bb4dfabf04d5b6310db0ab700437d9335f75b9579c1a030022dc9e3f097f19ee"
+    },
+    {
+      "path": "skills/sohrab/vector-rust-observability-pipelines/references/30-buffers-acks-and-backpressure.md",
+      "bytes": 14804,
+      "sha256": "f92a81946b026ea3c51c1bea1af76d598f89e3f860ecb647f1d6258969e3ab25"
+    },
+    {
+      "path": "skills/sohrab/vector-rust-observability-pipelines/references/35-pass-through-and-relay-paths.md",
+      "bytes": 9373,
+      "sha256": "1c00f92fb573e908d0196ce51777aed7f9363746eee2b895fe49c934b665838c"
+    },
+    {
+      "path": "skills/sohrab/vector-rust-observability-pipelines/references/40-clickhouse-sink.md",
+      "bytes": 9024,
+      "sha256": "d330f9f0f3748be1bcbc4ac8157975203094f12257b047487b36e9adbe808f88"
+    },
+    {
+      "path": "skills/sohrab/vector-rust-observability-pipelines/references/50-validation-and-testing.md",
+      "bytes": 10871,
+      "sha256": "6fbe5ab14b4342693a49be0ad7163566ab9b25c0eb599e89fec35e171d514509"
+    },
+    {
+      "path": "skills/sohrab/vector-rust-observability-pipelines/references/60-internal-monitoring.md",
+      "bytes": 9607,
+      "sha256": "71dc06321e743515dddd90607f2d898bc44f91e8594f74c80463a91ba164a6e8"
+    },
+    {
+      "path": "skills/sohrab/vector-rust-observability-pipelines/references/65-troubleshooting.md",
+      "bytes": 10692,
+      "sha256": "5f8f3fefcdd97fa6223745442c2b407c466afb8902456485cdb6a5eae0d54b78"
+    },
+    {
+      "path": "skills/sohrab/vector-rust-observability-pipelines/references/70-helm-chart-operations.md",
+      "bytes": 5973,
+      "sha256": "89c1ab5f836027409bb111c98571d3be9e2aec66603f48b27226ea722f27a884"
+    },
+    {
+      "path": "skills/sohrab/vector-rust-observability-pipelines/references/75-ala-ingest-pipeline.md",
+      "bytes": 23499,
+      "sha256": "cb7782bbcc4f4fe68b3635b5fad2c676476b8f5635c3c9f4d29333d2beaa5266"
+    },
+    {
+      "path": "skills/sohrab/vector-rust-observability-pipelines/references/80-version-and-upgrade-deltas.md",
+      "bytes": 16583,
+      "sha256": "1209dd697f270cdbd206a675aef0879212ec128962de544ef0bc31a9feef590c"
+    },
+    {
+      "path": "skills/sohrab/vector-rust-observability-pipelines/references/81-release-coverage.md",
+      "bytes": 8749,
+      "sha256": "b0318ae64a8630908330c8a5651b7240baad0ef56acfe9773fd508ebef8ee9ec"
+    },
+    {
+      "path": "skills/sohrab/vector-rust-observability-pipelines/references/82-capability-surface.md",
+      "bytes": 13226,
+      "sha256": "41fe5b5d10377ca4cd65f13ab5781ae3959691fe908fdc303c6637ac6f3ef093"
+    },
+    {
+      "path": "skills/sohrab/vector-rust-observability-pipelines/references/85-security-and-secrets.md",
+      "bytes": 13667,
+      "sha256": "422a9dd7105976b3eabcb6cffa41e7beeaba695e4c56780bf2f9f12b9e6e2527"
+    },
+    {
+      "path": "skills/sohrab/vector-rust-observability-pipelines/references/90-source-map.md",
+      "bytes": 6825,
+      "sha256": "af3fbfafeb5d19a309e9cd2da2ab293f31209945b13a5b6c227a89495961b167"
+    },
+    {
+      "path": "skills/sohrab/vector-rust-observability-pipelines/scripts/check-upstream-version.mjs",
+      "bytes": 10073,
+      "sha256": "5472c2dfdf65bca361aff3ac45971c132d8c0fe3d2553aa1af72301c311cba77"
+    },
+    {
+      "path": "skills/sohrab/vector-rust-observability-pipelines/scripts/check-vector-configs.mjs",
+      "bytes": 14236,
+      "sha256": "66eeabdb52f32e728ba39d2db21afc0261e8ae2f46ee2e9a42fb172766aeeb65"
+    }
+  ],
+  "proof_limit": "Static source/instruction assertions only; no consumer or live runtime behavior proof."
+}

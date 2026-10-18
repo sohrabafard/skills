@@ -26,7 +26,7 @@ what a test must fail on, are `78-testing-binding.md`.
 - SSR-safe, or explicitly client-only in its name and its documentation.
 - Does not own domain state that a store or service owns.
 - **Ships a unit test that fails when its teardown, its error path, or its guard is removed.** Test design
-  is `/alaa-testing-strategy` (`$alaa-testing-strategy`); the Vue binding is `78-testing-binding.md`.
+  is `/alaa-testing-strategy`; the Vue binding is `78-testing-binding.md`.
 
 ## New or changed Pinia store
 
@@ -61,19 +61,22 @@ what a test must fail on, are `78-testing-binding.md`.
 
 ## Commands
 
-Read `package.json` first and prefer the repository's own scripts. The authoring lane's focused set:
+Read `package.json` and the lockfile first; use that manager's existing scripts. In Quasar repositories,
+`alaa-quasar-app-vite-v3 SKILL.md` Version rules owns manager selection. Below, `<pm>` means that manager;
+for a direct tool call use its installed-local execution form, never a downloading package runner.
+The authoring lane's focused set:
 
 ```bash
-npm run typecheck                          # or: npx vue-tsc --noEmit
-npm run lint
-npm run test -- related --run <changed files>   # only when the test script runs bare `vitest`
-npx vitest related --run <changed files>        # otherwise, with the test script's own config flags
-npm run build
+<pm> run typecheck                         # or the installed-local vue-tsc --noEmit
+<pm> run lint
+<pm> run test <forwarded related --run arguments>  # only for a bare vitest test script
+<local-exec> vitest related --run <changed files> <test-script config flags>  # otherwise
+<pm> run build
 ```
 
-`npm run test` without a filter, the whole suite, is the exhaustive tier: the authority `/alaa-testing-strategy`
+`<pm> run test` without a filter, the whole suite, is the exhaustive tier: the authority `/alaa-testing-strategy`
 assigns runs it, and a session with no such authority runs it once, on the final tree. Skip the separate
-typecheck only when `npm run build` runs the same `vue-tsc` invocation over the same tsconfig projects, because
+typecheck only when `<pm> run build` runs the same `vue-tsc` invocation over the same tsconfig projects, because
 the same check would otherwise run twice on one tree.
 
 `vue-tsc --noEmit` is the typechecker for this fleet, per the TypeScript line stated in
@@ -89,5 +92,5 @@ consumer — `/alaa-mono-package` owns that boundary.
 ## Reporting
 
 The response format — what to include, what to leave out — is
-`/alaa-low-noise` (`$alaa-low-noise`). This skill adds one requirement to whatever that format says: every
+`/alaa-low-noise`. This skill adds one requirement to whatever that format says: every
 validation claim carries the command that produced it.

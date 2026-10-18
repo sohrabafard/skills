@@ -31,7 +31,6 @@ from pathlib import Path
 SKILL_NAME = "tusd-upload-platform"
 DESCRIPTION_HARD_LIMIT = 1024
 DESCRIPTION_AUTHOR_TARGET = 950
-ROUTER_THRESHOLD = 9
 TOPIC_MAP = "references/00-topic-map.md"
 
 TEXT_SUFFIXES = {
@@ -153,34 +152,24 @@ def topic_map_paths(root: Path) -> list[tuple[str, int]]:
 # --------------------------------------------------------------------------
 
 def check_single_router(root: Path) -> list[Violation]:
-    """1 - exactly one router, in the place the reference count requires."""
+    """1 - an external router has exactly one body pointer, regardless of count."""
     out: list[Violation] = []
     body = read(root / "SKILL.md")
     mentioned = re.findall(r"references/[A-Za-z0-9_.-]+", body)
-    count = len(content_references(root))
     has_map = (root / TOPIC_MAP).exists()
 
-    if count >= ROUTER_THRESHOLD and not has_map:
+    if not has_map and TOPIC_MAP in mentioned:
         out.append(Violation(
             "single-router", TOPIC_MAP, None,
-            f"{count} content references is at or above the {ROUTER_THRESHOLD}-reference "
-            "threshold, so the router belongs in the topic map, which is missing",
-            "move the router out of SKILL.md into references/00-topic-map.md, "
-            "preserving every row",
-        ))
-    if count < ROUTER_THRESHOLD and has_map:
-        out.append(Violation(
-            "single-router", TOPIC_MAP, None,
-            f"{count} content references is below the {ROUTER_THRESHOLD}-reference "
-            "threshold, so the router belongs in SKILL.md and the topic map must not exist",
-            "move every topic-map row into a SKILL.md table, then retire the topic map",
+            "SKILL.md points at an external topic map that is missing",
+            "restore the map or correct the pointer; reference count does not select placement",
         ))
     if has_map and mentioned != [TOPIC_MAP]:
         extra = [m for m in mentioned if m != TOPIC_MAP]
         out.append(Violation(
             "single-router", "SKILL.md", line_of(body, extra[0]) if extra else None,
-            "SKILL.md names reference files other than the topic map: "
-            + ", ".join(sorted(set(extra)))
+            "SKILL.md must contain exactly one topic-map pointer and no direct reference "
+            "pointers; found: " + ", ".join(mentioned)
             + "; two routers drift and the agent follows whichever it reads first",
             "leave exactly one pointer line in SKILL.md and route everything "
             "else from references/00-topic-map.md",
@@ -502,7 +491,7 @@ GOOD_DESCRIPTION = (
 )
 
 
-def build_fixture(directory: Path) -> None:
+def build_fixture(directory: Path, reference_count: int = 9) -> None:
     """Build a minimal pack that passes every check."""
     (directory / "references").mkdir(parents=True)
     (directory / "assets" / "client").mkdir(parents=True)
@@ -517,13 +506,13 @@ def build_fixture(directory: Path) -> None:
         "---\n\n"
         "# Fixture\n\n"
         "Routing lives in `references/00-topic-map.md`.\n",
-        encoding="utf-8",
+        encoding="utf-8", newline="\n",
     )
 
-    names = [f"{n:02d}-topic-{n}.md" for n in range(10, 100, 10)]
+    names = [f"{n:02d}-topic-{n}.md" for n in range(10, 10 * (reference_count + 1), 10)]
     rows = []
     for name in names:
-        (directory / "references" / name).write_text(f"# {name}\n", encoding="utf-8")
+        (directory / "references" / name).write_text(f"# {name}\n", encoding="utf-8", newline="\n")
         rows.append(f"| you are about to touch {name} | `references/{name}` |")
     rows.append("| you are about to write client code | `assets/client/upload.ts` |")
     rows.append("| you are about to deploy | `assets/docker-compose/tusd.compose.yaml` |")
@@ -531,24 +520,24 @@ def build_fixture(directory: Path) -> None:
 
     (directory / TOPIC_MAP).write_text(
         "# Topic Map\n\n| condition | file |\n|---|---|\n" + "\n".join(rows) + "\n",
-        encoding="utf-8",
+        encoding="utf-8", newline="\n",
     )
     (directory / "references" / "10-topic-10.md").write_text(
-        "# Source\n\nPinned release: v2.9.2, read 2026-04-24.\n", encoding="utf-8"
+        "# Source\n\nPinned release: v2.9.2, read 2026-04-24.\n", encoding="utf-8", newline="\n"
     )
     (directory / "assets" / "client" / "upload.ts").write_text(
-        "export const basePath = process.env.UPLOAD_BASE_PATH\n", encoding="utf-8"
+        "export const basePath = process.env.UPLOAD_BASE_PATH\n", encoding="utf-8", newline="\n"
     )
     (directory / "assets" / "docker-compose" / "tusd.compose.yaml").write_text(
         "services:\n  tusd:\n    image: ${TUSD_IMAGE:?pin it}\n    command:\n"
         '      - "-behind-proxy"\n      - "-disable-download"\n'
         '      - "-max-size=${TUSD_MAX_SIZE:?set the cap}"\n',
-        encoding="utf-8",
+        encoding="utf-8", newline="\n",
     )
     (directory / "agents" / "openai.yaml").write_text(
         "interface:\n  display_name: \"Fixture\"\npolicy:\n"
         "  allow_implicit_invocation: true\n",
-        encoding="utf-8",
+        encoding="utf-8", newline="\n",
     )
     shutil.copyfile(Path(__file__).resolve(), directory / "scripts" / "validate_pack.py")
 
@@ -610,13 +599,59 @@ MUTATIONS = {
 }
 
 
+ROUTER_POLICY_CASES = 6
+
+
+def router_policy_self_test() -> int:
+    """Focused router-policy fixtures; maintained by the normal self-test too."""
+    failures = []
+    with tempfile.TemporaryDirectory(prefix="tusd-router-policy-") as tmp:
+        workspace = Path(tmp)
+        clean = workspace / "one-reference-external-map"
+        clean.mkdir()
+        build_fixture(clean, reference_count=1)
+        checks = (check_single_router, check_topic_map_covers_pack)
+        if any(check(clean) for check in checks):
+            failures.append("one-reference external map must be accepted")
+
+        mutations = (
+            ("extra-body-pointer", "single-router", lambda d: (d / "SKILL.md").write_text(
+                read(d / "SKILL.md") + "Read `references/10-topic-10.md`.\n", encoding="utf-8", newline="\n")),
+            ("duplicate-map-pointer", "single-router", lambda d: (d / "SKILL.md").write_text(
+                read(d / "SKILL.md") + f"Read `{TOPIC_MAP}` again.\n", encoding="utf-8", newline="\n")),
+            ("broken-route", "topic-map", lambda d: (d / TOPIC_MAP).write_text(
+                read(d / TOPIC_MAP).replace("references/10-topic-10.md", "references/missing.md"),
+                encoding="utf-8", newline="\n")),
+            ("unrouted-reference", "topic-map", lambda d: (d / "references/20-unrouted.md").write_text(
+                "# Unrouted\n", encoding="utf-8", newline="\n")),
+        )
+        for name, expected, mutate in mutations:
+            case = workspace / name
+            shutil.copytree(clean, case)
+            mutate(case)
+            if expected not in {v.check for check in checks for v in check(case)}:
+                failures.append(f"{name} must fail {expected}")
+
+        missing = workspace / "missing-external-map"
+        missing.mkdir()
+        (missing / "SKILL.md").write_text(f"Read `{TOPIC_MAP}`.\n", encoding="utf-8", newline="\n")
+        if not check_single_router(missing):
+            failures.append("missing external map must fail single-router")
+
+    for failure in failures:
+        print(f"FAIL  router-policy: {failure}")
+    if not failures:
+        print(f"ok    router-policy: {ROUTER_POLICY_CASES} focused expectations held")
+    return len(failures)
+
+
 def self_test() -> int:
     """Build fixtures outside the repository and prove each check fires."""
     workspace = Path(tempfile.mkdtemp(prefix="tusd-skill-selftest-"))
     if workspace.is_relative_to(Path(__file__).resolve().parents[1]):
         raise Misuse("self-test fixtures must not be built inside the skill")
     print(f"self-test workspace: {workspace}")
-    failures = 0
+    failures = router_policy_self_test()
     try:
         clean = workspace / "clean"
         clean.mkdir()
@@ -646,7 +681,7 @@ def self_test() -> int:
     finally:
         shutil.rmtree(workspace, ignore_errors=True)
 
-    checked = len(MUTATIONS) + 1
+    checked = len(MUTATIONS) + 1 + ROUTER_POLICY_CASES
     if failures:
         print(f"\nself-test: {failures} of {checked} expectations failed")
         return 1

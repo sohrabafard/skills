@@ -3,6 +3,10 @@
 Mechanics for the file-backed store. Everything here dies with the store; nothing here is policy. The policy
 is in `SKILL.md`, `references/knowledge-shape.md`, and `references/drift-management.md`.
 
+Before serializing an authorized note or curated publication, read only `File-vault serialization` in
+`references/store-local.md` for the shared file format and destinations. This format-only reuse does not
+activate the local adapter; this adapter's operations and upstream mechanics remain selected.
+
 ## Version pin
 
 `basic-memory` **0.22.1**, published 2026-06-13. Re-derive before trusting it:

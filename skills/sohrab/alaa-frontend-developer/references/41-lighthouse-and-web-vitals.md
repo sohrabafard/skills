@@ -3,8 +3,7 @@
 Use this file for any Lighthouse, PageSpeed Insights, Core Web Vitals, or "make it faster / hit 90+" task.
 Target: performance score >= 90 on mobile, the harder profile, with 100 as the design goal on key routes.
 
-**This file is the canonical copy for the fleet.** `/alaa-quasar-app-vite-v3`
-(`$alaa-quasar-app-vite-v3`) and `/alaa-ui-ux-design-system` (`$alaa-ui-ux-design-system`) route here
+**This file is the canonical copy for the fleet.** `/alaa-quasar-app-vite-v3` and `/alaa-ui-ux-design-system` route here
 instead of duplicating it. Re-verify the weights and audit IDs when a new major Lighthouse ships.
 
 ## 1. How the score is computed
@@ -76,8 +75,7 @@ lab and field disagree, field wins.
 
 ## 4. Complexity and size thresholds
 
-Doctrine — how to state a bound and find the input that grows — is `/alaa-algorithms-data-structures`
-(`$alaa-algorithms-data-structures`) `references/10-complexity-budget.md`. The frontend numbers:
+Doctrine — how to state a bound and find the input that grows — is `/alaa-algorithms-data-structures` `references/10-complexity-budget.md`. The frontend numbers:
 
 | Condition | Requirement |
 |---|---|
@@ -88,7 +86,7 @@ Doctrine — how to state a bound and find the input that grows — is `/alaa-al
 | one request per row | prohibited; batch — `45-api-and-data-shaping.md` |
 
 The design-side expression of the same limits — how many items a screen should show at all — is
-`/alaa-ui-ux-design-system` (`$alaa-ui-ux-design-system`) `references/65-lists-latency-and-concurrency.md`.
+`/alaa-ui-ux-design-system` `references/65-lists-latency-and-concurrency.md`.
 
 ## 5. LCP (25%)
 
@@ -130,16 +128,16 @@ server-rendered skeletons count toward FCP and SI; a spinner added by JavaScript
 
 ## 8. Budgets
 
-Defaults for an initial route, compressed: JS < 300 KB, CSS < 100 KB, above-fold images < 500 KB, fonts <
-100 KB subset, third-party < 200 KB, total < 1.5 MB. Repo rules override the numbers.
+Defaults for an initial route, compressed: JS < 300 KB, CSS < 100 KB, above-fold images < 500 KB,
+third-party < 200 KB, total < 1.5 MB. Font subset and total-transfer ceilings have different scopes;
+read `alaa-ui-ux-design-system references/45-render-and-asset-budgets.md` under Font bytes for both.
+Repo rules override the numbers.
 
 Gate 8 in `SKILL.md` governs a breach; the exception it requires is recorded in the repo's budget config,
 beside the number it overrides. Whether a budget is required at all, and
-at what level, is `/alaa-observability-soc` (`$alaa-observability-soc`)
-`references/30-quantitative-budgets.md` and `/alaa-project-constitution`
-(`$alaa-project-constitution`) `references/quality-bar.md`. Enforcement in CI is `/alaa-frontend-devops`
-(`$alaa-frontend-devops`) `references/20-ci-gates-and-predicates.md`. The design-side asset budget is
-`/alaa-ui-ux-design-system` (`$alaa-ui-ux-design-system`) `references/45-render-and-asset-budgets.md`.
+at what level, is `/alaa-observability-soc`
+`references/30-quantitative-budgets.md` and `/alaa-project-constitution` `references/quality-bar.md`. Enforcement in CI is `/alaa-frontend-devops` `references/20-ci-gates-and-predicates.md`. The design-side asset budget is
+`/alaa-ui-ux-design-system` `references/45-render-and-asset-budgets.md`.
 
 ## 9. Verification
 
@@ -158,6 +156,6 @@ entry.
 ## Pairing
 
 Bottleneck workflow and realtime jank: `40-performance-and-realtime.md`. Quasar build config and
-code-splitting shape: `/alaa-quasar-app-vite-v3` (`$alaa-quasar-app-vite-v3`). Image, font, effect and
-motion cost: `/alaa-ui-ux-design-system` (`$alaa-ui-ux-design-system`). Evidence and release gating:
+code-splitting shape: `/alaa-quasar-app-vite-v3`. Image, font, effect and
+motion cost: `/alaa-ui-ux-design-system`. Evidence and release gating:
 `50-qa-and-verification.md`.

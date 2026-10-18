@@ -2,8 +2,8 @@
 
 Read this when pointing a client at ArvanCloud, choosing a region, deciding an addressing style or a signature
 version, or issuing and rotating an access key. Client-library selection, credential hygiene and rotation doctrine are
-`/alaa-minio-object-storage` (`$alaa-minio-object-storage`) `references/70-client-libraries.md` and
-`/alaa-minio-object-storage` (`$alaa-minio-object-storage`) `references/30-identity-credentials-and-access.md`; only
+`/alaa-minio-object-storage` `references/70-client-libraries.md` and
+`/alaa-minio-object-storage` `references/30-identity-credentials-and-access.md`; only
 the Arvan deltas are here.
 
 ## Regions and endpoints
@@ -21,8 +21,8 @@ same two hostnames and the Simin/Shahriar names by rclone's provider list
 it agrees with the vendor page.
 
 **Set the client's endpoint from `STORAGE_ENDPOINT` and its region from `STORAGE_REGION` in every environment, and
-fail startup when either is unset.** `references/15-environment-contract-deltas.md` carries the Arvan defaults for
-both, and `/alaa-minio-object-storage` (`$alaa-minio-object-storage`) `references/05-environment-contract.md` owns
+fail startup when either is unset.** `references/15-environment-contract-deltas.md` carries the explicit Arvan
+endpoint/region pairs, and `/alaa-minio-object-storage` `references/05-environment-contract.md` owns
 the family. A bucket is reachable only in the data centre that created it
 `[source: https://docs.arvancloud.ir/en/object-storage/limits/, read: 2026-07-27]`, so a default-region fallback sends
 production traffic to a namespace where the bucket does not exist and the error is a not-found, not a misconfiguration
@@ -103,4 +103,4 @@ change with a possible interruption**, and do not promise a zero-downtime rotati
 concurrent key can exist during a cutover is exactly what open question 4 asks.
 
 Credential storage, log redaction and the rule that a credential never appears in a URL or a metric label are
-`/alaa-minio-object-storage` (`$alaa-minio-object-storage`) constraints 4 and 5 and apply here unchanged.
+`/alaa-minio-object-storage` constraints 4 and 5 and apply here unchanged.

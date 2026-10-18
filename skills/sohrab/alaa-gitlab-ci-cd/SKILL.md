@@ -1,6 +1,6 @@
 ---
 name: alaa-gitlab-ci-cd
-description: Generate, validate, review, and debug GitLab CI/CD pipelines, reusable CI components, runner configs, and container-build workflows for GitLab Runner shell and Kubernetes executors. Use when the task involves one or more `.gitlab-ci.yml` files, included CI files, CI components, GitLab Runner `config.toml`, Helm `values.yaml`, GitLab Kubernetes executor behavior, Docker or daemonless image builds, cache keys, artifact retention, variables or inputs, job routing via tags, pipeline security, or CI failure triage. Prefer it for both authoring and debugging. Do not use it for unrelated Kubernetes manifests, unrelated Dockerfiles, or non-GitLab CI systems, and do not use it to decide whether a check should block a pipeline; that belongs to the skill that owns the stack.
+description: GitLab CI/CD pipeline generation, validation, review, and debugging for reusable CI components, runner configs, and container-build workflows for GitLab Runner shell and Kubernetes executors. Use when the task involves one or more `.gitlab-ci.yml` files, included CI files, CI components, GitLab Runner `config.toml`, Helm `values.yaml`, GitLab Kubernetes executor behavior, Docker or daemonless image builds, cache keys, artifact retention, variables or inputs, job routing via tags, pipeline security, or CI failure triage. Prefer it for both authoring and debugging. Do not use it for unrelated Kubernetes manifests, unrelated Dockerfiles, or non-GitLab CI systems, and do not use it to decide whether a check should block a pipeline; that belongs to the skill that owns the stack.
 ---
 
 Act like a production GitLab CI/CD specialist, not a generic YAML writer.
@@ -58,7 +58,8 @@ the narrowest file that matches and do not read the rest.
 
 ## Authoring rules
 
-Write `workflow:rules` with a terminal arm so pipeline creation is explicit, put
+Write `workflow:rules` with a terminal arm (defined in
+`references/pipeline-authoring/10-pipeline-creation-and-paths.md`) so pipeline creation is explicit, put
 the condition that decides whether a job should run into `rules:` rather than
 into a script that exits zero, and reuse through a hidden job, `extends`, an
 include or a component only when the same text appears in three or more jobs or

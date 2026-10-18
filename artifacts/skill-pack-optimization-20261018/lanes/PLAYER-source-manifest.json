@@ -1,0 +1,653 @@
+{
+  "format": "sorted-relative-path-nul-raw-file-bytes-v1",
+  "root": ".",
+  "algorithm": "sha256",
+  "entries": [
+    {
+      "path": "artifacts/skill-pack-optimization-20261018/intake-snapshot.json",
+      "bytes": 164018,
+      "sha256": "2bba02162e327a1fefd7bda0a18820cf36c1717e4d41c8bff8bd1aa1ef980ca6"
+    },
+    {
+      "path": "artifacts/skill-pack-optimization-20261018/lanes/PLAYER.md",
+      "bytes": 4402,
+      "sha256": "3121f6fae0b1e7ea0055dd4ad342379d63e750137abf31b44bc9ca411a1f8576"
+    },
+    {
+      "path": "scripts/check_fleet_references.py",
+      "bytes": 48224,
+      "sha256": "a314954a6a6c5b4408514a281d7a7eff532fbbf9afb54feaf685059f85fa4781"
+    },
+    {
+      "path": "skills/sohrab/alaa-indexeddb-browser-storage/SKILL.md",
+      "bytes": 7244,
+      "sha256": "74a966ae17916b91d0cd947984b66818e5a0cb1cc769fd93a63bc478b72855fb"
+    },
+    {
+      "path": "skills/sohrab/alaa-indexeddb-browser-storage/agents/openai.yaml",
+      "bytes": 1898,
+      "sha256": "0e82c0caccc299f9ac55bdc65c7738ad956b4a408a3316513ff2a3e3f4a008a6"
+    },
+    {
+      "path": "skills/sohrab/alaa-indexeddb-browser-storage/assets/alaa-indexeddb-adr.md",
+      "bytes": 2900,
+      "sha256": "26eda54eb72ac69f4c6c986edb52b7eb99810fc3e199386a1701974b2b5c2d36"
+    },
+    {
+      "path": "skills/sohrab/alaa-indexeddb-browser-storage/assets/browser-test-matrix.yaml",
+      "bytes": 4850,
+      "sha256": "7562f62d40b6eca89f97a3fa30eaf1a70c425fef15eab931b8fe4125cf571657"
+    },
+    {
+      "path": "skills/sohrab/alaa-indexeddb-browser-storage/assets/capability-tier-contract.json",
+      "bytes": 6707,
+      "sha256": "fed8ad42e3fced3977c7cd8d734376411184b7017d7e34405546788c72bf5870"
+    },
+    {
+      "path": "skills/sohrab/alaa-indexeddb-browser-storage/assets/data-classification-policy.yaml",
+      "bytes": 3808,
+      "sha256": "3ef4d1aa7bee5a0ff32a20575a1ec31fa9731cf3bbbcabe5fe2d8a745b9c7e6b"
+    },
+    {
+      "path": "skills/sohrab/alaa-indexeddb-browser-storage/assets/indexeddb-decision-record-template.md",
+      "bytes": 3875,
+      "sha256": "8d527e410f31de012c51b36ad7710f3f5cb7b17ff40ee5ed2eece243e42e15d0"
+    },
+    {
+      "path": "skills/sohrab/alaa-indexeddb-browser-storage/assets/indexeddb-feature-plan-template.md",
+      "bytes": 1989,
+      "sha256": "12db8da2f692dc541478aeaf294df97890566ea22521b89ba2fdb057d9dcdbb3"
+    },
+    {
+      "path": "skills/sohrab/alaa-indexeddb-browser-storage/assets/storage-budget-policy-template.md",
+      "bytes": 3785,
+      "sha256": "8851cde59aa594aac41da019d23349b8497c36837112f62369d3e36cdf1ef1b3"
+    },
+    {
+      "path": "skills/sohrab/alaa-indexeddb-browser-storage/examples/alaa-client-storage.ts",
+      "bytes": 8676,
+      "sha256": "3a6fa8abe775c306eb1bb7d0c8f9f9c792897e88721baf31846bfe843d3febe0"
+    },
+    {
+      "path": "skills/sohrab/alaa-indexeddb-browser-storage/examples/browser-capabilities.ts",
+      "bytes": 3991,
+      "sha256": "f37e8e638b797338618bc411fd8366483adecca01c6880d35c28c232d2b9d940"
+    },
+    {
+      "path": "skills/sohrab/alaa-indexeddb-browser-storage/examples/fallback-memory-store.ts",
+      "bytes": 1427,
+      "sha256": "0b1a51e1ccb0b40d25f753182490e0af17bc2903c97e082f40b0ca16103184d2"
+    },
+    {
+      "path": "skills/sohrab/alaa-indexeddb-browser-storage/examples/idb-core.ts",
+      "bytes": 7351,
+      "sha256": "ce77f1a4049a4adc733b3dc37e682b61563c61b3e772bc7c5b24e7dca69447df"
+    },
+    {
+      "path": "skills/sohrab/alaa-indexeddb-browser-storage/examples/migration-pattern.ts",
+      "bytes": 4345,
+      "sha256": "fceb0ed79a453cfcaf16934bf650c513bb5c4fb67ae2cc8b0f2f87f5258715b9"
+    },
+    {
+      "path": "skills/sohrab/alaa-indexeddb-browser-storage/examples/offline-asset-guard.ts",
+      "bytes": 6739,
+      "sha256": "08a3d974a3697df501c232ab399d415685869a7520b8adeb52e1fbacd15949dd"
+    },
+    {
+      "path": "skills/sohrab/alaa-indexeddb-browser-storage/examples/outbox-pattern.ts",
+      "bytes": 9418,
+      "sha256": "753edce11167dd9386cafcc6184cac6944f2fcd00219d8286661fd2e329c2336"
+    },
+    {
+      "path": "skills/sohrab/alaa-indexeddb-browser-storage/examples/outbox-reaper.ts",
+      "bytes": 4387,
+      "sha256": "7c40b7616f86fa95af48d09c00e268f2bd12f7ea3f6a1fc0138ce17a1900d1ef"
+    },
+    {
+      "path": "skills/sohrab/alaa-indexeddb-browser-storage/examples/playwright-quota-smoke.spec.ts",
+      "bytes": 6094,
+      "sha256": "4a0a7806bc9a5f21b4111cb3377e78970909cf934cfa629bd5db0e91861c72e9"
+    },
+    {
+      "path": "skills/sohrab/alaa-indexeddb-browser-storage/examples/quota-manager.ts",
+      "bytes": 5058,
+      "sha256": "bd9b84d3c1867429c7cd179fb2cd05689a759a2fe898516d6bc5168ed5747e72"
+    },
+    {
+      "path": "skills/sohrab/alaa-indexeddb-browser-storage/examples/vitest-idb-pattern.test.ts",
+      "bytes": 10842,
+      "sha256": "7ede7b8af735df130f7597028787208a2fe69895e90745f19d0e33feb44197df"
+    },
+    {
+      "path": "skills/sohrab/alaa-indexeddb-browser-storage/references/00-topic-map.md",
+      "bytes": 5322,
+      "sha256": "673ff3d44f825dcdcb991ca1d69a8e5d38b14caa23ce23b89d3293625bb14eb8"
+    },
+    {
+      "path": "skills/sohrab/alaa-indexeddb-browser-storage/references/05-source-priority-and-freshness.md",
+      "bytes": 2354,
+      "sha256": "8a086a2ebdc053208e3b249349c5346a41f0ff93a385471eeccd177fbae1e3d0"
+    },
+    {
+      "path": "skills/sohrab/alaa-indexeddb-browser-storage/references/10-indexeddb-mental-model-and-boundaries.md",
+      "bytes": 4347,
+      "sha256": "08bffe3ba4a5eb3c7ba6fa43e5337d8950aeb8183cda1a1b9f1983fff6357277"
+    },
+    {
+      "path": "skills/sohrab/alaa-indexeddb-browser-storage/references/20-browser-compatibility-and-capability-tiers.md",
+      "bytes": 5794,
+      "sha256": "b55863888586deeaa47d288aa594636446f67d1efcda5722498f8605cbc73311"
+    },
+    {
+      "path": "skills/sohrab/alaa-indexeddb-browser-storage/references/25-storage-buckets-api.md",
+      "bytes": 4333,
+      "sha256": "7afdbf2d57dac5cd8ad27e8f79fd5e2bea87c3ffcef0c9f0438a48703564e0d9"
+    },
+    {
+      "path": "skills/sohrab/alaa-indexeddb-browser-storage/references/30-quota-model-and-budgets.md",
+      "bytes": 6038,
+      "sha256": "ab8b51631ac326688d725bf5a04bf7d76f80e4ed4813df395f470be20618c263"
+    },
+    {
+      "path": "skills/sohrab/alaa-indexeddb-browser-storage/references/31-quota-exceeded-and-cleanup.md",
+      "bytes": 6443,
+      "sha256": "64f8c7ea32ad5d36e45a7db4d53e0053e8f83b0c1716199bbadda2d1009472fb"
+    },
+    {
+      "path": "skills/sohrab/alaa-indexeddb-browser-storage/references/32-eviction-and-recovery.md",
+      "bytes": 4757,
+      "sha256": "13dbda80c3e1eb81a47a9a86aa9faf55dc32c7de1c86d4abb3c77debd96c55dd"
+    },
+    {
+      "path": "skills/sohrab/alaa-indexeddb-browser-storage/references/40-schema-and-migrations.md",
+      "bytes": 2471,
+      "sha256": "9e490af6c0adc29d47477867b791e64794d2753b4bcccc11ca52f6c978fd1ab0"
+    },
+    {
+      "path": "skills/sohrab/alaa-indexeddb-browser-storage/references/40-schema-and-migrations/10-version-and-schema-foundations.md",
+      "bytes": 2417,
+      "sha256": "8d633eb7014ff6e0218d96d5238f443d13555102e797af7fc83b9f9b211f1ae2"
+    },
+    {
+      "path": "skills/sohrab/alaa-indexeddb-browser-storage/references/40-schema-and-migrations/20-upgrade-and-migration-strategies.md",
+      "bytes": 2761,
+      "sha256": "c76888cda69bc4ee51493050c181ec78a2c34fa2c467773457a38b34e7212fbc"
+    },
+    {
+      "path": "skills/sohrab/alaa-indexeddb-browser-storage/references/40-schema-and-migrations/30-journal-and-other-contexts.md",
+      "bytes": 883,
+      "sha256": "e039ee66b655f32d042dcb7cd36e1621e5e63db0bbb9bd409a04258cc48f66ef"
+    },
+    {
+      "path": "skills/sohrab/alaa-indexeddb-browser-storage/references/40-schema-and-migrations/40-upgrade-tests-and-example.md",
+      "bytes": 1909,
+      "sha256": "eb267847be5fdf731862ffc87e571c84075489a0b1c37a8a2798f369ebcc068f"
+    },
+    {
+      "path": "skills/sohrab/alaa-indexeddb-browser-storage/references/41-multitab-versionchange-and-locks.md",
+      "bytes": 7982,
+      "sha256": "61f35d2f63fe4ae12dcfe235be2f5a0c8146a7cf8e413313e0dcd9a44791384f"
+    },
+    {
+      "path": "skills/sohrab/alaa-indexeddb-browser-storage/references/50-transactions-performance-and-query-patterns.md",
+      "bytes": 8368,
+      "sha256": "51317a196f6d222f148747011b439449bbc7ac77e708460a3e8393c498a10d4e"
+    },
+    {
+      "path": "skills/sohrab/alaa-indexeddb-browser-storage/references/60-data-classification.md",
+      "bytes": 5389,
+      "sha256": "737baa0e79d129124adeae24e2435d0fea94e61e6f4c0d52f310cc2d78b6b0c2"
+    },
+    {
+      "path": "skills/sohrab/alaa-indexeddb-browser-storage/references/61-authority-boundary.md",
+      "bytes": 5109,
+      "sha256": "65aafe2fd0d5509f8c6e1f5ae5273ab218dcda79e6e77ed805429009a5ce50c7"
+    },
+    {
+      "path": "skills/sohrab/alaa-indexeddb-browser-storage/references/62-poisoning-and-purge.md",
+      "bytes": 2509,
+      "sha256": "7c2060c57256633828437214ea63cbcd7c2058112238543ac21e244fe394489e"
+    },
+    {
+      "path": "skills/sohrab/alaa-indexeddb-browser-storage/references/62-poisoning-and-purge/10-read-validation-and-script-boundaries.md",
+      "bytes": 1808,
+      "sha256": "12d783ea16e39baa575b28fe952490f6669fba30aa560ff319f228d623d8e311"
+    },
+    {
+      "path": "skills/sohrab/alaa-indexeddb-browser-storage/references/62-poisoning-and-purge/20-account-purge-procedure.md",
+      "bytes": 1393,
+      "sha256": "de97ce559f12cd621c668f69bf77e83613404c22f8c02bfe36192e85ce881f56"
+    },
+    {
+      "path": "skills/sohrab/alaa-indexeddb-browser-storage/references/62-poisoning-and-purge/20-account-purge-procedure/10-transaction-and-journal.md",
+      "bytes": 1558,
+      "sha256": "deb4242de467f6e15c12c57a0ab975f5ab9701f205939608a8a2c3debc19a94b"
+    },
+    {
+      "path": "skills/sohrab/alaa-indexeddb-browser-storage/references/62-poisoning-and-purge/20-account-purge-procedure/20-recovery-and-verification.md",
+      "bytes": 2230,
+      "sha256": "f6f7335f80a935f1582f59924d25633e1d58700c69cf8b351a262c9cda2c4f38"
+    },
+    {
+      "path": "skills/sohrab/alaa-indexeddb-browser-storage/references/70-cache-and-drafts.md",
+      "bytes": 5480,
+      "sha256": "2c2cd62e82f32fb5605a17c12c5c94711e20feaddca598e42db8d79ee8a41ae8"
+    },
+    {
+      "path": "skills/sohrab/alaa-indexeddb-browser-storage/references/71-browser-outbox.md",
+      "bytes": 1606,
+      "sha256": "5a847701f2b61d7be5df1c97eeac27cece10e9eaefab034e11c0d3f3f870319d"
+    },
+    {
+      "path": "skills/sohrab/alaa-indexeddb-browser-storage/references/71-browser-outbox/10-browser-outbox-boundary.md",
+      "bytes": 2355,
+      "sha256": "61fe548d31b712ffcd2043b2ba7096967c8198597267d8aaf14509966b2f8f3f"
+    },
+    {
+      "path": "skills/sohrab/alaa-indexeddb-browser-storage/references/71-browser-outbox/20-record-and-cursor-invariant.md",
+      "bytes": 1479,
+      "sha256": "6a891a87652480c1548e29ef18a0395ab2aa272c7b4432598c9c55e7ba12c700"
+    },
+    {
+      "path": "skills/sohrab/alaa-indexeddb-browser-storage/references/71-browser-outbox/30-flush-and-classification.md",
+      "bytes": 1748,
+      "sha256": "7fa1fe40f6720ae58573df83ed24a5d54652357bc3edbf849bad5504975e1cf8"
+    },
+    {
+      "path": "skills/sohrab/alaa-indexeddb-browser-storage/references/71-browser-outbox/40-reaper-and-recovery.md",
+      "bytes": 1129,
+      "sha256": "b59dda392763405aafa2ddbfbb78e988fa7cf9293e0a4ebc1aacdba1522ff65a"
+    },
+    {
+      "path": "skills/sohrab/alaa-indexeddb-browser-storage/references/71-browser-outbox/50-bounds-and-operations.md",
+      "bytes": 1569,
+      "sha256": "24caa48f3565b64a153c7f98118a6c996ee54c0423ba2c3f5d6c5e3f036a7ee0"
+    },
+    {
+      "path": "skills/sohrab/alaa-indexeddb-browser-storage/references/71-browser-outbox/60-retry-policy.md",
+      "bytes": 756,
+      "sha256": "5b64da357489ff33449bd8942aeebbe901d9045d3cad5811b52758d3815b1d22"
+    },
+    {
+      "path": "skills/sohrab/alaa-indexeddb-browser-storage/references/72-offline-media-store.md",
+      "bytes": 7640,
+      "sha256": "09a1ba039ac08217be8632132fb66c73bb18ca771900d1192f8d1e6ea829fed2"
+    },
+    {
+      "path": "skills/sohrab/alaa-indexeddb-browser-storage/references/80-testing-and-proof-levels.md",
+      "bytes": 3035,
+      "sha256": "87e778caa0338e86771dfdbe535dfbd73e506cc778abbcb90587a099461bc624"
+    },
+    {
+      "path": "skills/sohrab/alaa-indexeddb-browser-storage/references/80-testing-and-proof-levels/10-required-scenarios.md",
+      "bytes": 1291,
+      "sha256": "b6e5ef95377906e1951a5ceba92541b384043697ad4ff521fed860a234fa2150"
+    },
+    {
+      "path": "skills/sohrab/alaa-indexeddb-browser-storage/references/80-testing-and-proof-levels/20-quota-reproduction.md",
+      "bytes": 835,
+      "sha256": "33093abd54e9474a0e240c6889b4614eb7f67968ee5e132a0261272e7773ea9f"
+    },
+    {
+      "path": "skills/sohrab/alaa-indexeddb-browser-storage/references/80-testing-and-proof-levels/30-debug-surfaces.md",
+      "bytes": 581,
+      "sha256": "f1ed4521bc7d05309d4a4cc41e01b96f1ad8d52c181c6494c323983c71b07ece"
+    },
+    {
+      "path": "skills/sohrab/alaa-indexeddb-browser-storage/references/80-testing-and-proof-levels/40-performance-budgets.md",
+      "bytes": 607,
+      "sha256": "a2ea588f90b249faaab70b46bdf7ba55ecba25e298456e2ffe9e220e5bf9855c"
+    },
+    {
+      "path": "skills/sohrab/alaa-indexeddb-browser-storage/references/80-testing-and-proof-levels/50-release-checklist.md",
+      "bytes": 958,
+      "sha256": "ea3fbde9ce9c75f5d363da9261c862b86a6533a9a4e917285f184fed857751ed"
+    },
+    {
+      "path": "skills/sohrab/alaa-indexeddb-browser-storage/references/80-testing-and-proof-levels/60-real-indexeddb-harness.md",
+      "bytes": 1305,
+      "sha256": "ba529a4e1ff6107752c2d49608d6b1de60c4a498b43212c1a224810d3eb85076"
+    },
+    {
+      "path": "skills/sohrab/alaa-indexeddb-browser-storage/references/81-debugging-runbook.md",
+      "bytes": 5803,
+      "sha256": "8ebc7c48beaaefdf905094289ccda47edd40ae04135ad572ee651349b44771b2"
+    },
+    {
+      "path": "skills/sohrab/alaa-indexeddb-browser-storage/references/90-agent-workflows-prompts-and-output-contracts.md",
+      "bytes": 6121,
+      "sha256": "4b8501d7510818677313c3bd71212888292c2d27c9e76bcbef006564f9ee7070"
+    },
+    {
+      "path": "skills/sohrab/alaa-indexeddb-browser-storage/references/95-alaa-integration-playbook.md",
+      "bytes": 5700,
+      "sha256": "5b62149909895ecf53ea3b8659ee8197765d800262af5925d5bb21b96b2056eb"
+    },
+    {
+      "path": "skills/sohrab/alaa-indexeddb-browser-storage/references/99-sources-and-maintenance.md",
+      "bytes": 8513,
+      "sha256": "14d12602a60876453c966a350e1a9116360bff9eb301497174b61dd81d5a7b4b"
+    },
+    {
+      "path": "skills/sohrab/alaa-indexeddb-browser-storage/scripts/browser-storage-cases.mjs",
+      "bytes": 9036,
+      "sha256": "bb45c634d99a64769d547e989705b44e1d143506c72575591966b963534b52aa"
+    },
+    {
+      "path": "skills/sohrab/alaa-indexeddb-browser-storage/scripts/build-browser-regressions.mjs",
+      "bytes": 1836,
+      "sha256": "32e56ad056ffcd5f3a432d974433bbe9b25b25ba64736f071400c3ad76ea98a9"
+    },
+    {
+      "path": "skills/sohrab/alaa-indexeddb-browser-storage/scripts/capability_contract_conformance.py",
+      "bytes": 14246,
+      "sha256": "21eb9825f9c1fe909e61ae871579689c28231d6aff3406e65136f540a65de7f7"
+    },
+    {
+      "path": "skills/sohrab/alaa-indexeddb-browser-storage/scripts/check-storage-regressions.mjs",
+      "bytes": 7069,
+      "sha256": "86d4bac16ed0e7e2d8642ea077eb19e4b1ead8225738b7730240d74c24171e19"
+    },
+    {
+      "path": "skills/sohrab/alaa-indexeddb-browser-storage/scripts/check_references.py",
+      "bytes": 7710,
+      "sha256": "addb65f82632f85adb06ff56519b62625640bf0f05bbd49ae874aedd2619ac62"
+    },
+    {
+      "path": "skills/sohrab/alaa-indexeddb-browser-storage/scripts/validate_skill_pack.py",
+      "bytes": 13182,
+      "sha256": "9536aabc41ec1bc04c13fab2606da972349218e06fa6c9a4a14cd0165f1f4629"
+    },
+    {
+      "path": "skills/sohrab/alaa-indexeddb-browser-storage/skill-pack-manifest.json",
+      "bytes": 4313,
+      "sha256": "5c256aae39e0ae300880a097d726d336fda5a090d5dc0ef6012651f51ee8de42"
+    },
+    {
+      "path": "skills/sohrab/alaa-repo-docs/scripts/check_markdown_links.py",
+      "bytes": 45894,
+      "sha256": "93710100c27e349147b0f854b75987f1027359b7b7b5404ccb16b3a9c69e0e14"
+    },
+    {
+      "path": "skills/sohrab/alaa-shaka-player/SKILL.md",
+      "bytes": 8949,
+      "sha256": "3727675f6fcffbc9c88622b4a828f4d7f062d5954dc42ec0bab333b265956e1c"
+    },
+    {
+      "path": "skills/sohrab/alaa-shaka-player/agents/openai.yaml",
+      "bytes": 608,
+      "sha256": "162c2fbd768f3c202fbfd5b5cad46338fb3c9e1d69a11f82af59619b95c1132a"
+    },
+    {
+      "path": "skills/sohrab/alaa-shaka-player/assets/templates/ShakaPlayer.vue",
+      "bytes": 3765,
+      "sha256": "cfce309196a66334c6d51ea4a8083f40d397a7c2beb260da58a083f0e2fcfdb3"
+    },
+    {
+      "path": "skills/sohrab/alaa-shaka-player/assets/templates/offlineDownload.ts",
+      "bytes": 8163,
+      "sha256": "450b2e13ffab2a8714b08576bead4ba7aaf8627bbe2e743a01bcd4f1c1046bd1"
+    },
+    {
+      "path": "skills/sohrab/alaa-shaka-player/assets/templates/playbackQoe.ts",
+      "bytes": 10037,
+      "sha256": "da156430e83f24b9fc7762218706bacad022fcdde1720836f282dacc5c6484ec"
+    },
+    {
+      "path": "skills/sohrab/alaa-shaka-player/assets/templates/shakaTypes.ts",
+      "bytes": 10178,
+      "sha256": "c3826a7dc6d7a2b8d56e04d91da534e5d9e17f9597b466a0e9ead10673d39445"
+    },
+    {
+      "path": "skills/sohrab/alaa-shaka-player/assets/templates/useShakaPlayer.ts",
+      "bytes": 15600,
+      "sha256": "171dab1edfa9ba00f955994588de9885ba3e08e3308e3a79dfd51ae24ec62096"
+    },
+    {
+      "path": "skills/sohrab/alaa-shaka-player/references/00-topic-map.md",
+      "bytes": 6569,
+      "sha256": "ea702ce36f653d144add1015d664a7a62a97a4fe1a1bcc04ff6a7d1194e2fecd"
+    },
+    {
+      "path": "skills/sohrab/alaa-shaka-player/references/05-provenance-and-freshness.md",
+      "bytes": 10221,
+      "sha256": "bcf55ed3435440c6105e5910259c42fd72d989d691887e23e585c906b253995a"
+    },
+    {
+      "path": "skills/sohrab/alaa-shaka-player/references/10-architecture-and-module-seams.md",
+      "bytes": 4693,
+      "sha256": "747804b62f6e2636856ddeea1c8700eef521b0de9d9e84537bb2cd9af40248e5"
+    },
+    {
+      "path": "skills/sohrab/alaa-shaka-player/references/11-vue-quasar-binding.md",
+      "bytes": 6259,
+      "sha256": "1eee32e10b25b380881e0280a5b65c55402ee105641b9ab1d4dce19dfec0caec"
+    },
+    {
+      "path": "skills/sohrab/alaa-shaka-player/references/12-bundling-and-vite-loading.md",
+      "bytes": 6582,
+      "sha256": "38dda681611cbd04f3135f25049f7df8188026835f4b018cc6b8cef5b831de56"
+    },
+    {
+      "path": "skills/sohrab/alaa-shaka-player/references/15-configure-surface-and-safe-defaults.md",
+      "bytes": 7384,
+      "sha256": "0b6877c89a6f182be82a6649d09db658de1b43ea257eb18a92678cffc262be0d"
+    },
+    {
+      "path": "skills/sohrab/alaa-shaka-player/references/20-core-lifecycle.md",
+      "bytes": 8172,
+      "sha256": "503ca636f8f46d12f2a38bc2ac4f6f1e52d62adf5feba5751b9cfa4ce82a0bef"
+    },
+    {
+      "path": "skills/sohrab/alaa-shaka-player/references/22-streaming-formats-and-native-hls.md",
+      "bytes": 5998,
+      "sha256": "f9fc3620134c27d15d369a150b16b45637d4d15465be8b37e93523eba569a48c"
+    },
+    {
+      "path": "skills/sohrab/alaa-shaka-player/references/24-adaptive-bitrate-and-restrictions.md",
+      "bytes": 7992,
+      "sha256": "9ee715a072c652333953c50a112aaa651cc714f30d043608ab5271bbb1aa7f39"
+    },
+    {
+      "path": "skills/sohrab/alaa-shaka-player/references/26-tracks-audio-video-text.md",
+      "bytes": 9575,
+      "sha256": "517142a4b4fc117ec64f29f904316ae240c0648beb41ef871e1cf5c3ce890872"
+    },
+    {
+      "path": "skills/sohrab/alaa-shaka-player/references/28-subtitles-and-text-displayer.md",
+      "bytes": 8196,
+      "sha256": "89de743a9720a0612778140055294205e658c412c627af6c82f630d4162775d4"
+    },
+    {
+      "path": "skills/sohrab/alaa-shaka-player/references/30-playback-speed-seek-trickplay.md",
+      "bytes": 6865,
+      "sha256": "5d7138c02db4ab9f9c1f6973390821cf747135991891b7e87af210d08c27cbcd"
+    },
+    {
+      "path": "skills/sohrab/alaa-shaka-player/references/32-live-and-low-latency.md",
+      "bytes": 7494,
+      "sha256": "4d29fa1d99cc791968a2a935f06e28edd20b3f33481fed57b953f6b82d49b46f"
+    },
+    {
+      "path": "skills/sohrab/alaa-shaka-player/references/35-unstable-networks-and-resilience.md",
+      "bytes": 17608,
+      "sha256": "c3cd96f03b8664370f5d706b7790f3767625b6145291565173d6bb52c513e1a7"
+    },
+    {
+      "path": "skills/sohrab/alaa-shaka-player/references/37-switching-source.md",
+      "bytes": 6388,
+      "sha256": "b76ca5ef79bb08197b597f5397c4971d49cf4df432bcb635eaa685464df81895"
+    },
+    {
+      "path": "skills/sohrab/alaa-shaka-player/references/40-networking-engine-and-filters.md",
+      "bytes": 9490,
+      "sha256": "e0c566df10750ba23f8319d95b97fbdd17af7ff5e53f99b211cdc266f6739601"
+    },
+    {
+      "path": "skills/sohrab/alaa-shaka-player/references/42-media-url-trust-and-presigned.md",
+      "bytes": 8197,
+      "sha256": "cd7d97796fc8ec45733c718071f897845f5560310b9cb72a0a6d7297f29038d1"
+    },
+    {
+      "path": "skills/sohrab/alaa-shaka-player/references/45-drm.md",
+      "bytes": 10889,
+      "sha256": "86fb7003db2acb1a2546d539df23619027beb4fdf75d54834e7367b921c822a8"
+    },
+    {
+      "path": "skills/sohrab/alaa-shaka-player/references/50-offline-and-in-app-download.md",
+      "bytes": 15698,
+      "sha256": "040aee5268024f3ee8c599e23bbb416898f0579fc10bf48d99660ecd0af04b2e"
+    },
+    {
+      "path": "skills/sohrab/alaa-shaka-player/references/55-ads-vast-vmap-and-ima.md",
+      "bytes": 14593,
+      "sha256": "b07058d049df460470650504b65a0792def6f2e7a3607b34cf86e0ceb2de984b"
+    },
+    {
+      "path": "skills/sohrab/alaa-shaka-player/references/60-analytics-and-getstats.md",
+      "bytes": 1734,
+      "sha256": "0977c527a762cd89366acb21615d8ccf0534c978613fb2198f05c65eea45ef85"
+    },
+    {
+      "path": "skills/sohrab/alaa-shaka-player/references/60-analytics-and-getstats/10-contract-and-events.md",
+      "bytes": 3128,
+      "sha256": "b09068b45f1195cefd398ca490c442b158ad0e9ab0a28d2a29bd6a895d85ca94"
+    },
+    {
+      "path": "skills/sohrab/alaa-shaka-player/references/60-analytics-and-getstats/20-stats-catalog.md",
+      "bytes": 3919,
+      "sha256": "987dbc4bc49ecedca87da5fb4904f9edb00d535422b714d8d42946828f514a3a"
+    },
+    {
+      "path": "skills/sohrab/alaa-shaka-player/references/60-analytics-and-getstats/30-qoe-derivation.md",
+      "bytes": 2601,
+      "sha256": "724b6b7aba2907cd067b23d995ba80cbe2bdfdc690f859c9ac52dcf1a407d864"
+    },
+    {
+      "path": "skills/sohrab/alaa-shaka-player/references/60-analytics-and-getstats/40-qoe-collector-example.md",
+      "bytes": 4584,
+      "sha256": "8d0c95caa5e171d6884dd6eba9d821cff68483530761f9ee6b236a68345c1c75"
+    },
+    {
+      "path": "skills/sohrab/alaa-shaka-player/references/60-analytics-and-getstats/50-delivery-diagnostics.md",
+      "bytes": 1218,
+      "sha256": "8e8dc24d54bf7bb7bae10d7a116b0dcb6241a0674f55e4a55df8ccf847f7c1b0"
+    },
+    {
+      "path": "skills/sohrab/alaa-shaka-player/references/65-ui-library-skin-and-localisation.md",
+      "bytes": 15124,
+      "sha256": "bf6d648613ac22ae82129fee473e4c06660a2bf6b7fd2f0496dde877931d4371"
+    },
+    {
+      "path": "skills/sohrab/alaa-shaka-player/references/70-error-taxonomy-and-codes.md",
+      "bytes": 1778,
+      "sha256": "91368fd9243215ad2a9107985181aaa8f2633268253c94470dc9dd56e5f36f2b"
+    },
+    {
+      "path": "skills/sohrab/alaa-shaka-player/references/70-error-taxonomy-and-codes/10-structure-and-categories.md",
+      "bytes": 3217,
+      "sha256": "007428cd44626cd327c7815d4ced08945a4455ee67c72fc0319b2cb10770547f"
+    },
+    {
+      "path": "skills/sohrab/alaa-shaka-player/references/70-error-taxonomy-and-codes/20-complete-code-catalog.md",
+      "bytes": 5261,
+      "sha256": "ae5a90711cf1bbc11512474aa5c0249c5f22aeb6b85be85a9c129b97bcba6c13"
+    },
+    {
+      "path": "skills/sohrab/alaa-shaka-player/references/70-error-taxonomy-and-codes/30-error-data-and-handling-paths.md",
+      "bytes": 2687,
+      "sha256": "aad84e09ccc7f00abc206f8dfe466698e3f9775cb2c6a420f507cbae2cc6cbe0"
+    },
+    {
+      "path": "skills/sohrab/alaa-shaka-player/references/70-error-taxonomy-and-codes/40-user-facing-mapping.md",
+      "bytes": 1092,
+      "sha256": "cb77edebc665feb3d2bf33ed5306fd00ffc4fb47f1d356a69d6041ea611633d1"
+    },
+    {
+      "path": "skills/sohrab/alaa-shaka-player/references/75-platform-and-browser-matrix.md",
+      "bytes": 8610,
+      "sha256": "99c0b960ee601ba7118114514b73575466d2be35d34f82ef2e463d9f9d2ae9ca"
+    },
+    {
+      "path": "skills/sohrab/alaa-shaka-player/references/80-version-migration-and-release-deltas.md",
+      "bytes": 2062,
+      "sha256": "1393fe249e6e225f9b127ca2c7cd3bb0187ae906e7be183e8455995ea5e59795"
+    },
+    {
+      "path": "skills/sohrab/alaa-shaka-player/references/80-version-migration-and-release-deltas/10-migration-boundaries.md",
+      "bytes": 865,
+      "sha256": "78c9dc7bb03cb66a1d6d6bf3a8b7084203207a10f838b4b799141fb50cad0e7d"
+    },
+    {
+      "path": "skills/sohrab/alaa-shaka-player/references/80-version-migration-and-release-deltas/20-v4-to-v5-breaking-changes.md",
+      "bytes": 3601,
+      "sha256": "eb3dc6734e8d56ece13559b191e2f2e30545cc202a94bc85bf4e73013ebfd8bb"
+    },
+    {
+      "path": "skills/sohrab/alaa-shaka-player/references/80-version-migration-and-release-deltas/30-deprecations-and-v6.md",
+      "bytes": 1716,
+      "sha256": "e64350b3a434ab835dde47c1e8580910254deecb6afa58e0b8c2c0ad93b88484"
+    },
+    {
+      "path": "skills/sohrab/alaa-shaka-player/references/80-version-migration-and-release-deltas/40-v520-features.md",
+      "bytes": 2858,
+      "sha256": "950e9d4c7474d4b72940ac8fc3a8ba52a03039fa5b3818a0064506ff3097e90f"
+    },
+    {
+      "path": "skills/sohrab/alaa-shaka-player/references/80-version-migration-and-release-deltas/50-v52x-patches.md",
+      "bytes": 1968,
+      "sha256": "cb8a1bcceb880932c989c00d80d6ee2efd7b6ec6f13791f55bec316ab68bc134"
+    },
+    {
+      "path": "skills/sohrab/alaa-shaka-player/references/80-version-migration-and-release-deltas/60-v510-changes.md",
+      "bytes": 1656,
+      "sha256": "6e1fa0094ddd6cf6a07f435743d8d81844dc4217d48d050587886fae53a3f16d"
+    },
+    {
+      "path": "skills/sohrab/alaa-shaka-player/references/80-version-migration-and-release-deltas/70-upgrade-procedure.md",
+      "bytes": 1179,
+      "sha256": "662e7aa2bdc1bca83004cc32af81f5537a5ca2303c476f7f1a7db2625f726881"
+    },
+    {
+      "path": "skills/sohrab/alaa-shaka-player/references/85-troubleshooting-by-symptom.md",
+      "bytes": 2448,
+      "sha256": "d6f7da54fb2e704a8329220ed49d21026a6c30dd0f4aae556253f051fb5fb497"
+    },
+    {
+      "path": "skills/sohrab/alaa-shaka-player/references/85-troubleshooting-by-symptom/10-loading-and-startup.md",
+      "bytes": 2631,
+      "sha256": "ccf73827bc24edceca409068af735df940118d737ee7272c7d7ba9f8252700db"
+    },
+    {
+      "path": "skills/sohrab/alaa-shaka-player/references/85-troubleshooting-by-symptom/20-playback-quality-and-captions.md",
+      "bytes": 4101,
+      "sha256": "937971b65c7f16328b030ad9530c6e80e2a18f1cb4d9cc56972d5e6166f6e27b"
+    },
+    {
+      "path": "skills/sohrab/alaa-shaka-player/references/85-troubleshooting-by-symptom/30-protected-and-offline-playback.md",
+      "bytes": 3736,
+      "sha256": "d6c44316f7a2383d7ffed03db5492144bf71e3737baf50bbde86598dca03b035"
+    },
+    {
+      "path": "skills/sohrab/alaa-shaka-player/references/85-troubleshooting-by-symptom/40-lifecycle-and-diagnostics.md",
+      "bytes": 2331,
+      "sha256": "8c75ce497ecb617e022e48395fea4a26fd2222274894e2aeef0f92aedfd78cdb"
+    },
+    {
+      "path": "skills/sohrab/alaa-shaka-player/references/90-qa-modes-and-checklist.md",
+      "bytes": 7113,
+      "sha256": "068e5bf553b87f9e6e4838a9023ab3aed55abe7a1414b8c76226ba5191405ea4"
+    },
+    {
+      "path": "skills/sohrab/alaa-shaka-player/scripts/check-shaka-api.mjs",
+      "bytes": 17286,
+      "sha256": "44bf5d3326a4c42807e71405eff42c33d534401ed898ee956d2de040b982f415"
+    },
+    {
+      "path": "skills/sohrab/alaa-shaka-player/scripts/check-template-regressions.mjs",
+      "bytes": 10818,
+      "sha256": "0cb8807813e0e91bc413782a649257d35baa170d746745dc2916dbbaa45e4ea6"
+    }
+  ],
+  "combined_sha256": "1cc6b700bed8e70f5109254d6c01a0b82036eec7bb4d303e6bc7a99bf002434b"
+}

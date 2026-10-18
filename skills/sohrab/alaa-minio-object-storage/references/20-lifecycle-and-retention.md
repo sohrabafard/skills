@@ -22,12 +22,12 @@ https://min.io/docs/minio/linux/reference/minio-mc/mc-ilm.html, read: unverified
 longer than any legitimate resumable upload window on this fleet and short enough that abandoned parts cost less
 than a day of engineering time to notice. It is this skill's default rather than a provider guarantee, and the
 window differs between a test stack and production, so it is an environment value — see
-`05-environment-contract.md`. The fleet-wide value, once agreed, belongs to `/alaa-services-contract` (`$alaa-services-contract`), which
+`05-environment-contract.md`. The fleet-wide value, once agreed, belongs to `/alaa-services-contract`, which
 owns platform values; request registration rather than inventing a second number in a second service.
 
 **The abort window must be longer than the longest resumable-upload window the service offers**, because the rule
 cannot distinguish an abandoned upload from a paused one. Where the upload protocol above the store defines that
-window, take it from `/tusd-upload-platform` (`$tusd-upload-platform`) rather than guessing.
+window, take it from `/tusd-upload-platform` rather than guessing.
 
 ## Writing a lifecycle configuration
 
@@ -56,7 +56,7 @@ Write the intent, delete, then confirm — and see `SKILL.md` "When the store fa
 
 **An event that names a retention worker obliges that worker to exist.** The fleet's only object-storage consumer
 emits an `upload.asset.expired` event whose declared producer is a retention worker, and no retention worker and no
-sweep of expired rows or their objects exists in the repository `[source: tusd-upload-platform repository,
+sweep of expired rows or their objects exists in the repository `[source: Ala tusd repository,
 internal/observability/contracts.go, read: 2026-07-27]`. A declared-but-absent producer reads to every other
 service as a promise that data is being removed.
 
@@ -97,5 +97,5 @@ No lifecycle configuration of any kind exists in the fleet's only object-storage
 `PutBucketLifecycleConfiguration` call, no `AbortIncompleteMultipartUpload` rule, and no `mc ilm` invocation
 anywhere in its code, its Compose files, its Swarm stack or its provisioning container. Its one-shot provisioner
 sets the bucket up with `mc alias set`, `mc mb -p` and `mc stat`, and stops there
-`[source: tusd-upload-platform repository, docker-compose.yml and docker-compose.swarm.yml, read: 2026-07-27]`. An
+`[source: Ala tusd repository, docker-compose.yml and docker-compose.swarm.yml, read: 2026-07-27]`. An
 interrupted upload on that fleet therefore leaves parts that nothing aborts and nothing bounds.

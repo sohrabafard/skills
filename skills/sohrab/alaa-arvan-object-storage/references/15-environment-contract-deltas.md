@@ -17,11 +17,11 @@ Arvan gets, because a mechanism restated here would drift from the file that own
 
 ## The deltas
 
-| Variable | Baseline default | ArvanCloud default | Evidence for the ArvanCloud default | A wrong value causes |
+| Variable | Baseline default | ArvanCloud value or required shape | Evidence for the ArvanCloud value | A wrong value causes |
 |---|---|---|---|---|
 | `STORAGE_PROVIDER_PROFILE` | required, no default | `arvancloud` | this skill's stated default: `arvancloud` is the profile whose column carries the values in this table | another profile hands AWS's 5 GiB part ceiling and MinIO's path-style default to an Arvan endpoint, so a part is rejected after it crossed the network and edge caching is lost with no error at all |
-| `STORAGE_ENDPOINT` | required, no default | `https://s3.ir-thr-at1.arvanstorage.ir` for Simin, or `https://s3.ir-tbz-sh1.arvanstorage.ir` for Shahriar | published by ArvanCloud and read on 2026-07-28 `[source: https://docs.arvancloud.ir/en/developer-tools/sdk/object-storage/, read: 2026-07-28]` | a bucket is reachable only at its own region's endpoint, so the other endpoint returns a not-found identical to a deleted object |
-| `STORAGE_REGION` | `us-east-1` | `ir-thr-at1`, paired with the endpoint it belongs to | published by ArvanCloud and read on 2026-07-28 `[source: https://docs.arvancloud.ir/en/developer-tools/sdk/object-storage/, read: 2026-07-28]` | the AWS-shaped baseline region reaches a namespace where the bucket does not exist |
+| `STORAGE_ENDPOINT` | required, no default | required explicit selection; examples: `https://s3.ir-thr-at1.arvanstorage.ir` for Simin, `https://s3.ir-tbz-sh1.arvanstorage.ir` for Shahriar | published endpoint examples, re-read on 2026-10-18 `[source: https://docs.arvancloud.ir/en/developer-tools/sdk/object-storage/, read: 2026-10-18]`; neither is a profile default | a bucket is reachable only at its own region's endpoint, so the other endpoint returns a not-found identical to a deleted object |
+| `STORAGE_REGION` | `us-east-1` | the bucket's own region, explicitly paired with the chosen endpoint: `ir-thr-at1` for Simin, `ir-tbz-sh1` for Shahriar | published by ArvanCloud, re-read on 2026-10-18 `[source: https://docs.arvancloud.ir/en/developer-tools/sdk/object-storage/, read: 2026-10-18]` | the AWS-shaped baseline region reaches a namespace where the bucket does not exist |
 | `STORAGE_USE_PATH_STYLE` | `true` | `false` | published by ArvanCloud and read on 2026-07-28: the Virtual Host format `[bucketname].s3.[region].arvanstorage.ir` is stated as required for CDN caching `[source: https://docs.arvancloud.ir/en/object-storage/limits/, read: 2026-07-28]` | `true` loses edge caching with no error, so the cost arrives as a traffic bill rather than a failed request |
 | `STORAGE_TLS_ENABLED` | `false` | `true` | this skill's stated default, following `/alaa-minio-object-storage` constraint 6, because no `arvanstorage.ir` host is a loopback address | a plaintext hop to a public endpoint exposes the object bytes and the signed request across the open internet |
 | `STORAGE_MAX_PART_SIZE_BYTES` | `5368709120`, which is 5 GiB | `400000000` | published by ArvanCloud and read on 2026-07-28 as a 400 MB part ceiling, taken at its smaller reading `[source: https://docs.arvancloud.ir/en/object-storage/limits/, read: 2026-07-28]` | a part size copied from an AWS or MinIO guide is rejected only after the bytes crossed the network |
@@ -74,11 +74,10 @@ instead and behaves the same everywhere.
 
 **When Arvan needs behaviour that no existing knob expresses, add a new `STORAGE_*` variable to
 `/alaa-minio-object-storage` `references/05-environment-contract.md` with a default
-in every profile column, and write no branch.** Constraint 5 of this skill's `SKILL.md` is the live example: the
-client-side multipart abort is mandatory on Arvan and optional elsewhere, so the shape that carries it is a boolean
-variable defaulted on in the `arvancloud` column and off where a lifecycle rule is proven, added to the file that
-owns the family. The variable costs one row there and one env value per environment that disagrees with its
-profile; the branch costs a code change in every service, forever.
+in every profile column, and write no branch.** No client-abort boolean is registered there today.
+Constraint 5 still requires immediate client abort on Arvan alongside lifecycle cleanup; it does not
+establish a variable or defaults for other providers. Register a new knob only when implementing behavior
+that needs one, with its defaults decided in the shared owner rather than inferred here.
 
 ## What is still unsettled here
 

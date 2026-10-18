@@ -2,11 +2,12 @@
 
 Open this file when changing `publicPath`, an asset base, a CDN origin, or a path prefix that appears in a browser URL, or when deciding the `Cache-Control` policy for a response class.
 
-This file states **policy**. The directive that implements a policy on the edge — the header block, the compression settings, the path rewrite, the cache rule — is written by `/alaa-haproxy` (`$alaa-haproxy`). This skill decides what the policy is because the policy follows from how the build names its files; that skill decides how it is expressed and it decides no policy.
+This file states **policy**. The directive that implements a policy on the edge — the header block, the compression settings, the path rewrite, the cache rule — is written by `/alaa-haproxy`. This skill decides what the policy is because the policy follows from how the build names its files; that skill decides how it is expressed and it decides no policy.
 
 ## Public path is a single source of truth
 
-The browser asset base is declared in exactly one place, `quasar.config.*`'s `build.publicPath`. Any other file needing an asset URL reads `import.meta.env.BASE_URL`. No file re-derives the base from `location`, from an environment variable read at runtime, or from a string literal.
+The browser asset base is declared in exactly one place, `quasar.config.*`'s `build.publicPath`. Asset consumers read framework-generated `import.meta.env.BASE_URL` under the constant exception in
+`alaa-frontend-developer references/48-config-and-environment.md`. No file re-derives the base from `location`, from an environment variable read at runtime, or from a string literal.
 
 A change to `publicPath` is a delivery-critical change: it changes every URL in the emitted HTML and in the precache manifest simultaneously. It ships with a stated rollback file before it merges, per `references/40-verification-and-rollback.md`.
 
@@ -31,7 +32,7 @@ Un-hashed files must not be served from the client asset root. If a build emits 
 
 ## Proxy obligations
 
-These are obligations the serving layer must satisfy. The directives are `/alaa-haproxy` (`$alaa-haproxy`)'s to write.
+These are obligations the serving layer must satisfy. The directives are `/alaa-haproxy`'s to write.
 
 - The asset path prefix arrives at the origin unchanged: no rewrite strips it, and no rewrite duplicates it.
 - HTML responses are not stored under the immutable policy that applies to hashed assets.
@@ -42,10 +43,10 @@ These are obligations the serving layer must satisfy. The directives are `/alaa-
 
 When browser assets are served from an origin other than the application host, this skill decides three things: that the origin is used, that the base matches the emitted URLs, and that the origin's contents are a superset of the currently-referenced hashed files during the overlap window of a deploy.
 
-The bucket, its lifecycle rules, its access policy, its retention of superseded hashed files, and any invalidation call belong to the object-storage owner: `/alaa-minio-object-storage` (`$alaa-minio-object-storage`) for a MinIO-backed origin and `/alaa-arvan-object-storage` (`$alaa-arvan-object-storage`) for an ArvanCloud-backed one. The live `client` frontend pipeline uploads the extracted client asset tree to a MinIO bucket and serves it through a CDN host (`read: 2026-07-28`), so lifecycle questions about superseded assets go to the MinIO skill.
+The bucket, its lifecycle rules, its access policy, its retention of superseded hashed files, and any invalidation call belong to the object-storage owner: `/alaa-minio-object-storage` for a MinIO-backed origin and `/alaa-arvan-object-storage` for an ArvanCloud-backed one. The live `client` frontend pipeline uploads the extracted client asset tree to a MinIO bucket and serves it through a CDN host (`read: 2026-07-28`), so lifecycle questions about superseded assets go to the MinIO skill.
 
 The single rule this skill will not delegate: **hashed assets from the previous release are not deleted until no served HTML references them.** A lifecycle rule that expires them on the deploy that supersedes them produces the half-propagated-CDN failure, and there is no header that recovers from it.
 
 ## Service worker
 
-A deploy that changes the asset base must invalidate the precache manifest. The service-worker implementation, its update flow, and the precache manifest's generation belong to `/alaa-quasar-app-vite-v3` (`$alaa-quasar-app-vite-v3`), `references/32-pwa-injectmanifest-guard.md`. The obligation that a base change reaches the manifest in the same build is this skill's.
+A deploy that changes the asset base must invalidate the precache manifest. The service-worker implementation, its update flow, and the precache manifest's generation belong to `/alaa-quasar-app-vite-v3`, `references/32-pwa-injectmanifest-guard.md`. The obligation that a base change reaches the manifest in the same build is this skill's.

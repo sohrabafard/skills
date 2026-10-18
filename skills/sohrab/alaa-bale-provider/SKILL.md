@@ -76,8 +76,11 @@ Persist it before the first call, so a retry after a crash finds the same value.
 ## Secrets
 
 Keep `api-access-key`, OTP values, and full phone numbers out of **logs, traces, exceptions, screenshots,
-and final reports** — all five, because a value redacted in logs and printed in a stack trace is not
-redacted. Mask a phone number as `98912****000`, and never log an OTP or the key at any level.
+and final reports**. These exclusions cover all five required output surfaces. Phone defaults to omission or an independently
+approved stable internal reference. The separately approved diagnostic derivative is governed by `/alaa-observability-soc` `references/80-review-gates.md` under “Permitted phone derivative”; never use it as
+an identity or correlation key or metric label. For SOC/SIEM forwarding, follow `alaa-observability-soc references/70-soc-evidence.md`
+“SOC and SIEM egress”.
+Never log an OTP or the key.
 
 ## Failure behaviour
 
@@ -92,8 +95,9 @@ appear only when Safir is slow rather than down. `references/30-failure-classes.
 ## Observability
 
 Instrument every Safir call with the four `alaa_dependency_*` families named at `/alaa-services-contract`
-(`$alaa-services-contract`) `references/24-metric-registry.md:107-110` — `requests_total`,
-`request_duration_seconds`, `request_failures_total`, `timeouts_total`. Count a read timeout in the timeout
+(`$alaa-services-contract`) `references/24-metric-registry.md` section “Downstream dependency” —
+`alaa_dependency_requests_total`, `alaa_dependency_request_duration_seconds`,
+`alaa_dependency_request_failures_total`, and `alaa_dependency_timeouts_total`. Count a read timeout in the timeout
 family, not only the failure family, because the ambiguous outcome is the one an operator must find.
 
 Never label a metric with a phone number, `request_id`, `message_id`, or OTP: the first is PII and all four

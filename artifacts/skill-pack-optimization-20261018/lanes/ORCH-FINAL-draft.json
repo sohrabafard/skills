@@ -1,0 +1,12 @@
+{
+  "intent": "Resolve I1 without changing review triggers, authorities or model selection.",
+  "design": "The parent completes the required design record before implementation. The critic independently judges that record and the implemented candidate only at the inherited phase or final boundary. Preserve the complete boundary candidate, including earlier pending phases for final. A nested invocation cannot reset the boundary or candidate scope. Return missing, inconsistent or premature review dispatch to the parent. Planning and research remain available before implementation.",
+  "contract": "Keep trigger registration, consumer impact, compatibility and deprecation decisions in Stage A. Dispatch independent contract judgment only at the inherited declared phase or final review boundary. Carry the complete boundary candidate and parent cadence into the review template. Existing stricter repository gate conflicts still return to the canonical plan owner.",
+  "compression": "Replace repetitive timing explanations with the canonical gate pointer and one shared template boundary clause. Preserve the pre-implementation record, scope, missing/premature-dispatch stop, independent verdict and all existing specialist duties.",
+  "alternatives_rejected": [
+    "Keep early independent review: contradicts the canonical inherited cadence.",
+    "Drop the critic or contract gate: weakens independent acceptance.",
+    "Reset each nested scope to a local final candidate: excludes pending engagement phases."
+  ],
+  "limits": "Source contract and structural regressions only; no live model compliance or installed activation claim."
+}

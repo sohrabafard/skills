@@ -1,0 +1,36 @@
+{
+  "cwd": ".",
+  "resource_policy": "Bounded normal-priority evidence-only assertions.",
+  "command": [
+    "python",
+    "-B",
+    "artifacts/skill-pack-optimization-20261018/lanes/UI-evidence-correction.py"
+  ],
+  "former_algorithm": "Same record bytes, in Windows pathlib.Path sorted order (case-insensitive), as stored in each former files array.",
+  "algorithm": "SHA-256 of concatenated records in ascending case-sensitive relative POSIX path string order; each record is UTF-8 path + one NUL byte + raw file bytes; no separator after file bytes.",
+  "task_manifest": {
+    "previous_sha256": "d8c6403b60f05b4a8ad3e96cde98d4a9eb70bea6ca739712de6b6d56780a5c9f",
+    "corrected_sha256": "753164595219d8d26a70bedfdfe5d06319193bbc35a0f11204a1040735023d2b",
+    "files": 136
+  },
+  "changed_manifest": {
+    "previous_sha256": "d1e1863043660b4432f0310792a86b99bd0eddd4c485d63edf18237a40691aab",
+    "corrected_sha256": "9f45c1a91449f05ac08a169c3902fdd4227e9bae4cb47eb4aacd8ac74efd1138",
+    "files": 21
+  },
+  "read_provenance_files": 131,
+  "additional_validation_and_shared_inputs": [
+    "scripts/check_fleet_references.py",
+    "skills/sohrab/alaa-observability-soc/references/20-instrumentation-gates.md",
+    "skills/sohrab/alaa-observability-soc/references/60-sentry-and-profiling.md",
+    "skills/sohrab/alaa-repo-docs/scripts/check_markdown_links.py",
+    "skills/sohrab/alaa-services-contract/references/21-alaa-platform-observability-directive.md"
+  ],
+  "checks": {
+    "all_current_file_sizes_and_sha256_match": true,
+    "former_digests_reproduced_in_stored_order": true,
+    "product_and_checker_inputs_modified": false,
+    "fleet_links_and_product_checks_rerun": false
+  },
+  "exit": 0
+}

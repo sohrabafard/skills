@@ -43,12 +43,11 @@ Read this before repeating any version-sensitive or platform-sensitive claim fro
 
 ## Packages this skill names but the kit does not contain
 
-`singleflight`, `gobreaker`, `redsync`, `redis_rate`, and `rueidis` are absent from `alaa-go-chi` — from every
-`.go` file, from `go.mod`, and from `go.sum`; `golang.org/x/sync` is present only as an indirect dependency.
-Adopting any of them is a new direct dependency, so the package choice goes to `/alaa-golang` (`$alaa-golang`)
+Before adopting a Redis-adjacent package, check `51-redis-golang.md` for the dated kit inventory and re-read
+the current source and module metadata; a package mentioned in this skill is not evidence it is available.
+When adoption adds a direct dependency, the package choice goes to `/alaa-golang` (`$alaa-golang`)
 `references/40-production-ready-package-catalog.md`, and whether the mechanism belongs in the kit rather than in
-one service goes to `/alaa-go-chi-development` (`$alaa-go-chi-development`). Do not read their appearance in this
-skill as evidence that they are available.
+one service goes to `/alaa-go-chi-development` (`$alaa-go-chi-development`).
 
 ## Freshness triggers
 

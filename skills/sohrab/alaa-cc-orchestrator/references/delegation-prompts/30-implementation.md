@@ -15,6 +15,7 @@
   <resource_limits><priority, CPU count, workers, timeout></resource_limits>
   <excluded>the full suite, the race detector, the end-to-end suite, and any other lane's checks</excluded>
 </verification>
+<task_acceptance><only for the explicitly assigned task owner: exact bounded task-acceptance selectors at task end, or not assigned; never boundary affected/exhaustive checks></task_acceptance>
 <action_safety>No unrelated work, commit, deploy, publish, destructive action, or global configuration change.</action_safety>
 ```
 
@@ -36,6 +37,7 @@ Use `routing-matrix.md` to select directly from the ratified lane record. Pass t
   <resource_limits><priority, CPU count, workers, timeout></resource_limits>
   <excluded>the full suite, the race detector, the end-to-end suite, and any other lane's checks</excluded>
 </verification>
+<task_acceptance><only for the explicitly assigned task owner: exact bounded task-acceptance selectors at task end, or not assigned; never boundary affected/exhaustive checks></task_acceptance>
 <action_safety>No unrelated work, commit, deploy, publish, destructive action, or global configuration change.</action_safety>
 <output>Lane outcome in one sentence; design decision, alternatives rejected, and the deciding evidence; touched files and why each changed; acceptance criteria mapped to implementation/tests; verification evidence with command, cwd, resource policy, exit/result; residual risks and checks not run; blockers or boundary conflicts.</output>
 ```

@@ -79,7 +79,7 @@ owns it — gives the test that decides whether this skill fills the gap itself.
 
 | You are about to… | Read / load |
 |---|---|
-| write or review Go in a repository whose `go.mod` requires `git.alaatv.com/vk/alaa-go-chi` | `/alaa-golang-clean-code-principles`, after the phase gate in `SKILL.md` |
+| write or review Go in a repository whose `go.mod` requires `git.alaatv.com/vk/alaa-go-chi` | `/alaa-go-chi-development` `references/05-phase-and-source-truth.md` for the action-specific phase gate, then `/alaa-golang-clean-code-principles` |
 | change a kit surface, file a kit change request, or check the active scope phase | `/alaa-go-chi-development` |
 | write a metric name, an env key, an error code, an event name, a status code, a timeout value, or a window | `/alaa-services-contract` |
 | add a log field, a metric, a span, a dashboard, or an alert | `/alaa-observability-soc` |

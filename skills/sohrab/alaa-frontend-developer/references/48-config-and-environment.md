@@ -4,11 +4,9 @@ How a frontend build and a frontend runtime get their values, and what the app m
 it renders anything.
 
 Which mechanism a repo uses — an inlined build-time constant, a runtime-fetched config document, a
-templated placeholder in `index.html` — is decided by `/alaa-frontend-devops`
-(`$alaa-frontend-devops`) `references/15-build-time-vs-runtime-config.md`, and the serving and public-path
+templated placeholder in `index.html` — is decided by `/alaa-frontend-devops` `references/15-build-time-vs-runtime-config.md`, and the serving and public-path
 half is `references/30-serving-caching-and-public-path.md` there. The Vue-shaped rule for reading a
-`VITE_*` value in a component is `/alaa-vue-typescript-clean-code`
-(`$alaa-vue-typescript-clean-code`) `references/72-frontend-security-binding.md`. This file states what
+`VITE_*` value in a component is `/alaa-vue-typescript-clean-code` `references/72-frontend-security-binding.md`. This file states what
 the application owes.
 
 ## Build-time and runtime are different values with different lifetimes
@@ -16,7 +14,7 @@ the application owes.
 A `VITE_*` variable is **inlined into the bundle at build time**. It is not configuration: it is a
 constant, it is public, and changing it requires a rebuild and a redeploy. Anything that must differ
 between two deployments of the same artifact is runtime configuration and cannot be a `VITE_*` variable —
-otherwise the artifact is not the same artifact, and `/alaa-frontend-devops` (`$alaa-frontend-devops`)
+otherwise the artifact is not the same artifact, and `/alaa-frontend-devops`
 `references/25-artifact-identity-and-provenance.md` no longer holds.
 
 Consequences the frontend must respect:
@@ -24,8 +22,12 @@ Consequences the frontend must respect:
 - Never put a secret in a `VITE_*` variable. See `25-frontend-security.md`.
 - Never branch on an environment name (`if (env === 'production')`) to change behaviour. Name the
   capability instead, and let the value carry it.
-- Never read `import.meta.env` from more than one module. One typed config module reads it; everything
-  else imports from that module.
+- Project-injected values are read through one typed config module; consumers import its validated
+  values. Framework-owned build constants may be read directly where needed: Vite's `BASE_URL`, `MODE`,
+  `DEV`, `PROD`, `SSR`, and Quasar constants verified against the installed app-vite line. This is no
+  blanket `QUASAR_*` exemption: custom `defineEnv` and prefixed project values still use the module.
+  Keep member reads static for build replacement. Sources: [Vite env](https://vite.dev/guide/env-and-mode)
+  and [Quasar env](https://quasar.dev/quasar-cli-vite/handling-import-meta-env/), read: 2026-10-18.
 
 ## Validate at the boundary, fail fast
 
@@ -39,18 +41,19 @@ development and wrong in production is a defect that ships quietly.
 
 ## The single public-path source of truth
 
-The app's public or base path has exactly one source, read through the config module and validated at
-boot. Asset paths derive from it; no second copy is written in a component, a router, a service worker
+The app's public or base path has exactly one source. A framework-generated `BASE_URL` may be read
+directly under the exception above; a project/runtime base is read through the config module and validated
+at boot. Asset paths derive from that source; no second copy is written in a component, a router, a service worker
 template, or a stylesheet. A change to it is deploy-critical —
-`/alaa-frontend-devops` (`$alaa-frontend-devops`) `references/30-serving-caching-and-public-path.md`.
+`/alaa-frontend-devops` `references/30-serving-caching-and-public-path.md`.
 
 ## Values that belong to another owner
 
 `STORAGE_*` and every object-storage endpoint, region and bucket default is consumed as given, never
-branched on in code: `/alaa-minio-object-storage` (`$alaa-minio-object-storage`) and
-`/alaa-arvan-object-storage` (`$alaa-arvan-object-storage`). Timeouts and retry budgets come from
-`/alaa-reliability-sla` (`$alaa-reliability-sla`). Field limits and endpoint paths come from
-`/alaa-services-contract` (`$alaa-services-contract`). The frontend's obligation is to make each of them
+branched on in code: `/alaa-minio-object-storage` and
+`/alaa-arvan-object-storage`. Timeouts and retry budgets come from
+`/alaa-reliability-sla`. Field limits and endpoint paths come from
+`/alaa-services-contract`. The frontend's obligation is to make each of them
 one validated value, not a literal repeated across call sites.
 
 ## Feature flags

@@ -1,0 +1,30 @@
+{
+  "files": 2238,
+  "individual_hashes": "checked",
+  "aggregate": "497aeb4dd909571350b4b92783fa0aeec991a4131dfc22193c0e59507999554d",
+  "aggregate_match": false,
+  "preexisting_files_checked": 13,
+  "raw_cached_index_match": false,
+  "tracked_skill_deletions": 0,
+  "zero_byte_reports": [
+    {
+      "path": "artifacts/skill-pack-review-20261018/01-contradictions-and-overlaps.md",
+      "bytes": 0
+    },
+    {
+      "path": "artifacts/skill-pack-review-20261018/02-optimization.md",
+      "bytes": 0
+    },
+    {
+      "path": "artifacts/skill-pack-review-20261018/03-new-skill-proposals.md",
+      "bytes": 0
+    }
+  ],
+  "findings": [
+    "aggregate hash mismatch",
+    "preexisting drift artifacts/skill-pack-review-20261018/01-contradictions-and-overlaps.md",
+    "preexisting drift artifacts/skill-pack-review-20261018/02-optimization.md",
+    "preexisting drift artifacts/skill-pack-review-20261018/03-new-skill-proposals.md",
+    "cached index differs from intake snapshot"
+  ]
+}

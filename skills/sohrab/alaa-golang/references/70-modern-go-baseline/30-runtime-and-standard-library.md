@@ -24,7 +24,8 @@ Version-sensitive claims in this topic depend on [Go version source ledger](../S
   new error-mapping code once the directive allows.
 - **`slog.NewMultiHandler`** — fans one logger to several sinks without a hand-rolled tee. **Rule:** when a second
   sink is needed, use it; keep the JSON handler as the canonical machine-readable sink.
-- **`os/signal.NotifyContext` reports the cause.** Used in `../45-failure-behavior-at-the-call-site.md` section 7.
+- **`os/signal.NotifyContext` reports the cause.** For standalone services without `runkit`, use
+  `../45-failure-behavior-at-the-call-site.md` section 7; kit consumers register with `runkit` instead.
 - **`net/http` behaviour changed in three ways that break existing code:** the `Client` scopes cookies to
   `Request.Host`; `ServeMux` trailing-slash redirects are now **307**, preserving method and body; and
   `HTTP2Config.StrictMaxConcurrentRequests` makes HTTP/2 pool behaviour predictable. **Rule:** before upgrading a

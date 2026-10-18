@@ -32,9 +32,8 @@ never mistaken for authority:
   there the moment a task would write or debug any of them.
 - **What a timeout, retry or degradation should be** is decided by `/alaa-reliability-sla`.
   This skill states which timeouts exist and how they are written.
-- **What a change lets through when it fails** is decided by `/alaa-security-review`
-  whenever the answer to *when this dependency cannot answer, does
-  proceeding without it let something through that must not get through?* is yes.
+- **Which failure doctrine applies** is decided by `/alaa-security-review`
+  `SKILL.md`, "Fail-closed versus fail-open, and which doctrine applies".
 
 ## Quick start
 
@@ -87,6 +86,7 @@ Edit only the requested configuration/package scope. Installation, publication,
 deployment and external mutation require explicit authority. Report target version,
 build, changed files, source/static/runtime proof and skipped or failed gates.
 Stop when the requested behavior and applicable gates agree. For a failed operation,
-allow one cause-specific repair and one materially different retry; then preserve
+allow one cause-specific repair and one materially different retry, as defined in
+`references/80-gate-register.md` "Failed-operation boundary"; then preserve
 the evidence and report the missing prerequisite. An unavailable binary/component
 leaves its gate unrun, never passed.

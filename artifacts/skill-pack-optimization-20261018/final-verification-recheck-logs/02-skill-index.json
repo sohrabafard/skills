@@ -1,0 +1,7 @@
+{
+  "command": "python -B scripts/check_skill_index.py",
+  "cwd": ".",
+  "wall_time_seconds": 0.3862763,
+  "exit_code": 0,
+  "output": "check_skill_index.py\r\n  README.md map located by: markers\r\n  README.md map entries: 69\r\n  README.fa.md table entries: 69\r\n  skill directories: 69\r\n\r\nFINDINGS: none\r\n"
+}

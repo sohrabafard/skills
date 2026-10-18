@@ -1,0 +1,393 @@
+ M AGENTS.md
+A  artifacts/skill-pack-optimization-20261018/initial-dependencies.jsonl
+A  artifacts/skill-pack-optimization-20261018/intake-snapshot.json
+A  artifacts/skill-pack-optimization-20261018/lanes/CTRL-snapshot-before-router-correction.json
+AM artifacts/skill-pack-optimization-20261018/lanes/CTRL-snapshot.json
+AM artifacts/skill-pack-optimization-20261018/lanes/CTRL.md
+A  artifacts/skill-pack-optimization-20261018/lanes/GO-source-manifest.json
+AM artifacts/skill-pack-optimization-20261018/lanes/GO.md
+AM artifacts/skill-pack-optimization-20261018/lanes/MEMDOC-checks.json
+A  artifacts/skill-pack-optimization-20261018/lanes/MEMDOC-snapshot.json
+A  artifacts/skill-pack-optimization-20261018/lanes/MEMDOC.md
+A  artifacts/skill-pack-optimization-20261018/lanes/ORCH-source-manifest.json
+AM artifacts/skill-pack-optimization-20261018/lanes/ORCH-task-manifest.json
+AM artifacts/skill-pack-optimization-20261018/lanes/ORCH.md
+A  artifacts/skill-pack-optimization-20261018/lanes/PHP-checks.json
+A  artifacts/skill-pack-optimization-20261018/lanes/PHP-checks.py
+A  artifacts/skill-pack-optimization-20261018/lanes/PHP-draft.md
+A  artifacts/skill-pack-optimization-20261018/lanes/PHP-snapshot.json
+AM artifacts/skill-pack-optimization-20261018/lanes/PHP.md
+A  artifacts/skill-pack-optimization-20261018/lanes/PLATFORM-draft.md
+A  artifacts/skill-pack-optimization-20261018/lanes/PLATFORM-read-manifest.json
+AM artifacts/skill-pack-optimization-20261018/lanes/PLATFORM.md
+A  artifacts/skill-pack-optimization-20261018/lanes/SHARED-external-source-snapshot.json
+A  artifacts/skill-pack-optimization-20261018/lanes/SHARED-input-snapshot.json
+A  artifacts/skill-pack-optimization-20261018/lanes/SHARED-read-provenance.json
+A  artifacts/skill-pack-optimization-20261018/lanes/SHARED-source-dsn.md
+A  artifacts/skill-pack-optimization-20261018/lanes/SHARED-source-node.md
+A  artifacts/skill-pack-optimization-20261018/lanes/SHARED-source-vue-options.md
+A  artifacts/skill-pack-optimization-20261018/lanes/SHARED-source-vue.md
+AM artifacts/skill-pack-optimization-20261018/lanes/SHARED.md
+A  artifacts/skill-pack-optimization-20261018/lanes/STORAGE-baseline.json
+A  artifacts/skill-pack-optimization-20261018/lanes/STORAGE-checks.json
+A  artifacts/skill-pack-optimization-20261018/lanes/STORAGE-draft.md
+A  artifacts/skill-pack-optimization-20261018/lanes/STORAGE-final-snapshot.json
+A  artifacts/skill-pack-optimization-20261018/lanes/STORAGE-router-before.json
+AM artifacts/skill-pack-optimization-20261018/lanes/STORAGE.md
+A  artifacts/skill-pack-optimization-20261018/lanes/WF-final-snapshot.json
+A  artifacts/skill-pack-optimization-20261018/lanes/WF-source-snapshot.json
+A  artifacts/skill-pack-optimization-20261018/lanes/WF-task-snapshot.json
+AM artifacts/skill-pack-optimization-20261018/lanes/WF.md
+A  artifacts/skill-pack-optimization-20261018/phase1-snapshot.json
+A  artifacts/skill-pack-optimization-20261018/proposal-routing.json
+ M artifacts/skill-pack-review-20261018/01-contradictions-and-overlaps.md
+ M artifacts/skill-pack-review-20261018/02-optimization.md
+ M artifacts/skill-pack-review-20261018/03-new-skill-proposals.md
+A  artifacts/skill-pack-review-20261018/verification/L1-C01-C09.md
+A  artifacts/skill-pack-review-20261018/verification/L2-C10-C19.md
+A  artifacts/skill-pack-review-20261018/verification/L3-C20-C34.md
+A  artifacts/skill-pack-review-20261018/verification/L4-C35-C44-M2.md
+A  artifacts/skill-pack-review-20261018/verification/L5-M1-01-16.md
+A  artifacts/skill-pack-review-20261018/verification/L6-M1-17-32.md
+A  artifacts/skill-pack-review-20261018/verification/L7-file02.md
+A  artifacts/skill-pack-review-20261018/verification/L8-file03.md
+AM docs/_agent_plans/20261018-000000_skill-pack-optimization.md
+AM docs/_agent_plans/20261018-134259_skill-pack-review-verification.md
+AM docs/agents/20261018-000000_skill-pack-optimization-state.md
+AM docs/agents/20261018-134259_skill-pack-review-verification-state.md
+ M skills/sohrab/AGENTS.md
+ M skills/sohrab/README.fa.md
+ M skills/sohrab/README.md
+ M skills/sohrab/alaa-algorithms-data-structures/SKILL.md
+ M skills/sohrab/alaa-arvan-object-storage/references/10-connection-identity-and-addressing.md
+ M skills/sohrab/alaa-arvan-object-storage/references/15-environment-contract-deltas.md
+ M skills/sohrab/alaa-arvan-object-storage/references/SOURCES.md
+ M skills/sohrab/alaa-bale-provider/SKILL.md
+ M skills/sohrab/alaa-bash-shell/SKILL.md
+ M skills/sohrab/alaa-cc-orchestrator/SKILL.md
+ M skills/sohrab/alaa-cc-orchestrator/agents/alaa-architecture-critic.md
+ M skills/sohrab/alaa-cc-orchestrator/agents/alaa-implementer-fable.md
+ M skills/sohrab/alaa-cc-orchestrator/agents/alaa-implementer-haiku-high.md
+ M skills/sohrab/alaa-cc-orchestrator/agents/alaa-implementer-haiku.md
+ M skills/sohrab/alaa-cc-orchestrator/agents/alaa-implementer-opus-high.md
+ M skills/sohrab/alaa-cc-orchestrator/agents/alaa-implementer-opus.md
+ M skills/sohrab/alaa-cc-orchestrator/agents/alaa-implementer-sonnet-high.md
+ M skills/sohrab/alaa-cc-orchestrator/agents/alaa-implementer.md
+ M skills/sohrab/alaa-cc-orchestrator/agents/alaa-planner-high.md
+ M skills/sohrab/alaa-cc-orchestrator/agents/alaa-planner.md
+ M skills/sohrab/alaa-cc-orchestrator/assets/implementation-contract.md
+ M skills/sohrab/alaa-cc-orchestrator/assets/manifest.json
+ M skills/sohrab/alaa-cc-orchestrator/assets/planner-contract.md
+ M skills/sohrab/alaa-cc-orchestrator/references/delegation-prompts.md
+ M skills/sohrab/alaa-cc-orchestrator/references/delegation-prompts/20-design.md
+ M skills/sohrab/alaa-cc-orchestrator/references/delegation-prompts/30-implementation.md
+ M skills/sohrab/alaa-cc-orchestrator/references/delegation-prompts/40-verification.md
+ M skills/sohrab/alaa-cc-orchestrator/references/delegation-prompts/60-contract-review.md
+ M skills/sohrab/alaa-cc-orchestrator/references/delegation-prompts/90-completion/20-review-followup.md
+ M skills/sohrab/alaa-cc-orchestrator/references/routing-matrix.md
+ M skills/sohrab/alaa-cc-orchestrator/references/verification-and-gates.md
+ M skills/sohrab/alaa-cc-orchestrator/scripts/check_agent_contracts.py
+ M skills/sohrab/alaa-cc-orchestrator/scripts/validate_pack.py
+ M skills/sohrab/alaa-code-intelligence-routing/references/20-documentation-routing.md
+ M skills/sohrab/alaa-codex-orchestrator/SKILL.md
+ M skills/sohrab/alaa-codex-orchestrator/agents/alaa-architecture-critic.toml
+ M skills/sohrab/alaa-codex-orchestrator/agents/alaa-implementer-astra-medium.toml
+ M skills/sohrab/alaa-codex-orchestrator/agents/alaa-implementer-astra-xhigh.toml
+ M skills/sohrab/alaa-codex-orchestrator/agents/alaa-implementer-astra.toml
+ M skills/sohrab/alaa-codex-orchestrator/agents/alaa-implementer-high.toml
+ M skills/sohrab/alaa-codex-orchestrator/agents/alaa-implementer-low.toml
+ M skills/sohrab/alaa-codex-orchestrator/agents/alaa-implementer-luna-high.toml
+ M skills/sohrab/alaa-codex-orchestrator/agents/alaa-implementer-luna-low.toml
+ M skills/sohrab/alaa-codex-orchestrator/agents/alaa-implementer-luna.toml
+ M skills/sohrab/alaa-codex-orchestrator/agents/alaa-implementer-xhigh.toml
+ M skills/sohrab/alaa-codex-orchestrator/agents/alaa-implementer.toml
+ M skills/sohrab/alaa-codex-orchestrator/agents/alaa-planner-high.toml
+ M skills/sohrab/alaa-codex-orchestrator/agents/alaa-planner.toml
+ M skills/sohrab/alaa-codex-orchestrator/assets/implementation-contract.md
+ M skills/sohrab/alaa-codex-orchestrator/assets/manifest.json
+ M skills/sohrab/alaa-codex-orchestrator/assets/planner-contract.md
+ M skills/sohrab/alaa-codex-orchestrator/references/delegation-prompts.md
+ M skills/sohrab/alaa-codex-orchestrator/references/delegation-prompts/20-design.md
+ M skills/sohrab/alaa-codex-orchestrator/references/delegation-prompts/30-implementation.md
+ M skills/sohrab/alaa-codex-orchestrator/references/delegation-prompts/40-verification.md
+ M skills/sohrab/alaa-codex-orchestrator/references/delegation-prompts/60-contract-review.md
+ M skills/sohrab/alaa-codex-orchestrator/references/delegation-prompts/90-completion/20-review-followup.md
+ M skills/sohrab/alaa-codex-orchestrator/references/routing-matrix.md
+ M skills/sohrab/alaa-codex-orchestrator/references/verification-and-gates.md
+ M skills/sohrab/alaa-codex-orchestrator/scripts/check_agent_contracts.py
+ M skills/sohrab/alaa-codex-orchestrator/scripts/validate_pack.py
+ M skills/sohrab/alaa-codex-runtime-ops/SKILL.md
+ M skills/sohrab/alaa-codex-runtime-ops/references/00-topic-map.md
+ M skills/sohrab/alaa-codex-runtime-ops/references/20-command-and-path-discipline.md
+ M skills/sohrab/alaa-codex-runtime-ops/references/40-project-fallbacks.md
+ M skills/sohrab/alaa-data-layer/SKILL.md
+ M skills/sohrab/alaa-data-layer/references/10-postgres-design-and-tenant-boundaries.md
+ M skills/sohrab/alaa-data-layer/references/40-redis-verification-and-anti-patterns.md
+ M skills/sohrab/alaa-data-layer/references/50-redis-laravel-octane.md
+ M skills/sohrab/alaa-data-layer/references/51-redis-golang.md
+ M skills/sohrab/alaa-data-layer/references/60-configuration-and-kit-gaps.md
+ M skills/sohrab/alaa-data-layer/references/source-map.md
+ M skills/sohrab/alaa-docker-production/SKILL.md
+ M skills/sohrab/alaa-docker-production/references/00-source-map.md
+ M skills/sohrab/alaa-docker-production/references/10-dockerfile-authorship.md
+ M skills/sohrab/alaa-docker-production/references/20-compose-authorship.md
+ M skills/sohrab/alaa-docker-production/references/25-fail-closed-interpolation.md
+ M skills/sohrab/alaa-docker-production/references/90-companion-boundary.md
+ M skills/sohrab/alaa-frontend-developer/SKILL.md
+ M skills/sohrab/alaa-frontend-developer/references/00-topic-map.md
+ M skills/sohrab/alaa-frontend-developer/references/25-frontend-security.md
+ M skills/sohrab/alaa-frontend-developer/references/30-pwa-sw-and-offline.md
+ M skills/sohrab/alaa-frontend-developer/references/41-lighthouse-and-web-vitals.md
+ M skills/sohrab/alaa-frontend-developer/references/47-frontend-observability.md
+ M skills/sohrab/alaa-frontend-developer/references/48-config-and-environment.md
+ M skills/sohrab/alaa-frontend-developer/references/50-qa-and-verification.md
+ M skills/sohrab/alaa-frontend-developer/references/70-companion-skill-routing.md
+ M skills/sohrab/alaa-frontend-developer/references/95-sources-and-maintenance.md
+ M skills/sohrab/alaa-frontend-devops/references/10-build-contract-and-artifacts.md
+ M skills/sohrab/alaa-frontend-devops/references/30-serving-caching-and-public-path.md
+ M skills/sohrab/alaa-gitlab-ci-cd/SKILL.md
+ M skills/sohrab/alaa-gitlab-ci-cd/references/00-topic-map.md
+ M skills/sohrab/alaa-gitlab-ci-cd/references/90-companion-boundary.md
+ M skills/sohrab/alaa-gitlab-ci-cd/references/pipeline-authoring/10-pipeline-creation-and-paths.md
+ M skills/sohrab/alaa-gitlab-ci-cd/references/runner-shell-and-kubernetes.md
+ M skills/sohrab/alaa-go-chi-development/SKILL.md
+ M skills/sohrab/alaa-go-chi-development/references/12-kit-capability-map.md
+ M skills/sohrab/alaa-golang-clean-code-principles/SKILL.md
+ M skills/sohrab/alaa-golang-clean-code-principles/evals/evals.json
+ M skills/sohrab/alaa-golang-clean-code-principles/references/20-domain-data-and-consistency.md
+ M skills/sohrab/alaa-golang-clean-code-principles/references/30-runtime-and-observability.md
+ M skills/sohrab/alaa-golang-clean-code-principles/references/90-source-map.md
+ M skills/sohrab/alaa-golang-fiber/SKILL.md
+ M skills/sohrab/alaa-golang-fiber/evals/evals.json
+ M skills/sohrab/alaa-golang-fiber/references/30-validation-testing.md
+ M skills/sohrab/alaa-golang-fiber/references/40-production-readiness.md
+ M skills/sohrab/alaa-golang-fiber/references/45-v2-to-v3-migration.md
+ M skills/sohrab/alaa-golang-fiber/references/50-kit-conflict-register.md
+ M skills/sohrab/alaa-golang/SKILL.md
+ M skills/sohrab/alaa-golang/references/00-topic-map.md
+ M skills/sohrab/alaa-golang/references/11-orchestration-and-overlap-guide.md
+ M skills/sohrab/alaa-golang/references/31-chi-api-guide.md
+ M skills/sohrab/alaa-golang/references/45-failure-behavior-at-the-call-site.md
+ M skills/sohrab/alaa-golang/references/46-chi-under-load.md
+ M skills/sohrab/alaa-golang/references/61-redis-cache-layer.md
+ M skills/sohrab/alaa-golang/references/62-import-direction-and-boundaries.md
+ M skills/sohrab/alaa-golang/references/70-modern-go-baseline/30-runtime-and-standard-library.md
+ M skills/sohrab/alaa-haproxy-lua/SKILL.md
+ M skills/sohrab/alaa-haproxy/SKILL.md
+ M skills/sohrab/alaa-haproxy/references/40-rate-limiting-and-peers/30-replication-and-partitions.md
+ M skills/sohrab/alaa-haproxy/references/70-delivery-and-drain.md
+ M skills/sohrab/alaa-haproxy/references/80-gate-register.md
+ M skills/sohrab/alaa-haproxy/references/90-companion-boundary.md
+ M skills/sohrab/alaa-k8s-helm/SKILL.md
+ M skills/sohrab/alaa-k8s-helm/references/failure-and-load.md
+ M skills/sohrab/alaa-k8s-helm/references/openshift-and-managed-platforms.md
+ M skills/sohrab/alaa-keyset-pagination/SKILL.md
+ M skills/sohrab/alaa-keyset-pagination/references/10-route-mode-and-sort-allowlist.md
+ M skills/sohrab/alaa-keyset-pagination/references/40-wire-contract-limits-and-errors.md
+ M skills/sohrab/alaa-laravel-architecture/SKILL.md
+ M skills/sohrab/alaa-laravel-architecture/references/source-map.md
+ M skills/sohrab/alaa-laravel-job-rabbitmq/SKILL.md
+ M skills/sohrab/alaa-laravel-public-api-contract-pack/SKILL.md
+ M skills/sohrab/alaa-laravel-public-api-contract-pack/agents/openai.yaml
+ M skills/sohrab/alaa-laravel-public-api-contract-pack/references/40-consumer-discovery-pinning-and-secret-hygiene.md
+ M skills/sohrab/alaa-laravel-upgrade-all-packages/SKILL.md
+ M skills/sohrab/alaa-laravel-upgrade-all-packages/references/20-breaking-change-detection.md
+ M skills/sohrab/alaa-laravel-upgrade-all-packages/references/40-failure-classes.md
+ M skills/sohrab/alaa-laravel-upgrade-all-packages/references/50-runtime-verification.md
+ M skills/sohrab/alaa-low-noise/SKILL.md
+ M skills/sohrab/alaa-memory-os/SKILL.md
+ M skills/sohrab/alaa-memory-os/references/00-topic-map.md
+ M skills/sohrab/alaa-memory-os/references/knowledge-shape.md
+ M skills/sohrab/alaa-memory-os/references/prompt-3-publishing.md
+ M skills/sohrab/alaa-memory-os/references/store-basic-memory.md
+ M skills/sohrab/alaa-memory-os/references/store-hindsight.md
+ M skills/sohrab/alaa-memory-os/references/store-local.md
+ M skills/sohrab/alaa-minio-object-storage/SKILL.md
+ M skills/sohrab/alaa-minio-object-storage/references/00-topic-map.md
+ M skills/sohrab/alaa-minio-object-storage/references/05-environment-contract.md
+ M skills/sohrab/alaa-minio-object-storage/references/10-buckets-and-object-keys.md
+ M skills/sohrab/alaa-minio-object-storage/references/20-lifecycle-and-retention.md
+ M skills/sohrab/alaa-minio-object-storage/references/30-identity-credentials-and-access.md
+ M skills/sohrab/alaa-minio-object-storage/references/40-encryption-tls-and-durability.md
+ M skills/sohrab/alaa-minio-object-storage/references/50-multipart-capacity-and-cost.md
+ M skills/sohrab/alaa-minio-object-storage/references/60-presigned-urls-and-delivery.md
+ M skills/sohrab/alaa-minio-object-storage/references/70-client-libraries.md
+ M skills/sohrab/alaa-minio-object-storage/references/75-mc-command-line-client.md
+ M skills/sohrab/alaa-minio-object-storage/references/80-topology.md
+ M skills/sohrab/alaa-minio-object-storage/references/95-observability.md
+ M skills/sohrab/alaa-minio-object-storage/references/SOURCES.md
+ M skills/sohrab/alaa-mongodb-patterns/SKILL.md
+ M skills/sohrab/alaa-mongodb-patterns/references/source-map.md
+ M skills/sohrab/alaa-observability-soc/SKILL.md
+ M skills/sohrab/alaa-observability-soc/references/20-instrumentation-gates.md
+ M skills/sohrab/alaa-observability-soc/references/50-telemetry-pipeline.md
+ M skills/sohrab/alaa-observability-soc/references/60-sentry-and-profiling.md
+ M skills/sohrab/alaa-observability-soc/references/80-review-gates.md
+ M skills/sohrab/alaa-observability-soc/references/90-source-map.md
+ M skills/sohrab/alaa-partitioned-table-fk-audit/SKILL.md
+ M skills/sohrab/alaa-partitioned-table-fk-audit/scripts/partitioned_fk_audit.py
+ M skills/sohrab/alaa-permission-generator/SKILL.md
+ M skills/sohrab/alaa-php-clean-code/SKILL.md
+ M skills/sohrab/alaa-php-clean-code/references/documentation-and-artifacts.md
+ M skills/sohrab/alaa-php-clean-code/references/laravel-best-practices.md
+ M skills/sohrab/alaa-postman-collections/SKILL.md
+ M skills/sohrab/alaa-project-constitution/assets/constitution-template.md
+ M skills/sohrab/alaa-project-constitution/references/evidence-and-module-selection.md
+ M skills/sohrab/alaa-prompting-guide/SKILL.md
+ M skills/sohrab/alaa-prompting-guide/references/00-topic-map.md
+ M skills/sohrab/alaa-prompting-guide/references/11-codex-runtime-features.md
+ M skills/sohrab/alaa-prompting-guide/references/60-skill-authoring.md
+ M skills/sohrab/alaa-quasar-app-vite-v3/SKILL.md
+ M skills/sohrab/alaa-quasar-app-vite-v3/references/00-topic-map.md
+ M skills/sohrab/alaa-quasar-app-vite-v3/references/34-frontend-failure-and-degradation.md
+ M skills/sohrab/alaa-quasar-app-vite-v3/references/36-client-observability-contract.md
+ M skills/sohrab/alaa-quasar-app-vite-v3/references/75-testing-ci-playbook.md
+ M skills/sohrab/alaa-quasar-app-vite-v3/references/91-agent-authoring-and-dual-runtime.md
+ M skills/sohrab/alaa-reliability-sla/SKILL.md
+ M skills/sohrab/alaa-reliability-sla/references/00-topic-map.md
+ M skills/sohrab/alaa-repo-docs/SKILL.md
+ M skills/sohrab/alaa-repo-docs/references/10-language-and-links.md
+ M skills/sohrab/alaa-repo-docs/references/70-subagent-doc-workflows.md
+ M skills/sohrab/alaa-security-review/references/25-browser-trust-and-output.md
+ M skills/sohrab/alaa-security-review/references/60-deep-review-and-hardening.md
+ M skills/sohrab/alaa-services-contract/SKILL.md
+ M skills/sohrab/alaa-services-contract/references/21-alaa-platform-observability-directive.md
+ M skills/sohrab/alaa-services-contract/references/22-failure-load-and-deprecation-contract.md
+ M skills/sohrab/alaa-services-contract/references/25-end-to-end-flow-and-boundaries.md
+ M skills/sohrab/alaa-services-contract/references/26-request-time-authorization-openfga/40-decision-and-enforcement.md
+ M skills/sohrab/alaa-services-contract/references/95-fleet-conformance.md
+ M skills/sohrab/alaa-shaka-player/SKILL.md
+ M skills/sohrab/alaa-shaka-player/references/50-offline-and-in-app-download.md
+ M skills/sohrab/alaa-shaka-player/references/90-qa-modes-and-checklist.md
+ M skills/sohrab/alaa-sms-provider-mediana/SKILL.md
+ M skills/sohrab/alaa-sms-provider-mediana/references/30-failure-and-ambiguity.md
+ M skills/sohrab/alaa-system-design/SKILL.md
+ M skills/sohrab/alaa-system-design/agents/openai.yaml
+ M skills/sohrab/alaa-system-design/references/20-contract-first.md
+ M skills/sohrab/alaa-system-design/references/60-design-record.md
+ M skills/sohrab/alaa-system-design/references/70-review-and-readiness.md
+ M skills/sohrab/alaa-testing-strategy/SKILL.md
+ M skills/sohrab/alaa-testing-strategy/references/60-coverage.md
+ M skills/sohrab/alaa-testing-strategy/references/80-evidence-and-reporting.md
+ M skills/sohrab/alaa-testing-strategy/references/90-test-economy.md
+ M skills/sohrab/alaa-trust-gateway-auth/SKILL.md
+ M skills/sohrab/alaa-trust-gateway-auth/references/30-fail-closed-cases.md
+ M skills/sohrab/alaa-trust-gateway-auth/references/50-deny-codes.md
+ M skills/sohrab/alaa-ui-ux-design-system/references/05-rtl-and-persian.md
+ M skills/sohrab/alaa-ui-ux-design-system/references/45-render-and-asset-budgets.md
+ M skills/sohrab/alaa-vue-typescript-clean-code/evals/evals.json
+ M skills/sohrab/alaa-vue-typescript-clean-code/references/50-quasar-vite-pinia-contract.md
+ M skills/sohrab/alaa-vue-typescript-clean-code/references/60-validation-gates.md
+ M skills/sohrab/alaa-workflow/SKILL.md
+ M skills/sohrab/alaa-workflow/assets/continuation-state-template.md
+ M skills/sohrab/alaa-workflow/assets/phase-prompts-template.md
+A  skills/sohrab/alaa-workflow/assets/phase-template.md
+ M skills/sohrab/alaa-workflow/assets/plan-template.md
+ M skills/sohrab/alaa-workflow/assets/state-template.json
+ M skills/sohrab/alaa-workflow/references/artifact-lifecycle.md
+ M skills/sohrab/alaa-workflow/references/companion-routing.md
+ M skills/sohrab/alaa-workflow/references/context-continuity.md
+ M skills/sohrab/alaa-workflow/references/phase-prompts.md
+ M skills/sohrab/alaa-workflow/references/task-tracking.md
+ M skills/sohrab/alaa-workflow/references/workspace-and-integration.md
+ M skills/sohrab/alaa-workflow/scripts/init_workflow_files.py
+ M skills/sohrab/alaa-workflow/scripts/validate_workflow_files.py
+ M skills/sohrab/alaa-workflow/tests/test_workflow_files.py
+ M skills/sohrab/ansible-generator/SKILL.md
+ M skills/sohrab/ansible-generator/references/best-practices.md
+ M skills/sohrab/ansible-generator/references/playbook.md
+ M skills/sohrab/clickhouse-performance-schema-ops/references/15-fleet-clickhouse-boundary.md
+ M skills/sohrab/service-runtime-kit-governance/SKILL.md
+ M skills/sohrab/tusd-upload-platform/SKILL.md
+ M skills/sohrab/tusd-upload-platform/references/00-topic-map.md
+ M skills/sohrab/tusd-upload-platform/references/10-source-map.md
+ M skills/sohrab/tusd-upload-platform/references/20-decision-matrix.md
+ M skills/sohrab/tusd-upload-platform/references/35-storage-lifecycle.md
+ M skills/sohrab/tusd-upload-platform/references/45-hooks.md
+ M skills/sohrab/tusd-upload-platform/references/55-tests.md
+ M skills/sohrab/tusd-upload-platform/scripts/validate_pack.py
+ M skills/sohrab/vector-rust-observability-pipelines/SKILL.md
+ M skills/sohrab/vector-rust-observability-pipelines/references/30-buffers-acks-and-backpressure.md
+ M skills/sohrab/vector-rust-observability-pipelines/references/75-ala-ingest-pipeline.md
+?? artifacts/skill-pack-optimization-20261018/capture-candidate.py
+?? artifacts/skill-pack-optimization-20261018/change-notes.md
+?? artifacts/skill-pack-optimization-20261018/final-candidate.json
+?? artifacts/skill-pack-optimization-20261018/final-documentation.json
+?? artifacts/skill-pack-optimization-20261018/final-verification-logs/
+?? artifacts/skill-pack-optimization-20261018/final-verification-recheck-logs/
+?? artifacts/skill-pack-optimization-20261018/final-verification-recheck.json
+?? artifacts/skill-pack-optimization-20261018/final-verification-recheck.md
+?? artifacts/skill-pack-optimization-20261018/final-verification.json
+?? artifacts/skill-pack-optimization-20261018/final-verification.md
+?? artifacts/skill-pack-optimization-20261018/lanes/AUDIT-cli-assertion.py
+?? artifacts/skill-pack-optimization-20261018/lanes/AUDIT-verification.json
+?? artifacts/skill-pack-optimization-20261018/lanes/AUDIT.md
+?? artifacts/skill-pack-optimization-20261018/lanes/CITATION-FINAL-report.md
+?? artifacts/skill-pack-optimization-20261018/lanes/DESIGN-FINAL-evidence.md
+?? artifacts/skill-pack-optimization-20261018/lanes/GO-checks.json
+?? artifacts/skill-pack-optimization-20261018/lanes/GO-checks.py
+?? artifacts/skill-pack-optimization-20261018/lanes/GO-contracts-output.txt
+?? artifacts/skill-pack-optimization-20261018/lanes/GO-diff-output.txt
+?? artifacts/skill-pack-optimization-20261018/lanes/GO-draft.md
+?? artifacts/skill-pack-optimization-20261018/lanes/GO-fleet-output.txt
+?? artifacts/skill-pack-optimization-20261018/lanes/GO-links-output.txt
+?? artifacts/skill-pack-optimization-20261018/lanes/GO-task-snapshot.json
+?? artifacts/skill-pack-optimization-20261018/lanes/GO-verification.json
+?? artifacts/skill-pack-optimization-20261018/lanes/GO-verify.py
+?? artifacts/skill-pack-optimization-20261018/lanes/INTEGRATE-draft.md
+?? artifacts/skill-pack-optimization-20261018/lanes/INTEGRATE-input-manifest.json
+?? artifacts/skill-pack-optimization-20261018/lanes/INTEGRATE.md
+?? artifacts/skill-pack-optimization-20261018/lanes/ORCH-FINAL-checker-edit.py
+?? artifacts/skill-pack-optimization-20261018/lanes/ORCH-FINAL-checks.json
+?? artifacts/skill-pack-optimization-20261018/lanes/ORCH-FINAL-diff.txt
+?? artifacts/skill-pack-optimization-20261018/lanes/ORCH-FINAL-draft.json
+?? artifacts/skill-pack-optimization-20261018/lanes/ORCH-FINAL-edit.py
+?? artifacts/skill-pack-optimization-20261018/lanes/ORCH-FINAL-final-snapshot.json
+?? artifacts/skill-pack-optimization-20261018/lanes/ORCH-FINAL-finalize.py
+?? artifacts/skill-pack-optimization-20261018/lanes/ORCH-FINAL-focused.json
+?? artifacts/skill-pack-optimization-20261018/lanes/ORCH-FINAL-focused.py
+?? artifacts/skill-pack-optimization-20261018/lanes/ORCH-FINAL-read-baseline.json
+?? artifacts/skill-pack-optimization-20261018/lanes/ORCH-FINAL-report.md
+?? artifacts/skill-pack-optimization-20261018/lanes/PLATFORM-verification.json
+?? artifacts/skill-pack-optimization-20261018/lanes/PLATFORM-verify.py
+?? artifacts/skill-pack-optimization-20261018/lanes/PLAYER-source-manifest.json
+?? artifacts/skill-pack-optimization-20261018/lanes/PLAYER-verification.json
+?? artifacts/skill-pack-optimization-20261018/lanes/PLAYER.md
+?? artifacts/skill-pack-optimization-20261018/lanes/SHARED-final-checks.json
+?? artifacts/skill-pack-optimization-20261018/lanes/SHARED-finalize.py
+?? artifacts/skill-pack-optimization-20261018/lanes/SIGNALS-final-manifest.json
+?? artifacts/skill-pack-optimization-20261018/lanes/SIGNALS-read-manifest.json
+?? artifacts/skill-pack-optimization-20261018/lanes/SIGNALS.md
+?? artifacts/skill-pack-optimization-20261018/lanes/UI-INTEGRATE.json
+?? artifacts/skill-pack-optimization-20261018/lanes/UI-changed-paths.json
+?? artifacts/skill-pack-optimization-20261018/lanes/UI-check-1.txt
+?? artifacts/skill-pack-optimization-20261018/lanes/UI-check-2.txt
+?? artifacts/skill-pack-optimization-20261018/lanes/UI-check-3.txt
+?? artifacts/skill-pack-optimization-20261018/lanes/UI-diff.json
+?? artifacts/skill-pack-optimization-20261018/lanes/UI-diff.txt
+?? artifacts/skill-pack-optimization-20261018/lanes/UI-draft.json
+?? artifacts/skill-pack-optimization-20261018/lanes/UI-edit.py
+?? artifacts/skill-pack-optimization-20261018/lanes/UI-evidence-check.json
+?? artifacts/skill-pack-optimization-20261018/lanes/UI-evidence-check.py
+?? artifacts/skill-pack-optimization-20261018/lanes/UI-evidence-correction.json
+?? artifacts/skill-pack-optimization-20261018/lanes/UI-evidence-correction.py
+?? artifacts/skill-pack-optimization-20261018/lanes/UI-finalize.py
+?? artifacts/skill-pack-optimization-20261018/lanes/UI-read-provenance.json
+?? artifacts/skill-pack-optimization-20261018/lanes/UI-task-snapshot.json
+?? artifacts/skill-pack-optimization-20261018/lanes/UI-verification.json
+?? artifacts/skill-pack-optimization-20261018/lanes/UI.md
+?? artifacts/skill-pack-optimization-20261018/lanes/WF-FINAL-before.json
+?? artifacts/skill-pack-optimization-20261018/lanes/WF-FINAL-design.md
+?? artifacts/skill-pack-optimization-20261018/lanes/WF-FINAL-evidence.json
+?? artifacts/skill-pack-optimization-20261018/lanes/fixtures/
+?? artifacts/skill-pack-optimization-20261018/phase2-snapshot.json
+?? artifacts/skill-pack-optimization-20261018/phase3-acceptance.md
+?? artifacts/skill-pack-optimization-20261018/phase3-candidate.json
+?? artifacts/skill-pack-optimization-20261018/portability-correction.json
+?? artifacts/skill-pack-optimization-20261018/proposal-dispositions.json
+?? artifacts/skill-pack-optimization-20261018/proposal-dispositions.md
+?? artifacts/skill-pack-optimization-20261018/review-clearance.md
+?? artifacts/skill-pack-optimization-20261018/review-findings.md
+?? artifacts/skill-pack-optimization-20261018/review-schema.md
+?? artifacts/skill-pack-optimization-20261018/review-security.md
+?? artifacts/skill-pack-optimization-20261018/verification-first-candidate.json

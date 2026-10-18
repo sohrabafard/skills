@@ -25,7 +25,7 @@ A test already in the suite that falls into a row above is reported as a finding
 - **Every test belongs to one topic**: the behaviour or surface it defends, at the granularity a single change touches — a route family, a use case, a consumer, a policy, a migration.
 - **The topic is expressed through the runner's native selector**: a package or directory, a name prefix matched by the runner's filter, a group or tag, or a project. Layer is a second, independent selector, so the unit tests of one topic run without its integration tests.
 - **The repository records the selector map** — each topic and layer, and the exact command that runs it — in its validation policy. `/alaa-project-constitution` carries the slot. When a repository has no map, derive the selector from test location, use it, and report the missing map as a gap.
-- **The focused tier runs the selectors of the changed topics. The affected tier runs the union of selectors for every topic reachable from the changed surfaces.** The whole-suite command is the exhaustive tier only.
+- **Focused selects the smallest discriminating changed case; task acceptance combines bounded task coverage; affected selects reachable topics.** `SKILL.md` owns those scopes and the runtime orchestrators own scheduling. A whole-suite command remains exhaustive regardless of its label.
 - **A new test joins an existing topic** when its behaviour belongs to one; a new topic is created only for a new behaviour or surface.
 
 ## Setup once

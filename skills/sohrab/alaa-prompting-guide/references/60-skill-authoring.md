@@ -47,7 +47,7 @@ This routes: *"When you are about to choose a frontmatter key or a description l
 
 The cost model decides it. Inlining a failure taxonomy into the body charges every run for it, including the four runs in five that never fail a check; moving it behind a pointer charges one line and buys the whole file conditionally.
 
-Where the router itself lives — as a table in the body, or in its own file — is set by reference count, not by feel. **A skill with eight or fewer references carries the router in the body as a table and ships no separate router file; a skill with nine or more moves it into `references/00-topic-map.md` and leaves exactly one pointer line in the body.** The threshold is about always-loaded cost, not about whether routing matters: a router in the body reaches the agent with no second read and is the better placement whenever the body can afford it. Crossing the threshold in either direction *moves* the router and never duplicates it, because two routers in one skill drift and the agent follows whichever it reads first. A repository may pin a different threshold or filename in its own contract; where it does, that contract wins.
+Choose router placement by actual always-loaded cost and selective routing needs, never reference count alone. Preserve an existing external router unless evidence justifies relocation. Keep one router: a body table or an external file with one short triggered body pointer. Relocation is a separate justified change, never compression; preserve every trigger and destination. Repository-specific routing and retirement rules govern.
 
 ## The draft-then-compress loop
 

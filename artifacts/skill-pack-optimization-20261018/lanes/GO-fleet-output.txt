@@ -1,0 +1,13 @@
+check_fleet_references.py: 6 of 69 skills, 82 Markdown files, 242 citations
+
+FINDINGS: none
+
+INFO (61 unmarked target-repository paths across 6 skills; these never fail the run)
+    31  alaa-go-chi-development
+    15  service-runtime-kit-governance
+     5  alaa-golang
+     5  alaa-golang-clean-code-principles
+     4  alaa-golang-fiber
+     1  alaa-data-layer
+  Rerun with --show-info for every site, or --format json for all of them.
+  Mark each one as <repo>/<path> to retire it from this list.

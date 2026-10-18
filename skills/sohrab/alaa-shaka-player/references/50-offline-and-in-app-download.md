@@ -8,27 +8,16 @@ All rows `verified` at v5.2.3, read 2026-07-28.
 `shaka.offline.Storage` surface, `offline.trackSelectionCallback`, progress reporting, and storing
 with a persistent DRM licence.
 
-**`/alaa-indexeddb-browser-storage` (`$alaa-indexeddb-browser-storage`) owns the storage substrate.**
-Its reciprocal statement, carried here verbatim:
+`/alaa-indexeddb-browser-storage` (`$alaa-indexeddb-browser-storage`) owns the browser-storage substrate.
+Before designing or shipping a download, read `/alaa-indexeddb-browser-storage`,
+`references/72-offline-media-store.md` for quota, persistence, eviction, concurrency and caller recovery
+obligations; read `/alaa-indexeddb-browser-storage`, `references/32-eviction-and-recovery.md` for boot
+recovery; and read `/alaa-indexeddb-browser-storage`,
+`references/41-multitab-versionchange-and-locks.md` when a service worker and tab may both be active.
 
-> Quota, persistence, eviction, the multi-tab and service-worker concurrency around the offline store,
-> and what the application does when a stored asset is evicted mid-session are
-> `/alaa-indexeddb-browser-storage` (`$alaa-indexeddb-browser-storage`),
-> `references/72-offline-media-store.md`. Shaka never calls `navigator.storage.persist()`, so an
-> offline download sits in best-effort storage; the caller must request persistence itself and must
-> ship the eviction-recovery path.
-
-Read `alaa-indexeddb-browser-storage` `references/72-offline-media-store.md` before shipping a download
-feature, `alaa-indexeddb-browser-storage` `references/32-eviction-and-recovery.md` for the recovery path,
-and `alaa-indexeddb-browser-storage` `references/41-multitab-versionchange-and-locks.md` if a service
-worker and a tab can both be active during a download. Neither skill restates the other.
-
-**The fact that joins them, and the consequence the consumer must handle:** Shaka's only use of
-`navigator.storage` anywhere in `lib/` is **two `estimate()` calls** in
-`lib/util/player_configuration.js`. **Shaka never calls `navigator.storage.persist()`.** Therefore a
-downloaded asset lives in **best-effort** storage by default and the browser may evict it under
-pressure, at any time, without notifying the player. Requesting persistent storage is the
-application's job, and handling a mid-session eviction is the other skill's ground.
+Shaka's only use of `navigator.storage` anywhere in `lib/` is **two `estimate()` calls** in
+`lib/util/player_configuration.js`. The browser-storage owner above states the persistence and eviction
+consequences and the caller obligations.
 
 ## Current position
 
@@ -100,8 +89,7 @@ that database are `/alaa-indexeddb-browser-storage` (`$alaa-indexeddb-browser-st
 | The size estimate passed to the callback is computed in `store()` as `Σ (track.bandwidth × duration / 8)` over the **chosen** tracks. It is a bitrate-derived estimate, **not** a measured byte count. | `lib/offline/storage.js` L811–816 |
 | Callback returns `false` → `store()` rejects with **`STORAGE_LIMIT_REACHED` (9014)**. | L818–824 |
 | Callback *throws* a non-Shaka error → converted to **`DOWNLOAD_SIZE_CALLBACK_ERROR` (9015)** with a warning. Shaka `Error`s are re-thrown unchanged. | L826–836 |
-| **Shaka never calls `navigator.storage.persist()`.** | `grep -rn "navigator.storage" lib/` → exactly two hits, both `estimate()` |
-| Guidance on persistence, eviction, or the Storage Standard's best-effort/persistent buckets | `not documented` — searched all 712 lines of `docs/tutorials/offline.md` and `README.md` on 2026-07-28; none found |
+| Guidance in Shaka's docs on best-effort/persistent buckets | `not documented` — searched all 712 lines of `docs/tutorials/offline.md` and `README.md` on 2026-07-28; none found |
 | Generic IndexedDB failure → **`INDEXED_DB_ERROR` (9001)**. Its doc names a real cause: *"On Firefox, one common source for UnknownError calls is reverting Firefox to an old version… The only way to fix this is to delete the storage data in your profile."* `error.data[0]` is the underlying error object. | `lib/util/error.js` L1139–1145 |
 
 ## Persistent licences — platform constraints
@@ -159,10 +147,7 @@ const support = await shaka.offline.Storage.support();
 if (!support.basic) throw new Error('Offline storage unsupported here.');
 const canPersistWidevine = support.encrypted['com.widevine.alpha'] === true;
 
-// ---- 2. Ask the browser for PERSISTENT (non-evictable) storage.
-//         Shaka does NOT do this: it only calls navigator.storage.estimate().
-//         The eviction semantics behind this call are owned by
-//         /alaa-indexeddb-browser-storage ($alaa-indexeddb-browser-storage). ----
+// ---- 2. Apply the caller-side persistence policy from IDB references/72. ----
 if (navigator.storage && navigator.storage.persist) {
   const persisted = await navigator.storage.persist();
   recordStoragePersistence(persisted);   // false => the browser may evict this download
@@ -247,9 +232,8 @@ reach **this** skill, and which it already states, is:
 > `segment-v5`, `manifest-v5` and `session-ids`, all `autoIncrement: true`. Do not open that database
 > directly: it is Shaka's private schema with no stable contract.
 
-**Best practice.** Call `navigator.storage.persist()` yourself, record whether it was granted, and
-check `navigator.storage.estimate()` in your own `downloadSizeCallback`. Shaka's 95%-of-quota default
-is a guard rail, not a durability guarantee.
+**Best practice.** Use `navigator.storage.estimate()` in your own `downloadSizeCallback`. Shaka's
+95%-of-quota default is a guard rail, not a durability guarantee; it does not make the download durable.
 **Common mistake (three).** (a) `await storage.store(...)` without `.promise` — since v4.0 `store()`
 returns an `IAbortableOperation`, so awaiting it directly does not give you the `StoredContent`. (b)
 Registering auth filters on `player.getNetworkingEngine()` and finding downloads 401 — `Storage` has

@@ -1,0 +1,291 @@
+{
+  "canonicalization": "case-sensitive sorted relative POSIX path + NUL + raw bytes",
+  "sha256": "3fa287188381304840681eee0e6da28a2800cad09eddb1fb8f012323afc33b0f",
+  "counts": {
+    "affected_skills": 4,
+    "skill_files": 4,
+    "references": 35,
+    "scripts": 3,
+    "all_inputs": 54
+  },
+  "read_timing": "All four affected skills, every reference, and every script were fully read after the initial wording edits; the initial edit preceded this full-read evidence.",
+  "files": [
+    {
+      "path": "AGENTS.md",
+      "sha256": "6c01322f562cf9a07aece782e0974f831880b39006ac484ddc910508e808d4df",
+      "read_status": "input"
+    },
+    {
+      "path": "docs/_agent_plans/20261018-000000_skill-pack-optimization.md",
+      "sha256": "34f00db0ea0e486b9af41abc6befc4bcf5b8982578deb0d3f2387278328d84de",
+      "read_status": "input"
+    },
+    {
+      "path": "skills/sohrab/AGENTS.md",
+      "sha256": "b9a5fd02b05635b6a345276e41aed76c85f162f7f6333962f01c2390aa6fe9b9",
+      "read_status": "input"
+    },
+    {
+      "path": "skills/sohrab/README.fa.md",
+      "sha256": "244014faa2682baca459d8e88adc5c3722d8bb1e128d75a3231f3b539b1f3370",
+      "read_status": "input",
+      "pre_edit_sha256": "c982fd1738208424180ee7138fbc137645b918d11f9996136b49ba40aaf3ce24"
+    },
+    {
+      "path": "skills/sohrab/README.md",
+      "sha256": "b0cdc29a96a33a4f77c43b4d7493edddefc4d361f501e35d9d37a5bc4138580a",
+      "read_status": "input",
+      "pre_edit_sha256": "c43b19bb86f7646755a545a150dc21035736511154172057e43fa962ce59a395"
+    },
+    {
+      "path": "skills/sohrab/alaa-algorithms-data-structures/SKILL.md",
+      "sha256": "3c256115175073b73b1f693fd7eb0acd37c7f3c1057a42a41b496c89ec81a8f4",
+      "read_status": "complete",
+      "pre_edit_sha256": "5c58d195c7b2d249b5fbe39f45706c8f78fdd338b2ae023e8118a54875ab5c4c"
+    },
+    {
+      "path": "skills/sohrab/alaa-algorithms-data-structures/references/10-complexity-budget.md",
+      "sha256": "5331ccda6a7e66f3d5095a0e9d0919bb6393d8da294c33a06113e1221cb6357e",
+      "read_status": "complete"
+    },
+    {
+      "path": "skills/sohrab/alaa-algorithms-data-structures/references/20-finding-n.md",
+      "sha256": "f566ded3ed5e4bf7487eb515ffc8a02aef68654171383444e40d31246e9243f9",
+      "read_status": "complete"
+    },
+    {
+      "path": "skills/sohrab/alaa-algorithms-data-structures/references/30-choosing-a-structure.md",
+      "sha256": "cf02cd6e94188ebe7f5c0535106dd6ad439d236f74baac7566f1b561a48aa1bc",
+      "read_status": "complete"
+    },
+    {
+      "path": "skills/sohrab/alaa-algorithms-data-structures/references/40-call-in-a-loop.md",
+      "sha256": "63f3190053a01ff1b5e7574908fd5b36d5ab82ba1cd846f6a81949067e352cef",
+      "read_status": "complete"
+    },
+    {
+      "path": "skills/sohrab/alaa-algorithms-data-structures/references/50-memory-and-streaming.md",
+      "sha256": "82e37547325c24909c397aef7fcea5ca0cb5d402e9b4443a656e1ebed85a3786",
+      "read_status": "complete"
+    },
+    {
+      "path": "skills/sohrab/alaa-algorithms-data-structures/references/60-tuning-points.md",
+      "sha256": "8aa65a5582ad26aff2f53f52cd347e648e2fac65b75820c84f89db5e210e83c2",
+      "read_status": "complete"
+    },
+    {
+      "path": "skills/sohrab/alaa-algorithms-data-structures/references/70-proving-it.md",
+      "sha256": "3d09462639dafa1119053bcffa13190776fb4aa3859be9305ee01b733ae5b90d",
+      "read_status": "complete"
+    },
+    {
+      "path": "skills/sohrab/alaa-algorithms-data-structures/references/80-when-not-to.md",
+      "sha256": "7a759e0b0b3ed36293d3c042f061f501dca476caea09af6e970f9c3634b6beeb",
+      "read_status": "complete"
+    },
+    {
+      "path": "skills/sohrab/alaa-code-intelligence-routing/SKILL.md",
+      "sha256": "2d1ad4d9815f8390ffca15de5782f728063dcc0a6adc7b4873947aeadbbc9946",
+      "read_status": "input"
+    },
+    {
+      "path": "skills/sohrab/alaa-codex-runtime-ops/SKILL.md",
+      "sha256": "f247bf52cab4077b48ee2e5dccc86fae78793ffd8243a4636e254230a6ceaa86",
+      "read_status": "complete",
+      "pre_edit_sha256": "f82daba8978849b9d637dc50762ebbab9ba6080cbbc6286666f6e235a29c220a"
+    },
+    {
+      "path": "skills/sohrab/alaa-codex-runtime-ops/references/00-topic-map.md",
+      "sha256": "c8f57120b6441541875910a87f97bebd86f47288fbdf209efc6f9f30cf2dc3f1",
+      "read_status": "complete"
+    },
+    {
+      "path": "skills/sohrab/alaa-codex-runtime-ops/references/10-windows-sandbox-recovery.md",
+      "sha256": "5e73f58eac385749a8080f5369f337c26bdee3aa8eca69ee71ba559408a6d2a5",
+      "read_status": "complete"
+    },
+    {
+      "path": "skills/sohrab/alaa-codex-runtime-ops/references/20-command-and-path-discipline.md",
+      "sha256": "1d274f4c07112d23f4091aea966aaacb50e6d738ca445feb554b3dc5341efa74",
+      "read_status": "complete",
+      "pre_edit_sha256": "114df610dad2e366c92dd5d01cde2ef9161ebf4446f4d937fb562d92e5918191"
+    },
+    {
+      "path": "skills/sohrab/alaa-codex-runtime-ops/references/30-git-session-and-locked-file-recovery.md",
+      "sha256": "ca289df3ef8b0f8519ed7344ecfaf502781a26a4fa93d6a64dd2b443849f0ef8",
+      "read_status": "complete"
+    },
+    {
+      "path": "skills/sohrab/alaa-codex-runtime-ops/references/40-project-fallbacks.md",
+      "sha256": "43d9eaed0b909089a14effa43b08a90847d7d4b2f49afacc3703e7cbde4e13d7",
+      "read_status": "complete"
+    },
+    {
+      "path": "skills/sohrab/alaa-codex-runtime-ops/references/90-source-map.md",
+      "sha256": "5fb06e004478dd412fe21d70be47fc12de9bf7755170a9dc6d6b46c1dbedd043",
+      "read_status": "complete"
+    },
+    {
+      "path": "skills/sohrab/alaa-low-noise/SKILL.md",
+      "sha256": "84e275739ec9022332cc0250bb83cb4ac7960e48f6f711ffd1effc343b7dc1a6",
+      "read_status": "input"
+    },
+    {
+      "path": "skills/sohrab/alaa-postman-collections/SKILL.md",
+      "sha256": "4dd15cfa1ee9d7bcf8abe25a0d17f67d244fe6607e369b0bf695764e5d22e197",
+      "read_status": "complete",
+      "pre_edit_sha256": "5ea7fded30c6cbedd9f9fbb8f7f8ab2b49ec49242e805742f2dd83e3aa3bd889"
+    },
+    {
+      "path": "skills/sohrab/alaa-postman-collections/references/00-topic-map.md",
+      "sha256": "b09d8cf76380131aecdb0e7b34618a8f9dee49ebd747779d8898c161b083ade4",
+      "read_status": "complete"
+    },
+    {
+      "path": "skills/sohrab/alaa-postman-collections/references/10-scope-and-trigger-rules.md",
+      "sha256": "f5de608ce261db6b8b7f42a27f3b27167508ef7a774994b6e4b4b667aea1e2a6",
+      "read_status": "complete"
+    },
+    {
+      "path": "skills/sohrab/alaa-postman-collections/references/20-collection-structure-and-docs.md",
+      "sha256": "6d9cc85977170b1a06314449418745ff718c4cb666ea6d49a2cbe40b2127e861",
+      "read_status": "complete"
+    },
+    {
+      "path": "skills/sohrab/alaa-postman-collections/references/25-public-api-contract-and-sdk-readiness.md",
+      "sha256": "5a0930026ef71e0685eef650ad982973ca906e8677d56f2d4b7e94bf073c993d",
+      "read_status": "complete"
+    },
+    {
+      "path": "skills/sohrab/alaa-postman-collections/references/30-variables-auth-and-environments.md",
+      "sha256": "b903f5af8f68ee383fc0afab5f99db6634f90e4e88795afc8fb9f12a020f37bb",
+      "read_status": "complete"
+    },
+    {
+      "path": "skills/sohrab/alaa-postman-collections/references/41-response-contract-and-error-coverage.md",
+      "sha256": "191fa546c9ac489c31ba88e540c8875ffcd4e9cafe5e0ca22e0b8ad8d2197f52",
+      "read_status": "complete"
+    },
+    {
+      "path": "skills/sohrab/alaa-postman-collections/references/42-scripts-and-state-capture.md",
+      "sha256": "fe85ca784322bd0d55e257efcd9858bbf8aebab74e25a40d9f0bb4a054c95253",
+      "read_status": "complete"
+    },
+    {
+      "path": "skills/sohrab/alaa-postman-collections/references/43-response-tests.md",
+      "sha256": "28b0c2befbce03032a3c7ad60e2a43b5611a88677d33dfb30accb8bcd1ed6219",
+      "read_status": "complete"
+    },
+    {
+      "path": "skills/sohrab/alaa-postman-collections/references/44-request-documentation-blocks.md",
+      "sha256": "8e70dbdf6805ce13f9076301c231c1a689ce0ebbd10a53a4be22324aa39a7907",
+      "read_status": "complete"
+    },
+    {
+      "path": "skills/sohrab/alaa-postman-collections/references/45-mock-servers.md",
+      "sha256": "be889f07f40a7636ff774fab9a16a4ef32b564dbe0400f46ebef4902f0dba3f3",
+      "read_status": "complete"
+    },
+    {
+      "path": "skills/sohrab/alaa-postman-collections/references/50-insomnia-compatibility-and-free-plan-rules.md",
+      "sha256": "4048c1e7d7adf159cee3a9209bed174d975e711e16c545d998808f6088cc398f",
+      "read_status": "complete"
+    },
+    {
+      "path": "skills/sohrab/alaa-postman-collections/references/60-validation-and-output-contract.md",
+      "sha256": "f4e9a3bbce7a30b2753115ef5dc1c1d37b7d571c480658dd959ee99ac75f542b",
+      "read_status": "complete"
+    },
+    {
+      "path": "skills/sohrab/alaa-postman-collections/references/70-aggregate-collections-and-consumer-repos.md",
+      "sha256": "060c8786fd6ec66db5b062052b2183b59e51995a565b938c5a27601b5842a18a",
+      "read_status": "complete"
+    },
+    {
+      "path": "skills/sohrab/alaa-postman-collections/references/90-source-map.md",
+      "sha256": "aa43ad9692ee5fa08835d5c057d3bcbdf184676b33fff32f7684e848da734142",
+      "read_status": "complete"
+    },
+    {
+      "path": "skills/sohrab/alaa-postman-collections/scripts/audit_collection_contract.py",
+      "sha256": "30c3599ce95acecf1398028fbfc1f5847be619636d87bbe9fa1fd816934eabd7",
+      "read_status": "complete"
+    },
+    {
+      "path": "skills/sohrab/alaa-postman-collections/scripts/selftest.py",
+      "sha256": "ffa09a17f87622b8f2c3a3af571460aa65888ac1ba18b5d17919883fd7ab7b1d",
+      "read_status": "complete"
+    },
+    {
+      "path": "skills/sohrab/alaa-postman-collections/scripts/validate_postman_artifacts.py",
+      "sha256": "50331211287a05e6a6c4d34b744efb73a511b249e7d41c4cc83e19d06e9030eb",
+      "read_status": "complete"
+    },
+    {
+      "path": "skills/sohrab/alaa-prompting-guide/SKILL.md",
+      "sha256": "d9ae74eb8bf60164511360baa435272220c4c7cafed5a4f3416052442e0e9c4d",
+      "read_status": "input"
+    },
+    {
+      "path": "skills/sohrab/alaa-prompting-guide/references/60-skill-authoring.md",
+      "sha256": "50d4647688e97d83f7a737217bd4a45570dce72e71c7497301db232ad32da7f4",
+      "read_status": "input"
+    },
+    {
+      "path": "skills/sohrab/alaa-repo-docs/SKILL.md",
+      "sha256": "874600c2f12a256dc5e58dfccb7f56909aa9bdc1ca8267a65dab9f9ba3e672b7",
+      "read_status": "input"
+    },
+    {
+      "path": "skills/sohrab/alaa-system-design/SKILL.md",
+      "sha256": "78fab2f46fc23ad0455418c5e91282f0229df5c9bd54c9e8ff2402588b12f707",
+      "read_status": "complete",
+      "pre_edit_sha256": "674d2ea1220b96d6121fe38e2342459c793d92ce9a8fb4ad09b95d1b0e4baee7"
+    },
+    {
+      "path": "skills/sohrab/alaa-system-design/references/10-boundary-and-seam.md",
+      "sha256": "16c3d53fbb962dadad4f2efa722e662d7598ba9b253aefd146e7b2977cf8ae7e",
+      "read_status": "complete"
+    },
+    {
+      "path": "skills/sohrab/alaa-system-design/references/20-contract-first.md",
+      "sha256": "333bad6e50b59feef5a2ff408e9fe262e5f8318592a9371bd33726c9f6253f36",
+      "read_status": "complete"
+    },
+    {
+      "path": "skills/sohrab/alaa-system-design/references/30-data-and-consistency.md",
+      "sha256": "748e278b52ff478d463b80fc9b97b49b626887c02ebdb77ffbf71514c1478e53",
+      "read_status": "complete"
+    },
+    {
+      "path": "skills/sohrab/alaa-system-design/references/40-failure-and-load-inputs.md",
+      "sha256": "af3008ae45da16ee24c683e660970d97247353d37a5b64297b0c7d55d6c241e8",
+      "read_status": "complete"
+    },
+    {
+      "path": "skills/sohrab/alaa-system-design/references/50-alternatives-and-tradeoffs.md",
+      "sha256": "cf5dd218e10e0dfae5dc9ec44c2986e5766fe236abb5422c26cd4c27064cc585",
+      "read_status": "complete"
+    },
+    {
+      "path": "skills/sohrab/alaa-system-design/references/60-design-record.md",
+      "sha256": "fb2fa411b9ba971b089041547e65525445962d3e809df5df8ecd005939681d67",
+      "read_status": "complete"
+    },
+    {
+      "path": "skills/sohrab/alaa-system-design/references/70-review-and-readiness.md",
+      "sha256": "ed5bf4d298a64f875f844a2f627b1bb91d2a39ec7c01bce82a7e3510ee5edc5d",
+      "read_status": "complete"
+    },
+    {
+      "path": "skills/sohrab/alaa-workflow/SKILL.md",
+      "sha256": "a1976ac7eea20c058c0c80628e4a9233aa0b70b6010b66e6e1c6ae7dc95dfcf8",
+      "read_status": "input"
+    },
+    {
+      "path": "skills/sohrab/caas-arvan-kuber/SKILL.md",
+      "sha256": "70e241b4891d268f08aaa29e53b9580d7da00030cdb9ec82ab5b4aa176eb183b",
+      "read_status": "input"
+    }
+  ]
+}

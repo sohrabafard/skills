@@ -21,20 +21,20 @@ Make an agent correct on resumable uploads across three registers this skill kee
 
 | Ground | Read instead | Leave when |
 |---|---|---|
-| Bucket lifecycle policy, abandoned-multipart abort, IAM policy shape, root credentials, rotation, versioning, replication, encryption, TLS to the object store, CDN origin, MinIO topology | `/alaa-minio-object-storage` (`$alaa-minio-object-storage`) | the question is about the bucket, not one upload |
-| Who may assert a trusted header, how identity is derived, what happens when the gateway is unreachable | `/alaa-trust-gateway-auth` (`$alaa-trust-gateway-auth`) | you are deciding whether a caller may be believed |
-| The permission bit contract, id allocation, bitmap decoding, generated decoders and their conformance vectors | `/alaa-permission-generator` (`$alaa-permission-generator`) | you are writing or checking a decoder |
-| Header names, envelope shapes, event and metric names, Ala timeout and retry values | `/alaa-services-contract` (`$alaa-services-contract`) | you need the exact spelling of a name or a number |
-| Retry legality, backoff shape, idempotency mechanics, timeout doctrine | `/alaa-reliability-sla` (`$alaa-reliability-sla`) | you are shaping a retry, not placing one |
-| HAProxy directive syntax and tuning | `/alaa-haproxy` (`$alaa-haproxy`) | you are editing a proxy config file |
-| Image build, Compose and Swarm delivery, Kubernetes and Helm | `/alaa-docker-production` (`$alaa-docker-production`), `/alaa-k8s-helm` (`$alaa-k8s-helm`) | the change is to delivery rather than to upload behaviour |
+| Bucket lifecycle policy, abandoned-multipart abort, IAM policy shape, root credentials, rotation, versioning, replication, encryption, TLS to the object store, CDN origin, MinIO topology | `/alaa-minio-object-storage` | the question is about the bucket, not one upload |
+| Who may assert a trusted header, how identity is derived, what happens when the gateway is unreachable | `/alaa-trust-gateway-auth` | you are deciding whether a caller may be believed |
+| The permission bit contract, id allocation, bitmap decoding, generated decoders and their conformance vectors | `/alaa-permission-generator` | you are writing or checking a decoder |
+| Header names, envelope shapes, event and metric names, Ala timeout and retry values | `/alaa-services-contract` | you need the exact spelling of a name or a number |
+| Retry legality, backoff shape, idempotency mechanics, timeout doctrine | `/alaa-reliability-sla` | you are shaping a retry, not placing one |
+| HAProxy directive syntax and tuning | `/alaa-haproxy` | you are editing a proxy config file |
+| Image build, Compose and Swarm delivery, Kubernetes and Helm | `/alaa-docker-production`, `/alaa-k8s-helm` | the change is to delivery rather than to upload behaviour |
 | Vue component structure, Pinia store shape, Quasar boot convention, SSR wiring | the frontend skill for that framework | the question is code shape, not tus behaviour |
-| Go code shape, package layout, concurrency idiom | `/alaa-golang` (`$alaa-golang`) | the Go is not about tus semantics |
-| Telemetry requirement levels and gates | `/alaa-observability-soc` (`$alaa-observability-soc`) | you are deciding whether a signal is required |
+| Go code shape, package layout, concurrency idiom | `/alaa-golang` | the Go is not about tus semantics |
+| Telemetry requirement levels and gates | `/alaa-observability-soc` | you are deciding whether a signal is required |
 
 ## When not to use
 
-Do not use this skill for a presigned-URL upload that speaks no tus protocol, or for a one-off non-resumable form post. Do not use it to author an HAProxy directive — that is `/alaa-haproxy` (`$alaa-haproxy`). Do not use it for Vue component structure, store shape or boot-file convention, which are `/alaa-quasar-app-vite-v3` (`$alaa-quasar-app-vite-v3`) and `/alaa-vue-typescript-clean-code` (`$alaa-vue-typescript-clean-code`). Do not use it for bucket lifecycle policy, storage identity or credential rotation, which are `/alaa-minio-object-storage` (`$alaa-minio-object-storage`). Do not use it for queue or consumer mechanics, which are `/alaa-async-messaging` (`$alaa-async-messaging`).
+Do not use this skill for a presigned-URL upload that speaks no tus protocol, or for a one-off non-resumable form post. Do not use it to author an HAProxy directive — that is `/alaa-haproxy`. Do not use it for Vue component structure, store shape or boot-file convention, which are `/alaa-quasar-app-vite-v3` and `/alaa-vue-typescript-clean-code`. Do not use it for bucket lifecycle policy, storage identity or credential rotation, which are `/alaa-minio-object-storage`. Do not use it for queue or consumer mechanics, which are `/alaa-async-messaging`.
 
 ## Binding rules
 
@@ -63,4 +63,10 @@ Every reference and asset is routed by an observable condition in `references/00
 
 ## Expected output
 
-For design or review work, return: the register each claim came from; the topology decision and its rejected alternative; the authorization decision for every tus method; the size-limit chain from client to storage with the enforcing component named at each hop; the retention rule with its threshold, owner and metric; the failure posture of every hook and callback; the storage lifecycle including any two-copy window; the observability contract; the tests that catch a regression in each; and the open risks. For debugging, lead with ranked root causes, then the exact request, response field, log line or query that confirms or eliminates each.
+For an end-to-end design, return: each claim's register; the topology and rejected alternative;
+authorization for every tus method; the client-to-storage limit chain with each enforcer; retention's
+threshold, owner and metric; every hook/callback's failure posture; storage lifecycle and any two-copy
+window; observability; regression tests; and open risks. For a partial design or review, report the
+applicable items and cross-boundary effects, always identifying registers, tests and risks. A hook
+review includes failure posture, lifecycle and observability. For debugging, lead with ranked root
+causes and the exact request, response field, log line or query that confirms or eliminates each.

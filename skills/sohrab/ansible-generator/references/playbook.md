@@ -261,7 +261,7 @@ elsewhere in the same response.
 ```
 Generated <type>: <name>
 
-Checks:  check_templates 0 | validate_* 0 | scan_secrets 0 | check_task_safety 0
+Checks:  <every command in section 6 and its observed exit/result>
 Summary: <what it does, and the one implementation decision worth knowing>
 Usage:   <the exact command, with --check --diff --limit on the first run>
 Needs:   <collections with floors, target platform requirements>

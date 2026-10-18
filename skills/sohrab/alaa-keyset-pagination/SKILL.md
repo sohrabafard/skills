@@ -7,7 +7,8 @@ description: "Keyset (cursor) pagination design for Ala list routes: deciding wh
 
 Decide whether a route paginates, by which orderings, over which index, with which cursor, and under which failure behaviour — so every list surface in the fleet traverses a growing table without ever repeating or dropping a row. Correctness is the deliverable, and it is the hard part: a paginated list that silently skips rows returns a well-formed `200` with a plausible row count. No client error is raised, no alert fires, and no test that asserts only on status code and schema will ever see it.
 
-This skill owns the pagination decision. It owns no wire envelope, no index syntax, and no framework idiom. Companion skills are written `/name` for Claude Code and `$name` for Codex; both forms appear at every call site.
+This skill owns the pagination decision, not the wire envelope, index syntax or framework idiom.
+Write cross-skill calls once as `/name`, per the pack's `AGENTS.md`.
 
 ## When this applies
 
@@ -47,15 +48,17 @@ Observable: the route documentation names exactly one of these three modes, and 
 
 **8. Handle the hard cases before shipping, not after.** Nullable sort columns, mutable sort values, backward traversal, and the insert/delete/update consistency semantics each have a settled platform answer in `references/50-hard-cases.md`. Backward traversal is the feature most often claimed and least often correct: a route does not document backward pagination unless the reversal tests in `references/70-test-list.md` pass.
 
-**9. Set the limits.** `limit` defaults to 20 and does not exceed 100 on any Ala list route unless the route documents a measured reason and `alaa-services-contract` records the higher maximum. An out-of-range `limit` is rejected, never clamped, per the contract. Observable: the route's maximum was proven by the `EXPLAIN` run in step 4 at that exact value.
+**9. Set the limits.** Take the default, maximum and measured-exception rule from
+`alaa-services-contract references/22-failure-load-and-deprecation-contract.md`, `List page-size values`.
+Apply that skill's reject/no-clamp wire rule. Observable: step 4 proved the route's query at its exact maximum.
 
 **10. Prove it.** Every item in `references/70-test-list.md` is covered or explicitly waived with a reason in the route documentation.
 
 ## Platform decisions settled here
 
-**Response shape: `data` + `meta`, extended.** A collection carries `data` and `meta.next_cursor` as `alaa-services-contract` already binds, plus `meta.prev_cursor`. Both keys are always present and are `null` when no page exists in that direction. A separate `pagination` object is rejected: `meta` is already the fleet's collection envelope and two services emit it today, so a sibling envelope would force every consumer to carry two collection parsers. `has_more` is not emitted, because `has_more === (next_cursor !== null)` by construction and a second spelling of one fact diverges the first time a service computes it from `count($rows) > $limit`. `type: "cursor"` is not emitted: every Ala list route is keyset, so the field is constant and invites clients to branch on it.
-
-**Request shape: `cursor` and `limit` only.** The source's `after`/`before` split is rejected. Direction lives inside the signed cursor, not in the parameter name, so the client echoes back whichever of `next_cursor` or `prev_cursor` it received and cannot pair a forward cursor with a backward parameter. This also avoids a breaking rename on live services for no semantic gain.
+**Wire decisions.** `alaa-services-contract references/25-end-to-end-flow-and-boundaries.md` owns
+request/response keys, their exclusions and the offset exception. `references/40-wire-contract-limits-and-errors.md`
+keeps the algorithm rationale and cursor-failure handling; it defines no second envelope.
 
 **Laravel's native `cursorPaginate` is not the shipped paginator on an Ala list route.** It fails four platform rules at once, verified against framework source rather than inferred — see `references/60-per-stack.md` for the evidence and the required replacement.
 

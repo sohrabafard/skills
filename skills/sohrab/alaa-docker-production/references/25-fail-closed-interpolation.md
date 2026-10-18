@@ -139,11 +139,10 @@ file is the defect. The `id` values match.
 
 Threat classification for anything not on this list — whether a newly named variable is a security
 control at all, and what class of threat it belongs to — is `/alaa-security-review`
-(`$alaa-security-review`)'s decision. The discriminating question this programme uses: *when this
-dependency cannot answer, does proceeding without it let something through that must not get
-through?* If yes, it is fail-closed and belongs here. If the answer is instead about availability —
-proceeding degraded rather than not at all — that is `/alaa-reliability-sla`
-(`$alaa-reliability-sla`)'s ground and the variable is not a register member.
+(`$alaa-security-review`)'s decision under its `SKILL.md` section "Fail-closed versus fail-open,
+and which doctrine applies". Apply that classification before adding a register member.
+An availability-only dependency remains `/alaa-reliability-sla`'s ground and is not a
+register member; the Compose forms and disabling defaults above remain this file's concern.
 
 ### 4.4 Adding an entry
 

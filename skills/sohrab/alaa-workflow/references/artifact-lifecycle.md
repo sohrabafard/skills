@@ -23,6 +23,8 @@ Use `resumable` for multi-phase work: event-driven checkpoints preserve position
 
 Apply admission before selecting a profile; no profile overrides its exceptions. An actionable execution-plan request uses `resumable` unless a real consumer requires a heavier profile.
 
+For new phased/delegated families, apply `references/task-tracking.md` `## Phase-task-subtask hierarchy` regardless of profile. A `direct` plan remains genuinely single-phase; choosing it cannot bypass hierarchy for delegated work. Existing families retain their recorded authority until explicit migration.
+
 ## Size and consolidate the plan
 
 Classify each phase and delegated lane before execution: missing facts to retrieve or clarify; mechanical work with settled decisions; bounded semantic judgment with a local causal path and decisive acceptance evidence; ordinary engineering judgment; or coupled judgment with interacting unresolved decisions. Record the reason, settled/open decisions and invariants. Assess risk separately: sensitivity determines gates, not reasoning complexity. The runtime orchestrator owns actual task model/effort allocation; `/alaa-prompting-guide` supplies capabilities and runtime mechanics. Planning effort never determines worker effort.
@@ -57,9 +59,9 @@ The plan contains outcome/scope, phase design and barriers, phase acceptance, in
 
 The handoff package is a section inside the plan, not a separate file — knowledge is only useful next to the route it belongs to, and a fourth file is a fourth thing to keep honest. Its six fields are fixed; keep an unused one empty rather than deleting it, because a deleted field reads as a field nobody had anything to put in.
 
-The checkpoint contains only status, current phase, last verified result, blockers, next action, touched surfaces, update time, and, for a cross-PC handoff, the record `references/context-continuity.md` defines.
+The checkpoint contains only status, current phase/task/subtask cursor, last verified result, blockers, next action, touched surfaces, update time, and, for a cross-PC handoff, the record `references/context-continuity.md` defines.
 
-JSON contains only schema version, task identity, status, plan path, current phase, next actions, blockers, last validation (a pointer to its evidence owner, not a copy), and update time.
+JSON contains only schema version, task identity, status, plan path, current phase/task/subtask cursor, next actions, blockers, last validation (a pointer to its evidence owner, not a copy), and update time. `references/context-continuity.md` owns schema compatibility and exact cursor projection.
 
 ## Update events
 

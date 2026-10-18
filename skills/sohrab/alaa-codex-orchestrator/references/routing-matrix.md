@@ -5,8 +5,8 @@ Spawn only agents that materially reduce uncertainty or enforce a required autho
 ## Always or normally required
 
 - Non-trivial repository change: select an implementation profile through Implementation routing below before dispatch.
-- Combined changed state: `alaa-verifier`.
-- Ship-quality judgment: `alaa-reviewer`.
+- Combined changed state at the declared review boundary: `alaa-verifier`.
+- Ship-quality judgment at that boundary: `alaa-reviewer`.
 - Behavior, API, configuration, or operations changed: `alaa-documenter`, after review.
 
 ## Specification and evidence agents
@@ -101,13 +101,13 @@ Trigger when prompts, skills, agent definitions, or repository instructions chan
 
 ### Architecture critic — `alaa-architecture-critic`
 
-Trigger before implementation for cross-cutting design: public contracts, service boundaries, consistency models, concurrency, caching semantics, distributed workflows. Skip for a local bug fix whose contract and ownership are established.
+Record the trigger and design before implementation; schedule judgment through `verification-and-gates.md` at the declared review boundary for cross-cutting design: public contracts, service boundaries, consistency models, concurrency, caching semantics, distributed workflows. Skip for a local bug fix whose contract and ownership are established.
 
-`/alaa-system-design` owns the standard this gate reviews against, and its trigger list is wider than the one above by three conditions: the change moves which component writes a piece of data, it adds or removes a dependency between two components, or it creates a new deployable unit. Any of those requires a design pass in Phase A even when no contract shape changes, and the critic reviews the resulting design record rather than the plan that preceded it.
+`/alaa-system-design` owns the standard this gate reviews against, and its trigger list is wider than the one above by three conditions: the change moves which component writes a piece of data, it adds or removes a dependency between two components, or it creates a new deployable unit. Any of those requires a design pass in Stage A even when no contract shape changes; the boundary critic reviews that resulting design record.
 
 ### API contract reviewer — `alaa-api-contract-reviewer`
 
-Trigger when a public HTTP or RPC endpoint, event or message schema, shared DTO, SDK surface, or persisted serialization format changes shape. Prefer to trigger it in Phase A, before code exists, so the deprecation path and consumer impact are decided rather than discovered. Trigger it in Phase D instead when the contract change emerged during implementation. Skip when the change is internal to one module and no consumer outside it can observe the difference.
+Trigger when a public HTTP or RPC endpoint, event or message schema, shared DTO, SDK surface, or persisted serialization format changes shape. Record known triggers and decide deprecation and consumer impact in Stage A; schedule independent judgment at the declared boundary. A contract change discovered during implementation reopens the affected plan and gate. Skip when the change is internal to one module and no consumer outside it can observe the difference.
 
 Distinct from the architecture critic, which judges whether the design is sound; this gate judges whether the transition is safe for existing consumers.
 

@@ -4,9 +4,15 @@
 |---|---|---|---|
 | `204` | `AUTHZ_ALLOWED` | copy allow-only `X-Authz-*` metadata downstream, forward to backend | `http.request.completed` |
 | `403` | `AUTHZ_DENIED`, `AUTHZ_TARGET_RULE_MISMATCH`, `AUTHZ_LOCATION_CONTRADICTORY` | gateway-owned `403`, backend not called | `authz.denied` |
-| `401` | `AUTH_CONTEXT_MISSING` | gateway-owned `401` | `auth.context.invalid` |
+| `401` | `AUTH_CONTEXT_MISSING` (sidecar missing trusted identity context) | gateway-owned `401` for this hop | `auth.context.invalid` |
 | `400` | `AUTHZ_REQUEST_CONTEXT_INVALID`, `AUTHZ_ENDPOINT_CATEGORY_INVALID`, `AUTHZ_OBJECT_ID_INVALID`, `AUTHZ_NORMALIZATION_FAILED`, `AUTH_NAME_OR_LOCATION_HEADER_REQUIRED`, `AUTH_NAME_OR_LOCATION_HEADER_INVALID` | gateway-owned `400` | `input.validation.failed` |
 | `503` | `AUTHZ_SERVICE_TIMEOUT`, `AUTHZ_SERVICE_UNAVAILABLE`, `AUTHZ_STORE_NOT_PINNED`, `AUTHZ_MODEL_NOT_PINNED`, `AUTHZ_LOCATION_TOPOLOGY_DEFECT` | gateway-owned `503` | `http.request.failed` |
+
+`alaa-trust-gateway-auth references/50-deny-codes.md` owns the `AUTH_CONTEXT_MISSING` definition;
+the row above scopes its status to this sidecar/gateway hop, not every downstream service policy.
+These are the static wire mappings. Verify gateway executable configuration and observed output before
+claiming deployed behavior. An unmapped malformed checker response remains denied; stop for the owner's
+public-code decision rather than invent a mapping.
 
 On allow the sidecar returns exactly these headers: `X-Authz-Decision-Id`,
 `X-Authz-Decision-Code`, `X-Authz-Model-Id`, `X-Authz-Model-Label`, `X-Authz-Allow-Reason`,

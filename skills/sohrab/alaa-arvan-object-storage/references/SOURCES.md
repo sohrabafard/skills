@@ -53,6 +53,14 @@ All read on 2026-07-27.
 |---|---|
 | https://docs.arvancloud.ir/en/object-storage/buckets/lifecycle | Panel lifecycle controls include current/noncurrent version expiry and incomplete multipart cleanup. This supersedes the older panel-absence claim; S3 API parity and live rule execution remain unverified. |
 
+## Targeted re-read on 2026-10-18
+
+The [SDK overview](https://docs.arvancloud.ir/en/developer-tools/sdk/object-storage/) still
+lists the Simin and Shahriar endpoint/region pairs. The [limits page](https://docs.arvancloud.ir/en/object-storage/limits/)
+still requires the bucket's own region and publishes a 400 MB part ceiling and 10,000 parts.
+This re-read supports explicit endpoint selection and tusd part-bound mapping only. It refreshes
+neither the compatibility matrix nor live provider behavior; verify their dated claims separately.
+
 ## Pages indexed but not retrieved
 
 These pages exist in ArvanCloud's documentation under the names shown, and their content was not retrieved, so they

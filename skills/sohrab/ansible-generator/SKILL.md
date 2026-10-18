@@ -1,6 +1,6 @@
 ---
 name: ansible-generator
-description: Generate production-ready Ansible playbooks, roles, task files, inventories and project scaffolding with FQCN-correct modules, idempotent tasks, declared role interfaces and explicit file modes, then hand the result to the validator. Use when a file that does not yet exist has to exist when you are done. Do not use when every file you need already exists and your job is to produce a verdict about it (use /ansible-validator, $ansible-validator), for Terraform, Helm, Dockerfile or CI authoring unless Ansible is the main artifact, or for one-off shell automation that should stay a script.
+description: Production-ready Ansible generation for playbooks, roles, task files, inventories and project scaffolding with FQCN-correct modules, idempotent tasks, declared role interfaces and explicit file modes, followed by validator handoff. Use when a file that does not yet exist has to exist when you are done. Do not use when every file you need already exists and your job is to produce a verdict about it (use /ansible-validator, $ansible-validator), for Terraform, Helm, Dockerfile or CI authoring unless Ansible is the main artifact, or for one-off shell automation that should stay a script.
 ---
 
 # Ansible Generator
@@ -39,11 +39,8 @@ main artifact, nor for one-off shell automation that should stay a script.
    placeholder convention and the substitution commands.
 4. Write idempotent tasks: fully qualified actions, an end state, an explicit
    quoted `mode`, role-prefixed variables, a handler per restart, tags.
-5. Run the delivery gate: `python3 scripts/check_templates.py <files>`, then the
-   validator's `validate_playbook.sh` or `validate_role.sh`, `scan_secrets.sh`
-   and `check_task_safety.py`. **Exit 0 from every one is the only pass; exit 2
-   means a check could not run and is reported as blocked.** If two consecutive
-   fix-and-re-run cycles do not reduce the failure count, stop and report.
+5. Run every command in `references/playbook.md` section 6, the sole delivery
+   gate register; apply its acceptance, exemption and stopping conditions.
 6. Deliver in the format at `references/playbook.md` section 7: checks, summary,
    usage command, prerequisites.
 

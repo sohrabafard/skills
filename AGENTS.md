@@ -126,10 +126,9 @@ pass.
   It owns supported model/effort pairs and checked model-neutral role projections. Runtime
   orchestrators own actual task allocation/admission for every authority role; workflow records it.
   A role name or metadata default never chooses a task pair.
-- **Write one call form, `/name`.** Both runtimes load these skills and the plugin build rewrites
-  `$name` and `/name` alike, so a second form is a duplicate. `skills/sohrab/AGENTS.md` owns the
-  rule, the one `agents/openai.yaml` exception, and what to do with the legacy pairs still in the
-  pack.
+- **Before writing skill calls or reference routers, read `skills/sohrab/AGENTS.md`.** It owns
+  the single `/name` repository form, metadata and generated-prompt exceptions, legacy conversion,
+  and router placement.
 - **Before shortening or editing any text that will control another agent** — a prompt, a rule, a
   skill, this file, a `CLAUDE.md`, a constitution, or a subagent dispatch — apply the compression
   contract in `skills/sohrab/alaa-prompting-guide/references/60-skill-authoring.md`. It owns what

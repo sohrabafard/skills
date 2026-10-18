@@ -1,0 +1,514 @@
+{
+  "status": "implementation complete; independent Phase 4 review pending",
+  "agent": "/root/signals_execute",
+  "configured_dispatch": {
+    "model": "gpt-6-luna",
+    "effort": "medium",
+    "source": "parent dispatch; serving identity remains unknown"
+  },
+  "head": "1a0799de71254427973f1253d80b846fea9acf10",
+  "observer": "Codex lane agent /root/signals_execute; PowerShell-hosted local command runner",
+  "resource_policy": "Sequential bounded local checks; no special CPU priority or resource cap configured; no network/live provider calls.",
+  "unchanged_owned_input_comparison": {
+    "baseline": "SIGNALS-read-manifest.json",
+    "covered_owned_files": 69,
+    "expected_changed_files": [
+      "skills/sohrab/alaa-bale-provider/SKILL.md",
+      "skills/sohrab/alaa-sms-provider-mediana/SKILL.md",
+      "skills/sohrab/alaa-sms-provider-mediana/references/30-failure-and-ambiguity.md",
+      "skills/sohrab/clickhouse-performance-schema-ops/references/15-fleet-clickhouse-boundary.md"
+    ],
+    "unchanged_files_matched": 65,
+    "unexpected_mismatches": []
+  },
+  "deterministic_input_aggregate": {
+    "algorithm": "SHA-256 over concatenated entries sorted by UTF-8 relative path bytes; each entry is UTF-8 repository-relative path, NUL byte, then raw file bytes; no trailing separator.",
+    "entry_count": 71,
+    "owned_read_inputs": [
+      {
+        "path": "skills/sohrab/alaa-bale-provider/references/10-wire-contract.md",
+        "bytes": 10310,
+        "sha256": "4d2787ce7a47fda7afeb4c28819442d5ac37f7f1e785874829a23cf124efb0d8"
+      },
+      {
+        "path": "skills/sohrab/alaa-bale-provider/references/20-examples-and-rejects.md",
+        "bytes": 6365,
+        "sha256": "17601b1b3a004fd555ca430e5b11af455cef5f5f5c2e8aae5f126bcac3f28f99"
+      },
+      {
+        "path": "skills/sohrab/alaa-bale-provider/references/30-failure-classes.md",
+        "bytes": 8875,
+        "sha256": "2eec55df35748f7c245ae33904f9a9e8eda34354886757883f13c87f9d5be1e0"
+      },
+      {
+        "path": "skills/sohrab/alaa-bale-provider/references/40-phone-and-conformance.md",
+        "bytes": 14962,
+        "sha256": "19fbdd094b35f8efcbf6c7f15b49586e7ecce1faf3b404b9952124e1ffc3ce30"
+      },
+      {
+        "path": "skills/sohrab/alaa-bale-provider/scripts/phone-conformance-corpus.json",
+        "bytes": 21638,
+        "sha256": "2480fc502923ccc8f6b6a11ee6dc267103d7a095d614d2649d9c0c41aa191276"
+      },
+      {
+        "path": "skills/sohrab/alaa-bale-provider/scripts/validate_bale_payload.py",
+        "bytes": 36873,
+        "sha256": "8e87990903048949ce715788b60397e5769d31698da18c027119b0399f30e280"
+      },
+      {
+        "path": "skills/sohrab/alaa-bale-provider/SKILL.md",
+        "bytes": 9288,
+        "sha256": "b7a358c05940fc477befdc64d2e9c6dcf870a6d1234cd4b9c28cb4ae28f32fce"
+      },
+      {
+        "path": "skills/sohrab/alaa-signoz-clickhouse-docs/references/00-topic-map.md",
+        "bytes": 2480,
+        "sha256": "2c1feb0d9a48363277d00d0a4dcd151510a15a17f8941d9c92fc69b6af2985f5"
+      },
+      {
+        "path": "skills/sohrab/alaa-signoz-clickhouse-docs/references/10-docs-navigation.md",
+        "bytes": 5894,
+        "sha256": "2d6d3dfd05f8c1a1f8eefd9ef6f1ffab5b6468069a58bd47f700cd9aef76c48f"
+      },
+      {
+        "path": "skills/sohrab/alaa-signoz-clickhouse-docs/references/40-missing-spans.md",
+        "bytes": 4022,
+        "sha256": "51cd2e88c484430b1fbabba73e27d578795a94d106985ae51250d60bb7823383"
+      },
+      {
+        "path": "skills/sohrab/alaa-signoz-clickhouse-docs/references/50-service-topology.md",
+        "bytes": 6049,
+        "sha256": "7405538973097e547f486022d2e18c6dc5f44766ac4506084dd0d6c1d7b6e07d"
+      },
+      {
+        "path": "skills/sohrab/alaa-signoz-clickhouse-docs/references/90-versions.md",
+        "bytes": 12500,
+        "sha256": "6dbd28ebaedbf115e793a869e6a0787977c57ebf8e238e8a5c24f485953b7eb2"
+      },
+      {
+        "path": "skills/sohrab/alaa-signoz-clickhouse-docs/references/clickhouse-logs-reference.md",
+        "bytes": 1249,
+        "sha256": "cebcdd4ae66523510eac4c3a2fdec8a816837de487f134381cc0674db5fffbae"
+      },
+      {
+        "path": "skills/sohrab/alaa-signoz-clickhouse-docs/references/clickhouse-metrics-reference.md",
+        "bytes": 2387,
+        "sha256": "a5bfada83c3f4a7f3b466c52424d1d7d32ad66030675c43d45b54fec9d2c70e4"
+      },
+      {
+        "path": "skills/sohrab/alaa-signoz-clickhouse-docs/references/clickhouse-traces-reference.md",
+        "bytes": 1404,
+        "sha256": "0b08870339ec502dc3ca7ccb15e06c8f00cf6fde30b6914d9861910b01d17103"
+      },
+      {
+        "path": "skills/sohrab/alaa-signoz-clickhouse-docs/references/logs/10-schema.md",
+        "bytes": 841,
+        "sha256": "109b0516382aa88952ad278ab6c4801e8327a81e2a72eb8fb19c8cc2911cb13e"
+      },
+      {
+        "path": "skills/sohrab/alaa-signoz-clickhouse-docs/references/logs/20-time-resource.md",
+        "bytes": 1291,
+        "sha256": "abd10e7d8de2e66d88a155e2bcfccdaa39c20582b493369a4a671d19c084ad23"
+      },
+      {
+        "path": "skills/sohrab/alaa-signoz-clickhouse-docs/references/logs/30-column-access.md",
+        "bytes": 1509,
+        "sha256": "a2ac55fa79c8a0c6b2cff52890a2d8dbe7f5504840cc07756625dbd9fe07a524"
+      },
+      {
+        "path": "skills/sohrab/alaa-signoz-clickhouse-docs/references/logs/40-body-search.md",
+        "bytes": 1746,
+        "sha256": "aae543924172a231c047005bb3120739c29a8a89ab18b668e566e9e7e9184b0e"
+      },
+      {
+        "path": "skills/sohrab/alaa-signoz-clickhouse-docs/references/logs/50-panel-shapes.md",
+        "bytes": 1462,
+        "sha256": "1a9150fb7c040c8fa3172c9dc2ac9bb6d9e8671db797d59b57a5dceb7e18f8a8"
+      },
+      {
+        "path": "skills/sohrab/alaa-signoz-clickhouse-docs/references/logs/60-counts-errors.md",
+        "bytes": 1353,
+        "sha256": "60424ad4e5f133e6d583ace6f91c8a01a889c3574db396ee2af5b634634ced5a"
+      },
+      {
+        "path": "skills/sohrab/alaa-signoz-clickhouse-docs/references/logs/70-payload-audit.md",
+        "bytes": 1046,
+        "sha256": "6fd9e619db6af78bfef563c908c85cc602a69719a1bc514dd1f2537ff5e8b265"
+      },
+      {
+        "path": "skills/sohrab/alaa-signoz-clickhouse-docs/references/metrics/10-table-families.md",
+        "bytes": 2646,
+        "sha256": "aa70fd579d2173f37d8d5a8b1e69f0d4f787f8abdc7cc089340b7f3310ed7325"
+      },
+      {
+        "path": "skills/sohrab/alaa-signoz-clickhouse-docs/references/metrics/20-time-flags.md",
+        "bytes": 1234,
+        "sha256": "8fcbdac5c7c43b10edf61e18c7a32614c2d4eaaff934286c367b236a5db96881"
+      },
+      {
+        "path": "skills/sohrab/alaa-signoz-clickhouse-docs/references/metrics/30-metadata.md",
+        "bytes": 1084,
+        "sha256": "aaab8aae86659d273f1feebaf583b6e412a3a44c649804026ef38cc11d5631d6"
+      },
+      {
+        "path": "skills/sohrab/alaa-signoz-clickhouse-docs/references/metrics/40-raw-or-rollup.md",
+        "bytes": 1416,
+        "sha256": "af0e83a2db9a096090ee270f6666edc7e1b1aae58fe521e6015d56d9796515b2"
+      },
+      {
+        "path": "skills/sohrab/alaa-signoz-clickhouse-docs/references/metrics/50-gauge.md",
+        "bytes": 1363,
+        "sha256": "9a540b31e9cc0717c85629a903e7eaded0b57043b13c3e2102482c0536480c85"
+      },
+      {
+        "path": "skills/sohrab/alaa-signoz-clickhouse-docs/references/metrics/60-counter-rate.md",
+        "bytes": 2042,
+        "sha256": "76b736f0fa716bb5fef98e355dd6c588a3bdfff43eb695df3520baf765f1047f"
+      },
+      {
+        "path": "skills/sohrab/alaa-signoz-clickhouse-docs/references/metrics/70-error-ratio.md",
+        "bytes": 1025,
+        "sha256": "4d647c93aa022fa37db424b47167af95dd4b615754477507a0fcc24e2e51675a"
+      },
+      {
+        "path": "skills/sohrab/alaa-signoz-clickhouse-docs/references/metrics/80-histograms.md",
+        "bytes": 2078,
+        "sha256": "1548ba73093e8c80b7038fe98c6bcc9118627a0071e571addca773dba24f8553"
+      },
+      {
+        "path": "skills/sohrab/alaa-signoz-clickhouse-docs/references/metrics/90-repair.md",
+        "bytes": 1815,
+        "sha256": "aa680d543accacb818f81445fa3ca0a525ec1467653ae19979a9382a9982e3b1"
+      },
+      {
+        "path": "skills/sohrab/alaa-signoz-clickhouse-docs/references/query-language-routing.md",
+        "bytes": 6876,
+        "sha256": "2d8c1d2729b2fd234a5fe121c7a7b05f20bb3d7afc8317405224cfee5d404e0c"
+      },
+      {
+        "path": "skills/sohrab/alaa-signoz-clickhouse-docs/references/traces/10-physical-layout.md",
+        "bytes": 2578,
+        "sha256": "061431dae00bfee2ceb36a0134bad8e73a2daf54edee4028fd11651cb663185f"
+      },
+      {
+        "path": "skills/sohrab/alaa-signoz-clickhouse-docs/references/traces/20-schema.md",
+        "bytes": 1258,
+        "sha256": "d44d8c4848b726c558e271b0634d5dae4dd22e11bcf6dbad1eaa9ec140bbc942"
+      },
+      {
+        "path": "skills/sohrab/alaa-signoz-clickhouse-docs/references/traces/30-time-resource.md",
+        "bytes": 1075,
+        "sha256": "3d9916b8268d9ce09966712a86742fb2b0cded96b5c55ee026507e529d94d15e"
+      },
+      {
+        "path": "skills/sohrab/alaa-signoz-clickhouse-docs/references/traces/40-column-access.md",
+        "bytes": 2017,
+        "sha256": "f59ceb1a972b4357895e6cc51cc1e8f0c2d22b0c0e005a21ba9f753d4d9aa8a9"
+      },
+      {
+        "path": "skills/sohrab/alaa-signoz-clickhouse-docs/references/traces/50-panel-shapes.md",
+        "bytes": 1636,
+        "sha256": "a9f49fb897c67675b4f2b81422c7a2f3b1cb31ab335e589ca93ba9b4f83048e9"
+      },
+      {
+        "path": "skills/sohrab/alaa-signoz-clickhouse-docs/references/traces/60-errors-duration.md",
+        "bytes": 1529,
+        "sha256": "82ca230e9d36b7ff7b3c3cc9dd01f98dd8996cdd9697f5973b69398f5c5e204d"
+      },
+      {
+        "path": "skills/sohrab/alaa-signoz-clickhouse-docs/references/traces/70-missing-parent.md",
+        "bytes": 1650,
+        "sha256": "a4a483caa0935df12a88b0c7f4162ae611d2da30ec42e4f95bc6e66f524687fd"
+      },
+      {
+        "path": "skills/sohrab/alaa-signoz-clickhouse-docs/references/validation-checklists.md",
+        "bytes": 1956,
+        "sha256": "b3a281c713261f15fe56fe0b1a47121344b99f17313b292a38874364d2d780db"
+      },
+      {
+        "path": "skills/sohrab/alaa-signoz-clickhouse-docs/scripts/check-signoz-links.py",
+        "bytes": 9422,
+        "sha256": "fbbc90284f89c5e34c192e6b374bd6509518447f436900b0219dec7b7dd35850"
+      },
+      {
+        "path": "skills/sohrab/alaa-signoz-clickhouse-docs/scripts/check-signoz-schema.py",
+        "bytes": 15312,
+        "sha256": "68a21468f7506c0de0a269a241c9b42b00f59a1e94a0a5dc25dc688fd5aec817"
+      },
+      {
+        "path": "skills/sohrab/alaa-signoz-clickhouse-docs/scripts/check-signoz-sql.py",
+        "bytes": 27939,
+        "sha256": "d2436601d96d578d218c2c5555eb15d3ab73bc8816f360fb6a93481a173d2aa4"
+      },
+      {
+        "path": "skills/sohrab/alaa-signoz-clickhouse-docs/SKILL.md",
+        "bytes": 8854,
+        "sha256": "53c1b7c265a3092b20b8d09851a061d1c7c1ffdbdf9ebbefc48457c40136ab1c"
+      },
+      {
+        "path": "skills/sohrab/alaa-sms-provider-mediana/references/10-send-contract.md",
+        "bytes": 10232,
+        "sha256": "76faeb2b66c18cfa72da9f9f3abef909d7366c93d0cffa966f66f6a71a54f6af"
+      },
+      {
+        "path": "skills/sohrab/alaa-sms-provider-mediana/references/12-multipart-and-file-sends.md",
+        "bytes": 4177,
+        "sha256": "a904e9802a234c36c7f59cc8c5a1291f8f4861c39bdf627666b9e694e388bbe6"
+      },
+      {
+        "path": "skills/sohrab/alaa-sms-provider-mediana/references/15-targeting-and-bulk-sends.md",
+        "bytes": 6185,
+        "sha256": "6eb79642ebd0a0d378ea41890b818e5681ab2b399bb04aa6044b252e78008c28"
+      },
+      {
+        "path": "skills/sohrab/alaa-sms-provider-mediana/references/18-cancel-price-and-url-send.md",
+        "bytes": 3575,
+        "sha256": "0d7806a128fc8ac425db79ba5ed8d0033d63008cd5e034bf15f9aa939693529b"
+      },
+      {
+        "path": "skills/sohrab/alaa-sms-provider-mediana/references/20-examples-and-rejects.md",
+        "bytes": 12131,
+        "sha256": "1b4b783ef76d6dba1fc5f5510998a1b95b4e9ae797abd245445a2de2cfd184a6"
+      },
+      {
+        "path": "skills/sohrab/alaa-sms-provider-mediana/references/30-failure-and-ambiguity.md",
+        "bytes": 6809,
+        "sha256": "eabd84257f787f8b156df609c438f4b336f09bb78045bbbb855c068fd9c6511d"
+      },
+      {
+        "path": "skills/sohrab/alaa-sms-provider-mediana/references/40-vendor-contract-clues.md",
+        "bytes": 4894,
+        "sha256": "b86e9bbc2b7e160abd6230e397a8e9f3d46fe6dd5ccf5e6c094efd5053731725"
+      },
+      {
+        "path": "skills/sohrab/alaa-sms-provider-mediana/references/50-phone-and-conformance.md",
+        "bytes": 14835,
+        "sha256": "e6d1814eaa7a0f3829921f5fe707049c78c966bc8a5a269e71dde543f95e00aa"
+      },
+      {
+        "path": "skills/sohrab/alaa-sms-provider-mediana/scripts/phone-conformance-corpus.json",
+        "bytes": 21638,
+        "sha256": "2480fc502923ccc8f6b6a11ee6dc267103d7a095d614d2649d9c0c41aa191276"
+      },
+      {
+        "path": "skills/sohrab/alaa-sms-provider-mediana/scripts/validate_mediana_payload.py",
+        "bytes": 38989,
+        "sha256": "f235581639b9c845738fc4addf5f3d8c9ddcb83336ac5634a2d43e94926e9ce5"
+      },
+      {
+        "path": "skills/sohrab/alaa-sms-provider-mediana/SKILL.md",
+        "bytes": 10895,
+        "sha256": "2ff3d1e3fba1d48efb1426c00adc1192cb7d06724267545b238e94b8eb53c996"
+      },
+      {
+        "path": "skills/sohrab/clickhouse-performance-schema-ops/references/00-topic-map.md",
+        "bytes": 2032,
+        "sha256": "581e1e5d34bc020bd311ce0943fe7f33c595d25cfea468a8f11fdd083778a65d"
+      },
+      {
+        "path": "skills/sohrab/clickhouse-performance-schema-ops/references/10-authority-and-change-path.md",
+        "bytes": 8298,
+        "sha256": "bb81755d5b151460b4e8710f7a6aaed325c25e7a847ca533a4b222230932a367"
+      },
+      {
+        "path": "skills/sohrab/clickhouse-performance-schema-ops/references/15-fleet-clickhouse-boundary.md",
+        "bytes": 6137,
+        "sha256": "41ba01ce20e6e3bd087290e3fe1b2c00b2cda6698d961181411b97fb1447eb80"
+      },
+      {
+        "path": "skills/sohrab/clickhouse-performance-schema-ops/references/20-table-design.md",
+        "bytes": 12767,
+        "sha256": "9a94c9829b416e431f91ff42429b699dc5e12ecc8e85bf6c25789a010d1e9e06"
+      },
+      {
+        "path": "skills/sohrab/clickhouse-performance-schema-ops/references/30-ingest-and-parts.md",
+        "bytes": 9138,
+        "sha256": "7d927f105cfc3eaa463d7c6d3f3b46ede4bec4c3f942ff90b1351e0cedb3953d"
+      },
+      {
+        "path": "skills/sohrab/clickhouse-performance-schema-ops/references/40-query-tuning-and-read-lane.md",
+        "bytes": 5519,
+        "sha256": "baecb43776f74be2f721f5debcd099cdcfa9f1a17c3ae9bf587773663d8444ac"
+      },
+      {
+        "path": "skills/sohrab/clickhouse-performance-schema-ops/references/50-mvs-projections-and-ttl.md",
+        "bytes": 6887,
+        "sha256": "e09bfa3c5ea59928df7d5a429085118b3cedff84279b91ac90d4da578071aace"
+      },
+      {
+        "path": "skills/sohrab/clickhouse-performance-schema-ops/references/60-operations-and-diagnostics.md",
+        "bytes": 7021,
+        "sha256": "7200e3ccd5234e1b905de67ff3c9ea1c2b93f5d190cbd47daea295fa4a9a561f"
+      },
+      {
+        "path": "skills/sohrab/clickhouse-performance-schema-ops/references/70-failure-and-degradation.md",
+        "bytes": 7321,
+        "sha256": "678e734c3e2db0e3fe2cecaf50b772565b6ce3ce8ceea73e5e4e9b9d63bc011a"
+      },
+      {
+        "path": "skills/sohrab/clickhouse-performance-schema-ops/references/80-proof-and-validation.md",
+        "bytes": 7598,
+        "sha256": "e2a7718f2351c7a6af061e82d7da86506d83f5c20bd7f4d67449387d466991e9"
+      },
+      {
+        "path": "skills/sohrab/clickhouse-performance-schema-ops/references/85-access-and-configuration.md",
+        "bytes": 6672,
+        "sha256": "fbebc7ce67cbe7a0c3dae3a3fa6d78731a4e56deb4ac5fca2a55f3455412a88a"
+      },
+      {
+        "path": "skills/sohrab/clickhouse-performance-schema-ops/references/90-source-map.md",
+        "bytes": 6369,
+        "sha256": "bdc37272defd5527dcc53e568bf20622df7d52453bf9444901356d320016d466"
+      },
+      {
+        "path": "skills/sohrab/clickhouse-performance-schema-ops/scripts/review_clickhouse_ddl.py",
+        "bytes": 26623,
+        "sha256": "6f71f756222de6367d75b54494d5a13adb8c789093b4493f0d3df9e8bdad8c87"
+      },
+      {
+        "path": "skills/sohrab/clickhouse-performance-schema-ops/SKILL.md",
+        "bytes": 5516,
+        "sha256": "761ae65bb0d56c067cae41a98eee35285848a81820c9586772bd96c8872f01e7"
+      }
+    ],
+    "gate_scripts": [
+      {
+        "path": "scripts/check_fleet_references.py",
+        "bytes": 48224,
+        "sha256": "a314954a6a6c5b4408514a281d7a7eff532fbbf9afb54feaf685059f85fa4781"
+      },
+      {
+        "path": "skills/sohrab/alaa-repo-docs/scripts/check_markdown_links.py",
+        "bytes": 45894,
+        "sha256": "93710100c27e349147b0f854b75987f1027359b7b7b5404ccb16b3a9c69e0e14"
+      }
+    ],
+    "sha256": "27319de8a1c3c0933e6146a7082d7a1b3589b09c948413924dfe3028671ed245"
+  },
+  "changed_files": [
+    {
+      "path": "skills/sohrab/alaa-bale-provider/SKILL.md",
+      "bytes": 9288,
+      "sha256": "b7a358c05940fc477befdc64d2e9c6dcf870a6d1234cd4b9c28cb4ae28f32fce"
+    },
+    {
+      "path": "skills/sohrab/alaa-sms-provider-mediana/SKILL.md",
+      "bytes": 10895,
+      "sha256": "2ff3d1e3fba1d48efb1426c00adc1192cb7d06724267545b238e94b8eb53c996"
+    },
+    {
+      "path": "skills/sohrab/alaa-sms-provider-mediana/references/30-failure-and-ambiguity.md",
+      "bytes": 6809,
+      "sha256": "eabd84257f787f8b156df609c438f4b336f09bb78045bbbb855c068fd9c6511d"
+    },
+    {
+      "path": "skills/sohrab/clickhouse-performance-schema-ops/references/15-fleet-clickhouse-boundary.md",
+      "bytes": 6137,
+      "sha256": "41ba01ce20e6e3bd087290e3fe1b2c00b2cda6698d961181411b97fb1447eb80"
+    }
+  ],
+  "ratification_sources": [
+    {
+      "path": "artifacts/skill-pack-optimization-20261018/intake-snapshot.json",
+      "bytes": 164018,
+      "sha256": "2bba02162e327a1fefd7bda0a18820cf36c1717e4d41c8bff8bd1aa1ef980ca6"
+    },
+    {
+      "path": "artifacts/skill-pack-optimization-20261018/lanes/SHARED.md",
+      "bytes": 21898,
+      "sha256": "61a690cd413e74c79ba8acf320f43fe6466de2258fb53bd2432118c38550ba65"
+    },
+    {
+      "path": "skills/sohrab/alaa-observability-soc/references/70-soc-evidence.md",
+      "bytes": 6387,
+      "sha256": "a74b9e0bcd2255c7a247fa2063561aa0f853df715c0c544e4151b25fa6f514f1"
+    },
+    {
+      "path": "skills/sohrab/alaa-observability-soc/references/80-review-gates.md",
+      "bytes": 6251,
+      "sha256": "a4523ec3792b96dc8a7dd9981949058ace00eb77552d678c8cfc085bf972d216"
+    },
+    {
+      "path": "skills/sohrab/alaa-services-contract/references/24-metric-registry.md",
+      "bytes": 41083,
+      "sha256": "a12ff7b35a90fbb8ebaa01364e4ecd797bcc3fb418aea80badc457a68841742d"
+    },
+    {
+      "path": "skills/sohrab/alaa-reliability-sla/references/20-retries.md",
+      "bytes": 10496,
+      "sha256": "fca44fb3b8dc77dd51f159d4606bcc64795c96723302e9edc8e0bc89428935f2"
+    },
+    {
+      "path": "skills/sohrab/alaa-signoz-clickhouse-docs/SKILL.md",
+      "bytes": 8854,
+      "sha256": "53c1b7c265a3092b20b8d09851a061d1c7c1ffdbdf9ebbefc48457c40136ab1c"
+    },
+    {
+      "path": "skills/sohrab/clickhouse-performance-schema-ops/references/15-fleet-clickhouse-boundary.md",
+      "bytes": 6137,
+      "sha256": "41ba01ce20e6e3bd087290e3fe1b2c00b2cda6698d961181411b97fb1447eb80"
+    }
+  ],
+  "checkers": {
+    "fleet_references": {
+      "repository_relative_path": "scripts/check_fleet_references.py",
+      "sha256": "a314954a6a6c5b4408514a281d7a7eff532fbbf9afb54feaf685059f85fa4781",
+      "invocation": [
+        "python",
+        "-B",
+        "scripts/check_fleet_references.py",
+        "--skill",
+        "alaa-bale-provider",
+        "--skill",
+        "alaa-sms-provider-mediana",
+        "--skill",
+        "alaa-signoz-clickhouse-docs",
+        "--skill",
+        "clickhouse-performance-schema-ops"
+      ]
+    },
+    "repo_docs_links": {
+      "invocation": [
+        "python",
+        "-B",
+        "skills/sohrab/alaa-repo-docs/scripts/check_markdown_links.py",
+        ".",
+        "--files",
+        "skills/sohrab/alaa-bale-provider/SKILL.md",
+        "skills/sohrab/alaa-sms-provider-mediana/SKILL.md",
+        "skills/sohrab/alaa-sms-provider-mediana/references/30-failure-and-ambiguity.md",
+        "skills/sohrab/clickhouse-performance-schema-ops/references/15-fleet-clickhouse-boundary.md"
+      ],
+      "repository_checker_sha256": "93710100c27e349147b0f854b75987f1027359b7b7b5404ccb16b3a9c69e0e14",
+      "installed_checker_identity": "Codex installed alaa-repo-docs checker; source hash verified identical to repository checker. Installed-source hash: 93710100c27e349147b0f854b75987f1027359b7b7b5404ccb16b3a9c69e0e14. No machine-specific path retained."
+    }
+  },
+  "check_results": [
+    {
+      "gate": "scoped fleet references",
+      "exit_code": 0,
+      "result": "4 skills, 61 Markdown files, 206 citations; no findings."
+    },
+    {
+      "gate": "repo-docs Markdown links",
+      "exit_code": 0,
+      "result": "4 changed Markdown files validated."
+    },
+    {
+      "gate": "earlier scoped fleet references attempt",
+      "exit_code": 1,
+      "result": "Incorrect ref70 path; repaired once to existing 70-soc-evidence.md; final run passed."
+    },
+    {
+      "gate": "git diff --check",
+      "exit_code": 0,
+      "result": "No whitespace errors in the four changed Markdown files."
+    }
+  ],
+  "not_run": [
+    "full skill-pack validation",
+    "provider payload validators",
+    "live provider sends",
+    "broad suites"
+  ]
+}

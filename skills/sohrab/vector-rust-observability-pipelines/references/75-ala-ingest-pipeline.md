@@ -25,10 +25,9 @@ set `when_full: drop_newest` on a billing record and will be able to cite a rule
 SOC's rule governs telemetry *about* the product. It does not reach a table whose counts
 *are* the product.
 
-**Do not decide this by which tool moves the data.** Use the discrimination rule that
-`/alaa-reliability-sla` owns at its `SKILL.md:18-30`: when this
-dependency cannot answer, does proceeding without it let something through that must not
-get through? Answer it per path, and one Vector process answers it twice:
+**Classify each path under /alaa-security-review's gate discriminator.**
+`/alaa-reliability-sla` owns contributor failure behavior. The historical ruling
+below yields two different path contracts in one Vector process:
 
 | Path | Can it proceed without the destination? | Class | Direction |
 | --- | --- | --- | --- |
@@ -40,8 +39,8 @@ it. Three boundaries hold around that ruling, and none of them belongs to this f
 
 - **Whether a signal is required at all, and at which gate:**
   `/alaa-observability-soc`.
-- **Why a fail-open or fail-closed mechanism exists and how to choose its shape:**
-  `/alaa-reliability-sla`. It states no Ala number.
+- **Gate classification:** `/alaa-security-review`; **contributor behavior and
+  reliability mechanism:** `/alaa-reliability-sla`. Neither states an Ala number.
 - **Every Ala value** — tolerable outage duration, retry budget, request deadline:
   `/alaa-services-contract` `references/22-failure-load-and-deprecation-contract.md`.
 

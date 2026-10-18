@@ -1,0 +1,1 @@
+The CLI fixture scans only configured source extensions; this marker is intentionally ignored.

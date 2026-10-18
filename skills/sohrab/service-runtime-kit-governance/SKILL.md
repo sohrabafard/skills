@@ -52,7 +52,7 @@ Generator behavior is this skill's: a wrapper reuses an already-running shared i
 2. Bump the pin in `runtime/runtime-kit.env`, or refresh the copied `scripts/runtime/*` wrappers, when the bootstrap layer changed.
 3. Rerender and validate in the service repo.
 4. Confirm no generated file about to be committed carries secret material — no `APP_KEY` value, no Passport key contents, no DB or broker password, no token — because generated outputs are committed, so a secret rendered into one is a secret published. `alaa-services-contract` `references/15-deployment-and-runtime-contract.md:184-191` holds the contract; `alaa-security-review` owns the doctrine.
-5. Commit the regenerated outputs.
+5. Commit the regenerated outputs only with explicit user authorization. Otherwise leave them uncommitted and report the pending commit.
 
 **Change to the shared contract both generators implement.** That contract is `alaa-services-contract`'s, and a change to it must land in both `service-runtime-kit` and the `alaa-go-chi` kit, or the Laravel and Go fleets stop reusing one shared instance. When the `alaa-go-chi` kit is not in the workspace: change nothing in the shared contract, report which generator you can reach and which you cannot, and stop.
 

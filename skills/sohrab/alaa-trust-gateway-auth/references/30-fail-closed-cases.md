@@ -3,15 +3,9 @@
 Read this file when any part of the trust boundary stops answering, answers
 partially, or answers with something a service cannot verify.
 
-The deciding question is never how important the failing component is. It is
-what the failure lets through. Authentication and authorization at this boundary
-decide whether a caller may act, so every case in this file denies when it cannot
-decide. A component that merely contributes — a cache warmer, a projection
-refresher, an enrichment lookup — degrades instead, and that is a different
-doctrine. Read `/alaa-security-review` (`$alaa-security-review`) for the
-fail-closed doctrine itself and `/alaa-reliability-sla` (`$alaa-reliability-sla`)
-for the degrade doctrine, timeout shape, retry legality and backoff. This file
-states only which case falls on which side and what the denial looks like here.
+Apply /alaa-security-review's fail-closed discriminator to these trust-boundary cases;
+/alaa-reliability-sla owns contributor degradation, timeout shape, retry legality and backoff.
+This file owns the boundary-specific denial cases, not either general doctrine.
 
 Each case below gives the observable symptom, the decision, the outward response,
 the log, and the test that proves it. A case with no test is not closed.
@@ -32,8 +26,8 @@ verification, and that claim rests only on the network path. A service that
 accepts the header without the path has no authentication at all, and the caller
 chooses its own user id and project id.
 
-**Response.** `401` with `AUTH_CONTEXT_MISSING`. Do not echo the received header
-values.
+**Response.** `AUTH_CONTEXT_MISSING` with the service status policy in
+`references/50-deny-codes.md`. Do not echo the received header values.
 
 **Obligation on a directly reachable service.** A service that can be reached
 without crossing the gateway strips and rejects every trusted header at its own
@@ -47,7 +41,7 @@ address. Never the header values, because a forged `X-User-Id` in a log is
 indistinguishable from a real one to whoever reads it later.
 
 **Test.** Send every trusted header directly to the service's own listener from
-outside the trusted proxy set and assert `401`. A test that only exercises the
+outside the trusted proxy set and assert the documented denial status. A test that only exercises the
 gateway path proves nothing about this case.
 
 ---
@@ -58,18 +52,20 @@ gateway path proves nothing about this case.
 budget, returns a malformed body, or returns a decision the gateway cannot map.
 
 **Decision.** Deny at the gateway. The checker owns the route decision; an absent
-decision is not an allow. This is the one place where a dependency failure and a
-deny produce the same outward result deliberately.
+decision is not an allow. The protected backend is not called.
 
-**Response.** `403` with `AUTHZ_DENIED`. The caller is not told which dependency
-failed, because that discloses internal topology to an unauthenticated attacker.
+**Response.** Use `alaa-services-contract references/26-request-time-authorization-openfga/40-decision-and-enforcement.md`
+for the status/code mapping: explicit denial and dependency unavailability are distinct classes.
+That static contract is not evidence of a deployed gateway response. An unparseable or unmappable
+answer still denies; if the owner has no matching public-code row, report the gap and stop that
+contract decision rather than infer `403` or `503`. Never expose dependency topology or verifier internals.
 
 **What a downstream service does.** Nothing different. A service behind the
 gateway never observes this case, because the request does not arrive. A service
 that has built a fallback for "the checker did not answer" has built a bypass.
 
 **Timeout, retry budget and circuit shape for the checker call belong to**
-`/alaa-reliability-sla` (`$alaa-reliability-sla`); the values belong to
+`/alaa-reliability-sla`; the values belong to
 `alaa-services-contract` `references/22-failure-load-and-deprecation-contract.md`.
 
 **Test.** Point the checker at a black hole and assert the route denies rather
@@ -156,8 +152,7 @@ hot path.
 
 **When faster revocation is genuinely required**, the change is a contract change:
 forwarding `prv` to services, or shortening the token. Both are decided in
-`alaa-services-contract` and `/alaa-permission-generator`
-(`$alaa-permission-generator`), not inside a service.
+`alaa-services-contract` and `/alaa-permission-generator`, not inside a service.
 
 **Test.** Assert that a service takes no action on `prv` or `av`, because it
 cannot see them. A service containing code that reads either from a header is
@@ -213,7 +208,7 @@ re-encode. See the policy stated in `SKILL.md`; this case is where it is enforce
 tenant boundary, and `400` with the service's own invalid-cursor code otherwise.
 
 **The mechanism — cursor shape, signing, what a cursor binds — belongs to**
-`/alaa-keyset-pagination` (`$alaa-keyset-pagination`) and
+`/alaa-keyset-pagination` and
 `alaa-services-contract`. Only the trust rule is stated here.
 
 **Test.** Take a cursor issued to project A, present it on a request whose trusted
@@ -228,8 +223,7 @@ verification, trusted-header verification, or step-up enforcement.
 
 **Decision.** A truthy bypass switch in any environment file that is not
 explicitly local or test, with no recorded decision beside it naming the
-compensating control, the verifier and the date, is a `/alaa-security-review`
-(`$alaa-security-review`) trigger and blocks the change.
+compensating control, the verifier and the date, is a `/alaa-security-review` trigger and blocks the change.
 
 **Unverified, and stated as unverified.** `alaa-go-chi-development`
 `references/12-kit-capability-map.md:191` names a kit key `BYPASS_GATEWAY_PROOF`
@@ -325,4 +319,4 @@ normalization is not finished until all four pass.
    contract.** Assert that no claim outside the documented set is present.
 
 Test placement, layering and what belongs in a unit versus an integration test
-are owned by `/alaa-testing-strategy` (`$alaa-testing-strategy`).
+are owned by `/alaa-testing-strategy`.

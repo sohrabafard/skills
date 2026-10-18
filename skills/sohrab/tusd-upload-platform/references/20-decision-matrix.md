@@ -49,7 +49,7 @@ Only one transport can be enabled per process. Choosing a transport is choosing 
 |---|---|
 | May this caller start an upload at all | the creation-time gate: `pre-create` hook, or the pre-create callback in an embedded service |
 | May this caller resume, inspect the offset of, or terminate this upload | a per-method check in front of the byte-transfer handler, on every request |
-| Has the caller's right been revoked since the upload started | `post-receive` returning a stop decision, in register (a) only |
+| Has the caller's right been revoked during an active request | supplementary `post-receive` stop decision in register (a); read `45-hooks.md` for lookup/transport outages, termination races and any required revocation deadline |
 | Must the provider's credentials stay server-side | stage locally, relay from a worker |
 
 Creation-time authorization alone is never sufficient, because every later request presents only the upload URL. Full treatment in `40-authorization.md`.

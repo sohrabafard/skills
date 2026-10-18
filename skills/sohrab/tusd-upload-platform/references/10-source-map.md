@@ -35,6 +35,35 @@ The browser and Ala rows are historical snapshots, not current installed-version
 
 The latest tusd release fixes `MaxSize` enforcement for IETF draft creates and deferred uploads with `Content-Length`, plus silent S3 truncation of deferred-length uploads. Before consumer adoption, run the relevant size, integrity and resume gates in `55-tests.md` against its actual enabled protocols and storage backend. Release-note evidence does not prove the consumer is fixed; preserve its existing cap and protocol policy.
 
+## Targeted source verification on 2026-10-18
+
+This check covers hook failure/stop semantics and independent part sizing only; it refreshes no
+other default, latest-release claim or Ala runtime observation.
+
+- At the historical consumer pin `v2.8.0` and generic baseline `v2.9.2`, upstream
+  `pkg/hooks/hooks.go` propagates pre-finish errors, logs failed post-receive invocation without
+  stopping, and honors `StopUpload` from successful post-receive responses. Sources:
+  [consumer baseline](https://github.com/tus/tusd/blob/v2.8.0/pkg/hooks/hooks.go),
+  [generic baseline](https://github.com/tus/tusd/blob/v2.9.2/pkg/hooks/hooks.go).
+- At both pins, `pkg/handler/unrouted_handler.go` cancels an active request for a stop and
+  attempts backend termination when supported; termination errors are logged. Storage finish
+  precedes pre-finish callback execution. Sources:
+  [consumer handler](https://github.com/tus/tusd/blob/v2.8.0/pkg/handler/unrouted_handler.go),
+  [generic handler](https://github.com/tus/tusd/blob/v2.9.2/pkg/handler/unrouted_handler.go).
+- `pkg/s3store/s3store.go` at both pins retains a 50 MiB preference and can raise effective
+  size to fit `MaxMultipartParts`, rejecting a result above `MaxPartSize`. Sources:
+  [consumer store](https://github.com/tus/tusd/blob/v2.8.0/pkg/s3store/s3store.go),
+  [generic store](https://github.com/tus/tusd/blob/v2.9.2/pkg/s3store/s3store.go).
+  The consumer pin's [CLI flags](https://github.com/tus/tusd/blob/v2.8.0/cmd/tusd/cli/flags.go)
+  bind `-s3-part-size` to the preference. Deployment env wiring is in this skill's Compose asset;
+  it is not an upstream env contract or automatic embedded-service configuration.
+- Current [hook documentation](https://tus.github.io/tusd/advanced-topics/hooks/) corroborates
+  blocking pre-finish versus nonblocking post-receive and scopes `StopUpload` to post-receive.
+  Periodic delivery and successful stop responses prove no immediate-revocation bound or cleanup.
+
+These are source checks, not executed upload/termination tests. Recheck the actual consumer pin
+and enabled controls before claiming deployment behavior.
+
 ## Freshness triggers
 
 Re-read the source before asserting any of these, because each has changed between tusd minor releases:

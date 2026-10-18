@@ -38,13 +38,13 @@ claiming limiter behavior. Signal/alert policy stays with `/alaa-observability-s
 ### Deciding what to do about it
 
 `alaa-haproxy` states the mechanical fact — a partition can approach the aggregate of isolated per-node
-limits — and does not decide the response. Ask the discriminating question: **when this dependency
-cannot answer, does proceeding without it let something through that must not get through?**
+limits — and does not decide the response. Apply `/alaa-security-review` `SKILL.md`,
+"Fail-closed versus fail-open, and which doctrine applies", before choosing the response.
 
 - If the limiter protects a backend from overload, the answer is availability. Degradation and
   fail-open doctrine are decided by `/alaa-reliability-sla`.
-- If the limiter is the only control in front of a credential endpoint, the answer is yes,
-  something gets through. Fail-closed doctrine is decided by `/alaa-security-review`.
+- If the limiter is the only control in front of a credential endpoint, a partition can admit
+  attempts the control should deny. Fail-closed doctrine is decided by `/alaa-security-review`.
 
 ### A stick-table limit with peers is a damper, not a quota
 

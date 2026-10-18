@@ -1,6 +1,6 @@
 # Companion Skill Routing
 
-`alaa-workflow` owns workflow admission, plan and checkpoint continuity, delegation boundaries, handoff, and review cadence. Pair it with the narrowest owner for every technical decision. This file says which skill owns which decision and nothing more.
+`alaa-workflow` owns workflow admission, hierarchy, plan and checkpoint continuity, delegation boundaries and handoff. The mirrored runtime orchestrators own review cadence scheduling. Pair with the narrowest owner for every technical decision.
 
 ## Core companions
 
@@ -37,4 +37,4 @@ Each phase lists exact names in `- Required skills:`. Each local task or Beads i
 
 An unavailable conditional owner records `Source: unavailable` in its table cell and names the condition that activates it; stop that work when it activates unless the recorded authorized fallback applies. Never install or silently substitute it. A missing unconditional owner blocks its work. Draft `NEEDS_FILL` values remain visible warnings; unresolved or absent mappings block executable work. Existing active plans add these fields before continuing; completed legacy history remains readable without migration.
 
-Load mapped skills before their recorded decisions on first execution, resume, and delegated entry. Read inherited phase bindings before task overrides; pass exact skill names, sources, conditions, and absence actions to children. Resolve runtime-correct invocation through `/alaa-prompting-guide`; an empty installed result is unknown until its source is checked.
+Load mapped skills before their recorded decisions on first execution, resume, and delegated entry. Read phase bindings, task overrides and then subtask overrides under the hierarchy contract; pass exact skill names, sources, conditions, and absence actions to children. Resolve runtime-correct invocation through `/alaa-prompting-guide`; an empty installed result is unknown until its source is checked.

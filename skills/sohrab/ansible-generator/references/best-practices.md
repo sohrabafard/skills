@@ -231,13 +231,5 @@ comment saying what it controls and in what units.
 
 ## A13. Before you hand it over
 
-```bash
-python3 scripts/check_templates.py <the files you generated>
-bash <ansible-validator>/scripts/validate_playbook.sh <playbook>   # or validate_role.sh
-bash <ansible-validator>/scripts/scan_secrets.sh <target>
-python3 <ansible-validator>/scripts/check_task_safety.py <target>
-```
-
-Exit 0 is the only pass. Exit 2 means a check could not run, which is not a
-pass. `references/playbook.md` states the stopping condition for the
-fix-and-re-run loop.
+Run the complete delivery gate in `references/playbook.md` section 6. That
+register owns the commands, acceptance, exemptions and stopping condition.

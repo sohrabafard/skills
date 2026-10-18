@@ -36,7 +36,7 @@ Inspect effective sandbox, parent overrides and MCP grants before relying on iso
 
 ### Orchestrator mode
 
-Use when the user asks to build, fix, refactor, migrate, integrate, optimize, or otherwise change a repository. The lead plans, dispatches, reconciles, gates and reports. It should not implement while viable implementers are available; the verifier runs heavy suites.
+Use when the user asks to build, fix, refactor, migrate, integrate, optimize, or otherwise change a repository. The lead plans, dispatches, reconciles, gates and reports. It must not implement while viable implementers are available; the verifier runs heavy suites.
 
 ### Advisor mode
 
@@ -54,23 +54,23 @@ The lead owns goal normalization/scope control, repository-aware lanes, selectio
 
 The lead must not implement while implementers are viable, run heavy verification, silently take over failed lanes, permit self-approval, soften/omit review findings, claim unobserved checks or overlap writers. Save bulky output and report its path. Destructive, publication, deployment, force-push, data-deletion and external effects require explicit user permission.
 
-### Lead calibration
+### Dispatch discipline
 
-Read /alaa-prompting-guide for current model calibration. The following scope, verification and reporting constraints apply independently of the selected model.
+**One agent per lane.** No duplicate lane or summary-check agent. Independent verification and review inspect the actual artifact under separate authority. Dispatch independent lanes together; keep work finishable in a handful of tool calls inline.
 
-**Delegate narrowly.** One agent per lane; no duplicate lane or summary-check agent. Keep work finishable in a handful of tool calls inline. Independent verification and review inspect the actual artifact under separate authority. Dispatch independent lanes in the same turn.
+**Keep dispatches lean.** Apply /alaa-prompting-guide. Carry lane facts only: outcome, owned files, exclusions, acceptance, commands, dependencies, resolved skills and return contract. Do not restate the native role definition, which dilutes both contracts. State instructions once; expose task-relevant tools and only requirement-bearing examples.
 
-**Preserve proportional verification.** Retain required retrieval, focused implementer checks and independent acceptance gates. Remove repetition only without new changes, failures or unresolved concerns. Generic reminders never replace a gate: `alaa-verifier`, `alaa-reviewer` and specialists enforce independent authority, which model capability never waives. Read /alaa-prompting-guide before changing model-specific verification wording.
+**Preserve proportional verification.** Read `references/verification-and-gates.md` for gate economics and independent acceptance; /alaa-prompting-guide owns model-specific verification wording.
 
 **Correct sparingly.** Revise statements only when an error changes user code, conclusions or decisions; state it plainly and briefly, then continue. Fix immaterial slips without narration.
 
-**Calibrate length.** Reports/deliverables run long by default: cover the required substance, then stop without filler, redundant summaries or boilerplate. Start reports with the outcome, then supporting detail. Save reusable material before reporting its path; conversation is not storage. `/alaa-low-noise` owns budgets.
+**Calibrate length.** Cover required substance, then stop without filler, redundant summaries or boilerplate. Start with the outcome and supporting detail. Save reusable material before reporting its path; conversation is not storage. /alaa-low-noise owns budgets.
 
 ## 3. Intake and planning
 
 Before dispatch inspect guidance/affected paths; settle outcome, acceptance, preserved behavior and irreversible actions; draw disjoint lanes. `references/verification-and-gates.md` owns intake, lane fields and infrastructure reuse.
 
-Before Phase A evidence dispatch, apply triggered `/alaa-memory-os`: one bounded recall, verify useful claims in repository truth; keep active state in workflow. Route unresolved prior-session/ownership/shared-contract questions to `alaa-researcher`; `alaa-explorer` uses memory only when the repository cannot answer. Apply `/alaa-code-intelligence-routing` before code-evidence selection and reuse its result.
+Before Stage A evidence dispatch, apply triggered `/alaa-memory-os`: one bounded recall, verify useful claims in repository truth; keep active state in workflow. Route unresolved prior-session/ownership/shared-contract questions to `alaa-researcher`; `alaa-explorer` uses memory only when the repository cannot answer. Apply `/alaa-code-intelligence-routing` before code-evidence selection and reuse its result.
 
 Every dispatch carries `/alaa-low-noise`; return findings, verdicts, counts and permitted artifact paths, never transcripts/full diffs/logs. Persist reusable context before returning its path. Use bounded invocations and host-required progress. Do not infer a universal watchdog timeout or per-command narration. After interruption reconcile transcript, checkpoint and surviving files before resuming writes.
 
@@ -86,26 +86,26 @@ Report missing models/roles as blocked/degraded, never silent fallback. Diagnose
 
 ## 5. Orchestrator execution pipeline
 
-Orchestrator mode runs A–E; F requires requested integration and explicit authority before effects. Advisor mode runs no execution phases; section 1 routes planning artifacts. Phases are logical outcomes, not separate mandatory dispatches. Coalesce compatible actions/evidence in the workflow plan, preserving outcomes, independence and gate economics. Before Phase A dispatch read `references/verification-and-gates.md` for phase behavior, triggers and requirements.
+Orchestrator mode preserves A–E; F requires requested integration and explicit authority before effects. Advisor mode runs no execution stages; section 1 routes planning artifacts. Stages are logical outcomes, not workflow phases or separate mandatory dispatches. Coalesce compatible actions/evidence in the workflow plan, preserving outcomes, independence and gate economics. Before Stage A dispatch read `references/verification-and-gates.md` for the inherited phase/final review boundary, cadence, triggers and requirements.
 
-| Phase | Owns | Ends when |
+| Stage | Owns | Ends when |
 |---|---|---|
 | A — Plan | workspace setup, evidence lanes, the chosen solution and its rejected alternatives, the written plan, the profile | the plan and profile are recorded and presented |
-| B — Implementation | one lane per disjoint write scope, focused-tier checks, a reviewable diff per completed subtask | every required lane is reconciled against its actual diff |
-| C — Verification | one integrated affected-tier plan, executed by an authority that owns no lane | every command reached `PASS`, or the phase ended blocked with the failure classified and its owner named |
-| D — Review and specialist gates | the independent review, plus every specialist whose trigger holds | findings are resolved or explicitly accepted by the user |
-| E — Documentation and final validation | documentation and its grade, required final gates, the report; base integration only when requested and authorized | the candidate has the proof required for the requested outcome |
+| B — Implementation | disjoint lanes, focused subtask checks and bounded task acceptance, with tested diff evidence | every required lane is reconciled against its actual diff |
+| C — Verification | at the declared boundary, an integrated verification plan under its required observer | every command reached `PASS`, or the phase ended blocked with the failure classified and its owner named |
+| D — Review and specialist gates | at the declared boundary, independent review and every triggered specialist | findings are resolved or explicitly accepted by the user |
+| E — Documentation and final validation | documentation and its grade, required final gates, the report; base integration only when requested and authorized | applicable documentation is validated; whole-engagement final gates wait for its final candidate |
 | F — Requested integration | reviewable integration details and explicit authority, then the local merge | authorized integration is complete, or its declined/blocked status is reported; not applicable to local-only work |
 
 ### Execution profile: size the pipeline to the plan
 
-**Every profile preserves A–E and required gates.** F is conditional; local-only completion requires no merge prompt. Record the profile from the finished plan. Escalate on a heavier condition; do not de-escalate while qualifying evidence persists. `references/routing-matrix.md` owns implementation-role reassessment.
+**Every profile preserves A–E outcomes and required gates at the inherited review boundary.** F is conditional; local-only completion requires no merge prompt. Record the profile from the finished plan. Escalate on a heavier condition; do not de-escalate while qualifying evidence persists. `references/routing-matrix.md` owns implementation-role reassessment.
 
 | Profile | Conditions — every one must hold | Shape |
 |---|---|---|
-| `lean` | one lane, one implementation phase, a diff that stays inside the lane plan, and none of the `hardened` conditions or deep-review triggers | Phases A–E, and F only when requested; the lead performs Phase D's review itself instead of dispatching `alaa-reviewer`, and specialists still fire on their own triggers |
-| `standard` | anything that is neither `lean` nor `hardened` | Phases A–E with every required gate; F only when requested |
-| `hardened` | the change meets the adversarial reviewer's blast-radius condition in `references/routing-matrix.md` | `standard`, plus the architecture critic in Phase A and the adversarial reviewer in Phase D |
+| `lean` | one lane, one implementation phase, a diff that stays inside the lane plan, and none of the `hardened` conditions or deep-review triggers | Stages A–E, and F only when requested; the lead performs Stage D's review itself instead of dispatching `alaa-reviewer`, and specialists still fire on their own triggers |
+| `standard` | anything that is neither `lean` nor `hardened` | Stages A–E with every required gate; F only when requested |
+| `hardened` | the change meets the adversarial reviewer's blast-radius condition in `references/routing-matrix.md` | `standard`, plus the architecture design record in Stage A and critic/adversarial judgment at the declared review boundary |
 
 `lean` review is independent: the lead authored no diff. If it leaves the lane plan, select `standard` and dispatch `alaa-reviewer` on the complete change.
 
@@ -133,7 +133,7 @@ Run `python scripts/check_agent_contracts.py` after instruction-contract changes
 - Exact command semantics come from repository guidance and the dispatch. Never invent a flag merely to make a check pass.
 - After any change to `agents/`, the grant checker must pass before completion; `references/agent-catalog.md` states its exact invocation and exit-code contract.
 - Lowering process priority is mandatory for declared CPU-heavy local commands; limiting runner-level parallelism is separate and must also be explicit.
-- On the user's Windows environment, preserve every explicit `--browser chromium` argument. Never remove, replace, or change it without prior user approval.
+- Preserve every explicit `--browser chromium` argument: it is a hard user constraint on browser choice. Never remove, replace, or change it without prior user approval.
 - Do not kill unrelated services, dev servers, containers, or processes; do not start duplicate services when a reusable declared service exists.
 - Do not update snapshots, golden files, lockfiles, generated clients, dependencies, or migrations during verification unless that change is an explicitly scoped implementation lane.
 
@@ -164,7 +164,7 @@ Reviewers only judge, verifiers only execute evidence commands, researchers only
 |---|---|
 | Plan, allocate workers, reassess remaining work or decide a specialist trigger | `references/routing-matrix.md` |
 | Dispatch a role | `references/delegation-prompts.md` |
-| Start Phase A, consolidate checks or decide gate requirements | `references/verification-and-gates.md` |
+| Start Stage A, consolidate checks or decide gate requirements | `references/verification-and-gates.md` |
 | Select or deviate from a model/effort profile | `references/model-effort-policy.md` |
 | Inspect role authority, output or grants | `references/agent-catalog.md` |
 | Set command priority, workers, timeout or resource limits | `references/resource-policy.md` |

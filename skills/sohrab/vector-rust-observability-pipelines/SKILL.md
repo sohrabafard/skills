@@ -29,11 +29,12 @@ version-sensitive claim rather than recalling it: `references/90-source-map.md`.
    `references/30-buffers-acks-and-backpressure.md`.
 
 3. **Fail open or fail closed follows what the data is for, not which tool moves it.**
-   `/alaa-reliability-sla` supplies the test: when this
-   dependency cannot answer, does proceeding without it let something through that
-   must not get through? Telemetry, no — a contributor: `when_full: drop_newest`, sized
-   for the burst, never `block`, as `/alaa-observability-soc` binds.
-   Product data under an exactness ruling, yes — a gate: `references/75-ala-ingest-pipeline.md`.
+   `/alaa-security-review` owns the gate discriminator; `/alaa-reliability-sla`
+   owns contributor failure behavior. For product telemetry forwarding/export,
+   `/alaa-observability-soc` requires nonblocking delivery: `when_full: drop_newest`,
+   sized for the burst, never `block`. A required audit write or product data under
+   an exactness ruling is a separate path; preserve its gate contract.
+   `references/75-ala-ingest-pipeline.md` records the historical exactness example.
 
 4. **A path that must never slow its client is configured that way, or it is not
    that path.** Acknowledgements decide whether the *response* waits for durability;

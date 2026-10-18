@@ -31,6 +31,15 @@ file in the same effort.
 
 ## How to refresh this file
 
+**2026-10-18 ownership consolidation, no consumer re-survey.** Pagination defaults moved from keyset
+to reference 22 without changing their applicability; cursor rejection codes moved into reference 25.
+The offset exception preserves its five guards and now includes the filtered, measured exact-total query
+requirement. Browser/cache requirement unions and the approved phone-derivative gate are owned by
+/alaa-observability-soc; container baseline/default exceptions remain /alaa-security-review's. Adoption
+and live gateway timeout output were not revalidated. Treat every consumer's conformance to these
+clarifications as unproven until its source and required observations are checked; this note certifies
+no runtime change.
+
 Re-run the same twelve-section survey against each repository, one repository per run, answering from
 executable code and committed artifacts with `file:line` evidence, and marking anything unproven `ABSENT` or
 `UNDETERMINED` rather than inferring it. The sections are:

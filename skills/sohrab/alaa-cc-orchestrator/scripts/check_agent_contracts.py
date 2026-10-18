@@ -67,7 +67,6 @@ def orchestrator_failures(text: str) -> list[str]:
                      "Commit only with explicit user authorization",
                      "local-only completion requires no merge prompt",
                      "Independent verification and review inspect the actual artifact",
-                     "Retain required retrieval, focused implementer checks and independent acceptance gates",
                      "Do not infer a universal watchdog timeout"):
         if not contract_present(required, text):
             errors.append(f"missing authority contract: {required}")
@@ -135,10 +134,15 @@ IMPLEMENTER_REQUIREMENTS = (
     "invent no substitutes or flags",
     "If none qualify, report validation not run and request focused commands from the parent",
     "Your results never discharge independent acceptance",
+    "An explicitly assigned task owner may also run supplied bounded task-acceptance selectors at task end",
+    "this grants no boundary affected/exhaustive authority",
+    "whole-engagement cadence and exact phase/task/subtask cursor",
 )
 GATE_REQUIREMENTS = (
     "Before implementation or fix-cycle dispatch, classify actual command scope, never tier labels",
-    "send focused commands only and reserve affected/exhaustive commands for independent gates",
+    "send focused commands to subtask workers and explicitly bounded task-acceptance commands to the task owner",
+    "reserve affected/exhaustive commands for boundary gates",
+    "Retain required retrieval, focused implementer checks and independent acceptance gates",
     "Role definitions own dispatch-conflict handling",
     "reconcile every excluded command and unrun check before accepting the lane",
     "reuse requires the correct observer as well as unchanged tree",
@@ -182,6 +186,10 @@ def implementation_template_failures(text: str) -> list[str]:
         if not excluded or not all(term in excluded[1] for term in
                                    ("full suite", "race detector", "end-to-end suite", "other lane")):
             errors.append(prefix + "missing broad-check exclusions")
+        acceptance = re.search(r"<task_acceptance>(.*?)</task_acceptance>", block, re.S)
+        if not acceptance or not all(term in acceptance[1] for term in
+                                     ("only for the explicitly assigned task owner", "exact bounded", "or not assigned")):
+            errors.append(prefix + "missing bounded task-owner acceptance authority")
         if commands and re.search(r"affected|exhaustive|full suite|race detector|end-to-end|"
                                   r"-race\b|\./\.\.\.|--all\b", commands[1], re.I):
             errors.append(prefix + "overbroad command despite focused label")
@@ -263,6 +271,211 @@ def task_allocation_failures(routing: str, controls: str) -> list[str]:
     return errors
 
 
+# Cadence assertions are source contracts, not a simulation of agent obedience.
+# Workflow owns hierarchy validation; this consumer checks its scheduling seam.
+CADENCE_REQUIREMENTS = (
+    "Stages A-F name required orchestration outcomes and authority, not workflow phases",
+    "New phased/delegated work uses the bound Beads phase-task-subtask hierarchy",
+    "Existing unmarked/local families retain their original contract until explicit migration",
+    "`Review boundary: phase|final`", "`Final phase`", "`Commit authority`",
+    "`Review status`", "`Review evidence`",
+    "Pass that whole-engagement contract, plan reference and exact phase/task/subtask cursor into every nested invocation",
+    "Missing or inconsistent executing mappings block dependent dispatch",
+    "Nested goals never reset the boundary or relabel intermediate output as final",
+    "The implementer runs the smallest focused discriminating check",
+    "The task owner runs bounded task-acceptance selectors across its subtasks",
+    "Never dispatch independent subtask/task review or make a subtask/task commit",
+    "intermediate phases retain `REVIEW_PENDING`",
+    "tested issue closure advances readiness without claiming reviewed acceptance",
+    "Under `phase`, only the declared phase end earns review",
+    "Preserve stricter genuine repository gates and necessary focused feedback",
+    "return the conflict to the plan owner rather than silently skipping either rule",
+    "successful required review, accepted fixes and retests trigger the integration parent's Conventional Commit on the current branch",
+    "Reuse a recorded standing user grant; do not invent another approval",
+    "Without that grant, or after failed review/tests, preserve an identified uncommitted snapshot",
+    "Worker roles never gain commit authority",
+    "Stages C/D and final E gates wait for the inherited boundary",
+    "The exhaustive tier belongs only to the whole engagement's final candidate after final documentation when required",
+    "covered inputs, environment, flags and required observer match demonstrably",
+    "Markdown and templates can be checker inputs: documentation-only change proves no equivalence",
+    "never weaken tests or review to obtain a pass",
+)
+
+
+def cadence_failures(skill: str, gates: str, dispatch: str,
+                     implementer: str, planner: str, verifier: str,
+                     design: str, contract: str, critic: str) -> list[str]:
+    errors = [f"missing scheduling contract: {clause}"
+              for clause in CADENCE_REQUIREMENTS if not contract_present(clause, gates)]
+    errors.extend(specialist_cadence_failures(design, contract, critic))
+    for clause in ("It must not implement while viable implementers are available",
+                   "Correct sparingly", "Calibrate length", "Keep dispatches lean",
+                   "Do not restate the native role definition",
+                   "for gate economics and independent acceptance",
+                   "hard user constraint on browser choice", "--browser chromium"):
+        if not contract_present(clause, skill):
+            errors.append(f"missing mirrored body contract: {clause}")
+    if "Remove repetition only without new changes" in skill:
+        errors.append("gate economics duplicated outside its owner")
+    for clause in ("<cadence>", "whole-engagement plan", "current phase/task/subtask",
+                   "pending review/commit", "Delegated lanes"):
+        if clause not in dispatch:
+            errors.append(f"missing inherited dispatch cadence: {clause}")
+    for label, text, clauses in (
+        ("implementer", implementer, (
+            "An explicitly assigned task owner may also run supplied bounded task-acceptance selectors at task end",
+            "this grants no boundary affected/exhaustive authority",
+            "whole-engagement cadence and exact phase/task/subtask cursor",
+            "pending boundary review/commit rather than starting your own review or commit")),
+        ("planner", planner, ("phase-task-subtask hierarchy", "existing-family compatibility",
+                              "inherited review boundary, final phase, commit authority and exact cursor")),
+        ("verifier dispatch", verifier, ("<review_boundary>", "whole-engagement final candidate identity",
+                                        "no subtask/task independent acceptance")),
+    ):
+        for clause in clauses:
+            if not contract_present(clause, text):
+                errors.append(f"missing {label} cadence: {clause}")
+    forbidden = (
+        r"(?:independent )?review (?:every|each) (?:subtask|task)\b",
+        r"commit (?:at|after) (?:every|each) (?:subtask|task)\b",
+        r"(?:nested|child) (?:run|invocation) resets? (?:the )?review boundary",
+        r"documentation-only changes? (?:always )?(?:preserve|prove) (?:test |input )?equivalence",
+        r"commit on the work branch before expensive verification",
+        r"(?:weaken|skip) (?:failed tests|assertions|review) to (?:obtain|force) a pass",
+    )
+    for pattern in forbidden:
+        if re.search(pattern, gates, re.I):
+            errors.append(f"contradictory scheduling instruction: {pattern}")
+    return errors
+
+
+
+# Topic: specialist review cadence; layer: structural source contract.
+# The gate owner already schedules review; these consumers must not reintroduce
+# early judgment or narrow a nested final candidate to its current phase.
+def specialist_cadence_failures(design: str, contract: str, critic: str) -> list[str]:
+    errors = []
+    shared = (
+        "references/verification-and-gates.md",
+        "inherited", "declared phase|final boundary",
+        "complete phase candidate for phase",
+        "whole-engagement candidate including pending earlier phases for final",
+        "Nested invocations never reset that scope",
+        "Return missing, conflicting or premature cadence to the parent without judgment",
+    )
+    for label, text in (("design template", design), ("contract template", contract),
+                        ("architecture critic", critic)):
+        for clause in shared:
+            if not contract_present(clause, text):
+                errors.append(f"{label}: missing specialist cadence: {clause}")
+        for obsolete in (
+            "Pressure-test this proposed architecture before implementation",
+            "Dispatch in Stage A before code exists",
+            "Spawn before implementation",
+            "before expensive implementation begins",
+            "Questions that must be answered before implementation",
+        ):
+            if contract_present(obsolete, text):
+                errors.append(f"{label}: premature specialist judgment: {obsolete}")
+    for label, text, clauses in (
+        ("design template", design, ("pre-implementation design record", "report the missing record")),
+        ("contract template", contract, (
+            "Record known triggers and decide consumer impact, compatibility and deprecation in Stage A",
+            "a newly discovered trigger reopens the affected plan and gate")),
+        ("architecture critic", critic, ("The design record remains due before implementation",
+                                         "Unresolved questions and conditions that block acceptance")),
+    ):
+        for clause in clauses:
+            if not contract_present(clause, text):
+                errors.append(f"{label}: missing planning/acceptance contract: {clause}")
+    return errors
+
+
+def specialist_cadence_sources() -> tuple[str, str, str]:
+    suffix = ".md"
+    return tuple((ROOT / path).read_text(encoding="utf-8") for path in (
+        "references/delegation-prompts/20-design.md",
+        "references/delegation-prompts/60-contract-review.md",
+        "agents/alaa-architecture-critic" + suffix))
+
+
+def specialist_cadence_self_tests() -> list[tuple[str, bool]]:
+    """Immutable source setup; each mutation is isolated and checks its own diagnostic."""
+    sources = specialist_cadence_sources()
+    cases = [("specialist inherited phase/final cadence accepted",
+              not specialist_cadence_failures(*sources))]
+    for index, label in enumerate(("design template", "contract template", "architecture critic")):
+        for clause in (
+            "references/verification-and-gates.md", "declared phase|final boundary",
+            "complete phase candidate for phase",
+            "whole-engagement candidate including pending earlier phases for final",
+            "Nested invocations never reset that scope",
+            "Return missing, conflicting or premature cadence to the parent without judgment",
+        ):
+            broken = list(sources)
+            broken[index] = broken[index].replace(clause, "omitted")
+            diagnostic = f"{label}: missing specialist cadence: {clause}"
+            cases.append((f"{label}: requires {clause}",
+                          diagnostic in specialist_cadence_failures(*broken)))
+        # Contradictions must fail even with every valid clause still present.
+        for obsolete in ("Dispatch in Stage A before code exists", "Spawn before implementation",
+                         "before expensive implementation begins"):
+            broken = list(sources)
+            broken[index] += "\n" + obsolete
+            cases.append((f"{label}: rejects early judgment {obsolete}",
+                          f"{label}: premature specialist judgment: {obsolete}"
+                          in specialist_cadence_failures(*broken)))
+    for index, label, clause in (
+        (0, "design template", "pre-implementation design record"),
+        (0, "design template", "report the missing record"),
+        (1, "contract template", "Record known triggers and decide consumer impact, compatibility and deprecation in Stage A"),
+        (1, "contract template", "a newly discovered trigger reopens the affected plan and gate"),
+        (2, "architecture critic", "The design record remains due before implementation"),
+        (2, "architecture critic", "Unresolved questions and conditions that block acceptance"),
+    ):
+        broken = list(sources)
+        broken[index] = broken[index].replace(clause, "omitted")
+        cases.append((f"{label}: preserves {clause}",
+                      f"{label}: missing planning/acceptance contract: {clause}"
+                      in specialist_cadence_failures(*broken)))
+    return cases
+
+
+def cadence_sources() -> tuple[str, ...]:
+    return tuple((ROOT / path).read_text(encoding="utf-8") for path in (
+        "SKILL.md", "references/verification-and-gates.md", "references/delegation-prompts.md",
+        "assets/implementation-contract.md", "assets/planner-contract.md",
+        "references/delegation-prompts/40-verification.md")) + specialist_cadence_sources()
+
+
+def cadence_self_tests() -> list[tuple[str, bool]]:
+    sources = cadence_sources()
+    cases = [("inherited phase/final cadence accepted", not cadence_failures(*sources))]
+    for clause in CADENCE_REQUIREMENTS:
+        broken = list(sources)
+        broken[1] = broken[1].replace(clause, "omitted")
+        cases.append((f"cadence requires {clause}", bool(cadence_failures(*broken))))
+    for index, clause in ((0, "Correct sparingly"), (0, "hard user constraint on browser choice"),
+                          (2, "<cadence>"), (2, "Delegated lanes"),
+                          (3, "this grants no boundary affected/exhaustive authority"),
+                          (4, "existing-family compatibility"), (5, "<review_boundary>")):
+        broken = list(sources)
+        broken[index] = broken[index].replace(clause, "omitted")
+        cases.append((f"cadence seam requires {index}:{clause}", bool(cadence_failures(*broken))))
+    for contradiction in (
+        "Review every task independently", "independent review each subtask",
+        "Commit after each task", "commit at every subtask",
+        "Child invocation resets the review boundary",
+        "Documentation-only changes prove input equivalence",
+        "Commit on the work branch before expensive verification",
+        "Weaken failed tests to obtain a pass",
+    ):
+        broken = list(sources)
+        broken[1] += "\n" + contradiction
+        cases.append((f"cadence contradiction rejected: {contradiction}", bool(cadence_failures(*broken))))
+    return cases
+
+
 def verification_sources() -> tuple[str, list[str], dict[str, str]]:
     return (
         (ROOT / "references/verification-and-gates.md").read_text(encoding="utf-8"),
@@ -282,7 +495,9 @@ def self_test() -> int:
     # multiline body or a serialized scalar; these checks do not execute it.
     skill = (ROOT / "SKILL.md").read_text(encoding="utf-8")
     for original, equivalent in EQUIVALENT_REQUIREMENTS.items():
-        source = skill if original in skill else (ROOT / "references/model-effort-policy.md").read_text(encoding="utf-8")
+        source = next(text for text in (skill,
+            (ROOT / "references/model-effort-policy.md").read_text(encoding="utf-8"),
+            (ROOT / "references/verification-and-gates.md").read_text(encoding="utf-8")) if original in text)
         assert contract_present(original, source.replace(original, equivalent)), original
         assert not contract_present(original, equivalent.replace("mandatory", "optional").replace("must inspect", "may inspect").replace("authorizes no", "authorizes").replace("explicit reasoning effort", "inherited effort")), original
     dispatch = (ROOT / "references/delegation-prompts.md").read_text(encoding="utf-8")
@@ -317,10 +532,12 @@ def self_test() -> int:
         ("forced integration rejected", bool(orchestrator_failures(skill + "\nEvery profile runs all six phases"))),
         ("independent review preserved", bool(orchestrator_failures(skill.replace("Independent verification and review inspect the actual artifact", "Check summaries")))),
         ("silent fallback rejected", bool(orchestrator_failures(skill + "\ncontinue with general-purpose subagents"))),
-        ("focused checks preserved", bool(orchestrator_failures(skill.replace("Retain required retrieval, focused implementer checks and independent acceptance gates", "Omit checks")))),
+        ("gate owner pointer preserved", bool(cadence_failures(skill.replace("for gate economics and independent acceptance", "for optional checks"), *cadence_sources()[1:]))),
         ("blanket no-verification rejected", bool(orchestrator_failures(skill + "\n**Do not add verification instructions.**"))),
         ("invented watchdog rejected", bool(orchestrator_failures(skill + "\nA watchdog ends a lane on silence rather than on duration"))),
     ]
+    cases.extend(cadence_self_tests())
+    cases.extend(specialist_cadence_self_tests())
     cases.append(("economical execution accepted", not economy_failures(skill, gates)))
     for required in ("observed host slots", "resource ceilings", "integration barriers", "only one CPU-heavy", "Phase transitions and new agents alone earn no rerun", "current-checkout or isolation decision", "references/context-curation.md"):
         cases.append((f"economics {required} required", bool(economy_failures(skill, gates.replace(required, "omitted")))))
@@ -383,6 +600,8 @@ def self_test() -> int:
                 ("focused boundary omitted", block.replace(' tier="focused"', '', 1)),
                 ("exclusions omitted", re.sub(r"<excluded>.*?</excluded>", '', block, flags=re.S)),
                 ("scope omitted", block.replace("scoped", "unbounded", 1)),
+                ("task owner acceptance omitted", block.replace("<task_acceptance>", "<omitted>", 1)),
+                ("task acceptance unbounded", block.replace("exact bounded", "unbounded", 1)),
                 ("affected breadth appended", block.replace('</commands>', '; affected-tier checks</commands>', 1)),
                 ("race mislabeled focused", block.replace('</commands>', '; go test -race ./...</commands>', 1)),
                 ("full suite mislabeled focused", block.replace('</commands>', '; full suite</commands>', 1)),
@@ -413,6 +632,7 @@ def main() -> int:
             (ROOT / "references/verification-and-gates.md").read_text(encoding="utf-8"),
             (ROOT / "references/delegation-prompts/30-implementation.md").read_text(encoding="utf-8")))
         errors.extend(verification_failures(*verification_sources()))
+        errors.extend(cadence_failures(*cadence_sources()))
         errors.extend(task_allocation_failures(
             (ROOT / "references/routing-matrix.md").read_text(encoding="utf-8"),
             (ROOT / "references/model-effort-policy.md").read_text(encoding="utf-8")))

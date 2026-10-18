@@ -44,6 +44,8 @@ Optional schema-2 JSON is a compact consumer snapshot with no task table or grap
 
 Task state belongs to the authority selected through `references/task-tracking.md`; neither a checkpoint nor JSON becomes an offline issue register.
 
+For a `phase-task-subtask` family the cursor also records `Current task` and `Current subtask` as exact mapped issue IDs, or `none` before selection/after completion. A selected subtask requires its actual task and phase; a selected task requires its actual phase. Clear finished cursors before moving phases. Schema-3 JSON adds `current_task` and `current_subtask` and derives them exactly from the checkpoint (or direct cursor); schema-2 snapshots remain valid for existing families. Keep the inherited review boundary, pending review/commit and next safe leaf recoverable through the plan and cursor, without copying issue state.
+
 ## The handoff package
 
 Six fields. Each exists because a real resume fails without it.

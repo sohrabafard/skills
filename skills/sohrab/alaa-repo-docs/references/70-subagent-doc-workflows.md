@@ -1,10 +1,8 @@
 # Subagent workflows for documentation tasks
 
-This file states what the tracks are, what each returns, and how the parent merges them. It does
-not state how a runtime spawns a subagent: that mechanism belongs to the orchestrator, and a
-runtime-specific instruction inside a rule makes the rule wrong on the other runtime. Claude Code
-spawns parallel work with the Task tool; Codex spawns it from the parent thread. Both satisfy every
-rule below.
+This file owns documentation tracks, their returns and parent merging. Before spawning, use
+`/alaa-prompting-guide` for runtime mechanics and the active runtime orchestrator for allocation;
+runtime-specific instructions here would be wrong on the other runtime.
 
 ## Why subagents help this skill
 
@@ -43,7 +41,7 @@ For a broad repository-documentation refresh, start with these four read-heavy t
 
 Add a fifth track for final cross-checking or link validation only when the repository is especially large or the document graph is messy.
 
-**Fan-out bound:** five concurrent tracks is the ceiling for this skill, and each track's scope must be disjoint from the others by directory or by surface. Splitting one surface across two agents duplicates the reading and doubles the context spent for no extra evidence; the context budget itself is `/alaa-low-noise`'s (`$alaa-low-noise`). If a track is too large for one agent, narrow its scope and run it twice in sequence rather than widening the fan-out.
+**Fan-out bound:** five concurrent tracks is the ceiling for this skill, and each track's scope must be disjoint from the others by directory or by surface. Splitting one surface across two agents duplicates the reading and doubles the context spent for no extra evidence; the context budget itself is `/alaa-low-noise`'s. If a track is too large for one agent, narrow its scope and run it twice in sequence rather than widening the fan-out.
 
 ## Return contract for each subagent
 

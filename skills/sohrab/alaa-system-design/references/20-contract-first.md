@@ -1,10 +1,10 @@
 # Contract Before Implementation
 
-`SKILL.md` owns the rule that the contract is decided in the record and committed before the code that
-satisfies it. This file says how to enumerate the interfaces, what a data shape must fix, how to derive an
+`SKILL.md` owns contract-before-code ordering and routes review/commit cadence. This file says how to
+enumerate interfaces, what a data shape must fix, how to derive an
 error surface, and where the contract is committed. Read it during step 3.
 
-`/alaa-services-contract` (`$alaa-services-contract`) owns the platform invariants: response envelopes,
+`/alaa-services-contract` owns the platform invariants: response envelopes,
 correlation and trusted gateway headers, the public identifier boundary, the trust boundary, event and code
 names, and the deprecation procedure. Satisfy and cite them. Nothing in this file restates one, because a
 restated envelope is a second envelope the moment the contract changes.
@@ -33,7 +33,7 @@ consumer nobody knew existed.
 
 For each interface record: the caller, the direction, whether it crosses the trust boundary, whether it is
 synchronous or asynchronous, and whether repeating it is safe. The last one is not a detail — it decides in
-step 5 whether a retry is legal at all, and `/alaa-reliability-sla` (`$alaa-reliability-sla`) owns what
+step 5 whether a retry is legal at all, and `/alaa-reliability-sla` owns what
 that requires.
 
 ## Fix the data shape
@@ -97,8 +97,9 @@ client, a shared DTO package — the first implementation lane changes it, and t
 rather than repeating the fields. Where no machine-readable contract exists, the record carries the shapes
 in full, and the design says whether creating one is in scope.
 
-Either way the ordering is the same and is checkable in history: the commit that first states the shape
-precedes the commit that adds the handler, the consumer, or the route.
+Under orchestration, write the shape before its handler, consumer, or route; commit timing follows
+`SKILL.md` Review and readiness. Standalone, the commit first stating the shape precedes the commit
+adding its implementation. Neither mode grants commit authority.
 
 ## Anti-patterns
 

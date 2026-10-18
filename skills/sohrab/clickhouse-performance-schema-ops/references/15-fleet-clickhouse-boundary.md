@@ -41,26 +41,12 @@ any of them, so a defect in one is raised with the vendor rather than repaired w
 `80-proof-and-validation.md` do not apply to a `signoz_*` table. How such a table is queried:
 `/alaa-signoz-clickhouse-docs` (`$alaa-signoz-clickhouse-docs`).
 
-### The tenant-predicate rule does not transfer to SigNoz, and this is the reason
+### SigNoz tenancy
 
-`SKILL.md` rule 2 and `20-table-design.md` section 1 require the tenant column first in `ORDER BY`
-and a tenant predicate on every query. **That rule governs tables this fleet's own ingest pipeline
-owns; it does not transfer to `signoz_*` tables.** It does not transfer because of how the platform
-owner has decided SigNoz tenancy works, not because anybody forgot:
-
-- All tenants report into one shared SigNoz.
-- Everyone with access to that SigNoz is authorised to see every tenant's telemetry, because seeing
-  it is how they fix it. There is no tenant to isolate from another inside that instance.
-- A project whose telemetry must not be shared gets a **separate SigNoz address, selected by an
-  environment variable**. The isolation boundary is the address, not a `WHERE` clause.
-
-Two obligations follow, and they point in opposite directions:
-
-1. A SigNoz query carrying no tenant predicate is correct as written. Do not add one to satisfy this
-   skill's rule, and do not report its absence as a defect.
-2. The SigNoz posture is not a licence to drop `project_id` from a `wa_raw` or `wa_agg` query. Those
-   tables hold every tenant's rows in one instance with no second address separating them, so there
-   the predicate is the only isolation that exists.
+`/alaa-signoz-clickhouse-docs` (`$alaa-signoz-clickhouse-docs`) owns the SigNoz tenancy rule and
+its rationale. That exception applies only to vendor-owned `signoz_*` tables. Keep `project_id`
+predicates in queries against both `wa_raw` and `wa_agg`; those tables share tenant rows without a
+separate address boundary.
 
 ## What the pipeline side owns, so the seam has two agreed ends
 

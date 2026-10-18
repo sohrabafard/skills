@@ -125,7 +125,7 @@ application's, and replication lag is invisible until someone measures it — se
 
 **Decide what a failed replication means before enabling it.** Asynchronous replication that nobody alerts on is a
 disaster-recovery plan that has never been tested; state the recovery point objective the lag must stay inside, and
-route the objective itself to `/alaa-reliability-sla` (`$alaa-reliability-sla`).
+route the objective itself to `/alaa-reliability-sla`.
 
 ## Durability and consistency semantics
 
@@ -148,5 +148,5 @@ loopback address, so the transport rule above is broken in the test stack too**,
 change in both places. No server-side
 encryption, no versioning and no replication is configured anywhere in its code, Compose files, Swarm stack or
 provisioning container, and its store runs as a single replica on a single volume
-`[source: tusd-upload-platform repository, .env.example, docker-compose.yml and docker-compose.swarm.yml, read:
+`[source: Ala tusd repository, .env.example, docker-compose.yml and docker-compose.swarm.yml, read:
 2026-07-27]`.

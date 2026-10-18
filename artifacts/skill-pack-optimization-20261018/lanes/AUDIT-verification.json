@@ -1,0 +1,354 @@
+{
+  "schema_version": 1,
+  "lane": "AUDIT",
+  "status": "focused owner checks passed; Phase 4 independent acceptance pending",
+  "head": "1a0799de71254427973f1253d80b846fea9acf10",
+  "cwd": ".",
+  "resource_policy": "Serial, single-process checks; normal priority, no CPU-heavy operation or explicit resource cap. Required observer: owning lane only; independent review deferred to Phase 4.",
+  "reviewed_boundaries": [
+    "Three named skill trees and AUDIT artifact only",
+    "No generated map/seed applied",
+    "No target repository or live database engine tested",
+    "No installation performed",
+    "No broad suite or Phase 4 review performed"
+  ],
+  "changed_paths": [
+    "artifacts/skill-pack-optimization-20261018/lanes/AUDIT.md",
+    "skills/sohrab/alaa-mongodb-patterns/SKILL.md",
+    "skills/sohrab/alaa-mongodb-patterns/references/source-map.md",
+    "skills/sohrab/alaa-partitioned-table-fk-audit/SKILL.md",
+    "skills/sohrab/alaa-partitioned-table-fk-audit/scripts/partitioned_fk_audit.py",
+    "skills/sohrab/alaa-permission-generator/SKILL.md"
+  ],
+  "changed_path_count": 6,
+  "markdown_changed_path_count": 5,
+  "commands": [
+    {
+      "name": "FK CLI help wording",
+      "argv": [
+        "python",
+        "-B",
+        "skills/sohrab/alaa-partitioned-table-fk-audit/scripts/partitioned_fk_audit.py",
+        "--help"
+      ],
+      "cwd": ".",
+      "exit_code": 0,
+      "assertions_passed": true,
+      "stdout": "usage: partitioned_fk_audit.py [-h] [--ext EXT] [--exclude EXCLUDE]\n                               [--require-parents] [--json] [--quiet]\n                               [--self-test] [--install DEST]\n                               [roots ...]\n\nAudit source trees for foreign keys that reference a partitioned parent through an incomplete key.\n\nPostgreSQL requires a foreign key's referenced column list to match a full unique or primary\nkey on the referenced table. A partitioned parent's key must contain every partition-key\ncolumn, so it is composite, so an `id`-only reference into it fails with SQLSTATE 42830\n(\"there is no unique constraint matching given keys for referenced table\"). This script finds\nthose references from source text alone; it never opens a database connection.\n\nUsage\n  partitioned_fk_audit.py ROOT [ROOT ...] [options]\n  partitioned_fk_audit.py --self-test\n  partitioned_fk_audit.py --install DEST\n\nROOT is any directory or file to scan. Pass every tree that can hold schema source:\nmigrations, raw .sql, schema dumps, docs that show DDL, and vendor-published migrations.\nNo path is built into this script; a root you do not pass is not audited.\n\nOptions\n  --ext .sql,.php,.go,.md   file extensions to read (default: .sql,.php,.go,.md,.py,.rb,.ts)\n  --exclude NAME            directory name to skip, repeatable\n                            (default: .git, node_modules, __pycache__, .idea, dist, build)\n  --require-parents         exit 4 when no partitioned parent is discovered\n  --json                    emit the full finding set as JSON on stdout\n  --quiet                   print only the RESULT line and any finding lines\n  --self-test               run the built-in fixture suite and exit\n  --install DEST            copy this script to DEST unchanged, then exit\n\nExit codes, and what a non-zero code obliges the calling agent to do\n  0  No incomplete-key reference into a partitioned parent was found. Read the RESULT line\n     anyway: \"parents=0\" means no parent wa",
+      "stderr": ""
+    },
+    {
+      "name": "FK empty roots assertion",
+      "argv": [
+        "python",
+        "-B",
+        "skills/sohrab/alaa-partitioned-table-fk-audit/scripts/partitioned_fk_audit.py",
+        "<temporary empty root>",
+        "--require-parents"
+      ],
+      "cwd": ".",
+      "exit_code": 4,
+      "assertions_passed": true,
+      "stdout": "Partitioned parents discovered:\n  (none)\n\nRESULT: parents=0 no_partitioned_tables_found — no partitioned parent was found in the supplied roots; this scan does not verify guard installation or database-engine behavior.\n",
+      "stderr": "",
+      "root_selector": "A temporary empty directory created for the focused assertion; machine-specific path omitted."
+    },
+    {
+      "name": "fleet references",
+      "argv": [
+        "python",
+        "-B",
+        "scripts/check_fleet_references.py",
+        "--skill",
+        "alaa-permission-generator",
+        "--skill",
+        "alaa-partitioned-table-fk-audit",
+        "--skill",
+        "alaa-mongodb-patterns"
+      ],
+      "cwd": ".",
+      "exit_code": 0,
+      "assertions_passed": true,
+      "stdout": "check_fleet_references.py: 3 of 69 skills, 21 Markdown files, 136 citations\n\nFINDINGS: none\n\nINFO (11 unmarked target-repository paths across 1 skills; these never fail the run)\n    11  alaa-permission-generator\n  Rerun with --show-info for every site, or --format json for all of them.\n  Mark each one as <repo>/<path> to retire it from this list.\n",
+      "stderr": ""
+    },
+    {
+      "name": "Markdown links",
+      "argv": [
+        "python",
+        "-B",
+        "skills/sohrab/alaa-repo-docs/scripts/check_markdown_links.py",
+        ".",
+        "--files",
+        "skills/sohrab/alaa-permission-generator/SKILL.md",
+        "skills/sohrab/alaa-partitioned-table-fk-audit/SKILL.md",
+        "skills/sohrab/alaa-mongodb-patterns/SKILL.md",
+        "skills/sohrab/alaa-mongodb-patterns/references/source-map.md",
+        "artifacts/skill-pack-optimization-20261018/lanes/AUDIT.md"
+      ],
+      "cwd": ".",
+      "exit_code": 0,
+      "assertions_passed": true,
+      "stdout": "Validated links in 5 Markdown file(s) under ..\n",
+      "stderr": ""
+    },
+    {
+      "name": "FK packaged description budget",
+      "argv": [
+        "python",
+        "-B",
+        "-c",
+        "import sys; sys.path.insert(0,'scripts'); from validate_sohrab_skill_pack import load_skill, packaged_description_length; from pathlib import Path; d=Path('skills/sohrab/alaa-partitioned-table-fk-audit'); f,_=load_skill(d); names=[p.name for p in Path('skills/sohrab').iterdir() if p.is_dir()]; n=packaged_description_length(f['description'],names)[1]; print(n); raise SystemExit(0 if n<=1024 else 1)"
+      ],
+      "cwd": ".",
+      "exit_code": 0,
+      "assertions_passed": true,
+      "stdout": "833\n",
+      "stderr": ""
+    }
+  ],
+  "preserved_initial_budget_failure": {
+    "packaged_chars": 1026,
+    "limit": 1024,
+    "resolution": "description shortened; final scoped measure is 833",
+    "evidence_source": "prior lane execution record"
+  },
+  "harness_attempts": {
+    "first_empty_root_assertion": "The command returned expected exit 4 and current output, but an obsolete wording substring assertion failed; corrected assertion passed on the same empty root.",
+    "temporary_directory_cleanup": "Python TemporaryDirectory cleanup encountered WinError 5 access denied; the root was left empty; no further deletion attempted.",
+    "first_description_measure": "Harness called packaged_description_length without required pack_skill_names argument; corrected selector uses load_skill and live skill-name directories, yielding 833."
+  },
+  "final_budget_pass": {
+    "packaged_chars": 833,
+    "limit": 1024
+  },
+  "covered_inputs": {
+    "rule": "Narrow frozen snapshot: all regular files under the three owned skill trees, the two gate scripts, the packaged-description helper, AUDIT.md, and the portable CLI assertion plus its inert fixture marker. Case-sensitive sorted relative POSIX path + NUL + raw bytes; SHA-256 over concatenated records. No unrelated artifact bytes are included. The Markdown-link inputs contain no Markdown-syntax links; fleet inline citations resolve sibling path existence dynamically, without reading sibling target contents.",
+    "files": [
+      {
+        "path": "artifacts/skill-pack-optimization-20261018/lanes/AUDIT-cli-assertion.py",
+        "bytes": 1029,
+        "sha256": "21be51d6d7b49cd2be89942131dca3cad30beb60f726010291ece8a6b1676200"
+      },
+      {
+        "path": "artifacts/skill-pack-optimization-20261018/lanes/AUDIT.md",
+        "bytes": 4215,
+        "sha256": "3d8ed78f94bc4d477489cfe2d2e1073fbea6b6c09303f5c54c40d53ae392657a"
+      },
+      {
+        "path": "artifacts/skill-pack-optimization-20261018/lanes/fixtures/empty-root/.keep",
+        "bytes": 95,
+        "sha256": "d5789cac15cff85127b930767f2a6af638f5c28ce65419ad817b5186ecce9f1f"
+      },
+      {
+        "path": "scripts/check_fleet_references.py",
+        "bytes": 48224,
+        "sha256": "a314954a6a6c5b4408514a281d7a7eff532fbbf9afb54feaf685059f85fa4781"
+      },
+      {
+        "path": "scripts/validate_sohrab_skill_pack.py",
+        "bytes": 58255,
+        "sha256": "d26e1a9bd3145710cfbda7eda3816754dd330681b00720fa541f7f83253dfc89"
+      },
+      {
+        "path": "skills/sohrab/alaa-mongodb-patterns/SKILL.md",
+        "bytes": 4083,
+        "sha256": "e69505d2ffc63316154ebcd13d12c517022b8bf44e9248c53b7dc9b2987d25f3"
+      },
+      {
+        "path": "skills/sohrab/alaa-mongodb-patterns/agents/openai.yaml",
+        "bytes": 395,
+        "sha256": "2e7e88e73bbe40c8c6a96a4a31207ffa91b38665f118fab820dcf0202d75d252"
+      },
+      {
+        "path": "skills/sohrab/alaa-mongodb-patterns/references/10-modeling-tenancy-and-collection-shape.md",
+        "bytes": 5478,
+        "sha256": "a7d6a212524fc7f296bcd4b443bd5d8594f3bad63ee9c8b82e6cc790d1ad360e"
+      },
+      {
+        "path": "skills/sohrab/alaa-mongodb-patterns/references/20-indexes-ttl-and-query-shape.md",
+        "bytes": 5721,
+        "sha256": "2d0bf0b4fc4de4eafc51296ed5362812095b23ec8e70607014c13a191ace4978"
+      },
+      {
+        "path": "skills/sohrab/alaa-mongodb-patterns/references/30-writes-consistency-and-change-streams.md",
+        "bytes": 7260,
+        "sha256": "ba50c9b0ccf87624b5e7c741564d402b15ed746db2bb80762bdf3486ac4244af"
+      },
+      {
+        "path": "skills/sohrab/alaa-mongodb-patterns/references/40-failure-configuration-and-observability.md",
+        "bytes": 8931,
+        "sha256": "f9921cbbb5c3578daab404dbee90e9faf9f7965ad7cd6b12d70beaeb44085f8a"
+      },
+      {
+        "path": "skills/sohrab/alaa-mongodb-patterns/references/50-applying-and-proving.md",
+        "bytes": 5566,
+        "sha256": "ca05bc120de118507dc8c0f33a6153c26a064291cde072ac44458945aad8f84d"
+      },
+      {
+        "path": "skills/sohrab/alaa-mongodb-patterns/references/source-map.md",
+        "bytes": 6459,
+        "sha256": "9571fcda383683bf3e03ef6c45675d4b80095c5c706a471a7b845096945c76ee"
+      },
+      {
+        "path": "skills/sohrab/alaa-partitioned-table-fk-audit/SKILL.md",
+        "bytes": 6243,
+        "sha256": "79a58adcbebdfac7a9b36e072425bf476455faf8dead025c12877e110ed9aafd"
+      },
+      {
+        "path": "skills/sohrab/alaa-partitioned-table-fk-audit/agents/openai.yaml",
+        "bytes": 444,
+        "sha256": "608f5df2a0283d53d4cf902f28f6fb5774f8b2ca024ce8fb96083dc4da92fe45"
+      },
+      {
+        "path": "skills/sohrab/alaa-partitioned-table-fk-audit/references/10-search-patterns-and-false-positives.md",
+        "bytes": 6205,
+        "sha256": "0e450e82f6ba58ce878bed110cea0dc94934827d2d0696e9784947954f0bbde4"
+      },
+      {
+        "path": "skills/sohrab/alaa-partitioned-table-fk-audit/references/20-lock-safety-and-the-fix.md",
+        "bytes": 5773,
+        "sha256": "ba9d49a48ca7c7772c1f4ed550c9c967eec431a8e7fc74acc96ee91c669f6b94"
+      },
+      {
+        "path": "skills/sohrab/alaa-partitioned-table-fk-audit/scripts/partitioned_fk_audit.py",
+        "bytes": 33703,
+        "sha256": "d0d1dc36d351e6e9ed558a1683b934a66ccdb15db77bec7009f8f3e461dcebbc"
+      },
+      {
+        "path": "skills/sohrab/alaa-permission-generator/SKILL.md",
+        "bytes": 14103,
+        "sha256": "87da55b9b4ebb4743cd50c9116fcfc0ee2ea6843266d906cef81da1526aaefc0"
+      },
+      {
+        "path": "skills/sohrab/alaa-permission-generator/agents/openai.yaml",
+        "bytes": 431,
+        "sha256": "cfa3af819bfebf7af3e22957ecfab8eeab44c3bf524fe53ed8afbac38d11c948"
+      },
+      {
+        "path": "skills/sohrab/alaa-permission-generator/assets/permission-bitmap/PermissionBitmap.php",
+        "bytes": 10310,
+        "sha256": "3397e4f6feef085046ba7f9116bdf18d358568a5615ccf9847977e471627156e"
+      },
+      {
+        "path": "skills/sohrab/alaa-permission-generator/assets/permission-bitmap/PermissionBitmapException.php",
+        "bytes": 2024,
+        "sha256": "0bf4533d75dc1e97d1fb58dd4c47ebbf8aeee7883b933e4fb0bc27f6f941be35"
+      },
+      {
+        "path": "skills/sohrab/alaa-permission-generator/assets/permission-bitmap/permission-bitmap.ts",
+        "bytes": 9610,
+        "sha256": "46a1110769447fc7e134e9eda382644d8b25b763c1f38fce89b36a0f6b65a066"
+      },
+      {
+        "path": "skills/sohrab/alaa-permission-generator/assets/permission-bitmap/permission_bitmap.go",
+        "bytes": 9148,
+        "sha256": "4370c3ac17e6ad2e337090db958b35426b4416c41ebdc8693347a487454a9d4c"
+      },
+      {
+        "path": "skills/sohrab/alaa-permission-generator/references/00-topic-map.md",
+        "bytes": 3280,
+        "sha256": "c8b090d96b926ef6627c2d98f4e5bbcd7816fda7aec6f4b5e8a60c08ee64aceb"
+      },
+      {
+        "path": "skills/sohrab/alaa-permission-generator/references/catalog-decoder-emission-proposal.md",
+        "bytes": 6406,
+        "sha256": "7ad56d75049176fc09f16398179d68d6705324bd570c32cdeaecca5953f12fa9"
+      },
+      {
+        "path": "skills/sohrab/alaa-permission-generator/references/catalog-workflow.md",
+        "bytes": 9130,
+        "sha256": "b164ef0dc0338e672ddfaf69d736c52e6317effd1719619788c1a2c2f8996b39"
+      },
+      {
+        "path": "skills/sohrab/alaa-permission-generator/references/command-surface.md",
+        "bytes": 5738,
+        "sha256": "86b508a142e7d7f5b5f5267e25fe66ac96c4235114daed929998d2fa37e1b324"
+      },
+      {
+        "path": "skills/sohrab/alaa-permission-generator/references/failure-modes.md",
+        "bytes": 7655,
+        "sha256": "ae681c308d9166cebae936b5ec118d0f5fa8d4f3eb449d99491142128edaead3"
+      },
+      {
+        "path": "skills/sohrab/alaa-permission-generator/references/go-consumer.md",
+        "bytes": 4459,
+        "sha256": "40440c6fb4cb9a6f105cfd029b9b46e83f8b49ad8f594c8f3331dddeed124191"
+      },
+      {
+        "path": "skills/sohrab/alaa-permission-generator/references/laravel-consumer.md",
+        "bytes": 3312,
+        "sha256": "c1a5b5437b33ff9d1ddba2da0944b51b36a9a2108148819048daf79e7f2e7a90"
+      },
+      {
+        "path": "skills/sohrab/alaa-permission-generator/references/lifecycle.md",
+        "bytes": 5067,
+        "sha256": "5ca0e66f43cddf987a378f2c37bde6443e2bb8beff78c8b3de78878e8ccfd25d"
+      },
+      {
+        "path": "skills/sohrab/alaa-permission-generator/references/shared-consumer-contract.md",
+        "bytes": 6649,
+        "sha256": "a8a317137a492b12757435def9a934db11fa63107b58eaf2d9137f2b25cffbe6"
+      },
+      {
+        "path": "skills/sohrab/alaa-permission-generator/references/typescript-consumer.md",
+        "bytes": 6924,
+        "sha256": "20c8f4b9619f2a01ebcd64381c06ed8161e82d6df41ad030c1cd5e2a66dd6971"
+      },
+      {
+        "path": "skills/sohrab/alaa-permission-generator/scripts/bitmap-conformance.sh",
+        "bytes": 22775,
+        "sha256": "2b3a3f6280727d678fc7e71df96684c5791f89084b8dd8d5a2c4f63d48ee41f7"
+      },
+      {
+        "path": "skills/sohrab/alaa-permission-generator/scripts/permission-bitmap-corpus.json",
+        "bytes": 20896,
+        "sha256": "d81be4b2642131e59cd1a6958e4ad34a4eda2ec74a7676a138198485eb4a52f0"
+      },
+      {
+        "path": "skills/sohrab/alaa-repo-docs/scripts/check_markdown_links.py",
+        "bytes": 45894,
+        "sha256": "93710100c27e349147b0f854b75987f1027359b7b7b5404ccb16b3a9c69e0e14"
+      }
+    ],
+    "count": 37,
+    "aggregate_sha256": "207134be8766d8e02d9bf7eeee92decff6516ecece0f758ec6a0d51756fd3611"
+  },
+  "historical_broad_observation": {
+    "count": 12636,
+    "aggregate_sha256": "9139e993bb3814b4ed901b8dda4599f6097578b831c7aba58686898f5caa7c59",
+    "scope_note": "A prior all-workspace walk; overinclusive while parallel writers were active, so not treated as the audit lane input snapshot. Its file list is intentionally omitted from the operative manifest."
+  },
+  "interpreter": {
+    "command": "python",
+    "observed_version": "Python 3.14.8"
+  },
+  "commands_count": 5,
+  "inline_assertions": [
+    {
+      "command_record": "FK CLI help wording",
+      "expected": "exit 0; help states no supplied-root parent means neither guard installation nor engine behavior is proven.",
+      "actual_exit": 0,
+      "passed": true
+    },
+    {
+      "command_record": "FK empty roots assertion",
+      "expected": "exit 4; RESULT says no parent was found in supplied roots and scan does not verify guard installation or database-engine behavior.",
+      "actual_exit": 4,
+      "passed": true,
+      "replay_source": "artifacts/skill-pack-optimization-20261018/lanes/AUDIT-cli-assertion.py"
+    }
+  ],
+  "reproducibility": {
+    "cli_assertion_source": "artifacts/skill-pack-optimization-20261018/lanes/AUDIT-cli-assertion.py",
+    "fixture_root": "artifacts/skill-pack-optimization-20261018/lanes/fixtures/empty-root",
+    "command": [
+      "python",
+      "-B",
+      "artifacts/skill-pack-optimization-20261018/lanes/AUDIT-cli-assertion.py"
+    ],
+    "executed_in_this_evidence_update": false,
+    "reason": "No product inputs changed; this source preserves the focused assertion for exact replay without rerunning it."
+  },
+  "portability_note": "Repository-root absolute path rendered as . for portability; historical command outcomes unchanged."
+}

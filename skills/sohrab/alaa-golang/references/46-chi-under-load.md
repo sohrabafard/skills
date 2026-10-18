@@ -21,7 +21,7 @@ one; a skill statement is not proof that the kit implements a feature.
 | One error-envelope mapper for the whole service | `errkit` | `/alaa-golang-clean-code-principles` (`$alaa-golang-clean-code-principles`) P4 |
 | Four-phase ordered shutdown with a fixed total budget | `runkit/lifecycle.go` | `45-failure-behavior-at-the-call-site.md` section 7 |
 | Two separate Postgres lanes: a transaction-pooled application pool and a fixed two-connection admin pool, with a scale-tier selector | `pgkit/pool.go`, `pgkit/tier.go` | `/alaa-data-layer` (`$alaa-data-layer`) owns which lane and which tier |
-| A Redis client with library retries disabled, a fixed short per-call timeout, a mandatory positive TTL on every write, a miss treated as a miss rather than an error, and readiness reported at degraded rather than required severity | `rediskit/config.go`, `rediskit/cache.go`, `rediskit/doc.go` | `61-redis-cache-layer.md` |
+| Redis client, cache adapter and readiness | `rediskit` source, re-verified through `/alaa-data-layer` `references/51-redis-golang.md` | `61-redis-cache-layer.md` owns cache mechanics |
 | Black-box conformance tests for the trust boundary, the error envelope, readiness, and the route inventory | `contracttest/` | `/alaa-go-chi-development` (`$alaa-go-chi-development`) |
 | Five build-enforced analyzers, including one that forbids `LISTEN/NOTIFY`, `SET`, and `pg_advisory_lock` under transaction pooling | `linttools/`, exposed as `make lint-*` targets | `/alaa-go-chi-development` (`$alaa-go-chi-development`) |
 

@@ -48,6 +48,8 @@ That second property and the rule against testing one behaviour at three layers 
 
 `references/90-test-economy.md` lists the unowed kinds with what the consumer tests instead.
 
+Before adding a discretionary test, review, specialist, proof tool or gate beyond the declared cadence or repository requirements, state its concrete uncovered risk and why existing evidence is insufficient. Without that answer, do not add it. Required checks remain required; record the answer in the plan's check list when admitted, otherwise in the existing evidence owner.
+
 ## Non-negotiables
 
 1. Every test names the failure it defends against, in the test's own name or in one comment beside it. A reader who cannot tell what a test protects can neither judge that deleting it is safe nor repair it when it breaks, so it is kept forever and skipped when inconvenient.
@@ -97,13 +99,16 @@ Six levels, named so a claim's strength can be stated in one word across every s
 
 A proof level says how strong one claim is. A **tier** says how much of the suite has earned the right to run at this moment. The two are independent, and conflating them is what produces a pipeline that runs the whole suite four times against a tree that changed once.
 
-Three tiers. Each has exactly one owner and exactly one moment, and no tier is run by the author of the change it is judging except the first.
+These scope definitions choose check breadth, not review timing. `alaa-codex-orchestrator` and `alaa-cc-orchestrator` `references/verification-and-gates.md` own the declared phase/final cadence, review authority and scheduling. Pass the workflow's whole-engagement boundary into nested orchestration.
 
 | Tier | What runs | Who runs it | When |
 |---|---|---|---|
-| **Focused** | the topic selectors of this change's failure-mode tests, plus lint, type, and build checks scoped to the touched files | the lane that wrote the change | at the end of every subtask, before that subtask is reported complete |
-| **Affected** | the selectors of every topic reachable from the changed surfaces — callers, shared fixtures, the contract tests of the touched surface — plus the acceptance criteria this phase claims | an authority other than the lane that wrote the change | once per phase, after the phase's lanes are reconciled |
-| **Exhaustive** | the whole suite under its normal configuration, then the race, end-to-end, and highest-level proofs the claims require | an authority other than any implementing lane | exactly once, on the final candidate tree, after every lane and every fix has landed |
+| **Focused** | the smallest test/path/scenario distinguishing the subtask's changed behavior from its plausible failure, plus necessary touched-file lint/type/build | the implementing lane | subtask end under the declared cadence |
+| **Task acceptance** | bounded acceptance selectors combining that task's subtasks, with still-valid coverage cited | the task owner | task end under the declared cadence |
+| **Affected** | selectors of topics reachable from changed surfaces, including callers, shared fixtures and contract checks | the required boundary observer | at the declared review boundary |
+| **Exhaustive** | the whole suite and only the race, end-to-end and higher-level proofs the claims require | independent final authority | once on the whole engagement's final candidate, when required |
+
+A subtask's short check adds no expensive setup or full suite. Reuse already available reset-safe infrastructure when needed; no fixed duration or blanket container prohibition follows. Move broader coverage to task acceptance or the declared boundary and preserve any stricter repository gate. Labels never narrow an actual command's scope.
 
 **The exhaustive tier is not an early-warning system.** Run on an intermediate tree it observes a combination that is about to change, so its result expires before it is read while its cost is charged in full — and the tree it was meant to judge still goes unobserved. Its whole value is that it runs on the tree that ships.
 
@@ -114,6 +119,8 @@ Three tiers. Each has exactly one owner and exactly one moment, and no tier is r
 A recorded result remains citable evidence for a later claim while **all four** of these are unchanged since it was observed: the tracked tree at the paths the check reads; the tool, runner, and dependency versions; the environment and service state the check depends on; and the flags, seed, configuration, and working directory it ran under. While all four hold, cite the result with its original command and timestamp. Re-running it produces no new information and its cost is real.
 
 When one of them changes, say which one, and re-run every result downstream of it. Two results are never reused whatever the four conditions say: the exhaustive tier on the final candidate, which is always fresh; and any result classified `FLAKY`, `CONTAMINATED`, `TIMEOUT`, or environment-blocked, which carries no evidence in either direction.
+
+A required final aggregate may discharge covered narrower checks only when the covered inputs, environment, flags and required observer match demonstrably; cite its coverage instead of dispatching those checks again. Markdown/templates may be checker inputs, so a documentation-only difference proves no equivalence. A phase transition, new agent or compaction alone invalidates nothing. Repair a defect and rerun its failing path; never weaken assertions, suppress findings, lower standards or alter fixtures to conceal a failure. `references/80-evidence-and-reporting.md` distinguishes a repaired input from an unchanged flaky rerun.
 
 ### A failing tier is classified before it is repaired
 
@@ -149,7 +156,7 @@ Selectors: per test, topic selector and layer selector
 Shared setup: per expensive resource, scope (run | package | worker) and per-test isolation
 Build reuse: per build, compile, render, or image -> the steps that consumed it
 Evidence: per claim -> command run, working directory, proof level reached, observed outcome, artifact path
-Tier: focused | affected | exhaustive -> run now, or cited from an earlier run with the four validity conditions named as still holding
+Tier: focused | task acceptance | affected | exhaustive -> run now, or cited from an earlier run with the four validity conditions named as still holding
 Flake: any intermittent result -> classified product defect | broken test -> action taken and owner
 Gaps: claims with no test, levels not reached and the blocker, quarantined tests and their deadlines
 ```

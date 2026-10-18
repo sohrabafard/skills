@@ -21,8 +21,8 @@ and stop.
    evicted or flushed cannot be the record of what happened.
 2. Read the service's configured lanes before applying a Postgres rule: `alaa-go-chi docs/CONSUMERS.md:23` runs
    `wa-api` on ClickHouse with no pgkit and no rediskit.
-3. Every cache entry carries an explicit TTL, enforced at `rediskit/cache.go:65-67`. An entry with no expiry
-   outlives the truth it copies.
+3. Every cache entry carries an explicit TTL. An entry with no expiry outlives the truth it copies;
+   `references/51-redis-golang.md` owns the kit enforcement evidence.
 4. Every index names the query or invariant justifying it. An unjustified index is write cost buying no read.
 5. Every migration reverses, or records inside itself why it cannot and how that is mitigated. An irreversible
    migration turns a rollback into an incident.

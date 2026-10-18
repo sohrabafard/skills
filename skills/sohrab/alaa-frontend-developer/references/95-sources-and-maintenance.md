@@ -66,5 +66,5 @@ contract are `/alaa-prompting-guide` (`$alaa-prompting-guide`) `references/50-ef
 5. Re-check that the two skills consuming `41-lighthouse-and-web-vitals.md` still route here rather than
    restating it.
 6. Re-test whether realistic prompts still load this skill implicitly after any change to the description.
-7. Every cross-skill call site carries both trigger forms, ``/alaa-x` (`$alaa-x`)``. `agents/openai.yaml`
-   is Codex-only and stays `$`-form.
+7. Follow `skills/sohrab/AGENTS.md` for single `/name` pack calls and its metadata and generated-prompt
+   exceptions.

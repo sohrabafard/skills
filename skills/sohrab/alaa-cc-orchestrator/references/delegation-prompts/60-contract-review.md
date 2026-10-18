@@ -4,7 +4,8 @@
 
 ```xml
 <task>Judge whether this contract transition is safe for existing consumers: <surface and shape change>.</task>
-<trigger>A public HTTP or RPC endpoint, event or message schema, shared DTO, SDK surface, or persisted serialization format changes shape. Dispatch in Phase A before code exists; dispatch in Phase D instead only when the contract change emerged during implementation.</trigger>
+<trigger>A public HTTP or RPC endpoint, event or message schema, shared DTO, SDK surface, or persisted serialization format changes shape. Record known triggers and decide consumer impact, compatibility and deprecation in Stage A; a newly discovered trigger reopens the affected plan and gate.</trigger>
+<review_boundary>Consume the inherited <cadence> through references/verification-and-gates.md. Judge only at its declared phase|final boundary: the complete phase candidate for phase, or whole-engagement candidate including pending earlier phases for final. Nested invocations never reset that scope. Return missing, conflicting or premature cadence to the parent without judgment.</review_boundary>
 <surfaces><old and new shape per field and per operation, with the schemas, serializers, and published specs that define them></surfaces>
 <consumers><known call sites, published specs, collections, client code, and the upgrade cadence of the slowest consumer></consumers>
 <versioning><existing versioning strategy, deprecation policy, and any window already promised></versioning>

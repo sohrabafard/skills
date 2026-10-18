@@ -1,0 +1,292 @@
+{
+  "purpose": "Immutable initial item-to-owning-issue routing; Beads alone owns progress and final dispositions. Cross-owner edits stay with their exclusive skill writer.",
+  "version": 1,
+  "task_mapping": [
+    {
+      "lane": "WF",
+      "issue": "alaa-6dh.2.1",
+      "items": [
+        "01:A43",
+        "01:A44",
+        "01:A49",
+        "01:A50",
+        "01:A51",
+        "01:B27",
+        "02:P1",
+        "02:P2",
+        "02:P6",
+        "02:O1",
+        "03:N6"
+      ],
+      "skills": [
+        "alaa-workflow",
+        "alaa-testing-strategy"
+      ]
+    },
+    {
+      "lane": "ORCH",
+      "issue": "alaa-6dh.2.2",
+      "items": [
+        "01:A36",
+        "01:A45",
+        "01:B28",
+        "02:P3",
+        "02:P4",
+        "02:P5",
+        "02:O20",
+        "03:N7"
+      ],
+      "skills": [
+        "alaa-codex-orchestrator",
+        "alaa-cc-orchestrator"
+      ]
+    },
+    {
+      "lane": "CTRL",
+      "issue": "alaa-6dh.2.3",
+      "items": [
+        "01:A6",
+        "01:A37",
+        "01:A38",
+        "01:A46",
+        "01:B10",
+        "01:B26",
+        "01:C3",
+        "02:P7",
+        "02:O21",
+        "03:N3",
+        "03:N5"
+      ],
+      "skills": [
+        "alaa-prompting-guide",
+        "alaa-low-noise",
+        "alaa-extract-agent-lessons",
+        "alaa-project-constitution",
+        "alaa-bash-shell"
+      ]
+    },
+    {
+      "lane": "MEMDOC",
+      "issue": "alaa-6dh.2.4",
+      "items": [
+        "01:A11",
+        "01:A13",
+        "01:A24",
+        "01:A25",
+        "01:A26",
+        "03:N4",
+        "03:N8"
+      ],
+      "skills": [
+        "alaa-memory-os",
+        "alaa-codex-runtime-ops",
+        "alaa-repo-docs",
+        "alaa-code-intelligence-routing"
+      ]
+    },
+    {
+      "lane": "SHARED",
+      "issue": "alaa-6dh.3.1",
+      "items": [
+        "01:A7",
+        "01:A8",
+        "01:A9",
+        "01:A21",
+        "01:A33",
+        "01:A41",
+        "01:A42",
+        "01:B6",
+        "01:B7",
+        "01:B8",
+        "01:B9",
+        "01:B14",
+        "01:B19",
+        "01:B21",
+        "01:C1",
+        "01:C2",
+        "02:O2",
+        "02:O18",
+        "03:N2"
+      ],
+      "skills": [
+        "alaa-services-contract",
+        "alaa-keyset-pagination",
+        "alaa-trust-gateway-auth",
+        "alaa-security-review",
+        "alaa-observability-soc",
+        "alaa-reliability-sla",
+        "vector-rust-observability-pipelines"
+      ]
+    },
+    {
+      "lane": "PHP",
+      "issue": "alaa-6dh.3.2",
+      "items": [
+        "01:A3",
+        "01:A4",
+        "01:A5",
+        "01:B1",
+        "01:B2",
+        "01:B4",
+        "01:B5",
+        "02:O10",
+        "02:O11"
+      ],
+      "skills": [
+        "alaa-php-clean-code",
+        "alaa-laravel-architecture",
+        "alaa-laravel-upgrade-all-packages",
+        "alaa-octane-performance",
+        "alaa-async-messaging",
+        "alaa-laravel-job-rabbitmq",
+        "alaa-laravel-public-api-contract-pack"
+      ]
+    },
+    {
+      "lane": "STORAGE",
+      "issue": "alaa-6dh.3.3",
+      "items": [
+        "01:A27",
+        "01:A28",
+        "01:A29",
+        "01:A30",
+        "01:A31",
+        "01:B24",
+        "02:O3",
+        "02:O5",
+        "02:O14"
+      ],
+      "skills": [
+        "alaa-minio-object-storage",
+        "alaa-arvan-object-storage",
+        "tusd-upload-platform"
+      ]
+    },
+    {
+      "lane": "PLATFORM",
+      "issue": "alaa-6dh.3.4",
+      "items": [
+        "01:A1",
+        "01:A2",
+        "01:A40",
+        "01:A47",
+        "01:A48",
+        "02:O12",
+        "02:O16",
+        "02:O17",
+        "03:N1"
+      ],
+      "skills": [
+        "caas-arvan-kuber",
+        "alaa-docker-production",
+        "alaa-haproxy",
+        "alaa-haproxy-lua",
+        "alaa-k8s-helm",
+        "alaa-gitlab-ci-cd",
+        "ansible-generator",
+        "ansible-validator"
+      ]
+    },
+    {
+      "lane": "GO",
+      "issue": "alaa-6dh.3.5",
+      "items": [
+        "01:A12",
+        "01:A14",
+        "01:A15",
+        "01:A16",
+        "01:A17",
+        "01:A18",
+        "01:B3",
+        "01:B15",
+        "01:B16",
+        "01:B17",
+        "01:B18",
+        "01:B20",
+        "02:O8",
+        "02:O9",
+        "02:O19",
+        "02:O24",
+        "02:O26"
+      ],
+      "skills": [
+        "alaa-golang",
+        "alaa-golang-clean-code-principles",
+        "alaa-go-chi-development",
+        "alaa-golang-fiber",
+        "alaa-data-layer",
+        "service-runtime-kit-governance"
+      ]
+    },
+    {
+      "lane": "UI",
+      "issue": "alaa-6dh.3.6",
+      "items": [
+        "01:A19",
+        "01:A20",
+        "01:A22",
+        "01:A23",
+        "01:A39",
+        "01:B11",
+        "01:B12",
+        "01:B13",
+        "02:O6",
+        "02:O13"
+      ],
+      "skills": [
+        "alaa-frontend-developer",
+        "alaa-frontend-devops",
+        "alaa-vue-typescript-clean-code",
+        "alaa-quasar-app-vite-v3",
+        "alaa-ui-ux-design-system"
+      ]
+    },
+    {
+      "lane": "PLAYER",
+      "issue": "alaa-6dh.3.7",
+      "items": [
+        "01:B23",
+        "02:O4",
+        "02:O27"
+      ],
+      "skills": [
+        "alaa-shaka-player",
+        "alaa-indexeddb-browser-storage"
+      ]
+    },
+    {
+      "lane": "AUDIT",
+      "issue": "alaa-6dh.3.8",
+      "items": [
+        "01:A10",
+        "01:A34",
+        "01:A35",
+        "02:O7",
+        "02:O15",
+        "02:O25"
+      ],
+      "skills": [
+        "alaa-permission-generator",
+        "alaa-partitioned-table-fk-audit",
+        "alaa-mongodb-patterns"
+      ]
+    },
+    {
+      "lane": "SIGNALS",
+      "issue": "alaa-6dh.3.9",
+      "items": [
+        "01:A32",
+        "01:B22",
+        "01:B25",
+        "02:O22",
+        "02:O23"
+      ],
+      "skills": [
+        "alaa-bale-provider",
+        "alaa-sms-provider-mediana",
+        "alaa-signoz-clickhouse-docs",
+        "clickhouse-performance-schema-ops"
+      ]
+    }
+  ]
+}

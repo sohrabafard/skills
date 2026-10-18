@@ -100,6 +100,15 @@ which is stated so that no agent reads a neighbour's code and concludes the rule
   excuses the other.
 - Per-service status and the migration owner are in `95-fleet-conformance.md`.
 
+## List page-size values
+
+For Ala list routes governed by /alaa-keyset-pagination's `cursor`/`limit` contract, `limit` defaults
+to `20` and has a maximum of `100`. A higher maximum requires the route's documented measured reason
+and a recorded exception in this contract before use. Prove the route's query at its exact maximum;
+an out-of-range limit is rejected, never clamped, under `25-end-to-end-flow-and-boundaries.md`.
+These are the existing keyset defaults relocated to their value owner; they establish no current
+runtime conformance and add no limit to a distinct admin-offset envelope.
+
 ## Outbound timeout defaults
 
 These are the Ala defaults for an internal service-to-service hop. They are configurable per service

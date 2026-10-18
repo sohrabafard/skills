@@ -1,0 +1,105 @@
+{
+  "changed": [
+    {
+      "path": "skills/sohrab/alaa-codex-orchestrator/agents/alaa-architecture-critic.toml",
+      "before_sha256": "e1405186950d252e187c6c591220cafbc3f44b6a2d3ac83df83774cb10d9533a",
+      "after_sha256": "cc9d3123bd17243b678085fb6b06af6227b33fd1bfed8720500bb5753a6d0c0b",
+      "bytes_before": 3896,
+      "bytes_after": 4371,
+      "baseline_crlf": 9
+    },
+    {
+      "path": "skills/sohrab/alaa-codex-orchestrator/assets/manifest.json",
+      "before_sha256": "5f72de0f9b03688aeba275d9e8775b1efe07d6ba779e60f5ed2078146b8f579f",
+      "after_sha256": "8a0d92ad25755d5869546ebdb8bba2632db97d29c062472ffc5a0ca982cc4b0f",
+      "bytes_before": 6212,
+      "bytes_after": 6212,
+      "baseline_crlf": 0
+    },
+    {
+      "path": "skills/sohrab/alaa-codex-orchestrator/references/delegation-prompts/20-design.md",
+      "before_sha256": "d0484017b7983c25ff877d147181b6fe31085d8e20bdd71dc9a333a62382c743",
+      "after_sha256": "c4d6bff7f9b5ae47e79812bf2a9d990f55d3e6cdb1f7e5c504a9aef3c0ebd33d",
+      "bytes_before": 1799,
+      "bytes_after": 2206,
+      "baseline_crlf": 0
+    },
+    {
+      "path": "skills/sohrab/alaa-codex-orchestrator/references/delegation-prompts/60-contract-review.md",
+      "before_sha256": "6f2531057cae4b4f3ec402fa7e5a9e5c1258acfe438a98dc7b1d757acbc56df8",
+      "after_sha256": "bd11308289f5dcde5044e8f036d64774d345099f7c3701eafbbc809e89831e21",
+      "bytes_before": 2107,
+      "bytes_after": 2533,
+      "baseline_crlf": 0
+    },
+    {
+      "path": "skills/sohrab/alaa-codex-orchestrator/scripts/check_agent_contracts.py",
+      "before_sha256": "01c4edc1cf86e9e32ed6f48b571b337134e9e06616907642d9c8199454348d38",
+      "after_sha256": "7c18753903b102deae8471e3ba319abf1f48b3f2895fafba31420ad647d10d3c",
+      "bytes_before": 37548,
+      "bytes_after": 42917,
+      "baseline_crlf": 0
+    },
+    {
+      "path": "skills/sohrab/alaa-cc-orchestrator/agents/alaa-architecture-critic.md",
+      "before_sha256": "94c291dc2493fe4bfd87694ca9443a1a11a22f6c9fd909c506f1a4827ee7d08c",
+      "after_sha256": "e43ac34106b931403777691bb88b4d51fd98ef342f6903cf033db22e97016de2",
+      "bytes_before": 4238,
+      "bytes_after": 4666,
+      "baseline_crlf": 53
+    },
+    {
+      "path": "skills/sohrab/alaa-cc-orchestrator/assets/manifest.json",
+      "before_sha256": "fb0c814f7f2aa60e5e11940caef819842e459eb980795dee9891e9850dabbe36",
+      "after_sha256": "c3f33a85d3848ee5759f7b50a4915da489afe5325fd3fdd779a0ac301eabeaee",
+      "bytes_before": 5403,
+      "bytes_after": 5403,
+      "baseline_crlf": 0
+    },
+    {
+      "path": "skills/sohrab/alaa-cc-orchestrator/references/delegation-prompts/20-design.md",
+      "before_sha256": "d0484017b7983c25ff877d147181b6fe31085d8e20bdd71dc9a333a62382c743",
+      "after_sha256": "c4d6bff7f9b5ae47e79812bf2a9d990f55d3e6cdb1f7e5c504a9aef3c0ebd33d",
+      "bytes_before": 1799,
+      "bytes_after": 2206,
+      "baseline_crlf": 0
+    },
+    {
+      "path": "skills/sohrab/alaa-cc-orchestrator/references/delegation-prompts/60-contract-review.md",
+      "before_sha256": "6f2531057cae4b4f3ec402fa7e5a9e5c1258acfe438a98dc7b1d757acbc56df8",
+      "after_sha256": "bd11308289f5dcde5044e8f036d64774d345099f7c3701eafbbc809e89831e21",
+      "bytes_before": 2107,
+      "bytes_after": 2533,
+      "baseline_crlf": 0
+    },
+    {
+      "path": "skills/sohrab/alaa-cc-orchestrator/scripts/check_agent_contracts.py",
+      "before_sha256": "aafcd4ce05f7ed3357b5e26159fffccbab13a6d342cef745a1ce44d3981192af",
+      "after_sha256": "e54f9b7e8cac1b3dedfc9f5d19de78487df0da675fb240630a6db2942100dc23",
+      "bytes_before": 38215,
+      "bytes_after": 43582,
+      "baseline_crlf": 0
+    }
+  ],
+  "changed_candidate_sha256": "f562977a199b3d73721559fcc4e72247e71f7b82902078ad1d04fa8e1181c4b0",
+  "controls_grants": {
+    "alaa-codex-orchestrator": {
+      "changed_keys": [
+        "description",
+        "developer_instructions"
+      ],
+      "sandbox_unchanged": true,
+      "neutral": true
+    },
+    "alaa-cc-orchestrator": {
+      "metadata_except_description_unchanged": true
+    }
+  },
+  "read_provenance": "133 owned files fully decoded/read (834177 baseline bytes); Python scripts parsed as code; relevant gate/template/checker/projection text directly inspected; identical runtime sources reused after byte comparison.",
+  "evidence_probe_repair": "Initial CC metadata assertion failed because baseline was CRLF and frontmatter split was LF-only. One evidence-probe repair normalized baseline newlines; source unchanged; repaired retry passed.",
+  "limits": [
+    "No broad checker/self-test/validate_pack aggregate run by this lane.",
+    "No live instruction compliance, installation/activation or serving-identity proof.",
+    "Independent acceptance remains with the parent final review stage."
+  ]
+}

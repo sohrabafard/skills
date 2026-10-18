@@ -13,9 +13,10 @@
 ## Architecture critic
 
 ```xml
-<task>Pressure-test this proposed architecture before implementation: <plan>.</task>
+<task>Pressure-test this architecture and its implemented candidate: <plan and candidate>.</task>
+<review_boundary>Consume the inherited <cadence> through references/verification-and-gates.md. Judge only at its declared phase|final boundary: the complete phase candidate for phase, or whole-engagement candidate including pending earlier phases for final. Nested invocations never reset that scope. Return missing, conflicting or premature cadence to the parent without judgment.</review_boundary>
 <standard>Judge it against /alaa-system-design, which owns this design method: the six conditions requiring a design pass, the boundary and seam tests, contract-before-code, one writer per datum with every second copy labelled cache or fork, the dependency classification, and the two-candidate rule. Its references/70-review-and-readiness.md states what blocks at each step.</standard>
-<design_record><path to the design record under review, or a statement that no design pass was run and which of the six conditions fired></design_record>
+<design_record><pre-implementation design record; if absent, state which design-pass condition fired and report the missing record></design_record>
 <invariants><required correctness, compatibility, security, and operability invariants></invariants>
 <evidence><architecture docs, relevant code paths, external contracts></evidence>
 <question>Find blockers, hidden assumptions, simpler alternatives, rollout/rollback conditions.</question>

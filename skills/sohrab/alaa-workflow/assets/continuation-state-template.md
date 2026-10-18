@@ -3,6 +3,7 @@
 - Plan: `{{plan_path}}`
 - Status: planning
 - Current phase: Phase 1
+{{cursor_fields}}- Pending review/commit: See the plan's declared review boundary and commit authority.
 - Last verified result: not run
 - Blockers: none known
 - Next action: Complete the plan's repository-grounding fields.

@@ -1,0 +1,676 @@
+{
+  "head": "1a0799de71254427973f1253d80b846fea9acf10",
+  "branch": "main",
+  "manifest_rule": "sorted relative path UTF-8 + NUL + file bytes, excluding pre-existing pycache",
+  "source_snapshot_sha256": "9fe259bb17c9dee945e950a99160b35b899eb965cd93db51c6aca138288873ea",
+  "sources": [
+    {
+      "path": "scripts/check_fleet_references.py",
+      "sha256": "a314954a6a6c5b4408514a281d7a7eff532fbbf9afb54feaf685059f85fa4781",
+      "bytes": 48224
+    },
+    {
+      "path": "skills/sohrab/alaa-code-intelligence-routing/SKILL.md",
+      "sha256": "2d1ad4d9815f8390ffca15de5782f728063dcc0a6adc7b4873947aeadbbc9946",
+      "bytes": 2904
+    },
+    {
+      "path": "skills/sohrab/alaa-code-intelligence-routing/agents/openai.yaml",
+      "sha256": "06eb9ca9ba14a313857cc18c6ca86dcb7797467672c34ea9e3e174b4a37b495c",
+      "bytes": 396
+    },
+    {
+      "path": "skills/sohrab/alaa-code-intelligence-routing/references/00-topic-map.md",
+      "sha256": "8c8dc7fc4647a18c657e31b788c4dbede9b635fb58d72706d1cc3392b3d64adb",
+      "bytes": 1941
+    },
+    {
+      "path": "skills/sohrab/alaa-code-intelligence-routing/references/10-routing-contract.md",
+      "sha256": "1d6dda3d69a73aaf1aa7c1767a8897e6f56ecbff6d173c5a1c2e58ffe610ad61",
+      "bytes": 9362
+    },
+    {
+      "path": "skills/sohrab/alaa-code-intelligence-routing/references/20-documentation-routing.md",
+      "sha256": "b9bdcb3f0817a0f5afecf6f28fcb95b96697ab48a2dc10b151de517ff0b1ae52",
+      "bytes": 1372
+    },
+    {
+      "path": "skills/sohrab/alaa-code-intelligence-routing/references/30-artifact-boundaries.md",
+      "sha256": "4ee103943242f32c2ad8ebe30fb6a87f1edcbc8502bbc25233a1c7373fe187de",
+      "bytes": 1618
+    },
+    {
+      "path": "skills/sohrab/alaa-code-intelligence-routing/references/40-stack-bindings.md",
+      "sha256": "f284fa5c578f12863341a5860bcd4784b3d51a445c8c4f610c8f6f28c7d9d4c1",
+      "bytes": 8253
+    },
+    {
+      "path": "skills/sohrab/alaa-code-intelligence-routing/references/45-native-tools.md",
+      "sha256": "78043dfbae47ee7ebe791e3dd40df3323678720cd684375b0c32414c6b07e131",
+      "bytes": 6110
+    },
+    {
+      "path": "skills/sohrab/alaa-code-intelligence-routing/references/50-hooks.md",
+      "sha256": "3131f4f12f241e09bbe2d7a3a3cd5d0529d7da2544f888f90851973523ba70f8",
+      "bytes": 5743
+    },
+    {
+      "path": "skills/sohrab/alaa-code-intelligence-routing/references/60-evaluation.md",
+      "sha256": "9bbdd4ed3e82fa5e36d48b175e64a202a42bb5e88cb0dc1e0eb2b7c738135a3d",
+      "bytes": 3579
+    },
+    {
+      "path": "skills/sohrab/alaa-code-intelligence-routing/references/70-project-bindings.md",
+      "sha256": "c4ef14e6e8db7ec31907d5352b7682469773a22ab3e1b4d75556ff5252127219",
+      "bytes": 2901
+    },
+    {
+      "path": "skills/sohrab/alaa-code-intelligence-routing/references/80-agent-scoping.md",
+      "sha256": "19204a0bb915018c25554513ec9a4841a0bad09da9ae8fd8782fdb4a4db85bd7",
+      "bytes": 2866
+    },
+    {
+      "path": "skills/sohrab/alaa-code-intelligence-routing/references/90-source-map.md",
+      "sha256": "5cb082647fa28e947f071b79a31cf5f0031830d229dc2bc7c882ff6229f1a2dc",
+      "bytes": 4079
+    },
+    {
+      "path": "skills/sohrab/alaa-codex-runtime-ops/SKILL.md",
+      "sha256": "f82daba8978849b9d637dc50762ebbab9ba6080cbbc6286666f6e235a29c220a",
+      "bytes": 9694
+    },
+    {
+      "path": "skills/sohrab/alaa-codex-runtime-ops/agents/openai.yaml",
+      "sha256": "2caa50779c97df03a9fcc375e42bc7fb8b0a72276b82420404420f80e9f318c3",
+      "bytes": 230
+    },
+    {
+      "path": "skills/sohrab/alaa-codex-runtime-ops/references/00-topic-map.md",
+      "sha256": "c8f57120b6441541875910a87f97bebd86f47288fbdf209efc6f9f30cf2dc3f1",
+      "bytes": 2164
+    },
+    {
+      "path": "skills/sohrab/alaa-codex-runtime-ops/references/10-windows-sandbox-recovery.md",
+      "sha256": "5e73f58eac385749a8080f5369f337c26bdee3aa8eca69ee71ba559408a6d2a5",
+      "bytes": 1805
+    },
+    {
+      "path": "skills/sohrab/alaa-codex-runtime-ops/references/20-command-and-path-discipline.md",
+      "sha256": "114df610dad2e366c92dd5d01cde2ef9161ebf4446f4d937fb562d92e5918191",
+      "bytes": 7361
+    },
+    {
+      "path": "skills/sohrab/alaa-codex-runtime-ops/references/30-git-session-and-locked-file-recovery.md",
+      "sha256": "ca289df3ef8b0f8519ed7344ecfaf502781a26a4fa93d6a64dd2b443849f0ef8",
+      "bytes": 3987
+    },
+    {
+      "path": "skills/sohrab/alaa-codex-runtime-ops/references/40-project-fallbacks.md",
+      "sha256": "43d9eaed0b909089a14effa43b08a90847d7d4b2f49afacc3703e7cbde4e13d7",
+      "bytes": 1937
+    },
+    {
+      "path": "skills/sohrab/alaa-codex-runtime-ops/references/90-source-map.md",
+      "sha256": "5fb06e004478dd412fe21d70be47fc12de9bf7755170a9dc6d6b46c1dbedd043",
+      "bytes": 997
+    },
+    {
+      "path": "skills/sohrab/alaa-memory-os/SHA256SUMS",
+      "sha256": "0d83f0b9fb8a734a72939d5f02629a68eff545caae5960d4d5a61d69a5a058f2",
+      "bytes": 3932
+    },
+    {
+      "path": "skills/sohrab/alaa-memory-os/SKILL.md",
+      "sha256": "d227cea7faafcbb443688390123da9e8d2e5c05e69e2ffab580506a717789429",
+      "bytes": 14543
+    },
+    {
+      "path": "skills/sohrab/alaa-memory-os/agents/openai.yaml",
+      "sha256": "53219a320e796f2ce1e71bfcb9f5fec4bfc1623723b4eaddda865337d2fd08a2",
+      "bytes": 440
+    },
+    {
+      "path": "skills/sohrab/alaa-memory-os/references/00-topic-map.md",
+      "sha256": "3657d0a1b0abefb271130562f46fca7d5efbb71b9935d369a11c2105307c54c9",
+      "bytes": 1463
+    },
+    {
+      "path": "skills/sohrab/alaa-memory-os/references/checkers-and-hooks.md",
+      "sha256": "4a5ed7306900dabca7dfe24b747fc0453cb1750963048b94f76de5e1fb85d875",
+      "bytes": 9600
+    },
+    {
+      "path": "skills/sohrab/alaa-memory-os/references/drift-management.md",
+      "sha256": "8f1e86623662121cfe82c5a36368507da10eba40acf7eb6337a604508e4deb0d",
+      "bytes": 7367
+    },
+    {
+      "path": "skills/sohrab/alaa-memory-os/references/hindsight-setup.md",
+      "sha256": "d6d2dd54a72b0136397140a17571f0cdac0034b79fabbcb9a89849145ad7bd86",
+      "bytes": 9434
+    },
+    {
+      "path": "skills/sohrab/alaa-memory-os/references/knowledge-shape.md",
+      "sha256": "cd240790b4a78dd661104795ffbcc4dcd0b847d383602bd8473b3ac88b60732a",
+      "bytes": 5886
+    },
+    {
+      "path": "skills/sohrab/alaa-memory-os/references/prompt-3-publishing.md",
+      "sha256": "6a90ac3542bf02c06dc94dab99ecd58b4fc34e44b22b84db0512e8639dc38e9e",
+      "bytes": 4177
+    },
+    {
+      "path": "skills/sohrab/alaa-memory-os/references/skill-boundaries.md",
+      "sha256": "b23a6d15ce34aea76db24c79a87c0b8ad06c06cf410bb53f0764d297398034c4",
+      "bytes": 4465
+    },
+    {
+      "path": "skills/sohrab/alaa-memory-os/references/store-basic-memory.md",
+      "sha256": "1d76244371c4bbed1eb451ac2a3ea5c271f81412c00cc9612b683a6b8a996858",
+      "bytes": 9988
+    },
+    {
+      "path": "skills/sohrab/alaa-memory-os/references/store-hindsight.md",
+      "sha256": "34247552ddce6d277b5fb167b50473937cf7b920f7193357297f29d724806240",
+      "bytes": 3628
+    },
+    {
+      "path": "skills/sohrab/alaa-memory-os/references/store-local.md",
+      "sha256": "f066008d93c9e54886d4929ab0abcea99b62dbf79c89458f927b433ae61339cb",
+      "bytes": 7618
+    },
+    {
+      "path": "skills/sohrab/alaa-memory-os/scripts/_common.ps1",
+      "sha256": "7df9fc583124f497bedc89314d25092d967b74597fbfc3f2be31999cc6c78ab3",
+      "bytes": 8190
+    },
+    {
+      "path": "skills/sohrab/alaa-memory-os/scripts/alaa_memory_health.ps1",
+      "sha256": "70b189a87cb48dd85cd30cabd0cd1c15872deebce9b5f200787baacaefbb3e04",
+      "bytes": 4017
+    },
+    {
+      "path": "skills/sohrab/alaa-memory-os/scripts/alaa_memory_post_task.ps1",
+      "sha256": "6e44329e071e75a7ad892c85c764a0eceebc2c3d0c77eb8dacf7c8c596ee523d",
+      "bytes": 4673
+    },
+    {
+      "path": "skills/sohrab/alaa-memory-os/scripts/alaa_memory_reindex.ps1",
+      "sha256": "46e73ff71f98c6c781fbaec5599168f20709d5c6036cca0ac0cf35cded8ef9c8",
+      "bytes": 2300
+    },
+    {
+      "path": "skills/sohrab/alaa-memory-os/scripts/alaa_memory_staleness.ps1",
+      "sha256": "04d88da3ebb4076d1437a8f97a026c5b3d7dfaed4df364a22dab177a3f2a7779",
+      "bytes": 9036
+    },
+    {
+      "path": "skills/sohrab/alaa-memory-os/scripts/alaa_obsidian_linkcheck.ps1",
+      "sha256": "41cd06386c513359912a520784e61844a609d84c0c992fa1b4f110953b126c1a",
+      "bytes": 8489
+    },
+    {
+      "path": "skills/sohrab/alaa-memory-os/scripts/precompact_checkpoint.ps1",
+      "sha256": "cb3c84d6158a507d6a17ef4313c8ad2e611689343844f68d75867f5f2215f28f",
+      "bytes": 615
+    },
+    {
+      "path": "skills/sohrab/alaa-memory-os/scripts/session_start_context.ps1",
+      "sha256": "5b4c32778dea8dbf7d8476622f3fb63e6f918a5c398124f78cc568c3e8c8b74e",
+      "bytes": 3100
+    },
+    {
+      "path": "skills/sohrab/alaa-memory-os/test/fixtures/README.md",
+      "sha256": "95b11daa96f502150b22219394b6105dead3b39987d5f9f77c3dd80ba3a41197",
+      "bytes": 1470
+    },
+    {
+      "path": "skills/sohrab/alaa-memory-os/test/fixtures/checker-empty/empty.md",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "bytes": 0
+    },
+    {
+      "path": "skills/sohrab/alaa-memory-os/test/fixtures/green-vault/A.md",
+      "sha256": "29eb755b695100a34c7c8ea2fe5270abfe2a641016f6a9a6d2d45b85a3b68ac1",
+      "bytes": 366
+    },
+    {
+      "path": "skills/sohrab/alaa-memory-os/test/fixtures/green-vault/B.md",
+      "sha256": "31c05dedcde36f7f1f0744f974459f1e4420478ca3fe153fa06b4809288afdaa",
+      "bytes": 299
+    },
+    {
+      "path": "skills/sohrab/alaa-memory-os/test/fixtures/hooks/closed/archived.md",
+      "sha256": "19eb164f36374d1153bde0eed95c478b6095b42076119e716449bee32a7399ce",
+      "bytes": 49
+    },
+    {
+      "path": "skills/sohrab/alaa-memory-os/test/fixtures/hooks/closed/empty.md",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "bytes": 0
+    },
+    {
+      "path": "skills/sohrab/alaa-memory-os/test/fixtures/hooks/closed/resolved.md",
+      "sha256": "0e5ec3ecc5a5225ffdc31b7aab2a1e5416aa384369389deae6415ade6415c1cd",
+      "bytes": 49
+    },
+    {
+      "path": "skills/sohrab/alaa-memory-os/test/fixtures/hooks/open/analyzed.md",
+      "sha256": "4add89e631ee84668fd17e2daf668912e8442eaac498028cd1e2f7570c65b8b8",
+      "bytes": 49
+    },
+    {
+      "path": "skills/sohrab/alaa-memory-os/test/fixtures/hooks/open/records.md",
+      "sha256": "9eceb452641eb1e7887d8e46d2e0fd2cc5aa7b8b285eb911603ebc3707fc9c24",
+      "bytes": 78
+    },
+    {
+      "path": "skills/sohrab/alaa-memory-os/test/fixtures/hooks/silent-store.ps1",
+      "sha256": "6945b1de64a8c16bae85c54a19eb87b6a2e00ae340393e0da4e739a7cd74fb48",
+      "bytes": 238
+    },
+    {
+      "path": "skills/sohrab/alaa-memory-os/test/fixtures/hooks/transcript.jsonl",
+      "sha256": "616155c1bf5ca57cdf15f78d9c72d89290c2af33abdb8f2fa9f1803ff6b28ce6",
+      "bytes": 117
+    },
+    {
+      "path": "skills/sohrab/alaa-memory-os/test/fixtures/red-vault/A.md",
+      "sha256": "cae242d5a488a0181b8b0b859be7073b3a6e0e64e43b2a59de790d5a1f294056",
+      "bytes": 520
+    },
+    {
+      "path": "skills/sohrab/alaa-memory-os/test/fixtures/red-vault/B.md",
+      "sha256": "35b4c47674a6a071846cd2f9548ed25b94e00661d06b21c460f133d77efac092",
+      "bytes": 452
+    },
+    {
+      "path": "skills/sohrab/alaa-memory-os/test/fixtures/red-vault/Orphan Note.md",
+      "sha256": "1a2f860017253e2fdebbd0de48daeb0addfb836f83159aad56a65f30493dd3ce",
+      "bytes": 393
+    },
+    {
+      "path": "skills/sohrab/alaa-memory-os/test/fixtures/stub-store/store_clean.ps1",
+      "sha256": "887f37095c0a329e686a825d0c0b575f5da7d18c3f14527553c1e583905734ea",
+      "bytes": 638
+    },
+    {
+      "path": "skills/sohrab/alaa-memory-os/test/fixtures/stub-store/store_reports_problem.ps1",
+      "sha256": "6917ff3e62cd8e0829cd60c9d5e2168f7241d907a23c2df7e3d15c79f6212f27",
+      "bytes": 220
+    },
+    {
+      "path": "skills/sohrab/alaa-memory-os/test/run-tests.ps1",
+      "sha256": "41ac4407a9015c87b0561583ae7a34f9ed703ae3ca8966e978098a22cdf430f5",
+      "bytes": 2979
+    },
+    {
+      "path": "skills/sohrab/alaa-memory-os/test/test-checker-input-failures.py",
+      "sha256": "6caeb3560fba4e941b5d90fb6d3229e0bd1af82446beb05d8c2d588f362a868b",
+      "bytes": 3749
+    },
+    {
+      "path": "skills/sohrab/alaa-memory-os/test/test-hook-safety.py",
+      "sha256": "d82c5794ed058b29391da402d2b7f9fcf27bc3499b3a167a3b20a02ea0e044b1",
+      "bytes": 6509
+    },
+    {
+      "path": "skills/sohrab/alaa-repo-docs/SKILL.md",
+      "sha256": "874600c2f12a256dc5e58dfccb7f56909aa9bdc1ca8267a65dab9f9ba3e672b7",
+      "bytes": 10355
+    },
+    {
+      "path": "skills/sohrab/alaa-repo-docs/agents/openai.yaml",
+      "sha256": "2f1db5765edaae33464b49d11addb616673b322a7b4869efc67fa440afb6a536",
+      "bytes": 521
+    },
+    {
+      "path": "skills/sohrab/alaa-repo-docs/assets/fixtures/broken-link/a.md",
+      "sha256": "3b51dbcd38a9f4cbce2b42de2a76309056c6e7b92963ca2834e430414bbe8d8c",
+      "bytes": 61
+    },
+    {
+      "path": "skills/sohrab/alaa-repo-docs/assets/fixtures/clean/generics.md",
+      "sha256": "43f1b3199eb0e48205ed31166923201f9f2bb7d436e34330eef422205b1ce941",
+      "bytes": 477
+    },
+    {
+      "path": "skills/sohrab/alaa-repo-docs/assets/fixtures/clean/note.fa.md",
+      "sha256": "683b194df4c2cf6cfd57a5e657685452912bb5bc4d45e08fc61c92a0c619e233",
+      "bytes": 459
+    },
+    {
+      "path": "skills/sohrab/alaa-repo-docs/assets/fixtures/clean/note.md",
+      "sha256": "a1a401410ab3c8f03dc1a8fda23670a6502056ff325a5592490e5e9a24b6599c",
+      "bytes": 320
+    },
+    {
+      "path": "skills/sohrab/alaa-repo-docs/assets/fixtures/inline-code-anchor/guide.md",
+      "sha256": "2564c60c63cb14a685d3dc8f137eb95f6ca0107d1813ee3da960d89577b97b9e",
+      "bytes": 486
+    },
+    {
+      "path": "skills/sohrab/alaa-repo-docs/assets/fixtures/mirror/drift/consumer/mirror.json",
+      "sha256": "40344bd954484cfa141ac7d676bbe21b644ebf93dc6567bd23afc157e603540e",
+      "bytes": 139
+    },
+    {
+      "path": "skills/sohrab/alaa-repo-docs/assets/fixtures/mirror/drift/consumer/pkg/docs/contracts/svc/api.md",
+      "sha256": "07e724e6bb57f66d97993179eb0e50911e6f3ec24fcbce75ba393593142d78d6",
+      "bytes": 56
+    },
+    {
+      "path": "skills/sohrab/alaa-repo-docs/assets/fixtures/mirror/drift/consumer/pkg/docs/contracts/svc/index.md",
+      "sha256": "9b23085a3a34c823f4108c123cefca8c5db28cfa28f11d055a6ed5d488ea665a",
+      "bytes": 20
+    },
+    {
+      "path": "skills/sohrab/alaa-repo-docs/assets/fixtures/mirror/drift/origin/svc-repo/docs/contracts/svc/api.md",
+      "sha256": "07e724e6bb57f66d97993179eb0e50911e6f3ec24fcbce75ba393593142d78d6",
+      "bytes": 56
+    },
+    {
+      "path": "skills/sohrab/alaa-repo-docs/assets/fixtures/mirror/drift/origin/svc-repo/docs/contracts/svc/index.md",
+      "sha256": "f6ba3dac5fc71803f0ce60441adc2a2cc1cec012256a2366075ffe89a1bf980d",
+      "bytes": 21
+    },
+    {
+      "path": "skills/sohrab/alaa-repo-docs/assets/fixtures/mirror/escape/consumer/mirror.json",
+      "sha256": "40344bd954484cfa141ac7d676bbe21b644ebf93dc6567bd23afc157e603540e",
+      "bytes": 139
+    },
+    {
+      "path": "skills/sohrab/alaa-repo-docs/assets/fixtures/mirror/escape/consumer/pkg/docs/contracts/svc/api.md",
+      "sha256": "00a514cf1923ac1944e901f36778de9f9893f596ae0b232195f09992599f535a",
+      "bytes": 146
+    },
+    {
+      "path": "skills/sohrab/alaa-repo-docs/assets/fixtures/mirror/escape/origin/README.md",
+      "sha256": "0a6b362396903b3c5b6bb8ad3de77a056e203234c77e44b69ff8459f62f08f1d",
+      "bytes": 32
+    },
+    {
+      "path": "skills/sohrab/alaa-repo-docs/assets/fixtures/mirror/escape/origin/svc-repo/README.md",
+      "sha256": "50168de904b420f4cc46b7a86f0bed869b1291c50ee51d9ec638bc5c14739112",
+      "bytes": 6
+    },
+    {
+      "path": "skills/sohrab/alaa-repo-docs/assets/fixtures/mirror/escape/origin/svc-repo/docs/contracts/svc/api.md",
+      "sha256": "00a514cf1923ac1944e901f36778de9f9893f596ae0b232195f09992599f535a",
+      "bytes": 146
+    },
+    {
+      "path": "skills/sohrab/alaa-repo-docs/assets/fixtures/mirror/local-edit/consumer/mirror.json",
+      "sha256": "40344bd954484cfa141ac7d676bbe21b644ebf93dc6567bd23afc157e603540e",
+      "bytes": 139
+    },
+    {
+      "path": "skills/sohrab/alaa-repo-docs/assets/fixtures/mirror/local-edit/consumer/pkg/docs/contracts/svc/api.md",
+      "sha256": "51cfb36648bfdc2dc71d7f17ddc34a014f4e9bfc089079e0ff052537413d1c47",
+      "bytes": 364
+    },
+    {
+      "path": "skills/sohrab/alaa-repo-docs/assets/fixtures/mirror/local-edit/consumer/pkg/docs/contracts/svc/index.md",
+      "sha256": "d34b0c69c5edffeb88769cdf4846d9b75396ce8c9e0a2a3d4eac67b46429c1de",
+      "bytes": 37
+    },
+    {
+      "path": "skills/sohrab/alaa-repo-docs/assets/fixtures/mirror/local-edit/origin/svc-repo/README.md",
+      "sha256": "e742bcbd0f6a3be6f6948900d4bca6e7976fa089bacbda8359a47e2e79e7a50f",
+      "bytes": 23
+    },
+    {
+      "path": "skills/sohrab/alaa-repo-docs/assets/fixtures/mirror/local-edit/origin/svc-repo/docs/contracts/svc/api.md",
+      "sha256": "0d6d48398f0778aa22f653596bf1ada21f5a5be903415cac4212642fa4a546e4",
+      "bytes": 101
+    },
+    {
+      "path": "skills/sohrab/alaa-repo-docs/assets/fixtures/mirror/local-edit/origin/svc-repo/docs/contracts/svc/index.md",
+      "sha256": "f6ba3dac5fc71803f0ce60441adc2a2cc1cec012256a2366075ffe89a1bf980d",
+      "bytes": 21
+    },
+    {
+      "path": "skills/sohrab/alaa-repo-docs/assets/fixtures/mirror/local-only/consumer/mirror.json",
+      "sha256": "40344bd954484cfa141ac7d676bbe21b644ebf93dc6567bd23afc157e603540e",
+      "bytes": 139
+    },
+    {
+      "path": "skills/sohrab/alaa-repo-docs/assets/fixtures/mirror/local-only/consumer/pkg/docs/contracts/svc/note.md",
+      "sha256": "2354018af08058c1867a49b23fcbc908d0cd62917318d57ea89346052a2b0915",
+      "bytes": 194
+    },
+    {
+      "path": "skills/sohrab/alaa-repo-docs/assets/fixtures/mirror/local-only/origin/svc-repo/docs/contracts/svc/other.md",
+      "sha256": "b5b79e2b70a4030a0d207081f0982cccc59a5d906d506d1975b1dfc91cb4bc0c",
+      "bytes": 8
+    },
+    {
+      "path": "skills/sohrab/alaa-repo-docs/assets/fixtures/mirror/ok/consumer/conf/mirror-malformed.json",
+      "sha256": "6817bab5ea03ce9f393e5cb2f6913c5a0e57115fd60b0ed884e057017e60891e",
+      "bytes": 14
+    },
+    {
+      "path": "skills/sohrab/alaa-repo-docs/assets/fixtures/mirror/ok/consumer/conf/mirror.json",
+      "sha256": "1be53925ef3a597c5f105c8f1e4287076eaa98e9cefdec913ca6a64c77521297",
+      "bytes": 148
+    },
+    {
+      "path": "skills/sohrab/alaa-repo-docs/assets/fixtures/mirror/ok/consumer/mirror.json",
+      "sha256": "40344bd954484cfa141ac7d676bbe21b644ebf93dc6567bd23afc157e603540e",
+      "bytes": 139
+    },
+    {
+      "path": "skills/sohrab/alaa-repo-docs/assets/fixtures/mirror/ok/consumer/pkg/docs/contracts/svc/api.md",
+      "sha256": "89b193bb04a00c6d4052ce0591ef8a3090ef35ca814b74b2cbd2565b16578e3a",
+      "bytes": 333
+    },
+    {
+      "path": "skills/sohrab/alaa-repo-docs/assets/fixtures/mirror/ok/consumer/pkg/docs/contracts/svc/index.md",
+      "sha256": "d34b0c69c5edffeb88769cdf4846d9b75396ce8c9e0a2a3d4eac67b46429c1de",
+      "bytes": 37
+    },
+    {
+      "path": "skills/sohrab/alaa-repo-docs/assets/fixtures/mirror/ok/origin/svc-repo/README.md",
+      "sha256": "3e0e1ca6855d44f73be5199a450f3d4719524e8adfec00486fdde502ea07ead2",
+      "bytes": 21
+    },
+    {
+      "path": "skills/sohrab/alaa-repo-docs/assets/fixtures/mirror/ok/origin/svc-repo/docs/contracts/svc/api.md",
+      "sha256": "89b193bb04a00c6d4052ce0591ef8a3090ef35ca814b74b2cbd2565b16578e3a",
+      "bytes": 333
+    },
+    {
+      "path": "skills/sohrab/alaa-repo-docs/assets/fixtures/mirror/ok/origin/svc-repo/docs/contracts/svc/index.md",
+      "sha256": "f6ba3dac5fc71803f0ce60441adc2a2cc1cec012256a2366075ffe89a1bf980d",
+      "bytes": 21
+    },
+    {
+      "path": "skills/sohrab/alaa-repo-docs/assets/fixtures/mirror/unavailable-mixed/consumer/pkg/NOTES.md",
+      "sha256": "0fe43b48bf4abb4f5aa1c407b69f5881729de94a590198a6528694265a6d24e0",
+      "bytes": 66
+    },
+    {
+      "path": "skills/sohrab/alaa-repo-docs/assets/fixtures/mirror/unavailable-mixed/consumer/pkg/docs/contracts/svc/api.md",
+      "sha256": "931a17b4bff45ef75464d0384df7657ca423fe9afc734c1765f97a75b52dff4f",
+      "bytes": 61
+    },
+    {
+      "path": "skills/sohrab/alaa-repo-docs/assets/fixtures/mirror/unavailable/consumer/pkg/docs/contracts/svc/api.md",
+      "sha256": "84c1d6ca254c9dd7498ef07e690f240dfc93032a206f4c898e97201f260958ac",
+      "bytes": 94
+    },
+    {
+      "path": "skills/sohrab/alaa-repo-docs/assets/fixtures/mirror/upstream/consumer/mirror.json",
+      "sha256": "40344bd954484cfa141ac7d676bbe21b644ebf93dc6567bd23afc157e603540e",
+      "bytes": 139
+    },
+    {
+      "path": "skills/sohrab/alaa-repo-docs/assets/fixtures/mirror/upstream/consumer/pkg/NOTES.md",
+      "sha256": "0318333c837f655ca01a6309281f04019c8186de695c2167b96ce6247b55024a",
+      "bytes": 98
+    },
+    {
+      "path": "skills/sohrab/alaa-repo-docs/assets/fixtures/mirror/upstream/consumer/pkg/docs/contracts/svc/api.md",
+      "sha256": "6ffb162498f62fb2b445cc9a67dacf309b04a9cb7ec303c07150caa1971ae243",
+      "bytes": 150
+    },
+    {
+      "path": "skills/sohrab/alaa-repo-docs/assets/fixtures/mirror/upstream/origin/svc-repo/README.md",
+      "sha256": "c1758a5366bd44e8e2d2153ce77a48d236b58a2187ff83b1b08504128024f2f3",
+      "bytes": 26
+    },
+    {
+      "path": "skills/sohrab/alaa-repo-docs/assets/fixtures/mirror/upstream/origin/svc-repo/docs/contracts/svc/api.md",
+      "sha256": "6ffb162498f62fb2b445cc9a67dacf309b04a9cb7ec303c07150caa1971ae243",
+      "bytes": 150
+    },
+    {
+      "path": "skills/sohrab/alaa-repo-docs/assets/fixtures/pair-drift/guide.fa.md",
+      "sha256": "f24c4b12e8aa281b6fcd26f8fdd8b6110fbe97855f4b007551774f0ee44ce8ef",
+      "bytes": 29
+    },
+    {
+      "path": "skills/sohrab/alaa-repo-docs/assets/fixtures/pair-drift/guide.md",
+      "sha256": "5cfd325c3141acbcfd5dfdf83b779f8166374e68bc3f63c9d01830bed103d0ec",
+      "bytes": 34
+    },
+    {
+      "path": "skills/sohrab/alaa-repo-docs/assets/fixtures/pair-generic/guide.fr.md",
+      "sha256": "b5c75fc817bb8f977c51a035f6f20f253e9f10bff62146d7d4356b60e8a217fb",
+      "bytes": 125
+    },
+    {
+      "path": "skills/sohrab/alaa-repo-docs/assets/fixtures/pair-generic/guide.md",
+      "sha256": "e19a393b7a0f148146f297c8f3b7c2695eb956d176f8bcf27ae802ccf932ab72",
+      "bytes": 88
+    },
+    {
+      "path": "skills/sohrab/alaa-repo-docs/assets/fixtures/pair-missing/README.md",
+      "sha256": "765f60e82f9832c1cf3a548310b322c92b000f4e60c2f5ffa697a1616b471fd8",
+      "bytes": 192
+    },
+    {
+      "path": "skills/sohrab/alaa-repo-docs/assets/fixtures/pair-missing/other.fa.md",
+      "sha256": "a12fcb778b06a5da1df50935e38a48fcc5882090c43fc95775edb1c1535361ec",
+      "bytes": 25
+    },
+    {
+      "path": "skills/sohrab/alaa-repo-docs/assets/fixtures/pair-missing/other.md",
+      "sha256": "4f4d504e9c22ceeba244b78966c494bcf8ce03c8b0728f2409dcd3c6f349326f",
+      "bytes": 23
+    },
+    {
+      "path": "skills/sohrab/alaa-repo-docs/assets/fixtures/pair-orphan/x.fa.md",
+      "sha256": "b6c6463b7d7174f9f1e2949e3714917476aab5611ff6c74e1a668ee336023215",
+      "bytes": 201
+    },
+    {
+      "path": "skills/sohrab/alaa-repo-docs/assets/fixtures/undecodable/bad.md",
+      "sha256": "a5f682a09df4d42341e714b6c9922fc1105181540490f9b6a95b5fd62bc57bb4",
+      "bytes": 15
+    },
+    {
+      "path": "skills/sohrab/alaa-repo-docs/assets/fixtures/windows-abs/a.md",
+      "sha256": "7e43823a8b3c066f7acb66cb7586dd4b9d3254dd87e9a0411fbadf0c7100fb4c",
+      "bytes": 255
+    },
+    {
+      "path": "skills/sohrab/alaa-repo-docs/references/00-topic-map.md",
+      "sha256": "5a20cd5f2183de99b37d1017e6aad6fb6f06a09357b67aa11989a513a298494c",
+      "bytes": 2746
+    },
+    {
+      "path": "skills/sohrab/alaa-repo-docs/references/10-language-and-links.md",
+      "sha256": "848715ba420864010746506916a45dd250d8a2d94f92ab08dbf5cced3f68174b",
+      "bytes": 18699
+    },
+    {
+      "path": "skills/sohrab/alaa-repo-docs/references/15-document-size-and-clustering.md",
+      "sha256": "f52c852d36d101bc5a66cb6913942029e258e5779aba61790299b547350a2632",
+      "bytes": 7368
+    },
+    {
+      "path": "skills/sohrab/alaa-repo-docs/references/20-readme-big-picture-contract.md",
+      "sha256": "8362120f600ec3e62b16b9f58e7bdfb0ab5e06b0c9860192d198460d0826f5d0",
+      "bytes": 11027
+    },
+    {
+      "path": "skills/sohrab/alaa-repo-docs/references/30-api-summary-contract.md",
+      "sha256": "70e6bc1d355a82b547b5477e31f9ed749937a6377e888009171d2733dfe7fe04",
+      "bytes": 9669
+    },
+    {
+      "path": "skills/sohrab/alaa-repo-docs/references/40-sync-workflow-and-evidence.md",
+      "sha256": "08c09aa4a54e13ff4953d999ff877a3831151cbd5995f70a0c7704895ac2450a",
+      "bytes": 11745
+    },
+    {
+      "path": "skills/sohrab/alaa-repo-docs/references/50-data-architecture-contract.md",
+      "sha256": "7933297e64ebedf2a80d5153b6bc2fad4daff7f61b48d606df7d13ba5b68c21c",
+      "bytes": 6872
+    },
+    {
+      "path": "skills/sohrab/alaa-repo-docs/references/60-errors-events-observability-contract.md",
+      "sha256": "b64e2acce63da02ad84f37baa796967c3a551e1c4616a23964a87d9bc3d29979",
+      "bytes": 7165
+    },
+    {
+      "path": "skills/sohrab/alaa-repo-docs/references/70-subagent-doc-workflows.md",
+      "sha256": "a7c64b84f0d4ae1ffc3d374e02c5a264554667227a45d3d1f4d782d7efb9d531",
+      "bytes": 7535
+    },
+    {
+      "path": "skills/sohrab/alaa-repo-docs/references/80-implementation-gap-backlog.md",
+      "sha256": "e5b5422aa99ce5d4be138ec2e6ab344735a7e91633ffc697725e5d1aa87f0650",
+      "bytes": 2440
+    },
+    {
+      "path": "skills/sohrab/alaa-repo-docs/references/90-source-map.md",
+      "sha256": "d2d794ef3a56b3b2ad273be0183fb56ca6fbdc7db24816324fe5d0d42bd8375b",
+      "bytes": 3649
+    },
+    {
+      "path": "skills/sohrab/alaa-repo-docs/scripts/check_markdown_links.py",
+      "sha256": "93710100c27e349147b0f854b75987f1027359b7b7b5404ccb16b3a9c69e0e14",
+      "bytes": 45894
+    }
+  ],
+  "changed_files": [
+    "skills/sohrab/alaa-code-intelligence-routing/references/20-documentation-routing.md",
+    "skills/sohrab/alaa-codex-runtime-ops/references/00-topic-map.md",
+    "skills/sohrab/alaa-codex-runtime-ops/references/40-project-fallbacks.md",
+    "skills/sohrab/alaa-memory-os/SKILL.md",
+    "skills/sohrab/alaa-memory-os/references/00-topic-map.md",
+    "skills/sohrab/alaa-memory-os/references/knowledge-shape.md",
+    "skills/sohrab/alaa-memory-os/references/prompt-3-publishing.md",
+    "skills/sohrab/alaa-memory-os/references/store-basic-memory.md",
+    "skills/sohrab/alaa-memory-os/references/store-hindsight.md",
+    "skills/sohrab/alaa-memory-os/references/store-local.md",
+    "skills/sohrab/alaa-repo-docs/SKILL.md",
+    "skills/sohrab/alaa-repo-docs/references/10-language-and-links.md",
+    "skills/sohrab/alaa-repo-docs/references/70-subagent-doc-workflows.md"
+  ],
+  "word_counts": {
+    "skills/sohrab/alaa-memory-os": {
+      "head_words": 10865,
+      "candidate_words": 11056,
+      "delta": 191
+    },
+    "skills/sohrab/alaa-codex-runtime-ops": {
+      "head_words": 3991,
+      "candidate_words": 3991,
+      "delta": 0
+    },
+    "skills/sohrab/alaa-repo-docs": {
+      "head_words": 14102,
+      "candidate_words": 14063,
+      "delta": -39
+    },
+    "skills/sohrab/alaa-code-intelligence-routing": {
+      "head_words": 6584,
+      "candidate_words": 6601,
+      "delta": 17
+    }
+  },
+  "claim_limits": "Source-only snapshot; sibling target ownership continues to change. No runtime proof."
+}

@@ -1,0 +1,85 @@
+{
+  "covered_manifest": "STORAGE-final-snapshot.json",
+  "independent_acceptance": false,
+  "records": [
+    {
+      "id": "fleet",
+      "command": "python -B scripts/check_fleet_references.py --skill alaa-minio-object-storage --skill alaa-arvan-object-storage --skill tusd-upload-platform",
+      "cwd": ".",
+      "resource_policy": "lightweight bounded native command; no heavy suite",
+      "shell_exit_code": 0,
+      "result": "check_fleet_references.py: 3 of 69 skills, 38 Markdown files, 138 citations\n\nFINDINGS: none\n\nINFO (9 unmarked target-repository paths across 1 skills; these never fail the run)\n     9  alaa-minio-object-storage\n  Rerun with --show-info for every site, or --format json for all of them.\n  Mark each one as <repo>/<path> to retire it from this list."
+    },
+    {
+      "id": "tusd-pack",
+      "command": "python -B skills/sohrab/tusd-upload-platform/scripts/validate_pack.py --root skills/sohrab/tusd-upload-platform",
+      "cwd": ".",
+      "resource_policy": "lightweight bounded native command; no heavy suite",
+      "shell_exit_code": 1,
+      "result": "MISUSE: PyYAML is required to validate agents/openai.yaml: No module named 'yaml'"
+    },
+    {
+      "id": "markdown-links",
+      "command": "$storageFiles = (Get-Content artifacts/skill-pack-optimization-20261018/lanes/STORAGE-final-snapshot.json -Raw | ConvertFrom-Json).touched | Where-Object { $_.EndsWith('.md') }; python -B skills/sohrab/alaa-repo-docs/scripts/check_markdown_links.py . --files $storageFiles",
+      "cwd": ".",
+      "resource_policy": "lightweight bounded native command; no heavy suite",
+      "shell_exit_code": 0,
+      "result": "Validated links in 24 Markdown file(s) under <repo>."
+    },
+    {
+      "id": "whitespace",
+      "command": "git diff --check -- skills/sohrab/alaa-minio-object-storage skills/sohrab/alaa-arvan-object-storage skills/sohrab/tusd-upload-platform",
+      "cwd": ".",
+      "resource_policy": "lightweight bounded native command; no heavy suite",
+      "shell_exit_code": 0,
+      "result": ""
+    },
+    {
+      "id": "router-policy",
+      "command": "python -B -c \"import runpy; raise SystemExit(runpy.run_path('skills/sohrab/tusd-upload-platform/scripts/validate_pack.py')['router_policy_self_test']())\"",
+      "cwd": ".",
+      "resource_policy": "lightweight isolated temporary fixtures; outside-sandbox retry after observed WinError 5",
+      "shell_exit_code": 0,
+      "result": "ok    router-policy: 6 focused expectations held"
+    },
+    {
+      "id": "tusd-pack-container",
+      "command": "docker run --rm --pull=never --network none --read-only --cap-drop ALL --pids-limit 64 --memory 128m --cpus 1 --mount 'type=bind,source=<repo>,target=/work,readonly' --workdir /work --entrypoint python3 sha256:d7d5200cf678b9439e2c1bd44bfa5c99fb90915fd9bad96a4a0c4847557d7883 -B skills/sohrab/tusd-upload-platform/scripts/validate_pack.py --root skills/sohrab/tusd-upload-platform",
+      "cwd": "/work (<repo> read-only)",
+      "resource_policy": "cached immutable CI image; --pull=never --network none --read-only --cap-drop ALL --pids-limit 64 --memory 128m --cpus 1",
+      "shell_exit_code": 0,
+      "result": "OK: /work/skills/sohrab/tusd-upload-platform passed all 10 checks (0 warning(s))"
+    }
+  ],
+  "source_assertions": {
+    "groups": [
+      "A29/A30/A31/O3",
+      "A27/A28/B24/O5/O14"
+    ],
+    "result": "passed",
+    "limits": "static prose invariants only; no live agent or provider behavior"
+  },
+  "diff_comparison": {
+    "mechanical_files": 10,
+    "manifest_files": 59,
+    "result": "passed"
+  },
+  "environment": {
+    "temp_fixture_probe": "sandbox WinError 5 before assertions; one exact outside-sandbox retry succeeded",
+    "pyyaml": "missing in local runtimes; canonical cached CI image provided Python 3.14.7/PyYAML 6.0.3; unchanged validator passed",
+    "fallback": {
+      "owner": "ci-image README.md chart-validation contract and alpine-tools/Dockerfile",
+      "image": "sha256:d7d5200cf678b9439e2c1bd44bfa5c99fb90915fd9bad96a4a0c4847557d7883",
+      "revision": "cb9abf281b9109f4ab8c4c06d9fe33b90e24f29a",
+      "probe": "import sys,yaml; assert yaml.safe_load('a: 1') == {'a': 1}",
+      "probe_exit": 0,
+      "no_install_pull_network_or_parser_substitute": true
+    }
+  },
+  "not_run": [
+    "full unrelated validator self-test corpus",
+    "posture-checker self-tests for unchanged checker inputs",
+    "live upload/provider operations",
+    "independent Phase 4 acceptance"
+  ]
+}

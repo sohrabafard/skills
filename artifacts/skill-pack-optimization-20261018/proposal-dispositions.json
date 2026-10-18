@@ -1,0 +1,3056 @@
+{
+  "schema_version": 1,
+  "artifact_kind": "candidate proposal-coverage evidence index",
+  "authority_note": "This is a derived evidence index, not task status or an independent review verdict. Beads remains authoritative. All proposal integration is complete; independent acceptance is recorded separately in final review and verification evidence.",
+  "source_provenance": {
+    "intake_snapshot_path": "artifacts/skill-pack-optimization-20261018/intake-snapshot.json",
+    "intake_snapshot_sha256": "2bba02162e327a1fefd7bda0a18820cf36c1717e4d41c8bff8bd1aa1ef980ca6",
+    "proposal_routing_path": "artifacts/skill-pack-optimization-20261018/proposal-routing.json",
+    "proposal_routing_sha256": "9fa53872a0870e85de132f66dda55d216891327e3882792925f3746bdd789102",
+    "source_reports": [
+      {
+        "path": "artifacts/skill-pack-review-20261018/01-contradictions-and-overlaps.md",
+        "sha256": "6de7223950f08711ad4946039995286cc7efafd4a1558f1876f8ddcf13f6e03a",
+        "bytes": 89165
+      },
+      {
+        "path": "artifacts/skill-pack-review-20261018/02-optimization.md",
+        "sha256": "da0309f20c76b9bc98a3d3eda4e10ffcd8cdc2a3c815127a92c690e1ce06c7fa",
+        "bytes": 33447
+      },
+      {
+        "path": "artifacts/skill-pack-review-20261018/03-new-skill-proposals.md",
+        "sha256": "b145fa4e39121093514f86a13e711cc483b96304080a4b6e975ac6b04dfbc18e",
+        "bytes": 19047
+      }
+    ],
+    "canonical_inputs": {
+      "method": "case-sensitive sorted relative POSIX path + NUL + raw bytes concatenation",
+      "sha256": "7446fdfcfe54ab59d2be6e91c3b2f702e83ed0c2ece93093dab20f36e5f7c13e",
+      "files": [
+        {
+          "path": "artifacts/skill-pack-optimization-20261018/intake-snapshot.json",
+          "sha256": "2bba02162e327a1fefd7bda0a18820cf36c1717e4d41c8bff8bd1aa1ef980ca6",
+          "bytes": 164018
+        },
+        {
+          "path": "artifacts/skill-pack-optimization-20261018/lanes/AUDIT.md",
+          "sha256": "3d8ed78f94bc4d477489cfe2d2e1073fbea6b6c09303f5c54c40d53ae392657a",
+          "bytes": 4215
+        },
+        {
+          "path": "artifacts/skill-pack-optimization-20261018/lanes/CTRL.md",
+          "sha256": "feb1fd45f90c82c53b3032dd83037343eb52a7d54b8f4eeb9bff264fef711204",
+          "bytes": 19163
+        },
+        {
+          "path": "artifacts/skill-pack-optimization-20261018/lanes/GO.md",
+          "sha256": "21a25e546491ccfa08a2f7039905245efad001c35c56ed53dcb00a28c7e90183",
+          "bytes": 9962
+        },
+        {
+          "path": "artifacts/skill-pack-optimization-20261018/lanes/MEMDOC.md",
+          "sha256": "70054db301a45b4ff8670733755b9e0fe6bac8591c405a6a79c9f74508e05526",
+          "bytes": 13411
+        },
+        {
+          "path": "artifacts/skill-pack-optimization-20261018/lanes/ORCH.md",
+          "sha256": "d2489ae973a50cfedc7c5232d9fcd35a61f17bba2360e5001670d0094d62cfce",
+          "bytes": 8388
+        },
+        {
+          "path": "artifacts/skill-pack-optimization-20261018/lanes/PHP.md",
+          "sha256": "a1feddf257924920741b98ed96259b913d95817f4959f9d0e320afcec2872752",
+          "bytes": 8825
+        },
+        {
+          "path": "artifacts/skill-pack-optimization-20261018/lanes/PLATFORM.md",
+          "sha256": "58718031f0aee7a4375aeaa433883ff746753d124da4a5c06b4a6ca6fda35c06",
+          "bytes": 13355
+        },
+        {
+          "path": "artifacts/skill-pack-optimization-20261018/lanes/PLAYER.md",
+          "sha256": "3121f6fae0b1e7ea0055dd4ad342379d63e750137abf31b44bc9ca411a1f8576",
+          "bytes": 4402
+        },
+        {
+          "path": "artifacts/skill-pack-optimization-20261018/lanes/SHARED.md",
+          "sha256": "61a690cd413e74c79ba8acf320f43fe6466de2258fb53bd2432118c38550ba65",
+          "bytes": 21898
+        },
+        {
+          "path": "artifacts/skill-pack-optimization-20261018/lanes/SIGNALS.md",
+          "sha256": "892cefe0a0382566f47dc2e1304819e717c83a58c9ac4603c730585ce3cd8b80",
+          "bytes": 7153
+        },
+        {
+          "path": "artifacts/skill-pack-optimization-20261018/lanes/STORAGE.md",
+          "sha256": "fd965b8b467bbfde9091ece1ce429e9c0733c3bba2ac6e986855c5f4c2069e53",
+          "bytes": 14712
+        },
+        {
+          "path": "artifacts/skill-pack-optimization-20261018/lanes/UI.md",
+          "sha256": "c5b7e86b52c84a1be2287f19fa43e9022c8b0d8af74f8f0c509dc98b730320a8",
+          "bytes": 11847
+        },
+        {
+          "path": "artifacts/skill-pack-optimization-20261018/lanes/WF.md",
+          "sha256": "5481cd3a48ccdca58907fb7628a9a14b5e6e5d911f49db2f0a6e0e70bdd06136",
+          "bytes": 10430
+        },
+        {
+          "path": "artifacts/skill-pack-optimization-20261018/proposal-routing.json",
+          "sha256": "9fa53872a0870e85de132f66dda55d216891327e3882792925f3746bdd789102",
+          "bytes": 5895
+        },
+        {
+          "path": "docs/_agent_plans/20261018-000000_skill-pack-optimization.md",
+          "sha256": "b04992ca232ceea621b83353a1b927089fb4bbfbc31b969f2e41602542d4fa56",
+          "bytes": 65837
+        },
+        {
+          "path": "skills/sohrab/alaa-shaka-player/assets/templates/offlineDownload.ts",
+          "sha256": "450b2e13ffab2a8714b08576bead4ba7aaf8627bbe2e743a01bcd4f1c1046bd1",
+          "bytes": 8163
+        },
+        {
+          "path": "skills/sohrab/alaa-workflow/SKILL.md",
+          "sha256": "a1976ac7eea20c058c0c80628e4a9233aa0b70b6010b66e6e1c6ae7dc95dfcf8",
+          "bytes": 10608
+        },
+        {
+          "path": "skills/sohrab/alaa-workflow/references/workspace-and-integration.md",
+          "sha256": "ef3cb484c6fc2d5d2e38af6a9a8071ffad86e00d3db5173e62f5f988a5cffc26",
+          "bytes": 7713
+        },
+        {
+          "path": "skills/sohrab/jitsi-platform-architect/SKILL.md",
+          "sha256": "dfe57886bd25b3ae3e2b542aa04d60c71067a46456a9a9ca8ddc312f70e6cac1",
+          "bytes": 6776
+        }
+      ]
+    },
+    "integration_inputs": [
+      {
+        "path": "artifacts/skill-pack-optimization-20261018/lanes/INTEGRATE-input-manifest.json",
+        "sha256": "fdbf5cab15d2bcbb75fee76c78b6e7dbb1439e7b938ac79284d0cbb06f0587a9"
+      },
+      {
+        "path": "artifacts/skill-pack-optimization-20261018/lanes/UI-INTEGRATE.json",
+        "sha256": "c61501079d592ab0a829cf400e1db4013b8228b250cf0526cc4cbed87df2f7c6"
+      }
+    ]
+  },
+  "set_audit": {
+    "original_count": 124,
+    "routed_count": 124,
+    "unique_original_ids": 124,
+    "unique_routed_ids": 124,
+    "coverage_rows": 124,
+    "unique_coverage_ids": 124,
+    "exact_set_equality": true,
+    "duplicate_ids": []
+  },
+  "disposition_counts": {
+    "adapted": 90,
+    "implemented": 27,
+    "rejected": 7
+  },
+  "proposals": [
+    {
+      "id": "01:A1",
+      "title": "Arvan routing trigger has two forms",
+      "owner_lane": "PLATFORM",
+      "issue": "alaa-6dh.3.4",
+      "disposition": "adapted",
+      "decision_evidence": "ADAPT",
+      "reason": "Canonical CaaS deciding-test pointer now governs both pack indexes; PLATFORM consumers already align. Arvan precedence is conditional on this trigger.",
+      "evidence": [
+        {
+          "path": "artifacts/skill-pack-optimization-20261018/lanes/PLATFORM.md",
+          "line": 17
+        },
+        {
+          "path": "artifacts/skill-pack-optimization-20261018/lanes/INTEGRATE.md"
+        }
+      ],
+      "local_lane_action": "adapted",
+      "source": {
+        "snapshot_path": "artifacts/skill-pack-optimization-20261018/intake-snapshot.json",
+        "report_path": "artifacts/skill-pack-review-20261018/01-contradictions-and-overlaps.md",
+        "report_sha256": "6de7223950f08711ad4946039995286cc7efafd4a1558f1876f8ddcf13f6e03a"
+      },
+      "integration_issue": "alaa-6dh.4.1.1"
+    },
+    {
+      "id": "01:A2",
+      "title": "Ansible delivery gate is listed three ways",
+      "owner_lane": "PLATFORM",
+      "issue": "alaa-6dh.3.4",
+      "disposition": "implemented",
+      "decision_evidence": "ACCEPT pointer alternative",
+      "reason": "`ansible-generator/references/playbook.md:226-253` already supplies all five checks, exit-2 blocking, exemptions and bounded failure loop. ",
+      "evidence": [
+        {
+          "path": "artifacts/skill-pack-optimization-20261018/lanes/PLATFORM.md",
+          "line": 18
+        }
+      ],
+      "source": {
+        "snapshot_path": "artifacts/skill-pack-optimization-20261018/intake-snapshot.json",
+        "report_path": "artifacts/skill-pack-review-20261018/01-contradictions-and-overlaps.md",
+        "report_sha256": "6de7223950f08711ad4946039995286cc7efafd4a1558f1876f8ddcf13f6e03a"
+      }
+    },
+    {
+      "id": "01:A3",
+      "title": "Laravel upgrade sweep: step 3 cannot apply the set that step 2 defines",
+      "owner_lane": "PHP",
+      "issue": "alaa-6dh.3.2",
+      "disposition": "adapted",
+      "decision_evidence": "Adapt",
+      "reason": "Upgrade SKILL procedure 2-3 classifies majors then applies an unrestricted resolution. ",
+      "evidence": [
+        {
+          "path": "artifacts/skill-pack-optimization-20261018/lanes/PHP.md",
+          "line": 11
+        }
+      ],
+      "source": {
+        "snapshot_path": "artifacts/skill-pack-optimization-20261018/intake-snapshot.json",
+        "report_path": "artifacts/skill-pack-review-20261018/01-contradictions-and-overlaps.md",
+        "report_sha256": "6de7223950f08711ad4946039995286cc7efafd4a1558f1876f8ddcf13f6e03a"
+      }
+    },
+    {
+      "id": "01:A4",
+      "title": "Nobody owns a Laravel major-framework migration",
+      "owner_lane": "PHP",
+      "issue": "alaa-6dh.3.2",
+      "disposition": "adapted",
+      "decision_evidence": "Adapt",
+      "reason": "Upgrade description routes framework migration to architecture, which has no migration procedure; architecture source-map incorrectly assigns dependency bumps to PHP craft. ",
+      "evidence": [
+        {
+          "path": "artifacts/skill-pack-optimization-20261018/lanes/PHP.md",
+          "line": 12
+        }
+      ],
+      "source": {
+        "snapshot_path": "artifacts/skill-pack-optimization-20261018/intake-snapshot.json",
+        "report_path": "artifacts/skill-pack-review-20261018/01-contradictions-and-overlaps.md",
+        "report_sha256": "6de7223950f08711ad4946039995286cc7efafd4a1558f1876f8ddcf13f6e03a"
+      }
+    },
+    {
+      "id": "01:A5",
+      "title": "Octane scope predicate exists in two forms",
+      "owner_lane": "PHP",
+      "issue": "alaa-6dh.3.2",
+      "disposition": "implemented",
+      "decision_evidence": "Accept",
+      "reason": "Octane SKILL Scope condition owns runtime applicability; PHP SKILL Compatibility target has a conflicting package/file predicate. ",
+      "evidence": [
+        {
+          "path": "artifacts/skill-pack-optimization-20261018/lanes/PHP.md",
+          "line": 13
+        }
+      ],
+      "source": {
+        "snapshot_path": "artifacts/skill-pack-optimization-20261018/intake-snapshot.json",
+        "report_path": "artifacts/skill-pack-review-20261018/01-contradictions-and-overlaps.md",
+        "report_sha256": "6de7223950f08711ad4946039995286cc7efafd4a1558f1876f8ddcf13f6e03a"
+      }
+    },
+    {
+      "id": "01:A6",
+      "title": "Convention sentences tell the agent to write the dual call form",
+      "owner_lane": "CTRL",
+      "issue": "alaa-6dh.2.3",
+      "disposition": "adapted",
+      "decision_evidence": "Adapt across owners. Prompting `references/06-invocation-and-composition.md#Writing a call site` already distinguishes repository `/name` from generated target-surface sigils and metadata. Preserve it. Parent owns central AGENTS and other lanes own cited consumers.",
+      "reason": "All named convention consumers and two additional contradictory UI expectations now follow the central single source-reference form; runtime prompt/metadata exceptions remain. No blanket legacy sweep.",
+      "evidence": [
+        {
+          "path": "artifacts/skill-pack-optimization-20261018/lanes/CTRL.md",
+          "line": 18
+        },
+        {
+          "path": "artifacts/skill-pack-optimization-20261018/lanes/CTRL.md",
+          "line": 82
+        },
+        {
+          "path": "artifacts/skill-pack-optimization-20261018/lanes/INTEGRATE.md"
+        },
+        {
+          "path": "artifacts/skill-pack-optimization-20261018/lanes/UI-INTEGRATE.json"
+        }
+      ],
+      "local_lane_action": "adapted",
+      "source": {
+        "snapshot_path": "artifacts/skill-pack-optimization-20261018/intake-snapshot.json",
+        "report_path": "artifacts/skill-pack-review-20261018/01-contradictions-and-overlaps.md",
+        "report_sha256": "6de7223950f08711ad4946039995286cc7efafd4a1558f1876f8ddcf13f6e03a"
+      },
+      "integration_issue": "alaa-6dh.4.1.1"
+    },
+    {
+      "id": "01:A7",
+      "title": "Keyset and services-contract list different offset-exception conditions",
+      "owner_lane": "SHARED",
+      "issue": "alaa-6dh.3.1",
+      "disposition": "adapted",
+      "decision_evidence": "Adapt. Services-contract ref25 owns the single offset authorization list. Preserve its existing five conditions and incorporate keyset's missing requirement: the exact-total query uses the page filters and is measured at production row counts. Keep that as part of the documented operational requirement rather than dropping either guard. Remove circular ownership and stale \"currently forbids\" prose; keyset retains traversal/index rationale and points to the owner.",
+      "reason": "`alaa-services-contract/references/25-end-to-end-flow-and-boundaries.md` List pagination contract, lines 339-366; `alaa-keyset-pagination/references/10-route-mode-and-sort-allowlist.md` Offset. ",
+      "evidence": [
+        {
+          "path": "artifacts/skill-pack-optimization-20261018/lanes/SHARED.md",
+          "line": 23
+        }
+      ],
+      "source": {
+        "snapshot_path": "artifacts/skill-pack-optimization-20261018/intake-snapshot.json",
+        "report_path": "artifacts/skill-pack-review-20261018/01-contradictions-and-overlaps.md",
+        "report_sha256": "6de7223950f08711ad4946039995286cc7efafd4a1558f1876f8ddcf13f6e03a"
+      }
+    },
+    {
+      "id": "01:A8",
+      "title": "A request-time checker timeout maps to two status codes",
+      "owner_lane": "SHARED",
+      "issue": "alaa-6dh.3.1",
+      "disposition": "adapted",
+      "decision_evidence": "Adapt with evidence limit. Keep fail-closed/no backend fallback in trust. Replace its flat `403 AUTHZ_DENIED` assertion with the canonical decision/enforcement pointer. Ref26/40 currently specifies `503` for timeout/unavailable and `403` for an explicit deny; this is static normative text, not an observed gateway result. Preserve malformed/unparseable denial; if no owner row maps that outcome, report the contract gap before asserting its public code. Do not manufacture live confirmation.",
+      "reason": "`alaa-trust-gateway-auth/SKILL.md` Fail-closed cases and `references/30-fail-closed-cases.md` case 2; `alaa-services-contract/references/26-request-time-authorization-openfga/40-decision-and-enforcement.md` table, rows 403/503.",
+      "evidence": [
+        {
+          "path": "artifacts/skill-pack-optimization-20261018/lanes/SHARED.md",
+          "line": 24
+        }
+      ],
+      "source": {
+        "snapshot_path": "artifacts/skill-pack-optimization-20261018/intake-snapshot.json",
+        "report_path": "artifacts/skill-pack-review-20261018/01-contradictions-and-overlaps.md",
+        "report_sha256": "6de7223950f08711ad4946039995286cc7efafd4a1558f1876f8ddcf13f6e03a"
+      }
+    },
+    {
+      "id": "01:A9",
+      "title": "Auth deny-code table: status mismatch and two duplicate rows",
+      "owner_lane": "SHARED",
+      "issue": "alaa-6dh.3.1",
+      "disposition": "adapted",
+      "decision_evidence": "Adapt. Preserve delegated ownership of `AUTH_*` and `TENANT_CONTEXT_*` in trust ref50, including explicit service-policy context status and its migration rule. Make trust case 1/body use that owner rather than forcing a flat 401. Scope the sidecar `401 AUTH_CONTEXT_MISSING` row to its gateway path; point to ref50 for the code's definition. `AUTHZ_DENIED` wire mapping remains in services ref26/40; TOTP step-up shape remains in services ref32. Trust ref50 points rather than redefines those two.",
+      "reason": "`alaa-services-contract/references/20-operational-and-observability-contract.md` Exact code expectations; trust ref50 Canonical codes/Adopting these codes; trust ref30 case 1; services ref26/40 and ref32. ",
+      "evidence": [
+        {
+          "path": "artifacts/skill-pack-optimization-20261018/lanes/SHARED.md",
+          "line": 25
+        }
+      ],
+      "source": {
+        "snapshot_path": "artifacts/skill-pack-optimization-20261018/intake-snapshot.json",
+        "report_path": "artifacts/skill-pack-review-20261018/01-contradictions-and-overlaps.md",
+        "report_sha256": "6de7223950f08711ad4946039995286cc7efafd4a1558f1876f8ddcf13f6e03a"
+      }
+    },
+    {
+      "id": "01:A10",
+      "title": "Permission generator: unsourced frozen numbers",
+      "owner_lane": "AUDIT",
+      "issue": "alaa-6dh.3.8",
+      "disposition": "adapted",
+      "decision_evidence": "**A10 â€” permission catalog scale:** Removed unsourced service maxima and dated ID ranges from the durable skill body. Preserved registry-derived count, maximum ID, and fingerprint sources and the per-file maximum contract. Final source hashes: skill `87da55b9b4ebb4743cd50c9116fcfc0ee2ea6843266d906cef81da1526aaefc0`; referenced owner sources were fully read before editing.",
+      "reason": "**A10 â€” permission catalog scale:** Removed unsourced service maxima and dated ID ranges from the durable skill body. ",
+      "evidence": [
+        {
+          "path": "artifacts/skill-pack-optimization-20261018/lanes/AUDIT.md",
+          "line": 11
+        }
+      ],
+      "source": {
+        "snapshot_path": "artifacts/skill-pack-optimization-20261018/intake-snapshot.json",
+        "report_path": "artifacts/skill-pack-review-20261018/01-contradictions-and-overlaps.md",
+        "report_sha256": "6de7223950f08711ad4946039995286cc7efafd4a1558f1876f8ddcf13f6e03a"
+      }
+    },
+    {
+      "id": "01:A11",
+      "title": "Codex runtime ops records a \"standing approval\" with no provenance",
+      "owner_lane": "MEMDOC",
+      "issue": "alaa-6dh.2.4",
+      "disposition": "adapted",
+      "decision_evidence": "Adapt",
+      "reason": "`alaa-codex-runtime-ops/references/40-project-fallbacks.md` claims standing approval without approver/date/source. ",
+      "evidence": [
+        {
+          "path": "artifacts/skill-pack-optimization-20261018/lanes/MEMDOC.md",
+          "line": 25
+        }
+      ],
+      "source": {
+        "snapshot_path": "artifacts/skill-pack-optimization-20261018/intake-snapshot.json",
+        "report_path": "artifacts/skill-pack-review-20261018/01-contradictions-and-overlaps.md",
+        "report_sha256": "6de7223950f08711ad4946039995286cc7efafd4a1558f1876f8ddcf13f6e03a"
+      }
+    },
+    {
+      "id": "01:A12",
+      "title": "Service runtime kit governance commits by default",
+      "owner_lane": "GO",
+      "issue": "alaa-6dh.3.5",
+      "disposition": "implemented",
+      "decision_evidence": "Accept: service-runtime-kit-governance SKILL Working Method step 5 requires explicit commit permission; generated-output secret check remains before any commit.",
+      "reason": "Local permission counterexample: regeneration alone cannot authorize commit; no runtime generator change.",
+      "evidence": [
+        {
+          "path": "artifacts/skill-pack-optimization-20261018/lanes/GO.md",
+          "line": 9
+        }
+      ],
+      "source": {
+        "snapshot_path": "artifacts/skill-pack-optimization-20261018/intake-snapshot.json",
+        "report_path": "artifacts/skill-pack-review-20261018/01-contradictions-and-overlaps.md",
+        "report_sha256": "6de7223950f08711ad4946039995286cc7efafd4a1558f1876f8ddcf13f6e03a"
+      }
+    },
+    {
+      "id": "01:A13",
+      "title": "Memory OS: the store-neutral shape file requires vault fields",
+      "owner_lane": "MEMDOC",
+      "issue": "alaa-6dh.2.4",
+      "disposition": "adapted",
+      "decision_evidence": "Adapt",
+      "reason": "`alaa-memory-os/references/knowledge-shape.md` requires vault frontmatter and checker use despite declaring neutrality; `store-local.md` already owns the vault format. ",
+      "evidence": [
+        {
+          "path": "artifacts/skill-pack-optimization-20261018/lanes/MEMDOC.md",
+          "line": 26
+        }
+      ],
+      "source": {
+        "snapshot_path": "artifacts/skill-pack-optimization-20261018/intake-snapshot.json",
+        "report_path": "artifacts/skill-pack-review-20261018/01-contradictions-and-overlaps.md",
+        "report_sha256": "6de7223950f08711ad4946039995286cc7efafd4a1558f1876f8ddcf13f6e03a"
+      }
+    },
+    {
+      "id": "01:A14",
+      "title": "Go: \"documented fire-and-forget\" versus principle P9",
+      "owner_lane": "GO",
+      "issue": "alaa-6dh.3.5",
+      "disposition": "adapted",
+      "decision_evidence": "Adapt: alaa-golang ref11 Concurrency against context routes kit lifecycle to clean-code ref30 P9, including bounded worker, drain, error/metric reporting and all three accepted-loss conditions. Preserve generic owned/cancelled/error rule.",
+      "reason": "No undocumented fire-and-forget exception; preserve lifecycle owner and loss evidence.",
+      "evidence": [
+        {
+          "path": "artifacts/skill-pack-optimization-20261018/lanes/GO.md",
+          "line": 10
+        }
+      ],
+      "source": {
+        "snapshot_path": "artifacts/skill-pack-optimization-20261018/intake-snapshot.json",
+        "report_path": "artifacts/skill-pack-review-20261018/01-contradictions-and-overlaps.md",
+        "report_sha256": "6de7223950f08711ad4946039995286cc7efafd4a1558f1876f8ddcf13f6e03a"
+      }
+    },
+    {
+      "id": "01:A15",
+      "title": "Go: `WithoutCancel` drain example has no timeout",
+      "owner_lane": "GO",
+      "issue": "alaa-6dh.3.5",
+      "disposition": "implemented",
+      "decision_evidence": "Accept: clean-code ref30 P9 drain derives WithTimeout(WithoutCancel(ctx), w.flushBudget) and cancels it; point to alaa-golang ref45 section 8.",
+      "reason": "Budget comes from component configuration; no new number or kit knob; cancelled parent cannot make final drain unbounded.",
+      "evidence": [
+        {
+          "path": "artifacts/skill-pack-optimization-20261018/lanes/GO.md",
+          "line": 11
+        }
+      ],
+      "source": {
+        "snapshot_path": "artifacts/skill-pack-optimization-20261018/intake-snapshot.json",
+        "report_path": "artifacts/skill-pack-review-20261018/01-contradictions-and-overlaps.md",
+        "report_sha256": "6de7223950f08711ad4946039995286cc7efafd4a1558f1876f8ddcf13f6e03a"
+      }
+    },
+    {
+      "id": "01:A16",
+      "title": "Go: signal handling is both required and forbidden in one file",
+      "owner_lane": "GO",
+      "issue": "alaa-6dh.3.5",
+      "disposition": "implemented",
+      "decision_evidence": "Accept: ref45 section 7 and modern baseline ref70/30 scope signal.NotifyContext to standalone without runkit.",
+      "reason": "Kit signal/ordered drain ownership remains runkit.",
+      "evidence": [
+        {
+          "path": "artifacts/skill-pack-optimization-20261018/lanes/GO.md",
+          "line": 12
+        }
+      ],
+      "source": {
+        "snapshot_path": "artifacts/skill-pack-optimization-20261018/intake-snapshot.json",
+        "report_path": "artifacts/skill-pack-review-20261018/01-contradictions-and-overlaps.md",
+        "report_sha256": "6de7223950f08711ad4946039995286cc7efafd4a1558f1876f8ddcf13f6e03a"
+      }
+    },
+    {
+      "id": "01:A17",
+      "title": "Go: the `-race` and whole-suite gate is stated in four places",
+      "owner_lane": "GO",
+      "issue": "alaa-6dh.3.5",
+      "disposition": "adapted",
+      "decision_evidence": "Adapt: Go SKILL Validation gate remains sole general race trigger/authority owner. Fiber ref30 owns additional retained Ctx-value trigger; body and readiness/migration checklists point there and Go gate. Clean-code P9 proof also points to Go gate instead of restating whole-race command.",
+      "reason": "Retained Fiber values still trigger race; author cannot acquire broad-check authority through a checklist. ",
+      "evidence": [
+        {
+          "path": "artifacts/skill-pack-optimization-20261018/lanes/GO.md",
+          "line": 13
+        }
+      ],
+      "source": {
+        "snapshot_path": "artifacts/skill-pack-optimization-20261018/intake-snapshot.json",
+        "report_path": "artifacts/skill-pack-review-20261018/01-contradictions-and-overlaps.md",
+        "report_sha256": "6de7223950f08711ad4946039995286cc7efafd4a1558f1876f8ddcf13f6e03a"
+      }
+    },
+    {
+      "id": "01:A18",
+      "title": "Go: the dated phase gate is restated in the clean-code skill",
+      "owner_lane": "GO",
+      "issue": "alaa-6dh.3.5",
+      "disposition": "adapted",
+      "decision_evidence": "Adapt: clean-code SKILL phase paragraph and source-map dated roster become routes to go-chi ref05 plus phase-check. Fix Go SKILL step 2 and topic-map phase pointer to same action-specific matrix.",
+      "reason": "evidence-required is not forbidden; requester-specific action plus prior phase/record output suffices without second go-ahead. ",
+      "evidence": [
+        {
+          "path": "artifacts/skill-pack-optimization-20261018/lanes/GO.md",
+          "line": 14
+        }
+      ],
+      "source": {
+        "snapshot_path": "artifacts/skill-pack-optimization-20261018/intake-snapshot.json",
+        "report_path": "artifacts/skill-pack-review-20261018/01-contradictions-and-overlaps.md",
+        "report_sha256": "6de7223950f08711ad4946039995286cc7efafd4a1558f1876f8ddcf13f6e03a"
+      }
+    },
+    {
+      "id": "01:A19",
+      "title": "Frontend: sanitizer placement stated as input-time only",
+      "owner_lane": "UI",
+      "issue": "alaa-6dh.3.6",
+      "disposition": "adapted",
+      "decision_evidence": "Adapt frontend-developer ref25 to security-review ref25 Raw HTML: exactly one path and Vue ref72. SHARED owns security edits.",
+      "reason": "Output sanitization cannot be bypassed by another writer; optional input defense remains possible; no handwritten sanitizer or second raw-HTML path.",
+      "evidence": [
+        {
+          "path": "artifacts/skill-pack-optimization-20261018/lanes/UI.md",
+          "line": 13
+        }
+      ],
+      "source": {
+        "snapshot_path": "artifacts/skill-pack-optimization-20261018/intake-snapshot.json",
+        "report_path": "artifacts/skill-pack-review-20261018/01-contradictions-and-overlaps.md",
+        "report_sha256": "6de7223950f08711ad4946039995286cc7efafd4a1558f1876f8ddcf13f6e03a"
+      }
+    },
+    {
+      "id": "01:A20",
+      "title": "Frontend: navigation caching has two real positions",
+      "owner_lane": "UI",
+      "issue": "alaa-6dh.3.6",
+      "disposition": "implemented",
+      "decision_evidence": "Accept for frontend ref30 standard contract AND its chunk-404 diagnostic, plus QA wording. Quasar ref30 already allows precached shell or NetworkFirst.",
+      "reason": "No unauthorized SW strategy change; never force network-only where the canonical strategy permits offline navigation; retain offline fallback and old-asset retention boundary.",
+      "evidence": [
+        {
+          "path": "artifacts/skill-pack-optimization-20261018/lanes/UI.md",
+          "line": 14
+        }
+      ],
+      "source": {
+        "snapshot_path": "artifacts/skill-pack-optimization-20261018/intake-snapshot.json",
+        "report_path": "artifacts/skill-pack-review-20261018/01-contradictions-and-overlaps.md",
+        "report_sha256": "6de7223950f08711ad4946039995286cc7efafd4a1558f1876f8ddcf13f6e03a"
+      }
+    },
+    {
+      "id": "01:A21",
+      "title": "Frontend: client telemetry classes differ, and the proposed owner is wrong",
+      "owner_lane": "SHARED",
+      "issue": "alaa-6dh.3.1",
+      "disposition": "adapted",
+      "decision_evidence": "Adapt. Observability ref20 owns the union of the existing browser obligations: errors/rejections and Web Vitals; request outcomes when HTTP requests exist; connection transitions when WS/SSE exists; lifecycle and failed updates when a service worker exists. These are conditional requirement classes, not an \"exactly four\" emission allowlist. Shared names stay in services. Do not invent event/metric/env spellings for absent browser entries; record the naming gap and require approved target/source registration before changing emitted names. UI owner removes its conflicting local lists and keeps wiring.",
+      "reason": "Frontend ref47 Four required client signals; Quasar ref36 section 1; observability ref20 Requirement levels; services ref20 Event and code naming and ref24 registry. ",
+      "evidence": [
+        {
+          "path": "artifacts/skill-pack-optimization-20261018/lanes/SHARED.md",
+          "line": 26
+        }
+      ],
+      "source": {
+        "snapshot_path": "artifacts/skill-pack-optimization-20261018/intake-snapshot.json",
+        "report_path": "artifacts/skill-pack-review-20261018/01-contradictions-and-overlaps.md",
+        "report_sha256": "6de7223950f08711ad4946039995286cc7efafd4a1558f1876f8ddcf13f6e03a"
+      }
+    },
+    {
+      "id": "01:A22",
+      "title": "Frontend: who may read `import.meta.env`",
+      "owner_lane": "UI",
+      "issue": "alaa-6dh.3.6",
+      "disposition": "adapted",
+      "decision_evidence": "Adapt narrowly: installed-version framework-owned constants may be read locally; project-injected and runtime values stay behind one typed validated config module. Update frontend ref48, Vue ref50 and devops ref10/ref30 consistently.",
+      "reason": "BASE_URL derives from publicPath; no arbitrary QUASAR_* exemption; no project variable exemption or second runtime source.",
+      "evidence": [
+        {
+          "path": "artifacts/skill-pack-optimization-20261018/lanes/UI.md",
+          "line": 15
+        }
+      ],
+      "source": {
+        "snapshot_path": "artifacts/skill-pack-optimization-20261018/intake-snapshot.json",
+        "report_path": "artifacts/skill-pack-review-20261018/01-contradictions-and-overlaps.md",
+        "report_sha256": "6de7223950f08711ad4946039995286cc7efafd4a1558f1876f8ddcf13f6e03a"
+      }
+    },
+    {
+      "id": "01:A23",
+      "title": "Frontend: font byte budget has two numbers",
+      "owner_lane": "UI",
+      "issue": "alaa-6dh.3.6",
+      "disposition": "adapted",
+      "decision_evidence": "Adapt: preserve historical <100 KB subset scope separately from 150 KB total transferred first-party fonts on the initial route; neither replaces the other. UI ref45 owns font limits; ref05 routes there.",
+      "reason": "Historical units, strictness and subset/whole-route scopes; three weights, woff2 support exception, two preloads, Arabic/Latin/U+200C subset and transferred-size measurement.",
+      "evidence": [
+        {
+          "path": "artifacts/skill-pack-optimization-20261018/lanes/UI.md",
+          "line": 16
+        }
+      ],
+      "source": {
+        "snapshot_path": "artifacts/skill-pack-optimization-20261018/intake-snapshot.json",
+        "report_path": "artifacts/skill-pack-review-20261018/01-contradictions-and-overlaps.md",
+        "report_sha256": "6de7223950f08711ad4946039995286cc7efafd4a1558f1876f8ddcf13f6e03a"
+      }
+    },
+    {
+      "id": "01:A24",
+      "title": "Source comments are routed to a skill whose scope is frontend only",
+      "owner_lane": "MEMDOC",
+      "issue": "alaa-6dh.2.4",
+      "disposition": "adapted",
+      "decision_evidence": "Adapt",
+      "reason": "`alaa-frontend-doc-annotations/SKILL.md` limits its annotation pass to Vue/Quasar/Vite. ",
+      "evidence": [
+        {
+          "path": "artifacts/skill-pack-optimization-20261018/lanes/MEMDOC.md",
+          "line": 27
+        }
+      ],
+      "source": {
+        "snapshot_path": "artifacts/skill-pack-optimization-20261018/intake-snapshot.json",
+        "report_path": "artifacts/skill-pack-review-20261018/01-contradictions-and-overlaps.md",
+        "report_sha256": "6de7223950f08711ad4946039995286cc7efafd4a1558f1876f8ddcf13f6e03a"
+      }
+    },
+    {
+      "id": "01:A25",
+      "title": "Repo docs states a runtime mechanic in a skill that does not own it",
+      "owner_lane": "MEMDOC",
+      "issue": "alaa-6dh.2.4",
+      "disposition": "implemented",
+      "decision_evidence": "Accept",
+      "reason": "Repo-docs SKILL Subagent strategy and reference 70 opening state Task-tool/parent-thread mechanics outside their ownership. ",
+      "evidence": [
+        {
+          "path": "artifacts/skill-pack-optimization-20261018/lanes/MEMDOC.md",
+          "line": 28
+        }
+      ],
+      "source": {
+        "snapshot_path": "artifacts/skill-pack-optimization-20261018/intake-snapshot.json",
+        "report_path": "artifacts/skill-pack-review-20261018/01-contradictions-and-overlaps.md",
+        "report_sha256": "6de7223950f08711ad4946039995286cc7efafd4a1558f1876f8ddcf13f6e03a"
+      }
+    },
+    {
+      "id": "01:A26",
+      "title": "Link checker: exit-2 wording",
+      "owner_lane": "MEMDOC",
+      "issue": "alaa-6dh.2.4",
+      "disposition": "implemented",
+      "decision_evidence": "Accept",
+      "reason": "Repo-docs reference 10 Link validation workflow has an ambiguous exit-2 exception. ",
+      "evidence": [
+        {
+          "path": "artifacts/skill-pack-optimization-20261018/lanes/MEMDOC.md",
+          "line": 29
+        }
+      ],
+      "source": {
+        "snapshot_path": "artifacts/skill-pack-optimization-20261018/intake-snapshot.json",
+        "report_path": "artifacts/skill-pack-review-20261018/01-contradictions-and-overlaps.md",
+        "report_sha256": "6de7223950f08711ad4946039995286cc7efafd4a1558f1876f8ddcf13f6e03a"
+      }
+    },
+    {
+      "id": "01:A27",
+      "title": "Tusd hooks: fail-open and fail-closed classed against the stated question",
+      "owner_lane": "STORAGE",
+      "issue": "alaa-6dh.3.3",
+      "disposition": "adapted",
+      "decision_evidence": "A27 - adapt hook failure classification",
+      "reason": "Owner anchors: tusd `references/45-hooks.md` responsibility table and response shapes; `references/20-decision-matrix.md` authorization placement; `references/55-tests.md` hook cases. ",
+      "evidence": [
+        {
+          "path": "artifacts/skill-pack-optimization-20261018/lanes/STORAGE.md",
+          "line": 9
+        }
+      ],
+      "source": {
+        "snapshot_path": "artifacts/skill-pack-optimization-20261018/intake-snapshot.json",
+        "report_path": "artifacts/skill-pack-review-20261018/01-contradictions-and-overlaps.md",
+        "report_sha256": "6de7223950f08711ad4946039995286cc7efafd4a1558f1876f8ddcf13f6e03a"
+      }
+    },
+    {
+      "id": "01:A28",
+      "title": "Part-size knobs have no mapping between the two upload planes",
+      "owner_lane": "STORAGE",
+      "issue": "alaa-6dh.3.3",
+      "disposition": "adapted",
+      "decision_evidence": "A28 and O14 - adapt the part-size mapping",
+      "reason": "Owner anchors: minio `references/05-environment-contract.md` application variables; tusd `references/35-storage-lifecycle.md` multipart sizing; tusd env/Compose assets already map TUSD_S3_PART_SIZE to -s3-part-size. ",
+      "evidence": [
+        {
+          "path": "artifacts/skill-pack-optimization-20261018/lanes/STORAGE.md",
+          "line": 19
+        }
+      ],
+      "source": {
+        "snapshot_path": "artifacts/skill-pack-optimization-20261018/intake-snapshot.json",
+        "report_path": "artifacts/skill-pack-review-20261018/01-contradictions-and-overlaps.md",
+        "report_sha256": "6de7223950f08711ad4946039995286cc7efafd4a1558f1876f8ddcf13f6e03a"
+      }
+    },
+    {
+      "id": "01:A29",
+      "title": "Object storage: \"required, never defaulted\" endpoint beside an \"Arvan default\"",
+      "owner_lane": "STORAGE",
+      "issue": "alaa-6dh.3.3",
+      "disposition": "adapted",
+      "decision_evidence": "A29 - accept explicit endpoint selection",
+      "reason": "Minio `references/05-environment-contract.md`: exclude endpoint, bucket and credentials from profile defaulting; shapes are documentation only. ",
+      "evidence": [
+        {
+          "path": "artifacts/skill-pack-optimization-20261018/lanes/STORAGE.md",
+          "line": 29
+        }
+      ],
+      "source": {
+        "snapshot_path": "artifacts/skill-pack-optimization-20261018/intake-snapshot.json",
+        "report_path": "artifacts/skill-pack-review-20261018/01-contradictions-and-overlaps.md",
+        "report_sha256": "6de7223950f08711ad4946039995286cc7efafd4a1558f1876f8ddcf13f6e03a"
+      }
+    },
+    {
+      "id": "01:A30",
+      "title": "Arvan deltas cite a \"live example\" variable that the owner does not carry",
+      "owner_lane": "STORAGE",
+      "issue": "alaa-6dh.3.3",
+      "disposition": "adapted",
+      "decision_evidence": "A30 - accept removal of the nonexistent knob example",
+      "reason": "Arvan `references/15-environment-contract-deltas.md`: remove the claim that a client-abort boolean already exists or has defaults. ",
+      "evidence": [
+        {
+          "path": "artifacts/skill-pack-optimization-20261018/lanes/STORAGE.md",
+          "line": 33
+        }
+      ],
+      "source": {
+        "snapshot_path": "artifacts/skill-pack-optimization-20261018/intake-snapshot.json",
+        "report_path": "artifacts/skill-pack-review-20261018/01-contradictions-and-overlaps.md",
+        "report_sha256": "6de7223950f08711ad4946039995286cc7efafd4a1558f1876f8ddcf13f6e03a"
+      }
+    },
+    {
+      "id": "01:A31",
+      "title": "`mc` command block shows the form the same file forbids",
+      "owner_lane": "STORAGE",
+      "issue": "alaa-6dh.3.3",
+      "disposition": "adapted",
+      "decision_evidence": "A31 - adapt unsafe historical command handling",
+      "reason": "Minio `references/75-mc-command-line-client.md`: retain the historical positional command as evidence, with DO NOT COPY inside its fence. ",
+      "evidence": [
+        {
+          "path": "artifacts/skill-pack-optimization-20261018/lanes/STORAGE.md",
+          "line": 37
+        }
+      ],
+      "source": {
+        "snapshot_path": "artifacts/skill-pack-optimization-20261018/intake-snapshot.json",
+        "report_path": "artifacts/skill-pack-review-20261018/01-contradictions-and-overlaps.md",
+        "report_sha256": "6de7223950f08711ad4946039995286cc7efafd4a1558f1876f8ddcf13f6e03a"
+      }
+    },
+    {
+      "id": "01:A32",
+      "title": "Provider skills cite wrong lines in the services-contract metric registry",
+      "owner_lane": "SIGNALS",
+      "issue": "alaa-6dh.3.9",
+      "disposition": "adapted",
+      "decision_evidence": "Replace provider line-number citations to service metric registry rows with stable metric-family or section names.",
+      "reason": "Metric names and ownership stay unchanged; cite the `alaa_dependency_*` rows by name.",
+      "evidence": [
+        {
+          "path": "artifacts/skill-pack-optimization-20261018/lanes/SIGNALS.md",
+          "line": 15
+        }
+      ],
+      "source": {
+        "snapshot_path": "artifacts/skill-pack-optimization-20261018/intake-snapshot.json",
+        "report_path": "artifacts/skill-pack-review-20261018/01-contradictions-and-overlaps.md",
+        "report_sha256": "6de7223950f08711ad4946039995286cc7efafd4a1558f1876f8ddcf13f6e03a"
+      }
+    },
+    {
+      "id": "01:A33",
+      "title": "Vector: observability binding attributed to a skill that does not state it",
+      "owner_lane": "SHARED",
+      "issue": "alaa-6dh.3.1",
+      "disposition": "implemented",
+      "decision_evidence": "Accept with bounded-loss clarification. SOC owns nonblocking product traffic; Vector owns its concrete `drop_newest` expression. Change \"outage absorbed rather than dropped\" to bounded disk buffering within capacity, then counted/visible drops according to the path's accepted loss profile, without hot-path blocking. Do not promise indefinite retention.",
+      "reason": "Vector body rule 3; observability ref50 Why the sidecar tier exists and Per-hop resilience validation; Vector ref30 Ala binding.",
+      "evidence": [
+        {
+          "path": "artifacts/skill-pack-optimization-20261018/lanes/SHARED.md",
+          "line": 27
+        }
+      ],
+      "source": {
+        "snapshot_path": "artifacts/skill-pack-optimization-20261018/intake-snapshot.json",
+        "report_path": "artifacts/skill-pack-review-20261018/01-contradictions-and-overlaps.md",
+        "report_sha256": "6de7223950f08711ad4946039995286cc7efafd4a1558f1876f8ddcf13f6e03a"
+      }
+    },
+    {
+      "id": "01:A34",
+      "title": "Partitioned FK audit installs permanent repository files",
+      "owner_lane": "AUDIT",
+      "issue": "alaa-6dh.3.8",
+      "disposition": "adapted",
+      "decision_evidence": "**A34/O7 â€” partitioned FK audit:** Detector execution/findings remain independent of optional guard installation; missing durable guard is reportable. Installation and synthetic fixtures remain optional, explicitly authorized repository mutations. Corrected help/empty-roots wording: zero parent tables means none were found in the supplied roots and proves neither guard installation nor engine behavior. Preserved exit codes, detector algorithm, and `--install` behavior. Final hashes: skill `79a58adcbebdfac7a9b36e072425bf476455faf8dead025c12877e110ed9aafd`; script `d0d1dc36d351e6e9ed558a1683b934a66ccdb15db77bec7009f8f3e461dcebbc`.",
+      "reason": "**A34/O7 â€” partitioned FK audit:** Detector execution/findings remain independent of optional guard installation; missing durable guard is reportable. ",
+      "evidence": [
+        {
+          "path": "artifacts/skill-pack-optimization-20261018/lanes/AUDIT.md",
+          "line": 12
+        }
+      ],
+      "source": {
+        "snapshot_path": "artifacts/skill-pack-optimization-20261018/intake-snapshot.json",
+        "report_path": "artifacts/skill-pack-review-20261018/01-contradictions-and-overlaps.md",
+        "report_sha256": "6de7223950f08711ad4946039995286cc7efafd4a1558f1876f8ddcf13f6e03a"
+      }
+    },
+    {
+      "id": "01:A35",
+      "title": "Permission generator: same-change rule reads as unconditional",
+      "owner_lane": "AUDIT",
+      "issue": "alaa-6dh.3.8",
+      "disposition": "adapted",
+      "decision_evidence": "**A35/O15 â€” permission map and seed:** Coherent generated map and auth seed are applied together only when both operations are authorized. If either authorization is missing, apply neither and report the required companion path as blocked. This prevents unintended partial state. Final permission skill hash is listed above.",
+      "reason": "**A35/O15 â€” permission map and seed:** Coherent generated map and auth seed are applied together only when both operations are authorized. ",
+      "evidence": [
+        {
+          "path": "artifacts/skill-pack-optimization-20261018/lanes/AUDIT.md",
+          "line": 13
+        }
+      ],
+      "source": {
+        "snapshot_path": "artifacts/skill-pack-optimization-20261018/intake-snapshot.json",
+        "report_path": "artifacts/skill-pack-review-20261018/01-contradictions-and-overlaps.md",
+        "report_sha256": "6de7223950f08711ad4946039995286cc7efafd4a1558f1876f8ddcf13f6e03a"
+      }
+    },
+    {
+      "id": "01:A36",
+      "title": "The mirrored orchestrator pair has drifted",
+      "owner_lane": "ORCH",
+      "issue": "alaa-6dh.2.2",
+      "disposition": "implemented",
+      "decision_evidence": "Accept: mirror correction, length and lean-dispatch behavior; native role-definition wording works in both runtimes.",
+      "reason": "Accept: mirror correction, length and lean-dispatch behavior; native role-definition wording works in both runtimes.",
+      "evidence": [
+        {
+          "path": "artifacts/skill-pack-optimization-20261018/lanes/ORCH.md",
+          "line": 16
+        }
+      ],
+      "source": {
+        "snapshot_path": "artifacts/skill-pack-optimization-20261018/intake-snapshot.json",
+        "report_path": "artifacts/skill-pack-review-20261018/01-contradictions-and-overlaps.md",
+        "report_sha256": "6de7223950f08711ad4946039995286cc7efafd4a1558f1876f8ddcf13f6e03a"
+      }
+    },
+    {
+      "id": "01:A37",
+      "title": "Curation trigger lists differ",
+      "owner_lane": "CTRL",
+      "issue": "alaa-6dh.2.3",
+      "disposition": "rejected",
+      "decision_evidence": "Reject a new trigger list. Extractor `SKILL.md#Scan contract` already delegates timing to workflow; its description covers explicit user-requested extraction and its admission gate covers accepted/rejected judgment. Workflow `context-curation.md#The intermediate scan` separately selects timed scans.",
+      "reason": "Source comparison proves distinct timing/admission scopes; no duplicate wording added.",
+      "evidence": [
+        {
+          "path": "artifacts/skill-pack-optimization-20261018/lanes/CTRL.md",
+          "line": 19
+        }
+      ],
+      "source": {
+        "snapshot_path": "artifacts/skill-pack-optimization-20261018/intake-snapshot.json",
+        "report_path": "artifacts/skill-pack-review-20261018/01-contradictions-and-overlaps.md",
+        "report_sha256": "6de7223950f08711ad4946039995286cc7efafd4a1558f1876f8ddcf13f6e03a"
+      }
+    },
+    {
+      "id": "01:A38",
+      "title": "Low-noise claims per-model profiles that its own file disclaims",
+      "owner_lane": "CTRL",
+      "issue": "alaa-6dh.2.3",
+      "disposition": "implemented",
+      "decision_evidence": "Accept. Low-noise `references/model-output-profiles.md` explicitly defines no model profile/effort policy, while `SKILL.md#Model calibration` promises profiles and a universal fact.",
+      "reason": "Route current model claims to prompting; preserve independent output-length control and all evidence/authority caveats.",
+      "evidence": [
+        {
+          "path": "artifacts/skill-pack-optimization-20261018/lanes/CTRL.md",
+          "line": 20
+        }
+      ],
+      "source": {
+        "snapshot_path": "artifacts/skill-pack-optimization-20261018/intake-snapshot.json",
+        "report_path": "artifacts/skill-pack-review-20261018/01-contradictions-and-overlaps.md",
+        "report_sha256": "6de7223950f08711ad4946039995286cc7efafd4a1558f1876f8ddcf13f6e03a"
+      }
+    },
+    {
+      "id": "01:A39",
+      "title": "Vue validation block uses npm while Quasar says follow the lockfile",
+      "owner_lane": "UI",
+      "issue": "alaa-6dh.3.6",
+      "disposition": "implemented",
+      "decision_evidence": "Accept Vue ref60 script/local-exec equivalents selected by existing lockfile; Quasar body retains lockfile rule.",
+      "reason": "Existing script flags, final exhaustive tier authority, equivalent build/typecheck reuse; no package download or manager switch.",
+      "evidence": [
+        {
+          "path": "artifacts/skill-pack-optimization-20261018/lanes/UI.md",
+          "line": 17
+        }
+      ],
+      "source": {
+        "snapshot_path": "artifacts/skill-pack-optimization-20261018/intake-snapshot.json",
+        "report_path": "artifacts/skill-pack-review-20261018/01-contradictions-and-overlaps.md",
+        "report_sha256": "6de7223950f08711ad4946039995286cc7efafd4a1558f1876f8ddcf13f6e03a"
+      }
+    },
+    {
+      "id": "01:A40",
+      "title": "Docker rule 2 cites a file that does not hold its runtime keys",
+      "owner_lane": "PLATFORM",
+      "issue": "alaa-6dh.3.4",
+      "disposition": "implemented",
+      "decision_evidence": "ACCEPT",
+      "reason": "Docker `SKILL.md` rule 2 merges final-image posture with runtime keys. ",
+      "evidence": [
+        {
+          "path": "artifacts/skill-pack-optimization-20261018/lanes/PLATFORM.md",
+          "line": 19
+        }
+      ],
+      "source": {
+        "snapshot_path": "artifacts/skill-pack-optimization-20261018/intake-snapshot.json",
+        "report_path": "artifacts/skill-pack-review-20261018/01-contradictions-and-overlaps.md",
+        "report_sha256": "6de7223950f08711ad4946039995286cc7efafd4a1558f1876f8ddcf13f6e03a"
+      }
+    },
+    {
+      "id": "01:A41",
+      "title": "Fail-closed question restated in docker and haproxy",
+      "owner_lane": "SHARED",
+      "issue": "alaa-6dh.3.1",
+      "disposition": "implemented",
+      "decision_evidence": "Accept parent split. Security remains the full gate discriminator. PLATFORM replaces Docker/HAProxy discriminator copies; SHARED provides the exact existing security anchor, without editing PLATFORM files.",
+      "reason": "Security body Fail-closed versus fail-open; Docker ref25 and HAProxy body are out of lane.",
+      "evidence": [
+        {
+          "path": "artifacts/skill-pack-optimization-20261018/lanes/SHARED.md",
+          "line": 28
+        }
+      ],
+      "source": {
+        "snapshot_path": "artifacts/skill-pack-optimization-20261018/intake-snapshot.json",
+        "report_path": "artifacts/skill-pack-review-20261018/01-contradictions-and-overlaps.md",
+        "report_sha256": "6de7223950f08711ad4946039995286cc7efafd4a1558f1876f8ddcf13f6e03a"
+      }
+    },
+    {
+      "id": "01:A42",
+      "title": "Masking rule: an absolute ban beside permission to log a masked phone",
+      "owner_lane": "SHARED",
+      "issue": "alaa-6dh.3.1",
+      "disposition": "adapted",
+      "decision_evidence": "Adapt with C1/B21. A masked derivative is not automatically safe. Default to omission or a stable internal reference. A concrete phone diagnostic form may preserve only the wire's optional plus and country calling code; replace the entire national subscriber part with a fixed redaction marker. Never retain subscriber prefix/suffix digits or a reversible/hash correlation surrogate. Such a derivative belongs only in approved log/span/SOC fields, never metric labels.",
+      "reason": "Observability ref80 Classification gate, lines 20-41; security ref25 Logs, metrics, traces; provider current examples expose inconsistent subscriber digits. ",
+      "evidence": [
+        {
+          "path": "artifacts/skill-pack-optimization-20261018/lanes/SHARED.md",
+          "line": 29
+        }
+      ],
+      "source": {
+        "snapshot_path": "artifacts/skill-pack-optimization-20261018/intake-snapshot.json",
+        "report_path": "artifacts/skill-pack-review-20261018/01-contradictions-and-overlaps.md",
+        "report_sha256": "6de7223950f08711ad4946039995286cc7efafd4a1558f1876f8ddcf13f6e03a"
+      }
+    },
+    {
+      "id": "01:A43",
+      "title": "Orchestrators say \"should not implement\"",
+      "owner_lane": "WF",
+      "issue": "alaa-6dh.2.1",
+      "disposition": "adapted",
+      "decision_evidence": "Adapt via ORCH consumer",
+      "reason": "Current orchestrator preference/constraint conflict belongs to its exclusive writer; parent assigned ORCH. ",
+      "evidence": [
+        {
+          "path": "artifacts/skill-pack-optimization-20261018/lanes/WF.md",
+          "line": 44
+        },
+        {
+          "path": "artifacts/skill-pack-optimization-20261018/lanes/ORCH.md",
+          "line": 17
+        }
+      ],
+      "source": {
+        "snapshot_path": "artifacts/skill-pack-optimization-20261018/intake-snapshot.json",
+        "report_path": "artifacts/skill-pack-review-20261018/01-contradictions-and-overlaps.md",
+        "report_sha256": "6de7223950f08711ad4946039995286cc7efafd4a1558f1876f8ddcf13f6e03a"
+      }
+    },
+    {
+      "id": "01:A44",
+      "title": "Bash-shell forbids a re-check lane that an orchestrator mandates",
+      "owner_lane": "WF",
+      "issue": "alaa-6dh.2.1",
+      "disposition": "adapted",
+      "decision_evidence": "Adapt via CTRL Bash consumer",
+      "reason": "Redundant output re-checks differ from required artifact verification; parent assigned the narrow Bash exception to CTRL.",
+      "evidence": [
+        {
+          "path": "artifacts/skill-pack-optimization-20261018/lanes/WF.md",
+          "line": 45
+        },
+        {
+          "path": "artifacts/skill-pack-optimization-20261018/lanes/CTRL.md",
+          "line": 29
+        }
+      ],
+      "source": {
+        "snapshot_path": "artifacts/skill-pack-optimization-20261018/intake-snapshot.json",
+        "report_path": "artifacts/skill-pack-review-20261018/01-contradictions-and-overlaps.md",
+        "report_sha256": "6de7223950f08711ad4946039995286cc7efafd4a1558f1876f8ddcf13f6e03a"
+      }
+    },
+    {
+      "id": "01:A45",
+      "title": "The `--browser chromium` rule gives no reason",
+      "owner_lane": "ORCH",
+      "issue": "alaa-6dh.2.2",
+      "disposition": "implemented",
+      "decision_evidence": "Accept: keep `--browser chromium` and its approval requirement; add the documented hard-user-constraint reason.",
+      "reason": "Accept: keep `--browser chromium` and its approval requirement; add the documented hard-user-constraint reason.",
+      "evidence": [
+        {
+          "path": "artifacts/skill-pack-optimization-20261018/lanes/ORCH.md",
+          "line": 18
+        }
+      ],
+      "source": {
+        "snapshot_path": "artifacts/skill-pack-optimization-20261018/intake-snapshot.json",
+        "report_path": "artifacts/skill-pack-review-20261018/01-contradictions-and-overlaps.md",
+        "report_sha256": "6de7223950f08711ad4946039995286cc7efafd4a1558f1876f8ddcf13f6e03a"
+      }
+    },
+    {
+      "id": "01:A46",
+      "title": "Descriptions that open with a verb",
+      "owner_lane": "CTRL",
+      "issue": "alaa-6dh.2.3",
+      "disposition": "adapted",
+      "decision_evidence": "Adapt: prompting and Bash descriptions currently open with verbs. Change those affected descriptions, retaining all triggers, excluded uses and model/surface scope. No global sweep/checker extension.",
+      "reason": "Scoped structure/description checker plus semantic trigger comparison.",
+      "evidence": [
+        {
+          "path": "artifacts/skill-pack-optimization-20261018/lanes/CTRL.md",
+          "line": 21
+        }
+      ],
+      "source": {
+        "snapshot_path": "artifacts/skill-pack-optimization-20261018/intake-snapshot.json",
+        "report_path": "artifacts/skill-pack-review-20261018/01-contradictions-and-overlaps.md",
+        "report_sha256": "6de7223950f08711ad4946039995286cc7efafd4a1558f1876f8ddcf13f6e03a"
+      }
+    },
+    {
+      "id": "01:A47",
+      "title": "Two terms are used but never defined",
+      "owner_lane": "PLATFORM",
+      "issue": "alaa-6dh.3.4",
+      "disposition": "adapted",
+      "decision_evidence": "ADAPT",
+      "reason": "HAProxy/Lua completion blocks use undefined materially different retry. ",
+      "evidence": [
+        {
+          "path": "artifacts/skill-pack-optimization-20261018/lanes/PLATFORM.md",
+          "line": 20
+        }
+      ],
+      "source": {
+        "snapshot_path": "artifacts/skill-pack-optimization-20261018/intake-snapshot.json",
+        "report_path": "artifacts/skill-pack-review-20261018/01-contradictions-and-overlaps.md",
+        "report_sha256": "6de7223950f08711ad4946039995286cc7efafd4a1558f1876f8ddcf13f6e03a"
+      }
+    },
+    {
+      "id": "01:A48",
+      "title": "K8s-helm has no branch for an unreachable cluster",
+      "owner_lane": "PLATFORM",
+      "issue": "alaa-6dh.3.4",
+      "disposition": "adapted",
+      "decision_evidence": "ADAPT",
+      "reason": "k8s-helm `SKILL.md:26` already requires affirmative authorization. ",
+      "evidence": [
+        {
+          "path": "artifacts/skill-pack-optimization-20261018/lanes/PLATFORM.md",
+          "line": 21
+        }
+      ],
+      "source": {
+        "snapshot_path": "artifacts/skill-pack-optimization-20261018/intake-snapshot.json",
+        "report_path": "artifacts/skill-pack-review-20261018/01-contradictions-and-overlaps.md",
+        "report_sha256": "6de7223950f08711ad4946039995286cc7efafd4a1558f1876f8ddcf13f6e03a"
+      }
+    },
+    {
+      "id": "01:A49",
+      "title": "The orchestrators ask for a reviewed diff per subtask",
+      "owner_lane": "WF",
+      "issue": "alaa-6dh.2.1",
+      "disposition": "adapted",
+      "decision_evidence": "Implement",
+      "reason": "Close reason now identifies the tested version and says closure implies no independent review; task/phase REVIEW_PENDING is explicit.",
+      "evidence": [
+        {
+          "path": "artifacts/skill-pack-optimization-20261018/lanes/WF.md",
+          "line": 46
+        }
+      ],
+      "source": {
+        "snapshot_path": "artifacts/skill-pack-optimization-20261018/intake-snapshot.json",
+        "report_path": "artifacts/skill-pack-review-20261018/01-contradictions-and-overlaps.md",
+        "report_sha256": "6de7223950f08711ad4946039995286cc7efafd4a1558f1876f8ddcf13f6e03a"
+      }
+    },
+    {
+      "id": "01:A50",
+      "title": "Affected and exhaustive tiers overlap on one tree, and nothing lets one subsume the other",
+      "owner_lane": "WF",
+      "issue": "alaa-6dh.2.1",
+      "disposition": "adapted",
+      "decision_evidence": "Adapt",
+      "reason": "Final aggregate subsumption requires identical covered inputs/environment/flags/observer; documentation differences do not prove equivalence.",
+      "evidence": [
+        {
+          "path": "artifacts/skill-pack-optimization-20261018/lanes/WF.md",
+          "line": 47
+        }
+      ],
+      "source": {
+        "snapshot_path": "artifacts/skill-pack-optimization-20261018/intake-snapshot.json",
+        "report_path": "artifacts/skill-pack-review-20261018/01-contradictions-and-overlaps.md",
+        "report_sha256": "6de7223950f08711ad4946039995286cc7efafd4a1558f1876f8ddcf13f6e03a"
+      }
+    },
+    {
+      "id": "01:A51",
+      "title": "\"Final candidate\" is undefined when the orchestrator runs once per workflow phase",
+      "owner_lane": "WF",
+      "issue": "alaa-6dh.2.1",
+      "disposition": "adapted",
+      "decision_evidence": "Implement owner split",
+      "reason": "Workflow passes engagement/final-phase/review-boundary context; runtime scheduling stays in the mirrored gate owners.",
+      "evidence": [
+        {
+          "path": "artifacts/skill-pack-optimization-20261018/lanes/WF.md",
+          "line": 48
+        }
+      ],
+      "source": {
+        "snapshot_path": "artifacts/skill-pack-optimization-20261018/intake-snapshot.json",
+        "report_path": "artifacts/skill-pack-review-20261018/01-contradictions-and-overlaps.md",
+        "report_sha256": "6de7223950f08711ad4946039995286cc7efafd4a1558f1876f8ddcf13f6e03a"
+      }
+    },
+    {
+      "id": "01:B1",
+      "title": "Redelivery test shape",
+      "owner_lane": "PHP",
+      "issue": "alaa-6dh.3.2",
+      "disposition": "adapted",
+      "decision_evidence": "Adapt",
+      "reason": "Async references/60-telemetry-and-proof.md Required tests owns queue redelivery assertions. ",
+      "evidence": [
+        {
+          "path": "artifacts/skill-pack-optimization-20261018/lanes/PHP.md",
+          "line": 14
+        }
+      ],
+      "source": {
+        "snapshot_path": "artifacts/skill-pack-optimization-20261018/intake-snapshot.json",
+        "report_path": "artifacts/skill-pack-review-20261018/01-contradictions-and-overlaps.md",
+        "report_sha256": "6de7223950f08711ad4946039995286cc7efafd4a1558f1876f8ddcf13f6e03a"
+      }
+    },
+    {
+      "id": "01:B2",
+      "title": "Prefetch rule",
+      "owner_lane": "PHP",
+      "issue": "alaa-6dh.3.2",
+      "disposition": "implemented",
+      "decision_evidence": "Accept",
+      "reason": "Async references/30-consuming-ack-and-prefetch/40-prefetch.md owns sizing. ",
+      "evidence": [
+        {
+          "path": "artifacts/skill-pack-optimization-20261018/lanes/PHP.md",
+          "line": 15
+        }
+      ],
+      "source": {
+        "snapshot_path": "artifacts/skill-pack-optimization-20261018/intake-snapshot.json",
+        "report_path": "artifacts/skill-pack-review-20261018/01-contradictions-and-overlaps.md",
+        "report_sha256": "6de7223950f08711ad4946039995286cc7efafd4a1558f1876f8ddcf13f6e03a"
+      }
+    },
+    {
+      "id": "01:B3",
+      "title": "Provider boot rule has one diverging copy",
+      "owner_lane": "GO",
+      "issue": "alaa-6dh.3.5",
+      "disposition": "adapted",
+      "decision_evidence": "Adapt: data-layer ref50 Boot and register discipline routes provider boot policy to Laravel architecture ref20; remove booting callback and try/catch allowance, preserve lazy first-use fallback/per-request memo.",
+      "reason": "No Redis I/O in register/boot or booting hook. ",
+      "evidence": [
+        {
+          "path": "artifacts/skill-pack-optimization-20261018/lanes/GO.md",
+          "line": 15
+        }
+      ],
+      "source": {
+        "snapshot_path": "artifacts/skill-pack-optimization-20261018/intake-snapshot.json",
+        "report_path": "artifacts/skill-pack-review-20261018/01-contradictions-and-overlaps.md",
+        "report_sha256": "6de7223950f08711ad4946039995286cc7efafd4a1558f1876f8ddcf13f6e03a"
+      }
+    },
+    {
+      "id": "01:B4",
+      "title": "Upstream-override list: count claim false, remedy diverges",
+      "owner_lane": "PHP",
+      "issue": "alaa-6dh.3.2",
+      "disposition": "adapted",
+      "decision_evidence": "Adapt",
+      "reason": "Octane SKILL upstream precedence and full-guide cache tiers own once() remedy. ",
+      "evidence": [
+        {
+          "path": "artifacts/skill-pack-optimization-20261018/lanes/PHP.md",
+          "line": 16
+        }
+      ],
+      "source": {
+        "snapshot_path": "artifacts/skill-pack-optimization-20261018/intake-snapshot.json",
+        "report_path": "artifacts/skill-pack-review-20261018/01-contradictions-and-overlaps.md",
+        "report_sha256": "6de7223950f08711ad4946039995286cc7efafd4a1558f1876f8ddcf13f6e03a"
+      }
+    },
+    {
+      "id": "01:B5",
+      "title": "Postman generation and conventions",
+      "owner_lane": "PHP",
+      "issue": "alaa-6dh.3.2",
+      "disposition": "adapted",
+      "decision_evidence": "Adapt",
+      "reason": "Postman SKILL owns generation and complete saved examples. ",
+      "evidence": [
+        {
+          "path": "artifacts/skill-pack-optimization-20261018/lanes/PHP.md",
+          "line": 17
+        }
+      ],
+      "source": {
+        "snapshot_path": "artifacts/skill-pack-optimization-20261018/intake-snapshot.json",
+        "report_path": "artifacts/skill-pack-review-20261018/01-contradictions-and-overlaps.md",
+        "report_sha256": "6de7223950f08711ad4946039995286cc7efafd4a1558f1876f8ddcf13f6e03a"
+      }
+    },
+    {
+      "id": "01:B6",
+      "title": "The fail-open and fail-closed discriminator is restated",
+      "owner_lane": "SHARED",
+      "issue": "alaa-6dh.3.1",
+      "disposition": "adapted",
+      "decision_evidence": "Adapt. Full gate discriminator stays in security. Reliability keeps its contributor consequences, durably accepted-work boundary and conservative unclassified=>gate rule, replacing the duplicate question/illustrative repetition with the security pointer. Vector retains path-specific exactness and buffering consequences; replace repeated general discriminator with owner pointers.",
+      "reason": "Security body Fail-closed doctrine; reliability body discrimination section; Vector body rule3, ref30 Ala binding, ref75 ruling. ",
+      "evidence": [
+        {
+          "path": "artifacts/skill-pack-optimization-20261018/lanes/SHARED.md",
+          "line": 30
+        }
+      ],
+      "source": {
+        "snapshot_path": "artifacts/skill-pack-optimization-20261018/intake-snapshot.json",
+        "report_path": "artifacts/skill-pack-review-20261018/01-contradictions-and-overlaps.md",
+        "report_sha256": "6de7223950f08711ad4946039995286cc7efafd4a1558f1876f8ddcf13f6e03a"
+      }
+    },
+    {
+      "id": "01:B7",
+      "title": "Audit-write boundary: ambiguity only",
+      "owner_lane": "SHARED",
+      "issue": "alaa-6dh.3.1",
+      "disposition": "implemented",
+      "decision_evidence": "Accept. Explicitly limit SOC fail-open to forwarding/export; a privileged-action audit write required by repository non-repudiation policy stays under security's fail-closed control.",
+      "reason": "Observability body Platform invariants; security body audit-write/forward split; services ref20 `authz.cache.clear_started` row.",
+      "evidence": [
+        {
+          "path": "artifacts/skill-pack-optimization-20261018/lanes/SHARED.md",
+          "line": 31
+        }
+      ],
+      "source": {
+        "snapshot_path": "artifacts/skill-pack-optimization-20261018/intake-snapshot.json",
+        "report_path": "artifacts/skill-pack-review-20261018/01-contradictions-and-overlaps.md",
+        "report_sha256": "6de7223950f08711ad4946039995286cc7efafd4a1558f1876f8ddcf13f6e03a"
+      }
+    },
+    {
+      "id": "01:B8",
+      "title": "Keyset restates the envelope and invents limit values",
+      "owner_lane": "SHARED",
+      "issue": "alaa-6dh.3.1",
+      "disposition": "adapted",
+      "decision_evidence": "Adapt. Preserve the existing pagination 20/100 values by registering their ownership in services ref22, then point keyset limits there. This is an ownership relocation of already binding local defaults, not an invented measurement or claim that current services comply. Preserve measured/documented exceptions, reject/no clamp and compatibility migration. Wire envelope moves nowhere: services ref25 already owns it. Keyset keeps algorithm rationale, not a second response schema.",
+      "reason": "Keyset body step9, ref40 Request/Response; services ref25 Request/Response rules and services ref22 value ownership.",
+      "evidence": [
+        {
+          "path": "artifacts/skill-pack-optimization-20261018/lanes/SHARED.md",
+          "line": 32
+        }
+      ],
+      "source": {
+        "snapshot_path": "artifacts/skill-pack-optimization-20261018/intake-snapshot.json",
+        "report_path": "artifacts/skill-pack-review-20261018/01-contradictions-and-overlaps.md",
+        "report_sha256": "6de7223950f08711ad4946039995286cc7efafd4a1558f1876f8ddcf13f6e03a"
+      }
+    },
+    {
+      "id": "01:B9",
+      "title": "Keyset cursor error codes are not in the owner",
+      "owner_lane": "SHARED",
+      "issue": "alaa-6dh.3.1",
+      "disposition": "adapted",
+      "decision_evidence": "Adapt. Register the four existing cursor codes/statuses additively in services ref25, then keep condition/rationale in keyset pointing to that row. This registers the current pack contract and makes no claim that an external registry is absent. Never overwrite a conflicting target repository code registry; use the services body conflict/deprecation stop first.",
+      "reason": "Keyset ref40 Errors (`INVALID_CURSOR`, `CURSOR_VERSION_UNSUPPORTED`, `CURSOR_EXPIRED`, `INVALID_CURSOR_CONTEXT`, all 400); services ref25 List pagination contract; services body Hard contract rule.",
+      "evidence": [
+        {
+          "path": "artifacts/skill-pack-optimization-20261018/lanes/SHARED.md",
+          "line": 33
+        }
+      ],
+      "source": {
+        "snapshot_path": "artifacts/skill-pack-optimization-20261018/intake-snapshot.json",
+        "report_path": "artifacts/skill-pack-review-20261018/01-contradictions-and-overlaps.md",
+        "report_sha256": "6de7223950f08711ad4946039995286cc7efafd4a1558f1876f8ddcf13f6e03a"
+      }
+    },
+    {
+      "id": "01:B10",
+      "title": "Testing enumeration pointer",
+      "owner_lane": "CTRL",
+      "issue": "alaa-6dh.2.3",
+      "disposition": "implemented",
+      "decision_evidence": "Accept source correction, consumer outside CTRL. Testing `references/60-coverage.md` obligation 2 says reference 70 owns enumeration; reference 70 `#One enumeration, two consumers` instead identifies observability reference 10 as table owner.",
+      "reason": "WF writer corrects pointer; parent links its evidence before item removal.",
+      "evidence": [
+        {
+          "path": "artifacts/skill-pack-optimization-20261018/lanes/CTRL.md",
+          "line": 22
+        },
+        {
+          "path": "artifacts/skill-pack-optimization-20261018/lanes/WF.md",
+          "line": 56
+        }
+      ],
+      "source": {
+        "snapshot_path": "artifacts/skill-pack-optimization-20261018/intake-snapshot.json",
+        "report_path": "artifacts/skill-pack-review-20261018/01-contradictions-and-overlaps.md",
+        "report_sha256": "6de7223950f08711ad4946039995286cc7efafd4a1558f1876f8ddcf13f6e03a"
+      }
+    },
+    {
+      "id": "01:B11",
+      "title": "Cache Storage and token-in-storage rules are restated",
+      "owner_lane": "UI",
+      "issue": "alaa-6dh.3.6",
+      "disposition": "adapted",
+      "decision_evidence": "Adapt only UI consumers to those owners. Quasar ref34 Cache Storage contents becomes a pointer to ref30 section 2; body retains a short ownership boundary. PLAYER owns IndexedDB changes.",
+      "reason": "Credentialed request network-only/exception/logout-purge gates and app-local memory token posture survive. ",
+      "evidence": [
+        {
+          "path": "artifacts/skill-pack-optimization-20261018/lanes/UI.md",
+          "line": 18
+        }
+      ],
+      "source": {
+        "snapshot_path": "artifacts/skill-pack-optimization-20261018/intake-snapshot.json",
+        "report_path": "artifacts/skill-pack-review-20261018/01-contradictions-and-overlaps.md",
+        "report_sha256": "6de7223950f08711ad4946039995286cc7efafd4a1558f1876f8ddcf13f6e03a"
+      }
+    },
+    {
+      "id": "01:B12",
+      "title": "Service-worker verification runbook has two homes",
+      "owner_lane": "UI",
+      "issue": "alaa-6dh.3.6",
+      "disposition": "adapted",
+      "decision_evidence": "Adapt: transfer all five manual scenarios alongside automated regressions, then replace frontend list with triggered pointer.",
+      "reason": "Install/first-load, update waiting/SKIP_WAITING/reload-once/no missing chunk, offline reload/direct-navigation/no loop, allowed runtime-cache entries, online regression; production build only.",
+      "evidence": [
+        {
+          "path": "artifacts/skill-pack-optimization-20261018/lanes/UI.md",
+          "line": 19
+        }
+      ],
+      "source": {
+        "snapshot_path": "artifacts/skill-pack-optimization-20261018/intake-snapshot.json",
+        "report_path": "artifacts/skill-pack-review-20261018/01-contradictions-and-overlaps.md",
+        "report_sha256": "6de7223950f08711ad4946039995286cc7efafd4a1558f1876f8ddcf13f6e03a"
+      }
+    },
+    {
+      "id": "01:B13",
+      "title": "Frontend and Quasar carry a router in the body and in the topic map",
+      "owner_lane": "UI",
+      "issue": "alaa-6dh.3.6",
+      "disposition": "implemented",
+      "decision_evidence": "Accept. Preserve external maps and original behavioral ordering, unique triggers and destinations; leave one short triggered body pointer. Move frontend ownership routes into its map and update ref70's owner-table location.",
+      "reason": "No reference-count retirement, no duplicate body router; reduced-motion gate, permission timing/recovery, custom-SW pairing order and operational record remain reachable.",
+      "evidence": [
+        {
+          "path": "artifacts/skill-pack-optimization-20261018/lanes/UI.md",
+          "line": 20
+        }
+      ],
+      "source": {
+        "snapshot_path": "artifacts/skill-pack-optimization-20261018/intake-snapshot.json",
+        "report_path": "artifacts/skill-pack-review-20261018/01-contradictions-and-overlaps.md",
+        "report_sha256": "6de7223950f08711ad4946039995286cc7efafd4a1558f1876f8ddcf13f6e03a"
+      }
+    },
+    {
+      "id": "01:B14",
+      "title": "Services-contract and reliability carry a router in the body and in the topic map",
+      "owner_lane": "SHARED",
+      "issue": "alaa-6dh.3.1",
+      "disposition": "adapted",
+      "decision_evidence": "Adapt. Preserve both external topic maps. Remove only duplicated body routers from services and reliability; merge any unique condition into the existing topic map before removing the duplicate. Preserve direct procedural owner pointers and hard rules. Reject the obsolete reference-count relocation argument.",
+      "reason": "Services body Trigger to file versus ref00; reliability body Reference routing versus ref00. ",
+      "evidence": [
+        {
+          "path": "artifacts/skill-pack-optimization-20261018/lanes/SHARED.md",
+          "line": 34
+        }
+      ],
+      "source": {
+        "snapshot_path": "artifacts/skill-pack-optimization-20261018/intake-snapshot.json",
+        "report_path": "artifacts/skill-pack-review-20261018/01-contradictions-and-overlaps.md",
+        "report_sha256": "6de7223950f08711ad4946039995286cc7efafd4a1558f1876f8ddcf13f6e03a"
+      }
+    },
+    {
+      "id": "01:B15",
+      "title": "Go: the forbidden-import list differs, and the hierarchy is circular",
+      "owner_lane": "GO",
+      "issue": "alaa-6dh.3.5",
+      "disposition": "adapted",
+      "decision_evidence": "Adapt: alaa-golang ref62 owns complete forbidden transitive import list and build-graph check; clean-code P5 retains principle/consumer interfaces, example and missing-analyzer/change-request evidence, routes list/check to ref62.",
+      "reason": "Keep SDK/driver/transport prohibition, consumer-owned interfaces, concrete constructors, missing analyzer admission. ",
+      "evidence": [
+        {
+          "path": "artifacts/skill-pack-optimization-20261018/lanes/GO.md",
+          "line": 16
+        }
+      ],
+      "source": {
+        "snapshot_path": "artifacts/skill-pack-optimization-20261018/intake-snapshot.json",
+        "report_path": "artifacts/skill-pack-review-20261018/01-contradictions-and-overlaps.md",
+        "report_sha256": "6de7223950f08711ad4946039995286cc7efafd4a1558f1876f8ddcf13f6e03a"
+      }
+    },
+    {
+      "id": "01:B16",
+      "title": "TDD sequence copies omit steps of the owner",
+      "owner_lane": "GO",
+      "issue": "alaa-6dh.3.5",
+      "disposition": "implemented",
+      "decision_evidence": "Accept: Fiber ref30 TDD points to Go ref63 full owed-test sequence and testing-strategy design; keep Fiber-specific retained-value race evidence.",
+      "reason": "Existing-tests/read, isolated failing reason, stop/report and focused retest remain reachable.",
+      "evidence": [
+        {
+          "path": "artifacts/skill-pack-optimization-20261018/lanes/GO.md",
+          "line": 17
+        }
+      ],
+      "source": {
+        "snapshot_path": "artifacts/skill-pack-optimization-20261018/intake-snapshot.json",
+        "report_path": "artifacts/skill-pack-review-20261018/01-contradictions-and-overlaps.md",
+        "report_sha256": "6de7223950f08711ad4946039995286cc7efafd4a1558f1876f8ddcf13f6e03a"
+      }
+    },
+    {
+      "id": "01:B17",
+      "title": "Fiber restates rules owned elsewhere",
+      "owner_lane": "GO",
+      "issue": "alaa-6dh.3.5",
+      "disposition": "adapted",
+      "decision_evidence": "Adapt: Fiber ref40 routes admission doctrine to reliability ref40 and cache stampede/TTL/negative policy to Go ref61; retain Go semaphore/TryAcquire mechanics and Fiber/fasthttp specifics without duplicating rejection doctrine.",
+      "reason": "Immediate bounded admission remains actionable; no chi kit shedding copied into Fiber.",
+      "evidence": [
+        {
+          "path": "artifacts/skill-pack-optimization-20261018/lanes/GO.md",
+          "line": 18
+        }
+      ],
+      "source": {
+        "snapshot_path": "artifacts/skill-pack-optimization-20261018/intake-snapshot.json",
+        "report_path": "artifacts/skill-pack-review-20261018/01-contradictions-and-overlaps.md",
+        "report_sha256": "6de7223950f08711ad4946039995286cc7efafd4a1558f1876f8ddcf13f6e03a"
+      }
+    },
+    {
+      "id": "01:B18",
+      "title": "Fiber restates the correlation contract in full once",
+      "owner_lane": "GO",
+      "issue": "alaa-6dh.3.5",
+      "disposition": "adapted",
+      "decision_evidence": "Adapt: Fiber ref40 retains its unique TraceContext validation, reinjection, fresh valid context and bounded warning wiring, outer correlation middleware and kit change-request boundary. Route response/correlation contract to services-contract ref20.",
+      "reason": "Span middleware alone still cannot satisfy platform correlation; probes/errors remain covered by canonical owner and local tests.",
+      "evidence": [
+        {
+          "path": "artifacts/skill-pack-optimization-20261018/lanes/GO.md",
+          "line": 19
+        }
+      ],
+      "source": {
+        "snapshot_path": "artifacts/skill-pack-optimization-20261018/intake-snapshot.json",
+        "report_path": "artifacts/skill-pack-review-20261018/01-contradictions-and-overlaps.md",
+        "report_sha256": "6de7223950f08711ad4946039995286cc7efafd4a1558f1876f8ddcf13f6e03a"
+      }
+    },
+    {
+      "id": "01:B19",
+      "title": "Cache telemetry requirement appears in two differing lists",
+      "owner_lane": "SHARED",
+      "issue": "alaa-6dh.3.1",
+      "disposition": "adapted",
+      "decision_evidence": "Adapt. Add the existing cache requirement union to observability ref20: hits, misses, errors, source-of-truth fallbacks and latency histogram, conditional on a cache. Consumer Go/Fiber paths then point here. Exact cache names/labels remain registry/kit-owned; do not rename kit outputs or invent fleet-wide families.",
+      "reason": "Go ref61 Signals; Fiber ref40 production readiness; services ref24 existing authz-specific cache families, which are not a generic cache naming policy; observability ref20. ",
+      "evidence": [
+        {
+          "path": "artifacts/skill-pack-optimization-20261018/lanes/SHARED.md",
+          "line": 35
+        }
+      ],
+      "source": {
+        "snapshot_path": "artifacts/skill-pack-optimization-20261018/intake-snapshot.json",
+        "report_path": "artifacts/skill-pack-review-20261018/01-contradictions-and-overlaps.md",
+        "report_sha256": "6de7223950f08711ad4946039995286cc7efafd4a1558f1876f8ddcf13f6e03a"
+      }
+    },
+    {
+      "id": "01:B20",
+      "title": "Driver error text and kit Redis facts are repeated",
+      "owner_lane": "GO",
+      "issue": "alaa-6dh.3.5",
+      "disposition": "adapted",
+      "decision_evidence": "Adapt: data-layer ref51 owns actual rediskit client/readiness/TTL/miss/breaker facts; Go ref45/ref61, clean-code ref20 and go-chi ref12 point there. Data-layer ref60 keeps proposed keys/defaults and kit-gap obligations, points to ref51 for observed Redis settings; no relocation of desired configuration contract. Fiber decode duplication routes to Go ref45 section 5 while keeping transport adapter requirement.",
+      "reason": "Dated evidence and source refresh remain explicit; clean miss versus failure, no retries, TTL, degraded readiness and source truth survive. ",
+      "evidence": [
+        {
+          "path": "artifacts/skill-pack-optimization-20261018/lanes/GO.md",
+          "line": 20
+        }
+      ],
+      "source": {
+        "snapshot_path": "artifacts/skill-pack-optimization-20261018/intake-snapshot.json",
+        "report_path": "artifacts/skill-pack-review-20261018/01-contradictions-and-overlaps.md",
+        "report_sha256": "6de7223950f08711ad4946039995286cc7efafd4a1558f1876f8ddcf13f6e03a"
+      }
+    },
+    {
+      "id": "01:B21",
+      "title": "Provider skills restate the masking and egress rule",
+      "owner_lane": "SHARED",
+      "issue": "alaa-6dh.3.1",
+      "disposition": "adapted",
+      "decision_evidence": "Adapt with C1/B21. A masked derivative is not automatically safe. Default to omission or a stable internal reference. A concrete phone diagnostic form may preserve only the wire's optional plus and country calling code; replace the entire national subscriber part with a fixed redaction marker. Never retain subscriber prefix/suffix digits or a reversible/hash correlation surrogate. Such a derivative belongs only in approved log/span/SOC fields, never metric labels.",
+      "reason": "Observability ref80 Classification gate, lines 20-41; security ref25 Logs, metrics, traces; provider current examples expose inconsistent subscriber digits. ",
+      "evidence": [
+        {
+          "path": "artifacts/skill-pack-optimization-20261018/lanes/SHARED.md",
+          "line": 29
+        }
+      ],
+      "source": {
+        "snapshot_path": "artifacts/skill-pack-optimization-20261018/intake-snapshot.json",
+        "report_path": "artifacts/skill-pack-review-20261018/01-contradictions-and-overlaps.md",
+        "report_sha256": "6de7223950f08711ad4946039995286cc7efafd4a1558f1876f8ddcf13f6e03a"
+      }
+    },
+    {
+      "id": "01:B22",
+      "title": "Provider skills restate connect-refused versus timeout",
+      "owner_lane": "SIGNALS",
+      "issue": "alaa-6dh.3.9",
+      "disposition": "adapted",
+      "decision_evidence": "Provider skills retain only their vendor-specific mapping to reliability failure classes and point to the owner.",
+      "reason": "Mediana's zero retry budget and envelope-key resolution remain distinct from Bale's same-`request_id` retry behavior.",
+      "evidence": [
+        {
+          "path": "artifacts/skill-pack-optimization-20261018/lanes/SIGNALS.md",
+          "line": 17
+        }
+      ],
+      "source": {
+        "snapshot_path": "artifacts/skill-pack-optimization-20261018/intake-snapshot.json",
+        "report_path": "artifacts/skill-pack-review-20261018/01-contradictions-and-overlaps.md",
+        "report_sha256": "6de7223950f08711ad4946039995286cc7efafd4a1558f1876f8ddcf13f6e03a"
+      }
+    },
+    {
+      "id": "01:B23",
+      "title": "Shaka, indexeddb and minio carry text that another skill owns",
+      "owner_lane": "PLAYER",
+      "issue": "alaa-6dh.3.7",
+      "disposition": "adapted",
+      "decision_evidence": "`alaa-indexeddb-browser-storage/references/72-offline-media-store.md` is the single owner of the browser-storage boundary and caller-side `persist()` fact. Remove the repeated quoted block and repeated substrate explanation in Shaka ref50, replacing them with one triggered pointer to IDB72. Retain every Shaka-specific API, partial-store detection/restart/cleanup, persistent DRM, and download behavior.",
+      "reason": "IDB72 states the seam once and already contains the reciprocal pointer and `persist()` obligations. ",
+      "evidence": [
+        {
+          "path": "artifacts/skill-pack-optimization-20261018/lanes/PLAYER.md",
+          "line": 22
+        }
+      ],
+      "source": {
+        "snapshot_path": "artifacts/skill-pack-optimization-20261018/intake-snapshot.json",
+        "report_path": "artifacts/skill-pack-review-20261018/01-contradictions-and-overlaps.md",
+        "report_sha256": "6de7223950f08711ad4946039995286cc7efafd4a1558f1876f8ddcf13f6e03a"
+      }
+    },
+    {
+      "id": "01:B24",
+      "title": "Object-key rules and part sizing are routed to two owners",
+      "owner_lane": "STORAGE",
+      "issue": "alaa-6dh.3.3",
+      "disposition": "adapted",
+      "decision_evidence": "B24 - adapt ownership without losing the defect",
+      "reason": "Preserve both external topic maps. ",
+      "evidence": [
+        {
+          "path": "artifacts/skill-pack-optimization-20261018/lanes/STORAGE.md",
+          "line": 41
+        }
+      ],
+      "source": {
+        "snapshot_path": "artifacts/skill-pack-optimization-20261018/intake-snapshot.json",
+        "report_path": "artifacts/skill-pack-review-20261018/01-contradictions-and-overlaps.md",
+        "report_sha256": "6de7223950f08711ad4946039995286cc7efafd4a1558f1876f8ddcf13f6e03a"
+      }
+    },
+    {
+      "id": "01:B25",
+      "title": "ClickHouse boundary text and worked instance",
+      "owner_lane": "SIGNALS",
+      "issue": "alaa-6dh.3.9",
+      "disposition": "adapted",
+      "decision_evidence": "`alaa-signoz-clickhouse-docs/SKILL.md` remains the SigNoz tenancy owner. Remove the duplicate tenancy statement from ClickHouse reference 15, retaining a pointer and the raw plus aggregate `project_id` query obligation.",
+      "reason": "Preserve historical ClickHouse commit/line provenance and its existing re-derive instruction. ",
+      "evidence": [
+        {
+          "path": "artifacts/skill-pack-optimization-20261018/lanes/SIGNALS.md",
+          "line": 18
+        }
+      ],
+      "source": {
+        "snapshot_path": "artifacts/skill-pack-optimization-20261018/intake-snapshot.json",
+        "report_path": "artifacts/skill-pack-review-20261018/01-contradictions-and-overlaps.md",
+        "report_sha256": "6de7223950f08711ad4946039995286cc7efafd4a1558f1876f8ddcf13f6e03a"
+      }
+    },
+    {
+      "id": "01:B26",
+      "title": "The dispatch return contract is split across several files",
+      "owner_lane": "CTRL",
+      "issue": "alaa-6dh.2.3",
+      "disposition": "implemented",
+      "decision_evidence": "Accept owner, adapt edits. Low-noise `references/workflow-integration.md#Delegated lanes` already owns explicit shape/length bound and context rationale. Remove the body's repeated return rules; its References section already triggers that owner when delegated lanes are active. ORCH owns dispatch fields; WF owns durable evidence persistence.",
+      "reason": "Inspect one owner and surviving field/persistence links. ",
+      "evidence": [
+        {
+          "path": "artifacts/skill-pack-optimization-20261018/lanes/CTRL.md",
+          "line": 23
+        }
+      ],
+      "source": {
+        "snapshot_path": "artifacts/skill-pack-optimization-20261018/intake-snapshot.json",
+        "report_path": "artifacts/skill-pack-review-20261018/01-contradictions-and-overlaps.md",
+        "report_sha256": "6de7223950f08711ad4946039995286cc7efafd4a1558f1876f8ddcf13f6e03a"
+      }
+    },
+    {
+      "id": "01:B27",
+      "title": "Workflow restates its own trigger and timing rules",
+      "owner_lane": "WF",
+      "issue": "alaa-6dh.2.1",
+      "disposition": "adapted",
+      "decision_evidence": "Implement",
+      "reason": "Workflow body now routes timing, curation and prompt-shape detail to existing owners; misleading sole-trigger claim removed.",
+      "evidence": [
+        {
+          "path": "artifacts/skill-pack-optimization-20261018/lanes/WF.md",
+          "line": 49
+        }
+      ],
+      "source": {
+        "snapshot_path": "artifacts/skill-pack-optimization-20261018/intake-snapshot.json",
+        "report_path": "artifacts/skill-pack-review-20261018/01-contradictions-and-overlaps.md",
+        "report_sha256": "6de7223950f08711ad4946039995286cc7efafd4a1558f1876f8ddcf13f6e03a"
+      }
+    },
+    {
+      "id": "01:B28",
+      "title": "Gate-economics rule appears in three independent files",
+      "owner_lane": "ORCH",
+      "issue": "alaa-6dh.2.2",
+      "disposition": "implemented",
+      "decision_evidence": "Accept: gate economics has one mirrored owner; body points there; CTRL consumes that owner.",
+      "reason": "Accept: gate economics has one mirrored owner; body points there; CTRL consumes that owner.",
+      "evidence": [
+        {
+          "path": "artifacts/skill-pack-optimization-20261018/lanes/ORCH.md",
+          "line": 19
+        }
+      ],
+      "source": {
+        "snapshot_path": "artifacts/skill-pack-optimization-20261018/intake-snapshot.json",
+        "report_path": "artifacts/skill-pack-review-20261018/01-contradictions-and-overlaps.md",
+        "report_sha256": "6de7223950f08711ad4946039995286cc7efafd4a1558f1876f8ddcf13f6e03a"
+      }
+    },
+    {
+      "id": "01:C1",
+      "title": "Sensitive-data masking and log egress",
+      "owner_lane": "SHARED",
+      "issue": "alaa-6dh.3.1",
+      "disposition": "adapted",
+      "decision_evidence": "Adapt with C1/B21. A masked derivative is not automatically safe. Default to omission or a stable internal reference. A concrete phone diagnostic form may preserve only the wire's optional plus and country calling code; replace the entire national subscriber part with a fixed redaction marker. Never retain subscriber prefix/suffix digits or a reversible/hash correlation surrogate. Such a derivative belongs only in approved log/span/SOC fields, never metric labels.",
+      "reason": "Observability ref80 Classification gate, lines 20-41; security ref25 Logs, metrics, traces; provider current examples expose inconsistent subscriber digits. ",
+      "evidence": [
+        {
+          "path": "artifacts/skill-pack-optimization-20261018/lanes/SHARED.md",
+          "line": 29
+        }
+      ],
+      "source": {
+        "snapshot_path": "artifacts/skill-pack-optimization-20261018/intake-snapshot.json",
+        "report_path": "artifacts/skill-pack-review-20261018/01-contradictions-and-overlaps.md",
+        "report_sha256": "6de7223950f08711ad4946039995286cc7efafd4a1558f1876f8ddcf13f6e03a"
+      }
+    },
+    {
+      "id": "01:C2",
+      "title": "Container runtime-hardening baseline",
+      "owner_lane": "SHARED",
+      "issue": "alaa-6dh.3.1",
+      "disposition": "adapted",
+      "decision_evidence": "Adapt. Keep security ref60 as container baseline. Read-only root filesystem is the default; a workload that cannot meet it records exact writable paths, workload reason and compensating control in the change. Preserve non-root/no added capabilities/no runtime socket/digest/secret constraints. PLATFORM keeps Docker/Kubernetes syntax and adds owner pointers. No broad platform rewrite.",
+      "reason": "Security ref60 Part3 Container; services ref15 Docker delegation. ",
+      "evidence": [
+        {
+          "path": "artifacts/skill-pack-optimization-20261018/lanes/SHARED.md",
+          "line": 38
+        }
+      ],
+      "source": {
+        "snapshot_path": "artifacts/skill-pack-optimization-20261018/intake-snapshot.json",
+        "report_path": "artifacts/skill-pack-review-20261018/01-contradictions-and-overlaps.md",
+        "report_sha256": "6de7223950f08711ad4946039995286cc7efafd4a1558f1876f8ddcf13f6e03a"
+      }
+    },
+    {
+      "id": "01:C3",
+      "title": "Uncertainty-marker family has no owner",
+      "owner_lane": "CTRL",
+      "issue": "alaa-6dh.2.3",
+      "disposition": "rejected",
+      "decision_evidence": "Reject new taxonomy. Root `AGENTS.md#Rules` already requires an authoritative source or named placeholder; the active global grounding owner supplies marker examples. Domain-specific markers and cited-artifact entry gates retain their own scopes. Quality bar owns ten service obligations, not another marker registry.",
+      "reason": "Source evidence only; retain the existing general convention and domain variants. ",
+      "evidence": [
+        {
+          "path": "artifacts/skill-pack-optimization-20261018/lanes/CTRL.md",
+          "line": 24
+        }
+      ],
+      "source": {
+        "snapshot_path": "artifacts/skill-pack-optimization-20261018/intake-snapshot.json",
+        "report_path": "artifacts/skill-pack-review-20261018/01-contradictions-and-overlaps.md",
+        "report_sha256": "6de7223950f08711ad4946039995286cc7efafd4a1558f1876f8ddcf13f6e03a"
+      }
+    },
+    {
+      "id": "02:P1",
+      "title": "The pack has no single end-to-end cadence, and its pieces do not match your rule",
+      "owner_lane": "WF",
+      "issue": "alaa-6dh.2.1",
+      "disposition": "adapted",
+      "decision_evidence": "Implement",
+      "reason": "Bound phase-task-subtask hierarchy, short leaf scope, bounded task acceptance and review-pending milestone closure replace ambiguous task semantics.",
+      "evidence": [
+        {
+          "path": "artifacts/skill-pack-optimization-20261018/lanes/WF.md",
+          "line": 50
+        }
+      ],
+      "source": {
+        "snapshot_path": "artifacts/skill-pack-optimization-20261018/intake-snapshot.json",
+        "report_path": "artifacts/skill-pack-review-20261018/02-optimization.md",
+        "report_sha256": "da0309f20c76b9bc98a3d3eda4e10ffcd8cdc2a3c815127a92c690e1ce06c7fa"
+      }
+    },
+    {
+      "id": "02:P2",
+      "title": "Nothing makes an agent justify an added test, review, proof tool or gate",
+      "owner_lane": "WF",
+      "issue": "alaa-6dh.2.1",
+      "disposition": "adapted",
+      "decision_evidence": "Implement",
+      "reason": "Testing owns discretionary-check necessity; phase template asks uncovered risk and why existing evidence is insufficient.",
+      "evidence": [
+        {
+          "path": "artifacts/skill-pack-optimization-20261018/lanes/WF.md",
+          "line": 51
+        }
+      ],
+      "source": {
+        "snapshot_path": "artifacts/skill-pack-optimization-20261018/intake-snapshot.json",
+        "report_path": "artifacts/skill-pack-review-20261018/02-optimization.md",
+        "report_sha256": "da0309f20c76b9bc98a3d3eda4e10ffcd8cdc2a3c815127a92c690e1ce06c7fa"
+      }
+    },
+    {
+      "id": "02:P3",
+      "title": "Review cadence: where each rule belongs, at plan time and at run time",
+      "owner_lane": "ORCH",
+      "issue": "alaa-6dh.2.2",
+      "disposition": "adapted",
+      "decision_evidence": "Accept/adapt: only declared phase/final boundary schedules independent acceptance; task/subtask checks retain their separate scope.",
+      "reason": "Accept/adapt: only declared phase/final boundary schedules independent acceptance; task/subtask checks retain their separate scope.",
+      "evidence": [
+        {
+          "path": "artifacts/skill-pack-optimization-20261018/lanes/ORCH.md",
+          "line": 20
+        }
+      ],
+      "source": {
+        "snapshot_path": "artifacts/skill-pack-optimization-20261018/intake-snapshot.json",
+        "report_path": "artifacts/skill-pack-review-20261018/02-optimization.md",
+        "report_sha256": "da0309f20c76b9bc98a3d3eda4e10ffcd8cdc2a3c815127a92c690e1ce06c7fa"
+      }
+    },
+    {
+      "id": "02:P4",
+      "title": "The same selectors can run up to three times on an unchanged tree",
+      "owner_lane": "ORCH",
+      "issue": "alaa-6dh.2.2",
+      "disposition": "adapted",
+      "decision_evidence": "Adapt: final aggregate may discharge demonstrated covered narrower checks with matching inputs/environment/flags/observer; reject documentation-only equivalence.",
+      "reason": "Adapt: final aggregate may discharge demonstrated covered narrower checks with matching inputs/environment/flags/observer; reject documentation-only equivalence.",
+      "evidence": [
+        {
+          "path": "artifacts/skill-pack-optimization-20261018/lanes/ORCH.md",
+          "line": 21
+        }
+      ],
+      "source": {
+        "snapshot_path": "artifacts/skill-pack-optimization-20261018/intake-snapshot.json",
+        "report_path": "artifacts/skill-pack-review-20261018/02-optimization.md",
+        "report_sha256": "da0309f20c76b9bc98a3d3eda4e10ffcd8cdc2a3c815127a92c690e1ce06c7fa"
+      }
+    },
+    {
+      "id": "02:P5",
+      "title": "Workflow can invoke the orchestrator per phase, and each invocation reaches Phase E",
+      "owner_lane": "ORCH",
+      "issue": "alaa-6dh.2.2",
+      "disposition": "adapted",
+      "decision_evidence": "Adapt: nested execution inherits the engagement's boundary/final phase; intermediate E documentation is allowed without independent or exhaustive final proof.",
+      "reason": "Adapt: nested execution inherits the engagement's boundary/final phase; intermediate E documentation is allowed without independent or exhaustive final proof.",
+      "evidence": [
+        {
+          "path": "artifacts/skill-pack-optimization-20261018/lanes/ORCH.md",
+          "line": 22
+        }
+      ],
+      "source": {
+        "snapshot_path": "artifacts/skill-pack-optimization-20261018/intake-snapshot.json",
+        "report_path": "artifacts/skill-pack-review-20261018/02-optimization.md",
+        "report_sha256": "da0309f20c76b9bc98a3d3eda4e10ffcd8cdc2a3c815127a92c690e1ce06c7fa"
+      }
+    },
+    {
+      "id": "02:P6",
+      "title": "The focused tier has no stated bound",
+      "owner_lane": "WF",
+      "issue": "alaa-6dh.2.1",
+      "disposition": "adapted",
+      "decision_evidence": "Adapt",
+      "reason": "Smallest discriminating check; no new expensive setup/full suite at leaf end. ",
+      "evidence": [
+        {
+          "path": "artifacts/skill-pack-optimization-20261018/lanes/WF.md",
+          "line": 52
+        }
+      ],
+      "source": {
+        "snapshot_path": "artifacts/skill-pack-optimization-20261018/intake-snapshot.json",
+        "report_path": "artifacts/skill-pack-review-20261018/02-optimization.md",
+        "report_sha256": "da0309f20c76b9bc98a3d3eda4e10ffcd8cdc2a3c815127a92c690e1ce06c7fa"
+      }
+    },
+    {
+      "id": "02:P7",
+      "title": "A repository gate scope can override the pack",
+      "owner_lane": "CTRL",
+      "issue": "alaa-6dh.2.3",
+      "disposition": "adapted",
+      "decision_evidence": "Adapt generic constitution requirement; reject deploy mutation outside scope. Constitution template `CROSS-CUTTING QUALITY BAR` names topic/layer selectors, one build and shared setup, but no changed-path-to-gate mapping. `quality-bar.md` obligation 9 names feedback commands only.",
+      "reason": "Add changed-path-to-gate applicability mapping to method and standalone template; keep repo gates authoritative. ",
+      "evidence": [
+        {
+          "path": "artifacts/skill-pack-optimization-20261018/lanes/CTRL.md",
+          "line": 25
+        }
+      ],
+      "source": {
+        "snapshot_path": "artifacts/skill-pack-optimization-20261018/intake-snapshot.json",
+        "report_path": "artifacts/skill-pack-review-20261018/02-optimization.md",
+        "report_sha256": "da0309f20c76b9bc98a3d3eda4e10ffcd8cdc2a3c815127a92c690e1ce06c7fa"
+      }
+    },
+    {
+      "id": "02:O1",
+      "title": "The largest skill bodies",
+      "owner_lane": "WF",
+      "issue": "alaa-6dh.2.1",
+      "disposition": "adapted",
+      "decision_evidence": "Adapt; reject blanket cleanup",
+      "reason": "Size remains prioritization evidence. ",
+      "evidence": [
+        {
+          "path": "artifacts/skill-pack-optimization-20261018/lanes/WF.md",
+          "line": 53
+        }
+      ],
+      "source": {
+        "snapshot_path": "artifacts/skill-pack-optimization-20261018/intake-snapshot.json",
+        "report_path": "artifacts/skill-pack-review-20261018/02-optimization.md",
+        "report_sha256": "da0309f20c76b9bc98a3d3eda4e10ffcd8cdc2a3c815127a92c690e1ce06c7fa"
+      }
+    },
+    {
+      "id": "02:O2",
+      "title": "Duplicated routers in always-paid bodies",
+      "owner_lane": "SHARED",
+      "issue": "alaa-6dh.3.1",
+      "disposition": "adapted",
+      "decision_evidence": "Adapt as B14. Keep existing external maps; remove duplicate body routes only. No file retirement and no body-size sweep.",
+      "reason": "Services/ref00 and reliability/ref00; current pack AGENTS Structure/ref60 cost rule.",
+      "evidence": [
+        {
+          "path": "artifacts/skill-pack-optimization-20261018/lanes/SHARED.md",
+          "line": 39
+        }
+      ],
+      "source": {
+        "snapshot_path": "artifacts/skill-pack-optimization-20261018/intake-snapshot.json",
+        "report_path": "artifacts/skill-pack-review-20261018/02-optimization.md",
+        "report_sha256": "da0309f20c76b9bc98a3d3eda4e10ffcd8cdc2a3c815127a92c690e1ce06c7fa"
+      }
+    },
+    {
+      "id": "02:O3",
+      "title": "A dated observation in the minio body, and an inconsistent source name",
+      "owner_lane": "STORAGE",
+      "issue": "alaa-6dh.3.3",
+      "disposition": "adapted",
+      "decision_evidence": "O3 - accept source-name correction; retain dated evidence",
+      "reason": "Normalize the mistaken phrase \"tusd-upload-platform repository\" to \"Ala tusd repository\" throughout the owned minio skill, including SOURCES.md. ",
+      "evidence": [
+        {
+          "path": "artifacts/skill-pack-optimization-20261018/lanes/STORAGE.md",
+          "line": 45
+        }
+      ],
+      "source": {
+        "snapshot_path": "artifacts/skill-pack-optimization-20261018/intake-snapshot.json",
+        "report_path": "artifacts/skill-pack-review-20261018/02-optimization.md",
+        "report_sha256": "da0309f20c76b9bc98a3d3eda4e10ffcd8cdc2a3c815127a92c690e1ce06c7fa"
+      }
+    },
+    {
+      "id": "02:O4",
+      "title": "Shaka Player forces parts of the pipeline on any change",
+      "owner_lane": "PLAYER",
+      "issue": "alaa-6dh.3.7",
+      "disposition": "adapted",
+      "decision_evidence": "Replace unconditional API-check/version-reference and QA burden with explicit triggers. Read Shaka ref80 and run `check-shaka-api.mjs` when the task changes an API surface recognized by the checker; cover every recognized family, including configure/errors, tracks, ads, offline, native HLS, gaps, UI and preferences. Use ref90's lightest fitting QA mode only when the changed behavior requires proof; report only changed-surface evidence.",
+      "reason": "Current SKILL.md steps 2 and 6 impose unconditional work. ",
+      "evidence": [
+        {
+          "path": "artifacts/skill-pack-optimization-20261018/lanes/PLAYER.md",
+          "line": 23
+        }
+      ],
+      "source": {
+        "snapshot_path": "artifacts/skill-pack-optimization-20261018/intake-snapshot.json",
+        "report_path": "artifacts/skill-pack-review-20261018/02-optimization.md",
+        "report_sha256": "da0309f20c76b9bc98a3d3eda4e10ffcd8cdc2a3c815127a92c690e1ce06c7fa"
+      }
+    },
+    {
+      "id": "02:O5",
+      "title": "Tusd returns ten items for every design or review",
+      "owner_lane": "STORAGE",
+      "issue": "alaa-6dh.3.3",
+      "disposition": "adapted",
+      "decision_evidence": "O5 - accept output proportional to scope",
+      "reason": "Tusd SKILL.md expected output: preserve the full ten-part end-to-end design set; a partial review reports applicable items and cross-boundary effects only, with register, tests and risks still identified. ",
+      "evidence": [
+        {
+          "path": "artifacts/skill-pack-optimization-20261018/lanes/STORAGE.md",
+          "line": 49
+        }
+      ],
+      "source": {
+        "snapshot_path": "artifacts/skill-pack-optimization-20261018/intake-snapshot.json",
+        "report_path": "artifacts/skill-pack-review-20261018/02-optimization.md",
+        "report_sha256": "da0309f20c76b9bc98a3d3eda4e10ffcd8cdc2a3c815127a92c690e1ce06c7fa"
+      }
+    },
+    {
+      "id": "02:O6",
+      "title": "Frontend QA runs SSR and service-worker checks with no trigger",
+      "owner_lane": "UI",
+      "issue": "alaa-6dh.3.6",
+      "disposition": "adapted",
+      "decision_evidence": "Adapt explicit mode plus affected-surface triggers; point to Quasar-owned runbook.",
+      "reason": "Render/hydration proof remains owed for changed SSR initial output/boot/auth paths; no unrelated SSR/SW execution for static-only or absent-mode work; unrun mandatory checks remain blockers.",
+      "evidence": [
+        {
+          "path": "artifacts/skill-pack-optimization-20261018/lanes/UI.md",
+          "line": 21
+        }
+      ],
+      "source": {
+        "snapshot_path": "artifacts/skill-pack-optimization-20261018/intake-snapshot.json",
+        "report_path": "artifacts/skill-pack-review-20261018/02-optimization.md",
+        "report_sha256": "da0309f20c76b9bc98a3d3eda4e10ffcd8cdc2a3c815127a92c690e1ce06c7fa"
+      }
+    },
+    {
+      "id": "02:O7",
+      "title": "The partitioned FK audit writes permanent repository files",
+      "owner_lane": "AUDIT",
+      "issue": "alaa-6dh.3.8",
+      "disposition": "adapted",
+      "decision_evidence": "**A34/O7 â€” partitioned FK audit:** Detector execution/findings remain independent of optional guard installation; missing durable guard is reportable. Installation and synthetic fixtures remain optional, explicitly authorized repository mutations. Corrected help/empty-roots wording: zero parent tables means none were found in the supplied roots and proves neither guard installation nor engine behavior. Preserved exit codes, detector algorithm, and `--install` behavior. Final hashes: skill `79a58adcbebdfac7a9b36e072425bf476455faf8dead025c12877e110ed9aafd`; script `d0d1dc36d351e6e9ed558a1683b934a66ccdb15db77bec7009f8f3e461dcebbc`.",
+      "reason": "**A34/O7 â€” partitioned FK audit:** Detector execution/findings remain independent of optional guard installation; missing durable guard is reportable. ",
+      "evidence": [
+        {
+          "path": "artifacts/skill-pack-optimization-20261018/lanes/AUDIT.md",
+          "line": 12
+        }
+      ],
+      "source": {
+        "snapshot_path": "artifacts/skill-pack-optimization-20261018/intake-snapshot.json",
+        "report_path": "artifacts/skill-pack-review-20261018/02-optimization.md",
+        "report_sha256": "da0309f20c76b9bc98a3d3eda4e10ffcd8cdc2a3c815127a92c690e1ce06c7fa"
+      }
+    },
+    {
+      "id": "02:O8",
+      "title": "Go: several `-race` trigger lists",
+      "owner_lane": "GO",
+      "issue": "alaa-6dh.3.5",
+      "disposition": "adapted",
+      "decision_evidence": "Adapt: Go SKILL Validation gate remains sole general race trigger/authority owner. Fiber ref30 owns additional retained Ctx-value trigger; body and readiness/migration checklists point there and Go gate. Clean-code P9 proof also points to Go gate instead of restating whole-race command.",
+      "reason": "Retained Fiber values still trigger race; author cannot acquire broad-check authority through a checklist. ",
+      "evidence": [
+        {
+          "path": "artifacts/skill-pack-optimization-20261018/lanes/GO.md",
+          "line": 13
+        }
+      ],
+      "source": {
+        "snapshot_path": "artifacts/skill-pack-optimization-20261018/intake-snapshot.json",
+        "report_path": "artifacts/skill-pack-review-20261018/02-optimization.md",
+        "report_sha256": "da0309f20c76b9bc98a3d3eda4e10ffcd8cdc2a3c815127a92c690e1ce06c7fa"
+      }
+    },
+    {
+      "id": "02:O9",
+      "title": "Go: the TDD sequence is repeated and shortened",
+      "owner_lane": "GO",
+      "issue": "alaa-6dh.3.5",
+      "disposition": "implemented",
+      "decision_evidence": "Accept: Fiber ref30 TDD points to Go ref63 full owed-test sequence and testing-strategy design; keep Fiber-specific retained-value race evidence.",
+      "reason": "Existing-tests/read, isolated failing reason, stop/report and focused retest remain reachable.",
+      "evidence": [
+        {
+          "path": "artifacts/skill-pack-optimization-20261018/lanes/GO.md",
+          "line": 17
+        }
+      ],
+      "source": {
+        "snapshot_path": "artifacts/skill-pack-optimization-20261018/intake-snapshot.json",
+        "report_path": "artifacts/skill-pack-review-20261018/02-optimization.md",
+        "report_sha256": "da0309f20c76b9bc98a3d3eda4e10ffcd8cdc2a3c815127a92c690e1ce06c7fa"
+      }
+    },
+    {
+      "id": "02:O10",
+      "title": "Auditing an OpenAPI or Postman contract re-derives the owner's rules",
+      "owner_lane": "PHP",
+      "issue": "alaa-6dh.3.2",
+      "disposition": "adapted",
+      "decision_evidence": "Adapt",
+      "reason": "Postman SKILL owns generation and complete saved examples. ",
+      "evidence": [
+        {
+          "path": "artifacts/skill-pack-optimization-20261018/lanes/PHP.md",
+          "line": 17
+        }
+      ],
+      "source": {
+        "snapshot_path": "artifacts/skill-pack-optimization-20261018/intake-snapshot.json",
+        "report_path": "artifacts/skill-pack-review-20261018/02-optimization.md",
+        "report_sha256": "da0309f20c76b9bc98a3d3eda4e10ffcd8cdc2a3c815127a92c690e1ce06c7fa"
+      }
+    },
+    {
+      "id": "02:O11",
+      "title": "Upgrade sweep with an unusable apply step",
+      "owner_lane": "PHP",
+      "issue": "alaa-6dh.3.2",
+      "disposition": "adapted",
+      "decision_evidence": "Adapt",
+      "reason": "Upgrade SKILL procedure 2-3 classifies majors then applies an unrestricted resolution. ",
+      "evidence": [
+        {
+          "path": "artifacts/skill-pack-optimization-20261018/lanes/PHP.md",
+          "line": 11
+        }
+      ],
+      "source": {
+        "snapshot_path": "artifacts/skill-pack-optimization-20261018/intake-snapshot.json",
+        "report_path": "artifacts/skill-pack-review-20261018/02-optimization.md",
+        "report_sha256": "da0309f20c76b9bc98a3d3eda4e10ffcd8cdc2a3c815127a92c690e1ce06c7fa"
+      }
+    },
+    {
+      "id": "02:O12",
+      "title": "Ansible gate: run, then rerun",
+      "owner_lane": "PLATFORM",
+      "issue": "alaa-6dh.3.4",
+      "disposition": "implemented",
+      "decision_evidence": "ACCEPT pointer alternative",
+      "reason": "`ansible-generator/references/playbook.md:226-253` already supplies all five checks, exit-2 blocking, exemptions and bounded failure loop. ",
+      "evidence": [
+        {
+          "path": "artifacts/skill-pack-optimization-20261018/lanes/PLATFORM.md",
+          "line": 18
+        }
+      ],
+      "source": {
+        "snapshot_path": "artifacts/skill-pack-optimization-20261018/intake-snapshot.json",
+        "report_path": "artifacts/skill-pack-review-20261018/02-optimization.md",
+        "report_sha256": "da0309f20c76b9bc98a3d3eda4e10ffcd8cdc2a3c815127a92c690e1ce06c7fa"
+      }
+    },
+    {
+      "id": "02:O13",
+      "title": "Frontend service-worker runbook has two homes",
+      "owner_lane": "UI",
+      "issue": "alaa-6dh.3.6",
+      "disposition": "adapted",
+      "decision_evidence": "Adapt: transfer all five manual scenarios alongside automated regressions, then replace frontend list with triggered pointer.",
+      "reason": "Install/first-load, update waiting/SKIP_WAITING/reload-once/no missing chunk, offline reload/direct-navigation/no loop, allowed runtime-cache entries, online regression; production build only.",
+      "evidence": [
+        {
+          "path": "artifacts/skill-pack-optimization-20261018/lanes/UI.md",
+          "line": 19
+        }
+      ],
+      "source": {
+        "snapshot_path": "artifacts/skill-pack-optimization-20261018/intake-snapshot.json",
+        "report_path": "artifacts/skill-pack-review-20261018/02-optimization.md",
+        "report_sha256": "da0309f20c76b9bc98a3d3eda4e10ffcd8cdc2a3c815127a92c690e1ce06c7fa"
+      }
+    },
+    {
+      "id": "02:O14",
+      "title": "Two part-size defaults for one upload family",
+      "owner_lane": "STORAGE",
+      "issue": "alaa-6dh.3.3",
+      "disposition": "adapted",
+      "decision_evidence": "A28 and O14 - adapt the part-size mapping",
+      "reason": "Owner anchors: minio `references/05-environment-contract.md` application variables; tusd `references/35-storage-lifecycle.md` multipart sizing; tusd env/Compose assets already map TUSD_S3_PART_SIZE to -s3-part-size. ",
+      "evidence": [
+        {
+          "path": "artifacts/skill-pack-optimization-20261018/lanes/STORAGE.md",
+          "line": 19
+        }
+      ],
+      "source": {
+        "snapshot_path": "artifacts/skill-pack-optimization-20261018/intake-snapshot.json",
+        "report_path": "artifacts/skill-pack-review-20261018/02-optimization.md",
+        "report_sha256": "da0309f20c76b9bc98a3d3eda4e10ffcd8cdc2a3c815127a92c690e1ce06c7fa"
+      }
+    },
+    {
+      "id": "02:O15",
+      "title": "Permission generator: apply step wording",
+      "owner_lane": "AUDIT",
+      "issue": "alaa-6dh.3.8",
+      "disposition": "adapted",
+      "decision_evidence": "**A35/O15 â€” permission map and seed:** Coherent generated map and auth seed are applied together only when both operations are authorized. If either authorization is missing, apply neither and report the required companion path as blocked. This prevents unintended partial state. Final permission skill hash is listed above.",
+      "reason": "**A35/O15 â€” permission map and seed:** Coherent generated map and auth seed are applied together only when both operations are authorized. ",
+      "evidence": [
+        {
+          "path": "artifacts/skill-pack-optimization-20261018/lanes/AUDIT.md",
+          "line": 13
+        }
+      ],
+      "source": {
+        "snapshot_path": "artifacts/skill-pack-optimization-20261018/intake-snapshot.json",
+        "report_path": "artifacts/skill-pack-review-20261018/02-optimization.md",
+        "report_sha256": "da0309f20c76b9bc98a3d3eda4e10ffcd8cdc2a3c815127a92c690e1ce06c7fa"
+      }
+    },
+    {
+      "id": "02:O16",
+      "title": "Ansible history narrative in rules",
+      "owner_lane": "PLATFORM",
+      "issue": "alaa-6dh.3.4",
+      "disposition": "rejected",
+      "decision_evidence": "REJECT optional trimming",
+      "reason": "Historical passages are on-demand; they preserve concrete failure rationale and retired-rule provenance. ",
+      "evidence": [
+        {
+          "path": "artifacts/skill-pack-optimization-20261018/lanes/PLATFORM.md",
+          "line": 22
+        }
+      ],
+      "source": {
+        "snapshot_path": "artifacts/skill-pack-optimization-20261018/intake-snapshot.json",
+        "report_path": "artifacts/skill-pack-review-20261018/02-optimization.md",
+        "report_sha256": "da0309f20c76b9bc98a3d3eda4e10ffcd8cdc2a3c815127a92c690e1ce06c7fa"
+      }
+    },
+    {
+      "id": "02:O17",
+      "title": "Docker version table is dated",
+      "owner_lane": "PLATFORM",
+      "issue": "alaa-6dh.3.4",
+      "disposition": "adapted",
+      "decision_evidence": "ADAPT",
+      "reason": "`check-image-pinning.mjs:61-138` is a local dated register; `--versions` prints it without fetching. ",
+      "evidence": [
+        {
+          "path": "artifacts/skill-pack-optimization-20261018/lanes/PLATFORM.md",
+          "line": 23
+        }
+      ],
+      "source": {
+        "snapshot_path": "artifacts/skill-pack-optimization-20261018/intake-snapshot.json",
+        "report_path": "artifacts/skill-pack-review-20261018/02-optimization.md",
+        "report_sha256": "da0309f20c76b9bc98a3d3eda4e10ffcd8cdc2a3c815127a92c690e1ce06c7fa"
+      }
+    },
+    {
+      "id": "02:O18",
+      "title": "Keyset restates the envelope and the limits",
+      "owner_lane": "SHARED",
+      "issue": "alaa-6dh.3.1",
+      "disposition": "implemented",
+      "decision_evidence": "Accept as B8. Remove duplicate wire schema and false limit-ownership assertion after ref22 registration. Retain reasons and consistency/opaque-direction semantics in keyset.",
+      "reason": "Keyset body Platform decisions and ref40; services ref25.",
+      "evidence": [
+        {
+          "path": "artifacts/skill-pack-optimization-20261018/lanes/SHARED.md",
+          "line": 40
+        }
+      ],
+      "source": {
+        "snapshot_path": "artifacts/skill-pack-optimization-20261018/intake-snapshot.json",
+        "report_path": "artifacts/skill-pack-review-20261018/02-optimization.md",
+        "report_sha256": "da0309f20c76b9bc98a3d3eda4e10ffcd8cdc2a3c815127a92c690e1ce06c7fa"
+      }
+    },
+    {
+      "id": "02:O19",
+      "title": "Fiber restates many owners",
+      "owner_lane": "GO",
+      "issue": "alaa-6dh.3.5",
+      "disposition": "adapted",
+      "decision_evidence": "Adapt: Fiber ref40 routes admission doctrine to reliability ref40 and cache stampede/TTL/negative policy to Go ref61; retain Go semaphore/TryAcquire mechanics and Fiber/fasthttp specifics without duplicating rejection doctrine.",
+      "reason": "Immediate bounded admission remains actionable; no chi kit shedding copied into Fiber.",
+      "evidence": [
+        {
+          "path": "artifacts/skill-pack-optimization-20261018/lanes/GO.md",
+          "line": 18
+        }
+      ],
+      "source": {
+        "snapshot_path": "artifacts/skill-pack-optimization-20261018/intake-snapshot.json",
+        "report_path": "artifacts/skill-pack-review-20261018/02-optimization.md",
+        "report_sha256": "da0309f20c76b9bc98a3d3eda4e10ffcd8cdc2a3c815127a92c690e1ce06c7fa"
+      }
+    },
+    {
+      "id": "02:O20",
+      "title": "The gate-economics rule appears in three independent files",
+      "owner_lane": "ORCH",
+      "issue": "alaa-6dh.2.2",
+      "disposition": "implemented",
+      "decision_evidence": "Accept: gate economics has one mirrored owner; body points there; CTRL consumes that owner.",
+      "reason": "Accept: gate economics has one mirrored owner; body points there; CTRL consumes that owner.",
+      "evidence": [
+        {
+          "path": "artifacts/skill-pack-optimization-20261018/lanes/ORCH.md",
+          "line": 19
+        }
+      ],
+      "source": {
+        "snapshot_path": "artifacts/skill-pack-optimization-20261018/intake-snapshot.json",
+        "report_path": "artifacts/skill-pack-review-20261018/02-optimization.md",
+        "report_sha256": "da0309f20c76b9bc98a3d3eda4e10ffcd8cdc2a3c815127a92c690e1ce06c7fa"
+      }
+    },
+    {
+      "id": "02:O21",
+      "title": "Dispatch return contract across several owners",
+      "owner_lane": "CTRL",
+      "issue": "alaa-6dh.2.3",
+      "disposition": "implemented",
+      "decision_evidence": "Accept owner, adapt edits. Low-noise `references/workflow-integration.md#Delegated lanes` already owns explicit shape/length bound and context rationale. Remove the body's repeated return rules; its References section already triggers that owner when delegated lanes are active. ORCH owns dispatch fields; WF owns durable evidence persistence.",
+      "reason": "Inspect one owner and surviving field/persistence links. ",
+      "evidence": [
+        {
+          "path": "artifacts/skill-pack-optimization-20261018/lanes/CTRL.md",
+          "line": 23
+        }
+      ],
+      "source": {
+        "snapshot_path": "artifacts/skill-pack-optimization-20261018/intake-snapshot.json",
+        "report_path": "artifacts/skill-pack-review-20261018/02-optimization.md",
+        "report_sha256": "da0309f20c76b9bc98a3d3eda4e10ffcd8cdc2a3c815127a92c690e1ce06c7fa"
+      }
+    },
+    {
+      "id": "02:O22",
+      "title": "ClickHouse boundary and worked instance",
+      "owner_lane": "SIGNALS",
+      "issue": "alaa-6dh.3.9",
+      "disposition": "adapted",
+      "decision_evidence": "`alaa-signoz-clickhouse-docs/SKILL.md` remains the SigNoz tenancy owner. Remove the duplicate tenancy statement from ClickHouse reference 15, retaining a pointer and the raw plus aggregate `project_id` query obligation.",
+      "reason": "Preserve historical ClickHouse commit/line provenance and its existing re-derive instruction. ",
+      "evidence": [
+        {
+          "path": "artifacts/skill-pack-optimization-20261018/lanes/SIGNALS.md",
+          "line": 18
+        }
+      ],
+      "source": {
+        "snapshot_path": "artifacts/skill-pack-optimization-20261018/intake-snapshot.json",
+        "report_path": "artifacts/skill-pack-review-20261018/02-optimization.md",
+        "report_sha256": "da0309f20c76b9bc98a3d3eda4e10ffcd8cdc2a3c815127a92c690e1ce06c7fa"
+      }
+    },
+    {
+      "id": "02:O23",
+      "title": "Bale and Mediana restate reliability and security rules",
+      "owner_lane": "SIGNALS",
+      "issue": "alaa-6dh.3.9",
+      "disposition": "adapted",
+      "decision_evidence": "Provider skills point to observability's existing phone-derivative rule and remove duplicate masking policy. Default behavior is omission or an independently approved stable internal reference. A separately approved diagnostic derivative may retain only the verified country calling code, optional leading `+`, and fixed `[redacted]` marker.",
+      "reason": "Never preserve subscriber digits, hash/token surrogates, or emit the derivative as an identity/correlation key or metric label. ",
+      "evidence": [
+        {
+          "path": "artifacts/skill-pack-optimization-20261018/lanes/SIGNALS.md",
+          "line": 16
+        }
+      ],
+      "source": {
+        "snapshot_path": "artifacts/skill-pack-optimization-20261018/intake-snapshot.json",
+        "report_path": "artifacts/skill-pack-review-20261018/02-optimization.md",
+        "report_sha256": "da0309f20c76b9bc98a3d3eda4e10ffcd8cdc2a3c815127a92c690e1ce06c7fa"
+      }
+    },
+    {
+      "id": "02:O24",
+      "title": "Dated facts without a refresh trigger",
+      "owner_lane": "GO",
+      "issue": "alaa-6dh.3.5",
+      "disposition": "adapted",
+      "decision_evidence": "Adapt: add refresh triggers before changing/relying on Fiber defaults, consumer precedent, middleware package/version or kit signal naming at named sections. Preserve dates/source caveats; do not refresh unrelated APIs merely to rewrite snapshot dates.",
+      "reason": "Old snapshot never becomes live runtime proof; no new version/default claim.",
+      "evidence": [
+        {
+          "path": "artifacts/skill-pack-optimization-20261018/lanes/GO.md",
+          "line": 21
+        }
+      ],
+      "source": {
+        "snapshot_path": "artifacts/skill-pack-optimization-20261018/intake-snapshot.json",
+        "report_path": "artifacts/skill-pack-review-20261018/02-optimization.md",
+        "report_sha256": "da0309f20c76b9bc98a3d3eda4e10ffcd8cdc2a3c815127a92c690e1ce06c7fa"
+      }
+    },
+    {
+      "id": "02:O25",
+      "title": "A date inside a durable rule",
+      "owner_lane": "AUDIT",
+      "issue": "alaa-6dh.3.8",
+      "disposition": "adapted",
+      "decision_evidence": "**O25 â€” MongoDB fleet observation:** Removed the dated external-repository observation from durable `When not to use` policy and retained it as dated historical evidence with a recheck pointer. Final hashes: skill `e69505d2ffc63316154ebcd13d12c517022b8bf44e9248c53b7dc9b2987d25f3`; source map `9571fcda383683bf3e03ef6c45675d4b80095c5c706a471a7b845096945c76ee`.",
+      "reason": "**O25 â€” MongoDB fleet observation:** Removed the dated external-repository observation from durable `When not to use` policy and retained it as dated historical evidence with a recheck pointer. ",
+      "evidence": [
+        {
+          "path": "artifacts/skill-pack-optimization-20261018/lanes/AUDIT.md",
+          "line": 14
+        }
+      ],
+      "source": {
+        "snapshot_path": "artifacts/skill-pack-optimization-20261018/intake-snapshot.json",
+        "report_path": "artifacts/skill-pack-review-20261018/02-optimization.md",
+        "report_sha256": "da0309f20c76b9bc98a3d3eda4e10ffcd8cdc2a3c815127a92c690e1ce06c7fa"
+      }
+    },
+    {
+      "id": "02:O26",
+      "title": "Phase gate duplicated with its dated facts",
+      "owner_lane": "GO",
+      "issue": "alaa-6dh.3.5",
+      "disposition": "adapted",
+      "decision_evidence": "Adapt: clean-code SKILL phase paragraph and source-map dated roster become routes to go-chi ref05 plus phase-check. Fix Go SKILL step 2 and topic-map phase pointer to same action-specific matrix.",
+      "reason": "evidence-required is not forbidden; requester-specific action plus prior phase/record output suffices without second go-ahead. ",
+      "evidence": [
+        {
+          "path": "artifacts/skill-pack-optimization-20261018/lanes/GO.md",
+          "line": 14
+        }
+      ],
+      "source": {
+        "snapshot_path": "artifacts/skill-pack-optimization-20261018/intake-snapshot.json",
+        "report_path": "artifacts/skill-pack-review-20261018/02-optimization.md",
+        "report_sha256": "da0309f20c76b9bc98a3d3eda4e10ffcd8cdc2a3c815127a92c690e1ce06c7fa"
+      }
+    },
+    {
+      "id": "02:O27",
+      "title": "Shaka and indexeddb carry the same block",
+      "owner_lane": "PLAYER",
+      "issue": "alaa-6dh.3.7",
+      "disposition": "adapted",
+      "decision_evidence": "`alaa-indexeddb-browser-storage/references/72-offline-media-store.md` is the single owner of the browser-storage boundary and caller-side `persist()` fact. Remove the repeated quoted block and repeated substrate explanation in Shaka ref50, replacing them with one triggered pointer to IDB72. Retain every Shaka-specific API, partial-store detection/restart/cleanup, persistent DRM, and download behavior.",
+      "reason": "IDB72 states the seam once and already contains the reciprocal pointer and `persist()` obligations. ",
+      "evidence": [
+        {
+          "path": "artifacts/skill-pack-optimization-20261018/lanes/PLAYER.md",
+          "line": 22
+        }
+      ],
+      "source": {
+        "snapshot_path": "artifacts/skill-pack-optimization-20261018/intake-snapshot.json",
+        "report_path": "artifacts/skill-pack-review-20261018/02-optimization.md",
+        "report_sha256": "da0309f20c76b9bc98a3d3eda4e10ffcd8cdc2a3c815127a92c690e1ce06c7fa"
+      }
+    },
+    {
+      "id": "03:N1",
+      "title": "GitLab runner Compose bootstrap",
+      "owner_lane": "PLATFORM",
+      "issue": "alaa-6dh.3.4",
+      "disposition": "adapted",
+      "decision_evidence": "ADAPT existing owner",
+      "reason": "The runner reference covers executor/configuration/RBAC, not the Compose hosting handoff. ",
+      "evidence": [
+        {
+          "path": "artifacts/skill-pack-optimization-20261018/lanes/PLATFORM.md",
+          "line": 24
+        }
+      ],
+      "source": {
+        "snapshot_path": "artifacts/skill-pack-optimization-20261018/intake-snapshot.json",
+        "report_path": "artifacts/skill-pack-review-20261018/03-new-skill-proposals.md",
+        "report_sha256": "b145fa4e39121093514f86a13e711cc483b96304080a4b6e975ac6b04dfbc18e"
+      }
+    },
+    {
+      "id": "03:N2",
+      "title": "Browser Sentry SDK wiring for Quasar SPA and SSR",
+      "owner_lane": "SHARED",
+      "issue": "alaa-6dh.3.1",
+      "disposition": "adapted",
+      "decision_evidence": "Parent direction ratified. Repair the dangling env/default/package pointer with an explicit authority split: services ref21 contains verified platform names/values; approved target repository frontend config owns browser build/runtime key names until a shared entry is deliberately registered; frontend owner chooses the runtime SDK/wiring against target pinned versions/current official docs; PHP package selection stays delegated to PHP owners. No invented fleet `SENTRY_*` names/defaults, new skill or new reference. Browser-public DSN is an event-submission endpoint, not a secret read/admin token; retain source injection/no real DSN committed and abuse/privacy controls.",
+      "reason": "Observability ref60 opening/Configuration gates; services ref21 Ownership split; Quasar ref36 Wiring (UI-owned). ",
+      "evidence": [
+        {
+          "path": "artifacts/skill-pack-optimization-20261018/lanes/SHARED.md",
+          "line": 41
+        }
+      ],
+      "source": {
+        "snapshot_path": "artifacts/skill-pack-optimization-20261018/intake-snapshot.json",
+        "report_path": "artifacts/skill-pack-review-20261018/03-new-skill-proposals.md",
+        "report_sha256": "b145fa4e39121093514f86a13e711cc483b96304080a4b6e975ac6b04dfbc18e"
+      }
+    },
+    {
+      "id": "03:N3",
+      "title": "Codex patch failures and exec-wrapper syntax",
+      "owner_lane": "CTRL",
+      "issue": "alaa-6dh.2.3",
+      "disposition": "adapted",
+      "decision_evidence": "Adapt existing prompting runtime owner, no new skill. Reference 11 owns current host schemas; patch context/schema misuse is not a host outage. Live `functions.exec` schema accepts JavaScript, nested `exec_command` accepts shell; live `apply_patch` accepts patch text.",
+      "reason": "Add condition-triggered contract inspection, fresh target/context reconciliation, bounded correction and cause-specific host recovery routing; never require rereading every target on every edit.",
+      "evidence": [
+        {
+          "path": "artifacts/skill-pack-optimization-20261018/lanes/CTRL.md",
+          "line": 26
+        }
+      ],
+      "source": {
+        "snapshot_path": "artifacts/skill-pack-optimization-20261018/intake-snapshot.json",
+        "report_path": "artifacts/skill-pack-review-20261018/03-new-skill-proposals.md",
+        "report_sha256": "b145fa4e39121093514f86a13e711cc483b96304080a4b6e975ac6b04dfbc18e"
+      }
+    },
+    {
+      "id": "03:N4",
+      "title": "Windows shell and process failures in Codex",
+      "owner_lane": "MEMDOC",
+      "issue": "alaa-6dh.2.4",
+      "disposition": "rejected",
+      "decision_evidence": "Reject extension",
+      "reason": "Signal-pipe/MSYS startup and Win32 206 already have symptom/diagnosis/retry coverage. ",
+      "evidence": [
+        {
+          "path": "artifacts/skill-pack-optimization-20261018/lanes/MEMDOC.md",
+          "line": 30
+        }
+      ],
+      "source": {
+        "snapshot_path": "artifacts/skill-pack-optimization-20261018/intake-snapshot.json",
+        "report_path": "artifacts/skill-pack-review-20261018/03-new-skill-proposals.md",
+        "report_sha256": "b145fa4e39121093514f86a13e711cc483b96304080a4b6e975ac6b04dfbc18e"
+      }
+    },
+    {
+      "id": "03:N5",
+      "title": "Premature completion against goal and Stop-hook gates",
+      "owner_lane": "CTRL",
+      "issue": "alaa-6dh.2.3",
+      "disposition": "rejected",
+      "decision_evidence": "Reject duplicate rule. Prompting reference 06 `#Compose the kickoff and completion condition` and `#Satisfiable completion conditions`, reference 41 goal evaluator distinction, and workflow completion already separate proof from evaluator verdict.",
+      "reason": "Source comparison only; no new skill or duplicate completion gate.",
+      "evidence": [
+        {
+          "path": "artifacts/skill-pack-optimization-20261018/lanes/CTRL.md",
+          "line": 27
+        }
+      ],
+      "source": {
+        "snapshot_path": "artifacts/skill-pack-optimization-20261018/intake-snapshot.json",
+        "report_path": "artifacts/skill-pack-review-20261018/03-new-skill-proposals.md",
+        "report_sha256": "b145fa4e39121093514f86a13e711cc483b96304080a4b6e975ac6b04dfbc18e"
+      }
+    },
+    {
+      "id": "03:N6",
+      "title": "Central-delivery gate re-runs and re-reads",
+      "owner_lane": "WF",
+      "issue": "alaa-6dh.2.1",
+      "disposition": "adapted",
+      "decision_evidence": "Adapt; reject new skill/deploy edits",
+      "reason": "Existing workflow/testing and mirrored orchestrators cover the grounded cadence defect. ",
+      "evidence": [
+        {
+          "path": "artifacts/skill-pack-optimization-20261018/lanes/WF.md",
+          "line": 54
+        }
+      ],
+      "source": {
+        "snapshot_path": "artifacts/skill-pack-optimization-20261018/intake-snapshot.json",
+        "report_path": "artifacts/skill-pack-review-20261018/03-new-skill-proposals.md",
+        "report_sha256": "b145fa4e39121093514f86a13e711cc483b96304080a4b6e975ac6b04dfbc18e"
+      }
+    },
+    {
+      "id": "03:N7",
+      "title": "Subagent re-reads of global rules and skills",
+      "owner_lane": "ORCH",
+      "issue": "alaa-6dh.2.2",
+      "disposition": "rejected",
+      "decision_evidence": "Reject behavioral change: causal evidence is unproven, encrypted dispatches establish no cause; no chat-count audit or global-rule edit.",
+      "reason": "Reject behavioral change: causal evidence is unproven, encrypted dispatches establish no cause; no chat-count audit or global-rule edit.",
+      "evidence": [
+        {
+          "path": "artifacts/skill-pack-optimization-20261018/lanes/ORCH.md",
+          "line": 23
+        }
+      ],
+      "source": {
+        "snapshot_path": "artifacts/skill-pack-optimization-20261018/intake-snapshot.json",
+        "report_path": "artifacts/skill-pack-review-20261018/03-new-skill-proposals.md",
+        "report_sha256": "b145fa4e39121093514f86a13e711cc483b96304080a4b6e975ac6b04dfbc18e"
+      }
+    },
+    {
+      "id": "03:N8",
+      "title": "Persian-language drift",
+      "owner_lane": "MEMDOC",
+      "issue": "alaa-6dh.2.4",
+      "disposition": "rejected",
+      "decision_evidence": "Reject new skill/config",
+      "reason": "Reply language is an unconditional user/global working-style concern. ",
+      "evidence": [
+        {
+          "path": "artifacts/skill-pack-optimization-20261018/lanes/MEMDOC.md",
+          "line": 31
+        }
+      ],
+      "source": {
+        "snapshot_path": "artifacts/skill-pack-optimization-20261018/intake-snapshot.json",
+        "report_path": "artifacts/skill-pack-review-20261018/03-new-skill-proposals.md",
+        "report_sha256": "b145fa4e39121093514f86a13e711cc483b96304080a4b6e975ac6b04dfbc18e"
+      }
+    }
+  ],
+  "auxiliary_coverage": [
+    {
+      "id": "03:V1",
+      "kind": "coverage_row",
+      "owner_lane": "SHARED",
+      "issue": "alaa-6dh.3.1",
+      "disposition": "corrected",
+      "reason": "The draft claim that Sentry appears in only a few skill files was corrected; existing observability policy, Vue facade and tusd scrub evidence are preserved.",
+      "evidence": [
+        {
+          "path": "artifacts/skill-pack-optimization-20261018/lanes/SHARED.md",
+          "line": 42
+        }
+      ]
+    },
+    {
+      "id": "03:V2",
+      "kind": "coverage_row",
+      "owner_lane": "SHARED",
+      "issue": "alaa-6dh.3.1",
+      "related_issue": "alaa-6dh.3.6",
+      "disposition": "partial_gap_adapted",
+      "reason": "The dangling Sentry ownership pointer was corrected; client and SSR wiring remain with the existing Quasar owner and no names/defaults are invented.",
+      "evidence": [
+        {
+          "path": "artifacts/skill-pack-optimization-20261018/lanes/SHARED.md",
+          "line": 43
+        }
+      ]
+    },
+    {
+      "id": "03:V3",
+      "kind": "coverage_row",
+      "owner_lane": "MEMDOC",
+      "issue": "alaa-6dh.2.4",
+      "disposition": "covered",
+      "reason": "Existing runtime-ops references already cover the signal-pipe case; no duplicate capability is claimed.",
+      "evidence": [
+        {
+          "path": "artifacts/skill-pack-optimization-20261018/lanes/MEMDOC.md",
+          "line": 32
+        }
+      ]
+    },
+    {
+      "id": "03:V4",
+      "kind": "coverage_row",
+      "owner_lane": "MEMDOC",
+      "issue": "alaa-6dh.2.4",
+      "disposition": "impact_unproven_no_change",
+      "reason": "No evidenced failed command establishes that the profile warning needs a recovery class.",
+      "evidence": [
+        {
+          "path": "artifacts/skill-pack-optimization-20261018/lanes/MEMDOC.md",
+          "line": 33
+        }
+      ]
+    },
+    {
+      "id": "03:V5",
+      "kind": "coverage_row",
+      "owner_lane": "CTRL",
+      "issue": "alaa-6dh.2.3",
+      "disposition": "coverage_claim_confirmed_adapted",
+      "reason": "The cited hit is only an API tool-type list, not patch CLI guidance; CTRL routes schema misuse to the existing prompting owner.",
+      "evidence": [
+        {
+          "path": "artifacts/skill-pack-optimization-20261018/lanes/CTRL.md",
+          "line": 26
+        }
+      ]
+    },
+    {
+      "id": "03:V6",
+      "kind": "coverage_row",
+      "owner_lane": "CTRL",
+      "issue": "alaa-6dh.2.3",
+      "disposition": "corrected_existing_coverage",
+      "reason": "Existing prompting/workflow composition and evaluator rules distinguish gate proof from completion verdict; no duplicate completion rule was added.",
+      "evidence": [
+        {
+          "path": "artifacts/skill-pack-optimization-20261018/lanes/CTRL.md",
+          "line": 27
+        }
+      ]
+    },
+    {
+      "id": "03:V7",
+      "kind": "coverage_row",
+      "owner_lane": "PLATFORM",
+      "issue": "alaa-6dh.3.4",
+      "disposition": "confirmed_gap_adapted_existing_owner",
+      "reason": "Runner executor/configuration coverage lacked the Compose-hosting handoff; PLATFORM adds a conditional section to the existing owner.",
+      "evidence": [
+        {
+          "path": "artifacts/skill-pack-optimization-20261018/lanes/PLATFORM.md",
+          "line": 24
+        }
+      ]
+    },
+    {
+      "id": "03:V8",
+      "kind": "coverage_row",
+      "owner_lane": "WF",
+      "issue": "alaa-6dh.2.1",
+      "disposition": "verified_coverage_preserved",
+      "reason": "The existing test-economy owner and its shared setup/selector/build-once obligations remain in place.",
+      "evidence": [
+        {
+          "path": "artifacts/skill-pack-optimization-20261018/lanes/WF.md",
+          "line": 55
+        }
+      ]
+    },
+    {
+      "id": "03:V9",
+      "kind": "coverage_row",
+      "owner_lane": "MEMDOC",
+      "issue": "alaa-6dh.2.4",
+      "disposition": "attribution_corrected",
+      "reason": "Reply-language ownership is global; repo-docs retains document-language and localized-companion duties.",
+      "evidence": [
+        {
+          "path": "artifacts/skill-pack-optimization-20261018/lanes/MEMDOC.md",
+          "line": 34
+        }
+      ]
+    },
+    {
+      "id": "03:H1",
+      "kind": "harness_note",
+      "owner_lane": "CTRL",
+      "issue": "alaa-6dh.2.3",
+      "disposition": "rejected_unverified_claim",
+      "reason": "No exact failing tool call or active schema was supplied, so the alleged scope-error root cause was not promoted to a pack defect.",
+      "evidence": [
+        {
+          "path": "artifacts/skill-pack-optimization-20261018/lanes/CTRL.md",
+          "line": 28
+        }
+      ]
+    },
+    {
+      "id": "03:N-8",
+      "kind": "legacy_appendix_item_not_in_124",
+      "owner_lane": "INTEGRATE",
+      "issue": "alaa-6dh.4.1.1",
+      "disposition": "rejected_as_false",
+      "reason": "Parent verified the cited workflow owner text already requires preserving other ownersâ€™ changes and parent-only staging; the old claim of a missing commit-scope rule is false.",
+      "evidence": [
+        {
+          "path": "artifacts/skill-pack-optimization-20261018/intake-snapshot.json",
+          "report_path": "artifacts/skill-pack-review-20261018/03-new-skill-proposals.md",
+          "section": "Appendix: ID mapping",
+          "line": 136
+        },
+        {
+          "path": "skills/sohrab/alaa-workflow/references/workspace-and-integration.md",
+          "lines": [
+            8,
+            15
+          ]
+        }
+      ]
+    },
+    {
+      "id": "legacy:O-04",
+      "kind": "legacy_non_item_claim",
+      "owner_lane": "INTEGRATE",
+      "issue": "alaa-6dh.4.1.1",
+      "disposition": "rejected_as_style_only",
+      "reason": "Parent verified the workflow direct-profile and conditional-owner routes already exist; the proposed start-sequence remedy was stylistic, not a demonstrated coverage defect.",
+      "evidence": [
+        {
+          "path": "artifacts/skill-pack-review-20261018/02-optimization.md",
+          "section": "Appendix: ID mapping",
+          "line": 291
+        },
+        {
+          "path": "skills/sohrab/alaa-workflow/SKILL.md",
+          "section": "Generate prompts"
+        }
+      ]
+    },
+    {
+      "id": "legacy:M1-25",
+      "kind": "legacy_non_item_claim",
+      "owner_lane": "INTEGRATE",
+      "issue": "alaa-6dh.4.1.1",
+      "disposition": "rejected_no_demonstrated_defect",
+      "reason": "Parent verified Jitsi explicitly routes reliability, security, and telemetry doctrine to canonical owners; no defect was demonstrated.",
+      "evidence": [
+        {
+          "path": "artifacts/skill-pack-review-20261018/01-contradictions-and-overlaps.md",
+          "section": "Appendix: ID mapping and removals",
+          "line": 691
+        },
+        {
+          "path": "skills/sohrab/jitsi-platform-architect/SKILL.md",
+          "section": "Not owned here"
+        }
+      ]
+    },
+    {
+      "id": "legacy:Shaka-offlineDownload-cleanup",
+      "kind": "legacy_non_item_claim",
+      "owner_lane": "INTEGRATE",
+      "issue": "alaa-6dh.4.1.1",
+      "disposition": "rejected_out_of_scope_unsubstantiated",
+      "reason": "Parent verified the source file exists but no Markdown reference or demonstrated behavior/context-cost defect supports cleanup; no change is proposed.",
+      "evidence": [
+        {
+          "path": "skills/sohrab/alaa-shaka-player/assets/templates/offlineDownload.ts",
+          "bytes": 8163,
+          "note": "Parent verified source exists; no Markdown reference or demonstrated defect."
+        }
+      ]
+    },
+    {
+      "id": "legacy:validator-generated-drift-codegraph",
+      "kind": "legacy_non_item_claim",
+      "owner_lane": "INTEGRATE",
+      "issue": "alaa-6dh.4.1.1",
+      "disposition": "rejected_unsupported_claim",
+      "reason": "Parent classified the thin validator, generated-drift, and CodeGraph remarks as unsupported without a concrete proposal; this index does not treat them as disproven.",
+      "evidence": [
+        {
+          "path": "artifacts/skill-pack-optimization-20261018/intake-snapshot.json",
+          "note": "Raw claims preserved; no numbered proposal ID or concrete change request."
+        }
+      ]
+    }
+  ],
+  "summary_scaffold_index": [
+    {
+      "report": "artifacts/skill-pack-review-20261018/01-contradictions-and-overlaps.md",
+      "section": "## Method and evidence status",
+      "source_line_range": [
+        6,
+        19
+      ],
+      "disposition": "informational_limit_preserved",
+      "issue": "alaa-6dh.4.1.1",
+      "reason": "Method, date/count provenance, and not-assessed statements describe source limits; they are not fixes and do not justify claims about unexamined skills."
+    },
+    {
+      "report": "artifacts/skill-pack-review-20261018/01-contradictions-and-overlaps.md",
+      "section": "## Suggested fix batches",
+      "source_line_range": [
+        661,
+        670
+      ],
+      "disposition": "superseded_by_ratified_ownership_plan",
+      "issue": "alaa-6dh.4.1.1",
+      "reason": "The planâ€™s ratified ownership and dependency graph supersedes these suggested groupings; retained only as historical source text."
+    },
+    {
+      "report": "artifacts/skill-pack-review-20261018/01-contradictions-and-overlaps.md",
+      "section": "## Not assessed",
+      "source_line_range": [
+        671,
+        677
+      ],
+      "disposition": "informational_limit_preserved",
+      "issue": "alaa-6dh.4.1.1",
+      "reason": "Method, date/count provenance, and not-assessed statements describe source limits; they are not fixes and do not justify claims about unexamined skills."
+    },
+    {
+      "report": "artifacts/skill-pack-review-20261018/01-contradictions-and-overlaps.md",
+      "section": "## Appendix: ID mapping and removals",
+      "source_line_range": [
+        678,
+        699
+      ],
+      "disposition": "aliases_indexed",
+      "issue": "alaa-6dh.4.1.1",
+      "reason": "Legacy labels and removals are alias/history metadata only; numbered proposal rows carry the dispositions, so these lines do not create extra work."
+    },
+    {
+      "report": "artifacts/skill-pack-review-20261018/02-optimization.md",
+      "section": "## Purpose and method",
+      "source_line_range": [
+        6,
+        16
+      ],
+      "disposition": "informational_limit_preserved",
+      "issue": "alaa-6dh.4.1.1",
+      "reason": "Method, date/count provenance, and not-assessed statements describe source limits; they are not fixes and do not justify claims about unexamined skills."
+    },
+    {
+      "report": "artifacts/skill-pack-review-20261018/02-optimization.md",
+      "section": "## F. Not reported",
+      "source_line_range": [
+        278,
+        284
+      ],
+      "disposition": "informational_limit_preserved",
+      "issue": "alaa-6dh.4.1.1",
+      "reason": "Method, date/count provenance, and not-assessed statements describe source limits; they are not fixes and do not justify claims about unexamined skills."
+    },
+    {
+      "report": "artifacts/skill-pack-review-20261018/02-optimization.md",
+      "section": "## Appendix: ID mapping",
+      "source_line_range": [
+        285,
+        297
+      ],
+      "disposition": "aliases_indexed",
+      "issue": "alaa-6dh.4.1.1",
+      "reason": "Legacy labels and removals are alias/history metadata only; numbered proposal rows carry the dispositions, so these lines do not create extra work."
+    },
+    {
+      "report": "artifacts/skill-pack-review-20261018/03-new-skill-proposals.md",
+      "section": "## Sources, limits and how this edition was checked",
+      "source_line_range": [
+        6,
+        14
+      ],
+      "disposition": "informational_limit_preserved",
+      "issue": "alaa-6dh.4.1.1",
+      "reason": "Method, date/count provenance, and not-assessed statements describe source limits; they are not fixes and do not justify claims about unexamined skills."
+    },
+    {
+      "report": "artifacts/skill-pack-review-20261018/03-new-skill-proposals.md",
+      "section": "## Recommendation summary",
+      "source_line_range": [
+        29,
+        43
+      ],
+      "disposition": "accepted_existing_owner_extensions",
+      "issue": "alaa-6dh.4.1.1",
+      "reason": "Parent accepts the conclusion: no new skill is justified by these proposals. Verified gaps were assigned to existing owners; transcript frequency alone grants no new owner."
+    },
+    {
+      "report": "artifacts/skill-pack-review-20261018/03-new-skill-proposals.md",
+      "section": "## Not assessed",
+      "source_line_range": [
+        123,
+        130
+      ],
+      "disposition": "informational_limit_preserved",
+      "issue": "alaa-6dh.4.1.1",
+      "reason": "Method, date/count provenance, and not-assessed statements describe source limits; they are not fixes and do not justify claims about unexamined skills."
+    },
+    {
+      "report": "artifacts/skill-pack-review-20261018/03-new-skill-proposals.md",
+      "section": "## Appendix: ID mapping",
+      "source_line_range": [
+        131,
+        139
+      ],
+      "disposition": "aliases_indexed",
+      "issue": "alaa-6dh.4.1.1",
+      "reason": "Legacy labels and removals are alias/history metadata only; numbered proposal rows carry the dispositions, so these lines do not create extra work."
+    }
+  ],
+  "limitations": [
+    "This is a derived coverage index, not task status or an independent review verdict; Beads remains authoritative.",
+    "Lane dispositions are attributed to recorded lane evidence; this index does not independently validate every product outcome.",
+    "A1/A6 integration is complete with recorded INTEGRATE evidence; final review and verification evidence separately own acceptance.",
+    "Auxiliary and summary/scaffold rows are outside the 124 numbered proposal set. Informational source limits do not establish that unexamined skills are clean."
+  ],
+  "legacy_alias_policy": "Legacy merged, renumbered, and removed IDs are aliases/history to numbered dispositions, not additional tasks. Full mappings remain in the immutable intake snapshot; parent-verified exceptions and non-item claims are separately indexed in auxiliary_coverage. Parent verified old C-12 against HEAD workflow prompt exceptions; its residue maps to B27. Cosmetic code-span wrapping and unsupported host-python wording require no additional change.",
+  "consulted_owner_sources": [
+    {
+      "path": "skills/sohrab/alaa-workflow/references/workspace-and-integration.md",
+      "sha256": "ef3cb484c6fc2d5d2e38af6a9a8071ffad86e00d3db5173e62f5f988a5cffc26",
+      "bytes": 7713
+    },
+    {
+      "path": "skills/sohrab/alaa-workflow/SKILL.md",
+      "sha256": "a1976ac7eea20c058c0c80628e4a9233aa0b70b6010b66e6e1c6ae7dc95dfcf8",
+      "bytes": 10608
+    },
+    {
+      "path": "skills/sohrab/jitsi-platform-architect/SKILL.md",
+      "sha256": "dfe57886bd25b3ae3e2b542aa04d60c71067a46456a9a9ca8ddc312f70e6cac1",
+      "bytes": 6776
+    },
+    {
+      "path": "skills/sohrab/alaa-shaka-player/assets/templates/offlineDownload.ts",
+      "sha256": "450b2e13ffab2a8714b08576bead4ba7aaf8627bbe2e743a01bcd4f1c1046bd1",
+      "bytes": 8163
+    }
+  ],
+  "parent_ratification": "All numbered and auxiliary outcomes ratified for implementation integration; final independent review clearance is recorded in review-clearance.md and native acceptance remains with the final verification evidence."
+}

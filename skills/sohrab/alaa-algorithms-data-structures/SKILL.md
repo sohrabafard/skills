@@ -5,7 +5,7 @@ description: "Complexity budgets and structure choice for service code: stating 
 
 # Alaa Algorithms And Data Structures
 
-Decide, before the code is written, what an operation is allowed to cost as its input grows, which structure serves the way that input is actually accessed, and which chosen values a deployment may change. The deliverable is a written budget and a named rejected alternative, not a faster implementation. This skill owns that decision and no implementation, syntax, algorithm catalogue, or platform value; it discharges obligation 7 of the quality bar in `/alaa-project-constitution` (`$alaa-project-constitution`). Companion skills are written `/name` for Claude Code and `$name` for Codex; both forms appear at every call site.
+Decide, before the code is written, what an operation is allowed to cost as its input grows, which structure serves the way that input is actually accessed, and which chosen values a deployment may change. The deliverable is a written budget and a named rejected alternative, not a faster implementation. This skill owns that decision and no implementation, syntax, algorithm catalogue, or platform value; it discharges obligation 7 of the quality bar in `/alaa-project-constitution` (`$alaa-project-constitution`). Write cross-skill references as `/name`.
 
 ## When this applies
 

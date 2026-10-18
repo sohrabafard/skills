@@ -1,0 +1,297 @@
+{
+  "overall_status": "FAIL",
+  "agent": "alaa-verifier",
+  "configured_controls": {
+    "model": "neutral/unpinned",
+    "effort": "neutral/unpinned"
+  },
+  "requested_controls": {
+    "model": "gpt-6-luna",
+    "effort": "medium"
+  },
+  "observed_controls": "unknown",
+  "effective_authority": {
+    "mcp_enforcement": "unknown",
+    "scope": "final-verification.json, final-verification.md, final-verification-logs/**",
+    "sandbox": "workspace-write"
+  },
+  "repository": {
+    "final_status_rows": 388,
+    "initial_status_rows": 385,
+    "head": "1a0799de71254427973f1253d80b846fea9acf10",
+    "contaminated": false,
+    "cwd": ".",
+    "branch": "main"
+  },
+  "checks": [
+    {
+      "id": 1,
+      "command": "python -B scripts/validate_sohrab_skill_pack.py",
+      "cwd": ".",
+      "duration_seconds": 0.344,
+      "exit": 1,
+      "classification": "PRODUCT-FAILURE",
+      "tier": "affected (not explicitly tier-labeled in dispatch)",
+      "proof_level": "none",
+      "resources": "light; 120s timeout",
+      "evidence": "01-validate-skill-pack.log",
+      "note": "Missing referenced path: alaa-bale-provider references/70-soc-evidence.md"
+    },
+    {
+      "id": 2,
+      "command": "python -B scripts/check_skill_index.py",
+      "cwd": ".",
+      "duration_seconds": 0.228,
+      "exit": 0,
+      "classification": "PASS",
+      "tier": "affected",
+      "proof_level": "1 static",
+      "resources": "light; 120s timeout",
+      "evidence": "02-skill-index.log"
+    },
+    {
+      "id": 3,
+      "command": "python -B scripts/check_fleet_references.py",
+      "cwd": ".",
+      "duration_seconds": 3.554,
+      "exit": 0,
+      "classification": "PASS",
+      "tier": "affected",
+      "proof_level": "1 static",
+      "resources": "light; 120s timeout",
+      "evidence": "03-fleet-references.log"
+    },
+    {
+      "id": 4,
+      "command": "python -B scripts/check_lifecycle_contract.py",
+      "cwd": ".",
+      "duration_seconds": 0.676,
+      "exit": 0,
+      "classification": "PASS",
+      "tier": "affected",
+      "proof_level": "1 static",
+      "resources": "light; 120s timeout",
+      "evidence": "04-lifecycle-contract.log"
+    },
+    {
+      "id": 5,
+      "command": "& .\\skills\\sohrab\\alaa-codex-orchestrator\\scripts\\Invoke-AlaaLowPriority.ps1 -FilePath (Get-Command python).Source -ArgumentList @('-B','skills/sohrab/alaa-workflow/tests/test_workflow_files.py') -Priority BelowNormal -CpuCount 2 -TimeoutSeconds 300 -WorkingDirectory (Get-Location).Path",
+      "cwd": ".",
+      "duration_seconds": 57.819,
+      "exit": 0,
+      "classification": "PASS",
+      "tier": "exhaustive",
+      "proof_level": "2 unit",
+      "resources": "BelowNormal; 2 CPUs; 300s command timeout; runner reported no timeout",
+      "evidence": "runner output captured in dispatch transcript"
+    },
+    {
+      "id": 6,
+      "command": "python -B skills/sohrab/alaa-workflow/scripts/validate_workflow_files.py --plan docs/_agent_plans/20261018-000000_skill-pack-optimization.md",
+      "cwd": ".",
+      "duration_seconds": 0.473,
+      "exit": 0,
+      "classification": "PASS",
+      "tier": "affected",
+      "proof_level": "1 static",
+      "resources": "light; 120s timeout",
+      "evidence": "06-validate-workflow-files.log",
+      "note": "Offline Beads structure warning; live binding/readiness not verified"
+    },
+    {
+      "id": 7,
+      "command": "python -B scripts/check_agent_contracts.py",
+      "cwd": "skills/sohrab/alaa-codex-orchestrator",
+      "duration_seconds": 0.16,
+      "exit": 0,
+      "classification": "PASS",
+      "tier": "affected",
+      "proof_level": "1 static",
+      "resources": "light; 120s timeout",
+      "evidence": "07-codex-contracts.log"
+    },
+    {
+      "id": 8,
+      "command": "python -B scripts/check_agent_contracts.py --self-test",
+      "cwd": "skills/sohrab/alaa-codex-orchestrator",
+      "duration_seconds": 2.47,
+      "exit": 0,
+      "classification": "PASS",
+      "tier": "affected",
+      "proof_level": "2 unit",
+      "resources": "light; 120s timeout",
+      "evidence": "08-codex-contracts-self-test.log"
+    },
+    {
+      "id": 9,
+      "command": "python -B scripts/validate_pack.py",
+      "cwd": "skills/sohrab/alaa-codex-orchestrator",
+      "duration_seconds": 0.55,
+      "exit": 0,
+      "classification": "PASS",
+      "tier": "affected",
+      "proof_level": "1 static",
+      "resources": "light; 120s timeout",
+      "evidence": "09-codex-validate-pack.log"
+    },
+    {
+      "id": 10,
+      "command": "python -B scripts/check_agent_contracts.py",
+      "cwd": "skills/sohrab/alaa-cc-orchestrator",
+      "duration_seconds": 0.16,
+      "exit": 0,
+      "classification": "PASS",
+      "tier": "affected",
+      "proof_level": "1 static",
+      "resources": "light; 120s timeout",
+      "evidence": "10-cc-contracts.log"
+    },
+    {
+      "id": 11,
+      "command": "python -B scripts/check_agent_contracts.py --self-test",
+      "cwd": "skills/sohrab/alaa-cc-orchestrator",
+      "duration_seconds": 1.95,
+      "exit": 0,
+      "classification": "PASS",
+      "tier": "affected",
+      "proof_level": "2 unit",
+      "resources": "light; 120s timeout",
+      "evidence": "11-cc-contracts-self-test.log"
+    },
+    {
+      "id": 12,
+      "command": "python -B scripts/validate_pack.py",
+      "cwd": "skills/sohrab/alaa-cc-orchestrator",
+      "duration_seconds": 0.67,
+      "exit": 0,
+      "classification": "PASS",
+      "tier": "affected",
+      "proof_level": "1 static",
+      "resources": "light; 120s timeout",
+      "evidence": "12-cc-validate-pack.log"
+    },
+    {
+      "id": 13,
+      "command": "python -B scripts/validate_pack.py --self-test",
+      "cwd": "skills/sohrab/alaa-cc-orchestrator",
+      "duration_seconds": 0.92,
+      "exit": 0,
+      "classification": "PASS",
+      "tier": "affected",
+      "proof_level": "2 unit",
+      "resources": "light; 120s timeout",
+      "evidence": "13-cc-validate-pack-self-test.log"
+    },
+    {
+      "id": 14,
+      "command": "docker run --rm --pull=never --network none --read-only --cap-drop ALL --pids-limit 64 --memory 128m --cpus 1 --tmpfs /tmp:rw,nosuid,size=32m --mount \"type=bind,source=D:\\Sohrab\\Project\\skills,target=/work,readonly\" --workdir /work --entrypoint python3 sha256:d7d5200cf678b9439e2c1bd44bfa5c99fb90915fd9bad96a4a0c4847557d7883 -B skills/sohrab/tusd-upload-platform/scripts/validate_pack.py --root skills/sohrab/tusd-upload-platform",
+      "cwd": ".",
+      "duration_seconds": 2.54,
+      "exit": 0,
+      "classification": "PASS",
+      "tier": "affected",
+      "proof_level": "1 static",
+      "resources": "Docker: 1 CPU, 128 MiB, 64 pids; cached image; 120s timeout",
+      "evidence": "14-tusd-docker-pack.log"
+    },
+    {
+      "id": 15,
+      "command": "docker run --rm --pull=never --network none --read-only --cap-drop ALL --pids-limit 64 --memory 128m --cpus 1 --tmpfs /tmp:rw,nosuid,size=32m --mount \"type=bind,source=D:\\Sohrab\\Project\\skills,target=/work,readonly\" --workdir /work --entrypoint python3 sha256:d7d5200cf678b9439e2c1bd44bfa5c99fb90915fd9bad96a4a0c4847557d7883 -B skills/sohrab/tusd-upload-platform/scripts/validate_pack.py --root skills/sohrab/tusd-upload-platform --self-test",
+      "cwd": ".",
+      "duration_seconds": 1.355,
+      "exit": 0,
+      "classification": "PASS",
+      "tier": "affected",
+      "proof_level": "2 unit",
+      "resources": "Docker: 1 CPU, 128 MiB, 64 pids; cached image; 120s timeout",
+      "evidence": "15-tusd-docker-pack-self-test.log"
+    },
+    {
+      "id": 16,
+      "command": "python -B skills/sohrab/alaa-project-constitution/scripts/validate_constitution.py --template skills/sohrab/alaa-project-constitution/assets/constitution-template.md",
+      "cwd": ".",
+      "duration_seconds": null,
+      "exit": 0,
+      "classification": "PASS",
+      "tier": "affected",
+      "proof_level": "1 static",
+      "resources": "light; 120s timeout",
+      "evidence": "16-validate-constitution.log"
+    },
+    {
+      "id": 17,
+      "command": "python -B artifacts/skill-pack-optimization-20261018/lanes/AUDIT-cli-assertion.py",
+      "cwd": ".",
+      "duration_seconds": null,
+      "exit": null,
+      "classification": "SKIPPED",
+      "tier": "not specified",
+      "proof_level": "none",
+      "resources": "light; 120s timeout",
+      "evidence": "no output log or reliable exit captured; do not infer pass"
+    },
+    {
+      "id": 18,
+      "command": "python -B skills/sohrab/alaa-repo-docs/scripts/check_markdown_links.py . --files [228 exact paths in 18-final-markdown-links.paths.txt]",
+      "cwd": ".",
+      "duration_seconds": 0.339,
+      "exit": 0,
+      "classification": "PASS",
+      "tier": "affected",
+      "proof_level": "1 static",
+      "resources": "light; 120s timeout",
+      "evidence": "18-final-markdown-links.log; exact path list in 18-final-markdown-links.paths.txt"
+    },
+    {
+      "id": 19,
+      "command": "python -B skills/sohrab/alaa-repo-docs/scripts/check_markdown_links.py . --files artifacts/skill-pack-optimization-20261018/change-notes.md --line-budget",
+      "cwd": ".",
+      "duration_seconds": null,
+      "exit": 0,
+      "classification": "PASS",
+      "tier": "affected",
+      "proof_level": "1 static",
+      "resources": "light; 120s timeout",
+      "evidence": "19-change-notes-line-budget.log"
+    },
+    {
+      "id": 20,
+      "command": "git diff --check HEAD -- AGENTS.md skills/sohrab artifacts/skill-pack-optimization-20261018 artifacts/skill-pack-review-20261018/01-contradictions-and-overlaps.md artifacts/skill-pack-review-20261018/02-optimization.md artifacts/skill-pack-review-20261018/03-new-skill-proposals.md docs/_agent_plans/20261018-000000_skill-pack-optimization.md docs/agents/20261018-000000_skill-pack-optimization-state.md",
+      "cwd": ".",
+      "duration_seconds": null,
+      "exit": null,
+      "classification": "SKIPPED",
+      "tier": "not specified",
+      "proof_level": "none",
+      "resources": "light; 120s timeout",
+      "evidence": "PowerShell wrapper failed before recording output/exit; no log exists; no rerun"
+    }
+  ],
+  "integrity": {
+    "aggregate_hash": "matched",
+    "unrelated_hashes": "matched",
+    "product_files": 2238,
+    "terminal_dispositions": {
+      "adapted": 90,
+      "rejected": 7,
+      "implemented": 27
+    },
+    "owned_text_files_utf8_no_bom_lf": 374,
+    "cached_raw_index_entries": "matched exactly",
+    "tracked_skill_deletions": 0,
+    "individual_hashes": "matched",
+    "bash_topic_map_sha256": "a83df1a9104bd2af70d56a7cee8a20746c4baa68286a3605100a25a3ab7d2867",
+    "preserved_unrelated_files": 10,
+    "zero_byte_reports": 3,
+    "coverage_rows": 124,
+    "product_manifest_sha256": "b1ad1db1cc9e1d1b3179b9c9875c39eabfaf7d91595e57afde9aeb297e278a76",
+    "unique_coverage_ids": 124
+  },
+  "limitations": [
+    "Static checks do not prove installed activation, live Beads behavior, application runtime behavior, or performance improvement.",
+    "Gate 17 and gate 20 have no reliable exit evidence.",
+    "Duration is unavailable where the console capture wrapper failed.",
+    "The first integrity probe was flawed; its output is preserved as integrity-assertions.json and corrected assertions passed in integrity-assertions-corrected.json.",
+    "An exploratory coverage probe used the wrong JSON key and failed before any product command; disposition counts were read from the canonical proposal record."
+  ]
+}

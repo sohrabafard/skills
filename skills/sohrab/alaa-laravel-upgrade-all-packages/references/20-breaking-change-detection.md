@@ -1,6 +1,6 @@
 # Breaking-Change Detection
 
-The baseline that makes "pre-existing" checkable, the classification that splits a major bump out of a patch sweep, and the checks a test suite does not perform. Test design -- what makes a test a test, which layer a behaviour belongs at, flake versus intermittent defect -- is `/alaa-testing-strategy` (`$alaa-testing-strategy`).
+The baseline that makes "pre-existing" checkable, the classification that splits a major bump out of a patch sweep, and the checks a test suite does not perform. Test design -- what makes a test a test, which layer a behaviour belongs at, flake versus intermittent defect -- is `/alaa-testing-strategy`.
 
 ## Step 1 -- capture the baseline
 
@@ -48,9 +48,15 @@ From the `--dry-run` output, classify each package by the leftmost version compo
 
 **A major bump is a separate change**: its own branch, its own restore point, one package at a time with `composer update <vendor/package> --with-dependencies`, the package's upgrade guide read first, and the higher proof level below. The reason is the revert unit -- thirty patch bumps sharing a commit range with one major means reverting the major reverts the thirty.
 
+### Scoped preview and apply
+
+Use the classified patch/minor package names as explicit positional arguments to `composer update <package> ... --with-dependencies --dry-run --no-interaction --no-progress`. Inspect every proposed transitive move with the same classification table. If a major remains, stop that subset and record the blocker; do not widen constraints or the package list to force resolution. An empty allowed set runs no update. Apply the accepted command unchanged except for removing `--dry-run`, then classify the full lock diff again. An unexpected major blocks acceptance: restore the pre-sweep lock and installed tree through `10-rollback-and-blast-radius.md`, then isolate it as its own change.
+
+Composer's partial-update and dependency flags permit dependency movement; they promise no patch/minor ceiling. Source: [Composer update command](https://getcomposer.org/doc/03-cli.md#update-u-upgrade), verified 2026-10-18. Honor the repository wrapper detected in `SKILL.md`; if it cannot express this scope, report the blocker instead of substituting an unrestricted update.
+
 ## Proof level per class
 
-Name the level from `/alaa-controlled-ops` (`$alaa-controlled-ops`) `references/40-validation-and-release-gates.md`, "Proof vocabulary". Minimums:
+Name the level from `/alaa-controlled-ops` `references/40-validation-and-release-gates.md`, "Proof vocabulary". Minimums:
 
 | Class | Minimum proof |
 |---|---|
@@ -58,7 +64,7 @@ Name the level from `/alaa-controlled-ops` (`$alaa-controlled-ops`) `references/
 | Patch or minor touching the request path, a driver, or a queue consumer | host-to-Docker smoke |
 | Major, or any bump to the framework or a database, Redis or AMQP client | in-runtime service proof, plus PostgreSQL or RabbitMQ live proof when the bumped client speaks to that dependency |
 
-A runtime that will not come up means reporting the highest strength actually reached and the blocker, never relabelling a unit proof. The runtime comes from `/service-runtime-kit-governance` (`$service-runtime-kit-governance`).
+A runtime that will not come up means reporting the highest strength actually reached and the blocker, never relabelling a unit proof. The runtime comes from `/service-runtime-kit-governance`.
 
 ## Step 3 -- does the frontend build ship?
 
@@ -68,13 +74,13 @@ Three checks; one hit settles it.
 2. A Blade or Inertia entrypoint references it: `grep -rn '@vite\|vite(\|manifest.json' resources/views app/`.
 3. A container build stage runs it: `grep -rn 'npm run build\|vite build\|yarn build' Dockerfile* docker/`.
 
-One hit makes the frontend production surface: its gates equal the Composer side's, and the repo's own build command must succeed after the npm upgrade, because `npm audit` passing does not prove the build still works. Zero hits makes it dev-only tooling, closed by `npm audit` alone. Build and delivery are `/alaa-frontend-devops` (`$alaa-frontend-devops`).
+One hit makes the frontend production surface: its gates equal the Composer side's, and the repo's own build command must succeed after the npm upgrade, because `npm audit` passing does not prove the build still works. Zero hits makes it dev-only tooling, closed by `npm audit` alone. Build and delivery are `/alaa-frontend-devops`.
 
 ## Step 4 -- what the test suite does not check
 
 - **Deprecations.** Run once with `--fail-on-deprecation` (PHPUnit 10 and later; Pest passes it through). A runner rejecting the flag is reported as `deprecation gate not available: <runner> <version>`, not skipped.
-- **Config drift.** Diff the service's copy against the package's shipped copy -- `diff config/<name>.php vendor/<vendor>/<package>/config/<name>.php` -- rather than republishing over `config/`, which overwrites local values. Config contract: `/alaa-laravel-architecture` (`$alaa-laravel-architecture`) `references/70-config-contract.md`.
-- **Shipped migrations.** `php artisan migrate --pretend` shows migrations the upgrade brought in. Schema safety: `/alaa-data-layer` (`$alaa-data-layer`) `references/20-schema-migrations-and-performance.md`.
-- **Interface shape.** A bump changing a class, interface or contract the service extends or implements is a design change: `/alaa-system-design` (`$alaa-system-design`) requires its pass first.
+- **Config drift.** Diff the service's copy against the package's shipped copy -- `diff config/<name>.php vendor/<vendor>/<package>/config/<name>.php` -- rather than republishing over `config/`, which overwrites local values. Config contract: `/alaa-laravel-architecture` `references/70-config-contract.md`.
+- **Shipped migrations.** `php artisan migrate --pretend` shows migrations the upgrade brought in. Schema safety: `/alaa-data-layer` `references/20-schema-migrations-and-performance.md`.
+- **Interface shape.** A bump changing a class, interface or contract the service extends or implements is a design change: `/alaa-system-design` requires its pass first.
 - **Silent behaviour classes.** These move with no signature change and pass a happy-path suite: serialisation and JSON encoding flags, date parsing strictness, default timezone and locale, HTTP client default redirect and TLS-verification behaviour, decimal and float formatting, collection ordering, default charset or collation. For each one the bumped package touches, name the assertion that fails if it changed, and write it when it does not exist.
 - **Runtime behaviour under a long-lived worker.** `50-runtime-verification.md`.

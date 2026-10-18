@@ -63,7 +63,7 @@ A chart that declares a dependency inherits its failure. State, per dependency, 
 
 - If the workload cannot serve any request without it, the readiness probe fails and the Service stops routing. That is fail-closed and `/alaa-security-review` (`$alaa-security-review`) owns the decision when the dependency is an authorisation or policy check.
 - If the workload can serve a reduced answer, readiness stays true and the degradation is reported as a metric. That is fail-open and `/alaa-reliability-sla` (`$alaa-reliability-sla`) owns it.
-- The discriminating question: *when this dependency cannot answer, does proceeding without it let something through that must not get through?* If yes, fail closed.
+- Classify the failure with `/alaa-security-review` `SKILL.md`, "Fail-closed versus fail-open, and which doctrine applies", before choosing the readiness and degradation behavior above.
 - An `initContainer` that waits for a dependency converts a dependency outage into `Pod Pending` with no logs from the application. Give it a bounded wait and a message that names the dependency.
 
 ## 7. Degraded-dependency playbook

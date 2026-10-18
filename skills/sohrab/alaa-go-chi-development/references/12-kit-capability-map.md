@@ -139,9 +139,8 @@ fixed at 2 connections, one of which is reserved for the advisory lock. Tier ban
 connections, and the Postgres slice. DDL and session operations use the direct admin lane.
 `pgkit.ComposeMigrations` orders service and kit sources by owned version bands; never renumber or hand-merge.
 
-**`rediskit` is deliberately unforgiving**: client retries are disabled outright (`MaxRetries = -1`), dial, read,
-write and pool timeouts are all set to the call timeout (default 250 ms), a non-positive TTL is rejected, a miss
-is a clean miss, and a failing Redis reports Degraded readiness. Redis is never truth.
+**Before relying on `rediskit` behavior**, read `/alaa-data-layer` `references/51-redis-golang.md` for its
+client, timeout/retry/pool, TTL, miss and readiness facts, including source re-verification. Redis is never truth.
 
 **`jobkit` has full-jitter exponential backoff** bounded by a ceiling. **`mqkit` has no Go-level retry or
 backoff.** No circuit breaker exists anywhere in the kit.

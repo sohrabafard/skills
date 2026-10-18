@@ -15,7 +15,7 @@ A single "transport error" class is the defect this page exists to prevent. Thes
 | Read timeout or total timeout after the request was written | Nothing. The SMS may already be on its way to the subscriber | **Do not re-issue the HTTP call.** Record the attempt as ambiguous and resolve it at the envelope's `idempotency_key` |
 | Connection reset after the request was written | Nothing, for the same reason | Same as a read timeout |
 
-`alaa-reliability-sla references/20-retries.md:33` states the doctrine: a refusal is proof of non-execution, a timeout is the absence of information, and code that catches one generic transport exception has already lost the distinction. The observable consequence of losing it is duplicate messages that appear only when the vendor is slow — which is exactly when a subscriber is already waiting for an OTP and will request a second one.
+The refusal-versus-timeout distinction and retry doctrine belong to `/alaa-reliability-sla` (`$alaa-reliability-sla`) `references/20-retries.md`; this table records Mediana-specific outcomes and handling only.
 
 The Mediana send API defines no idempotency key, so this route records `idempotent: false` and every caller sets its HTTP retry budget to `0` (`alaa-services-contract references/22-failure-load-and-deprecation-contract.md:149-151`). Deduplication happens one layer up, at the `idempotency_key` already inside the notification command envelope; adding a second mechanism beside it is forbidden by `22-…:152-153`.
 
@@ -43,7 +43,7 @@ The Mediana send API defines no idempotency key, so this route records `idempote
 
 ## Telemetry
 
-Emit `alaa_dependency_requests_total`, `alaa_dependency_request_duration_seconds`, `alaa_dependency_request_failures_total`, and `alaa_dependency_timeouts_total` for every Mediana call, defined at `alaa-services-contract references/24-metric-registry.md:107-110`. Do not invent a Mediana-specific family; the registry is the only place a metric name is coined.
+Emit `alaa_dependency_requests_total`, `alaa_dependency_request_duration_seconds`, `alaa_dependency_request_failures_total`, and `alaa_dependency_timeouts_total` for every Mediana call, defined at `alaa-services-contract references/24-metric-registry.md` section “Downstream dependency”. Do not invent a Mediana-specific family; the registry is the only place a metric name is coined.
 
 Label those series with the send mode and the outcome class from the first table, both of which are closed sets. Requirement levels — what must be traced, what must be logged, and at which severity — are `/alaa-observability-soc` (`$alaa-observability-soc`).
 

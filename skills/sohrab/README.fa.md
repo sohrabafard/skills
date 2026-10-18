@@ -29,7 +29,7 @@
 
 ### ۱. سیاست Arvan-first برای پلتفرم
 
-اگر کار زیرساخت یا Kubernetes یا Helm یا استقرار روی ArvanCloud CaaS است، منبع حقیقت سطح-pack همان `caas-arvan-kuber` است. اگر توصیه عمومی زیرساخت با محدودیت‌های آروان تناقض داشت، Arvan-first برنده است، مگر کاربر صریحا override را تایید کند.
+برای تصمیم‌های پلتفرم Arvan CaaS، آزمون بارگذاری را در `caas-arvan-kuber` `SKILL.md` و بخش «The deciding test, stated in the same words on both sides of this seam» دنبال کنید؛ تقدم Arvan-first فقط وقتی اعمال می‌شود که آن آزمون برقرار باشد.
 
 ### ۲. سیاست اعتماد gateway
 
