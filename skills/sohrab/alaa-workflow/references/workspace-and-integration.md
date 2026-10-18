@@ -10,6 +10,8 @@
 
 ## Record the tested state
 
+Tested-state, integration-evidence and completion-lifecycle rules cover execution and issue-only implementation. Design records sources and observed validation in its plan without execution phases, snapshots or implementation verdicts. Authority limits apply to every kind.
+
 Before a gate, hold writes to its tested scope. Record the command, result, HEAD SHA, scoped paths, and a SHA-256 digest of a deterministic manifest of those paths and their file contents, including untracked files. Record the manifest method and observation time so a resumed agent can compare the same inputs. A commit SHA may replace the content digest only when the commit contains every tested change. A Git ref alone does not identify uncommitted contents.
 
 Record explicit user commit authority and its scope once; a standing grant remains valid within that scope and does not require repeated approval. After successful declared boundary review, accepted fixes and required retests, the parent stages only owned paths and commits on the current branch with a Conventional Commit subject and no agent attribution. No task/subtask commit is implied. Under final-only review, intermediate phases remain uncommitted; a failed boundary remains uncommitted unless the user expressly authorizes a partial checkpoint. `alaa-codex-orchestrator` and `alaa-cc-orchestrator` `references/verification-and-gates.md` schedule the action. Without commit authority, the observed snapshot identifies evidence and the uncommitted tree remains a reported recovery risk.
@@ -26,7 +28,7 @@ This skill grants no commit, merge, push, tag, publication, deployment, installa
 
 ## The completion lifecycle
 
-Four states describe what a run has proven, and every run reports all four. Each carries its own verdict — proven, not proven with the blocker named, or not requested — because one word for "done" reads the same over a change that is committed and reviewed as over one that is merely written.
+Every execution run reports all four states of proven work. Each carries its own verdict — proven, not proven with the blocker named, or not requested — because one word for "done" reads the same over a change that is committed and reviewed as over one that is merely written.
 
 | State | Proven when |
 |---|---|

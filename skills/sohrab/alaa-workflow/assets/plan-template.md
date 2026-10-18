@@ -1,5 +1,7 @@
 # Workflow Plan - {{task}}
 
+- Plan kind: execution
+- Approved design: {{approved_design_display}}
 - Task ID: `{{task_id}}`
 - Mode: `{{mode}}`
 - Profile: `{{profile}}`

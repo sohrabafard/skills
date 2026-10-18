@@ -1,6 +1,6 @@
 # Optional Prompt Generation
 
-Create a same-stem prompt pack only when the user explicitly requests reusable prompts.
+Create a same-stem prompt pack only for an admitted execution family and an explicit reusable-prompt request. Resolve kind admission through `references/artifact-lifecycle.md` first.
 
 ## Freshness gate
 

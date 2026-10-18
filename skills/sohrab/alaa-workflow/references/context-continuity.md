@@ -36,9 +36,15 @@ The handoff package is a section inside the plan rather than a separate file, be
 
 Issue-only Beads work creates no plan, checkpoint, or six-field handoff package; its issue owns position, results and knowledge as `## Task resume and phase resume` states.
 
-## Status and execution position
+## Status and position
 
-The plan header owns overall workflow status. Checkpoint and JSON status are attributable snapshots of that header, not separate decisions. The checkpoint owns current phase, blockers, and next action; checkpoint-bearing plans link to it instead of copying those fields. A direct profile keeps this cursor in its sole plan.
+The plan header owns overall workflow status. Checkpoint and JSON status snapshot that header; they make no independent status decision. Every admitted checkpoint contains its exact `Plan` reference, status, last verified result, blockers, next action, touched surfaces and update time. The last verified result references its evidence owner. Keep a cross-PC handoff record when applicable. Checkpoint-bearing plans link to their checkpoint instead of copying position, blockers or next action.
+
+A design checkpoint uses `Current position` to name the current design question, decision or approval step. It has no phase/task/subtask cursor. Its in-plan handoff uses the six fields below for verified ideas, assumptions, rejected algorithms and continuation evidence. Design validation evidence belongs to that design plan; the checkpoint references it.
+
+For execution, checkpoint position adds current phase; a direct profile keeps its cursor in its sole plan. The execution plan contains outcome/scope, phase design and barriers, phase acceptance, integrated-review evidence, skill associations and the handoff package. Task results follow `references/task-tracking.md` `## Acceptance and evidence by level`.
+
+The JSON and issue-cursor rules below apply only to execution. JSON contains schema version, task identity, status, plan path, current phase/task/subtask cursor, next actions, blockers, last validation and update time, without phase definitions, history or task tables.
 
 Optional schema-2 JSON is a compact consumer snapshot with no task table or graph. Derive its position fields from the checkpoint when present, otherwise the direct-plan cursor; never edit them independently. Copy `current_phase` exactly. Project each blocker/next-action scalar into one whole trimmed array entry, or an empty array for empty/none sentinels; trim outer whitespace/code wrapping and never split punctuation. Reconcile torn updates from canonical owners before execution or completion. For marked families, companion references must resolve to this exact plan, not merely share its basename.
 
@@ -62,9 +68,11 @@ Six fields. Each exists because a real resume fails without it.
 
 **Traps.** Anything that looks correct and is not. A test that passes for the wrong reason, a config that is overridden elsewhere, a name that appears twice with different meanings.
 
-Write a field when you learn something that belongs in it, not on a schedule. An empty field stays empty; do not pad it.
+Keep all six fields present in an admitted handoff package. Write a field when you learn something that belongs in it, not on a schedule. An empty field stays empty; do not pad it.
 
 ## Task resume and phase resume
+
+For design, use the kind-aware resume protocol below; this section covers execution and issue-only work.
 
 Task resume reads the Beads issue: `notes` for position, including blockers, and next step, comments for events, `acceptance`, and its relations. Phase resume reads the plan, the checkpoint and the handoff package through the resume protocol below. A task inside an admitted plan resumes through both: the issue gives the task's state, the plan gives the phase it serves.
 
@@ -82,7 +90,7 @@ Writing continuously is a tax; writing only at the end risks losing detail. Writ
 
 1. **Material task progress, or a phase completes or fails.** Update the selected task authority and affected canonical workflow fields, then derive admitted snapshots. This is the routine case and it is cheap.
 2. **A decision, blocker or scope change.** Update affected workflow owners/snapshots and, if a decision closed off an alternative, add it to *ruled out*.
-3. **A validation runs.** Record its evidence once at its level owner in `references/task-tracking.md` `## Acceptance and evidence by level`. When a checkpoint is admitted, point its last verified result to that evidence. `references/workspace-and-integration.md` owns tested identity, write isolation, and reuse; without attributable inputs, a result cannot be cited on resume.
+3. **A validation runs.** Record design evidence at the design plan; execution evidence uses its level owner in `references/task-tracking.md` `## Acceptance and evidence by level`. When a checkpoint is admitted, point its last verified result to that evidence. `references/workspace-and-integration.md` owns tested identity, write isolation, and reuse; without attributable inputs, a result cannot be cited on resume.
 4. **Something is learned that would be expensive to rediscover.** Add it immediately to the matching handoff field when a plan is admitted, or to issue comments otherwise, while details are exact.
 5. **Before handing off, and before any long autonomous stretch.** Bring selected task/workflow owners and admitted snapshots current, then verify with the cold-start test.
 
@@ -102,10 +110,10 @@ This test is worth running mentally before any long unattended stretch, because 
 
 ## The resume protocol
 
-First resolve the artifact family and selected task store through `references/task-tracking.md`. Before acting, read every applicable owner below in order; skip only an absent/not-admitted artifact or JSON without a consumer.
+First resolve the artifact family and kind through `references/artifact-lifecycle.md`, then its task authority through `references/task-tracking.md`. Before acting, read every applicable owner below in order; skip only an absent/not-admitted artifact or JSON without a consumer.
 
 1. **The current bound issue**, when Beads is selected, for actual task state, notes, comments and prerequisites; fresh hook guidance is no substitute for this read.
-2. **The plan**, when admitted, for destination, scope, ordered phases, acceptance and validation; in local mode it also owns tasks.
+2. **The plan**, when admitted, for destination, scope, acceptance and validation; a design also requires its decisions and open questions, while execution reads ordered phases and any tasks owned by an existing local family.
 3. **The handoff package** inside the plan, for verified facts, assumptions, rejected approaches and traps before touching code. Issue-only work reads the issue's notes and comments instead.
 4. **The checkpoint**, when admitted, for position, last verified result, blockers and next action; direct work reads the plan cursor.
 5. **The files named in "read first on resume."**
@@ -113,9 +121,9 @@ First resolve the artifact family and selected task store through `references/ta
 
 Then verify position against reality: check `git status`, the diff, source/deliverable availability and attributable evidence against the cursor's touched surfaces. Reconcile stale task/phase/status snapshots before acting and record what was stale. `references/workspace-and-integration.md` owns evidence reuse: unchanged attributable proof survives a new session or PC, while affected proof does not. A remembered result or another PC's inaccessible source is insufficient.
 
-Before the next task, resolve and load its phase bindings and task overrides through `references/companion-routing.md`. Recheck mapped availability when the runtime or installed catalog changed; historical mappings do not prove current availability.
+Before the next execution task, resolve and load its phase bindings and task overrides through `references/companion-routing.md`. Recheck mapped availability when the runtime or installed catalog changed; historical mappings do not prove current availability.
 
-On resume, add explicit phase/task skill bindings to older active plans before execution. Completed archives remain readable; reactivation requires those bindings before the next task. This does not migrate task-store authority, which `references/task-tracking.md` owns.
+On execution resume, add explicit phase/task skill bindings to older active execution plans before continuing. Completed archives remain readable; reactivation requires those bindings before the next task. This does not migrate task-store authority, which `references/task-tracking.md` owns.
 
 ## After compaction, specifically
 

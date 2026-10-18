@@ -4,7 +4,7 @@ This file owns task-store selection, task authority, where each kind of task inf
 
 ## Select before tracking-dependent work
 
-Continue an existing family's recorded task store until explicit migration. New phased or delegated execution plans require explicitly adopted, verified Beads and the hierarchy below; a missing binding blocks dependent execution and dispatch. Small direct single-phase work may use `local` when no binding is adopted. A CLI, installed skill, hook context or local `.beads` directory alone selects nothing. A valid binding can point to an external hub without a repository-local database.
+Resolve kind and admission through `references/artifact-lifecycle.md` before tracking-dependent work. Continue an existing family's recorded task store until explicit migration. Every new execution plan, including direct single-phase work, requires explicitly adopted, verified Beads and the hierarchy below; a missing binding blocks dependent execution and dispatch. A CLI, installed skill, hook context or local `.beads` directory alone selects nothing. A valid binding can point to an external hub without a repository-local database.
 
 The project binding owns workspace identity, project scope, and authority. Record its nonempty repository-relative instruction/configuration reference, optionally with a `#anchor`, rather than copying settings or machine paths. The reference must contain no absolute machine path, multiline value, backtick, or unresolved marker. Helpers check its format, not owner existence/configuration. Resolve conflicting or incomplete adoption/binding before tracking-dependent work. Verify active workspace and project through the binding owner before reading/changing issues; a reachable wrong hub is not the configured store.
 
@@ -12,7 +12,7 @@ For Beads mechanics, load the installed upstream Beads skill separately and reus
 
 ## Division of labor
 
-The selected task store owns task registration, status, dependencies, ready and blocked state, discovered work, task continuation context, and the local evidence of new tasks. This skill owns whether a plan is needed and the process size, goal and phases, skill and lane choice, conflict prevention, evidence validity, phase acceptance, the four completion states, resume, handoff, and lesson selection. No Markdown file tracks tasks except a `local`-store plan, which owns task state only because Beads is not selected.
+The selected task store owns task registration, status, dependencies, ready and blocked state, discovered work, task continuation context, and the local evidence of new tasks. This skill owns whether a plan is needed and the process size, goal and phases, skill and lane choice, conflict prevention, evidence validity, phase acceptance, the four completion states, resume, handoff, and lesson selection. Only existing `local` execution plans track tasks in Markdown; their recorded store owns that state.
 
 ## Agent identity and ownership
 
@@ -34,20 +34,20 @@ Verified on 2026-10-18 against installed `bd` 1.3.1 help and matching upstream [
 
 | Store | Task owner | Plan work entries |
 |---|---|---|
-| `local` | Plan tasks own progress and prerequisite edges | Stable ID, outcome, dependency list and skill mapping |
+| `local` in an existing execution family | Plan tasks own progress and prerequisite edges | Stable ID, outcome, dependency list and skill mapping |
 | `beads` | Beads owns issue identity, status, priority, assignee, issue edges and native readiness | Unique issue ID mapped to one phase, with its skill mapping |
 
-For marked local families, write each task as `- [ ] T1: <outcome> [depends: none] [skills: inherit]`. Keep IDs unique and stable across the plan. Use comma-separated local IDs for prerequisites; `none` means no prerequisites. Every prerequisite must exist, the graph must be acyclic, and completed tasks' prerequisites must be completed. Tick only after observing the task's outcome and evidence, including work verified as already done. The local plan's recorded claim/ownership coordinates; it does not prove exclusivity across agents or PCs.
+For existing marked local execution families, write each task as `- [ ] T1: <outcome> [depends: none] [skills: inherit]`. Keep IDs unique and stable across the plan. Use comma-separated local IDs for prerequisites; `none` means no prerequisites. Every prerequisite must exist, the graph must be acyclic, and completed tasks' prerequisites must be completed. Tick only after observing the task's outcome and evidence, including work verified as already done. The local plan's recorded claim/ownership coordinates; it does not prove exclusivity across agents or PCs.
 
-For existing flat Beads families or direct nondelegated work, write `- Issue: <issue-id> [skills: inherit]`, using the actual opaque ID without assuming a prefix. New phased/delegated families use `## Phase-task-subtask hierarchy`. Map each issue uniquely to one phase; a task override is its complete `[skills: name, name]` mapping. Keep no authoritative local checkbox/numbered task list or editable issue register alongside these mappings. Issue closure is recorded in Beads, never by ticking a plan mirror. `references/companion-routing.md` owns inherited/override skill semantics for both stores.
+For existing flat Beads families, write `- Issue: <issue-id> [skills: inherit]`, using the actual opaque ID without assuming a prefix. New execution families use `## Phase-task-subtask hierarchy`. Map each issue uniquely to one phase; a task override is its complete `[skills: name, name]` mapping. Keep no authoritative local checkbox/numbered task list or editable issue register alongside these mappings. Issue closure is recorded in Beads, never by ticking a plan mirror. `references/companion-routing.md` owns inherited/override skill semantics for both stores.
 
-Plans own the goal and phases, shared constraints, phase acceptance, integrated-review evidence, skill associations, shared-resource conflicts and integration barriers. Acceptance and evidence follow `## Acceptance and evidence by level`.
+Workflow plan contents follow `references/context-continuity.md`; task acceptance and evidence follow `## Acceptance and evidence by level`.
 
 ## Phase-task-subtask hierarchy
 
-New phased/delegated families declare `- Task hierarchy: phase-task-subtask` in the plan header, with `Task store: beads` and its portable `Task binding`. Existing unmarked or local families keep their original contract until explicit migration; the marker is not an optional escape for newly created phased plans.
+Every new execution family declares `- Task hierarchy: phase-task-subtask` in the plan header, with `Task store: beads` and its portable `Task binding`. Existing unmarked or local families keep their original contract until explicit migration; omitting the marker cannot exempt a new execution plan.
 
-Register every phase, task and subtask, its acceptance and parent-child relation in bound Beads before dependent execution. A phase contains one or more tasks; each task contains one or more executable subtasks. IDs are opaque and unique across the family. Preserve an optional enclosing engagement epic. The plan maps containment, never mutable issue status:
+Register every phase, task and subtask, its acceptance and parent-child relation in bound Beads before dependent execution. A phase or milestone contains one or more tasks; each task contains one or more executable subtasks. Map milestones as `Phase N` in the plan. IDs are opaque and unique across the family. Preserve an optional enclosing engagement epic. The plan maps containment, never mutable issue status:
 
 ```markdown
 ### Phase 1 - Implement
@@ -70,7 +70,7 @@ Completed required review boundaries need resolved `Validation commands` and obs
 
 ## Where task information lives
 
-Under `local`, the plan owns the first three rows.
+For existing local execution families, the plan owns the first three rows.
 
 | Information | Owner |
 |---|---|
@@ -150,9 +150,9 @@ After a mutation with an uncertain outcome, read actual task state through the b
 
 ## Helper boundary and compatibility
 
-The initializer takes `--task-store {local,beads}` and `--beads-binding <portable-reference>` for Beads. Its local default is admitted only for direct nondelegated single-phase plans (or deprecated standalone state snapshots); new phased/delegated plans reject missing explicit Beads/binding before writing. `--review-boundary {phase,final}` defaults to phase at the root, inherits canonical parent cadence when nested, and rejects a conflicting explicit override. Resolve and verify adoption before invoking it; it never discovers a store from PATH, environment or directory existence. Local binding is `not applicable`. Beads binding is required; Beads with deprecated standalone `--state-only` is invalid. Helpers invoke no Beads command, service or network operation.
+For a new execution family, the initializer requires `--task-store beads` and `--beads-binding <portable-reference>`. Kind admission belongs to `references/artifact-lifecycle.md`; profiles and aliases never replace task authority. `--review-boundary {phase,final}` defaults to phase at the root, inherits canonical parent cadence when nested, and rejects a conflicting explicit override. Resolve and verify adoption before invoking it; it never discovers a store from PATH, environment or directory existence. Local binding is `not applicable`. Beads binding is required; Beads with deprecated standalone `--state-only` is invalid. Helpers invoke no Beads command, service or network operation.
 
-Either `Task store` or `Task binding` metadata header marks a family. Marked families require exactly one of each, a supported store and valid pairing under every profile, including legacy. Both absent retains the old compatibility contract. Draft unresolved markers may warn; unresolved executing work fails even when the overall header still says planning. Offline validation checks metadata, graph/mappings, skills and snapshots; it proves no live issue existence, bound workspace, project scope or readiness.
+For execution and existing compatible families, either `Task store` or `Task binding` metadata header marks a family. Marked families require exactly one of each, a supported store and valid pairing under every profile, including legacy. Both absent retains the old compatibility contract. Draft unresolved markers may warn; unresolved executing work fails even when the overall header still says planning. Offline validation checks metadata, graph/mappings, skills and snapshots; it proves no live issue existence, bound workspace, project scope or readiness.
 
 Install compatible instructions, templates, and helpers together before executing a newly marked family. Older consumers may skip mappings or gates and cannot safely execute it. On rollback, freeze marked families until compatible consumers return; preserve task truth/evidence rather than converting issues to checkboxes or selecting local. Existing unmarked families remain under their original compatible contract.
 

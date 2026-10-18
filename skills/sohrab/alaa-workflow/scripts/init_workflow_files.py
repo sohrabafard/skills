@@ -5,6 +5,7 @@ from __future__ import annotations
 
 import argparse
 import json
+import os
 import re
 import sys
 import traceback
@@ -100,6 +101,8 @@ def parse_args() -> argparse.Namespace:
         formatter_class=argparse.RawDescriptionHelpFormatter,
     )
     parser.add_argument("--task", required=True, help="Human task title used for naming and template fill.")
+    parser.add_argument("--plan-kind", required=True, choices=("design", "execution"), help="Design discussion or execution of an approved design.")
+    parser.add_argument("--approved-design", help="Readable approved design plan required for execution; never modified.")
     parser.add_argument(
         "--profile",
         choices=PROFILES,
@@ -246,7 +249,7 @@ def task_store_values(args: argparse.Namespace, checkpoint: Path | None, profile
     delegated = args.mode == "delegated" or bool(args.parent_plan or args.lane)
     if args.state_only and delegated:
         raise Misuse("Delegated work requires a bound plan; --state-only cannot represent its hierarchy.")
-    hierarchy = not args.state_only and (profile != "direct" or delegated)
+    hierarchy = not args.state_only
     if hierarchy and args.task_store != "beads":
         raise Misuse("New phased/delegated plans require --task-store beads and --beads-binding; continue existing local families in place.")
     binding = args.beads_binding
@@ -308,6 +311,28 @@ def task_store_values(args: argparse.Namespace, checkpoint: Path | None, profile
 
 
 def run(args: argparse.Namespace) -> int:
+    if args.plan_kind == "design":
+        incompatible = (args.approved_design or args.beads_binding or args.task_store != "local"
+                        or args.review_boundary or args.with_prompts or args.with_state or args.state_only
+                        or args.no_continuation or args.lane or args.parent_plan or args.mode != "plan"
+                        or (args.profile is not None and args.profile != "resumable"))
+        if incompatible:
+            raise Misuse("Design requires resumable/local and rejects execution, hierarchy, prompt and state flags.")
+    elif not args.approved_design:
+        raise Misuse("Execution requires --approved-design naming a valid approved design plan.")
+    elif args.state_only:
+        raise Misuse("--state-only cannot represent an execution plan and its Beads hierarchy; continue historical state in place.")
+    approved_design = None
+    protected_design_paths: list[Path] = []
+    if args.plan_kind == "execution":
+        from validate_workflow_files import extract_reference, path_from_reference, read_text, require_approved_design
+        approved_design = Path(args.approved_design).expanduser()
+        try:
+            require_approved_design(approved_design)
+            design_checkpoint = path_from_reference(extract_reference(read_text(approved_design), ("checkpoint",)), approved_design)
+        except (ValueError, OSError, UnicodeError) as exc:
+            raise Misuse(f"Invalid --approved-design: {exc}") from exc
+        protected_design_paths = [approved_design] + ([design_checkpoint] if design_checkpoint else [])
     profile = resolve_profile(args)
     include_prompts = args.with_prompts or profile == "legacy"
     prompt_metadata = resolve_prompt_metadata(args, include_prompts)
@@ -356,7 +381,8 @@ def run(args: argparse.Namespace) -> int:
         "phase_prompts_display": display_path(prompt_path if include_prompts else None),
         "continuation_state_display": display_path(checkpoint_path if include_checkpoint else None),
         "state_display": display_path(state_path if include_state else None),
-        **task_store_values(args, checkpoint_path if include_checkpoint and not args.state_only else None, profile),
+        **(task_store_values(args, checkpoint_path if include_checkpoint and not args.state_only else None, profile)
+           if args.plan_kind == "execution" else {}),
         **prompt_metadata,
     }
     if inherited:
@@ -365,7 +391,15 @@ def run(args: argparse.Namespace) -> int:
 
     planned: list[tuple[Path, str]] = []
 
-    if not args.state_only:
+    if args.plan_kind == "design":
+        planned.append((plan_path, render("design-plan-template.md", values)))
+        planned.append((checkpoint_path, render("design-checkpoint-template.md", values)))
+    elif not args.state_only:
+        try:
+            approved_design_link = Path(os.path.relpath(approved_design.resolve(), Path.cwd().resolve()))
+        except ValueError as exc:
+            raise Misuse("Approved design cannot be represented by a portable relative path from this repository.") from exc
+        values["approved_design_display"] = display_path(approved_design_link)
         planned.append((plan_path, render("plan-template.md", values)))
         if include_prompts:
             planned.append((prompt_path, render("phase-prompts-template.md", values)))
@@ -373,6 +407,9 @@ def run(args: argparse.Namespace) -> int:
             planned.append((checkpoint_path, render("continuation-state-template.md", values)))
     if include_state:
         planned.append((state_path, render_json(values)))
+
+    if any(path.resolve() == protected.resolve() for path, _ in planned for protected in protected_design_paths):
+        raise Misuse("An output would overwrite the approved design or its checkpoint; choose a different task stem or directory.")
 
     # Every target is checked before any of them is written. Writing until the first
     # collision leaves half an artifact family behind, and the next run then cannot start
@@ -394,6 +431,7 @@ def run(args: argparse.Namespace) -> int:
 
     payload: dict[str, Any] = {
         "task": args.task,
+        "plan_kind": args.plan_kind,
         "mode": mode,
         "profile": profile,
         "task_store": args.task_store,

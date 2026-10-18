@@ -1,0 +1,26 @@
+expected_scope=130f88682e51226f966706b21d85030b5ca7929898eab36a792b78c98604f6a5
+actual_scope=130f88682e51226f966706b21d85030b5ca7929898eab36a792b78c98604f6a5
+per_file_mismatches=0
+head=3f044c6479972c63ab47e1651cb7999238bc19af
+head_expected=3f044c6479972c63ab47e1651cb7999238bc19af
+initial_source_scope=58bf3c6fb2974903c6e10f356d6d66c148dca6018c840f2cb27a87d0398c04bf
+final_status=
+ M skills/sohrab/alaa-workflow/SKILL.md
+ M skills/sohrab/alaa-workflow/assets/plan-template.md
+ M skills/sohrab/alaa-workflow/references/artifact-lifecycle.md
+ M skills/sohrab/alaa-workflow/references/companion-routing.md
+ M skills/sohrab/alaa-workflow/references/context-continuity.md
+ M skills/sohrab/alaa-workflow/references/context-curation.md
+ M skills/sohrab/alaa-workflow/references/phase-prompts.md
+ M skills/sohrab/alaa-workflow/references/task-tracking.md
+ M skills/sohrab/alaa-workflow/references/workspace-and-integration.md
+ M skills/sohrab/alaa-workflow/scripts/init_workflow_files.py
+ M skills/sohrab/alaa-workflow/scripts/validate_workflow_files.py
+ M skills/sohrab/alaa-workflow/tests/test_workflow_files.py
+?? artifacts/workflow-plan-kinds-20261018/
+?? docs/_agent_plans/20261018-194100_workflow-plan-kinds-design.md
+?? docs/_agent_plans/20261018-194100_workflow-plan-kinds-execution.md
+?? docs/agents/20261018-194100_workflow-plan-kinds-design-state.md
+?? docs/agents/20261018-194100_workflow-plan-kinds-execution-state.md
+?? skills/sohrab/alaa-workflow/assets/design-checkpoint-template.md
+?? skills/sohrab/alaa-workflow/assets/design-plan-template.md

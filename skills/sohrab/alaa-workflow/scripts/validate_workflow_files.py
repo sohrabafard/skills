@@ -9,6 +9,7 @@ import re
 import sys
 import traceback
 from collections import deque
+from datetime import date
 from pathlib import Path
 from typing import Any, Iterable
 
@@ -74,6 +75,141 @@ def clean_scalar(value: str) -> str:
 
 def plan_header(content: str) -> str:
     return re.split(r"^#{2,6}\s+", content, maxsplit=1, flags=re.M)[0]
+
+
+def header_values(content: str, label: str) -> list[str]:
+    return [clean_scalar(value) for value in re.findall(
+        rf"^[ \t]*[-*]?[ \t]*{re.escape(label)}:[ \t]*([^\r\n]*)$", plan_header(content), re.I | re.M)]
+
+
+def plan_kind(content: str) -> str | None:
+    values = header_values(content, "Plan kind")
+    if not values:
+        return None
+    if len(values) != 1 or values[0] not in {"design", "execution"}:
+        raise ValueError("Plan header requires exactly one Plan kind: design or execution.")
+    return values[0]
+
+
+def recorded_value(value: str) -> bool:
+    return bool(value and not UNRESOLVED_RE.search(value) and value.lower() not in {
+        "none", "none yet", "n/a", "pending", "not recorded", "not run", "not applicable", "unknown"})
+
+
+def design_approval(content: str, required: bool = False) -> list[str]:
+    messages: list[str] = []
+    fields = {label: header_values(content, label) for label in (
+        "Approval status", "Approval by", "Approval on", "Approval evidence")}
+    if any(len(values) != 1 for values in fields.values()):
+        return [error("design.approval", "Approval fields are missing or duplicated.", "Keep one status, by, on and evidence field in the header.")]
+    status = fields["Approval status"][0]
+    if status not in {"pending", "approved"}:
+        messages.append(error("design.approval", "Approval status is unsupported.", "Use pending or approved, matching recorded reality."))
+    if required and status != "approved":
+        messages.append(error("design.approval", "Design has no recorded approval.", "Obtain and record attributable dated approval before execution or completion."))
+    if status == "approved":
+        if any(not recorded_value(fields[label][0]) for label in ("Approval by", "Approval evidence")):
+            messages.append(error("design.approval", "Approval lacks attribution or evidence.", "Record the actual approving party and evidence; never infer approval."))
+        approved_on = fields["Approval on"][0]
+        try:
+            if not re.fullmatch(r"[0-9]{4}-[0-9]{2}-[0-9]{2}", approved_on):
+                raise ValueError("not an ISO calendar date")
+            date.fromisoformat(approved_on)
+        except ValueError:
+            messages.append(error("design.approval", "Approval on is not a valid YYYY-MM-DD calendar date.", "Record the actual approval date."))
+    return messages
+
+
+DESIGN_EXECUTION_FIELDS = (
+    "Task binding", "Task hierarchy", "Phase issue", "Task issue", "Subtask issue", "Root issue", "Issue",
+    "Current phase", "Current task", "Current subtask", "Review boundary", "Final phase", "Local final phase",
+    "Review status", "Review evidence", "Commit authority", "Commit", "Snapshot", "Machine state", "Prompt pack",
+    "Phase prompts", "Approved design", "Parent plan", "Required skills", "Pending review/commit",
+)
+
+
+def design_execution_messages(content: str) -> list[str]:
+    execution_field = any(field_value(content, label) is not None for label in DESIGN_EXECUTION_FIELDS)
+    execution_heading = has(content, r"^#{2,6}\s+(?:Phase\b|Ordered Work\b|Task Allocation\b|Delegation\b|Execution Position\b)")
+    if execution_field or execution_heading or has(content, r"^\s*[-*]\s+\[[ xX-]\]"):
+        return [error("design.execution-fields", "Design contains execution hierarchy, cursor or gates.", "Keep design decisions/questions and a position checkpoint; create a separate approved-design execution plan.")]
+    return []
+
+
+def validate_design_checkpoint(path: Path, plan_path: Path, content: str) -> list[str]:
+    checkpoint = read_text(path)
+    messages = design_execution_messages(checkpoint)
+    for label in ("Plan", "Status", "Current position", "Last verified result", "Blockers", "Next action", "Touched surfaces", "Updated"):
+        values = header_values(checkpoint, label)
+        if len(values) != 1 or not values[0]:
+            messages.append(error("design.checkpoint", f"Checkpoint requires exactly one nonempty {label}.", "Restore the compact design position fields."))
+    declared = extract_reference(checkpoint, ("plan",))
+    if not declared or not references_selected_plan(declared, plan_path):
+        messages.append(error("design.checkpoint-plan", "Checkpoint does not reference the exact selected design.", "Restore the full selected plan reference; matching basenames are insufficient."))
+    if detect_status(checkpoint) != detect_status(content):
+        messages.append(error("design.checkpoint-status", "Checkpoint status differs from design status.", "Derive status from the plan header."))
+    messages.extend(unresolved_messages(checkpoint, is_complete_status(detect_status(content)), "design.checkpoint-placeholders"))
+    return messages
+
+
+def validate_design_plan(path: Path, checkpoint_path: Path | None = None) -> list[str]:
+    content = read_text(path)
+    status = detect_status(content)
+    complete = is_complete_status(status)
+    approved = header_values(content, "Approval status") == ["approved"]
+    messages = design_execution_messages(content)
+    for label, expected in (("Plan kind", "design"), ("Task store", "local"), ("Profile", "resumable")):
+        if header_values(content, label) != [expected]:
+            messages.append(error("design.header", f"Design requires one {label}: {expected} header.", "Restore the design contract without migrating execution history."))
+    if len(header_values(content, "Status")) != 1 or not status:
+        messages.append(error("design.status", "Design requires exactly one nonempty status header.", "Record the current design status."))
+    messages.extend(design_approval(content, required=complete))
+    for title in ("Summary and Outcome", "Scope", "Decisions", "Open Questions", "Acceptance Criteria", "Handoff Package"):
+        if not has(content, rf"^##\s+{re.escape(title)}\s*$"):
+            messages.append(error("design.section", f"Design is missing {title}.", "Restore its design section; do not add execution phases."))
+    decisions = section_block(content, re.compile(r"^##\s+Decisions\s*$", re.I | re.M)) or ""
+    rows = [[cell.strip() for cell in line.strip().strip("|").split("|")]
+            for line in decisions.splitlines() if line.strip().startswith("|")]
+    if not rows or rows[0] != ["Date", "Owner", "Decision", "Reason"]:
+        messages.append(error("design.decisions", "Decisions table columns are missing or unsupported.", "Use Date | Owner | Decision | Reason."))
+    for row in rows[1:]:
+        if all(re.fullmatch(r":?-+:?", cell) for cell in row):
+            continue
+        if len(row) != 4 or any(not cell for cell in row):
+            messages.append(error("design.decisions", "Decision has missing fields.", "Record its date, owner, decision and reason."))
+            continue
+        try:
+            if not re.fullmatch(r"[0-9]{4}-[0-9]{2}-[0-9]{2}", row[0]):
+                raise ValueError("not an ISO calendar date")
+            date.fromisoformat(row[0])
+        except ValueError:
+            messages.append(error("design.decisions", "Decision date is invalid.", "Use a valid YYYY-MM-DD date."))
+    messages.extend(validate_handoff(content, "resumable", status))
+    if SKILL_HEADING_RE.search(content):
+        messages.extend(validate_skill_bindings(content, path, "resumable", status))
+    messages.extend(unresolved_messages(content, complete or approved, "design.placeholders"))
+    checkpoints = header_values(content, "Checkpoint")
+    declared = path_from_reference(checkpoints[0], path) if len(checkpoints) == 1 else None
+    if declared is None or not checkpoints[0] or checkpoints[0] in {"not created", "none"}:
+        messages.append(error("design.checkpoint", "Design requires one checkpoint reference.", "Link its design position checkpoint."))
+    elif not declared.is_file():
+        messages.append(error("design.checkpoint", "Declared design checkpoint is missing.", "Restore the declared checkpoint before handoff or execution."))
+    else:
+        messages.extend(validate_design_checkpoint(declared, path, content))
+    if checkpoint_path is not None and (declared is None or checkpoint_path.resolve() != declared.resolve()):
+        messages.append(error("design.checkpoint", "Selected checkpoint differs from the design's declared checkpoint.", "Reconcile the canonical reference instead of substituting a companion."))
+    return messages
+
+
+def require_approved_design(path: Path) -> None:
+    """Validate recorded approval offline; this never establishes human authority."""
+    content = read_text(path)
+    if plan_kind(content) != "design":
+        raise ValueError("Approved design must reference an explicit design plan.")
+    messages = validate_design_plan(path) + design_approval(content, required=True)
+    failures = [message for message in messages if message.startswith("ERROR")]
+    if failures:
+        raise ValueError("; ".join(failures))
 
 
 def hierarchy_family(content: str) -> bool:
@@ -660,7 +796,7 @@ def validate_skill_bindings(content: str, path: Path, profile: str, status: str)
                     if condition.lower() == "always":
                         messages.append(level("plan.skills-source", f"Unconditional skill {name} is unavailable.", "Block its work or record an explicitly authorized fallback; never silently substitute or install."))
                     continue
-                source_path = Path(source)
+                source_path = Path(source).expanduser()
                 if not source_path.is_absolute() and not source_path.exists():
                     source_path = path.parent / source_path
                 if source_path.name != "SKILL.md" or not source_path.is_file():
@@ -692,7 +828,7 @@ def validate_skill_bindings(content: str, path: Path, profile: str, status: str)
                 messages.append(level("plan.skills-mapping", f"{where} refers to unbound skills: {', '.join(missing)}.", "Add their complete Skill Bindings rows."))
 
     regions = phase_regions(content)
-    if not regions:
+    if not regions and plan_kind(content) != "design":
         messages.append(level("plan.skills-structure", "Plan has no executable phase structure.", "Put ordered tasks inside Phase headings with explicit Required skills fields."))
     for title, start, end in regions:
         phase = content[start:end]
@@ -733,9 +869,29 @@ def validate_skill_bindings(content: str, path: Path, profile: str, status: str)
 
 def validate_plan(path: Path, profile: str) -> list[str]:
     content = read_text(path)
+    try:
+        kind = plan_kind(content)
+    except ValueError as exc:
+        return [error("plan.kind", str(exc), "Restore exactly one supported header kind.")]
+    if kind == "design":
+        return validate_design_plan(path)
     status = effective_plan_status(content, path, profile)
     complete = is_complete_status(status)
     messages: list[str] = []
+    if kind == "execution":
+        if not hierarchy_family(content):
+            messages.append(error("plan.execution-hierarchy", "Explicit execution requires the Beads phase-task-subtask hierarchy.", "Restore the hierarchy; direct changes cadence, never task authority."))
+        designs = header_values(content, "Approved design")
+        if len(designs) != 1 or not recorded_value(designs[0]):
+            messages.append(error("plan.approved-design", "Execution requires one approved-design link.", "Link the valid approved design without modifying it."))
+        else:
+            design = path_from_reference(designs[0], path)
+            try:
+                if design is None or design.resolve() == path.resolve():
+                    raise ValueError("Execution cannot approve itself.")
+                require_approved_design(design)
+            except (ValueError, OSError, UnicodeError) as exc:
+                messages.append(error("plan.approved-design", str(exc), "Restore a readable valid approved design; never infer approval."))
     if field_value(plan_header(content), "Local final phase") is not None:
         try:
             resolve_review_contract(path)
@@ -1159,6 +1315,25 @@ def main() -> int:
             print(error("plan.path", "Selected plan does not exist.", "Pass an existing plan path."))
             return 2
         content = read_text(plan_path)
+        try:
+            kind = plan_kind(content)
+        except ValueError as exc:
+            report("plan", plan_path, [error("plan.kind", str(exc), "Restore exactly one supported header kind.")])
+            return 1
+        if kind == "design":
+            if args.profile not in {"auto", "resumable"} or args.state or args.phase_prompts:
+                report("plan", plan_path, [error("design.companions", "Design cannot select execution profiles, state or prompts.", "Validate its design checkpoint only.")])
+                return 1
+            checkpoint = None
+            if args.continuation and args.continuation != "auto":
+                checkpoint = Path(args.continuation)
+                if not checkpoint.is_file():
+                    print(error("artifact.checkpoint", "Explicit checkpoint does not exist.", "Pass a readable path."))
+                    return 2
+            had_error = report("design", plan_path, validate_design_plan(plan_path, checkpoint))
+            if not had_error:
+                print("Validation completed without blocking errors (plan kind: design; profile: resumable).")
+            return 1 if had_error else 0
         profile = detect_profile(content) if profile == "auto" else profile
         companions = resolve_companions(plan_path, content)
         had_error = report("plan", plan_path, validate_plan(plan_path, profile)) or had_error

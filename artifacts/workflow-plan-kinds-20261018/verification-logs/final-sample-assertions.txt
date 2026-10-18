@@ -1,0 +1,8 @@
+approved_design_link=20261018-235500_synthetic-verifier-final-design.md
+approved_design_link_is_relative=true
+linked_design_resolves=true
+all_plan_and_checkpoint_outputs_under_temp=true
+design_validation=PASS
+execution_validation=PASS
+synthetic_approval_only=true
+no_live_beads_operations=true

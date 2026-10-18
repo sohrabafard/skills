@@ -1,6 +1,7 @@
 from __future__ import annotations
 
 import json
+import os
 import importlib.util
 import shutil
 import subprocess
@@ -171,8 +172,29 @@ def workspace_tempdir():
         shutil.rmtree(resolved, ignore_errors=True)
 
 
+def approved_design_fixture(root: Path) -> Path:
+    """Keep independent design authority outside the execution output inventory."""
+    design = root.parent / "approved-design.md"
+    checkpoint = root.parent / "approved-design-state.md"
+    values = {"task": "Fixture design", "task_id": "fixture-design", "created_at": "2026-07-10T01:01:01Z",
+              "plan_path": design.as_posix(), "continuation_state_display": f"`{checkpoint.as_posix()}`"}
+    for template, path in (("design-plan-template.md", design), ("design-checkpoint-template.md", checkpoint)):
+        content = (SKILL_DIR / "assets" / template).read_text(encoding="utf-8")
+        for key, value in values.items():
+            content = content.replace("{{" + key + "}}", value)
+        content = content.replace("NEEDS_FILL", "verified fixture").replace("- Status: planning", "- Status: completed")
+        content = content.replace("- Approval status: pending", "- Approval status: approved")
+        content = content.replace("- Approval by: not recorded", "- Approval by: fixture user")
+        content = content.replace("- Approval on: not recorded", "- Approval on: 2026-07-10")
+        content = content.replace("- Approval evidence: not recorded", "- Approval evidence: synthetic test approval; no live authority")
+        path.write_text(content, encoding="utf-8", newline="\n")
+    return design
+
+
 class WorkflowFilesTest(unittest.TestCase):
     def run_script(self, script: Path, args: list[str], cwd: Path, expected: int = 0) -> subprocess.CompletedProcess[str]:
+        if script == INIT and "--help" not in args and "--plan-kind" not in args:
+            args = ["--plan-kind", "execution", "--approved-design", str(approved_design_fixture(cwd)), *args]
         result = subprocess.run(
             [sys.executable, "-B", str(script), *args],
             cwd=cwd,
@@ -184,10 +206,9 @@ class WorkflowFilesTest(unittest.TestCase):
         return result
 
     def init(self, root: Path, *args: str) -> tuple[dict[str, object], subprocess.CompletedProcess[str]]:
-        # New phased fixtures explicitly adopt a portable binding; this helper never
-        # claims live Beads verification. Direct/local and deprecated state-only stay distinct.
-        direct = "--profile" in args and args[args.index("--profile") + 1] == "direct"
-        binding = [] if "--task-store" in args or direct or "--no-continuation" in args or "--state-only" in args else ["--task-store", "beads", "--beads-binding", "AGENTS.md#beads"]
+        # Every new execution fixture adopts a binding, including direct cadence.
+        # These are offline schema fixtures and claim no live Beads verification.
+        binding = [] if "--task-store" in args else ["--task-store", "beads", "--beads-binding", "AGENTS.md#beads"]
         result = self.run_script(INIT, ["--task", "Adaptive workflow", "--timestamp", STAMP, *binding, *args], root)
         return json.loads(result.stdout), result
 
@@ -363,10 +384,14 @@ class WorkflowFilesTest(unittest.TestCase):
     def test_remaining_compatibility_flags_still_execute(self) -> None:
         with workspace_tempdir() as tmp:
             root = Path(tmp)
-            state_payload, state_result = self.init(root, "--state-only")
-            self.assertEqual("orchestrated", state_payload["profile"])
-            self.assertEqual([f".codex/state/{STAMP}_adaptive-workflow.json"], state_payload["outputs"])
-            self.assertIn("DEPRECATED", state_result.stderr)
+            self.run_script(INIT, ["--task", "State", "--state-only"], root, 2)
+            self.assertEqual([], list(root.iterdir()))
+            # Old state-only files remain readable without inventing a new plan.
+            state = root / "historic-state.json"
+            state.write_text(json.dumps({"schema_version": 2, "task_id": "historic", "task": "Historic",
+                "status": "planning", "plan_path": "not-created.md", "current_phase": "Phase 1",
+                "next_actions": [], "blockers": [], "last_validation": "not run", "updated_at": "2026-07-10"}), encoding="utf-8")
+            self.run_script(VALIDATE, ["--state", str(state)], root)
 
         with workspace_tempdir() as tmp:
             payload, result = self.init(Path(tmp), "--no-continuation")
@@ -1155,10 +1180,13 @@ class TaskStoreFixture(unittest.TestCase):
         plan = root / str(payload["outputs"][0])
         self.fill_skills(root, plan)
         content = plan.read_text(encoding="utf-8")
+        content = "\n".join(line for line in content.split("\n") if not line.startswith(("- Plan kind:", "- Approved design:")))
         content = content.replace("- Task hierarchy: phase-task-subtask\n", "")
         if "### Phase 2" not in content:
             phase = content.split("### Phase 1 - Ground and implement", 1)[1].split("\n## Task Allocation", 1)[0]
             second = phase.replace("- Depends on: none", "- Depends on: Phase 1").replace("NEEDS_FILL_ISSUE_1", "NEEDS_FILL_ISSUE_3").replace("NEEDS_FILL_ISSUE_2", "NEEDS_FILL_ISSUE_4")
+            for level in ("phase", "task", "subtask"):
+                second = second.replace(f"opaque-{level}-1", f"opaque-{level}-2")
             content = content.replace("\n## Task Allocation", "\n### Phase 2 - Validate and reconcile" + second + "\n## Task Allocation", 1)
         for number in (1, 2):
             content = content.replace(f"- Phase issue: opaque-phase-{number}\n", "")
@@ -1214,14 +1242,21 @@ class TaskStoreCliTest(TaskStoreFixture):
                         self.assertNotIn("tasks", json.loads(state.read_text()))
 
     def test_direct_default_and_explicit_local(self):
-        for args in (("--profile", "direct"), ("--profile", "direct", "--task-store", "local")):
-            with self.subTest(args=args), workspace_tempdir() as tmp:
-                root = Path(tmp)
-                payload, _ = self.init(root, *args)
-                plan = root / str(payload["outputs"][0])
-                self.assertEqual("local", payload["task_store"])
-                self.assertIn("[depends: T1]", plan.read_text())
-                self.assertNotIn("### Phase 2", plan.read_text())
+        with workspace_tempdir() as tmp:
+            root = Path(tmp)
+            payload, _ = self.init(root, "--profile", "direct")
+            plan = root / str(payload["outputs"][0])
+            self.assertEqual("beads", payload["task_store"])
+            self.assertIn("Task hierarchy: phase-task-subtask", plan.read_text())
+            self.assertNotIn("### Phase 2", plan.read_text())
+        with workspace_tempdir() as tmp:
+            root = Path(tmp)
+            self.run_script(INIT, ["--task", "Local", "--profile", "direct", "--task-store", "local"], root, 2)
+            self.assertEqual([], list(root.iterdir()))
+        # Preserve the old local single-plan task assertions on an unmarked family.
+        with workspace_tempdir() as tmp:
+            plan, _ = self.fixture(Path(tmp), "local", "direct")
+            self.assertIn("[depends: T1]", plan.read_text())
 
     def test_invalid_options_write_nothing(self):
         invalid = (
@@ -1257,9 +1292,8 @@ class TaskStoreCliTest(TaskStoreFixture):
                              else f"docs/agents/{STAMP}_adaptive-workflow-state.md")
                 self.write_files(root, {collision: "existing bytes"})
                 before = self.inventory(root)
-                args = ["--task", "Adaptive workflow", "--timestamp", STAMP, "--profile", profile, "--task-store", store]
-                if store == "beads":
-                    args += ["--beads-binding", "AGENTS.md#external-hub"]
+                args = ["--task", "Adaptive workflow", "--timestamp", STAMP, "--profile", profile,
+                        "--task-store", "beads", "--beads-binding", "AGENTS.md#external-hub"]
                 self.run_script(INIT, args, root, 1)
                 self.assertEqual(before, self.inventory(root))
 
@@ -1268,8 +1302,8 @@ class TaskStoreCliTest(TaskStoreFixture):
         module = importlib.util.module_from_spec(spec)
         spec.loader.exec_module(module)
         with workspace_tempdir() as tmp, patch("subprocess.run", side_effect=AssertionError("live process")), patch("socket.create_connection", side_effect=AssertionError("network")):
-            args = ["initializer", "--task", "Offline", "--task-store", "beads", "--beads-binding", "AGENTS.md#hub", "--plan-dir", str(Path(tmp) / "plans"), "--profile", "direct", "--dry-run"]
-            with patch.object(sys, "argv", args):
+            args = ["initializer", "--plan-kind", "execution", "--approved-design", str(approved_design_fixture(Path(tmp))), "--task", "Offline", "--task-store", "beads", "--beads-binding", "AGENTS.md#hub", "--plan-dir", str(Path(tmp) / "plans"), "--profile", "direct", "--dry-run"]
+            with patch.object(sys, "argv", args), patch.object(sys, "path", [str(INIT.parent), *sys.path]):
                 self.assertEqual(0, module.main())
 
 
@@ -1891,6 +1925,276 @@ class HierarchyCliTest(unittest.TestCase):
                 self.assertIn(required, read_first)
             self.assertIn("entire declared boundary", done)
             self.assertIn("incomplete phase or engagement coverage blocks acceptance", done)
+
+
+class PlanKindTest(unittest.TestCase):
+    """Plan-kind CLI and offline contract tests; no live Beads authority."""
+
+    write_files = WorkflowFilesTest.write_files
+    edit = WorkflowFilesTest.edit
+
+    def cli(self, root: Path, script: Path, *args: str, expected: int = 0):
+        result = subprocess.run([sys.executable, "-B", str(script), *args], cwd=root,
+                                text=True, capture_output=True, check=False)
+        self.assertEqual(expected, result.returncode, result.stdout + result.stderr)
+        return result
+
+    def design(self, root: Path, *args: str):
+        result = self.cli(root, INIT, "--task", "Design", "--timestamp", STAMP, "--plan-kind", "design", *args)
+        outputs = json.loads(result.stdout)["outputs"]
+        return root / outputs[0], root / outputs[1]
+
+    def execute(self, root: Path, design: Path, *args: str, expected: int = 0):
+        return self.cli(root, INIT, "--task", "Execute", "--timestamp", STAMP, "--plan-kind", "execution",
+                        "--approved-design", str(design), "--task-store", "beads", "--beads-binding", "AGENTS.md#beads",
+                        *args, expected=expected)
+
+    def inventory(self, root: Path):
+        return {str(path.relative_to(root)): path.read_bytes() for path in root.rglob("*") if path.is_file()}
+
+    def test_explicit_kind_is_required_without_writes(self):
+        with workspace_tempdir() as tmp:
+            root = Path(tmp)
+            result = self.cli(root, INIT, "--task", "Missing kind", expected=2)
+            self.assertIn("--plan-kind", result.stderr)
+            self.assertEqual([], list(root.iterdir()))
+
+    def test_pending_design_has_position_and_no_execution_artifacts(self):
+        with workspace_tempdir() as tmp:
+            root = Path(tmp)
+            plan, checkpoint = self.design(root)
+            self.assertEqual(2, len(self.inventory(root)))
+            content = plan.read_text()
+            for forbidden in ("Task binding:", "Task hierarchy:", "### Phase", "Task issue:", "## Ordered Work", "## Task Allocation", "Review status:"):
+                self.assertNotIn(forbidden, content)
+            self.assertIn("- Approval status: pending", content)
+            self.assertIn("- Current position:", checkpoint.read_text())
+            self.cli(root, VALIDATE, "--plan", str(plan))
+            self.assertFalse((root / ".codex").exists())
+
+    def test_design_rejects_execution_flags_without_writes(self):
+        incompatible = (("--profile", "direct"), ("--profile", "orchestrated"), ("--with-prompts",),
+                        ("--task-store", "beads"), ("--beads-binding", "AGENTS.md"), ("--state-only",),
+                        ("--with-state",), ("--no-continuation",), ("--review-boundary", "final"),
+                        ("--mode", "execute"), ("--approved-design", "elsewhere.md"),
+                        ("--implementer-model", "unresolved"))
+        for flags in incompatible:
+            with self.subTest(flags=flags), workspace_tempdir() as tmp:
+                root = Path(tmp)
+                self.cli(root, INIT, "--task", "Design", "--plan-kind", "design", *flags, expected=2)
+                self.assertEqual([], list(root.iterdir()))
+
+    def test_execution_requires_a_readable_approved_design_before_writes(self):
+        for case in ("missing", "directory", "pending", "wrong-kind", "unmarked", "invalid-date", "no-owner", "no-evidence", "duplicate-approval", "substring-approval", "unreadable"):
+            with self.subTest(case=case), workspace_tempdir() as tmp:
+                root = Path(tmp)
+                design = approved_design_fixture(root)
+                if case == "missing":
+                    design = root.parent / "missing.md"
+                elif case == "directory":
+                    design = root.parent
+                elif case == "unreadable":
+                    design.write_bytes(b"\xff")
+                else:
+                    old, new = {
+                        "pending": ("Approval status: approved", "Approval status: pending"),
+                        "wrong-kind": ("Plan kind: design", "Plan kind: execution"),
+                        "unmarked": ("- Plan kind: design\n", ""),
+                        "invalid-date": ("Approval on: 2026-07-10", "Approval on: 2026-02-30"),
+                        "no-owner": ("Approval by: fixture user", "Approval by: not recorded"),
+                        "no-evidence": ("Approval evidence: synthetic test approval; no live authority", "Approval evidence: pending"),
+                        "duplicate-approval": ("Approval status: approved", "Approval status: approved\n- Approval status: pending"),
+                        "substring-approval": ("Approval status: approved", "Approval status: not approved"),
+                    }[case]
+                    self.edit(design, old, new)
+                self.execute(root, design, expected=2)
+                self.assertEqual([], list(root.iterdir()))
+        with workspace_tempdir() as tmp:
+            root = Path(tmp)
+            self.cli(root, INIT, "--task", "No link", "--plan-kind", "execution", expected=2)
+            self.assertEqual([], list(root.iterdir()))
+
+    def test_approved_design_is_linked_unchanged_and_direct_execution_keeps_hierarchy(self):
+        with workspace_tempdir() as tmp:
+            root = Path(tmp)
+            design = approved_design_fixture(root)
+            before = design.read_bytes()
+            result = self.execute(root, design, "--profile", "direct")
+            plan = root / json.loads(result.stdout)["outputs"][0]
+            content = plan.read_text()
+            for required in ("Plan kind: execution", "Approved design:", "Task hierarchy: phase-task-subtask", "Phase issue:", "Task issue:", "Subtask issue:"):
+                self.assertIn(required, content)
+            self.assertNotIn("### Phase 2", content)
+            self.cli(root, VALIDATE, "--plan", str(plan))
+            self.assertEqual(before, design.read_bytes())
+
+    def test_absolute_design_argument_emits_a_relative_link_that_survives_relocation(self):
+        with workspace_tempdir() as tmp:
+            root = Path(tmp)
+            design, checkpoint = self.design(root)
+            content = design.read_text().replace("NEEDS_FILL", "verified fixture")
+            content = content.replace("Approval status: pending", "Approval status: approved")
+            content = content.replace("Approval by: not recorded", "Approval by: fixture user")
+            content = content.replace("Approval on: not recorded", "Approval on: 2026-07-10")
+            content = content.replace("Approval evidence: not recorded", "Approval evidence: synthetic fixture approval")
+            design.write_text(content, encoding="utf-8")
+            original = {path: path.read_bytes() for path in (design, checkpoint)}
+            payload = json.loads(self.execute(root, design.resolve()).stdout)
+            plan = root / payload["outputs"][0]
+            self.assertIn(f"- Approved design: `{design.relative_to(root).as_posix()}`\n", plan.read_text())
+            self.assertEqual(original, {path: path.read_bytes() for path in original})
+            relocated = root.parent / "relocated"
+            shutil.copytree(root, relocated)
+            # An absolute dependency would now consume the original's revoked approval.
+            self.edit(design, "Approval status: approved", "Approval status: pending")
+            self.cli(relocated, VALIDATE, "--plan", str(plan.relative_to(root)))
+
+    def test_external_same_drive_absolute_design_link_remains_relative_and_resolves(self):
+        with workspace_tempdir() as tmp:
+            root = Path(tmp)
+            design = approved_design_fixture(root)
+            original = design.read_bytes()
+            payload = json.loads(self.execute(root, design.resolve(), "--profile", "direct").stdout)
+            plan = root / payload["outputs"][0]
+            self.assertIn("- Approved design: `../approved-design.md`\n", plan.read_text())
+            self.cli(root, VALIDATE, "--plan", str(plan))
+            self.assertEqual(original, design.read_bytes())
+
+    def test_design_completion_requires_approval_and_exact_checkpoint_identity(self):
+        with workspace_tempdir() as tmp:
+            root = Path(tmp)
+            plan, checkpoint = self.design(root)
+            for path in (plan, checkpoint):
+                self.edit(path, "Status: planning", "Status: completed")
+            result = self.cli(root, VALIDATE, "--plan", str(plan), expected=1)
+            self.assertIn("ERROR [design.approval]", result.stdout)
+        with workspace_tempdir() as tmp:
+            root = Path(tmp)
+            design = approved_design_fixture(root)
+            self.cli(root, VALIDATE, "--plan", str(design))
+            checkpoint = root.parent / "approved-design-state.md"
+            self.edit(checkpoint, design.as_posix(), (root / "other" / design.name).as_posix())
+            result = self.cli(root, VALIDATE, "--plan", str(design), expected=1)
+            self.assertIn("ERROR [design.checkpoint-plan]", result.stdout)
+
+    def test_design_rejects_hidden_execution_fields_and_checkpoint_cursors(self):
+        for addition in ("\n### Phase 1 - Hidden\n", "\n- Task issue: opaque\n", "\n- Task binding: AGENTS.md\n", "\n- [ ] T1: execute\n", "\n- Snapshot: captured\n"):
+            with self.subTest(addition=addition), workspace_tempdir() as tmp:
+                root = Path(tmp)
+                plan, _ = self.design(root)
+                plan.write_text(plan.read_text() + addition, encoding="utf-8")
+                result = self.cli(root, VALIDATE, "--plan", str(plan), expected=1)
+                self.assertIn("ERROR [design.execution-fields]", result.stdout)
+        with workspace_tempdir() as tmp:
+            root = Path(tmp)
+            plan, checkpoint = self.design(root)
+            self.edit(checkpoint, "- Current position:", "- Current phase:")
+            result = self.cli(root, VALIDATE, "--plan", str(plan), expected=1)
+            self.assertIn("ERROR [design.checkpoint]", result.stdout)
+
+    def test_kind_is_selected_only_from_unique_header(self):
+        for extra in ("- Plan kind: design\n", "- Plan kind: unsupported\n"):
+            with self.subTest(extra=extra), workspace_tempdir() as tmp:
+                root = Path(tmp)
+                plan, _ = self.design(root)
+                self.edit(plan, "- Plan kind: design\n", "- Plan kind: design\n" + extra)
+                result = self.cli(root, VALIDATE, "--plan", str(plan), expected=1)
+                self.assertIn("ERROR [plan.kind]", result.stdout)
+        with workspace_tempdir() as tmp:
+            root = Path(tmp)
+            plan, _ = self.design(root)
+            plan.write_text(plan.read_text() + "\n## Example\n\n- Plan kind: execution\n", encoding="utf-8")
+            self.cli(root, VALIDATE, "--plan", str(plan))
+
+    def test_design_checkpoint_is_mandatory_and_cannot_be_substituted(self):
+        with workspace_tempdir() as tmp:
+            root = Path(tmp)
+            plan, checkpoint = self.design(root)
+            self.edit(plan, checkpoint.relative_to(root).as_posix(), "missing-state.md")
+            result = self.cli(root, VALIDATE, "--plan", str(plan), "--continuation", str(checkpoint), expected=1)
+            self.assertIn("ERROR [design.checkpoint]", result.stdout)
+
+    def test_execution_validator_rejects_removed_hierarchy_or_unapproved_link(self):
+        for case in ("hierarchy", "approval"):
+            with self.subTest(case=case), workspace_tempdir() as tmp:
+                root = Path(tmp)
+                design = approved_design_fixture(root)
+                payload = json.loads(self.execute(root, design).stdout)
+                plan = root / payload["outputs"][0]
+                if case == "hierarchy":
+                    self.edit(plan, "- Task hierarchy: phase-task-subtask\n", "")
+                else:
+                    self.edit(design, "Approval status: approved", "Approval status: pending")
+                result = self.cli(root, VALIDATE, "--plan", str(plan), expected=1)
+                self.assertIn("ERROR [plan.execution-hierarchy]" if case == "hierarchy" else "ERROR [plan.approved-design]", result.stdout)
+
+    def test_dry_run_collision_and_design_overwrite_preflight_preserve_inputs(self):
+        with workspace_tempdir() as tmp:
+            root = Path(tmp)
+            self.design(root, "--dry-run")
+            self.assertEqual([], list(root.iterdir()))
+            plan, checkpoint = self.design(root)
+            before = self.inventory(root)
+            self.cli(root, INIT, "--task", "Design", "--timestamp", STAMP, "--plan-kind", "design", expected=1)
+            self.assertEqual(before, self.inventory(root))
+            content = plan.read_text().replace("NEEDS_FILL", "verified fixture")
+            content = content.replace("Approval status: pending", "Approval status: approved")
+            content = content.replace("Approval by: not recorded", "Approval by: fixture user")
+            content = content.replace("Approval on: not recorded", "Approval on: 2026-07-10")
+            content = content.replace("Approval evidence: not recorded", "Approval evidence: synthetic fixture approval")
+            plan.write_text(content, encoding="utf-8")
+            before = self.inventory(root)
+            result = self.execute(root, plan, "--force", "--slug", "design", expected=2)
+            self.assertIn("overwrite the approved design", result.stderr)
+            self.assertEqual(before, self.inventory(root))
+            result = self.execute(root, plan, "--force", "--slug", "design", "--plan-dir", "different-plans", expected=2)
+            self.assertIn("overwrite the approved design", result.stderr)
+            self.assertEqual(before, self.inventory(root))
+
+
+class SkillSourcePathTest(TaskStoreFixture):
+    """Installed skill-source resolution keeps source identity checks intact."""
+
+    def test_host_absolute_and_home_paths_keep_frontmatter_validation(self):
+        for source_kind in ("absolute", "home"):
+            with self.subTest(source_kind=source_kind), workspace_tempdir() as tmp:
+                root = Path(tmp)
+                plan, _ = self.fixture(root, "beads", "resumable")
+                home = root / "test-home"
+                source = home / "installed" / "SKILL.md"
+                self.write_files(root, {source.relative_to(root).as_posix(): "---\nname: example-owner\n---\n"})
+                source_text = str(source) if source_kind == "absolute" else "~/installed/SKILL.md"
+                self.edit(plan, "skills/example-owner/SKILL.md", source_text)
+                with patch.dict(os.environ, {"HOME": str(home), "USERPROFILE": str(home)}):
+                    self.validate(root, plan)
+                    self.edit(source, "name: example-owner", "name: other-owner")
+                    self.assertIn("ERROR [plan.skills-source]", self.validate(root, plan, 1))
+
+    def test_relative_source_resolution_keeps_repository_then_adjacent_order(self):
+        with workspace_tempdir() as tmp:
+            root = Path(tmp)
+            plan, _ = self.fixture(root, "beads", "resumable")
+            adjacent = plan.parent / "skills/example-owner/SKILL.md"
+            adjacent.parent.mkdir(parents=True)
+            adjacent.write_text("---\nname: wrong-owner\n---\n", encoding="utf-8")
+            self.validate(root, plan)
+            self.edit(plan, "skills/example-owner/SKILL.md", "adjacent/SKILL.md")
+            local = plan.parent / "adjacent/SKILL.md"
+            local.parent.mkdir()
+            local.write_text("---\nname: example-owner\n---\n", encoding="utf-8")
+            self.validate(root, plan)
+
+    def test_installed_source_must_remain_readable_and_exist(self):
+        with workspace_tempdir() as tmp:
+            root = Path(tmp)
+            plan, _ = self.fixture(root, "beads", "resumable")
+            source = root / "installed/SKILL.md"
+            source.parent.mkdir()
+            source.write_bytes(b"\xff")
+            self.edit(plan, "skills/example-owner/SKILL.md", str(source))
+            self.run_script(VALIDATE, ["--plan", str(plan)], root, 2)
+            self.edit(plan, str(source), str(source.parent / "missing/SKILL.md"))
+            self.assertIn("ERROR [plan.skills-source]", self.validate(root, plan, 1))
 
 
 if __name__ == "__main__":
