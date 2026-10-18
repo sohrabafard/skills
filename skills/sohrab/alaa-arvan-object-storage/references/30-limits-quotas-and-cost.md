@@ -1,8 +1,7 @@
 # Limits, Quotas and Cost
 
 Read this when sizing a part, a bucket or an object count, when a call fails at a boundary, or when explaining an Arvan
-storage or traffic bill. Multipart strategy and capacity planning in general are `/alaa-minio-object-storage`
-(`$alaa-minio-object-storage`) `references/50-multipart-capacity-and-cost.md`; only the Arvan numbers and the decisions
+storage or traffic bill. Multipart strategy and capacity planning in general are `/alaa-minio-object-storage` `references/50-multipart-capacity-and-cost.md`; only the Arvan numbers and the decisions
 they change are here.
 
 ## The published limits
@@ -49,8 +48,7 @@ makes it mandatory above 5 GB.
 
 **Plan a bucket to stay under 3,700,000 objects, and shard by a key prefix scheme decided before the first write.**
 Splitting a bucket after it fills means copying objects with no documented server-side copy, per
-`references/20-s3-compatibility-matrix.md`. Key-namespace design itself is `/alaa-minio-object-storage`
-(`$alaa-minio-object-storage`) `references/10-buckets-and-object-keys.md`.
+`references/20-s3-compatibility-matrix.md`. Key-namespace design itself is `/alaa-minio-object-storage` `references/10-buckets-and-object-keys.md`.
 
 **Count buckets against the 50-bucket default before adopting a bucket-per-tenant design.** A bucket-per-tenant scheme
 reaches the default ceiling at 50 tenants and then depends on a support request, so tenant separation by key prefix is
@@ -58,7 +56,7 @@ the shape that scales on this provider.
 
 **Retry on `5xx` responses.** Arvan states programs must retry on `5xx`
 `[source: https://docs.arvancloud.ir/en/object-storage/limits/, read: 2026-07-27]`. Retry counts, backoff shape and
-breaker thresholds are `/alaa-reliability-sla` (`$alaa-reliability-sla`).
+breaker thresholds are `/alaa-reliability-sla`.
 
 ## Request rate limits
 
@@ -80,7 +78,8 @@ Two cost behaviours are established and change design decisions:
    responsibility for releasing that volume
    `[source: https://docs.arvancloud.ir/en/developer-tools/sdk/object-storage/multipart-upload/, read: 2026-07-27]`.
    **When Arvan storage usage exceeds the sum of object sizes, suspect abandoned parts first**, and see
-   `references/20-s3-compatibility-matrix.md` for why they may not be enumerable.
+   `references/20-s3-compatibility-matrix.md` for the documented upload and part listing APIs. Verify
+   pagination against the target region before using those listings for reconciliation.
 2. **Object versions occupy billed volume, and disabling versioning does not remove the versions already created.**
    Previous versions stay accessible after versioning is disabled, and lifecycle rules keep applying to them
    `[source: https://docs.arvancloud.ir/en/object-storage/buckets/versioning, read: 2026-07-27]`. **Decide the version

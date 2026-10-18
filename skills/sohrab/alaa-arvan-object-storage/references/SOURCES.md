@@ -26,7 +26,7 @@ All read on 2026-07-27.
 | https://docs.arvancloud.ir/en/developer-tools/sdk/object-storage/multipart-upload/ | Initiate, upload part, complete and abort are documented; abort is the uploader's responsibility; no automatic cleanup described on that SDK page; superseded for panel capability by the 2026-09-29 lifecycle read |
 | https://docs.arvancloud.ir/en/developer-tools/sdk/object-storage/upload-presigned/ | Presigned URL generation via the standard SDK call; expiry in hours with a 12-hour example; no maximum lifetime stated |
 | https://docs.arvancloud.ir/en/developer-tools/sdk/object-storage/put-bucket-policy/ | Bucket policy uses the AWS IAM shape; `s3:GetObject`, `Principal: "*"`, prefix-scoped resource ARN |
-| https://docs.arvancloud.ir/en/developer-tools/sdk/object-storage/get-bucket-cors/ | `GetBucketCors` and the rule fields; no put or delete operation documented |
+| https://docs.arvancloud.ir/en/developer-tools/sdk/object-storage/get-bucket-cors/ | `GetBucketCors` and the rule fields; the broader put/delete absence claim is superseded by the per-operation refresh below |
 | https://docs.arvancloud.ir/en/object-storage/buckets/versioning | Versioning is per bucket, free, off by default; pre-existing objects get a null version ID; disabling keeps prior versions and lifecycle rules keep applying |
 | https://docs.arvancloud.ir/en/object-storage/buckets | Private default and public toggle; the toggle does not cascade to existing objects; bucket tags; static website hosting; CDN caching settings |
 | https://docs.arvancloud.ir/en/object-storage/buckets/custom-domain | Object storage uses the Arvan CDN by default; ANAME for root domain, CNAME for subdomain; host header rewritten to the bucket host; virtual-hosted object URL example |
@@ -58,8 +58,31 @@ All read on 2026-07-27.
 The [SDK overview](https://docs.arvancloud.ir/en/developer-tools/sdk/object-storage/) still
 lists the Simin and Shahriar endpoint/region pairs. The [limits page](https://docs.arvancloud.ir/en/object-storage/limits/)
 still requires the bucket's own region and publishes a 400 MB part ceiling and 10,000 parts.
-This re-read supports explicit endpoint selection and tusd part-bound mapping only. It refreshes
-neither the compatibility matrix nor live provider behavior; verify their dated claims separately.
+That endpoint/limit re-read supports explicit selection and tusd part-bound mapping only.
+The separate per-operation refresh below updates compatibility documentation, not live behavior.
+
+## Per-operation compatibility refresh on 2026-10-18
+
+The operation content below was retrieved and read, not inferred from index titles. These
+pages supersede the matrix's absence claims and their migration/cost consequences. No live
+provider call was made; examples establish neither full AWS parity nor every SDK option.
+
+| Official operation page | Content observed |
+|---|---|
+| [PutBucketCors](https://docs.arvancloud.ir/en/developer-tools/sdk/object-storage/put-bucket-cors/) | SDK call sets CORS rules |
+| [DeleteBucketCors](https://docs.arvancloud.ir/en/developer-tools/sdk/object-storage/delete-bucket-cors/) | SDK call removes CORS configuration |
+| [ListMultipartUploads](https://docs.arvancloud.ir/en/developer-tools/sdk/object-storage/list-multipart-upload/) | SDK call lists unfinished uploads |
+| [ListParts](https://docs.arvancloud.ir/en/developer-tools/sdk/object-storage/list-parts/) | SDK call lists parts for an upload ID |
+| [PutObjectTagging](https://docs.arvancloud.ir/en/developer-tools/sdk/object-storage/put-object-tag/) | SDK call writes object tags |
+| [Object listing](https://docs.arvancloud.ir/en/developer-tools/sdk/object-storage/object-list/) | PHP/JavaScript call ListObjects; Go calls ListObjectsV2 |
+| [DeleteObject](https://docs.arvancloud.ir/en/developer-tools/sdk/object-storage/delete-object/) | PHP/Go call DeleteObject; the .NET example instead uses DeleteObjects |
+| [GetBucketAcl](https://docs.arvancloud.ir/en/developer-tools/sdk/object-storage/get-bucket-acl/) | SDK call reads bucket ACL |
+| [PutBucketAcl](https://docs.arvancloud.ir/en/developer-tools/sdk/object-storage/put-bucket-acl/) | SDK call writes bucket ACL |
+| [GetObjectAcl](https://docs.arvancloud.ir/en/developer-tools/sdk/object-storage/get-object-acl/) | SDK call reads object ACL |
+| [PutObjectAcl](https://docs.arvancloud.ir/en/developer-tools/sdk/object-storage/put-object-acl/) | SDK call writes object ACL |
+
+Unrelated limits, encryption, copy, retention and lifecycle-action questions retain their own
+dates and uncertainty. The examples are not copy-ready client code or authorization to widen access.
 
 ## Pages indexed but not retrieved
 

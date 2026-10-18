@@ -6,9 +6,8 @@ stores, so a client written against either is expected to work against the other
 ## Write the client to the portable subset
 
 **Restrict a dual-target client to the operations marked Supported in `references/20-s3-compatibility-matrix.md`.**
-Everything else is available on MinIO and unestablished on Arvan, so a client using it works in development against
-MinIO and fails in production against Arvan. The portable subset established today is `PutObject`, multipart create,
-upload, complete and abort, `PutBucketPolicy`, `GetBucketCors`, presigned GET and PUT, and bucket versioning.
+That matrix is the operation inventory; its statuses describe documentation, not live compatibility.
+Prove any additional operation on the target before relying on it. A MinIO pass alone cannot establish Arvan behavior.
 
 **Carry every setting that differs between the two targets in the `STORAGE_*` environment family, never in code, and
 use the same variable names against both.** `STORAGE_ENDPOINT`, `STORAGE_REGION`, `STORAGE_USE_PATH_STYLE`,
@@ -25,16 +24,16 @@ exercised by whichever environment sets it.
 same build satisfies Arvan's part ceiling and MinIO's larger one. See `references/30-limits-quotas-and-cost.md` for
 the ceiling and `references/15-environment-contract-deltas.md` for why the byte value is that one.
 
-**Do not rely on a MinIO-only capability without a fallback**: server-side `CopyObject`, `ListMultipartUploads`,
-object tagging, object lock and replication are all documented for MinIO and undocumented for Arvan. **When one is
-needed, implement the fallback path first and use the fast path only where the target is proven to support it.**
+**For capabilities the matrix leaves unestablished on Arvan, implement the fallback first and enable the
+capability only after target verification.** Do not classify multipart listing or object tagging as MinIO-only;
+the matrix records their Arvan SDK documentation and read dates.
 
 ## Testing a dual-target client
 
 **Run the integration suite against both targets before shipping, not against MinIO alone.** MinIO in a local container
 is the convenient target and is the one that hides every difference in the matrix. **Where a live Arvan endpoint is
 unavailable to the test lane, record which assertions were proven against MinIO only**, because a MinIO pass is not
-evidence about Arvan. Proof-strength vocabulary is `/alaa-testing-strategy` (`$alaa-testing-strategy`)
+evidence about Arvan. Proof-strength vocabulary is `/alaa-testing-strategy`
 `references/40-proof-strength.md`.
 
 **Point the Arvan lane at a scratch bucket in the target region**, since a bucket is reachable only in its own region
