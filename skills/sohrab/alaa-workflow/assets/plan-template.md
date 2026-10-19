@@ -1,10 +1,15 @@
 # Workflow Plan - {{task}}
 
+- Plan kind: execution
+- Approved design: {{approved_design_display}}
 - Task ID: `{{task_id}}`
 - Mode: `{{mode}}`
 - Profile: `{{profile}}`
 - Task store: `{{task_store}}`
 - Task binding: {{task_binding}}
+{{hierarchy_header}}- Review boundary: {{review_boundary}}
+- Final phase: {{final_phase}}
+{{local_final_header}}- Commit authority: not granted
 - Status: planning
 - Created: `{{created_at}}`
 - Parent plan: {{parent_plan_display}}
@@ -48,39 +53,7 @@ Knowledge held only in the current agent's head disappears on compaction. Fill a
 
 Keep only phases with a distinct decision, authority or integration barrier. Merge compatible work while retaining each acceptance outcome and evidence mapping.
 
-### Phase 1 - Ground and implement
-
-- Status: pending
-- Depends on: none
-- Reasoning and selection reason: NEEDS_FILL
-- Settled/open decisions and invariants: NEEDS_FILL
-- Risk and required observers: NEEDS_FILL
-- Owned scope: NEEDS_FILL
-- Excluded from this phase: NEEDS_FILL
-- Required skills: NEEDS_FILL
-- Work:
-{{phase_1_work}}
-- Acceptance criteria: NEEDS_FILL
-- Validation commands: NEEDS_FILL
-- Evidence observed: not run
-- Snapshot: not captured yet
-
-### Phase 2 - Validate and reconcile
-
-- Status: pending
-- Depends on: Phase 1
-- Reasoning and selection reason: NEEDS_FILL
-- Settled/open decisions and invariants: NEEDS_FILL
-- Risk and required observers: NEEDS_FILL
-- Owned scope: NEEDS_FILL
-- Excluded from this phase: NEEDS_FILL
-- Required skills: NEEDS_FILL
-- Work:
-{{phase_2_work}}
-- Acceptance criteria: required behavior and evidence agree.
-- Validation commands: NEEDS_FILL
-- Evidence observed: not run
-- Snapshot: not captured yet
+{{ordered_work}}
 
 ## Task Allocation
 
@@ -104,5 +77,6 @@ Prompting-guide supplies capability/mechanics evidence; workflow stores decision
 - Reusable evidence and invalidation conditions: NEEDS_FILL
 - Dispatches assume zero shared context: copy the relevant handoff-package facts into the dispatch text rather than referring to this conversation.
 - Lanes report changed paths; this plan's owner records the validated snapshot and handles any explicitly authorized commit.
+- Before execution, verify the adopted Beads workspace, project, nodes, parent-child relations and blocking edges through the binding owner; initialization proves only offline syntax. Nested invocations inherit this engagement's review boundary and final phase.
 
 {{position_section}}

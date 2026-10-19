@@ -41,7 +41,7 @@ that does, which turns a file store into a script host.
 
 1. **Set the shortest lifetime that covers one download or upload attempt on the slowest supported connection.**
    The link cannot be revoked before it expires, so the lifetime is the entire blast radius. Where the fleet
-   registers a maximum, take it from `/alaa-services-contract` (`$alaa-services-contract`); where it does not,
+   registers a maximum, take it from `/alaa-services-contract`; where it does not,
    choose the shortest workable value and request registration rather than inventing a second number.
 2. **Sign with an identity scoped to the one operation and the one prefix.** A presigned URL inherits the signer's
    permissions for that request, so a URL signed by a broad identity is a broad credential in a link.
@@ -66,7 +66,7 @@ The client controls the body length and the content type, so a presigned `PUT` i
 content type and key prefix are enforced by the store
 `[source: https://docs.aws.amazon.com/AmazonS3/latest/API/sigv4-HTTPPOSTConstructPolicy.html, read: unverified as
 of 2026-07-27]`. Where the client uploads through a resumable protocol instead, that protocol's own size chain is
-`/tusd-upload-platform` (`$tusd-upload-platform`).
+`/tusd-upload-platform`.
 
 **Never trust the content type the client declared.** Store it as a claim, determine the real type server-side
 before serving the object back, and serve user-supplied bytes with a content type and a `Content-Disposition` that
@@ -106,13 +106,12 @@ the private half, and there is no signal when it happens.
 3. **Keep the cache lifetime shorter than the object's mutability, or make the key immutable.** An object store has
    no way to purge a CDN, so a cached copy of a deleted object outlives the deletion by the whole cache lifetime —
    which matters when the deletion was a retention obligation.
-4. **Route the CDN or proxy configuration itself to its owner**: HAProxy directives are `/alaa-haproxy`
-   (`$alaa-haproxy`), and Kubernetes ingress is `/alaa-k8s-helm` (`$alaa-k8s-helm`).
+4. **Route the CDN or proxy configuration itself to its owner**: HAProxy directives are `/alaa-haproxy`, and Kubernetes ingress is `/alaa-k8s-helm`.
 
 ## What the fleet does today
 
 No presigned URL is issued anywhere in the fleet's only object-storage consumer, and no CDN origin is configured.
 `presigned_url` and `object_key` are already on that service's forbidden-log-field list, so the logging rule above
-is met before the feature exists `[source: tusd-upload-platform repository,
+is met before the feature exists `[source: Ala tusd repository,
 internal/observability/contracts.go, read: 2026-07-27]`. No bucket policy is set, so whether the bucket is publicly
 readable is decided by the store's own default rather than by an explicit decision.

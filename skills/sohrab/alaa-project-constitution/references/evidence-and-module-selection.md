@@ -116,6 +116,10 @@ do not drop the obligation because no command exists yet.
 For a `THIN_CHARTER`, list an exact command once at most, at its canonical owner, and use compact
 change-class references instead of repeating command catalogs per module and again in a matrix.
 
+Require a repository-owned changed-path and change-class map naming mandatory gates and their
+applicability conditions, alongside the topic/layer selector map. Derive commands from the owners
+above; a missing map is a factual gap, never permission to invent commands or narrow existing gates.
+
 ## Evidence ledger minimum
 
 For each binding rule that carries project-specific facts, capture the rule, its canonical path

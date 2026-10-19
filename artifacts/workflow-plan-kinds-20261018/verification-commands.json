@@ -1,0 +1,74 @@
+[
+  {
+    "command": "python -B skills/sohrab/alaa-workflow/tests/test_workflow_files.py",
+    "cwd": "<repo>",
+    "start": "2026-10-18T23:20:04.4951259+03:30",
+    "end": "2026-10-18T23:21:44.0730451+03:30",
+    "duration_seconds": 99.578,
+    "exit": 0,
+    "classification": "PASS",
+    "tier": "exhaustive",
+    "log": "artifacts/workflow-plan-kinds-20261018/verification-logs/check-01.log",
+    "salient": "Ran 144 tests in 98.999s | OK"
+  },
+  {
+    "command": "python -B scripts/validate_sohrab_skill_pack.py",
+    "cwd": "<repo>",
+    "start": "2026-10-18T23:21:44.1229765+03:30",
+    "end": "2026-10-18T23:21:44.5732452+03:30",
+    "duration_seconds": 0.45,
+    "exit": 0,
+    "classification": "PASS",
+    "tier": "affected",
+    "log": "artifacts/workflow-plan-kinds-20261018/verification-logs/check-02.log",
+    "salient": "Warnings:"
+  },
+  {
+    "command": "python -B scripts/check_skill_index.py",
+    "cwd": "<repo>",
+    "start": "2026-10-18T23:21:44.5760143+03:30",
+    "end": "2026-10-18T23:21:44.8288011+03:30",
+    "duration_seconds": 0.253,
+    "exit": 0,
+    "classification": "PASS",
+    "tier": "affected",
+    "log": "artifacts/workflow-plan-kinds-20261018/verification-logs/check-03.log",
+    "salient": ""
+  },
+  {
+    "command": "python -B scripts/check_fleet_references.py",
+    "cwd": "<repo>",
+    "start": "2026-10-18T23:21:44.8306826+03:30",
+    "end": "2026-10-18T23:21:48.8238598+03:30",
+    "duration_seconds": 3.993,
+    "exit": 0,
+    "classification": "PASS",
+    "tier": "affected",
+    "log": "artifacts/workflow-plan-kinds-20261018/verification-logs/check-04.log",
+    "salient": ""
+  },
+  {
+    "command": "python -B scripts/check_lifecycle_contract.py",
+    "cwd": "<repo>",
+    "start": "2026-10-18T23:21:48.8264676+03:30",
+    "end": "2026-10-18T23:21:49.5319994+03:30",
+    "duration_seconds": 0.706,
+    "exit": 0,
+    "classification": "PASS",
+    "tier": "affected",
+    "log": "artifacts/workflow-plan-kinds-20261018/verification-logs/check-05.log",
+    "salient": ""
+  },
+  {
+    "command": "git diff --check",
+    "cwd": "<repo>",
+    "start": "2026-10-18T23:21:49.5334039+03:30",
+    "end": "2026-10-18T23:21:49.6834866+03:30",
+    "duration_seconds": 0.15,
+    "exit": 0,
+    "classification": "PASS",
+    "tier": "affected",
+    "log": "artifacts/workflow-plan-kinds-20261018/verification-logs/check-06.log",
+    "salient": ""
+  }
+]

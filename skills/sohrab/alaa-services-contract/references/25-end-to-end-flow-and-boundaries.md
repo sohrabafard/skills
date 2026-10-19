@@ -301,16 +301,19 @@ silently repeats or skips rows when a row is inserted or deleted between two req
 
 Request rules:
 - The cursor parameter is `cursor`. Its value is the opaque string the previous response returned, and the
-  client sends it back unchanged.
-- The page-size parameter is `limit`, a positive integer, with a maximum the route documents.
+  client sends it back unchanged. An absent cursor requests the first page.
+- The page-size parameter is `limit`, a positive integer, with a maximum the route documents; shared
+  defaults and measured exceptions are owned by `22-failure-load-and-deprecation-contract.md`, `List page-size values`.
 - A `limit` above the documented maximum is rejected with `400` and code `INPUT_VALIDATION_FAILED`. It is
   not silently clamped, because a client that asked for 500 and received 100 cannot tell it received a
   partial answer.
-- `page`, `per_page`, `offset`, and `skip` are not accepted parameters. A service that accepts one today
+- Any out-of-range `limit` or `sort` outside the documented allowlist uses that same `400` input-validation code.
+- `page`, `per_page`, `offset`, `skip`, `after`, and `before` are not accepted parameters. A service that accepts one today
   removes it through the deprecation procedure in `22-failure-load-and-deprecation-contract.md`.
 
 Response rules:
 - A collection response body carries `data` as an array, `meta.next_cursor`, and `meta.prev_cursor`.
+- Do not add a sibling `pagination` object; continuation metadata belongs in `meta`.
 - `meta.next_cursor` is a string when a further page exists and is `null` on the last page. `meta.prev_cursor`
   is a string when a page exists before the current one and is `null` at the start of the collection. Both
   keys are present in every collection response, including the first page and the last page, because a
@@ -323,7 +326,8 @@ Response rules:
   `references/70-test-list.md`, pass.
 - `has_more` and `type` are not emitted. `has_more` is `next_cursor !== null` by construction, and a second
   spelling of one fact diverges the first time a service computes it from the row count instead; `type` is
-  constant across every Ala keyset list and only invites clients to branch on it.
+  constant across every Ala keyset list and only invites clients to branch on it. Do not echo `limit`:
+  the caller already knows its input and invalid input is rejected rather than silently changed.
 - `meta` may carry service-declared counters the route documents, such as `meta.counts`. It must not carry
   `total`, `total_pages`, `current_page`, `last_page`, or `per_page`: those are offset artifacts, and a
   client that reads them builds page-number navigation the service cannot serve.
@@ -336,11 +340,26 @@ Ordering and cursor rules:
 - The cursor is opaque and signed; clients must not parse, construct, or depend on its contents. It may
   encode private identifiers, per the identifier boundary above.
 
-The admin-table offset exception:
+### Cursor rejection codes
 
-Offset is permitted on a list only when every one of these five conditions holds. Four are checkable from
-the route table and the route's own code; the fifth is checkable from its documentation. A route that
-satisfies four of five uses keyset.
+Use the error envelope in `10-core-service-contract.md` and these registered codes. The decoding,
+signature, expiry and context checks remain /alaa-keyset-pagination's design responsibility.
+
+| Condition | HTTP | Code |
+|---|---|---|
+| Cursor cannot be decoded or its signature fails | 400 | `INVALID_CURSOR` |
+| Cursor schema version is unsupported | 400 | `CURSOR_VERSION_UNSUPPORTED` |
+| Cursor expiry has passed | 400 | `CURSOR_EXPIRED` |
+| Bound filter, sort or scope context differs from the request | 400 | `INVALID_CURSOR_CONTEXT` |
+
+Register these additively in the target service's committed registry. If its published code contract
+conflicts, apply the compatibility/deprecation stop in `SKILL.md`; this table proves no external
+registry's absence and authorizes no silent replacement.
+
+### Admin-table offset exception
+
+Offset is permitted only when all five conditions hold, supported by the route inventory, code,
+documentation and measured query evidence. A route missing any condition uses keyset.
 
 1. The route is mounted under an admin-only path and requires an admin permission checked at request time,
    from trusted `X-Access` per `28-backend-permission-authorization-and-role-freeze.md`.
@@ -352,7 +371,9 @@ satisfies four of five uses keyset.
    a request above either with `400` and code `INPUT_VALIDATION_FAILED`. It does not clamp.
 5. The route's own documentation records `pagination: offset` together with the named operational
    requirement that makes exact totals necessary — which report, which operator workflow. "Totals are nice
-   to have" and "an operator asked for totals" are not requirements.
+   to have" and "an operator asked for totals" are not requirements. The exact-total query uses the same
+   filters as the page query and is measured at production-shaped row counts, so counting does not hide
+   an unbounded query behind a bounded page.
 
 An offset route does not use the `meta` collection envelope, because `total`, `total_pages`, `current_page`,
 `last_page`, and `per_page` are forbidden inside `meta` by the rule above and that rule is not relaxed here.
@@ -362,8 +383,8 @@ other and no shared client parser has to guess which it received.
 Observable that decides whether a route has claimed the exception legitimately: a route emitting `total`,
 `total_pages`, `current_page`, `last_page`, or `per_page` that is reachable without an admin permission, or
 that appears in the public gateway route table, is a violation regardless of what its documentation says.
-The five conditions and their reasoning are owned by `/alaa-keyset-pagination`, `references/10-route-mode-and-sort-allowlist.md`;
-this section is the contract text that authorizes them.
+This section owns the exception conditions. /alaa-keyset-pagination owns traversal design and index/query
+rationale; it points here before choosing offset rather than maintaining another authorization list.
 
 Scope:
 - A route that returns a bounded set with no paging parameters at all — a fixed catalog, a per-user session

@@ -33,26 +33,17 @@ Read `references/05-authority-and-api-lookup.md` for lookup and fallback. No MCP
 
 1. Read repo-local `AGENTS.md`/`CLAUDE.md`, the lockfile, `package.json`, `quasar.config.*`, and only the mode folders you touch. Repo instructions override this skill.
 2. For exact APIs, query the installed API before any atlas example or model memory.
-3. **`references/00-topic-map.md` is this skill's only router.** Read it unless you already know the file; each file names its own "also load" pairings.
-
-Mandatory pairings:
-
-- Custom service worker or InjectManifest -> `references/32-pwa-injectmanifest-guard.md` **then** `references/30-service-worker-excellence.md`; verify install, update, and offline.
-- SSR, `preFetch`, router, store, boot, middleware, SEO, or auth -> also `references/31-ssr-pwa-and-security.md`.
-- Any platform mode -> `references/21-cli-vite-and-config.md` + `references/35-platform-modes.md`.
-- Deciding what the user sees when a request, a render, or the network fails -> `references/34-frontend-failure-and-degradation.md`.
-- Sending anything from the browser to a collector -> `references/36-client-observability-contract.md`.
-- A permission-gated API (`getUserMedia`, geolocation, `Notification.requestPermission`, clipboard read, sensors) -> `references/45-browser-apis-and-permissions.md`: ask inside a user gesture after a primer, provide denial recovery, treat `granted` as an expiring cache.
-- Data grids, virtualization, uploads, media, dialogs -> also `references/70-guardrails-a11y-performance-monorepo.md`.
-- Shipping a PWA change -> `references/37-pwa-operations-record.md`.
+3. Before acting on a Quasar surface, read `references/00-topic-map.md` for every matching route and
+   mandatory pairing, in its stated order.
 
 ## Companion boundary
 
-Structured offline data — drafts, progress, outbox, cursors — is `/alaa-indexeddb-browser-storage`; a service worker owns only Request/Response caches. Vue and TypeScript code shape is `/alaa-vue-typescript-clean-code`; compiler compatibility and the fleet line are owned by its `references/24-typescript-project-and-antipatterns.md`. Media playback, DRM, and in-app download are `/alaa-shaka-player`. `packages/*` boundaries, peers, and asset reachability are `/alaa-mono-package`. Digit and text normalization of user input is `/alaa-input-normalization`. Retry, timeout, and degradation doctrine is `/alaa-reliability-sla`; test design and proof levels are `/alaa-testing-strategy`; threat classes are `/alaa-security-review`; requirement levels are `/alaa-observability-soc` and every emitted name is `/alaa-services-contract`. Gateway auth is `/alaa-trust-gateway-auth`; the browser tus client behind `QUploader` is `/tusd-upload-platform`; list pagination is `/alaa-keyset-pagination`; complexity budgets are `/alaa-algorithms-data-structures`; CI and deploy are `/alaa-frontend-devops` with GitLab YAML expression in `/alaa-gitlab-ci-cd`; model and effort questions are `/alaa-prompting-guide`. `references/00-topic-map.md` §3 carries the full owner table with file paths. Cite an owner; never restate its rule here.
+This skill owns Quasar wiring and mechanics. External doctrine, values, package/storage boundaries and
+runtime policy stay with their canonical owners in the topic map. Cite an owner; never restate its rule here.
 
 ## When NOT to use
 
-Do not use for plain Vue or Vite without the Quasar CLI — `@quasar/vite-plugin` is not app-vite. Do not use for broad non-Quasar frontend work, Vue/TypeScript code-quality review, CI or deployment authoring, browser storage design, gateway authentication, or backend and infrastructure tasks; each has a named owner above.
+Do not use for plain Vue or Vite without the Quasar CLI — `@quasar/vite-plugin` is not app-vite. Do not use for broad non-Quasar frontend work, Vue/TypeScript code-quality review, CI or deployment authoring, browser storage design, gateway authentication, or backend and infrastructure tasks; route to the canonical external owner.
 
 ## Final response contract
 

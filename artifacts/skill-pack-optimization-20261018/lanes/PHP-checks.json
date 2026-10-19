@@ -1,0 +1,57 @@
+[
+  {
+    "check": "changed UTF-8-no-BOM/LF and relative Markdown links",
+    "exit": 0,
+    "files": 13,
+    "links": 3,
+    "findings": []
+  },
+  {
+    "command": [
+      "python",
+      "-B",
+      "scripts/check_fleet_references.py",
+      "--skill",
+      "alaa-php-clean-code",
+      "--skill",
+      "alaa-laravel-architecture",
+      "--skill",
+      "alaa-laravel-upgrade-all-packages",
+      "--skill",
+      "alaa-octane-performance",
+      "--skill",
+      "alaa-async-messaging",
+      "--skill",
+      "alaa-laravel-job-rabbitmq",
+      "--skill",
+      "alaa-laravel-public-api-contract-pack"
+    ],
+    "exit": 0,
+    "stdout": "check_fleet_references.py: 7 of 69 skills, 87 Markdown files, 375 citations\n\nFINDINGS: none\n\nINFO (3 unmarked target-repository paths across 3 skills; these never fail the run)\n     1  alaa-laravel-architecture\n     1  alaa-laravel-upgrade-all-packages\n     1  alaa-octane-performance\n  Rerun with --show-info for every site, or --format json for all of them.\n  Mark each one as <repo>/<path> to retire it from this list.\n",
+    "stderr": ""
+  },
+  {
+    "command": [
+      "git",
+      "diff",
+      "--check",
+      "--",
+      "skills/sohrab/alaa-laravel-architecture/SKILL.md",
+      "skills/sohrab/alaa-laravel-architecture/references/source-map.md",
+      "skills/sohrab/alaa-laravel-job-rabbitmq/SKILL.md",
+      "skills/sohrab/alaa-laravel-public-api-contract-pack/SKILL.md",
+      "skills/sohrab/alaa-laravel-public-api-contract-pack/agents/openai.yaml",
+      "skills/sohrab/alaa-laravel-public-api-contract-pack/references/40-consumer-discovery-pinning-and-secret-hygiene.md",
+      "skills/sohrab/alaa-laravel-upgrade-all-packages/SKILL.md",
+      "skills/sohrab/alaa-laravel-upgrade-all-packages/references/20-breaking-change-detection.md",
+      "skills/sohrab/alaa-laravel-upgrade-all-packages/references/40-failure-classes.md",
+      "skills/sohrab/alaa-laravel-upgrade-all-packages/references/50-runtime-verification.md",
+      "skills/sohrab/alaa-php-clean-code/SKILL.md",
+      "skills/sohrab/alaa-php-clean-code/references/documentation-and-artifacts.md",
+      "skills/sohrab/alaa-php-clean-code/references/laravel-best-practices.md"
+    ],
+    "exit": 0,
+    "stdout": "",
+    "stderr": ""
+  }
+]

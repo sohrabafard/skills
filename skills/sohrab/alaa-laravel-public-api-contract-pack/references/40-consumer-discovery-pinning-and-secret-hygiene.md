@@ -15,7 +15,7 @@ agent reads first. These fields are required; a pack missing any of them is inco
 
 | Field | Content |
 |---|---|
-| `name`, `service` | the pack identifier, and the canonical service identity, whose form is owned by `alaa-services-contract` (`/alaa-services-contract`, `$alaa-services-contract`) `references/10-core-service-contract.md` |
+| `name`, `service` | the pack identifier, and the canonical service identity, whose form is owned by `alaa-services-contract` (`/alaa-services-contract`) `references/10-core-service-contract.md` |
 | `contract_version` | semver over the pack, per the pinning rule below |
 | `api_version` | the API major the pack documents, matching the route inventory |
 | `contract_root` | the pack's own path in the repository, so the next run resolves no hedge |
@@ -58,8 +58,7 @@ cannot satisfy a procedure that requires notifying them.
 ## Secret hygiene for the emitted artifacts
 
 The typed-secret rule, the placeholder rule, and the per-developer versus shared split for the
-Postman files are `alaa-postman-collections` (`/alaa-postman-collections`,
-`$alaa-postman-collections`) `references/30-variables-auth-and-environments.md`, which wins on
+Postman files are `alaa-postman-collections` (`/alaa-postman-collections`) `references/30-variables-auth-and-environments.md`, which wins on
 any conflict about those files. Three rules are added here, and they are this skill's because
 they cover the pack, not the collection.
 
@@ -89,7 +88,10 @@ identifier in the form owned by
 appear inside an error envelope's `meta` — exception text, SQL, internal identifiers, secrets,
 PII beyond the request's own — is bound by that skill's
 `references/10-core-service-contract.md`; the pack's obligation is that its saved error examples
-obey it and that at least one saved `4xx` and one saved `5xx` example exist to be checked.
+obey it. Before generating or auditing examples, read
+`alaa-postman-collections references/41-response-contract-and-error-coverage.md` for complete
+reachable-error coverage. Inspect its saved `4xx` and `5xx` cases under this pack's secret rules;
+record missing required cases as gaps rather than inventing an unreachable error.
 
 ## Deliverables floor
 
@@ -108,7 +110,7 @@ Every item runs on every emission.
 - the audit command named in the emission gate in `SKILL.md`, exiting `0`
 - every JSON artifact parses; every YAML artifact parses
 - the repo-native public API audit command, when one exists
-- one saved `4xx` and one saved `5xx` example, plus the secret scan above
+- saved-error coverage validated through `/alaa-postman-collections`, plus this pack's secret scan above
 - `git diff --check`
 
 A blocked item is recorded with its exact command and blocker. A blocked inventory means refusal.

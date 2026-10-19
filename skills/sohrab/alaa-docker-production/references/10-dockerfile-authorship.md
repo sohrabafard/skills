@@ -185,11 +185,11 @@ is not available. `FROM php:8.4.13-fpm-trixie` does not move. A release build ad
 digest; see this skill's `references/45-registry-and-mirrors.md` for when a digest is required and
 how the release manifest records it.
 
-Current lines as of 2026-07-29, with the command that re-derives each: run
-`node scripts/check-image-pinning.mjs --versions`. Summary, so a Dockerfile author has a default to
-reach for rather than picking one per repository:
+Historical lines observed 2026-07-29 follow. `node scripts/check-image-pinning.mjs --versions`
+prints local dates and source locations; it performs no upstream check. Before selecting a
+current default, follow `references/00-source-map.md` and verify the primary lifecycle sources.
 
-| Line | Current as of 2026-07-29 | Use for |
+| Line | Observed 2026-07-29 | Use for |
 |---|---|---|
 | Alpine | 3.24 stable; 3.21 and newer supported | A runtime image with no glibc dependency |
 | Debian slim | 13 "trixie"; 12 "bookworm" is oldstable | Anything linking glibc, ICU, or a proprietary driver |

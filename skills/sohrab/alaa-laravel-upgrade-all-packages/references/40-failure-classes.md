@@ -2,7 +2,7 @@
 
 Each class is symptom, diagnosis, smallest retry, escalation. "Smallest retry" always names what changes on the retry; an identical re-run is not a retry. Two things are never a retry step: `composer update` used to undo something (`10-rollback-and-blast-radius.md`), and a hand-edited `composer.lock`.
 
-Windows sandbox specifics, locked files and path discipline are `/alaa-codex-runtime-ops` (`$alaa-codex-runtime-ops`) `references/10-windows-sandbox-recovery.md`, which wins wherever both describe the same Windows behaviour.
+Windows sandbox specifics, locked files and path discipline are `/alaa-codex-runtime-ops` `references/10-windows-sandbox-recovery.md`, which wins wherever both describe the same Windows behaviour.
 
 Command forms are given for both shells, because both occur on the same machine: native PowerShell for a Codex session on Windows, POSIX or Git-Bash for a Claude Code Bash-tool call. `$env:VAR = "value"` is PowerShell-only and, pasted into a POSIX shell, fails silently as a literal command rather than erroring. Translate; never paste one form into the other runtime.
 
@@ -20,7 +20,7 @@ Command forms are given for both shells, because both occur on the same machine:
 
 **Symptom.** A post-sweep failure the baseline does not contain, under the identity rule in `20-breaking-change-detection.md`.
 
-**Diagnosis.** Re-run that one test with the baseline's seed to separate order-dependence from a real regression; flake versus intermittent product defect is `/alaa-testing-strategy` (`$alaa-testing-strategy`) `references/50-flake.md`. If real, bisect by package, not by test: from the pre-sweep lock, `composer update <vendor/package> --with-dependencies` one package at a time. Bisecting by test says which assertion broke; bisecting by package says what to pin.
+**Diagnosis.** Re-run that one test with the baseline's seed to separate order-dependence from a real regression; flake versus intermittent product defect is `/alaa-testing-strategy` `references/50-flake.md`. If real, bisect by package, not by test: from the pre-sweep lock, `composer update <vendor/package> --with-dependencies` one package at a time. Bisecting by test says which assertion broke; bisecting by package says what to pin.
 
 **Smallest retry.** Re-run only the failing test with the offending package moved back one version.
 
@@ -56,7 +56,7 @@ printf '%s\n' '.composer-home/' '.composer-cache/' '.npm-cache/' >> "$(git rev-p
 export COMPOSER_HOME="$MANIFEST_ROOT/.composer-home"
 export COMPOSER_CACHE_DIR="$MANIFEST_ROOT/.composer-cache"
 export npm_config_cache="$MANIFEST_ROOT/.npm-cache"
-composer update --with-all-dependencies --no-interaction --no-progress
+# Re-run the accepted scoped apply command from 20-breaking-change-detection.md.
 rm -rf "$COMPOSER_HOME" "$COMPOSER_CACHE_DIR" "$npm_config_cache"
 ```
 
@@ -66,11 +66,11 @@ Add-Content -Path (git rev-parse --git-path info/exclude) -Value '.composer-home
 $env:COMPOSER_HOME      = Join-Path $ManifestRoot '.composer-home'
 $env:COMPOSER_CACHE_DIR = Join-Path $ManifestRoot '.composer-cache'
 $env:npm_config_cache   = Join-Path $ManifestRoot '.npm-cache'
-composer update --with-all-dependencies --no-interaction --no-progress
+# Re-run the accepted scoped apply command from 20-breaking-change-detection.md.
 Remove-Item -Recurse -Force $env:COMPOSER_HOME, $env:COMPOSER_CACHE_DIR, $env:npm_config_cache -ErrorAction SilentlyContinue
 ```
 
-**Escalation.** Confirm cleanup by both checks, since either can pass while the other fails: `git status --short` shows only intended files, and none of the three directories still exists on disk. Then `/alaa-codex-runtime-ops` (`$alaa-codex-runtime-ops`). Do not escalate privileges broadly and do not abandon the sweep over a cache error.
+**Escalation.** Confirm cleanup by both checks, since either can pass while the other fails: `git status --short` shows only intended files, and none of the three directories still exists on disk. Then `/alaa-codex-runtime-ops`. Do not escalate privileges broadly and do not abandon the sweep over a cache error.
 
 ## 6. Partially-applied update
 

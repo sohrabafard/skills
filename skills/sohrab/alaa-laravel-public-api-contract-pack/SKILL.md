@@ -19,10 +19,7 @@ A public API contract pack is requested for a Laravel service; the output feeds 
 SDK, a frontend, Postman, Insomnia, or an OpenAPI consumer; committed artifacts may have drifted
 from routes; a public route changes; or public input must be separated from trusted input.
 
-Not this skill: implementing backend behaviour (`/alaa-laravel-architecture`,
-`$alaa-laravel-architecture`); a narrow Postman edit (`/alaa-postman-collections`,
-`$alaa-postman-collections`); what a trusted header means (`/alaa-trust-gateway-auth`,
-`$alaa-trust-gateway-auth`).
+Not this skill: implementing backend behaviour (`/alaa-laravel-architecture`); a narrow Postman edit (`/alaa-postman-collections`); what a trusted header means (`/alaa-trust-gateway-auth`).
 
 ## The emission gate
 
@@ -30,8 +27,7 @@ Not this skill: implementing backend behaviour (`/alaa-laravel-architecture`,
 
 **Refusal condition:** any route in the inventory whose API version, deprecation status, or —
 when deprecated — sunset date cannot be established from a cited repository artifact or a cited
-entry in the owning reference file of `alaa-services-contract` (`/alaa-services-contract`,
-`$alaa-services-contract`).
+entry in the owning reference file of `alaa-services-contract` (`/alaa-services-contract`).
 
 **Instead:** write no file of the pack. Report per unresolved route its method, its path, which
 of the three fields is unresolved, and the one named artifact or owner decision that resolves it.
@@ -67,8 +63,9 @@ Exit `5` means the pack may not be emitted; `--help` holds the exit table and it
 5. **Extract the public-versus-trusted boundary** by the method below.
 6. **Answer the per-route questions** the references own: version and change class, write and
    retry semantics, pagination and limits.
-7. **Emit** endpoint docs, OpenAPI, Postman collection and environment, and SDK input notes as
-   projections of one verified behaviour. A statement in two artifacts is generated once.
+7. **Emit** endpoint docs, OpenAPI and SDK input notes from verified behavior; invoke
+   `/alaa-postman-collections` to generate or align the collection and environment from that same
+   contract. All remain required pack deliverables; generate each shared statement once.
 8. **Validate against the floor** in `references/40-consumer-discovery-pinning-and-secret-hygiene.md`
    and report each command with its result.
 
@@ -156,26 +153,27 @@ the example is wrong here: never document a client-set header as tenant or user 
 
 ## Ownership boundary
 
-`/name` for Claude Code, `$name` for Codex. Where this skill and an owner could state one rule,
-the owner states it and this skill points; on conflict the owner wins.
+Cross-skill calls follow the single `/name` convention in the [pack instructions](../AGENTS.md).
+Where this skill and an owner could state one rule, the owner states it and this skill points;
+on conflict the owner wins.
 
 | Not owned here | Owner |
 |---|---|
-| Envelopes, health and readiness shapes, trusted header names, public identifier forms, event and code names, deprecation windows, and every platform number — timeout, retry count, pool bound | `/alaa-services-contract` (`$alaa-services-contract`) |
-| Why a caller retries; budgets, backoff, breakers, degradation, error budgets | `/alaa-reliability-sla` (`$alaa-reliability-sla`) |
-| Pagination mechanism: ordering, index, predicate, cursor codec, page-size bound, reversal tests | `/alaa-keyset-pagination` (`$alaa-keyset-pagination`) |
-| Complexity budgets, structure choice, the N+1 family, unbounded result sets | `/alaa-algorithms-data-structures` (`$alaa-algorithms-data-structures`) |
-| Collection and environment generation, saved-example and error-coverage completeness, Insomnia portability | `/alaa-postman-collections` (`$alaa-postman-collections`) |
-| Gateway trust boundary, JWT verification, header sanitisation, tenant derivation | `/alaa-trust-gateway-auth` (`$alaa-trust-gateway-auth`) |
-| Object-level relationship authorization | `/openfga` (`$openfga`) |
-| Threat classes, review triggers, the fail-closed discriminator | `/alaa-security-review` (`$alaa-security-review`) |
-| What makes a test a test, which layer it belongs at, proof levels | `/alaa-testing-strategy` (`$alaa-testing-strategy`) |
-| Observability names | `/alaa-services-contract`; requirement levels and gates `/alaa-observability-soc` (`$alaa-observability-soc`) |
-| Laravel structure, PHP naming, design-pattern selection | `/alaa-laravel-architecture` (`$alaa-laravel-architecture`), `/alaa-php-clean-code` (`$alaa-php-clean-code`) and its `references/design-patterns.md` |
-| Pre-implementation design once a scope expansion changes an interface, a writer, or what a caller sees when a dependency fails | `/alaa-system-design` (`$alaa-system-design`) |
-| Multi-file runs and durable handoff; risky operations and proof strength | `/alaa-workflow` (`$alaa-workflow`), `/alaa-controlled-ops` (`$alaa-controlled-ops`) |
-| Lane planning and subagent roles; model and reasoning-effort choice | `/alaa-cc-orchestrator` (`$alaa-codex-orchestrator`), `/alaa-prompting-guide` (`$alaa-prompting-guide`) |
-| The ten-criterion quality bar; Farsi docs and backlog wording | `alaa-project-constitution references/quality-bar.md`, `/alaa-repo-docs` (`$alaa-repo-docs`) |
+| Envelopes, health and readiness shapes, trusted header names, public identifier forms, event and code names, deprecation windows, and every platform number — timeout, retry count, pool bound | `/alaa-services-contract` |
+| Why a caller retries; budgets, backoff, breakers, degradation, error budgets | `/alaa-reliability-sla` |
+| Pagination mechanism: ordering, index, predicate, cursor codec, page-size bound, reversal tests | `/alaa-keyset-pagination` |
+| Complexity budgets, structure choice, the N+1 family, unbounded result sets | `/alaa-algorithms-data-structures` |
+| Collection and environment generation, saved-example and error-coverage completeness, Insomnia portability | `/alaa-postman-collections` |
+| Gateway trust boundary, JWT verification, header sanitisation, tenant derivation | `/alaa-trust-gateway-auth` |
+| Object-level relationship authorization | `/openfga` |
+| Threat classes, review triggers, the fail-closed discriminator | `/alaa-security-review` |
+| What makes a test a test, which layer it belongs at, proof levels | `/alaa-testing-strategy` |
+| Observability names | `/alaa-services-contract`; requirement levels and gates `/alaa-observability-soc` |
+| Laravel structure, PHP naming, design-pattern selection | `/alaa-laravel-architecture`, `/alaa-php-clean-code` and its `references/design-patterns.md` |
+| Pre-implementation design once a scope expansion changes an interface, a writer, or what a caller sees when a dependency fails | `/alaa-system-design` |
+| Multi-file runs and durable handoff; risky operations and proof strength | `/alaa-workflow`, `/alaa-controlled-ops` |
+| Lane planning and subagent roles; model and reasoning-effort choice | `/alaa-cc-orchestrator` (Claude Code), `/alaa-codex-orchestrator` (Codex), `/alaa-prompting-guide` |
+| The ten-criterion quality bar; Farsi docs and backlog wording | `alaa-project-constitution references/quality-bar.md`, `/alaa-repo-docs` |
 
 Owned here and stated nowhere else: the pack's file set and `contract.meta.json` shape; the
 emission gate; the source-priority ladder and its conflict rule; the boundary extraction method;

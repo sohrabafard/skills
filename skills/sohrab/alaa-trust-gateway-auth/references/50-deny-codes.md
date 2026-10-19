@@ -5,7 +5,7 @@ error name into a service contract, or reconciling two services that deny the sa
 thing differently.
 
 The response envelope, the field set inside it, and the platform-wide error-code
-taxonomy are owned by `/alaa-services-contract` (`$alaa-services-contract`)
+taxonomy are owned by `/alaa-services-contract`
 `references/10-core-service-contract.md`. What this file owns is which code applies
 to which trust-boundary failure and what it maps from.
 
@@ -48,11 +48,17 @@ name such as `X-User-Mobile`, a purpose string.
 | `AUTH_NAME_OR_LOCATION_HEADER_INVALID` | 400 | a trusted name or location header violates the compact contract |
 | `AUTH_NAME_OR_LOCATION_HEADER_REQUIRED` | 400 | a route that deliberately requires trusted identity headers did not receive one |
 | `TOTP_REQUIRED` | 403 | the operation requires TOTP and the actor has not enrolled |
-| `TOTP_STEP_UP_REQUIRED` | 403 | a step-up-required route received no valid proof; `meta.purpose` names the purpose the client must request |
-| `AUTHZ_DENIED` | 403 | the caller is authenticated and not allowed to perform the action |
 | `TENANT_CONTEXT_MISSING` | 400 on an HTTP route, or 401/403 by service policy | a tenant-safe operation has no trusted tenant context |
 | `TENANT_CONTEXT_MISMATCH` | 403 | trusted tenant context and the requested target do not match |
 | `TENANT_CONTEXT_INVALID` | 403 | a client-supplied tenant selector conflicts with trusted context, or a tenant-override attempt was detected |
+
+For `AUTHZ_DENIED` and dependency-failure mappings, read
+`alaa-services-contract references/26-request-time-authorization-openfga/40-decision-and-enforcement.md`.
+For `TOTP_STEP_UP_REQUIRED`, its status and `meta.purpose`, read
+`alaa-services-contract references/32-auth-totp-and-step-up-contract.md`.
+Those owner rows are not redefined here. `AUTH_CONTEXT_MISSING` in the sidecar's gateway-facing
+decision table is scoped to that hop's missing trusted context; it does not override the downstream
+service policy above or its compatibility procedure below.
 
 ## Translating gateway error names
 

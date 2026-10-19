@@ -1,11 +1,10 @@
 # Review And Readiness
 
-`SKILL.md` owns the rule that a design is reviewed before any implementation lane is dispatched, and the
-stop conditions. This file is what the reviewer checks, how findings are classified, and what the
-implementation lane may decide on its own once the record is reviewed. Read it when reviewing a record and
-when handing one over.
+`SKILL.md` Review and readiness owns admission under orchestrated cadence and standalone review; it also
+owns stop conditions. This file supplies review checks, finding classification and implementation discretion.
+Read it when reviewing a record or handing one over.
 
-Under `/alaa-cc-orchestrator` (`$alaa-codex-orchestrator` in Codex) this review runs as the
+Under `/alaa-cc-orchestrator` or `/alaa-codex-orchestrator`, this review runs as the
 `alaa-architecture-critic` role, which is already gated on contract, boundary, consistency, concurrency,
 and caching changes. That role owns its verdict vocabulary and its output contract; this file supplies the
 standard it reviews against. A human reviewer applies the same checks and reaches the same verdicts, and a
@@ -57,11 +56,11 @@ find.
 - Block on preference. A different but equally sound design is not a finding; it is a candidate, and if it
   is a real one it belongs in step 6 with its axis.
 
-## Ready to build
+## Decision readiness
 
-A design is ready when all three hold: every check above has an answer in the record; every blocking finding
-is resolved in the record; and no open question would change an interface shape, a data owner, or a
-consistency choice.
+The design decisions are complete when every check above has an answer in the record, known blocking
+findings are resolved there, and no open question would change an interface shape, a data owner, or a
+consistency choice. Independent judgment still waits for the applicable review boundary.
 
 An open question that would change none of those three does not block — record it with the decision it
 defers and the point at which it must be answered. **The split matters because a design that waits for every
@@ -70,8 +69,8 @@ first implementer's guess as the contract.**
 
 ## Handing over to implementation
 
-The implementation lane receives the reviewed record, the contract files it points at, and the dependency
-table. Within that, it decides on its own: internal structure and module layout, algorithms and data
+The implementation lane receives the record admitted under `SKILL.md` Review and readiness, its contract
+files and dependency table. Within that, it decides on its own: internal structure and module layout, algorithms and data
 structures inside the stated complexity and load budget, naming inside the component, test structure, and
 the constructs that enforce the mechanism classes the record named.
 
@@ -79,5 +78,5 @@ It escalates back to a design change — not a code decision — when it finds t
 an interface shape, an error outcome, a data owner, a consistency model, a cache-or-fork label, a dependency
 classification, or the boundary itself. Escalating updates the record and re-runs the affected checks; it
 does not create a second design in the pull request. **This split is what keeps a fleet's services
-recognisable to each other: the decisions that cross components live in reviewed records, and the decisions
-inside a component live in the code where they belong.**
+recognisable to each other: the decisions that cross components live in the record and receive independent judgment at the applicable
+review boundary; the decisions inside a component live in the code where they belong.**

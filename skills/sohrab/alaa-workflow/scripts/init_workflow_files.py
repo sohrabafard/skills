@@ -5,6 +5,7 @@ from __future__ import annotations
 
 import argparse
 import json
+import os
 import re
 import sys
 import traceback
@@ -62,7 +63,7 @@ def display_path(path: Path | None) -> str:
 
 def write_text(path: Path, content: str) -> None:
     path.parent.mkdir(parents=True, exist_ok=True)
-    path.write_text(content, encoding="utf-8")
+    path.write_text(content, encoding="utf-8", newline="\n")
 
 
 def render(template_name: str, values: dict[str, str]) -> str:
@@ -100,6 +101,8 @@ def parse_args() -> argparse.Namespace:
         formatter_class=argparse.RawDescriptionHelpFormatter,
     )
     parser.add_argument("--task", required=True, help="Human task title used for naming and template fill.")
+    parser.add_argument("--plan-kind", required=True, choices=("design", "execution"), help="Design discussion or execution of an approved design.")
+    parser.add_argument("--approved-design", help="Readable approved design plan required for execution; never modified.")
     parser.add_argument(
         "--profile",
         choices=PROFILES,
@@ -111,8 +114,9 @@ def parse_args() -> argparse.Namespace:
         ),
     )
     parser.add_argument("--with-prompts", action="store_true", help="Create the same-stem role prompt pack.")
-    parser.add_argument("--task-store", choices=("local", "beads"), default="local", help="Task authority; default local. No live tracker access.")
+    parser.add_argument("--task-store", choices=("local", "beads"), default="local", help="Task authority; local is valid only for new direct single-phase work. Phased/delegated plans require explicit beads and binding. No live tracker access.")
     parser.add_argument("--beads-binding", help="Portable project-relative binding owner reference for Beads.")
+    parser.add_argument("--review-boundary", choices=("phase", "final"), help="Declared engagement review boundary; defaults to phase at the root, inherited from a parent plan.")
     parser.add_argument("--slug", help="Optional explicit slug.")
     parser.add_argument("--plan-dir", default="auto", help="Plan directory, or auto.")
     parser.add_argument("--timestamp", help="Fixed timestamp in YYYYMMDD-HHMMSS format.")
@@ -241,7 +245,13 @@ def resolve_prompt_metadata(args: argparse.Namespace, active: bool) -> dict[str,
     }
 
 
-def task_store_values(args: argparse.Namespace, checkpoint: Path | None) -> dict[str, str]:
+def task_store_values(args: argparse.Namespace, checkpoint: Path | None, profile: str) -> dict[str, str]:
+    delegated = args.mode == "delegated" or bool(args.parent_plan or args.lane)
+    if args.state_only and delegated:
+        raise Misuse("Delegated work requires a bound plan; --state-only cannot represent its hierarchy.")
+    hierarchy = not args.state_only
+    if hierarchy and args.task_store != "beads":
+        raise Misuse("New phased/delegated plans require --task-store beads and --beads-binding; continue existing local families in place.")
     binding = args.beads_binding
     if args.task_store == "local" and binding is not None:
         raise Misuse("--beads-binding requires --task-store beads.")
@@ -263,18 +273,37 @@ def task_store_values(args: argparse.Namespace, checkpoint: Path | None) -> dict
         "  - [ ] T3: Run the affected validation surface and repair failures. [depends: T2] [skills: inherit]\n"
         "  - [ ] T4: Reconcile documentation, status, blockers, and remaining work. [depends: T3] [skills: inherit]",
     )
-    beads_work = (
-        "  - Issue: NEEDS_FILL_ISSUE_1 [skills: inherit]\n  - Issue: NEEDS_FILL_ISSUE_2 [skills: inherit]",
-        "  - Issue: NEEDS_FILL_ISSUE_3 [skills: inherit]\n  - Issue: NEEDS_FILL_ISSUE_4 [skills: inherit]",
+    beads_work = tuple(
+        (f"  - Task issue: NEEDS_FILL_TASK_{number} [skills: inherit]\n"
+         f"    - Subtask issue: NEEDS_FILL_SUBTASK_{number} [skills: inherit]") if hierarchy else
+        "  - Issue: NEEDS_FILL_ISSUE_1 [skills: inherit]\n  - Issue: NEEDS_FILL_ISSUE_2 [skills: inherit]"
+        for number in (1, 2)
     )
     work = local_work if args.task_store == "local" else beads_work
-    position = (f"## Execution Position\n\n- Position owner: {display_path(checkpoint)} (current phase, blockers, next action)."
-                if checkpoint else "## Blockers and Next Action\n\n- Current phase: Phase 1\n- Blockers: none known.\n- Next action: Complete the plan's repository-grounding fields.")
+    direct_cursor = "- Current task: none\n- Current subtask: none\n" if hierarchy else ""
+    position = (f"## Execution Position\n\n- Position owner: {display_path(checkpoint)} (current phase/task/subtask, blockers, next action)."
+                if checkpoint else "## Blockers and Next Action\n\n- Current phase: Phase 1\n" + direct_cursor + "- Blockers: none known.\n- Next action: Complete the plan's repository-grounding fields.")
+    phase_count = 2 if profile != "direct" else 1
+    phase_values = []
+    for number in range(1, phase_count + 1):
+        phase_values.append(render("phase-template.md", {
+            "phase_number": str(number),
+            "phase_title": "Ground and implement" if number == 1 else "Validate and reconcile",
+            "phase_dependency": "none" if number == 1 else "Phase 1",
+            "phase_mapping": f"- Phase issue: NEEDS_FILL_PHASE_{number}\n" if hierarchy else "",
+            "phase_work": work[number - 1],
+        }))
     return {
         "task_store": args.task_store,
         "task_binding": binding or "not applicable",
-        "phase_1_work": work[0],
-        "phase_2_work": work[1],
+        "hierarchy_header": "- Task hierarchy: phase-task-subtask\n" if hierarchy else "",
+        "review_boundary": args.review_boundary or "phase",
+        "final_phase": f"Phase {phase_count}",
+        "local_final_header": "",
+        "ordered_work": "\n".join(phase_values),
+        "cursor_fields": "- Current task: none\n- Current subtask: none\n" if hierarchy else "",
+        "schema_version": "3" if hierarchy else "2",
+        "json_cursor_fields": '  "current_task": "none",\n  "current_subtask": "none",\n' if hierarchy else "",
         "task_delegation": ("- Dependency edges and ready sets: Local task prerequisites above own dependency edges; derive readiness before dispatch."
                             if args.task_store == "local" else "- Dependency edges and ready sets: Beads owns issue dependencies and readiness; the plan owns phase barriers and shared-resource conflicts."),
         "position_section": position,
@@ -282,6 +311,28 @@ def task_store_values(args: argparse.Namespace, checkpoint: Path | None) -> dict
 
 
 def run(args: argparse.Namespace) -> int:
+    if args.plan_kind == "design":
+        incompatible = (args.approved_design or args.beads_binding or args.task_store != "local"
+                        or args.review_boundary or args.with_prompts or args.with_state or args.state_only
+                        or args.no_continuation or args.lane or args.parent_plan or args.mode != "plan"
+                        or (args.profile is not None and args.profile != "resumable"))
+        if incompatible:
+            raise Misuse("Design requires resumable/local and rejects execution, hierarchy, prompt and state flags.")
+    elif not args.approved_design:
+        raise Misuse("Execution requires --approved-design naming a valid approved design plan.")
+    elif args.state_only:
+        raise Misuse("--state-only cannot represent an execution plan and its Beads hierarchy; continue historical state in place.")
+    approved_design = None
+    protected_design_paths: list[Path] = []
+    if args.plan_kind == "execution":
+        from validate_workflow_files import extract_reference, path_from_reference, read_text, require_approved_design
+        approved_design = Path(args.approved_design).expanduser()
+        try:
+            require_approved_design(approved_design)
+            design_checkpoint = path_from_reference(extract_reference(read_text(approved_design), ("checkpoint",)), approved_design)
+        except (ValueError, OSError, UnicodeError) as exc:
+            raise Misuse(f"Invalid --approved-design: {exc}") from exc
+        protected_design_paths = [approved_design] + ([design_checkpoint] if design_checkpoint else [])
     profile = resolve_profile(args)
     include_prompts = args.with_prompts or profile == "legacy"
     prompt_metadata = resolve_prompt_metadata(args, include_prompts)
@@ -291,6 +342,16 @@ def run(args: argparse.Namespace) -> int:
         raise Misuse("--lane requires --parent-plan.")
     if parent_plan and not parent_plan.exists():
         raise Misuse(f"Parent plan not found: {parent_plan}")
+    inherited = None
+    if parent_plan:
+        # Share the validator's contract rather than inventing nested defaults.
+        from validate_workflow_files import resolve_review_contract
+        try:
+            inherited = resolve_review_contract(parent_plan)
+        except (ValueError, OSError, UnicodeError) as exc:
+            raise Misuse(f"Cannot inherit parent review contract: {exc}") from exc
+        if args.review_boundary and args.review_boundary != inherited[0]:
+            raise Misuse("--review-boundary conflicts with the canonical parent review boundary.")
 
     stamp = validate_timestamp(args.timestamp) if args.timestamp else now_stamp()
     created_at = now_iso()
@@ -320,13 +381,25 @@ def run(args: argparse.Namespace) -> int:
         "phase_prompts_display": display_path(prompt_path if include_prompts else None),
         "continuation_state_display": display_path(checkpoint_path if include_checkpoint else None),
         "state_display": display_path(state_path if include_state else None),
-        **task_store_values(args, checkpoint_path if include_checkpoint and not args.state_only else None),
+        **(task_store_values(args, checkpoint_path if include_checkpoint and not args.state_only else None, profile)
+           if args.plan_kind == "execution" else {}),
         **prompt_metadata,
     }
+    if inherited:
+        values["local_final_header"] = f"- Local final phase: {values['final_phase']}\n"
+        values["review_boundary"], values["final_phase"] = inherited
 
     planned: list[tuple[Path, str]] = []
 
-    if not args.state_only:
+    if args.plan_kind == "design":
+        planned.append((plan_path, render("design-plan-template.md", values)))
+        planned.append((checkpoint_path, render("design-checkpoint-template.md", values)))
+    elif not args.state_only:
+        try:
+            approved_design_link = Path(os.path.relpath(approved_design.resolve(), Path.cwd().resolve()))
+        except ValueError as exc:
+            raise Misuse("Approved design cannot be represented by a portable relative path from this repository.") from exc
+        values["approved_design_display"] = display_path(approved_design_link)
         planned.append((plan_path, render("plan-template.md", values)))
         if include_prompts:
             planned.append((prompt_path, render("phase-prompts-template.md", values)))
@@ -334,6 +407,9 @@ def run(args: argparse.Namespace) -> int:
             planned.append((checkpoint_path, render("continuation-state-template.md", values)))
     if include_state:
         planned.append((state_path, render_json(values)))
+
+    if any(path.resolve() == protected.resolve() for path, _ in planned for protected in protected_design_paths):
+        raise Misuse("An output would overwrite the approved design or its checkpoint; choose a different task stem or directory.")
 
     # Every target is checked before any of them is written. Writing until the first
     # collision leaves half an artifact family behind, and the next run then cannot start
@@ -355,6 +431,7 @@ def run(args: argparse.Namespace) -> int:
 
     payload: dict[str, Any] = {
         "task": args.task,
+        "plan_kind": args.plan_kind,
         "mode": mode,
         "profile": profile,
         "task_store": args.task_store,

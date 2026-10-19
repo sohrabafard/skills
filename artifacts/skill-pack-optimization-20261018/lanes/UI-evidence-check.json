@@ -1,0 +1,43 @@
+{
+  "cwd": ".",
+  "command": [
+    "python",
+    "-B",
+    "artifacts/skill-pack-optimization-20261018/lanes/UI-evidence-check.py"
+  ],
+  "resource_policy": "Bounded normal-priority evidence-only assertions.",
+  "manifest_checks": [
+    {
+      "file": "UI-task-snapshot.json",
+      "entries": 136,
+      "sha256": "753164595219d8d26a70bedfdfe5d06319193bbc35a0f11204a1040735023d2b",
+      "exit": 0
+    },
+    {
+      "file": "UI-verification.json",
+      "entries": 21,
+      "sha256": "9f45c1a91449f05ac08a169c3902fdd4227e9bae4cb47eb4aacd8ac74efd1138",
+      "exit": 0
+    }
+  ],
+  "diff_pointer_matches": true,
+  "utf8_no_bom_lf_nonempty_files": [
+    "artifacts/skill-pack-optimization-20261018/lanes/UI-changed-paths.json",
+    "artifacts/skill-pack-optimization-20261018/lanes/UI-check-1.txt",
+    "artifacts/skill-pack-optimization-20261018/lanes/UI-check-2.txt",
+    "artifacts/skill-pack-optimization-20261018/lanes/UI-check-3.txt",
+    "artifacts/skill-pack-optimization-20261018/lanes/UI-diff.json",
+    "artifacts/skill-pack-optimization-20261018/lanes/UI-diff.txt",
+    "artifacts/skill-pack-optimization-20261018/lanes/UI-draft.json",
+    "artifacts/skill-pack-optimization-20261018/lanes/UI-edit.py",
+    "artifacts/skill-pack-optimization-20261018/lanes/UI-evidence-check.py",
+    "artifacts/skill-pack-optimization-20261018/lanes/UI-evidence-correction.json",
+    "artifacts/skill-pack-optimization-20261018/lanes/UI-evidence-correction.py",
+    "artifacts/skill-pack-optimization-20261018/lanes/UI-finalize.py",
+    "artifacts/skill-pack-optimization-20261018/lanes/UI-read-provenance.json",
+    "artifacts/skill-pack-optimization-20261018/lanes/UI-task-snapshot.json",
+    "artifacts/skill-pack-optimization-20261018/lanes/UI-verification.json",
+    "artifacts/skill-pack-optimization-20261018/lanes/UI.md"
+  ],
+  "exit": 0
+}

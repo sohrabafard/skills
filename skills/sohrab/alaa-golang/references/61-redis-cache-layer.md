@@ -2,8 +2,9 @@
 
 Read this before writing any Redis call. Every rule here is absolute; none has an exception.
 
-All kit facts below were read from `alaa-go-chi` source on **2026-07-26** and must be re-read from source before being
-relied on.
+Before relying on kit client, timeout/retry/pool, TTL, miss or readiness behavior, read `/alaa-data-layer`
+`references/51-redis-golang.md`; it owns the dated facts and their source re-verification. This file owns
+cache mechanics, not another kit snapshot.
 
 ## What Redis is here
 
@@ -14,9 +15,6 @@ exists, it is not cache and this file does not govern it. Take that design to `/
 (`$alaa-data-layer`) before writing the code.
 
 ## Failure behaviour — the two rules that have no exception
-
-**Verified fact (`rediskit/config.go`, read 2026-07-26):** the kit sets `MaxRetries = -1`, which disables the client
-library's internal retries, and applies a 250 ms per-call timeout. A Redis call therefore fails fast, once.
 
 **Rule:** a failed cache read is a miss. Read from the source of truth, serve the response, and record the error. The
 request succeeds.
@@ -33,14 +31,10 @@ decided not to retry, and re-adding retries multiplies latency during exactly th
 designed for. **Rule:** pass the request-scoped context (`45-failure-behavior-at-the-call-site.md` section 2) and let
 the call fail.
 
-**Verified fact (`rediskit/doc.go`, read 2026-07-26):** the kit reports Redis readiness at degraded severity, not
-required, so a Redis outage does not remove the instance from rotation. **Rule:** your service's behaviour must match
-that promise — a service that cannot serve without Redis contradicts its own readiness contract.
+**Rule:** service behavior must match the kit's readiness promise in `/alaa-data-layer`
+`references/51-redis-golang.md`; a service that cannot serve without Redis contradicts that promise.
 
 ## TTL
-
-**Verified fact (`rediskit/cache.go`, read 2026-07-26):** the kit rejects a write with a non-positive TTL, returning
-`ErrMissingTTL`. Every cache entry expires.
 
 **Rule:** every write passes a positive TTL chosen for that key's data, not a shared default constant.
 
@@ -53,8 +47,6 @@ repeated miss does not become a repeated database read.
 **Forbidden:** persisting a cache entry with no expiry. If the data must not expire, see the second rule of this file.
 
 ## A miss is not an error
-
-**Verified fact (`rediskit/cache.go`, read 2026-07-26):** the kit's cache reports a miss as a miss, never as an error.
 
 **Forbidden:** comparing against `redis.Nil`, string-matching an error message, or treating a miss as a failure to
 log. **Rule:** branch on the kit's miss signal, fall through to the source of truth, and record a miss — not an error.
@@ -119,11 +111,9 @@ header that decision arrived on to `/alaa-trust-gateway-auth` (`$alaa-trust-gate
 
 ## Signals
 
-**Rule:** every cache emits hits, misses, errors, and source-of-truth fallbacks as separate counters, and cache call
-latency as a histogram. Which of these must exist before a change merges belongs to `/alaa-observability-soc`
-(`$alaa-observability-soc`); their names belong to `/alaa-services-contract` (`$alaa-services-contract`).
-
-**Forbidden:** a metric label carrying a cache key, an entity id, or any value whose domain is not finite and small.
+Before wiring cache telemetry, apply `/alaa-observability-soc` `references/20-instrumentation-gates.md`
+section Cache signals for outcomes, latency and label constraints. Names belong to `/alaa-services-contract`;
+`/alaa-data-layer` `references/51-redis-golang.md` owns kit wiring and registry-gap handling.
 
 ## Tests
 

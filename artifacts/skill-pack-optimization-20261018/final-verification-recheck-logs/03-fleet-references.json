@@ -1,0 +1,7 @@
+{
+  "command": "python -B scripts/check_fleet_references.py",
+  "cwd": ".",
+  "wall_time_seconds": 3.3804519,
+  "exit_code": 0,
+  "output": "check_fleet_references.py: 69 of 69 skills, 1146 Markdown files, 4302 citations\r\n\r\nFINDINGS: none\r\n\r\nINFO (320 unmarked target-repository paths across 31 skills; these never fail the run)\r\n    94  alaa-repo-docs\r\n    49  alaa-services-contract\r\n    31  alaa-go-chi-development\r\n    27  alaa-shaka-player\r\n    15  service-runtime-kit-governance\r\n    11  alaa-permission-generator\r\n    10  alaa-trust-gateway-auth\r\n    10  ansible-validator\r\n     9  alaa-docker-production\r\n     9  alaa-minio-object-storage\r\n     7  alaa-gitlab-ci-cd\r\n     6  alaa-makefile\r\n     5  alaa-golang\r\n     5  alaa-golang-clean-code-principles\r\n     5  alaa-memory-os\r\n     4  alaa-golang-fiber\r\n     3  alaa-controlled-ops\r\n     3  alaa-postman-collections\r\n     3  clickhouse-performance-schema-ops\r\n     2  alaa-codex-orchestrator\r\n     2  alaa-k8s-helm\r\n     1  alaa-bale-provider\r\n     1  alaa-data-layer\r\n     1  alaa-input-normalization\r\n     1  alaa-laravel-architecture\r\n     1  alaa-laravel-upgrade-all-packages\r\n     1  alaa-octane-performance\r\n     1  alaa-quasar-app-vite-v3\r\n     1  alaa-sms-provider-mediana\r\n     1  ansible-generator\r\n     1  caas-arvan-kuber\r\n  Rerun with --show-info for every site, or --format json for all of them.\r\n  Mark each one as <repo>/<path> to retire it from this list.\r\n"
+}

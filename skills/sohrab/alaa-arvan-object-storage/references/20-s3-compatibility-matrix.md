@@ -24,14 +24,14 @@ behaviour evidence, and the two diverge on this provider.
 |---|---|---|
 | `PutObject` (single request) | Supported | Capped at 5 GB per upload request `[source: https://docs.arvancloud.ir/en/object-storage/limits/, read: 2026-07-27]`; operation page indexed at `.../sdk/object-storage/upload-object/` |
 | `GetObject` | Documented, unread | Page indexed as "Download File from Bucket" `[source: https://docs.arvancloud.ir/en/developer-tools/sdk/object-storage/download-object/, read: 2026-07-27]` |
-| `DeleteObject` | Not documented | No page found in the searches recorded in `SOURCES.md` |
-| `ListObjects` / `ListObjectsV2` | Not documented | No page found; Arvan recommends third-party tools such as s3cmd for buckets with large object counts `[source: https://docs.arvancloud.ir/en/object-storage/limits/, read: 2026-07-27]` |
+| `DeleteObject` | Supported | PHP and Go examples call the single-object operation [source](https://docs.arvancloud.ir/en/developer-tools/sdk/object-storage/delete-object/), read: 2026-10-18 |
+| `ListObjects` / `ListObjectsV2` | Supported | PHP/JavaScript show `ListObjects`; Go shows `ListObjectsV2` [source](https://docs.arvancloud.ir/en/developer-tools/sdk/object-storage/object-list/), read: 2026-10-18. Verify pagination with the selected SDK |
 | `CreateMultipartUpload` | Supported | Documented as initiating the multipart process `[source: https://docs.arvancloud.ir/en/developer-tools/sdk/object-storage/multipart-upload/, read: 2026-07-27]` |
 | `UploadPart` | Supported | Same page; the worked example sets `long partSize = 400 * (long)Math.Pow(2, 20)`, which is 419,430,400 bytes labelled as 400 MB and therefore larger than the published 400 MB ceiling — see `references/15-environment-contract-deltas.md` |
 | `CompleteMultipartUpload` | Supported | Same page |
 | `AbortMultipartUpload` | Supported | Same page, in the error-handling path; client abort releases failed-upload parts immediately. Panel age-based cleanup is documented separately below |
-| `ListMultipartUploads` | Not documented | Absent from the multipart page; **this is the operation that finds orphaned parts**, so budget reconciliation may have no listing to work from |
-| `ListParts` | Not documented | Absent from the multipart page |
+| `ListMultipartUploads` | Supported | Dedicated SDK examples enumerate unfinished uploads by bucket [source](https://docs.arvancloud.ir/en/developer-tools/sdk/object-storage/list-multipart-upload/), read: 2026-10-18 |
+| `ListParts` | Supported | Dedicated SDK examples list parts by bucket, key and upload ID [source](https://docs.arvancloud.ir/en/developer-tools/sdk/object-storage/list-parts/), read: 2026-10-18 |
 | `UploadPartCopy` | Not documented | Absent from the multipart page |
 | `CopyObject` | Not documented | No page found; a server-side copy is the normal way to re-key or re-tier an object, so assume download-and-reupload until proven otherwise |
 | `PutBucketLifecycleConfiguration` | Supported | The S3 API example uses the AWS SDK: a `LifecycleConfiguration` holding `Rules`, each with a `Filter`, a `Status` of `"Enabled"` and an action `[source: https://docs.arvancloud.ir/fa/developer-tools/sdk/object-storage/put-bucket-lifecycle-config/, read: 2026-07-28]`. The English page at the same path is robots-blocked; the Persian page carries the same worked example |
@@ -43,13 +43,13 @@ behaviour evidence, and the two diverge on this provider.
 | `GetBucketVersioning` | Documented, unread | Page indexed as "Get Object Versioning Status" `[source: https://docs.arvancloud.ir/en/developer-tools/sdk/object-storage/get-bucket-versioning/, read: 2026-07-27]` |
 | `PutBucketPolicy` | Supported | AWS IAM policy shape with `Version`, `Statement`, `Sid`, `Effect`, `Principal`, `Action`, `Resource`; example uses `s3:GetObject`, `Principal: "*"`, `arn:aws:s3:::sample_bucket/user_*` `[source: https://docs.arvancloud.ir/en/developer-tools/sdk/object-storage/put-bucket-policy/, read: 2026-07-27]` |
 | `GetBucketCors` | Supported | Rules expose `ID`, `MaxAgeSeconds`, `AllowedMethods`, `AllowedOrigins`, `AllowedHeaders`, `ExposeHeaders` `[source: https://docs.arvancloud.ir/en/developer-tools/sdk/object-storage/get-bucket-cors/, read: 2026-07-27]` |
-| `PutBucketCors` / `DeleteBucketCors` | Not documented | Only the get operation is documented, so **a browser-direct upload flow may have no supported way to set CORS by API** and may require the panel |
+| `PutBucketCors` / `DeleteBucketCors` | Supported | SDK examples [set CORS rules](https://docs.arvancloud.ir/en/developer-tools/sdk/object-storage/put-bucket-cors/) and [delete the configuration](https://docs.arvancloud.ir/en/developer-tools/sdk/object-storage/delete-bucket-cors/), read: 2026-10-18 |
 | Presigned URL (GET and PUT) | Supported | Generated with the standard SDK presign call against the Arvan service URL; expiry expressed in hours with a 12-hour example, and no maximum lifetime stated `[source: https://docs.arvancloud.ir/en/developer-tools/sdk/object-storage/upload-presigned/, read: 2026-07-27]` |
 | Server-side encryption | Conflicting | The product page lists "client-side and server-side encryption" `[source: https://www.arvancloud.ir/en/products/cloud-storage, read: 2026-07-27]`, and no SSE operation, header or key-management page appears in the SDK documentation. Treat SSE as unproven and encrypt client-side where the data requires it |
-| Object tagging (`PutObjectTagging`) | Not documented | Bucket-level tags exist in the panel `[source: https://docs.arvancloud.ir/en/object-storage/buckets, read: 2026-07-27]`; object tagging was not found |
+| Object tagging (`PutObjectTagging`) | Supported | SDK examples assign a tag set to an object key [source](https://docs.arvancloud.ir/en/developer-tools/sdk/object-storage/put-object-tag/), read: 2026-10-18; this establishes no lifecycle tag-filter parity |
 | Object Lock / retention | Not documented | No page found; do not promise WORM or compliance retention on Arvan |
 | Bucket replication | Not documented | No page found; the product page's "multi-region" claim is about region availability, not bucket replication |
-| Bucket / object ACLs | Not documented | Access is a bucket-level public toggle rather than a documented ACL API `[source: https://docs.arvancloud.ir/en/object-storage/buckets, read: 2026-07-27]` |
+| Bucket / object ACLs | Supported | SDK examples for [GetBucketAcl](https://docs.arvancloud.ir/en/developer-tools/sdk/object-storage/get-bucket-acl/), [PutBucketAcl](https://docs.arvancloud.ir/en/developer-tools/sdk/object-storage/put-bucket-acl/), [GetObjectAcl](https://docs.arvancloud.ir/en/developer-tools/sdk/object-storage/get-object-acl/) and [PutObjectAcl](https://docs.arvancloud.ir/en/developer-tools/sdk/object-storage/put-object-acl/), read: 2026-10-18. This grants no permission to make private data public |
 | Static website hosting | Supported | Configurable per bucket with index and error objects `[source: https://docs.arvancloud.ir/en/object-storage/buckets, read: 2026-07-27]` |
 | Custom domain and CDN | Supported | Arvan Object Storage uses the Arvan CDN by default; a custom domain needs the domain on Arvan CDN with HTTPS active, then an ANAME for a root domain or a CNAME for a subdomain, with the host header rewritten to `bucketname.s3.<region>.arvanstorage.ir` `[source: https://docs.arvancloud.ir/en/object-storage/buckets/custom-domain, read: 2026-07-27]` |
 
@@ -62,8 +62,9 @@ behaviour evidence, and the two diverge on this provider.
 2. **`CopyObject` is not documented.** Any design that re-keys objects — a tenant rename, a key-scheme migration, a
    move between prefixes — must budget for download-and-reupload bandwidth and time until a server-side copy is proven
    against the live endpoint.
-3. **`PutBucketCors` is not documented.** A browser-direct upload against a presigned PUT needs CORS on the bucket;
-   confirm the panel can set it before designing a flow that depends on it.
+3. **CORS configuration is documented; browser behavior still needs verification.** Before shipping a
+   browser-direct upload, verify the intended origin, methods, headers and preflight against the target bucket.
+   The SDK examples above establish an API configuration path, not a successful browser upload.
 
 ## Public access and delivery
 

@@ -2,7 +2,7 @@
 
 You are about to edit this skill's own files or scripts. This file holds only what is **specific to this pack**.
 
-General agent-authoring doctrine — how to write a skill, how to write an instruction file, runtime differences, effort and thinking budgets, trigger syntax, and model selection — is `/alaa-prompting-guide` (`$alaa-prompting-guide`): `references/06-invocation-and-composition.md`, `references/50-effort-and-thinking.md`, `references/60-skill-authoring.md`, `references/70-agent-instruction-files.md`. Read it there. **State no model name anywhere in this pack**; refer to runtime families when a distinction is genuinely needed, and route the question to the prompting guide.
+General agent-authoring doctrine — how to write a skill, how to write an instruction file, runtime differences, effort and thinking budgets, trigger syntax, and model selection — is `/alaa-prompting-guide`: `references/06-invocation-and-composition.md`, `references/50-effort-and-thinking.md`, `references/60-skill-authoring.md`, `references/70-agent-instruction-files.md`. Read it there. **State no model name anywhere in this pack**; refer to runtime families when a distinction is genuinely needed, and route the question to the prompting guide.
 
 ## 1. The example convention, with Quasar examples
 
@@ -22,21 +22,21 @@ The Quasar-specific reason this convention earns its space: the two app-vite lin
 
 ## 2. Why this pack ships two scripts
 
-- `scripts/check-upstream-versions.mjs` exists because every version number in this pack expires, and a live registry read is deterministic while model memory is not. It is the fleet's only copy; `/alaa-frontend-developer` (`$alaa-frontend-developer`) routes here rather than keeping a duplicate.
+- `scripts/check-upstream-versions.mjs` exists because every version number in this pack expires, and a live registry read is deterministic while model memory is not. It is the fleet's only copy; `/alaa-frontend-developer` routes here rather than keeping a duplicate.
 - `scripts/query-installed-quasar-api.mjs` exists because exact Quasar APIs belong to the target project's installed version, not to this pack. It resolves the project-local CLI, preserves its exit status, and refuses to execute a binary that resolves outside the installed package. This script is why the atlases can be judgment references rather than API mirrors.
 
 Both take `--help` and `--self-test`, and both distinguish "could not run" from "clean" in their exit codes. Keep those three properties in any change.
 
 ## 3. Structure rules for this pack
 
-- `SKILL.md` is the lean entry: posture, version rules, authority, one pointer to the router, mandatory pairings, companion boundary, and the response contract. It carries no routing table and no version snapshot. The body ceiling is 6,700 bytes net of the frontmatter description.
+- `SKILL.md` is the lean entry: posture, version rules, authority, one triggered pointer to the external router and its mandatory pairings, companion boundary, and the response contract. It carries no routing table and no version snapshot. The body ceiling is 6,700 bytes net of the frontmatter description.
 - `references/00-topic-map.md` is the only routing surface. The family tables inside `60`, `64`, `35`, and `85` index symbols or legacy names within one topic; if one of them starts routing across the skill, fold it back into `00`.
 - `references/05-authority-and-api-lookup.md` owns the authority ladder, the installed lookup, fallbacks, and disagreement handling.
 - `references/80-upstream-deltas-and-live-checks.md` owns every version number and the canonical v2 -> v3 delta table. When a number is needed elsewhere, point here instead of copying it — the six-fold duplication of the delta set produced a factual contradiction in the `sourceFiles` default that survived undetected.
 - Every reference states its trigger in its first paragraph as an observable situation, and ends with a `Search:` line.
 - Details stay one level deep under `references/`. Unread bundled files cost no context, so a comprehensive reference set is acceptable when the routing is precise.
 - Use absolute dates, never "recently". Use forward-slash local paths, never wrapped in `file://` or a URL scheme.
-- A cross-skill reference names the owning skill beside the path, and gives both trigger forms: the slash form first, then the dollar form in parentheses, then the file path. `agents/openai.yaml` is a Codex-runtime file and stays dollar-form only.
+- A cross-skill reference names the owning skill beside the path and uses the repository's single `/name` call form. `agents/openai.yaml` is Codex-only metadata and retains its dollar form.
 
 ## 4. Maintenance checklist
 

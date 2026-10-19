@@ -42,11 +42,11 @@ answer and call the question closed.
 
 ## P5 — Ports Inward, Adapters Outward, Domain Pure
 
-`domain ← application ← infrastructure`, enforced by import direction. Domain and application packages import
-**no** pgx, amqp, chi, Redis, or provider SDK. Every side effect crosses a small interface (port) owned by the
-application layer; infrastructure implements it. This is what makes use cases testable with fakes and providers
-swappable as data. (Repository-pattern depth and layer discipline: `/alaa-golang` (`$alaa-golang`) references
-60 and 62.)
+`domain ← application ← infrastructure`, enforced by import direction. Every side effect crosses a small,
+consumer-owned interface (port); infrastructure implements it, so use cases are testable with fakes and
+providers are swappable. Before adding an import or checking direction, read `/alaa-golang`
+`references/62-import-direction-and-boundaries.md` for the complete direct/transitive forbidden list and
+build-graph check; repository placement is its `references/60-service-architecture-patterns.md`.
 
 ```go
 // WRONG — SQL in the use case; untestable without a database, unswappable forever
@@ -69,17 +69,12 @@ skill and no analyzer enforces it. The kit's `linttools` ships five analyzers �
 `structtag`, `uuiddefault`, `textnorm` — and none checks import direction; `make lint-analysis`, which runs
 `cmd/alaa-lint` as a `go vet` vettool, does not include one. Verified against kit source 2026-07-26.
 
-Two things to do about that. Run this in the service's CI now — any output is a P5 violation:
-
-```sh
-go list -deps ./internal/domain/... ./internal/application/... \
-  | grep -E 'jackc/pgx|rabbitmq/amqp091|go-chi/chi|redis/go-redis|clickhouse-go'
-```
-
-And file the real gate: one timestamped change request proposing an import-direction analyzer in `linttools/`,
+Until an analyzer lands, run the complete build-graph check in `/alaa-golang`
+`references/62-import-direction-and-boundaries.md` in the service's CI and review its dependency list.
+File the real gate: one timestamped change request proposing an import-direction analyzer in `linttools/`,
 wired into `cmd/alaa-lint` and `make lint-analysis`, submitted through `/alaa-go-chi-development`
-(`$alaa-go-chi-development`) using its change-request template. Until that lands, P5 is enforced by the grep
-above and by review — treat it as unenforced, not as enforced.
+(`$alaa-go-chi-development`) using its change-request template. These manual/CI checks do not make the
+missing kit analyzer implemented.
 
 ## P6 — One Transaction, One Truth: Business Write + Outbox + Audit Together
 
@@ -154,10 +149,9 @@ that whatever policy you choose must land on an idempotent target.
 
 Kit facts that constrain that policy, verified against kit source 2026-07-26 — do not assume otherwise:
 `mqkit` has no Go-level retry or backoff; a failed delivery is broker-requeued or dead-lettered with a receipt.
-`jobkit` does have full-jitter exponential backoff (`jobkit.Backoff`, `jobkit.DeferBackoff`). `rediskit`
-disables client retries outright (`MaxRetries = -1`), rejects a non-positive TTL with `ErrMissingTTL`, treats a
-missing key as a clean miss rather than an error, uses a 250 ms `DefaultCallTimeout`, and reports `Degraded`
-rather than `Required` readiness. The kit has **no ingress request deadline, no rate limiting, no circuit
+`jobkit` does have full-jitter exponential backoff (`jobkit.Backoff`, `jobkit.DeferBackoff`). Before choosing
+Redis behavior, read `/alaa-data-layer` `references/51-redis-golang.md` for the observed client retry,
+TTL, miss, timeout and readiness facts and re-verify its cited source. The kit has **no ingress request deadline, no rate limiting, no circuit
 breaker, no backpressure, no load shedding, and no in-flight cap** — if your design needs one, it does not
 exist yet and must be filed, not assumed.
 

@@ -26,7 +26,6 @@ Repository validation policy owns any stricter invocation requirements.
 - Prefer a targeted tool result to a raw dump: a scoped search with a few lines of context, a changed-file list, or a count beats `cat`, a full tree, or an unbounded log.
 - Batch independent reads and searches into one turn where the runtime supports it, and prefer one well-chosen query to several exploratory ones.
 - Route bulky output to a path instead of into the window: capture it, inspect only the failing or relevant slice, and keep the path.
-- Keep subagent returns tight so the parent's context stays clean. Children return findings, counts, verdicts, or artifact paths — never transcripts, full diffs, or raw logs — and the parent owns synthesis.
 
 ### Part 2 — Output noise: what gets printed
 
@@ -49,11 +48,9 @@ These survive every general instruction to be concise, because each one feels li
 2. **Pasting command output to show the command ran.** The outcome is the evidence; the transcript is not. Report the result, the one line that mattered, and the path to the rest.
 3. **Restating a file just written or edited.** The file is the deliverable and it can be opened. Name the path and what changed in it.
 
-A fourth belongs to delegation: **a child returning its work instead of its findings.** That one is prevented in the dispatch rather than in the child — every dispatch carries a return shape and a line bound. `references/workflow-integration.md` owns the return contract.
-
 ## Model calibration
 
-Verbosity defaults, narration cadence, and instruction literalness differ per model, so a concision rule tuned for one family can be inert on another. One fact is universal: reasoning effort controls thinking volume, not answer length — lowering effort does not shorten output, and length needs its own instruction. Read `references/model-output-profiles.md` for per-model profiles and documented calibration language.
+When output length or narration needs tuning, read `references/model-output-profiles.md` for output-calibration routing. It separates response, artifact and progress controls and routes model-specific claims to `/alaa-prompting-guide`; this skill defines no model profiles or effort policy.
 
 ## When NOT to use
 
@@ -69,7 +66,7 @@ Verbosity defaults, narration cadence, and instruction literalness differ per mo
 
 Read only when needed:
 
-- `references/model-output-profiles.md` when tuning verbosity for a model, or when length or narration does not match the instruction given.
+- `references/model-output-profiles.md` when calibrating output length or narration, including routing a model-specific claim.
 - `references/noise-control-patterns.md` for search, read, diff, and log-capture patterns in both runtimes.
 - `references/workflow-integration.md` when `/alaa-workflow`, repo-local state, or delegated lanes are active.
 - `references/90-source-map.md` when behavior depends on current tool, shell, runtime, or model guidance.

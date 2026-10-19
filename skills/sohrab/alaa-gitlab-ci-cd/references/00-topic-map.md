@@ -25,7 +25,7 @@ task in front of you. Do not read every file.
 | `variables-and-inputs/60-rules-and-value-availability.md` | variable availability during rule evaluation |
 | `variables-and-inputs/70-downstream-forwarding.md` | forwarded variables in downstream pipelines |
 | `variables-and-inputs/80-variable-debugging-and-inventory.md` | diagnosing or documenting variable values |
-| `runner-shell-and-kubernetes.md` | runner architecture: executor choice, `config.toml`, Helm `values.yaml` versus embedded TOML, RBAC and namespaces, restricted clusters, `concurrent`, distributed cache, `image_pull_secrets` and `helper_image` |
+| `runner-shell-and-kubernetes.md` | runner architecture: executor choice, container-hosted manager bootstrap, persistent configuration, authentication-token source and TLS trust, `config.toml`, Helm `values.yaml` versus embedded TOML, RBAC and namespaces, restricted clusters, `concurrent`, distributed cache, `image_pull_secrets` and `helper_image` |
 | `container-build-strategies.md` | choosing a build path: rootless BuildKit, Docker-in-Docker, a shell runner against a host daemon, Podman or Buildah, and registry cache wiring |
 | `security-and-hardening.md` | runner isolation, credential handling, merge-request and fork exposure, pull policy, privileged mode, and credentials that outlive a job |
 | `validation-and-debugging/10-static-validation-and-checkers.md` | the validation ladder or bundled checker limits |

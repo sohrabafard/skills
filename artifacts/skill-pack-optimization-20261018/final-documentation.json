@@ -1,0 +1,106 @@
+{
+  "agent": "alaa-documenter",
+  "configured_controls": {
+    "model": "neutral/unpinned",
+    "effort": "neutral/unpinned",
+    "source": "agent definition"
+  },
+  "requested_controls": {
+    "model": "gpt-6-luna",
+    "effort": "medium"
+  },
+  "observed_controls": "unknown; runtime identity evidence unavailable",
+  "effective_authority": {
+    "scope": [
+      "artifacts/skill-pack-optimization-20261018/change-notes.md",
+      "artifacts/skill-pack-optimization-20261018/final-documentation.json"
+    ],
+    "workspace_write": "observed from active managed sandbox declaration",
+    "mcp_enforcement": "unknown",
+    "out_of_scope_writes": "none"
+  },
+  "product_manifest_sha256": "24aa88d79f4e483bac8946d045b5e4486f1d2c5847027350d620abd70bc8b878",
+  "documentation": [
+    {
+      "path": "artifacts/skill-pack-optimization-20261018/change-notes.md",
+      "outcome": "created",
+      "classification": "eligible narrative documentation",
+      "grade": "GREEN",
+      "physical_lines": 23,
+      "reason": "Coherent evidence navigation and concise compatibility summary; below the 50-line green ceiling."
+    },
+    {
+      "path": "skills/sohrab/README.md",
+      "outcome": "inspected; not edited in this lane",
+      "classification": "EXEMPT-ATOMIC",
+      "grade": "not graded",
+      "reason": "Its complete skill map is a machine-consumed catalog; the index checker validates the complete directory/name bijection and uniqueness."
+    },
+    {
+      "path": "skills/sohrab/README.fa.md",
+      "outcome": "inspected; not edited in this lane",
+      "classification": "EXEMPT-ATOMIC",
+      "grade": "not graded",
+      "reason": "Its complete Persian group tables are a machine-consumed catalog; the index checker validates the complete directory/name bijection and uniqueness."
+    },
+    {
+      "path": "artifacts/skill-pack-optimization-20261018/final-documentation.json",
+      "outcome": "created",
+      "classification": "exempt named artifact",
+      "grade": "not graded",
+      "reason": "JSON evidence record."
+    }
+  ],
+  "product_evidence_summary": {
+    "changed_product_paths": 254,
+    "body_measurements": 46,
+    "net_body_bytes_delta": -17878,
+    "zero_byte_source_reports": 3,
+    "all_proposals_terminal": {
+      "implemented": 27,
+      "adapted": 90,
+      "rejected": 7
+    },
+    "verification_evidence": "Maintained separately in the active plan; this record does not assert final verification status."
+  },
+  "checks": [
+    {
+      "command": "python skills/sohrab/alaa-repo-docs/scripts/check_markdown_links.py . --files artifacts/skill-pack-optimization-20261018/change-notes.md skills/sohrab/README.md skills/sohrab/README.fa.md",
+      "result": "passed; validated links in 3 Markdown files"
+    },
+    {
+      "command": "python -B skills/sohrab/alaa-repo-docs/scripts/check_markdown_links.py . --files artifacts/skill-pack-optimization-20261018/change-notes.md --line-budget",
+      "result": "passed; GREEN 23 physical lines and links valid"
+    },
+    {
+      "command": "physical line count of artifacts/skill-pack-optimization-20261018/change-notes.md",
+      "result": "passed; 23 physical lines (GREEN, 0-49)"
+    },
+    {
+      "command": "python -m json.tool artifacts/skill-pack-optimization-20261018/final-documentation.json",
+      "result": "passed; valid JSON"
+    },
+    {
+      "command": "git diff --check -- artifacts/skill-pack-optimization-20261018/change-notes.md artifacts/skill-pack-optimization-20261018/final-documentation.json",
+      "result": "passed; no whitespace findings"
+    }
+  ],
+  "expected_but_unchanged": [
+    {
+      "path": "README.md",
+      "reason": "Repository root index is unaffected; changed README files are the skill-pack catalog pair."
+    },
+    {
+      "path": "install-skills.md",
+      "reason": "No install path or installation behavior changed."
+    },
+    {
+      "path": "docs/BIG_PICTURE.md",
+      "reason": "This skills repository has no product architecture change requiring a system map."
+    }
+  ],
+  "uncertainty": [
+    "Verification status is maintained in the active plan's verification evidence, not asserted by this note.",
+    "Static/source evidence does not establish installed activation, live Beads state, runtime compliance, or performance improvement."
+  ]
+}

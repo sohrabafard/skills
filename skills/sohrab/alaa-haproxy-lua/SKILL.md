@@ -66,6 +66,6 @@ Stop and report blocked, without shipping, when any of these holds: `haproxy -vv
 
 Read `references/00-topic-map.md` and load only the file whose triggering condition matches the task in front of you. That file also routes every question this skill does not own to the skill that does.
 
-For one failed operation, make at most one cause-specific repair and one materially different retry. Then report the blocker and preserved evidence; unavailable gates are not passes.
+For one failed operation, make at most one cause-specific repair and one materially different retry under `/alaa-haproxy` `references/80-gate-register.md` "Failed-operation boundary". Then report the blocker and preserved evidence; unavailable gates are not passes.
 
 Report changed contracts/files, sources, exact static/unit/parser/runtime results and unrun deployment gates.

@@ -24,6 +24,40 @@ and why. The platform invariants in `SKILL.md` also bind and are not restated he
 
 A service failing a mandatory level carries a **blocked** verdict, not an action item — see `80-review-gates.md`.
 
+## Browser client signals
+
+These are conditional requirements, not a fixed emission allowlist. Each applicable row is mandatory;
+an application without the named behavior marks that row not applicable.
+
+| Signal class | Applies when |
+|---|---|
+| Errors and rejections | browser unhandled errors, unhandled rejections, or component error boundaries occur; catching and displaying an error does not remove its reporting obligation |
+| Web Vitals field data | a real browser session produces finalized LCP, INP, or CLS measurements |
+| Request outcomes | the client makes HTTP requests; cover status, duration, success, failure, abort and deadline outcomes by bounded request class |
+| Connection transitions | the client uses WebSocket or SSE; cover connect, disconnect and reconnect |
+| Service-worker lifecycle | the app registers a service worker; cover installation, waiting, activation, redundancy and controller changes |
+| Failed updates | an accepted service-worker update does not produce the expected controller, or a precached asset fails after activation |
+
+Error capture stays unsampled. Other rates follow `30-quantitative-budgets.md` and an approved,
+bounded application policy where that file supplies no rate; do not invent a fleet rate or a
+consecutive-failure threshold. A missing required setting blocks that configuration claim.
+Product analytics needs its separate consent basis and pipeline.
+
+Take emitted names and fields from /alaa-services-contract. These requirement classes register no new
+event, metric or environment name. If the shared registry lacks a required name, report the gap and
+settle its owner entry before changing the emitted wire surface; preserve a target repository's
+approved existing contract through the compatibility procedure. /alaa-quasar-app-vite-v3 owns browser
+transport, scrub-before-send and client/SSR wiring; /alaa-frontend-developer owns Web Vitals measurement.
+
+## Cache signals
+
+A service with a cache emits hits, misses, errors and source-of-truth fallbacks as distinct counter
+outcomes, plus a cache-call latency histogram. A service without a cache marks this requirement not
+applicable. Use registered names from /alaa-services-contract and the runtime kit's verified label
+contract; this requirement invents neither a family nor a label. An absent generic registry entry is a
+gap to resolve before introducing a new emitted name, not permission to rename a deployed kit metric.
+Cache keys and entity identifiers never become metric labels.
+
 ## Exemplars: the requirement level, stated once
 
 Every service with a latency SLO emits latency histograms carrying exemplars, so an operator moving from a red percentile
@@ -53,7 +87,7 @@ for exemplars, because it produces no per-request link.
 
 The workflow this exists to serve: open the latency panel, find the slow bucket, follow that bucket's exemplar `trace_id`,
 open the trace, read the span tree, fix the slowest span at its source, confirm the percentile recovers. To write the
-SigNoz query for the panel or the exemplar lookup, hand off to `/alaa-signoz-clickhouse-docs` (`$alaa-signoz-clickhouse-docs`).
+SigNoz query for the panel or the exemplar lookup, hand off to `/alaa-signoz-clickhouse-docs`.
 
 ## Resource identity
 

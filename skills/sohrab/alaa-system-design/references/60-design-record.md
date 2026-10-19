@@ -21,7 +21,7 @@ one line. Where it does not, do not create an index.
 
 ## Which counterfactual is answered where
 
-The counterfactuals raised by `/alaa-project-constitution` (`$alaa-project-constitution`) enter the record
+The counterfactuals raised by `/alaa-project-constitution` enter the record
 by class, so that the same question always lands in the same section and a reader can find it:
 
 | Counterfactual class | Section |
@@ -39,9 +39,9 @@ or a gap in the design.
 
 `draft` → `reviewed` → `built` → `superseded`, plus the terminal `not-required`.
 
-- `draft` — written, not yet reviewed. No implementation lane is dispatched against a draft.
+- `draft` — written, not yet reviewed. Dispatch admission follows `SKILL.md` Review and readiness.
 - `reviewed` — a reviewer has applied `70-review-and-readiness.md` and its blocking findings are resolved in
-  the record. Implementation may start.
+  the record. This status records independent judgment, not dispatch or commit authority.
 - `built` — the change shipped. Record the commit or release that carries it.
 - `superseded` — a later record replaces this decision. Add a link to the successor and change nothing else.
 - `not-required` — the design pass produced no decision. Record which trigger condition misfired.
@@ -76,7 +76,7 @@ everyone learns to skip.
 |---|---|
 | A decision about this subsystem's shape, boundaries, owners, consistency, dependencies, or rollout | This record |
 | A rule every service in the estate owes | `CONSTITUTION.md`, through `/alaa-project-constitution` |
-| An exact interface, field, envelope, header, event, or code | The contract files, per `/alaa-services-contract` (`$alaa-services-contract`); the record points at them |
+| An exact interface, field, envelope, header, event, or code | The contract files, per `/alaa-services-contract`; the record points at them |
 | A timeout, retry, pool, or shed value | `/alaa-services-contract`'s `references/22-failure-load-and-deprecation-contract.md`; the record cites it |
 | Investigation notes, benchmarks, and discarded reasoning | Outside the record, or compressed into one rejected-candidate line |
 

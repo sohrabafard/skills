@@ -3,7 +3,8 @@
 Read this when a Go service adds or changes Redis usage: a cache in front of a repository read, a lock, an
 idempotency key, or a rate limiter.
 
-Every configuration claim below was read from `alaa-go-chi` source in this repository, not from a design document
+This file owns the observed `rediskit` client, timeout/retry/pool, TTL, miss, readiness and optional-mechanism facts.
+They were read from `alaa-go-chi` source on 2026-07-26, not from a design document
 or a decision log. Re-read the cited file before repeating a claim; `references/source-map.md` says which claims
 are version-sensitive. Cache-aside shape, key naming, serialization, and the Go cache test list are
 `/alaa-golang` (`$alaa-golang`) `references/61-redis-cache-layer.md`; that file is the pattern authority and this
@@ -12,7 +13,8 @@ one does not restate it.
 ## Platform policy — cache database reads, not computation
 
 - Use Redis as cache-aside in front of repository database reads: hot lookups, expensive aggregates, high-QPS list
-  heads. Postgres stays the only source of truth, which `rediskit/doc.go:12-13` states as a kit invariant.
+  heads. Postgres stays the only source of truth; `rediskit/doc.go:12-13` defines Redis as cache and
+  cross-pod freshness signal, never truth.
 - Do not cache function results, rendered payloads, or business computation whose inputs are already in memory. In
   Go the recompute is cheaper than the network hop, and every extra cached shape adds an invalidation liability
   that outlives the person who added it.
@@ -49,7 +51,7 @@ What the kit fixes today, read from source:
 | MaxRetries | `-1`, retries disabled | `rediskit/config.go:91` |
 | MinRetryBackoff, MaxRetryBackoff | `-1` | `rediskit/config.go:92-93` |
 | DialerRetries | `1` | `rediskit/config.go:94` |
-| PoolSize, MaxIdleConns | `32` | `rediskit/config.go:20,96-97` |
+| PoolSize, MaxIdleConns | `32` | `rediskit/config.go:20,54,96-97` |
 | MaxActiveConns | `32`, equal to PoolSize | `rediskit/config.go:23,98` |
 | MaxConcurrentDials | `4` | `rediskit/config.go:25,99` |
 | MinIdleConns, ConnMaxIdleTime | never set | absent from `rediskit/config.go` |
@@ -81,7 +83,7 @@ registers the Redis check at `SeverityDegraded`, so a Redis blip degrades the po
 3. **Bound the origin load during the outage.** With the cache gone, every read reaches Postgres.
    `22-…` requires at most one origin computation per cache key in flight per instance, with later callers waiting
    on it until the deadline. `rediskit/doc.go:9` assigns that single-flight to consumer domain code, and
-   `golang.org/x/sync` is an indirect dependency in `go.mod` today, so adopting `singleflight` is a direct
+   `golang.org/x/sync` is an indirect dependency in `go.mod` today, but the kit imports no `singleflight`, so adopting it is a direct
    dependency addition. Take the package decision to `/alaa-golang` (`$alaa-golang`)
    `references/40-production-ready-package-catalog.md`.
 4. **Whether to add a circuit breaker is a doctrine question, not a configuration one.** The kit contains no
@@ -114,7 +116,9 @@ Metric, log-field, event, and error-code names are `/alaa-services-contract` (`$
 `references/24-metric-registry.md` is the register. That register lists `alaa_db_*` families for a service with a
 database and lists no Redis cache family today, so a service adopting the kit's Redis metrics requests their
 registration rather than assuming they are covered. Requirement levels, gates, and alerting belong to
-`/alaa-observability-soc` (`$alaa-observability-soc`).
+`/alaa-observability-soc` `references/20-instrumentation-gates.md`, including its conditional Cache signals
+contract. Wire missing outcomes through the verified kit ports or request the missing kit surface; do not
+invent a metric name or double-count an outcome already emitted by the kit.
 
 ## Locks and rate limits
 

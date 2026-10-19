@@ -10,10 +10,10 @@ telemetry name, and no platform number is stated here.
 
 ## When not to use
 
-The repository does not already run MongoDB and the request did not name it: say so, route the store-selection
-decision to `/alaa-data-layer` (`$alaa-data-layer`), and stop. On 2026-07-26 no service in
-`alaa-go-chi docs/CONSUMERS.md` runs MongoDB and the kit ships no MongoDB package, so proposing it here adds a
-datastore nobody operates.
+The target repository does not already run MongoDB and the request did not name it: say so, route the store-selection
+decision to `/alaa-data-layer` (`$alaa-data-layer`), and stop. Verify current use in that repository's dependency and
+configuration sources before making this claim. The dated fleet observation in `references/source-map.md` is
+historical evidence only and does not establish current support.
 
 ## Rules that hold on every task
 

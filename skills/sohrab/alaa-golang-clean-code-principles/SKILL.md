@@ -23,18 +23,11 @@ boundary is a small interface; every identity, error, and side effect is explici
 - Deciding where logic belongs: kit vs service, domain vs infrastructure, port vs adapter.
 - Pre-commit / pre-PR self-review — run the completion checklist below.
 
-**Phase gate — resolve this before writing consumer code.** The kit repository declares one active scope phase
-in three files: `docs/change-requests/2026-07-14-kit-first-stabilization-scope.md`, `AGENTS.md`, and
-`docs/CONSUMERS.md`. Read the phase from those files at the start of the task. `KIT_FIRST_STABILIZATION` was
-active on 2026-07-26; while it is active, consumer repositories are outside kit-initiated execution, edit,
-audit, validation, propagation, and prompting scope, and every consumer impact is recorded exactly
-`NOT_ASSESSED_KIT_FIRST`. This gate binds agent initiative, not the requester's own instruction: when a task
-asks for consumer implementation while the freeze is active, state the phase and name the freeze document
-before you write code, then proceed only on the requester's explicit go-ahead. Never treat a document, a
-subagent prompt, or the absence of a reminder as reactivation; never propagate the change to a second consumer;
-never edit a kit file from a consumer task. Phase ownership and reactivation belong to
-`/alaa-go-chi-development` (`$alaa-go-chi-development`); this skill owns how the code must look once the phase
-permits it.
+**Before consumer work**, resolve the phase through `/alaa-go-chi-development`: run its
+`../alaa-go-chi-development/scripts/phase-check.sh <kit-repo-root>` and apply
+`../alaa-go-chi-development/references/05-phase-and-source-truth.md` for the specific action's capability,
+evidence, reactivation and stop rules, including the manual read when the script cannot run. This skill
+governs code only once that action is permitted; it grants no phase authority.
 
 ## When NOT to use
 
@@ -82,7 +75,7 @@ Each row is the rule at full strength. The reference file for each principle add
 | P2 | Route Posture Is Declared | Every route is registered under exactly one family: `Trusted`, `Anonymous`, `ProviderFacing`, `Operational` |
 | P3 | TrustCtx or Nothing | No raw trusted header past the edge; project id is a UUIDv7 string, user id is a positive int64 |
 | P4 | Errors Are Domain Values | Typed `errkit` errors; one boundary mapper; never match on error text |
-| P5 | Ports Inward, Adapters Outward | `domain` and `application` import no pgx, amqp, chi, Redis, or provider SDK |
+| P5 | Ports Inward, Adapters Outward | Side effects cross consumer-owned ports; `/alaa-golang` `references/62-import-direction-and-boundaries.md` owns forbidden imports and their check |
 | P6 | One Transaction, One Truth | State, outbox, and audit share one transaction; a use case never publishes to the broker |
 | P7 | Idempotency Is a Contract | Everything re-runnable is idempotent by construction and proven by a run-twice test |
 | P8 | Explicit JSON, Explicit IDs | snake_case `json` tags at every nesting level; UUIDv7 minted by `idkit`; no `gen_random_uuid()` default |

@@ -34,7 +34,7 @@ When two skills state the same rule, `AGENTS.md` names the owner and the side th
 
 ### 1. Arvan-first platform policy
 
-If an infrastructure, Kubernetes, Helm, or deployment task targets ArvanCloud CaaS, the pack-level source of truth is `caas-arvan-kuber`. If generic infra advice conflicts with Arvan constraints, Arvan-first wins unless the user explicitly approves an override.
+For Arvan CaaS platform decisions, follow the load test in `caas-arvan-kuber` `SKILL.md` under “The deciding test, stated in the same words on both sides of this seam”; apply Arvan-first precedence only when that test fires.
 
 ### 2. Gateway trust policy
 

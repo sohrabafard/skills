@@ -38,6 +38,13 @@ outcome does not confirm persistence; reconcile it through supported official me
 a possibly completed write. Report the exact terminal or unknown outcome; preserve unwritten admitted
 content through workflow. Never substitute session retention or conversation import for a curated write.
 
+Include `references/knowledge-shape.md` semantic metadata and labeled observations in the curated content
+passed to the supported official write operation. Explicitly preserve source paths, verification/curation
+date, status and confidence; server extraction alone does not verify these fields. Map topics to records in the approved
+bank/service scope, not vault paths or permalinks. Use IDs, tags and metadata only through the exposed
+schema; never assume arbitrary metadata is filterable. If the surface cannot preserve or verify required
+content, report the write unavailable; invent no fields and switch no adapter.
+
 When source language or extraction quality is in question, read `references/knowledge-shape.md`. Verify
 current API/worker and bank/strategy settings against source-linked facts before claiming language
 compliance; candidate language policy does not configure server extraction. Reflect answers in the

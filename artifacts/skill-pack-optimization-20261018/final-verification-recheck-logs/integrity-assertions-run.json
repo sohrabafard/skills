@@ -1,0 +1,7 @@
+{
+  "command": "python -B - (read-only assertions over frozen candidate, intake, and prior manifest)",
+  "cwd": ".",
+  "wall_time_seconds": 0.7596358,
+  "exit_code": 0,
+  "output": "{\r\n  \"status\": \"PASS\",\r\n  \"product_files\": 2238,\r\n  \"product_manifest_sha256\": \"24aa88d79f4e483bac8946d045b5e4486f1d2c5847027350d620abd70bc8b878\",\r\n  \"first_candidate_delta_paths\": [\r\n    \"skills/sohrab/alaa-bale-provider/SKILL.md\",\r\n    \"skills/sohrab/alaa-sms-provider-mediana/SKILL.md\"\r\n  ],\r\n  \"unrelated_files\": 10,\r\n  \"unrelated_hashes\": \"matched\",\r\n  \"cached_raw_index\": \"matched exactly\",\r\n  \"zero_byte_reports\": [\r\n    {\r\n      \"path\": \"artifacts/skill-pack-review-20261018/01-contradictions-and-overlaps.md\",\r\n      \"bytes\": 0\r\n    },\r\n    {\r\n      \"path\": \"artifacts/skill-pack-review-20261018/02-optimization.md\",\r\n      \"bytes\": 0\r\n    },\r\n    {\r\n      \"path\": \"artifacts/skill-pack-review-20261018/03-new-skill-proposals.md\",\r\n      \"bytes\": 0\r\n    }\r\n  ],\r\n  \"coverage_rows\": 124,\r\n  \"unique_coverage_ids\": 124,\r\n  \"terminal_dispositions\": {\r\n    \"adapted\": 90,\r\n    \"implemented\": 27,\r\n    \"rejected\": 7\r\n  },\r\n  \"bash_topic_map_sha256\": \"a83df1a9104bd2af70d56a7cee8a20746c4baa68286a3605100a25a3ab7d2867\",\r\n  \"tracked_skill_deletions\": 0\r\n}\r\n"
+}

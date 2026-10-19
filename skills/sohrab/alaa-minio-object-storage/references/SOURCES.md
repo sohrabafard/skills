@@ -12,7 +12,7 @@ recorded for one. Fetch the source before acting on any of them where the cost o
 outage, or a security decision.
 
 Facts read from the fleet's only object-storage consumer carry
-`[source: tusd-upload-platform repository, <file>, read: 2026-07-27]`. Those **were** read from source in that
+`[source: Ala tusd repository, <file>, read: 2026-07-27]`. Those **were** read from source in that
 session. They describe **one consumer's current state**, several items of which are defects; they are never
 platform policy and never a precedent.
 
@@ -101,7 +101,7 @@ a spelling before putting it in a script or a runbook**, because a wrong flag fa
 meets it rather than at review.
 
 **Repo-verified, needing no check:** `mc alias set` with its four positional arguments, `--api S3v4`, `mc mb -p`,
-`mc stat` `[source: tusd-upload-platform repository, read: 2026-07-27]`.
+`mc stat` `[source: Ala tusd repository, read: 2026-07-27]`.
 
 | Spelling or claim | File |
 |---|---|

@@ -2,6 +2,8 @@
 
 Three skills meet here and the boundary is settled. `alaa-extract-agent-lessons` owns admission and the reusable shapes — what qualifies as a decision interface, a judgment rubric, or a knowledge card. `alaa-memory-os` owns durable publication. This workflow owns when curation runs, where a candidate is parked while the engagement is still open, and what happens to the plan when the final gate changes something.
 
+The gates below cover execution and issue-only implementation. Design retains context through `references/context-continuity.md` without implementation-completion curation.
+
 ## The intermediate scan
 
 At a completed or failed phase, or a material decision boundary, invoke `/alaa-extract-agent-lessons` only when that boundary produced one of these:

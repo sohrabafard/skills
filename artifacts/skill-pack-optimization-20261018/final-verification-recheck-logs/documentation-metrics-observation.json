@@ -1,0 +1,7 @@
+{
+  "command": "read final-documentation.json metrics",
+  "cwd": ".",
+  "wall_time_seconds": 0.2605374,
+  "exit_code": 0,
+  "output": "24aa88d79f4e483bac8946d045b5e4486f1d2c5847027350d620abd70bc8b878\r\n{\"changed_product_paths\":254,\"body_measurements\":46,\"net_body_bytes_delta\":-17878,\"zero_byte_source_reports\":3,\"all_proposals_terminal\":{\"implemented\":27,\"adapted\":90,\"rejected\":7},\"verification_evidence\":\"Maintained separately in the active plan; this record does not assert final verification status.\"}\r\n{\"path\":\"artifacts/skill-pack-optimization-20261018/change-notes.md\",\"outcome\":\"created\",\"classification\":\"eligible narrative documentation\",\"grade\":\"GREEN\",\"physical_lines\":23,\"reason\":\"Coherent evidence navigation and concise compatibility summary; below the 50-line green ceiling.\"}\r\n"
+}

@@ -22,13 +22,20 @@ func (w *ReceiptFlusher) Run(ctx context.Context) error {
     for {
         select {
         case <-ctx.Done():
-            return w.flush(context.WithoutCancel(ctx)) // final drain
+            drainCtx, cancel := context.WithTimeout(context.WithoutCancel(ctx), w.flushBudget)
+            defer cancel()
+            return w.flush(drainCtx) // final drain
         case <-t.C:
             if err := w.flush(ctx); err != nil { w.metrics.FlushFailures.Inc(); w.log.Error(...) }
         }
     }
 }
 ```
+
+`w.flushBudget` is a finite, validated component budget injected at boot, not a new kit env key.
+For shutdown-only detachment and timeout rules, read `/alaa-golang`
+`references/45-failure-behavior-at-the-call-site.md` section 8. Context APIs checked against
+https://pkg.go.dev/context on 2026-10-18; this does not refresh the kit snapshot below.
 
 Shutdown is four ordered phases — stop intake, wait for drain, flush, close — and `runkit` gives each phase one
 quarter of the total budget, defaulting to 30 s hardcoded in `runkit/lifecycle.go`. A `SHUTDOWN_TIMEOUT` env key
@@ -43,7 +50,7 @@ window the buffer may lose; (2) a test proves the buffer is empty after `runkit`
 graceful shutdown; (3) a counter metric increments on every dropped record and an alert fires on it. Fewer than
 three is a bug, not a design choice. No agent self-certifies data loss.
 
-**Proof.** `go test -race ./...` for the shared state, plus a shutdown test: start the worker, feed it work,
+**Proof.** Apply `/alaa-golang`'s validation gate for the shared-state race run and its authority, plus a shutdown test: start the worker, feed it work,
 cancel its context, and assert both that `Run` returned and that the buffer is empty and the rows landed.
 `goleak` at the end of the package's `TestMain` turns a leaked goroutine into a failing test rather than a
 memory graph someone reads later.
@@ -103,6 +110,8 @@ the `service` label distinguishes emitters. One renamed metric kills the single 
 to enable. Read the current names from `obskit.KitMetricNames()` and `/alaa-services-contract`
 (`$alaa-services-contract`) — never from memory, and never from an example. A change request dated 2026-07-25
 proposes prefixing every kit-owned metric name; as of 2026-07-26 it is proposed, not ratified, not implemented.
+Before relying on that proposal status or changing an emitted name, re-read the decision record and kit source;
+the dated observation grants no current naming authority.
 
 The rest of observability is owned elsewhere and is not restated here. Which signals a feature is *required* to
 emit, the severity rubric, and the definition-of-done gate a shipped feature must pass belong to

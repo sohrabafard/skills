@@ -1,0 +1,18 @@
+{
+  "repository": "authz-sidecar",
+  "branch": "main",
+  "base_head": "b6d2a646fea2e0515cffcdf3ead7cd77a97208a4",
+  "paths": [
+    "AGENTS.md",
+    "CLAUDE.md"
+  ],
+  "subject": "fix(beads): standardize per-agent ownership binding",
+  "commit_exit": 0,
+  "timestamp_utc": "2026-10-18T19:29:50.659376+00:00",
+  "output": "[main a1dbf70] fix(beads): standardize per-agent ownership binding\n 2 files changed, 34 insertions(+), 22 deletions(-)\n",
+  "verified": true,
+  "commit": "a1dbf7017ef70b32441e1bf0ed06827185f02471",
+  "unrelated_staged_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+  "unrelated_tracked_preserved": 0,
+  "post_status": ""
+}

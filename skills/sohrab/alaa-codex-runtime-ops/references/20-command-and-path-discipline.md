@@ -35,7 +35,7 @@ If the target port falls inside an excluded range, choose a host port outside th
 
 ## Git Bash and path conversion
 
-Git Bash may rewrite slash-looking argument or environment values when invoking native Windows binaries. For Docker Compose and runtime scripts, route service-runtime env conversion issues to `$service-runtime-kit-governance`.
+Git Bash may rewrite slash-looking argument or environment values when invoking native Windows binaries. For Docker Compose and runtime scripts, route service-runtime env conversion issues to `/service-runtime-kit-governance`.
 
 After Git Bash has been selected by the Windows execution order, consider `MSYS_NO_PATHCONV=1` or `MSYS2_ARG_CONV_EXCL=*` only for the affected command.
 

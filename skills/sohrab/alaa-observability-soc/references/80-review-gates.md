@@ -40,6 +40,15 @@ Rules:
 - When a field's class is unclear, redact it and emit a stable internal reference an authorised human can resolve in the
   source system. An unclassified field shipped is a decision made by default.
 
+### Permitted phone derivative
+
+Omit the phone or emit a stable internal reference by default. A diagnostic field explicitly approved by the
+classification/egress policy may retain only the optional `+` and country calling code from its verified wire form;
+replace the entire national subscriber number with the fixed marker `[redacted]`. For example, the two provider wire
+forms yield `98[redacted]` and `+98[redacted]`. Preserve no subscriber prefix or suffix digits. This derivative is not
+an identity or correlation key and never enters a metric label. A partial mask, truncation or enumerable phone hash
+is still sensitive; it does not pass this gate merely because it differs from the raw number.
+
 ## Readiness evidence
 
 A service is observability-ready only when the evidence exists in the repository, its tests, or live telemetry. "It is

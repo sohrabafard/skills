@@ -1,6 +1,6 @@
 # Dispatching `alaa-rule-writer`
 
-Choose explicit model AND effort for the actual rewrite through the delegating parent's runtime orchestrator allocation procedure; using that procedure does not require its full pipeline. Record both controls and the task reason in this dispatch when no durable plan is admitted. Check the loaded model-neutral role and effective controls; observed serving identity may remain unknown without a paid probe.
+Choose explicit model AND effort for the actual rewrite through the delegating parent's runtime orchestrator allocation procedure; using that procedure does not require its full pipeline. Normalize omitted fields through `alaa-codex-orchestrator references/model-effort-policy.md` or its `alaa-cc-orchestrator` mirror before validation. Record both controls and the task reason in this dispatch when no durable plan is admitted. Check the loaded model-neutral role and effective controls; observed serving identity may remain unknown without a paid probe.
 
 Send lane facts only. The definition already owns the role, the invariants, the doctrine order, and
 the output contract, so restating any of them here dilutes both copies.

@@ -5,31 +5,23 @@ every rule here is about the knowledge, not about the product holding it.
 
 ## Search before you create
 
-Before creating a note, search for one that already covers the topic by title, permalink, project, domain,
-canonical source path, and synonym. Update that note instead of adding a second. Two notes on one topic do not
-merely waste space; they create a disagreement with no drift record, and the next agent picks whichever it
-found first.
+Before creating a note, search for one that already covers the topic by title, project, domain,
+canonical source path, synonym and any stable identifier the selected adapter supports. Update that note
+instead of adding a second: duplicates create disagreement without a drift record, and the next agent
+picks whichever it finds first.
 
-## Required frontmatter
+## Required semantic metadata
 
-```yaml
-title:
-type:
-status:
-confidence:
-permalink:
-tags:
-canonical_source_paths:
-last_verified:
-```
+Every note carries `title`, `type`, `status`, `confidence`, `canonical_source_paths` and `last_verified`.
+These name knowledge properties, not API keys or a frontmatter requirement; the selected adapter owns
+their representation and any product-specific identity or tags.
 
 Use `last_curated` in place of `last_verified` for lessons and patterns drawn from processed evidence rather
 than from a source file.
 
 `canonical_source_paths` and `last_verified` are the fields that make staleness detectable. A note that
 records a fact from a repository file and does not name that file cannot be re-verified by anything, so it
-decays without a symptom. `scripts/alaa_memory_staleness.ps1` is the checker that enforces both, and it is the
-reason these two fields are required rather than recommended.
+decays without a symptom. Preserve both through the selected adapter's serialization and verification.
 
 - `status`: `draft`, `active`, `needs_review`, `stale`, `archived`, `superseded`.
 - `confidence`: `low`, `medium`, `high`.
@@ -107,17 +99,6 @@ that same path at volume, not an exception to it.
 
 ## Adapter serialization
 
-The selected adapter owns serialization and product-specific note/schema/search mechanics. These fields
-and observations remain store-neutral; do not load an inactive store's upstream pack.
-
-## Human editing surface
-
-Where the store is file-backed and opened in an editor such as Obsidian, that surface is for navigation and
-review, not runtime truth. Two conventions matter there:
-
-- Quote wiki links inside YAML values, because an unquoted `[[…]]` is not valid YAML.
-- Keep typed relations in the note body, not in frontmatter, so they stay queryable as relations.
-
-Use the editor's backlink and orphan views to find notes nothing points at, then fix the graph with
-`scripts/alaa_obsidian_linkcheck.ps1` rather than by eye. Do not turn graph neatness into an end in itself:
-an orphan note that is correct and findable by search is not a defect.
+The selected adapter owns serialization, publication destinations, product-specific identity, tags,
+schema/search mechanics and applicable verification. These fields and observations remain store-neutral;
+do not load an inactive store's upstream pack.

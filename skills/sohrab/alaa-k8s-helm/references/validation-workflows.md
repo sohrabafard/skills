@@ -6,7 +6,7 @@ This file is the register. For each gate it states the **predicate** it asserts,
 - `/alaa-docker-production` owns how the image a chart references is built and hardened, and decides no gate.
 - `/alaa-makefile` owns making a local Make target return the same verdict as the runner for the same gate.
 - `/caas-arvan-kuber` contributes Arvan-only predicates to this register and owns no gate placement.
-- `/alaa-testing-strategy` decides what a chart test must assert. This register decides only that the test exists, is packaged, and runs.
+- `/alaa-testing-strategy` decides whether a chart behaviour is owed a test and what that test must assert; Helm's own templating and Kubernetes' own admission are never re-tested. This register decides only that the test exists, is packaged, and runs, and gate 6's `rendered.yaml` is the one render every later gate reads.
 
 ## How to use the register
 

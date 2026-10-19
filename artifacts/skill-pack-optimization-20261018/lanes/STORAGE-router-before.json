@@ -1,0 +1,8 @@
+{
+  "source_sha256": "2417332dda31e6eb6346b4c614c51e1651d651395447c9622b72e7e4fb88eef2",
+  "case": "valid external router with one content reference",
+  "result": "rejected by obsolete numeric policy",
+  "violations": [
+    "[single-router] references/00-topic-map.md\n    problem:    1 content references is below the 9-reference threshold, so the router belongs in SKILL.md and the topic map must not exist\n    obligation: move every topic-map row into a SKILL.md table, then retire the topic map"
+  ]
+}

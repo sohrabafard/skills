@@ -34,7 +34,9 @@ These bind on every Alaa service: a repo satisfies each one or carries a blockin
 - Every service with a latency SLO emits latency histograms carrying exemplars. The one exemption, and the evidence it
   demands, are in `references/20-instrumentation-gates.md`.
 - Telemetry is fail-open for product traffic: a failed backend, Collector, Vector sidecar, or SOC destination degrades
-  observability and never the hot path. Fail-closed telemetry ships only on a written operator request.
+  observability and never the hot path. This governs forwarding/export; a privileged-action audit write required by
+  repository non-repudiation policy remains a control under /alaa-security-review's audit-write boundary.
+  Fail-closed telemetry ships only on a written operator request.
 - Secrets, credentials, tokens, session values, raw PII, unrestricted payloads, and customer-private content never enter
   logs, span attributes, metric labels, alert annotations, Sentry contexts, or SOC exports. Emit a stable internal
   reference an authorised human can resolve in the source system instead.
@@ -53,21 +55,22 @@ These bind on every Alaa service: a repo satisfies each one or carries a blockin
 
 ## Ownership
 
-- `/alaa-services-contract` (`$alaa-services-contract`) owns every **name and value**: headers, event and code names,
+- `/alaa-services-contract` owns every **name and value**: headers, event and code names,
   log field names, metric families, allowed and forbidden label lists, endpoints, env variables and their defaults,
-  package choices, middleware order, route families, deploy topology. This skill owns every **requirement level, gate,
+  middleware order, route families, deploy topology. Runtime package selection stays with the applicable stack owner;
+  `alaa-services-contract references/21-alaa-platform-observability-directive.md` names that boundary. This skill owns every **requirement level, gate,
   and reason** over those names. A rule here that needs a name points there. Pair both on any Alaa service repo.
-- `/alaa-signoz-clickhouse-docs` (`$alaa-signoz-clickhouse-docs`) owns SigNoz docs routing and ClickHouse or panel SQL. Hand off query authoring, panel
+- `/alaa-signoz-clickhouse-docs` owns SigNoz docs routing and ClickHouse or panel SQL. Hand off query authoring, panel
   SQL repair, missing-span anti-joins, and SigNoz schema questions.
-- `/alaa-reliability-sla` (`$alaa-reliability-sla`) owns product-traffic load behaviour: pools, lock contention, backpressure, load shedding,
+- `/alaa-reliability-sla` owns product-traffic load behaviour: pools, lock contention, backpressure, load shedding,
   timeouts, retries, circuit breaking, graceful degradation, idempotency. This skill owns load of the telemetry plane only.
-- `/alaa-security-review` (`$alaa-security-review`) owns security controls. Pair it when event semantics, policy decisions, customer data,
+- `/alaa-security-review` owns security controls. Pair it when event semantics, policy decisions, customer data,
   authn/authz, abuse, or incident response are in scope.
-- `/alaa-minio-object-storage` (`$alaa-minio-object-storage`) owns the object store's failure classes and the
+- `/alaa-minio-object-storage` owns the object store's failure classes and the
   storage-side facts a signal describes. Pair it when deciding what to measure about an object store, or when proving
   an object-storage failure class is visible; this skill owns the requirement level and the gate over those signals.
 - Clean code, SOLID, and design-pattern judgment belong to the per-language clean-code skills; algorithm and
-  data-structure choice belongs to `/alaa-algorithms-data-structures` (`$alaa-algorithms-data-structures`). This skill reviews neither.
+  data-structure choice belongs to `/alaa-algorithms-data-structures`. This skill reviews neither.
 
 ## Output contract
 

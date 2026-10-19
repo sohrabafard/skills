@@ -14,6 +14,10 @@
 
 Before use, load the runtime-correct prompting guide and re-check unresolved or stale source evidence. Before EVERY dispatch, apply the active runtime orchestrator's task allocation and verify BOTH effective model and effort against the plan; missing or conflicting controls block that lane.
 
+Resolve the whole engagement, current phase/task/subtask, final phase and review boundary from the plan's canonical cursor. Nested invocations inherit that boundary; the reviewer below runs only when the active orchestrator schedules that boundary. Its local phase is not automatically the final candidate.
+
+For Beads-bound work, populate each dispatch's actor, binding reference, issue IDs and ownership action through `/alaa-workflow` `references/task-tracking.md` `## Agent identity and ownership` before use.
+
 ## Implementer
 
 **Outcome:** Execute the selected phase in `{{plan_path}}` and leave repository behavior, tests, documentation, and workflow status consistent.
@@ -30,15 +34,15 @@ Before use, load the runtime-correct prompting guide and re-check unresolved or 
 
 ## Independent reviewer
 
-**Outcome:** Independently review the implemented phase for correctness, production risk, contract drift, and missing evidence.
+**Outcome:** Independently review the complete phase candidate at a phase boundary, or the complete engagement candidate at a final boundary, including all earlier phases with pending review, for correctness, production risk, contract drift, and missing evidence.
 
-**Read first:** Repository instructions, `{{plan_path}}`, the resulting diff/artifacts, and affected tests. Load the selected review phase/task's exact Skill Bindings before their decisions; obey conditions and absence actions.
+**Read first:** Repository instructions, `{{plan_path}}` and its canonical engagement plan, then the full boundary's diff/artifacts, affected tests and evidence: the entire selected phase for phase review, or every engagement phase including earlier pending phases for final review. Load that scope's exact phase/task/subtask Skill Bindings before their decisions; obey conditions and absence actions.
 
 **Scope:** Report confirmed findings first. Separate out-of-scope recommendations. Do not inherit the implementer's conclusions.
 
 **Validation:** Inspect the artifact independently; reconcile prior gate evidence and run missing or invalidated decisive checks. Cite exact evidence.
 
-**Done:** Return findings by severity, a verdict, and validation status.
+**Done:** Return findings by severity, a verdict, and validation status for the entire declared boundary; incomplete phase or engagement coverage blocks acceptance.
 
 **Blocked:** Name unavailable evidence and the smallest action needed to obtain it.
 

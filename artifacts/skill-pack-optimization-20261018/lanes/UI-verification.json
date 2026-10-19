@@ -1,0 +1,215 @@
+{
+  "cwd": ".",
+  "results": [
+    {
+      "command": [
+        "python",
+        "-B",
+        "scripts/check_fleet_references.py",
+        "--skill",
+        "alaa-frontend-developer",
+        "--skill",
+        "alaa-frontend-devops",
+        "--skill",
+        "alaa-vue-typescript-clean-code",
+        "--skill",
+        "alaa-quasar-app-vite-v3",
+        "--skill",
+        "alaa-ui-ux-design-system"
+      ],
+      "cwd": ".",
+      "exit": 0,
+      "output": "artifacts/skill-pack-optimization-20261018/lanes/UI-check-1.txt"
+    },
+    {
+      "command": [
+        "python",
+        "-B",
+        "skills/sohrab/alaa-repo-docs/scripts/check_markdown_links.py",
+        ".",
+        "--files",
+        "skills/sohrab/alaa-frontend-developer/references/00-topic-map.md",
+        "skills/sohrab/alaa-frontend-developer/references/25-frontend-security.md",
+        "skills/sohrab/alaa-frontend-developer/references/30-pwa-sw-and-offline.md",
+        "skills/sohrab/alaa-frontend-developer/references/41-lighthouse-and-web-vitals.md",
+        "skills/sohrab/alaa-frontend-developer/references/47-frontend-observability.md",
+        "skills/sohrab/alaa-frontend-developer/references/48-config-and-environment.md",
+        "skills/sohrab/alaa-frontend-developer/references/50-qa-and-verification.md",
+        "skills/sohrab/alaa-frontend-developer/references/70-companion-skill-routing.md",
+        "skills/sohrab/alaa-frontend-developer/SKILL.md",
+        "skills/sohrab/alaa-frontend-devops/references/10-build-contract-and-artifacts.md",
+        "skills/sohrab/alaa-frontend-devops/references/30-serving-caching-and-public-path.md",
+        "skills/sohrab/alaa-quasar-app-vite-v3/references/00-topic-map.md",
+        "skills/sohrab/alaa-quasar-app-vite-v3/references/34-frontend-failure-and-degradation.md",
+        "skills/sohrab/alaa-quasar-app-vite-v3/references/36-client-observability-contract.md",
+        "skills/sohrab/alaa-quasar-app-vite-v3/references/75-testing-ci-playbook.md",
+        "skills/sohrab/alaa-quasar-app-vite-v3/references/91-agent-authoring-and-dual-runtime.md",
+        "skills/sohrab/alaa-quasar-app-vite-v3/SKILL.md",
+        "skills/sohrab/alaa-ui-ux-design-system/references/05-rtl-and-persian.md",
+        "skills/sohrab/alaa-ui-ux-design-system/references/45-render-and-asset-budgets.md",
+        "skills/sohrab/alaa-vue-typescript-clean-code/references/50-quasar-vite-pinia-contract.md",
+        "skills/sohrab/alaa-vue-typescript-clean-code/references/60-validation-gates.md"
+      ],
+      "cwd": ".",
+      "exit": 0,
+      "output": "artifacts/skill-pack-optimization-20261018/lanes/UI-check-2.txt"
+    },
+    {
+      "command": [
+        "git",
+        "diff",
+        "--check",
+        "--",
+        "skills/sohrab/alaa-frontend-developer/references/00-topic-map.md",
+        "skills/sohrab/alaa-frontend-developer/references/25-frontend-security.md",
+        "skills/sohrab/alaa-frontend-developer/references/30-pwa-sw-and-offline.md",
+        "skills/sohrab/alaa-frontend-developer/references/41-lighthouse-and-web-vitals.md",
+        "skills/sohrab/alaa-frontend-developer/references/47-frontend-observability.md",
+        "skills/sohrab/alaa-frontend-developer/references/48-config-and-environment.md",
+        "skills/sohrab/alaa-frontend-developer/references/50-qa-and-verification.md",
+        "skills/sohrab/alaa-frontend-developer/references/70-companion-skill-routing.md",
+        "skills/sohrab/alaa-frontend-developer/SKILL.md",
+        "skills/sohrab/alaa-frontend-devops/references/10-build-contract-and-artifacts.md",
+        "skills/sohrab/alaa-frontend-devops/references/30-serving-caching-and-public-path.md",
+        "skills/sohrab/alaa-quasar-app-vite-v3/references/00-topic-map.md",
+        "skills/sohrab/alaa-quasar-app-vite-v3/references/34-frontend-failure-and-degradation.md",
+        "skills/sohrab/alaa-quasar-app-vite-v3/references/36-client-observability-contract.md",
+        "skills/sohrab/alaa-quasar-app-vite-v3/references/75-testing-ci-playbook.md",
+        "skills/sohrab/alaa-quasar-app-vite-v3/references/91-agent-authoring-and-dual-runtime.md",
+        "skills/sohrab/alaa-quasar-app-vite-v3/SKILL.md",
+        "skills/sohrab/alaa-ui-ux-design-system/references/05-rtl-and-persian.md",
+        "skills/sohrab/alaa-ui-ux-design-system/references/45-render-and-asset-budgets.md",
+        "skills/sohrab/alaa-vue-typescript-clean-code/references/50-quasar-vite-pinia-contract.md",
+        "skills/sohrab/alaa-vue-typescript-clean-code/references/60-validation-gates.md"
+      ],
+      "cwd": ".",
+      "exit": 0,
+      "output": "artifacts/skill-pack-optimization-20261018/lanes/UI-check-3.txt"
+    },
+    {
+      "check": "UTF-8 without BOM, LF and nonzero bytes",
+      "findings": [],
+      "exit": 0
+    },
+    {
+      "check": "Frozen input manifest unchanged across commands",
+      "exit": 0
+    },
+    {
+      "check": "Untouched owned baseline preserved",
+      "findings": [],
+      "exit": 0
+    }
+  ],
+  "changed_manifest": {
+    "sha256": "9f45c1a91449f05ac08a169c3902fdd4227e9bae4cb47eb4aacd8ac74efd1138",
+    "files": [
+      {
+        "path": "skills/sohrab/alaa-frontend-developer/SKILL.md",
+        "bytes": 4652,
+        "sha256": "114af819e5f63829d069081dfc58083d5e986e26b1b590ae58b9ae04e837cff1"
+      },
+      {
+        "path": "skills/sohrab/alaa-frontend-developer/references/00-topic-map.md",
+        "bytes": 10472,
+        "sha256": "4e7ca6d54c05b9b04176a372e9fe75215e3a8e3052ac7f13d8e3bd3a20c0de45"
+      },
+      {
+        "path": "skills/sohrab/alaa-frontend-developer/references/25-frontend-security.md",
+        "bytes": 4480,
+        "sha256": "77a786ef1beeb0fe0269b895927630e5915a24b792358daae1182b8cb9113eea"
+      },
+      {
+        "path": "skills/sohrab/alaa-frontend-developer/references/30-pwa-sw-and-offline.md",
+        "bytes": 3968,
+        "sha256": "ab89a3816a751e5f040aca16e57c399415cc2954fae40bb19f0a62a68d7c5ccf"
+      },
+      {
+        "path": "skills/sohrab/alaa-frontend-developer/references/41-lighthouse-and-web-vitals.md",
+        "bytes": 10103,
+        "sha256": "a87b8d81999cb576b5f8d176779e37556e2e0416a3345c8dfd8f86f3d136e140"
+      },
+      {
+        "path": "skills/sohrab/alaa-frontend-developer/references/47-frontend-observability.md",
+        "bytes": 3278,
+        "sha256": "e0d3ba91c487da3939b70a6996f133716cc19a2b065834d095c041d6869e22fb"
+      },
+      {
+        "path": "skills/sohrab/alaa-frontend-developer/references/48-config-and-environment.md",
+        "bytes": 4405,
+        "sha256": "d82d89adb698577cc25f817299dd872b79b0cf5fbe3f66e02aba1c32a392124a"
+      },
+      {
+        "path": "skills/sohrab/alaa-frontend-developer/references/50-qa-and-verification.md",
+        "bytes": 4300,
+        "sha256": "99c80bc31a2df0d6442cc8bcb71f5d301fde6a160cac45864f4cfdbb63b2f688"
+      },
+      {
+        "path": "skills/sohrab/alaa-frontend-developer/references/70-companion-skill-routing.md",
+        "bytes": 3215,
+        "sha256": "cc52c26d5ff00cc0bdebf5b3d716957d55622512e0f4edbd857644b39875ffac"
+      },
+      {
+        "path": "skills/sohrab/alaa-frontend-devops/references/10-build-contract-and-artifacts.md",
+        "bytes": 4129,
+        "sha256": "f0bcda6ed8262a1cf9fe44996291ec01a0606c53393b425d89c4356df2c830bc"
+      },
+      {
+        "path": "skills/sohrab/alaa-frontend-devops/references/30-serving-caching-and-public-path.md",
+        "bytes": 5127,
+        "sha256": "662aef99c431141126ea32bdeeafc57205d13b1a9e775df1d96a6eb5a5b94eff"
+      },
+      {
+        "path": "skills/sohrab/alaa-quasar-app-vite-v3/SKILL.md",
+        "bytes": 4828,
+        "sha256": "671eb84ba02de7aa4fae3fd9dfd37e20a0e69624bb346d2b83a32342902129a7"
+      },
+      {
+        "path": "skills/sohrab/alaa-quasar-app-vite-v3/references/00-topic-map.md",
+        "bytes": 12448,
+        "sha256": "8c5197d980019040a2f5f0fb1fbc571091da77ddc8d69aeedeac3508814755fb"
+      },
+      {
+        "path": "skills/sohrab/alaa-quasar-app-vite-v3/references/34-frontend-failure-and-degradation.md",
+        "bytes": 10187,
+        "sha256": "8ac1e54a31192b819ae694d2aff601d3c091c01262df2d6beaa615cf66c87e6c"
+      },
+      {
+        "path": "skills/sohrab/alaa-quasar-app-vite-v3/references/36-client-observability-contract.md",
+        "bytes": 11451,
+        "sha256": "9284cf63efe10f7ae575e94a6662e47d9cafd3db2055b37a94460da9a3718a61"
+      },
+      {
+        "path": "skills/sohrab/alaa-quasar-app-vite-v3/references/75-testing-ci-playbook.md",
+        "bytes": 9995,
+        "sha256": "8fa902ef88c747f565d59ba23c04681c5378112024677e584f5265f320f319c4"
+      },
+      {
+        "path": "skills/sohrab/alaa-quasar-app-vite-v3/references/91-agent-authoring-and-dual-runtime.md",
+        "bytes": 4991,
+        "sha256": "8166bd46f26687f10d8ddede2a2412152bf14174f387e4be6427766749f9a1c5"
+      },
+      {
+        "path": "skills/sohrab/alaa-ui-ux-design-system/references/05-rtl-and-persian.md",
+        "bytes": 13656,
+        "sha256": "a5b410d63c99769db331ab4850607c8f3c6198dc03a1a4afd664272cc918b830"
+      },
+      {
+        "path": "skills/sohrab/alaa-ui-ux-design-system/references/45-render-and-asset-budgets.md",
+        "bytes": 7484,
+        "sha256": "835f57120c9a8468ca4c64208ccbb5e46c601ad6699807467a0d6b06d22f56ab"
+      },
+      {
+        "path": "skills/sohrab/alaa-vue-typescript-clean-code/references/50-quasar-vite-pinia-contract.md",
+        "bytes": 4444,
+        "sha256": "762c5fb44dc0864e7d7d104c54a7cd1fcc5893530cb5bcb5f6a4b06926a33f5b"
+      },
+      {
+        "path": "skills/sohrab/alaa-vue-typescript-clean-code/references/60-validation-gates.md",
+        "bytes": 4977,
+        "sha256": "9f055de0af80b829d29ad0fae8fdea669e994d3a8580cd00f3d0f88e67433dae"
+      }
+    ],
+    "algorithm": "SHA-256 of concatenated records in ascending case-sensitive relative POSIX path string order; each record is UTF-8 path + one NUL byte + raw file bytes; no separator after file bytes."
+  }
+}

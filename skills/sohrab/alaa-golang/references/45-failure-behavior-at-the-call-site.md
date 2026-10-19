@@ -73,10 +73,9 @@ func attemptCtx(ctx context.Context, perAttempt time.Duration) (context.Context,
 the boundary error instead. Starting a call you know cannot finish burns a connection and a dependency slot for
 nothing.
 
-**Verified fact (`rediskit/config.go`, `rediskit/cache.go`, read 2026-07-26):** the kit's Redis client applies a
-250 ms per-call timeout of its own and sets `MaxRetries = -1`, which disables the client library's internal retries.
-A Redis call therefore fails fast and fails once. Do not add a retry loop around it in service code; see
-`61-redis-cache-layer.md` for what a service does with that failure.
+For the kit Redis client's observed timeout and disabled-retry settings, read `/alaa-data-layer`
+`references/51-redis-golang.md` and re-verify its cited source. Do not add a service retry loop around it;
+`61-redis-cache-layer.md` owns the cache fallback mechanics.
 
 ## 4. The complete server bound set
 
@@ -207,8 +206,8 @@ error response, never half of each.
 Both a shutdown signal and an expired deadline cancel a context, and `ctx.Err()` says `context.Canceled` for one and
 `context.DeadlineExceeded` for the other — which is not enough to know *which* signal, or *whose* deadline.
 
-**Rule:** create the process context with `signal.NotifyContext`, which cancels with a cause, and read the cause when
-you log or branch:
+**Standalone service without `runkit`. Rule:** create the process context with `signal.NotifyContext`, which
+cancels with a cause, and read the cause when you log or branch:
 
 ```go
 ctx, stop := signal.NotifyContext(context.Background(), syscall.SIGINT, syscall.SIGTERM)
@@ -218,7 +217,7 @@ defer stop()
 log.InfoContext(ctx, "shutdown started", slog.String("cause", context.Cause(ctx).Error()))
 ```
 
-`context.Cause` names the signal, so an orchestrated `SIGTERM` rollout and an operator's `SIGINT` are distinguishable
+In that standalone service, `context.Cause` names the signal, so an orchestrated `SIGTERM` rollout and an operator's `SIGINT` are distinguishable
 in the logs of the same service. **Rule:** log the cause at the start of shutdown; without it a shutdown that took too
 long cannot be attributed afterwards.
 

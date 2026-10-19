@@ -1,0 +1,21 @@
+{
+  "cwd": ".",
+  "resource_policy": "Normal priority; bounded native Python checks only; no CPU-heavy or aggregate suite",
+  "source_snapshot": "MEMDOC-snapshot.json",
+  "commands": [
+    {
+      "command": "python -B scripts/check_fleet_references.py --skill alaa-memory-os --skill alaa-codex-runtime-ops --skill alaa-repo-docs --skill alaa-code-intelligence-routing",
+      "exit_code": 0,
+      "output": "check_fleet_references.py: 4 of 69 skills, 42 Markdown files, 292 citations\r\n\r\nFINDINGS: none\r\n\r\nINFO (99 unmarked target-repository paths across 2 skills; these never fail the run)\r\n    94  alaa-repo-docs\r\n     5  alaa-memory-os\r\n  Rerun with --show-info for every site, or --format json for all of them.\r\n  Mark each one as <repo>/<path> to retire it from this list.",
+      "wall_time_seconds": 0.7457587
+    },
+    {
+      "command": "python -B skills/sohrab/alaa-repo-docs/scripts/check_markdown_links.py . --files skills/sohrab/alaa-code-intelligence-routing/references/20-documentation-routing.md skills/sohrab/alaa-codex-runtime-ops/references/00-topic-map.md skills/sohrab/alaa-codex-runtime-ops/references/40-project-fallbacks.md skills/sohrab/alaa-memory-os/SKILL.md skills/sohrab/alaa-memory-os/references/00-topic-map.md skills/sohrab/alaa-memory-os/references/knowledge-shape.md skills/sohrab/alaa-memory-os/references/prompt-3-publishing.md skills/sohrab/alaa-memory-os/references/store-basic-memory.md skills/sohrab/alaa-memory-os/references/store-hindsight.md skills/sohrab/alaa-memory-os/references/store-local.md skills/sohrab/alaa-repo-docs/SKILL.md skills/sohrab/alaa-repo-docs/references/10-language-and-links.md skills/sohrab/alaa-repo-docs/references/70-subagent-doc-workflows.md",
+      "exit_code": 0,
+      "output": "Validated links in 13 Markdown file(s) under ..",
+      "wall_time_seconds": 0.4247902
+    }
+  ],
+  "proof": "Static reference/link coverage only; not independent acceptance, installed activation, memory connectivity or runtime adherence.",
+  "portability_note": "Repository-root absolute path rendered as . for portability; historical command outcomes unchanged."
+}

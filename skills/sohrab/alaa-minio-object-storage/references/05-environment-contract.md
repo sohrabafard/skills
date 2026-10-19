@@ -18,12 +18,12 @@ cheap correction path is the one that has to exist.
 **Extend the `STORAGE_*` family, and add no second family for a knob the family already names.** The fleet's only
 object-storage consumer already reads `STORAGE_DRIVER`, `STORAGE_ENDPOINT`, `STORAGE_REGION`, `STORAGE_BUCKET`,
 `STORAGE_ACCESS_KEY`, `STORAGE_SECRET_KEY`, `STORAGE_USE_PATH_STYLE` and `STORAGE_TLS_ENABLED`
-`[source: tusd-upload-platform repository, .env.example and internal/storage/s3_compatible.go, read: 2026-07-28]`.
+`[source: Ala tusd repository, .env.example and internal/storage/s3_compatible.go, read: 2026-07-28]`.
 This file adds names to that family and renames nothing in it. A service moving from MinIO to ArvanCloud must
 change env values only, and a parallel family with different names for the same knob would turn that move back into
 a code change, which is the cost this contract exists to remove.
 
-**`/alaa-arvan-object-storage` (`$alaa-arvan-object-storage`) `references/15-environment-contract-deltas.md` states
+**`/alaa-arvan-object-storage` `references/15-environment-contract-deltas.md` states
 only the variables whose default differs on ArvanCloud**, and it uses these names unchanged. Read that file for an
 `arvanstorage.ir` endpoint and this one for everything else, because a delta file that repeated the shared names
 would drift from them.
@@ -35,7 +35,7 @@ Each default below carries exactly one evidence marker, and the three are not in
 - **verified from the tusd repository** — the value is what the fleet's consumer reads today, cited to the file it
   came from.
 - **published by ArvanCloud and read on 2026-07-28** — a provider fact whose URL is in
-  `/alaa-arvan-object-storage` (`$alaa-arvan-object-storage`) `references/SOURCES.md`.
+  `/alaa-arvan-object-storage` `references/SOURCES.md`.
 - **this skill's conservative estimate pending confirmation** — a placeholder that nobody has confirmed. Change it
   when a service shows what it needs. Quote it to nobody as a provider limit, because it is not one.
 
@@ -57,7 +57,7 @@ after the bytes have already crossed the network, so the cost is bandwidth and e
 | `STORAGE_USE_PATH_STYLE` | `true` | verified from the tusd repository | a boolean literal | `true` against a provider that needs virtual-hosted style loses edge caching with no error, so the cost arrives as a traffic bill rather than a failed request |
 | `STORAGE_TLS_ENABLED` | `false` | verified from the tusd repository, where the endpoint is a loopback development store | a boolean literal, and `true` whenever the endpoint host is not a loopback address | a plaintext hop exposes the object bytes and the signed request to every workload sharing that network |
 | `STORAGE_SIGNATURE_VERSION` | `s3v4` | this skill's conservative estimate pending confirmation; ArvanCloud's own SDK examples set no signature option and therefore sign with the SDK's Signature Version 4 default `[source: https://docs.arvancloud.ir/en/developer-tools/sdk/object-storage/credentials/, read: 2026-07-28]` | one of `s3v4`, `s3` | a mismatch returns `SignatureDoesNotMatch`, which reads as a wrong secret key and sends the investigation to credential rotation instead of client configuration |
-| `STORAGE_PART_SIZE_BYTES` | `16777216`, which is 16 MiB | this skill's conservative estimate pending confirmation | at least `STORAGE_MIN_PART_SIZE_BYTES` and at most `STORAGE_MAX_PART_SIZE_BYTES` | a part below the floor is rejected at upload, and a part above the ceiling is rejected only after it crossed the network |
+| `STORAGE_PART_SIZE_BYTES` | `16777216`, which is 16 MiB, for the application client only | this skill's conservative estimate pending confirmation | at least `STORAGE_MIN_PART_SIZE_BYTES` and at most `STORAGE_MAX_PART_SIZE_BYTES` | a part below the floor is rejected at upload, and a part above the ceiling is rejected only after it crossed the network |
 | `STORAGE_MIN_PART_SIZE_BYTES` | `5242880`, which is 5 MiB | published by ArvanCloud and read on 2026-07-28, and the same figure appears in the AWS S3 limits this skill records as unverified | at least 1 | a floor set too low lets a part size through that the store rejects |
 | `STORAGE_MAX_PART_SIZE_BYTES` | `5368709120`, which is 5 GiB | AWS S3 documented value, unverified as of 2026-07-28 | at least `STORAGE_MIN_PART_SIZE_BYTES` | a ceiling copied from AWS onto a stricter provider passes validation and fails at the store |
 | `STORAGE_MAX_PARTS` | `10000` | published by ArvanCloud and read on 2026-07-28, matching the AWS figure this skill records as unverified | at least 1 | an upload exceeding it fails at part 10,001, after every earlier part was transmitted and billed |
@@ -65,7 +65,11 @@ after the bytes have already crossed the network, so the cost is bandwidth and e
 | `STORAGE_UPLOAD_CONCURRENCY` | `4` | this skill's conservative estimate pending confirmation | at least 1 | a high value multiplies the bytes held in flight, and the failure is an out-of-memory kill or a full disk that takes down every request on the process, not only the upload that caused it |
 | `STORAGE_MULTIPART_ABORT_DAYS` | `7` | this skill's stated default, carried unchanged from `SKILL.md` constraint 2 | at least 1, and longer than the longest resumable-upload window the service offers | a window shorter than the resumable-upload window aborts an upload a user is still resuming, because the lifecycle rule cannot tell an abandoned upload from a paused one |
 | `STORAGE_PRESIGN_MAX_SECONDS` | `900`, which is 15 minutes | this skill's conservative estimate pending confirmation | at least 1 and at most `604800` | a long lifetime leaves an unrevocable bearer link alive past the need it was issued for, and withdrawing it early means rotating the signing credential, which invalidates every other outstanding URL at the same time |
-| `STORAGE_OBJECT_KEY_PREFIX` | empty | this skill's stated default; the fleet's consumer spells its own prefix `TUSD_OFFICIAL_TUS_STORAGE_PREFIX` with the value `tusd`, which is a service-specific name rather than a second family `[source: tusd-upload-platform repository, .env.example and internal/storage/s3_compatible.go, read: 2026-07-28]` | no leading slash, no trailing slash, and no segment taken from client input | a prefix assembled from a client-supplied value is a cross-tenant read returning a well-formed success, which is `SKILL.md` constraint 3 |
+| `STORAGE_OBJECT_KEY_PREFIX` | empty | this skill's stated default; the fleet's consumer spells its own prefix `TUSD_OFFICIAL_TUS_STORAGE_PREFIX` with the value `tusd`, which is a service-specific name rather than a second family `[source: Ala tusd repository, .env.example and internal/storage/s3_compatible.go, read: 2026-07-28]` | no leading slash, no trailing slash, and no segment taken from client input | a prefix assembled from a client-supplied value is a cross-tenant read returning a well-formed success, which is `SKILL.md` constraint 3 |
+
+For tusd's independent part-size controls and their mapping to provider bounds, read
+`/tusd-upload-platform` `references/35-storage-lifecycle.md`. Neither this application's
+estimate nor a tusd part preference sets the browser's tus `PATCH` chunk size.
 
 `604800` seconds is seven days, recorded as the SigV4 presigned ceiling and unverified as of 2026-07-28. Confirm it
 against the signing SDK in use before raising `STORAGE_PRESIGN_MAX_SECONDS` anywhere near it.
@@ -77,6 +81,9 @@ profile's column below, and override any of those defaults by setting that varia
 provider behaves differently and ArvanCloud is not the only S3 provider this fleet may use, so the alternative is
 eleven provider-shaped values copied by hand into every environment file of every service, where one stale copy is a
 part ceiling nobody notices until an upload fails after the bytes crossed the network.
+
+**Endpoint, bucket and credentials are always explicit environment values, never profile defaults.**
+Endpoint shapes in the profile table document valid forms; they select no endpoint or region.
 
 The value is spelled `STORAGE_PROVIDER_PROFILE` rather than `STORAGE_PROVIDER` because the name states what the
 value is for: a profile is a bundle of defaults and a provider is an identity, and an identity in a variable invites
@@ -121,12 +128,12 @@ that failure has no reason to suspect the profile name because nothing reported 
 
 Each cell carries exactly one marker, and the five are not interchangeable.
 
-- `[repo]` — verified from the fleet's consumer `[source: tusd-upload-platform repository, .env.example and
+- `[repo]` — verified from the fleet's consumer `[source: Ala tusd repository, .env.example and
   internal/storage/s3_compatible.go, read: 2026-07-28]`, and for the signature version `[source:
-  tusd-upload-platform repository, docker-compose.yml, where the provisioner passes `mc alias set … --api S3v4`,
+  Ala tusd repository, docker-compose.yml, where the provisioner passes `mc alias set … --api S3v4`,
   read: 2026-07-27]`.
 - `[arvan]` — published by ArvanCloud and read on 2026-07-28. The URL and the arithmetic behind each of these cells
-  are in `/alaa-arvan-object-storage` (`$alaa-arvan-object-storage`)
+  are in `/alaa-arvan-object-storage`
   `references/15-environment-contract-deltas.md`, which owns that column.
 - `[est]` — this skill's conservative estimate pending confirmation. Quote it to nobody as a provider limit, because
   it is not one.
@@ -183,7 +190,7 @@ the network.
    unverified, ArvanCloud publishes a 12-hour example rather than a limit, and MinIO's figure was not read. Every
    column carries `900` because a lifetime nobody has confirmed is a bearer credential nobody can withdraw.
 5. **Whether ArvanCloud accepts path-style addressing at all.** This is open question 2 in
-   `/alaa-arvan-object-storage` (`$alaa-arvan-object-storage`) `references/SOURCES.md`, and the `arvancloud` column
+   `/alaa-arvan-object-storage` `references/SOURCES.md`, and the `arvancloud` column
    carries `false` because virtual-hosted is the documented style, not because path-style was tested and refused.
 6. **Whether MinIO enforces `STORAGE_REGION` at all.** The `minio` column carries `us-east-1` because the fleet's
    consumer sets it; whether MinIO validates the value was not read.
@@ -212,7 +219,7 @@ not-found is indistinguishable from deleted data.
 
 **Emit the validated configuration once at startup with every secret replaced by a redaction marker.** An operator
 who cannot see which values took effect debugs a wrong env value by reading code, and the fleet's consumer already
-demonstrates the shape in its redacted runtime plan `[source: tusd-upload-platform repository,
+demonstrates the shape in its redacted runtime plan `[source: Ala tusd repository,
 internal/storage/s3_compatible.go, read: 2026-07-28]`.
 
 **State the effective value and its source in the startup line, as one of `baseline`, `profile` or `env`, so a
@@ -239,9 +246,6 @@ an env change and raising the part count is a request to the provider that will 
 
 ## Not owned here
 
-Timeout, retry, backoff and breaker values are `/alaa-reliability-sla` (`$alaa-reliability-sla`). Registration of a
-fleet-wide value so two services cannot hold two different numbers is `/alaa-services-contract`
-(`$alaa-services-contract`). Where these variables are set — a Compose file, a Swarm stack, a Kubernetes Secret or
-a secret manager — is `/alaa-docker-production` (`$alaa-docker-production`) and `/alaa-k8s-helm`
-(`$alaa-k8s-helm`). The ArvanCloud values that differ are `/alaa-arvan-object-storage`
-(`$alaa-arvan-object-storage`) `references/15-environment-contract-deltas.md`.
+Timeout, retry, backoff and breaker values are `/alaa-reliability-sla`. Registration of a
+fleet-wide value so two services cannot hold two different numbers is `/alaa-services-contract`. Where these variables are set — a Compose file, a Swarm stack, a Kubernetes Secret or
+a secret manager — is `/alaa-docker-production` and `/alaa-k8s-helm`. The ArvanCloud values that differ are `/alaa-arvan-object-storage` `references/15-environment-contract-deltas.md`.

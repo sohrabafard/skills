@@ -12,17 +12,12 @@ Use `chunkById` or `lazyById` in Laravel, or a repeated keyset query over the pr
 
 Observable: no export, command, or job in the repository calls a paginator that accepts a page number, and no call to `chunk(` exists on a traversal whose callback writes.
 
-**Offset — narrow exception.** `alaa-services-contract` `references/25-end-to-end-flow-and-boundaries.md` currently forbids offset pagination on any list a client can page through. The owner has ratified a narrow exception for admin tables that genuinely require exact totals and page numbers. Until that contract text records the exception, a new offset route needs the contract change first; do not ship one against the current text and do not treat this paragraph as the amendment.
-
-The exception applies only when all five conditions hold:
-
-1. The route is mounted under an admin-only path and requires an admin permission checked at request time.
-2. The route is absent from the public gateway route table and from every published SDK and client bundle.
-3. The route's own documentation records `pagination: offset` together with the named operational requirement that justifies it — which report, which operator workflow. "Totals are nice to have" is not a requirement.
-4. The route enforces a maximum reachable offset, documented and rejected above that value. Deep `OFFSET` makes the database read and discard every skipped row on every request, so an unbounded offset route is a load defect that grows with the table.
-5. The exact-total query is bounded by the same filters as the page query and is measured at production row counts. An unbounded `COUNT(*)` over a growing table is itself the defect.
-
-Observable that decides compliance: a route emitting `total`, `total_pages`, `current_page`, `last_page`, or `per_page` that is reachable without an admin permission, or that appears in the public gateway route table, is a violation regardless of what its documentation says. Because those keys are forbidden inside `meta` by the contract, an offset route does not use the `meta` collection envelope at all; it uses a distinct envelope its documentation declares, so no consumer can mistake one for the other.
+**Offset — narrow exception.** Apply all five conditions in
+`alaa-services-contract references/25-end-to-end-flow-and-boundaries.md`, `Admin-table offset exception`.
+That section alone authorizes offset and its distinct envelope; this file maintains no second list.
+Deep `OFFSET` reads and discards skipped rows on every request, and an unbounded exact-total query
+hides an independent scan behind a bounded page. Those costs are why both page/offset bounds and
+filtered, production-shaped total-query measurements remain required by the owner.
 
 ## Building the sort allowlist
 

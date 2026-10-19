@@ -16,8 +16,8 @@ or gone?
   requires that a dependency marked `required: false` in `/api/ready` not fail a product request.
 - **Redis calls are bounded so a sick Redis costs milliseconds.** Why a timeout, a retry budget, a backoff, or a
   breaker exists and how to shape it is `/alaa-reliability-sla` (`$alaa-reliability-sla`). The env keys and
-  defaults for the Redis budgets, and what the kit compiles in today, are `60-configuration-and-kit-gaps.md`. This
-  file states no number.
+  defaults for the Redis budgets are `60-configuration-and-kit-gaps.md`; observed kit settings and their
+  re-verification are `51-redis-golang.md`. This file states no number.
 - **Nothing connects to Redis at process start or framework boot as a precondition for serving.** Connections stay
   lazy and probe failures stay non-fatal, so a Redis outage cannot stop workers from booting.
 - **Every lock and every limiter states its behaviour when Redis is unreachable, at its call site.** The deciding
@@ -52,8 +52,8 @@ Rules:
 
 ## TTL discipline
 
-- Every cache entry has an explicit TTL. On the Go kit this is enforced: `rediskit/cache.go:65-67` returns
-  `ErrMissingTTL` for a non-positive TTL. Reason: an entry with no expiry outlives the truth it copies, and a
+- Every cache entry has an explicit TTL. `51-redis-golang.md` owns the Go kit's enforcement evidence.
+  Reason: an entry with no expiry outlives the truth it copies, and a
   missed invalidation then never heals.
 - Shorter TTLs for volatile data; event-driven invalidation where correctness is strict.
 - Spread the expiry of wide fan-out keys so they do not all expire in the same second. The jitter value is a

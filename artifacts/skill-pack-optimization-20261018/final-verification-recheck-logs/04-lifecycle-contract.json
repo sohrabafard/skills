@@ -1,0 +1,7 @@
+{
+  "command": "python -B scripts/check_lifecycle_contract.py",
+  "cwd": ".",
+  "wall_time_seconds": 0.8350282,
+  "exit_code": 0,
+  "output": "check_lifecycle_contract.py\r\n  root: D:\\Sohrab\\Project\\skills\r\n  owner: alaa-workflow references/workspace-and-integration.md\r\n  states: IMPLEMENTED, MERGE_CANDIDATE, RELEASE_CANDIDATE, PUBLISHED\r\n  reporters: alaa-cc-orchestrator, alaa-codex-orchestrator\r\n\r\nFINDINGS: none\r\n"
+}

@@ -113,10 +113,10 @@ cannot be written in one line, fix the code instead.
 **Rule:** load both whenever a goroutine is cancelled through a context.
 
 **Forbidden — absolutely, with no exception:** starting a goroutine that has no owner, no cancellation path, and no
-place its error is reported. This is P9 in `/alaa-golang-clean-code-principles`, it is a rule and not a preference,
-and this file does not soften it. **Rule:** every goroutine is started by a component that also stops it, takes a
-context that shutdown cancels, and either returns its error to that owner or is a documented fire-and-forget whose
-failure is recorded as a metric.
+place its error is reported. **Rule:** the component that starts it also stops it, supplies a shutdown-cancelled
+context and receives its errors or records failures as metrics. On a kit service, follow P9 in
+`/alaa-golang-clean-code-principles` `references/30-runtime-and-observability.md` for the bounded worker,
+drain, metric name and all three accepted-data-loss conditions; documentation alone grants no exception.
 
 ## Modernize against lint
 

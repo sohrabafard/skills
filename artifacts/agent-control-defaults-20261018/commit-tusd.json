@@ -1,0 +1,17 @@
+{
+  "repository": "tusd",
+  "branch": "main",
+  "base_head": "788de5c560ce6b8713d499f2c995abf295099f3f",
+  "paths": [
+    "AGENTS.md"
+  ],
+  "subject": "fix(beads): standardize per-agent ownership binding",
+  "commit_exit": 0,
+  "timestamp_utc": "2026-10-18T19:28:50.547824+00:00",
+  "output": "[main 24091d6a] fix(beads): standardize per-agent ownership binding\n 1 file changed, 17 insertions(+), 11 deletions(-)\n",
+  "verified": true,
+  "commit": "24091d6a50adec4a42e0d020d95714fe0ee0b188",
+  "unrelated_staged_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+  "unrelated_tracked_preserved": 0,
+  "post_status": ""
+}

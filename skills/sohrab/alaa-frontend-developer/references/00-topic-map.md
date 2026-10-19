@@ -35,6 +35,50 @@ One file answers most tasks and two is normal. Loading every row means the task 
   component that decides one of them locally is wrong even when it happens to be safe today.
 - `05-proof-and-tests.md` fires on the word "done", not on the decision to write a test.
 
+## Additional mandatory matches
+
+Read every matching row, even when the user named only one surface.
+
+| The diff touches | Also read |
+|---|---|
+| SSR, hydration, a router guard, a store, a boot file or any browser-only API | `20-vue-js-ssr-patterns.md` |
+| A formatter | `22-input-validation-and-normalization.md` |
+| A date, number or currency formatted during SSR | `55-i18n-locale-and-rtl.md` |
+| A trace-context header, client event or error report | `47-frontend-observability.md` |
+| A UI symptom caused by backend query shape, exact-count cost or missing aggregation | `45-api-and-data-shaping.md` |
+| An animation, transition or CSS feature with uncertain support | `alaa-ui-ux-design-system references/70-motion-contract.md` and `alaa-ui-ux-design-system references/72-modern-css-baseline-tiers.md`; reduced motion is a blocking gate |
+| Lighthouse, PageSpeed, Web Vitals, LCP/INP/CLS/TBT or a score target | `41-lighthouse-and-web-vitals.md` for weighted investigation order and production/mobile/three-run/median proof |
+
+## Companion ownership routes
+
+| You are about to decide | Load and enter at |
+|---|---|
+| exact Quasar API, `quasar.config`, platform modes, v2→v3 migration, SW depth, WebOTP, installed versions | `/alaa-quasar-app-vite-v3` `references/00-topic-map.md` |
+| TypeScript, SOLID, decomposition, Pinia shape, Vue patterns, strictness gates | `/alaa-vue-typescript-clean-code` `references/00-topic-map.md` |
+| visual design, tokens, motion, failure-state design, RTL layout, Persian typography | `/alaa-ui-ux-design-system` `references/00-topic-map.md` |
+| CI gates, artifact identity, serving, caching, public path, deploy failure | `/alaa-frontend-devops` `references/00-topic-map.md` |
+| `packages/*` boundaries, exports maps, peer deps, asset reachability, release gates, `dist/ssr` paths | `/alaa-mono-package` `references/00-topic-map.md` |
+| browser storage mechanics, quota, eviction, migrations, request cache, drafts, outbox, offline media | `/alaa-indexeddb-browser-storage` `references/00-topic-map.md` |
+| video or audio playback, DRM, in-app download, ads, player analytics | `/alaa-shaka-player` `references/00-topic-map.md` |
+| a documentation-only diff, JSDoc, `NOTE:` annotations, annotation staleness | `/alaa-frontend-doc-annotations` `references/10-annotation-boundaries.md` |
+| the digit and text normalization form | `/alaa-input-normalization` `references/20-browser-binding.md` |
+| test design, layers, doubles, proof levels | `/alaa-testing-strategy` `references/40-proof-strength.md` |
+| timeout, retry, backoff, breaker, shedding, degradation, idempotency | `/alaa-reliability-sla` `references/00-topic-map.md` |
+| threat classes, review triggers, fail-closed doctrine | `/alaa-security-review` `references/25-browser-trust-and-output.md` |
+| log fields, metric names, envelope keys, error codes, SDK consumption | `/alaa-services-contract` `references/60-frontend-sdk-consumption-contract.md` |
+| the requirement level of any telemetry, and its budgets | `/alaa-observability-soc` `references/20-instrumentation-gates.md` |
+| the quality bar itself | `/alaa-project-constitution` `references/quality-bar.md` |
+| cursor and keyset pagination contract | `/alaa-keyset-pagination` `references/40-wire-contract-limits-and-errors.md` |
+| complexity budgets, structure choice, the N+1 family | `/alaa-algorithms-data-structures` `references/10-complexity-budget.md` |
+| boundary and seam design before implementation | `/alaa-system-design` `references/10-boundary-and-seam.md` |
+| identifier codec parity — run the harness, do not reason about it | `/alaa-crockford-base32-codecs` `scripts/codec-conformance.sh` |
+| the permission bitmap and its decoder | `/alaa-permission-generator` `assets/permission-bitmap/permission-bitmap.ts` |
+| gateway verification, trusted headers, downstream trust | `/alaa-trust-gateway-auth` `references/20-claims-headers-and-sentinels.md` |
+| object storage, presigned URLs, `STORAGE_*`, resumable upload | `/alaa-minio-object-storage`, `/alaa-arvan-object-storage`, `/tusd-upload-platform` |
+| query shape, index, or aggregate cost behind a slow screen | `/alaa-data-layer`, `/alaa-laravel-architecture` |
+| real-browser execution, or a stateful debugging loop | `/playwright`, `/playwright-interactive`; profile choice in this skill's `references/70-companion-skill-routing.md` |
+| authoritative OpenAI or Codex product behaviour | `/openai-docs` |
+| model and effort selection | `/alaa-prompting-guide` `references/50-effort-and-thinking.md` |
 ## Good first searches
 
 `hydration mismatch`, `onMounted`, `AbortController`, `deep watch`, `BFF`, `token-mediating backend`,
@@ -57,4 +101,4 @@ realtime to `40-` and `41-`, API and query shape to `45-`, QA and runbooks to `5
 
 Design terms — `view transitions`, `container queries`, `oklch`, `light-dark`, `prefers-reduced-motion`,
 `@starting-style`, tokens, styles, icons, RTL layout, Persian typography — belong to
-`/alaa-ui-ux-design-system` (`$alaa-ui-ux-design-system`) `references/00-topic-map.md`.
+`/alaa-ui-ux-design-system` `references/00-topic-map.md`.

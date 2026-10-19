@@ -1,0 +1,332 @@
+[
+  {
+    "runtime": "alaa-codex-orchestrator",
+    "passed": true,
+    "assertion_errors": [],
+    "self_tests": [
+      [
+        "specialist inherited phase/final cadence accepted",
+        true
+      ],
+      [
+        "design template: requires references/verification-and-gates.md",
+        true
+      ],
+      [
+        "design template: requires declared phase|final boundary",
+        true
+      ],
+      [
+        "design template: requires complete phase candidate for phase",
+        true
+      ],
+      [
+        "design template: requires whole-engagement candidate including pending earlier phases for final",
+        true
+      ],
+      [
+        "design template: requires Nested invocations never reset that scope",
+        true
+      ],
+      [
+        "design template: requires Return missing, conflicting or premature cadence to the parent without judgment",
+        true
+      ],
+      [
+        "design template: rejects early judgment Dispatch in Stage A before code exists",
+        true
+      ],
+      [
+        "design template: rejects early judgment Spawn before implementation",
+        true
+      ],
+      [
+        "design template: rejects early judgment before expensive implementation begins",
+        true
+      ],
+      [
+        "contract template: requires references/verification-and-gates.md",
+        true
+      ],
+      [
+        "contract template: requires declared phase|final boundary",
+        true
+      ],
+      [
+        "contract template: requires complete phase candidate for phase",
+        true
+      ],
+      [
+        "contract template: requires whole-engagement candidate including pending earlier phases for final",
+        true
+      ],
+      [
+        "contract template: requires Nested invocations never reset that scope",
+        true
+      ],
+      [
+        "contract template: requires Return missing, conflicting or premature cadence to the parent without judgment",
+        true
+      ],
+      [
+        "contract template: rejects early judgment Dispatch in Stage A before code exists",
+        true
+      ],
+      [
+        "contract template: rejects early judgment Spawn before implementation",
+        true
+      ],
+      [
+        "contract template: rejects early judgment before expensive implementation begins",
+        true
+      ],
+      [
+        "architecture critic: requires references/verification-and-gates.md",
+        true
+      ],
+      [
+        "architecture critic: requires declared phase|final boundary",
+        true
+      ],
+      [
+        "architecture critic: requires complete phase candidate for phase",
+        true
+      ],
+      [
+        "architecture critic: requires whole-engagement candidate including pending earlier phases for final",
+        true
+      ],
+      [
+        "architecture critic: requires Nested invocations never reset that scope",
+        true
+      ],
+      [
+        "architecture critic: requires Return missing, conflicting or premature cadence to the parent without judgment",
+        true
+      ],
+      [
+        "architecture critic: rejects early judgment Dispatch in Stage A before code exists",
+        true
+      ],
+      [
+        "architecture critic: rejects early judgment Spawn before implementation",
+        true
+      ],
+      [
+        "architecture critic: rejects early judgment before expensive implementation begins",
+        true
+      ],
+      [
+        "design template: preserves pre-implementation design record",
+        true
+      ],
+      [
+        "design template: preserves report the missing record",
+        true
+      ],
+      [
+        "contract template: preserves Record known triggers and decide consumer impact, compatibility and deprecation in Stage A",
+        true
+      ],
+      [
+        "contract template: preserves a newly discovered trigger reopens the affected plan and gate",
+        true
+      ],
+      [
+        "architecture critic: preserves The design record remains due before implementation",
+        true
+      ],
+      [
+        "architecture critic: preserves Unresolved questions and conditions that block acceptance",
+        true
+      ]
+    ],
+    "caller_seam": [
+      [
+        "design template",
+        true
+      ],
+      [
+        "contract template",
+        true
+      ],
+      [
+        "architecture critic",
+        true
+      ]
+    ],
+    "baseline_red_diagnostics": [
+      "design template: premature specialist judgment: Pressure-test this proposed architecture before implementation",
+      "contract template: premature specialist judgment: Dispatch in Stage A before code exists",
+      "architecture critic: premature specialist judgment: Spawn before implementation",
+      "architecture critic: premature specialist judgment: before expensive implementation begins",
+      "architecture critic: premature specialist judgment: Questions that must be answered before implementation"
+    ],
+    "scope": "specialist cadence source assertions, isolated mutations, changed cadence consumer seam; no full checker or pack"
+  },
+  {
+    "runtime": "alaa-cc-orchestrator",
+    "passed": true,
+    "assertion_errors": [],
+    "self_tests": [
+      [
+        "specialist inherited phase/final cadence accepted",
+        true
+      ],
+      [
+        "design template: requires references/verification-and-gates.md",
+        true
+      ],
+      [
+        "design template: requires declared phase|final boundary",
+        true
+      ],
+      [
+        "design template: requires complete phase candidate for phase",
+        true
+      ],
+      [
+        "design template: requires whole-engagement candidate including pending earlier phases for final",
+        true
+      ],
+      [
+        "design template: requires Nested invocations never reset that scope",
+        true
+      ],
+      [
+        "design template: requires Return missing, conflicting or premature cadence to the parent without judgment",
+        true
+      ],
+      [
+        "design template: rejects early judgment Dispatch in Stage A before code exists",
+        true
+      ],
+      [
+        "design template: rejects early judgment Spawn before implementation",
+        true
+      ],
+      [
+        "design template: rejects early judgment before expensive implementation begins",
+        true
+      ],
+      [
+        "contract template: requires references/verification-and-gates.md",
+        true
+      ],
+      [
+        "contract template: requires declared phase|final boundary",
+        true
+      ],
+      [
+        "contract template: requires complete phase candidate for phase",
+        true
+      ],
+      [
+        "contract template: requires whole-engagement candidate including pending earlier phases for final",
+        true
+      ],
+      [
+        "contract template: requires Nested invocations never reset that scope",
+        true
+      ],
+      [
+        "contract template: requires Return missing, conflicting or premature cadence to the parent without judgment",
+        true
+      ],
+      [
+        "contract template: rejects early judgment Dispatch in Stage A before code exists",
+        true
+      ],
+      [
+        "contract template: rejects early judgment Spawn before implementation",
+        true
+      ],
+      [
+        "contract template: rejects early judgment before expensive implementation begins",
+        true
+      ],
+      [
+        "architecture critic: requires references/verification-and-gates.md",
+        true
+      ],
+      [
+        "architecture critic: requires declared phase|final boundary",
+        true
+      ],
+      [
+        "architecture critic: requires complete phase candidate for phase",
+        true
+      ],
+      [
+        "architecture critic: requires whole-engagement candidate including pending earlier phases for final",
+        true
+      ],
+      [
+        "architecture critic: requires Nested invocations never reset that scope",
+        true
+      ],
+      [
+        "architecture critic: requires Return missing, conflicting or premature cadence to the parent without judgment",
+        true
+      ],
+      [
+        "architecture critic: rejects early judgment Dispatch in Stage A before code exists",
+        true
+      ],
+      [
+        "architecture critic: rejects early judgment Spawn before implementation",
+        true
+      ],
+      [
+        "architecture critic: rejects early judgment before expensive implementation begins",
+        true
+      ],
+      [
+        "design template: preserves pre-implementation design record",
+        true
+      ],
+      [
+        "design template: preserves report the missing record",
+        true
+      ],
+      [
+        "contract template: preserves Record known triggers and decide consumer impact, compatibility and deprecation in Stage A",
+        true
+      ],
+      [
+        "contract template: preserves a newly discovered trigger reopens the affected plan and gate",
+        true
+      ],
+      [
+        "architecture critic: preserves The design record remains due before implementation",
+        true
+      ],
+      [
+        "architecture critic: preserves Unresolved questions and conditions that block acceptance",
+        true
+      ]
+    ],
+    "caller_seam": [
+      [
+        "design template",
+        true
+      ],
+      [
+        "contract template",
+        true
+      ],
+      [
+        "architecture critic",
+        true
+      ]
+    ],
+    "baseline_red_diagnostics": [
+      "design template: premature specialist judgment: Pressure-test this proposed architecture before implementation",
+      "contract template: premature specialist judgment: Dispatch in Stage A before code exists",
+      "architecture critic: premature specialist judgment: Spawn before implementation",
+      "architecture critic: premature specialist judgment: before expensive implementation begins",
+      "architecture critic: premature specialist judgment: Questions that must be answered before implementation"
+    ],
+    "scope": "specialist cadence source assertions, isolated mutations, changed cadence consumer seam; no full checker or pack"
+  }
+]

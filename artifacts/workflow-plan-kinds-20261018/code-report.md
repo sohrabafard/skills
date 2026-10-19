@@ -1,0 +1,35 @@
+# Workflow plan kinds: code lane
+
+Outcome: Implemented the ratified plan-kind initializer, validator, templates and focused regressions; final combined verification/review remains with the parent.
+AGENT: workflow_code / alaa-implementer. CONFIGURED: definition omits model/effort; workspace-write. REQUESTED: gpt-6.1-sol/medium. OBSERVED: unknown; no observable mismatch. Parent scope is narrower than filesystem/MCP grants; no external authority used.
+Owned issue: alaa-sj9.1.1, actor codex:01a14f6e:workflow-code, verified in_progress; not closed. bd lint and project-scoped bd stale both exited 0 before handoff.
+
+## Changed paths and acceptance
+
+- `skills/sohrab/alaa-workflow/scripts/init_workflow_files.py`: required explicit kind; design-only resumable/local preflight; execution validates approved design before metadata/output; protects design and checkpoint even with force; all new execution profiles retain Beads hierarchy.
+- `skills/sohrab/alaa-workflow/scripts/validate_workflow_files.py`: unique header-kind dispatch before execution gates; design sections, decisions, approval and exact checkpoint identity/status; execution approved-design and hierarchy checks; expands installed home paths before existing repository/adjacent source resolution.
+- `skills/sohrab/alaa-workflow/assets/plan-template.md`: execution kind and approved-design link.
+- `skills/sohrab/alaa-workflow/assets/design-plan-template.md`, `design-checkpoint-template.md`: discussion, decisions, questions, pending approval, six-field handoff and current design position; no execution hierarchy or cursor.
+- `skills/sohrab/alaa-workflow/tests/test_workflow_files.py`: explicit execution fixtures with independent synthetic approved design; historical local/flat families explicitly remove new kind metadata; discriminating approval/date/readability/kind/collision/force/source-path/no-write tests.
+- Deliberate CLI changes: new direct execution cannot select local; new state-only creation is rejected because it cannot represent execution hierarchy. Historical local and state-only validator contracts remain covered.
+- Design decisions: separate early dispatch avoids weakening execution gates; common approval validation keeps initializer/validator semantics aligned. Reusing execution phases for design and silently migrating legacy families were rejected by the ratified design.
+- Invariants: offline metadata establishes no real human approval or live Beads readiness; pending design passes without execution artifacts; approved source bytes and checkpoint remain untouched; collision preflight and dry-run preserve inputs.
+- Compression: drafted both design templates, then shortened controlling sentences without removing approval attribution/date/evidence, completion condition, authority limits, checkpoint ownership or resume boundaries. Added Proposed Design as discussion guidance without a new validator-heading obligation.
+
+## Observed verification
+
+All commands ran from the repository root; Python used -B, serial default process resources, no CPU-heavy runner. Required temp-workspace tests used scoped require_escalated after the first sandbox failure.
+1. `python -B skills/sohrab/alaa-workflow/tests/test_workflow_files.py PlanKindTest SkillSourcePathTest WorkflowFilesTest.test_resumable_is_the_default_and_creates_a_plan_plus_checkpoint WorkflowFilesTest.test_direct_remains_available_as_one_small_plan WorkflowFilesTest.test_remaining_compatibility_flags_still_execute TaskStoreCliTest.test_direct_default_and_explicit_local TaskStoreCliTest.test_collisions_are_atomic TaskStoreCliTest.test_no_tracker_or_network_operations` — sandbox exit 1, 49 infrastructure errors before behavior, WinError 5 at temporary workspace mkdir. Exact escalated retry exit 0: 19 tests, 17.093s, on the earlier candidate.
+2. `python -B skills/sohrab/alaa-workflow/tests/test_workflow_files.py PlanKindTest SkillSourcePathTest TaskStoreCliTest WorkflowFilesTest.test_profiles_create_only_declared_companions WorkflowFilesTest.test_explicit_prompt_pack_records_roles_and_freshness WorkflowFilesTest.test_with_state_alias_reproduces_legacy_four_file_set WorkflowFilesTest.test_remaining_compatibility_flags_still_execute WorkflowFilesTest.test_existing_outputs_are_refused_whole_and_nothing_is_written WorkflowFilesTest.test_initializer_misuse_reports_could_not_run WorkflowFilesTest.test_task_text_is_json_escaped HierarchyContractTest.test_new_hierarchy_round_trip_and_schema3_cursor` — escalated exit 1: 26 actual tests passed; one loader error for my nonexistent HierarchyContractTest selector. No behavior failure; 29.075s.
+3. `python -B skills/sohrab/alaa-workflow/tests/test_workflow_files.py HierarchyCliTest.test_new_hierarchy_round_trip_and_schema3_cursor` — corrected selector only, escalated exit 0: 1 test, 0.649s. Passing selectors from command 2 were not repeated.
+4. `git diff --check -- skills/sohrab/alaa-workflow/scripts skills/sohrab/alaa-workflow/tests skills/sohrab/alaa-workflow/assets` — exit 0. Six owned source/template files were verified UTF-8 without BOM and LF (zero CR bytes).
+Snapshot: SHA-256 `644ab72c3e890d77fbd663b657451d58ce6a698095026206d08351f10362ddd4`; sorted six source/template repository-relative paths, each joined to its content SHA-256 by one space; records joined with LF, no final LF, UTF-8 manifest.
+
+## Remaining
+
+Full suite, repository gates, independent correctness/instruction review and final integrated snapshot are intentionally unrun here; parent owns them. No self-test flag was added or claimed. No commit, push, installation or live application mutation occurred. Existing ignored caches are parent-confirmed initial state and were preserved. No boundary conflict remains; any review fixes require parent dispatch.
+
+## Review fix: portable approved-design link
+
+After the parent released the verifier freeze, changed only initializer and tests: emit the approved design relative to the repository invocation root, preserving the original resolved identity for approval/overwrite checks. Different-drive designs without a relative representation fail before writes. Added absolute-argument relocation and same-drive external-link regressions; original design/checkpoint bytes remain protected. No instruction/template edit required compression.
+`python -B skills/sohrab/alaa-workflow/tests/test_workflow_files.py PlanKindTest.test_absolute_design_argument_emits_a_relative_link_that_survives_relocation PlanKindTest.test_external_same_drive_absolute_design_link_remains_relative_and_resolves PlanKindTest.test_approved_design_is_linked_unchanged_and_direct_execution_keeps_hierarchy PlanKindTest.test_execution_requires_a_readable_approved_design_before_writes PlanKindTest.test_dry_run_collision_and_design_overwrite_preflight_preserve_inputs PlanKindTest.test_execution_validator_rejects_removed_hierarchy_or_unapproved_link` — repository root, scoped require_escalated, serial defaults, exit 0: 6 tests in 7.062s. Scoped diff --check exited 0. Earlier snapshot is superseded for initializer/tests; parent owns the new combined snapshot and final review. Source frozen again.

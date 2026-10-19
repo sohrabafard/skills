@@ -57,6 +57,8 @@ Derive final commands from repository guidance. Common conservative examples:
 
 `-p` controls package/build concurrency. `-parallel` controls tests using `t.Parallel` inside a test binary. `GOMAXPROCS` controls runtime CPU parallelism. They are not interchangeable.
 
+Test-result caching is separate from build caching. Reuse test results only while the four validity conditions in `/alaa-testing-strategy` hold. When a condition changes or a check requires fresh proof, bypass result reuse for its selected packages or topics, including affected-tier checks against external dependency state (Go: `-count=1`); retain the build cache. The exhaustive tier runs once, fresh, on the final candidate; `./...` is exhaustive-only, and `-count=1` may be used at any tier that needs a fresh result.
+
 ## Node/Vue/Quasar
 
 Use repository scripts exactly. Apply worker limits only when the test/build tool supports them and the repository does not define a conflicting policy. Examples vary by Vitest/Jest/Playwright/Vite and must not be guessed.

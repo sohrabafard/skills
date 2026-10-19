@@ -26,7 +26,7 @@ Use this file to choose the smallest recovery reference. Each entry names the fa
 
 - `references/40-project-fallbacks.md`
 - Node, Vite, Vitest, Quasar, and Yarn-gate fallbacks recorded from real sessions
-- standing maintainer approval for unsandboxed validation gates, and its scope condition
+- validation command candidates and their normal escalation/authority conditions
 - the `entekhabat-front` `/new` package lane
 
 - `references/90-source-map.md`

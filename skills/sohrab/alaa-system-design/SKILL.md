@@ -9,7 +9,7 @@ Decide the shape of a subsystem before it is implemented, and record the decisio
 
 The deliverable is one design record written on `assets/design-record-template.md`, in that template's section order, so that two agents designing the same subsystem from the same evidence produce recognisably the same record. A fleet whose designs come out differently every run cannot be reviewed, debugged, or extended by anyone who did not write them.
 
-A **component** here is anything with its own state and its own interface — a service, a module inside a service, a worker, or a shared package — and the procedure is identical at every scale. Companion skills are written `/name` for Claude Code and `$name` for Codex; both forms name the same skill.
+A **component** here is anything with its own state and its own interface — a service, a module inside a service, a worker, or a shared package — and the procedure is identical at every scale. Write cross-skill references as `/name`.
 
 ## When a design pass is required
 
@@ -30,7 +30,7 @@ Both errors cost. A skipped pass relocates the decision into whichever function 
 
 ## What this skill consumes
 
-`/alaa-project-constitution` (`$alaa-project-constitution`) builds the project-intent model, matches the project's archetypes, and walks every owned surface against the archetype counterfactuals and the ten quality-bar obligations — then stops deliberately, forbidding an implementation or a number as the answer to any question it raises, because a policy with one design embedded in it outlives that design.
+`/alaa-project-constitution` builds the project-intent model, matches the project's archetypes, and walks every owned surface against the archetype counterfactuals and the ten quality-bar obligations — then stops deliberately, forbidding an implementation or a number as the answer to any question it raises, because a policy with one design embedded in it outlives that design.
 
 This skill answers those questions, under three rules that keep one obligation list from becoming two. First, read `CONSTITUTION.md` and the archetype identifiers it matched; when the repository has none, invoke that skill to match archetypes rather than matching them here. Second, carry every counterfactual its discovery raised against a surface this design touches into the record section that owns it, cite the archetype identifier, and answer it with a decision — `references/60-design-record.md` maps each counterfactual class to its section. Third, never copy the constitution's rows into the record and never re-derive its archetype match here, because two copies of one obligation list drift and the copy inside a design record is the one nobody updates. The traffic runs both ways: an answer stating what every service in the estate owes is a constitutional amendment rather than a line in one record, so route it back and say so — an estate-wide rule buried in one subsystem's record binds nobody.
 
@@ -60,9 +60,9 @@ Read `references/10-boundary-and-seam.md` when deciding what is inside the desig
 
 ### Step 3 — Derive the contract
 
-**The contract is decided in the record and committed as the first implementation lane, before the code that satisfies it.** An implementation lane that has to invent a field name, a status code, or an error class was dispatched too early, and whatever it invents becomes the contract by default. Enumerate every interface into and out of the subsystem, fix the data shape on each, and derive the error surface each caller must handle.
+**Decide the contract in the record before implementation; write its contract files in the first implementation lane, before the code that satisfies them.** Commit timing follows Review and readiness below. An implementation lane that has to invent a field name, a status code, or an error class was dispatched too early, and whatever it invents becomes the contract by default. Enumerate every interface into and out of the subsystem, fix the data shape on each, and derive the error surface each caller must handle.
 
-Satisfy the platform invariants `/alaa-services-contract` (`$alaa-services-contract`) owns and cite them; never restate one in the record.
+Satisfy the platform invariants `/alaa-services-contract` owns and cite them; never restate one in the record.
 
 Read `references/20-contract-first.md` when enumerating interfaces, fixing data shapes, or deciding an error surface, and before committing any contract change.
 
@@ -72,7 +72,7 @@ Read `references/20-contract-first.md` when enumerating interfaces, fixing data 
 
 **A second copy of data is a cache when deleting it at any moment loses nothing** — the system converges to the same answer by re-reading the owner — **and the record states its maximum age and its invalidation trigger. It is a fork when deletion loses information, or when anything writes to it that does not also write to the owner.** A fork carries a named reconciliation path and a rule for which copy wins; an unlabelled second copy becomes a fork silently, on the first write that reaches only one of them.
 
-This step owns only who may write and what a stale read is allowed to cause; `/alaa-data-layer` (`$alaa-data-layer`) owns the mechanics that enforce it.
+This step owns only who may write and what a stale read is allowed to cause; `/alaa-data-layer` owns the mechanics that enforce it.
 
 Read `references/30-data-and-consistency.md` when a datum's owner is unclear, when a read may be stale, when a second copy is proposed, or when two write paths can interleave.
 
@@ -80,7 +80,7 @@ Read `references/30-data-and-consistency.md` when a datum's owner is unclear, wh
 
 **A design with an unclassified dependency is unfinished, and this classification happens during design rather than during implementation.** A classification left to implementation is made by whoever writes the call site, one call site at a time, which is how two services come to behave differently against the same dependency.
 
-This step owns only that the classification and the assumed load exist before the record is reviewable; the gate-versus-contributor rule behind the classification is `/alaa-reliability-sla`'s (`$alaa-reliability-sla`).
+This step owns only that the classification and the assumed load exist before the record is reviewable; the gate-versus-contributor rule behind the classification is `/alaa-reliability-sla`'s.
 
 Read `references/40-failure-and-load-inputs.md` when building the dependency table, when a classification is disputed, or when the design states no load assumption yet.
 
@@ -100,7 +100,7 @@ Name the state of the system while old and new versions run together, because in
 
 ## Authority and side effects
 
-A design pass writes exactly one file: the design record, plus the pointer files a multi-repository design requires. It changes no application code, no schema, no configuration, and no contract file; those are the first implementation lane, dispatched after the record is reviewed. A design that edited the code it proposes cannot be rejected, and a proposal that cannot be rejected is not a design pass.
+A design pass writes exactly one file: the design record, plus the pointer files a multi-repository design requires. It changes no application code, no schema, no configuration, and no contract file; those belong to implementation under Review and readiness below. A design that edited the code it proposes cannot be rejected, and a proposal that cannot be rejected is not a design pass.
 
 ## The design record
 
@@ -110,9 +110,11 @@ Read `references/60-design-record.md` when creating, numbering, superseding, or 
 
 ## Review and readiness
 
-A design is reviewed before any implementation lane is dispatched, and a record nobody has reviewed is a draft whatever its status line says.
+Complete the design decisions before implementation. Under /alaa-cc-orchestrator or /alaa-codex-orchestrator, inherit the plan cadence and exact phase/task/subtask cursor through that orchestrator's `references/verification-and-gates.md` section `Review boundary and execution cadence`; it owns review and commit timing. A decision-complete draft may guide implementation pending that boundary; it is not reviewed acceptance. Return missing or inconsistent cadence to the plan owner before dependent dispatch.
 
-Read `references/70-review-and-readiness.md` when reviewing a record, when deciding whether a finding blocks, and when handing a reviewed record to an implementation lane.
+Standalone, without an orchestrator, review the record before dispatching implementation. An unreviewed record remains `draft` in either mode; only independent judgment with blocking findings resolved earns `reviewed`.
+
+Read `references/70-review-and-readiness.md` when reviewing a record, when deciding whether a finding blocks, and when handing a record to an implementation lane.
 
 ## When NOT to use
 
@@ -125,20 +127,20 @@ Read `references/70-review-and-readiness.md` when reviewing a record, when decid
 
 ## Stop conditions
 
-Stop successfully when every section of the record carries either a decision or a stated non-applicability with its evidence; the reviewer's blocking findings are resolved in the record rather than deferred into implementation; and the record's status reads `reviewed`.
+Finish design authoring when every section carries a decision or evidenced non-applicability. Under orchestration, return the record with review/commit pending until the inherited boundary; resolve blocking findings in the record before reviewed acceptance. Standalone success requires those findings resolved and status `reviewed`.
 
-Stop and report a blocked state when: a dependency cannot be classified as gate or contributor from the code and the repository's documentation; a datum needs two writers and no owner can be named without a decision that belongs to the user; the extend-or-create decision turns on a trust or compliance rule the repository does not state, which goes to `/alaa-security-review` (`$alaa-security-review`) and then to the user; no second candidate can be constructed even from the do-nothing generator in `references/50-alternatives-and-tradeoffs.md`, which means the problem is not yet stated as a design problem; or the design would change a surface a live external consumer depends on with no deprecation window open under `/alaa-services-contract`'s `references/22-failure-load-and-deprecation-contract.md`.
+Stop and report a blocked state when: a dependency cannot be classified as gate or contributor from the code and the repository's documentation; a datum needs two writers and no owner can be named without a decision that belongs to the user; the extend-or-create decision turns on a trust or compliance rule the repository does not state, which goes to `/alaa-security-review` and then to the user; no second candidate can be constructed even from the do-nothing generator in `references/50-alternatives-and-tradeoffs.md`, which means the problem is not yet stated as a design problem; or the design would change a surface a live external consumer depends on with no deprecation window open under `/alaa-services-contract`'s `references/22-failure-load-and-deprecation-contract.md`.
 
 ## Output
 
 Return this, in this order, for every design pass:
 
 ```text
-Outcome: design ready | design blocked | not required
+Outcome: design ready | design authored, review pending | design blocked | not required
 Record: path, status, and the trigger condition that fired
 Scope: components inside, dependencies outside with owners, seam and its test results
 Boundary decision: extend <component> | new service, with the conditions met
-Contract: interfaces added or changed, and where each shape is committed
+Contract: interfaces added or changed, shape paths, pending commit if any
 Data: each datum -> owning component; each second copy -> cache | fork with its rule
 Dependencies: each -> classification, caller-visible failure, assumed load, source of bounds
 Candidates: winner with the axis it won on; each rejected with its axis and reviving condition
@@ -153,17 +155,17 @@ This skill owns the **method**: what must be decided, in what order, and what ma
 
 | Not owned here | Owner |
 |---|---|
-| Project policy, archetype and quality-bar obligations, and the intent model and counterfactuals consumed above | `/alaa-project-constitution` — `$alaa-project-constitution` |
-| Envelopes, correlation and trusted gateway headers, the public identifier boundary, the trust boundary, event, code and permission names, and the deprecation procedure | `/alaa-services-contract` — `$alaa-services-contract` |
+| Project policy, archetype and quality-bar obligations, and the intent model and counterfactuals consumed above | `/alaa-project-constitution` |
+| Envelopes, correlation and trusted gateway headers, the public identifier boundary, the trust boundary, event, code and permission names, and the deprecation procedure | `/alaa-services-contract` |
 | Every Ala timeout, retry, pool, acquire-wait, and shed value, with the wire behaviour carrying it | `/alaa-services-contract`'s `references/22-failure-load-and-deprecation-contract.md` |
-| Failure doctrine: gate-versus-contributor discrimination, deadlines, retries, breakers, bulkheads, admission and shedding, degradation, idempotency, error budgets, and their evidence | `/alaa-reliability-sla` — `$alaa-reliability-sla` |
-| Trust-boundary review, authn and authz decisions, tenant isolation, fail-closed doctrine, every security verdict | `/alaa-security-review` — `$alaa-security-review` |
-| Signal selection, instrumentation requirement levels, cardinality and sampling budgets, alerting, retention, SOC evidence | `/alaa-observability-soc` — `$alaa-observability-soc` |
-| Schema, constraints, indexes, migrations, isolation semantics, pooling mechanics, projections, Redis behaviour | `/alaa-data-layer` — `$alaa-data-layer` |
-| Broker prefetch, acknowledgement, consumer concurrency, dead-letter mechanics | `/alaa-async-messaging` — `$alaa-async-messaging` |
-| Dispatching and gating the implementation lanes a reviewed design produces, and the `alaa-architecture-critic` role that runs this review with its verdict vocabulary | `/alaa-cc-orchestrator` — `$alaa-codex-orchestrator` |
-| Plan files, resumable state, and phase prompt packs for a design spanning sessions | `/alaa-workflow` — `$alaa-workflow` |
-| What proves a design's behaviour: the layer a behaviour is tested at, whether a double is honest, the six proof levels, and what evidence a review accepts | `/alaa-testing-strategy` — `$alaa-testing-strategy` |
-| The complexity budget on a path this design creates, the real bound on a growing input dimension, structure choice from the access pattern, and the N+1 family | `/alaa-algorithms-data-structures` — `$alaa-algorithms-data-structures` |
+| Failure doctrine: gate-versus-contributor discrimination, deadlines, retries, breakers, bulkheads, admission and shedding, degradation, idempotency, error budgets, and their evidence | `/alaa-reliability-sla` |
+| Trust-boundary review, authn and authz decisions, tenant isolation, fail-closed doctrine, every security verdict | `/alaa-security-review` |
+| Signal selection, instrumentation requirement levels, cardinality and sampling budgets, alerting, retention, SOC evidence | `/alaa-observability-soc` |
+| Schema, constraints, indexes, migrations, isolation semantics, pooling mechanics, projections, Redis behaviour | `/alaa-data-layer` |
+| Broker prefetch, acknowledgement, consumer concurrency, dead-letter mechanics | `/alaa-async-messaging` |
+| Dispatch, review/commit cadence, and the `alaa-architecture-critic` role and verdicts | `/alaa-cc-orchestrator` or `/alaa-codex-orchestrator` |
+| Plan files, resumable state, and phase prompt packs for a design spanning sessions | `/alaa-workflow` |
+| What proves a design's behaviour: the layer a behaviour is tested at, whether a double is honest, the six proof levels, and what evidence a review accepts | `/alaa-testing-strategy` |
+| The complexity budget on a path this design creates, the real bound on a growing input dimension, structure choice from the access pattern, and the N+1 family | `/alaa-algorithms-data-structures` |
 | Language idiom, patterns, and refactoring inside a component | the per-language clean-code skills, named per stack |
-| Model selection, effort selection, prompting, and skill or agent authoring | `/alaa-prompting-guide` — `$alaa-prompting-guide` |
+| Model selection, effort selection, prompting, and skill or agent authoring | `/alaa-prompting-guide` |

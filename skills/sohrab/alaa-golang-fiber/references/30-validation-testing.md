@@ -57,14 +57,11 @@ before using `binding_source`.
 
 ### What Fiber's binder does not do
 
-The kit's `httpkit.Bind[T]` enforces four things beyond decoding: it requires the JSON content type,
-wraps the body in a size-capped reader at the configured limit, rejects unknown fields, and rejects
-a second JSON document in the same body. Fiber's binder enforces none of these; `fiber.Config`'s
-`BodyLimit` caps the size and nothing else.
-
-On Fiber, write one bind helper in the transport package that adds the missing four, and call it
-from every handler. Four separate handlers each remembering to check content type is four chances to
-forget. `50-kit-conflict-register.md` records this surface and its cost.
+Before implementing a Fiber bind helper, read `/alaa-golang`
+`references/45-failure-behavior-at-the-call-site.md` section 5 for the four decode checks and kit binder
+contract. Fiber's binder does not supply that contract; `fiber.Config.BodyLimit` covers only its size
+bound. Add the missing checks in one transport helper called by every handler, so a handler cannot forget
+one. `50-kit-conflict-register.md` records the surface and its cost.
 
 ## The `StructValidator` adapter
 
@@ -114,18 +111,10 @@ change the public contract.
 
 ## TDD
 
-For any behavior change:
-
-1. Write or update a test that fails for the reason you are about to fix.
-2. Write the smallest change that makes it pass.
-3. Refactor names, boundaries and duplication with the test still passing.
-
-Run the focused test after each step, then `go test ./...` before calling the work done. Add
-`go test -race ./...` when the change touches shared state, caches, goroutines, workers, or any
-value copied out of a `fiber.Ctx`.
-
-Test design beyond this loop - what to test at which layer, fixture strategy, coverage policy - is
-owned by `/alaa-testing-strategy`.
+Before changing behavior, follow `/alaa-golang` `references/63-tdd-and-testing-discipline.md` for the
+complete owed-test sequence, isolated failure confirmation and stop/report path; its `SKILL.md`
+validation gate owns native commands, general race triggers and broad-check authority.
+`/alaa-testing-strategy` owns test obligation, layer, fixtures and coverage.
 
 ## Handler tests
 
@@ -164,9 +153,8 @@ without being more truthful.
 
 ## Race and fuzz
 
-- `go test -race ./...` on every package that shares state across goroutines. On a Fiber service
-  this specifically includes any code path that retains a value derived from `fiber.Ctx`: the race
-  detector will not catch a buffer-reuse bug directly, but it will catch the concurrent access that
-  usually accompanies it.
+- Apply `/alaa-golang`'s race gate and command authority. Fiber adds one trigger: a changed code path
+  retaining any value derived from `fiber.Ctx`, including copied values. Race detection does not prove
+  buffer-copy safety directly; it catches the concurrent access that usually accompanies buffer reuse.
 - Fuzz parsers, codecs, validators and any surface that reads untrusted input. Keep fuzz targets
   fast, deterministic and free of persistent global state.

@@ -1,0 +1,35 @@
+{
+  "status": "PASS",
+  "product_files": 2238,
+  "product_manifest_sha256": "24aa88d79f4e483bac8946d045b5e4486f1d2c5847027350d620abd70bc8b878",
+  "first_candidate_delta_paths": [
+    "skills/sohrab/alaa-bale-provider/SKILL.md",
+    "skills/sohrab/alaa-sms-provider-mediana/SKILL.md"
+  ],
+  "unrelated_files": 10,
+  "unrelated_hashes": "matched",
+  "cached_raw_index": "matched exactly",
+  "zero_byte_reports": [
+    {
+      "path": "artifacts/skill-pack-review-20261018/01-contradictions-and-overlaps.md",
+      "bytes": 0
+    },
+    {
+      "path": "artifacts/skill-pack-review-20261018/02-optimization.md",
+      "bytes": 0
+    },
+    {
+      "path": "artifacts/skill-pack-review-20261018/03-new-skill-proposals.md",
+      "bytes": 0
+    }
+  ],
+  "coverage_rows": 124,
+  "unique_coverage_ids": 124,
+  "terminal_dispositions": {
+    "adapted": 90,
+    "implemented": 27,
+    "rejected": 7
+  },
+  "bash_topic_map_sha256": "a83df1a9104bd2af70d56a7cee8a20746c4baa68286a3605100a25a3ab7d2867",
+  "tracked_skill_deletions": 0
+}

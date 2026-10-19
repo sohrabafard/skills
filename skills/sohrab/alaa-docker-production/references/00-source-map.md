@@ -18,9 +18,11 @@ carries the command or URL that re-derives it, and the checker carries the same 
 node scripts/check-image-pinning.mjs --versions
 ```
 
-That command is the freshness procedure. It prints every value below with its source and its
-re-derivation command, and `check-image-pinning.mjs` reports `image-eol-line` when a Compose file
-references a language or distribution line that has left support.
+That command prints the local version register, observation dates, sources and re-derivation
+commands; it fetches no upstream evidence. Before selecting or changing a current default,
+check the named primary sources and record the date and result. A local printer run alone
+does not refresh this ledger. `check-image-pinning.mjs` reports `image-eol-line` against its
+recorded language and distribution support facts, not freshly fetched lifecycle evidence.
 
 ## Verification ledger - dated observations
 

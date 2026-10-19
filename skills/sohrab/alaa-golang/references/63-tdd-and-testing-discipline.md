@@ -2,7 +2,9 @@
 
 Read this before changing what any Go code does. It owns the **sequence** a behaviour change follows and the Go
 mechanics of writing the test. Which kinds of test a change requires, and where the boundary between unit,
-integration, contract, and load testing sits, belong to `/alaa-testing-strategy` (`$alaa-testing-strategy`).
+integration, contract, and load testing sits, belong to `/alaa-testing-strategy`, which also decides whether a
+behaviour is owed a test at all: a consumer of the alaa-go-chi kit, a shared package, or the standard library does
+not re-test what that dependency's own suite proves.
 
 ## What counts as a behaviour change
 
@@ -12,7 +14,8 @@ moving a file, reformatting, and adding a comment are not behaviour changes.
 
 ## The sequence
 
-**Rule:** for every behaviour change, in this order, with no step skipped and no step merged into another:
+**Rule:** for every behaviour change that `/alaa-testing-strategy` finds owed a test, in this order, with no step
+skipped and no step merged into another:
 
 1. Read the existing tests for the code you are about to change. Name them in your report.
 2. Write or update the test that will pass only once the new behaviour exists.
@@ -69,7 +72,11 @@ signal that the work reached the point you care about.
 
 **Forbidden:** a test whose result depends on wall-clock time, on `map` iteration order, on a random value without a
 fixed seed, or on another test having run. **Rule:** inject the clock, sort before comparing, seed explicitly, and
-make each test construct its own state.
+make each test construct its own mutable state.
+
+**Rule:** start an expensive resource — a testcontainer, a migrated schema, a booted router — once per package in
+`TestMain` when tests can isolate it with a rolled-back transaction, unique namespace, or exact reset. Keep it per
+test when none is safe, recording why; also create it per test when creation is the behaviour under test.
 
 **Rule:** use a hand-written fake when the assertion is about the value the code under test produced. Use a mock when
 the assertion is about the interaction itself — that a method was called, with which arguments, how many times. An
@@ -80,11 +87,21 @@ keep the target free of shared state so it stays deterministic under `-race`.
 
 ## Running the tests
 
-**Rule:** run the single test first, then the changed packages, then the repository. Running everything first hides
-which change broke what.
+**Rule:** run the single test first, then the changed packages. Running everything first hides which change broke
+what. The repository-wide run, its `-race` variant and their triggers belong to the validation gate in `SKILL.md`.
 
-**Rule:** run `go test -race ./...` whenever the change touches a goroutine, a channel, a mutex, a cache, a worker
-pool, or a package-level variable — the same trigger as the validation gate in `SKILL.md`.
+**Rule:** make every test selectable by topic and layer. The topic is the package plus the behaviour prefix of the
+test name, so `-run '^TestCreateUser_'` selects it. The layer is the repository's configured build tag for real-store
+tests; the alaa-go-chi kit uses `testcontainers`. Before combining tagged and normal runs, inspect build constraints
+and test configuration to prove the selection covers required normal behavior: tags can exclude files such as
+`!integration`, and may select different production code. If that coverage is unproven, retain both selections.
+
+**Rule:** a Go test binary is one package, so "once per run" for an expensive resource means once per package.
+
+**Rule:** reuse Go build artifacts and test results independently. A fresh test execution may use `-count=1` when
+externally mutable dependency state changes without changing the test inputs, a cache hit cannot establish the
+required result, or final proof requires a new observation; this bypasses test-result reuse without discarding
+reusable build outputs. Do not clear the test cache for routine runs.
 
 **Forbidden:** reporting a test suite as passing when it was not executed in this session, and reporting a skipped
 test as a passing one. Use the evidence vocabulary from `alaa-go-chi-development`

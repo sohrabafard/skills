@@ -1,6 +1,9 @@
 # Documentation routing
 
-/alaa-repo-docs owns repository Markdown authoring, canonical topic ownership, language, navigation, alignment, redaction and link validation. /alaa-frontend-doc-annotations owns source comments/docblocks. This reference selects their evidence surfaces.
+/alaa-repo-docs owns repository Markdown authoring, canonical topic ownership, language, navigation,
+alignment, redaction and link validation. Before routing source comments/docblocks, use its `SKILL.md`
+section `Ground this skill does not own` for the verified stack-specific owner. This reference selects
+evidence surfaces, not annotation policy.
 
 | Question | Surface |
 |---|---|

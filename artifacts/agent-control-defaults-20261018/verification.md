@@ -1,0 +1,61 @@
+# Independent verification
+
+Overall status: **PASS for the dispatched static gates and binding audit**. The repaired core candidate passed the authorized affected reruns, and both final reviewers approved the targeted change. The first complete binding-audit attempt used a raw checkout-vs-blob comparison for an unchanged import and reported a false `skills` mismatch. The parent verified Git's canonical clean content and authorized one focused audit under the corrected oracle; that audit passed. The combined 17-repository commit-input manifest is complete.
+
+AGENT: `alaa-verifier`. CONFIGURED model/effort: neutral definition, no pins. REQUESTED model/effort: `gpt-6-luna` / `medium`, explicitly recorded in the plan. OBSERVED model/effort: unknown (runtime evidence does not expose serving identity). The plan records explicit host controls as available. Active authority observed: workspace-write context and mutation-capable tools; verification used read-only commands. Runtime enforcement evidence for the role boundary is unknown.
+
+## Environment and command evidence
+
+Repository: `.` (skills repository root); branch `main`; base `4c2a5bd66f18338f128423e2fbaf038a724efb1b`. Python 3.14.8; `PYTHONDONTWRITEBYTECODE=1` plus `-B`; PowerShell; 32 logical processors reported by .NET, while Windows CIM system facts were unavailable (`Access denied`). All commands were serialized at normal priority with default affinity. No command was declared CPU-heavy, so the low-priority runner was not applicable. The dispatch did not explicitly assign focused/affected/exhaustive tiers; the tier column therefore says `unspecified` rather than inventing one.
+
+| Command | CWD | Resource limits | Duration | Exit | Classification | Tier | Proof |
+|---|---|---|---:|---:|---|---|---|
+| `python -B skills/sohrab/alaa-codex-orchestrator/scripts/check_agent_contracts.py --self-test` | repo root | 1 process; normal; default affinity | 3.331s | 0 | PASS | unspecified | Level 2, fixture self-test |
+| `python -B skills/sohrab/alaa-cc-orchestrator/scripts/check_agent_contracts.py --self-test` | repo root | 1 process; normal; default affinity | 2.598s | 0 | PASS | unspecified | Level 2, fixture self-test |
+| `python -B skills/sohrab/alaa-codex-orchestrator/scripts/validate_pack.py` | repo root | 1 process; normal; default affinity | 0.702s | 0 | PASS | unspecified | Level 1, static |
+| `python -B skills/sohrab/alaa-cc-orchestrator/scripts/validate_pack.py` | repo root | 1 process; normal; default affinity | 0.847s | 1 | PRODUCT-FAILURE | unspecified | — |
+| `python -B skills/sohrab/alaa-prompting-guide/scripts/check_codex_model_policy.py --agent-root skills/sohrab/alaa-codex-orchestrator/agents --agent-root skills/sohrab/alaa-prompting-guide/assets/rule-writer/codex` | repo root | 1 process; normal; default affinity | 0.260s | 0 | PASS | unspecified | Level 1, static |
+| `python -B skills/sohrab/alaa-prompting-guide/scripts/check_claude_model_policy.py --agent-root skills/sohrab/alaa-prompting-guide/assets/rule-writer/claude` | repo root | 1 process; normal; default affinity | 0.272s | 0 | PASS | unspecified | Level 1, static |
+| `python -B skills/sohrab/alaa-prompting-guide/scripts/check_rule_writer_grants.py` | repo root | 1 process; normal; default affinity | 0.530s | 0 | PASS | unspecified | Level 1, static |
+| `python -B skills/sohrab/alaa-workflow/scripts/validate_workflow_files.py --plan docs/_agent_plans/20261018-190000_agent-control-defaults.md` | repo root | 1 process; normal; default affinity | 0.246s | 0 | PASS | unspecified | Level 1, static; offline-Beads warning |
+| `python -B scripts/validate_sohrab_skill_pack.py` | repo root | 1 process; normal; default affinity | 0.337s | 0 | PASS | unspecified | Level 1, static |
+| `python -B scripts/check_skill_index.py` | repo root | 1 process; normal; default affinity | 0.222s | 0 | PASS | unspecified | Level 1, static |
+| `python -B scripts/check_fleet_references.py --skill alaa-codex-orchestrator --skill alaa-cc-orchestrator --skill alaa-prompting-guide --skill alaa-workflow` | repo root | 1 process; normal; default affinity | 0.801s | 0 | PASS | unspecified | Level 1, static |
+| `python -B scripts/check_lifecycle_contract.py` | repo root | 1 process; normal; default affinity | 0.709s | 0 | PASS | unspecified | Level 1, static |
+| `git diff --check` | repo root | 1 process; normal; default affinity | 0.179s | 0 | PASS | unspecified | Level 1, static |
+| `python -B skills/sohrab/alaa-codex-orchestrator/scripts/check_agent_contracts.py --self-test` (frozen repair rerun) | repo root | 1 process; normal; default affinity | 2.371s | 0 | PASS | affected rerun | Level 2, 547 fixture cases |
+| `python -B skills/sohrab/alaa-cc-orchestrator/scripts/check_agent_contracts.py --self-test` (frozen repair rerun) | repo root | 1 process; normal; default affinity | 1.962s | 0 | PASS | affected rerun | Level 2, 490 fixture cases |
+| `python -B skills/sohrab/alaa-codex-orchestrator/scripts/validate_pack.py` (frozen repair rerun) | repo root | 1 process; normal; default affinity | 0.518s | 0 | PASS | affected rerun | Level 1, static |
+| `python -B skills/sohrab/alaa-cc-orchestrator/scripts/validate_pack.py` (frozen repair rerun) | repo root | 1 process; normal; default affinity | 0.607s | 0 | PASS | affected rerun | Level 1, static |
+| `python -B scripts/check_fleet_references.py --skill alaa-cc-orchestrator` | repo root | 1 process; normal; default affinity | 0.7s | 0 | PASS | affected | Level 1, static |
+| `& 'artifacts/agent-control-defaults-20261018/audit_bindings.ps1'` | repo root; elevated PowerShell | 1 process; normal; default affinity | 0.36s | 1 | TEST-INFRA-FAILURE | affected | — |
+| `$env:PYTHONDONTWRITEBYTECODE='1'; python -B artifacts/agent-control-defaults-20261018/audit_bindings.py --project-root <project-root>` | repo root; elevated PowerShell/native Git | serial repo checks; normal; default affinity | ~14s | 1 | TEST-INFRA-FAILURE (wrong unchanged-import oracle) | affected | Level 1, static byte and Git checks |
+| `$env:PYTHONDONTWRITEBYTECODE='1'; python -B artifacts/agent-control-defaults-20261018/audit_bindings.py --project-root <project-root> --only skills --output verification-bindings-skills.json` | repo root; elevated PowerShell/native Git | serial; normal; default affinity | 8.159s | 0 | PASS | affected follow-up | Level 1, static byte and Git checks |
+
+Aggregate coverage was checked in source before avoiding duplicate child gates. Both `validate_pack.py` files invoke their exact repository-local `check_agent_grants.py` input and evaluate renderer drift via `expected_outputs(...)` and `drift(...)`, matching the corresponding `render_agents.py --check` inputs. Standalone grant and renderer child commands were not duplicated.
+
+The post-repair CC aggregate passed with 29 agents. Its prior failing run is retained as evidence for the earlier candidate, not counted as a flake: the source was repaired between those runs. The authorized rerun also re-executed both changed checker self-tests and both aggregate validators. The two changed CC role references were inspected; the scoped CC fleet-reference check passed.
+
+## Failures and audit result
+
+The first binding audit helper did not parse and ran no repository checks. PowerShell reported `audit_bindings.ps1:92` and: `Variable reference is not valid. ':' was not followed by a valid variable name character.` The parent supplied a cause-specific replacement helper, and the one materially different retry reached all 17 roots.
+
+The complete audit's initial `skills: FAIL: import drift` was an oracle mismatch, not a product finding. Parent evidence established the untouched `skills/CLAUDE.md` is 313 bytes with five CRLF endings in the worktree and 308 LF bytes in the HEAD blob; `git ls-files --eol` reports `i/lf w/crlf`, `git hash-object --path=CLAUDE.md CLAUDE.md` equals HEAD blob `a4acb3870685646fab834654a017b1c5b08af80f`, and `git diff HEAD -- CLAUDE.md` is empty. This is the documented Windows checkout conversion. The corrected helper uses Git's canonical clean representation for unchanged imports while preserving raw-byte comparisons for changed binding blocks and their outside bytes.
+
+The full run recorded 16 repositories, 24 physical files, 31 logical paths, seven preserved symlinks and two unchanged imports; all 16 passed. The authorized focused `--only skills` run then passed its binding block, outside-byte, import, status and scoped diff assertions. Together these establish 17 repositories, 25 physical files, 32 logical paths, seven symlinks and two unchanged imports. The original partial manifest remains as raw evidence; `binding-commit-manifest.json` combines the 16-root record with the focused `skills` record and documents the resolved oracle mismatch.
+
+At the initial CC aggregate, `validate_pack.py` returned 1 because its aggregate grant check reported: `alaa-instruction-reviewer: names /alaa-cc-orchestrator but holds no Skill tool and does not preload it` and `alaa-verifier: names /alaa-cc-orchestrator but holds no Skill tool and does not preload it`. The frozen repair changed those roles to reference the owner file directly; the authorized CC self-test and aggregate reruns passed. The verifier did not edit or repair source.
+
+The validation commands reused aggregate coverage instead of running duplicate `check_agent_grants.py` and renderer checks. No other test or live-runtime check was dispatched. Installed activation and serving identity remain unproven.
+
+## Repository state and contamination
+
+Initial status was already dirty: the plan/checkpoint and model/actor artifacts, both orchestrator trees, prompting-guide and workflow files, root `AGENTS.md`, and binding-batch artifacts were present before verification. Final status still shows those project-owned changes, including nine staged task evidence/plan files and 90 unstaged source files under the four scoped skills; untracked artifacts include the audit helpers, receipts and verification evidence. The verifier did not stage files, alter the index, edit product source, or change sibling repository files. No command-induced tracked-source contamination was observed. The verification artifacts are confined to this task artifact directory.
+
+Detailed core command results: [verification-core.json](verification-core.json). Frozen repair reruns: [verification-repair-rerun.json](verification-repair-rerun.json). Scoped source SHA-256 list (90 files): [verification-source-sha256.json](verification-source-sha256.json). Raw partial audit: [verification-bindings.json](verification-bindings.json). Focused `skills` audit: [verification-bindings-skills.json](verification-bindings-skills.json). Complete safe binding-only inputs and unrelated staged/dirty state: [binding-commit-manifest.json](binding-commit-manifest.json). Final root status: [verification-final-status.txt](verification-final-status.txt). The failed first helper is retained as [audit_bindings.ps1](audit_bindings.ps1); the replacement read-only helper is [audit_bindings.py](audit_bindings.py).
+
+## Commit preparation
+
+The user subsequently authorized committing the remaining source and task artifacts on the same branch. Machine-specific paths in this report and JSON records were normalized to `.` (skills repository root) or `<project-root>` (its parent); recorded results are unchanged. The failed PowerShell helper now derives that parent from its own location and remains historical failure evidence. The ignored console log remains local; the linked JSON records contain the recorded command outputs.
+
+Commit-preparation checks: all 90 source SHA-256 values matched the reviewed manifest; 41 artifact/plan files passed UTF-8 without BOM, LF, whitespace and portable-path checks; all 23 JSON files parsed. `git diff --check` returned 0. `python -B skills/sohrab/alaa-workflow/scripts/validate_workflow_files.py --plan docs/_agent_plans/20261018-190000_agent-control-defaults.md` first rejected the plural authority prefix; restoring its recognized `explicit user grant:` prefix made the unchanged validator return 0. Its offline-Beads warning remains; no live issue mutation or new closure is part of this commit-only follow-up. Broad source suites were not repeated because covered source hashes are unchanged.

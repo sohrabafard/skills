@@ -1,0 +1,35 @@
+{
+  "resource_policy": "Lightweight static/in-memory checks; normal priority, single Python process per check, bounded output; no CPU-heavy suite.",
+  "checks": [
+    {
+      "command": "python -B artifacts/skill-pack-optimization-20261018/lanes/ORCH-FINAL-focused.py",
+      "cwd": "repository root",
+      "exit": 0,
+      "observed": "Each runtime: 34/34 fixtures, 3/3 caller-seam diagnostics, 5 baseline-red early-review diagnostics; rerun after runtime suffix correction."
+    },
+    {
+      "command": "python -B scripts/render_agents.py --write",
+      "cwd": "each owned orchestrator root",
+      "exit": 0,
+      "observed": "34 Codex / 30 Claude outputs; only each manifest changed beyond hand-maintained critic sources."
+    },
+    {
+      "command": "python -B scripts/render_agents.py --check",
+      "cwd": "each owned orchestrator root",
+      "exit": 0,
+      "observed": "34 Codex / 30 Claude generated files agree; reused after checker-only suffix correction, which is outside renderer inputs."
+    },
+    {
+      "command": "python -B scripts/check_fleet_references.py --skill alaa-codex-orchestrator --skill alaa-cc-orchestrator",
+      "cwd": "repository root",
+      "exit": 0,
+      "observed": "2 skills, 74 Markdown files, 288 citations; no findings, 2 pre-existing informational unmarked paths."
+    },
+    {
+      "command": "git diff --check -- skills/sohrab/alaa-codex-orchestrator skills/sohrab/alaa-cc-orchestrator",
+      "cwd": "repository root",
+      "exit": 0,
+      "observed": "No whitespace errors; final invocation retained in parent tool evidence."
+    }
+  ]
+}

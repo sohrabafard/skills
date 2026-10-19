@@ -1,0 +1,332 @@
+{
+  "head": "1a0799de71254427973f1253d80b846fea9acf10",
+  "observer": "STORAGE implementation lane; independent acceptance pending",
+  "resource_policy": "lightweight commands; sequential or bounded independent native checks; no CPU-heavy suite",
+  "manifest_algorithm": "SHA256 of sorted repository-relative path + NUL + raw file bytes",
+  "manifest_sha256": "df062b9291f02030ff00bfaa07ea97fcbb7c51845df0197fcc0610ad5643ed41",
+  "files": [
+    {
+      "path": "skills/sohrab/alaa-arvan-object-storage/SKILL.md",
+      "sha256": "57433d2c77d637b89aff34b6e8739c8996efb2350fe17016310761b78aeaf986",
+      "bytes": 9622
+    },
+    {
+      "path": "skills/sohrab/alaa-arvan-object-storage/agents/openai.yaml",
+      "sha256": "1a5fd702c2b6417a7be5eea1c0e94f08212a5cfaf004f0ed8b90c6748f797782",
+      "bytes": 2633
+    },
+    {
+      "path": "skills/sohrab/alaa-arvan-object-storage/references/10-connection-identity-and-addressing.md",
+      "sha256": "53a6b4481a9a654877cd07f5835182faf53d049105653147432bac6773c746b0",
+      "bytes": 7521
+    },
+    {
+      "path": "skills/sohrab/alaa-arvan-object-storage/references/15-environment-contract-deltas.md",
+      "sha256": "73e3959dc9bfac019d8cb873d3b863dfed50f2621ea8ce4879ea06297197c741",
+      "bytes": 10242
+    },
+    {
+      "path": "skills/sohrab/alaa-arvan-object-storage/references/20-s3-compatibility-matrix.md",
+      "sha256": "9680157d3e0c5a55ebbc13decd555bff16ac7e792170aeaf2ffe568ae6a82406",
+      "bytes": 9705
+    },
+    {
+      "path": "skills/sohrab/alaa-arvan-object-storage/references/30-limits-quotas-and-cost.md",
+      "sha256": "cfefc789d70f8e3996f7869984696fe903a1e76ea7de3429c8f71ae07374f463",
+      "bytes": 6306
+    },
+    {
+      "path": "skills/sohrab/alaa-arvan-object-storage/references/40-migration-and-portability.md",
+      "sha256": "6329e9ce7893747b966b28cae1d011d46483a194869f3536f665bdae9113987e",
+      "bytes": 5928
+    },
+    {
+      "path": "skills/sohrab/alaa-arvan-object-storage/references/SOURCES.md",
+      "sha256": "be4d3fb642f7ebaaaf9073d539075ecf00a7aeaefe258c5113c1d46325c25c25",
+      "bytes": 15081
+    },
+    {
+      "path": "skills/sohrab/alaa-arvan-object-storage/scripts/check_arvan_storage_config.py",
+      "sha256": "20816d85a948a8777568e72b58e0ddc8f70098ee4bad645fa7c6f6edd9073bfc",
+      "bytes": 16427
+    },
+    {
+      "path": "skills/sohrab/alaa-minio-object-storage/SKILL.md",
+      "sha256": "e5ca310e721d4922f18369da91e78feaa9bee7d2f6d73427a05261d71084dfe3",
+      "bytes": 11820
+    },
+    {
+      "path": "skills/sohrab/alaa-minio-object-storage/agents/openai.yaml",
+      "sha256": "746ac758ff351587789b2c2f69d7c17a39459815a1f007be0fa03212b37fd823",
+      "bytes": 3145
+    },
+    {
+      "path": "skills/sohrab/alaa-minio-object-storage/references/00-topic-map.md",
+      "sha256": "992a610d6362d22774f9feab21693a601920c3c275ac16d34bc6077e8b6fdac2",
+      "bytes": 4234
+    },
+    {
+      "path": "skills/sohrab/alaa-minio-object-storage/references/05-environment-contract.md",
+      "sha256": "c5db43e900281a470339abbf35493c07412b796a50580ba3a5498f615be28ee0",
+      "bytes": 22810
+    },
+    {
+      "path": "skills/sohrab/alaa-minio-object-storage/references/10-buckets-and-object-keys.md",
+      "sha256": "8abbbf138fdb710f3a86cd0cc829c24f523bf593398ff8ee070b3427f38d06da",
+      "bytes": 6690
+    },
+    {
+      "path": "skills/sohrab/alaa-minio-object-storage/references/20-lifecycle-and-retention.md",
+      "sha256": "c36066abe1609300ad17f3a7ac1320dd53f1cf00ede3a6243b4c834e8a4ae8d0",
+      "bytes": 7360
+    },
+    {
+      "path": "skills/sohrab/alaa-minio-object-storage/references/30-identity-credentials-and-access.md",
+      "sha256": "60edd88688b3796cc4a9b0c3528251185a995be5aba870da18a413c51426f15c",
+      "bytes": 7992
+    },
+    {
+      "path": "skills/sohrab/alaa-minio-object-storage/references/40-encryption-tls-and-durability.md",
+      "sha256": "0667d6b7b873e6807f8b19f13d319ade4bc0431ddb80cf50e17eef18b9cd0899",
+      "bytes": 10836
+    },
+    {
+      "path": "skills/sohrab/alaa-minio-object-storage/references/50-multipart-capacity-and-cost.md",
+      "sha256": "4e107d233cb983f618606b56ccb998e81bee4d2f9c22053814cc1dafd7fbdb87",
+      "bytes": 6563
+    },
+    {
+      "path": "skills/sohrab/alaa-minio-object-storage/references/60-presigned-urls-and-delivery.md",
+      "sha256": "2c8fe2afa3f0ad9e470d5c210a4c0bf4394cf9853b7fa7a3313260bae8b1005d",
+      "bytes": 8350
+    },
+    {
+      "path": "skills/sohrab/alaa-minio-object-storage/references/70-client-libraries.md",
+      "sha256": "04f5f60b9b65a283fd6249a080d10773417374a167e9dd31295d7645a309bf14",
+      "bytes": 15253
+    },
+    {
+      "path": "skills/sohrab/alaa-minio-object-storage/references/75-mc-command-line-client.md",
+      "sha256": "bc3df6cebf7f586d1aaeca30bf8e150871e3308197aa5f3c0e010ed8a4929288",
+      "bytes": 17398
+    },
+    {
+      "path": "skills/sohrab/alaa-minio-object-storage/references/80-topology.md",
+      "sha256": "8969ecde6ce59ba86d0feab85d3e44a528ccdff6a3d4fb9f8325fae6dcf5fce1",
+      "bytes": 7957
+    },
+    {
+      "path": "skills/sohrab/alaa-minio-object-storage/references/90-failure-classes.md",
+      "sha256": "a9859d23261651aabfe9b3704f0202cf129dc633e3b038834eb2ff9643e1f8e7",
+      "bytes": 8117
+    },
+    {
+      "path": "skills/sohrab/alaa-minio-object-storage/references/95-observability.md",
+      "sha256": "01d12ba1fa385b2a74525bd089910258d170a3bc262101c93691280ca550c179",
+      "bytes": 5889
+    },
+    {
+      "path": "skills/sohrab/alaa-minio-object-storage/references/SOURCES.md",
+      "sha256": "164fb80be8051f6616846dc8406c16009568bda97e4f014302f02ddaeb5579b1",
+      "bytes": 14196
+    },
+    {
+      "path": "skills/sohrab/alaa-minio-object-storage/scripts/check_object_storage_posture.py",
+      "sha256": "a4fbcdd40a03e39ba949a3bb3224476d4363c47d8f59d2afd1630bf00de6f585",
+      "bytes": 39974
+    },
+    {
+      "path": "skills/sohrab/tusd-upload-platform/SKILL.md",
+      "sha256": "d46d3169105b5e1c04ec08cd34ac5d336eaba4ccae686e110810ce44226d7713",
+      "bytes": 8321
+    },
+    {
+      "path": "skills/sohrab/tusd-upload-platform/agents/openai.yaml",
+      "sha256": "80e16e4f4dbdc9db16cda699b1b45751a713414fc04c4c0941ea107c790782a2",
+      "bytes": 409
+    },
+    {
+      "path": "skills/sohrab/tusd-upload-platform/assets/client/TusUploadPanel.vue",
+      "sha256": "d03ea21c732e12ef02e0bc5e6c41ea6c988894433c4a013dbaec2dab142a3178",
+      "bytes": 2704
+    },
+    {
+      "path": "skills/sohrab/tusd-upload-platform/assets/client/quasar.boot.sentry.ts",
+      "sha256": "96c1f78afb5f8980fa5a4ce25ec0fab6fe69897bdd701a293eee12eebb69cf4b",
+      "bytes": 977
+    },
+    {
+      "path": "skills/sohrab/tusd-upload-platform/assets/client/quasar.boot.uploads.ts",
+      "sha256": "c988da499dd3e42f030cbd83eb8bd330ff7e673ff67860d98876b82be3e152f5",
+      "bytes": 571
+    },
+    {
+      "path": "skills/sohrab/tusd-upload-platform/assets/client/quasar.config.snippet.ts",
+      "sha256": "84be3bd75e219a630112857062f51fd30c89be30213c26a03c937ab6add5c3bc",
+      "bytes": 1196
+    },
+    {
+      "path": "skills/sohrab/tusd-upload-platform/assets/client/uploadStates.ts",
+      "sha256": "95642c7fcb8387ee20cb3b9c9eef949e7d3a895a4dd66cdcbefcc70ca1820558",
+      "bytes": 2279
+    },
+    {
+      "path": "skills/sohrab/tusd-upload-platform/assets/client/uploadTelemetry.ts",
+      "sha256": "5a9bdb024520c3d27b5fa095b3b0fc7a6df6cfe8ea484071852107ece356d120",
+      "bytes": 2546
+    },
+    {
+      "path": "skills/sohrab/tusd-upload-platform/assets/client/useTusUpload.ts",
+      "sha256": "3b5aaaa1a7d75c6ef297e30f84c25ca55fd79901a3fdb4cd888a18c69c46c5f1",
+      "bytes": 13487
+    },
+    {
+      "path": "skills/sohrab/tusd-upload-platform/assets/client/useUploadQueueStore.ts",
+      "sha256": "c8f7060488d3572b819b398ed730471e55a7686323ed5e404b8f30b461ec58b2",
+      "bytes": 2473
+    },
+    {
+      "path": "skills/sohrab/tusd-upload-platform/assets/docker-compose/tusd-s3.compose.yaml",
+      "sha256": "4009c6fde5389d30fa01d91c7cde728c65c87906444f5db41f4b7c65d84682d9",
+      "bytes": 4622
+    },
+    {
+      "path": "skills/sohrab/tusd-upload-platform/assets/docker-compose/tusd-staging.compose.yaml",
+      "sha256": "d898cdc354698212b04b1ff5e42ae1b5f2d67921f329c57b55a214e9de1c9d21",
+      "bytes": 3296
+    },
+    {
+      "path": "skills/sohrab/tusd-upload-platform/assets/env/tusd-s3.env.example",
+      "sha256": "4f24eabb9165d097cc8739298def23d45467473e85b83f3774f343ad16869328",
+      "bytes": 1710
+    },
+    {
+      "path": "skills/sohrab/tusd-upload-platform/assets/env/tusd-staging.env.example",
+      "sha256": "2909139c0cf0c450797d55bae5b815cbfbb696b4396e69f86a680a09bd76c430",
+      "bytes": 1011
+    },
+    {
+      "path": "skills/sohrab/tusd-upload-platform/assets/haproxy/tusd-reverse-proxy.cfg",
+      "sha256": "e55e35c3752b00b184cb40f63c5a2f0e66a2de2076f4f2cb09d651a783833ab8",
+      "bytes": 3702
+    },
+    {
+      "path": "skills/sohrab/tusd-upload-platform/assets/prometheus/tusd-alert-rules.yml",
+      "sha256": "bb17f9398fbfe6d79991054fb4db3c88c9c7efb166b64d36b8dc3689b184ad04",
+      "bytes": 3712
+    },
+    {
+      "path": "skills/sohrab/tusd-upload-platform/assets/schemas/upload-record.schema.json",
+      "sha256": "76389ca10ad284263be9fb421a70987620848c196d0d76ae9e556d04a3e6ec68",
+      "bytes": 4435
+    },
+    {
+      "path": "skills/sohrab/tusd-upload-platform/references/00-topic-map.md",
+      "sha256": "5e22cf2f5549d7c57ef94f2e886927e2155a58d2adffcfcbfde076585cc29628",
+      "bytes": 6106
+    },
+    {
+      "path": "skills/sohrab/tusd-upload-platform/references/10-source-map.md",
+      "sha256": "18e80549508692d87dfc1113f24ece470984b19baba9345565b402c1485521cd",
+      "bytes": 6812
+    },
+    {
+      "path": "skills/sohrab/tusd-upload-platform/references/15-ala-service.md",
+      "sha256": "1f26b800e83ad6ef632851c8fc7cca1aab732e14b1cdcad1b84f331c7a9881a7",
+      "bytes": 10485
+    },
+    {
+      "path": "skills/sohrab/tusd-upload-platform/references/20-decision-matrix.md",
+      "sha256": "265b6a9f4b39ca1a06c216f1b35e1898921b538fb6b383012f1a8c03d67d137d",
+      "bytes": 5537
+    },
+    {
+      "path": "skills/sohrab/tusd-upload-platform/references/25-upstream-library.md",
+      "sha256": "b97361e1a40e66603108a48ce64bcd064d09be8e60fc41206687bbb1a1dcda2a",
+      "bytes": 6897
+    },
+    {
+      "path": "skills/sohrab/tusd-upload-platform/references/30-topologies.md",
+      "sha256": "38035262bab55d242ae8f71be18cbeceabd50437b008dfd9580df1be74078c48",
+      "bytes": 4516
+    },
+    {
+      "path": "skills/sohrab/tusd-upload-platform/references/35-storage-lifecycle.md",
+      "sha256": "19e720ba99ce64406970108f47a261bef0f4cb24a62d6f2094abe89a0fe86804",
+      "bytes": 9770
+    },
+    {
+      "path": "skills/sohrab/tusd-upload-platform/references/40-authorization.md",
+      "sha256": "7d6bdd05077d3c8b32816aff80af54d402d299830ce2a1b44d32d0a8e9cf7ea5",
+      "bytes": 8007
+    },
+    {
+      "path": "skills/sohrab/tusd-upload-platform/references/45-hooks.md",
+      "sha256": "2ff2ac450f21a561ca91f9aca0a1ce8542424933f3d02703aedb39d2b1a0c80b",
+      "bytes": 9643
+    },
+    {
+      "path": "skills/sohrab/tusd-upload-platform/references/50-failure-modes.md",
+      "sha256": "f02776e6311efadd3186f1aed6f9b0828d6efbb23b583164027171acfe315072",
+      "bytes": 9238
+    },
+    {
+      "path": "skills/sohrab/tusd-upload-platform/references/55-tests.md",
+      "sha256": "715141900da0d17bf4e95f1e0cd996a3b8534a92a9c018de7a47e01aca17473c",
+      "bytes": 9972
+    },
+    {
+      "path": "skills/sohrab/tusd-upload-platform/references/60-browser-client.md",
+      "sha256": "b08cc702e8d0e9708054cbb2a0811c623f76a3f449f9c542f1ae3d61cca7a093",
+      "bytes": 7334
+    },
+    {
+      "path": "skills/sohrab/tusd-upload-platform/references/70-front-door.md",
+      "sha256": "c993334c95fc715964353e2118890a21383cb830d569e3ef3c533c6543fbd250",
+      "bytes": 5606
+    },
+    {
+      "path": "skills/sohrab/tusd-upload-platform/references/80-observability.md",
+      "sha256": "026a9a87c322c703387039f09d4dd2cc32d79dd59c6bf6e6513e0d909a6f9b34",
+      "bytes": 6785
+    },
+    {
+      "path": "skills/sohrab/tusd-upload-platform/references/90-constraints.md",
+      "sha256": "9729b524d9fb6771ac1f445cf5c99e32bd01378195a2503dabe0609714d5a475",
+      "bytes": 4757
+    },
+    {
+      "path": "skills/sohrab/tusd-upload-platform/scripts/validate_pack.py",
+      "sha256": "e2811626598f2b8fda67df1ec1eafc1434c00f784b28e7d07f022744b15bcc72",
+      "bytes": 30832
+    }
+  ],
+  "touched": [
+    "skills/sohrab/alaa-minio-object-storage/references/00-topic-map.md",
+    "skills/sohrab/alaa-minio-object-storage/references/05-environment-contract.md",
+    "skills/sohrab/alaa-minio-object-storage/references/10-buckets-and-object-keys.md",
+    "skills/sohrab/alaa-minio-object-storage/references/20-lifecycle-and-retention.md",
+    "skills/sohrab/alaa-minio-object-storage/references/30-identity-credentials-and-access.md",
+    "skills/sohrab/alaa-minio-object-storage/references/40-encryption-tls-and-durability.md",
+    "skills/sohrab/alaa-minio-object-storage/references/50-multipart-capacity-and-cost.md",
+    "skills/sohrab/alaa-minio-object-storage/references/60-presigned-urls-and-delivery.md",
+    "skills/sohrab/alaa-minio-object-storage/references/70-client-libraries.md",
+    "skills/sohrab/alaa-minio-object-storage/references/75-mc-command-line-client.md",
+    "skills/sohrab/alaa-minio-object-storage/references/80-topology.md",
+    "skills/sohrab/alaa-minio-object-storage/references/95-observability.md",
+    "skills/sohrab/alaa-minio-object-storage/references/SOURCES.md",
+    "skills/sohrab/alaa-minio-object-storage/SKILL.md",
+    "skills/sohrab/alaa-arvan-object-storage/references/10-connection-identity-and-addressing.md",
+    "skills/sohrab/alaa-arvan-object-storage/references/15-environment-contract-deltas.md",
+    "skills/sohrab/alaa-arvan-object-storage/references/SOURCES.md",
+    "skills/sohrab/tusd-upload-platform/references/00-topic-map.md",
+    "skills/sohrab/tusd-upload-platform/references/10-source-map.md",
+    "skills/sohrab/tusd-upload-platform/references/20-decision-matrix.md",
+    "skills/sohrab/tusd-upload-platform/references/35-storage-lifecycle.md",
+    "skills/sohrab/tusd-upload-platform/references/45-hooks.md",
+    "skills/sohrab/tusd-upload-platform/references/55-tests.md",
+    "skills/sohrab/tusd-upload-platform/scripts/validate_pack.py",
+    "skills/sohrab/tusd-upload-platform/SKILL.md"
+  ],
+  "unchanged_inputs": 34
+}

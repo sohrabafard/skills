@@ -66,21 +66,17 @@ only when the request names it.
   contract; ignore unknown bits and fail closed on zero known permissions; never hand-edit a generated file;
   re-validate after applying. They are stated once in `references/shared-consumer-contract.md`, with the observability
   and per-request cost rules. Read it before writing or reviewing any consumer code.
-- **`MaxPermissionID()` is per-file, not per-catalog.** Each generated Go map returns the highest id in *that service's*
-  map — `tusd` returns 95, `news` returns 119, `wa` returns 1 — and the generated `Decode` passes it as the decode
-  bound, so an id above a service's own generated maximum is dropped by that service even while auth issues it. Apply
-  the consuming service's generated map in the same change as the auth seed, because a seed-only change leaves the
-  service unable to see the permission it was just granted.
+- **`MaxPermissionID()` is per-file, not per-catalog.** Each generated Go map returns the highest id in that service's
+  map, and the generated `Decode` uses it as the decode bound. A permission above that map's maximum is dropped by
+  that service even while auth issues it. The auth seed and consuming service map must remain coherent. Apply them in
+  the same change only when both operations are authorized. If either operation is unauthorized, apply neither and
+  report the required companion operation and path as blocked work.
 - **Never freeze the scale.** No permission count, maximum id, or fingerprint goes into code, a comment, a test, or a
   report. Read them from `catalog/permissions.json`, from `generated/reports/permission-catalog-summary.md` and
   `generated/reports/permission-drift-report.json`, or from `PERMISSION_CATALOG_ACTIVE_COUNT`,
   `PERMISSION_CATALOG_MAX_BITMAP_ID`, and `PERMISSION_CATALOG_FINGERPRINT` at the end of the generated TypeScript
-  artifact. **The id ranges the project's `docs/` state are not the problem; their incompleteness is.** Every range
-  those documents name — `64-78`, `79-91`, `92-95`, `96-107` — was still correct on 2026-07-27, so treating all of them
-  as stale makes a reader re-derive a range that was right. What no catalog document mentions is the `news` block at ids
-  `108-119` or the `auth` admin and scope block at ids `120-130`, so a reader who stops at `docs/` concludes the catalog
-  ends at 107. Read the current count and maximum from the sources named above, never from a document and never from
-  this paragraph.
+  artifact. Do not infer catalog size from partial service ranges in documentation. Read the current count and maximum
+  from the sources named above, never from a document or a copied value.
 
 ## One decoder, not one per service
 

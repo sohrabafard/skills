@@ -1,0 +1,7 @@
+{
+  "command": "python -B skills/sohrab/alaa-workflow/scripts/validate_workflow_files.py --plan docs/_agent_plans/20261018-000000_skill-pack-optimization.md",
+  "cwd": ".",
+  "wall_time_seconds": 0.4875043,
+  "exit_code": 1,
+  "output": "plan: docs/_agent_plans/20261018-000000_skill-pack-optimization.md\r\nWARN [plan.beads-offline] Offline structure only; live binding, nodes, parent-child edges and readiness are not verified. Remediation: Verify the bound owner before dependent execution.\r\ncheckpoint: docs/agents/20261018-000000_skill-pack-optimization-state.md\r\nERROR [checkpoint.last-verified] Compact checkpoint field is missing. Remediation: Add the last verified field without duplicating the plan.\r\nfamily: docs/_agent_plans/20261018-000000_skill-pack-optimization.md\r\n"
+}

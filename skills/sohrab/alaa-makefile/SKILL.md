@@ -95,7 +95,7 @@ Each owner decides its matter; this skill states only how the invocation is shap
   it.
 - `/alaa-services-contract` (`$alaa-services-contract`) — every shared name a target prints or passes:
   log fields, metric names, `OTEL_*` values, host ports.
-- `/alaa-testing-strategy` (`$alaa-testing-strategy`) — what `test:` and `check:` assert.
+- `/alaa-testing-strategy` — what `test:` and `check:` assert, test topic selection, and building once per tree state. Expose a focused test target that takes the topic selector and an exhaustive target, both depending on one build target.
 - `/alaa-security-review` (`$alaa-security-review`) — review triggers and fail-closed doctrine when a
   target handles a secret, signature or credential.
 - `/alaa-controlled-ops` (`$alaa-controlled-ops`) — change control when a target deploys or migrates.

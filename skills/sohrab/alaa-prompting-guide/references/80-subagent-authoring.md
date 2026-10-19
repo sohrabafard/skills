@@ -84,7 +84,7 @@ Neither runtime's precedence proves the model that actually served a response.
 
 ## Task model and effort independent of authority role
 
-Read the runtime orchestrator's allocation procedure for actual task choice and `references/90-model-selection.md` for capability/source evidence. Structured policies register neutral roles and supported pairs, not role defaults. Compatibility model/effort-named IDs grant no choice. Both controls must be explicit and realized; unresolved serving identity can remain unknown when configured control resolution is verified. No normal dispatch requires paid calibration.
+Read the runtime orchestrator's allocation procedure for actual task choice and `references/90-model-selection.md` for capability/source evidence. Structured policies register neutral roles and supported pairs, not role defaults. Compatibility model/effort-named IDs grant no choice. The matching `alaa-codex-orchestrator references/model-effort-policy.md` or `alaa-cc-orchestrator references/model-effort-policy.md` owns omission normalization; accept its resolved defaults before capability/control validation. Both normalized controls must be explicit and realized; unresolved serving identity can remain unknown when configured control resolution is verified. No normal dispatch requires paid calibration.
 
 ## Prompting a subagent once defined
 

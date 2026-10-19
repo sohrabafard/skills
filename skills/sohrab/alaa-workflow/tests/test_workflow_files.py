@@ -1,6 +1,7 @@
 from __future__ import annotations
 
 import json
+import os
 import importlib.util
 import shutil
 import subprocess
@@ -171,10 +172,31 @@ def workspace_tempdir():
         shutil.rmtree(resolved, ignore_errors=True)
 
 
+def approved_design_fixture(root: Path) -> Path:
+    """Keep independent design authority outside the execution output inventory."""
+    design = root.parent / "approved-design.md"
+    checkpoint = root.parent / "approved-design-state.md"
+    values = {"task": "Fixture design", "task_id": "fixture-design", "created_at": "2026-07-10T01:01:01Z",
+              "plan_path": design.as_posix(), "continuation_state_display": f"`{checkpoint.as_posix()}`"}
+    for template, path in (("design-plan-template.md", design), ("design-checkpoint-template.md", checkpoint)):
+        content = (SKILL_DIR / "assets" / template).read_text(encoding="utf-8")
+        for key, value in values.items():
+            content = content.replace("{{" + key + "}}", value)
+        content = content.replace("NEEDS_FILL", "verified fixture").replace("- Status: planning", "- Status: completed")
+        content = content.replace("- Approval status: pending", "- Approval status: approved")
+        content = content.replace("- Approval by: not recorded", "- Approval by: fixture user")
+        content = content.replace("- Approval on: not recorded", "- Approval on: 2026-07-10")
+        content = content.replace("- Approval evidence: not recorded", "- Approval evidence: synthetic test approval; no live authority")
+        path.write_text(content, encoding="utf-8", newline="\n")
+    return design
+
+
 class WorkflowFilesTest(unittest.TestCase):
     def run_script(self, script: Path, args: list[str], cwd: Path, expected: int = 0) -> subprocess.CompletedProcess[str]:
+        if script == INIT and "--help" not in args and "--plan-kind" not in args:
+            args = ["--plan-kind", "execution", "--approved-design", str(approved_design_fixture(cwd)), *args]
         result = subprocess.run(
-            [sys.executable, str(script), *args],
+            [sys.executable, "-B", str(script), *args],
             cwd=cwd,
             text=True,
             capture_output=True,
@@ -184,7 +206,10 @@ class WorkflowFilesTest(unittest.TestCase):
         return result
 
     def init(self, root: Path, *args: str) -> tuple[dict[str, object], subprocess.CompletedProcess[str]]:
-        result = self.run_script(INIT, ["--task", "Adaptive workflow", "--timestamp", STAMP, *args], root)
+        # Every new execution fixture adopts a binding, including direct cadence.
+        # These are offline schema fixtures and claim no live Beads verification.
+        binding = [] if "--task-store" in args else ["--task-store", "beads", "--beads-binding", "AGENTS.md#beads"]
+        result = self.run_script(INIT, ["--task", "Adaptive workflow", "--timestamp", STAMP, *binding, *args], root)
         return json.loads(result.stdout), result
 
     def write_files(self, root: Path, files: dict[str, str]) -> None:
@@ -211,6 +236,9 @@ class WorkflowFilesTest(unittest.TestCase):
         content = plan.read_text(encoding="utf-8")
         content = content.replace("| NEEDS_FILL | NEEDS_FILL | NEEDS_FILL | NEEDS_FILL | NEEDS_FILL |", SKILL_ROW)
         content = content.replace("- Required skills: NEEDS_FILL", "- Required skills: example-owner")
+        for number in (1, 2):
+            for level in ("PHASE", "TASK", "SUBTASK"):
+                content = content.replace(f"NEEDS_FILL_{level}_{number}", f"opaque-{level.lower()}-{number}")
         plan.write_text(content, encoding="utf-8")
 
     def test_resumable_is_the_default_and_creates_a_plan_plus_checkpoint(self) -> None:
@@ -356,10 +384,14 @@ class WorkflowFilesTest(unittest.TestCase):
     def test_remaining_compatibility_flags_still_execute(self) -> None:
         with workspace_tempdir() as tmp:
             root = Path(tmp)
-            state_payload, state_result = self.init(root, "--state-only")
-            self.assertEqual("orchestrated", state_payload["profile"])
-            self.assertEqual([f".codex/state/{STAMP}_adaptive-workflow.json"], state_payload["outputs"])
-            self.assertIn("DEPRECATED", state_result.stderr)
+            self.run_script(INIT, ["--task", "State", "--state-only"], root, 2)
+            self.assertEqual([], list(root.iterdir()))
+            # Old state-only files remain readable without inventing a new plan.
+            state = root / "historic-state.json"
+            state.write_text(json.dumps({"schema_version": 2, "task_id": "historic", "task": "Historic",
+                "status": "planning", "plan_path": "not-created.md", "current_phase": "Phase 1",
+                "next_actions": [], "blockers": [], "last_validation": "not run", "updated_at": "2026-07-10"}), encoding="utf-8")
+            self.run_script(VALIDATE, ["--state", str(state)], root)
 
         with workspace_tempdir() as tmp:
             payload, result = self.init(Path(tmp), "--no-continuation")
@@ -383,6 +415,7 @@ class WorkflowFilesTest(unittest.TestCase):
                     "frontend",
                     "--parent-plan",
                     parent_path,
+                    "--task-store", "beads", "--beads-binding", "AGENTS.md#beads",
                 ],
                 root,
             )
@@ -508,7 +541,7 @@ class WorkflowFilesTest(unittest.TestCase):
                 "Reusable evidence and invalidation conditions",
             ):
                 self.assertIn(f"- {field}: NEEDS_FILL", content)
-            self.assertIn("- Dependency edges and ready sets: Local task prerequisites above own dependency edges; derive readiness before dispatch.", content)
+            self.assertIn("- Dependency edges and ready sets: Beads owns issue dependencies and readiness; the plan owns phase barriers and shared-resource conflicts.", content)
             self.run_script(VALIDATE, ["--plan", str(plan.relative_to(root))], root)
 
     def test_previous_version_plan_without_a_handoff_package_only_warns(self) -> None:
@@ -692,9 +725,7 @@ class WorkflowFilesTest(unittest.TestCase):
     def test_existing_commit_field_remains_compatible(self) -> None:
         with workspace_tempdir() as tmp:
             root = Path(tmp)
-            payload, _ = self.init(root)
-            plan = root / str(payload["outputs"][0])
-            self.fill_skills(root, plan)
+            plan, _ = TaskStoreFixture().fixture(root)
             self.edit(plan, "### Phase 1 - Ground and implement\n\n- Status: pending", "### Phase 1 - Ground and implement\n\n- Status: complete")
             self.edit(plan, "- Snapshot: not captured yet", "- Commit: abc1234")
             result = self.run_script(VALIDATE, ["--plan", str(plan.relative_to(root))], root)
@@ -770,7 +801,7 @@ class WorkflowFilesTest(unittest.TestCase):
             state.unlink()
 
             failure = self.run_script(
-                INIT, ["--task", "Adaptive workflow", "--timestamp", STAMP, "--profile", "orchestrated"], root, expected=1
+                INIT, ["--task", "Adaptive workflow", "--timestamp", STAMP, "--profile", "orchestrated", "--task-store", "beads", "--beads-binding", "AGENTS.md#beads"], root, expected=1
             )
             self.assertIn("nothing was written", (failure.stdout + failure.stderr).lower())
             self.assertIn(plan.name, failure.stdout + failure.stderr)
@@ -860,7 +891,7 @@ class WorkflowFilesTest(unittest.TestCase):
             root = Path(tmp)
             result = self.run_script(
                 INIT,
-                ["--task", 'Quoted "task"', "--timestamp", STAMP, "--profile", "orchestrated"],
+                ["--task", 'Quoted "task"', "--timestamp", STAMP, "--profile", "orchestrated", "--task-store", "beads", "--beads-binding", "AGENTS.md#beads"],
                 root,
             )
             payload = json.loads(result.stdout)
@@ -1141,17 +1172,46 @@ class TaskStoreFixture(unittest.TestCase):
     fill_skills = WorkflowFilesTest.fill_skills
 
     def fixture(self, root: Path, store: str = "local", profile: str = "direct") -> tuple[Path, dict[str, object]]:
-        args = ["--profile", profile, "--task-store", store]
-        if store == "beads":
-            args += ["--beads-binding", "AGENTS.md#task-binding"]
+        # Reconstruct the pre-hierarchy family explicitly. These tests protect old
+        # local/flat Beads contracts; they do not admit new local phased generation.
+        args = ["--profile", profile, "--task-store", "beads", "--beads-binding", "AGENTS.md#task-binding"]
         payload, _ = self.init(root, *args)
+        payload["task_store"] = store
         plan = root / str(payload["outputs"][0])
         self.fill_skills(root, plan)
         content = plan.read_text(encoding="utf-8")
+        content = "\n".join(line for line in content.split("\n") if not line.startswith(("- Plan kind:", "- Approved design:")))
+        content = content.replace("- Task hierarchy: phase-task-subtask\n", "")
+        if "### Phase 2" not in content:
+            phase = content.split("### Phase 1 - Ground and implement", 1)[1].split("\n## Task Allocation", 1)[0]
+            second = phase.replace("- Depends on: none", "- Depends on: Phase 1").replace("NEEDS_FILL_ISSUE_1", "NEEDS_FILL_ISSUE_3").replace("NEEDS_FILL_ISSUE_2", "NEEDS_FILL_ISSUE_4")
+            for level in ("phase", "task", "subtask"):
+                second = second.replace(f"opaque-{level}-1", f"opaque-{level}-2")
+            content = content.replace("\n## Task Allocation", "\n### Phase 2 - Validate and reconcile" + second + "\n## Task Allocation", 1)
+        for number in (1, 2):
+            content = content.replace(f"- Phase issue: opaque-phase-{number}\n", "")
+            content = content.replace(f"  - Task issue: opaque-task-{number} [skills: inherit]\n    - Subtask issue: opaque-subtask-{number} [skills: inherit]", f"  - Issue: NEEDS_FILL_ISSUE_{2 * number - 1} [skills: inherit]\n  - Issue: NEEDS_FILL_ISSUE_{2 * number} [skills: inherit]")
+        if store == "local":
+            content = content.replace("- Task store: `beads`", "- Task store: `local`").replace("- Task binding: AGENTS.md#task-binding", "- Task binding: not applicable")
+            tasks = (
+                "Read the named sources and verify current behavior.", "Make the smallest in-scope change.",
+                "Run the affected validation surface and repair failures.", "Reconcile documentation, status, blockers, and remaining work.",
+            )
+            for number, outcome in enumerate(tasks, 1):
+                dependency = "none" if number == 1 else f"T{number - 1}"
+                content = content.replace(f"- Issue: NEEDS_FILL_ISSUE_{number} [skills: inherit]", f"- [ ] T{number}: {outcome} [depends: {dependency}] [skills: inherit]")
         for number in range(1, 5):
             content = content.replace(f"NEEDS_FILL_ISSUE_{number}", f"opaque/{number}")
         content = content.replace("NEEDS_FILL", "repository-grounded")
         plan.write_text(content, encoding="utf-8")
+        for output in payload["outputs"]:
+            path = root / str(output)
+            if path.suffix == ".json":
+                data = json.loads(path.read_text())
+                data["schema_version"] = 2
+                data.pop("current_task", None)
+                data.pop("current_subtask", None)
+                path.write_text(json.dumps(data), encoding="utf-8")
         if profile == "legacy":
             prompt = next(root / str(path) for path in payload["outputs"] if str(path).endswith("__phase-prompts.md"))
             prompt.write_text(prompt.read_text(encoding="utf-8").replace("NEEDS_LIVE_VERIFICATION", "resolved"), encoding="utf-8")
@@ -1165,7 +1225,7 @@ class TaskStoreFixture(unittest.TestCase):
 
 
 class TaskStoreCliTest(TaskStoreFixture):
-    def test_profiles_both_stores(self):
+    def test_historical_profiles_both_stores(self):
         for store in ("local", "beads"):
             for profile in ("direct", "resumable", "orchestrated", "legacy"):
                 with self.subTest(store=store, profile=profile), workspace_tempdir() as tmp:
@@ -1181,14 +1241,22 @@ class TaskStoreCliTest(TaskStoreFixture):
                         self.assertEqual(2, json.loads(state.read_text())["schema_version"])
                         self.assertNotIn("tasks", json.loads(state.read_text()))
 
-    def test_default_and_explicit_local(self):
-        for args in ((), ("--task-store", "local")):
-            with self.subTest(args=args), workspace_tempdir() as tmp:
-                root = Path(tmp)
-                payload, _ = self.init(root, *args)
-                plan = root / str(payload["outputs"][0])
-                self.assertEqual("local", payload["task_store"])
-                self.assertIn("[depends: T3]", plan.read_text())
+    def test_direct_default_and_explicit_local(self):
+        with workspace_tempdir() as tmp:
+            root = Path(tmp)
+            payload, _ = self.init(root, "--profile", "direct")
+            plan = root / str(payload["outputs"][0])
+            self.assertEqual("beads", payload["task_store"])
+            self.assertIn("Task hierarchy: phase-task-subtask", plan.read_text())
+            self.assertNotIn("### Phase 2", plan.read_text())
+        with workspace_tempdir() as tmp:
+            root = Path(tmp)
+            self.run_script(INIT, ["--task", "Local", "--profile", "direct", "--task-store", "local"], root, 2)
+            self.assertEqual([], list(root.iterdir()))
+        # Preserve the old local single-plan task assertions on an unmarked family.
+        with workspace_tempdir() as tmp:
+            plan, _ = self.fixture(Path(tmp), "local", "direct")
+            self.assertIn("[depends: T1]", plan.read_text())
 
     def test_invalid_options_write_nothing(self):
         invalid = (
@@ -1219,12 +1287,13 @@ class TaskStoreCliTest(TaskStoreFixture):
         for store in ("local", "beads"):
             with self.subTest(store=store), workspace_tempdir() as tmp:
                 root = Path(tmp)
-                checkpoint = f"docs/agents/{STAMP}_adaptive-workflow-state.md"
-                self.write_files(root, {checkpoint: "existing bytes"})
+                profile = "direct" if store == "local" else "orchestrated"
+                collision = (f"docs/_agent_plans/{STAMP}_adaptive-workflow.md" if store == "local"
+                             else f"docs/agents/{STAMP}_adaptive-workflow-state.md")
+                self.write_files(root, {collision: "existing bytes"})
                 before = self.inventory(root)
-                args = ["--task", "Adaptive workflow", "--timestamp", STAMP, "--profile", "orchestrated", "--task-store", store]
-                if store == "beads":
-                    args += ["--beads-binding", "AGENTS.md#external-hub"]
+                args = ["--task", "Adaptive workflow", "--timestamp", STAMP, "--profile", profile,
+                        "--task-store", "beads", "--beads-binding", "AGENTS.md#external-hub"]
                 self.run_script(INIT, args, root, 1)
                 self.assertEqual(before, self.inventory(root))
 
@@ -1233,8 +1302,8 @@ class TaskStoreCliTest(TaskStoreFixture):
         module = importlib.util.module_from_spec(spec)
         spec.loader.exec_module(module)
         with workspace_tempdir() as tmp, patch("subprocess.run", side_effect=AssertionError("live process")), patch("socket.create_connection", side_effect=AssertionError("network")):
-            args = ["initializer", "--task", "Offline", "--task-store", "beads", "--beads-binding", "AGENTS.md#hub", "--plan-dir", str(Path(tmp) / "plans"), "--profile", "direct", "--dry-run"]
-            with patch.object(sys, "argv", args):
+            args = ["initializer", "--plan-kind", "execution", "--approved-design", str(approved_design_fixture(Path(tmp))), "--task", "Offline", "--task-store", "beads", "--beads-binding", "AGENTS.md#hub", "--plan-dir", str(Path(tmp) / "plans"), "--profile", "direct", "--dry-run"]
+            with patch.object(sys, "argv", args), patch.object(sys, "path", [str(INIT.parent), *sys.path]):
                 self.assertEqual(0, module.main())
 
 
@@ -1511,6 +1580,621 @@ class ReviewRepairTest(TaskStoreFixture):
                 self.assertIn("not applicable", result.stderr)
                 self.assertEqual(before, self.inventory(root))
                 self.assertEqual(paths, set(root.rglob("*")))
+
+
+class HierarchyUnitTest(unittest.TestCase):
+    """Topic: hierarchy/cadence/cursor; layer: pure parser unit checks."""
+
+    @classmethod
+    def setUpClass(cls):
+        spec = importlib.util.spec_from_file_location("hierarchy_validator", VALIDATE)
+        cls.validator = importlib.util.module_from_spec(spec)
+        spec.loader.exec_module(cls.validator)
+
+    def content(self):
+        return """# Plan
+- Task store: beads
+- Task binding: AGENTS.md#beads
+- Task hierarchy: phase-task-subtask
+- Review boundary: final
+- Final phase: Phase 1
+- Commit authority: not granted
+- Status: executing
+### Phase 1 - Implement
+- Phase issue: phase/one
+- Status: in_progress
+- Required skills: exact-owner
+- Work:
+  - Task issue: task/one [skills: inherit]
+    - Subtask issue: leaf/one [skills: inherit]
+  - Task issue: task/two [skills: inherit]
+    - Subtask issue: leaf/two [skills: inherit]
+- Review status: REVIEW_PENDING
+- Review evidence: not run
+- Validation commands: python -B targeted_check.py
+- Evidence observed: selected tests passed; snapshot evidence.md
+## Execution Position
+- Current phase: Phase 1
+- Current task: task/one
+- Current subtask: leaf/one
+- Next action: Run leaf selector.
+- Blockers: none
+"""
+
+    def errors(self, content):
+        return [line for line in self.validator.validate_task_store(content, "executing") if line.startswith("ERROR")]
+
+    def test_valid_three_level_containment_does_not_invent_prerequisites(self):
+        nodes, messages = self.validator.hierarchy_nodes(self.content(), "executing")
+        self.assertEqual([], messages)
+        self.assertEqual(("subtask", "task/one", "Phase 1"), nodes["leaf/one"])
+        self.assertEqual(("task", "phase/one", "Phase 1"), nodes["task/two"])
+        self.assertEqual([], self.errors(self.content()))
+
+    def test_optional_engagement_root_header_is_not_an_escaped_phase_node(self):
+        content = self.content().replace("- Task store: beads", "- Root issue: `engagement`; discovered-from `origin`\n- Task store: beads")
+        self.assertEqual([], self.errors(content))
+        escaped = self.content() + "\n- Root issue: escaped\n"
+        self.assertTrue(self.errors(escaped))
+
+    def test_missing_duplicate_orphan_and_unknown_levels_are_refused(self):
+        changes = (
+            ("- Phase issue: phase/one\n", ""),
+            ("leaf/two", "leaf/one"),
+            ("  - Task issue: task/one [skills: inherit]\n", ""),
+            ("    - Subtask issue: leaf/two [skills: inherit]\n", ""),
+            ("    - Subtask issue:", "    - Leaf issue:"),
+            ("    - Subtask issue:", "  - Subtask issue:"),
+            ("task/one [skills", " [skills"),
+            ("## Execution Position", "## Outside\n  - Task issue: escaped [skills: inherit]\n## Execution Position"),
+        )
+        for old, new in changes:
+            with self.subTest(change=(old, new)):
+                self.assertTrue(self.errors(self.content().replace(old, new, 1)))
+
+    def test_binding_marker_and_mixed_store_cannot_bypass_hierarchy(self):
+        for old, new in (
+            ("Task store: beads", "Task store: local"),
+            ("Task binding: AGENTS.md#beads", "Task binding: not applicable"),
+            ("Task binding: AGENTS.md#beads", "Task binding: C:/private/AGENTS.md"),
+            ("Task hierarchy: phase-task-subtask", "Task hierarchy: flat"),
+            ("Task hierarchy: phase-task-subtask", "Task hierarchy: phase-task-subtask\n- Task hierarchy: phase-task-subtask"),
+            ("- Work:", "- Work:\n  - Issue: flat [skills: inherit]"),
+            ("- Work:", "- Work:\n  - [ ] T1: local [depends: none] [skills: inherit]"),
+        ):
+            with self.subTest(change=(old, new)):
+                self.assertTrue(self.errors(self.content().replace(old, new, 1)))
+
+    def test_unresolved_nodes_warn_only_before_execution(self):
+        draft = self.content().replace("leaf/one", "NEEDS_FILL_LEAF").replace("- Status: in_progress", "- Status: pending").replace("- Status: executing", "- Status: planning")
+        messages = self.validator.validate_task_store(draft, "planning")
+        self.assertFalse(any(line.startswith("ERROR") for line in messages), messages)
+        self.assertTrue(any(line.startswith("WARN [plan.hierarchy]") for line in messages))
+        self.assertTrue(self.errors(draft))
+
+    def test_cursor_requires_mapped_phase_task_and_its_actual_subtask(self):
+        def check(content):
+            return self.validator.validate_family_snapshots(Path("plan.md"), content, {"checkpoint": None, "state": None, "prompts": None})
+        self.assertEqual([], check(self.content()))
+        for old, new in (
+            ("Current phase: Phase 1", "Current phase: Phase 9"),
+            ("Current task: task/one", "Current task: leaf/one"),
+            ("Current task: task/one", "Current task: none"),
+            ("Current subtask: leaf/one", "Current subtask: leaf/two"),
+            ("Current subtask: leaf/one", "Current subtask: unknown"),
+            ("- Current subtask: leaf/one\n", ""),
+            ("- Current task: task/one", "- Current task: task/one\n- Current task: task/two"),
+        ):
+            with self.subTest(change=(old, new)):
+                self.assertTrue(check(self.content().replace(old, new, 1)))
+
+    def test_removed_hierarchy_guard_is_detected_by_the_negative_oracle(self):
+        malformed = self.content().replace("  - Task issue: task/one [skills: inherit]\n", "")
+        self.assertTrue(self.errors(malformed))
+        # Scratch mutation: remove the owned containment control in memory. The
+        # negative oracle must fail, without editing the source or hiding a survivor.
+        with patch.object(self.validator, "hierarchy_nodes", return_value=({}, [])):
+            with self.assertRaisesRegex(AssertionError, "Missing hierarchy rejection"):
+                self.assertTrue(self.errors(malformed), "Missing hierarchy rejection")
+
+    def test_final_only_intermediate_milestone_keeps_review_pending(self):
+        first, cursor = self.content().split("## Execution Position", 1)
+        second = first.split("### Phase 1 - Implement", 1)[1]
+        for old, new in (("phase/one", "phase/final"), ("task/one", "task/final"), ("task/two", "task/final-two"), ("leaf/one", "leaf/final"), ("leaf/two", "leaf/final-two")):
+            second = second.replace(old, new)
+        family = first.replace("Final phase: Phase 1", "Final phase: Phase 2").replace("Status: in_progress", "Status: complete") + "### Phase 2 - Accept" + second + "## Execution Position" + cursor
+        self.assertEqual([], self.errors(family))
+        reviewed_early = family.replace("Review status: REVIEW_PENDING", "Review status: APPROVED", 1).replace("Review evidence: not run", "Review evidence: review.md", 1)
+        self.assertTrue(self.errors(reviewed_early))
+
+    def test_commits_require_authority_and_accepted_boundary_not_leaf_review(self):
+        commit = self.content().replace("- Review status:", "- Commit: abc1234\n- Review status:")
+        self.assertTrue(self.errors(commit))
+        accepted = commit.replace("Commit authority: not granted", "Commit authority: explicit user grant: current user instruction; accepted scoped changes").replace("Review status: REVIEW_PENDING", "Review status: APPROVED").replace("Review evidence: not run", "Review evidence: review.md; snapshot abc1234; fixes/retests passed").replace("Status: in_progress", "Status: complete")
+        self.assertEqual([], self.errors(accepted))
+        self.assertTrue(self.errors(accepted.replace("- Commit: abc1234", "    - Commit: abc1234")))
+        self.assertTrue(self.errors(accepted.replace("Review evidence: review.md; snapshot abc1234; fixes/retests passed", "Review evidence: not run")))
+        self.assertTrue(self.errors(accepted.replace("Status: complete", "Status: failed")))
+        self.assertTrue(self.errors(accepted.replace("Evidence observed: selected tests passed; snapshot evidence.md", "Evidence observed: not run")))
+        self.assertTrue(self.errors(self.content().replace("Final phase: Phase 1", "Final phase: Phase 9")))
+
+    def test_completed_required_boundary_rejects_missing_or_unrun_validation(self):
+        accepted = self.content().replace("- Status: executing", "- Status: complete").replace("Status: in_progress", "Status: complete").replace("Review status: REVIEW_PENDING", "Review status: APPROVED").replace("Review evidence: not run", "Review evidence: final-review.md; exact candidate")
+        self.assertEqual([], self.errors(accepted))
+        for old, new in (
+            ("- Evidence observed: selected tests passed; snapshot evidence.md", ""),
+            ("Evidence observed: selected tests passed; snapshot evidence.md", "Evidence observed: "),
+            ("Evidence observed: selected tests passed; snapshot evidence.md", "Evidence observed: NOT RUN"),
+            ("Evidence observed: selected tests passed; snapshot evidence.md", "Evidence observed: not_run; required check pending"),
+            ("Evidence observed: selected tests passed; snapshot evidence.md", "Evidence observed: NEEDS_FILL"),
+            ("- Validation commands: python -B targeted_check.py", ""),
+            ("Validation commands: python -B targeted_check.py", "Validation commands: none"),
+            ("Evidence observed: selected tests passed; snapshot evidence.md", "Evidence observed: not applicable (no behavior changed)"),
+        ):
+            with self.subTest(change=(old, new)):
+                errors = self.errors(accepted.replace(old, new))
+                self.assertTrue(any("[plan.boundary-validation]" in line for line in errors), errors)
+
+    def test_accepted_completed_phase_boundary_requires_validation_before_engagement_completion(self):
+        content = self.content().replace("Review boundary: final", "Review boundary: phase").replace("Status: in_progress", "Status: complete").replace("Review status: REVIEW_PENDING", "Review status: APPROVED").replace("Review evidence: not run", "Review evidence: phase-review.md")
+        self.assertEqual([], self.errors(content))
+        broken = content.replace("Evidence observed: selected tests passed; snapshot evidence.md", "Evidence observed: not run")
+        self.assertTrue(any("[plan.boundary-validation]" in line for line in self.errors(broken)))
+
+    def test_completed_boundary_accepts_only_explicit_justified_no_validation(self):
+        content = self.content().replace("- Status: executing", "- Status: complete").replace("Status: in_progress", "Status: complete").replace("Review status: REVIEW_PENDING", "Review status: APPROVED").replace("Review evidence: not run", "Review evidence: final-review.md")
+        content = content.replace("Validation commands: python -B targeted_check.py", "Validation commands: none (read-only decision; no executable surface changed)").replace("Evidence observed: selected tests passed; snapshot evidence.md", "Evidence observed: not applicable (read-only decision; no executable surface changed)")
+        self.assertEqual([], self.errors(content))
+        for old, new in (
+            ("none (read-only decision; no executable surface changed)", "none ()"),
+            ("not applicable (read-only decision; no executable surface changed)", "not applicable"),
+            ("not applicable (read-only decision; no executable surface changed)", "not run"),
+        ):
+            with self.subTest(change=(old, new)):
+                self.assertTrue(any("[plan.boundary-validation]" in line for line in self.errors(content.replace(old, new))))
+
+    def test_final_boundary_reuses_aggregate_without_intermediate_review(self):
+        first, cursor = self.content().split("## Execution Position", 1)
+        second = first.split("### Phase 1 - Implement", 1)[1]
+        for old, new in (("phase/one", "phase/final"), ("task/one", "task/final"), ("task/two", "task/final-two"), ("leaf/one", "leaf/final"), ("leaf/two", "leaf/final-two")):
+            second = second.replace(old, new)
+        second = second.replace("Review status: REVIEW_PENDING", "Review status: APPROVED").replace("Review evidence: not run", "Review evidence: final-review.md; all phase candidates").replace("Evidence observed: selected tests passed; snapshot evidence.md", "Evidence observed: aggregate passed covering Phase 1 and Phase 2; candidate evidence.md")
+        family = first.replace("Final phase: Phase 1", "Final phase: Phase 2").replace("Evidence observed: selected tests passed; snapshot evidence.md", "Evidence observed: not run; covered by final aggregate") + "### Phase 2 - Accept" + second + "## Execution Position" + cursor
+        family = family.replace("Status: executing", "Status: complete").replace("Status: in_progress", "Status: complete")
+        self.assertEqual([], self.errors(family))
+
+    def test_nested_final_only_local_name_match_cannot_claim_engagement_acceptance(self):
+        nested = self.content().replace("- Final phase: Phase 1", "- Final phase: Phase 1\n- Local final phase: Phase 1\n- Parent plan: root.md")
+        self.assertEqual([], self.errors(nested))
+        accepted = nested.replace("Review status: REVIEW_PENDING", "Review status: APPROVED").replace("Review evidence: not run", "Review evidence: local-review.md")
+        self.assertTrue(any("[plan.review-boundary]" in line for line in self.errors(accepted)))
+
+    def test_parent_resolution_has_a_finite_ancestry_bound(self):
+        root = self.content()
+        def ancestor(path):
+            number = int(path.stem)
+            return root if number == 64 else root.replace("- Final phase: Phase 1", f"- Final phase: Phase 1\n- Local final phase: Phase 1\n- Parent plan: {number + 1}.md")
+        with patch.object(self.validator, "read_text", side_effect=ancestor):
+            with self.assertRaisesRegex(ValueError, "64-plan bound"):
+                self.validator.resolve_review_contract(Path("bounded-ancestry-fixture/0.md"))
+
+
+class HierarchyCliTest(unittest.TestCase):
+    """Topic: new-family generation; layer: offline CLI contract checks."""
+
+    run_script = WorkflowFilesTest.run_script
+    init = WorkflowFilesTest.init
+    fill_skills = WorkflowFilesTest.fill_skills
+    write_files = WorkflowFilesTest.write_files
+    edit = WorkflowFilesTest.edit
+
+    def test_new_phased_generation_requires_explicit_binding_without_writes(self):
+        for args in ([], ["--profile", "orchestrated"], ["--task-store", "local"], ["--profile", "direct", "--mode", "delegated"], ["--state-only", "--mode", "delegated"]):
+            with self.subTest(args=args), workspace_tempdir() as tmp:
+                root = Path(tmp)
+                self.run_script(INIT, ["--task", "Unbound", *args], root, 2)
+                self.assertEqual([], list(root.rglob("*")))
+
+    def test_new_hierarchy_round_trip_and_schema3_cursor(self):
+        with workspace_tempdir() as tmp:
+            root = Path(tmp)
+            payload, _ = self.init(root, "--profile", "orchestrated", "--review-boundary", "final")
+            plan = root / str(payload["outputs"][0])
+            self.fill_skills(root, plan)
+            self.assertIn("- Task hierarchy: phase-task-subtask", plan.read_text())
+            self.assertIn("- Review boundary: final", plan.read_text())
+            self.run_script(VALIDATE, ["--plan", str(plan.relative_to(root))], root)
+            state = next(root / str(path) for path in payload["outputs"] if str(path).endswith(".json"))
+            data = json.loads(state.read_text())
+            self.assertEqual(3, data["schema_version"])
+            self.assertEqual("none", data["current_task"])
+            data["current_subtask"] = "wrong"
+            state.write_text(json.dumps(data), encoding="utf-8")
+            result = self.run_script(VALIDATE, ["--plan", str(plan.relative_to(root))], root, 1)
+            self.assertIn("state.snapshot-current_subtask", result.stdout)
+
+    def test_hierarchy_skill_override_inherits_the_task_not_the_phase(self):
+        with workspace_tempdir() as tmp:
+            root = Path(tmp)
+            payload, _ = self.init(root)
+            plan = root / str(payload["outputs"][0])
+            self.fill_skills(root, plan)
+            self.write_files(root, {"skills/other-owner/SKILL.md": "---\nname: other-owner\n---\n"})
+            self.edit(plan, SKILL_ROW, SKILL_ROW + "\n| other-owner | skills/other-owner/SKILL.md | changes | always | stop |")
+            self.edit(plan, "Task issue: opaque-task-1 [skills: inherit]", "Task issue: opaque-task-1 [skills: other-owner]")
+            self.run_script(VALIDATE, ["--plan", str(plan.relative_to(root))], root)
+            self.edit(plan, "Task issue: opaque-task-1 [skills: other-owner]", "Task issue: opaque-task-1 [skills: missing-owner]")
+            result = self.run_script(VALIDATE, ["--plan", str(plan.relative_to(root))], root, 1)
+            self.assertIn("ERROR [plan.skills-mapping] Phase 1 - Ground and implement subtask 'opaque-subtask-1 [skills: inherit]' refers to unbound skills: missing-owner.", result.stdout)
+
+    def test_nested_initialization_inherits_canonical_cadence_and_keeps_local_identity(self):
+        for boundary in ("phase", "final"):
+            with self.subTest(boundary=boundary), workspace_tempdir() as tmp:
+                root = Path(tmp)
+                parent, _ = self.init(root, "--review-boundary", boundary)
+                parent_path = root / str(parent["outputs"][0])
+                self.edit(parent_path, "Final phase: Phase 2", "Final phase: Phase 4")
+                self.edit(parent_path, "### Phase 2 -", "### Phase 4 -")
+                original = parent_path.read_bytes()
+                current = str(parent_path.relative_to(root))
+                for lane, override in (("child", []), ("grandchild", ["--review-boundary", boundary])):
+                    result = self.run_script(INIT, ["--task", lane, "--parent-plan", current, "--profile", "direct", "--task-store", "beads", "--beads-binding", "AGENTS.md#beads", *override], root)
+                    current = json.loads(result.stdout)["outputs"][0]
+                    child = root / current
+                    content = child.read_text(encoding="utf-8")
+                    self.assertIn(f"- Review boundary: {boundary}\n", content)
+                    self.assertIn("- Final phase: Phase 4\n- Local final phase: Phase 1\n", content)
+                    self.assertIn("- Current phase: Phase 1\n", content)
+                    self.assertNotIn("### Phase 4", content)
+                    self.run_script(VALIDATE, ["--plan", current], root)
+                self.assertEqual(original, parent_path.read_bytes())
+
+    def test_nested_conflicting_override_is_rejected_without_writes(self):
+        with workspace_tempdir() as tmp:
+            root = Path(tmp)
+            parent, _ = self.init(root, "--review-boundary", "final")
+            before = {str(p): p.read_bytes() for p in root.rglob("*") if p.is_file()}
+            paths = set(root.rglob("*"))
+            result = self.run_script(INIT, ["--task", "Rejected", "--parent-plan", str(parent["outputs"][0]), "--review-boundary", "phase", "--task-store", "beads", "--beads-binding", "AGENTS.md#beads"], root, 2)
+            self.assertIn("conflicts with the canonical parent", result.stderr)
+            self.assertEqual(before, {str(p): p.read_bytes() for p in root.rglob("*") if p.is_file()})
+            self.assertEqual(paths, set(root.rglob("*")))
+
+    def test_nested_malformed_or_unresolvable_parent_refuses_before_writes(self):
+        changes = (
+            ("- Review boundary: final", "- Review boundary: final\n- Review boundary: phase"),
+            ("- Final phase: Phase 2\n", ""),
+            ("Final phase: Phase 2", "Final phase: Phase 99"),
+            ("Review boundary: final", "Review boundary: NEEDS_FILL"),
+            ("- Parent plan: not created", "- Parent plan: absent.md\n- Local final phase: Phase 2"),
+            ("- Parent plan: not created", "- Parent plan: absent.md\n- Parent plan: another.md"),
+            ("### Phase 2 -", "### Phase 1 -"),
+        )
+        for old, new in changes:
+            with self.subTest(change=(old, new)), workspace_tempdir() as tmp:
+                root = Path(tmp)
+                parent, _ = self.init(root, "--review-boundary", "final")
+                self.edit(root / str(parent["outputs"][0]), old, new)
+                before = {str(p): p.read_bytes() for p in root.rglob("*") if p.is_file()}
+                paths = set(root.rglob("*"))
+                result = self.run_script(INIT, ["--task", "Rejected", "--parent-plan", str(parent["outputs"][0]), "--task-store", "beads", "--beads-binding", "AGENTS.md#beads"], root, 2)
+                self.assertIn("Cannot inherit parent review contract", result.stderr)
+                self.assertEqual(before, {str(p): p.read_bytes() for p in root.rglob("*") if p.is_file()})
+                self.assertEqual(paths, set(root.rglob("*")))
+
+    def test_nested_cycle_and_legacy_cadence_refuse_without_migration(self):
+        for kind in ("cycle", "legacy"):
+            with self.subTest(kind=kind), workspace_tempdir() as tmp:
+                root = Path(tmp)
+                if kind == "legacy":
+                    self.write_files(root, LEGACY_PACK)
+                    parent_path = next(iter(LEGACY_PACK))
+                    self.run_script(VALIDATE, ["--plan", parent_path], root)
+                else:
+                    parent, _ = self.init(root)
+                    parent_path = str(parent["outputs"][0])
+                    self.edit(root / parent_path, "- Parent plan: not created", f"- Parent plan: `{parent_path}`\n- Local final phase: Phase 2")
+                before = {str(p): p.read_bytes() for p in root.rglob("*") if p.is_file()}
+                result = self.run_script(INIT, ["--task", "Rejected", "--parent-plan", parent_path, "--task-store", "beads", "--beads-binding", "AGENTS.md#beads"], root, 2)
+                self.assertIn("cycle" if kind == "cycle" else "explicitly reconcile legacy", result.stderr)
+                self.assertEqual(before, {str(p): p.read_bytes() for p in root.rglob("*") if p.is_file()})
+
+    def test_nested_validation_rejects_drifted_canonical_ancestry(self):
+        with workspace_tempdir() as tmp:
+            root = Path(tmp)
+            parent, _ = self.init(root, "--review-boundary", "final")
+            child, _ = self.init(root, "--parent-plan", str(parent["outputs"][0]), "--lane", "child")
+            child_path = root / str(child["outputs"][0])
+            self.run_script(VALIDATE, ["--plan", str(child_path.relative_to(root))], root)
+            self.edit(root / str(parent["outputs"][0]), "Review boundary: final", "Review boundary: phase")
+            result = self.run_script(VALIDATE, ["--plan", str(child_path.relative_to(root))], root, 1)
+            self.assertIn("ERROR [plan.review-inheritance]", result.stdout)
+
+    def test_reviewer_prompt_covers_the_entire_declared_boundary(self):
+        with workspace_tempdir() as tmp:
+            root = Path(tmp)
+            payload, _ = self.init(root, "--with-prompts", "--review-boundary", "final")
+            prompt = (root / str(payload["outputs"][1])).read_text(encoding="utf-8")
+            reviewer = prompt.split("## Independent reviewer", 1)[1].split("## Documenter", 1)[0]
+            outcome = reviewer.split("**Outcome:**", 1)[1].split("**Read first:**", 1)[0]
+            read_first = reviewer.split("**Read first:**", 1)[1].split("**Scope:**", 1)[0]
+            done = reviewer.split("**Done:**", 1)[1].split("**Blocked:**", 1)[0]
+            for required in ("complete phase candidate", "complete engagement candidate", "all earlier phases with pending review"):
+                self.assertIn(required, outcome)
+            for required in ("canonical engagement plan", "entire selected phase", "every engagement phase including earlier pending phases"):
+                self.assertIn(required, read_first)
+            self.assertIn("entire declared boundary", done)
+            self.assertIn("incomplete phase or engagement coverage blocks acceptance", done)
+
+
+class PlanKindTest(unittest.TestCase):
+    """Plan-kind CLI and offline contract tests; no live Beads authority."""
+
+    write_files = WorkflowFilesTest.write_files
+    edit = WorkflowFilesTest.edit
+
+    def cli(self, root: Path, script: Path, *args: str, expected: int = 0):
+        result = subprocess.run([sys.executable, "-B", str(script), *args], cwd=root,
+                                text=True, capture_output=True, check=False)
+        self.assertEqual(expected, result.returncode, result.stdout + result.stderr)
+        return result
+
+    def design(self, root: Path, *args: str):
+        result = self.cli(root, INIT, "--task", "Design", "--timestamp", STAMP, "--plan-kind", "design", *args)
+        outputs = json.loads(result.stdout)["outputs"]
+        return root / outputs[0], root / outputs[1]
+
+    def execute(self, root: Path, design: Path, *args: str, expected: int = 0):
+        return self.cli(root, INIT, "--task", "Execute", "--timestamp", STAMP, "--plan-kind", "execution",
+                        "--approved-design", str(design), "--task-store", "beads", "--beads-binding", "AGENTS.md#beads",
+                        *args, expected=expected)
+
+    def inventory(self, root: Path):
+        return {str(path.relative_to(root)): path.read_bytes() for path in root.rglob("*") if path.is_file()}
+
+    def test_explicit_kind_is_required_without_writes(self):
+        with workspace_tempdir() as tmp:
+            root = Path(tmp)
+            result = self.cli(root, INIT, "--task", "Missing kind", expected=2)
+            self.assertIn("--plan-kind", result.stderr)
+            self.assertEqual([], list(root.iterdir()))
+
+    def test_pending_design_has_position_and_no_execution_artifacts(self):
+        with workspace_tempdir() as tmp:
+            root = Path(tmp)
+            plan, checkpoint = self.design(root)
+            self.assertEqual(2, len(self.inventory(root)))
+            content = plan.read_text()
+            for forbidden in ("Task binding:", "Task hierarchy:", "### Phase", "Task issue:", "## Ordered Work", "## Task Allocation", "Review status:"):
+                self.assertNotIn(forbidden, content)
+            self.assertIn("- Approval status: pending", content)
+            self.assertIn("- Current position:", checkpoint.read_text())
+            self.cli(root, VALIDATE, "--plan", str(plan))
+            self.assertFalse((root / ".codex").exists())
+
+    def test_design_rejects_execution_flags_without_writes(self):
+        incompatible = (("--profile", "direct"), ("--profile", "orchestrated"), ("--with-prompts",),
+                        ("--task-store", "beads"), ("--beads-binding", "AGENTS.md"), ("--state-only",),
+                        ("--with-state",), ("--no-continuation",), ("--review-boundary", "final"),
+                        ("--mode", "execute"), ("--approved-design", "elsewhere.md"),
+                        ("--implementer-model", "unresolved"))
+        for flags in incompatible:
+            with self.subTest(flags=flags), workspace_tempdir() as tmp:
+                root = Path(tmp)
+                self.cli(root, INIT, "--task", "Design", "--plan-kind", "design", *flags, expected=2)
+                self.assertEqual([], list(root.iterdir()))
+
+    def test_execution_requires_a_readable_approved_design_before_writes(self):
+        for case in ("missing", "directory", "pending", "wrong-kind", "unmarked", "invalid-date", "no-owner", "no-evidence", "duplicate-approval", "substring-approval", "unreadable"):
+            with self.subTest(case=case), workspace_tempdir() as tmp:
+                root = Path(tmp)
+                design = approved_design_fixture(root)
+                if case == "missing":
+                    design = root.parent / "missing.md"
+                elif case == "directory":
+                    design = root.parent
+                elif case == "unreadable":
+                    design.write_bytes(b"\xff")
+                else:
+                    old, new = {
+                        "pending": ("Approval status: approved", "Approval status: pending"),
+                        "wrong-kind": ("Plan kind: design", "Plan kind: execution"),
+                        "unmarked": ("- Plan kind: design\n", ""),
+                        "invalid-date": ("Approval on: 2026-07-10", "Approval on: 2026-02-30"),
+                        "no-owner": ("Approval by: fixture user", "Approval by: not recorded"),
+                        "no-evidence": ("Approval evidence: synthetic test approval; no live authority", "Approval evidence: pending"),
+                        "duplicate-approval": ("Approval status: approved", "Approval status: approved\n- Approval status: pending"),
+                        "substring-approval": ("Approval status: approved", "Approval status: not approved"),
+                    }[case]
+                    self.edit(design, old, new)
+                self.execute(root, design, expected=2)
+                self.assertEqual([], list(root.iterdir()))
+        with workspace_tempdir() as tmp:
+            root = Path(tmp)
+            self.cli(root, INIT, "--task", "No link", "--plan-kind", "execution", expected=2)
+            self.assertEqual([], list(root.iterdir()))
+
+    def test_approved_design_is_linked_unchanged_and_direct_execution_keeps_hierarchy(self):
+        with workspace_tempdir() as tmp:
+            root = Path(tmp)
+            design = approved_design_fixture(root)
+            before = design.read_bytes()
+            result = self.execute(root, design, "--profile", "direct")
+            plan = root / json.loads(result.stdout)["outputs"][0]
+            content = plan.read_text()
+            for required in ("Plan kind: execution", "Approved design:", "Task hierarchy: phase-task-subtask", "Phase issue:", "Task issue:", "Subtask issue:"):
+                self.assertIn(required, content)
+            self.assertNotIn("### Phase 2", content)
+            self.cli(root, VALIDATE, "--plan", str(plan))
+            self.assertEqual(before, design.read_bytes())
+
+    def test_absolute_design_argument_emits_a_relative_link_that_survives_relocation(self):
+        with workspace_tempdir() as tmp:
+            root = Path(tmp)
+            design, checkpoint = self.design(root)
+            content = design.read_text().replace("NEEDS_FILL", "verified fixture")
+            content = content.replace("Approval status: pending", "Approval status: approved")
+            content = content.replace("Approval by: not recorded", "Approval by: fixture user")
+            content = content.replace("Approval on: not recorded", "Approval on: 2026-07-10")
+            content = content.replace("Approval evidence: not recorded", "Approval evidence: synthetic fixture approval")
+            design.write_text(content, encoding="utf-8")
+            original = {path: path.read_bytes() for path in (design, checkpoint)}
+            payload = json.loads(self.execute(root, design.resolve()).stdout)
+            plan = root / payload["outputs"][0]
+            self.assertIn(f"- Approved design: `{design.relative_to(root).as_posix()}`\n", plan.read_text())
+            self.assertEqual(original, {path: path.read_bytes() for path in original})
+            relocated = root.parent / "relocated"
+            shutil.copytree(root, relocated)
+            # An absolute dependency would now consume the original's revoked approval.
+            self.edit(design, "Approval status: approved", "Approval status: pending")
+            self.cli(relocated, VALIDATE, "--plan", str(plan.relative_to(root)))
+
+    def test_external_same_drive_absolute_design_link_remains_relative_and_resolves(self):
+        with workspace_tempdir() as tmp:
+            root = Path(tmp)
+            design = approved_design_fixture(root)
+            original = design.read_bytes()
+            payload = json.loads(self.execute(root, design.resolve(), "--profile", "direct").stdout)
+            plan = root / payload["outputs"][0]
+            self.assertIn("- Approved design: `../approved-design.md`\n", plan.read_text())
+            self.cli(root, VALIDATE, "--plan", str(plan))
+            self.assertEqual(original, design.read_bytes())
+
+    def test_design_completion_requires_approval_and_exact_checkpoint_identity(self):
+        with workspace_tempdir() as tmp:
+            root = Path(tmp)
+            plan, checkpoint = self.design(root)
+            for path in (plan, checkpoint):
+                self.edit(path, "Status: planning", "Status: completed")
+            result = self.cli(root, VALIDATE, "--plan", str(plan), expected=1)
+            self.assertIn("ERROR [design.approval]", result.stdout)
+        with workspace_tempdir() as tmp:
+            root = Path(tmp)
+            design = approved_design_fixture(root)
+            self.cli(root, VALIDATE, "--plan", str(design))
+            checkpoint = root.parent / "approved-design-state.md"
+            self.edit(checkpoint, design.as_posix(), (root / "other" / design.name).as_posix())
+            result = self.cli(root, VALIDATE, "--plan", str(design), expected=1)
+            self.assertIn("ERROR [design.checkpoint-plan]", result.stdout)
+
+    def test_design_rejects_hidden_execution_fields_and_checkpoint_cursors(self):
+        for addition in ("\n### Phase 1 - Hidden\n", "\n- Task issue: opaque\n", "\n- Task binding: AGENTS.md\n", "\n- [ ] T1: execute\n", "\n- Snapshot: captured\n"):
+            with self.subTest(addition=addition), workspace_tempdir() as tmp:
+                root = Path(tmp)
+                plan, _ = self.design(root)
+                plan.write_text(plan.read_text() + addition, encoding="utf-8")
+                result = self.cli(root, VALIDATE, "--plan", str(plan), expected=1)
+                self.assertIn("ERROR [design.execution-fields]", result.stdout)
+        with workspace_tempdir() as tmp:
+            root = Path(tmp)
+            plan, checkpoint = self.design(root)
+            self.edit(checkpoint, "- Current position:", "- Current phase:")
+            result = self.cli(root, VALIDATE, "--plan", str(plan), expected=1)
+            self.assertIn("ERROR [design.checkpoint]", result.stdout)
+
+    def test_kind_is_selected_only_from_unique_header(self):
+        for extra in ("- Plan kind: design\n", "- Plan kind: unsupported\n"):
+            with self.subTest(extra=extra), workspace_tempdir() as tmp:
+                root = Path(tmp)
+                plan, _ = self.design(root)
+                self.edit(plan, "- Plan kind: design\n", "- Plan kind: design\n" + extra)
+                result = self.cli(root, VALIDATE, "--plan", str(plan), expected=1)
+                self.assertIn("ERROR [plan.kind]", result.stdout)
+        with workspace_tempdir() as tmp:
+            root = Path(tmp)
+            plan, _ = self.design(root)
+            plan.write_text(plan.read_text() + "\n## Example\n\n- Plan kind: execution\n", encoding="utf-8")
+            self.cli(root, VALIDATE, "--plan", str(plan))
+
+    def test_design_checkpoint_is_mandatory_and_cannot_be_substituted(self):
+        with workspace_tempdir() as tmp:
+            root = Path(tmp)
+            plan, checkpoint = self.design(root)
+            self.edit(plan, checkpoint.relative_to(root).as_posix(), "missing-state.md")
+            result = self.cli(root, VALIDATE, "--plan", str(plan), "--continuation", str(checkpoint), expected=1)
+            self.assertIn("ERROR [design.checkpoint]", result.stdout)
+
+    def test_execution_validator_rejects_removed_hierarchy_or_unapproved_link(self):
+        for case in ("hierarchy", "approval"):
+            with self.subTest(case=case), workspace_tempdir() as tmp:
+                root = Path(tmp)
+                design = approved_design_fixture(root)
+                payload = json.loads(self.execute(root, design).stdout)
+                plan = root / payload["outputs"][0]
+                if case == "hierarchy":
+                    self.edit(plan, "- Task hierarchy: phase-task-subtask\n", "")
+                else:
+                    self.edit(design, "Approval status: approved", "Approval status: pending")
+                result = self.cli(root, VALIDATE, "--plan", str(plan), expected=1)
+                self.assertIn("ERROR [plan.execution-hierarchy]" if case == "hierarchy" else "ERROR [plan.approved-design]", result.stdout)
+
+    def test_dry_run_collision_and_design_overwrite_preflight_preserve_inputs(self):
+        with workspace_tempdir() as tmp:
+            root = Path(tmp)
+            self.design(root, "--dry-run")
+            self.assertEqual([], list(root.iterdir()))
+            plan, checkpoint = self.design(root)
+            before = self.inventory(root)
+            self.cli(root, INIT, "--task", "Design", "--timestamp", STAMP, "--plan-kind", "design", expected=1)
+            self.assertEqual(before, self.inventory(root))
+            content = plan.read_text().replace("NEEDS_FILL", "verified fixture")
+            content = content.replace("Approval status: pending", "Approval status: approved")
+            content = content.replace("Approval by: not recorded", "Approval by: fixture user")
+            content = content.replace("Approval on: not recorded", "Approval on: 2026-07-10")
+            content = content.replace("Approval evidence: not recorded", "Approval evidence: synthetic fixture approval")
+            plan.write_text(content, encoding="utf-8")
+            before = self.inventory(root)
+            result = self.execute(root, plan, "--force", "--slug", "design", expected=2)
+            self.assertIn("overwrite the approved design", result.stderr)
+            self.assertEqual(before, self.inventory(root))
+            result = self.execute(root, plan, "--force", "--slug", "design", "--plan-dir", "different-plans", expected=2)
+            self.assertIn("overwrite the approved design", result.stderr)
+            self.assertEqual(before, self.inventory(root))
+
+
+class SkillSourcePathTest(TaskStoreFixture):
+    """Installed skill-source resolution keeps source identity checks intact."""
+
+    def test_host_absolute_and_home_paths_keep_frontmatter_validation(self):
+        for source_kind in ("absolute", "home"):
+            with self.subTest(source_kind=source_kind), workspace_tempdir() as tmp:
+                root = Path(tmp)
+                plan, _ = self.fixture(root, "beads", "resumable")
+                home = root / "test-home"
+                source = home / "installed" / "SKILL.md"
+                self.write_files(root, {source.relative_to(root).as_posix(): "---\nname: example-owner\n---\n"})
+                source_text = str(source) if source_kind == "absolute" else "~/installed/SKILL.md"
+                self.edit(plan, "skills/example-owner/SKILL.md", source_text)
+                with patch.dict(os.environ, {"HOME": str(home), "USERPROFILE": str(home)}):
+                    self.validate(root, plan)
+                    self.edit(source, "name: example-owner", "name: other-owner")
+                    self.assertIn("ERROR [plan.skills-source]", self.validate(root, plan, 1))
+
+    def test_relative_source_resolution_keeps_repository_then_adjacent_order(self):
+        with workspace_tempdir() as tmp:
+            root = Path(tmp)
+            plan, _ = self.fixture(root, "beads", "resumable")
+            adjacent = plan.parent / "skills/example-owner/SKILL.md"
+            adjacent.parent.mkdir(parents=True)
+            adjacent.write_text("---\nname: wrong-owner\n---\n", encoding="utf-8")
+            self.validate(root, plan)
+            self.edit(plan, "skills/example-owner/SKILL.md", "adjacent/SKILL.md")
+            local = plan.parent / "adjacent/SKILL.md"
+            local.parent.mkdir()
+            local.write_text("---\nname: example-owner\n---\n", encoding="utf-8")
+            self.validate(root, plan)
+
+    def test_installed_source_must_remain_readable_and_exist(self):
+        with workspace_tempdir() as tmp:
+            root = Path(tmp)
+            plan, _ = self.fixture(root, "beads", "resumable")
+            source = root / "installed/SKILL.md"
+            source.parent.mkdir()
+            source.write_bytes(b"\xff")
+            self.edit(plan, "skills/example-owner/SKILL.md", str(source))
+            self.run_script(VALIDATE, ["--plan", str(plan)], root, 2)
+            self.edit(plan, str(source), str(source.parent / "missing/SKILL.md"))
+            self.assertIn("ERROR [plan.skills-source]", self.validate(root, plan, 1))
 
 
 if __name__ == "__main__":

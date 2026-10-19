@@ -1,6 +1,6 @@
 # Optional Prompt Generation
 
-Create a same-stem prompt pack only when the user explicitly requests reusable prompts.
+Create a same-stem prompt pack only for an admitted execution family and an explicit reusable-prompt request. Resolve kind admission through `references/artifact-lifecycle.md` first.
 
 ## Freshness gate
 
@@ -40,6 +40,10 @@ Each role prompt contains:
 6. Blocked condition.
 
 Within read-first, give the selected phase/task's exact skill names and sources with load points, conditions, and absence actions, or an exact reference to its populated Skill Bindings and task overrides. Resolve these from the plan rather than writing "use relevant skills". Keep this within the six fields; `references/companion-routing.md` owns the mapping contract.
+
+Every generated dispatch identifies the whole engagement, current phase/task/subtask, final phase and declared review boundary from the plan. The reviewer prompt applies only at that boundary; a nested invocation inherits it. Route scheduling to `alaa-codex-orchestrator` or `alaa-cc-orchestrator` `references/verification-and-gates.md`, never infer a new final candidate from the prompt's local phase.
+
+For Beads-bound dispatches, resolve actor, binding, issue IDs and ownership action through `references/task-tracking.md` `## Agent identity and ownership` before use.
 
 The read-first section must carry the handoff-package facts that bear on this lane: the confirmed facts with how they were verified, the approaches already ruled out and why, and the environment notes and traps that apply to the surfaces this role owns. The executing agent has no shared context — it sees this prompt and the files it names, and nothing else. Copy the facts in rather than pointing at a conversation it never had. A prompt that omits them buys a rediscovery, or a repeat of an experiment that already failed. Field semantics are in `references/context-continuity.md`.
 

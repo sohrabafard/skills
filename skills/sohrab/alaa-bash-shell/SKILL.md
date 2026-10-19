@@ -1,6 +1,6 @@
 ---
 name: alaa-bash-shell
-description: Generate, refactor, validate, debug, explain, and port Bash and POSIX shell scripts, including one-off utilities, multi-script toolchains, CI helpers, text-processing pipelines, and command wrappers. Use when the task involves .sh or .bash files, Bash-vs-sh decisions, mandatory -h/--help output, self-documenting shell code, ShellCheck/shfmt/checkbashisms/Bats workflows, Alpine BusyBox ash, Debian dash, or GNU/BSD/macOS portability. Do not use for zsh, fish, PowerShell, or for large systems that should be implemented in a fuller language instead of shell.
+description: Bash and POSIX shell engineering for one-off utilities, multi-script toolchains, CI helpers, text-processing pipelines, and command wrappers. Use to generate, refactor, validate, debug, explain, or port scripts, or for .sh or .bash files, Bash-vs-sh decisions, mandatory -h/--help output, self-documenting shell code, ShellCheck/shfmt/checkbashisms/Bats workflows, Alpine BusyBox ash, Debian dash, or GNU/BSD/macOS portability. Do not use for zsh, fish, PowerShell, or for large systems that should be implemented in a fuller language instead of shell.
 ---
 
 # Alaa Bash & Shell
@@ -24,16 +24,7 @@ Settle these three before writing or editing a line; they select every reference
 
 ## Reference navigation
 
-`references/00-topic-map.md` maps task shape to the smallest sufficient set. Rule owners, all under `references/`:
-
-- `script-contract.md` — script shape, help contract
-- `generation-workflow.md` — build and refactor order, defaults, leaving shell
-- `validation-and-debugging.md` — check order, tracing, failures
-- `portability-and-platforms.md` — Bash vs `sh`, Alpine, Debian, GNU/BSD, macOS
-- `tool-selection-and-performance.md` — command choice, performance
-- `testing-and-ci.md` — smoke tests, Bats, pre-commit, CI
-- `patterns-and-examples.md` — reusable snippets
-- `official-reference-map.md` — external docs, freshness triggers
+Before choosing references for the task, read `references/00-topic-map.md` and load only its relevant routes.
 
 ## Bundled tools
 
@@ -51,9 +42,9 @@ Settle these three before writing or editing a line; they select every reference
 
 Delegate only a lane that is genuinely independent and would otherwise flood the parent context. Portability inventory — shebangs, Bashisms, and GNU-only flags across a tree — and lint or format collection are bounded lanes: their criteria are fixed before the lane starts, so they search and report rather than decide. Cross-platform redesign is a judgment lane, because the decision is still open when it starts: how a Bash-only construct becomes portable, or whether the script should stop being shell.
 
-Pick the model from the kind of judgment the lane requires and the effort from how much search that judgment needs. Do not hardcode a model name here; read `/alaa-prompting-guide` (`$alaa-prompting-guide`), specifically its `references/50-effort-and-thinking.md`, at dispatch time so routing follows the current roster instead of a pin that quietly goes stale.
+Pick the model from the kind of judgment the lane requires and the effort from how much search that judgment needs. Do not hardcode a model name here; read `/alaa-prompting-guide`, specifically its `references/50-effort-and-thinking.md`, at dispatch time so routing follows the current roster instead of a pin that quietly goes stale.
 
-The parent keeps the final shell choice, every edit, and the validation summary. Do not spawn a lane whose only job is to re-check another lane's output.
+The parent keeps the final shell choice, every edit, and the validation summary. Do not spawn a lane whose only job is to re-check another lane's output. Required artifact verification and review follow the active orchestrator's declared review boundary.
 
 ## Final report
 

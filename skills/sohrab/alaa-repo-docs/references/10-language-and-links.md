@@ -83,7 +83,7 @@ Documents produced here are committed and often published. Every example is a pu
 - A placeholder must be recognisable as a placeholder from the value alone. A realistic-looking
   fake is worse than an obvious one, because a reader cannot tell it is not live.
 - When you cannot determine whether a value is safe to publish, do not publish it. Whether a
-  disclosure is acceptable is `/alaa-security-review`'s (`$alaa-security-review`) decision, not
+  disclosure is acceptable is `/alaa-security-review`'s decision, not
   this skill's.
 
 ## Hard constraints
@@ -203,8 +203,9 @@ reviewing a paired document does and does not oblige.
   heading anchors.
 - Run `python $SKILL_DIR/scripts/check_markdown_links.py <repo-root>`, or
   `python $SKILL_DIR/scripts/check_markdown_links.py <repo-root> --files <paths>` for a narrow
-  pass. Exit `0` is clean, `1` is findings, `2` means the check could not run and nothing was
-  proven, except when a declared origin is unavailable; see Mirrored directories.
+  pass. Exit `0` is clean, `1` is findings, and `2` is a failed, incomplete gate. For a declared
+  unavailable origin, see Mirrored directories: affected links remain unvalidated and printed local
+  findings remain real.
 - By default the checker validates Markdown-link syntax only. Add
   `--localized-pair <base> <companion>` only when that localized companion is explicitly in scope;
   repeat the option for more explicitly scoped pairs. It does not see the inline-code path citations

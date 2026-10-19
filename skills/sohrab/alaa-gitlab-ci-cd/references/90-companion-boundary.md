@@ -55,8 +55,6 @@ makes a version move one edit.
 
 ## The discriminating question for fail-closed versus fail-open
 
-When a dependency cannot answer, does proceeding without it let something through
-that must not get through? If yes, it is a security decision and
-`/alaa-security-review` (`$alaa-security-review`) owns the fail-closed rule. If no,
-it is an availability decision and `/alaa-reliability-sla`
-(`$alaa-reliability-sla`) owns the degradation shape.
+Apply `/alaa-security-review` `SKILL.md`, "Fail-closed versus fail-open, and which
+doctrine applies", to classify the dependency. This skill expresses the resulting
+job behavior; it does not choose the doctrine or `/alaa-reliability-sla`'s degradation shape.

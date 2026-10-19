@@ -1,0 +1,96 @@
+{
+  "evidence_kind": "focused source assertions and scoped snapshot, not independent acceptance",
+  "supersedes": "CTRL-snapshot-before-router-correction.json for router placement, Bash map location, affected file hashes and assertions only",
+  "resource_policy": "normal priority; no CPU-heavy checks",
+  "cwd": ".",
+  "result": "pass",
+  "checks": [
+    "restored exact Bash router bytes and destinations",
+    "one short triggered Bash body pointer without inline router/list",
+    "cost-based one-router policy and retained essential body/full-read rules",
+    "modified policy and body UTF-8 without BOM and LF"
+  ],
+  "unchanged_file_evidence_reused": [
+    "skills/sohrab/alaa-prompting-guide/SKILL.md",
+    "skills/sohrab/alaa-prompting-guide/references/00-topic-map.md",
+    "skills/sohrab/alaa-prompting-guide/references/11-codex-runtime-features.md",
+    "skills/sohrab/alaa-low-noise/SKILL.md",
+    "skills/sohrab/alaa-project-constitution/references/evidence-and-module-selection.md",
+    "skills/sohrab/alaa-project-constitution/assets/constitution-template.md"
+  ],
+  "restored_file_encoding": "UTF-8 original bytes preserved; original line endings retained",
+  "files": [
+    {
+      "path": "AGENTS.md",
+      "bytes": 11820,
+      "sha256": "6c01322f562cf9a07aece782e0974f831880b39006ac484ddc910508e808d4df"
+    },
+    {
+      "path": "skills/sohrab/AGENTS.md",
+      "bytes": 15225,
+      "sha256": "b9a5fd02b05635b6a345276e41aed76c85f162f7f6333962f01c2390aa6fe9b9"
+    },
+    {
+      "path": "skills/sohrab/alaa-prompting-guide/SKILL.md",
+      "bytes": 8102,
+      "sha256": "d9ae74eb8bf60164511360baa435272220c4c7cafed5a4f3416052442e0e9c4d"
+    },
+    {
+      "path": "skills/sohrab/alaa-prompting-guide/references/00-topic-map.md",
+      "bytes": 5607,
+      "sha256": "3e050d5edc30e716b94a479d56dac4678d11de7c00619235c6e9accf901b6d3c"
+    },
+    {
+      "path": "skills/sohrab/alaa-prompting-guide/references/11-codex-runtime-features.md",
+      "bytes": 16234,
+      "sha256": "b8f5a7225d28676b215ceb91e1a58354ca20f4ee1a13644aa47518f2701189bf"
+    },
+    {
+      "path": "skills/sohrab/alaa-prompting-guide/references/60-skill-authoring.md",
+      "bytes": 19376,
+      "sha256": "50d4647688e97d83f7a737217bd4a45570dce72e71c7497301db232ad32da7f4"
+    },
+    {
+      "path": "skills/sohrab/alaa-low-noise/SKILL.md",
+      "bytes": 7884,
+      "sha256": "84e275739ec9022332cc0250bb83cb4ac7960e48f6f711ffd1effc343b7dc1a6"
+    },
+    {
+      "path": "skills/sohrab/alaa-project-constitution/references/evidence-and-module-selection.md",
+      "bytes": 8704,
+      "sha256": "6ea0b6368fc4ce17b7f6b4ba34bfd1724251fccdd827fcd00510c72fdc7d9646"
+    },
+    {
+      "path": "skills/sohrab/alaa-project-constitution/assets/constitution-template.md",
+      "bytes": 34785,
+      "sha256": "3ca36ba26f9382e1e71adf1baebd23e9d3b3ac6ed7c81f220656f50e649233c1"
+    },
+    {
+      "path": "skills/sohrab/alaa-bash-shell/SKILL.md",
+      "bytes": 4746,
+      "sha256": "392359a69d07fcb3d3e66cfc12a584e415f610efcda9ac33d4d391ac7826e76b"
+    },
+    {
+      "path": "skills/sohrab/alaa-bash-shell/references/00-topic-map.md",
+      "bytes": 1793,
+      "sha256": "a83df1a9104bd2af70d56a7cee8a20746c4baa68286a3605100a25a3ab7d2867"
+    }
+  ],
+  "observed_commands": [
+    {
+      "command": "python -B scripts/check_fleet_references.py --skill alaa-bash-shell",
+      "exit": 0,
+      "result": "1/69 skills, 10 Markdown files, 7 citations; no findings"
+    },
+    {
+      "command": "python -B skills/sohrab/alaa-repo-docs/scripts/check_markdown_links.py . --files AGENTS.md skills/sohrab/AGENTS.md skills/sohrab/alaa-bash-shell/SKILL.md skills/sohrab/alaa-bash-shell/references/00-topic-map.md skills/sohrab/alaa-prompting-guide/references/60-skill-authoring.md artifacts/skill-pack-optimization-20261018/lanes/CTRL.md",
+      "exit": 0,
+      "result": "links validated in six Markdown files"
+    },
+    {
+      "command": "git diff --check -- AGENTS.md skills/sohrab/AGENTS.md skills/sohrab/alaa-bash-shell/SKILL.md skills/sohrab/alaa-bash-shell/references/00-topic-map.md skills/sohrab/alaa-prompting-guide/references/60-skill-authoring.md artifacts/skill-pack-optimization-20261018/lanes/CTRL.md",
+      "exit": 0,
+      "result": "no whitespace findings"
+    }
+  ]
+}

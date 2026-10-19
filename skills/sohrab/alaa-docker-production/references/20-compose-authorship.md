@@ -128,6 +128,8 @@ and must be run before the deploy.
 
 These are the Compose-side half of always-loaded rule 2. The image-side half — `USER`, no package
 manager in the final stage — is in this skill's `references/10-dockerfile-authorship.md`.
+The default and exception evidence come from `/alaa-security-review`
+`references/60-deep-review-and-hardening.md`, Part 3, Container; this section owns the Compose keys.
 
 ```yaml
     user: "1000:1000"
@@ -150,8 +152,8 @@ manager in the final stage — is in this skill's `references/10-dockerfile-auth
   `/tmp` (tmpfs) and the `storage/` and `bootstrap/cache` trees, which are named volumes or bind
   mounts rather than tmpfs because their contents must survive a restart. The observable condition
   that permits omitting `read_only` is: the process writes to a path that is neither in `tmpfs:` nor
-  a mounted volume and the path cannot be moved. Name that path in the merge request; "the app
-  needs to write" is not that statement.
+  a mounted volume and the path cannot be moved. Record the exact writable paths, workload reason
+  and compensating control in the merge request; "the app needs to write" is not that statement.
 - **`cap_drop: [ALL]`** and then `cap_add` only for a capability with a named reason. A PHP or Node
   application server binding port 8000 or 3000 needs none: `NET_BIND_SERVICE` is required only
   below port 1024, which is why the fleet's containers listen on high ports and the proxy publishes

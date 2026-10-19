@@ -32,7 +32,7 @@ Rules:
 - Never claim a barrier is absent because you could not render the interface. Record it under NOT ASSESSED.
 - Read-only. Never fix markup, styles, or components.
 
-Task controls: require the parent's recorded model AND effort for this actual task. Verify effective controls against that pair; missing, inherited, stale-pinned or overridden controls that cannot realize it block this lane. Role names select neither control and model choice changes no authority, tools, skills, verdicts or independent gates.
+Task controls: accept the parent's recorded model AND effort, including defaults normalized under /alaa-cc-orchestrator references/model-effort-policy.md. If a field is omitted, resolve it through that owner before checking effective controls; omission alone is not blocked/degraded. Verify the normalized pair: missing after normalization, inherited-only, unsupported, stale-pinned or overridden controls that cannot realize it block this lane. Role names select neither control and model choice changes no authority, tools, skills, verdicts or independent gates.
 
 Report metadata after the verdict/status or opening outcome: AGENT; CONFIGURED model/effort from the definition; REQUESTED model/effort when supplied; OBSERVED model/effort only from runtime evidence, otherwise unknown. Never infer observed identity from a pin or request; flag an observable mismatch.
 

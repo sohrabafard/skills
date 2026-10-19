@@ -21,7 +21,7 @@ Classify by what changed the outcome:
 
 | What changed the outcome | Classification | The defect |
 |---|---|---|
-| Test order, or running alone versus with others | **Broken test** | Shared state between tests — a fixture, a global, a database row, a temp file, a singleton, a cached connection |
+| Test order, or running alone versus with others | **Broken test** | Mutable state shared between tests — a mutated fixture, a global, a database row, a temp file, a singleton, a cached connection |
 | Worker count or parallelism, with no shared product state | **Broken test** | Tests contending for the same external resource: a port, a fixed identifier, a shared schema, a named file |
 | Machine load, or a changed sleep duration | **Broken test** | The test synchronises on elapsed time rather than on the condition it is waiting for |
 | The ambient environment — clock, timezone, locale, DNS, network, leftover files | **Broken test** | Missing hermeticity, unless the product itself depends on that thing unbounded, which is a product defect |
@@ -29,7 +29,7 @@ Classify by what changed the outcome:
 | Nothing the test controls — same order, workers, environment, machine, still intermittent | **Product defect** | Non-determinism inside the product: a race, an unsynchronised structure, an uninitialised value, iteration-order dependence, an unordered query, a retry that is not idempotent |
 | The race or concurrency detector reports a finding | **Product defect** | Treat a detector finding as decisive; it names the defect directly |
 
-**The deciding question, when the table leaves it open: does the varying mechanism also run in production?** A goroutine or thread, a lock, a retry, a clock read, a map iteration, a database isolation choice, a queue delivery — all run in production, so the test found a real defect and did its job. A sleep, a shared fixture, a leaked temp directory, another test's rows, a hardcoded port — exist only in the harness, so the test is broken.
+**The deciding question, when the table leaves it open: does the varying mechanism also run in production?** A goroutine or thread, a lock, a retry, a clock read, a map iteration, a database isolation choice, a queue delivery — all run in production, so the test found a real defect and did its job. A sleep, a mutated shared fixture, a leaked temp directory, another test's rows, a hardcoded port — exist only in the harness, so the test is broken.
 
 An unclassifiable case is treated as a product defect and reported as such, because a suppressed product defect returns as an incident while a suppressed test defect returns as an annoyance.
 
@@ -64,7 +64,7 @@ Most flake is prevented by the same four properties, and every one of them is ch
 
 1. **Injected time.** The product reads a clock it was given, so the test sets it. No test sleeps to reach a boundary.
 2. **Waiting on conditions.** A test waits for the condition it needs, with a bounded timeout and a clear failure message, never for a duration.
-3. **Per-test isolation by construction.** A fresh schema, a transaction rolled back, or a unique namespace per test — so no order exists in which tests interfere.
+3. **Per-test isolation by construction.** A transaction rolled back, a unique namespace, or a reset of the data the test touched, over infrastructure shared under `90-test-economy.md` — so no order exists in which tests interfere.
 4. **Seeded randomness.** Any randomness in the product or the fixture is seeded, and the seed is printed on failure so the run is reproducible.
 
-`/alaa-reliability-sla` (`$alaa-reliability-sla`) owns the product-side mechanisms whose absence produces genuine intermittency — retry legality, idempotency, and concurrency bounds. When the classification lands on product defect, that skill owns the fix and this file owns only the classification.
+`/alaa-reliability-sla` owns the product-side mechanisms whose absence produces genuine intermittency — retry legality, idempotency, and concurrency bounds. When the classification lands on product defect, that skill owns the fix and this file owns only the classification.

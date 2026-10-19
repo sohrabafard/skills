@@ -1,0 +1,353 @@
+{
+  "claim": "static instruction-contract proof only",
+  "results": [
+    {
+      "topic": "alaa-golang:phase-authority",
+      "layer": "static-instruction-contract",
+      "passed": true
+    },
+    {
+      "topic": "alaa-golang-clean-code-principles:phase-authority",
+      "layer": "static-instruction-contract",
+      "passed": true
+    },
+    {
+      "topic": "phase:action-not-blanket",
+      "layer": "static-instruction-contract",
+      "passed": true
+    },
+    {
+      "topic": "drain:finite-detached-context",
+      "layer": "static-instruction-contract",
+      "passed": true
+    },
+    {
+      "topic": "loss:all-three-preserved",
+      "layer": "static-instruction-contract",
+      "passed": true
+    },
+    {
+      "topic": "goroutine:no-documented-exception",
+      "layer": "static-instruction-contract",
+      "passed": true
+    },
+    {
+      "topic": "signal:kit-owner",
+      "layer": "static-instruction-contract",
+      "passed": true
+    },
+    {
+      "topic": "commit:explicit-authority",
+      "layer": "static-instruction-contract",
+      "passed": true
+    },
+    {
+      "topic": "imports:complete-owner",
+      "layer": "static-instruction-contract",
+      "passed": true
+    },
+    {
+      "topic": "provider:no-boot-cache-exception",
+      "layer": "static-instruction-contract",
+      "passed": true
+    },
+    {
+      "topic": "fiber:correlation-union",
+      "layer": "static-instruction-contract",
+      "passed": true
+    },
+    {
+      "topic": "fiber:tdd-and-retained-race",
+      "layer": "static-instruction-contract",
+      "passed": true
+    },
+    {
+      "topic": "fiber:no-independent-broad-command",
+      "layer": "static-instruction-contract",
+      "passed": true
+    },
+    {
+      "topic": "cache:conditional-union",
+      "layer": "static-instruction-contract",
+      "passed": true
+    },
+    {
+      "topic": "redis:runtime-facts-and-wiring",
+      "layer": "static-instruction-contract",
+      "passed": true
+    },
+    {
+      "topic": "redis:configuration-contract-preserved",
+      "layer": "static-instruction-contract",
+      "passed": true
+    },
+    {
+      "topic": "evals:phase-not-pinned",
+      "layer": "static-instruction-contract",
+      "passed": true
+    },
+    {
+      "topic": "evals:precedent-observed",
+      "layer": "static-instruction-contract",
+      "passed": true
+    },
+    {
+      "topic": "alaa-golang-clean-code-principles:eval-other-expectations-preserved",
+      "layer": "static-instruction-contract",
+      "passed": true
+    },
+    {
+      "topic": "alaa-golang-fiber:eval-other-expectations-preserved",
+      "layer": "static-instruction-contract",
+      "passed": true
+    },
+    {
+      "topic": "skills/sohrab/alaa-data-layer/references/10-postgres-design-and-tenant-boundaries.md:encoding",
+      "layer": "static-instruction-contract",
+      "passed": true
+    },
+    {
+      "topic": "skills/sohrab/alaa-data-layer/references/40-redis-verification-and-anti-patterns.md:encoding",
+      "layer": "static-instruction-contract",
+      "passed": true
+    },
+    {
+      "topic": "skills/sohrab/alaa-data-layer/references/50-redis-laravel-octane.md:encoding",
+      "layer": "static-instruction-contract",
+      "passed": true
+    },
+    {
+      "topic": "skills/sohrab/alaa-data-layer/references/51-redis-golang.md:encoding",
+      "layer": "static-instruction-contract",
+      "passed": true
+    },
+    {
+      "topic": "skills/sohrab/alaa-data-layer/references/60-configuration-and-kit-gaps.md:encoding",
+      "layer": "static-instruction-contract",
+      "passed": true
+    },
+    {
+      "topic": "skills/sohrab/alaa-data-layer/references/source-map.md:encoding",
+      "layer": "static-instruction-contract",
+      "passed": true
+    },
+    {
+      "topic": "skills/sohrab/alaa-data-layer/SKILL.md:encoding",
+      "layer": "static-instruction-contract",
+      "passed": true
+    },
+    {
+      "topic": "skills/sohrab/alaa-go-chi-development/references/12-kit-capability-map.md:encoding",
+      "layer": "static-instruction-contract",
+      "passed": true
+    },
+    {
+      "topic": "skills/sohrab/alaa-go-chi-development/SKILL.md:encoding",
+      "layer": "static-instruction-contract",
+      "passed": true
+    },
+    {
+      "topic": "skills/sohrab/alaa-golang/references/00-topic-map.md:encoding",
+      "layer": "static-instruction-contract",
+      "passed": true
+    },
+    {
+      "topic": "skills/sohrab/alaa-golang/references/11-orchestration-and-overlap-guide.md:encoding",
+      "layer": "static-instruction-contract",
+      "passed": true
+    },
+    {
+      "topic": "skills/sohrab/alaa-golang/references/31-chi-api-guide.md:encoding",
+      "layer": "static-instruction-contract",
+      "passed": true
+    },
+    {
+      "topic": "skills/sohrab/alaa-golang/references/45-failure-behavior-at-the-call-site.md:encoding",
+      "layer": "static-instruction-contract",
+      "passed": true
+    },
+    {
+      "topic": "skills/sohrab/alaa-golang/references/46-chi-under-load.md:encoding",
+      "layer": "static-instruction-contract",
+      "passed": true
+    },
+    {
+      "topic": "skills/sohrab/alaa-golang/references/61-redis-cache-layer.md:encoding",
+      "layer": "static-instruction-contract",
+      "passed": true
+    },
+    {
+      "topic": "skills/sohrab/alaa-golang/references/62-import-direction-and-boundaries.md:encoding",
+      "layer": "static-instruction-contract",
+      "passed": true
+    },
+    {
+      "topic": "skills/sohrab/alaa-golang/references/70-modern-go-baseline/30-runtime-and-standard-library.md:encoding",
+      "layer": "static-instruction-contract",
+      "passed": true
+    },
+    {
+      "topic": "skills/sohrab/alaa-golang/SKILL.md:encoding",
+      "layer": "static-instruction-contract",
+      "passed": true
+    },
+    {
+      "topic": "skills/sohrab/alaa-golang-clean-code-principles/evals/evals.json:encoding",
+      "layer": "static-instruction-contract",
+      "passed": true
+    },
+    {
+      "topic": "skills/sohrab/alaa-golang-clean-code-principles/references/20-domain-data-and-consistency.md:encoding",
+      "layer": "static-instruction-contract",
+      "passed": true
+    },
+    {
+      "topic": "skills/sohrab/alaa-golang-clean-code-principles/references/30-runtime-and-observability.md:encoding",
+      "layer": "static-instruction-contract",
+      "passed": true
+    },
+    {
+      "topic": "skills/sohrab/alaa-golang-clean-code-principles/references/90-source-map.md:encoding",
+      "layer": "static-instruction-contract",
+      "passed": true
+    },
+    {
+      "topic": "skills/sohrab/alaa-golang-clean-code-principles/SKILL.md:encoding",
+      "layer": "static-instruction-contract",
+      "passed": true
+    },
+    {
+      "topic": "skills/sohrab/alaa-golang-fiber/evals/evals.json:encoding",
+      "layer": "static-instruction-contract",
+      "passed": true
+    },
+    {
+      "topic": "skills/sohrab/alaa-golang-fiber/references/30-validation-testing.md:encoding",
+      "layer": "static-instruction-contract",
+      "passed": true
+    },
+    {
+      "topic": "skills/sohrab/alaa-golang-fiber/references/40-production-readiness.md:encoding",
+      "layer": "static-instruction-contract",
+      "passed": true
+    },
+    {
+      "topic": "skills/sohrab/alaa-golang-fiber/references/45-v2-to-v3-migration.md:encoding",
+      "layer": "static-instruction-contract",
+      "passed": true
+    },
+    {
+      "topic": "skills/sohrab/alaa-golang-fiber/references/50-kit-conflict-register.md:encoding",
+      "layer": "static-instruction-contract",
+      "passed": true
+    },
+    {
+      "topic": "skills/sohrab/alaa-golang-fiber/SKILL.md:encoding",
+      "layer": "static-instruction-contract",
+      "passed": true
+    },
+    {
+      "topic": "skills/sohrab/service-runtime-kit-governance/SKILL.md:encoding",
+      "layer": "static-instruction-contract",
+      "passed": true
+    },
+    {
+      "topic": "scope:no-runtime-code-change",
+      "layer": "static-instruction-contract",
+      "passed": true
+    },
+    {
+      "topic": "skills/sohrab/alaa-data-layer/agents/openai.yaml:preserved",
+      "layer": "static-instruction-contract",
+      "passed": true
+    },
+    {
+      "topic": "skills/sohrab/alaa-go-chi-development/agents/openai.yaml:preserved",
+      "layer": "static-instruction-contract",
+      "passed": true
+    },
+    {
+      "topic": "skills/sohrab/alaa-go-chi-development/assets/templates/audit-report.md:preserved",
+      "layer": "static-instruction-contract",
+      "passed": true
+    },
+    {
+      "topic": "skills/sohrab/alaa-go-chi-development/assets/templates/baseline-proposal.md:preserved",
+      "layer": "static-instruction-contract",
+      "passed": true
+    },
+    {
+      "topic": "skills/sohrab/alaa-go-chi-development/assets/templates/consumer-update-prompt.md:preserved",
+      "layer": "static-instruction-contract",
+      "passed": true
+    },
+    {
+      "topic": "skills/sohrab/alaa-go-chi-development/assets/templates/consumers-registry.md:preserved",
+      "layer": "static-instruction-contract",
+      "passed": true
+    },
+    {
+      "topic": "skills/sohrab/alaa-go-chi-development/assets/templates/kit-change-request.md:preserved",
+      "layer": "static-instruction-contract",
+      "passed": true
+    },
+    {
+      "topic": "skills/sohrab/alaa-go-chi-development/scripts/phase-check.sh:preserved",
+      "layer": "static-instruction-contract",
+      "passed": true
+    },
+    {
+      "topic": "skills/sohrab/alaa-golang/agents/openai.yaml:preserved",
+      "layer": "static-instruction-contract",
+      "passed": true
+    },
+    {
+      "topic": "skills/sohrab/alaa-golang-clean-code-principles/agents/openai.yaml:preserved",
+      "layer": "static-instruction-contract",
+      "passed": true
+    },
+    {
+      "topic": "skills/sohrab/alaa-golang-fiber/agents/openai.yaml:preserved",
+      "layer": "static-instruction-contract",
+      "passed": true
+    },
+    {
+      "topic": "skills/sohrab/service-runtime-kit-governance/agents/openai.yaml:preserved",
+      "layer": "static-instruction-contract",
+      "passed": true
+    }
+  ],
+  "changed_files": [
+    "skills/sohrab/alaa-data-layer/references/10-postgres-design-and-tenant-boundaries.md",
+    "skills/sohrab/alaa-data-layer/references/40-redis-verification-and-anti-patterns.md",
+    "skills/sohrab/alaa-data-layer/references/50-redis-laravel-octane.md",
+    "skills/sohrab/alaa-data-layer/references/51-redis-golang.md",
+    "skills/sohrab/alaa-data-layer/references/60-configuration-and-kit-gaps.md",
+    "skills/sohrab/alaa-data-layer/references/source-map.md",
+    "skills/sohrab/alaa-data-layer/SKILL.md",
+    "skills/sohrab/alaa-go-chi-development/references/12-kit-capability-map.md",
+    "skills/sohrab/alaa-go-chi-development/SKILL.md",
+    "skills/sohrab/alaa-golang/references/00-topic-map.md",
+    "skills/sohrab/alaa-golang/references/11-orchestration-and-overlap-guide.md",
+    "skills/sohrab/alaa-golang/references/31-chi-api-guide.md",
+    "skills/sohrab/alaa-golang/references/45-failure-behavior-at-the-call-site.md",
+    "skills/sohrab/alaa-golang/references/46-chi-under-load.md",
+    "skills/sohrab/alaa-golang/references/61-redis-cache-layer.md",
+    "skills/sohrab/alaa-golang/references/62-import-direction-and-boundaries.md",
+    "skills/sohrab/alaa-golang/references/70-modern-go-baseline/30-runtime-and-standard-library.md",
+    "skills/sohrab/alaa-golang/SKILL.md",
+    "skills/sohrab/alaa-golang-clean-code-principles/evals/evals.json",
+    "skills/sohrab/alaa-golang-clean-code-principles/references/20-domain-data-and-consistency.md",
+    "skills/sohrab/alaa-golang-clean-code-principles/references/30-runtime-and-observability.md",
+    "skills/sohrab/alaa-golang-clean-code-principles/references/90-source-map.md",
+    "skills/sohrab/alaa-golang-clean-code-principles/SKILL.md",
+    "skills/sohrab/alaa-golang-fiber/evals/evals.json",
+    "skills/sohrab/alaa-golang-fiber/references/30-validation-testing.md",
+    "skills/sohrab/alaa-golang-fiber/references/40-production-readiness.md",
+    "skills/sohrab/alaa-golang-fiber/references/45-v2-to-v3-migration.md",
+    "skills/sohrab/alaa-golang-fiber/references/50-kit-conflict-register.md",
+    "skills/sohrab/alaa-golang-fiber/SKILL.md",
+    "skills/sohrab/service-runtime-kit-governance/SKILL.md"
+  ],
+  "passed": true
+}

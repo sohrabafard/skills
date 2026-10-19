@@ -27,7 +27,7 @@ Boost tells you what the application *is*. It does not decide anything: explicit
 
 ## Laravel 13 audit points
 
-The dependency bumps and skeleton comparison belong to `/alaa-laravel-upgrade-all-packages` (`$alaa-laravel-upgrade-all-packages`). These points outlive the upgrade and apply whenever you touch the surface named:
+Dependency resolution and isolation belong to `/alaa-laravel-upgrade-all-packages`; framework code migration follows its separate-scope boundary and the official target-version upgrade guide. These audit points outlive the upgrade and apply whenever you touch the named surface:
 
 - Replace direct references to `VerifyCsrfToken` or `ValidateCsrfToken` with `PreventRequestForgery` when touching middleware config, route exclusions, or tests.
 - Cache payloads are arrays and scalars. A class-typed payload requires the class to be listed in `cache.serializable_classes`; add a name to that list only as a recorded interim step while an existing class-typed payload is migrated to arrays, never as the default, and never widen it to a wildcard.
@@ -39,7 +39,7 @@ The dependency bumps and skeleton comparison belong to `/alaa-laravel-upgrade-al
 - `Queue::route(...)` and the queue attributes `#[Tries]`, `#[Backoff]`, `#[Timeout]`, `#[FailOnTimeout]`, `#[DeleteWhenMissingModels]` replace repeated properties or worker flags when they make job policy clearer in one place.
 - Laravel 13 attribute-based model/component configuration is adopted repo-wide as a deliberate convention or not at all — never mixed per-file with property-based configuration.
 - First-party JSON:API resources are used only where the public contract actually is JSON:API. Do not replace an existing stable envelope with one.
-- Laravel AI SDK, semantic search, and vector search are opt-in. Introduce one only when the user asks or the repository already chose it, and route the storage or indexing decision to `/alaa-data-layer` (`$alaa-data-layer`).
+- Laravel AI SDK, semantic search, and vector search are opt-in. Introduce one only when the user asks or the repository already chose it, and route the storage or indexing decision to `/alaa-data-layer`.
 
 ## Repository-first persistence
 
@@ -51,7 +51,7 @@ This is the layering law, stated at language level. The gate itself is in `SKILL
 - **Enable `Model::preventLazyLoading()` outside production.** `Model::preventLazyLoading(! app()->isProduction())` in `AppServiceProvider::boot()` is the one mechanical guard that turns an unnoticed N+1 into a failing test before it reaches production, so it is on. If the repository deliberately has it off, that is a finding to report, not a reason to leave it off silently.
 - A query hidden inside an accessor, a cast, or a resource is a query nobody reading the call site can see. Accessors, casts, and resources do not perform IO.
 
-Eager-loading mechanics, column selection, `withCount()`/`withExists()`, and index choice: upstream `rules/db-performance.md` and `rules/advanced-queries.md`. Whether a growing path needs a bound at all: `/alaa-algorithms-data-structures` (`$alaa-algorithms-data-structures`).
+Eager-loading mechanics, column selection, `withCount()`/`withExists()`, and index choice: upstream `rules/db-performance.md` and `rules/advanced-queries.md`. Whether a growing path needs a bound at all: `/alaa-algorithms-data-structures`.
 
 ## Partial updates (PATCH semantics)
 
@@ -61,7 +61,7 @@ Eager-loading mechanics, column selection, `withCount()`/`withExists()`, and ind
 
 ## Resources and serialization
 
-Response shaping lives in an API Resource, never in a controller and never in a model. Do not return a raw model or collection where the public contract must stay stable, and do not hide heavy serialization logic in a model. The mandatory relation-and-count guard is in `SKILL.md` under Laravel defaults; envelope and field naming belong to `/alaa-services-contract` (`$alaa-services-contract`).
+Response shaping lives in an API Resource, never in a controller and never in a model. Do not return a raw model or collection where the public contract must stay stable, and do not hide heavy serialization logic in a model. The mandatory relation-and-count guard is in `SKILL.md` under Laravel defaults; envelope and field naming belong to `/alaa-services-contract`.
 
 ## Large-dataset traversal
 
@@ -74,13 +74,13 @@ Upstream `rules/db-performance.md` and `rules/collections.md` own the enumeratio
 
 - **Transaction bodies stay short and contain no external IO.** An HTTP call, a queue dispatch, or a file write inside a transaction holds a database connection for the duration of someone else's outage.
 - **Idempotency is a contract, not a hope.** Retries, redeliveries, and re-runs are the normal consequence of an at-least-once queue and of crash recovery, so code that is only correct when run once is incorrect. Use natural-key upserts (`updateOrCreate`, an `ON CONFLICT`-shaped operation) rather than a bare insert for any re-runnable write.
-- **Prove it with a run-twice test.** Run the job, listener, consumer, or seeder twice against the same state and assert the second run is a no-op: same end state, no duplicate row, no duplicate side effect. A re-runnable unit without this test is unproven.
+- **Prove re-runnable units with a run-twice test.** Run the job, listener, consumer, or seeder twice against the same state: unchanged end state, no duplicate row or side effect. A re-runnable unit without this proof is unproven. For queue redelivery, read `alaa-async-messaging references/60-telemetry-and-proof.md` for the full assertion set; add the driver delta from `/alaa-laravel-job-rabbitmq` when that driver applies.
 
-The idempotency contract itself and the retry doctrine belong to `/alaa-reliability-sla` (`$alaa-reliability-sla`); the values to `alaa-services-contract references/22-failure-load-and-deprecation-contract.md`; queue and broker mechanics to `/alaa-async-messaging` (`$alaa-async-messaging`) and `/alaa-laravel-job-rabbitmq` (`$alaa-laravel-job-rabbitmq`), with upstream `rules/queue-jobs.md` for framework mechanics.
+The idempotency contract itself and the retry doctrine belong to `/alaa-reliability-sla`; the values to `alaa-services-contract references/22-failure-load-and-deprecation-contract.md`; queue and broker mechanics to `/alaa-async-messaging` and `/alaa-laravel-job-rabbitmq`, with upstream `rules/queue-jobs.md` for framework mechanics.
 
 ## Tests
 
-`/alaa-testing-strategy` (`$alaa-testing-strategy`) owns every test *decision*: what makes a test a test, which layer a behaviour belongs at, whether a double is honest, the proof level a claim reaches, and whether an intermittent failure is a product defect or a broken test. It deliberately owns no framework construct, which leaves Pest and PHPUnit idiom to this skill. Three conditions govern that split:
+`/alaa-testing-strategy` owns every test *decision*: what makes a test a test, which layer a behaviour belongs at, whether a double is honest, the proof level a claim reaches, and whether an intermittent failure is a product defect or a broken test. It deliberately owns no framework construct, which leaves Pest and PHPUnit idiom to this skill. Three conditions govern that split:
 
 1. **Pest syntax, `test()`/`it()` choice, dataset form, `arch()` form, browser-test form, and runner flags come from the upstream `pest-testing` skill** at `.agents/skills/pest-testing/SKILL.md` — not owned by this repository. Follow it for syntax.
 2. **The database-refresh decision does not come from `pest-testing`.** That file never mentions `LazilyRefreshDatabase`; its sibling upstream `laravel-best-practices/rules/testing.md` does, and prefers it over `RefreshDatabase`. Use `LazilyRefreshDatabase` unless the suite needs a migration on every run, and state which you chose.
@@ -91,7 +91,7 @@ Two PHP-side obligations this skill owns outright:
 - **A bug fix starts with a failing test that reproduces the bug.** Write the reproduction first and watch it fail against the unfixed code. If you cannot make it fail, you have not located the bug — stop and report what is missing rather than changing code and hoping.
 - **Where the repository has query-count assertions, a changed read path carries one.** It is the only assertion that catches an N+1 or query inflation reintroduced by a later refactor.
 
-For a leak-prone Octane change, the regression test and what it must assert belong to `/alaa-octane-performance` (`$alaa-octane-performance`).
+For a leak-prone Octane change, the regression test and what it must assert belong to `/alaa-octane-performance`.
 
 ## Overrides of the upstream skill
 
@@ -99,6 +99,6 @@ Upstream `laravel-best-practices/` is not owned by this repository. Where it con
 
 | Upstream rule | Why it is wrong for these services | Owner that wins |
 |---|---|---|
-| `rules/architecture.md`, "Use `Context` for Request-Scoped Data": `Context::add('tenant_id', $request->header('X-Tenant-ID'));` | Derives tenant identity from an untrusted client header, in a form an agent will copy verbatim. Tenant identity comes from the verified gateway assertion, never from a raw request header. | `/alaa-trust-gateway-auth` (`$alaa-trust-gateway-auth`) |
-| `rules/caching.md`, "Use `once()` for Per-Request Memoization" | Mislabelled under a long-lived worker: `once()` memoizes for the *object's* lifetime, and the object lifetime of a service the worker resolved once **is the worker lifetime**. A `once()`-wrapped roles or permissions lookup returns request 1's authorization set to every later request that worker serves. Memoize per request only inside an object the request itself created, and key it by tenant. | `/alaa-octane-performance` (`$alaa-octane-performance`) |
+| `rules/architecture.md`, "Use `Context` for Request-Scoped Data": `Context::add('tenant_id', $request->header('X-Tenant-ID'));` | Derives tenant identity from an untrusted client header, in a form an agent will copy verbatim. Tenant identity comes from the verified gateway assertion, never from a raw request header. | `/alaa-trust-gateway-auth` |
+| `rules/caching.md`, "Use `once()` for Per-Request Memoization" | Before using it in a worker, read `/alaa-octane-performance` `SKILL.md`, "Precedence over the upstream skills", for the retention hazard and override; its `references/full-guide.md`, "The three cache tiers", selects the replacement. | `/alaa-octane-performance` |
 | `rules/style.md`, "No Unnecessary Comments" — comments only in config files | Would strip the invariant docblocks, side-effect notes, and test-intent comments this pack requires. Extract-and-name still applies to a comment explaining *what* unclear code does; a comment stating *why* — an invariant, a provider quirk, a unit or timezone assumption — stays. | `documentation-and-artifacts.md` in this skill |

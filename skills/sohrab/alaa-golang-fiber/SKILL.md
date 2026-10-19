@@ -18,7 +18,8 @@ any Fiber work that would otherwise be a kit consumer.
 
 ## Standing facts, verified 2026-07-26
 
-State these to the user before writing Fiber code for an Ala service. They are facts, not
+Re-read the kit's current consumer registry before relying on this dated precedent; report any drift.
+State the verified facts to the user before writing Fiber code for an Ala service. They are facts, not
 preferences, and an agent that omits them lets the user assume a precedent that does not exist.
 
 - **No Ala service runs on Fiber.** The kit consumer registry (`docs/CONSUMERS.md` in the
@@ -85,9 +86,9 @@ exists, the rule names who grants it and in what record.
   are owned by `/alaa-services-contract`.
 - **Keep `fiber` types out of `internal/domain`, `internal/application` and repository code.** The
   transport package converts; nothing below it imports Fiber.
-- **Write or update a failing test before a behavior-changing edit**, then run the focused test,
-  then `go test ./...`, and add `go test -race ./...` when the change touches shared state,
-  caches, goroutines or workers.
+- **For behavior changes and validation, follow `/alaa-golang`'s validation gate** and
+  `references/30-validation-testing.md`, which routes the full TDD sequence and adds the retained-Ctx-value
+  race trigger. Their check ownership applies; this checklist grants no broader command authority.
 - **Never edit anything under `vendor/`.**
 - **Route model, reasoning-effort and runtime-capability questions to `/alaa-prompting-guide`.** Do not name a model in this skill or in work produced from it.
 

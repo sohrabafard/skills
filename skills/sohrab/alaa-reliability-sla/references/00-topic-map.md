@@ -1,6 +1,6 @@
 # Topic Map
 
-Read this when the task touches more than one mechanism and the routing is not obvious. It routes only; every rule lives in the file named beside it, and the always-binding rules live in `SKILL.md`.
+Read before selecting mechanism detail or diagnosis. It routes only; every rule lives in the file named beside it, and the always-binding rules live in `SKILL.md`.
 
 ## By what the task is doing
 
@@ -8,11 +8,11 @@ Read this when the task touches more than one mechanism and the routing is not o
 |---|---|
 | Adds or changes an outbound call of any kind | `10-deadlines-and-timeouts.md`, then `30-breakers-and-bulkheads.md` for the isolation slot |
 | Adds, removes, or tunes a retry | `20-retries.md`, and `60-idempotency.md` before declaring the retry legal |
-| Adds an end-to-end latency target, or splits one across hops | `10-deadlines-and-timeouts.md` |
+| Adds an end-to-end latency target, splits one across hops, or changes cancellation, per-hop budgets or a durable-acceptance lifecycle | `10-deadlines-and-timeouts.md` |
 | Adds a circuit breaker, or one dependency is exhausting a shared pool | `30-breakers-and-bulkheads.md` |
-| Adds a queue, an in-flight limit, a rate limit, or a shed decision | `40-admission-and-shedding.md` |
+| Adds a queue, an in-flight limit, a rate limit or a shed decision; a route saturates, a queue grows, or rate and concurrency limits are confused | `40-admission-and-shedding.md` |
 | Makes a response partial, adds a fallback, or uses a cache to survive an outage | `50-degradation.md` |
-| Adds a state-changing route a caller may repeat, or designs a key store | `60-idempotency.md` |
+| Adds a state-changing route a caller may repeat, makes a retry legal, or designs a key store | `60-idempotency.md` |
 | Defines or challenges an SLI, SLO, error budget, or release gate | `70-error-budgets-and-slos.md` |
 | Is about to be called done, or must decide what evidence a review accepts | `80-verification.md` |
 

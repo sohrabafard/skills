@@ -225,16 +225,16 @@ sink becomes a reportable error, and choose `when_full` from the rule below.
 The fleet has already decided, and this skill's job is to name the Vector option
 that expresses that decision — not to re-open it.
 
-`/alaa-observability-soc` states the requirement:
-*"Telemetry is fail-open for product traffic: a failed backend, Collector, Vector
-sidecar, or SOC destination degrades observability and never the hot path.
-Fail-closed telemetry ships only on a written operator request."* SOC owns
-requirement level, so this is binding and the mechanism must follow it.
+`/alaa-observability-soc` owns the nonblocking telemetry forwarding/export
+requirement and the written-operator exception. `/alaa-security-review` owns the
+gate discriminator, including required privileged-action audit writes. Apply the
+chosen path contract with these Vector mechanisms:
 
-| The path carries | SOC's requirement | The Vector option that expresses it |
+| The path carries | Owning requirement | The Vector option that expresses it |
 | --- | --- | --- |
 | Product application logs, metrics, traces | Fail open | `when_full: drop_newest`, sized for the burst. Never `block`. |
-| Audit or SOC evidence, where losing a record leaves an action unrecorded | Fail closed, and only on a written operator request | Disk buffer, `when_full: block`, `acknowledgements.enabled: true`, an ack-capable source, and monitored free space |
+| SOC forwarding/export | Fail open; fail-closed telemetry requires a written operator request under SOC policy | Normally `drop_newest`; an approved blocking exception requires a durable disk buffer, `block`, end-to-end acknowledgements and monitored free space |
+| Required audit write at an action's non-repudiation boundary | Security's fail-closed gate; forwarding a copy does not satisfy the write | If Vector is the write path, disk buffer, `when_full: block`, end-to-end acknowledgements through an ack-capable source, and monitored free space; prove the path's required durability before reporting success |
 
 **`block` on a product-telemetry path is a defect, not a trade-off.** It converts a
 sink outage into a product outage, which is precisely what SOC's rule forbids.
@@ -243,9 +243,8 @@ path; the safe value is not the default one.
 
 Boundaries, so this file is not read as the owner of things it is not:
 
-- **Why a fail-open/fail-closed mechanism exists, and how to choose its shape in
-  general:** `/alaa-reliability-sla`. It states no Ala
-  number.
+- **Gate classification:** `/alaa-security-review`. **Contributor failure behavior
+  and general reliability mechanism:** `/alaa-reliability-sla`. Neither sets an Ala number.
 - **Every Ala value** — timeout, retry budget, burst allowance, tolerable outage
   duration: `/alaa-services-contract`
   `references/22-failure-load-and-deprecation-contract.md`. Do not invent one here.
@@ -254,6 +253,5 @@ Boundaries, so this file is not read as the owner of things it is not:
 - **This skill owns only** which Vector option implements the chosen shape, and
   what the pipeline does when the sink is unreachable.
 
-That is the third half of a boundary whose other two halves already exist:
-reliability owns the reasoning, the services contract owns the numbers, and this
-file owns the mechanism.
+Keep the path's loss and durability contract explicit; these settings alone do not
+prove exactness or a completed audit write.

@@ -8,6 +8,9 @@ with the store; nothing here is policy. The policy is in `SKILL.md`, `references
 `references/store-basic-memory.md` stays for the period while `bm` is still installed and for anyone who
 reinstates it. Nothing was migrated when the tool was dropped, because the tool was never where the notes lived.
 
+The `File-vault serialization` section also owns the shared on-disk format for the Basic Memory adapter.
+Reading that section for format does not select this adapter or authorize its file operations.
+
 ## What the store actually is
 
 `<vault-root>` — plain markdown notes in a git repository, with its root resolved from the task or `ALAA_MEMORY_VAULT`. Basic Memory indexed this directory; it never owned it. The consequence worth internalising: **dropping
@@ -63,10 +66,7 @@ Three recall behaviours change, and pretending they did not is how an agent repo
 - **Recall still fails open**, and now it rarely needs to: a file search over a few hundred notes returns well
   inside the five-second budget `SKILL.md` sets. The budget is no longer the binding constraint; query quality is.
 
-## Writing
-
-Create or edit the file directly. Search before creating, as `references/knowledge-shape.md` requires — without an
-index, a duplicate is harder to notice later, not easier.
+## File-vault serialization
 
 - Path is `<folder>/<Title With Spaces>.md`, matching the existing convention; the title in frontmatter and the
   filename stay in step.
@@ -76,6 +76,29 @@ index, a duplicate is harder to notice later, not easier.
   future indexed store can adopt the vault without rewriting every cross-reference.
 - Write UTF-8 without a byte-order mark. A mark immediately before the YAML delimiter breaks the frontmatter
   parse, and on Windows PowerShell 5.1 `Set-Content -Encoding UTF8` emits one.
+
+For curated publication, map the topics in `references/prompt-3-publishing.md` to:
+
+- `lessons/Global Agent Lessons.md`
+- `lessons/Project Lesson Index.md`
+- `lessons/project-lessons/PROJECT-KEY Lessons.md`
+- `patterns/Repeated Work Patterns.md`
+- `projects/PROJECT-KEY/Learned Patterns.md`
+
+Use `last_curated` for curated lessons and patterns. Check file-backed source paths and dates with
+`scripts/alaa_memory_staleness.ps1`; this checker reads frontmatter, not server-backed memories.
+For invocation and exit-code handling, read `references/checkers-and-hooks.md` before running it.
+
+In Obsidian or similar editors, quote wiki links in YAML values because unquoted `[[…]]` is invalid YAML.
+Keep typed relations in the note body so they remain queryable. Editors provide navigation and review,
+not runtime truth. Use backlink/orphan views to locate graph issues and
+`scripts/alaa_obsidian_linkcheck.ps1` to check them, following `references/checkers-and-hooks.md`.
+A correct note findable by search is not defective merely because it is an orphan.
+
+## Writing
+
+When this adapter is selected, create or edit the file directly. Search before creating through
+`references/knowledge-shape.md`; without an index, duplicates are harder to notice.
 
 Read back every authorized file write and confirm its intended content before reporting completion.
 Report changed paths and uncommitted status. Commit only with explicit permission for that separate effect;

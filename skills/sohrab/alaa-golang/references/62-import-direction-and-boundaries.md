@@ -8,8 +8,8 @@ Two things this file does not contain. The catalogue of Go design patterns and t
 `/alaa-golang-clean-code-principles` `references/60-design-patterns-kit-era.md`.
 Neither is repeated here, and choosing a pattern is not a reason to open this file.
 
-On a kit service, P5 (`ports inward, adapters outward`) is the binding form of the rule below and it wins. This file
-states the same direction for every Go service this skill routes, kit or not, and adds the check.
+This file owns the forbidden-import list and its build-graph check for every Go service, kit or not.
+P5 in `/alaa-golang-clean-code-principles` owns kit-era ports-and-adapters discipline and points here for both.
 
 ## The direction
 

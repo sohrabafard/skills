@@ -15,8 +15,7 @@ substrate under it.
 
 Object storage holds immutable opaque byte sequences, addressed by a key the server computes, read and written
 whole. Put the fact in Postgres instead whenever it must be queried by anything other than its key, updated in
-place, read inside a transaction, or joined to another fact; that decision belongs to `/alaa-data-layer`
-(`$alaa-data-layer`), which owns store selection. Do not load this skill for a change touching no bucket, no
+place, read inside a transaction, or joined to another fact; that decision belongs to `/alaa-data-layer`, which owns store selection. Do not load this skill for a change touching no bucket, no
 object key, no storage credential and no storage policy.
 
 ## Constraints that hold on every task
@@ -27,7 +26,7 @@ object key, no storage credential and no storage policy.
 2. **Every bucket receiving multipart uploads carries a lifecycle rule that aborts incomplete multipart uploads,
    and that rule states a maximum age.** Parts of an interrupted upload stay allocated and billed and appear in no
    object listing, so nothing else will ever remove them. Use seven days where no fleet value is registered, and
-   ask `/alaa-services-contract` (`$alaa-services-contract`) to register one.
+   ask `/alaa-services-contract` to register one.
 3. **Every object key takes its tenant scope from the trusted request context, never from client input.** The
    store applies no tenant filter of its own, so a key assembled from a client-supplied value is a cross-tenant
    read returning a well-formed success. Build the key server-side from the project the gateway asserted.
@@ -64,14 +63,13 @@ object key, no storage credential and no storage policy.
    provider needs, every variable still overrides its profile default from its own environment value, and no
    service branches on the profile name, because a branch turns adopting a fourth provider into a code change in
    every service. `references/05-environment-contract.md` owns the names, the
-   defaults, the profile table, the evidence behind each default and the validation, and `/alaa-arvan-object-storage`
-   (`$alaa-arvan-object-storage`) `references/15-environment-contract-deltas.md` states only where ArvanCloud's
+   defaults, the profile table, the evidence behind each default and the validation, and `/alaa-arvan-object-storage` `references/15-environment-contract-deltas.md` states only where ArvanCloud's
    default differs.
 
 ## What the fleet does today
 
 The fleet's only object-storage consumer violates constraints 2, 3, 4, 5 and 6, and leaves 7 unproven because it
-sets no bucket policy and issues no presigned URL `[source: tusd-upload-platform repository, read: 2026-07-27]`.
+sets no bucket policy and issues no presigned URL `[source: Ala tusd repository, read: 2026-07-27]`.
 Its Compose and Swarm files put the application on the store's root credentials, and those files describe the
 local development and test stack rather than production, so that is a constraint 1 finding against the test stack
 and an open question against production — `references/80-topology.md` states the boundary and
@@ -98,8 +96,7 @@ you. Do not read the others.
    unconfirmed response, because that orphans bytes no query will find again. Where a lifecycle rule owns the
    removal, record that and stop retrying.
 
-Retry counts, backoff shape, breaker thresholds and degradation policy are `/alaa-reliability-sla`
-(`$alaa-reliability-sla`); this section states only what a failure is allowed to mean.
+Retry counts, backoff shape, breaker thresholds and degradation policy are `/alaa-reliability-sla`; this section states only what a failure is allowed to mean.
 
 ## Checker and output
 
@@ -123,16 +120,16 @@ unverified.
 
 | You are about to | Use |
 |---|---|
-| choose between Postgres and Redis, design a table or index, or tune a query, pool or cache | `/alaa-data-layer` (`$alaa-data-layer`) |
-| shape a retry, backoff, timeout, breaker, idempotency key or degradation policy | `/alaa-reliability-sla` (`$alaa-reliability-sla`) |
-| name a metric, log field, event, error code or header, or use an Ala platform value such as a timeout or retry budget | `/alaa-services-contract` (`$alaa-services-contract`) `references/22-failure-load-and-deprecation-contract.md` |
-| decide whether telemetry is required, or which gate it must pass | `/alaa-observability-soc` (`$alaa-observability-soc`) |
-| trigger a security review, classify a threat, or apply fail-closed doctrine | `/alaa-security-review` (`$alaa-security-review`) |
-| write a Dockerfile, Compose file or Swarm stack, or harden an image | `/alaa-docker-production` (`$alaa-docker-production`) |
-| write a Kubernetes manifest or a Helm chart | `/alaa-k8s-helm` (`$alaa-k8s-helm`), Arvan specifics in `/caas-arvan-kuber` (`$caas-arvan-kuber`) |
-| change an HAProxy directive in front of the store | `/alaa-haproxy` (`$alaa-haproxy`) |
-| decide which layer a behaviour is tested at, or what proof a claim reached | `/alaa-testing-strategy` (`$alaa-testing-strategy`) `references/40-proof-strength.md` |
-| size a tus part, build an upload-session key, or retain an unfinished upload | `/tusd-upload-platform` (`$tusd-upload-platform`) |
-| check work against the ten-point quality bar | `/alaa-project-constitution` (`$alaa-project-constitution`) `references/quality-bar.md` |
-| point a bucket or client at an ArvanCloud endpoint, choose an Arvan region, or check whether an S3 operation works on ArvanCloud | `/alaa-arvan-object-storage` (`$alaa-arvan-object-storage`) |
-| choose a model or an effort level | `/alaa-prompting-guide` (`$alaa-prompting-guide`) |
+| choose between Postgres and Redis, design a table or index, or tune a query, pool or cache | `/alaa-data-layer` |
+| shape a retry, backoff, timeout, breaker, idempotency key or degradation policy | `/alaa-reliability-sla` |
+| name a metric, log field, event, error code or header, or use an Ala platform value such as a timeout or retry budget | `/alaa-services-contract` `references/22-failure-load-and-deprecation-contract.md` |
+| decide whether telemetry is required, or which gate it must pass | `/alaa-observability-soc` |
+| trigger a security review, classify a threat, or apply fail-closed doctrine | `/alaa-security-review` |
+| write a Dockerfile, Compose file or Swarm stack, or harden an image | `/alaa-docker-production` |
+| write a Kubernetes manifest or a Helm chart | `/alaa-k8s-helm`, Arvan specifics in `/caas-arvan-kuber` |
+| change an HAProxy directive in front of the store | `/alaa-haproxy` |
+| decide which layer a behaviour is tested at, or what proof a claim reached | `/alaa-testing-strategy` `references/40-proof-strength.md` |
+| size a tus part, build an upload-session key, or retain an unfinished upload | `/tusd-upload-platform` |
+| check work against the ten-point quality bar | `/alaa-project-constitution` `references/quality-bar.md` |
+| point a bucket or client at an ArvanCloud endpoint, choose an Arvan region, or check whether an S3 operation works on ArvanCloud | `/alaa-arvan-object-storage` |
+| choose a model or an effort level | `/alaa-prompting-guide` |

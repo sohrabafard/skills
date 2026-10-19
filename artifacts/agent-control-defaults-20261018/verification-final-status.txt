@@ -1,0 +1,114 @@
+## main...origin/main
+ M AGENTS.md
+A  artifacts/agent-control-defaults-20261018/actor-report.md
+AM artifacts/agent-control-defaults-20261018/binding-a.md
+AM artifacts/agent-control-defaults-20261018/binding-d.md
+A  artifacts/agent-control-defaults-20261018/binding-proposal.md
+AM artifacts/agent-control-defaults-20261018/binding-template.md
+AM artifacts/agent-control-defaults-20261018/model-draft.md
+AM artifacts/agent-control-defaults-20261018/model-report.md
+AM docs/_agent_plans/20261018-190000_agent-control-defaults.md
+AM docs/agents/20261018-190000_agent-control-defaults-state.md
+ M skills/sohrab/alaa-cc-orchestrator/SKILL.md
+ M skills/sohrab/alaa-cc-orchestrator/agents/alaa-accessibility-reviewer.md
+ M skills/sohrab/alaa-cc-orchestrator/agents/alaa-adversarial-reviewer.md
+ M skills/sohrab/alaa-cc-orchestrator/agents/alaa-api-contract-reviewer.md
+ M skills/sohrab/alaa-cc-orchestrator/agents/alaa-architecture-critic.md
+ M skills/sohrab/alaa-cc-orchestrator/agents/alaa-browser-qa.md
+ M skills/sohrab/alaa-cc-orchestrator/agents/alaa-dependency-auditor.md
+ M skills/sohrab/alaa-cc-orchestrator/agents/alaa-documenter.md
+ M skills/sohrab/alaa-cc-orchestrator/agents/alaa-explorer.md
+ M skills/sohrab/alaa-cc-orchestrator/agents/alaa-failure-analyst.md
+ M skills/sohrab/alaa-cc-orchestrator/agents/alaa-implementer-fable.md
+ M skills/sohrab/alaa-cc-orchestrator/agents/alaa-implementer-haiku-high.md
+ M skills/sohrab/alaa-cc-orchestrator/agents/alaa-implementer-haiku.md
+ M skills/sohrab/alaa-cc-orchestrator/agents/alaa-implementer-opus-high.md
+ M skills/sohrab/alaa-cc-orchestrator/agents/alaa-implementer-opus.md
+ M skills/sohrab/alaa-cc-orchestrator/agents/alaa-implementer-sonnet-high.md
+ M skills/sohrab/alaa-cc-orchestrator/agents/alaa-implementer.md
+ M skills/sohrab/alaa-cc-orchestrator/agents/alaa-instruction-reviewer.md
+ M skills/sohrab/alaa-cc-orchestrator/agents/alaa-migration-guardian.md
+ M skills/sohrab/alaa-cc-orchestrator/agents/alaa-observability-reviewer.md
+ M skills/sohrab/alaa-cc-orchestrator/agents/alaa-performance-profiler.md
+ M skills/sohrab/alaa-cc-orchestrator/agents/alaa-planner-high.md
+ M skills/sohrab/alaa-cc-orchestrator/agents/alaa-planner.md
+ M skills/sohrab/alaa-cc-orchestrator/agents/alaa-release-guardian.md
+ M skills/sohrab/alaa-cc-orchestrator/agents/alaa-researcher.md
+ M skills/sohrab/alaa-cc-orchestrator/agents/alaa-reviewer.md
+ M skills/sohrab/alaa-cc-orchestrator/agents/alaa-security-reviewer.md
+ M skills/sohrab/alaa-cc-orchestrator/agents/alaa-spec-analyst.md
+ M skills/sohrab/alaa-cc-orchestrator/agents/alaa-test-strategist.md
+ M skills/sohrab/alaa-cc-orchestrator/agents/alaa-verifier.md
+ M skills/sohrab/alaa-cc-orchestrator/assets/implementation-contract.md
+ M skills/sohrab/alaa-cc-orchestrator/assets/manifest.json
+ M skills/sohrab/alaa-cc-orchestrator/assets/planner-contract.md
+ M skills/sohrab/alaa-cc-orchestrator/references/agent-catalog.md
+ M skills/sohrab/alaa-cc-orchestrator/references/delegation-prompts.md
+ M skills/sohrab/alaa-cc-orchestrator/references/model-effort-policy.md
+ M skills/sohrab/alaa-cc-orchestrator/references/routing-matrix.md
+ M skills/sohrab/alaa-cc-orchestrator/scripts/check_agent_contracts.py
+ M skills/sohrab/alaa-codex-orchestrator/SKILL.md
+ M skills/sohrab/alaa-codex-orchestrator/agents/alaa-accessibility-reviewer.toml
+ M skills/sohrab/alaa-codex-orchestrator/agents/alaa-adversarial-reviewer.toml
+ M skills/sohrab/alaa-codex-orchestrator/agents/alaa-api-contract-reviewer.toml
+ M skills/sohrab/alaa-codex-orchestrator/agents/alaa-architecture-critic.toml
+ M skills/sohrab/alaa-codex-orchestrator/agents/alaa-browser-qa.toml
+ M skills/sohrab/alaa-codex-orchestrator/agents/alaa-dependency-auditor.toml
+ M skills/sohrab/alaa-codex-orchestrator/agents/alaa-documenter.toml
+ M skills/sohrab/alaa-codex-orchestrator/agents/alaa-explorer.toml
+ M skills/sohrab/alaa-codex-orchestrator/agents/alaa-failure-analyst.toml
+ M skills/sohrab/alaa-codex-orchestrator/agents/alaa-implementer-astra-medium.toml
+ M skills/sohrab/alaa-codex-orchestrator/agents/alaa-implementer-astra-xhigh.toml
+ M skills/sohrab/alaa-codex-orchestrator/agents/alaa-implementer-astra.toml
+ M skills/sohrab/alaa-codex-orchestrator/agents/alaa-implementer-high.toml
+ M skills/sohrab/alaa-codex-orchestrator/agents/alaa-implementer-low.toml
+ M skills/sohrab/alaa-codex-orchestrator/agents/alaa-implementer-luna-high.toml
+ M skills/sohrab/alaa-codex-orchestrator/agents/alaa-implementer-luna-low.toml
+ M skills/sohrab/alaa-codex-orchestrator/agents/alaa-implementer-luna.toml
+ M skills/sohrab/alaa-codex-orchestrator/agents/alaa-implementer-xhigh.toml
+ M skills/sohrab/alaa-codex-orchestrator/agents/alaa-implementer.toml
+ M skills/sohrab/alaa-codex-orchestrator/agents/alaa-instruction-reviewer.toml
+ M skills/sohrab/alaa-codex-orchestrator/agents/alaa-migration-guardian.toml
+ M skills/sohrab/alaa-codex-orchestrator/agents/alaa-observability-reviewer.toml
+ M skills/sohrab/alaa-codex-orchestrator/agents/alaa-performance-profiler.toml
+ M skills/sohrab/alaa-codex-orchestrator/agents/alaa-planner-high.toml
+ M skills/sohrab/alaa-codex-orchestrator/agents/alaa-planner.toml
+ M skills/sohrab/alaa-codex-orchestrator/agents/alaa-release-guardian.toml
+ M skills/sohrab/alaa-codex-orchestrator/agents/alaa-researcher.toml
+ M skills/sohrab/alaa-codex-orchestrator/agents/alaa-reviewer-deep.toml
+ M skills/sohrab/alaa-codex-orchestrator/agents/alaa-reviewer.toml
+ M skills/sohrab/alaa-codex-orchestrator/agents/alaa-security-reviewer.toml
+ M skills/sohrab/alaa-codex-orchestrator/agents/alaa-spec-analyst.toml
+ M skills/sohrab/alaa-codex-orchestrator/agents/alaa-test-strategist.toml
+ M skills/sohrab/alaa-codex-orchestrator/agents/alaa-verifier.toml
+ M skills/sohrab/alaa-codex-orchestrator/assets/implementation-contract.md
+ M skills/sohrab/alaa-codex-orchestrator/assets/manifest.json
+ M skills/sohrab/alaa-codex-orchestrator/assets/planner-contract.md
+ M skills/sohrab/alaa-codex-orchestrator/assets/reviewer-contract.md
+ M skills/sohrab/alaa-codex-orchestrator/references/agent-catalog.md
+ M skills/sohrab/alaa-codex-orchestrator/references/delegation-prompts.md
+ M skills/sohrab/alaa-codex-orchestrator/references/model-effort-policy.md
+ M skills/sohrab/alaa-codex-orchestrator/references/routing-matrix.md
+ M skills/sohrab/alaa-codex-orchestrator/scripts/check_agent_contracts.py
+ M skills/sohrab/alaa-prompting-guide/assets/rule-writer/dispatch.md
+ M skills/sohrab/alaa-prompting-guide/references/50-effort-and-thinking.md
+ M skills/sohrab/alaa-prompting-guide/references/80-subagent-authoring.md
+ M skills/sohrab/alaa-prompting-guide/references/90-model-selection.md
+ M skills/sohrab/alaa-workflow/SKILL.md
+ M skills/sohrab/alaa-workflow/assets/phase-prompts-template.md
+ M skills/sohrab/alaa-workflow/references/context-continuity.md
+ M skills/sohrab/alaa-workflow/references/phase-prompts.md
+ M skills/sohrab/alaa-workflow/references/task-tracking.md
+?? artifacts/agent-control-defaults-20261018/audit_bindings.ps1
+?? artifacts/agent-control-defaults-20261018/audit_bindings.py
+?? artifacts/agent-control-defaults-20261018/binding-b.md
+?? artifacts/agent-control-defaults-20261018/binding-c.md
+?? artifacts/agent-control-defaults-20261018/binding-commit-manifest.json
+?? artifacts/agent-control-defaults-20261018/commit_bindings.py
+?? artifacts/agent-control-defaults-20261018/review.md
+?? artifacts/agent-control-defaults-20261018/verification-bindings-skills.json
+?? artifacts/agent-control-defaults-20261018/verification-bindings.json
+?? artifacts/agent-control-defaults-20261018/verification-core.json
+?? artifacts/agent-control-defaults-20261018/verification-repair-rerun.json
+?? artifacts/agent-control-defaults-20261018/verification-source-sha256.json
+?? artifacts/agent-control-defaults-20261018/verification.md

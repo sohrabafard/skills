@@ -1,0 +1,17 @@
+{
+  "repository": "deploy",
+  "branch": "main",
+  "base_head": "f6eee3c0863494901284dca9d261306aafc579ca",
+  "paths": [
+    "AGENTS.md"
+  ],
+  "subject": "fix(beads): standardize per-agent ownership binding",
+  "commit_exit": 0,
+  "timestamp_utc": "2026-10-18T19:30:15.964683+00:00",
+  "output": "[main b95757e] fix(beads): standardize per-agent ownership binding\n 1 file changed, 17 insertions(+), 11 deletions(-)\nTEXT ENCODING OK\n",
+  "verified": true,
+  "commit": "b95757e9bf2b46c5e4b96358f4eb83f50e838b36",
+  "unrelated_staged_sha256": "56f3d42847d788ec100bcf29a2fd41b7453393069ad2c348668c9eeba883e239",
+  "unrelated_tracked_preserved": 2,
+  "post_status": "AM docs/delivery-topology.md\n M docs/design/0001-central-multi-target-delivery.md\n?? docs/_agent_plans/20261018-180000_gitlab-native-single-host-cd.md\n?? docs/agents/20261018-180000_gitlab-native-single-host-cd-state.md\n"
+}

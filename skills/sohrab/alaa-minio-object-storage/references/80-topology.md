@@ -50,7 +50,7 @@ The fleet's only object-storage consumer runs its **test-stack** MinIO **per ser
 `minio/minio:RELEASE.2025-09-07T16-13-09Z-cpuv1`, command `server /data --console-address ":9001"`, volume
 `minio_data:/data`, aliased `tusd-minio` on the service network and **also attached to `alaa-shared-network`**. The
 Swarm stack is identical at `replicas: 1` with no distributed-mode erasure set
-`[source: tusd-upload-platform repository, docker-compose.yml and docker-compose.swarm.yml, read: 2026-07-27]`.
+`[source: Ala tusd repository, docker-compose.yml and docker-compose.swarm.yml, read: 2026-07-27]`.
 
 ## Exposure
 
@@ -60,7 +60,7 @@ surface with root-equivalent power over every bucket.
 
 **Check the exposure of the store against the exposure of the service it serves.** The fleet's consumer publishes
 MinIO's `9000` and `9001` on all interfaces while the API those buckets exist for is bound to loopback
-`[source: tusd-upload-platform repository, docker-compose.yml, read: 2026-07-27]`. The storage plane is therefore
+`[source: Ala tusd repository, docker-compose.yml, read: 2026-07-27]`. The storage plane is therefore
 more reachable than its consumer, which inverts the intended trust ordering: an attacker who cannot reach the
 service can still reach the bytes.
 
@@ -94,7 +94,7 @@ variable was wrong.
 The fleet's provisioner is a one-shot `minio/mc:RELEASE.2025-08-13T08-35-41Z-cpuv1` container running `mc alias
 set`, then `mc mb -p`, then `mc stat`. It is correctly idempotent and correctly non-destructive, and it sets **no
 policy, no versioning, no encryption and no lifecycle**
-`[source: tusd-upload-platform repository, docker-compose.yml, read: 2026-07-27]`. Steps 2 through 6 above are the
+`[source: Ala tusd repository, docker-compose.yml, read: 2026-07-27]`. Steps 2 through 6 above are the
 gap.
 
 ## Deployed topology
@@ -116,6 +116,6 @@ recovers it.
 ## Not owned here
 
 Container image construction, Compose and Swarm file expression, registry and secret mechanics:
-`/alaa-docker-production` (`$alaa-docker-production`). Kubernetes manifests, Helm charts, StatefulSets and storage classes:
-`/alaa-k8s-helm` (`$alaa-k8s-helm`), with Arvan specifics in `/caas-arvan-kuber` (`$caas-arvan-kuber`). Canonical
-shared-infrastructure names and ports: `/alaa-services-contract` (`$alaa-services-contract`).
+`/alaa-docker-production`. Kubernetes manifests, Helm charts, StatefulSets and storage classes:
+`/alaa-k8s-helm`, with Arvan specifics in `/caas-arvan-kuber`. Canonical
+shared-infrastructure names and ports: `/alaa-services-contract`.

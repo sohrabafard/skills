@@ -16,7 +16,7 @@ Two claims are never accepted, however confidently they are written: a check tha
 
 ## Reruns
 
-**A rerun that passes after a failure is a flaky result, never a clean pass.** Report both outcomes — the failure and the pass — and enter the classification procedure in `50-flake.md`. The failing run is the observation that carries information; the passing run only shows that the failure is not deterministic, which is the input to the classification, not a resolution of it.
+**An unchanged rerun that passes after a failure is a flaky result, never a clean pass.** Report both outcomes and enter the classification procedure in `50-flake.md`. A named defect repair changes the input: report the failure, repair, new tested identity and retest separately; a successful repaired path is not automatically flaky. Never conceal the original failure.
 
 Reporting the second run alone is the single most common way a real intermittent defect is lost, because the first run is the only evidence it ever produced.
 
@@ -38,7 +38,7 @@ Three rules settle the common disputes:
 
 - **A reviewer may demand one re-run**, and gets it without argument. The reuse rule exists to stop unprompted repetition, not to refuse a check that a reviewer has a reason to want.
 - **A citation across a subagent boundary names the agent that observed it.** A result the reporting agent did not observe is reported as not run — that rule is not relaxed by citation; the observing lane's evidence is carried forward with its owner attached.
-- **A merge, rebase, or conflict resolution invalidates every result taken before it.** The merged tree is a tree nothing has run against, whatever both parents returned.
+- **A merge, rebase, or conflict resolution requires evidence reconciliation.** Invalidate affected inputs and integration claims; unchanged narrower checks remain citable when all four validity conditions hold. Required final exhaustive proof still runs fresh on the resulting candidate.
 
 ## A result obtained after changing the command
 

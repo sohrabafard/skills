@@ -1,8 +1,8 @@
 # Multipart, capacity and cost
 
-This file owns what a multipart upload costs the process performing it and what a bucket costs the account holding
-it. Read it before choosing a part size, before sizing the disk or memory of an uploading process, and before
-setting a quota.
+This file owns provider bounds, application-client multipart capacity and bucket costs. Read it before
+sizing non-tus application parts/buffers or setting a quota. For tusd controls and temp-disk sizing,
+read `/tusd-upload-platform` `references/35-storage-lifecycle.md`; its parts must fit these provider bounds.
 
 ## Multipart mechanics
 
@@ -36,7 +36,7 @@ to whatever the buffering budget below allows.
 `STORAGE_MAX_PART_SIZE_BYTES` and `STORAGE_MAX_PARTS`, and validate the part size against those bounds before the
 client is constructed.** Every one of those four numbers is a provider limit that differs between MinIO and
 ArvanCloud, so each is an environment value with a stated default rather than a constant in code —
-`05-environment-contract.md` owns them and `/alaa-arvan-object-storage` (`$alaa-arvan-object-storage`)
+`05-environment-contract.md` owns them and `/alaa-arvan-object-storage`
 `references/15-environment-contract-deltas.md` states where Arvan's differ.
 
 ## The local cost of an in-flight upload
@@ -61,13 +61,13 @@ On the fleet's only object-storage consumer, no part-size or concurrency overrid
 repository, so the upstream library defaults are in effect: a 5 MiB minimum part, a 50 MiB preferred part, a 5 GiB
 maximum part, 10,000 parts, a 5 TiB maximum object, ten concurrent part uploads and twenty buffered parts. That is
 approximately 1 GiB of local temp demand per in-flight upload, on a container with no volume, no tmpfs and no
-disk-pressure guard `[source: tusd-upload-platform repository — the absence of any override was verified this
+disk-pressure guard `[source: Ala tusd repository — the absence of any override was verified this
 session; the upstream default values were taken from the tusd v2.8.0 S3 store and are marked unverified because the
 module source was out of scope for this session, read: 2026-07-27 for the repository, unverified for the upstream
 defaults]`.
 
 Part sizing driven by the tus protocol, and the temp-disk formula as an upload-plane concern, belong to
-`/tusd-upload-platform` (`$tusd-upload-platform`). This file owns the storage-side limits those choices must fit
+`/tusd-upload-platform`. This file owns the storage-side limits those choices must fit
 inside.
 
 ## The two-copy window
@@ -101,4 +101,4 @@ Four things cost money, and only the first is intuitive:
 requests is not fixed by a cheaper storage class.
 
 Complexity budgets for a loop, listing or fan-out that grows with tenants or objects belong to
-`/alaa-algorithms-data-structures` (`$alaa-algorithms-data-structures`).
+`/alaa-algorithms-data-structures`.

@@ -16,6 +16,13 @@ some earlier version.
 4. Community answers for troubleshooting only, and never as the source of an index restriction, a default, or a
    planner claim; verify each against the manual and against `explain()` before writing it down.
 
+## Dated fleet observation
+
+A prior observation dated 2026-07-26 states that `alaa-go-chi docs/CONSUMERS.md` listed no MongoDB use and that the kit
+shipped no MongoDB package. Those external sources were not re-verified in this checkout. Treat the statement as
+historical evidence, not current fleet policy or proof about another target. Before making a present support claim,
+inspect the target repository's dependency and configuration sources.
+
 ## Verified pages
 
 Each row was fetched and read on 2026-07-26 and resolved.

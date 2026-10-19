@@ -245,7 +245,8 @@ Every service in scope is production, security-sensitive, high-concurrency, and 
 availability target above 99.99%. For every owned journey and high-risk surface, walk all ten
 and either produce a dispositioned candidate or record an exclusion with its evidence path:
 correctness and testability, including tests that would fail against a plausible broken
-implementation; failure behaviour, including timeouts, bounded retries, idempotency, partial
+implementation, written only for decisions the project owns and failures that can reach it, never
+for framework, shared-kit, package, or vendor behaviour that the owner's own suite proves; failure behaviour, including timeouts, bounded retries, idempotency, partial
 failure, degraded dependencies, and recovery objectives; security, including trust boundaries,
 authentication and authorization, untrusted input, secrets, and tenant isolation; observability,
 where every new failure mode is diagnosable in production without a code change; concurrency and
@@ -253,7 +254,12 @@ load, including pools, contention, N+1 access, cache semantics, backpressure, an
 clean code, SOLID, and design patterns applied where they earn their place; algorithm and
 data-structure choice with stated complexity budgets; configurability with safe defaults and
 boundary validation, failing fast on a missing required setting; speed of development and
-debuggability, naming the commands that test, run, and reproduce; and documentation of what
+debuggability, naming the commands that test, run, and reproduce, including the map from each test
+topic and layer to the command that selects it, a repository-owned changed-path and change-class
+map naming mandatory gates and their applicability conditions, the one build every gate consumes,
+and the test setup shared once per run. Derive commands from canonical repository sources; a
+missing map is a factual gap, never permission to invent commands or narrow existing gates.
+The final obligation is documentation of what
 shipped, how it is operated, and how it fails.
 
 Two standing preferences cut across all ten. Prefer official framework, platform, and standard

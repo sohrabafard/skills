@@ -1,0 +1,1 @@
+Raw scoped diff is preserved as ASCII-escaped JSON in UI-diff.json.

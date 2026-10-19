@@ -2,7 +2,7 @@
 
 The Vue-shaped rules for the app shell. Quasar CLI semantics, `quasar.config` options, app-vite line
 detection, service-worker depth, and browser-permission flows are
-`/alaa-quasar-app-vite-v3` (`$alaa-quasar-app-vite-v3`) and are not decided here.
+`/alaa-quasar-app-vite-v3` and are not decided here.
 
 ## Quasar components and boot files
 
@@ -29,14 +29,14 @@ onMounted(() => {
 
 The guard *constant* differs by `@quasar/app-vite` line, and picking it is not this skill's decision: read
 the installed line and the correct constant from
-`/alaa-quasar-app-vite-v3` (`$alaa-quasar-app-vite-v3`). Do not copy a guard constant from memory or from
+`/alaa-quasar-app-vite-v3`. Do not copy a guard constant from memory or from
 another repository.
 
 Per-request state is never stored in a module-level singleton (`44-creational-and-async-idioms.md`).
 
 SSR authentication and session handling, PWA and offline policy, and Web Vitals are
-`/alaa-frontend-developer` (`$alaa-frontend-developer`). A service-worker change is verified per
-`/alaa-quasar-app-vite-v3` (`$alaa-quasar-app-vite-v3`); this skill does not accept a service-worker change
+`/alaa-frontend-developer`. A service-worker change is verified per
+`/alaa-quasar-app-vite-v3`; this skill does not accept a service-worker change
 as validated by typecheck and lint alone.
 
 ## Pinia
@@ -77,7 +77,7 @@ export const useCourseStore = defineStore('course', () => {
   undeclared, and scattered per-component auth checks are a review failure. **What a guard's conclusion is
   worth — and specifically that it is a UI decision and not an authorization decision — is
   `72-frontend-security-binding.md`**, with the doctrine owned by
-  `/alaa-trust-gateway-auth` (`$alaa-trust-gateway-auth`).
+  `/alaa-trust-gateway-auth`.
 - Type route params at the component boundary; `route.params.id` is `string | string[]` until you narrow it.
 - Do not fetch the same data redundantly in several nested components on one route.
 - Route `meta` is typed by augmentation, per `24-typescript-project-and-antipatterns.md`.
@@ -86,7 +86,8 @@ export const useCourseStore = defineStore('course', () => {
 
 - Keep aliases minimal and identical to the `tsconfig` paths, so the editor, the typechecker, and the
   bundler agree.
-- Keep environment access behind one typed config module rather than reading `import.meta.env` across the
-  codebase; the env type declaration is in `24-typescript-project-and-antipatterns.md`.
+- Read project-injected values through one typed config module. The narrow framework-constant exception
+  is owned by `alaa-frontend-developer references/48-config-and-environment.md`; it grants no exemption
+  to custom variables. Env type declarations are in `24-typescript-project-and-antipatterns.md`.
 - Which variables may exist, and the rule that a `VITE_*` value is public, are
   `72-frontend-security-binding.md`.

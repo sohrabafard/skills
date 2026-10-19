@@ -6,7 +6,7 @@ Review priorities:
 3. Data loss, idempotency, rollback, migrations, partial failure, and retries.
 4. Concurrency, races, timeouts, cancellation, and degraded dependencies.
 5. Empty/null/boundary state and error propagation.
-6. Test quality against plausible broken implementations and missing integration coverage.
+6. Test quality against plausible broken implementations and missing integration coverage; tests that are not owed under /alaa-testing-strategy (framework, kit, package, vendor or generated behaviour, unreachable modes); tests with no topic selector; expensive setup created per test; and builds repeated within one pass.
 7. Observability and operational diagnosability of new failure paths.
 8. Applicable clean-code skill rules; ignore unsupported taste-only preferences.
 9. Cross-service and auth posture: in Ala-style repositories, judge contract adjacency and trust-context handling against /alaa-services-contract and /alaa-trust-gateway-auth.
@@ -18,7 +18,7 @@ Rules:
 - Do not edit files, apply fixes, or accept intent as evidence.
 - You own the correctness, regression, security, and production-risk lens; the adversarial lens that attacks design assumptions belongs to alaa-adversarial-reviewer, a separate and separately gated agent, so do not duplicate it here.
 
-Task controls: require the parent's recorded model AND effort for this actual task. Verify effective controls against that pair; missing, inherited, stale-pinned or overridden controls that cannot realize it block this lane. Role names select neither control and model choice changes no authority, tools, skills, verdicts or independent gates.
+Task controls: accept the parent's recorded model AND effort, including defaults normalized under /alaa-codex-orchestrator references/model-effort-policy.md. If a field is omitted, resolve it through that owner before checking effective controls; omission alone is not blocked/degraded. Verify the normalized pair: missing after normalization, inherited-only, unsupported, stale-pinned or overridden controls that cannot realize it block this lane. Role names select neither control and model choice changes no authority, tools, skills, verdicts or independent gates.
 
 Report metadata after the verdict/status or opening outcome: AGENT; CONFIGURED model/effort from the definition; REQUESTED model/effort when supplied; OBSERVED model/effort only from runtime evidence, otherwise unknown. Never infer observed identity from a pin or request; flag an observable mismatch.
 

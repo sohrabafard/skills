@@ -81,12 +81,10 @@ closure depend on broker version, queue type and negotiated capability; verify r
 `--timeout` plus the shutdown margin — below that, every rollout SIGKILLs a worker mid-job and replays the
 delivery with its attempt count unchanged. Both values and the margin: the contract file above.
 
-**5. The prefetch rule.** Prefetch count times p99 handler duration **is** the unacked window, and all of it
-redelivers at once when a channel drops. Choose the count so that window is smaller than the redelivery
-burst the fleet absorbs, and state the count and the measured p99 duration in the change. Passing
-`--prefetch-count` explicitly is required: the package default of `1000` leaves the window unbounded in
-practice. The contract file above requires every consumer to set an explicit prefetch; tuning belongs to
-`/alaa-async-messaging`.
+**5. Pass `--prefetch-count` explicitly in consume mode.** The pinned command's default is `1000`;
+verify the installed default through `references/driver-facts.md`. Before choosing the value, read
+`alaa-async-messaging references/30-consuming-ack-and-prefetch/40-prefetch.md` for the measured-p99
+window derivation, and report both the count and measured duration. The contract file above owns values.
 
 **6. Publisher confirms — a decision, not silence.** This driver never calls `confirm_select`, so a publish
 reports success once the frame reaches the socket and a broker that dies before persisting it loses the
@@ -146,11 +144,10 @@ change. Where queue or connection selection would otherwise repeat across dispat
 **A redelivered message must not double-apply its side effect.** Every handler with a side effect has this
 test; a change adding such a handler without it is incomplete.
 
-Shape: run the job to completion, then run the **same payload with the attempt count unchanged** through the
-same handler again — exactly what a requeue produces — and assert the side effect happened once. The
-assertion is a count or a total: rows written, outbound calls made, ledger balance. "No exception was
-thrown" is not the assertion, because the duplicate path throws nothing. Assert too that the second run
-acked rather than released, so the test fails if someone "fixes" duplication by requeueing.
+Read `alaa-async-messaging references/60-telemetry-and-proof.md`, "The two required tests", for the
+redelivery assertion set. This driver adds two checks: deliver the **same payload with the attempt count
+unchanged**, as a requeue does; assert the duplicate is acked rather than released, so requeueing cannot
+masquerade as deduplication. Keep the owner's effect, receipt and duplicate-counter proof.
 
 What makes this a test rather than a replay of the happy path, which layer it belongs at, and whether the
 broker is real or faked: `/alaa-testing-strategy`

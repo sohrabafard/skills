@@ -13,7 +13,7 @@ Each row states an observable condition. Match the condition, open that one file
 | choose between the tusd binary, the embedded library, one deployment or two, or you are about to propose custom code around tusd | `references/20-decision-matrix.md` | (a) + (c) |
 | configure the tusd binary or construct `tusdhandler.NewHandler`, wire a storage backend, or reason about what upstream guarantees | `references/25-upstream-library.md` | (a) |
 | lay out an upload plane end to end, place a relay or staging hop, or decide how it scales and locks | `references/30-topologies.md` | (a) + (c) |
-| set a size cap, decide part sizes, size temp disk, define retention for unfinished uploads, build an object key, or explain why a finished object is not in the bucket yet | `references/35-storage-lifecycle.md` | (a) + (c) |
+| set an upload cap, size tusd parts/temp disk, define unfinished-upload retention, lay out tus/application keys and sidecars under the shared key rules, or explain when a finished object appears | `references/35-storage-lifecycle.md` | (a) + (c) |
 | decide who may create, resume, inspect, or terminate an upload; consume an `upload_to_*` permission bit; or design the durable ownership record | `references/40-authorization.md` | (c) |
 | write, review or debug a hook, a callback or a lifecycle notification, or you need to state what happens when one fails | `references/45-hooks.md` | (a) + (c) |
 | triage a live upload incident, or you need the symptom-to-cause table for a stall, a duplicate, a lost record or a wrong-tenant resume | `references/50-failure-modes.md` | all |

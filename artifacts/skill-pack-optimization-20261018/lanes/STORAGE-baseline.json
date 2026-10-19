@@ -1,0 +1,305 @@
+{
+  "head": "1a0799de71254427973f1253d80b846fea9acf10",
+  "scope": [
+    "alaa-minio-object-storage",
+    "alaa-arvan-object-storage",
+    "tusd-upload-platform"
+  ],
+  "files": [
+    {
+      "path": "skills/sohrab/alaa-minio-object-storage/agents/openai.yaml",
+      "sha256": "746ac758ff351587789b2c2f69d7c17a39459815a1f007be0fa03212b37fd823",
+      "bytes": 3145
+    },
+    {
+      "path": "skills/sohrab/alaa-minio-object-storage/references/00-topic-map.md",
+      "sha256": "c2a290c9df0d77b950f109cc0417cf0a34ade6502bcdae344bc5c20e3beae407",
+      "bytes": 4100
+    },
+    {
+      "path": "skills/sohrab/alaa-minio-object-storage/references/05-environment-contract.md",
+      "sha256": "739fc87ba998d84c353cb1c028d3a42f222bef25e67fdb4a6a00d0c909b0f897",
+      "bytes": 22890
+    },
+    {
+      "path": "skills/sohrab/alaa-minio-object-storage/references/10-buckets-and-object-keys.md",
+      "sha256": "6204dcdf93493e18738400951528166e2fcb13102524617f79baa824b32fe453",
+      "bytes": 6874
+    },
+    {
+      "path": "skills/sohrab/alaa-minio-object-storage/references/20-lifecycle-and-retention.md",
+      "sha256": "7f63b2d37bb8fb91cfec7480f44ecd6ca95b8511ad968dddf4954b98f04d345a",
+      "bytes": 7539
+    },
+    {
+      "path": "skills/sohrab/alaa-minio-object-storage/references/30-identity-credentials-and-access.md",
+      "sha256": "f8d16e7425ff0cd0c35d7401018a0fa92e2ee676923474ff447cee3603101e83",
+      "bytes": 8176
+    },
+    {
+      "path": "skills/sohrab/alaa-minio-object-storage/references/40-encryption-tls-and-durability.md",
+      "sha256": "93f24413ab8022e4bf0c22cb6f2b99ef6080fc8272e95275fda7c6cfb3f428bd",
+      "bytes": 11026
+    },
+    {
+      "path": "skills/sohrab/alaa-minio-object-storage/references/50-multipart-capacity-and-cost.md",
+      "sha256": "985e7e1e0ad3c693f9d0e0636c03496b6c1deeeac3f4a71a87e15787d8609a8a",
+      "bytes": 6702
+    },
+    {
+      "path": "skills/sohrab/alaa-minio-object-storage/references/60-presigned-urls-and-delivery.md",
+      "sha256": "11f1acb0194712f3020549c6737ad70a3364f368916a76585ed7b9f433cadfa9",
+      "bytes": 8574
+    },
+    {
+      "path": "skills/sohrab/alaa-minio-object-storage/references/70-client-libraries.md",
+      "sha256": "f0ae733da0f6dc1391a3e6f8fdb7aaa926bafba018086eab0a29969fb81baeef",
+      "bytes": 15693
+    },
+    {
+      "path": "skills/sohrab/alaa-minio-object-storage/references/75-mc-command-line-client.md",
+      "sha256": "37d4531a7e9c567fc9155aaa81164e299af52e60d1e42535de7e8ac1af40be7c",
+      "bytes": 17568
+    },
+    {
+      "path": "skills/sohrab/alaa-minio-object-storage/references/80-topology.md",
+      "sha256": "adfb5bfb531b720c57b702e44604d0da5d73f7c8fde94faae9f7b52cbefdfde9",
+      "bytes": 8211
+    },
+    {
+      "path": "skills/sohrab/alaa-minio-object-storage/references/90-failure-classes.md",
+      "sha256": "a9859d23261651aabfe9b3704f0202cf129dc633e3b038834eb2ff9643e1f8e7",
+      "bytes": 8117
+    },
+    {
+      "path": "skills/sohrab/alaa-minio-object-storage/references/95-observability.md",
+      "sha256": "083f0078d519177ab66842f3ba912e31d51b99670921a91fb80e73d6415d7af9",
+      "bytes": 6154
+    },
+    {
+      "path": "skills/sohrab/alaa-minio-object-storage/references/SOURCES.md",
+      "sha256": "baaf59bc6711315e923c003013bd84cbb10aa8ad8b3b13e134b57131badd1ec1",
+      "bytes": 14394
+    },
+    {
+      "path": "skills/sohrab/alaa-minio-object-storage/scripts/check_object_storage_posture.py",
+      "sha256": "a4fbcdd40a03e39ba949a3bb3224476d4363c47d8f59d2afd1630bf00de6f585",
+      "bytes": 39974
+    },
+    {
+      "path": "skills/sohrab/alaa-minio-object-storage/SKILL.md",
+      "sha256": "5b242b07658da1b1ed9b008378510d08237c541e21c8d58b3e486c067a2fba29",
+      "bytes": 12436
+    },
+    {
+      "path": "skills/sohrab/alaa-arvan-object-storage/agents/openai.yaml",
+      "sha256": "1a5fd702c2b6417a7be5eea1c0e94f08212a5cfaf004f0ed8b90c6748f797782",
+      "bytes": 2633
+    },
+    {
+      "path": "skills/sohrab/alaa-arvan-object-storage/references/10-connection-identity-and-addressing.md",
+      "sha256": "aa4594e53ff644adbe28c06cef6f2275bfa9ab46c001e1dfe964499c71517f58",
+      "bytes": 7738
+    },
+    {
+      "path": "skills/sohrab/alaa-arvan-object-storage/references/15-environment-contract-deltas.md",
+      "sha256": "5f5904cd994c9ac8644ccf997762d534469dbdaf40a8841d47c5de2a92236227",
+      "bytes": 10215
+    },
+    {
+      "path": "skills/sohrab/alaa-arvan-object-storage/references/20-s3-compatibility-matrix.md",
+      "sha256": "9680157d3e0c5a55ebbc13decd555bff16ac7e792170aeaf2ffe568ae6a82406",
+      "bytes": 9705
+    },
+    {
+      "path": "skills/sohrab/alaa-arvan-object-storage/references/30-limits-quotas-and-cost.md",
+      "sha256": "cfefc789d70f8e3996f7869984696fe903a1e76ea7de3429c8f71ae07374f463",
+      "bytes": 6306
+    },
+    {
+      "path": "skills/sohrab/alaa-arvan-object-storage/references/40-migration-and-portability.md",
+      "sha256": "6329e9ce7893747b966b28cae1d011d46483a194869f3536f665bdae9113987e",
+      "bytes": 5928
+    },
+    {
+      "path": "skills/sohrab/alaa-arvan-object-storage/references/SOURCES.md",
+      "sha256": "f873daf8055501a9b4171f7632931aea8f611218f681430d152898d9f918dc5b",
+      "bytes": 14540
+    },
+    {
+      "path": "skills/sohrab/alaa-arvan-object-storage/scripts/check_arvan_storage_config.py",
+      "sha256": "20816d85a948a8777568e72b58e0ddc8f70098ee4bad645fa7c6f6edd9073bfc",
+      "bytes": 16427
+    },
+    {
+      "path": "skills/sohrab/alaa-arvan-object-storage/SKILL.md",
+      "sha256": "57433d2c77d637b89aff34b6e8739c8996efb2350fe17016310761b78aeaf986",
+      "bytes": 9622
+    },
+    {
+      "path": "skills/sohrab/tusd-upload-platform/agents/openai.yaml",
+      "sha256": "80e16e4f4dbdc9db16cda699b1b45751a713414fc04c4c0941ea107c790782a2",
+      "bytes": 409
+    },
+    {
+      "path": "skills/sohrab/tusd-upload-platform/assets/client/quasar.boot.sentry.ts",
+      "sha256": "96c1f78afb5f8980fa5a4ce25ec0fab6fe69897bdd701a293eee12eebb69cf4b",
+      "bytes": 977
+    },
+    {
+      "path": "skills/sohrab/tusd-upload-platform/assets/client/quasar.boot.uploads.ts",
+      "sha256": "c988da499dd3e42f030cbd83eb8bd330ff7e673ff67860d98876b82be3e152f5",
+      "bytes": 571
+    },
+    {
+      "path": "skills/sohrab/tusd-upload-platform/assets/client/quasar.config.snippet.ts",
+      "sha256": "84be3bd75e219a630112857062f51fd30c89be30213c26a03c937ab6add5c3bc",
+      "bytes": 1196
+    },
+    {
+      "path": "skills/sohrab/tusd-upload-platform/assets/client/TusUploadPanel.vue",
+      "sha256": "d03ea21c732e12ef02e0bc5e6c41ea6c988894433c4a013dbaec2dab142a3178",
+      "bytes": 2704
+    },
+    {
+      "path": "skills/sohrab/tusd-upload-platform/assets/client/uploadStates.ts",
+      "sha256": "95642c7fcb8387ee20cb3b9c9eef949e7d3a895a4dd66cdcbefcc70ca1820558",
+      "bytes": 2279
+    },
+    {
+      "path": "skills/sohrab/tusd-upload-platform/assets/client/uploadTelemetry.ts",
+      "sha256": "5a9bdb024520c3d27b5fa095b3b0fc7a6df6cfe8ea484071852107ece356d120",
+      "bytes": 2546
+    },
+    {
+      "path": "skills/sohrab/tusd-upload-platform/assets/client/useTusUpload.ts",
+      "sha256": "3b5aaaa1a7d75c6ef297e30f84c25ca55fd79901a3fdb4cd888a18c69c46c5f1",
+      "bytes": 13487
+    },
+    {
+      "path": "skills/sohrab/tusd-upload-platform/assets/client/useUploadQueueStore.ts",
+      "sha256": "c8f7060488d3572b819b398ed730471e55a7686323ed5e404b8f30b461ec58b2",
+      "bytes": 2473
+    },
+    {
+      "path": "skills/sohrab/tusd-upload-platform/assets/docker-compose/tusd-s3.compose.yaml",
+      "sha256": "4009c6fde5389d30fa01d91c7cde728c65c87906444f5db41f4b7c65d84682d9",
+      "bytes": 4622
+    },
+    {
+      "path": "skills/sohrab/tusd-upload-platform/assets/docker-compose/tusd-staging.compose.yaml",
+      "sha256": "d898cdc354698212b04b1ff5e42ae1b5f2d67921f329c57b55a214e9de1c9d21",
+      "bytes": 3296
+    },
+    {
+      "path": "skills/sohrab/tusd-upload-platform/assets/env/tusd-s3.env.example",
+      "sha256": "4f24eabb9165d097cc8739298def23d45467473e85b83f3774f343ad16869328",
+      "bytes": 1710
+    },
+    {
+      "path": "skills/sohrab/tusd-upload-platform/assets/env/tusd-staging.env.example",
+      "sha256": "2909139c0cf0c450797d55bae5b815cbfbb696b4396e69f86a680a09bd76c430",
+      "bytes": 1011
+    },
+    {
+      "path": "skills/sohrab/tusd-upload-platform/assets/haproxy/tusd-reverse-proxy.cfg",
+      "sha256": "e55e35c3752b00b184cb40f63c5a2f0e66a2de2076f4f2cb09d651a783833ab8",
+      "bytes": 3702
+    },
+    {
+      "path": "skills/sohrab/tusd-upload-platform/assets/prometheus/tusd-alert-rules.yml",
+      "sha256": "bb17f9398fbfe6d79991054fb4db3c88c9c7efb166b64d36b8dc3689b184ad04",
+      "bytes": 3712
+    },
+    {
+      "path": "skills/sohrab/tusd-upload-platform/assets/schemas/upload-record.schema.json",
+      "sha256": "76389ca10ad284263be9fb421a70987620848c196d0d76ae9e556d04a3e6ec68",
+      "bytes": 4435
+    },
+    {
+      "path": "skills/sohrab/tusd-upload-platform/references/00-topic-map.md",
+      "sha256": "92cea8ce35800253a1107fe9761c73ec60885d9cb65303d17f0e10ca1f1e7137",
+      "bytes": 6129
+    },
+    {
+      "path": "skills/sohrab/tusd-upload-platform/references/10-source-map.md",
+      "sha256": "99c8351f4da20343d1d40b4168257c4740e5c90aa66659e416a62e019082ecc2",
+      "bytes": 4688
+    },
+    {
+      "path": "skills/sohrab/tusd-upload-platform/references/15-ala-service.md",
+      "sha256": "1f26b800e83ad6ef632851c8fc7cca1aab732e14b1cdcad1b84f331c7a9881a7",
+      "bytes": 10485
+    },
+    {
+      "path": "skills/sohrab/tusd-upload-platform/references/20-decision-matrix.md",
+      "sha256": "e06e8a444032b421977ba9642572773043a86663ef2a35c84bb917ad26ee2bd6",
+      "bytes": 5512
+    },
+    {
+      "path": "skills/sohrab/tusd-upload-platform/references/25-upstream-library.md",
+      "sha256": "b97361e1a40e66603108a48ce64bcd064d09be8e60fc41206687bbb1a1dcda2a",
+      "bytes": 6897
+    },
+    {
+      "path": "skills/sohrab/tusd-upload-platform/references/30-topologies.md",
+      "sha256": "38035262bab55d242ae8f71be18cbeceabd50437b008dfd9580df1be74078c48",
+      "bytes": 4516
+    },
+    {
+      "path": "skills/sohrab/tusd-upload-platform/references/35-storage-lifecycle.md",
+      "sha256": "d282163ebbabd34bf7d21cbbc02cdc5a38efc8af64e9f9ddf8d8411669c8f9dc",
+      "bytes": 8498
+    },
+    {
+      "path": "skills/sohrab/tusd-upload-platform/references/40-authorization.md",
+      "sha256": "7d6bdd05077d3c8b32816aff80af54d402d299830ce2a1b44d32d0a8e9cf7ea5",
+      "bytes": 8007
+    },
+    {
+      "path": "skills/sohrab/tusd-upload-platform/references/45-hooks.md",
+      "sha256": "85b162faf45845087d9d4b72d701df3e28610e6f2a442ee6571c38cf49209004",
+      "bytes": 8009
+    },
+    {
+      "path": "skills/sohrab/tusd-upload-platform/references/50-failure-modes.md",
+      "sha256": "f02776e6311efadd3186f1aed6f9b0828d6efbb23b583164027171acfe315072",
+      "bytes": 9238
+    },
+    {
+      "path": "skills/sohrab/tusd-upload-platform/references/55-tests.md",
+      "sha256": "ba76af69cf32c4f8be0c2b9e1297673c2134d4fc74da6e01b2b2e124b3f71bbd",
+      "bytes": 8305
+    },
+    {
+      "path": "skills/sohrab/tusd-upload-platform/references/60-browser-client.md",
+      "sha256": "b08cc702e8d0e9708054cbb2a0811c623f76a3f449f9c542f1ae3d61cca7a093",
+      "bytes": 7334
+    },
+    {
+      "path": "skills/sohrab/tusd-upload-platform/references/70-front-door.md",
+      "sha256": "c993334c95fc715964353e2118890a21383cb830d569e3ef3c533c6543fbd250",
+      "bytes": 5606
+    },
+    {
+      "path": "skills/sohrab/tusd-upload-platform/references/80-observability.md",
+      "sha256": "026a9a87c322c703387039f09d4dd2cc32d79dd59c6bf6e6513e0d909a6f9b34",
+      "bytes": 6785
+    },
+    {
+      "path": "skills/sohrab/tusd-upload-platform/references/90-constraints.md",
+      "sha256": "9729b524d9fb6771ac1f445cf5c99e32bd01378195a2503dabe0609714d5a475",
+      "bytes": 4757
+    },
+    {
+      "path": "skills/sohrab/tusd-upload-platform/scripts/validate_pack.py",
+      "sha256": "2417332dda31e6eb6346b4c614c51e1651d651395447c9622b72e7e4fb88eef2",
+      "bytes": 29670
+    },
+    {
+      "path": "skills/sohrab/tusd-upload-platform/SKILL.md",
+      "sha256": "4b3682b76bc9fc8faa4598d511cdf179605bfa52a808a0789fe09c5b2d1d7a79",
+      "bytes": 8734
+    }
+  ]
+}

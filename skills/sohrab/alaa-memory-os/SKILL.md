@@ -16,8 +16,9 @@ replacing the store changes one adapter file and leaves every rule below intact.
 ACTIVE_ADAPTER: hindsight
 ```
 
-**This line is the sole selection.** Read it before a task's first recall/write, load only
-`references/store-<value>.md`, and use that adapter's mechanics for every task store operation.
+**This line is the sole selection.** Before a task's first recall/write, load
+`references/store-<value>.md` and use only its mechanics for task store operations. A format-only section
+explicitly routed by that adapter shares serialization, not adapter activation or operation authority.
 
 Exactly one adapter is active. Two adapters write the same knowledge under different indexing, commit and
 concurrency assumptions; disagreement later leaves notes duplicated or missing.

@@ -1,0 +1,256 @@
+{
+  "head": "1a0799de71254427973f1253d80b846fea9acf10",
+  "resource_policy": "ordinary serial low-cost; no CPU-heavy or live checks",
+  "cwd": ".",
+  "manifest_algorithm": "SHA256 of sorted repository-relative UTF8 path + NUL + raw bytes",
+  "manifest_sha256": "35eedb30db40d0360633afd21cccf7693282496e957f4e1c1e915290f95fed1c",
+  "inputs": [
+    {
+      "path": "artifacts/skill-pack-optimization-20261018/lanes/PLATFORM-draft.md",
+      "bytes": 2798,
+      "sha256": "5db16fab46364e0076a84037e4fa908fcc227f8592f5d18a1ad6738356d511c0"
+    },
+    {
+      "path": "artifacts/skill-pack-optimization-20261018/lanes/PLATFORM-read-manifest.json",
+      "bytes": 17670,
+      "sha256": "344f241c18eec7072a64d4b21dc5668443df28f00b9e8e63c6363bda04dd00a0"
+    },
+    {
+      "path": "artifacts/skill-pack-optimization-20261018/lanes/PLATFORM-verify.py",
+      "bytes": 3311,
+      "sha256": "92b82c377f9432f4109e9b44ab61f25e41434ab40aeb6c96b7b8915ff2e94f64"
+    },
+    {
+      "path": "artifacts/skill-pack-optimization-20261018/lanes/PLATFORM.md",
+      "bytes": 13355,
+      "sha256": "58718031f0aee7a4375aeaa433883ff746753d124da4a5c06b4a6ca6fda35c06"
+    },
+    {
+      "path": "skills/sohrab/alaa-docker-production/SKILL.md",
+      "bytes": 4124,
+      "sha256": "ff41f97628d6deb270dcb6562635c576034aa28420cef51a5e079851543f01b1"
+    },
+    {
+      "path": "skills/sohrab/alaa-docker-production/references/00-source-map.md",
+      "bytes": 10442,
+      "sha256": "dc682865da4963a1663170b3f94947027f1a1ccd638bd4eb3ff33e605a6efa05"
+    },
+    {
+      "path": "skills/sohrab/alaa-docker-production/references/10-dockerfile-authorship.md",
+      "bytes": 29343,
+      "sha256": "bdcfe556f1e24af17d8c99eb72bbb3802b146d853be579511f067995fcddb502"
+    },
+    {
+      "path": "skills/sohrab/alaa-docker-production/references/20-compose-authorship.md",
+      "bytes": 19502,
+      "sha256": "7ef61c84983881d696982dd49a157e9e53cbbc716ddb578a073aa27e75e82a2a"
+    },
+    {
+      "path": "skills/sohrab/alaa-docker-production/references/25-fail-closed-interpolation.md",
+      "bytes": 17653,
+      "sha256": "8bd5b711cfd7b86a65b6b51a6fa5388623b399a4894daa6ffda572c4e4f073d7"
+    },
+    {
+      "path": "skills/sohrab/alaa-docker-production/references/90-companion-boundary.md",
+      "bytes": 9047,
+      "sha256": "69f868457f982abf43776339b1da0cab9335cba9211c2f26a23a96988f3c3c8d"
+    },
+    {
+      "path": "skills/sohrab/alaa-gitlab-ci-cd/SKILL.md",
+      "bytes": 9206,
+      "sha256": "f994ba006e64fdee90376d303d5e9845618d5d241bb31866c4de0b80b5dc2694"
+    },
+    {
+      "path": "skills/sohrab/alaa-gitlab-ci-cd/references/00-topic-map.md",
+      "bytes": 4426,
+      "sha256": "6fd950e99d1b16dc575c6e7273e3d1a75ecd70a89ef85d08a14548a99693cbbb"
+    },
+    {
+      "path": "skills/sohrab/alaa-gitlab-ci-cd/references/90-companion-boundary.md",
+      "bytes": 5917,
+      "sha256": "6ba69e73cfa4826b88655e1dcfa237ceaaa329cb5f8cfcf21a3d49e79bc359bc"
+    },
+    {
+      "path": "skills/sohrab/alaa-gitlab-ci-cd/references/pipeline-authoring/10-pipeline-creation-and-paths.md",
+      "bytes": 3212,
+      "sha256": "132aa68d68efed48fe180653491b776c1fbae1a894e81820f5af59f172defb37"
+    },
+    {
+      "path": "skills/sohrab/alaa-gitlab-ci-cd/references/runner-shell-and-kubernetes.md",
+      "bytes": 12566,
+      "sha256": "e6eac978c02435a5c1ed48f69db2db8e58e68e88d94d6f46db366005287df8af"
+    },
+    {
+      "path": "skills/sohrab/alaa-haproxy-lua/SKILL.md",
+      "bytes": 6839,
+      "sha256": "5f389990c92fb41656baa6ae3f024afc086188da6e67b640f902a039eccd3751"
+    },
+    {
+      "path": "skills/sohrab/alaa-haproxy/SKILL.md",
+      "bytes": 5612,
+      "sha256": "6e92445155e9f974bc959163657edc922afecd2841f895770a5b72af7a82cbdd"
+    },
+    {
+      "path": "skills/sohrab/alaa-haproxy/references/40-rate-limiting-and-peers/30-replication-and-partitions.md",
+      "bytes": 3203,
+      "sha256": "eddff088722ee248e025071370c16486ad16c2bea2aeb19c00514215a2dc50d7"
+    },
+    {
+      "path": "skills/sohrab/alaa-haproxy/references/70-delivery-and-drain.md",
+      "bytes": 1041,
+      "sha256": "27cfc6bf6802b05a90e1ccb94c8f363f800c2a9a1a8cb09fe71089ea75375747"
+    },
+    {
+      "path": "skills/sohrab/alaa-haproxy/references/80-gate-register.md",
+      "bytes": 9337,
+      "sha256": "60cf716f00ddb582e6145229ffab2467ec3d1d07804c87cc98b27c91f1023ba9"
+    },
+    {
+      "path": "skills/sohrab/alaa-haproxy/references/90-companion-boundary.md",
+      "bytes": 5269,
+      "sha256": "6d20446a40569d0e8fac5856575ca7599d9b6d0933f0a9b603e5e16233b98efc"
+    },
+    {
+      "path": "skills/sohrab/alaa-k8s-helm/SKILL.md",
+      "bytes": 8642,
+      "sha256": "57f25e5b747b8d63fc8ab112a8b44eb8eb7d53f87bcf93cad761f37af180ba5d"
+    },
+    {
+      "path": "skills/sohrab/alaa-k8s-helm/references/failure-and-load.md",
+      "bytes": 9790,
+      "sha256": "7e2bbf4f3d6ae7763427ca64ef3eaeca87b832354876dab68fcfdc7d886ee556"
+    },
+    {
+      "path": "skills/sohrab/alaa-k8s-helm/references/openshift-and-managed-platforms.md",
+      "bytes": 12568,
+      "sha256": "e880c7e23db4ecd6e36eb3e394644fa2a84ed568eede1f7f5181e1ea2dd042d8"
+    },
+    {
+      "path": "skills/sohrab/ansible-generator/SKILL.md",
+      "bytes": 4703,
+      "sha256": "438145f76e5a871e62c7b494f692532f4ebd81334392883e20499ce6068542ab"
+    },
+    {
+      "path": "skills/sohrab/ansible-generator/references/best-practices.md",
+      "bytes": 10784,
+      "sha256": "95d7c3f7c90570e55e2efc6a89da286db8ed122bdc5dd3a3f8a642d3a920161a"
+    },
+    {
+      "path": "skills/sohrab/ansible-generator/references/playbook.md",
+      "bytes": 11838,
+      "sha256": "9c1b0b01667a072255e52a64526bfdf1e9f988028d8a47baa77b930a067753d6"
+    }
+  ],
+  "commands": [
+    {
+      "argv": [
+        "python",
+        "-B",
+        "scripts/check_fleet_references.py",
+        "--skill",
+        "caas-arvan-kuber",
+        "--skill",
+        "alaa-docker-production",
+        "--skill",
+        "alaa-haproxy",
+        "--skill",
+        "alaa-haproxy-lua",
+        "--skill",
+        "alaa-k8s-helm",
+        "--skill",
+        "alaa-gitlab-ci-cd",
+        "--skill",
+        "ansible-generator",
+        "--skill",
+        "ansible-validator"
+      ],
+      "cwd": ".",
+      "exit_code": 0,
+      "stdout": "check_fleet_references.py: 8 of 69 skills, 237 Markdown files, 694 citations\n\nFINDINGS: none\n\nINFO (30 unmarked target-repository paths across 6 skills; these never fail the run)\n    10  ansible-validator\n     9  alaa-docker-production\n     7  alaa-gitlab-ci-cd\n     2  alaa-k8s-helm\n     1  ansible-generator\n     1  caas-arvan-kuber\n  Rerun with --show-info for every site, or --format json for all of them.\n  Mark each one as <repo>/<path> to retire it from this list.\n",
+      "stderr": ""
+    },
+    {
+      "argv": [
+        "python",
+        "-B",
+        "skills/sohrab/alaa-repo-docs/scripts/check_markdown_links.py",
+        ".",
+        "--files",
+        "artifacts/skill-pack-optimization-20261018/lanes/PLATFORM-draft.md",
+        "artifacts/skill-pack-optimization-20261018/lanes/PLATFORM.md",
+        "skills/sohrab/alaa-docker-production/SKILL.md",
+        "skills/sohrab/alaa-docker-production/references/00-source-map.md",
+        "skills/sohrab/alaa-docker-production/references/10-dockerfile-authorship.md",
+        "skills/sohrab/alaa-docker-production/references/20-compose-authorship.md",
+        "skills/sohrab/alaa-docker-production/references/25-fail-closed-interpolation.md",
+        "skills/sohrab/alaa-docker-production/references/90-companion-boundary.md",
+        "skills/sohrab/alaa-gitlab-ci-cd/SKILL.md",
+        "skills/sohrab/alaa-gitlab-ci-cd/references/00-topic-map.md",
+        "skills/sohrab/alaa-gitlab-ci-cd/references/90-companion-boundary.md",
+        "skills/sohrab/alaa-gitlab-ci-cd/references/pipeline-authoring/10-pipeline-creation-and-paths.md",
+        "skills/sohrab/alaa-gitlab-ci-cd/references/runner-shell-and-kubernetes.md",
+        "skills/sohrab/alaa-haproxy-lua/SKILL.md",
+        "skills/sohrab/alaa-haproxy/SKILL.md",
+        "skills/sohrab/alaa-haproxy/references/40-rate-limiting-and-peers/30-replication-and-partitions.md",
+        "skills/sohrab/alaa-haproxy/references/70-delivery-and-drain.md",
+        "skills/sohrab/alaa-haproxy/references/80-gate-register.md",
+        "skills/sohrab/alaa-haproxy/references/90-companion-boundary.md",
+        "skills/sohrab/alaa-k8s-helm/SKILL.md",
+        "skills/sohrab/alaa-k8s-helm/references/failure-and-load.md",
+        "skills/sohrab/alaa-k8s-helm/references/openshift-and-managed-platforms.md",
+        "skills/sohrab/ansible-generator/SKILL.md",
+        "skills/sohrab/ansible-generator/references/best-practices.md",
+        "skills/sohrab/ansible-generator/references/playbook.md"
+      ],
+      "cwd": ".",
+      "exit_code": 0,
+      "stdout": "Validated links in 25 Markdown file(s) under ..\n",
+      "stderr": ""
+    },
+    {
+      "argv": [
+        "git",
+        "diff",
+        "--check",
+        "--",
+        "artifacts/skill-pack-optimization-20261018/lanes/PLATFORM-draft.md",
+        "artifacts/skill-pack-optimization-20261018/lanes/PLATFORM-read-manifest.json",
+        "artifacts/skill-pack-optimization-20261018/lanes/PLATFORM-verify.py",
+        "artifacts/skill-pack-optimization-20261018/lanes/PLATFORM.md",
+        "skills/sohrab/alaa-docker-production/SKILL.md",
+        "skills/sohrab/alaa-docker-production/references/00-source-map.md",
+        "skills/sohrab/alaa-docker-production/references/10-dockerfile-authorship.md",
+        "skills/sohrab/alaa-docker-production/references/20-compose-authorship.md",
+        "skills/sohrab/alaa-docker-production/references/25-fail-closed-interpolation.md",
+        "skills/sohrab/alaa-docker-production/references/90-companion-boundary.md",
+        "skills/sohrab/alaa-gitlab-ci-cd/SKILL.md",
+        "skills/sohrab/alaa-gitlab-ci-cd/references/00-topic-map.md",
+        "skills/sohrab/alaa-gitlab-ci-cd/references/90-companion-boundary.md",
+        "skills/sohrab/alaa-gitlab-ci-cd/references/pipeline-authoring/10-pipeline-creation-and-paths.md",
+        "skills/sohrab/alaa-gitlab-ci-cd/references/runner-shell-and-kubernetes.md",
+        "skills/sohrab/alaa-haproxy-lua/SKILL.md",
+        "skills/sohrab/alaa-haproxy/SKILL.md",
+        "skills/sohrab/alaa-haproxy/references/40-rate-limiting-and-peers/30-replication-and-partitions.md",
+        "skills/sohrab/alaa-haproxy/references/70-delivery-and-drain.md",
+        "skills/sohrab/alaa-haproxy/references/80-gate-register.md",
+        "skills/sohrab/alaa-haproxy/references/90-companion-boundary.md",
+        "skills/sohrab/alaa-k8s-helm/SKILL.md",
+        "skills/sohrab/alaa-k8s-helm/references/failure-and-load.md",
+        "skills/sohrab/alaa-k8s-helm/references/openshift-and-managed-platforms.md",
+        "skills/sohrab/ansible-generator/SKILL.md",
+        "skills/sohrab/ansible-generator/references/best-practices.md",
+        "skills/sohrab/ansible-generator/references/playbook.md"
+      ],
+      "cwd": ".",
+      "exit_code": 0,
+      "stdout": "",
+      "stderr": ""
+    }
+  ],
+  "unrun": [
+    "product/parser/runtime/self-test suites: no covered executable input changed",
+    "live cluster, runner provisioning, deploy, installs: outside authority",
+    "full-pack aggregate and independent review: parent Phase 4"
+  ],
+  "portability_note": "Repository-root absolute path rendered as . for portability; historical command outcomes unchanged."
+}

@@ -2,8 +2,11 @@
 
 Load when the task enables, tunes, or reviews Sentry, or turns profiling on or off.
 
-Sentry env variable names and their default values, and the package set for each runtime, belong to
-`/alaa-services-contract`, `references/21-alaa-platform-observability-directive.md`. Sample rates and their ceilings are in
+Verified shared Sentry names/values and configuration authority are in
+`alaa-services-contract references/21-alaa-platform-observability-directive.md`; it defines no fleet browser env defaults.
+The target repository's approved frontend configuration owns its browser keys, and the frontend owner selects SDKs
+against pinned runtime versions and current official documentation. PHP package choices remain with the PHP owners.
+Sample rates and their ceilings are in
 `30-quantitative-budgets.md`. This file owns the role split, the gates, and the reasons.
 
 ## The role split
@@ -47,10 +50,14 @@ No, and the reason is specific. Dated 2026-07; version-sensitive, re-check `90-s
 
 ## Sentry configuration gates
 
-- Real DSNs are never committed. Release and environment are injected by the build or deploy, never hardcoded, because a
+- Real DSNs are never committed. A browser DSN is a public event-submission address, not a secret read/admin credential;
+  publicity still permits event-injection abuse and never authorizes arbitrary destinations or payloads. Auth and
+  source-map upload tokens stay secret. Release and environment are injected by the build or deploy, never hardcoded, because a
   Sentry issue with the wrong release attribution sends the regression hunt to the wrong commit.
-- Default-PII sending stays off unless an approved written data policy says otherwise. Scrub with the SDK's own
-  before-send hook for exception events rather than filtering downstream, so the data never leaves the process.
+- Default-PII sending stays off unless an approved written data policy says otherwise. Select the setting from the
+  installed SDK version's official documentation; option names change across major versions. Scrub exception events
+  with the SDK's before-send hook before transport. Check other enabled signal types' own scrub hooks; an exception
+  hook proves no log, span, replay or breadcrumb coverage by itself.
 - On a long-lived runtime — Octane, a resident worker, any process reused across requests — Sentry scope and context are
   reset per request or per job, and no request-scoped state lives in a static or a singleton without an explicit reset
   path. Leaked scope attributes one customer's error to another customer's user, which is a data-protection incident,

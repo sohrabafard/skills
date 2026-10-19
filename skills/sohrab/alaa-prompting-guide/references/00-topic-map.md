@@ -12,7 +12,7 @@ Rows are conditions, not headings. If your situation is not listed, no reference
 | Evaluate a recorded legacy exception or compare historical GPT behavior | `references/10-gpt-5-6.md` | Legacy guidance is not the active routing default |
 | Design/run representative Codex comparisons or allocation-only observations for either runtime | `references/92-agent-evaluation.md` | Separates allocation-only observations, historical validation and controlled worker comparisons |
 | Design Claude comparisons, record identity or fallback, or validate calibration evidence | `references/93-claude-evaluation.md` | Source checks and synthetic fixtures do not prove runtime behavior |
-| Use Codex's goal loop, subagents, batch jobs, `AGENTS.md` discovery, or its slash commands | `references/11-codex-runtime-features.md` | These are harness features with version gates and hard limits a prompt must respect |
+| Use Codex's goal loop, subagents, batch jobs, `AGENTS.md` discovery or slash commands, or diagnose rejected tool input or patch context | `references/11-codex-runtime-features.md` | Harness mechanics and the active tool contract determine the supported operation |
 | Tune current Opus prompting or migrate older Opus instructions | `references/21-opus-5-5.md` | Calibration and API boundaries differ from historical Opus 5 |
 | Compare historical Opus 5 behavior explicitly | `references/20-opus-5.md` | Retained evidence does not authorize current pins |
 | Tune current Sonnet prompting or migrate Sonnet API controls | `references/31-sonnet-5-5.md` | Recalibrated effort, thinking modes and tool contracts differ from Sonnet 5 |

@@ -67,16 +67,10 @@ Redis connections in Laravel are lazy: nothing connects until first use. The cla
 that touches cache or Redis during bootstrap — with Redis down, every request throws, and under Octane the worker
 crash-loops before serving anything.
 
-- Keep provider `register()` to container bindings only. In `boot()`, wire events, routes, and observers, and read
-  no cache, no session, and no `Redis::`.
-- A provider that needs a cached value defers it with `$this->app->booting(...)` or a lazy closure, or reads it at
-  first use inside the consuming class with a fallback.
-- Do not call `Cache::remember('settings', ...)` inside a provider `boot()`. That converts a cache outage into a
-  total outage.
-- Wrap any unavoidable boot-time cache read in `try`/`catch` with a safe default and log through the standard
-  channel.
-- Feature flags and settings needed on every request live in a class that reads lazily with a per-request memo,
-  not in provider boot.
+Before adding provider wiring, apply `/alaa-laravel-architecture`
+`references/20-composition-and-boot.md`: it owns the no-I/O `register()`/`boot()` boundary.
+Read cached flags and settings at first use inside the consuming class, with fallback and a per-request memo;
+moving the read into a `booting` callback or catching its failure still performs I/O during boot.
 
 ## Where cache logic lives — a decorator over the repository
 

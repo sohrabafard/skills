@@ -7,7 +7,7 @@ A hook is where an upload plane makes a decision or records a fact. This file st
 - **Fail-closed.** The call decides whether a caller may act. When it cannot decide, it denies. Nothing proceeds.
 - **Fail-open and loud.** The call only records. Its failure denies nothing, so it must log its own failure and increment a metric, because the operation continues with a gap in the record.
 
-The deciding question is never how important the call is. It is: **what does its failure let through?** A creation gate that fails open lets an unauthorized upload start. A recording call that fails closed rejects an upload that was already authorized and already paid for in bytes. Doctrine is `/alaa-security-review` (`$alaa-security-review`) for the first and `/alaa-reliability-sla` (`$alaa-reliability-sla`) for the second.
+The deciding question is never how important the call is. It is: **what does its failure let through?** A creation gate that fails open lets an unauthorized upload start. A recording call that fails closed rejects an upload that was already authorized and already paid for in bytes. Doctrine is `/alaa-security-review` for the first and `/alaa-reliability-sla` for the second.
 
 **There is no third posture.** "Fail open and silent" is the defect this file exists to prevent: it produces a plane that is wrong and looks healthy.
 
@@ -15,17 +15,40 @@ The deciding question is never how important the call is. It is: **what does its
 
 Register (a), the tusd binary and the library. `pre-` events are blocking; `post-` events are not.
 
-| Hook | Blocking | Use it for | Never use it for | On failure |
+| Hook | Blocking | Use it for | Never use it for | Upstream invocation failure |
 |---|---|---|---|---|
 | `pre-create` | yes | authenticate, authorize the intent, validate metadata, enforce the size cap and the target, set the id | database workflows, remote calls, scanning | **fail closed**: deny creation |
 | `post-create` | no | register the creation, audit, analytics | anything that must complete before bytes flow | **fail open, loud**: log and count; the record is now missing |
-| `post-receive` | no | periodic re-check of the actor's right, progress telemetry, stopping a revoked upload | the primary authorization model, expensive external work | **fail open, loud**: the upload continues under the creation-time decision |
-| `pre-finish` | yes | one small response hint | anything that must be retryable, anything long | **fail closed**: the completion response fails; the bytes are still stored |
+| `post-receive` | no | progress telemetry; supplementary revocation stopping under the policy below | the primary authorization model, expensive external work | logs and continues; an invocation error is not a stop decision |
+| `pre-finish` | yes | one small optional response hint under the policy below | anything that must be retryable, anything long | the completion response fails after storage finish; this is upstream behavior, not the hint's required policy |
 | `post-finish` | no | write a durable job or outbox row, publish an event | performing the downstream work inline | **fail open, loud**: the client sees success and nothing downstream runs |
 | `pre-terminate` | yes | refuse a termination that policy forbids | heavy cleanup | **fail closed**: deny termination |
 | `post-terminate` | no | cleanup bookkeeping and alerting | anything that must block deletion | **fail open, loud** |
 
 Two ordering guarantees hold and no others: `pre-create` is first for an upload, and `post-finish` starts after `pre-finish` completes. Never write code that depends on `post-create` being observed before `post-finish`.
+
+## Optional hints and revocation
+
+**An optional pre-finish hint is a contributor: fail open and loud inside its implementation.**
+Catch hint-computation failures, log/count the loss, and return successful empty JSON over HTTP,
+or an empty response with nil error in-process. An unreachable hook endpoint or an unhandled
+callback error still fails completion upstream. Omit the optional blocking hook when that outage
+must not affect completion; its transport has no fail-open switch established here. Keep the
+hint's data queryable from the control plane even when the client misses the response.
+
+**A post-receive revocation decision is a gate; progress recording is a contributor.**
+When the revocation lookup denies or cannot decide, return a successful hook response with
+`StopUpload: true`, not a hook transport error. Upstream logs invocation errors and continues
+without a stop. Per-method authorization in `40-authorization.md` remains mandatory through
+the trusted boundary; add no backend bearer-token fallback. If active-stream revocation has a
+deadline, do not approve the design until it proves that deadline during hook-endpoint outages.
+Periodic progress hooks alone prove no such bound.
+
+`StopUpload` acts on the active request and can race completion. Backend termination requires
+support and can fail; a stop response proves neither immediate cessation nor cleanup. Preserve
+durable denial of later access and reconcile retained bytes when termination fails. These targeted
+upstream semantics were checked on 2026-10-18; `10-source-map.md` records the exact sources
+and versions. They are source evidence, not a live-engine result.
 
 ## Authenticating the hook endpoint itself
 
@@ -62,7 +85,8 @@ Reject a creation:
 }
 ```
 
-Stop an upload whose permission was revoked mid-transfer:
+Request a stop from a successful `post-receive` response when permission is revoked
+or its revocation lookup cannot decide; the outage and race limits above still apply:
 
 ```json
 {
@@ -94,7 +118,7 @@ A header the browser must read has to be exposed through CORS, or it is invisibl
 
 ## Idempotency
 
-Every hook side effect runs more than once eventually: the transport retries, a worker replays, a client repeats a request. Doctrine, including how to derive a key and why it must not come from request content, is `/alaa-reliability-sla` (`$alaa-reliability-sla`). The upload-plane obligations are:
+Every hook side effect runs more than once eventually: the transport retries, a worker replays, a client repeats a request. Doctrine, including how to derive a key and why it must not come from request content, is `/alaa-reliability-sla`. The upload-plane obligations are:
 
 - creation-time authorization is safe to run again for the same business request;
 - creation registration records "already created" without producing a second business artifact;

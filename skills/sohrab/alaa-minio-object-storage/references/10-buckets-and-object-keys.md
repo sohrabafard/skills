@@ -26,7 +26,7 @@ posture — because all four are bucket-level settings and a single bucket canno
    `70-client-libraries.md` states the certificate arithmetic under "The addressing style".
 3. **Treat the name as permanent.** A bucket cannot be renamed, and the name appears in every policy document,
    every endpoint URL, every backup manifest and every runbook, so changing it later means a copy of all data.
-4. **Register the name with `/alaa-services-contract` (`$alaa-services-contract`) before first use**, because a
+4. **Register the name with `/alaa-services-contract` before first use**, because a
    bucket name is a shared-infrastructure identifier and that skill owns canonical names.
 
 ## Composing an object key
@@ -70,7 +70,7 @@ cleanup planner computes keys, so a routine cleanup deletes live data with no er
 The fleet's only object-storage consumer implements exactly this guard and surfaces it through readiness: the
 configured tus prefix is rejected when its first segment is one of `tmp`, `final` or `extracted`, or when any
 segment is empty, `.` or `..`, or contains a character outside letters, digits, `-`, `_` and `.`
-`[source: tusd-upload-platform repository, cmd/tusd-api/main.go, read: 2026-07-27]`. Generalise that guard; do not
+`[source: Ala tusd repository, cmd/tusd-api/main.go, read: 2026-07-27]`. Generalise that guard; do not
 copy its specific segment list.
 
 ## What the fleet does today
@@ -79,7 +79,7 @@ Keys in the fleet's only object-storage consumer are `<configured-prefix>/<uploa
 writes, and `tmp|final|extracted/<assetID>/<componentID>/<uploadID>` for objects the service writes itself. **No key
 carries a project or tenant segment**, so tenant isolation rests entirely on the database and the router, and a
 key-construction defect becomes a cross-tenant read with no storage-layer backstop
-`[source: tusd-upload-platform repository, internal/storage/s3_compatible.go, read: 2026-07-27]`. That is an
+`[source: Ala tusd repository, internal/storage/s3_compatible.go, read: 2026-07-27]`. That is an
 observation of one consumer, not a pattern to copy.
 
 ## Prefix distribution
@@ -92,4 +92,4 @@ early in the key. Below that rate, keep the key readable: a prefix scheme adopte
 makes every debugging session harder and buys nothing.
 
 Complexity budgets for a listing or a fan-out that grows with tenants or objects belong to
-`/alaa-algorithms-data-structures` (`$alaa-algorithms-data-structures`).
+`/alaa-algorithms-data-structures`.

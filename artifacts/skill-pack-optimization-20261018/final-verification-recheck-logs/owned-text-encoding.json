@@ -1,0 +1,8 @@
+{
+  "status": "PASS",
+  "changed_untracked_paths_in_scope": 405,
+  "excluded_original_unrelated_paths": 10,
+  "owned_utf8_text_files_checked": 405,
+  "binary_or_non_utf8_files_skipped": [],
+  "text_paths_file": "owned-text-paths.txt"
+}

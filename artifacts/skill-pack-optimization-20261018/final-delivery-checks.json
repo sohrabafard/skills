@@ -1,0 +1,37 @@
+{
+  "observer": "parent final delivery metadata gate; independent product acceptance remains final-verification-recheck.json",
+  "product_manifest_sha256": "24aa88d79f4e483bac8946d045b5e4486f1d2c5847027350d620abd70bc8b878",
+  "first_metadata_validation": {
+    "exit_code": 1,
+    "findings": [
+      "Phase 4 snapshot omitted explicit paths marker",
+      "Intermediate phases cannot claim independent review under final-only cadence",
+      "Checkpoint omitted required Touched surfaces field label"
+    ],
+    "repair": "Restore historical REVIEW_PENDING only on intermediate phases, retain final APPROVED, add explicit snapshot paths marker, restore checkpoint label. No product/test/gate edits."
+  },
+  "checks": [
+    {
+      "command": "python -B skills/sohrab/alaa-workflow/scripts/validate_workflow_files.py --plan docs/_agent_plans/20261018-000000_skill-pack-optimization.md",
+      "cwd": ".",
+      "exit_code": 0,
+      "output": "plan: docs/_agent_plans/20261018-000000_skill-pack-optimization.md\r\nWARN [plan.beads-offline] Offline structure only; live binding, nodes, parent-child edges and readiness are not verified. Remediation: Verify the bound owner before dependent execution.\r\ncheckpoint: docs/agents/20261018-000000_skill-pack-optimization-state.md\r\nfamily: docs/_agent_plans/20261018-000000_skill-pack-optimization.md\r\nValidation completed without blocking errors (profile: resumable).\r\n",
+      "wall_time_seconds": 0.4007231
+    },
+    {
+      "command": "python -B skills/sohrab/alaa-repo-docs/scripts/check_markdown_links.py . --files docs/_agent_plans/20261018-000000_skill-pack-optimization.md docs/agents/20261018-000000_skill-pack-optimization-state.md artifacts/skill-pack-optimization-20261018/review-clearance.md",
+      "cwd": ".",
+      "exit_code": 0,
+      "output": "Validated links in 3 Markdown file(s) under ..\r\n",
+      "wall_time_seconds": 0.347195
+    },
+    {
+      "command": "git diff --check HEAD -- AGENTS.md skills/sohrab artifacts/skill-pack-optimization-20261018 artifacts/skill-pack-review-20261018/01-contradictions-and-overlaps.md artifacts/skill-pack-review-20261018/02-optimization.md artifacts/skill-pack-review-20261018/03-new-skill-proposals.md docs/_agent_plans/20261018-000000_skill-pack-optimization.md docs/agents/20261018-000000_skill-pack-optimization-state.md",
+      "cwd": ".",
+      "exit_code": 0,
+      "output": "",
+      "wall_time_seconds": 0.4062913
+    }
+  ],
+  "commit": "Authorized containing commit; actual SHA and scope/index verification recorded in Beads alaa-6dh.5.2.2 after success. Revert prepared completion metadata if commit fails."
+}

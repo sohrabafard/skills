@@ -5,9 +5,11 @@
 Three tiers, each proving a different boundary, none substituting for another:
 
 - **Use-case tests** run against fakes at ports, table-driven. Where business rules *are* the product (news's
-  grant rules and visibility predicate; notification's routing and etiquette rules), the tables are exhaustive:
-  every permission × audience combination, every suppression path.
-- **Infrastructure tests** run against real PostgreSQL, RabbitMQ, Redis, or ClickHouse via testcontainers.
+  grant rules and visibility predicate; notification's routing and etiquette rules), the tables cover every
+  permission × audience combination the specification decides differently, and every suppression path;
+  combinations the specification decides identically share one case, never combinations the implementation merges.
+- **Infrastructure tests** run against real PostgreSQL, RabbitMQ, Redis, or ClickHouse via testcontainers,
+  started once per package (`/alaa-golang` reference 63).
   Anything with store-specific SQL — `ON CONFLICT`, `FOR UPDATE SKIP LOCKED`, partial indexes, `jsonb` — is
   **only** tested here. The SQLite fast lane exists strictly inside its fence: portable-SQL query sets,
   build-tagged, never a substitute for the real-store lane in CI.
@@ -37,12 +39,12 @@ is always the real one.
 
 Everything else about testing is owned elsewhere and is not restated here: which layer a given behavior should
 be tested at, when a fake beats a stub beats a mock, flake control, and coverage policy belong to
-`/alaa-testing-strategy` (`$alaa-testing-strategy`). Table and assertion mechanics belong to `/golang-testing`
-(`$golang-testing`) and `/golang-stretchr-testify` (`$golang-stretchr-testify`) through the `/alaa-golang`
-(`$alaa-golang`) router; the TDD cadence is `/alaa-golang` (`$alaa-golang`) reference 63.
+`/alaa-testing-strategy`, including the rule that a service does not re-test what the kit's own suite proves.
+Table and assertion mechanics belong to `/golang-testing` and `/golang-stretchr-testify` through the
+`/alaa-golang` router; the TDD cadence is `/alaa-golang` reference 63.
 
 **Proof.** `contracttest` is P12's own gate and it is real: `make contracttest` (`go test ./contracttest/...`)
-in the service, plus the trust-boundary assertions (`contracttest.AssertTrustBoundary` and the TOTP challenge
+in the service, cited from a run of the same tree only when that run's output shows the `contracttest` package executed, plus the trust-boundary assertions (`contracttest.AssertTrustBoundary` and the TOTP challenge
 assertions) that `make totp-contract` exercises in the kit. A service whose CI does not run `contracttest`
 against its own router has not satisfied P12 regardless of its unit-test count.
 

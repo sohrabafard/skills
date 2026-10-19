@@ -1,0 +1,18 @@
+{
+  "head": "1a0799de71254427973f1253d80b846fea9acf10",
+  "method": "SHA-256 over sorted repository-relative UTF-8 path + NUL + file bytes",
+  "paths": [
+    "skills/sohrab/alaa-testing-strategy/SKILL.md",
+    "skills/sohrab/alaa-testing-strategy/references/80-evidence-and-reporting.md",
+    "skills/sohrab/alaa-testing-strategy/references/90-test-economy.md",
+    "skills/sohrab/alaa-workflow/SKILL.md",
+    "skills/sohrab/alaa-workflow/references/artifact-lifecycle.md",
+    "skills/sohrab/alaa-workflow/references/companion-routing.md",
+    "skills/sohrab/alaa-workflow/references/context-continuity.md",
+    "skills/sohrab/alaa-workflow/references/phase-prompts.md",
+    "skills/sohrab/alaa-workflow/references/task-tracking.md",
+    "skills/sohrab/alaa-workflow/references/workspace-and-integration.md"
+  ],
+  "sha256": "fe158a2dc31c688ef139725a5b7a09c5251d3c1a5c7d11c25c20dfa749164cc7",
+  "proof": "source contract; scoped fleet references passed; executable enforcement not yet changed"
+}

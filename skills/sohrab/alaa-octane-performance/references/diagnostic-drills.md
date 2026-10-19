@@ -52,7 +52,7 @@ Pass threshold: the top frame by exclusive time must be work the endpoint exists
 boot appearing in a profile means the driver is not reusing the worker — check
 `config('octane.server')` and that the request went to the Octane port. Whether profiling may be
 enabled in a given environment is owned by `/alaa-observability-soc`
-(`$alaa-observability-soc`), `references/60-sentry-and-profiling.md`.
+`references/60-sentry-and-profiling.md`.
 
 ## Query count per request
 
@@ -63,14 +63,13 @@ Event::listen(RequestTerminated::class, fn () => logger()->debug('queries', ['n'
 ```
 
 Pass threshold: the count does not grow when the response's collection size grows. That is the
-N+1 test; the budget it is held to is owned by `/alaa-algorithms-data-structures`
-(`$alaa-algorithms-data-structures`).
+N+1 test; the budget it is held to is owned by `/alaa-algorithms-data-structures`.
 
 ## Bisect — finding *which* binding leaked
 
-1. Reproduce with Shape A in `references/leak-detection-harness.md`. Without a failing test
-   there is nothing to bisect against.
-2. List what the container still holds after the flush, for request 1 and request 2:
+1. Reproduce with Shape A for scoped-binding lifetime, or Shape B for worker reset wiring,
+   in `references/leak-detection-harness.md`. Without a failing test there is nothing to bisect.
+2. For Shape B, inspect candidate bindings at request termination, before Octane's final cleanup:
 
 ```php
 Event::listen(RequestTerminated::class, function (): void {
@@ -80,8 +79,8 @@ Event::listen(RequestTerminated::class, function (): void {
 });
 ```
 
-   Any key present after both requests that should be request-scoped is a candidate.
-3. Move half the candidates into the `flush` array of `config/octane.php` and re-run the test.
+   Repeated keys are candidates, not proof that instances survived; use the harness's state/identity assertions.
+3. Move half the candidates into the `flush` array of `config/octane.php` and re-run Shape B.
    The half that turns it green contains the leak. Halve again until one abstract remains, then
    fix it with the right mechanism from `references/full-guide.md` — `flush` was the bisect
    instrument, not necessarily the fix.

@@ -1,8 +1,8 @@
 # Observability of the object store
 
 This file owns what to measure about the store and what proves each failure class is actually visible. It states no
-metric name, no log field and no event name: those are `/alaa-services-contract` (`$alaa-services-contract`), and
-whether a change is obliged to carry telemetry at all is `/alaa-observability-soc` (`$alaa-observability-soc`).
+metric name, no log field and no event name: those are `/alaa-services-contract`, and
+whether a change is obliged to carry telemetry at all is `/alaa-observability-soc`.
 **Never invent a name here**; request registration there and use what comes back.
 
 ## The cardinality rule
@@ -43,18 +43,17 @@ objects on every readiness probe adds load proportional to probe frequency.
 
 The fleet's only object-storage consumer does exactly this: readiness performs a bucket-existence check with the
 runtime credential, and separately validates the configured object prefix, reporting each as a named readiness
-result `[source: tusd-upload-platform repository, cmd/tusd-api/main.go, read: 2026-07-27]`.
+result `[source: Ala tusd repository, cmd/tusd-api/main.go, read: 2026-07-27]`.
 
 ## Logging
 
 **Log the failure class, the operation and the bucket-scoped context, and never the key, the URL or the
 credential.** The fleet's consumer already keeps `object_key` and `presigned_url` on its forbidden-log-field list
-alongside authorization headers and raw tokens `[source: tusd-upload-platform repository,
+alongside authorization headers and raw tokens `[source: Ala tusd repository,
 internal/observability/contracts.go, read: 2026-07-27]`; that list is the pattern to copy.
 
 **Carry the correlation identifier into the storage call and back out of it**, so a storage failure joins the
-request that caused it. The identifier's name and propagation shape are `/alaa-services-contract`
-(`$alaa-services-contract`).
+request that caused it. The identifier's name and propagation shape are `/alaa-services-contract`.
 
 ## The store's own telemetry
 
@@ -69,7 +68,7 @@ per-bucket scrape at the default interval on a store with many buckets is itself
 
 **Protect the metrics endpoint.** Metrics disclose bucket names, object counts and capacity, which is reconnaissance
 for anyone who should not have it. The gateway-proof requirement for a metrics endpoint is
-`/alaa-services-contract` (`$alaa-services-contract`).
+`/alaa-services-contract`.
 
 ## Audit
 
@@ -77,13 +76,12 @@ for anyone who should not have it. The gateway-proof requirement for a metrics e
 Without it, the question "who deleted this object" has no answer, and it is asked only after the deletion. MinIO
 sends audit events to a configured webhook or log target rather than storing them itself
 `[source: https://min.io/docs/minio/linux/operations/monitoring/minio-logging.html, read: unverified as of
-2026-07-27]`. SOC evidence requirements and log retention belong to `/alaa-observability-soc`
-(`$alaa-observability-soc`).
+2026-07-27]`. SOC evidence requirements and log retention belong to `/alaa-observability-soc`.
 
 ## What the fleet does today
 
 The consuming service has a bucket-existence readiness check and a prefix-validity readiness check, and a
 forbidden-log-field list that already covers keys and presigned URLs. It has **no signal for incomplete multipart
 uploads, no signal for bucket size or free capacity, and no scrape of the store's own metrics** anywhere in its
-repository `[source: tusd-upload-platform repository, read: 2026-07-27]`. The first of those three is the one that
+repository `[source: Ala tusd repository, read: 2026-07-27]`. The first of those three is the one that
 makes the missing lifecycle rule in `20-lifecycle-and-retention.md` invisible.

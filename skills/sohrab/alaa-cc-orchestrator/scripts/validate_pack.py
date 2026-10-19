@@ -8,7 +8,8 @@ has leaked into this pack. Run from anywhere; paths resolve against the pack roo
 from __future__ import annotations
 
 from pathlib import Path
-from check_agent_contracts import agent_failures, dispatch_failures, orchestrator_failures, task_allocation_failures
+from check_agent_contracts import (agent_failures, dispatch_failures, orchestrator_failures,
+                                   task_allocation_failures, cadence_failures, cadence_sources)
 from check_agent_grants import frontmatter
 from render_agents import drift, expected_outputs, load_policy, OWNER
 import argparse
@@ -60,6 +61,7 @@ def validate() -> int:
 
     skill = (ROOT / "SKILL.md").read_text(encoding="utf-8")
     errors.extend(orchestrator_failures(skill))
+    errors.extend(cadence_failures(*cadence_sources()))
     errors.extend(dispatch_failures((ROOT / "references/delegation-prompts.md").read_text(encoding="utf-8")))
     errors.extend(task_allocation_failures(
         (ROOT / "references/routing-matrix.md").read_text(encoding="utf-8"),

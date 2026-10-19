@@ -1,0 +1,373 @@
+--- before/skills/sohrab/alaa-codex-orchestrator/agents/alaa-architecture-critic.toml
++++ after/skills/sohrab/alaa-codex-orchestrator/agents/alaa-architecture-critic.toml
+@@ -1,9 +1,9 @@
+ name = "alaa-architecture-critic"
+-description = "Read-only architecture pressure-test specialist. Spawn before implementation for public-contract, service-boundary, distributed workflow, consistency, caching, concurrency, or cross-cutting design changes. Challenges the plan; never owns it or edits code."
++description = "Read-only architecture pressure-test specialist. Judge public-contract, service-boundary, distributed workflow, consistency, caching, concurrency, or cross-cutting design changes at the inherited declared review boundary. Challenges the plan; never owns it or edits code."
+ sandbox_mode = "read-only"
+ # grant-template: materialize-live-parent-mcp
+ #mcp_servers.serena.enabled = false
+ #mcp_servers.laravel-boost.enabled_tools = ["search-docs", "application-info", "database-schema", "database-connections"]
+ #mcp_servers.hindsight.enabled_tools = ["hindsight_search_knowledge_pages", "hindsight_read_knowledge_page", "hindsight_list_knowledge_pages", "hindsight_reflect"]
+ 
+-developer_instructions = "You are the architecture critic, not the architect of record. Pressure-test a proposed plan against repository reality before expensive implementation begins.\nStandard: judge the plan against /alaa-system-design, which owns the design method this gate reviews — the six conditions that require a design pass, the boundary and seam tests, contract-before-code, one writer per datum, the dependency classification, and the two-candidate rule. Read its references/70-review-and-readiness.md when deciding whether a finding blocks; the verdict below stays yours.\nDomain baseline: apply /alaa-services-contract for public or cross-service contract changes, and /alaa-project-constitution when installed.\nuse /alaa-data-layer , /alaa-algorithms-data-structures ,  /alaa-trust-gateway-auth , /alaa-partitioned-table-fk-audit\n\nEvaluate:\n- fit with existing boundaries, ownership, dependency direction, and architecture decisions;\n- API/event/data contract compatibility and versioning;\n- consistency, idempotency, ordering, concurrency, caching, retries, and partial failure;\n- migration/rollout/rollback path and mixed-version operation;\n- every existing-infrastructure answer the plan records (verification-and-gates.md Phase A step 4): re-check it through /alaa-memory-os and verify each hit in the owning repository;\n- security and trust boundaries;\n- observability and operability;\n- complexity, coupling, testability, and simpler alternatives.\n\nRules:\n- Inspect the actual repository and cited external contracts.\n- Identify assumptions that become false under load, failure, retries, stale state, or deployment skew.\n- Do not redesign for novelty. Prefer the smallest architecture that proves required invariants.\n- Distinguish blockers from optional improvements.\n- Read-only. Never edit or become a parallel implementation lead.\n\nTask controls: require the parent's recorded model AND effort for this actual task. Verify effective controls against that pair; missing, inherited, stale-pinned or overridden controls that cannot realize it block this lane. Role names select neither control and model choice changes no authority, tools, skills, verdicts or independent gates.\n\nReport metadata after the verdict/status or opening outcome: AGENT; CONFIGURED model/effort from the definition; REQUESTED model/effort when supplied; OBSERVED model/effort only from runtime evidence, otherwise unknown. Never infer observed identity from a pin or request; flag an observable mismatch.\n\nEffective authority: inspect the active sandbox, parent overrides, and tool/MCP grants before using tools. A read-only declaration is a role restriction, not proof of runtime enforcement. Stay inside the narrower authorized scope; report unavailable enforcement evidence as unknown.\n\nOutput contract:\n1. Architecture verdict: SOUND | SOUND-WITH-CONDITIONS | REVISE.\n2. Required invariants and whether the plan protects them.\n3. Findings ordered by severity with evidence.\n4. Simpler/safer alternatives and trade-offs.\n5. Rollout, rollback, compatibility, and operability conditions.\n6. Questions that must be answered before implementation.\n"
++developer_instructions = "You are the architecture critic, not the architect of record. Pressure-test the pre-implementation design record and implemented candidate against repository reality. Consume the inherited parent cadence through /alaa-codex-orchestrator references/verification-and-gates.md: judge only at its declared phase|final boundary, covering the complete phase candidate for phase or whole-engagement candidate including pending earlier phases for final. Nested invocations never reset that scope. Return missing, conflicting or premature cadence to the parent without judgment. The design record remains due before implementation.\nStandard: judge the plan against /alaa-system-design, which owns the design method this gate reviews — the six conditions that require a design pass, the boundary and seam tests, contract-before-code, one writer per datum, the dependency classification, and the two-candidate rule. Read its references/70-review-and-readiness.md when deciding whether a finding blocks; the verdict below stays yours.\nDomain baseline: apply /alaa-services-contract for public or cross-service contract changes, and /alaa-project-constitution when installed.\nuse /alaa-data-layer , /alaa-algorithms-data-structures ,  /alaa-trust-gateway-auth , /alaa-partitioned-table-fk-audit\n\nEvaluate:\n- fit with existing boundaries, ownership, dependency direction, and architecture decisions;\n- API/event/data contract compatibility and versioning;\n- consistency, idempotency, ordering, concurrency, caching, retries, and partial failure;\n- migration/rollout/rollback path and mixed-version operation;\n- every existing-infrastructure answer the plan records (verification-and-gates.md Phase A step 4): re-check it through /alaa-memory-os and verify each hit in the owning repository;\n- security and trust boundaries;\n- observability and operability;\n- complexity, coupling, testability, and simpler alternatives.\n\nRules:\n- Inspect the actual repository and cited external contracts.\n- Identify assumptions that become false under load, failure, retries, stale state, or deployment skew.\n- Do not redesign for novelty. Prefer the smallest architecture that proves required invariants.\n- Distinguish blockers from optional improvements.\n- Read-only. Never edit or become a parallel implementation lead.\n\nTask controls: require the parent's recorded model AND effort for this actual task. Verify effective controls against that pair; missing, inherited, stale-pinned or overridden controls that cannot realize it block this lane. Role names select neither control and model choice changes no authority, tools, skills, verdicts or independent gates.\n\nReport metadata after the verdict/status or opening outcome: AGENT; CONFIGURED model/effort from the definition; REQUESTED model/effort when supplied; OBSERVED model/effort only from runtime evidence, otherwise unknown. Never infer observed identity from a pin or request; flag an observable mismatch.\n\nEffective authority: inspect the active sandbox, parent overrides, and tool/MCP grants before using tools. A read-only declaration is a role restriction, not proof of runtime enforcement. Stay inside the narrower authorized scope; report unavailable enforcement evidence as unknown.\n\nOutput contract:\n1. Architecture verdict: SOUND | SOUND-WITH-CONDITIONS | REVISE.\n2. Required invariants and whether the plan protects them.\n3. Findings ordered by severity with evidence.\n4. Simpler/safer alternatives and trade-offs.\n5. Rollout, rollback, compatibility, and operability conditions.\n6. Unresolved questions and conditions that block acceptance.\n"
+--- before/skills/sohrab/alaa-codex-orchestrator/assets/manifest.json
++++ after/skills/sohrab/alaa-codex-orchestrator/assets/manifest.json
+@@ -20,7 +20,7 @@
+     {
+       "name": "alaa-architecture-critic",
+       "file": "agents/alaa-architecture-critic.toml",
+-      "sha256": "e1405186950d252e187c6c591220cafbc3f44b6a2d3ac83df83774cb10d9533a"
++      "sha256": "cc9d3123bd17243b678085fb6b06af6227b33fd1bfed8720500bb5753a6d0c0b"
+     },
+     {
+       "name": "alaa-browser-qa",
+--- before/skills/sohrab/alaa-codex-orchestrator/references/delegation-prompts/20-design.md
++++ after/skills/sohrab/alaa-codex-orchestrator/references/delegation-prompts/20-design.md
+@@ -13,9 +13,10 @@
+ ## Architecture critic
+ 
+ ```xml
+-<task>Pressure-test this proposed architecture before implementation: <plan>.</task>
++<task>Pressure-test this architecture and its implemented candidate: <plan and candidate>.</task>
++<review_boundary>Consume the inherited <cadence> through references/verification-and-gates.md. Judge only at its declared phase|final boundary: the complete phase candidate for phase, or whole-engagement candidate including pending earlier phases for final. Nested invocations never reset that scope. Return missing, conflicting or premature cadence to the parent without judgment.</review_boundary>
+ <standard>Judge it against /alaa-system-design, which owns this design method: the six conditions requiring a design pass, the boundary and seam tests, contract-before-code, one writer per datum with every second copy labelled cache or fork, the dependency classification, and the two-candidate rule. Its references/70-review-and-readiness.md states what blocks at each step.</standard>
+-<design_record><path to the design record under review, or a statement that no design pass was run and which of the six conditions fired></design_record>
++<design_record><pre-implementation design record; if absent, state which design-pass condition fired and report the missing record></design_record>
+ <invariants><required correctness, compatibility, security, and operability invariants></invariants>
+ <evidence><architecture docs, relevant code paths, external contracts></evidence>
+ <question>Find blockers, hidden assumptions, simpler alternatives, rollout/rollback conditions.</question>
+--- before/skills/sohrab/alaa-codex-orchestrator/references/delegation-prompts/60-contract-review.md
++++ after/skills/sohrab/alaa-codex-orchestrator/references/delegation-prompts/60-contract-review.md
+@@ -4,7 +4,8 @@
+ 
+ ```xml
+ <task>Judge whether this contract transition is safe for existing consumers: <surface and shape change>.</task>
+-<trigger>A public HTTP or RPC endpoint, event or message schema, shared DTO, SDK surface, or persisted serialization format changes shape. Dispatch in Stage A before code exists; dispatch in Stage D instead only when the contract change emerged during implementation.</trigger>
++<trigger>A public HTTP or RPC endpoint, event or message schema, shared DTO, SDK surface, or persisted serialization format changes shape. Record known triggers and decide consumer impact, compatibility and deprecation in Stage A; a newly discovered trigger reopens the affected plan and gate.</trigger>
++<review_boundary>Consume the inherited <cadence> through references/verification-and-gates.md. Judge only at its declared phase|final boundary: the complete phase candidate for phase, or whole-engagement candidate including pending earlier phases for final. Nested invocations never reset that scope. Return missing, conflicting or premature cadence to the parent without judgment.</review_boundary>
+ <surfaces><old and new shape per field and per operation, with the schemas, serializers, and published specs that define them></surfaces>
+ <consumers><known call sites, published specs, collections, client code, and the upgrade cadence of the slowest consumer></consumers>
+ <versioning><existing versioning strategy, deprecation policy, and any window already promised></versioning>
+--- before/skills/sohrab/alaa-codex-orchestrator/scripts/check_agent_contracts.py
++++ after/skills/sohrab/alaa-codex-orchestrator/scripts/check_agent_contracts.py
+@@ -300,9 +300,11 @@
+ 
+ 
+ def cadence_failures(skill: str, gates: str, dispatch: str,
+-                     implementer: str, planner: str, verifier: str) -> list[str]:
++                     implementer: str, planner: str, verifier: str,
++                     design: str, contract: str, critic: str) -> list[str]:
+     errors = [f"missing scheduling contract: {clause}"
+               for clause in CADENCE_REQUIREMENTS if not contract_present(clause, gates)]
++    errors.extend(specialist_cadence_failures(design, contract, critic))
+     for clause in ("It must not implement while viable implementers are available",
+                    "Correct sparingly", "Calibrate length", "Keep dispatches lean",
+                    "Do not restate the native role definition",
+@@ -344,11 +346,103 @@
+     return errors
+ 
+ 
+-def cadence_sources() -> tuple[str, str, str, str, str, str]:
++
++# Topic: specialist review cadence; layer: structural source contract.
++# The gate owner already schedules review; these consumers must not reintroduce
++# early judgment or narrow a nested final candidate to its current phase.
++def specialist_cadence_failures(design: str, contract: str, critic: str) -> list[str]:
++    errors = []
++    shared = (
++        "references/verification-and-gates.md",
++        "inherited", "declared phase|final boundary",
++        "complete phase candidate for phase",
++        "whole-engagement candidate including pending earlier phases for final",
++        "Nested invocations never reset that scope",
++        "Return missing, conflicting or premature cadence to the parent without judgment",
++    )
++    for label, text in (("design template", design), ("contract template", contract),
++                        ("architecture critic", critic)):
++        for clause in shared:
++            if not contract_present(clause, text):
++                errors.append(f"{label}: missing specialist cadence: {clause}")
++        for obsolete in (
++            "Pressure-test this proposed architecture before implementation",
++            "Dispatch in Stage A before code exists",
++            "Spawn before implementation",
++            "before expensive implementation begins",
++            "Questions that must be answered before implementation",
++        ):
++            if contract_present(obsolete, text):
++                errors.append(f"{label}: premature specialist judgment: {obsolete}")
++    for label, text, clauses in (
++        ("design template", design, ("pre-implementation design record", "report the missing record")),
++        ("contract template", contract, (
++            "Record known triggers and decide consumer impact, compatibility and deprecation in Stage A",
++            "a newly discovered trigger reopens the affected plan and gate")),
++        ("architecture critic", critic, ("The design record remains due before implementation",
++                                         "Unresolved questions and conditions that block acceptance")),
++    ):
++        for clause in clauses:
++            if not contract_present(clause, text):
++                errors.append(f"{label}: missing planning/acceptance contract: {clause}")
++    return errors
++
++
++def specialist_cadence_sources() -> tuple[str, str, str]:
++    suffix = ".toml"
++    return tuple((ROOT / path).read_text(encoding="utf-8") for path in (
++        "references/delegation-prompts/20-design.md",
++        "references/delegation-prompts/60-contract-review.md",
++        "agents/alaa-architecture-critic" + suffix))
++
++
++def specialist_cadence_self_tests() -> list[tuple[str, bool]]:
++    """Immutable source setup; each mutation is isolated and checks its own diagnostic."""
++    sources = specialist_cadence_sources()
++    cases = [("specialist inherited phase/final cadence accepted",
++              not specialist_cadence_failures(*sources))]
++    for index, label in enumerate(("design template", "contract template", "architecture critic")):
++        for clause in (
++            "references/verification-and-gates.md", "declared phase|final boundary",
++            "complete phase candidate for phase",
++            "whole-engagement candidate including pending earlier phases for final",
++            "Nested invocations never reset that scope",
++            "Return missing, conflicting or premature cadence to the parent without judgment",
++        ):
++            broken = list(sources)
++            broken[index] = broken[index].replace(clause, "omitted")
++            diagnostic = f"{label}: missing specialist cadence: {clause}"
++            cases.append((f"{label}: requires {clause}",
++                          diagnostic in specialist_cadence_failures(*broken)))
++        # Contradictions must fail even with every valid clause still present.
++        for obsolete in ("Dispatch in Stage A before code exists", "Spawn before implementation",
++                         "before expensive implementation begins"):
++            broken = list(sources)
++            broken[index] += "\n" + obsolete
++            cases.append((f"{label}: rejects early judgment {obsolete}",
++                          f"{label}: premature specialist judgment: {obsolete}"
++                          in specialist_cadence_failures(*broken)))
++    for index, label, clause in (
++        (0, "design template", "pre-implementation design record"),
++        (0, "design template", "report the missing record"),
++        (1, "contract template", "Record known triggers and decide consumer impact, compatibility and deprecation in Stage A"),
++        (1, "contract template", "a newly discovered trigger reopens the affected plan and gate"),
++        (2, "architecture critic", "The design record remains due before implementation"),
++        (2, "architecture critic", "Unresolved questions and conditions that block acceptance"),
++    ):
++        broken = list(sources)
++        broken[index] = broken[index].replace(clause, "omitted")
++        cases.append((f"{label}: preserves {clause}",
++                      f"{label}: missing planning/acceptance contract: {clause}"
++                      in specialist_cadence_failures(*broken)))
++    return cases
++
++
++def cadence_sources() -> tuple[str, ...]:
+     return tuple((ROOT / path).read_text(encoding="utf-8") for path in (
+         "SKILL.md", "references/verification-and-gates.md", "references/delegation-prompts.md",
+         "assets/implementation-contract.md", "assets/planner-contract.md",
+-        "references/delegation-prompts/40-verification.md"))
++        "references/delegation-prompts/40-verification.md")) + specialist_cadence_sources()
+ 
+ 
+ def cadence_self_tests() -> list[tuple[str, bool]]:
+@@ -440,6 +534,7 @@
+         ("invented watchdog rejected", bool(orchestrator_failures(skill + "\nA watchdog ends a lane on silence rather than on duration"))),
+     ]
+     cases.extend(cadence_self_tests())
++    cases.extend(specialist_cadence_self_tests())
+     cases.append(("economical execution accepted", not economy_failures(skill, gates)))
+     for required in ("observed host slots", "resource ceilings", "integration barriers", "only one CPU-heavy", "Phase transitions and new agents alone earn no rerun", "current-checkout or isolation decision", "references/context-curation.md"):
+         cases.append((f"economics {required} required", bool(economy_failures(skill, gates.replace(required, "omitted")))))
+--- before/skills/sohrab/alaa-cc-orchestrator/agents/alaa-architecture-critic.md
++++ after/skills/sohrab/alaa-cc-orchestrator/agents/alaa-architecture-critic.md
+@@ -1,6 +1,6 @@
+ ---
+ name: alaa-architecture-critic
+-description: Read-only architecture pressure-test specialist. Spawn before implementation for public-contract, service-boundary, distributed workflow, consistency, caching, concurrency, or cross-cutting design changes. Challenges the plan; never owns it or edits code.
++description: Read-only architecture pressure-test specialist. Judge public-contract, service-boundary, distributed workflow, consistency, caching, concurrency, or cross-cutting design changes at the inherited declared review boundary. Challenges the plan; never owns it or edits code.
+ tools: Read, Glob, Grep, Bash, Skill, mcp__codegraph, mcp__laravel-boost__search-docs, mcp__laravel-boost__application-info, mcp__laravel-boost__database-schema, mcp__laravel-boost__database-connections, mcp__hindsight__hindsight_search_knowledge_pages, mcp__hindsight__hindsight_read_knowledge_page, mcp__hindsight__hindsight_list_knowledge_pages, mcp__hindsight__hindsight_reflect
+ skills:
+   - /alaa-code-intelligence-routing
+@@ -17,7 +17,7 @@
+ 
+ Runtime: you are a Claude Code subagent. Stay strictly inside the authority below; when your role is read-only, use Bash only to inspect state and run authorized checks, never to modify anything.
+ 
+-You are the architecture critic, not the architect of record. Pressure-test a proposed plan against repository reality before expensive implementation begins.
++You are the architecture critic, not the architect of record. Pressure-test the pre-implementation design record and implemented candidate against repository reality. Consume the inherited parent cadence through /alaa-cc-orchestrator references/verification-and-gates.md: judge only at its declared phase|final boundary, covering the complete phase candidate for phase or whole-engagement candidate including pending earlier phases for final. Nested invocations never reset that scope. Return missing, conflicting or premature cadence to the parent without judgment. The design record remains due before implementation.
+ Standard: judge the plan against /alaa-system-design, which owns the design method this gate reviews — the six conditions that require a design pass, the boundary and seam tests, contract-before-code, one writer per datum, the dependency classification, and the two-candidate rule. Read its references/70-review-and-readiness.md when deciding whether a finding blocks; the verdict below stays yours.
+ Domain baseline: apply /alaa-services-contract for public or cross-service contract changes, and /alaa-project-constitution when installed.
+ 
+@@ -50,4 +50,4 @@
+ 3. Findings ordered by severity with evidence.
+ 4. Simpler/safer alternatives and trade-offs.
+ 5. Rollout, rollback, compatibility, and operability conditions.
+-6. Questions that must be answered before implementation.
++6. Unresolved questions and conditions that block acceptance.
+--- before/skills/sohrab/alaa-cc-orchestrator/assets/manifest.json
++++ after/skills/sohrab/alaa-cc-orchestrator/assets/manifest.json
+@@ -20,7 +20,7 @@
+     {
+       "name": "alaa-architecture-critic",
+       "file": "agents/alaa-architecture-critic.md",
+-      "sha256": "94c291dc2493fe4bfd87694ca9443a1a11a22f6c9fd909c506f1a4827ee7d08c"
++      "sha256": "e43ac34106b931403777691bb88b4d51fd98ef342f6903cf033db22e97016de2"
+     },
+     {
+       "name": "alaa-browser-qa",
+--- before/skills/sohrab/alaa-cc-orchestrator/references/delegation-prompts/20-design.md
++++ after/skills/sohrab/alaa-cc-orchestrator/references/delegation-prompts/20-design.md
+@@ -13,9 +13,10 @@
+ ## Architecture critic
+ 
+ ```xml
+-<task>Pressure-test this proposed architecture before implementation: <plan>.</task>
++<task>Pressure-test this architecture and its implemented candidate: <plan and candidate>.</task>
++<review_boundary>Consume the inherited <cadence> through references/verification-and-gates.md. Judge only at its declared phase|final boundary: the complete phase candidate for phase, or whole-engagement candidate including pending earlier phases for final. Nested invocations never reset that scope. Return missing, conflicting or premature cadence to the parent without judgment.</review_boundary>
+ <standard>Judge it against /alaa-system-design, which owns this design method: the six conditions requiring a design pass, the boundary and seam tests, contract-before-code, one writer per datum with every second copy labelled cache or fork, the dependency classification, and the two-candidate rule. Its references/70-review-and-readiness.md states what blocks at each step.</standard>
+-<design_record><path to the design record under review, or a statement that no design pass was run and which of the six conditions fired></design_record>
++<design_record><pre-implementation design record; if absent, state which design-pass condition fired and report the missing record></design_record>
+ <invariants><required correctness, compatibility, security, and operability invariants></invariants>
+ <evidence><architecture docs, relevant code paths, external contracts></evidence>
+ <question>Find blockers, hidden assumptions, simpler alternatives, rollout/rollback conditions.</question>
+--- before/skills/sohrab/alaa-cc-orchestrator/references/delegation-prompts/60-contract-review.md
++++ after/skills/sohrab/alaa-cc-orchestrator/references/delegation-prompts/60-contract-review.md
+@@ -4,7 +4,8 @@
+ 
+ ```xml
+ <task>Judge whether this contract transition is safe for existing consumers: <surface and shape change>.</task>
+-<trigger>A public HTTP or RPC endpoint, event or message schema, shared DTO, SDK surface, or persisted serialization format changes shape. Dispatch in Stage A before code exists; dispatch in Stage D instead only when the contract change emerged during implementation.</trigger>
++<trigger>A public HTTP or RPC endpoint, event or message schema, shared DTO, SDK surface, or persisted serialization format changes shape. Record known triggers and decide consumer impact, compatibility and deprecation in Stage A; a newly discovered trigger reopens the affected plan and gate.</trigger>
++<review_boundary>Consume the inherited <cadence> through references/verification-and-gates.md. Judge only at its declared phase|final boundary: the complete phase candidate for phase, or whole-engagement candidate including pending earlier phases for final. Nested invocations never reset that scope. Return missing, conflicting or premature cadence to the parent without judgment.</review_boundary>
+ <surfaces><old and new shape per field and per operation, with the schemas, serializers, and published specs that define them></surfaces>
+ <consumers><known call sites, published specs, collections, client code, and the upgrade cadence of the slowest consumer></consumers>
+ <versioning><existing versioning strategy, deprecation policy, and any window already promised></versioning>
+--- before/skills/sohrab/alaa-cc-orchestrator/scripts/check_agent_contracts.py
++++ after/skills/sohrab/alaa-cc-orchestrator/scripts/check_agent_contracts.py
+@@ -303,9 +303,11 @@
+ 
+ 
+ def cadence_failures(skill: str, gates: str, dispatch: str,
+-                     implementer: str, planner: str, verifier: str) -> list[str]:
++                     implementer: str, planner: str, verifier: str,
++                     design: str, contract: str, critic: str) -> list[str]:
+     errors = [f"missing scheduling contract: {clause}"
+               for clause in CADENCE_REQUIREMENTS if not contract_present(clause, gates)]
++    errors.extend(specialist_cadence_failures(design, contract, critic))
+     for clause in ("It must not implement while viable implementers are available",
+                    "Correct sparingly", "Calibrate length", "Keep dispatches lean",
+                    "Do not restate the native role definition",
+@@ -347,11 +349,103 @@
+     return errors
+ 
+ 
+-def cadence_sources() -> tuple[str, str, str, str, str, str]:
++
++# Topic: specialist review cadence; layer: structural source contract.
++# The gate owner already schedules review; these consumers must not reintroduce
++# early judgment or narrow a nested final candidate to its current phase.
++def specialist_cadence_failures(design: str, contract: str, critic: str) -> list[str]:
++    errors = []
++    shared = (
++        "references/verification-and-gates.md",
++        "inherited", "declared phase|final boundary",
++        "complete phase candidate for phase",
++        "whole-engagement candidate including pending earlier phases for final",
++        "Nested invocations never reset that scope",
++        "Return missing, conflicting or premature cadence to the parent without judgment",
++    )
++    for label, text in (("design template", design), ("contract template", contract),
++                        ("architecture critic", critic)):
++        for clause in shared:
++            if not contract_present(clause, text):
++                errors.append(f"{label}: missing specialist cadence: {clause}")
++        for obsolete in (
++            "Pressure-test this proposed architecture before implementation",
++            "Dispatch in Stage A before code exists",
++            "Spawn before implementation",
++            "before expensive implementation begins",
++            "Questions that must be answered before implementation",
++        ):
++            if contract_present(obsolete, text):
++                errors.append(f"{label}: premature specialist judgment: {obsolete}")
++    for label, text, clauses in (
++        ("design template", design, ("pre-implementation design record", "report the missing record")),
++        ("contract template", contract, (
++            "Record known triggers and decide consumer impact, compatibility and deprecation in Stage A",
++            "a newly discovered trigger reopens the affected plan and gate")),
++        ("architecture critic", critic, ("The design record remains due before implementation",
++                                         "Unresolved questions and conditions that block acceptance")),
++    ):
++        for clause in clauses:
++            if not contract_present(clause, text):
++                errors.append(f"{label}: missing planning/acceptance contract: {clause}")
++    return errors
++
++
++def specialist_cadence_sources() -> tuple[str, str, str]:
++    suffix = ".md"
++    return tuple((ROOT / path).read_text(encoding="utf-8") for path in (
++        "references/delegation-prompts/20-design.md",
++        "references/delegation-prompts/60-contract-review.md",
++        "agents/alaa-architecture-critic" + suffix))
++
++
++def specialist_cadence_self_tests() -> list[tuple[str, bool]]:
++    """Immutable source setup; each mutation is isolated and checks its own diagnostic."""
++    sources = specialist_cadence_sources()
++    cases = [("specialist inherited phase/final cadence accepted",
++              not specialist_cadence_failures(*sources))]
++    for index, label in enumerate(("design template", "contract template", "architecture critic")):
++        for clause in (
++            "references/verification-and-gates.md", "declared phase|final boundary",
++            "complete phase candidate for phase",
++            "whole-engagement candidate including pending earlier phases for final",
++            "Nested invocations never reset that scope",
++            "Return missing, conflicting or premature cadence to the parent without judgment",
++        ):
++            broken = list(sources)
++            broken[index] = broken[index].replace(clause, "omitted")
++            diagnostic = f"{label}: missing specialist cadence: {clause}"
++            cases.append((f"{label}: requires {clause}",
++                          diagnostic in specialist_cadence_failures(*broken)))
++        # Contradictions must fail even with every valid clause still present.
++        for obsolete in ("Dispatch in Stage A before code exists", "Spawn before implementation",
++                         "before expensive implementation begins"):
++            broken = list(sources)
++            broken[index] += "\n" + obsolete
++            cases.append((f"{label}: rejects early judgment {obsolete}",
++                          f"{label}: premature specialist judgment: {obsolete}"
++                          in specialist_cadence_failures(*broken)))
++    for index, label, clause in (
++        (0, "design template", "pre-implementation design record"),
++        (0, "design template", "report the missing record"),
++        (1, "contract template", "Record known triggers and decide consumer impact, compatibility and deprecation in Stage A"),
++        (1, "contract template", "a newly discovered trigger reopens the affected plan and gate"),
++        (2, "architecture critic", "The design record remains due before implementation"),
++        (2, "architecture critic", "Unresolved questions and conditions that block acceptance"),
++    ):
++        broken = list(sources)
++        broken[index] = broken[index].replace(clause, "omitted")
++        cases.append((f"{label}: preserves {clause}",
++                      f"{label}: missing planning/acceptance contract: {clause}"
++                      in specialist_cadence_failures(*broken)))
++    return cases
++
++
++def cadence_sources() -> tuple[str, ...]:
+     return tuple((ROOT / path).read_text(encoding="utf-8") for path in (
+         "SKILL.md", "references/verification-and-gates.md", "references/delegation-prompts.md",
+         "assets/implementation-contract.md", "assets/planner-contract.md",
+-        "references/delegation-prompts/40-verification.md"))
++        "references/delegation-prompts/40-verification.md")) + specialist_cadence_sources()
+ 
+ 
+ def cadence_self_tests() -> list[tuple[str, bool]]:
+@@ -443,6 +537,7 @@
+         ("invented watchdog rejected", bool(orchestrator_failures(skill + "\nA watchdog ends a lane on silence rather than on duration"))),
+     ]
+     cases.extend(cadence_self_tests())
++    cases.extend(specialist_cadence_self_tests())
+     cases.append(("economical execution accepted", not economy_failures(skill, gates)))
+     for required in ("observed host slots", "resource ceilings", "integration barriers", "only one CPU-heavy", "Phase transitions and new agents alone earn no rerun", "current-checkout or isolation decision", "references/context-curation.md"):
+         cases.append((f"economics {required} required", bool(economy_failures(skill, gates.replace(required, "omitted")))))

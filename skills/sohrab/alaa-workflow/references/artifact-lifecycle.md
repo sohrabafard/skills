@@ -4,13 +4,27 @@ Use the smallest artifact set with a real consumer.
 
 ## Admission
 
-An actionable implementation/execution-plan request authorizes a saved plan and checkpoint without a separate request to save them. Authorized multi-phase, resumable, or delegated execution saves them before implementation or write-lane dispatch. A plan-only request authorizes these planning artifacts, never product implementation.
+A design-plan or execution-plan request authorizes saving its admitted plan and checkpoint. Authorized multi-phase, resumable, or delegated execution materializes its execution family before implementation or write-lane dispatch. A plan-only request authorizes planning artifacts, never product implementation.
 
 Explicit no-file, read-only, or chat-only limits prevail. Native Plan Mode uses only its host-permitted planning surface until execution is approved; then materialize the admitted artifact family before implementation. Short advisory answers, ordinary review, and small bounded single-phase edits create no workflow files unless requested. A continuing authorized fix loop follows execution admission.
 
-When an admitted family exists, update it instead of creating another. Before execution, fill ordered phases and store-appropriate task mappings, dependencies, ownership, exclusions, phase acceptance, validation, resume context, and skill bindings; task acceptance and results follow `references/task-tracking.md` `## Acceptance and evidence by level`. `references/task-tracking.md` owns task authority; `references/companion-routing.md` owns skill bindings. Report saved plan/checkpoint paths; prose alone does not satisfy admitted durable planning.
+When an admitted family exists, update it instead of creating another. Select its kind below before choosing a profile or task authority. Report saved plan/checkpoint paths; prose alone does not satisfy admitted durable planning.
+
+## Plan kinds and approval
+
+Every new plan declares `Plan kind: design` or `Plan kind: execution`; initializer calls require `--plan-kind design|execution`. Mode and profile never substitute for kind. Existing unmarked families retain recorded authority until explicit migration; never infer and convert their kind.
+
+A **design** plan discusses ideas, alternatives and algorithms before implementation. It always uses `Task store: local` and `Profile: resumable`, with no Beads binding, issue registration, phase, task or subtask hierarchy, executable checklist, prompt pack or machine state. Keep outcome, scope, proposed design, acceptance criteria, `## Decisions` with `Date | Owner | Decision | Reason`, and `## Open Questions`. Date and attribute each decision and its reason. `references/context-continuity.md` owns its required handoff package and checkpoint. Stop design work by presenting the design for explicit user approval; do not dispatch implementation from it.
+
+The design header records `Approval status: pending|approved`, `Approval by`, `Approval on`, and `Approval evidence`. Pending values remain explicit. Approval requires an identifiable approver, a valid ISO date and evidence of the user's approval of this design and scope. Do not infer approval from file creation, schema success or a request to discuss the design. A material change to an approved design returns affected decisions to pending approval before dependent execution.
+
+An **execution** plan exists only after an approved design and records its readable portable path in `Approved design`. Resolve the linked design and approval evidence before creation or dependent execution. Missing, pending, invalid or mismatched approval blocks those steps. Offline validation checks the recorded link and approval structure; it cannot authenticate a human's approval or grant execution, commit or other authority.
+
+Before execution, populate ordered phases, task mappings, dependencies, ownership, exclusions, phase acceptance, validation, resume context and skill bindings through their owners. `references/task-tracking.md` owns mandatory execution task authority and hierarchy; `references/companion-routing.md` owns exact phase/task skill bindings. A small edit needing no plan remains outside artifact admission; choosing a small execution profile does not create a task-authority exception.
 
 ## Profiles
+
+Design uses the profile specified above. For execution and existing compatible families:
 
 | Profile | Plan | Checkpoint | JSON state | Prompt pack | Use for |
 |---|---:|---:|---:|---:|---|
@@ -23,7 +37,11 @@ Use `resumable` for multi-phase work: event-driven checkpoints preserve position
 
 Apply admission before selecting a profile; no profile overrides its exceptions. An actionable execution-plan request uses `resumable` unless a real consumer requires a heavier profile.
 
+For execution hierarchy, apply `references/task-tracking.md` `## Phase-task-subtask hierarchy` regardless of profile.
+
 ## Size and consolidate the plan
+
+This section and the dependency/concurrency plan below apply to execution.
 
 Classify each phase and delegated lane before execution: missing facts to retrieve or clarify; mechanical work with settled decisions; bounded semantic judgment with a local causal path and decisive acceptance evidence; ordinary engineering judgment; or coupled judgment with interacting unresolved decisions. Record the reason, settled/open decisions and invariants. Assess risk separately: sensitivity determines gates, not reasoning complexity. The runtime orchestrator owns actual task model/effort allocation; `/alaa-prompting-guide` supplies capabilities and runtime mechanics. Planning effort never determines worker effort.
 
@@ -53,13 +71,7 @@ Continue an active task's existing family and stem. Resolve companions only from
 
 `references/context-continuity.md` owns why the artifacts divide the way they do, what each handoff field means, and when a field earns a line. This file owns only where each artifact lives and what it is permitted to contain.
 
-The plan contains outcome/scope, phase design and barriers, phase acceptance, integrated-review evidence, skill associations, and the handoff package; task acceptance and results live per `references/task-tracking.md` `## Acceptance and evidence by level`. Task progress/dependencies follow `references/task-tracking.md`; status and cursor ownership follow `references/context-continuity.md`.
-
-The handoff package is a section inside the plan, not a separate file — knowledge is only useful next to the route it belongs to, and a fourth file is a fourth thing to keep honest. Its six fields are fixed; keep an unused one empty rather than deleting it, because a deleted field reads as a field nobody had anything to put in.
-
-The checkpoint contains only status, current phase, last verified result, blockers, next action, touched surfaces, update time, and, for a cross-PC handoff, the record `references/context-continuity.md` defines.
-
-JSON contains only schema version, task identity, status, plan path, current phase, next actions, blockers, last validation (a pointer to its evidence owner, not a copy), and update time.
+Kind-specific contents follow `## Plan kinds and approval`; task acceptance/results follow `references/task-tracking.md` `## Acceptance and evidence by level`. For handoff contents, checkpoint fields, status/cursor ownership and JSON projection, read `references/context-continuity.md`.
 
 ## Update events
 
@@ -77,6 +89,6 @@ Do not maintain duplicate phase checklists, review history, lane definitions, do
 
 ## Compatibility
 
-`--with-state`, `--state-only`, `--no-continuation`, `--lane`, `--parent-plan`, and `--mode` remain available for one transition period and emit deprecation warnings when they alter profile behavior. Use `--profile legacy` when an old consumer requires four files.
+Execution compatibility aliases `--with-state`, `--state-only`, `--no-continuation`, `--lane`, `--parent-plan`, and `--mode` remain subject to the initializer's kind checks and emit deprecation warnings when they alter profile behavior. They never bypass kind admission. New initialization rejects `--state-only`: it cannot represent an execution plan and hierarchy. Continue historical standalone snapshots in place. Use `--profile legacy` when an old execution consumer requires four files.
 
 Completed legacy artifacts remain historical evidence. Validate them with warnings; do not rewrite them unless they become actively executable.

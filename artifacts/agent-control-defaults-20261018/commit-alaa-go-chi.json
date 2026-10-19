@@ -1,0 +1,18 @@
+{
+  "repository": "alaa-go-chi",
+  "branch": "main",
+  "base_head": "81507da77d837d66e430e73d7bff60ae33964542",
+  "paths": [
+    "AGENTS.md",
+    "CLAUDE.md"
+  ],
+  "subject": "fix(beads): standardize per-agent ownership binding",
+  "commit_exit": 0,
+  "timestamp_utc": "2026-10-18T19:29:27.516140+00:00",
+  "output": "[main 1159164] fix(beads): standardize per-agent ownership binding\n 2 files changed, 38 insertions(+), 22 deletions(-)\ngo run ./cmd/alaa-text-lint staged .\r\ntext normalization: 0 file(s) updated\ngo build ./...\r\ngo vet ./...\r\n",
+  "verified": true,
+  "commit": "11591643d5b5cafe8669537c8d2e9966a8fe0a50",
+  "unrelated_staged_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+  "unrelated_tracked_preserved": 0,
+  "post_status": ""
+}

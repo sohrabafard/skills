@@ -21,9 +21,8 @@ If that fails, do not proceed on the assumption that the layout matches. Ask the
 warehouse root, or for read access to it, and record the answer in a note with `canonical_source_paths` set to
 the confirmed path so the next session inherits a checked fact rather than this caveat.
 
-One convention that is fixed regardless: **paths are written with backslashes**, matching the platform the
-scripts run on. An earlier version of this skill wrote the same paths with forward slashes in prose and
-backslashes in scripts, and nothing detected the disagreement.
+Resolve input paths using the confirmed warehouse layout and platform. These input examples impose no
+path syntax or destination on the selected memory adapter.
 
 Candidate inputs, in the order they are read:
 
@@ -37,13 +36,9 @@ file: read them, do not restate them here, and never plan a publication on a rem
 
 ## What publishing produces
 
-Curated notes, at these locations in the store:
-
-- `lessons/Global Agent Lessons.md`
-- `lessons/Project Lesson Index.md`
-- `lessons/project-lessons/PROJECT-KEY Lessons.md`
-- `patterns/Repeated Work Patterns.md`
-- `projects/PROJECT-KEY/Learned Patterns.md`
+Curated global lessons, project lesson indexes and collections, repeated work patterns and project-scoped
+learned patterns. The selected adapter maps these topics to its publication destinations; no vault path is
+required by this policy.
 
 Publish only curated lessons and repeated patterns. What must never be published is the single do-not-store
 list in `references/knowledge-shape.md`; it is not restated here, and it already covers raw sessions, whole
@@ -75,5 +70,5 @@ published without one is a defect.
 - Do not publish from the warehouse without first confirming the warehouse path, as above.
 - Do not publish a lesson without exactly one curation label.
 - Do not create a separate note per skill candidate; record the candidacy on the lesson.
-- Do not overwrite a curated note wholesale on re-publication. Update it, and keep `last_curated` current so
-  `scripts/alaa_memory_staleness.ps1` can see how old the curation is.
+- Do not overwrite a curated note wholesale on re-publication. Update it and keep `last_curated` current
+  through the selected adapter so curation age remains verifiable.

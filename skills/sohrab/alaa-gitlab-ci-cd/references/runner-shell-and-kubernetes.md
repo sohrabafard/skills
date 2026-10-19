@@ -7,6 +7,7 @@ Runner architecture and configuration. Failure triage lives in
 ## Table of contents
 
 - Choosing an executor
+- Container-hosted manager bootstrap
 - Shell runner operating model and hardening
 - Kubernetes executor operating model
 - Helm values versus embedded TOML
@@ -28,6 +29,41 @@ A shell runner executes the job script directly on the host as the runner user.
 The build directory persists between jobs and between projects that share the
 host, so anything a job writes there — a cached credential, a `.git/config`, a
 temp file — is readable by the next job that lands on it.
+
+## Container-hosted manager bootstrap
+
+Read this section only when creating or changing a runner manager hosted in a
+container. Record the host OS/runtime and manager image version, then choose the
+job executor separately: hosting Runner in Docker does not select Docker as the
+job executor. A shell executor runs jobs in the manager's environment; the host
+daemon path and its isolation preconditions remain `container-build-strategies.md`'s.
+
+Before authoring the configuration, record:
+
+- the persistent volume or host directory mounted at `/etc/gitlab-runner`, its
+  ownership and backup/restore path; replacing the manager container must preserve
+  `config.toml` and its credentials;
+- the existing runner authentication-token source and registration target; use
+  the authentication-token workflow described below, without logging the token
+  or committing it to Compose or TOML examples;
+- the GitLab URL and TLS trust source. For a private CA, configure trust in the
+  manager and separately in the helper/build environment that needs it; manager
+  trust alone does not prove job tooling trusts the endpoint. Do not disable
+  certificate verification to bypass a missing CA;
+- the executor's actual job context: filesystem and writable paths, tools,
+  network access, cache, and the daemon endpoint only if that build path requires
+  one. A host runtime socket grants daemon authority and is not a bootstrap default.
+
+`/alaa-docker-production` `references/20-compose-authorship.md` owns any Compose
+service, mounts and runtime hardening. Keep OS-specific bootstrap commands and
+repository scripts in the consumer repository; do not invent a universal installer
+or grant provisioning authority through this guide. Validate the changed runner
+inputs with this skill's existing static checker and report separately any
+authorized registration, restart and representative-job proof that actually ran.
+
+Sources, checked 2026-10-18: [Runner in Docker](https://docs.gitlab.com/runner/install/docker/)
+and [self-signed/private-CA trust](https://docs.gitlab.com/runner/configuration/tls-self-signed/).
+These are documentation observations, not proof of a provisioned runner.
 
 ## Shell runner operating model and hardening
 

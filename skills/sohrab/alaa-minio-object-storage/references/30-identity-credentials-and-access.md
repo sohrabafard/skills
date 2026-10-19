@@ -76,7 +76,7 @@ all `[source: https://docs.aws.amazon.com/STS/latest/APIReference/API_AssumeRole
 
 - **In the test stack, the application runs as MinIO root.** `MINIO_ROOT_USER` and `MINIO_ROOT_PASSWORD` are set
   from the same variables the application consumes as `STORAGE_ACCESS_KEY` and `STORAGE_SECRET_KEY`, and no scoped
-  identity and no bucket policy appear anywhere in the repository `[source: tusd-upload-platform repository,
+  identity and no bucket policy appear anywhere in the repository `[source: Ala tusd repository,
   docker-compose.yml and docker-compose.swarm.yml, read: 2026-07-27]`. **Record this as an observation of the test
   stack those two files stand up, and not as a production defect.** Both files configure the local development and
   test store described in `80-topology.md`, while production reads its endpoint, bucket and credentials from the
@@ -89,14 +89,14 @@ all `[source: https://docs.aws.amazon.com/STS/latest/APIReference/API_AssumeRole
   may not exist, and once discovering the real state was never established.
 - **Credentials come from environment variables only** — no file path, no secret-manager integration, no
   `AssumeRole` — and both clients capture them at construction and are never rebuilt, so no rotation path exists
-  beyond a full restart `[source: tusd-upload-platform repository, internal/storage/s3_compatible.go and
+  beyond a full restart `[source: Ala tusd repository, internal/storage/s3_compatible.go and
   internal/httpapi/official_tusd_creation.go, read: 2026-07-27]`.
 - **The hand-rolled client sets no `x-amz-security-token` header**, so temporary credentials cannot be adopted
-  there without changing the signer `[source: tusd-upload-platform repository, internal/storage/s3_http_client.go,
+  there without changing the signer `[source: Ala tusd repository, internal/storage/s3_http_client.go,
   read: 2026-07-27]`.
 - **Credentials are handled correctly in output**: the runtime config plan redacts the endpoint, bucket, access key
   and secret key, and `object_key` and `presigned_url` sit on the service's forbidden-log-field list
-  `[source: tusd-upload-platform repository, internal/storage/s3_compatible.go and
+  `[source: Ala tusd repository, internal/storage/s3_compatible.go and
   internal/observability/contracts.go, read: 2026-07-27]`.
 
 The migration off root, for whichever environment the answer above shows is running on it, is: create a scoped
@@ -106,5 +106,4 @@ password to a value no application holds. **Run that sequence against the test s
 production**, because the test stack is the one place where a policy that grants too little costs an afternoon
 rather than an outage.
 
-Threat classification, review triggers and the fail-closed doctrine behind all of this are `/alaa-security-review`
-(`$alaa-security-review`).
+Threat classification, review triggers and the fail-closed doctrine behind all of this are `/alaa-security-review`.

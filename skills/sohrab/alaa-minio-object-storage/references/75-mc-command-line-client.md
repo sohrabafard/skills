@@ -15,10 +15,11 @@ copied out of this file into a runbook is worse than a named unknown. `SOURCES.m
 
 An alias binds a name to an endpoint, an access key, a secret key and a signature version, so later commands
 address `alias/bucket/key` instead of repeating all four. The fleet's provisioner sets one this way, and this
-spelling is **repo-verified** `[source: tusd-upload-platform repository, docker-compose.yml,
+spelling is **repo-verified** `[source: Ala tusd repository, docker-compose.yml,
 docker-compose.swarm.yml and scripts/docker/smoke-compose-*.sh, read: 2026-07-27]`:
 
 ```sh
+# DO NOT COPY: observed fleet defect; this exposes credentials in argv.
 mc alias set local "$STORAGE_ENDPOINT" "$STORAGE_ACCESS_KEY" "$STORAGE_SECRET_KEY" --api S3v4
 ```
 
@@ -36,8 +37,8 @@ Supply the credential to `mc` by one of these two instead, in this order:
    `https://<access-key>:<secret-key>@<endpoint>` — so confirm it against the client reference before scripting it
    `[source: https://min.io/docs/minio/linux/reference/minio-mc.html, read: unverified as of 2026-07-27]`.
 2. **A configuration file written into a scoped configuration directory with mode `0600`** by the process that
-   already holds the secret. This works on any `mc` release regardless of flag renames, because that file is what
-   `mc alias set` writes anyway.
+   already holds the secret. *Its schema and compatibility with the pinned `mc` release remain unverified.*
+   Confirm both against that release before scripting the file; do not assume configuration is release-independent.
 
 **Treat `mc`'s configuration directory as credential storage with the lifetime of the filesystem under it.**
 `mc alias set` persists the alias, secret key included, into a configuration file, so a credential entered once is
@@ -192,19 +193,19 @@ that greps human output breaks on an image bump with no error naming the cause. 
 defect: `mc mb -p ... || true` hid every bucket-creation failure and left the API reporting itself ready against a
 bucket that did not exist. Both Compose files now fail closed on alias setup, bucket creation and the `mc stat`
 read-back, and a static guard rejects the `|| true` pattern if it returns
-`[source: tusd-upload-platform repository, <repo>/docs/agents/tusd-api-contract-state.md and
+`[source: Ala tusd repository, <repo>/docs/agents/tusd-api-contract-state.md and
 scripts/docker/validate-compose-runtime.sh, read: 2026-07-27]`.
 
 **Discard `mc`'s output on the success path and print a fixed message instead.** `mc` prints the alias, endpoint,
 bucket and object key, and none of those belongs in a log; on the failure path print the failing step by name and
 nothing else, so the operator learns which step failed without learning the bucket. The fleet's provisioner
 already does this, printing `Object storage provisioned: status=ok`
-`[source: tusd-upload-platform repository, docker-compose.yml, read: 2026-07-27]`.
+`[source: Ala tusd repository, docker-compose.yml, read: 2026-07-27]`.
 
 **Keep a provisioning script idempotent and non-destructive**, because it runs on every deployment including the
 one where an environment variable was wrong. The fleet's provisioner is the good example to copy on this point: it
 runs `mc alias set`, then `mc mb -p`, then `mc stat` as a read-back, checks every exit status, and removes nothing
-`[source: tusd-upload-platform repository, docker-compose.yml and docker-compose.swarm.yml, read: 2026-07-27]`.
+`[source: Ala tusd repository, docker-compose.yml and docker-compose.swarm.yml, read: 2026-07-27]`.
 Its two defects are the credential in `argv` and stopping after bucket creation — no policy, no versioning
 decision, no encryption and no lifecycle, so no abort-incomplete-multipart rule.
 
@@ -221,13 +222,13 @@ per `40-encryption-tls-and-durability.md` and the signature version stated expli
 ## What the fleet does today
 
 - **Every `mc alias set` in the repository passes the access key and secret key positionally**, in both Compose
-  files and in three smoke scripts `[source: tusd-upload-platform repository, docker-compose.yml,
+  files and in three smoke scripts `[source: Ala tusd repository, docker-compose.yml,
   docker-compose.swarm.yml and scripts/docker/smoke-compose-*.sh, read: 2026-07-27]`.
 - **The alias is configured with the store's root credential**, because `STORAGE_ACCESS_KEY` defaults to
-  `MINIO_ROOT_USER` `[source: tusd-upload-platform repository, docker-compose.yml, read: 2026-07-27]`.
+  `MINIO_ROOT_USER` `[source: Ala tusd repository, docker-compose.yml, read: 2026-07-27]`.
 - **No `mc ilm`, `mc anonymous`, `mc policy`, `mc version`, `mc encrypt` or `mc replicate` invocation exists
   anywhere in the repository**, and no `mc` invocation uses `--json` or a scoped configuration directory
-  `[source: tusd-upload-platform repository, read: 2026-07-27]`.
+  `[source: Ala tusd repository, read: 2026-07-27]`.
 
 `scripts/check_object_storage_posture.py` fires `MC_CREDENTIAL_ON_COMMAND_LINE` on the first of those, and it
 reported all five on 2026-07-27 at `docker-compose.yml:132`, `docker-compose.swarm.yml:117`,

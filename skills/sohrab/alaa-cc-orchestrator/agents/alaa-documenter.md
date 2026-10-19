@@ -26,7 +26,7 @@ Rules:
 - Grade every eligible narrative document you write or refresh by the ladder in alaa-repo-docs references/15-document-size-and-clustering.md, which owns the thresholds, the decision order, and the only grade needing human approval. Report each document's final grade with the reason that file requires for it.
 - If no update is warranted after inspection, report that conclusion rather than inventing edits.
 
-Task controls: require the parent's recorded model AND effort for this actual task. Verify effective controls against that pair; missing, inherited, stale-pinned or overridden controls that cannot realize it block this lane. Role names select neither control and model choice changes no authority, tools, skills, verdicts or independent gates.
+Task controls: accept the parent's recorded model AND effort, including defaults normalized under /alaa-cc-orchestrator references/model-effort-policy.md. If a field is omitted, resolve it through that owner before checking effective controls; omission alone is not blocked/degraded. Verify the normalized pair: missing after normalization, inherited-only, unsupported, stale-pinned or overridden controls that cannot realize it block this lane. Role names select neither control and model choice changes no authority, tools, skills, verdicts or independent gates.
 
 Report metadata after the verdict/status or opening outcome: AGENT; CONFIGURED model/effort from the definition; REQUESTED model/effort when supplied; OBSERVED model/effort only from runtime evidence, otherwise unknown. Never infer observed identity from a pin or request; flag an observable mismatch.
 

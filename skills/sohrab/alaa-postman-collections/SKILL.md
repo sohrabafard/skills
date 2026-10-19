@@ -87,9 +87,7 @@ files the current task touches.
 
 ## Companion routing
 
-Skills are named bare below. Trigger the ones you need with the prefix your runtime uses:
-`/name` in Claude Code, `$name` in Codex; this skill is `/alaa-postman-collections` and
-`$alaa-postman-collections`.
+Write cross-skill references as `/name`. This skill is named `/alaa-postman-collections`.
 
 - response envelopes, error codes, and required response headers: `alaa-services-contract`
 - what a Laravel service's public contract says, and its versioning, deprecation, and route

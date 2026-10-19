@@ -1,6 +1,6 @@
 ---
 name: alaa-partitioned-table-fk-audit
-description: "Audit a PostgreSQL repository (Laravel, raw SQL, or Go migrations) for foreign keys referencing a partitioned table through an incomplete key: the id-only-FK-into-a-partitioned-parent bug class, SQLSTATE 42830, 'no unique constraint matching given keys'. Ships a tested detector that discovers partitioned parents from source, reads each parent's real key shape, and flags every raw-SQL and Laravel-shorthand reference supplying less than that key. Use when asked to audit or harden a service for partitioned-table integrity, when a migration or query fails with 42830, before a partitioned-table migration reaches its reversibility gate, or as a proactive sweep with none reported. A clean audit is incomplete without a durable regression test. Do not use for general lock safety, index design, or tenancy -- that is /alaa-data-layer ($alaa-data-layer) -- nor for an ordinary id-only foreign key into a non-partitioned table, which is normal."
+description: "Audit PostgreSQL repositories for incomplete foreign keys into partitioned tables, including id-only references, SQLSTATE 42830, and 'no unique constraint matching given keys'. Ships a source detector that discovers partitioned parents, reads their keys, and flags incomplete raw-SQL and Laravel-shorthand references. Use when asked to audit or harden partitioned-table integrity, when a migration or query fails with 42830, before a partitioned-table migration reaches its reversibility gate, or for a proactive sweep. Report source results and durable guard status separately; installation or CI wiring in a target repository requires authorization. Do not use for general lock safety, index design, or tenancy -- use /alaa-data-layer ($alaa-data-layer) -- or for an ordinary id-only foreign key into a non-partitioned table."
 ---
 
 # Alaa Partitioned Table FK Audit
@@ -13,9 +13,10 @@ reference into it fails with `SQLSTATE[42830]: no unique constraint matching giv
 and is silently wrong. `scripts/partitioned_fk_audit.py` decides this from schema source alone, so an unreachable
 database blocks no step here.
 
-Treat "no partitioned tables exist today" as incomplete rather than clean, because the regression test is what
-stops the bug landing later. This audit is a **level 1 static** proof and the test it leaves is **level 2**;
-proving the constraint holds in the engine is level 6, unreachable here, and reported as a gap in those words.
+Report the detector's source result and the repository's durable regression-guard status separately. A missing guard is
+a finding, not a reason to suppress detector results or install files without authorization. This audit is a
+**level 1 static** proof; proving the constraint holds in the engine is level 6, unreachable here, and reported as a
+gap in those words.
 
 ## When to use
 
@@ -46,19 +47,20 @@ proving the constraint holds in the engine is level 6, unreachable here, and rep
    foreign key to clear a finding, because that removes the enforcement this audit exists to prove.
 6. Size the lock window before running that fix against a database holding rows, because the statement locks the
    parent and every partition against writes until it completes.
-7. Install the shipped detector as the repository's permanent test —
-   `python3 scripts/partitioned_fk_audit.py --install <repo test path>` — and wire the repository's runner to
-   invoke it over the step-2 roots. Never re-implement it, because a re-implementation drifts from the fixtures
-   that prove it.
-8. Prove that test works: add one deliberately broken synthetic fixture — a fake partitioned parent plus an
-   incomplete-key reference, in the test's fixture directory and never as a real migration — confirm the run exits
-   2, then confirm it exits 0 once corrected. Report the parents found, each bug fixed, the test's path, and both
-   runs pasted as output.
+7. Check whether the target repository already has a durable regression guard and report its path and selector
+   separately. The detector scans only supplied roots; it does not verify guard installation. If no guard exists,
+   report that as a finding; it does not block reporting the detector's source findings. Install and wire the shipped
+   detector only when the request explicitly authorizes changes to the named test and runner paths; never re-implement it.
+8. After installation is authorized, prove the test with a deliberately broken synthetic fixture — a fake
+   partitioned parent plus an incomplete-key reference, in the test's fixture directory and never as a real migration.
+   Confirm the run exits 2, then confirm it exits 0 once corrected. Report the detector result, guard status, parents
+   found, bugs fixed, test path, and both runs separately.
 
 ## Validation
 
-- `python3 scripts/partitioned_fk_audit.py --self-test` exits 0 before any finding of yours is reported.
-- The repository's full suite passes after the installed test is added.
+- `python3 scripts/partitioned_fk_audit.py --self-test` exits 0 before any detector result is reported.
+- When guard installation is authorized, run the installed test through its selector and the repository suite once
+  after adding it.
 - The report names the proof level reached and each claim it could not reach.
 
 ## Routing

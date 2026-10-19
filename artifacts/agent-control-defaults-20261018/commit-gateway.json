@@ -1,0 +1,17 @@
+{
+  "repository": "gateway",
+  "branch": "main",
+  "base_head": "24c4d7ae5da1947bbe759a585318252ae2d1d447",
+  "paths": [
+    "AGENTS.md"
+  ],
+  "subject": "fix(beads): standardize per-agent ownership binding",
+  "commit_exit": 0,
+  "timestamp_utc": "2026-10-18T19:28:54.966246+00:00",
+  "output": "[main c9239d7] fix(beads): standardize per-agent ownership binding\n 1 file changed, 17 insertions(+), 11 deletions(-)\n",
+  "verified": true,
+  "commit": "c9239d78a2c7a77dd3d9d7d3822a59c7f5690a08",
+  "unrelated_staged_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+  "unrelated_tracked_preserved": 0,
+  "post_status": ""
+}

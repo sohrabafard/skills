@@ -1,0 +1,764 @@
+{
+  "cwd": ".",
+  "head": "1a0799de71254427973f1253d80b846fea9acf10",
+  "resource_policy": "Bounded non-heavy static checks; normal priority; no parallel heavy work.",
+  "observer": "UI implementer only; independent final acceptance remains parent-owned.",
+  "manifest": {
+    "sha256": "753164595219d8d26a70bedfdfe5d06319193bbc35a0f11204a1040735023d2b",
+    "files": [
+      {
+        "path": "scripts/check_fleet_references.py",
+        "bytes": 48224,
+        "sha256": "a314954a6a6c5b4408514a281d7a7eff532fbbf9afb54feaf685059f85fa4781"
+      },
+      {
+        "path": "skills/sohrab/alaa-frontend-developer/SKILL.md",
+        "bytes": 4652,
+        "sha256": "114af819e5f63829d069081dfc58083d5e986e26b1b590ae58b9ae04e837cff1"
+      },
+      {
+        "path": "skills/sohrab/alaa-frontend-developer/agents/openai.yaml",
+        "bytes": 270,
+        "sha256": "9fc717816ae84119b090aa0956b64046ebb4a9a99e7c985baa456fa157e42989"
+      },
+      {
+        "path": "skills/sohrab/alaa-frontend-developer/references/00-topic-map.md",
+        "bytes": 10472,
+        "sha256": "4e7ca6d54c05b9b04176a372e9fe75215e3a8e3052ac7f13d8e3bd3a20c0de45"
+      },
+      {
+        "path": "skills/sohrab/alaa-frontend-developer/references/05-proof-and-tests.md",
+        "bytes": 3235,
+        "sha256": "d5c0f53f1dce67416b7cd71084c634a4dd023b2abcb29dbba84304e172ef12fb"
+      },
+      {
+        "path": "skills/sohrab/alaa-frontend-developer/references/10-contract-and-boundaries.md",
+        "bytes": 3997,
+        "sha256": "cb502c38680a189fec9db25beeaf860535e6b349016756e057ca3a9c79f6b396"
+      },
+      {
+        "path": "skills/sohrab/alaa-frontend-developer/references/20-vue-js-ssr-patterns.md",
+        "bytes": 5136,
+        "sha256": "6f34dcd200b2d1047f1d2accc2b30bb239f2a65f305098b00ffc46014e36a375"
+      },
+      {
+        "path": "skills/sohrab/alaa-frontend-developer/references/21-ssr-auth-and-session-patterns.md",
+        "bytes": 6287,
+        "sha256": "92aada1dfe56344e451e7f4d895124e616aa258298891008de2921a81db56b12"
+      },
+      {
+        "path": "skills/sohrab/alaa-frontend-developer/references/22-input-validation-and-normalization.md",
+        "bytes": 4066,
+        "sha256": "9ce965f620a7a6e1bc6dfcec79065da745c3196dacb434ccc0d8bba277ab0b47"
+      },
+      {
+        "path": "skills/sohrab/alaa-frontend-developer/references/25-frontend-security.md",
+        "bytes": 4480,
+        "sha256": "77a786ef1beeb0fe0269b895927630e5915a24b792358daae1182b8cb9113eea"
+      },
+      {
+        "path": "skills/sohrab/alaa-frontend-developer/references/30-pwa-sw-and-offline.md",
+        "bytes": 3968,
+        "sha256": "ab89a3816a751e5f040aca16e57c399415cc2954fae40bb19f0a62a68d7c5ccf"
+      },
+      {
+        "path": "skills/sohrab/alaa-frontend-developer/references/40-performance-and-realtime.md",
+        "bytes": 4473,
+        "sha256": "042f9f3dd4bedd2462a10fb4a7853f9a151e2fa1e2df7a420005a1a1f0b1926e"
+      },
+      {
+        "path": "skills/sohrab/alaa-frontend-developer/references/41-lighthouse-and-web-vitals.md",
+        "bytes": 10103,
+        "sha256": "a87b8d81999cb576b5f8d176779e37556e2e0416a3345c8dfd8f86f3d136e140"
+      },
+      {
+        "path": "skills/sohrab/alaa-frontend-developer/references/45-api-and-data-shaping.md",
+        "bytes": 4387,
+        "sha256": "5ca54e429028b4cdc6c7e2b07205d9ea0657f8c52a31113b789e7e174fe57301"
+      },
+      {
+        "path": "skills/sohrab/alaa-frontend-developer/references/46-resilience-and-degradation.md",
+        "bytes": 4352,
+        "sha256": "fd74ef691aed62a26bdb5f85f271050babfcefe105a8851cf38b5aa4b6f313e2"
+      },
+      {
+        "path": "skills/sohrab/alaa-frontend-developer/references/47-frontend-observability.md",
+        "bytes": 3278,
+        "sha256": "e0d3ba91c487da3939b70a6996f133716cc19a2b065834d095c041d6869e22fb"
+      },
+      {
+        "path": "skills/sohrab/alaa-frontend-developer/references/48-config-and-environment.md",
+        "bytes": 4405,
+        "sha256": "d82d89adb698577cc25f817299dd872b79b0cf5fbe3f66e02aba1c32a392124a"
+      },
+      {
+        "path": "skills/sohrab/alaa-frontend-developer/references/50-qa-and-verification.md",
+        "bytes": 4300,
+        "sha256": "99c80bc31a2df0d6442cc8bcb71f5d301fde6a160cac45864f4cfdbb63b2f688"
+      },
+      {
+        "path": "skills/sohrab/alaa-frontend-developer/references/55-i18n-locale-and-rtl.md",
+        "bytes": 4170,
+        "sha256": "8af04171fd0221713b5070ac7090ec5b6c7a14d41556c0711c3804f789d21c57"
+      },
+      {
+        "path": "skills/sohrab/alaa-frontend-developer/references/60-browser-debug.md",
+        "bytes": 3194,
+        "sha256": "7bd0c4784a6fd8799c82e3049183759f85a21d660d07e9957adc25804b19c743"
+      },
+      {
+        "path": "skills/sohrab/alaa-frontend-developer/references/70-companion-skill-routing.md",
+        "bytes": 3215,
+        "sha256": "cc52c26d5ff00cc0bdebf5b3d716957d55622512e0f4edbd857644b39875ffac"
+      },
+      {
+        "path": "skills/sohrab/alaa-frontend-developer/references/95-sources-and-maintenance.md",
+        "bytes": 4197,
+        "sha256": "ceca45f63757533ff5e6438637482b9a4119f034809d7ce25e62ac9f0af72274"
+      },
+      {
+        "path": "skills/sohrab/alaa-frontend-devops/SKILL.md",
+        "bytes": 3815,
+        "sha256": "7808d23f678d316fffeb8b9b5ee26641201a57fd39df4ccbd07609a308eee7da"
+      },
+      {
+        "path": "skills/sohrab/alaa-frontend-devops/agents/openai.yaml",
+        "bytes": 272,
+        "sha256": "2ca2352eeb044a0fab528fc88b9d58aea00129d95493e7e87a72d85af4550a99"
+      },
+      {
+        "path": "skills/sohrab/alaa-frontend-devops/references/00-source-map.md",
+        "bytes": 3426,
+        "sha256": "4e2cf68bb693bb5e3ce4cc1302ab1a6fb83f710a49a09be814bca81f6c32cece"
+      },
+      {
+        "path": "skills/sohrab/alaa-frontend-devops/references/00-topic-map.md",
+        "bytes": 3462,
+        "sha256": "b9ab942a95ff858c9b826683efd90c90e8a5ccc5923cbaa6fb9fb02344bdff0f"
+      },
+      {
+        "path": "skills/sohrab/alaa-frontend-devops/references/10-build-contract-and-artifacts.md",
+        "bytes": 4129,
+        "sha256": "f0bcda6ed8262a1cf9fe44996291ec01a0606c53393b425d89c4356df2c830bc"
+      },
+      {
+        "path": "skills/sohrab/alaa-frontend-devops/references/15-build-time-vs-runtime-config.md",
+        "bytes": 5025,
+        "sha256": "319a648e87b440d6c747524d94cd2fb304021a6fd2726f6aa8b8613d5fd84056"
+      },
+      {
+        "path": "skills/sohrab/alaa-frontend-devops/references/20-ci-gates-and-predicates.md",
+        "bytes": 5586,
+        "sha256": "e54167db718932995bf27faa755536e2f9288be498d9088068c244e550962052"
+      },
+      {
+        "path": "skills/sohrab/alaa-frontend-devops/references/25-artifact-identity-and-provenance.md",
+        "bytes": 4153,
+        "sha256": "2ed5c8abe98be4a290f3ee81fb34ef53144f1bce0c6aa437a2e394cc6cd1f303"
+      },
+      {
+        "path": "skills/sohrab/alaa-frontend-devops/references/30-serving-caching-and-public-path.md",
+        "bytes": 5127,
+        "sha256": "662aef99c431141126ea32bdeeafc57205d13b1a9e775df1d96a6eb5a5b94eff"
+      },
+      {
+        "path": "skills/sohrab/alaa-frontend-devops/references/35-client-bundle-security.md",
+        "bytes": 5854,
+        "sha256": "71a59e0c38696f3f119431e0b38253404dfb36dbbc5553ff95c7101581cbf685"
+      },
+      {
+        "path": "skills/sohrab/alaa-frontend-devops/references/40-verification-and-rollback.md",
+        "bytes": 3394,
+        "sha256": "ec1fa45791bfb08143e6fdea322c37d26ac132aaee220a8fea4663f90571c84e"
+      },
+      {
+        "path": "skills/sohrab/alaa-frontend-devops/references/45-deploy-failure-playbook.md",
+        "bytes": 7382,
+        "sha256": "dc9253ca7eaa6c326639769a01a795e2afb8d767f223de9ea1a3bbe3785b94ea"
+      },
+      {
+        "path": "skills/sohrab/alaa-frontend-devops/references/90-companion-boundary.md",
+        "bytes": 4872,
+        "sha256": "fd6073b2033cf91d4b6f9d2910946e1560d398bc057e92fb5d26a8fb09f68922"
+      },
+      {
+        "path": "skills/sohrab/alaa-frontend-devops/scripts/verify-artifact-contract.mjs",
+        "bytes": 19764,
+        "sha256": "ce4bb5d2a17fa0723d1df7ace04b69abf2355a306410b7101642f8bc349862ea"
+      },
+      {
+        "path": "skills/sohrab/alaa-observability-soc/references/20-instrumentation-gates.md",
+        "bytes": 12069,
+        "sha256": "ed255d024b7fb46ccb3723dbb843dc69bc9c0b645d34595caa8b79b1a31fc568"
+      },
+      {
+        "path": "skills/sohrab/alaa-observability-soc/references/60-sentry-and-profiling.md",
+        "bytes": 6043,
+        "sha256": "87ab780325315b6f71530b57d4a6acf688a288c4b460de231e3115e73ad99e94"
+      },
+      {
+        "path": "skills/sohrab/alaa-quasar-app-vite-v3/SKILL.md",
+        "bytes": 4828,
+        "sha256": "671eb84ba02de7aa4fae3fd9dfd37e20a0e69624bb346d2b83a32342902129a7"
+      },
+      {
+        "path": "skills/sohrab/alaa-quasar-app-vite-v3/agents/openai.yaml",
+        "bytes": 342,
+        "sha256": "d8fbfdbf023ac6578e0ef035d67c482f1092b44ab9de56579476919eb2463f9f"
+      },
+      {
+        "path": "skills/sohrab/alaa-quasar-app-vite-v3/references/00-topic-map.md",
+        "bytes": 12448,
+        "sha256": "8c5197d980019040a2f5f0fb1fbc571091da77ddc8d69aeedeac3508814755fb"
+      },
+      {
+        "path": "skills/sohrab/alaa-quasar-app-vite-v3/references/05-authority-and-api-lookup.md",
+        "bytes": 4646,
+        "sha256": "ff6a2453a26852a359930518b28dcf8a74c20917669ad01333283890bdac61e8"
+      },
+      {
+        "path": "skills/sohrab/alaa-quasar-app-vite-v3/references/10-v2-to-v3-migration.md",
+        "bytes": 7801,
+        "sha256": "bf2739f0ef1aab62c87aa4109b620c78227d7c939a9bc2f6f96784960194ed85"
+      },
+      {
+        "path": "skills/sohrab/alaa-quasar-app-vite-v3/references/11-review-and-upgrade-checklist.md",
+        "bytes": 5982,
+        "sha256": "a757768d63a4e503d2e792a008321de4ea8c25865780617a34eb4bcae9853232"
+      },
+      {
+        "path": "skills/sohrab/alaa-quasar-app-vite-v3/references/12-v2-maintenance-playbook.md",
+        "bytes": 6740,
+        "sha256": "6f60adcef301571a577003eab31315cd5aa4cb8678b3525074166ff44988b1e6"
+      },
+      {
+        "path": "skills/sohrab/alaa-quasar-app-vite-v3/references/13-examples-review-style.md",
+        "bytes": 4494,
+        "sha256": "b35bed9119e2dae174d662f866084cc367859d4ccd4f7e34239094c605155b18"
+      },
+      {
+        "path": "skills/sohrab/alaa-quasar-app-vite-v3/references/20-v3-config-and-features.md",
+        "bytes": 6639,
+        "sha256": "381ee253250be49123821d6ee13d956045103af98af569186c28c0b06d019da4"
+      },
+      {
+        "path": "skills/sohrab/alaa-quasar-app-vite-v3/references/21-cli-vite-and-config.md",
+        "bytes": 3668,
+        "sha256": "37a489973407c70e715bb8019d8f99e9be75df0e138b43cced0b77125f7d4f1c"
+      },
+      {
+        "path": "skills/sohrab/alaa-quasar-app-vite-v3/references/22-cli-cookbook-and-examples.md",
+        "bytes": 8258,
+        "sha256": "756aad678556e48c3a479723d98fe3f06482389bc1275789853bda8a02355309"
+      },
+      {
+        "path": "skills/sohrab/alaa-quasar-app-vite-v3/references/30-service-worker-excellence.md",
+        "bytes": 14641,
+        "sha256": "9ce195cbf9b0a07a0e7d848b3bd601ccb308e08756a063b4a342d5d525ba1fd6"
+      },
+      {
+        "path": "skills/sohrab/alaa-quasar-app-vite-v3/references/31-ssr-pwa-and-security.md",
+        "bytes": 7165,
+        "sha256": "eb8f6524258352c32dc2e5b616f4147380d3c52e570a15718472ee2e336dcaaa"
+      },
+      {
+        "path": "skills/sohrab/alaa-quasar-app-vite-v3/references/32-pwa-injectmanifest-guard.md",
+        "bytes": 4501,
+        "sha256": "22bf1c112a0b5702f0c964c787cdc8d54c1c952a4e1165185aebfe812f70686f"
+      },
+      {
+        "path": "skills/sohrab/alaa-quasar-app-vite-v3/references/34-frontend-failure-and-degradation.md",
+        "bytes": 10187,
+        "sha256": "8ac1e54a31192b819ae694d2aff601d3c091c01262df2d6beaa615cf66c87e6c"
+      },
+      {
+        "path": "skills/sohrab/alaa-quasar-app-vite-v3/references/35-platform-modes.md",
+        "bytes": 4539,
+        "sha256": "95fd3afb53165cd1c49df655ba4119eb57016d1d176fd74366b7d91a350e7362"
+      },
+      {
+        "path": "skills/sohrab/alaa-quasar-app-vite-v3/references/36-client-observability-contract.md",
+        "bytes": 11451,
+        "sha256": "9284cf63efe10f7ae575e94a6662e47d9cafd3db2055b37a94460da9a3718a61"
+      },
+      {
+        "path": "skills/sohrab/alaa-quasar-app-vite-v3/references/37-pwa-operations-record.md",
+        "bytes": 5700,
+        "sha256": "4df4aefbbbe7e675542172ec796543af73cbf0848aaf3eee2a436431b91a9322"
+      },
+      {
+        "path": "skills/sohrab/alaa-quasar-app-vite-v3/references/40-webotp-and-device-trust.md",
+        "bytes": 9092,
+        "sha256": "fe09a8643f5b7489bf5eaae8645181e0b362b41b8e08a30161ea1a58dfbb8c83"
+      },
+      {
+        "path": "skills/sohrab/alaa-quasar-app-vite-v3/references/41-step-up-and-permission-hints.md",
+        "bytes": 6704,
+        "sha256": "7c71433d7ac2eecc3d858938020225c641474443efe232d286e34343835e5a75"
+      },
+      {
+        "path": "skills/sohrab/alaa-quasar-app-vite-v3/references/45-browser-apis-and-permissions.md",
+        "bytes": 13654,
+        "sha256": "09323526b3245030941b04891b45d985bbcffc66f5dacc8344e0bd4956f71fd6"
+      },
+      {
+        "path": "skills/sohrab/alaa-quasar-app-vite-v3/references/50-modern-experience.md",
+        "bytes": 5551,
+        "sha256": "7ed290167ad01f0de86d1045faaba38f2d774097e74ff5df2583bbd1d2345db4"
+      },
+      {
+        "path": "skills/sohrab/alaa-quasar-app-vite-v3/references/60-components-and-layouts.md",
+        "bytes": 2993,
+        "sha256": "b7c619125695b62155022835bb77bf63e25d4171fa6b334ecc79402e26ba1a76"
+      },
+      {
+        "path": "skills/sohrab/alaa-quasar-app-vite-v3/references/61-component-usage-atlas.md",
+        "bytes": 9937,
+        "sha256": "bcd2267ba595b995347488945de635edf50a521384c1e2605a15030072bfed68"
+      },
+      {
+        "path": "skills/sohrab/alaa-quasar-app-vite-v3/references/62-layout-patterns-and-examples.md",
+        "bytes": 2755,
+        "sha256": "2246b03abbb581fbb6fc74ba9b4a373ac57b87ca089f905419da2bc3db6ad21d"
+      },
+      {
+        "path": "skills/sohrab/alaa-quasar-app-vite-v3/references/63-image-delivery-and-placeholders.md",
+        "bytes": 1820,
+        "sha256": "bf760a3ab9840a6cf39db247bc3f58973d06c5be6b294deb8bcd8ca3e077ec0b"
+      },
+      {
+        "path": "skills/sohrab/alaa-quasar-app-vite-v3/references/64-plugins-composables-directives-options-utils.md",
+        "bytes": 2797,
+        "sha256": "feebd461a1f72035e7336e10985fc0d65c52f9bb84a985aa0276dc8db79f9048"
+      },
+      {
+        "path": "skills/sohrab/alaa-quasar-app-vite-v3/references/65-directive-usage-atlas.md",
+        "bytes": 3175,
+        "sha256": "28af5fb66fb2639fd8b0ad1e0c4f4d876160c9ef64363e10d52405f9b5794d45"
+      },
+      {
+        "path": "skills/sohrab/alaa-quasar-app-vite-v3/references/66-api-usage-atlas.md",
+        "bytes": 4884,
+        "sha256": "7a89128aa9925555d3b442bbeb13c67b171f8f775f7a8f3125ce408e3174f13f"
+      },
+      {
+        "path": "skills/sohrab/alaa-quasar-app-vite-v3/references/70-guardrails-a11y-performance-monorepo.md",
+        "bytes": 8116,
+        "sha256": "c6c40908c9926281bfb14625b2544e28232d91a93c3b9e63485d3ec211860a75"
+      },
+      {
+        "path": "skills/sohrab/alaa-quasar-app-vite-v3/references/75-testing-ci-playbook.md",
+        "bytes": 9995,
+        "sha256": "8fa902ef88c747f565d59ba23c04681c5378112024677e584f5265f320f319c4"
+      },
+      {
+        "path": "skills/sohrab/alaa-quasar-app-vite-v3/references/80-upstream-deltas-and-live-checks.md",
+        "bytes": 2955,
+        "sha256": "6637214dd082bfeb6c51d6dda93528d1cdd538b142f918b10b5ad6ff4305d080"
+      },
+      {
+        "path": "skills/sohrab/alaa-quasar-app-vite-v3/references/80-upstream-deltas-and-live-checks/10-refresh-and-authority.md",
+        "bytes": 1641,
+        "sha256": "e62e59c2acf84b12285126729cc0ac2e3fcdcb25434f81f26dfeb1d365f709b6"
+      },
+      {
+        "path": "skills/sohrab/alaa-quasar-app-vite-v3/references/80-upstream-deltas-and-live-checks/20-current-release-refresh.md",
+        "bytes": 2141,
+        "sha256": "ce17437c681b4d9d0ea225609123babc6c4f0b5daa207526029b156d80ecb9e7"
+      },
+      {
+        "path": "skills/sohrab/alaa-quasar-app-vite-v3/references/80-upstream-deltas-and-live-checks/30-historical-registry-snapshot.md",
+        "bytes": 1867,
+        "sha256": "27487de1b9d4fbf604f36be20ca67357e56d93be96e02d7e5c788ad33d21f1a4"
+      },
+      {
+        "path": "skills/sohrab/alaa-quasar-app-vite-v3/references/80-upstream-deltas-and-live-checks/40-installed-major.md",
+        "bytes": 1782,
+        "sha256": "b46c2febe78346176ecee5b50dffdb15e9bcbcfeb17cde4a117d0f3c8ca2307b"
+      },
+      {
+        "path": "skills/sohrab/alaa-quasar-app-vite-v3/references/80-upstream-deltas-and-live-checks/50-v2-to-v3-deltas.md",
+        "bytes": 3947,
+        "sha256": "252eda8592e2d0895cea84949f51325457f54a90b99f0da053e4270ea050bb86"
+      },
+      {
+        "path": "skills/sohrab/alaa-quasar-app-vite-v3/references/80-upstream-deltas-and-live-checks/60-framework-tool-deltas.md",
+        "bytes": 3064,
+        "sha256": "ae404eae4fadcc7d0dc7a95c8e7112a6f72a14f2efabd9962d0ad018aaf8ba21"
+      },
+      {
+        "path": "skills/sohrab/alaa-quasar-app-vite-v3/references/80-upstream-deltas-and-live-checks/70-live-checks-and-maintenance.md",
+        "bytes": 2606,
+        "sha256": "5defab7711106bd07d45a01319ad5dfcd64f9b4a8f7d948105b9d47590a9d5b2"
+      },
+      {
+        "path": "skills/sohrab/alaa-quasar-app-vite-v3/references/80-upstream-deltas-and-live-checks/80-posture-and-package-manager.md",
+        "bytes": 1601,
+        "sha256": "30bbb821352ff5808203096776db97d8d22d8c70eccf646f42450910fb42e88e"
+      },
+      {
+        "path": "skills/sohrab/alaa-quasar-app-vite-v3/references/85-legacy-skill-coverage.md",
+        "bytes": 4077,
+        "sha256": "d9460a5a07fb6a1f1806d510e756443b1370197068d512f894cadd1147c510a0"
+      },
+      {
+        "path": "skills/sohrab/alaa-quasar-app-vite-v3/references/91-agent-authoring-and-dual-runtime.md",
+        "bytes": 4991,
+        "sha256": "8166bd46f26687f10d8ddede2a2412152bf14174f387e4be6427766749f9a1c5"
+      },
+      {
+        "path": "skills/sohrab/alaa-quasar-app-vite-v3/scripts/check-upstream-versions.mjs",
+        "bytes": 12037,
+        "sha256": "d84e04ccf5a22cfccdf3f6038021454fbc454639b23f3e87a34ce54a4dc1e633"
+      },
+      {
+        "path": "skills/sohrab/alaa-quasar-app-vite-v3/scripts/query-installed-quasar-api.mjs",
+        "bytes": 9382,
+        "sha256": "13a95edf0d09a89c78ca635689d7a2840a04b9180d3541c87cab2e4e2c29f647"
+      },
+      {
+        "path": "skills/sohrab/alaa-repo-docs/scripts/check_markdown_links.py",
+        "bytes": 45894,
+        "sha256": "93710100c27e349147b0f854b75987f1027359b7b7b5404ccb16b3a9c69e0e14"
+      },
+      {
+        "path": "skills/sohrab/alaa-services-contract/references/21-alaa-platform-observability-directive.md",
+        "bytes": 14535,
+        "sha256": "6c5bb6805faad1fa3c3bdd240ef8c9069527e6bf4b6e97767c9f01f5f9d05b6f"
+      },
+      {
+        "path": "skills/sohrab/alaa-ui-ux-design-system/SKILL.md",
+        "bytes": 7222,
+        "sha256": "c0dd7293056978963386453485872bd72a3c5a661dc1ebdbfa77fd9f0960bf88"
+      },
+      {
+        "path": "skills/sohrab/alaa-ui-ux-design-system/agents/openai.yaml",
+        "bytes": 347,
+        "sha256": "23b38c28810d1fdb7b1918419b1dbc636fb7c09f73e87d4ee807a52f762abc5f"
+      },
+      {
+        "path": "skills/sohrab/alaa-ui-ux-design-system/references/00-topic-map.md",
+        "bytes": 6416,
+        "sha256": "b37b5321aad5aadfed63af4d3a10ba62c07af784671680ceb72d1cc009490ccd"
+      },
+      {
+        "path": "skills/sohrab/alaa-ui-ux-design-system/references/05-rtl-and-persian.md",
+        "bytes": 13656,
+        "sha256": "a5b410d63c99769db331ab4850607c8f3c6198dc03a1a4afd664272cc918b830"
+      },
+      {
+        "path": "skills/sohrab/alaa-ui-ux-design-system/references/10-design-workflow.md",
+        "bytes": 7454,
+        "sha256": "4a0e1b1eb74de711434fda3549a8b290dff37ecb82daa18c16bb5cefbf036b45"
+      },
+      {
+        "path": "skills/sohrab/alaa-ui-ux-design-system/references/15-designed-failure-states.md",
+        "bytes": 8442,
+        "sha256": "a48edebc9fd03e4cc3c3ef43a5d860451ec3fc04c59508c124fb4e93f3320a97"
+      },
+      {
+        "path": "skills/sohrab/alaa-ui-ux-design-system/references/20-design-tokens-and-theming.md",
+        "bytes": 8255,
+        "sha256": "93102f47d975d4b2edb69252908e98842f1d192829a503d39ed69a86d5abb64e"
+      },
+      {
+        "path": "skills/sohrab/alaa-ui-ux-design-system/references/25-untrusted-content-and-ui-authority.md",
+        "bytes": 8909,
+        "sha256": "5b7e52282d01dcf0948e365c230113ff551990764b455807b249ed8062c7e168"
+      },
+      {
+        "path": "skills/sohrab/alaa-ui-ux-design-system/references/28-ui-diagnosability.md",
+        "bytes": 6004,
+        "sha256": "d0393ec2b3cf6b6024f4a9372ddc5d974d7ee64bb17da7f42af92a3e90529a3c"
+      },
+      {
+        "path": "skills/sohrab/alaa-ui-ux-design-system/references/30-typography-and-color.md",
+        "bytes": 6331,
+        "sha256": "72ba9b9a9ab8c1abb85a3b8431b51eea5341a7b3d2d6cc9a3a762183b43d2bfe"
+      },
+      {
+        "path": "skills/sohrab/alaa-ui-ux-design-system/references/32-starter-palettes.md",
+        "bytes": 8199,
+        "sha256": "0ab0f797e1b27874f01a45db540c4076275187054ddf0e122924d6bc034d56b3"
+      },
+      {
+        "path": "skills/sohrab/alaa-ui-ux-design-system/references/35-ux-writing-and-microcopy.md",
+        "bytes": 4683,
+        "sha256": "4d07f33f38292dc199212386b0fae8f07ac9d10cb042058fa143ea0ae5460da5"
+      },
+      {
+        "path": "skills/sohrab/alaa-ui-ux-design-system/references/40-styles-and-visual-language.md",
+        "bytes": 5191,
+        "sha256": "ae92b77b7f3529f4eadf31260d38509f837201ffc50cb3c0bd20e30df4339a74"
+      },
+      {
+        "path": "skills/sohrab/alaa-ui-ux-design-system/references/45-render-and-asset-budgets.md",
+        "bytes": 7484,
+        "sha256": "835f57120c9a8468ca4c64208ccbb5e46c601ad6699807467a0d6b06d22f56ab"
+      },
+      {
+        "path": "skills/sohrab/alaa-ui-ux-design-system/references/50-layout-landing-and-ia.md",
+        "bytes": 4178,
+        "sha256": "5b6a8bbb2e780bab43528904cafa1fecd4447ca9ba50defd5053175b30face5e"
+      },
+      {
+        "path": "skills/sohrab/alaa-ui-ux-design-system/references/55-component-library-and-governance.md",
+        "bytes": 5896,
+        "sha256": "b50d955a505fa735bb049081aec2d0a96a8ca608fc976574deff981d14d6cd30"
+      },
+      {
+        "path": "skills/sohrab/alaa-ui-ux-design-system/references/60-components-states-and-ux.md",
+        "bytes": 6256,
+        "sha256": "6b0a70fdeb98785a4debd7a5ac248763ae46690362fb7b96645ad15cd6f6375d"
+      },
+      {
+        "path": "skills/sohrab/alaa-ui-ux-design-system/references/65-lists-latency-and-concurrency.md",
+        "bytes": 7909,
+        "sha256": "931acc7acd5059734e354043f8e77df5dede8e6c5e5673e6a9261de47f91e82c"
+      },
+      {
+        "path": "skills/sohrab/alaa-ui-ux-design-system/references/70-motion-contract.md",
+        "bytes": 5677,
+        "sha256": "b9ec5a762966430b72c8460152fa4fb8545397f565b5e5f13d95109836fe1bc6"
+      },
+      {
+        "path": "skills/sohrab/alaa-ui-ux-design-system/references/72-modern-css-baseline-tiers.md",
+        "bytes": 6543,
+        "sha256": "7ecbec6672e40ed353f2fabc8d630a5a8cd50f4a0638d2d83d700e28083eefae"
+      },
+      {
+        "path": "skills/sohrab/alaa-ui-ux-design-system/references/80-icons-assets-and-imagery.md",
+        "bytes": 6348,
+        "sha256": "1544d53a264f81f074eb9c73fd0f96f0744ae3a334e46bcea6d394b3f8eda51d"
+      },
+      {
+        "path": "skills/sohrab/alaa-ui-ux-design-system/references/85-accessibility-patterns.md",
+        "bytes": 6464,
+        "sha256": "cb28dcafa506646a4527acc4c38418de6e3f089d334db26704f53d94d5fa940f"
+      },
+      {
+        "path": "skills/sohrab/alaa-ui-ux-design-system/references/90-quality-gates-and-review.md",
+        "bytes": 6511,
+        "sha256": "7bc8771a5ddd99ef0f6c86fe0a9a0044efb16909011486496ca92b214b327dd3"
+      },
+      {
+        "path": "skills/sohrab/alaa-ui-ux-design-system/references/95-design-proofs.md",
+        "bytes": 6030,
+        "sha256": "6efeba4c2cbd0dbacb2c71c832a3299950378f31434da509616950b16bef6276"
+      },
+      {
+        "path": "skills/sohrab/alaa-ui-ux-design-system/scripts/check-design-system.mjs",
+        "bytes": 27713,
+        "sha256": "e5999d6f5b6391d5804c4e4a2612b7c4bb09cd75bdf83f7681d08a84dd5385e4"
+      },
+      {
+        "path": "skills/sohrab/alaa-vue-typescript-clean-code/SKILL.md",
+        "bytes": 10824,
+        "sha256": "b0f0b95578ed4d1ed9ef39922f4b2b3d5295751d09475621b0ebd17effbb2cb6"
+      },
+      {
+        "path": "skills/sohrab/alaa-vue-typescript-clean-code/agents/openai.yaml",
+        "bytes": 308,
+        "sha256": "d07d7fe39e26c3eecde0971b45394bb59f7ed333c06258fc838513bd4254fe80"
+      },
+      {
+        "path": "skills/sohrab/alaa-vue-typescript-clean-code/evals/evals.json",
+        "bytes": 9285,
+        "sha256": "7f1df35d5ad3ef05b216ea031ddd63561d4d9a6a733440a17600eaaf25bd098a"
+      },
+      {
+        "path": "skills/sohrab/alaa-vue-typescript-clean-code/references/00-topic-map.md",
+        "bytes": 4593,
+        "sha256": "b671a3b3cb831d1c523dfe9f6ad2ca9258c98eb1df452ed1d589e6cb11be071c"
+      },
+      {
+        "path": "skills/sohrab/alaa-vue-typescript-clean-code/references/05-sources-and-freshness.md",
+        "bytes": 4681,
+        "sha256": "7eb0956849d899b93b5399008abfb20086b0f7f9492620fa4636521ccad2dbbf"
+      },
+      {
+        "path": "skills/sohrab/alaa-vue-typescript-clean-code/references/10-vue-style-contract.md",
+        "bytes": 6298,
+        "sha256": "36d696dc167c1a00d8eb8416816d696ccc0357856fa9575ad33cbe14b8f4155d"
+      },
+      {
+        "path": "skills/sohrab/alaa-vue-typescript-clean-code/references/20-typescript-composition-contract.md",
+        "bytes": 7211,
+        "sha256": "688ba761cea792c3e4eed601c3da13b912402e9b1ae6180e51f8376ed7da85cd"
+      },
+      {
+        "path": "skills/sohrab/alaa-vue-typescript-clean-code/references/22-typescript-type-system.md",
+        "bytes": 9809,
+        "sha256": "be2507aaf32513b50f8a29a2d8fd7d639e7534912d248e32f8c6cdd5d52d8a02"
+      },
+      {
+        "path": "skills/sohrab/alaa-vue-typescript-clean-code/references/24-typescript-project-and-antipatterns.md",
+        "bytes": 1633,
+        "sha256": "1851d8729140f0c67585197039c0abb168a67cbcc61768123fe7753075171609"
+      },
+      {
+        "path": "skills/sohrab/alaa-vue-typescript-clean-code/references/24-typescript-project-and-antipatterns/10-fleet-typescript-line.md",
+        "bytes": 1417,
+        "sha256": "16cf8defaf3b26c196bcf5680f3ec33ac714fcc650c018055c04b04df578ec85"
+      },
+      {
+        "path": "skills/sohrab/alaa-vue-typescript-clean-code/references/24-typescript-project-and-antipatterns/20-compiler-and-module-settings.md",
+        "bytes": 2996,
+        "sha256": "59b0983de9ff6c38bbcf8bb94224de458d8c258e1c06da79f18f1414e80beeb9"
+      },
+      {
+        "path": "skills/sohrab/alaa-vue-typescript-clean-code/references/24-typescript-project-and-antipatterns/30-module-augmentation.md",
+        "bytes": 1737,
+        "sha256": "6c08a76022690e446a2177417893becbe6c5b266bfd48aecb2d6cdacb2d90fc6"
+      },
+      {
+        "path": "skills/sohrab/alaa-vue-typescript-clean-code/references/24-typescript-project-and-antipatterns/40-antipatterns.md",
+        "bytes": 3161,
+        "sha256": "7f953913401592be5596c312a2049c455b9f0a0f4a4348a3de52d25c8072a702"
+      },
+      {
+        "path": "skills/sohrab/alaa-vue-typescript-clean-code/references/30-clean-code-solid-vue.md",
+        "bytes": 10046,
+        "sha256": "ef652163e3b53c6195f665ff2c2c84ac85697b2cafe8e57a2b0c16f4292c9956"
+      },
+      {
+        "path": "skills/sohrab/alaa-vue-typescript-clean-code/references/41-pattern-selection.md",
+        "bytes": 7004,
+        "sha256": "552fc1b8bc92cccd99889ecb788ad0bf90c0f2b9618c0f5c4c74b9d1bdc15536"
+      },
+      {
+        "path": "skills/sohrab/alaa-vue-typescript-clean-code/references/42-structural-patterns.md",
+        "bytes": 6627,
+        "sha256": "3d1dd24a9bcdf3426d75c871f69748425eab453fe75e2d546631b80d30e11783"
+      },
+      {
+        "path": "skills/sohrab/alaa-vue-typescript-clean-code/references/43-behavioral-patterns.md",
+        "bytes": 10885,
+        "sha256": "a900ad5724623c22cd1a79599010c1a9ac9dbfaa7028e600948d70b5e8d3210c"
+      },
+      {
+        "path": "skills/sohrab/alaa-vue-typescript-clean-code/references/44-creational-and-async-idioms.md",
+        "bytes": 6737,
+        "sha256": "4f1a152b2d03ab74cbf595005ef081c43a7e298dd7126b750116bb0ff0fe26b1"
+      },
+      {
+        "path": "skills/sohrab/alaa-vue-typescript-clean-code/references/50-quasar-vite-pinia-contract.md",
+        "bytes": 4444,
+        "sha256": "762c5fb44dc0864e7d7d104c54a7cd1fcc5893530cb5bcb5f6a4b06926a33f5b"
+      },
+      {
+        "path": "skills/sohrab/alaa-vue-typescript-clean-code/references/60-validation-gates.md",
+        "bytes": 4977,
+        "sha256": "9f055de0af80b829d29ad0fae8fdea669e994d3a8580cd00f3d0f88e67433dae"
+      },
+      {
+        "path": "skills/sohrab/alaa-vue-typescript-clean-code/references/65-alaa-observed-patterns.md",
+        "bytes": 9800,
+        "sha256": "22ff942a44f8ce62bb9703828070c361483ffb96160e2ff340a6e28f7e113a3f"
+      },
+      {
+        "path": "skills/sohrab/alaa-vue-typescript-clean-code/references/70-async-and-failure-binding.md",
+        "bytes": 5410,
+        "sha256": "58d1480a29494a62636a49ea1cecb92c17da121771283916595ebe619984c159"
+      },
+      {
+        "path": "skills/sohrab/alaa-vue-typescript-clean-code/references/72-frontend-security-binding.md",
+        "bytes": 8289,
+        "sha256": "ea919c9bb6e1c6394ed25f84a8dbd776780bcb343f0538bc817b381b2b7045e2"
+      },
+      {
+        "path": "skills/sohrab/alaa-vue-typescript-clean-code/references/74-observability-binding.md",
+        "bytes": 4861,
+        "sha256": "ed6317e0561a77eb4bda9ac04455856b5998d651e24f70536b007b8fb6022b6d"
+      },
+      {
+        "path": "skills/sohrab/alaa-vue-typescript-clean-code/references/76-load-and-concurrency-binding.md",
+        "bytes": 6559,
+        "sha256": "964defad2beab5030327a08473024aaac014bab041b2e29ca5901fc60c4f60a9"
+      },
+      {
+        "path": "skills/sohrab/alaa-vue-typescript-clean-code/references/78-testing-binding.md",
+        "bytes": 4848,
+        "sha256": "e245dc4ac8286c6bc37df5f7627ffba6f55a52fbeec8902c951cfca33296494a"
+      },
+      {
+        "path": "skills/sohrab/alaa-vue-typescript-clean-code/scripts/check-frontend-versions.mjs",
+        "bytes": 16048,
+        "sha256": "26f648de0774e52f0dea3f066b122e13a96a871604ee90e6a9d889bed7add30e"
+      }
+    ],
+    "algorithm": "SHA-256 of concatenated records in ascending case-sensitive relative POSIX path string order; each record is UTF-8 path + one NUL byte + raw file bytes; no separator after file bytes."
+  },
+  "commands": [
+    [
+      "python",
+      "-B",
+      "scripts/check_fleet_references.py",
+      "--skill",
+      "alaa-frontend-developer",
+      "--skill",
+      "alaa-frontend-devops",
+      "--skill",
+      "alaa-vue-typescript-clean-code",
+      "--skill",
+      "alaa-quasar-app-vite-v3",
+      "--skill",
+      "alaa-ui-ux-design-system"
+    ],
+    [
+      "python",
+      "-B",
+      "skills/sohrab/alaa-repo-docs/scripts/check_markdown_links.py",
+      ".",
+      "--files",
+      "skills/sohrab/alaa-frontend-developer/references/00-topic-map.md",
+      "skills/sohrab/alaa-frontend-developer/references/25-frontend-security.md",
+      "skills/sohrab/alaa-frontend-developer/references/30-pwa-sw-and-offline.md",
+      "skills/sohrab/alaa-frontend-developer/references/41-lighthouse-and-web-vitals.md",
+      "skills/sohrab/alaa-frontend-developer/references/47-frontend-observability.md",
+      "skills/sohrab/alaa-frontend-developer/references/48-config-and-environment.md",
+      "skills/sohrab/alaa-frontend-developer/references/50-qa-and-verification.md",
+      "skills/sohrab/alaa-frontend-developer/references/70-companion-skill-routing.md",
+      "skills/sohrab/alaa-frontend-developer/SKILL.md",
+      "skills/sohrab/alaa-frontend-devops/references/10-build-contract-and-artifacts.md",
+      "skills/sohrab/alaa-frontend-devops/references/30-serving-caching-and-public-path.md",
+      "skills/sohrab/alaa-quasar-app-vite-v3/references/00-topic-map.md",
+      "skills/sohrab/alaa-quasar-app-vite-v3/references/34-frontend-failure-and-degradation.md",
+      "skills/sohrab/alaa-quasar-app-vite-v3/references/36-client-observability-contract.md",
+      "skills/sohrab/alaa-quasar-app-vite-v3/references/75-testing-ci-playbook.md",
+      "skills/sohrab/alaa-quasar-app-vite-v3/references/91-agent-authoring-and-dual-runtime.md",
+      "skills/sohrab/alaa-quasar-app-vite-v3/SKILL.md",
+      "skills/sohrab/alaa-ui-ux-design-system/references/05-rtl-and-persian.md",
+      "skills/sohrab/alaa-ui-ux-design-system/references/45-render-and-asset-budgets.md",
+      "skills/sohrab/alaa-vue-typescript-clean-code/references/50-quasar-vite-pinia-contract.md",
+      "skills/sohrab/alaa-vue-typescript-clean-code/references/60-validation-gates.md"
+    ],
+    [
+      "git",
+      "diff",
+      "--check",
+      "--",
+      "skills/sohrab/alaa-frontend-developer/references/00-topic-map.md",
+      "skills/sohrab/alaa-frontend-developer/references/25-frontend-security.md",
+      "skills/sohrab/alaa-frontend-developer/references/30-pwa-sw-and-offline.md",
+      "skills/sohrab/alaa-frontend-developer/references/41-lighthouse-and-web-vitals.md",
+      "skills/sohrab/alaa-frontend-developer/references/47-frontend-observability.md",
+      "skills/sohrab/alaa-frontend-developer/references/48-config-and-environment.md",
+      "skills/sohrab/alaa-frontend-developer/references/50-qa-and-verification.md",
+      "skills/sohrab/alaa-frontend-developer/references/70-companion-skill-routing.md",
+      "skills/sohrab/alaa-frontend-developer/SKILL.md",
+      "skills/sohrab/alaa-frontend-devops/references/10-build-contract-and-artifacts.md",
+      "skills/sohrab/alaa-frontend-devops/references/30-serving-caching-and-public-path.md",
+      "skills/sohrab/alaa-quasar-app-vite-v3/references/00-topic-map.md",
+      "skills/sohrab/alaa-quasar-app-vite-v3/references/34-frontend-failure-and-degradation.md",
+      "skills/sohrab/alaa-quasar-app-vite-v3/references/36-client-observability-contract.md",
+      "skills/sohrab/alaa-quasar-app-vite-v3/references/75-testing-ci-playbook.md",
+      "skills/sohrab/alaa-quasar-app-vite-v3/references/91-agent-authoring-and-dual-runtime.md",
+      "skills/sohrab/alaa-quasar-app-vite-v3/SKILL.md",
+      "skills/sohrab/alaa-ui-ux-design-system/references/05-rtl-and-persian.md",
+      "skills/sohrab/alaa-ui-ux-design-system/references/45-render-and-asset-budgets.md",
+      "skills/sohrab/alaa-vue-typescript-clean-code/references/50-quasar-vite-pinia-contract.md",
+      "skills/sohrab/alaa-vue-typescript-clean-code/references/60-validation-gates.md"
+    ]
+  ]
+}

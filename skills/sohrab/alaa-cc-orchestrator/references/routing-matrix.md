@@ -5,8 +5,8 @@ Spawn only agents that materially reduce uncertainty or enforce a required autho
 ## Always or normally required
 
 - Non-trivial repository change: select an implementation profile through Implementation routing below before dispatch.
-- Combined changed state: `alaa-verifier`.
-- Ship-quality judgment: `alaa-reviewer`.
+- Combined changed state at the declared review boundary: `alaa-verifier`.
+- Ship-quality judgment at that boundary: `alaa-reviewer`.
 - Behavior, API, configuration, or operations changed: `alaa-documenter`, after review.
 
 ## Specification and evidence agents
@@ -64,7 +64,7 @@ This orchestrator owns actual task complexity, priority, model and effort decisi
 3. Evaluate the cheapest eligible supported available model AND effort pair for EVERY role: evidence, planning, implementation, verification, review, specialists, documentation and rule-writer. Bounded suitability requires an explicit outcome, finite named scope, grounded local contracts/known invariants, a known pattern or causal path, settled cross-boundary decisions, bounded local discretion and a discriminating check. Non-bug semantic work needs no reproduced failure; mechanical/bug branches retain their predicates below. Select the least costly suitable available pair unless explicit user choice or recorded task evidence justifies departure; no quotas. Justify model and effort separately using remaining reasoning, priority, current official guidance and applicable prior evidence. Record each cheaper rejection's actual failed fit predicate or stronger task-specific evidence, rejected decomposition and applicable exact source row/date. Titles, volume, priority labels and whole-goal complexity are no failed predicates. Select directly: no mandatory trial ladder, synthetic experiment or replay. Supported capability is not calibrated local quality.
 4. For exceptional model selection on ANY role, require an exact canonical-owner-supported official-task/priority recommendation with remaining reasoning need and rejected cheaper/decomposed alternatives, applicable documented high-workhorse inadequacy after context/specification/tool correction and decomposition consideration, or explicit user selection. A repairable defect or imagined insufficiency is not model inadequacy. A model mention alone is no selection instruction.
 5. Record task, role/authority identity, scope/complexity, priority/reason, selected model AND effort, admission/evidence, runtime control surface, requested and effective configured controls, availability and unresolved limits in the existing workflow plan, or a compact dispatch when no durable plan is admitted. A bounded standalone delegation requires no full pipeline or new workflow artifacts solely for model selection. Preserve role tools, skills, verdicts and independent gates for every pair. Legacy model/effort-named IDs are compatibility identities; their names select neither control.
-6. Before EVERY dispatch, follow `model-effort-policy.md` to verify and explicitly supply BOTH controls. If the host cannot realize the selected pair, use only an exact verified available compatibility realization preserving authority; otherwise block that affected lane with evidence. No silent substitution, automatic installation or global configuration edit. Source changes do not reload installed or current-session roles. Unknown serving identity is a reporting limit, not evidence of a control mismatch or a reason for paid calibration.
+6. Before EVERY dispatch, follow `model-effort-policy.md` to normalize any omitted field, validate the resulting pair and explicitly supply BOTH controls. Owner-normalized defaults are valid task selections; omissions alone do not block or degrade a lane. If the host cannot realize the selected pair, use only an exact verified available compatibility realization preserving authority; otherwise block that affected lane with evidence. No silent substitution, automatic installation or global configuration edit. Source changes do not reload installed or current-session roles. Unknown serving identity is a reporting limit, not evidence of a control mismatch or a reason for paid calibration.
 
 ## Implementation routing
 
@@ -98,13 +98,13 @@ Trigger when prompts, skills, agent definitions, or repository instructions chan
 
 ### Architecture critic — `alaa-architecture-critic`
 
-Trigger before implementation for cross-cutting design: public contracts, service boundaries, consistency models, concurrency, caching semantics, distributed workflows. Skip for a local bug fix whose contract and ownership are established.
+Record the trigger and design before implementation; schedule judgment through `verification-and-gates.md` at the declared review boundary for cross-cutting design: public contracts, service boundaries, consistency models, concurrency, caching semantics, distributed workflows. Skip for a local bug fix whose contract and ownership are established.
 
-`/alaa-system-design` owns the standard this gate reviews against, and its trigger list is wider than the one above by three conditions: the change moves which component writes a piece of data, it adds or removes a dependency between two components, or it creates a new deployable unit. Any of those requires a design pass in Phase A even when no contract shape changes, and the critic reviews the resulting design record rather than the plan that preceded it.
+`/alaa-system-design` owns the standard this gate reviews against, and its trigger list is wider than the one above by three conditions: the change moves which component writes a piece of data, it adds or removes a dependency between two components, or it creates a new deployable unit. Any of those requires a design pass in Stage A even when no contract shape changes; the boundary critic reviews that resulting design record.
 
 ### API contract reviewer — `alaa-api-contract-reviewer`
 
-Trigger when a public HTTP or RPC endpoint, event or message schema, shared DTO, SDK surface, or persisted serialization format changes shape. Prefer to trigger it in Phase A, before code exists, so the deprecation path and consumer impact are decided rather than discovered. Trigger it in Phase D instead when the contract change emerged during implementation. Skip when the change is internal to one module and no consumer outside it can observe the difference.
+Trigger when a public HTTP or RPC endpoint, event or message schema, shared DTO, SDK surface, or persisted serialization format changes shape. Record known triggers and decide deprecation and consumer impact in Stage A; schedule independent judgment at the declared boundary. A contract change discovered during implementation reopens the affected plan and gate. Skip when the change is internal to one module and no consumer outside it can observe the difference.
 
 Distinct from the architecture critic, which judges whether the design is sound; this gate judges whether the transition is safe for existing consumers.
 

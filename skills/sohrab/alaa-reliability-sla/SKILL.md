@@ -17,18 +17,16 @@ It does not apply to a change that makes no outbound call, holds no shared resou
 
 ## The discrimination rule: fail closed, or fail open
 
-**Before giving any dependency a timeout fallback, a retry, a cache, or a degraded path, classify it by one question: when this dependency cannot answer, does proceeding without it let something through that must not get through?**
+Before choosing a timeout fallback, retry, cache or degraded path, classify the dependency through
+/alaa-security-review's `Fail-closed versus fail-open, and which doctrine applies` section. It owns
+the discriminator and every "cannot decide" state. Gates still need bounds; this skill's retry,
+cache, stale-serve and degradation rules never substitute for a gate's answer.
 
-- **Yes — the dependency is a gate.** It fails closed: the request is refused with the gate's own error and the protected work does not run. Timeouts and bulkheads still bound a gate; retries, caches, stale values, and degraded paths never substitute for its answer. `/alaa-security-review` owns gates and the full set of states that count as "cannot decide".
-- **No — the dependency is a contributor.** It fails open under this skill: degrade, shed, drop, or serve without it, and record what was lost. For durably accepted work, apply `references/10-deadlines-and-timeouts.md` before choosing a disposition; fail-open does not release an accepted obligation.
-
-The two doctrines contradict each other on purpose, and the deciding question is what the failure lets through, not how important the component is. An authorization check that times out returns a denial, because allowing costs a breach and denying costs one request. A telemetry exporter that times out drops its batch and counts the drop, because dropping costs one span and blocking costs the request. Same failure, opposite response.
-
-Three consequences an agent holding both skills must not get backwards:
-
-- Never apply this skill's retry, cache, stale-serve, or degradation rules to a gate. A cached allow decision served through an outage of the deciding service is a security hole, not availability work.
-- Never apply the fail-closed rule to a contributor. A service that refuses product traffic because its metrics sink is unreachable has converted a visibility incident into an outage and bought no security.
-- When you cannot classify a dependency, treat it as a gate and say so in the report. A wrongly-gated contributor costs availability on one path and is visible within minutes; a wrongly-opened gate costs a breach and is invisible until someone else finds it.
+A contributor degrades, sheds, drops or serves without the contribution and records the loss; its
+failure must not turn a visibility incident into a product outage. Before disposing of durably
+accepted work, apply `references/10-deadlines-and-timeouts.md`: fail-open releases no accepted obligation.
+If classification is unresolved, treat the dependency as a gate and report it: a wrongly opened gate
+can permit a breach that remains invisible, while a wrongly gated contributor visibly costs availability.
 
 ## Non-negotiables
 
@@ -106,17 +104,8 @@ Stop and report blocked when: a dependency cannot be classified as gate or contr
 
 ## Reference routing
 
-Read only the files whose condition the task meets. Loading the whole tree means the task was not scoped.
-
-- `references/00-topic-map.md` — first, when the task touches more than one mechanism and the routing is not obvious.
-- `references/10-deadlines-and-timeouts.md` — when a deadline, timeout, cancellation path, per-hop budget, or durable-acceptance lifecycle is added or changed.
-- `references/20-retries.md` — when a retry is added, removed, or found to be nested inside another retry.
-- `references/30-breakers-and-bulkheads.md` — when a dependency flaps, when one slow dependency exhausts a shared pool, or when a breaker is added or tuned.
-- `references/40-admission-and-shedding.md` — when a route saturates, a queue grows, or a rate limit and a concurrency limit are being confused for each other.
-- `references/50-degradation.md` — when a dependency is optional, when a cache is used as a fallback, or when a response can be partial.
-- `references/60-idempotency.md` — when a caller may repeat a state-changing request, whenever a retry is being made legal, and always before a key store is designed.
-- `references/70-error-budgets-and-slos.md` — when an SLI, SLO, error budget, or release-gating policy is defined or challenged.
-- `references/80-verification.md` — before calling any mechanism in this skill done, and when a review must decide what evidence to accept.
+Before selecting mechanism detail or diagnosis, read `references/00-topic-map.md`; it selects only
+the references whose conditions apply. Loading the whole tree means the task was not scoped.
 
 ## What this skill does not own
 

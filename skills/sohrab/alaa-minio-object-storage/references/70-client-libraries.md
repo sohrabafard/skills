@@ -12,7 +12,7 @@ the other, and a fix applied to one leaves the other broken in a way no test cov
 The fleet's only object-storage consumer runs two: `aws-sdk-go-v2/service/s3` v1.101.0 feeding the upload library,
 and a hand-rolled SigV4 client for bucket checks, object reads and writes, the finalization copy and cleanup. The
 hand-rolled client uses `http.DefaultClient`, which has **no timeout at all**, performs no retries, and sets no
-`x-amz-security-token`, so it cannot use temporary credentials `[source: tusd-upload-platform repository,
+`x-amz-security-token`, so it cannot use temporary credentials `[source: Ala tusd repository,
 internal/storage/s3_http_client.go, internal/httpapi/official_tusd_creation.go and go.mod, read: 2026-07-27]`.
 Name that shape when you meet it; do not reproduce it.
 
@@ -41,15 +41,14 @@ store.
 Package names are recorded as unverified for version and current-maintenance status
 `[source: package registries were not reachable this session, read: unverified as of 2026-07-27]`. Confirm the
 version installed in the service before writing an API call against it, and take the dependency decision itself to
-the owning language skill — `/alaa-golang` (`$alaa-golang`) for Go, `/alaa-php-clean-code`
-(`$alaa-php-clean-code`) for PHP.
+the owning language skill — `/alaa-golang` for Go, `/alaa-php-clean-code` for PHP.
 
 ## Configuration every client needs
 
 1. **An explicit request timeout on the underlying HTTP client.** A default client with no timeout turns a stalled
    store into an exhausted worker pool: every request waits forever and the process stops serving everything else,
-   not just storage calls. Take the value from `/alaa-services-contract` (`$alaa-services-contract`) and the
-   doctrine from `/alaa-reliability-sla` (`$alaa-reliability-sla`).
+   not just storage calls. Take the value from `/alaa-services-contract` and the
+   doctrine from `/alaa-reliability-sla`.
 2. **An explicit retry policy, distinct from the SDK default.** SDK defaults are tuned for a public cloud's error
    profile, not for a single-node store on the same network.
 3. **An addressing style set explicitly from `STORAGE_USE_PATH_STYLE`, and an endpoint override** when the store
@@ -126,7 +125,7 @@ Under path-style:
 
 **ArvanCloud documents virtual-hosted addressing and states nothing about whether path-style works at all**
 `[source: https://docs.arvancloud.ir/en/object-storage/limits/, read: 2026-07-28]`; that is open question 2 in
-`/alaa-arvan-object-storage` (`$alaa-arvan-object-storage`) `references/SOURCES.md`. **MinIO is normally addressed
+`/alaa-arvan-object-storage` `references/SOURCES.md`. **MinIO is normally addressed
 path-style**, because virtual-hosted addressing needs wildcard DNS and a wildcard certificate that a single-node
 deployment usually lacks. Neither statement is a property of S3; each is a property of one provider's deployment,
 and a third provider may agree with neither. **That is why the value is `STORAGE_USE_PATH_STYLE` with a default per
@@ -154,7 +153,7 @@ literal is the compiled-in value the environment contract exists to remove.
 properties of the endpoint, both fail in a shape that reads as something else — a not-found or an authentication
 error — and `90-failure-classes.md` class 2 already lists addressing style beside signature version among the causes
 to check before anyone rotates a credential that was never wrong. Arvan's own stance on both is
-`/alaa-arvan-object-storage` (`$alaa-arvan-object-storage`) `references/10-connection-identity-and-addressing.md`.
+`/alaa-arvan-object-storage` `references/10-connection-identity-and-addressing.md`.
 
 ## The signature version
 
@@ -204,11 +203,11 @@ request discards the pool and leaks file descriptors under load.
 
 **Hold no per-request state on the client.** In a long-lived worker — an Octane worker, a Go server, a queue
 consumer — the client outlives every request, so a tenant, an actor or a bucket override stored on it leaks across
-requests. Route long-lived-worker state safety to `/alaa-octane-performance` (`$alaa-octane-performance`).
+requests. Route long-lived-worker state safety to `/alaa-octane-performance`.
 
 ## Testing a client
 
 Prove the client against a real store, not a mock of the interface it implements. A mock proves that the calling
 code calls the method; it proves nothing about signing, path style, checksum negotiation, or how the store answers
 a delete of an object that is not there. Proof levels and which layer each behaviour is tested at belong to
-`/alaa-testing-strategy` (`$alaa-testing-strategy`) `references/40-proof-strength.md`.
+`/alaa-testing-strategy` `references/40-proof-strength.md`.

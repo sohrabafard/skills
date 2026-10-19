@@ -22,10 +22,10 @@ is `/alaa-reliability-sla` (`$alaa-reliability-sla`). This file states keys and 
 
 | Key | Default | What `alaa-go-chi` does today | What that obliges |
 |---|---|---|---|
-| `REDIS_DIAL_TIMEOUT` | `1s` | no key; folded into the single 250 ms constant at `rediskit/config.go:15,87` | file a kit change request: the key is absent **and** the value is wrong |
-| `REDIS_CALL_TIMEOUT` (read, write, pool wait) | `250ms` | no key; `DefaultCallTimeout = 250 * time.Millisecond` applied to ReadTimeout, WriteTimeout and PoolTimeout at `rediskit/config.go:88-90` | file a kit change request for the key; the value already agrees |
-| `REDIS_MAX_RETRIES` | `-1` (disabled) | no key; `opts.MaxRetries = -1` at `rediskit/config.go:91` | file a kit change request for the key; the value already agrees |
-| `REDIS_POOL_SIZE` | `32` | no key; `DefaultPoolSize = 32` at `rediskit/config.go:20`, always injected at `:54` | file a kit change request for the key; the value already agrees |
+| `REDIS_DIAL_TIMEOUT` | `1s` | no key; observed client setting in `51-redis-golang.md` | file a kit change request: the key is absent **and** the value is wrong |
+| `REDIS_CALL_TIMEOUT` (read, write, pool wait) | `250ms` | no key; observed client setting in `51-redis-golang.md` | file a kit change request for the key; the value already agrees |
+| `REDIS_MAX_RETRIES` | `-1` (disabled) | no key; observed client setting in `51-redis-golang.md` | file a kit change request for the key; the value already agrees |
+| `REDIS_POOL_SIZE` | `32` | no key; observed client setting in `51-redis-golang.md` | file a kit change request for the key; the value already agrees |
 | `PG_STATEMENT_TIMEOUT` | `30s` on the runtime lane, `0` on the migrate lane | absent; `pgkit` sets no `statement_timeout` anywhere | file a kit change request |
 | `PG_LOCK_TIMEOUT` | `3s` | absent | file a kit change request |
 | `PG_IDLE_IN_TX_TIMEOUT` | `10s` | absent | file a kit change request |
@@ -47,10 +47,9 @@ request could already afford, so 250 ms is a correct ceiling there.
 
 **Retries stay disabled at the command layer.** Inside a 250 ms budget, behind a decorator whose miss path already
 falls through to Postgres, a command retry only doubles latency before arriving at the same fallback. Retry belongs
-at dial, where a fresh connection can succeed where the last one failed, and `rediskit/config.go:94` already sets
-`DialerRetries = 1` there. `rediskit/config.go:84-85` states the kit's own position: the timeout, retry, and
-connection budgets are kit invariants and a deployment URL must not silently weaken them — which is why weakening
-them needs a key and a change request rather than a URL query parameter.
+at dial, where a fresh connection can succeed where the last one failed. For the observed dial-retry setting and
+kit invariant enforcement, read `51-redis-golang.md`; changing that policy needs a key and a change request,
+not a URL query parameter.
 
 **`PG_STATEMENT_TIMEOUT` is a backstop, not a request budget.** A repository on the request path still passes a
 tighter per-query deadline with `context.WithTimeout`, which pgx honours by cancelling the query. The server-side
@@ -66,8 +65,8 @@ legitimately run for hours, and a timeout there aborts a migration mid-flight.
 - Postgres runtime: `PG_DSN`, or the components `PG_HOST`, `PG_PORT`, `PG_USER`, `PG_PASS`, `PG_DATABASE`,
   `PG_SSLMODE`; the matching `PG_MIGRATE_*` set for the migrate lane; `PG_SCALE_TIER` (default `small`),
   `PG_PGBOUNCER_COMPAT` (default `false`), `PG_MAX_CONNS` (default `20`).
-- Redis: `REDIS_URL`, `REDIS_HOST`, `REDIS_PORT`, `REDIS_PASS`, `REDIS_DB` (`configkit/keys.go:40-44`). That is the
-  whole list — every timeout, retry, and pool value above is compile-time.
+- Redis: `51-redis-golang.md` owns the observed key inventory and compiled client settings; the missing
+  tuning-key obligations remain in the table above.
 - ClickHouse: `CLICKHOUSE_ADDR`, `CLICKHOUSE_DATABASE`, `CLICKHOUSE_USER`, `CLICKHOUSE_PASSWORD`,
   `CLICKHOUSE_DIAL_TIMEOUT`. A blank `CLICKHOUSE_ADDR` means the lane is absent.
 - Outbox: `OUTBOX_BATCH` (default `100`) and `OUTBOX_TICK` (default `500ms`), `outboxkit/config.go:10-14`. That is
@@ -115,7 +114,7 @@ disagree, that contract file is the fleet registry and the reconciliation is a c
 `/alaa-services-contract`. Two are open today, both observed rather than inferred:
 
 1. `22-…` records the service-to-Redis single-command hop as `500 ms` connect and `1000 ms` per attempt with no
-   retries, while `rediskit` compiles `250 ms` for every phase. The command budgets agree in intent and differ in
+   retries, while the observed kit settings in `51-redis-golang.md` differ. The command budgets agree in intent and differ in
    number; the dial budget differs in both.
 2. `22-…` records `25` maximum open connections for a Go service, while `configkit/keys.go:39,103` defaults
    `PG_MAX_CONNS` to `20`.

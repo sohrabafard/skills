@@ -2,6 +2,24 @@
 
 These are Codex app/CLI features, not raw model behavior. Read only the feature section needed; model/API guidance lives in `references/12-gpt-6.md`.
 
+## Rejected tool input or patch context
+
+Before repairing a rejected call, read the active host's tool schema: JavaScript orchestration,
+shell-command arguments, structured objects and patch text are different input contracts.
+Keep each language in its declared input; API examples do not establish the host's schema.
+
+For a patch-context mismatch, inspect the current target region and scoped diff, including other
+owners' edits, then rebuild the smallest patch matching that state. For duplicate-operation
+errors, combine or split operations only as the active patch contract permits. If mutation may
+have occurred, reconcile actual state before retrying; never blindly replay an uncertain write.
+
+Schema/context mistakes belong here; process, shell, path or sandbox failures route to
+`/alaa-codex-runtime-ops`. Neither diagnosis authorizes settings changes or broader writes.
+Use the active repair/retry budget; report the exact blocker and stop the dependent operation
+when the required contract or safe resulting state remains unknown. This procedure is grounded
+in active host schemas inspected 18 October 2026; recheck the executing host rather than copying
+a remembered tool signature.
+
 ## `/goal` — persistent objective mode
 
 A Goal is durable, thread-scoped state that keeps a Codex thread working toward one defined outcome across many turns instead of stopping after a single reply. Codex keeps working across turns toward a verifiable stopping condition, works in checkpoints, keeps a short progress log, and can run independently for hours. **Evidence, not speculation, determines completion**: it stops when it is fairly confident the stopping condition is met, when it hits its budget, or when it is genuinely blocked. Reaching a budget limit is explicitly not the same as completing the objective — in that case Codex stops substantive work, summarizes progress and blockers, and names the next useful step rather than claiming success.

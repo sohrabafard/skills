@@ -32,6 +32,9 @@ Per-image transferred size ceilings, at the width actually served:
 ## Font bytes
 
 - **150 KB total transferred** for first-party fonts on the initial route.
+- The initial route's **compressed subset font bytes stay < 100 KB** (the existing Lighthouse budget
+  relocated here). This measures the subset payload; the 150 KB ceiling measures all first-party font
+  transfer on that route. Record both scopes; satisfying one does not waive the other.
 - At most **three weights per family**, `woff2` only. Drop `woff` unless the repo's browser-support matrix names a browser that lacks `woff2` — as of 2026 that is unusual, and shipping both doubles the directory for no delivered bytes.
 - At most **two preloaded** font files.
 - Subset to the ranges the product actually renders. For a Persian product that is the Arabic range plus Latin plus U+200C; see `05-rtl-and-persian.md` section 6.
@@ -43,7 +46,7 @@ Per-image transferred size ceilings, at the width actually served:
 - A heavy embed below the fold ships as a **facade**: a static image with the real embed loaded on interaction. Design the facade as a real state, not a placeholder.
 - **Budget: at most one heavy third-party embed above the fold, and none at all on a conversion-critical flow** — checkout, authentication, payment. Their failure modes are not ours to control and their appearance is not ours to theme.
 
-Scoring, thresholds and the measurement toolchain for all of the above are owned by `/alaa-frontend-developer` (`$alaa-frontend-developer`); CDN and build-time delivery by `/alaa-frontend-devops` (`$alaa-frontend-devops`). The numbers on this page are design ceilings that keep a direction inside those budgets, not a second scoring system.
+Scoring, thresholds and the measurement toolchain for all of the above are owned by `/alaa-frontend-developer`; CDN and build-time delivery by `/alaa-frontend-devops`. The numbers on this page are design ceilings that keep a direction inside those budgets, not a second scoring system.
 
 ## The theme matrix, and which cells must be verified
 
@@ -51,7 +54,7 @@ Every visual axis multiplies with every other. Enumerated for a product with two
 
 `2 themes x 3 density tiers x 2 directions x 2 (prefers-contrast) x 2 (prefers-reduced-transparency) = 48 renderings of every component`
 
-Adding `prefers-reduced-motion` doubles it again. **This does not shrink by ignoring it**, and the failure mode of ignoring it is a real one: a component verified in light-standard-RTL and shipped, then found broken in dark-dense-LTR by a user. The doctrine behind combinatorial growth is owned by `/alaa-algorithms-data-structures` (`$alaa-algorithms-data-structures`); what follows is this skill's ruling on which cells are verified.
+Adding `prefers-reduced-motion` doubles it again. **This does not shrink by ignoring it**, and the failure mode of ignoring it is a real one: a component verified in light-standard-RTL and shipped, then found broken in dark-dense-LTR by a user. The doctrine behind combinatorial growth is owned by `/alaa-algorithms-data-structures`; what follows is this skill's ruling on which cells are verified.
 
 **Mandatory cells — every component, every time:**
 

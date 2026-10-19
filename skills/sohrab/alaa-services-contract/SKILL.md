@@ -45,41 +45,9 @@ judgment cannot be debugged. Exact detail lives in `references/`; this file rout
 7. Run the checklists in `references/40-apply-checklist-and-anti-patterns.md`.
 8. Update docs, Postman artifacts, and tests for every contract surface you touched, in the same change.
 
-## Trigger to file
-
-Short form, keyed on the concern. Step 2 above loads `references/00-topic-map.md`, which carries the full
-identifier-level trigger vocabulary per mode; each reference file names its own companion skills.
-
-| Task touches | File |
-|---|---|
-| Health, readiness, service identity, route families | `10-core-service-contract.md` |
-| Creating or choosing an image, toolchain, chart, CI include, generator, hook pack, or shared script; which project owns a delivery step; the gateway's generated config; Compose or Swarm production artifacts | `16-infrastructure-services-and-delivery-artifacts.md` |
-| Deployment mode, shared infra, registry, CI baseline, fast tests | `15-deployment-and-runtime-contract.md` |
-| Correlation headers, log fields, event and code names, request middleware | `20-operational-and-observability-contract.md` |
-| OTLP exporter env, Prometheus scraping, per-service telemetry reality | `21-alaa-platform-observability-directive.md` |
-| A timeout, retry, idempotency key, pool bound, request deadline, load-shedding decision, or deprecating any contract surface | `22-failure-load-and-deprecation-contract.md` |
-| An exchange, queue, or routing-key name, or whether a message is an event or a command | `23-queue-and-exchange-registry.md` |
-| A metric name, its type, its labels, or registering a new one | `24-metric-registry.md` |
-| Gateway prefixes, route ownership, internal hops, public vs private identifiers, internal mTLS status | `25-end-to-end-flow-and-boundaries.md` |
-| Request-time per-resource authorization and its OpenFGA wire contract | `26-request-time-authorization-openfga.md` |
-| Sending work to the `notification` service | `27-notification-service-contract.md` |
-| Backend authorization decisions, roles, and access levels | `28-backend-permission-authorization-and-role-freeze.md` |
-| Laravel trusted ingress, the public `project_id` boundary, the `/api/*` success envelope | `30-trusted-ingress-and-laravel-contract.md` |
-| TOTP enrollment and forced route-level step-up | `32-auth-totp-and-step-up-contract.md` |
-| Permission catalogs, bitmap ids, generated permission configs, drift checks | `35-permission-catalog-and-service-configs.md` |
-| Frontend or host code consuming the `@alaa/*` SDK | `60-frontend-sdk-consumption-contract.md` |
-| Page Kit, UI Kit, app-shell, widgets | `65-frontend-page-kit-and-widgets-contract.md` |
-| Which standard, framework doc, or platform doc outranks which | `90-source-map.md` |
-| Which services follow a rule today, and what a named service must change to follow it | `95-fleet-conformance.md` |
-
-`references/50-laravel-copy-baselines.md` holds copy-oriented Laravel class and helper shapes. Read it only
-after the file that owns the rule, because it carries shapes, not decisions.
-
 ## Companion skills
 
-Invoke a companion as `/alaa-trust-gateway-auth` in Claude Code and `$alaa-trust-gateway-auth` in Codex.
-Every skill named anywhere in this pack takes both forms; reference files write the `$` form and it means
-the same skill in either runtime. Each reference file names the companions its own concern needs. These
+Write cross-skill calls once as `/name`, per the pack's `AGENTS.md`. Each reference names the companions its concern needs. These
 load on a concern no reference file keys on:
 
 - `alaa-php-clean-code` — before implementing or refactoring any PHP.

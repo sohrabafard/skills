@@ -1,0 +1,54 @@
+[
+  {
+    "label": "codex-contract-self-test-repair",
+    "command": "python -B skills/sohrab/alaa-codex-orchestrator/scripts/check_agent_contracts.py --self-test",
+    "cwd": ".",
+    "environment": "PYTHONDONTWRITEBYTECODE=1",
+    "priority": "Normal",
+    "affinity": "default",
+    "started_utc": "2026-10-18T19:24:32.1878814Z",
+    "ended_utc": "2026-10-18T19:24:34.5603037Z",
+    "duration_seconds": 2.371,
+    "exit_code": 0,
+    "output": "CONTRACT SELF-TEST OK: 547 positive/negative structural fixtures"
+  },
+  {
+    "label": "cc-contract-self-test-repair",
+    "command": "python -B skills/sohrab/alaa-cc-orchestrator/scripts/check_agent_contracts.py --self-test",
+    "cwd": ".",
+    "environment": "PYTHONDONTWRITEBYTECODE=1",
+    "priority": "Normal",
+    "affinity": "default",
+    "started_utc": "2026-10-18T19:24:34.5999640Z",
+    "ended_utc": "2026-10-18T19:24:36.5624614Z",
+    "duration_seconds": 1.962,
+    "exit_code": 0,
+    "output": "CONTRACT SELF-TEST OK: 490 positive/negative structural fixtures"
+  },
+  {
+    "label": "codex-validate-pack-repair",
+    "command": "python -B skills/sohrab/alaa-codex-orchestrator/scripts/validate_pack.py",
+    "cwd": ".",
+    "environment": "PYTHONDONTWRITEBYTECODE=1",
+    "priority": "Normal",
+    "affinity": "default",
+    "started_utc": "2026-10-18T19:24:36.5652493Z",
+    "ended_utc": "2026-10-18T19:24:37.0836798Z",
+    "duration_seconds": 0.518,
+    "exit_code": 0,
+    "output": "PACK VALID: 33 agents, skill version 5.3.0"
+  },
+  {
+    "label": "cc-validate-pack-repair",
+    "command": "python -B skills/sohrab/alaa-cc-orchestrator/scripts/validate_pack.py",
+    "cwd": ".",
+    "environment": "PYTHONDONTWRITEBYTECODE=1",
+    "priority": "Normal",
+    "affinity": "default",
+    "started_utc": "2026-10-18T19:24:37.0842368Z",
+    "ended_utc": "2026-10-18T19:24:37.6915329Z",
+    "duration_seconds": 0.607,
+    "exit_code": 0,
+    "output": "PACK VALID: 29 agents, skill version 5.3.0"
+  }
+]
