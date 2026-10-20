@@ -100,12 +100,14 @@ HTTP v2 has no pattern or template mode as of the read date. OTP and every other
 |---|---|---|
 | DNS failure, connect refused, TLS failure, reset before the request was fully written | Not executed | Retry inside the caller's budget, same `uid` |
 | Read timeout or reset after the request was written | Nothing | **Do not re-issue `send`.** Call `GET /mid/{uid}` |
-| Item or top-level `15`, `23` | Vendor says resend | Call `GET /mid/{uid}` first, then resend only if not found |
+| Item or top-level `15`, `23` | Vendor says resend | Call `GET /mid/{uid}` first, then resend only if not found; for an OTP see the exception below |
+
+**OTP exception for `15` and `23`.** An OTP may be resent with the same code and the same `uid` after a short delay and without the `mid` lookup, because a duplicate copy of the same code is harmless, while the lookup path (settle delay, then a second lookup) usually outlives the code. The caller bounds it: a resend count that fits the attempt budget, a minimum remaining code lifetime, and a send-time check that the code is still current. Every other message keeps the lookup, because a duplicate of other content costs the recipient or the account. A read timeout is never covered by this exception, for an OTP either.
 
 The `mid` lookup:
 
 - `mid` greater than `0`: the message was accepted. Record the `mid` and stop.
-- `mid` equal to `-1`: not found. The vendor presents this lookup as the duplicate guard, so treat `-1` as not sent and resend with the same `uid`. How soon after a timeout the lookup becomes reliable, and whether Magfa rejects a repeated `uid`, are `NEEDS_MAGFA_CONFIRMATION`; until confirmed, wait the caller's configured settle delay before the lookup and look up once more before resending.
+- `mid` equal to `-1`: not found. The vendor presents this lookup as the duplicate guard, so treat `-1` as not sent and resend with the same `uid`. How soon after a timeout the lookup becomes reliable, and whether Magfa rejects a repeated `uid`, are `NEEDS_MAGFA_CONFIRMATION`; until confirmed, wait the caller's configured settle delay before the lookup and look up once more before resending. An OTP `15` or `23` under the OTP exception above skips this lookup.
 
 ## Delivery status (pull only)
 
@@ -133,7 +135,7 @@ The `mid` lookup:
 
 The caller acts on the class; the driver returns the class and the raw code.
 
-- **transient** — retry with backoff on the same line, same `uid`, after a `mid` lookup when the outcome may have executed.
+- **transient** — retry with backoff on the same line, same `uid`, after a `mid` lookup when the outcome may have executed; an OTP `15` or `23` may skip the lookup under the OTP exception.
 - **recipient-terminal** — fail this recipient on this line; the caller may try another line or channel.
 - **account** — stop using this account or line: open its breaker and alert an operator; never retry.
 - **caller-defect** — fix the code or configuration; never retry.
@@ -149,14 +151,14 @@ The caller acts on the class; the driver returns the class and the raw code.
 | `8` | promotional send outside 07:00–22:00 | window |
 | `13` | empty content | caller-defect |
 | `14` | insufficient credit | account |
-| `15` | internal server error, resend | transient |
+| `15` | internal server error, resend | transient; OTP: same-code resend without lookup allowed |
 | `16` | account inactive | account |
 | `17` | account expired | account |
 | `18` | invalid username or password | account |
 | `19` | invalid username, password and domain combination | account |
 | `20` | sender not owned by the account | caller-defect (line-to-account mapping) |
 | `22` | service not enabled for the account | account |
-| `23` | cannot process now, resend | transient |
+| `23` | cannot process now, resend | transient; OTP: same-code resend without lookup allowed |
 | `24` | invalid message id, or older than one day | caller-defect on `mid`/`statuses`; `expired` when older than one day |
 | `25` | invalid method name | caller-defect |
 | `27` | recipient on operator blacklist (promotional) | recipient-terminal |
@@ -187,6 +189,7 @@ An unlisted code is stored verbatim with its recipient, treated as terminal for 
 - Response parsing: mixed accepted and rejected items, `userId` as string and number, non-zero top-level `status` with empty `messages`.
 - Error mapping: every listed code maps to its class; an unlisted code is terminal.
 - Ambiguity: a read timeout never re-issues `send`; `mid > 0` records acceptance; `mid = -1` resends with the same `uid`.
+- Resend requests: a non-OTP `15` or `23` is looked up before any resend; an OTP `15` or `23` is resent with the same code and `uid` only inside the caller's resend count and remaining-lifetime bounds.
 - `uid` is derived from the delivery id, never from content, and is identical across retries.
 - Status mapping for every row, including `0` and `-1`, and batching at 100 ids.
 - Redaction: no password, number, text or OTP reaches a log, trace attribute, exception payload or report.
