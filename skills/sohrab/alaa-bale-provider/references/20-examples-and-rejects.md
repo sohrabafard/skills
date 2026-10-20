@@ -158,7 +158,8 @@ outcome per recipient and see `30-failure-classes.md` class 8:
 }
 ```
 
-`upload_file` success and failure:
+`upload_file` success and failure. Safir shows no failure example; the second shape is illustrative, built
+from its output table's `error` (`ErrorInfo`) field:
 
 ```json
 { "file_id": "987141dd2672149" }
@@ -167,6 +168,8 @@ outcome per recipient and see `30-failure-classes.md` class 8:
 ```json
 { "error": { "phone_number": "989123830000", "code": 4, "description": "invalid input" } }
 ```
+
+`[source: https://docs.bale.ai/safir; read: 2026-10-20]`
 
 ## Rejects
 
@@ -179,7 +182,8 @@ Trunk-zero number that was never normalised:
   "message_data": { "message": { "text": "wrong phone form" } } }
 ```
 
-E.164 with the plus sign, which is Mediana's form and not Safir's:
+E.164 with the plus sign, which is Mediana's form. Safir's documentation also accepts `+98`, but this skill
+sends Safir only the `989` form:
 
 ```json
 { "request_id": "r", "bot_id": 1, "phone_number": "+989123830000",
@@ -201,14 +205,14 @@ Telegram fields that Safir does not define:
   "message_data": { "message": { "text": "hi" } } }
 ```
 
-A non-ASCII OTP, which a `str.isdigit()` check accepts and Safir does not:
+A non-ASCII OTP, which a `str.isdigit()` check accepts and this skill's ASCII-digit safety rule rejects:
 
 ```json
 { "request_id": "r", "bot_id": 1, "phone_number": "989123830000",
   "message_data": { "otp_message": { "otp": "۱۲۳۴۵۶" } } }
 ```
 
-A missing `request_id`, and a whitespace-only one:
+A missing `request_id`, and a whitespace-only one. Safir marks `request_id` optional; this skill requires it:
 
 ```json
 { "bot_id": 1, "phone_number": "989123830000",

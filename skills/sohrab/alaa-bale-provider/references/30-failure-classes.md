@@ -14,8 +14,14 @@ Every general rule they depend on is owned elsewhere and routed, never restated:
 - Queue, worker, DLQ and redelivery behaviour when the send is dispatched from a broker consumer:
   `/alaa-async-messaging` (`$alaa-async-messaging`).
 
+Safir documents the error codes in `10-wire-contract.md` and no HTTP status, authentication-failure code, or
+`Retry-After` header. The HTTP statuses and the retry hint named below are generic HTTP behaviour, not Safir
+facts. `[source: https://docs.bale.ai/safir; read: 2026-10-20]`
+
 One rule governs the whole table and belongs to this skill: **`request_id` never changes across retries of
-one delivery.** A retry carrying a new `request_id` is a second send, and Safir will deliver it.
+one delivery.** A retry carrying a new `request_id` is a second send, and Safir will deliver it. Safir
+states that a repeated `request_id` is not sent again, but not for how long or in what scope;
+`10-wire-contract.md` lists that gap under "Not documented".
 
 ## 1. Connect refused, DNS failure, or TLS handshake failure
 
@@ -112,7 +118,7 @@ and looks like a per-message failure in the logs.
 **Symptom.** Safir rejects the request as malformed, or rejects the recipient number.
 
 **Diagnosis.** A caller defect. Code `8` is almost always a normalisation defect: a number that reached the
-wire as `09123830000`, `+989123830000`, or with Persian digits still in it.
+wire as `09123830000`, `9123830000`, `0912-383-0000`, or with Persian digits still in it.
 
 **Smallest safe retry.** None with the same payload. Retrying an invalid request converts a client defect
 into provider load.
@@ -126,9 +132,10 @@ the send path disagree — find the call site that builds the number without the
 
 **Symptom.** A `200` response carrying both a `message_id` and a non-empty `error_data` array.
 
-**Diagnosis.** A partial result. Some recipients were accepted and some were not, and the transport status
-says nothing about which. A client that treats a `200` with a `message_id` as success silently drops every
-per-recipient failure in the array.
+**Diagnosis.** A partial result: at least one recipient was not accepted, and the transport status says
+nothing about which. Safir says `send_message` can return a separate error for each number but documents
+no multi-recipient request, so a multi-entry array is unconfirmed. A client that treats a `200` with a
+`message_id` as success silently drops every per-recipient failure in the array.
 
 **Smallest safe retry.** Never retry the whole request. Take the outcome per recipient from `error_data`,
 map each entry by its `phone_number`, and apply the class above that matches each `code`. Recipients absent

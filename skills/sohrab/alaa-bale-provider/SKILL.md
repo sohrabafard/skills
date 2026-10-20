@@ -49,7 +49,7 @@ RabbitMQ is this platform's only broker; do not design an outbox here.
 - Put `api-access-key` on every request, and keep `bot_id` numeric.
 - Send `phone_number` as `989` plus nine digits: no `+`, no leading `0`, no separators, no Persian or
   Arabic digits.
-- This vendor's wire form is `989xxxxxxxxx` and Mediana's is `+989xxxxxxxxx`, and both render one platform
+- This skill's Safir wire form is `989xxxxxxxxx` and Mediana's is `+989xxxxxxxxx`, and both render one platform
   input form, so one shared normalisation function serving both channels is a defect unless it takes the
   target channel as a parameter — a number rendered for the wrong channel is rejected by the vendor at best
   and misdelivered at worst.
@@ -133,8 +133,8 @@ safe recipient; then use a synthetic OTP, and record the command redacted.
 
 **A vendor fact carrying no read date is re-verified against live Safir documentation before it is relied
 on for a production change**, recording the URL and date in the same edit, because an undated fact looks
-authoritative and gets copied forward. `references/10-wire-contract.md` marks every table
-`unverified as of 2026-07-27`.
+authoritative and gets copied forward. `references/10-wire-contract.md` records the documentation URL, each
+table's read date, and the facts Safir does not document (`NEEDS_BALE_CONFIRMATION`).
 
 ## When not to use
 

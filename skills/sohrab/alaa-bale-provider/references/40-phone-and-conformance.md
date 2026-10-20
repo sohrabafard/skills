@@ -12,7 +12,13 @@ Alaa accepts one input form from users and renders it differently for each chann
 | Bale Safir | `989xxxxxxxxx`, no plus sign | `989123830000` |
 | Mediana / IPPanel | `+989xxxxxxxxx`, with a plus sign | `+989123830000` |
 
-The two differ by exactly one character, and that character decides whether the message is delivered.
+The two differ by exactly one character. Safir's documentation accepts `98` or `+98` followed by ten digits,
+with no spaces or dashes: its valid example is `989196111003`, and its invalid examples are `09196111003`,
+`0919-611-1003` and `9196111003`. It also shows `+98919611003`, which has only nine digits after `98` and is
+probably a typo. This skill sends Safir only the `989` form, which matches the repository owner's rule, so
+`09123830000` and `+989123830000` both normalise to `989123830000`.
+
+`[source: https://docs.bale.ai/safir; read: 2026-10-20]`
 
 `SKILL.md` states the rule that a normaliser must take the target channel as a parameter. The signature is
 `normalize(raw, channel)`, and the channel is supplied by the call site that already knows which provider
