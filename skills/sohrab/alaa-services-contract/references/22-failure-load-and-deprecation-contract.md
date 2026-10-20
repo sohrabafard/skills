@@ -132,6 +132,9 @@ retries reports a dependency as up when it is flapping, which defeats the purpos
 
 ## Retry budget
 
+A call to an external messaging provider (an SMS gateway, a messenger) follows
+`33-outbound-messaging-provider-contract.md` instead of this section and the timeout table above.
+
 - Attempt at most `3` times in total: the first attempt plus at most `2` retries.
 - Back off exponentially with full jitter: attempt `n` waits a uniformly random duration between `0` and
   `min(100 ms * 2^(n-1), 2000 ms)`. Never retry with a fixed delay, and never retry with no delay.

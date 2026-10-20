@@ -150,7 +150,9 @@ Every row carries exactly one status, and each means one thing:
 | `notification.commands.dlx` | `notification` | command dead-letter, direct | dead-lettered commands from the queues below | broker on nack | operator replay | `conforming` |
 | `projector.commands` (+ `projector.commands.dlx`) | `entitlement-projector` | command, direct | rule projection tasks, routing key `rule_projection.task.v1` | `entitlement-api` projection relay | `entitlement-projector` executor | `conforming` (`entitlement-api/docs/contracts/source-owned-rule-projection-v1/`, `internal/mq/projection.go:17-24`); production declarer unverified: the executor only passive-declares its queue (`entitlement-projector: internal/execruntime/runtime.go:585`), and `entitlement-api` declares this topology only with `ENTITLEMENT_API_PROJECTION_DECLARE_TASK_TOPOLOGY` on, for tests and local (`entitlement-api: internal/app/projection_worker.go:164-168`) |
 | `entitlement.commands` (+ `entitlement.commands.dlx`) | `entitlement-api` | command, direct | rule projection receipts, routing key `rule_projection.receipt.v1` | `entitlement-projector` | `entitlement-api` projection worker | `conforming` (same sources) |
-| `<service>.commands` for `auth`, `content`, `comment`, `wa` | each service | command, direct | inbound work another service requires this service to do | the requesting service | the owning service | `gap` — only `notification`, `entitlement-projector` and `entitlement-api` (projection receipts) accept commands today, so every other cross-service instruction is either an HTTP call or absent |
+| `auth.commands` | `auth` | command, direct | `auth`'s own SMS lane commands; routing key = lane queue name | `auth` SMS outbox relay (`sms:relay`) | `auth` lane workers | `conforming` (`app/Enums/SmsQueue.php:18-20`); internal: `auth` is both sender and receiver |
+| `auth.commands.dlx` | `auth` | command dead-letter, direct | dead-lettered SMS lane commands, routing key `<lane>.failed` | broker on nack, by policy | operator replay | `conforming` (`app/Enums/SmsQueue.php:22`, `runtime/hooks/after-migrate/ensure-sms-command-topology.sh:44-46`); on Kubernetes an operator applies the exchange, queues and policies (`auth` `docs/ops/sms-magfa-cutover.md`) |
+| `<service>.commands` for `content`, `comment`, `wa`, and other services for inbound cross-service work | each service | command, direct | inbound work another service requires this service to do | the requesting service | the owning service | `gap` — only `notification`, `entitlement-projector` and `entitlement-api` (projection receipts) accept commands today, so every other cross-service instruction is either an HTTP call or absent |
 
 ## Registry: queues
 
@@ -168,7 +170,10 @@ Every row carries exactly one status, and each means one thing:
 | `notif.retrieve_users` (+ `.retry`, `.dlq`) | `entitlement-api` | command | resolve an object audience into recipients | requester unverified; no publisher in `entitlement-api` | `entitlement-api` `expansion-worker`; it writes `.retry` and `.dlq` itself | `conforming` (`entitlement-api: internal/mq/types.go:17`, `internal/workers/expansion_worker.go:262-309`) |
 | `notif.expand_users` | unverified — `entitlement-api` only publishes and does not declare it; its doc names `notification` as declarer (`entitlement-api: docs/delivery-operators/20-local-bring-up.md:109`, doc only) | command | expand one group principal into users | `entitlement-api` `expansion-worker` (default `AUTH_EXPANSION_PROVIDER_MODE=queue`) | audience/expansion provider, unverified; no reply is read from the queue | `conforming` name (`entitlement-api: internal/mq/types.go:18`, `internal/mq/topology.go:14-20`); `.retry`/`.dlq` unverified |
 | `notif.recipient_chunks` | unverified — same as `notif.expand_users` | command | deliver resolved recipient chunks | `entitlement-api` `expansion-worker`, only for a job carrying a `notification_id` | reserved — no consumer is wired | `conforming` name, undrained consumer (`entitlement-api: internal/mq/types.go:19`, `internal/expansion/service.go:576-582`); `.retry`/`.dlq` unverified |
-| `auth.jobs.sms` | `auth` | internal job | `auth`'s own SMS send jobs, enqueued and consumed by `auth` | `auth` | `auth` | `gap` — the queue is named `sms` today (`config/queue.php:79`, `.env.example:246`) |
+| `auth.jobs.sms_otp` (+ `.dlq`) | `auth` | internal job | OTP and security-notice sends | `auth` through `auth.commands` | `auth` `worker-sms-otp` | `conforming` (`app/Enums/SmsQueue.php:14`) |
+| `auth.jobs.sms_bulk` (+ `.dlq`) | `auth` | internal job | admin campaign batches of at most 100 recipients | `auth` through `auth.commands` | `auth` `worker-sms-bulk` | `conforming` (`app/Enums/SmsQueue.php:15`) |
+| `auth.jobs.sms_control` (+ `.dlq`) | `auth` | internal job | campaign preparation, reconciliation lookups, delivery-status polls | `auth` through `auth.commands` | `auth` `worker-sms-control` | `conforming` (`app/Enums/SmsQueue.php:16`) |
+| `sms` | `auth` | internal job | legacy Mediana notification jobs left from before the Magfa cutover; each now fails with `MEDIANA_DELIVERY_DISABLED` | none since the cutover | `auth` `worker-sms` | `non-conforming` — a bare name in a shared vhost (`runtime/service.runtime.env:129`); retire it with `worker-sms` once it is drained, never add a publisher |
 | `comment.jobs.outbox` | `comment` | internal job | `comment`'s own outbox relay job | `comment` | `comment` | `gap` — the queue is named `events` today (`config/queue.php:84`, `.env.example:128`) |
 | `content.jobs.outbox` | `content` | internal job | `content`'s own outbox relay job | `content` | `content` | `gap` — the queue is named `events` today (`.env.example:101`) |
 | `content.jobs.progress` | `content` | internal job | learner-progress processing | `content` | `content` | `gap` — the queue is named `progress` today (`.env.example:103`) |
@@ -189,10 +194,12 @@ Not rows, verified 2026-10-10:
 
 ## The `auth` to `notification` command path
 
-`auth` has no command path to `notification` at all. It sends OTP by calling the SMS provider directly
-through `app/Classes/sms/MedianaClient.php`, behind `MedianaChannel` and `MedianaPatternChannel`. That is
-not a queue this registry can classify; it is the absence of one, and it is recorded here so the next agent
-does not conclude from `auth`'s code that a direct provider call is the platform pattern.
+`auth` has no command path to `notification` at all. Since the Magfa cutover (read 2026-10-20) it sends
+OTP, security notices and admin campaigns itself: a PostgreSQL ledger and outbox, its own lanes on
+`auth.commands`, and lane workers that call Magfa directly (`app/Services/Messaging/Sms/`; canonical design
+`docs/notification-latest-plan.md` in `auth`). Mediana is inactive. That is not a path to `notification`; it
+is recorded here so the next agent does not conclude from `auth`'s code that a direct provider call is the
+platform pattern. `33-outbound-messaging-provider-contract.md` owns how such a provider call behaves.
 
 The name the path will take when it is built: `auth` publishes to exchange `notification.commands` with
 routing key `sms.send_pattern.v1`, landing in the existing `notification.command.sms.send_pattern.v1`

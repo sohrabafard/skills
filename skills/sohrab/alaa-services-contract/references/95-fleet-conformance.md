@@ -184,18 +184,19 @@ special case into its own SDK, and each one is a second migration later.
     which conforms, while `.env.example:238` overrides it to `auth-profile.events`, which does not — a hyphen
     is not a segment separator and the two spellings are two namespaces for one service. Fix the env example
     and any deployment that copies it. Rule: `23-queue-and-exchange-registry.md`.
-12. **Rename the internal job queue.** *Second pass*: the worker queue is `sms`
-    (`config/queue.php:79,102`; `.env.example:237,246`), a bare name in a shared vhost. It becomes
-    `auth.jobs.sms`. Its *messages* stay whatever Laravel produces — the envelope scope test in
-    `20-operational-and-observability-contract.md` frees an internal job from the envelope — but the name is
-    governed regardless, because two services declaring `sms` collide. Rule:
-    `23-queue-and-exchange-registry.md`.
-13. **Build the command path to `notification`.** *Second pass*: `auth` has none. It sends OTP by calling
-    the SMS provider directly through `app/Classes/sms/MedianaClient.php`, behind `MedianaChannel` and
-    `MedianaPatternChannel`, so a provider outage is an `auth` outage on the login path. The path it will
-    take publishes to the existing `notification.commands` exchange with routing key `sms.send_pattern.v1`;
-    `auth` declares no queue. Rule: `23-queue-and-exchange-registry.md`, and
-    `27-notification-service-contract.md` for the payload.
+12. **Rename the internal job queue.** *Third pass (2026-10-20)*: SMS work now runs on the conforming lanes
+    `auth.jobs.sms_otp`, `auth.jobs.sms_bulk` and `auth.jobs.sms_control` behind `auth.commands`
+    (`app/Enums/SmsQueue.php:14-20`). The bare `sms` queue remains only for legacy Mediana jobs, which now fail
+    with `MEDIANA_DELIVERY_DISABLED` (`runtime/service.runtime.env:129`), so two services declaring `sms` can
+    still collide. Retire it with `worker-sms` once it is drained. Rule: `23-queue-and-exchange-registry.md`.
+13. **Build the command path to `notification`.** *Third pass (2026-10-20)*: `auth` still has none. It now
+    sends through its own Magfa module: the OTP request records a ledger row and an outbox command, and lane
+    workers call Magfa (`app/Services/Messaging/Sms/`), so a provider outage delays codes instead of failing
+    the login request; Mediana is inactive. Whether `auth` moves to `notification.commands` with routing key
+    `sms.send_pattern.v1` is an open owner decision, since the module is `auth`'s approved design
+    (`docs/notification-latest-plan.md`). Rule: `23-queue-and-exchange-registry.md`,
+    `27-notification-service-contract.md` for the payload, and `33-outbound-messaging-provider-contract.md`
+    for the direct provider calls meanwhile.
 14. **Register and align the metric names.** *Second pass*: `auth` emits thirteen platform families through
     `app/Support/Observability/MetricsRegistry.php:85-221` plus seven `alaa_auth_*` business families at
     `:230-236`, all correctly prefixed. Two gaps: it does not emit
