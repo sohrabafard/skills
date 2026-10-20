@@ -47,10 +47,18 @@ name such as `X-User-Mobile`, a purpose string.
 | `AUTH_MOBILE_HEADER_INVALID` | 422 | `X-User-Mobile` is present and malformed |
 | `AUTH_NAME_OR_LOCATION_HEADER_INVALID` | 400 | a trusted name or location header violates the compact contract |
 | `AUTH_NAME_OR_LOCATION_HEADER_REQUIRED` | 400 | a route that deliberately requires trusted identity headers did not receive one |
+| `SESSION_EXPIRED` | 401 | auth: a refresh finds no usable session (`references/60-auth-service-v3-contract.md`), or a live-token route's `X-Access-Token-Id` is missing or names an unknown, revoked, expired or another user's token (`references/30-fail-closed-cases.md` case 9) |
 | `TOTP_REQUIRED` | 403 | the operation requires TOTP and the actor has not enrolled |
+| `TOTP_FRESH_LOGIN_REQUIRED` | 403 | auth: TOTP enroll or confirm on a session whose SMS-OTP login is not fresh or cannot be dated (`references/30-fail-closed-cases.md` case 10) |
+| `TOTP_ALREADY_ENABLED` | 409 | auth: TOTP enrolment while a factor is enabled; nothing changes |
+| `TOTP_ADMIN_RESET_FORBIDDEN` | 403 | auth: an admin TOTP reset refused by peer protection; the conditions are in auth `docs/contracts/auth/endpoints/admin-public/50-admin-totp-reset.md` |
 | `TENANT_CONTEXT_MISSING` | 400 on an HTTP route, or 401/403 by service policy | a tenant-safe operation has no trusted tenant context |
 | `TENANT_CONTEXT_MISMATCH` | 403 | trusted tenant context and the requested target do not match |
 | `TENANT_CONTEXT_INVALID` | 403 | a client-supplied tenant selector conflicts with trusted context, or a tenant-override attempt was detected |
+
+Auth rows verified on 2026-10-20 in auth `app/Enums/ApiErrorCode.php`,
+`app/Exceptions/Security/TotpLifecycleException.php` and the middleware named in
+cases 9 and 10.
 
 For `AUTHZ_DENIED` and dependency-failure mappings, read
 `alaa-services-contract references/26-request-time-authorization-openfga/40-decision-and-enforcement.md`.

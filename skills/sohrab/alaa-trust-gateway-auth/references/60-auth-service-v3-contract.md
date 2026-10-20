@@ -61,6 +61,7 @@ Gateway-facing:
 - `/auth/api/v3/sessions*`
 - `/auth/api/v3/totp*`
 - `/auth/api/v3/admin/users/{user}/sessions*`
+- `/auth/api/v3/admin/users/{user_id}/totp`
 - `/auth/api/v3/admin/users/{user}/authz-overrides*`
 - `/auth/api/v3/profile*`
 
@@ -75,8 +76,12 @@ Service-local, after prefix stripping: the same paths without the `/auth` prefix
 ### TOTP management and step-up
 
 - `GET /auth/api/v3/totp` returns TOTP status.
-- `POST /auth/api/v3/totp/enroll` starts enrolment.
+- `POST /auth/api/v3/totp/enroll` starts enrolment; on an enabled factor it answers
+  `409 TOTP_ALREADY_ENABLED` and changes nothing (auth
+  `app/Services/Security/TotpService.php`).
 - `POST /auth/api/v3/totp/confirm` takes `{"code": "123456"}`.
+- Enroll and confirm also need a fresh SMS-OTP login (`totp_fresh_login`;
+  `references/30-fail-closed-cases.md` case 10).
 - `POST /auth/api/v3/totp/recovery-codes/regenerate` takes `{"code": "123456"}`.
 - `POST /auth/api/v3/totp/step-up` takes `purpose` plus either `code` or
   `recovery_code`, and returns the proof the client presents in `X-TOTP-Proof`.
@@ -98,6 +103,18 @@ and `service_key` filters. `PUT` takes a body shaped like
 `DELETE /auth/api/v3/admin/users/{user}/sessions` and
 `DELETE /auth/api/v3/admin/users/{user}/sessions/{session}`.
 
+The admin TOTP reset `DELETE /auth/api/v3/admin/users/{user_id}/totp` needs
+`auth_admin_users_totp_reset` and a gateway-verified step-up for purpose
+`auth.totp.admin_reset:<user_id>`; peer protection refuses it with
+`403 TOTP_ADMIN_RESET_FORBIDDEN` (auth `app/Services/Admin/TotpAdminResetGuard.php`).
+
+### Live-token guard
+
+`reject_revoked_access_token` runs on TOTP enroll, confirm, recovery-codes
+regenerate, step-up and disable, on the admin TOTP reset, and on the authz-override
+`PUT` and `DELETE` (auth `routes/api.php:59-110`). Denials are
+`references/30-fail-closed-cases.md` case 9.
+
 ### Profile
 
 `GET /auth/api/v3/profile` returns the canonical profile projection. `PATCH` and
@@ -110,10 +127,14 @@ and `GET /auth/api/v3/profile/national-card` are trusted-gateway routes.
 ## Auth-service's own trusted-header contract
 
 Auth-service's `trusted_gateway` guard consumes only `X-User-Id` and `X-Project-Id`,
-and parses both as positive integers on protected gateway-backed routes. It does not
-read `X-Access`, `X-User-Roles`, `X-User-Mobile`, `X-Access-Token-Id`, the
-`X-TOKEN-*` headers, `X-USER-SCOPES`, or the name and location headers on its v3
-routes. No extra backend-only signature header is required: the trust boundary is
+and parses both as positive integers on protected gateway-backed routes. Route
+middleware also reads `X-Access` (`access_permission`; auth
+`app/Support/Auth/TrustedAccessPermissionSet.php`), `X-Access-Token-Id`
+(`reject_revoked_access_token`, `totp_fresh_login`) and the three `X-TOTP-*` step-up
+headers (`gateway_step_up`; auth `app/Http/Middleware/RequireGatewayStepUpProof.php`).
+Auth does not read `X-User-Roles`, `X-User-Mobile`, the `X-TOKEN-*` headers,
+`X-USER-SCOPES`, or the name and location headers on its v3 routes (verified
+2026-10-20 at auth `77977c3`). No extra backend-only signature header is required: the trust boundary is
 the sanitized gateway path plus the injected identity headers.
 
 **Do not freeze that positive-integer parser into the shared public contract.**

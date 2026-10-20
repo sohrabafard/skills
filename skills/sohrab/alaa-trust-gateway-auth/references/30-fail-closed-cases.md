@@ -148,7 +148,8 @@ faster revocation than that obtains it by shortening the access token or by
 revoking the session, never by adding a per-request permission lookup in a
 service. A per-request lookup reintroduces the callback pattern the compact-claim
 contract exists to remove, and it makes every service a dependency of auth on the
-hot path.
+hot path. Revoking the session ends refresh, not the live access token, which the
+gateway accepts until `exp` (case 9).
 
 **When faster revocation is genuinely required**, the change is a contract change:
 forwarding `prv` to services, or shortening the token. Both are decided in
@@ -241,6 +242,62 @@ environment file under a path and exits 1 on an undocumented truthy bypass.
 
 ---
 
+## 9. A revoked access token reaches a sensitive auth route
+
+**Symptom.** Logout, revoke-all and the admin TOTP reset only set `revoked` flags in
+auth's database (auth `app/Repositories/Auth/DatabaseTokenSessionRepository.php`).
+The gateway verifies the JWT without a revocation lookup, so the revoked access
+token passes it until `ACCESS_TOKEN_TTL_MINUTES` ends (auth `config/auth.php:46`,
+default 15). The value is env-controlled: the owner may lower it to 1 minute in
+production or raise it under load.
+
+**Decision.** On its live-token routes (`references/60-auth-service-v3-contract.md`),
+auth denies unless its own database shows the token live. Middleware
+`reject_revoked_access_token` (auth `app/Http/Middleware/RejectRevokedAccessToken.php`)
+reads `X-Access-Token-Id`, which the gateway sets from the verified `jti` after
+deleting any client copy (gateway `snapshots/alaa-service.haproxy.cfg:226`, `:920`),
+and runs one primary-key lookup on auth's own database (auth
+`app/Repositories/Auth/DatabaseAccessTokenSessionLookup.php`). It makes no
+inter-service call and shortens the window only on those routes; elsewhere case 5
+holds.
+
+**Response.** `401 SESSION_EXPIRED` when the header is missing or malformed, or the
+token row is unknown, revoked, expired or another user's.
+
+**Log.** `auth.access_token.rejected` with `code`, `reason`, `route_name` and
+`user_id`.
+
+**Test.** Revoke a session, replay its access token on each live-token route and
+assert `401 SESSION_EXPIRED`; repeat with the header absent and with an unknown,
+expired and another user's token id (auth `tests/Feature/RevokedAccessTokenGuardTest.php`).
+
+---
+
+## 10. TOTP enrolment without a fresh SMS-OTP login
+
+**Symptom.** TOTP enroll or confirm arrives on a session whose SMS-OTP login is older
+than `AUTH_TOTP_ENROLL_FRESH_LOGIN_SECONDS` (default 600, clamped to 60..86400; auth
+`config/auth.php:120`), or whose login time cannot be read.
+
+**Decision.** Deny, because a stolen access token could otherwise bind the thief's
+authenticator to an account that has none, and `409 TOTP_ALREADY_ENABLED` would then
+lock the owner out. Middleware `totp_fresh_login` (auth
+`app/Http/Middleware/RequireFreshTotpEnrollmentLogin.php`) takes the login time from
+the ULID of the session's refresh-token family, found through `X-Access-Token-Id`,
+and fails closed whenever it cannot read that time. With TOTP disabled it steps
+aside and the route answers `404`.
+
+**Response.** `403 TOTP_FRESH_LOGIN_REQUIRED` with `meta.max_age_seconds`, naming no
+session id and no time; the enrolment quota is not spent.
+
+**Log.** `auth.totp.fresh_login.denied` with `code`, `reason`, `route_name` and
+`user_id`.
+
+**Test.** Assert a deny for a stale login, an unreadable login time and a missing
+header, and a pass inside the bound (auth `tests/Feature/TotpFreshLoginTest.php`).
+
+---
+
 ## TOTP step-up
 
 Step-up decides whether a caller may act, so a service denies whenever it cannot
@@ -279,16 +336,20 @@ service, and both deny.
   does not.
 
 **Every service other than auth enforces step-up against the gateway-injected
-headers. Auth is the exception, because it verifies the TOTP code itself.**
+headers.** Auth verifies the TOTP code itself, and enforces `require_totp` routes
+against its own proof record and `gateway_step_up` routes against the three headers
+(auth `app/Http/Middleware/RequireTotpMiddleware.php`,
+`app/Http/Middleware/RequireGatewayStepUpProof.php`).
 
-**One observed platform behaviour, recorded here without editing anything outside
-this skill.** The auth service issues a proof token it never consumes. Its
-`RequireTotpMiddleware` enforces against an auth-local cache marker rather than
-against the gateway headers, and a search for `X-TOTP` across the auth
-repository's `app/`, `config/`, `routes/` and `bootstrap/` on 2026-07-27 returned
-zero matches. The consequence is that a cryptographically valid, in-window proof
-yields a denial at auth if the cache marker has been evicted. An agent debugging
-a step-up denial at auth checks the cache marker, not the proof.
+**Proof binding is local to auth.** Auth binds each proof it issues to the active
+TOTP credential in its own Redis and denies a proof whose credential is no longer
+the enabled one, so a disable or reset voids earlier proofs at once on auth routes;
+an unreadable store fails closed (auth `app/Support/Auth/TotpStepUpProofStore.php`,
+`app/Support/Auth/TotpProofBindingVerifier.php`). An agent debugging a step-up
+denial at auth checks the binding record and the credential state, not only the
+headers. Every other service honours a gateway-verified proof until its `exp`,
+because services make no direct call to auth (owner rule). The step-up contract is
+`/alaa-services-contract` `references/32-auth-totp-and-step-up-contract.md`.
 
 **Test.** For a step-up-required route: assert a deny with each of the three
 headers removed in turn; assert a deny when `X-TOTP-PURPOSE` names a different
