@@ -49,16 +49,25 @@ Never log or persist TOTP `secret`, `otpauth_uri`, user-entered TOTP codes, or r
 
 ## Forced route-level TOTP
 
-To force TOTP on a sensitive route, keep the route behind the normal authenticated gateway/trusted flow and add `require_totp:<purpose>`.
+To force TOTP on a sensitive route, keep the route behind the normal authenticated gateway/trusted flow and add `require_totp:<purpose>,<mode>`.
 
 Example Laravel route shape:
 
 ```php
 Route::middleware('auth:trusted_gateway')->group(function (): void {
     Route::delete('sessions', [SessionController::class, 'destroyAll'])
-        ->middleware('require_totp:auth.sessions.revoke_all');
+        ->middleware('require_totp:auth.sessions.revoke_all,optional');
 });
 ```
+
+Mode rules (`<mode>` is `optional` or `required`):
+
+- The gateway never enforces TOTP. It verifies `X-TOTP-Proof` and injects the `X-TOTP-*` headers; the backend decides per route.
+- `required` is for admin and high-risk operations. With `AUTH_TOTP_ENABLED=false` the request fails closed with `403 TOTP_UNAVAILABLE`. With TOTP enabled, a user without TOTP gets `403 TOTP_REQUIRED`, and a missing or invalid proof gets `403 TOTP_STEP_UP_REQUIRED`.
+- `optional` is for self-protective actions on the caller's own account, such as revoking all own sessions. It passes when `AUTH_TOTP_ENABLED=false`, because blocking a user from protecting their own account is worse than the step-up gap. With TOTP enabled it behaves like `required`.
+- Choose the mode per route by risk. A disabled flag never permits a `required` operation.
+- A missing or unknown mode is a configuration error and fails loudly. There is no default mode.
+- Auth's `gateway_step_up` middleware (admin SMS campaigns, admin TOTP reset) is always `required`.
 
 Purpose rules:
 

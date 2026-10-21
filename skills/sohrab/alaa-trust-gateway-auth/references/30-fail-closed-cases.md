@@ -326,9 +326,17 @@ service, and both deny.
 - **Return `503` with a distinct unavailable code rather than the step-up
   challenge when the decision itself depends on a store that is down**, because a
   challenge tells the client to spend a TOTP code the service cannot evaluate.
-- **Never allow a step-up-required operation because the feature flag is off in
-  this environment.** Remove the route's requirement deliberately and record the
-  removal, so an operator reading the route list sees the real protection state.
+- **Never allow a `required` step-up operation because the feature flag is off in
+  this environment.** Deny with `403` `TOTP_UNAVAILABLE`. Remove the route's
+  requirement deliberately and record the removal, so an operator reading the route
+  list sees the real protection state.
+- **The only exception is an `optional` route**: a self-protective action on the
+  caller's own account (for example revoke all own sessions) passes while the flag
+  is off, because blocking a user from protecting their own account is worse than
+  the step-up gap. With the flag on it behaves like `required`.
+- **Choose the mode per route by risk, explicitly.** Admin and high-risk operations
+  are `required`. A missing or unknown mode is a configuration error, never a
+  default. The gateway never enforces TOTP; the backend decides.
 - **Log the denial with the proof id, the required purpose, the presented
   purpose, the route, the user id, the project id and the decision.** Never log
   the proof token, a TOTP code, a recovery code, the enrolment secret or the
@@ -337,7 +345,8 @@ service, and both deny.
 
 **Every service other than auth enforces step-up against the gateway-injected
 headers.** Auth verifies the TOTP code itself, and enforces `require_totp` routes
-against its own proof record and `gateway_step_up` routes against the three headers
+against its own proof record (`require_totp:<purpose>,<optional|required>`) and
+`gateway_step_up` routes, which are always `required`, against the three headers
 (auth `app/Http/Middleware/RequireTotpMiddleware.php`,
 `app/Http/Middleware/RequireGatewayStepUpProof.php`).
 

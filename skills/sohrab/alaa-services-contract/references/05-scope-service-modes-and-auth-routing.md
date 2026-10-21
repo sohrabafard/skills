@@ -178,7 +178,7 @@ Read next:
 - Auth terms acceptance is implicit in successful OTP verification and login. Treat `user/accept-terms-and-conditions` as a retired flow, not as a missing current API.
 - The frontend may present a non-removable terms notice or required checkbox before OTP request. The backend acceptance moment is successful `POST /api/v3/otp/verify`, when the service creates the authenticated session.
 - Do not add or search for a separate accept-terms endpoint, request field, `terms_accepted_at`, `terms_version`, or consent table unless the user explicitly asks to change the legal/audit contract. If they do, treat it as a new product/legal contract change that needs docs, Postman, tests, and migration planning.
-- Auth TOTP is optional self-service until a route explicitly attaches `require_totp:<purpose>`. Every rule about `AUTH_TOTP_ENABLED`, enrollment, `otpauth_uri`, recovery codes, proof tokens, and forced-route rollout is owned by `32-auth-totp-and-step-up-contract.md`. Read it there rather than restating it in a service repository.
+- Auth TOTP is optional self-service until a route explicitly attaches `require_totp:<purpose>,<optional|required>`. Every rule about `AUTH_TOTP_ENABLED`, enrollment, `otpauth_uri`, recovery codes, proof tokens, and forced-route rollout is owned by `32-auth-totp-and-step-up-contract.md`. Read it there rather than restating it in a service repository.
 
 ## Working rule
 
