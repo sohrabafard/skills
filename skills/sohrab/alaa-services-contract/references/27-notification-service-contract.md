@@ -89,8 +89,9 @@ PHP with case-sensitive `json_decode`, so a capitalized nested key silently drop
   user; `pattern_values` keys must match the stored pattern).
 - `notification.command.notification.store.v1` — `{ owner_id, message_public_id }` (`producer_service` becomes the
   stored `service_id`).
-- `notification.command.user_projection.upsert.v1` — `{ user_id, first_name, last_name, mobile, national_code }`; the
-  canonical path for any service to keep notification's user projection (and ownership) resolvable.
+- `notification.command.user_projection.upsert.v1` — `{ user_id, first_name, last_name, mobile, national_code }`;
+  `user_id` carries the canonical Auth UUIDv7 from reference `25`, never a producer's private numeric key.
+  This is the canonical path for any service to keep notification's user projection (and ownership) resolvable.
 
 ## Recipient model (current) vs channel addressing (reserved)
 

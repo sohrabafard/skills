@@ -154,8 +154,8 @@ Nothing a client should not see, and nothing that describes the inside of the se
 - SQL text, query fragments, table names, column names, constraint names, and driver error strings. A
   constraint name tells an attacker the schema and tells the client nothing it can act on.
 - Internal identifiers the public-identifier rule in `25-end-to-end-flow-and-boundaries.md` forbids: an
-  auto-increment row id, an internal numeric `project_id`, an internal queue or job id. That rule has one
-  exception, the actor identifier, and this section creates no second one.
+  auto-increment row id, an internal numeric `project_id`, an internal queue or job id, or a private user
+  row id. Public user identity uses the canonical UUIDv7; Auth may resolve it to its private key internally.
 - Secrets and credentials of every kind: tokens, a full JWT, a raw `X-Access` value, a TOTP secret or code,
   a recovery code, an API key, a signing key, a connection string.
 - PII beyond what the request itself already carried. Echoing back the mobile number the caller just sent is

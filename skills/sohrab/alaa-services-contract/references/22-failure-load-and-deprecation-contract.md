@@ -328,3 +328,15 @@ anything else, and a later change may not cite it as precedent without being add
   procedure still apply — announce and date it, notify the three, and remove the old spelling together with
   its compatibility code, tests, docs, and API artifacts in one change. This exception covers that one
   rename and no other surface.
+
+- **2026-10-21 — Auth user identity, first affected production release pending.** The user confirmed that
+  none of the affected services has production data or a production release and the fleet is preparing its
+  first release. For this user-identity migration only, coordinated breaking API, proto, event, queue,
+  schema, and deterministic-seed changes may ship together without a default 90-day window, dual publish,
+  dual header, or accept-both identity mode solely to protect nonexistent production consumers. This is
+  not general permission for a service implementation: explicit plan-only/read-only requests remain
+  read-only, and execution or destructive reset of development databases, queues, sessions/tokens, caches,
+  or derived OpenFGA state needs explicit scope and environment authority. Each implementation plan names
+  the disposition for those resources. If an owner reports a real external consumer or protected data,
+  stop and apply the ordinary compatibility procedure. This exception expires at the first affected
+  production release; later incompatible identity changes use the ordinary procedure.

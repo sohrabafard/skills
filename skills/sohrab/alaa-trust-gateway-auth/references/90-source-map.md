@@ -46,6 +46,11 @@ executable configuration retains edge authority.
 
 ## Facts in this skill with a read date
 
+**2026-10-21 user identity policy source.** Auth's existing `users.uuidv7` is the canonical public user ID;
+verified JWT `sub` projects to the existing `X-User-Id`. The policy is owned by
+`alaa-services-contract` references `25` and `22`. This dated ruling does not verify gateway or consumer
+runtime adoption; inspect owning repositories and rendered configuration before making runtime claims.
+
 | Fact | Verified on | Where |
 |---|---|---|
 | Gateway verifies the TOTP proof and never blocks; injects three headers only on full validity | 2026-07-27 | gateway `charts/gateway/templates/configmap.yaml:487-583`, `docs/totp-proof-gateway-contract.md:9,51` |

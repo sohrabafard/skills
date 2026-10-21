@@ -115,14 +115,15 @@ When applying this skill to a service, finish by checking:
 - any offset list satisfies all five conditions of the admin-table exception in
   `25-end-to-end-flow-and-boundaries.md` and declares its own response envelope rather than using `meta`
 - a `limit` above the documented maximum is rejected, not clamped
-- no payload field carries an auto-increment database id, except the actor identifier received in `X-User-Id`
+- no payload field carries a private auto-increment identifier; user identity uses the canonical Auth UUIDv7
 - readiness `checks` is an object keyed by check name, not an array, and every item carries `status`,
   `required`, `code`, and `message`
 - `error.meta` carries only the four permitted kinds of detail, carries no exception text, SQL, internal
   identifier, secret, or extra PII, and one `code` always produces one `meta` key set
 - every field named `project_id` is a UUIDv7 string on the HTTP payload, the event envelope, the log field,
   and the cache key
-- no payload, event, or log carries a database integer under any name other than the recorded actor-identifier debt
+- no public or inter-service surface carries a private numeric user key; an owning service may retain a
+  local numeric user key only behind an explicit mapping to the canonical Auth UUIDv7
 
 ### Async messages
 - the internal-versus-inter-service test in `20-operational-and-observability-contract.md` was applied
@@ -140,7 +141,8 @@ When applying this skill to a service, finish by checking:
 
 ### Trusted ingress
 - missing blank invalid `X-Project-Id`
-- missing invalid `X-User-Id`
+- missing, malformed, or wrong-version `X-User-Id` fails closed where the route requires an actor; guest,
+  tokenless, and public routes retain their existing optional-actor semantics
 - missing invalid zero-known-permission `X-Access`
 - `X-Access` decoding against the generated, committed service permission config
 - exact permission checks cover allow and deny behavior without a role-derived fallback
@@ -233,7 +235,7 @@ Flag a problem when you see any of these:
 - an error `meta` carries exception text, SQL, a stack fragment, an internal identifier, a secret, or PII the
   request did not already carry, or one `code` produces two different `meta` key sets
 - a field named `project_id` carries an integer in a payload, an event, a log field, or a cache key
-- a new numeric identifier is added and justified by citing the actor-identifier exception
+- a private numeric user key crosses a service boundary or is justified as an actor-identity exception
 - a contract surface is deleted or renamed without the deprecation procedure, or a deprecation carries no removal date
 
 ## Anti-patterns

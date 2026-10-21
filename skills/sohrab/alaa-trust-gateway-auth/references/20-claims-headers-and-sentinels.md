@@ -19,7 +19,7 @@ Custom compact claims are `m`, `prm`, `rol`, `prv`, `av`, `pid`, `loc`, `fn`, `l
 | Claim | Meaning | Projected to |
 |---|---|---|
 | `pid` | public project boundary, UUIDv7 | `X-Project-Id` |
-| `sub` | authenticated user id | `X-User-Id` |
+| `sub` | canonical Auth user UUIDv7 | existing `X-User-Id` |
 | `m` | mobile | `X-User-Mobile` |
 | `prm` | permission bitmap | `X-Access` |
 | `rol` | canonical role-name array, issuance-time snapshot | `X-User-Roles` |
@@ -40,6 +40,13 @@ Custom compact claims are `m`, `prm`, `rol`, `prv`, `av`, `pid`, `loc`, `fn`, `l
 | `loc.br` | shobe | `X-Location-Shobe` |
 | `loc.sc` | school | `X-Location-School` |
 
+Auth issues its existing `users.uuidv7` as `sub`; after verification the gateway
+projects that same value into the existing `X-User-Id`. Do not add a second
+permanent user claim or header, resolve UUIDs remotely per request, or treat UUID
+possession as authorization. The canonical shape and Auth bootstrap source belong
+to `/alaa-services-contract` reference `25`; its temporary first-release exception
+belongs to reference `22`.
+
 This is the only projection table in this skill. A second copy would drift, and it
 already did: an earlier revision listed the forwarded surface in two places and one
 of them omitted `X-User-Roles`, which is how a frozen, sanitized header comes to
@@ -57,6 +64,8 @@ Auth is the only runtime issuer of `prm`, `prv` and `av`.
 
 ## Worked example of a verified access token
 
+The UUID value below is illustrative, not the pinned Auth bootstrap UUID.
+
 ```json
 {
   "aud": ["3"],
@@ -64,7 +73,7 @@ Auth is the only runtime issuer of `prm`, `prv` and `av`.
   "iat": 1775296800,
   "nbf": 1775296800,
   "exp": 1775300400,
-  "sub": "1001",
+  "sub": "0190f7d8-f840-7a85-9a89-e3f61052f840",
   "scopes": [],
   "prm": "AAABgQ",
   "prv": 1,

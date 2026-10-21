@@ -8,7 +8,7 @@ sent. `HEAD` is used because the whole decision rides in the status and headers.
 HEAD /internal/authz/check HTTP/1.1
 Host: authz-sidecar
 X-Project-Id: <project-uuidv7>
-X-User-Id: 91
+X-User-Id: 0190f7d8-f840-7a85-9a89-e3f61052f840
 X-Request-Id: <uuid>
 traceparent: 00-<trace>-<span>-01
 X-Authz-Endpoint-Category: watch_content
@@ -23,8 +23,8 @@ headers are stripped from client input at the edge, so a client cannot forge the
 
 ### 4. authz-sidecar -> OpenFGA
 
-The sidecar validates the context (`X-Project-Id` is a UUIDv7, `X-User-Id` is a
-non-zero integer, endpoint category is known, object id matches the contract
+The sidecar validates the context (`X-Project-Id` and `X-User-Id` are canonical
+UUIDv7 strings, endpoint category is known, object id matches the contract
 pattern), resolves the final permission from `endpoint-permissions.yaml`
 (`watch_content` + `content` -> `can_view`), confirms the store and model are
 pinned, checks its short-TTL decision cache, and on a miss calls OpenFGA:
@@ -39,14 +39,15 @@ Authorization: Bearer <preshared-key>   # only when OPENFGA_AUTHN_METHOD=preshar
 {
   "authorization_model_id": "<OPENFGA_AUTHORIZATION_MODEL_ID>",
   "tuple_key": {
-    "user": "user:91",
+    "user": "user:0190f7d8-f840-7a85-9a89-e3f61052f840",
     "relation": "can_view",
     "object": "content:p_01hzy0f6m4p7n8q9r0s1t2v3wx__cnt_w5"
   }
 }
 ```
 
-- `user` is `user:` joined with the trusted numeric `X-User-Id`.
+- `user` is `user:` joined with the trusted canonical user UUIDv7 from `X-User-Id`, as defined by
+  `25-end-to-end-flow-and-boundaries.md`. Preserve the object's existing encoding.
 - `relation` is the resolved `can_*` permission.
 - `object` is the canonical object id.
 - OpenFGA replies `{ "allowed": true | false }`. Any non-`200` is a dependency failure.

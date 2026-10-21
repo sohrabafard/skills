@@ -23,6 +23,12 @@ For an infrastructure service or delivery artifact, the owning repository's READ
 
 ## Freshness triggers
 
+**2026-10-21 user identity policy source.** The approved canonical shape and bootstrap owner are recorded
+in `25-end-to-end-flow-and-boundaries.md`; the temporary first-release exception is in
+`22-failure-load-and-deprecation-contract.md`. Auth's source file is
+`Auth <repo>/database/seeders/AuthAdminUserSeeder.php` (`USER_UUIDV7`). This ruling is not a downstream
+runtime survey or migration proof; verify each consumer in its own repository before claiming adoption.
+
 Re-check official docs and target repo truth when the task mentions:
 
 - latest, current, today, version bump, upgrade, security, deprecation, breaking change, or compatibility

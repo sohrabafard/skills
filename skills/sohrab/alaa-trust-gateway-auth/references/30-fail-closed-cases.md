@@ -98,6 +98,25 @@ gateway denies before any backend is contacted.
 
 ---
 
+### 3a. A route requires an actor but the user UUID is absent or invalid
+
+**Symptom.** A route whose contract requires an authenticated actor receives no
+`X-User-Id`, or receives a value that is malformed or not UUIDv7. The gateway must
+reject a token with a missing or invalid `sub`; the service also validates trusted
+header shape at ingress rather than trusting malformed context.
+
+**Decision.** Deny under the existing owning error policy. Do not parse a numeric
+fallback, accept both UUID and numeric forms, resolve the identity remotely, or
+derive an actor from request data. Preserve the route's established response code.
+
+**Scope.** This is only for routes requiring an actor. Guest, tokenless, and public
+routes retain their existing optional-actor semantics. UUID possession never grants
+authorization; normal permission, tenant, and business checks still apply.
+
+**Test.** On an actor-required route, test absent, malformed, and wrong-version
+identity and assert denial before the protected operation. On a public or guest
+route, verify actor absence retains its documented behavior.
+
 ## 4. `rol` is absent from a token, so `X-User-Roles` is not injected
 
 **Symptom.** A verified access token carries no `rol` claim, so the gateway

@@ -71,7 +71,10 @@ Responsibility:
 
 Required validation behavior:
 - validate `X-Project-Id` as UUIDv7
-- validate `X-User-Id` as a positive integer
+- validate `X-User-Id` as the canonical lowercase hyphenated Auth user UUIDv7. Require it only on routes
+  whose actor contract requires an authenticated user; missing, malformed, or wrong-version values fail
+  closed under the route's existing error policy. Guest, tokenless, and public routes retain their existing
+  optional-actor semantics.
 - decode `X-Access` as the base64url permission bitmap
 - map `X-Access` only through the service's generated, committed catalog-owned permission config
 - reject `X-Access` when it maps to zero known permissions after service-local mapping
@@ -85,7 +88,8 @@ Required validation behavior:
 
 Actor context must be able to hold at least:
 - trusted project identifier
-- trusted user identifier
+- trusted public user UUIDv7; Auth may resolve it to its private numeric `users.id` only inside Auth, and
+  another service may map it to a private local user key without exposing that key across services
 - normalized permission names
 - trusted access-token identifier when present
 - normalized first and last name values

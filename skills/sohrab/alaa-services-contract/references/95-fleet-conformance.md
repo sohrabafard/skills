@@ -19,6 +19,16 @@ is accurate to nothing else. A conformance claim here that contradicts the repos
 the repository moved and this file did not; the repository wins, and the change that moved it updates this
 file in the same effort.
 
+**Amended 2026-10-21, policy only; no consumer re-survey.** The approved target user identity is Auth's
+existing `users.uuidv7`, canonical lowercase hyphenated UUIDv7, across public and cross-service surfaces.
+`users.id` remains private to Auth; local numeric keys remain permitted behind explicit UUID mappings.
+OpenFGA user subjects use `user:<canonical UUIDv7>`. This session verified the Auth bootstrap mapping
+`users.id=1` -> `01a14099-6210-7243-8687-d7b5fb9772ed` in
+`Auth <repo>/database/seeders/AuthAdminUserSeeder.php` (`USER_UUIDV7`). This is source evidence, not
+evidence that any downstream runtime migrated. The numeric behavior
+recorded below remains historical observed drift; all non-Auth runtime migration status is unverified and
+pending. No other repository was re-audited for this amendment.
+
 | Component | Surveyed commit |
 |---|---|
 | `auth` | `2d062c2d843b7c502409e19599cd9b0c6336150b` |
@@ -155,9 +165,11 @@ special case into its own SDK, and each one is a second migration later.
    this as its own DRIFT. Rule: `25-end-to-end-flow-and-boundaries.md`. Evidence:
    `app/Http/Requests/Admin/AdminCatalogIndexRequest.php:21`; `app/Services/Admin/AdminCatalogService.php:39-65`.
 5. **Stop emitting the internal user id from `ProfileResource`.** `id => $this->resource->publicUserId ?? $user->id`
-   falls back to the table key, and three tests assert the numeric value. The actor-identifier exception in
-   `25-end-to-end-flow-and-boundaries.md` permits the gateway-projected numeric id in a field named
-   `user_id`; it does not permit a resource's own `id` to be a table key. Evidence:
+   falls back to the table key, and three tests assert the numeric value. Under the 2026-07-25 snapshot's
+   then-recorded actor exception, the gateway-projected numeric id was
+   permitted in a field named `user_id`; the resource's own `id` was not permitted to be a table key.
+   The 2026-10-21 policy amendment above supersedes that target rule; this paragraph preserves the old
+   observed evidence only. Evidence:
    `app/Http/Resources/V3/ProfileResource.php:35-37`; `tests/Feature/AuthSuccessResponseContractTest.php:66-80`.
 6. **Emit the UUIDv7 project id in events, logs, and cache keys.** The outbox envelope carries
    `"project_id": 42`, an internal integer, where `entitlement-api` carries a UUIDv7. A consumer cannot map
@@ -224,8 +236,9 @@ special case into its own SDK, and each one is a second migration later.
    `app/Listeners/CommentEvents/EventRelayToN8n.php:118-136`.
 4. **Stop emitting numeric `user_id`, `flagged_by`, `resolved_by`, and the internal `project_id`** from
    resources. `comment`'s own contract already forbids it, and its survey records this as its own DRIFT.
-   The actor-identifier exception covers only `user_id` when the value is the one received in `X-User-Id`;
-   `flagged_by` and `resolved_by` end `_by`, not `_user_id`, so rename them or carry public identifiers.
+   The 2026-07-25 survey applied its then-recorded actor exception only to `user_id` when the value was
+   received in `X-User-Id`; it did not cover `flagged_by` or `resolved_by`. The 2026-10-21 policy amendment
+   above supersedes that target rule; this paragraph preserves the old observed evidence only.
    Rule: `25-end-to-end-flow-and-boundaries.md`. Evidence: `app/Http/Resources/CommentResource.php:33-39`;
    `app/Http/Resources/ModerationFlagResource.php:31-41`; `docs/contracts/comment/api-reference.md:47-51`.
 5. **Replace `per_page` page pagination with keyset.** Evidence:

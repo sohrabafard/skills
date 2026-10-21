@@ -60,9 +60,9 @@ Gateway-facing:
 
 - `/auth/api/v3/sessions*`
 - `/auth/api/v3/totp*`
-- `/auth/api/v3/admin/users/{user}/sessions*`
-- `/auth/api/v3/admin/users/{user_id}/totp`
-- `/auth/api/v3/admin/users/{user}/authz-overrides*`
+- `/auth/api/v3/admin/users/{user_uuid}/sessions*`
+- `/auth/api/v3/admin/users/{user_uuid}/totp`
+- `/auth/api/v3/admin/users/{user_uuid}/authz-overrides*`
 - `/auth/api/v3/profile*`
 
 Service-local, after prefix stripping: the same paths without the `/auth` prefix.
@@ -103,9 +103,9 @@ and `service_key` filters. `PUT` takes a body shaped like
 `DELETE /auth/api/v3/admin/users/{user}/sessions` and
 `DELETE /auth/api/v3/admin/users/{user}/sessions/{session}`.
 
-The admin TOTP reset `DELETE /auth/api/v3/admin/users/{user_id}/totp` needs
+The admin TOTP reset `DELETE /auth/api/v3/admin/users/{user_uuid}/totp` needs
 `auth_admin_users_totp_reset` and a gateway-verified step-up for purpose
-`auth.totp.admin_reset:<user_id>`; peer protection refuses it with
+`auth.totp.admin_reset:<user_uuid>`; peer protection refuses it with
 `403 TOTP_ADMIN_RESET_FORBIDDEN` (auth `app/Services/Admin/TotpAdminResetGuard.php`).
 
 ### Live-token guard
@@ -129,8 +129,12 @@ and `GET /auth/api/v3/profile/national-card` are trusted-gateway routes.
 
 ## Auth-service's own trusted-header contract
 
-Auth-service's `trusted_gateway` guard consumes only `X-User-Id` and `X-Project-Id`,
-and parses both as positive integers on protected gateway-backed routes. Route
+Auth-service's target trusted-gateway contract consumes the existing `X-User-Id`
+as the canonical Auth user UUIDv7 and `X-Project-Id` as the public project UUIDv7.
+On routes requiring an actor, missing, malformed, or wrong-version user identity
+fails closed under the existing route error policy; guest, tokenless, and public
+routes retain their optional-actor semantics. Auth resolves the UUID to its private
+numeric `users.id` only inside Auth. Route
 middleware also reads `X-Access` (`access_permission`; auth
 `app/Support/Auth/TrustedAccessPermissionSet.php`), `X-Access-Token-Id`
 (`reject_revoked_access_token`, `totp_fresh_login`) and the three `X-TOTP-*` step-up
@@ -141,9 +145,16 @@ Auth does not read `X-User-Roles`, `X-User-Mobile`, the `X-TOKEN-*` headers,
 the sanitized gateway path plus the injected identity headers.
 
 **Do not freeze that positive-integer parser into the shared public contract.**
-Translate the trusted public boundary into the internal numeric key at auth-service
-ingress. The shared boundary carries UUIDv7 `pid`; the numeric key is auth's own
-storage detail during migration.
+Translate the trusted public user UUID to the internal numeric key only at Auth's
+own storage boundary. The public project boundary remains UUIDv7 `pid`.
+
+**Identity target (approved 2026-10-21; adoption not asserted here).** Auth's
+existing `users.uuidv7` is the sole public user ID. Access-token `sub`, TOTP proof
+`sub`, and the existing `X-User-Id` projection use that same UUID; issuance,
+refresh, and session paths preserve the alignment. Admin target-user paths use the
+same UUID, while Auth may resolve it to `users.id` internally. UUID possession is
+not authorization. The canonical shape and first-release compatibility limit are
+owned by `/alaa-services-contract` references `25` and `22`.
 
 ## Direct local backend testing
 

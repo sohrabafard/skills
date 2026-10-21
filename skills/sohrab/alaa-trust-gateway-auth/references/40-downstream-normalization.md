@@ -32,9 +32,9 @@ one.
 ## Normalize once, at ingress
 
 Build the request-scoped trusted context once, near the service edge, and read only
-that context afterwards. Normalize at least: project id, actor id, token id when
-the domain audits it, request id for correlation, and the trusted name and location
-fields the service actually uses.
+that context afterwards. Normalize at least: project id, actor UUID when the route
+requires one, token id when the domain audits it, request id for correlation, and
+the trusted name and location fields the service actually uses.
 
 - No policy, controller, repository, job or helper re-reads a raw trusted header
   after normalization. A second read is a second parser, and the two disagree the
@@ -89,10 +89,10 @@ how the response is built — belong to `/alaa-laravel-architecture`
   the read rule in `references/10-verification-and-ingress.md`, which states the test
   a route passes to be listed, what ingress does for a route that is not listed, and
   what takes a listed route off again.
-- When `X-User-Id` is absent, never synthesize a trusted actor from a client payload
-  field such as `identity.user_id`, `visitor_id` or `device_id`. Store those as
-  untrusted analytics metadata if the domain needs them, and classify them that way
-  in the schema.
+- When an actor is optional and `X-User-Id` is absent, never synthesize a trusted
+  actor from a client payload field such as `identity.user_id`, `visitor_id` or
+  `device_id`. Store those as untrusted analytics metadata if the domain needs them,
+  and classify them that way in the schema.
 - Not every gateway-backed service is tenant-scoped. Do not invent `project_id`
   enforcement in a service that has no real tenant boundary to make documentation
   look uniform. When such a service later becomes tenant-aware, add trusted
@@ -120,8 +120,12 @@ denial.
 
 ## Header-by-header rules
 
-- `X-Project-Id` is the public tenant boundary input. `X-User-Id` is the
-  authenticated actor. `X-REQUEST-ID` is correlation only.
+- `X-Project-Id` is the public tenant boundary input. The existing `X-User-Id` carries
+  the canonical lowercase hyphenated Auth user UUIDv7 projected from verified `sub`.
+  Require an actor only where the route contract requires one; there, missing,
+  malformed, or wrong-version identity fails closed under the existing owner error
+  policy. Guest, tokenless, and public routes retain optional-actor behavior.
+  `X-REQUEST-ID` is correlation only.
 - `X-Access` and `X-USER-SCOPES` are verified token context; server-side permission
   rules still run.
 - `X-User-Mobile` is supplemental identity or audit context by default. Each service

@@ -64,11 +64,11 @@ cannot point at is not a review item.
    rejects trusted headers at its own edge — and both were checked, not one.
 2. One request-scoped context builder exists near ingress, and nothing downstream
    re-reads a raw trusted header.
-3. Tenant comes from `X-Project-Id` and actor from `X-User-Id`; the public boundary
-   value is validated as UUIDv7; any internal numeric key is derived after that
-   validation and stays service-local.
+3. Tenant comes from `X-Project-Id` and the canonical Auth user UUIDv7 comes from
+   `X-User-Id`; any internal numeric user key is derived only inside its owning service.
 4. A protected request with missing trusted tenant context is rejected, and a route
-   requiring an actor rejects a missing actor.
+   requiring an actor rejects a missing, malformed, or wrong-version user UUID. Guest,
+   tokenless, and public routes retain optional-actor behavior.
 5. Every tenant-aware query and command is scoped by the trusted context.
 6. A client tenant-override attempt is denied explicitly.
 7. Deny response codes and deny log codes match, with request and trace correlation

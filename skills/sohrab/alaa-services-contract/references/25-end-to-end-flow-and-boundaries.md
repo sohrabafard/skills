@@ -216,40 +216,34 @@ carries a private identifier and is a violation. A field named `id` that returns
 a field named `section_key`, `user_id`, `flagged_by`, or `resolved_by` that returns a table's integer key
 fails, whatever it is named.
 
-There is exactly one fleet-wide exception, and it is the **actor identifier**. Read what it is before
-reading what it permits: it is **technical debt this contract has recorded and accepted for now, owned by
-`auth`**. It is not a design choice, not a precedent, and not a demonstration that numeric identifiers are
-acceptable when convenient.
+### Canonical user identity
 
-The debt exists because `auth` authenticates against its own `users.id` and puts that integer in the token's
-`sub` claim. The gateway projects the claim it was given, so every downstream service receives the integer,
-and OpenFGA subjects already encode it as `user:<decimal>`. No consumer chose this; each inherited it from
-the token. Recording it as debt rather than leaving it as a bare exception is what stops the next agent from
-citing it as precedent — a new numeric identifier for a new domain resource is a violation of the rule
-above, and the existence of this row is an argument against it, not for it. There is no second exception,
-and adding one is a contract change, not a local decision.
+Auth's existing `users.uuidv7` is the sole public and cross-service user identifier: a lowercase,
+hyphenated UUIDv7 string. Auth's `users.id` remains private to Auth. Other services may retain private
+numeric user-table keys and foreign keys when they map them explicitly to this UUID; this rule does not
+require changing every local schema primary key. No other service creates a second public UUID for the same
+Auth user, and possession of the UUID grants no authorization.
 
-The exception, precisely:
-- The numeric `X-User-Id` the gateway projects from the verified `sub` claim is `auth`'s `users.id`. Every
-  service already receives it, and OpenFGA subjects already encode it as `user:<decimal>`. A payload may
-  carry that value in a field named exactly `user_id` or ending `_user_id`.
-- A service must carry the value it received in `X-User-Id` into such a field, never its own local
-  users-table key, because two services emitting different numbers for one person is the failure this
-  exception is narrow enough to prevent.
-- The exception covers the actor identifier and nothing else. A comment id, a course id, a section id, a
-  grant id, a flag id, or any other domain resource id is a public identifier and is never a database
-  integer on the wire.
-- `auth` owns the change that ends the debt, and no other service can end it: `users.uuidv7` already
-  exists, and the exception closes when `auth` puts a public user identifier in the token claim, the gateway
-  projects it, and every consumer reads it. Until that change ships, a service that invents its own public
-  user identifier creates a third spelling of one person and is a violation today.
-- The debt's per-service status and the migration item on `auth` are recorded in `95-fleet-conformance.md`.
-  A dated closure record belongs there when the change ships, not in this rule.
+Use the same UUID in API responses and target-user paths, SDKs, events and queue payloads, gRPC, and
+cross-service or shared-cache identity. OpenFGA user subjects use `user:<canonical UUIDv7>` consistently;
+preserve all other object-id encodings. Public and cross-service user identity always remains this UUIDv7.
+Only the owning service may map it to its private storage key inside that service boundary. There is no
+numeric actor exception and no accept-both fallback in the target contract.
+
+For Auth's bootstrap admin only, the source is `Auth <repo>/database/seeders/AuthAdminUserSeeder.php`
+(`USER_UUIDV7`). A new seed or reseed converges `users.id=1` to that pinned UUID; it does not assume any
+other seeded users, and other users retain their existing UUIDs. Downstream seed references use the Auth
+UUID, never a matching local numeric key. The current conformance status and dated adoption evidence belong
+in `95-fleet-conformance.md`; that snapshot is not proof that a consumer has migrated.
+
+This identity shape is a target contract, not evidence of runtime adoption. For token/header mechanics see
+`/alaa-trust-gateway-auth`; for the narrowly dated first-release compatibility exception and its limits see
+`22-failure-load-and-deprecation-contract.md`. Explicit plan-only or read-only requests remain read-only.
 
 ### Canonical `project_id` form
 
 `project_id` is a canonical UUIDv7 string on every surface where that field name appears. There is no
-exception, and unlike the actor identifier above, none has ever been accepted.
+exception.
 
 The four surfaces, named because each one has been got wrong somewhere in the fleet:
 - **HTTP payload** — request bodies, query parameters, DTOs, Resources, and serializers, inbound and
