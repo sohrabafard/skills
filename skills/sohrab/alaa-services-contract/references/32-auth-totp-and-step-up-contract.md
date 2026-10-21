@@ -172,6 +172,24 @@ Downstream service responsibilities:
 - Read `X-TOTP-PROOF-REJECTED` only to choose a message. A service that never reads it behaves exactly as it
   did before the header existed.
 
+## Proof binding to the issuing credential
+
+A step-up proof is bound to the credential that issued it, so a disable or reset invalidates every earlier proof.
+
+- `auth` stores the issuing credential's id under the proof's `jti` and under the local proof key. A request passes
+  only when the stored id equals the user's currently enabled credential (`app/Support/Auth/TotpProofBindingVerifier.php:29-40`,
+  `app/Services/Security/TotpStepUpService.php:89-98`). A disable or reset retires the credential and forgets the user's
+  proofs, so an earlier proof stops working at once, not at its expiry (`app/Support/Auth/TotpStepUpProofStore.php:80-103`).
+- The check runs inside `auth` with no call to another service. It covers both enforcement paths: `require_totp`
+  against the local proof record, and `gateway_step_up` against the gateway-injected `X-TOTP-PROOF-ID`
+  (`app/Http/Middleware/RequireGatewayStepUpProof.php:75-84`). Only `auth`'s own routes enforce it
+  (`/alaa-trust-gateway-auth` `references/90-source-map.md`).
+- An unreadable proof store fails closed: the read raises `DependencyUnavailableException`
+  (`TotpStepUpProofStore.php:111-118`), answered `503 DEPENDENCY_UNAVAILABLE` (`bootstrap/app.php:108-126`), never as a
+  valid proof. A failed forget after a disable or reset is only logged, because the binding check already refuses a
+  retired credential.
+- The Redis keys are registered in `29-redis-key-registry.md`.
+
 ## Rejected-proof advisory header
 
 `X-TOTP-PROOF-REJECTED` closes one blind spot and grants no new authority. Without it, a request whose proof

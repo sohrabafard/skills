@@ -64,9 +64,12 @@ what an operator needs to decide.
 **Diagnosis.** The account is sending faster than its allowance. This is a capacity condition, not a defect
 in the payload.
 
-**Smallest safe retry.** Retryable with an unchanged `request_id`. Where the response carries a retry hint,
-wait exactly the hint: guessing a shorter wait is the amplification the hint exists to prevent. Where there
-is no hint, back off under the curve `alaa-reliability-sla references/20-retries.md` defines.
+**Smallest safe retry.** Retryable with an unchanged `request_id`. Read `Retry-After` only on a throttle (HTTP
+`429` or error code `3`), never on a `5xx`. Clamp the hint to the caller's maximum (Ala: `SMS_RETRY_AFTER_MAX_SECONDS`,
+default 60 s) and wait at least the clamped hint, never past the message deadline: a longer hint is an outage, not
+a pause. Where there is no readable hint, back off under the curve `alaa-reliability-sla references/20-retries.md`
+defines. The account-wide cooldown a hint starts is owned by `/alaa-services-contract`
+`references/33-outbound-messaging-provider-contract.md`.
 
 **Escalation.** Sustained throttling is a capacity problem that a retry cannot fix. Reduce concurrency at
 the sender, and raise the account limit with Bale. Retrying harder converts a throttle into an outage.

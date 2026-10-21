@@ -26,14 +26,16 @@ Every path is relative to the root of the `auth` repository checkout. Trust code
 4. `docs/data-architecture/85-message-provider-resilience.md`, `docs/ops/sms-magfa-cutover.md`
 
 Facts here were read on 2026-10-20 from `auth` branch `feat/followups-p5-resilience` (D4 of
-`docs/_agent_plans/20261020-103000_sms-milestone-followups-design.md`), not yet merged or released.
+`docs/_agent_plans/20261020-103000_sms-milestone-followups-design.md`), now merged into `auth` `main`. The Bale
+registration, the Bale timeouts and everything about `Retry-After` and the cooldown were re-read at `8fa95e7` on
+2026-10-21.
 
 ## Adapter port
 
 - One adapter per provider behind one channel-neutral port. A provider registry maps the provider name to its
   adapter; shared code never binds the port to one adapter and never reads a provider's own configuration.
-- Registry names: `magfa` (registered), `bale` (planned, D5). Metric `dependency` label values: `magfa`,
-  `bale_safir` (planned).
+- Registry names: `magfa`, `bale` (both registered: `app/Providers/AppServiceProvider.php:84-86`). Metric `dependency`
+  label values: `magfa`, `bale_safir` (`app/Services/Messaging/Sms/Bale/BaleCallObserver.php:24`).
 - The adapter only translates: it builds the request, authenticates, parses and classifies. It never retries,
   schedules, picks a line or suppresses, and it never throws for a classified answer or a transport failure.
 - Every message carries a durable idempotency key the caller persisted before the first call and reuses on every
@@ -61,7 +63,7 @@ Facts here were read on 2026-10-20 from `auth` branch `feat/followups-p5-resilie
 | Transport signal | Set when | Transport breaker | AIMD rate |
 |---|---|---|---|
 | `answered` | Any HTTP status below 500 except a throttle | success sample | none |
-| `throttled` | The provider refused for rate (Magfa HTTP 429) | not counted | halve |
+| `throttled` | The provider refused for rate (Magfa and Bale HTTP 429, Bale body code 3) | not counted | halve |
 | `failed` | Connect refused or unreachable, DNS or TLS failure, connect or read timeout, broken transfer, HTTP 5xx | failure sample | none |
 | `not_called` | A local refusal, or nothing to send | not counted | none |
 
@@ -82,19 +84,20 @@ breaker, never the account's.
 ## Admission order
 
 Before every call: (1) operator pause `{all}:pause`, every provider; (2) the process's transport breaker for the
-provider; (3) the account breaker; (4) the line breaker; (5) the account's AIMD rate and concurrency. A refusal
-defers the work durably for the remaining lifetime of what refused (a capacity shortage: at most
-`SMS_CAPACITY_DEFER_MS`; an unreadable Redis: at least 5 s), never spends an attempt and never fails the work. An
-unreadable store admits nothing.
+provider; (3) the account breaker; (4) the line breaker; (5) the account's `Retry-After` cooldown; (6) the account's
+AIMD rate and concurrency. A refusal defers the work durably for the remaining lifetime of what refused (a capacity
+shortage: at most `SMS_CAPACITY_DEFER_MS`; an unreadable Redis: at least 5 s), never spends an attempt and never fails
+the work. An unreadable store admits nothing.
 
 ## Values
 
 | Value | Ala value | Key |
 |---|---|---|
 | Magfa connect / total timeout per call | 3 s / 15 s | `MAGFA_SMS_CONNECT_TIMEOUT_SECONDS`, `MAGFA_SMS_TIMEOUT_SECONDS` |
-| Bale connect / read timeout (planned, D5) | 2 s / 5 s | not yet configured |
+| Bale connect / total timeout per call | 2 s / 5 s | `BALE_SAFIR_CONNECT_TIMEOUT_SECONDS`, `BALE_SAFIR_TIMEOUT_SECONDS` |
 | Attempts per delivery, same key | 3 in total; full-jitter backoff `min(100 ms * 2^(n-1), 2000 ms)` | `sms.delivery.max_attempts` |
-| Throttled (429) retry | at least 5 s plus jitter, and the rate is halved; `Retry-After` is not read | code |
+| Throttled retry | at least 5 s plus jitter, the rate is halved, and a readable `Retry-After` raises the wait (see `Retry-After on a throttle`) | code |
+| `Retry-After` clamp | a hint is clamped to 1 through this maximum, default 60 s; the maximum is read clamped to 1 through 3600 | `SMS_RETRY_AFTER_MAX_SECONDS` |
 | AIMD ceiling (starting rate) | 5 req/s for Magfa (`NEEDS_MAGFA_CONFIRMATION`) | `SMS_MAGFA_REQUESTS_PER_SECOND` |
 | AIMD floor | 1 req/s | `SMS_AIMD_FLOOR_REQUESTS_PER_SECOND` |
 | AIMD decrease | x0.5, at most once per 2 s window | `SMS_AIMD_DECREASE_FACTOR`, `SMS_AIMD_DECREASE_WINDOW_MS` |
@@ -117,6 +120,25 @@ The transport breaker lives in each worker process and is never shared through R
 must not switch a provider off fleet-wide. On opening it writes only the advisory `{<provider>}:degraded` key for
 the open period; nothing reads that key to decide. The rate, the in-flight set and the OTP reserve are scoped to the
 provider account, never to a line, because per-line limits would remove the account limit and the reserve.
+
+## Retry-After on a throttle
+
+A provider's `Retry-After` header (delay seconds or an HTTP date) is read only on a throttle: Magfa and Bale HTTP 429,
+and Bale body code 3. A header on any other answer, a 503 included, is ignored. A throttle with a readable hint:
+
+1. Clamps the hint to `SMS_RETRY_AFTER_MAX_SECONDS`. A longer wait is an outage and belongs to the account breaker or
+   the operator pause.
+2. Sets the account-wide cooldown `{<provider>}:cooldown` for the clamped hint, extend-only: concurrent workers can
+   lengthen the pause, never shorten it. Admission defers every call of that provider account, after the breakers
+   and before the lease, spending no attempt. A cooldown never blocks another provider.
+3. Moves the AIMD anchor to the pause end (`anchor_ms` = now plus the pause) and lets the AIMD state live that much
+   longer, so the pause is never credited as recovery and the halved rate survives it.
+4. Holds the row's retry gate to at least the hint, bounded by the message deadline: `max(backoff, outage floor,
+   min(now + clamped hint, deadline))`. The rows of one call share one gate.
+
+An OTP or notice whose cooldown outlasts its deadline falls back to the next provider when it can: its channel ends as
+`channel_unavailable`, logged with reason `retry_after_cooldown`. Without a fallback it waits and closes at its
+deadline. A pause, a capacity shortage or an unreadable cooldown never ends a channel this way.
 
 ### Worked example: rate
 
@@ -159,6 +181,7 @@ connection no cache store flushes. The braced segment is the provider account's 
 | `{<provider>}:rate:<unix_second>` | per-second request counter | 2 s |
 | `{<provider>}:inflight` | sorted set of capacity leases | lease |
 | `{<provider>}:aimd` | hash `rate`, `anchor_ms`, `last_cut_ms` | refreshed on write; long enough to climb back to the ceiling |
+| `{<provider>}:cooldown` | account `Retry-After` pause, written by the throttle script | the clamped hint, extend-only |
 | `{<provider>}:breaker` | account breaker | breaker period |
 | `{<provider>}:line:<line>:breaker` | one line's breaker | breaker period |
 | `{<provider>}:degraded` | advisory transport-degraded flag | the open period |

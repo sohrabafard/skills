@@ -173,6 +173,10 @@ The caller acts on the class; the driver returns the class and the raw code.
 
 An unlisted code is stored verbatim with its recipient, treated as terminal for that item, and alerted; never retry it, because an unknown code retried as transient turns a caller defect into provider load.
 
+## HTTP 429 and `Retry-After`
+
+HTTP 429 without a readable vendor status means the gateway throttled the call before Magfa processed it: outcome not-sent, class transient, retry with the same `uid`. That 429 is the only throttle signal and is `NEEDS_MAGFA_CONFIRMATION`; codes `15` and `23` stay transient rejections, not throttles. Read `Retry-After` on a 429 and on no other answer, a `5xx` included, and clamp the hint to the caller's maximum (Ala: `SMS_RETRY_AFTER_MAX_SECONDS`, default 60 s). The wait, the account-wide cooldown and the provider fallback belong to the caller: `/alaa-services-contract` `references/33-outbound-messaging-provider-contract.md`.
+
 ## Non-negotiables
 
 - Keep the service password, the `Authorization` header, full recipient numbers, message text and OTP values out of logs, traces, exception payloads, screenshots and reports. Mask a recipient as `98912****000`.
