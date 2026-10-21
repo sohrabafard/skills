@@ -79,6 +79,9 @@ breaker, never the account's.
 - A delivery is recorded with its lane's first line. A send tries the recorded line first, then the lane's other
   lines. A line refused by its own breaker leaves the account's other lines in the race; an account that refused is
   not asked again for its other lines. A send moved to another line goes out from it and the delivery records it.
+- A line-scoped rejection (Magfa `20` or `34`) on a single-delivery send gives the attempt back and moves the delivery
+  to another admitted line of the same provider, once per delivery, and logs `auth.sms.delivery.line_switch_scheduled`.
+  With no other admitted line, or after the one switch, the delivery fails as before.
 - A line is sent only through its own provider account's credentials.
 
 ## Admission order
@@ -193,11 +196,32 @@ connection no cache store flushes. The braced segment is the provider account's 
   `alaa_dependency_request_duration_seconds` and `alaa_dependency_timeouts_total`, with `dependency=<provider>` and
   `operation` (`send`, `mid`, `statuses`). `outcome=refused` is a call the adapter refused to make. No recipient,
   key, uid or message id is ever a label.
-- `auth` log events (`event` plus `code`): `auth.sms.provider.throttled` (`SMS_PROVIDER_THROTTLED`),
+- `auth` log events (`event` plus `code`): `auth.sms.provider.throttled` (`SMS_PROVIDER_THROTTLED`; warning; fires when
+  the rate was cut or a hint set or lengthened the cooldown, and stays silent when neither changed; fields `provider`,
+  `requests_per_second`, `rate_decreased`, `cooldown` of `set`, `extended` or `unchanged`, and `retry_after_seconds`,
+  the whole seconds left of the clamped cooldown, never the raw header),
   `auth.sms.provider.transport_breaker_opened` (`SMS_PROVIDER_TRANSPORT_DEGRADED`),
   `auth.sms.provider.transport_breaker_closed` (`SMS_PROVIDER_TRANSPORT_RECOVERED`), `auth.sms.provider.account_error`
   (`SMS_PROVIDER_ACCOUNT_ERROR`), `auth.sms.provider.line_error` (`SMS_PROVIDER_LINE_ERROR`),
-  `auth.sms.lines.entry_ignored` (`SMS_SENDER_LINE_IGNORED`), `auth.sms.lines.unusable` (`SMS_SENDER_LINE_UNUSABLE`).
+  `auth.sms.lines.entry_ignored` (`SMS_SENDER_LINE_IGNORED`), `auth.sms.lines.unusable` (`SMS_SENDER_LINE_UNUSABLE`),
+  `auth.sms.delivery.line_switch_scheduled` (`SMS_DELIVERY_LINE_SWITCH_SCHEDULED`; warning; fields `sms_delivery_id`,
+  `kind`, `provider`, `provider_code`, `error_class`), `auth.sms.delivery.queued_expired`
+  (`SMS_DELIVERY_QUEUED_EXPIRED`; warning; fields `sms_delivery_id`, `kind`, `provider`),
+  `auth.sms.delivery.unclaimed_expired` (`SMS_DELIVERY_UNCLAIMED_EXPIRED`; now also closes fanout and last-in-chain
+  deliveries), `auth.sms.delivery.unknown_kind` (`SMS_DELIVERY_UNKNOWN_KIND`; now also written by the claim step and
+  by lease recovery), `auth.sms.due_work.stage_failed` (`SMS_DUE_WORK_STAGE_FAILED`; error; fields `stage` of
+  `recover_expired_leases`, `never_claimed`, `dispatch_queued`, `dispatch_unknown` or `dispatch_accepted`, and the
+  exception class name), `auth.sms.relay.stage_failed` (`SMS_RELAY_STAGE_FAILED`; error; `stage` is
+  `campaign_schedule`), `auth.sms.attempt_partitions.ensured` (`SMS_ATTEMPT_PARTITIONS_ENSURED`; info, or warning when
+  rows moved or a month failed; fields `created`, `partitions`, `moved_rows`, `failed_months`) and
+  `auth.sms.attempt_partitions.ensure_failed` (`SMS_ATTEMPT_PARTITIONS_ENSURE_FAILED`; error; fields `reason`,
+  `partition`, `rows`). Every log line written during an OTP, notice or Bale lane job also carries `sms_delivery_id`.
+- `auth` TOTP denial events: `auth.totp.admin_reset.denied` (warning; `code` is `TOTP_ADMIN_RESET_FORBIDDEN` for the
+  guard reasons `self`, `target_holds_reset_permission`, `multi_project_scope` and `privilege_superset`, and
+  `TOTP_RATE_LIMITED` for `quota`; fields `reason`, `actor_user_id`, and `retry_after_seconds` on quota) and
+  `auth.totp.enroll.denied` (warning; `TOTP_RATE_LIMITED`, `reason=quota`). Neither carries the target of a reset or
+  free text, and `http.path` is the route template. The admin reset audit line keeps the reason, operator and ticket
+  out of the application log; they live in the audit row only.
 
 ## Conformance check
 

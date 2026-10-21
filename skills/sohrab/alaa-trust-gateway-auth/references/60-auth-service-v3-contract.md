@@ -111,9 +111,12 @@ The admin TOTP reset `DELETE /auth/api/v3/admin/users/{user_id}/totp` needs
 ### Live-token guard
 
 `reject_revoked_access_token` runs on TOTP enroll, confirm, recovery-codes
-regenerate, step-up and disable, on the admin TOTP reset, and on the authz-override
-`PUT` and `DELETE` (auth `routes/api.php:59-110`). Denials are
-`references/30-fail-closed-cases.md` case 9.
+regenerate, step-up and disable, on the admin TOTP reset, on the authz-override
+`PUT` and `DELETE`, and on both admin session revoke routes (`DELETE .../sessions` and
+`DELETE .../sessions/{session}`; auth `routes/api.php`). On the session revoke routes
+it runs before `access_permission`, so a revoked or missing token gets
+`401 SESSION_EXPIRED` ahead of any `403 AUTHZ_DENIED`, and nothing is revoked. Denials
+are `references/30-fail-closed-cases.md` case 9.
 
 ### Profile
 
