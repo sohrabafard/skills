@@ -7,6 +7,7 @@
 1. **Record the base and checkout.** Capture the current branch, HEAD SHA, and worktree path. If integration is requested, also capture the target branch and its base SHA. A resumed agent needs those identities to determine what changed.
 2. **Map existing changes.** Treat unowned modified and untracked paths as user or other-lane work. Preserve them and continue on disjoint paths. Resolve overlapping ownership before editing the same file; never stash, stage, overwrite, or commit another owner's change.
 3. **Choose an isolated surface when needed.** Use the current checkout when its ownership is clear. Create a branch or worktree for concurrent writes or integration when it materially reduces collision risk, and record the choice. Branch creation never grants commit or merge authority.
+4. **Cut lane worktrees from the recorded base.** When the local base branch is ahead of its remote, the lead creates each lane worktree from the HEAD SHA recorded in step 1 (`git worktree add -b <branch> <path> <base-sha>`) and passes its path in the dispatch instead of relying on a runtime isolation option, which can branch from the remote default branch (Claude Code: `alaa-prompting-guide references/41-claude-code-runtime-features.md`). Before its first edit, every lane verifies that its HEAD contains that commit (`git merge-base --is-ancestor <base-sha> HEAD`) and stops with a blocker when it does not.
 
 ## Record the tested state
 

@@ -68,7 +68,7 @@ Before resolving any runtime name, model name, effort level, feature syntax, or 
 
 ## Review
 
-Review the requested surface directly. Lead with actionable findings and exact evidence; create workflow artifacts only when explicitly requested or when a continuing fix loop needs them. `references/review-mode.md` owns the evidence order, the must-check areas, and the verdict vocabulary a phase can hand across a lane boundary.
+Review the requested surface directly. Lead with actionable findings and exact evidence; create workflow artifacts only when explicitly requested or when a continuing fix loop needs them. `references/review-mode.md` owns the evidence order, the must-check areas, the verdict vocabulary a phase can hand across a lane boundary, and finding triage before any fix.
 
 ## Validate the workflow artifacts
 
