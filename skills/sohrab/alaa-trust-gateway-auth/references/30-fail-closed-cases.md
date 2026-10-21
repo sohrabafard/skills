@@ -259,7 +259,9 @@ deleting any client copy (gateway `snapshots/alaa-service.haproxy.cfg:226`, `:92
 and runs one primary-key lookup on auth's own database (auth
 `app/Repositories/Auth/DatabaseAccessTokenSessionLookup.php`). It makes no
 inter-service call and shortens the window only on those routes; elsewhere case 5
-holds.
+holds. The admin session revoke routes are live-token routes. The guard runs before
+the permission check there, so a stale caller token gets `401 SESSION_EXPIRED` and not
+`403 AUTHZ_DENIED`.
 
 **Response.** `401 SESSION_EXPIRED` when the header is missing or malformed, or the
 token row is unknown, revoked, expired or another user's.
