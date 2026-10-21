@@ -26,7 +26,7 @@ For Beads-bound work, populate each dispatch's actor, binding reference, issue I
 
 **Scope:** Change only the phase-owned surfaces. Preserve unrelated work. Delegate only independent, disjoint work or high-volume context isolation; the main agent owns integration.
 
-**Validation:** Reconcile prior evidence, run the plan's missing or invalidated affected commands under its authority limits, repair in-scope failures, and record concise evidence.
+**Validation:** Run only assigned focused or bounded task-owner checks. Return evidence to the integration owner, who follows the active runtime orchestrator's verification-and-gates.md for centralized phase collection, repair/retest barriers and inherited review. Preserve exact failures and blockers.
 
 **Done:** The phase acceptance criteria pass and status reflects verified reality.
 

@@ -8,11 +8,11 @@ The exact dispatched command completed successfully, evidence was captured, and 
 
 ## PRODUCT-FAILURE
 
-The implemented repository behavior violates a test, lint rule, type/build contract, smoke scenario, or acceptance criterion. Route to the owning implementation lane.
+The implemented repository behavior violates a test, lint rule, type/build contract, smoke scenario, or acceptance criterion. Identify its behavior owner; repair scheduling follows `verification-and-gates.md` Gate economics.
 
 ## TEST-INFRA-FAILURE
 
-The test harness, fixture, runner, generated setup, service dependency, or test environment is broken independently of the intended product behavior. Create an explicit infrastructure lane when a repository change is needed.
+The test harness, fixture, runner, generated setup, service dependency, or test environment is broken independently of the intended product behavior. Identify required infrastructure scope in the combined repair assignment under `verification-and-gates.md` Gate economics.
 
 ## ENVIRONMENT-BLOCKED
 

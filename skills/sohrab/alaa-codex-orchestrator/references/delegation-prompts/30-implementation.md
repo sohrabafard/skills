@@ -20,3 +20,7 @@
 ```
 
 Select the exact registered variant from the ratified lane record using `routing-matrix.md`; demanding workhorse work alone does not admit the exceptional implementation profile.
+
+## Collected verification repair
+
+Use the implementer envelope above for the single serialized batch fix lane selected under `verification-and-gates.md` Gate economics. Replace the lane scope with the combined authorized repair scope; carry every failure verbatim, its classification and owner, retired conflicting writers and exact focused retests. For an admitted early repair, scope only the recorded obstruction and return to collection without Review. Boundary retests remain the verifier's responsibility.

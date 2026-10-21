@@ -1,0 +1,23 @@
+ M skills/sohrab/alaa-cc-orchestrator/SKILL.md
+ M skills/sohrab/alaa-cc-orchestrator/references/delegation-prompts.md
+ M skills/sohrab/alaa-cc-orchestrator/references/delegation-prompts/30-implementation.md
+ M skills/sohrab/alaa-cc-orchestrator/references/delegation-prompts/40-verification.md
+ M skills/sohrab/alaa-cc-orchestrator/references/failure-taxonomy.md
+ M skills/sohrab/alaa-cc-orchestrator/references/routing-matrix.md
+ M skills/sohrab/alaa-cc-orchestrator/references/verification-and-gates.md
+ M skills/sohrab/alaa-cc-orchestrator/scripts/check_agent_contracts.py
+ M skills/sohrab/alaa-codex-orchestrator/SKILL.md
+ M skills/sohrab/alaa-codex-orchestrator/references/delegation-prompts.md
+ M skills/sohrab/alaa-codex-orchestrator/references/delegation-prompts/30-implementation.md
+ M skills/sohrab/alaa-codex-orchestrator/references/delegation-prompts/40-verification.md
+ M skills/sohrab/alaa-codex-orchestrator/references/failure-taxonomy.md
+ M skills/sohrab/alaa-codex-orchestrator/references/routing-matrix.md
+ M skills/sohrab/alaa-codex-orchestrator/references/verification-and-gates.md
+ M skills/sohrab/alaa-codex-orchestrator/scripts/check_agent_contracts.py
+ M skills/sohrab/alaa-workflow/SKILL.md
+ M skills/sohrab/alaa-workflow/assets/phase-prompts-template.md
+ M skills/sohrab/alaa-workflow/assets/phase-template.md
+ M skills/sohrab/alaa-workflow/assets/plan-template.md
+ M skills/sohrab/alaa-workflow/references/artifact-lifecycle.md
+ M skills/sohrab/alaa-workflow/references/phase-prompts.md
+?? outputs/phase-test-batching/

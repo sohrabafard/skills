@@ -39,7 +39,7 @@ Combine the common envelope with the smallest applicable complete template from 
 
 - When dispatching a planner variant, spec analyst, explorer, or researcher, read [Discovery and acceptance](./delegation-prompts/10-discovery.md) for acceptance, repository-mapping, or research template.
 - When dispatching a test strategist or architecture critic, read [Design and test strategy](./delegation-prompts/20-design.md) for matrix-design or architecture-review template.
-- When dispatching an implementation lane, read [Implementation](./delegation-prompts/30-implementation.md) for lane template and escalation instructions.
+- When dispatching an implementation lane, read [Implementation](./delegation-prompts/30-implementation.md) for implementation or collected verification repair and escalation instructions.
 - When dispatching a verifier or failure analyst, read [Verification and failure analysis](./delegation-prompts/40-verification.md) for evidence-run or failure-diagnosis template.
 - When dispatching a correctness, instruction, or adversarial reviewer, read [Correctness and instruction review](./delegation-prompts/50-correctness-review.md) for selected review template and its boundary.
 - When dispatching an API contract reviewer, security reviewer, or migration guardian, read [Contract and security review](./delegation-prompts/60-contract-review.md) for compatibility, trust-boundary, or migration template.

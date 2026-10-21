@@ -5,7 +5,7 @@ Spawn only agents that materially reduce uncertainty or enforce a required autho
 ## Always or normally required
 
 - Non-trivial repository change: select an implementation profile through Implementation routing below before dispatch.
-- Combined changed state at the declared review boundary: `alaa-verifier`.
+- Centralized phase test collection and combined acceptance evidence at the declared review boundary: `alaa-verifier`; `verification-and-gates.md` owns their distinct cadence.
 - Ship-quality judgment at that boundary: `alaa-reviewer`.
 - Behavior, API, configuration, or operations changed: `alaa-documenter`, after review.
 
@@ -156,9 +156,9 @@ Never trigger it on a routine change. A second opinion on work that already pass
 
 ## Failure routing
 
-- Clear test failure owned by one lane: return to that implementation lane.
+- Test failures, including clear single-owner failures: collect and route one combined batch through `verification-and-gates.md` Gate economics; never return each failure immediately to its original lane.
 - Ambiguous, cross-lane, flaky, timeout, environment, or contamination failure: `alaa-failure-analyst` first.
 - For every implementation fix, including security, migration, and architecture blockers, reapply Implementation routing above to the remaining work; preserve the finding verbatim.
 - Contract-compatibility blocker: route the fix through the owning implementer with the contract reviewer's finding verbatim.
 - Browser-only reproducible defect: browser QA provides evidence; the owning implementer fixes.
-- Test infrastructure defect: create an explicit infrastructure implementation lane; the verifier never fixes it.
+- Test infrastructure defects retain explicit infrastructure scope inside the serialized batch fix assignment; the verifier never fixes. Environment actions require their existing authority.

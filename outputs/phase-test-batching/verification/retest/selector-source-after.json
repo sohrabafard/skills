@@ -1,0 +1,10 @@
+[
+  {
+    "path": "skills/sohrab/alaa-workflow/tests/test_workflow_files.py",
+    "sha256": "8C1D6C8EB5A9C2EAAC994CBF4ECF44A1621BCB68493A29897B1E04DC8E81E743"
+  },
+  {
+    "path": "skills/sohrab/alaa-workflow/scripts/init_workflow_files.py",
+    "sha256": "60C694534E848C06EDC74C105AE95F28DBD3E0869F35CF2A93DD21738196F239"
+  }
+]

@@ -92,7 +92,7 @@ Orchestrator mode preserves A–E; F requires requested integration and explicit
 |---|---|---|
 | A — Plan | workspace setup, evidence lanes, the chosen solution and its rejected alternatives, the written plan, the profile | the plan and profile are recorded and presented |
 | B — Implementation | disjoint lanes, focused subtask checks and bounded task acceptance, with tested diff evidence | every required lane is reconciled against its actual diff |
-| C — Verification | at the declared boundary, an integrated verification plan under its required observer | every command reached `PASS`, or the phase ended blocked with the failure classified and its owner named |
+| C — Verification | centralized phase test collection under its required observer; acceptance at the declared boundary | every command reached `PASS`, or the phase ended blocked with the failure classified and its owner named |
 | D — Review and specialist gates | at the declared boundary, independent review and every triggered specialist | findings are resolved or explicitly accepted by the user |
 | E — Documentation and final validation | documentation and its grade, required final gates, the report; base integration only when requested and authorized | applicable documentation is validated; whole-engagement final gates wait for its final candidate |
 | F — Requested integration | reviewable integration details and explicit authority, then the local merge | authorized integration is complete, or its declined/blocked status is reported; not applicable to local-only work |

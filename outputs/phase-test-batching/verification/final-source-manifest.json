@@ -1,0 +1,82 @@
+[
+  {
+    "path": "skills/sohrab/alaa-cc-orchestrator/SKILL.md",
+    "sha256": "11271EA33FFACEEBE20BE437F71236ADFA451610AC48F728A14DD486AD0CAB6E"
+  },
+  {
+    "path": "skills/sohrab/alaa-cc-orchestrator/references/delegation-prompts.md",
+    "sha256": "06BAE952A79E0793B12CB97C189DE2A9EB56FF7A666601456B85FD74D90538BC"
+  },
+  {
+    "path": "skills/sohrab/alaa-cc-orchestrator/references/delegation-prompts/30-implementation.md",
+    "sha256": "3931C5E06406BBFBC82CD69DE5D2F95B23695DEC7131AF804E672849DA21DAE7"
+  },
+  {
+    "path": "skills/sohrab/alaa-cc-orchestrator/references/delegation-prompts/40-verification.md",
+    "sha256": "9E96D113A7579D13D1663A91550CFD5EF959FC11F53C53129C23A488EF8933F8"
+  },
+  {
+    "path": "skills/sohrab/alaa-cc-orchestrator/references/routing-matrix.md",
+    "sha256": "0C601E5D9C0E7A68FBF2F5039D1F8698048CCC22F2E22079911905BF5C042B68"
+  },
+  {
+    "path": "skills/sohrab/alaa-cc-orchestrator/references/verification-and-gates.md",
+    "sha256": "D65C79D948CA69741C5F1BBDCE9D548E983DC059C10426EB2E2D35C0D6BBC6DD"
+  },
+  {
+    "path": "skills/sohrab/alaa-cc-orchestrator/scripts/check_agent_contracts.py",
+    "sha256": "7DF520F99605774C82F9A43EED1B8C431120AE16DC625A6F4EE1286DEDBDD602"
+  },
+  {
+    "path": "skills/sohrab/alaa-codex-orchestrator/SKILL.md",
+    "sha256": "942F148BEA82A6FA758E25A8F19591251FC31E15E237A67E432827C7E55CAE45"
+  },
+  {
+    "path": "skills/sohrab/alaa-codex-orchestrator/references/delegation-prompts.md",
+    "sha256": "06BAE952A79E0793B12CB97C189DE2A9EB56FF7A666601456B85FD74D90538BC"
+  },
+  {
+    "path": "skills/sohrab/alaa-codex-orchestrator/references/delegation-prompts/30-implementation.md",
+    "sha256": "1CCD52B1F0C2760C1F0DEF50C228139BA23FA0F298C8B8211FF4FB53F6903810"
+  },
+  {
+    "path": "skills/sohrab/alaa-codex-orchestrator/references/delegation-prompts/40-verification.md",
+    "sha256": "9E96D113A7579D13D1663A91550CFD5EF959FC11F53C53129C23A488EF8933F8"
+  },
+  {
+    "path": "skills/sohrab/alaa-codex-orchestrator/references/routing-matrix.md",
+    "sha256": "2265633BAD9D415D36A0D2B0992880A2864589A3C6560D6331A0D8ADA43A435F"
+  },
+  {
+    "path": "skills/sohrab/alaa-codex-orchestrator/references/verification-and-gates.md",
+    "sha256": "A3FC50429274560EA8CB9D81294FEA51CAFE2F877C4D71202BEEA6B1989783FB"
+  },
+  {
+    "path": "skills/sohrab/alaa-codex-orchestrator/scripts/check_agent_contracts.py",
+    "sha256": "9B0B7443E30FC0396E6DE8F2B5F89AEB35F705868BBECC8C565E9BA0100895C6"
+  },
+  {
+    "path": "skills/sohrab/alaa-workflow/SKILL.md",
+    "sha256": "EF124DDA4D28B491A8B187E8A846C442AD41759447216315687E1881C4209990"
+  },
+  {
+    "path": "skills/sohrab/alaa-workflow/assets/phase-prompts-template.md",
+    "sha256": "C978D4F77E2118C27809ADF846177706624F16806AD873F29A38F44B47D5EB9F"
+  },
+  {
+    "path": "skills/sohrab/alaa-workflow/assets/phase-template.md",
+    "sha256": "5B89F9E7946532421192FFE804EDEB10BE84C2FE3ED6FCE9201E51F4CF2E5D9E"
+  },
+  {
+    "path": "skills/sohrab/alaa-workflow/assets/plan-template.md",
+    "sha256": "260538B5272538C5131E243C8278F50BFBEF6941AD2CD5BC804FE87A172719F4"
+  },
+  {
+    "path": "skills/sohrab/alaa-workflow/references/artifact-lifecycle.md",
+    "sha256": "907EC90AB0AF8EDD56034F33DFD212B84433954C9D878FF0E0A85DBE151DADB3"
+  },
+  {
+    "path": "skills/sohrab/alaa-workflow/references/phase-prompts.md",
+    "sha256": "12FA8FD4316BD7F75BB0A0B7B737C8200BB4361BA736A6047D5CC412D084B65E"
+  }
+]

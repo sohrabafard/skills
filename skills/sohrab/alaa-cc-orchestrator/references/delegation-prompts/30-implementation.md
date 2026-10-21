@@ -41,3 +41,7 @@ Use `routing-matrix.md` to select directly from the ratified lane record. Pass t
 <action_safety>No unrelated work, commit, deploy, publish, destructive action, or global configuration change.</action_safety>
 <output>Lane outcome in one sentence; design decision, alternatives rejected, and the deciding evidence; touched files and why each changed; acceptance criteria mapped to implementation/tests; verification evidence with command, cwd, resource policy, exit/result; residual risks and checks not run; blockers or boundary conflicts.</output>
 ```
+
+## Collected verification repair
+
+Use the implementer envelope above for the single serialized batch fix lane selected under `verification-and-gates.md` Gate economics. Replace the lane scope with the combined authorized repair scope; carry every failure verbatim, its classification and owner, retired conflicting writers and exact focused retests. For an admitted early repair, scope only the recorded obstruction and return to collection without Review. Boundary retests remain the verifier's responsibility.

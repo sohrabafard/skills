@@ -36,7 +36,7 @@ This section applies to execution engagements and issue-only implementation.
 - Apply the execution hierarchy and task authority in `references/task-tracking.md` before dependent work.
 - Bring canonical workflow/task owners and derived snapshots current before the next phase, handoff, or report.
 - Record the engagement's review boundary and final phase; pass them into nested orchestration. `alaa-codex-orchestrator` and `alaa-cc-orchestrator` `references/verification-and-gates.md` own cadence scheduling.
-- Run the affected gates at the strength the change requires. Resolve cheap findings before an expensive gate, then cite an unchanged result instead of repeating it. A repository validation policy and `/alaa-testing-strategy` own stricter proof.
+- Record phase test-collection, repair/retest and inherited review barriers in the plan through `references/artifact-lifecycle.md`. Route their execution order to the runtime orchestrator pair's `references/verification-and-gates.md`; cite eligible unchanged evidence. Repository validation policy and `/alaa-testing-strategy` own stricter proof.
 - Fix defects and retest the failing path within the active retry budget; never weaken assertions, conceal failures through fixtures, suppress findings or lower review standards. Record an unresolved blocker and next safe action; continue independent safe work.
 - On resume, follow the read order in `references/context-continuity.md` before taking any action.
 - Complete only when implementation, validation evidence, documentation, artifact status, and the final reusable-context curation outcome agree.

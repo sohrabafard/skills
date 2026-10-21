@@ -1,0 +1,95 @@
+{
+  "head": "2ddd92880730458480207d414d53828107a06335",
+  "scope_sha256": "e00ecfd229ad93e80eb91a424c85e9fec02b07cdd91f4e35ed1140ee18512563",
+  "method": "SHA256 of sorted path/content-SHA256 manifest encoded as compact sorted-key UTF-8 JSON",
+  "files": [
+    {
+      "path": "skills/sohrab/alaa-cc-orchestrator/SKILL.md",
+      "sha256": "11271ea33ffaceebe20be437f71236adfa451610ac48f728a14dd486ad0cab6e"
+    },
+    {
+      "path": "skills/sohrab/alaa-cc-orchestrator/references/delegation-prompts.md",
+      "sha256": "06bae952a79e0793b12cb97c189de2a9eb56ff7a666601456b85fd74d90538bc"
+    },
+    {
+      "path": "skills/sohrab/alaa-cc-orchestrator/references/delegation-prompts/30-implementation.md",
+      "sha256": "3931c5e06406bbfbc82cd69de5d2f95b23695dec7131af804e672849da21dae7"
+    },
+    {
+      "path": "skills/sohrab/alaa-cc-orchestrator/references/delegation-prompts/40-verification.md",
+      "sha256": "9e96d113a7579d13d1663a91550cfd5ef959fc11f53c53129c23a488ef8933f8"
+    },
+    {
+      "path": "skills/sohrab/alaa-cc-orchestrator/references/failure-taxonomy.md",
+      "sha256": "bc1f7d1a5b7102da969af8ec0fc8604eebf03dfe44ca86468b3152d86c84ee7e"
+    },
+    {
+      "path": "skills/sohrab/alaa-cc-orchestrator/references/routing-matrix.md",
+      "sha256": "0c601e5d9c0e7a68fbf2f5039d1f8698048ccc22f2e22079911905bf5c042b68"
+    },
+    {
+      "path": "skills/sohrab/alaa-cc-orchestrator/references/verification-and-gates.md",
+      "sha256": "d65c79d948ca69741c5f1bbdce9d548e983dc059c10426eb2e2d35c0d6bbc6dd"
+    },
+    {
+      "path": "skills/sohrab/alaa-cc-orchestrator/scripts/check_agent_contracts.py",
+      "sha256": "cc6ad2516690a3008221bb9cb5812d096c669e9a588f101a574ad1a4a4a6c2b0"
+    },
+    {
+      "path": "skills/sohrab/alaa-codex-orchestrator/SKILL.md",
+      "sha256": "942f148bea82a6fa758e25a8f19591251fc31e15e237a67e432827c7e55cae45"
+    },
+    {
+      "path": "skills/sohrab/alaa-codex-orchestrator/references/delegation-prompts.md",
+      "sha256": "06bae952a79e0793b12cb97c189de2a9eb56ff7a666601456b85fd74d90538bc"
+    },
+    {
+      "path": "skills/sohrab/alaa-codex-orchestrator/references/delegation-prompts/30-implementation.md",
+      "sha256": "1ccd52b1f0c2760c1f0def50c228139ba23fa0f298c8b8211ff4fb53f6903810"
+    },
+    {
+      "path": "skills/sohrab/alaa-codex-orchestrator/references/delegation-prompts/40-verification.md",
+      "sha256": "9e96d113a7579d13d1663a91550cfd5ef959fc11f53c53129c23a488ef8933f8"
+    },
+    {
+      "path": "skills/sohrab/alaa-codex-orchestrator/references/failure-taxonomy.md",
+      "sha256": "bc1f7d1a5b7102da969af8ec0fc8604eebf03dfe44ca86468b3152d86c84ee7e"
+    },
+    {
+      "path": "skills/sohrab/alaa-codex-orchestrator/references/routing-matrix.md",
+      "sha256": "2265633bad9d415d36a0d2b0992880a2864589a3c6560d6331a0d8ada43a435f"
+    },
+    {
+      "path": "skills/sohrab/alaa-codex-orchestrator/references/verification-and-gates.md",
+      "sha256": "a3fc50429274560ea8cb9d81294fea51cafe2f877c4d71202beea6b1989783fb"
+    },
+    {
+      "path": "skills/sohrab/alaa-codex-orchestrator/scripts/check_agent_contracts.py",
+      "sha256": "ed6679a55c83916618d8c1d59743f9e4faafda770ce9922876437b47878ee9ce"
+    },
+    {
+      "path": "skills/sohrab/alaa-workflow/SKILL.md",
+      "sha256": "ef124dda4d28b491a8b187e8a846c442ad41759447216315687e1881c4209990"
+    },
+    {
+      "path": "skills/sohrab/alaa-workflow/assets/phase-prompts-template.md",
+      "sha256": "c978d4f77e2118c27809adf846177706624f16806ad873f29a38f44b47d5eb9f"
+    },
+    {
+      "path": "skills/sohrab/alaa-workflow/assets/phase-template.md",
+      "sha256": "5b89f9e7946532421192ffe804edeb10be84c2fe3ed6fce9201e51f4cf2e5d9e"
+    },
+    {
+      "path": "skills/sohrab/alaa-workflow/assets/plan-template.md",
+      "sha256": "260538b5272538c5131e243c8278f50bfbef6941ad2cd5bc804fe87a172719f4"
+    },
+    {
+      "path": "skills/sohrab/alaa-workflow/references/artifact-lifecycle.md",
+      "sha256": "907ec90ab0af8edd56034f33dfd212b84433954c9d878ff0e0a85dbe151dadb3"
+    },
+    {
+      "path": "skills/sohrab/alaa-workflow/references/phase-prompts.md",
+      "sha256": "12fa8fd4316bd7f75bb0a0b7b737c8200bb4361ba736a6047d5cc412d084b65e"
+    }
+  ]
+}

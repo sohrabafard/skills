@@ -16,6 +16,7 @@
   Unix runner: <absolute SKILL_ROOT>/scripts/run-low-priority.sh
   Priority: BelowNormal; CPU count: <n>; only one heavy command at a time.
 </resource_policy>
+<collection_barrier>Apply verification-and-gates.md Gate economics: collect all runnable commands and failures; no fixes or Review during collection. Continue safe independent commands; stop unsafe/contaminated execution and report affected unrun checks. Return the combined results, including every blocker, for one serialized repair assignment.</collection_barrier>
 <review_boundary><inherited phase|final boundary, whole-engagement final candidate identity and source plan; no subtask/task independent acceptance></review_boundary>
 <tier>affected | exhaustive; cite eligible unchanged affected evidence; exhaustive fresh once on the final candidate</tier>
 <already_observed><commands whose recorded results are still valid, with the run that produced each; do not re-run these></already_observed>

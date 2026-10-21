@@ -12,6 +12,7 @@
 {{phase_work}}
 - Acceptance criteria: NEEDS_FILL
 - Validation commands: NEEDS_FILL
+- Collection/repair/retest barrier and evidence owner: NEEDS_FILL; scheduling follows the active runtime orchestrator's verification-and-gates.md.
 - Evidence observed: not run
 - Review status: REVIEW_PENDING
 - Review evidence: not run

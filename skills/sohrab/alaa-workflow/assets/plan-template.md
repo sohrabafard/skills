@@ -74,6 +74,7 @@ Prompting-guide supplies capability/mechanics evidence; workflow stores decision
 - Disjoint writes and shared-resource conflicts: NEEDS_FILL
 - Integration barriers and parallel/serialized rationale: NEEDS_FILL
 - Consolidated tasks/checks and preserved outcome/evidence mappings: NEEDS_FILL
+- Phase collection, repair/retest and review barriers, owners and resume evidence: NEEDS_FILL; apply the active runtime orchestrator's verification-and-gates.md.
 - Reusable evidence and invalidation conditions: NEEDS_FILL
 - Dispatches assume zero shared context: copy the relevant handoff-package facts into the dispatch text rather than referring to this conversation.
 - Lanes report changed paths; this plan's owner records the validated snapshot and handles any explicitly authorized commit.

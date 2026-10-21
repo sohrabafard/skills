@@ -333,7 +333,7 @@ CADENCE_REQUIREMENTS = (
     "Reuse a recorded standing user grant; do not invent another approval",
     "Without that grant, or after failed review/tests, preserve an identified uncommitted snapshot",
     "Worker roles never gain commit authority",
-    "Stages C/D and final E gates wait for the inherited boundary",
+    "Stage C runs at each phase implementation end; Stage D and final E gates wait for the inherited boundary",
     "The exhaustive tier belongs only to the whole engagement's final candidate after final documentation when required",
     "covered inputs, environment, flags and required observer match demonstrably",
     "Markdown and templates can be checker inputs: documentation-only change proves no equivalence",
@@ -515,6 +515,129 @@ def cadence_self_tests() -> list[tuple[str, bool]]:
     return cases
 
 
+# Topic: phase collection and batch repair; layer: structural source contract.
+# These fixtures reject source regressions, not simulate a live agent scheduler.
+COLLECTION_REQUIREMENTS = (
+    "run every required runnable phase check centrally once through `alaa-verifier`",
+    "A failure does not cancel independent remaining checks",
+    "Record each command's exit/result and each unrun check's blocker",
+    "A fail-fast aggregate proves only executed coverage: dispatch its supported keep-going mode or exact uncovered child commands; preserve failure exits",
+    "Combine the full collection's failures verbatim into one serialized fix lane with explicit scope/ownership; retire conflicting writers",
+    "Classify first, use the failure analyst for ambiguous ownership and preserve environment/security authority limits",
+    "Only a failure blocking all or most remaining checks permits a minimal early repair",
+    "record blocked checks and cause, repair only that obstruction",
+    "then run or resume all required checks, including previously blocked checks, before any Review",
+    "Invalidate affected evidence",
+    "After batch repair, independent verification reruns failed and invalidated checks before Stage D",
+    "Unresolved required checks block Review and acceptance",
+    "Keep existing retry/stop budgets",
+    "Continue safe independent checks; stop unsafe or contaminated execution and name affected unrun checks, without calling collection complete",
+    "final-only review defers acceptance, not phase test collection",
+    "Stage C runs at each phase implementation end; Stage D and final E gates wait for the inherited boundary",
+    "after Stage C's collection, batch repair and required retests pass",
+)
+COLLECTION_SEAMS = {
+    "taxonomy": (
+        "Identify its behavior owner; repair scheduling follows `verification-and-gates.md` Gate economics",
+        "Identify required infrastructure scope in the combined repair assignment under `verification-and-gates.md` Gate economics",
+    ),
+    "routing": (
+        "Test failures, including clear single-owner failures: collect and route one combined batch",
+        "never return each failure immediately to its original lane",
+    ),
+    "verifier": ("<collection_barrier>", "collect all runnable commands and failures; no fixes or Review during collection"),
+    "repair": ("single serialized batch fix lane", "For an admitted early repair, scope only the recorded obstruction and return to collection without Review"),
+    "workflow": ("Record phase test-collection, repair/retest and inherited review barriers",),
+    "planning": ("Record each phase's post-reconciliation test collection, combined repair/retest and declared review barriers", "workflow records these barriers without redefining their policy"),
+    "plan_template": ("Phase collection, repair/retest and review barriers, owners and resume evidence",),
+    "phase_template": ("Collection/repair/retest barrier and evidence owner",),
+    "prompt_routing": ("Carry the plan's phase collection and repair/retest barriers and their evidence owner",),
+    "prompt_template": ("Run only assigned focused or bounded task-owner checks", "centralized phase collection, repair/retest barriers and inherited review"),
+}
+COLLECTION_CONTRADICTIONS = (
+    "Route to the owning implementation lane.",
+    "Create an explicit infrastructure lane when a repository change is needed.",
+    "Gate economics below may move cheap review before expensive verification",
+    "resolve cheap read-only gates before expensive verification",
+    "dispatch Stage D's read-only gates before Stage C",
+    "orders this review before that gate's dispatch rather than after it",
+    "Clear test failure owned by one lane: return to that implementation lane",
+    "Send a grounded fix request to the owning implementer afterward",
+    "Resolve cheap findings before an expensive gate",
+    "Stages C/D and final E gates wait for the inherited boundary",
+    "Stop collection after the first failed command",
+    "Start one repair lane for each failed test",
+    "Any failed check permits an early repair",
+    "Review immediately after the minimal early repair",
+    "A fail-fast aggregate proves all required checks ran",
+    "Skip previously blocked checks after early repair",
+    "Under final-only review, defer all phase test collection until final review",
+    "Collection resets the retry budget",
+)
+
+
+def collection_sources() -> dict[str, str]:
+    paths = {
+        "gates": ROOT / "references/verification-and-gates.md",
+        "taxonomy": ROOT / "references/failure-taxonomy.md",
+        "routing": ROOT / "references/routing-matrix.md",
+        "verifier": ROOT / "references/delegation-prompts/40-verification.md",
+        "repair": ROOT / "references/delegation-prompts/30-implementation.md",
+        "workflow": ROOT.parent / "alaa-workflow/SKILL.md",
+        "planning": ROOT.parent / "alaa-workflow/references/artifact-lifecycle.md",
+        "plan_template": ROOT.parent / "alaa-workflow/assets/plan-template.md",
+        "phase_template": ROOT.parent / "alaa-workflow/assets/phase-template.md",
+        "prompt_routing": ROOT.parent / "alaa-workflow/references/phase-prompts.md",
+        "prompt_template": ROOT.parent / "alaa-workflow/assets/phase-prompts-template.md",
+    }
+    return {name: path.read_text(encoding="utf-8") for name, path in paths.items()}
+
+
+def collection_failures(sources: dict[str, str]) -> list[str]:
+    errors = []
+    requirements = {"gates": COLLECTION_REQUIREMENTS, **COLLECTION_SEAMS}
+    for name, clauses in requirements.items():
+        for clause in clauses:
+            if not contract_present(clause, sources[name]):
+                errors.append(f"{name}: missing collection contract: {clause}")
+    for name, text in sources.items():
+        for clause in COLLECTION_CONTRADICTIONS:
+            if contract_present(clause, text):
+                errors.append(f"{name}: contradictory collection contract: {clause}")
+    return errors
+
+
+def collection_self_tests() -> list[tuple[str, bool]]:
+    # Immutable source setup; each mutation receives a fresh dictionary.
+    sources = collection_sources()
+    cases = [("phase collect/repair/retest/review source accepted", not collection_failures(sources))]
+    for name, clauses in {"gates": COLLECTION_REQUIREMENTS, **COLLECTION_SEAMS}.items():
+        for clause in clauses:
+            broken = {**sources, name: sources[name].replace(clause, "omitted")}
+            diagnostic = f"{name}: missing collection contract: {clause}"
+            cases.append((f"{name}: requires {clause}", diagnostic in collection_failures(broken)))
+    # Contradictions remain rejected when every positive clause is still present.
+    for name in sources:
+        for clause in COLLECTION_CONTRADICTIONS:
+            broken = {**sources, name: sources[name] + "\n" + clause}
+            diagnostic = f"{name}: contradictory collection contract: {clause}"
+            cases.append((f"{name}: rejects {clause}", diagnostic in collection_failures(broken)))
+    # Isolate the load-bearing clauses in representative failure scenarios.
+    for scenario, clauses in (
+        ("A fails, B runs, C fails, then one combined repair", COLLECTION_REQUIREMENTS[:5]),
+        ("setup blocks most checks: minimal repair then full collection without Review", COLLECTION_REQUIREMENTS[6:10]),
+        ("one blocked test leaves safe independent checks runnable", (COLLECTION_REQUIREMENTS[1], COLLECTION_REQUIREMENTS[13])),
+        ("fail-fast coverage requires uncovered children with preserved failures", (COLLECTION_REQUIREMENTS[3],)),
+        ("final-only review still collects each phase", COLLECTION_REQUIREMENTS[14:16]),
+        ("retest before Review without a fresh retry budget", (COLLECTION_REQUIREMENTS[10], COLLECTION_REQUIREMENTS[12], COLLECTION_REQUIREMENTS[16])),
+    ):
+        for clause in clauses:
+            broken = {**sources, "gates": sources["gates"].replace(clause, "omitted")}
+            diagnostic = f"gates: missing collection contract: {clause}"
+            cases.append((scenario + ": " + clause, diagnostic in collection_failures(broken)))
+    return cases
+
+
 def verification_sources() -> tuple[str, list[str], dict[str, str]]:
     return (
         (ROOT / "references/verification-and-gates.md").read_text(encoding="utf-8"),
@@ -575,6 +698,7 @@ def self_test() -> int:
         ("blanket no-verification rejected", bool(orchestrator_failures(skill + "\n**Do not add verification instructions.**"))),
         ("invented watchdog rejected", bool(orchestrator_failures(skill + "\nA watchdog ends a lane on silence rather than on duration"))),
     ]
+    cases.extend(collection_self_tests())
     cases.extend(cadence_self_tests())
     cases.extend(specialist_cadence_self_tests())
     cases.append(("economical execution accepted", not economy_failures(skill, gates)))
@@ -698,6 +822,7 @@ def main() -> int:
             (ROOT / "references/delegation-prompts/30-implementation.md").read_text(encoding="utf-8")))
         errors.extend(verification_failures(*verification_sources()))
         errors.extend(cadence_failures(*cadence_sources()))
+        errors.extend(collection_failures(collection_sources()))
         errors.extend(task_allocation_failures(
             (ROOT / "references/routing-matrix.md").read_text(encoding="utf-8"),
             (ROOT / "references/model-effort-policy.md").read_text(encoding="utf-8")))
