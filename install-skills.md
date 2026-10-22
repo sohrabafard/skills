@@ -136,8 +136,8 @@ It links into `~/.codex/skills` and `~/.claude/skills`. Missing roots, real dest
 and different symlinks are reported and skipped. Correct links remain unchanged. Duplicate skill
 names follow source-root order: an earlier link is kept and a later conflicting source is skipped.
 The final summary counts skipped conflicts; exit zero does not mean every skill was installed.
-Generated Gortex directories need the setup guide's explicit backup step before this installer
-can link their managed replacements. The installer itself never moves or overwrites them.
+Existing real Gortex directories are reported and skipped like other real destinations;
+this installer never moves or overwrites them. The setup guide verifies shared skill links.
 
 ## Where a skill is installed, and how it is invoked
 
@@ -158,7 +158,7 @@ The adapted Gortex task recipes live in `skills/gortex/`; `skills/sohrab/alaa-co
 remains their shared policy owner. `skills/gortex/provenance.json` records the supplied installer
 snapshot and adaptations. Do not refresh this pack by running Gortex's installer or profile
 switch against installed symlinks: those operations can write through the links into this repository.
-The WSL setup guide owns the backup-and-link migration from generated user copies.
+The WSL setup guide describes Git synchronization and shared-link verification.
 
 **Invocation is `/name` in Claude Code and `$name` in Codex**, and both forms name the same skill.
 Whether a skill may be selected without being named is declared once per skill, in its
