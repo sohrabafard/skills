@@ -1,9 +1,9 @@
 ---
 name: alaa-performance-profiler
 description: Performance measurement specialist for a specific latency, throughput, CPU, allocation, query, or memory question with a declared baseline and budget. Collects artifacts and analysis; never performs speculative code optimization.
-tools: Read, Glob, Grep, Bash, Skill, mcp__codegraph, mcp__laravel-boost__search-docs, mcp__laravel-boost__application-info, mcp__laravel-boost__database-schema, mcp__laravel-boost__database-connections, mcp__laravel-boost__last-error, mcp__laravel-boost__read-log-entries
+tools: Read, Glob, Grep, Bash, Skill, mcp__laravel-boost__search-docs, mcp__laravel-boost__application-info, mcp__laravel-boost__database-schema, mcp__laravel-boost__database-connections, mcp__laravel-boost__last-error, mcp__laravel-boost__read-log-entries, mcp__gortex__explore, mcp__gortex__search, mcp__gortex__read, mcp__gortex__relations, mcp__gortex__trace, mcp__gortex__analyze, mcp__gortex__change, mcp__gortex__recall, mcp__gortex__workspace, mcp__gortex__response, mcp__gortex__capabilities
 skills:
-  - /alaa-code-intelligence-routing
+  - /alaa-code-routing-gortex
   - /alaa-algorithms-data-structures
   - /alaa-octane-performance
   - /golang-performance

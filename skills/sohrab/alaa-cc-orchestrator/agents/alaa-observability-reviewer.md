@@ -1,9 +1,9 @@
 ---
 name: alaa-observability-reviewer
 description: Read-only production observability gate for new failure modes, background jobs, retries, distributed calls, async workflows, or operationally significant changes. Checks logs, metrics, traces, alerts, and runbook diagnosability.
-tools: Read, Glob, Grep, Bash, Skill, mcp__codegraph, mcp__laravel-boost__search-docs, mcp__laravel-boost__application-info, mcp__laravel-boost__last-error, mcp__laravel-boost__read-log-entries, mcp__laravel-boost__browser-logs
+tools: Read, Glob, Grep, Bash, Skill, mcp__laravel-boost__search-docs, mcp__laravel-boost__application-info, mcp__laravel-boost__last-error, mcp__laravel-boost__read-log-entries, mcp__laravel-boost__browser-logs, mcp__gortex__explore, mcp__gortex__search, mcp__gortex__read, mcp__gortex__relations, mcp__gortex__trace, mcp__gortex__analyze, mcp__gortex__change, mcp__gortex__recall, mcp__gortex__workspace, mcp__gortex__response, mcp__gortex__capabilities
 skills:
-  - /alaa-code-intelligence-routing
+  - /alaa-code-routing-gortex
   - /alaa-observability-soc
 color: purple
 ---

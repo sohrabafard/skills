@@ -58,7 +58,7 @@ the import graph lie about what depends on what. **Rule:** construct in the comp
 
 - `go list -deps ./internal/domain/... ./internal/application/...` lists everything those layers actually pull in,
   transitively. Nothing in the forbidden list above may appear.
-- Before a move requiring package-API or reference evidence, load /alaa-code-intelligence-routing
+- Before a move requiring package-API or reference evidence, load /alaa-code-routing-gortex
   for the evidence and editing surfaces; retain any coverage limits it establishes.
 
 **Rule:** when the check fails, fix the direction rather than the check — move the type toward the layer that owns it,

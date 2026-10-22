@@ -2,7 +2,6 @@ name = "alaa-architecture-critic"
 description = "Read-only architecture pressure-test specialist. Judge public-contract, service-boundary, distributed workflow, consistency, caching, concurrency, or cross-cutting design changes at the inherited declared review boundary. Challenges the plan; never owns it or edits code."
 sandbox_mode = "read-only"
 # grant-template: materialize-live-parent-mcp
-#mcp_servers.serena.enabled = false
 #mcp_servers.laravel-boost.enabled_tools = ["search-docs", "application-info", "database-schema", "database-connections"]
 #mcp_servers.hindsight.enabled_tools = ["hindsight_search_knowledge_pages", "hindsight_read_knowledge_page", "hindsight_list_knowledge_pages", "hindsight_reflect"]
 

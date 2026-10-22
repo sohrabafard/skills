@@ -17,9 +17,10 @@ Withholding ``Skill`` was tried and reverted. It narrows nothing on a role that 
 holds ``Bash``, ``Read``, ``Write``, and ``Edit``; it makes the dispatch's own
 ``clean_code_skill`` field unsatisfiable; and it silently removed runtime invocation
 from every specialist on the theory that its preload list was complete, which no
-evidence supported. The safety deny set is therefore exactly Serena's shell tool, a
-real second path to the shell that bypasses the runtime's approval rules, plus the
-Hindsight server, whose write tools an inheriting role would otherwise receive.
+evidence supported. The safety deny set preserves the legacy alternate-shell block and Hindsight write
+ownership. It also excludes Gortex open-world, administrative, memory-write and
+connection-state tools from inherited implementation grants; local read and guarded
+edit/refactor remain available. See the routing owner for operation authority.
 
 What is checked instead is reachability, in both directions. Every preloaded name must
 resolve to an installed skill, because a stale preload silently removes a standard. And
@@ -40,13 +41,8 @@ AGENTS = os.path.join(ROOT, "agents")
 PACK = os.path.dirname(ROOT)
 REPO = os.path.dirname(os.path.dirname(PACK))
 
-ROUTING_SKILL = "/alaa-code-intelligence-routing"
-MUST_DENY = frozenset((
-    "mcp__serena__execute_shell_command",
-    # Server-level pattern: removes every Hindsight tool, including retain and ingest,
-    # because a memory write is the lead's decision, never an implementation lane's.
-    "mcp__hindsight",
-))
+ROUTING_SKILL = "/alaa-code-routing-gortex"
+MUST_DENY = frozenset(['mcp__serena__execute_shell_command', 'mcp__hindsight', 'mcp__gortex__ask', 'mcp__gortex__review', 'mcp__gortex__pr', 'mcp__gortex__workspace_admin', 'mcp__gortex__session', 'mcp__gortex__overlay', 'mcp__gortex__remember', 'mcp__gortex__publish_review'])
 
 
 def skill_roots() -> list[str]:
@@ -80,14 +76,19 @@ def named_skills(body: str, roots: list[str]) -> set[str]:
     installed = installed_skills(roots)
     return {"/" + t for t in re.findall(r"(?<![\w-])/([\w-]+)", body) if t in installed}
 
-CODEGRAPH = {"mcp__codegraph"}
-SERENA_READ = {
-    "mcp__serena__find_symbol",
-    "mcp__serena__get_symbols_overview",
-    "mcp__serena__find_referencing_symbols",
-    "mcp__serena__find_declaration",
-    "mcp__serena__find_implementations",
-    "mcp__serena__get_diagnostics_for_file",
+# Compact facade only; exact operation effects belong to the routing owner.
+GORTEX_READ = {
+    "mcp__gortex__explore",
+    "mcp__gortex__search",
+    "mcp__gortex__read",
+    "mcp__gortex__relations",
+    "mcp__gortex__trace",
+    "mcp__gortex__analyze",
+    "mcp__gortex__change",
+    "mcp__gortex__recall",
+    "mcp__gortex__workspace",
+    "mcp__gortex__response",
+    "mcp__gortex__capabilities",
 }
 BOOST_DOCS = {
     "mcp__laravel-boost__search-docs",
@@ -114,26 +115,26 @@ HINDSIGHT_READ = {
 
 EXPECTED_MCP = {
     "alaa-accessibility-reviewer": BOOST_DOCS | BOOST_ROUTING,
-    "alaa-adversarial-reviewer": CODEGRAPH | SERENA_READ | BOOST_DOCS | BOOST_SCHEMA,
-    "alaa-api-contract-reviewer": CODEGRAPH | BOOST_DOCS | BOOST_ROUTING | BOOST_SCHEMA,
-    "alaa-architecture-critic": CODEGRAPH | BOOST_DOCS | BOOST_SCHEMA | HINDSIGHT_READ,
+    "alaa-adversarial-reviewer": GORTEX_READ | BOOST_DOCS | BOOST_SCHEMA,
+    "alaa-api-contract-reviewer": GORTEX_READ | BOOST_DOCS | BOOST_ROUTING | BOOST_SCHEMA,
+    "alaa-architecture-critic": GORTEX_READ | BOOST_DOCS | BOOST_SCHEMA | HINDSIGHT_READ,
     "alaa-browser-qa": BOOST_DOCS | BOOST_ROUTING | BOOST_ERRORS | BOOST_BROWSER,
     "alaa-dependency-auditor": BOOST_DOCS,
     "alaa-documenter": BOOST_DOCS | BOOST_ROUTING,
-    "alaa-explorer": CODEGRAPH | BOOST_DOCS | BOOST_ROUTING | HINDSIGHT_READ,
-    "alaa-failure-analyst": CODEGRAPH | SERENA_READ | BOOST_DOCS | BOOST_ERRORS | BOOST_BROWSER,
+    "alaa-explorer": GORTEX_READ | BOOST_DOCS | BOOST_ROUTING | HINDSIGHT_READ,
+    "alaa-failure-analyst": GORTEX_READ | BOOST_DOCS | BOOST_ERRORS | BOOST_BROWSER,
     "alaa-implementer-opus": None,
     "alaa-implementer-fable": None,
     "alaa-implementer": None,
-    "alaa-migration-guardian": CODEGRAPH | BOOST_DOCS | BOOST_SCHEMA,
-    "alaa-observability-reviewer": CODEGRAPH | BOOST_DOCS | BOOST_ERRORS | BOOST_BROWSER,
-    "alaa-performance-profiler": CODEGRAPH | BOOST_DOCS | BOOST_SCHEMA | BOOST_ERRORS,
+    "alaa-migration-guardian": GORTEX_READ | BOOST_DOCS | BOOST_SCHEMA,
+    "alaa-observability-reviewer": GORTEX_READ | BOOST_DOCS | BOOST_ERRORS | BOOST_BROWSER,
+    "alaa-performance-profiler": GORTEX_READ | BOOST_DOCS | BOOST_SCHEMA | BOOST_ERRORS,
     "alaa-release-guardian": BOOST_DOCS,
     "alaa-researcher": BOOST_DOCS | HINDSIGHT_READ,
-    "alaa-reviewer": CODEGRAPH | SERENA_READ | BOOST_DOCS | BOOST_SCHEMA,
-    "alaa-security-reviewer": CODEGRAPH | SERENA_READ | BOOST_DOCS | BOOST_SCHEMA,
-    "alaa-spec-analyst": CODEGRAPH | BOOST_DOCS,
-    "alaa-test-strategist": CODEGRAPH | BOOST_DOCS | BOOST_SCHEMA,
+    "alaa-reviewer": GORTEX_READ | BOOST_DOCS | BOOST_SCHEMA,
+    "alaa-security-reviewer": GORTEX_READ | BOOST_DOCS | BOOST_SCHEMA,
+    "alaa-spec-analyst": GORTEX_READ | BOOST_DOCS,
+    "alaa-test-strategist": GORTEX_READ | BOOST_DOCS | BOOST_SCHEMA,
     "alaa-verifier": set(),
     "alaa-instruction-reviewer": set(),
 }
@@ -322,9 +323,12 @@ def self_test() -> int:
     SERENA_SHELL = "mcp__serena__execute_shell_command"
     HREAD = ", ".join(sorted(HINDSIGHT_READ))
     SCHEMA = ", ".join(sorted(BOOST_SCHEMA))
-    SERENA = ", ".join(sorted(SERENA_READ))
+    GORTEX = ", ".join(sorted(GORTEX_READ))
     # label, role, tools line, disallowedTools line, preloaded skills, body, expected message
     cases = [
+        ("readonly reviewer granted Gortex write", "alaa-reviewer",
+         "tools: Read, Glob, Grep, Bash, Skill, " + ", ".join(sorted(EXPECTED_MCP["alaa-reviewer"] | {"mcp__gortex__edit"})),
+         None, [ROUTING_SKILL], "body", "MCP grant differs"),
         ("reviewer extra Write", "alaa-reviewer", "tools: Read, Glob, Grep, Bash, Skill, Write", None, [], "body", "native grant differs"),
         ("verifier delegation", "alaa-verifier", "tools: Read, Glob, Grep, Bash, Agent", None, [], "body", "native grant differs"),
         ("documenter missing Edit", "alaa-documenter", "tools: Read, Glob, Grep, Bash, Skill, Write", None, [], "body", "native grant differs"),
@@ -332,8 +336,8 @@ def self_test() -> int:
         ("instruction reviewer shell", "alaa-instruction-reviewer", "tools: Read, Glob, Grep, Bash", None, [], "body", "native grant"),
         ("instruction reviewer MCP", "alaa-instruction-reviewer", "tools: Read, Glob, Grep, mcp__unknown", None, [], "body", "MCP grant differs"),
         ("unexpected server on a no-MCP role", "alaa-verifier",
-         "tools: Read, Bash, mcp__codegraph", None, [], "body", "MCP grant differs"),
-        ("missing CodeGraph from explorer", "alaa-explorer",
+         "tools: Read, Bash, mcp__gortex__explore", None, [], "body", "MCP grant differs"),
+        ("missing Gortex read tools from explorer", "alaa-explorer",
          f"tools: Read, Bash, {BOOST}, mcp__laravel-boost__get-absolute-url", None,
          [ROUTING_SKILL], "body", "MCP grant differs"),
         ("MCP grant without routing preload", "alaa-researcher",
@@ -361,10 +365,10 @@ def self_test() -> int:
          f"tools: Read, Bash, {BOOST}, {HREAD}, mcp__hindsight__hindsight_ingest_document", None,
          [ROUTING_SKILL], "body", "MCP grant differs"),
         ("memory role missing the Hindsight read set", "alaa-architecture-critic",
-         f"tools: Read, Bash, mcp__codegraph, {BOOST}, {SCHEMA}", None,
+         f"tools: Read, Bash, mcp__gortex__explore, {BOOST}, {SCHEMA}", None,
          [ROUTING_SKILL], "body", "MCP grant differs"),
         ("Hindsight granted to a role with no memory question", "alaa-reviewer",
-         f"tools: Read, Bash, mcp__codegraph, {SERENA}, {BOOST}, {SCHEMA}, mcp__hindsight__hindsight_reflect",
+         f"tools: Read, Bash, mcp__gortex__explore, {GORTEX}, {BOOST}, {SCHEMA}, mcp__hindsight__hindsight_reflect",
          None, [ROUTING_SKILL], "body", "MCP grant differs"),
         ("inherited role that denies Skill and names an unpreloaded one", "alaa-implementer",
          None, f"disallowedTools: {SERENA_SHELL}, Skill", [ROUTING_SKILL],

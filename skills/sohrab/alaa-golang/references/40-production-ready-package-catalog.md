@@ -159,7 +159,7 @@ using it to prove a query returns correct results — that needs a real database
 ## Repository tools
 
 `gopls` — Go language server. For a task requiring a local semantic operation,
-load /alaa-code-intelligence-routing for surface selection.
+load /alaa-code-routing-gortex for surface selection.
 `golangci-lint` — **default** lint runner. **Rule:** pin its version in CI.
 `govulncheck` — **default** vulnerability gate.
 `buf` — **default** in any protobuf repository.

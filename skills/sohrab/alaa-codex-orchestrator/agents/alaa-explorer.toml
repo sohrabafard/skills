@@ -2,7 +2,6 @@ name = "alaa-explorer"
 description = "Fast read-only repository mapper for orchestrated goals. Spawn when ownership, execution paths, dependencies, tests, conventions, or likely change scope are unclear. Never edits and does not choose the design."
 sandbox_mode = "read-only"
 # grant-template: materialize-live-parent-mcp
-#mcp_servers.serena.enabled = false
 #mcp_servers.laravel-boost.enabled_tools = ["search-docs", "application-info", "get-absolute-url"]
 #mcp_servers.hindsight.enabled_tools = ["hindsight_search_knowledge_pages", "hindsight_read_knowledge_page", "hindsight_list_knowledge_pages", "hindsight_reflect"]
 

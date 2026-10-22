@@ -21,9 +21,9 @@ risks at the start of the task, not after something breaks.
 | reviewing security-sensitive code | `/golang-security` | `/golang-safety`, `/golang-lint`, `/golang-error-handling` |
 | changing dependencies | `/golang-dependency-management` | `/golang-pkg-go-dev`, `/golang-security` |
 | configuring CI | `/golang-continuous-integration` | `/golang-lint`, `/golang-security`, `/golang-testing` |
-| navigating unfamiliar code | `/alaa-code-intelligence-routing` | `/golang-project-layout` for package-layout decisions |
-| restructuring existing code | `/golang-refactoring` | `/alaa-code-intelligence-routing` and the skill that defines the target shape |
-| adopting a newer Go feature | `/golang-modernize` | `/golang-lint` and `/alaa-code-intelligence-routing` when a local code-intelligence question needs answering |
+| navigating unfamiliar code | `/alaa-code-routing-gortex` | `/golang-project-layout` for package-layout decisions |
+| restructuring existing code | `/golang-refactoring` | `/alaa-code-routing-gortex` and the skill that defines the target shape |
+| adopting a newer Go feature | `/golang-modernize` | `/golang-lint` and `/alaa-code-routing-gortex` when a local code-intelligence question needs answering |
 
 **Forbidden:** loading a Go skill because the task is written in Go. **Rule:** load a skill when the task hits the
 condition that skill's row names, and no others.
@@ -131,13 +131,13 @@ drain, metric name and all three accepted-data-loss conditions; documentation al
 
 The dividing question is whether you are asking about *this repository's build* or *the published ecosystem*.
 
-- /alaa-code-intelligence-routing — evidence and editing surfaces for this repository;
+- /alaa-code-routing-gortex — evidence and editing surfaces for this repository;
   it owns provider selection and degraded operation.
 - `/golang-pkg-go-dev` — the published ecosystem: versions, symbols, examples, importers, licences, and CVEs of a
   package, including one not yet in `go.mod`. It queries pkg.go.dev, never your checkout.
 - `/golang-security` — the whole-tree reachable-CVE audit with `govulncheck ./...`, which is the gate of record.
 
-**Rule:** route local evidence and editing-surface choices through /alaa-code-intelligence-routing,
+**Rule:** route local evidence and editing-surface choices through /alaa-code-routing-gortex,
 learn ecosystem facts with godig, and gate releases with `govulncheck`.
 **Forbidden:** stating a package's version, licence, CVE status, or importer set from memory. **Rule:** query
 `godig` and cite what it returned.
@@ -150,7 +150,7 @@ learn ecosystem facts with godig, and gate releases with `govulncheck`.
   the destination: the new name, the new package, the target shape, the modern idiom.
 - `/alaa-golang-clean-code-principles` — the destination for any service on the kit.
 
-**Rule:** load the process skill and the destination skill together; use /alaa-code-intelligence-routing
+**Rule:** load the process skill and the destination skill together; use /alaa-code-routing-gortex
 for the editing surface and any missing semantic guarantee before the dependent operation.
 **Forbidden:** a commit that both moves code and changes behaviour. **Rule:** land the move, verify the tests are
 unchanged and green, then land the behaviour change separately.

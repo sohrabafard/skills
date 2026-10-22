@@ -1,0 +1,4 @@
+interface:
+  display_name: "Alaa Gortex Code Routing"
+  short_description: "Route code and Laravel evidence with guarded worktree writes"
+  default_prompt: "Use $alaa-code-routing-gortex to bind the actual worktree, select Gortex or the matching Laravel Boost capability, preserve write authority and freshness guards, and finish with native proof."

@@ -1,9 +1,9 @@
 ---
 name: alaa-test-strategist
 description: Read-only test strategy specialist for subtle behavior, legacy code, concurrency, migrations, failure paths, and acceptance criteria that need a rigorous test matrix before implementation. Never writes tests or production code.
-tools: Read, Glob, Grep, Bash, Skill, mcp__codegraph, mcp__laravel-boost__search-docs, mcp__laravel-boost__application-info, mcp__laravel-boost__database-schema, mcp__laravel-boost__database-connections
+tools: Read, Glob, Grep, Bash, Skill, mcp__laravel-boost__search-docs, mcp__laravel-boost__application-info, mcp__laravel-boost__database-schema, mcp__laravel-boost__database-connections, mcp__gortex__explore, mcp__gortex__search, mcp__gortex__read, mcp__gortex__relations, mcp__gortex__trace, mcp__gortex__analyze, mcp__gortex__change, mcp__gortex__recall, mcp__gortex__workspace, mcp__gortex__response, mcp__gortex__capabilities
 skills:
-  - /alaa-code-intelligence-routing
+  - /alaa-code-routing-gortex
   - /alaa-testing-strategy
   - /golang-testing
 color: yellow

@@ -1,9 +1,9 @@
 ---
 name: alaa-implementer-opus
 description: "Materially coupled unresolved system decisions beyond bounded implementation. Scoped implementation; admission in /alaa-cc-orchestrator references/routing-matrix.md. Never self-review or widen scope. Model and effort are selected for the task, never from this compatibility ID."
-disallowedTools: mcp__serena__execute_shell_command, mcp__hindsight
+disallowedTools: mcp__serena__execute_shell_command, mcp__hindsight, mcp__gortex__ask, mcp__gortex__review, mcp__gortex__pr, mcp__gortex__workspace_admin, mcp__gortex__session, mcp__gortex__overlay, mcp__gortex__remember, mcp__gortex__publish_review
 skills:
-  - /alaa-code-intelligence-routing
+  - /alaa-code-routing-gortex
   - /alaa-services-contract
   - /alaa-trust-gateway-auth
 color: blue

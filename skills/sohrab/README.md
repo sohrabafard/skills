@@ -117,6 +117,7 @@ Every folder in this directory appears exactly once between the markers below, a
 - `alaa-system-design` — the pre-implementation design method for a service, subsystem, or class set: bounding the subsystem, contracts derived before code, data ownership, compared candidates, and one reviewable design record.
 - `alaa-testing-strategy` — test design doctrine for services that must not fail: which layer a behaviour belongs at, when to fake, stub, or use the real dependency, the six proof levels, and telling a flaky test from an intermittent product defect.
 - `alaa-algorithms-data-structures` — complexity budgets and structure choice for service code: the bound an operation must hold as input grows, choosing a structure from the access pattern, and catching the N+1 family before a growing path ships with no stated bound.
+- `alaa-code-routing-gortex` — Gortex checkout-aware code evidence and guarded edits, Laravel Boost context, explicit fallback and native proof.
 - `alaa-code-intelligence-routing` — deterministic evidence routing across CodeGraph, Serena, Laravel Boost, native/domain owners, and repository proof; prevents duplicate retrieval and requires same-worktree validation.
 - `alaa-keyset-pagination` — cursor/keyset pagination design: deterministic ordering, matching index, cursor integrity and context binding, limits, and the offset exception.
 - `alaa-input-normalization` — folding Persian, Arabic and every other non-ASCII decimal digit to ASCII at both input boundaries, under one contract with four implementations and a conformance harness.
