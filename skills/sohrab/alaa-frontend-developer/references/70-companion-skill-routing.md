@@ -49,4 +49,27 @@ do when two owners both look right, and which browser profile to use.
 - Do not select `MCP_DOCKER` to obtain a headless browser when a Playwright headless profile exists;
   reserve it for Docker-specific isolation.
 
+## Shared HTTP browser services
+
+When a workspace provides shared browser MCP endpoints, use the endpoint assigned to the current runtime
+(Codex or Claude) and the selected headless/visual mode. Resolve addresses from the active workspace
+configuration; do not infer them from names, borrow another runtime's endpoint, or launch a duplicate
+stdio server. A configured URL is not proof of an MCP handshake or browser launch.
+
+- For parallel headless work, require an isolated session per connection. Do not enable shared context
+  or reuse a fixed persistent profile across concurrent tasks. Do not assume visual login state carries over.
+- For visual work, establish one task owner for the runtime's persistent profile before a browser call.
+  Separate Codex and Claude profiles do not isolate two tasks in the same runtime. If another task owns
+  it, or ownership is unknown, wait or use an isolated headless session when that satisfies the observation.
+- HTTP transport and a tab identifier do not enforce exclusive ownership. Without a verified lease/queue,
+  coordinate ownership explicitly; never claim the service prevents concurrent control.
+- Use DevTools only for the named debugging/performance observation. If it controls the same browser,
+  it must have the same task owner. A Playwright MCP URL is not a Chrome CDP endpoint. Do not invent
+  a shared DevTools HTTP backend; its transport and session behavior require separate verification.
+- Release only this task's sessions/tabs. Do not stop a shared service, close another task's browser,
+  clear its storage, or delete its profile. An operator drains owners before restarting or upgrading.
+
+Installation, ports, cache paths, display environment and service lifecycle belong to the workspace setup
+guide, not this reusable skill. Browser cache sharing does not share session state or cap browser count.
+
 Whether the browser opens at all is gate 5 in `SKILL.md`, not a profile question.

@@ -25,7 +25,7 @@ One file answers most tasks and two is normal. Loading every row means the task 
 | decide which checks to run before calling a change done, write a manual verification plan, or write the release note for what shipped | `50-qa-and-verification.md` |
 | format a date, a number, a currency or a relative time that renders during SSR, or set a locale or timezone anywhere in the render path | `55-i18n-locale-and-rtl.md` |
 | open a browser to look at a bug, collect console, network or DOM evidence, or implement a design that needs measurement before hydration | `60-browser-debug.md` |
-| find two companion skills that both look right, or choose between a headless and a headed browser profile | `70-companion-skill-routing.md` |
+| find two companion skills that both look right, choose a browser profile, or use a shared browser endpoint with concurrent tasks | `70-companion-skill-routing.md` |
 | assert a version, a "latest" or "current" fact, cite a source, or update this skill | `95-sources-and-maintenance.md` |
 
 ## Rows that are not optional when they match

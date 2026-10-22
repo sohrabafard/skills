@@ -25,7 +25,11 @@ cannot produce** — the exact console warning text, a computed style value, or 
 observation, then open. Profile choice is `70-companion-skill-routing.md`.
 
 Before opening, write four lines: the expected behaviour, the observed failure, the target route or URL,
-and the success criterion. Without them the session produces screenshots instead of a diagnosis.
+and the success criterion. Without them the session produces screenshots instead of a diagnosis. For shared MCP services,
+also record the runtime, project, endpoint, mode, session/tab identity and visual task owner. Apply the
+ownership and cleanup contract in `70-companion-skill-routing.md` before collecting evidence. Verify
+initialize/tools discovery and the required browser operation; a live port is insufficient. Attribute
+captures to that task and session, and never use another session's login or output as proof.
 
 ## Evidence checklist
 
