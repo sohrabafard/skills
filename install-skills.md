@@ -14,6 +14,7 @@ $repoRoot = (Resolve-Path ".").Path
 $srcRoots = @(
     (Join-Path $repoRoot "skills\.curated")
     (Join-Path $repoRoot "skills\sohrab")
+    (Join-Path $repoRoot "skills\gortex")
 # vendor-subtrees:codex-src-roots:start
     (Join-Path $repoRoot "vendor\openfga-agent-skills\skills")
     (Join-Path $repoRoot "vendor\cc-skills-golang\skills")
@@ -121,10 +122,16 @@ may contradict them.
 On a POSIX shell those are `~/.codex/skills` and `~/.claude/skills`. A skill installed there follows
 the user into every repository, which is what a general-purpose skill wants.
 
-**`.agents/skills` is reserved for a skill that travels with one repository**, checked in beside the
-code it governs, and it is never a target of this installer. `~/.agents/skills` is not an install
-location at all: a document that names it as the user-level path is wrong, and the correct value is
-`~/.codex/skills` above.
+**This installer uses `~/.codex/skills` for personal Codex skills** and keeps repository-local
+skills under `.agents/skills`. Current Codex documentation also supports `~/.agents/skills` as a
+personal discovery root; do not install a second copy there when using this installer's root.
+See [Codex skill discovery](https://learn.chatgpt.com/docs/build-skills).
+
+The adapted Gortex task recipes live in `skills/gortex/`; `skills/sohrab/alaa-code-routing-gortex`
+remains their shared policy owner. `skills/gortex/provenance.json` records the supplied installer
+snapshot and adaptations. Do not refresh this pack by running Gortex's installer or profile
+switch against installed symlinks: those operations can write through the links into this repository.
+The WSL setup guide owns the backup-and-link migration from generated user copies.
 
 **Invocation is `/name` in Claude Code and `$name` in Codex**, and both forms name the same skill.
 Whether a skill may be selected without being named is declared once per skill, in its

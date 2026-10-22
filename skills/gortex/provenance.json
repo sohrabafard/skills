@@ -1,0 +1,91 @@
+{
+  "upstream": "https://github.com/zzet/gortex/tree/v0.64.8",
+  "origin": "User-supplied fresh-install snapshot in the docs repository",
+  "adaptation": "Preserve task recipes; replace duplicated mandatory MCP/worktree policy with the Alaa routing owner; route historical decisions through the established memory owner.",
+  "skills": {
+    "gortex-add-test": {
+      "original_sha256": "678342ce4fb5df031f1e628dbd4a5c1d30ff282a118d05525914ff0cbe6513ba",
+      "adapted_sha256": "6258c656ddf94c79c5dac5b0def7c2976c7717502cd3b0f64e8402cef765ee6d"
+    },
+    "gortex-architecture-review": {
+      "original_sha256": "d8ec75398d62ff300de7796b21816f0105ed39ad29c4ab6b081f7a4fa4d92b52",
+      "adapted_sha256": "07a23abaae094aa4723bb8f1867559affeba3b487f1c812341e9bad6e285e351"
+    },
+    "gortex-cli": {
+      "original_sha256": "bce77dd03c806d66552f952a296efe40361559041dcd38ac359757c4f5756278",
+      "adapted_sha256": "e193016bbdbbc781fba2505641daafaa32f094a9277f1f0dae2529db65464d59"
+    },
+    "gortex-co-change": {
+      "original_sha256": "d1367a52215b788b3772f3ebecab9c61b5175324006b927c25c176986cb090e3",
+      "adapted_sha256": "3d37175264927f566558b41a16bbe4c9374d41cb33d1f147db64d3f9b5d9ea10"
+    },
+    "gortex-cross-repo-usage": {
+      "original_sha256": "cbe5c977ac0ca8b7019fb13919899a5911c36a50985611113a475f45f936550e",
+      "adapted_sha256": "e76483e6104a22ccfa5d049699b756fff0656a0f8f64d1adebe8997364ec3c98"
+    },
+    "gortex-dataflow-trace": {
+      "original_sha256": "4ecd2b7f416fbe431f1e6a27fdd2739818d190f04d3db52b837878e83f1b7c22",
+      "adapted_sha256": "c54fb3ba3cc3ed7446a79df35ea3c0c485e3e0dea26a5a1f85b2fb0d3a23ca4e"
+    },
+    "gortex-debug": {
+      "original_sha256": "e74c15b5d706a092240330c110059244998f8efbaaf3bab21f56cbd3d0ff4032",
+      "adapted_sha256": "70824ddf5e977253328669746b2127b755861e80facdda193abbd8b61c1d8a34"
+    },
+    "gortex-episode-replay": {
+      "original_sha256": "9480984fe6aed2b0baf4d5b692fcea2cf93a8e8df79989d92b0c075b715fa923",
+      "adapted_sha256": "f723cc19602c42b815a3a2b10a6db59850c6eaf45621b48252f01d09599161f4"
+    },
+    "gortex-explore": {
+      "original_sha256": "a0661fdc1bb5c1062280b997142aefa91a1b42d756f64e33a3ab0db4748fa929",
+      "adapted_sha256": "4ac983e28bac0f3593f532edb207cae1843af4c13418ff3b7423101c9b009440"
+    },
+    "gortex-extract-function": {
+      "original_sha256": "4b8a689fbeb987bf239ae05db89037aab7cd3a39d1fd0f281bdc0cc17f6d9b31",
+      "adapted_sha256": "83e18bd8c58bcdd7806970b2bb96a8f17fd6cdb6e413118a840acfdc1690e19e"
+    },
+    "gortex-fix-all": {
+      "original_sha256": "e75ff15d15231242339b0098143fc0cd74c4e0a7c5dae201429dc9cb225cc1b6",
+      "adapted_sha256": "4792ee460e8bf47e5d6e91ada0660bdf7936ed380715a853a21b1d4efbf26cf8"
+    },
+    "gortex-guide": {
+      "original_sha256": "7ea508d458f22ff78cfad1d064264ffc32e068fd4e9998bfdf0b7f40e69c47e1",
+      "adapted_sha256": "94a593c26d0ec490dc82fcadf59f6659f328cbc2ade1f6b8c962e845de5bdb8f"
+    },
+    "gortex-impact": {
+      "original_sha256": "0474f154657a6473b9082df567a50715c50063a01b14b1536678cfb54b4d7d1a",
+      "adapted_sha256": "9973a6cf64624b2285a422d3c6a8cc134310340ed3d0166ba6fa36b21f9907d6"
+    },
+    "gortex-incident-investigation": {
+      "original_sha256": "492ea8ffab84f2d26747608c53d778027e42b08a9b2d7e8e31fdc0d8c5414338",
+      "adapted_sha256": "76f3a32ec06985413355b12b559448cc47b6bbaada6dc991fe5a5e0bfc72a87f"
+    },
+    "gortex-onboarding": {
+      "original_sha256": "38428baf64640abab1dcb84d6f8bc30a21c9523f5987541240aac90701175881",
+      "adapted_sha256": "aaefb445e211552496f996564c6de95eb00101d120b29aa9b1b64096ef848ea9"
+    },
+    "gortex-pr-review": {
+      "original_sha256": "737d3238683be487a9937768097753d85d2c5073e353bbc13f3e8a43073f7e23",
+      "adapted_sha256": "b5945e5f67c26201b2a000e3ad7904430bba1de27b27ad0596e53f971c858638"
+    },
+    "gortex-pr-review-agent": {
+      "original_sha256": "3870af63435ca84884753f3092c69fd53c32a30c2c0579eba763557c4a733bd8",
+      "adapted_sha256": "e189fa6cf517626a97c660bd779821f6c25b1601e882c7cc3bffa5b34770f9c2"
+    },
+    "gortex-quality-audit": {
+      "original_sha256": "a2ec193f244281eac0ce6209789250760b739f7be67522bd649dc39ea1887af8",
+      "adapted_sha256": "21ef9a8b95c0a2e0748bf3d1b5162104ccb5897fe235ffd6f1bde2a05dd1304b"
+    },
+    "gortex-refactor": {
+      "original_sha256": "f51d5fa14d8e17dbf51334098dd684932825c573d89b244a6acacc052525bd54",
+      "adapted_sha256": "9870691bf01eef70b7e1a5cdef3553767794972dae437331b3bc27ecca478512"
+    },
+    "gortex-rename": {
+      "original_sha256": "d1212a1c6a25716225297941e1895c3c4626189f790cf58f12387a56193e15d0",
+      "adapted_sha256": "a1921a1ec2ae1c2a818149bee5c207fc06f3ac6963a48d3a44e8de71af2d9952"
+    },
+    "gortex-safe-edit": {
+      "original_sha256": "939b9108e0ef42d5f243e6bb2a11676d5373db8fa0734b2d5d5de8ac0f097f40",
+      "adapted_sha256": "67c8f466d08b88958e43ea2f7ebc74587fcdbc9c3cdf7c7e946f3037d5de1120"
+    }
+  }
+}

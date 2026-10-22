@@ -25,6 +25,12 @@ to find prior assessments, completed plans and verification records.
 Third-party skills sit under `skills/.curated/` and `skills/.system/`. Upstream packs are committed
 under `vendor/` and listed below.
 
+The adapted [Gortex task recipes](skills/gortex/) share the first-party routing owner
+`alaa-code-routing-gortex`. Their [provenance](skills/gortex/provenance.json) records the supplied
+installer snapshot and local adaptations; their [license](skills/gortex/LICENSE.md) travels with
+the pack. The installer links this source root into both runtimes; no upstream subtree refresh
+overwrites these intentional adaptations.
+
 ## Vendored upstream skills
 
 Upstream skill packs are committed under [`vendor/`](vendor/) as ordinary tracked files, so a clone
