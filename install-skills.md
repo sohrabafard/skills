@@ -112,6 +112,33 @@ foreach ($srcRoot in $srcRoots) {
         }
 }
 ```
+## WSL installer
+
+Run the committed Bash installer from the Linux clone; it derives the repository root from its
+own location. The active `$srcRoots` array above is also its source list: comments are ignored,
+backslashes become Linux separators, and unrecognized expressions fail before any links are made.
+It never evaluates PowerShell or fetches dependencies. Changes to the generated vendor block
+therefore apply to both installers without maintaining a second list.
+
+```bash
+cd ~/project/skills
+bash install-skills.wsl.sh --dry-run
+```
+
+After reviewing the output:
+
+```bash
+bash ~/project/skills/install-skills.wsl.sh
+```
+
+Like the PowerShell procedure, it scans only immediate non-hidden directories with `SKILL.md`.
+It links into `~/.codex/skills` and `~/.claude/skills`. Missing roots, real destination directories
+and different symlinks are reported and skipped. Correct links remain unchanged. Duplicate skill
+names follow source-root order: an earlier link is kept and a later conflicting source is skipped.
+The final summary counts skipped conflicts; exit zero does not mean every skill was installed.
+Generated Gortex directories need the setup guide's explicit backup step before this installer
+can link their managed replacements. The installer itself never moves or overwrites them.
+
 ## Where a skill is installed, and how it is invoked
 
 This file is authoritative for install paths. Three facts follow, and no document in this repository
