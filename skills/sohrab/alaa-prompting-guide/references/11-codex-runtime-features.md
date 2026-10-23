@@ -112,7 +112,7 @@ Discovery runs across these scopes, highest priority first:
 | User | `$HOME/.codex/skills` | **field-verified, undocumented** |
 | System | Bundled by OpenAI | documented |
 
-The `$HOME/.codex/skills` row is not in the official page but works: skills installed there are discovered and trigger normally, verified on Windows where the path is `Join-Path $HOME ".codex\skills"`. Treat the official list as incomplete rather than treating this path as broken. Note that it sits next to `~/.codex/agents/`, which is where agent TOMLs live — so a Codex user who keeps both under `~/.codex/` has one coherent tree, which is likely why this location is in use even though the docs point elsewhere.
+The `$HOME/.codex/skills` row is absent from the official page but its discovery has been field-verified on Windows. In POSIX shells, including WSL, express the path as `$HOME/.codex/skills`; in PowerShell, use `Join-Path $HOME ".codex\skills"`. Linux/WSL discovery has not been verified here, so check it in the target runtime before relying on it. Treat the official list as incomplete evidence, not as grounds to reject this path. It sits next to `~/.codex/agents/`, which is where agent TOMLs live — so a Codex user who keeps both under `~/.codex/` has one coherent tree, which is likely why this location is in use even though the docs point elsewhere.
 
 When generating install instructions, name `$HOME/.codex/skills` for personal skills unless the user has said otherwise, and `.agents/skills` for repository-scoped skills that travel with a project.
 
