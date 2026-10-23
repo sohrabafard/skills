@@ -53,6 +53,7 @@ Unknown counters and unavailable runtime cells stay unverified. Static source ch
 | S28 | No Serena in Laravel: Boost docs/runtime remain independent of PHP diagnostics; boot/DB failure does not discard healthy docs |
 | S29 | Changed or unsaved files, nested language roots and another worktree invalidate affected evidence; analysis uses the intended source state |
 | S30 | Missing project-root `.serena` makes Serena inactive despite an installed binary or exposed endpoint; unreadable is unknown, present still requires capability/root validation, and a copied marker does not retarget HTTP. Owner: routing contract |
+| S31 | Bash/shell discovery, source, relationship and impact questions use native evidence without CodeGraph MCP/CLI calls, including extensionless scripts and embedded commands in indexed mixed-language repositories; separate supported-language questions retain normal routing. Owner: routing contract |
 
 For each scenario map expected owner/fallback, forbidden action/inference and final-rule owner; keep actual traces separate from expectations.
 
