@@ -17,7 +17,7 @@ knew the answer; knowledge-page search did not surface it. Recall that depends o
 
 ## 2. Evidence
 
-Incident, 2026-10-02, in `D:/Sohrab/Project/deploy/docs/_agent_plans/20261001-114507_alaa-service-gateway-client__service-contracts-ssot.md`,
+Incident, 2026-10-02, in `/home/sohrab/project/deploy/docs/_agent_plans/20261001-114507_alaa-service-gateway-client__service-contracts-ssot.md`,
 section "ci-image and the deploy-tools image":
 
 - Agents designing the ServiceContract release model created a tools image `alaa/deploy-tools` in deploy

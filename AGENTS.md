@@ -10,7 +10,7 @@ every shared rule is edited here and nowhere else.
 
 Project label: `repo:skills`
 
-Expected workspace: `D:/Sohrab/Project/alaa-task-hub/.beads`
+Expected workspace: `/home/sohrab/project/alaa-task-hub/.beads`
 
 User, repository, and orchestrator constraints govern. This binding overrides conflicting upstream Beads skill or hook guidance and grants no additional authority.
 

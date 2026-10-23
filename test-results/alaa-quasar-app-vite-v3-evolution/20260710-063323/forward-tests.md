@@ -4,7 +4,7 @@ Timestamp: `20260710-063323`
 
 ## app-vite v3 task
 
-Task: use the Skill in `D:/Sohrab/Project/client` to verify the installed QTable row-selection API and recommend a repository-consistent direction without editing files.
+Task: use the Skill in `/home/sohrab/project/client` to verify the installed QTable row-selection API and recommend a repository-consistent direction without editing files.
 
 Result: passed.
 
@@ -15,7 +15,7 @@ Result: passed.
 
 ## app-vite v2 task
 
-Task: use the Skill in `D:/Sohrab/Project/entekhabat-front` to verify the installed boot import line and an exact Notify API detail without editing files.
+Task: use the Skill in `/home/sohrab/project/entekhabat-front` to verify the installed boot import line and an exact Notify API detail without editing files.
 
 Result: passed.
 

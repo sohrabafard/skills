@@ -1,5 +1,5 @@
 {
-  "cwd": "D:/Sohrab/Project/skills",
+  "cwd": "/home/sohrab/project/skills",
   "resource_policy": "ordinary bounded static assertions, sequential, no CPU-heavy runner",
   "proof": "static only; independent acceptance not discharged",
   "checks": [

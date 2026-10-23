@@ -977,7 +977,7 @@ index 4232fd225..5f329333c 100644
  
  ## What the store actually is
  
--`D:/Sohrab/Project/agent-memory` â€” plain markdown notes in a git repository, roughly 140 of them at the time of
+-`/home/sohrab/project/agent-memory` â€” plain markdown notes in a git repository, roughly 140 of them at the time of
 -writing. Basic Memory indexed this directory; it never owned it. The consequence worth internalising: **dropping
 +`<vault-root>` â€” plain markdown notes in a git repository, with its root resolved from the task or `ALAA_MEMORY_VAULT`. Basic Memory indexed this directory; it never owned it. The consequence worth internalising: **dropping
  the index loses search, not content**, and every note remains readable by any agent in any runtime that can read
@@ -995,19 +995,19 @@ index 4232fd225..5f329333c 100644
  
  ```powershell
  # by topic, across the vault
--rg -i -l "notification command contract" D:/Sohrab/Project/agent-memory
+-rg -i -l "notification command contract" /home/sohrab/project/agent-memory
 +rg -i -l "notification command contract" $vaultRoot
  
  # by lifecycle field, which is ordinary frontmatter here
--rg -l "^status: needs_review" D:/Sohrab/Project/agent-memory
+-rg -l "^status: needs_review" /home/sohrab/project/agent-memory
 +rg -l "^status: needs_review" $vaultRoot
  
  # by relation, to walk the graph by hand
--rg -l "\[\[Alaa System Architecture Map\]\]" D:/Sohrab/Project/agent-memory
+-rg -l "\[\[Alaa System Architecture Map\]\]" /home/sohrab/project/agent-memory
 +rg -l "\[\[Alaa System Architecture Map\]\]" $vaultRoot
  
  # what changed recently, the replacement for recent-activity
--git -C D:/Sohrab/Project/agent-memory log --oneline -20 --name-only
+-git -C /home/sohrab/project/agent-memory log --oneline -20 --name-only
 +git -C $vaultRoot log --oneline -20 --name-only
  ```
  
@@ -1021,8 +1021,8 @@ index 4232fd225..5f329333c 100644
 -in a git-backed vault is one `git clean` away from gone, and nothing will report it missing.
 -
 -```powershell
--git -C D:/Sohrab/Project/agent-memory add -A
--git -C D:/Sohrab/Project/agent-memory commit -m "memory: <what changed and why>"
+-git -C /home/sohrab/project/agent-memory add -A
+-git -C /home/sohrab/project/agent-memory commit -m "memory: <what changed and why>"
 -```
 +Read back every authorized file write and confirm its intended content before reporting completion.
 +Report changed paths and uncommitted status. Commit only with explicit permission for that separate effect;

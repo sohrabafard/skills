@@ -5,7 +5,7 @@
   "draft_sha256": "d031cb4beb3ae60f4041eec2f752f23883aa405eff617097f7a276af1f975811",
   "replacement_sha256": "b3dced2af26cda77fa4a98090c2ac885e6629bc0da9f46e383501997f8e947a2",
   "source_after_sha256": "4a5ed7306900dabca7dfe24b747fc0453cb1750963048b94f76de5e1fb85d875",
-  "cwd": "D:/Sohrab/Project/skills",
+  "cwd": "/home/sohrab/project/skills",
   "resource_policy": "ordinary bounded static assertions, sequential; no behavioral command execution",
   "checks": [
     {

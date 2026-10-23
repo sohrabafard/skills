@@ -10,7 +10,7 @@ The declared hash matched both the sorted manifest entries and hashes computed f
 
 **Metadata:** AGENT: alaa-verifier. CONFIGURED model/effort: gpt-6-luna/low. REQUESTED: gpt-6-luna/low. OBSERVED: unknown. Runtime enforcement evidence: unknown.
 
-**Changed artifact:** [verification.md](D:/Sohrab/Project/skills/outputs/20261007-entitlement-skill-source-owners/verification.md)
+**Changed artifact:** [verification.md](/home/sohrab/project/skills/outputs/20261007-entitlement-skill-source-owners/verification.md)
 
 Skills used:
 
