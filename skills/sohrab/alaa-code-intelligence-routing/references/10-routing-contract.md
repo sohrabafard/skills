@@ -6,6 +6,8 @@ Name the question; reuse adequate fresh evidence before selecting one primary ow
 
 Scope, branch, service, configuration or resume changes require checking which evidence/capability state remains valid; invalidate affected entries rather than restarting covered discovery. Parallel retrieval is allowed only for independently named questions when neither result can change the other's owner, scope, authority or query.
 
+Before selecting Serena, check `.serena` at the resolved project root in the target worktree, not an arbitrary shell directory. By this pack's policy, confirmed directory absence means Serena is not installed/configured for that project and is inactive for routing, regardless of host binary or exposed MCP endpoint. Skip Serena calls, activation and onboarding; use eligible CodeGraph/native/Boost operations. Create no marker or integration without explicit setup scope. Unreadable status is unknown, not absence. Directory presence permits eligibility checks but proves neither connection, operation support nor active-project identity. A copied marker cannot retarget inherited HTTP; verify that binding separately.
+
 | Question | Primary selection | Eligible fallback for a recorded gap |
 |---|---|---|
 | Source/declaration lookup, location, relationships, call paths or likely impact in supported indexed source, whether the file/symbol is known or unknown | Any eligible CodeGraph MCP/CLI operation fitting the question and providing adequate evidence | Another eligible same-index operation for an operation/transport gap; supported Serena operation; bounded native source for a narrower claim |
