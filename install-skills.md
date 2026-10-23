@@ -14,7 +14,6 @@ $repoRoot = (Resolve-Path ".").Path
 $srcRoots = @(
     (Join-Path $repoRoot "skills\.curated")
     (Join-Path $repoRoot "skills\sohrab")
-    (Join-Path $repoRoot "skills\gortex")
 # vendor-subtrees:codex-src-roots:start
     (Join-Path $repoRoot "vendor\openfga-agent-skills\skills")
     (Join-Path $repoRoot "vendor\cc-skills-golang\skills")
