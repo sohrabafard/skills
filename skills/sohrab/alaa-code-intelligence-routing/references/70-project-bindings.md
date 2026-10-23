@@ -22,7 +22,11 @@ The official Boost guide supports custom `<repo>/.ai/guidelines/*.md` or Blade g
 
 ## Serena context and languages
 
-Choose context by the actual MCP client, not its containing application/window. Installed contexts can expose different file/shell tools; inspect the effective tool set. Take context names from the installed version rather than stale aliases.
+Choose context by client capabilities and project lifecycle, not the HTTP/stdio transport or containing window. Context is selected at server startup, not negotiated separately for each connected client. Dedicated instances normally use their client's context; a shared Claude Code/Codex instance can use the generic `ide` context when both provide native file/shell operations. This is a shared-client recommendation, not evidence that client-specific prompts are interchangeable.
+
+Share one HTTP instance only among clients targeting the same exact project/worktree: Serena has one active project. For concurrent different worktrees, recommend separate instances/endpoints or client-owned stdio processes; never switch a shared instance away from another client's target. With `ide` and a startup project, single-project behavior disables project activation. Without a startup project, do not infer that lock from the context name. Shared project identity does not coordinate concurrent edits.
+
+Inspect the installed context's prompt and effective capabilities. Built-in prompts can prioritize Serena discovery over CodeGraph; during authorized setup, use a custom context with a short pointer to this routing skill and the verified client/project behavior. Do not copy a second routing table or assume an appended pointer removes contradictory instructions. Context tool exclusions alone do not select REPL APIs; use the topic map's REPL owner.
 
 The installed schema owns `<repo>/.serena/project.yml`. Generate it only under setup authority, then merge language entries under its generated selection key; never create both old/new keys or rename from an old guide.
 

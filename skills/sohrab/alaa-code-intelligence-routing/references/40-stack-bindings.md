@@ -8,6 +8,8 @@ CodeGraph requires a matching supported index; Serena requires the needed config
 
 ## Laravel
 
+For PHP diagnostics/navigation use the PHP section below. Boost owns the table's framework/runtime questions even without Serena; it is not a replacement for symbol semantics.
+
 | Needed fact | Eligible installed Boost group | Evidence limit |
 |---|---|---|
 | Installed PHP/Laravel/packages/models | Application info | Installed metadata; lockfile alone is intended resolution |
@@ -40,7 +42,9 @@ When application-info is unavailable, inspect direct installed package metadata;
 
 ## CodeGraph specialized groups
 
-Explore accepts file/symbol names and can return verbatim source, relationships and impact together. Apply the routing contract regardless of known identity; heuristic edges do not prove binding completeness. When a narrower unresolved fact needs it, use exposed node/source, symbol query, files, callers/callees, impact or context operations. CLI and MCP inventories can differ; do not enable optional MCP tools to mirror CLI.
+All available CodeGraph tools are eligible, with or without Serena; there is no explore-only allowlist. Match the question to explore, node/source, query/search, files, callers, callees, impact, context, affected tests, status or another verified operation. CLI-only operations need no preceding MCP failure; verify the index/worktree and role permissions. For an unlisted MCP tool, use its eligible CLI equivalent or report the missing surface without changing configuration.
+
+Explore combines source, relationships and impact; a focused operation may answer a narrower question directly. Neither requires a preliminary call to the other. Apply the routing contract's reuse rule. Heuristic edges do not prove binding completeness; more graph calls cannot supply unimplemented type diagnostics or semantic-edit guarantees.
 
 Affected-test/dependency suggestions select candidate coverage; native execution alone proves tests passed. Status/version establish index/installation information. Init/uninit, index/sync/unlock, daemon control, install/uninstall/upgrade and telemetry changes have lifecycle/configuration effects; they require explicit corresponding authority, never automatic evidence fallback. A documented unreleased viewer is not an installed capability.
 
@@ -52,12 +56,20 @@ Supported symbol body/insert/rename operations and backend-specific move/inline/
 
 Configuration/manual-instruction inspection can identify active project, context, modes and tools. Activation/onboarding, language-server restart, project removal and dashboard opening are lifecycle effects; inspect side effects and authority first. File/search tools retain native coverage limits; they add no semantic guarantee and must not repeat answered facts.
 
-Shell, REPL and debug evaluation carry execution authority. Beta REPL and backend-specific evaluation require observed operation availability; an unrestricted execution surface is not a semantic-read grant. External-project queries require an explicitly named authorized target and independently verified identity. Provider memories remain under the task's memory owner, not this routing skill.
+Shell, REPL and debug evaluation carry execution authority. REPL and backend-specific evaluation require observed operation availability; the topic map routes interface mechanics and grant enforcement to their owners. External-project queries require an explicitly named authorized target and independently verified identity. Provider memories remain under the task's memory owner, not this routing skill.
 
 ## Go
 
-For Go source/structural lookup, follow `references/10-routing-contract.md`: eligible CodeGraph is preferred when it can adequately answer, even for a known file or symbol. Required binding/build-aware semantics, diagnostics or semantic mutation select capable Serena directly, then configured gopls for a supported unavailable/unhealthy or missing-operation gap, then eligible native evidence retaining lost guarantees. Serena's Go backend uses gopls; that backend is not a parallel owner. Skip graph calls for unsupported operations. For dependency metadata/resolution or an authorized upgrade, use `references/45-native-tools.md`; source/impact/API questions trigger separate selection. The routing contract owns bounded native edits and supplemental diagnostics. Native Go recipes own build/vet/test proof.
+For Go source/structure, use the routing contract. Installed gopls can answer supported definition, reference, implementation, call-hierarchy and diagnostic questions through its CLI or a connected language service; Serena is not required. Verify the selected operation against the module/workspace, build tags, toolchain and file version. A configured Serena gopls backend and direct gopls are alternative surfaces, not reasons to retrieve the same evidence twice. The native reference owns invocation/cost limits and dependency recipes; native Go recipes own build/vet/test proof.
 /alaa-golang owns implementation doctrine; routing does not authorize backend activation.
+
+## PHP, including Laravel
+
+PHPantom's `analyze` CLI supplies native symbol-resolution/type-coverage diagnostics without Serena or an LSP client; it neither runs PHPStan nor proves complete references. Definition, hover and references require an exposed LSP operation or verified equivalent, not analyze. Installed `fix`, `format` and `move` require the matching authorized change, coverage checks and mutation reconciliation. Repository recipes retain PHPStan/Pest/PHPUnit/Pint obligations.
+
+## Python
+
+The `pyright` CLI supplies type checking/diagnostics for the configured Python environment. Navigation and rename require a connected `pyright-langserver` client/bridge exposing those operations. Type checking does not prove complete references or test success; mandatory repository checks retain their scope.
 
 ## Vue and Quasar
 

@@ -19,6 +19,8 @@ Start a semantic-read grant from observed supported equivalents of `find_symbol`
 
 Unknown operations are not read-safe. Exclude edits, file creation/deletion, shell, memory writes, activation/onboarding and unrestricted REPL/debug execution from a read-only grant. An advertised read query through a general execution tool is insufficient without observable restriction to that read set.
 
+Serena REPL API filters and project `read_only` steer exposed methods; Python can still exercise the Serena process's permissions. Neither an API allowlist nor removing `shell` makes `serena_repl` a semantic-read grant. For a strictly read-only role, use individually exposed read tools in the tools interface or separately verified process isolation that enforces the required boundary. If neither is available, withhold REPL and report the missing semantic surface. Whole-call approval also covers any operations composed inside that call; authorize the actual code/effects, not its tool name alone.
+
 MCP executes in a separate process; native sandbox/permission modes and withheld native edit tools do not enforce its filesystem/shell effects. Use an exact read allowlist rather than a whole-server grant or stale denylist. Report enforcement unavailable when the runtime cannot demonstrate the restriction.
 
 ## Reachability and validation

@@ -38,6 +38,20 @@ Unknown counters and unavailable runtime cells stay unverified. Static source ch
 | S13 | Advertised optional/beta capability absent from inventory is not called or granted |
 | S14 | Missing native proof tool leaves required gate blocked |
 | S15 | Resume/worktree/branch/service changes reuse only still-valid evidence |
+| S16 | REPL-only Serena resolves an exposed semantic API through its help; missing legacy MCP names do not trigger false outage fallback |
+| S17 | Inclusion-only YAML is not an allowlist; facade exclusion plus method inclusion is checked after all layers, including optional methods and new facades |
+| S18 | Shared HTTP clients on different worktrees cannot reuse one active-project binding; same-project sharing grants no edit coordination |
+| S19 | Filtered REPL remains execution-capable and cannot satisfy a strict semantic-read grant without verified isolation |
+| S20 | A composed REPL query reuses adequate CodeGraph evidence; partial-write failure reconciles state without replay |
+| S21 | Serena and its hooks absent: eligible CodeGraph/native/Boost operations proceed without a Serena probe, setup or completion dependency |
+| S22 | No Serena: any suitable exposed CodeGraph tool or same-index CLI operation may be selected directly; no explore-only restriction or redundant preliminary call |
+| S23 | Installed gopls CLI answers a named Go semantic question with verified build/worktree/position context; repeated cold loads are avoided |
+| S24 | PHPantom analyze supplies scoped diagnostics without an LSP client; findings are not an outage, PHPStan execution or complete-reference proof |
+| S25 | Pyright CLI uses the intended config/interpreter; positional-file analysis is not reported as a full-project pass |
+| S26 | PHPantom/Pyright binary present but no connected LSP surface: navigation remains unavailable; no bare-server invocation, invented CLI or implicit bridge setup |
+| S27 | Native semantic edit is authorized and inspected; uncertain writes reconcile before replay and required native proof still runs |
+| S28 | No Serena in Laravel: Boost docs/runtime remain independent of PHP diagnostics; boot/DB failure does not discard healthy docs |
+| S29 | Changed or unsaved files, nested language roots and another worktree invalidate affected evidence; analysis uses the intended source state |
 
 For each scenario map expected owner/fallback, forbidden action/inference and final-rule owner; keep actual traces separate from expectations.
 

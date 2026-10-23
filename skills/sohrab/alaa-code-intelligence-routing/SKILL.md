@@ -1,6 +1,6 @@
 ---
 name: alaa-code-intelligence-routing
-description: "Evidence routing for CodeGraph, Serena, Laravel Boost and useful native tools. Use to select an owner for discovery, call paths, impact, known-symbol semantics, semantic edits, Laravel documentation or runtime facts, configuration, Markdown, generated artifacts, review, fallback or proof; also use to scope provider grants for a role. Activating this skill performs no setup. Do not use to implement domain code, author repository documentation, manage durable state, orchestrate agents or prove completion; those belong to the stack owner, /alaa-repo-docs, /alaa-workflow, the installed orchestrator and repository-native gates."
+description: "Evidence routing for CodeGraph, optional Serena, gopls, PHPantom, Pyright, Laravel Boost and native tools. Use to select an owner for discovery, call paths, impact, symbol semantics, diagnostics, semantic edits, Laravel docs/runtime facts, configuration, Markdown, generated artifacts, review, fallback or proof, including work without Serena and CLI versus LSP capability checks; also use to scope provider grants for a role. Activating this skill performs no setup. Do not use to implement domain code, author repository documentation, manage durable state, orchestrate agents or prove completion; those belong to the stack owner, /alaa-repo-docs, /alaa-workflow, the installed orchestrator and repository-native gates."
 ---
 
 # Alaa Code Intelligence Routing
@@ -10,7 +10,7 @@ Route each named question to its best available evidence owner, consume the answ
 ## Decision procedure
 
 1. Name independently answerable questions and their intended worktree/environment.
-2. Before selecting an owner, handling its result or failure, or choosing a grant, read `references/00-topic-map.md`; it selects the sole reference owning that decision.
+2. Before selecting an owner, handling its result or failure, choosing a grant, or advising on Serena contexts/REPL APIs, read `references/00-topic-map.md`; it selects the sole reference owning that decision.
 3. Apply the routing contract: select one primary owner, reuse adequate evidence, and ask only the missing question.
 4. Treat editing, runtime observation and proof as distinct questions; execute applicable authorized native gates.
 

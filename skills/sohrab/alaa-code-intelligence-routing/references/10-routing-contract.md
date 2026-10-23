@@ -8,8 +8,8 @@ Scope, branch, service, configuration or resume changes require checking which e
 
 | Question | Primary selection | Eligible fallback for a recorded gap |
 |---|---|---|
-| Source/declaration lookup, location, relationships, call paths or likely impact in supported indexed source, whether the file/symbol is known or unknown | CodeGraph's eligible exploration/source operation when it can adequately answer the question | Same-index CLI for transport failure; supported Serena operation; bounded native source for a narrower claim |
-| Required binding/build-aware semantics (including complete references or implementation hierarchy), diagnostics or semantic mutation | Capable stack-declared semantic owner, otherwise supported Serena backend, directly without a futile graph call | Eligible configured Go gopls or equivalent native semantic operation; targeted source for partial read evidence; bounded native edit under the continuation rule below |
+| Source/declaration lookup, location, relationships, call paths or likely impact in supported indexed source, whether the file/symbol is known or unknown | Any eligible CodeGraph MCP/CLI operation fitting the question and providing adequate evidence | Another eligible same-index operation for an operation/transport gap; supported Serena operation; bounded native source for a narrower claim |
+| Required binding/build-aware semantics (including complete references or implementation hierarchy), diagnostics or semantic mutation | Capable stack-declared semantic owner, otherwise supported Serena backend or eligible native language operation; skip absent surfaces without futile calls | Another eligible semantic operation; targeted source for partial read evidence; bounded native edit under the continuation rule below |
 | Dependency metadata, resolved module/workspace versions or an authorized dependency upgrade | Native manifest/parser for declared metadata; inspected stack version/dependency recipe for resolution or upgrade | Eligible equivalent proving the named metadata property; discover source or semantics only for a separate missing impact/API fact |
 | Literal, known hand-maintained text, Markdown, JSON/YAML/TOML or configuration | Bounded native search/read/parser | Available equivalent native operation retaining scope/dialect limits |
 | Installed Laravel framework/package guidance | Applicable configured Boost documentation with verified installed versions | Version-correct official documentation; package source only for a separately named implementation question |
@@ -20,6 +20,8 @@ Scope, branch, service, configuration or resume changes require checking which e
 | Behavioral/artifact proof | Inspected repository-native tests, types, lint, builds, generators, schema/link checks | Authorized equivalent proving the same acceptance property; otherwise blocked |
 
 Known identity alone does not select Serena. Prefer eligible CodeGraph for adequate source/structural answers, then eligible Serena, then bounded native evidence. Send required semantics beyond CodeGraph directly to the capable semantic owner; do not make a futile graph-first call. Native dependency metadata/resolution, literals, unsupported artifacts, Boost/runtime facts and native proof keep the specialized owners above. The CodeGraph server/installer owns exact usage and managed instructions. Stack owners retain implementation doctrine; /alaa-repo-docs owns Markdown authoring/alignment, /alaa-workflow durable state, /alaa-low-noise output budgets and the installed orchestrator fan-out.
+
+Serena and its hooks are not prerequisites for native language operations. Record known absence once per unchanged capability context; use eligible CLI/connected LSP operations without a failed Serena call first. The stack reference owns operation fit; the native reference owns executable versus client eligibility.
 
 ## Consume evidence
 
@@ -36,7 +38,7 @@ For each unchanged question retain established evidence and attempted owner/oper
 For a failed operation, allow at most one cause-specific non-mutating health/capability repair and one materially different retry when the cause supports them; otherwise advance immediately. Activation, restart, unlock, sync or reindex are not automatic non-mutating repairs. A fallback uses a different eligible operation and never resets a failed operation's budget. Missing coverage alone is not a health failure.
 
 - CodeGraph MCP transport failure: try CLI only when independently usable against the same valid index. Shared stale/bad index skips this detour. Then use supported Serena/backend evidence, then bounded native evidence; retain lost graph coverage.
-- Missing required semantic operation: use eligible configured Go gopls or an equivalent stack-native semantic operation, then targeted source for a partial read claim. Never infer reference completeness or refactor safety from text.
+- Missing required semantic operation: use an eligible language-native CLI or connected LSP operation covering the same property, then targeted source for a partial read claim. Diagnostics alone do not establish complete references; text does not establish refactor safety.
 - Missing docs: use version-correct official sources after establishing installed versions.
 - Missing native read/parser: use an available equivalent with the actual format/dialect; state lost parsing or search coverage.
 - Missing Laravel runtime capability: apply independent docs/boot/DB failure domains in the stack owner.
