@@ -90,8 +90,14 @@ TEMPLATE_MARKER = "# grant-template: materialize-live-parent-mcp"
 INVENTORY_FILE = ".alaa-codex-orchestrator.mcp-inventory"
 SAFE_NAME = re.compile(r"^[A-Za-z0-9_-]+$")
 
-GORTEX_READ = ['explore', 'search', 'read', 'relations', 'trace', 'analyze', 'change', 'recall', 'workspace', 'response', 'capabilities']
-GORTEX_WRITE = GORTEX_READ + ["edit", "refactor"]
+SERENA_READ = [
+    "find_symbol",
+    "get_symbols_overview",
+    "find_referencing_symbols",
+    "find_declaration",
+    "find_implementations",
+    "get_diagnostics_for_file",
+]
 BOOST_DOCS = ["search-docs", "application-info"]
 BOOST_ROUTING = ["get-absolute-url"]
 BOOST_SCHEMA = ["database-schema", "database-connections"]
@@ -114,14 +120,14 @@ def _only(tools: list[str]) -> dict[str, list[str]]:
 ROLE_POLICY: dict[str, dict[str, dict]] = {
     "alaa-accessibility-reviewer": {"laravel-boost": _only(BOOST_DOCS + BOOST_ROUTING)},
     "alaa-adversarial-reviewer": {
-        "gortex": _only(GORTEX_READ),
+        "codegraph": {}, "serena": _only(SERENA_READ),
         "laravel-boost": _only(BOOST_DOCS + BOOST_SCHEMA),
     },
     "alaa-api-contract-reviewer": {
-        "gortex": _only(GORTEX_READ), "laravel-boost": _only(BOOST_DOCS + BOOST_ROUTING + BOOST_SCHEMA),
+        "codegraph": {}, "laravel-boost": _only(BOOST_DOCS + BOOST_ROUTING + BOOST_SCHEMA),
     },
     "alaa-architecture-critic": {
-        "gortex": _only(GORTEX_READ), "laravel-boost": _only(BOOST_DOCS + BOOST_SCHEMA),
+        "codegraph": {}, "laravel-boost": _only(BOOST_DOCS + BOOST_SCHEMA),
         "hindsight": _only(HINDSIGHT_READ),
     },
     "alaa-browser-qa": {
@@ -130,43 +136,45 @@ ROLE_POLICY: dict[str, dict[str, dict]] = {
     "alaa-dependency-auditor": {"laravel-boost": _only(BOOST_DOCS)},
     "alaa-documenter": {"laravel-boost": _only(BOOST_DOCS + BOOST_ROUTING)},
     "alaa-explorer": {
-        "gortex": _only(GORTEX_READ), "laravel-boost": _only(BOOST_DOCS + BOOST_ROUTING),
+        "codegraph": {}, "laravel-boost": _only(BOOST_DOCS + BOOST_ROUTING),
         "hindsight": _only(HINDSIGHT_READ),
     },
     "alaa-failure-analyst": {
-        "gortex": _only(GORTEX_READ),
+        "codegraph": {}, "serena": _only(SERENA_READ),
         "laravel-boost": _only(BOOST_DOCS + BOOST_ERRORS + BOOST_BROWSER),
     },
     "alaa-implementer-astra": {
-        "gortex": _only(GORTEX_WRITE),
+        "codegraph": {},
+        "serena": {"disabled_tools": ["execute_shell_command"]},
         "laravel-boost": {},
     },
     "alaa-implementer": {
-        "gortex": _only(GORTEX_WRITE),
+        "codegraph": {},
+        "serena": {"disabled_tools": ["execute_shell_command"]},
         "laravel-boost": {},
     },
     "alaa-migration-guardian": {
-        "gortex": _only(GORTEX_READ), "laravel-boost": _only(BOOST_DOCS + BOOST_SCHEMA),
+        "codegraph": {}, "laravel-boost": _only(BOOST_DOCS + BOOST_SCHEMA),
     },
     "alaa-observability-reviewer": {
-        "gortex": _only(GORTEX_READ), "laravel-boost": _only(BOOST_DOCS + BOOST_ERRORS + BOOST_BROWSER),
+        "codegraph": {}, "laravel-boost": _only(BOOST_DOCS + BOOST_ERRORS + BOOST_BROWSER),
     },
     "alaa-performance-profiler": {
-        "gortex": _only(GORTEX_READ), "laravel-boost": _only(BOOST_DOCS + BOOST_SCHEMA + BOOST_ERRORS),
+        "codegraph": {}, "laravel-boost": _only(BOOST_DOCS + BOOST_SCHEMA + BOOST_ERRORS),
     },
     "alaa-release-guardian": {"laravel-boost": _only(BOOST_DOCS)},
     "alaa-researcher": {"laravel-boost": _only(BOOST_DOCS), "hindsight": _only(HINDSIGHT_READ)},
     "alaa-reviewer": {
-        "gortex": _only(GORTEX_READ),
+        "codegraph": {}, "serena": _only(SERENA_READ),
         "laravel-boost": _only(BOOST_DOCS + BOOST_SCHEMA),
     },
     "alaa-security-reviewer": {
-        "gortex": _only(GORTEX_READ),
+        "codegraph": {}, "serena": _only(SERENA_READ),
         "laravel-boost": _only(BOOST_DOCS + BOOST_SCHEMA),
     },
-    "alaa-spec-analyst": {"gortex": _only(GORTEX_READ), "laravel-boost": _only(BOOST_DOCS)},
+    "alaa-spec-analyst": {"codegraph": {}, "laravel-boost": _only(BOOST_DOCS)},
     "alaa-test-strategist": {
-        "gortex": _only(GORTEX_READ), "laravel-boost": _only(BOOST_DOCS + BOOST_SCHEMA),
+        "codegraph": {}, "laravel-boost": _only(BOOST_DOCS + BOOST_SCHEMA),
     },
     "alaa-verifier": {},
     "alaa-instruction-reviewer": {},
@@ -412,7 +420,7 @@ def materialize(source_dir: str, output_dir: str) -> int:
 
 def self_test() -> int:
     inventory = {
-        "gortex": ("command", "gortex", True),
+        "serena": ("command", "serena", True),
         "remote-docs": ("url", "https://example.invalid/mcp", True),
     }
     cases = [
@@ -421,25 +429,25 @@ def self_test() -> int:
             "alaa-instruction-reviewer", TEMPLATE_MARKER, {"sandbox_mode": "workspace-write"}), "read-only"),
         ("instruction reviewer extra MCP", _resolved_failures(
             "alaa-instruction-reviewer", {"sandbox_mode": "read-only", "mcp_servers": {
-                "gortex": {"command": "gortex", "enabled": True},
+                "serena": {"command": "serena", "enabled": True},
                 "remote-docs": {"url": "https://example.invalid/mcp", "enabled": False},
             }}, inventory), "grant differs"),
         ("unmarked inherited omission", _template_failures("fixture", "", {}), "lacks"),
         ("partial source definition", _template_failures(
-            "fixture", TEMPLATE_MARKER, {"mcp_servers": {"gortex": {"enabled": False}}}), "must not embed"),
+            "fixture", TEMPLATE_MARKER, {"mcp_servers": {"serena": {"enabled": False}}}), "must not embed"),
         ("resolved omission", _resolved_failures("alaa-reviewer", {}, inventory), "inherits"),
         ("missing inherited server", _resolved_failures(
             "alaa-reviewer", {"mcp_servers": {
-                "gortex": {"command": "gortex", "enabled": True, "enabled_tools": GORTEX_READ},
+                "serena": {"command": "serena", "enabled": True, "enabled_tools": SERENA_READ},
             }}, inventory), "not overridden"),
         ("unassigned server left enabled", _resolved_failures(
             "alaa-reviewer", {"mcp_servers": {
-                "gortex": {"command": "gortex", "enabled": True, "enabled_tools": GORTEX_READ},
+                "serena": {"command": "serena", "enabled": True, "enabled_tools": SERENA_READ},
                 "remote-docs": {"url": "https://example.invalid/mcp", "enabled": True},
             }}, inventory), "grant differs"),
         ("read-only semantic server overgranted", _resolved_failures(
             "alaa-reviewer", {"mcp_servers": {
-                "gortex": {"command": "gortex", "enabled": True},
+                "serena": {"command": "serena", "enabled": True},
                 "remote-docs": {"url": "https://example.invalid/mcp", "enabled": False},
             }}, inventory), "grant differs"),
     ]
@@ -488,7 +496,7 @@ def self_test() -> int:
         if good["mcp_servers"]["hindsight"]["enabled"]:
             failures.append(f"{role}: implementation grant enabled memory")
         broken = {**good, "mcp_servers": {**good["mcp_servers"],
-                  "gortex": {"command": "gortex", "enabled": True}}}
+                  "serena": {"command": "serena", "enabled": True}}}
         if not _resolved_failures(role, broken, combined_inventory):
             failures.append(f"{role}: semantic shell safety deny omission accepted")
     for label, observed, expected_message in cases:

@@ -1,9 +1,9 @@
 ---
 name: alaa-reviewer
 description: Fresh-context independent read-only reviewer for complete orchestrated changes or user-authored work. Judges correctness, regressions, security, tests, and production risks. Never edits or fixes.
-tools: Read, Glob, Grep, Bash, Skill, mcp__laravel-boost__search-docs, mcp__laravel-boost__application-info, mcp__laravel-boost__database-schema, mcp__laravel-boost__database-connections, mcp__gortex__explore, mcp__gortex__search, mcp__gortex__read, mcp__gortex__relations, mcp__gortex__trace, mcp__gortex__analyze, mcp__gortex__change, mcp__gortex__recall, mcp__gortex__workspace, mcp__gortex__response, mcp__gortex__capabilities
+tools: Read, Glob, Grep, Bash, Skill, mcp__codegraph, mcp__serena__find_symbol, mcp__serena__get_symbols_overview, mcp__serena__find_referencing_symbols, mcp__serena__find_declaration, mcp__serena__find_implementations, mcp__serena__get_diagnostics_for_file, mcp__laravel-boost__search-docs, mcp__laravel-boost__application-info, mcp__laravel-boost__database-schema, mcp__laravel-boost__database-connections
 skills:
-  - /alaa-code-routing-gortex
+  - /alaa-code-intelligence-routing
   - /alaa-php-clean-code
   - /alaa-vue-typescript-clean-code
   - /alaa-golang-clean-code-principles

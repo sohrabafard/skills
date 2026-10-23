@@ -68,24 +68,24 @@ assigned here, including servers unknown to this pack, are disabled in that role
 
 | Agent | Structural and semantic | Framework context |
 |---|---|---|
-| `alaa-explorer` | Gortex local-read | docs, routing |
-| `alaa-spec-analyst` | Gortex local-read | docs |
-| `alaa-architecture-critic` | Gortex local-read | docs, schema |
-| `alaa-test-strategist` | Gortex local-read | docs, schema |
-| `alaa-api-contract-reviewer` | Gortex local-read | docs, routing, schema |
-| `alaa-migration-guardian` | Gortex local-read | docs, schema |
-| `alaa-observability-reviewer` | Gortex local-read | docs, app-errors, browser |
-| `alaa-performance-profiler` | Gortex local-read | docs, schema, app-errors |
-| `alaa-reviewer`, `alaa-reviewer-deep`, `alaa-adversarial-reviewer`, `alaa-security-reviewer` | Gortex local-read | docs, schema |
-| `alaa-failure-analyst` | Gortex local-read | docs, app-errors, browser |
-| Every registered implementer profile | Gortex local-read + authorized edit/refactor | full |
+| `alaa-explorer` | CodeGraph | docs, routing |
+| `alaa-spec-analyst` | CodeGraph | docs |
+| `alaa-architecture-critic` | CodeGraph | docs, schema |
+| `alaa-test-strategist` | CodeGraph | docs, schema |
+| `alaa-api-contract-reviewer` | CodeGraph | docs, routing, schema |
+| `alaa-migration-guardian` | CodeGraph | docs, schema |
+| `alaa-observability-reviewer` | CodeGraph | docs, app-errors, browser |
+| `alaa-performance-profiler` | CodeGraph | docs, schema, app-errors |
+| `alaa-reviewer`, `alaa-reviewer-deep`, `alaa-adversarial-reviewer`, `alaa-security-reviewer` | CodeGraph + Serena read set | docs, schema |
+| `alaa-failure-analyst` | CodeGraph + Serena read set | docs, app-errors, browser |
+| Every registered implementer profile | full, minus Serena's shell tool | full |
 | `alaa-researcher`, `alaa-dependency-auditor`, `alaa-release-guardian` | none | docs |
 | `alaa-accessibility-reviewer`, `alaa-documenter` | none | docs, routing |
 | `alaa-browser-qa` | none | docs, routing, browser, app-errors |
 | `alaa-verifier`, `alaa-instruction-reviewer` | none | none |
 
-The Gortex grant sets and framework classes come from
-`alaa-code-routing-gortex references/agent-scoping.md`: `docs` is `search-docs` and
+The Serena read set and framework classes come from
+`alaa-code-intelligence-routing references/80-agent-scoping.md`: `docs` is `search-docs` and
 `application-info`; `schema` is `database-schema` and `database-connections`; `routing` is
 `get-absolute-url`; `app-errors` is `last-error` and `read-log-entries`; and `browser` is
 `browser-logs`. Read-only roles receive only the classes their question requires. Implementation roles inherit Laravel Boost's native surface; this orchestrator does not create a second server-wide Boost policy.

@@ -1,9 +1,9 @@
 ---
 name: alaa-planner
 description: "Advisory read-only planner for clear scope, contracts and constraints. Parent ratifies and owns the durable plan; never implements or edits. Model and effort are selected for the task, never from this compatibility ID."
-tools: Read, Glob, Grep, Bash, Skill, mcp__laravel-boost__search-docs, mcp__laravel-boost__application-info, mcp__gortex__explore, mcp__gortex__search, mcp__gortex__read, mcp__gortex__relations, mcp__gortex__trace, mcp__gortex__analyze, mcp__gortex__change, mcp__gortex__recall, mcp__gortex__workspace, mcp__gortex__response, mcp__gortex__capabilities
+tools: Read, Glob, Grep, Bash, Skill, mcp__codegraph, mcp__laravel-boost__search-docs, mcp__laravel-boost__application-info
 skills:
-  - /alaa-code-routing-gortex
+  - /alaa-code-intelligence-routing
 color: cyan
 ---
 

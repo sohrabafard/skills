@@ -1,9 +1,9 @@
 ---
 name: alaa-spec-analyst
 description: Read-only specification analyst. Spawn before any implementation dispatch when the goal's acceptance criteria are not yet checkable — vague quality language, an implied but unstated contract, or a "done" state two competent readers would define differently. Never implements, designs, or decides product questions.
-tools: Read, Glob, Grep, Bash, Skill, mcp__laravel-boost__search-docs, mcp__laravel-boost__application-info, mcp__gortex__explore, mcp__gortex__search, mcp__gortex__read, mcp__gortex__relations, mcp__gortex__trace, mcp__gortex__analyze, mcp__gortex__change, mcp__gortex__recall, mcp__gortex__workspace, mcp__gortex__response, mcp__gortex__capabilities
+tools: Read, Glob, Grep, Bash, Skill, mcp__codegraph, mcp__laravel-boost__search-docs, mcp__laravel-boost__application-info
 skills:
-  - /alaa-code-routing-gortex
+  - /alaa-code-intelligence-routing
 color: cyan
 ---
 

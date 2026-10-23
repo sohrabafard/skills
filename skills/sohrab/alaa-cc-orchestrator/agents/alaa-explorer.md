@@ -1,9 +1,9 @@
 ---
 name: alaa-explorer
 description: Bounded read-only repository mapper with named starting paths/symbols and required relationship evidence. Spawn when ownership, execution paths, dependencies, tests, conventions, or likely change scope are unclear. Never edits and does not choose the design.
-tools: Read, Glob, Grep, Bash, Skill, mcp__laravel-boost__search-docs, mcp__laravel-boost__application-info, mcp__laravel-boost__get-absolute-url, mcp__hindsight__hindsight_search_knowledge_pages, mcp__hindsight__hindsight_read_knowledge_page, mcp__hindsight__hindsight_list_knowledge_pages, mcp__hindsight__hindsight_reflect, mcp__gortex__explore, mcp__gortex__search, mcp__gortex__read, mcp__gortex__relations, mcp__gortex__trace, mcp__gortex__analyze, mcp__gortex__change, mcp__gortex__recall, mcp__gortex__workspace, mcp__gortex__response, mcp__gortex__capabilities
+tools: Read, Glob, Grep, Bash, Skill, mcp__codegraph, mcp__laravel-boost__search-docs, mcp__laravel-boost__application-info, mcp__laravel-boost__get-absolute-url, mcp__hindsight__hindsight_search_knowledge_pages, mcp__hindsight__hindsight_read_knowledge_page, mcp__hindsight__hindsight_list_knowledge_pages, mcp__hindsight__hindsight_reflect
 skills:
-  - /alaa-code-routing-gortex
+  - /alaa-code-intelligence-routing
 color: cyan
 ---
 

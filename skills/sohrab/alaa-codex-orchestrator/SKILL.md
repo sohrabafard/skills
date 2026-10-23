@@ -70,7 +70,7 @@ It must not implement while implementers are viable, run heavy verification, sil
 
 Before dispatch inspect guidance/affected paths; settle outcome, acceptance, preserved behavior and irreversible actions; draw disjoint lanes. `references/verification-and-gates.md` owns intake, lane fields and infrastructure reuse.
 
-Before Stage A evidence dispatch, apply triggered `/alaa-memory-os`: one bounded recall, verify useful claims in repository truth; keep active state in workflow. Route unresolved prior-session/ownership/shared-contract questions to `alaa-researcher`; `alaa-explorer` uses memory only when the repository cannot answer. Apply `/alaa-code-routing-gortex` before code-evidence selection and reuse its result.
+Before Stage A evidence dispatch, apply triggered `/alaa-memory-os`: one bounded recall, verify useful claims in repository truth; keep active state in workflow. Route unresolved prior-session/ownership/shared-contract questions to `alaa-researcher`; `alaa-explorer` uses memory only when the repository cannot answer. Apply `/alaa-code-intelligence-routing` before code-evidence selection and reuse its result.
 
 Every dispatch carries `/alaa-low-noise`; return findings, verdicts, counts and permitted artifact paths, never transcripts/full diffs/logs. Persist reusable context before returning its path. Use bounded invocations and host-required progress. Do not infer a universal watchdog timeout or per-command narration. After interruption reconcile transcript, checkpoint and surviving files before resuming writes.
 
@@ -148,7 +148,7 @@ Before resource/failure decisions apply the router below.
 - Repository-local, reversible edits inside declared scopes may proceed in orchestrator mode.
 - Ask before destructive Git operations, force pushes, history rewrites, deployment, publishing, production access, data deletion, credential changes, shared-system configuration changes, or irreversible migrations.
 - Installation and updates require explicit user authorization for named target paths; activation grants none.
-- Agent files own code-intelligence grants; dispatches do not. `references/agent-catalog.md` assigns Gortex local-read/write or no code-intelligence tools; `/alaa-code-routing-gortex` owns rationale. Change grants here, not `~/.codex/agents`, because reinstall restores pack grants.
+- Agent files own code-intelligence grants; dispatches do not. `references/agent-catalog.md` assigns CodeGraph/Serena read/both/neither; `/alaa-code-intelligence-routing` owns rationale. Change grants here, not `~/.codex/agents`, because reinstall restores pack grants.
 - Commit only with explicit user authorization in the workflow-selected checkout. Otherwise preserve the reviewed diff and snapshot validation through workflow. Every external/destructive effect needs its own explicit authority. Never add Co-Authored tags.
 - Never expose secrets in prompts, logs, artifacts, or reports.
 

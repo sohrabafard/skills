@@ -35,7 +35,7 @@ Read `references/00-topic-map.md` before a Go decision; open only rows matching 
    reactivation. Load /alaa-golang-clean-code-principles before the first edit or review comment;
    P1-P13 bind and this skill adds or overrides no principle.
 3. Before choosing evidence, an editing surface or supplemental diagnostics, load
-   /alaa-code-routing-gortex. It alone selects providers, order, eligibility and fallback.
+   /alaa-code-intelligence-routing. It alone selects providers, order, eligibility and fallback.
    Follow its rules for native continuation, missing guarantees and mutation reconciliation;
    this skill supplies Go doctrine and native proof, not a provider sequence.
 4. Load each triggered domain owner before the governed action and follow it without restating its rules. For an uncovered decision, apply the gap test reached through the topic map, then
@@ -62,7 +62,7 @@ on the changed packages, narrowed with `-run` to the changed topic in a large pa
 shipped entrypoint links with `go build` or a matching artifact from the same tree, environment and
 build configuration. A test compile does not prove that the production entrypoint links.
 Supplemental provider diagnostics and any required uncovered semantic property are governed by
-/alaa-code-routing-gortex; they do not replace these native gates.
+/alaa-code-intelligence-routing; they do not replace these native gates.
 Run `govulncheck ./...` in the authoring lane when `go.mod` or `go.sum` changed.
 The whole-suite run is an affected- and exhaustive-tier gate that /alaa-testing-strategy assigns
 to an authority other than the authoring lane; when the session has no such authority, run it on

@@ -61,24 +61,24 @@ roster line read as a trigger under-fires, because the conditions it leaves out 
 
 Each agent file fixes which code-intelligence servers that role may reach, because a role that cannot
 ask a server's question gains nothing from holding it and pays for its tool descriptions in every
-dispatch. `/alaa-code-routing-gortex` owns the grant classes and the named tool sets; `references/agent-scoping.md`
+dispatch. `/alaa-code-intelligence-routing` owns the grant classes and the named tool sets; `references/80-agent-scoping.md`
 inside that skill is the definition. This table is only the assignment.
 
 | Agent | Structural and semantic | Framework context |
 |---|---|---|
-| `alaa-explorer` | Gortex local-read | docs, routing |
-| `alaa-spec-analyst` | Gortex local-read | docs |
-| `alaa-architecture-critic` | Gortex local-read | docs, schema |
-| `alaa-test-strategist` | Gortex local-read | docs, schema |
-| `alaa-api-contract-reviewer` | Gortex local-read | docs, routing, schema |
-| `alaa-migration-guardian` | Gortex local-read | docs, schema |
-| `alaa-observability-reviewer` | Gortex local-read | docs, app-errors, browser |
-| `alaa-performance-profiler` | Gortex local-read | docs, schema, app-errors |
-| `alaa-reviewer` | Gortex local-read | docs, schema |
-| `alaa-adversarial-reviewer` | Gortex local-read | docs, schema |
-| `alaa-security-reviewer` | Gortex local-read | docs, schema |
-| `alaa-failure-analyst` | Gortex local-read | docs, app-errors, browser |
-| `alaa-implementer`, `alaa-implementer-opus`, `alaa-implementer-fable` | Gortex local-read + authorized edit/refactor; restricted inherited tools | full |
+| `alaa-explorer` | CodeGraph | docs, routing |
+| `alaa-spec-analyst` | CodeGraph | docs |
+| `alaa-architecture-critic` | CodeGraph | docs, schema |
+| `alaa-test-strategist` | CodeGraph | docs, schema |
+| `alaa-api-contract-reviewer` | CodeGraph | docs, routing, schema |
+| `alaa-migration-guardian` | CodeGraph | docs, schema |
+| `alaa-observability-reviewer` | CodeGraph | docs, app-errors, browser |
+| `alaa-performance-profiler` | CodeGraph | docs, schema, app-errors |
+| `alaa-reviewer` | CodeGraph + Serena read set | docs, schema |
+| `alaa-adversarial-reviewer` | CodeGraph + Serena read set | docs, schema |
+| `alaa-security-reviewer` | CodeGraph + Serena read set | docs, schema |
+| `alaa-failure-analyst` | CodeGraph + Serena read set | docs, app-errors, browser |
+| `alaa-implementer`, `alaa-implementer-opus`, `alaa-implementer-fable` | full, minus Serena's shell tool and the Hindsight server | full |
 | `alaa-researcher` | none | docs |
 | `alaa-dependency-auditor` | none | docs |
 | `alaa-release-guardian` | none | docs |
@@ -93,13 +93,12 @@ The framework classes are composed, not bundled, so no read-only lane carries a 
 `read-log-entries`; and `browser` is `browser-logs`. Implementation lanes inherit Laravel Boost's native surface;
 this orchestrator does not create a second server-wide Boost policy.
 
-Read-only lanes receive exact Gortex local-read tool names, never the whole server.
-A native read-only sandbox does not constrain writes inside an external MCP process.
-The tool classes and implementation exclusions are owned by
-`alaa-code-routing-gortex references/agent-scoping.md`; the checker enforces this catalog's assignment.
+Read-only lanes receive Serena tools by exact name rather than the whole server. An MCP server is a
+separate process, so a withheld `Edit` tool and a restrictive permission mode does not stop that server's own rename and delete tools; only the allow
+list does. The same reason removes Serena's shell tool from the implementation lanes, which already hold `Bash` under the runtime's own approval rules.
 
-Every lane granted a server also carries `/alaa-code-routing-gortex`, because a lane holding
-multiple providers and no contract for choosing among them is the problem the grants were meant to solve.
+Every lane granted a server also carries `/alaa-code-intelligence-routing`, because a lane holding
+three servers and no contract for choosing among them is the problem the grants were meant to solve.
 
 ## Memory scope
 
@@ -131,12 +130,9 @@ Every general allowlisted role keeps `Skill` for that reason, and every implemen
 Withholding `Skill` from the allowlists was tried and reverted. It narrows nothing on a role that
 already holds `Bash`, `Read`, `Write`, and `Edit`; it makes the dispatch's own `skills`
 field unsatisfiable; and it removes runtime invocation from every specialist on the theory that its
-preload list is complete, which no evidence supports. Implementation native-tool inheritance
-stays intact. Its exact deny projection follows
-`alaa-code-routing-gortex references/agent-scoping.md`, preserving Hindsight write ownership
-and the legacy alternate-shell defense while excluding non-local and administrative Gortex tools.
-The compact facade must be selected and checked before activation; an expanded provider inventory
-requires grant review, never automatic inheritance of newly exposed operations.
+preload list is complete, which no evidence supports. The safety deny set is therefore exactly
+Serena's shell tool, a real second path to the shell that bypasses the runtime's approval rules, and
+the Hindsight server (`mcp__hindsight`), whose write tools an inheriting role would otherwise receive.
 
 The checker enforces reachability in both directions. Every preloaded name must resolve to an
 installed skill, because a stale preload removes a standard silently. And a role that does not hold

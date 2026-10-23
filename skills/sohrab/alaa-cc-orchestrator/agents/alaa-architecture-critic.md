@@ -1,9 +1,9 @@
 ---
 name: alaa-architecture-critic
 description: Read-only architecture pressure-test specialist. Judge public-contract, service-boundary, distributed workflow, consistency, caching, concurrency, or cross-cutting design changes at the inherited declared review boundary. Challenges the plan; never owns it or edits code.
-tools: Read, Glob, Grep, Bash, Skill, mcp__laravel-boost__search-docs, mcp__laravel-boost__application-info, mcp__laravel-boost__database-schema, mcp__laravel-boost__database-connections, mcp__hindsight__hindsight_search_knowledge_pages, mcp__hindsight__hindsight_read_knowledge_page, mcp__hindsight__hindsight_list_knowledge_pages, mcp__hindsight__hindsight_reflect, mcp__gortex__explore, mcp__gortex__search, mcp__gortex__read, mcp__gortex__relations, mcp__gortex__trace, mcp__gortex__analyze, mcp__gortex__change, mcp__gortex__recall, mcp__gortex__workspace, mcp__gortex__response, mcp__gortex__capabilities
+tools: Read, Glob, Grep, Bash, Skill, mcp__codegraph, mcp__laravel-boost__search-docs, mcp__laravel-boost__application-info, mcp__laravel-boost__database-schema, mcp__laravel-boost__database-connections, mcp__hindsight__hindsight_search_knowledge_pages, mcp__hindsight__hindsight_read_knowledge_page, mcp__hindsight__hindsight_list_knowledge_pages, mcp__hindsight__hindsight_reflect
 skills:
-  - /alaa-code-routing-gortex
+  - /alaa-code-intelligence-routing
   - /alaa-system-design
   - /alaa-services-contract
   - /alaa-laravel-architecture

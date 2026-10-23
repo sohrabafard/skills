@@ -56,8 +56,8 @@ owns it — gives the test that decides whether this skill fills the gap itself.
 
 | You are about to… | Read / load |
 |---|---|
-| find a definition, caller, package surface, implementation, or diagnostic | `/alaa-code-routing-gortex` for evidence and required semantic-operation selection |
-| rename, move, extract, or inline across more than one file | `/golang-refactoring` for the process, `/alaa-code-routing-gortex` for the semantic actuator, plus the skill that defines the target shape |
+| find a definition, caller, package surface, implementation, or diagnostic | `/alaa-code-intelligence-routing` for evidence and required semantic-operation selection |
+| rename, move, extract, or inline across more than one file | `/golang-refactoring` for the process, `/alaa-code-intelligence-routing` for the semantic actuator, plus the skill that defines the target shape |
 | change behaviour of any kind | `63-tdd-and-testing-discipline.md` |
 | debug a panic, a deadlock, a leak, or output nobody can explain | `/golang-troubleshooting` |
 | investigate slowness | `/golang-observability` first, then `/golang-benchmark`, then `/golang-performance` |

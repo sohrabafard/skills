@@ -1,9 +1,9 @@
 ---
 name: alaa-implementer-fable
 description: "Compatibility implementation authority identity. Exceptional model admission is a separate task decision under the all-role allocation record; the role name selects neither model nor effort. Never self-review or widen scope."
-disallowedTools: mcp__serena__execute_shell_command, mcp__hindsight, mcp__gortex__ask, mcp__gortex__review, mcp__gortex__pr, mcp__gortex__workspace_admin, mcp__gortex__session, mcp__gortex__overlay, mcp__gortex__remember, mcp__gortex__publish_review
+disallowedTools: mcp__serena__execute_shell_command, mcp__hindsight
 skills:
-  - /alaa-code-routing-gortex
+  - /alaa-code-intelligence-routing
   - /alaa-services-contract
   - /alaa-trust-gateway-auth
 color: blue

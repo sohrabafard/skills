@@ -1,9 +1,9 @@
 ---
 name: alaa-failure-analyst
 description: Read-only diagnostic specialist for failed, flaky, timed-out, contaminated, cross-lane, or environment-dependent verification. Determines the most likely failure class and owning lane; never edits or reruns broad suites without instruction.
-tools: Read, Glob, Grep, Bash, Skill, mcp__laravel-boost__search-docs, mcp__laravel-boost__application-info, mcp__laravel-boost__last-error, mcp__laravel-boost__read-log-entries, mcp__laravel-boost__browser-logs, mcp__gortex__explore, mcp__gortex__search, mcp__gortex__read, mcp__gortex__relations, mcp__gortex__trace, mcp__gortex__analyze, mcp__gortex__change, mcp__gortex__recall, mcp__gortex__workspace, mcp__gortex__response, mcp__gortex__capabilities
+tools: Read, Glob, Grep, Bash, Skill, mcp__codegraph, mcp__serena__find_symbol, mcp__serena__get_symbols_overview, mcp__serena__find_referencing_symbols, mcp__serena__find_declaration, mcp__serena__find_implementations, mcp__serena__get_diagnostics_for_file, mcp__laravel-boost__search-docs, mcp__laravel-boost__application-info, mcp__laravel-boost__last-error, mcp__laravel-boost__read-log-entries, mcp__laravel-boost__browser-logs
 skills:
-  - /alaa-code-routing-gortex
+  - /alaa-code-intelligence-routing
 color: orange
 ---
 

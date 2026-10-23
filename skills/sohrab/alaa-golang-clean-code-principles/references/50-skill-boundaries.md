@@ -24,7 +24,7 @@ among all 46 of them; the direct trigger is given so you can jump when the route
 | Language-level security | `/golang-security` (`$golang-security`) |
 | Lint configuration | `/golang-lint` (`$golang-lint`) |
 | Modern idioms, upgrades, latest-Go features | `/golang-modernize` (`$golang-modernize`) plus `/alaa-golang` (`$alaa-golang`) reference 70 |
-| Structural discovery and semantic code navigation | `/alaa-code-routing-gortex`: Gortex for structure, Go symbols, references, diagnostics and supported edits; direct `/golang-gopls` (`$golang-gopls`) only for one recorded fallback |
+| Structural discovery and semantic code navigation | `/alaa-code-intelligence-routing` (`$alaa-code-intelligence-routing`): CodeGraph for unknown structure, Serena for known Go symbols and diagnostics, direct `/golang-gopls` (`$golang-gopls`) only for one recorded fallback |
 | Safe, staged, at-scale refactoring process | `/golang-refactoring` (`$golang-refactoring`) |
 | Published-package lookup — versions, CVEs, symbols | `/golang-pkg-go-dev` (`$golang-pkg-go-dev`) |
 | Go map and slice behavior | `/golang-data-structures` (`$golang-data-structures`) |

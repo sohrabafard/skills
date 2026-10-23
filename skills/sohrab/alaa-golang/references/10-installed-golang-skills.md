@@ -145,13 +145,13 @@ Swagger and OpenAPI with `swaggo/swag`: annotations, generated docs, UI routes, 
 
 Go's `gopls` language-server mechanics: build-aware definitions, references, package API discovery,
 diagnostics, rename and code actions against the locally resolved build, including `replace`d forks.
-When the task needs a local code-intelligence operation, load /alaa-code-routing-gortex;
+When the task needs a local code-intelligence operation, load /alaa-code-intelligence-routing;
 it selects the surface and its limits. This catalogue names capabilities only.
 
 ### golang-refactoring (`/golang-refactoring`)
 
 The safe, staged process of restructuring existing Go: coverage safety net, behaviour-preserving transforms through
-the semantic actuator selected by `/alaa-code-routing-gortex`, plus
+the semantic actuator selected by `/alaa-code-intelligence-routing`, plus
 `gofmt -r`, `eg`, `gopatch`, and `go/analysis` fixers; breaking import cycles; moving types with aliases; and small
 stacked PRs. It owns *how*; the target shape is owned elsewhere.
 
