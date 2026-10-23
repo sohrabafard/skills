@@ -103,7 +103,7 @@ The target outcome is:
 - `Get-Content -Raw 'skills\sohrab\teamimplement\SKILL.md'`
 - `Get-Content -Raw 'skills\sohrab\alaa-workflow\SKILL.md'`
 - `Get-Content -Raw 'skills\sohrab\alaa-php-clean-code\references\agent-orchestration.md'`
-- `python 'C:\Users\CIT\.codex\skills\.system\skill-creator\scripts\quick_validate.py' 'D:\Sohrab\Project\skills\skills\sohrab\teamimplement'`
+- `python 'C:\Users\CIT\.codex\skills\.system\skill-creator\scripts\quick_validate.py' '/home/sohrab/project/skills/skills/sohrab/teamimplement'`
 - Optional after applying edits:
   - `rg -n "\.planning/PLAN\.md|\.planning/phase-|teamimplement" skills docs`
 

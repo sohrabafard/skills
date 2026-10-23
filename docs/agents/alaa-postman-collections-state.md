@@ -26,7 +26,7 @@
   - Postman environment export structure is less prominently documented than collection schema details, so the skill should prefer existing exported shapes when present and validate structure conservatively
 - Validation summary:
   - official-source review completed before editing
-  - `python C:\Users\CIT\.codex\skills\.system\skill-creator\scripts\quick_validate.py D:\Sohrab\Project\skills\skills\sohrab\alaa-postman-collections` passed
+  - `python C:\Users\CIT\.codex\skills\.system\skill-creator\scripts\quick_validate.py /home/sohrab/project/skills/skills/sohrab/alaa-postman-collections` passed
   - `python skills\sohrab\alaa-postman-collections\scripts\validate_postman_artifacts.py <temp collection> --env <temp environment>` passed with one expected warning because `jsonschema` is not installed locally
   - `Get-Command inso, insomnia -ErrorAction SilentlyContinue` returned no local Insomnia CLI or desktop command, so no live import smoke test was available in this session
   - `python scripts\validate_sohrab_skill_pack.py` still fails on unrelated pre-existing skills elsewhere in the pack; no new error was emitted for `alaa-postman-collections`

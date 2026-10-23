@@ -1,5 +1,5 @@
 argv=python -B skills\sohrab\alaa-prompting-guide\scripts\check_claude_model_policy.py
-cwd=D:\Sohrab\Project\skills
+cwd=/home/sohrab/project/skills
 env-overrides=none
 resource=BelowNormal; serial; timeout=180s
 started=2026-09-25T15:44:09.554887+03:30

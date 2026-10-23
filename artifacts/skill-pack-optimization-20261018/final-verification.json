@@ -184,7 +184,7 @@
     },
     {
       "id": 14,
-      "command": "docker run --rm --pull=never --network none --read-only --cap-drop ALL --pids-limit 64 --memory 128m --cpus 1 --tmpfs /tmp:rw,nosuid,size=32m --mount \"type=bind,source=D:\\Sohrab\\Project\\skills,target=/work,readonly\" --workdir /work --entrypoint python3 sha256:d7d5200cf678b9439e2c1bd44bfa5c99fb90915fd9bad96a4a0c4847557d7883 -B skills/sohrab/tusd-upload-platform/scripts/validate_pack.py --root skills/sohrab/tusd-upload-platform",
+      "command": "docker run --rm --pull=never --network none --read-only --cap-drop ALL --pids-limit 64 --memory 128m --cpus 1 --tmpfs /tmp:rw,nosuid,size=32m --mount \"type=bind,source=/home/sohrab/project/skills,target=/work,readonly\" --workdir /work --entrypoint python3 sha256:d7d5200cf678b9439e2c1bd44bfa5c99fb90915fd9bad96a4a0c4847557d7883 -B skills/sohrab/tusd-upload-platform/scripts/validate_pack.py --root skills/sohrab/tusd-upload-platform",
       "cwd": ".",
       "duration_seconds": 2.54,
       "exit": 0,
@@ -196,7 +196,7 @@
     },
     {
       "id": 15,
-      "command": "docker run --rm --pull=never --network none --read-only --cap-drop ALL --pids-limit 64 --memory 128m --cpus 1 --tmpfs /tmp:rw,nosuid,size=32m --mount \"type=bind,source=D:\\Sohrab\\Project\\skills,target=/work,readonly\" --workdir /work --entrypoint python3 sha256:d7d5200cf678b9439e2c1bd44bfa5c99fb90915fd9bad96a4a0c4847557d7883 -B skills/sohrab/tusd-upload-platform/scripts/validate_pack.py --root skills/sohrab/tusd-upload-platform --self-test",
+      "command": "docker run --rm --pull=never --network none --read-only --cap-drop ALL --pids-limit 64 --memory 128m --cpus 1 --tmpfs /tmp:rw,nosuid,size=32m --mount \"type=bind,source=/home/sohrab/project/skills,target=/work,readonly\" --workdir /work --entrypoint python3 sha256:d7d5200cf678b9439e2c1bd44bfa5c99fb90915fd9bad96a4a0c4847557d7883 -B skills/sohrab/tusd-upload-platform/scripts/validate_pack.py --root skills/sohrab/tusd-upload-platform --self-test",
       "cwd": ".",
       "duration_seconds": 1.355,
       "exit": 0,

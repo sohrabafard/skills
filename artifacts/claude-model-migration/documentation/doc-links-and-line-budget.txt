@@ -3,4 +3,4 @@ exit=0
 output:
 README.md: YELLOW 53 physical lines
 docs/claude-model-migration.md: YELLOW 61 physical lines
-Validated links, line budgets in 2 Markdown file(s) under D:\Sohrab\Project\skills.
+Validated links, line budgets in 2 Markdown file(s) under /home/sohrab/project/skills.
