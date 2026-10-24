@@ -1,0 +1,753 @@
+diff --git a/skills/sohrab/alaa-cc-orchestrator/CHANGELOG.md b/skills/sohrab/alaa-cc-orchestrator/CHANGELOG.md
+index c8d2c3f2..941d2a22 100644
+--- a/skills/sohrab/alaa-cc-orchestrator/CHANGELOG.md
++++ b/skills/sohrab/alaa-cc-orchestrator/CHANGELOG.md
+@@ -1,5 +1,14 @@
+ # Changelog
+ 
++## 5.4.0 - 2026-10-24
++
++- Draw the fewest lanes that keep write scopes disjoint; the lane, not the subtask, is the dispatch unit, and the lead may make a mechanical local edit.
++- Require each acceptance criterion to name its proving check, and carry established anchors in dispatch context.
++- Report verification failures per case with stage, first causal error and blocked dependents; zero selected cases never pass.
++- Continue the original implementer for the batch repair when its context is valid, then rerun the whole recorded check list.
++- Route a recurring harness or environment failure to a bounded reproduction instead of another full run.
++
++
+ ## 5.3.0 - 2026-10-09
+ 
+ - Coalesce logical phase outcomes; preserve independent verification, review and triggered gates.
+diff --git a/skills/sohrab/alaa-cc-orchestrator/SKILL.md b/skills/sohrab/alaa-cc-orchestrator/SKILL.md
+index b3f3a112..948feb09 100644
+--- a/skills/sohrab/alaa-cc-orchestrator/SKILL.md
++++ b/skills/sohrab/alaa-cc-orchestrator/SKILL.md
+@@ -36,7 +36,7 @@ Inspect effective sandbox, parent overrides and MCP grants before relying on iso
+ 
+ ### Orchestrator mode
+ 
+-Use when the user asks to build, fix, refactor, migrate, integrate, optimize, or otherwise change a repository. The lead plans, dispatches, reconciles, gates and reports. It must not implement while viable implementers are available; the verifier runs heavy suites.
++Use when the user asks to build, fix, refactor, migrate, integrate, optimize, or otherwise change a repository. The lead plans, dispatches, reconciles, gates and reports. It implements only a mechanical local edit with known scope, no design decision, and a few tool calls, because dispatching such an edit costs more than making it; viable implementers own all other implementation, and the verifier runs heavy suites.
+ 
+ ### Advisor mode
+ 
+@@ -52,7 +52,7 @@ Use `references/routing-matrix.md` for the actual lead-session task selection an
+ 
+ The lead owns goal normalization/scope control, repository-aware lanes, selection/dispatch authority, reconciliation, verification/review, specialist triggers, truthful reporting and stopping.
+ 
+-The lead must not implement while implementers are viable, run heavy verification, silently take over failed lanes, permit self-approval, soften/omit review findings, claim unobserved checks or overlap writers. Save bulky output and report its path. Destructive, publication, deployment, force-push, data-deletion and external effects require explicit user permission.
++The lead must not implement beyond that mechanical-edit exception, run heavy verification, silently take over failed lanes, permit self-approval, soften/omit review findings, claim unobserved checks or overlap writers. Save bulky output and report its path. Destructive, publication, deployment, force-push, data-deletion and external effects require explicit user permission.
+ 
+ ### Dispatch discipline
+ 
+@@ -107,7 +107,7 @@ Orchestrator mode preserves A–E; F requires requested integration and explicit
+ | `standard` | anything that is neither `lean` nor `hardened` | Stages A–E with every required gate; F only when requested |
+ | `hardened` | the change meets the adversarial reviewer's blast-radius condition in `references/routing-matrix.md` | `standard`, plus the architecture design record in Stage A and critic/adversarial judgment at the declared review boundary |
+ 
+-`lean` review is independent: the lead authored no diff. If it leaves the lane plan, select `standard` and dispatch `alaa-reviewer` on the complete change.
++`lean` review is independent: the lead authored no diff. If it leaves the lane plan, or the lead made a mechanical edit, select `standard` and dispatch `alaa-reviewer` on the complete change.
+ 
+ **No profile suppresses a specialist.** Apply only `references/routing-matrix.md` triggers, identically across profiles.
+ 
+diff --git a/skills/sohrab/alaa-cc-orchestrator/VERSION b/skills/sohrab/alaa-cc-orchestrator/VERSION
+index 03f488b0..8a30e8f9 100644
+--- a/skills/sohrab/alaa-cc-orchestrator/VERSION
++++ b/skills/sohrab/alaa-cc-orchestrator/VERSION
+@@ -1 +1 @@
+-5.3.0
++5.4.0
+diff --git a/skills/sohrab/alaa-cc-orchestrator/agents/alaa-implementer.md b/skills/sohrab/alaa-cc-orchestrator/agents/alaa-implementer.md
+index ee362b0c..b03fa85f 100644
+--- a/skills/sohrab/alaa-cc-orchestrator/agents/alaa-implementer.md
++++ b/skills/sohrab/alaa-cc-orchestrator/agents/alaa-implementer.md
+@@ -60,7 +60,7 @@ For design work, also report invariants protected, the design decision, alternat
+ 
+ Output contract:
+ 1. Lane outcome in one sentence.
+-2. Touched files and why each changed.
++2. Touched files and why each changed, plus each contract, interface or settled decision a later lane or repair owner must know, with file:line.
+ 3. Acceptance criteria mapped to implementation/tests.
+ 4. Verification evidence: command, cwd, resource policy, exit/result.
+ 5. Residual risks and checks not run.
+diff --git a/skills/sohrab/alaa-cc-orchestrator/agents/alaa-verifier.md b/skills/sohrab/alaa-cc-orchestrator/agents/alaa-verifier.md
+index e4b393d6..4417e10f 100644
+--- a/skills/sohrab/alaa-cc-orchestrator/agents/alaa-verifier.md
++++ b/skills/sohrab/alaa-cc-orchestrator/agents/alaa-verifier.md
+@@ -21,7 +21,7 @@ Execution protocol:
+ 1. Record initial git status and relevant environment facts.
+ 2. Run the lead's finite, consolidated command list exactly as dispatched, from the specified cwd. Apply its aggregate coverage and eligible evidence citations; never add or repeat checks on your own.
+ 3. Every declared CPU-heavy command must go through the supplied low-priority runner. Default Windows priority is BelowNormal. Respect CPU count, runner parallelism, package parallelism, worker count, and timeout independently.
+-4. Capture command, cwd, environment overrides, priority/affinity, start/end or duration, exit code, and the smallest useful output.
++4. Capture command, cwd, environment overrides, priority/affinity, start/end or duration, exit code, and the smallest useful output; read case results from the runner's machine-readable report when it has one.
+ 5. Classify each command as PASS, PRODUCT-FAILURE, TEST-INFRA-FAILURE, ENVIRONMENT-BLOCKED, TIMEOUT, FLAKY, SKIPPED, or CONTAMINATED. Name the tier the dispatch assigned it — focused, affected, or exhaustive — and the proof level each PASS reached, from the six in /alaa-testing-strategy, references/40-proof-strength.md; a run against an in-memory or embedded substitute and the same run against the real engine are indistinguishable from the command line alone, and only the level tells the reader which one happened.
+ 6. Rerun a failed command only when the dispatch authorizes one identical flake-detection rerun. A pass after failure is FLAKY, never PASS.
+ 7. Record final git status. Unexpected tracked-source changes make the run CONTAMINATED. Never revert them automatically.
+@@ -38,7 +38,7 @@ Effective authority: inspect the active sandbox, parent overrides, and tool/MCP
+ 
+ Output contract:
+ 1. Overall status.
+-2. Command evidence table: command, cwd, resource limits, duration, exit, classification, tier, proof level reached.
+-3. Failed checks/tests with concise error excerpts and artifact paths.
++2. Command evidence table: command, cwd, resource limits, duration, exit, classification, tier, proof level reached, and cases passed/failed/skipped/not run.
++3. Per failing case: command id, case identity, stage (setup | execution | assertion | cleanup), first causal error with file:line, expected versus observed, classification, cases it blocked, cleanup state, artifact path. Group cases sharing one first causal error. An unknown cause stays unknown.
+ 4. Initial/final repository status and contamination findings.
+ 5. Flakiness, blockers, skipped checks, and environment assumptions.
+diff --git a/skills/sohrab/alaa-cc-orchestrator/assets/implementation-contract.md b/skills/sohrab/alaa-cc-orchestrator/assets/implementation-contract.md
+index 78f9087c..a80691c1 100644
+--- a/skills/sohrab/alaa-cc-orchestrator/assets/implementation-contract.md
++++ b/skills/sohrab/alaa-cc-orchestrator/assets/implementation-contract.md
+@@ -48,7 +48,7 @@ For design work, also report invariants protected, the design decision, alternat
+ 
+ Output contract:
+ 1. Lane outcome in one sentence.
+-2. Touched files and why each changed.
++2. Touched files and why each changed, plus each contract, interface or settled decision a later lane or repair owner must know, with file:line.
+ 3. Acceptance criteria mapped to implementation/tests.
+ 4. Verification evidence: command, cwd, resource policy, exit/result.
+ 5. Residual risks and checks not run.
+diff --git a/skills/sohrab/alaa-cc-orchestrator/references/delegation-prompts.md b/skills/sohrab/alaa-cc-orchestrator/references/delegation-prompts.md
+index 495ce380..de4772d5 100644
+--- a/skills/sohrab/alaa-cc-orchestrator/references/delegation-prompts.md
++++ b/skills/sohrab/alaa-cc-orchestrator/references/delegation-prompts.md
+@@ -6,12 +6,12 @@ Use the smallest applicable template. Replace placeholders with concrete reposit
+ 
+ ```xml
+ <goal><one-sentence outcome></goal>
+-<context><relevant repository facts, prior lane outcomes, and preserved behavior></context>
++<context><established anchors (file:line, contracts, settled decisions), prior lane outcomes, cited discovery artifacts and preserved behavior; the child re-derives none of them></context>
+ <scope>
+   <owned>files/modules or read-only questions</owned>
+   <excluded>explicit exclusions</excluded>
+ </scope>
+-<acceptance_criteria><numbered checkable criteria></acceptance_criteria>
++<acceptance_criteria><numbered: observable behavior -> proving command or selector -> expected result, or review-only: reason></acceptance_criteria>
+ <constraints><safety, compatibility, resource, and user constraints></constraints>
+ <authority>what the agent may and may not change or execute</authority>
+ <cadence><whole-engagement plan, declared phase|final review boundary, final phase, current phase/task/subtask, pending review/commit and supplied task-owner acceptance authority></cadence>
+diff --git a/skills/sohrab/alaa-cc-orchestrator/references/delegation-prompts/30-implementation.md b/skills/sohrab/alaa-cc-orchestrator/references/delegation-prompts/30-implementation.md
+index d05bfc14..43c413e8 100644
+--- a/skills/sohrab/alaa-cc-orchestrator/references/delegation-prompts/30-implementation.md
++++ b/skills/sohrab/alaa-cc-orchestrator/references/delegation-prompts/30-implementation.md
+@@ -4,7 +4,7 @@
+ 
+ ```xml
+ <task>Implement lane <n>: <bounded outcome>.</task>
+-<role_selection><exact registered profile from ratified plan; outcome/scope; settled and open decisions; failure/invariant reasoning; selection reason; exceptional admission: applicable high-workhorse inadequacy with context/spec/tool corrections and decomposition consideration, or explicit user direction></role_selection>
++<role_selection><outcome/scope; settled and open decisions; failure/invariant reasoning; registered profile, selection reason and exceptional-admission evidence go once in `<task_controls>`></role_selection>
+ <scope><owned files/modules>; exclude <everything else>.</scope>
+ <acceptance_criteria><numbered criteria></acceptance_criteria>
+ <dependencies><completed lane contracts or none></dependencies>
+@@ -25,7 +25,7 @@ Use `routing-matrix.md` to select directly from the ratified lane record. Pass t
+ 
+ ```xml
+ <task>Implement escalated lane <n>: <bounded outcome whose design is not yet decided>.</task>
+-<role_selection><exact registered profile from ratified plan; outcome/scope; settled and open decisions; failure/invariant reasoning; selection reason; exceptional admission: applicable high-workhorse inadequacy with context/spec/tool corrections and decomposition consideration, or explicit user direction></role_selection>
++<role_selection><outcome/scope; settled and open decisions; failure/invariant reasoning; registered profile, selection reason and exceptional-admission evidence go once in `<task_controls>`></role_selection>
+ <scope><owned files/modules>; exclude <everything else>.</scope>
+ <acceptance_criteria><numbered criteria></acceptance_criteria>
+ <dependencies><completed lane contracts or none></dependencies>
+@@ -44,4 +44,4 @@ Use `routing-matrix.md` to select directly from the ratified lane record. Pass t
+ 
+ ## Collected verification repair
+ 
+-Use the implementer envelope above for the single serialized batch fix lane selected under `verification-and-gates.md` Gate economics. Replace the lane scope with the combined authorized repair scope; carry every failure verbatim, its classification and owner, retired conflicting writers and exact focused retests. For an admitted early repair, scope only the recorded obstruction and return to collection without Review. Boundary retests remain the verifier's responsibility.
++Use the implementer envelope above for the single serialized batch fix lane selected under `verification-and-gates.md` Gate economics. Replace the lane scope with the combined authorized repair scope; carry every failure verbatim, its classification and owner, retired conflicting writers and exact focused retests. When Gate economics continues an existing implementer, send this content as the continuation message rather than a new envelope. For an admitted early repair, scope only the recorded obstruction and return to collection without Review. Boundary retests remain the verifier's responsibility.
+diff --git a/skills/sohrab/alaa-cc-orchestrator/references/delegation-prompts/90-completion/20-review-followup.md b/skills/sohrab/alaa-cc-orchestrator/references/delegation-prompts/90-completion/20-review-followup.md
+index 7f99ad1f..c2466137 100644
+--- a/skills/sohrab/alaa-cc-orchestrator/references/delegation-prompts/90-completion/20-review-followup.md
++++ b/skills/sohrab/alaa-cc-orchestrator/references/delegation-prompts/90-completion/20-review-followup.md
+@@ -5,7 +5,7 @@
+ ```xml
+ <task>Resolve reviewer/specialist findings in original lane <n>.</task>
+ <findings_verbatim><file:line, severity, failure, required fix></findings_verbatim>
+-<role_selection><exact registered profile from ratified plan; outcome/scope; settled and open decisions; failure/invariant reasoning; selection reason; exceptional admission: applicable high-workhorse inadequacy with context/spec/tool corrections and decomposition consideration, or explicit user direction></role_selection>
++<role_selection><outcome/scope; settled and open decisions; failure/invariant reasoning; registered profile, selection reason and exceptional-admission evidence go once in `<task_controls>`></role_selection>
+ <handoff><remaining work, surviving edits/checkpoint, evidence, and retired writer if reassigned; or none></handoff>
+ <original_scope_and_acceptance>unchanged unless the orchestrator explicitly revises them</original_scope_and_acceptance>
+ <verification tier="focused">
+diff --git a/skills/sohrab/alaa-cc-orchestrator/references/failure-taxonomy.md b/skills/sohrab/alaa-cc-orchestrator/references/failure-taxonomy.md
+index 4f80c737..3a89e252 100644
+--- a/skills/sohrab/alaa-cc-orchestrator/references/failure-taxonomy.md
++++ b/skills/sohrab/alaa-cc-orchestrator/references/failure-taxonomy.md
+@@ -4,7 +4,7 @@ Use one primary classification per command and record secondary factors separate
+ 
+ ## PASS
+ 
+-The exact dispatched command completed successfully, evidence was captured, and no unexpected tracked changes occurred.
++The exact dispatched command completed successfully, evidence was captured, and no unexpected tracked changes occurred. A command whose selector executed zero cases is `TEST-INFRA-FAILURE`, never `PASS`.
+ 
+ ## PRODUCT-FAILURE
+ 
+@@ -60,3 +60,5 @@ Clearing a cache, installing a tool, changing a permission, or starting a servic
+ 5. Inspect the owning code/test/config path.
+ 6. Classify owner: implementation lane, test infrastructure lane, environment owner, or orchestrator decision.
+ 7. Route the smallest grounded next action.
++
++A `TEST-INFRA-FAILURE` or `ENVIRONMENT-BLOCKED` recurring with the same first causal error earns no further full run: its owner reproduces the smallest failing path within the active retry budget while safe independent checks continue, because a full rerun repeats the cost and returns the same evidence.
+diff --git a/skills/sohrab/alaa-cc-orchestrator/references/verification-and-gates.md b/skills/sohrab/alaa-cc-orchestrator/references/verification-and-gates.md
+index f447d305..b73aa22f 100644
+--- a/skills/sohrab/alaa-cc-orchestrator/references/verification-and-gates.md
++++ b/skills/sohrab/alaa-cc-orchestrator/references/verification-and-gates.md
+@@ -36,7 +36,7 @@ Apply `routing-matrix.md` for planning controls and the single post-consolidatio
+ 
+ 1. Inspect relevant repository guidance (`CLAUDE.md`/`AGENTS.md`, local instructions, architecture docs, package manifests, CI, tests, and affected code paths).
+ 2. Restate internally: desired outcome; checkable acceptance criteria; constraints and preserved behavior; out-of-scope work; irreversible or externally visible actions.
+-3. Split into the smallest practical disjoint lanes, each with one concrete outcome, owned files/modules, exclusions, acceptance criteria, focused commands, dependencies, resolved skill bindings under `alaa-workflow references/companion-routing.md` including its matching clean-code owner, and return shape/line bound. Before implementation or fix-cycle dispatch, classify actual command scope, never tier labels; send focused commands to subtask workers and explicitly bounded task-acceptance commands to the task owner; reserve affected/exhaustive commands for boundary gates; a focused command is the topic selector `/alaa-testing-strategy` names.
++3. Draw the fewest lanes that keep write scopes disjoint and buy real parallelism, each with one concrete outcome, owned files/modules, exclusions, acceptance criteria in the dispatch envelope's criterion shape, focused commands, dependencies, resolved skill bindings under `alaa-workflow references/companion-routing.md` including its matching clean-code owner, and return shape/line bound. Split a lane only for disjoint write scope run in parallel, a different owning skill or authority, a different task model or effort, or work exceeding one agent's context; sequential work in one scope stays one lane, because each extra lane adds a dispatch, a context transfer and a reconciliation. The lane, not the subtask, is the dispatch unit: one dispatch carries every same-owner subtask of a task, and that agent runs the task-acceptance selectors at its end. Before implementation or fix-cycle dispatch, classify actual command scope, never tier labels; send focused commands to subtask workers and explicitly bounded task-acceptance commands to the task owner; reserve affected/exhaustive commands for boundary gates; a focused command is the topic selector `/alaa-testing-strategy` names.
+ 4. Serialize lanes that overlap in files, data contracts, generated output, migrations, or runtime state — or run them under worktree isolation and merge deliberately.
+ 
+ `references/routing-matrix.md` owns every specialist trigger; `references/delegation-prompts.md` owns
+@@ -48,10 +48,10 @@ Retain required retrieval, focused implementer checks and independent acceptance
+ 
+ Schedule gates by the collection barrier below, regardless of cost. Repository validation policy overrides this section within its repository; `/alaa-testing-strategy` owns that precedence.
+ 
+-Before validation dispatch, record one check list in the existing plan: required gates, exact scoped inputs and commands, aggregate-to-child coverage, observer, and eligible evidence citations. Inspect aggregate execution; a wrapper's name proves no coverage. Run an aggregate instead of its identical covered children only when inputs, environment, flags and required independent authority match. Run uncovered gates separately; report partial coverage. Count underlying checks once, not wrapper and child as separate passes. Phase transitions and new agents alone earn no rerun. A required final exhaustive aggregate discharges covered narrower checks only when covered inputs, environment, flags and required observer match demonstrably; preserve focused feedback and run uncovered checks. Markdown and templates can be checker inputs: documentation-only change proves no equivalence. Evidence quality below owns reuse; /alaa-testing-strategy owns stricter proof and fresh exhaustive gates. Preserve mandatory checks and changed-input reruns; run checker self-tests only when checker logic changes. The gates of one pass consume one build, compile, render or image per tree state; a dispatch that rebuilds what an earlier gate of the pass produced is corrected before it runs.
++Before validation dispatch, record one check list in the existing plan: required gates, exact scoped inputs and commands, each command's machine-readable reporter when the runner has one, declared case dependencies, aggregate-to-child coverage, observer, and eligible evidence citations. Before the first run of a new or changed command, or one with a recorded harness failure, confirm through the runner's list or collect mode that its selector selects the expected cases. Inspect aggregate execution; a wrapper's name proves no coverage. Run an aggregate instead of its identical covered children only when inputs, environment, flags and required independent authority match. Run uncovered gates separately; report partial coverage. Count underlying checks once, not wrapper and child as separate passes. Phase transitions and new agents alone earn no rerun. A required final exhaustive aggregate discharges covered narrower checks only when covered inputs, environment, flags and required observer match demonstrably; preserve focused feedback and run uncovered checks. Markdown and templates can be checker inputs: documentation-only change proves no equivalence. Evidence quality below owns reuse; /alaa-testing-strategy owns stricter proof and fresh exhaustive gates. Preserve mandatory checks and changed-input reruns; run checker self-tests only when checker logic changes. The gates of one pass consume one build, compile, render or image per tree state; a dispatch that rebuilds what an earlier gate of the pass produced is corrected before it runs.
+ 
+ 1. **Collect before repair.** After merging or reconciling phase diffs, run every required runnable phase check centrally once through `alaa-verifier`, reusing eligible covered evidence. A failure does not cancel independent remaining checks. Record each command's exit/result and each unrun check's blocker. A fail-fast aggregate proves only executed coverage: dispatch its supported keep-going mode or exact uncovered child commands; preserve failure exits.
+-2. **Repair as one batch, then retest, then Review.** Combine the full collection's failures verbatim into one serialized fix lane with explicit scope/ownership; retire conflicting writers. Classify first, use the failure analyst for ambiguous ownership and preserve environment/security authority limits. Only a failure blocking all or most remaining checks permits a minimal early repair: record blocked checks and cause, repair only that obstruction, then run or resume all required checks, including previously blocked checks, before any Review. Invalidate affected evidence. After batch repair, independent verification reruns failed and invalidated checks before Stage D. Unresolved required checks block Review and acceptance. Keep existing retry/stop budgets; never weaken tests or review to obtain a pass.
++2. **Repair as one batch, then retest, then Review.** Combine the full collection's failures verbatim into one serialized fix lane with explicit scope/ownership; retire conflicting writers. Assign it by continuing the existing implementer whose still-valid assignment and context cover most failures, through `SendMessage`, because a fresh lane rediscovers what that agent holds; dispatch fresh only when no continuation is available, that context is invalid, or Implementation routing selects another profile. Classify first, use the failure analyst for ambiguous ownership and preserve environment/security authority limits. Only a failure blocking all or most remaining checks permits a minimal early repair: record blocked checks and cause, repair only that obstruction, then run or resume all required checks, including previously blocked checks, before any Review. Invalidate affected evidence. After batch repair, independent verification reruns the whole recorded check list before Stage D, under `/alaa-testing-strategy` result validity. Unresolved required checks block Review and acceptance. Keep existing retry/stop budgets; never weaken tests or review to obtain a pass.
+ 3. **Freeze before verifying.** Pin a content snapshot of tracked diff, relevant untracked files and tool inputs, and prevent concurrent writes; commit only after the authorized boundary has passed. Evidence needs no commit. `alaa-workflow references/workspace-and-integration.md` owns the commit protocol and forbidden writes during a pass.
+ 
+ ## Reusable-context owner
+@@ -99,7 +99,7 @@ Always first, never skipped, at any profile. Everything after it inherits its de
+ 4. On Windows, CPU-heavy commands must use `scripts/Invoke-AlaaLowPriority.ps1` with `BelowNormal` by default; `Idle` only for explicitly background-grade benchmark, fuzz, or very heavy diagnostics. On Unix-like systems use `scripts/run-low-priority.sh`. When `/alaa-testing-strategy` sends a gate into a container of the CI job image, the dispatch names the image reference, the read-only mount, the copy into the container filesystem, a `--cpus` limit below the host's logical CPU count, and the gate's parallel flag sized to that limit. That `--cpus` limit replaces the low-priority wrapper for the container run. The gate's own parallel mode inside it counts as the one CPU-heavy command Stage B step 3 allows. A container dispatch that returns `ENVIRONMENT-BLOCKED` for Docker, the image, a mount, the copy, a setup step, or a service is re-dispatched once on the host under the wrapper above, and the report names why.
+ 5. Do not proceed as if verification passed when status is `PRODUCT-FAILURE`, `TEST-INFRA-FAILURE`, `ENVIRONMENT-BLOCKED`, `TIMEOUT`, `FLAKY`, or `CONTAMINATED`. Continue safe independent checks; stop unsafe or contaminated execution and name affected unrun checks, without calling collection complete. Classify before any repair through `references/failure-taxonomy.md`; a host/environment or stale-cache failure justifies no product edit.
+ 6. Route the collected batch through `references/routing-matrix.md` Failure routing and Gate economics; the analyst diagnoses and never fixes. Neither a clear owner nor a cheap fix bypasses collection.
+-7. After the batch fix, independently rerun failed topic selectors and checks whose inputs changed, followed by the integrated gate when shared behavior changed. Resume all outstanding required checks; retain only eligible unchanged evidence. Any new failures follow the same collection barrier within existing retry/stop budgets.
++7. After the batch fix, independently rerun the whole recorded check list, including outstanding required checks, under Gate economics. Any new failures follow the same collection barrier within existing retry/stop budgets.
+ 
+ ## Stage D — Independent review and specialist gates
+ 
+diff --git a/skills/sohrab/alaa-cc-orchestrator/scripts/check_agent_contracts.py b/skills/sohrab/alaa-cc-orchestrator/scripts/check_agent_contracts.py
+index 64b48b2a..eb050b68 100644
+--- a/skills/sohrab/alaa-cc-orchestrator/scripts/check_agent_contracts.py
++++ b/skills/sohrab/alaa-cc-orchestrator/scripts/check_agent_contracts.py
+@@ -350,7 +350,7 @@ def cadence_failures(skill: str, gates: str, dispatch: str,
+     errors = [f"missing scheduling contract: {clause}"
+               for clause in CADENCE_REQUIREMENTS if not contract_present(clause, gates)]
+     errors.extend(specialist_cadence_failures(design, contract, critic))
+-    for clause in ("It must not implement while viable implementers are available",
++    for clause in ("It implements only a mechanical local edit with known scope, no design decision, and a few tool calls",
+                    "Correct sparingly", "Calibrate length", "Keep dispatches lean",
+                    "Do not restate the native role definition",
+                    "for gate economics and independent acceptance",
+@@ -531,7 +531,7 @@ COLLECTION_REQUIREMENTS = (
+     "record blocked checks and cause, repair only that obstruction",
+     "then run or resume all required checks, including previously blocked checks, before any Review",
+     "Invalidate affected evidence",
+-    "After batch repair, independent verification reruns failed and invalidated checks before Stage D",
++    "After batch repair, independent verification reruns the whole recorded check list before Stage D",
+     "Unresolved required checks block Review and acceptance",
+     "Keep existing retry/stop budgets",
+     "Continue safe independent checks; stop unsafe or contaminated execution and name affected unrun checks, without calling collection complete",
+@@ -641,6 +641,104 @@ def collection_self_tests() -> list[tuple[str, bool]]:
+     return cases
+ 
+ 
++# Topic: run economy and failure locality; layer: structural source contract.
++# Each pack carries the same behavioural rules; the sibling pack is checked too
++# because the mirrored pair must decide identically.
++RUN_ECONOMY_REQUIREMENTS = {
++    "gates": (
++        "Draw the fewest lanes that keep write scopes disjoint and buy real parallelism",
++        "sequential work in one scope stays one lane",
++        "The lane, not the subtask, is the dispatch unit",
++        "confirm through the runner's list or collect mode that its selector selects the expected cases",
++        "Assign it by continuing the existing implementer whose still-valid assignment and context cover most failures",
++        "dispatch fresh only when no continuation is available, that context is invalid, or Implementation routing selects another profile",
++        "After batch repair, independent verification reruns the whole recorded check list before Stage D",
++        "independently rerun the whole recorded check list, including outstanding required checks",
++    ),
++    "skill": ("mechanical-edit exception", "or the lead made a mechanical edit, select `standard`"),
++    "taxonomy": (
++        "A command whose selector executed zero cases is `TEST-INFRA-FAILURE`, never `PASS`",
++        "earns no further full run",
++    ),
++    "dispatch": ("proving command or selector -> expected result, or review-only: reason",
++                 "the child re-derives none of them"),
++    "repair": ("send this content as the continuation message rather than a new envelope",),
++    "verifier_agent": ("first causal error with file:line", "stage (setup | execution | assertion | cleanup)",
++                       "Group cases sharing one first causal error"),
++    "implementation_contract": ("settled decision a later lane or repair owner must know",),
++    "testing_strategy": (
++        "any result in a collected check list after its batch repair",
++        "A case failing never stops an independent case from running",
++        "reported `SKIPPED` naming that precondition",
++        "makes every later result over that state `CONTAMINATED`",
++    ),
++    "test_economy": ("A failure alone never justifies deleting a test", "## Existing tests on a touched topic"),
++}
++RUN_ECONOMY_CONTRADICTIONS = (
++    "Split into the smallest practical disjoint lanes",
++    "independent verification reruns failed and invalidated checks",
++    "rerun failed topic selectors and checks whose inputs changed",
++    "It must not implement while viable implementers are available",
++    "concise error excerpts",
++)
++
++
++def run_economy_sources(root: Path = ROOT) -> dict[str, str]:
++    verifier = next(path for path in sorted((root / "agents").glob("alaa-verifier.*"))
++                    if path.suffix in {".toml", ".md"})
++    paths = {
++        "gates": root / "references/verification-and-gates.md",
++        "skill": root / "SKILL.md",
++        "taxonomy": root / "references/failure-taxonomy.md",
++        "dispatch": root / "references/delegation-prompts.md",
++        "repair": root / "references/delegation-prompts/30-implementation.md",
++        "verifier_agent": verifier,
++        "implementation_contract": root / "assets/implementation-contract.md",
++        "testing_strategy": root.parent / "alaa-testing-strategy/SKILL.md",
++        "test_economy": root.parent / "alaa-testing-strategy/references/90-test-economy.md",
++    }
++    return {name: path.read_text(encoding="utf-8") for name, path in paths.items()}
++
++
++def run_economy_failures(sources: dict[str, str], label: str = "") -> list[str]:
++    errors = []
++    for name, clauses in RUN_ECONOMY_REQUIREMENTS.items():
++        for clause in clauses:
++            if not contract_present(clause, sources[name]):
++                errors.append(f"{label}{name}: missing run-economy contract: {clause}")
++    for name, text in sources.items():
++        for clause in RUN_ECONOMY_CONTRADICTIONS:
++            if clause in text:
++                errors.append(f"{label}{name}: contradictory run-economy contract: {clause}")
++    return errors
++
++
++def sibling_root() -> Path:
++    # The mirrored pack is the one other orchestrator beside this one.
++    siblings = [path for path in sorted(ROOT.parent.glob("alaa-*-orchestrator"))
++                if path != ROOT and (path / "references/verification-and-gates.md").is_file()]
++    if len(siblings) != 1:
++        raise ValueError(f"expected one mirrored orchestrator pack, found {len(siblings)}")
++    return siblings[0]
++
++
++def run_economy_self_tests() -> list[tuple[str, bool]]:
++    # Immutable source setup; each mutation receives a fresh dictionary.
++    sources = run_economy_sources()
++    cases = [("run-economy source accepted", not run_economy_failures(sources))]
++    for name, clauses in RUN_ECONOMY_REQUIREMENTS.items():
++        for clause in clauses:
++            broken = {**sources, name: sources[name].replace(clause, "omitted")}
++            diagnostic = f"{name}: missing run-economy contract: {clause}"
++            cases.append((f"run economy {name}: requires {clause}", diagnostic in run_economy_failures(broken)))
++    for name in sources:
++        for clause in RUN_ECONOMY_CONTRADICTIONS:
++            broken = {**sources, name: sources[name] + "\n" + clause}
++            diagnostic = f"{name}: contradictory run-economy contract: {clause}"
++            cases.append((f"run economy {name}: rejects {clause}", diagnostic in run_economy_failures(broken)))
++    return cases
++
++
+ def verification_sources() -> tuple[str, list[str], dict[str, str]]:
+     return (
+         (ROOT / "references/verification-and-gates.md").read_text(encoding="utf-8"),
+@@ -702,6 +800,7 @@ def self_test() -> int:
+         ("invented watchdog rejected", bool(orchestrator_failures(skill + "\nA watchdog ends a lane on silence rather than on duration"))),
+     ]
+     cases.extend(collection_self_tests())
++    cases.extend(run_economy_self_tests())
+     cases.extend(cadence_self_tests())
+     cases.extend(specialist_cadence_self_tests())
+     cases.append(("economical execution accepted", not economy_failures(skill, gates)))
+@@ -828,6 +927,8 @@ def main() -> int:
+         errors.extend(verification_failures(*verification_sources()))
+         errors.extend(cadence_failures(*cadence_sources()))
+         errors.extend(collection_failures(collection_sources()))
++        errors.extend(run_economy_failures(run_economy_sources()))
++        errors.extend(run_economy_failures(run_economy_sources(sibling_root()), f"{sibling_root().name}: "))
+         errors.extend(task_allocation_failures(
+             (ROOT / "references/routing-matrix.md").read_text(encoding="utf-8"),
+             (ROOT / "references/model-effort-policy.md").read_text(encoding="utf-8")))
+diff --git a/skills/sohrab/alaa-codex-orchestrator/CHANGELOG.md b/skills/sohrab/alaa-codex-orchestrator/CHANGELOG.md
+index 5140ce45..691e493c 100644
+--- a/skills/sohrab/alaa-codex-orchestrator/CHANGELOG.md
++++ b/skills/sohrab/alaa-codex-orchestrator/CHANGELOG.md
+@@ -1,5 +1,14 @@
+ # Changelog
+ 
++## 5.4.0 - 2026-10-24
++
++- Draw the fewest lanes that keep write scopes disjoint; the lane, not the subtask, is the dispatch unit, and the lead may make a mechanical local edit.
++- Require each acceptance criterion to name its proving check, and carry established anchors in dispatch context.
++- Report verification failures per case with stage, first causal error and blocked dependents; zero selected cases never pass.
++- Continue the original implementer for the batch repair when its context is valid, then rerun the whole recorded check list.
++- Route a recurring harness or environment failure to a bounded reproduction instead of another full run.
++
++
+ ## 5.3.0 - 2026-10-09
+ 
+ - Coalesce logical phase outcomes; preserve independent verification, review and triggered gates.
+diff --git a/skills/sohrab/alaa-codex-orchestrator/SKILL.md b/skills/sohrab/alaa-codex-orchestrator/SKILL.md
+index 0b100077..b5efae4c 100644
+--- a/skills/sohrab/alaa-codex-orchestrator/SKILL.md
++++ b/skills/sohrab/alaa-codex-orchestrator/SKILL.md
+@@ -36,7 +36,7 @@ Inspect effective sandbox, parent overrides and MCP grants before relying on iso
+ 
+ ### Orchestrator mode
+ 
+-Use when the user asks to build, fix, refactor, migrate, integrate, optimize, or otherwise change a repository. The main thread plans, dispatches, reconciles, gates and reports. It must not implement while viable implementers are available; the verifier runs heavy suites.
++Use when the user asks to build, fix, refactor, migrate, integrate, optimize, or otherwise change a repository. The main thread plans, dispatches, reconciles, gates and reports. It implements only a mechanical local edit with known scope, no design decision, and a few tool calls, because dispatching such an edit costs more than making it; viable implementers own all other implementation, and the verifier runs heavy suites.
+ 
+ ### Advisor mode
+ 
+@@ -52,7 +52,7 @@ Use `references/routing-matrix.md` for the actual main-thread task selection and
+ 
+ It owns goal normalization/scope control, repository-aware lanes, selection/dispatch authority, reconciliation, verification/review, specialist triggers, truthful reporting and stopping.
+ 
+-It must not implement while implementers are viable, run heavy verification, silently take over failed lanes, permit self-approval, soften/omit review findings, claim unobserved checks or overlap writers. Save bulky output and report its path. Destructive, publication, deployment, force-push, data-deletion and external effects require explicit user permission.
++It must not implement beyond that mechanical-edit exception, run heavy verification, silently take over failed lanes, permit self-approval, soften/omit review findings, claim unobserved checks or overlap writers. Save bulky output and report its path. Destructive, publication, deployment, force-push, data-deletion and external effects require explicit user permission.
+ 
+ ### Dispatch discipline
+ 
+@@ -107,7 +107,7 @@ Orchestrator mode preserves A–E; F requires requested integration and explicit
+ | `standard` | anything that is neither `lean` nor `hardened` | Stages A–E with every required gate; F only when requested |
+ | `hardened` | the change meets the adversarial reviewer's blast-radius condition in `references/routing-matrix.md` | `standard`, plus the architecture design record in Stage A and critic/adversarial judgment at the declared review boundary |
+ 
+-`lean` review is independent: the lead authored no diff. If it leaves the lane plan, select `standard` and dispatch `alaa-reviewer` on the complete change.
++`lean` review is independent: the lead authored no diff. If it leaves the lane plan, or the lead made a mechanical edit, select `standard` and dispatch `alaa-reviewer` on the complete change.
+ 
+ **No profile suppresses a specialist.** Apply only `references/routing-matrix.md` triggers, identically across profiles.
+ 
+diff --git a/skills/sohrab/alaa-codex-orchestrator/VERSION b/skills/sohrab/alaa-codex-orchestrator/VERSION
+index 03f488b0..8a30e8f9 100644
+--- a/skills/sohrab/alaa-codex-orchestrator/VERSION
++++ b/skills/sohrab/alaa-codex-orchestrator/VERSION
+@@ -1 +1 @@
+-5.3.0
++5.4.0
+diff --git a/skills/sohrab/alaa-codex-orchestrator/assets/implementation-contract.md b/skills/sohrab/alaa-codex-orchestrator/assets/implementation-contract.md
+index e36ea1e7..f5aa9f47 100644
+--- a/skills/sohrab/alaa-codex-orchestrator/assets/implementation-contract.md
++++ b/skills/sohrab/alaa-codex-orchestrator/assets/implementation-contract.md
+@@ -47,7 +47,7 @@ For design work, also report invariants protected, the design decision, alternat
+ 
+ Output contract:
+ 1. Lane outcome in one sentence.
+-2. Touched files and why each changed.
++2. Touched files and why each changed, plus each contract, interface or settled decision a later lane or repair owner must know, with file:line.
+ 3. Acceptance criteria mapped to implementation/tests.
+ 4. Verification evidence: command, cwd, resource policy, exit/result.
+ 5. Residual risks and checks not run.
+diff --git a/skills/sohrab/alaa-codex-orchestrator/references/delegation-prompts.md b/skills/sohrab/alaa-codex-orchestrator/references/delegation-prompts.md
+index 495ce380..de4772d5 100644
+--- a/skills/sohrab/alaa-codex-orchestrator/references/delegation-prompts.md
++++ b/skills/sohrab/alaa-codex-orchestrator/references/delegation-prompts.md
+@@ -6,12 +6,12 @@ Use the smallest applicable template. Replace placeholders with concrete reposit
+ 
+ ```xml
+ <goal><one-sentence outcome></goal>
+-<context><relevant repository facts, prior lane outcomes, and preserved behavior></context>
++<context><established anchors (file:line, contracts, settled decisions), prior lane outcomes, cited discovery artifacts and preserved behavior; the child re-derives none of them></context>
+ <scope>
+   <owned>files/modules or read-only questions</owned>
+   <excluded>explicit exclusions</excluded>
+ </scope>
+-<acceptance_criteria><numbered checkable criteria></acceptance_criteria>
++<acceptance_criteria><numbered: observable behavior -> proving command or selector -> expected result, or review-only: reason></acceptance_criteria>
+ <constraints><safety, compatibility, resource, and user constraints></constraints>
+ <authority>what the agent may and may not change or execute</authority>
+ <cadence><whole-engagement plan, declared phase|final review boundary, final phase, current phase/task/subtask, pending review/commit and supplied task-owner acceptance authority></cadence>
+diff --git a/skills/sohrab/alaa-codex-orchestrator/references/delegation-prompts/30-implementation.md b/skills/sohrab/alaa-codex-orchestrator/references/delegation-prompts/30-implementation.md
+index 0806acd4..99ac6ca2 100644
+--- a/skills/sohrab/alaa-codex-orchestrator/references/delegation-prompts/30-implementation.md
++++ b/skills/sohrab/alaa-codex-orchestrator/references/delegation-prompts/30-implementation.md
+@@ -4,7 +4,7 @@
+ 
+ ```xml
+ <task>Implement lane <n>: <bounded outcome>.</task>
+-<role_selection><exact registered profile from ratified plan; outcome/scope; settled and open decisions; failure/invariant reasoning; selection reason; exceptional admission: canonical-supported exact official task/priority with reasoning need and rejected cheaper/decomposed alternatives, applicable high-workhorse inadequacy with context/spec/tool corrections, or explicit user direction></role_selection>
++<role_selection><outcome/scope; settled and open decisions; failure/invariant reasoning; registered profile, selection reason and exceptional-admission evidence go once in `<task_controls>`></role_selection>
+ <scope><owned files/modules>; exclude <everything else>.</scope>
+ <acceptance_criteria><numbered criteria></acceptance_criteria>
+ <dependencies><completed lane contracts or none></dependencies>
+@@ -23,4 +23,4 @@ Select the exact registered variant from the ratified lane record using `routing
+ 
+ ## Collected verification repair
+ 
+-Use the implementer envelope above for the single serialized batch fix lane selected under `verification-and-gates.md` Gate economics. Replace the lane scope with the combined authorized repair scope; carry every failure verbatim, its classification and owner, retired conflicting writers and exact focused retests. For an admitted early repair, scope only the recorded obstruction and return to collection without Review. Boundary retests remain the verifier's responsibility.
++Use the implementer envelope above for the single serialized batch fix lane selected under `verification-and-gates.md` Gate economics. Replace the lane scope with the combined authorized repair scope; carry every failure verbatim, its classification and owner, retired conflicting writers and exact focused retests. When Gate economics continues an existing implementer, send this content as the continuation message rather than a new envelope. For an admitted early repair, scope only the recorded obstruction and return to collection without Review. Boundary retests remain the verifier's responsibility.
+diff --git a/skills/sohrab/alaa-codex-orchestrator/references/delegation-prompts/90-completion/20-review-followup.md b/skills/sohrab/alaa-codex-orchestrator/references/delegation-prompts/90-completion/20-review-followup.md
+index aad451d3..c2466137 100644
+--- a/skills/sohrab/alaa-codex-orchestrator/references/delegation-prompts/90-completion/20-review-followup.md
++++ b/skills/sohrab/alaa-codex-orchestrator/references/delegation-prompts/90-completion/20-review-followup.md
+@@ -5,7 +5,7 @@
+ ```xml
+ <task>Resolve reviewer/specialist findings in original lane <n>.</task>
+ <findings_verbatim><file:line, severity, failure, required fix></findings_verbatim>
+-<role_selection><exact registered profile from ratified plan; outcome/scope; settled and open decisions; failure/invariant reasoning; selection reason; exceptional admission: canonical-supported exact official task/priority with reasoning need and rejected cheaper/decomposed alternatives, applicable high-workhorse inadequacy with context/spec/tool corrections, or explicit user direction></role_selection>
++<role_selection><outcome/scope; settled and open decisions; failure/invariant reasoning; registered profile, selection reason and exceptional-admission evidence go once in `<task_controls>`></role_selection>
+ <handoff><remaining work, surviving edits/checkpoint, evidence, and retired writer if reassigned; or none></handoff>
+ <original_scope_and_acceptance>unchanged unless the orchestrator explicitly revises them</original_scope_and_acceptance>
+ <verification tier="focused">
+diff --git a/skills/sohrab/alaa-codex-orchestrator/references/failure-taxonomy.md b/skills/sohrab/alaa-codex-orchestrator/references/failure-taxonomy.md
+index 4f80c737..3a89e252 100644
+--- a/skills/sohrab/alaa-codex-orchestrator/references/failure-taxonomy.md
++++ b/skills/sohrab/alaa-codex-orchestrator/references/failure-taxonomy.md
+@@ -4,7 +4,7 @@ Use one primary classification per command and record secondary factors separate
+ 
+ ## PASS
+ 
+-The exact dispatched command completed successfully, evidence was captured, and no unexpected tracked changes occurred.
++The exact dispatched command completed successfully, evidence was captured, and no unexpected tracked changes occurred. A command whose selector executed zero cases is `TEST-INFRA-FAILURE`, never `PASS`.
+ 
+ ## PRODUCT-FAILURE
+ 
+@@ -60,3 +60,5 @@ Clearing a cache, installing a tool, changing a permission, or starting a servic
+ 5. Inspect the owning code/test/config path.
+ 6. Classify owner: implementation lane, test infrastructure lane, environment owner, or orchestrator decision.
+ 7. Route the smallest grounded next action.
++
++A `TEST-INFRA-FAILURE` or `ENVIRONMENT-BLOCKED` recurring with the same first causal error earns no further full run: its owner reproduces the smallest failing path within the active retry budget while safe independent checks continue, because a full rerun repeats the cost and returns the same evidence.
+diff --git a/skills/sohrab/alaa-codex-orchestrator/references/verification-and-gates.md b/skills/sohrab/alaa-codex-orchestrator/references/verification-and-gates.md
+index 320fe066..b1d1fb20 100644
+--- a/skills/sohrab/alaa-codex-orchestrator/references/verification-and-gates.md
++++ b/skills/sohrab/alaa-codex-orchestrator/references/verification-and-gates.md
+@@ -36,7 +36,7 @@ Apply `routing-matrix.md` for planning controls and the single post-consolidatio
+ 
+ 1. Inspect relevant repository guidance (`AGENTS.md`, local instructions, architecture docs, package manifests, CI, tests, and affected code paths).
+ 2. Restate internally: desired outcome; checkable acceptance criteria; constraints and preserved behavior; out-of-scope work; irreversible or externally visible actions.
+-3. Split into the smallest practical disjoint lanes, each with one concrete outcome, owned files/modules, exclusions, acceptance criteria, focused commands, dependencies, resolved skill bindings under `alaa-workflow references/companion-routing.md` including its matching clean-code owner, and return shape/line bound. Before implementation or fix-cycle dispatch, classify actual command scope, never tier labels; send focused commands to subtask workers and explicitly bounded task-acceptance commands to the task owner; reserve affected/exhaustive commands for boundary gates; a focused command is the topic selector `/alaa-testing-strategy` names.
++3. Draw the fewest lanes that keep write scopes disjoint and buy real parallelism, each with one concrete outcome, owned files/modules, exclusions, acceptance criteria in the dispatch envelope's criterion shape, focused commands, dependencies, resolved skill bindings under `alaa-workflow references/companion-routing.md` including its matching clean-code owner, and return shape/line bound. Split a lane only for disjoint write scope run in parallel, a different owning skill or authority, a different task model or effort, or work exceeding one agent's context; sequential work in one scope stays one lane, because each extra lane adds a dispatch, a context transfer and a reconciliation. The lane, not the subtask, is the dispatch unit: one dispatch carries every same-owner subtask of a task, and that agent runs the task-acceptance selectors at its end. Before implementation or fix-cycle dispatch, classify actual command scope, never tier labels; send focused commands to subtask workers and explicitly bounded task-acceptance commands to the task owner; reserve affected/exhaustive commands for boundary gates; a focused command is the topic selector `/alaa-testing-strategy` names.
+ 4. Serialize lanes that overlap in files, data contracts, generated output, migrations, or runtime state — or run them under worktree isolation and merge deliberately.
+ 
+ `references/routing-matrix.md` owns every specialist trigger; `references/delegation-prompts.md` owns
+@@ -48,10 +48,10 @@ Retain required retrieval, focused implementer checks and independent acceptance
+ 
+ Schedule gates by the collection barrier below, regardless of cost. Repository validation policy overrides this section within its repository; `/alaa-testing-strategy` owns that precedence.
+ 
+-Before validation dispatch, record one check list in the existing plan: required gates, exact scoped inputs and commands, aggregate-to-child coverage, observer, and eligible evidence citations. Inspect aggregate execution; a wrapper's name proves no coverage. Run an aggregate instead of its identical covered children only when inputs, environment, flags and required independent authority match. Run uncovered gates separately; report partial coverage. Count underlying checks once, not wrapper and child as separate passes. Phase transitions and new agents alone earn no rerun. A required final exhaustive aggregate discharges covered narrower checks only when covered inputs, environment, flags and required observer match demonstrably; preserve focused feedback and run uncovered checks. Markdown and templates can be checker inputs: documentation-only change proves no equivalence. Evidence quality below owns reuse; /alaa-testing-strategy owns stricter proof and fresh exhaustive gates. Preserve mandatory checks and changed-input reruns; run checker self-tests only when checker logic changes. The gates of one pass consume one build, compile, render or image per tree state; a dispatch that rebuilds what an earlier gate of the pass produced is corrected before it runs.
++Before validation dispatch, record one check list in the existing plan: required gates, exact scoped inputs and commands, each command's machine-readable reporter when the runner has one, declared case dependencies, aggregate-to-child coverage, observer, and eligible evidence citations. Before the first run of a new or changed command, or one with a recorded harness failure, confirm through the runner's list or collect mode that its selector selects the expected cases. Inspect aggregate execution; a wrapper's name proves no coverage. Run an aggregate instead of its identical covered children only when inputs, environment, flags and required independent authority match. Run uncovered gates separately; report partial coverage. Count underlying checks once, not wrapper and child as separate passes. Phase transitions and new agents alone earn no rerun. A required final exhaustive aggregate discharges covered narrower checks only when covered inputs, environment, flags and required observer match demonstrably; preserve focused feedback and run uncovered checks. Markdown and templates can be checker inputs: documentation-only change proves no equivalence. Evidence quality below owns reuse; /alaa-testing-strategy owns stricter proof and fresh exhaustive gates. Preserve mandatory checks and changed-input reruns; run checker self-tests only when checker logic changes. The gates of one pass consume one build, compile, render or image per tree state; a dispatch that rebuilds what an earlier gate of the pass produced is corrected before it runs.
+ 
+ 1. **Collect before repair.** After merging or reconciling phase diffs, run every required runnable phase check centrally once through `alaa-verifier`, reusing eligible covered evidence. A failure does not cancel independent remaining checks. Record each command's exit/result and each unrun check's blocker. A fail-fast aggregate proves only executed coverage: dispatch its supported keep-going mode or exact uncovered child commands; preserve failure exits.
+-2. **Repair as one batch, then retest, then Review.** Combine the full collection's failures verbatim into one serialized fix lane with explicit scope/ownership; retire conflicting writers. Classify first, use the failure analyst for ambiguous ownership and preserve environment/security authority limits. Only a failure blocking all or most remaining checks permits a minimal early repair: record blocked checks and cause, repair only that obstruction, then run or resume all required checks, including previously blocked checks, before any Review. Invalidate affected evidence. After batch repair, independent verification reruns failed and invalidated checks before Stage D. Unresolved required checks block Review and acceptance. Keep existing retry/stop budgets; never weaken tests or review to obtain a pass.
++2. **Repair as one batch, then retest, then Review.** Combine the full collection's failures verbatim into one serialized fix lane with explicit scope/ownership; retire conflicting writers. Assign it by continuing the existing implementer whose still-valid assignment and context cover most failures, through a collaboration tool the current host documents for continuing that agent, because a fresh lane rediscovers what that agent holds; dispatch fresh only when no continuation is available, that context is invalid, or Implementation routing selects another profile. Classify first, use the failure analyst for ambiguous ownership and preserve environment/security authority limits. Only a failure blocking all or most remaining checks permits a minimal early repair: record blocked checks and cause, repair only that obstruction, then run or resume all required checks, including previously blocked checks, before any Review. Invalidate affected evidence. After batch repair, independent verification reruns the whole recorded check list before Stage D, under `/alaa-testing-strategy` result validity. Unresolved required checks block Review and acceptance. Keep existing retry/stop budgets; never weaken tests or review to obtain a pass.
+ 3. **Freeze before verifying.** Pin a content snapshot of tracked diff, relevant untracked files and tool inputs, and prevent concurrent writes; commit only after the authorized boundary has passed. Evidence needs no commit. `alaa-workflow references/workspace-and-integration.md` owns the commit protocol and forbidden writes during a pass.
+ 
+ ## Reusable-context owner
+@@ -99,7 +99,7 @@ Always first, never skipped, at any profile. Everything after it inherits its de
+ 4. On Windows, CPU-heavy commands must use `scripts/Invoke-AlaaLowPriority.ps1` with `BelowNormal` by default; `Idle` only for explicitly background-grade benchmark, fuzz, or very heavy diagnostics. On Unix-like systems use `scripts/run-low-priority.sh`. When `/alaa-testing-strategy` sends a gate into a container of the CI job image, the dispatch names the image reference, the read-only mount, the copy into the container filesystem, a `--cpus` limit below the host's logical CPU count, and the gate's parallel flag sized to that limit. That `--cpus` limit replaces the low-priority wrapper for the container run. The gate's own parallel mode inside it counts as the one CPU-heavy command Stage B step 3 allows. A container dispatch that returns `ENVIRONMENT-BLOCKED` for Docker, the image, a mount, the copy, a setup step, or a service is re-dispatched once on the host under the wrapper above, and the report names why. Under Codex, a Docker named-pipe permission failure goes to `/alaa-codex-runtime-ops` before that host re-dispatch.
+ 5. Do not proceed as if verification passed when status is `PRODUCT-FAILURE`, `TEST-INFRA-FAILURE`, `ENVIRONMENT-BLOCKED`, `TIMEOUT`, `FLAKY`, or `CONTAMINATED`. Continue safe independent checks; stop unsafe or contaminated execution and name affected unrun checks, without calling collection complete. Classify before any repair through `references/failure-taxonomy.md`; a host/environment or stale-cache failure justifies no product edit.
+ 6. Route the collected batch through `references/routing-matrix.md` Failure routing and Gate economics; the analyst diagnoses and never fixes. Neither a clear owner nor a cheap fix bypasses collection.
+-7. After the batch fix, independently rerun failed topic selectors and checks whose inputs changed, followed by the integrated gate when shared behavior changed. Resume all outstanding required checks; retain only eligible unchanged evidence. Any new failures follow the same collection barrier within existing retry/stop budgets.
++7. After the batch fix, independently rerun the whole recorded check list, including outstanding required checks, under Gate economics. Any new failures follow the same collection barrier within existing retry/stop budgets.
+ 
+ ## Stage D — Independent review and specialist gates
+ 
+diff --git a/skills/sohrab/alaa-codex-orchestrator/scripts/check_agent_contracts.py b/skills/sohrab/alaa-codex-orchestrator/scripts/check_agent_contracts.py
+index 39ecc6f4..d5c652a1 100644
+--- a/skills/sohrab/alaa-codex-orchestrator/scripts/check_agent_contracts.py
++++ b/skills/sohrab/alaa-codex-orchestrator/scripts/check_agent_contracts.py
+@@ -347,7 +347,7 @@ def cadence_failures(skill: str, gates: str, dispatch: str,
+     errors = [f"missing scheduling contract: {clause}"
+               for clause in CADENCE_REQUIREMENTS if not contract_present(clause, gates)]
+     errors.extend(specialist_cadence_failures(design, contract, critic))
+-    for clause in ("It must not implement while viable implementers are available",
++    for clause in ("It implements only a mechanical local edit with known scope, no design decision, and a few tool calls",
+                    "Correct sparingly", "Calibrate length", "Keep dispatches lean",
+                    "Do not restate the native role definition",
+                    "for gate economics and independent acceptance",
+@@ -528,7 +528,7 @@ COLLECTION_REQUIREMENTS = (
+     "record blocked checks and cause, repair only that obstruction",
+     "then run or resume all required checks, including previously blocked checks, before any Review",
+     "Invalidate affected evidence",
+-    "After batch repair, independent verification reruns failed and invalidated checks before Stage D",
++    "After batch repair, independent verification reruns the whole recorded check list before Stage D",
+     "Unresolved required checks block Review and acceptance",
+     "Keep existing retry/stop budgets",
+     "Continue safe independent checks; stop unsafe or contaminated execution and name affected unrun checks, without calling collection complete",
+@@ -638,6 +638,104 @@ def collection_self_tests() -> list[tuple[str, bool]]:
+     return cases
+ 
+ 
++# Topic: run economy and failure locality; layer: structural source contract.
++# Each pack carries the same behavioural rules; the sibling pack is checked too
++# because the mirrored pair must decide identically.
++RUN_ECONOMY_REQUIREMENTS = {
++    "gates": (
++        "Draw the fewest lanes that keep write scopes disjoint and buy real parallelism",
++        "sequential work in one scope stays one lane",
++        "The lane, not the subtask, is the dispatch unit",
++        "confirm through the runner's list or collect mode that its selector selects the expected cases",
++        "Assign it by continuing the existing implementer whose still-valid assignment and context cover most failures",
++        "dispatch fresh only when no continuation is available, that context is invalid, or Implementation routing selects another profile",
++        "After batch repair, independent verification reruns the whole recorded check list before Stage D",
++        "independently rerun the whole recorded check list, including outstanding required checks",
++    ),
++    "skill": ("mechanical-edit exception", "or the lead made a mechanical edit, select `standard`"),
++    "taxonomy": (
++        "A command whose selector executed zero cases is `TEST-INFRA-FAILURE`, never `PASS`",
++        "earns no further full run",
++    ),
++    "dispatch": ("proving command or selector -> expected result, or review-only: reason",
++                 "the child re-derives none of them"),
++    "repair": ("send this content as the continuation message rather than a new envelope",),
++    "verifier_agent": ("first causal error with file:line", "stage (setup | execution | assertion | cleanup)",
++                       "Group cases sharing one first causal error"),
++    "implementation_contract": ("settled decision a later lane or repair owner must know",),
++    "testing_strategy": (
++        "any result in a collected check list after its batch repair",
++        "A case failing never stops an independent case from running",
++        "reported `SKIPPED` naming that precondition",
++        "makes every later result over that state `CONTAMINATED`",
++    ),
++    "test_economy": ("A failure alone never justifies deleting a test", "## Existing tests on a touched topic"),
++}
++RUN_ECONOMY_CONTRADICTIONS = (
++    "Split into the smallest practical disjoint lanes",
++    "independent verification reruns failed and invalidated checks",
++    "rerun failed topic selectors and checks whose inputs changed",
++    "It must not implement while viable implementers are available",
++    "concise error excerpts",
++)
++
++
++def run_economy_sources(root: Path = ROOT) -> dict[str, str]:
++    verifier = next(path for path in sorted((root / "agents").glob("alaa-verifier.*"))
++                    if path.suffix in {".toml", ".md"})
++    paths = {
++        "gates": root / "references/verification-and-gates.md",
++        "skill": root / "SKILL.md",
++        "taxonomy": root / "references/failure-taxonomy.md",
++        "dispatch": root / "references/delegation-prompts.md",
++        "repair": root / "references/delegation-prompts/30-implementation.md",
++        "verifier_agent": verifier,
++        "implementation_contract": root / "assets/implementation-contract.md",
++        "testing_strategy": root.parent / "alaa-testing-strategy/SKILL.md",
++        "test_economy": root.parent / "alaa-testing-strategy/references/90-test-economy.md",
++    }
++    return {name: path.read_text(encoding="utf-8") for name, path in paths.items()}
++
++
++def run_economy_failures(sources: dict[str, str], label: str = "") -> list[str]:
++    errors = []
++    for name, clauses in RUN_ECONOMY_REQUIREMENTS.items():
++        for clause in clauses:
++            if not contract_present(clause, sources[name]):
++                errors.append(f"{label}{name}: missing run-economy contract: {clause}")
++    for name, text in sources.items():
++        for clause in RUN_ECONOMY_CONTRADICTIONS:
++            if clause in text:
++                errors.append(f"{label}{name}: contradictory run-economy contract: {clause}")
++    return errors
++
++
++def sibling_root() -> Path:
++    # The mirrored pack is the one other orchestrator beside this one.
++    siblings = [path for path in sorted(ROOT.parent.glob("alaa-*-orchestrator"))
++                if path != ROOT and (path / "references/verification-and-gates.md").is_file()]
++    if len(siblings) != 1:
++        raise ValueError(f"expected one mirrored orchestrator pack, found {len(siblings)}")
++    return siblings[0]
++
++
++def run_economy_self_tests() -> list[tuple[str, bool]]:
++    # Immutable source setup; each mutation receives a fresh dictionary.
++    sources = run_economy_sources()
++    cases = [("run-economy source accepted", not run_economy_failures(sources))]
++    for name, clauses in RUN_ECONOMY_REQUIREMENTS.items():
++        for clause in clauses:
++            broken = {**sources, name: sources[name].replace(clause, "omitted")}
++            diagnostic = f"{name}: missing run-economy contract: {clause}"
++            cases.append((f"run economy {name}: requires {clause}", diagnostic in run_economy_failures(broken)))
++    for name in sources:
++        for clause in RUN_ECONOMY_CONTRADICTIONS:
++            broken = {**sources, name: sources[name] + "\n" + clause}
++            diagnostic = f"{name}: contradictory run-economy contract: {clause}"
++            cases.append((f"run economy {name}: rejects {clause}", diagnostic in run_economy_failures(broken)))
++    return cases
++
++
+ def verification_sources() -> tuple[str, list[str], dict[str, str]]:
+     return (
+         (ROOT / "references/verification-and-gates.md").read_text(encoding="utf-8"),
+@@ -699,6 +797,7 @@ def self_test() -> int:
+         ("invented watchdog rejected", bool(orchestrator_failures(skill + "\nA watchdog ends a lane on silence rather than on duration"))),
+     ]
+     cases.extend(collection_self_tests())
++    cases.extend(run_economy_self_tests())
+     cases.extend(cadence_self_tests())
+     cases.extend(specialist_cadence_self_tests())
+     cases.append(("economical execution accepted", not economy_failures(skill, gates)))
+@@ -823,6 +922,8 @@ def main() -> int:
+         errors.extend(verification_failures(*verification_sources()))
+         errors.extend(cadence_failures(*cadence_sources()))
+         errors.extend(collection_failures(collection_sources()))
++        errors.extend(run_economy_failures(run_economy_sources()))
++        errors.extend(run_economy_failures(run_economy_sources(sibling_root()), f"{sibling_root().name}: "))
+         errors.extend(task_allocation_failures(
+             (ROOT / "references/routing-matrix.md").read_text(encoding="utf-8"),
+             (ROOT / "references/model-effort-policy.md").read_text(encoding="utf-8")))
+diff --git a/skills/sohrab/alaa-testing-strategy/SKILL.md b/skills/sohrab/alaa-testing-strategy/SKILL.md
+index 51b28c88..3adbfafc 100644
+--- a/skills/sohrab/alaa-testing-strategy/SKILL.md
++++ b/skills/sohrab/alaa-testing-strategy/SKILL.md
+@@ -61,18 +61,19 @@ Before adding a discretionary test, review, specialist, proof tool or gate beyon
+ 7. Coverage obligations are named, never expressed as a percentage target. A percentage is satisfied by executing code without asserting anything.
+ 8. The test list is derived from the enumerated failure modes of the change that pass *Whether a test is owed*; the happy path is added last, as a control proving the failure tests fail for the reason claimed, never as the starting point.
+ 9. A check that was not observed to run is reported as not run. An unexecuted check has no result, and reporting one invents evidence.
+-10. Every test is hermetic over its mutable state: it creates the data it asserts on, asserts only on that data, and leaves none behind. A test depending on another test's leftovers passes in one order and fails in another, and the order is not part of anyone's contract. Expensive resettable infrastructure — an engine or container, a migrated schema, a booted application, a built artifact, immutable fixture data — is created once per suite, package, or worker and shared, and each test is isolated over it by transaction rollback, a unique namespace, or a reset of the data it touched. A test creates that infrastructure for itself only when creation is the behaviour under test, because per-test creation multiplies the suite's cost by its test count and buys no isolation that rollback or a namespace does not.
++10. Every test is hermetic over its mutable state: it creates the data it asserts on, asserts only on that data, and leaves none behind. A failed reset or cleanup makes every later result over that state `CONTAMINATED`: report it and stop the cases that depend on that state. A test depending on another test's leftovers passes in one order and fails in another, and the order is not part of anyone's contract. Expensive resettable infrastructure — an engine or container, a migrated schema, a booted application, a built artifact, immutable fixture data — is created once per suite, package, or worker and shared, and each test is isolated over it by transaction rollback, a unique namespace, or a reset of the data it touched. A test creates that infrastructure for itself only when creation is the behaviour under test, because per-test creation multiplies the suite's cost by its test count and buys no isolation that rollback or a namespace does not.
+ 11. No test synchronises on wall-clock sleeping. Time is injected as a controllable clock, and waiting is done on the condition the test is waiting for, with a bounded timeout. A sleeping test flakes on a loaded machine and charges its sleep on every run forever.
+ 12. Breadth is earned by a change in the tree, never by a change of phase, agent, or reviewer. A result whose four validity conditions still hold is cited, not re-run, and the exhaustive tier runs once, fresh, on the final candidate. Re-running a heavy suite against an unchanged tree buys no confidence and produces the worst evidence available, because a warm cache and a warm environment are hardest to tell apart from a real pass.
+ 13. Every test this change adds or changes is selectable by its topic — the behaviour or surface it defends — and by its layer, through the runner's native selector, and the repository records which command selects which topic. A test reachable only through the whole-suite command forces every change to pay for the whole suite, because the focused tier cannot select it.
+ 14. One build, compile, render, or image is produced per tree state and environment, and every lint, type, test, and smoke step of that pass consumes its output, cache, or image digest. A step that rebuilds what an earlier step of the same pass produced, or a separate compile that the test step already performs, is removed, because it charges the build again for no new information.
++15. A case failing never stops an independent case from running. A case that depends on another case's outcome or state declares that dependency, and when the precondition fails it is reported `SKIPPED` naming that precondition, never run against the broken state. A suite whose first failure hides the rest costs one repair cycle per hidden failure.
+ 
+ ## Designing the tests for a change
+ 
+ Walk this in order. Each step names the reference that owns its detail.
+ 
+ 1. **Enumerate the failure modes the change introduces**, from the diff rather than from the ticket. This enumeration is shared with `/alaa-observability-soc` and is produced once, not twice. (`references/70-failure-mode-first.md`)
+-2. **Decide whether each mode is owed a test**, under *Whether a test is owed*, and record every mode that is not. (`references/90-test-economy.md`)
++2. **Decide whether each mode is owed a test**, under *Whether a test is owed*, and record every mode that is not. Before writing an owed test, check the topic's existing tests: one that already fails when the mode is injected is cited, not duplicated. (`references/90-test-economy.md`)
+ 3. **Write the broken implementation for each owed mode**, by the four-step derivation above. (`references/10-what-makes-a-test.md`)
+ 4. **Place each test at one layer**, by naming the smallest set of components that must be real for that failure to be producible. (`references/20-layers.md`)
+ 5. **Decide the doubles**, and for each one whether it can drift and what binds it if it can. (`references/30-doubles.md`)
+@@ -118,7 +119,7 @@ A subtask's short check adds no expensive setup or full suite. Reuse already ava
+ 
+ A recorded result remains citable evidence for a later claim while **all four** of these are unchanged since it was observed: the tracked tree at the paths the check reads; the tool, runner, and dependency versions; the environment and service state the check depends on; and the flags, seed, configuration, and working directory it ran under. While all four hold, cite the result with its original command and timestamp. Re-running it produces no new information and its cost is real.
+ 
+-When one of them changes, say which one, and re-run every result downstream of it. Two results are never reused whatever the four conditions say: the exhaustive tier on the final candidate, which is always fresh; and any result classified `FLAKY`, `CONTAMINATED`, `TIMEOUT`, or environment-blocked, which carries no evidence in either direction.
++When one of them changes, say which one, and re-run every result downstream of it. Three results are never reused whatever the four conditions say: the exhaustive tier on the final candidate, which is always fresh; any result classified `FLAKY`, `CONTAMINATED`, `TIMEOUT`, or environment-blocked, which carries no evidence in either direction; and any result in a collected check list after its batch repair. After that repair the whole recorded list reruns on the frozen repaired snapshot, because a misjudged invalidation costs another repair cycle and one rerun of an already chosen list costs less; a check outside the list runs only when the repair proves a new reachable surface, which extends the list.
+ 
+ A required final aggregate may discharge covered narrower checks only when the covered inputs, environment, flags and required observer match demonstrably; cite its coverage instead of dispatching those checks again. Markdown/templates may be checker inputs, so a documentation-only difference proves no equivalence. A phase transition, new agent or compaction alone invalidates nothing. Repair a defect and rerun its failing path; never weaken assertions, suppress findings, lower standards or alter fixtures to conceal a failure. `references/80-evidence-and-reporting.md` distinguishes a repaired input from an unchanged flaky rerun.
+ 
+diff --git a/skills/sohrab/alaa-testing-strategy/references/00-topic-map.md b/skills/sohrab/alaa-testing-strategy/references/00-topic-map.md
+index bd09a73b..e24e761d 100644
+--- a/skills/sohrab/alaa-testing-strategy/references/00-topic-map.md
++++ b/skills/sohrab/alaa-testing-strategy/references/00-topic-map.md
+@@ -12,4 +12,4 @@ Read only the files whose stated condition the task meets. Loading the whole tre
+ | Measure, gate, or cite coverage, or decide what still needs a test | `60-coverage.md` |
+ | Start a change, before any test is written | `70-failure-mode-first.md` |
+ | Report a test result, review someone else's, handle a test that cannot run, or decide whether an earlier result may be cited instead of re-run | `80-evidence-and-reporting.md` |
+-| Decide whether a candidate is owed a test, give a test its selector, create or share setup, choose which commands a gate runs, or find a build, compile, render, or image produced more than once in a pass | `90-test-economy.md` |
++| Decide whether a candidate is owed a test, give a test its selector, create or share setup, repair or delete an existing test on a touched topic, choose which commands a gate runs, or find a build, compile, render, or image produced more than once in a pass | `90-test-economy.md` |
+diff --git a/skills/sohrab/alaa-testing-strategy/references/90-test-economy.md b/skills/sohrab/alaa-testing-strategy/references/90-test-economy.md
+index 4063b2a3..ae9c59a1 100644
+--- a/skills/sohrab/alaa-testing-strategy/references/90-test-economy.md
++++ b/skills/sohrab/alaa-testing-strategy/references/90-test-economy.md
+@@ -1,6 +1,6 @@
+ # Test Economy
+ 
+-Read when deciding whether a candidate is owed a test, giving a test its selector, creating or sharing setup, choosing which commands a gate runs, or finding a build, compile, render, or image produced more than once in a pass. `SKILL.md` holds the binding rules: *Whether a test is owed* and non-negotiables 10, 13, and 14. This file holds the detail; the per-stack skills own the native mechanism for each rule.
++Read when deciding whether a candidate is owed a test, giving a test its selector, creating or sharing setup, repairing or deleting an existing test on a touched topic, choosing which commands a gate runs, or finding a build, compile, render, or image produced more than once in a pass. `SKILL.md` holds the binding rules: *Whether a test is owed* and non-negotiables 10, 13, and 14. This file holds the detail; the per-stack skills own the native mechanism for each rule.
+ 
+ ## Candidates that are not owed a test
+ 
+@@ -20,6 +20,12 @@ The always-owed tests in `SKILL.md` — named security controls, reported-defect
+ 
+ A test already in the suite that falls into a row above is reported as a finding with its reason, because it passes against every implementation this project can ship. It is deleted only after an independent reviewer accepts that finding, never by the lane whose change it is failing on, and never when it is an always-owed test.
+ 
++A failure alone never justifies deleting a test: a failing test is repaired, or classified under `50-flake.md`, whose quarantine deadline is the only failure-driven deletion. Every other deletion follows the independent-acceptance rule above and keeps the coverage obligations of `60-coverage.md`.
++
++## Existing tests on a touched topic
++
++Repair, in the same change, only the existing tests of topics the change touches, and only to: name the failure a test defends against, add its topic and layer selector, split independent scenarios into independent cases, and remove a duplicate that the layer discriminator in `SKILL.md` proves. Redesigning shared test infrastructure or migrating untouched topics is a separate task, recorded as a follow-up, because it widens the change's review scope and retest breadth beyond the behaviour that changed.
++
+ ## Topic and layer selectors
+ 
+ - **Every test belongs to one topic**: the behaviour or surface it defends, at the granularity a single change touches — a route family, a use case, a consumer, a policy, a migration.

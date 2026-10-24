@@ -4,7 +4,7 @@ Use one primary classification per command and record secondary factors separate
 
 ## PASS
 
-The exact dispatched command completed successfully, evidence was captured, and no unexpected tracked changes occurred.
+The exact dispatched command completed successfully, evidence was captured, and no unexpected tracked changes occurred. A command whose selector executed zero cases is `TEST-INFRA-FAILURE`, never `PASS`.
 
 ## PRODUCT-FAILURE
 
@@ -60,3 +60,5 @@ Clearing a cache, installing a tool, changing a permission, or starting a servic
 5. Inspect the owning code/test/config path.
 6. Classify owner: implementation lane, test infrastructure lane, environment owner, or orchestrator decision.
 7. Route the smallest grounded next action.
+
+A `TEST-INFRA-FAILURE` or `ENVIRONMENT-BLOCKED` recurring with the same first causal error earns no further full run: its owner reproduces the smallest failing path within the active retry budget while safe independent checks continue, because a full rerun repeats the cost and returns the same evidence.

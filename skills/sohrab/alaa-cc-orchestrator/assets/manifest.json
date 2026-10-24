@@ -1,6 +1,6 @@
 {
   "pack": "alaa-cc-orchestrator",
-  "version": "5.3.0",
+  "version": "5.4.0",
   "managed_agents": [
     {
       "name": "alaa-accessibility-reviewer",
@@ -50,37 +50,37 @@
     {
       "name": "alaa-implementer-fable",
       "file": "agents/alaa-implementer-fable.md",
-      "sha256": "745dca5b42571535ed504dcb0dd707ff910592b683bc144aad747659c75d0b09"
+      "sha256": "77a4397150343fa22240aa6f7768efcf67b0762bc64d52d9a7a90e2d450176a2"
     },
     {
       "name": "alaa-implementer-haiku-high",
       "file": "agents/alaa-implementer-haiku-high.md",
-      "sha256": "d740eceb692e9bcb3062bfc59fa39cb5b6c5c93e76059a0101350199a1e72792"
+      "sha256": "b9ab830453847b1a768da00c56a3c719cc0731c023a7eeb52b385b13c28d925b"
     },
     {
       "name": "alaa-implementer-haiku",
       "file": "agents/alaa-implementer-haiku.md",
-      "sha256": "c3ec4846462cbe1821ac4dd4d62a93dfcf3fd85ad02e63044beda8e1142f177d"
+      "sha256": "29139fc8bab448733d03b9d1fd72966fc8ec8ca08b3f70a5a75821f422b4f697"
     },
     {
       "name": "alaa-implementer-opus-high",
       "file": "agents/alaa-implementer-opus-high.md",
-      "sha256": "fc805e0608d423e7364e8220e0a0c6c715f62291aaf2ff0eebdc01cd49c578e9"
+      "sha256": "5ae8270bf49bbfab53f9aa2c7fe6f747019f05bb815ed25770f437c594c91f1d"
     },
     {
       "name": "alaa-implementer-opus",
       "file": "agents/alaa-implementer-opus.md",
-      "sha256": "3eb0c82ae7721a7332a759a9eb213d16638a54cf0cac79194a236aaa12f67052"
+      "sha256": "a03d91033f969f9a020076a2783388ed1f29d40769c0ec6333c2329ee91c6824"
     },
     {
       "name": "alaa-implementer-sonnet-high",
       "file": "agents/alaa-implementer-sonnet-high.md",
-      "sha256": "6d7abe7f95e40b2bea8e389b2a2f481a819d32a53f5e76242d00ad3c509e3fa8"
+      "sha256": "8f75341f6cacbaad8792dd3105afa86290d81e1fe74e4cff13d89b292a232bb2"
     },
     {
       "name": "alaa-implementer",
       "file": "agents/alaa-implementer.md",
-      "sha256": "4a69385a72f54b8d71b2738235a5190e88aec3d023fa15b570cc0d60ec87b932"
+      "sha256": "041f3ca33dc1af71b3d436a659cf847d001069d074c779b54bb1e744c87a9951"
     },
     {
       "name": "alaa-instruction-reviewer",
@@ -145,7 +145,7 @@
     {
       "name": "alaa-verifier",
       "file": "agents/alaa-verifier.md",
-      "sha256": "9a82d733422fee1b189c91f2d0dcc72f7bd351d9474ef69101192d0beb67dd88"
+      "sha256": "fd1b8fb6f7e0f66166124a6269693af06ecc9cc8b7662ba17606684e20312841"
     }
   ]
 }

@@ -347,7 +347,7 @@ def cadence_failures(skill: str, gates: str, dispatch: str,
     errors = [f"missing scheduling contract: {clause}"
               for clause in CADENCE_REQUIREMENTS if not contract_present(clause, gates)]
     errors.extend(specialist_cadence_failures(design, contract, critic))
-    for clause in ("It must not implement while viable implementers are available",
+    for clause in ("It implements only a mechanical local edit with known scope, no design decision, and a few tool calls",
                    "Correct sparingly", "Calibrate length", "Keep dispatches lean",
                    "Do not restate the native role definition",
                    "for gate economics and independent acceptance",
@@ -528,7 +528,7 @@ COLLECTION_REQUIREMENTS = (
     "record blocked checks and cause, repair only that obstruction",
     "then run or resume all required checks, including previously blocked checks, before any Review",
     "Invalidate affected evidence",
-    "After batch repair, independent verification reruns failed and invalidated checks before Stage D",
+    "After batch repair, independent verification reruns the whole recorded check list, including checks it discharged by citation, before Stage D",
     "Unresolved required checks block Review and acceptance",
     "Keep existing retry/stop budgets",
     "Continue safe independent checks; stop unsafe or contaminated execution and name affected unrun checks, without calling collection complete",
@@ -638,6 +638,133 @@ def collection_self_tests() -> list[tuple[str, bool]]:
     return cases
 
 
+# Topic: run economy and failure locality; layer: structural source contract.
+# Each pack carries the same behavioural rules; the sibling pack is checked too
+# because the mirrored pair must decide identically.
+RUN_ECONOMY_REQUIREMENTS = {
+    "gates": (
+        "Draw the fewest lanes that keep write scopes disjoint and buy real parallelism",
+        "sequential work in one scope stays one lane",
+        "The lane, not the subtask, is the dispatch unit",
+        "the runner's list or collect mode confirming that its selector selects the expected cases",
+        "Then assign it by continuing the existing implementer whose still-valid assignment and context cover most failures",
+        "through a continuation tool the current host documents for that agent",
+        "dispatch fresh only when no continuation is available, that context is invalid, or Implementation routing selects another profile or task pair",
+        "After batch repair, independent verification reruns the whole recorded check list, including checks it discharged by citation, before Stage D",
+        "independently rerun the whole recorded check list, including outstanding required checks",
+    ),
+    "skill": ("mechanical-edit exception", "in files no active or pending lane owns",
+              "or the lead made a mechanical edit, select `standard`"),
+    "taxonomy": (
+        "A command whose selector executed zero cases is `TEST-INFRA-FAILURE`, never `PASS`",
+        "earns no further full run",
+    ),
+    "dispatch": ("proving command or selector -> expected result, or review-only: reason",
+                 "the child re-derives none of them"),
+    "repair": ("as the continuation message rather than a new envelope",
+               "if Implementation routing changed the profile or task pair, dispatch fresh under Gate economics instead"),
+    "verifier_agent": ("first causal error with file:line", "stage (setup | execution | assertion | cleanup)",
+                       "Group cases sharing one first causal error"),
+    "implementation_contract": ("settled decision a later lane or repair owner must know",),
+    "testing_strategy": (
+        "any result in a collected check list after its batch repair",
+        "A case failing never stops an independent case from running",
+        "reported `SKIPPED` naming that precondition",
+        "makes every later result over that state `CONTAMINATED`",
+    ),
+    "test_economy": ("A failure alone never justifies deleting a test", "## Existing tests on a touched topic"),
+}
+# Each retired phrase is checked only in the source that used to carry it.
+RUN_ECONOMY_CONTRADICTIONS = {
+    "gates": (
+        "Split into the smallest practical disjoint lanes",
+        "independent verification reruns failed and invalidated checks",
+        "rerun failed topic selectors and checks whose inputs changed",
+    ),
+    "skill": (
+        "It must not implement while viable implementers are available",
+        "keep work finishable in a handful of tool calls inline",
+    ),
+    "verifier_agent": ("concise error excerpts",),
+}
+
+
+def run_economy_sources(root: Path = ROOT) -> dict[str, str]:
+    verifier = next((path for path in sorted((root / "agents").glob("alaa-verifier.*"))
+                     if path.suffix in {".toml", ".md"}), None)
+    if verifier is None:
+        raise ValueError(f"no alaa-verifier.toml or alaa-verifier.md under {root / 'agents'}")
+    paths = {
+        "gates": root / "references/verification-and-gates.md",
+        "skill": root / "SKILL.md",
+        "taxonomy": root / "references/failure-taxonomy.md",
+        "dispatch": root / "references/delegation-prompts.md",
+        "repair": root / "references/delegation-prompts/30-implementation.md",
+        "verifier_agent": verifier,
+        "implementation_contract": root / "assets/implementation-contract.md",
+        "testing_strategy": root.parent / "alaa-testing-strategy/SKILL.md",
+        "test_economy": root.parent / "alaa-testing-strategy/references/90-test-economy.md",
+    }
+    return {name: path.read_text(encoding="utf-8") for name, path in paths.items()}
+
+
+def run_economy_failures(sources: dict[str, str], label: str = "") -> list[str]:
+    errors = []
+    for name, clauses in RUN_ECONOMY_REQUIREMENTS.items():
+        for clause in clauses:
+            if not contract_present(clause, sources[name]):
+                errors.append(f"{label}{name}: missing run-economy contract: {clause}")
+    for name, clauses in RUN_ECONOMY_CONTRADICTIONS.items():
+        for clause in clauses:
+            if contract_present(clause, sources[name]):
+                errors.append(f"{label}{name}: contradictory run-economy contract: {clause}")
+    return errors
+
+
+def sibling_root(root: Path = ROOT) -> Path:
+    # The mirrored pack is the one other orchestrator beside this one; a pack
+    # copied alone cannot prove parity, so the check reports unavailable (exit 2).
+    siblings = [path for path in sorted(root.parent.glob("alaa-*-orchestrator"))
+                if path != root and (path / "references/verification-and-gates.md").is_file()]
+    if len(siblings) != 1:
+        raise ValueError(f"expected one mirrored orchestrator pack, found {len(siblings)}")
+    return siblings[0]
+
+
+def run_economy_self_tests() -> list[tuple[str, bool]]:
+    # Immutable source setup; each mutation receives a fresh dictionary.
+    sources = run_economy_sources()
+    cases = [("run-economy source accepted", not run_economy_failures(sources))]
+    for name, clauses in RUN_ECONOMY_REQUIREMENTS.items():
+        for clause in clauses:
+            broken = {**sources, name: sources[name].replace(clause, "omitted")}
+            diagnostic = f"{name}: missing run-economy contract: {clause}"
+            cases.append((f"run economy {name}: requires {clause}", diagnostic in run_economy_failures(broken)))
+    for name, clauses in RUN_ECONOMY_CONTRADICTIONS.items():
+        for clause in clauses:
+            # Wrapped and recased variants of a retired phrase are still rejected.
+            for variant in (clause, clause.replace(" ", "\n", 1).upper()):
+                broken = {**sources, name: sources[name] + "\n" + variant}
+                diagnostic = f"{name}: contradictory run-economy contract: {clause}"
+                cases.append((f"run economy {name}: rejects {variant!r}", diagnostic in run_economy_failures(broken)))
+    from tempfile import TemporaryDirectory
+    for count in (0, 2):
+        with TemporaryDirectory() as tmp:
+            own = Path(tmp) / "alaa-own-orchestrator"
+            (own / "references").mkdir(parents=True)
+            for index in range(count):
+                other = Path(tmp) / f"alaa-other{index}-orchestrator" / "references"
+                other.mkdir(parents=True)
+                (other / "verification-and-gates.md").write_text("fixture\n", encoding="utf-8")
+            try:
+                sibling_root(own)
+                rejected = False
+            except ValueError:
+                rejected = True
+            cases.append((f"sibling discovery rejects {count} mirrored packs", rejected))
+    return cases
+
+
 def verification_sources() -> tuple[str, list[str], dict[str, str]]:
     return (
         (ROOT / "references/verification-and-gates.md").read_text(encoding="utf-8"),
@@ -699,6 +826,7 @@ def self_test() -> int:
         ("invented watchdog rejected", bool(orchestrator_failures(skill + "\nA watchdog ends a lane on silence rather than on duration"))),
     ]
     cases.extend(collection_self_tests())
+    cases.extend(run_economy_self_tests())
     cases.extend(cadence_self_tests())
     cases.extend(specialist_cadence_self_tests())
     cases.append(("economical execution accepted", not economy_failures(skill, gates)))
@@ -823,6 +951,9 @@ def main() -> int:
         errors.extend(verification_failures(*verification_sources()))
         errors.extend(cadence_failures(*cadence_sources()))
         errors.extend(collection_failures(collection_sources()))
+        errors.extend(run_economy_failures(run_economy_sources()))
+        sibling = sibling_root()
+        errors.extend(run_economy_failures(run_economy_sources(sibling), f"{sibling.name}: "))
         errors.extend(task_allocation_failures(
             (ROOT / "references/routing-matrix.md").read_text(encoding="utf-8"),
             (ROOT / "references/model-effort-policy.md").read_text(encoding="utf-8")))

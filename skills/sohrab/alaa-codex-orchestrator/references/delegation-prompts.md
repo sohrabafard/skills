@@ -6,12 +6,12 @@ Use the smallest applicable template. Replace placeholders with concrete reposit
 
 ```xml
 <goal><one-sentence outcome></goal>
-<context><relevant repository facts, prior lane outcomes, and preserved behavior></context>
+<context><established anchors (file:line, contracts, settled decisions), prior lane outcomes, cited discovery artifacts and preserved behavior; the child re-derives none of them></context>
 <scope>
   <owned>files/modules or read-only questions</owned>
   <excluded>explicit exclusions</excluded>
 </scope>
-<acceptance_criteria><numbered checkable criteria></acceptance_criteria>
+<acceptance_criteria><numbered: observable behavior -> proving command or selector -> expected result, or review-only: reason></acceptance_criteria>
 <constraints><safety, compatibility, resource, and user constraints></constraints>
 <authority>what the agent may and may not change or execute</authority>
 <cadence><whole-engagement plan, declared phase|final review boundary, final phase, current phase/task/subtask, pending review/commit and supplied task-owner acceptance authority></cadence>

@@ -36,7 +36,7 @@ Inspect effective sandbox, parent overrides and MCP grants before relying on iso
 
 ### Orchestrator mode
 
-Use when the user asks to build, fix, refactor, migrate, integrate, optimize, or otherwise change a repository. The main thread plans, dispatches, reconciles, gates and reports. It must not implement while viable implementers are available; the verifier runs heavy suites.
+Use when the user asks to build, fix, refactor, migrate, integrate, optimize, or otherwise change a repository. The main thread plans, dispatches, reconciles, gates and reports. It implements only a mechanical local edit with known scope, no design decision, and a few tool calls, in files no active or pending lane owns, because dispatching such an edit costs more than making it; viable implementers own all other implementation, and the verifier runs heavy suites.
 
 ### Advisor mode
 
@@ -52,11 +52,11 @@ Use `references/routing-matrix.md` for the actual main-thread task selection and
 
 It owns goal normalization/scope control, repository-aware lanes, selection/dispatch authority, reconciliation, verification/review, specialist triggers, truthful reporting and stopping.
 
-It must not implement while implementers are viable, run heavy verification, silently take over failed lanes, permit self-approval, soften/omit review findings, claim unobserved checks or overlap writers. Save bulky output and report its path. Destructive, publication, deployment, force-push, data-deletion and external effects require explicit user permission.
+It must not implement beyond that mechanical-edit exception, run heavy verification, silently take over failed lanes, permit self-approval, soften/omit review findings, claim unobserved checks or overlap writers. Save bulky output and report its path. Destructive, publication, deployment, force-push, data-deletion and external effects require explicit user permission.
 
 ### Dispatch discipline
 
-**One agent per lane.** No duplicate lane or summary-check agent. Independent verification and review inspect the actual artifact under separate authority. Dispatch independent lanes together; keep work finishable in a handful of tool calls inline.
+**One agent per lane.** No duplicate lane or summary-check agent. Independent verification and review inspect the actual artifact under separate authority. Dispatch independent lanes together; keep inspection and Orchestrator mode's mechanical edit inline.
 
 **Keep dispatches lean.** Apply /alaa-prompting-guide. Carry lane facts only: outcome, owned files, exclusions, acceptance, commands, dependencies, resolved skills and return contract. Do not restate the native role definition, which dilutes both contracts. State instructions once; expose task-relevant tools and only requirement-bearing examples.
 
@@ -107,7 +107,7 @@ Orchestrator mode preserves A–E; F requires requested integration and explicit
 | `standard` | anything that is neither `lean` nor `hardened` | Stages A–E with every required gate; F only when requested |
 | `hardened` | the change meets the adversarial reviewer's blast-radius condition in `references/routing-matrix.md` | `standard`, plus the architecture design record in Stage A and critic/adversarial judgment at the declared review boundary |
 
-`lean` review is independent: the lead authored no diff. If it leaves the lane plan, select `standard` and dispatch `alaa-reviewer` on the complete change.
+`lean` review is independent: the lead authored no diff. If it leaves the lane plan, or the lead made a mechanical edit, select `standard` and dispatch `alaa-reviewer` on the complete change.
 
 **No profile suppresses a specialist.** Apply only `references/routing-matrix.md` triggers, identically across profiles.
 

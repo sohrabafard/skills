@@ -1,6 +1,6 @@
 {
   "pack": "alaa-codex-orchestrator",
-  "version": "5.3.0",
+  "version": "5.4.0",
   "managed_agents": [
     {
       "name": "alaa-accessibility-reviewer",
@@ -50,52 +50,52 @@
     {
       "name": "alaa-implementer-astra-medium",
       "file": "agents/alaa-implementer-astra-medium.toml",
-      "sha256": "e7e74ac701f0d18be3b96e385b592c2c565fe9c3ce2c93f5245372aa5c2b9fb0"
+      "sha256": "8c490bc55292fa8246710206815b68ba7ac31d19c7c774b45beffbd0bd3a28b2"
     },
     {
       "name": "alaa-implementer-astra-xhigh",
       "file": "agents/alaa-implementer-astra-xhigh.toml",
-      "sha256": "453dfe6beab56c07b5088ac97105d446580b0ed74b4af6335d18700297a64685"
+      "sha256": "f92d5c1569a16e598adab79555a815f786e99e1aef96b5ac49429592a09377b7"
     },
     {
       "name": "alaa-implementer-astra",
       "file": "agents/alaa-implementer-astra.toml",
-      "sha256": "054d08b64facf3cd3f05d01c20f6409652059ee8daf999b419e48d35534e7444"
+      "sha256": "35d43c8d229b75bdb660040aca60c716876fbeabe78679be42a9011ecf3bcf46"
     },
     {
       "name": "alaa-implementer-high",
       "file": "agents/alaa-implementer-high.toml",
-      "sha256": "2e17f666a59bf41aff5726f2ef643609aeeaff9a568e6a3849a2c82834614d4c"
+      "sha256": "452b5d1c17f44257bc25cab893189f7aeb0ac57e71b2cf5165eab2211a7a4898"
     },
     {
       "name": "alaa-implementer-low",
       "file": "agents/alaa-implementer-low.toml",
-      "sha256": "7a53cd446727c417b5d5cfc58d9f3276665d8096ba0515f5173a74068feb3b26"
+      "sha256": "f2097102d86792a59ab3d51237b6cf933247a90fb96d660309e9b88c3767aa30"
     },
     {
       "name": "alaa-implementer-luna-high",
       "file": "agents/alaa-implementer-luna-high.toml",
-      "sha256": "8528962028fcfddc2eae734147ae7b962135a7eb71c7f22bc5f6521a82e3b941"
+      "sha256": "70508b4be0704ad03bfbcf5ec1ae9b755db340e818a5d0a69087baa001ee6e36"
     },
     {
       "name": "alaa-implementer-luna-low",
       "file": "agents/alaa-implementer-luna-low.toml",
-      "sha256": "53f2f47152fe7cd4685e9301852fccbfb1d71d947e4a90ab9050e3d65fb4c783"
+      "sha256": "79f2444c6de5988abc418cae50dd02a3d50bc86e306b62682e84f2fd893bb8ca"
     },
     {
       "name": "alaa-implementer-luna",
       "file": "agents/alaa-implementer-luna.toml",
-      "sha256": "b4e37a08690f5f048d93b4a7a61e35d87f6f8801f60a2519308f0aae39bd82a5"
+      "sha256": "087dc1261f226e5a5d0c72fb645d67d05cab73af3d85b08cbebdf4a80f209329"
     },
     {
       "name": "alaa-implementer-xhigh",
       "file": "agents/alaa-implementer-xhigh.toml",
-      "sha256": "c4253d9a54f010920adfc6a64eedba3904406b07859419f41520bdbcc0e453cd"
+      "sha256": "10320118c7f91d9ae673c3256c0ecce670edb89c63ca78df18d864666068e2f1"
     },
     {
       "name": "alaa-implementer",
       "file": "agents/alaa-implementer.toml",
-      "sha256": "12ec954ee2ed08226f2ce8de9eec623c23f66caf189c8fbc790f859a57d830c9"
+      "sha256": "9458c4a424a78c400f69998639920787e3b46ecec953025caadc6b2d75e3dd74"
     },
     {
       "name": "alaa-instruction-reviewer",
@@ -165,7 +165,7 @@
     {
       "name": "alaa-verifier",
       "file": "agents/alaa-verifier.toml",
-      "sha256": "255f2a46c747821e34bdebc39d73c01e22214c329522268531d9a56d8d481e3e"
+      "sha256": "c25a0b07046bfeb9affa17ea6e864c0bb43421bb37d3077f19b94a54d46a8e92"
     }
   ]
 }

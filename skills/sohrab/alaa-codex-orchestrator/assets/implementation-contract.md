@@ -47,7 +47,7 @@ For design work, also report invariants protected, the design decision, alternat
 
 Output contract:
 1. Lane outcome in one sentence.
-2. Touched files and why each changed.
+2. Touched files and why each changed, plus each contract, interface or settled decision a later lane or repair owner must know, with file:line.
 3. Acceptance criteria mapped to implementation/tests.
 4. Verification evidence: command, cwd, resource policy, exit/result.
 5. Residual risks and checks not run.

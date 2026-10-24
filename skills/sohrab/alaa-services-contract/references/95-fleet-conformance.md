@@ -39,6 +39,15 @@ pending. No other repository was re-audited for this amendment.
 | `wa` | `691baf4473a78013087d4f5397fd2e9978b472ac` |
 | `alaa-go-chi` kit | `f166b57e579e0dedf4a2954944f98d42d9538fd6` |
 
+## Topology deployment adoption — 2026-10-24
+
+This amendment records local implementation and isolated real-broker validation under `alaa-ubec`, not a fleet re-survey, production deployment, or release proof.
+
+| Component | Local implementation | Contract integration | Evidence and limits |
+|---|---|---|---|
+| `auth` | Implemented locally: `php artisan broker:topology ensure`, `export-admin`, and `verify`; explicit `AUTH_BROKER_TOPOLOGY_MODE=full` or `restricted` | **BLOCKED**: deploy's `<repo>/schemas/service-contract.v1.json` permits only `preDeployJobs.migrate` with `additionalProperties: false`; `alaa-csmd` owns schema expansion | Auth `<repo>/docs/ops/sms-magfa-cutover.md`, Broker topology; `<repo>/app/Console/Commands/BrokerTopologyCommand.php`; `<repo>/runtime/hooks/after-migrate/ensure-sms-command-topology.sh`. Full-mode `verify` fails when policy or topology-object inspection is unavailable. Only restricted mode warns and exits 0 when management inspection is unreadable; policies remain unverified and require separate administrator verification before delivery. Command/model evidence: `<repo>/app/Services/Messaging/BrokerTopology.php`; regression evidence: `<repo>/tests/Feature/BrokerTopologyCommandTest.php`. Final independent SQLite suite: 2713 tests, 40693 assertions, zero errors or failures, 125 skips, and two notices. Fresh local RabbitMQ validation in a source-mounted runtime image on the Docker network passed one test with 35 assertions; isolated fixture cleanup was verified. Evidence: `alaa-ubec` artifacts `final-exhaustive.log`, `final-live-summary.json`, and `final-fixture-cleanup-check.json`. No contract-declared topology job, running-app-container validation, packaged-image validation, production deployment, or release proof. |
+| `deploy` | Implemented locally under `alaa-csmd` (2026-10-24): `preDeployJobs` is a map of named `{command}` jobs (`^[a-z][a-zA-Z0-9]{0,31}$`, `migrate` required for class laravel); Compose runs every migrate, then each service's other jobs by name, before workloads; keeps each job output as `cd-artifacts/pre-deploy/<service>/<job>.log`; refuses `PRE_DEPLOY_UNVERIFIED` on a `verification=incomplete` line unless `PRE_DEPLOY_ACCEPT_UNVERIFIED=true`; shared variable `BROKER_TOPOLOGY_MODE` (`full`/`restricted`, default `restricted`) fills `<PREFIX>_BROKER_TOPOLOGY_MODE` | Unblocks the `auth` row once its contract declares the jobs; service contracts not yet changed | Deploy `<repo>/docs/delivery-topology.md`, Pre-deploy jobs; `<repo>/values/derived-inputs.yaml` `sharedInputs`; EO-55. Static and unit evidence only; no GitLab run, live broker or Helm hook execution. |
+
 ## How to refresh this file
 
 **2026-10-18 ownership consolidation, no consumer re-survey.** Pagination defaults moved from keyset

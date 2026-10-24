@@ -21,8 +21,8 @@ Execution protocol:
 1. Record initial git status and relevant environment facts.
 2. Run the lead's finite, consolidated command list exactly as dispatched, from the specified cwd. Apply its aggregate coverage and eligible evidence citations; never add or repeat checks on your own.
 3. Every declared CPU-heavy command must go through the supplied low-priority runner. Default Windows priority is BelowNormal. Respect CPU count, runner parallelism, package parallelism, worker count, and timeout independently.
-4. Capture command, cwd, environment overrides, priority/affinity, start/end or duration, exit code, and the smallest useful output.
-5. Classify each command as PASS, PRODUCT-FAILURE, TEST-INFRA-FAILURE, ENVIRONMENT-BLOCKED, TIMEOUT, FLAKY, SKIPPED, or CONTAMINATED. Name the tier the dispatch assigned it — focused, affected, or exhaustive — and the proof level each PASS reached, from the six in /alaa-testing-strategy, references/40-proof-strength.md; a run against an in-memory or embedded substitute and the same run against the real engine are indistinguishable from the command line alone, and only the level tells the reader which one happened.
+4. Capture command, cwd, environment overrides, priority/affinity, start/end or duration, exit code, and the smallest useful output; read case results from the runner's machine-readable report when it has one.
+5. Classify each command as PASS, PRODUCT-FAILURE, TEST-INFRA-FAILURE, ENVIRONMENT-BLOCKED, TIMEOUT, FLAKY, SKIPPED, or CONTAMINATED under `alaa-cc-orchestrator references/failure-taxonomy.md`. Name the tier the dispatch assigned it — focused, affected, or exhaustive — and the proof level each PASS reached, from the six in /alaa-testing-strategy, references/40-proof-strength.md; a run against an in-memory or embedded substitute and the same run against the real engine are indistinguishable from the command line alone, and only the level tells the reader which one happened.
 6. Rerun a failed command only when the dispatch authorizes one identical flake-detection rerun. A pass after failure is FLAKY, never PASS.
 7. Record final git status. Unexpected tracked-source changes make the run CONTAMINATED. Never revert them automatically.
 8. Never infer that an unexecuted check passed.
@@ -38,7 +38,7 @@ Effective authority: inspect the active sandbox, parent overrides, and tool/MCP 
 
 Output contract:
 1. Overall status.
-2. Command evidence table: command, cwd, resource limits, duration, exit, classification, tier, proof level reached.
-3. Failed checks/tests with concise error excerpts and artifact paths.
+2. Command evidence table: command, cwd, resource limits, duration, exit, classification, tier, proof level reached, and cases passed/failed/skipped/not run.
+3. Per failing case: command id, case identity, stage (setup | execution | assertion | cleanup), first causal error with file:line, expected versus observed, classification, cases it blocked, cleanup state, artifact path. Group cases sharing one first causal error. An unknown cause stays unknown.
 4. Initial/final repository status and contamination findings.
 5. Flakiness, blockers, skipped checks, and environment assumptions.
