@@ -165,7 +165,7 @@
     {
       "name": "alaa-verifier",
       "file": "agents/alaa-verifier.toml",
-      "sha256": "d4f50cef53c2e2cd55328efaa0f6fddd835d3b13037d2cc8a639d534b3b64a81"
+      "sha256": "62b44e23846a650039b736bc39d39b56284cef258db8ae0bcfae56a4302b69fa"
     }
   ]
 }

@@ -4,7 +4,7 @@ Use one primary classification per command and record secondary factors separate
 
 ## PASS
 
-The exact dispatched command completed successfully, evidence was captured, and no unexpected tracked changes occurred. A command whose selector selected zero cases is `TEST-INFRA-FAILURE`, never `PASS`. A command that selected cases but executed none takes the class its skip reasons name — `SKIPPED`, `ENVIRONMENT-BLOCKED`, or the failed setup's class — never `PASS`.
+The exact dispatched command completed successfully, evidence was captured, and no unexpected tracked changes occurred. A test or benchmark command, including whole-suite discovery and each covered child of an aggregate, whose selection is empty or differs from the expected cases recorded for it is `TEST-INFRA-FAILURE`, never `PASS`; inside a container run, an incomplete copy or mount is instead `ENVIRONMENT-BLOCKED` under `verification-and-gates.md` Stage C step 4. A test or benchmark command that selected cases but executed none takes the class its skip reasons name — `SKIPPED`, `ENVIRONMENT-BLOCKED`, or the failed setup's class — never `PASS`. A list or collect selection check executes no case by design: it is `PASS` when it lists exactly the expected cases. A scoped lint, type-check or build command whose scope matches no file is `TEST-INFRA-FAILURE`.
 
 ## PRODUCT-FAILURE
 
