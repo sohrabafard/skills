@@ -649,7 +649,8 @@ RUN_ECONOMY_REQUIREMENTS = {
         "Draw the fewest lanes that keep write scopes disjoint and buy real parallelism",
         "sequential work in one scope stays one lane",
         "The lane, not the subtask, is the dispatch unit",
-        "the runner's list or collect mode confirming that its selector selects the expected cases",
+        "when the runner has a list or collect mode, dispatch it to the verifier as its own command before the first run",
+        "otherwise compare the selected cases in the first run's report with the expected ones",
         "Then assign it by continuing the existing implementer whose still-valid assignment and context cover most failures",
         "through a continuation tool the current host documents for that agent",
         "dispatch fresh only when no continuation is available, that context is invalid, or Implementation routing selects another profile or task pair",
@@ -659,14 +660,15 @@ RUN_ECONOMY_REQUIREMENTS = {
     "skill": ("mechanical-edit exception", "in files no active or pending lane owns",
               "or the lead made a mechanical edit, select `standard`"),
     "taxonomy": (
-        "A command whose selector executed zero cases is `TEST-INFRA-FAILURE`, never `PASS`",
+        "A command whose selector selected zero cases is `TEST-INFRA-FAILURE`, never `PASS`",
+        "selected cases but executed none takes the class its skip reasons name",
         "earns no further full run",
     ),
     "dispatch": ("proving command or selector -> expected result, or review-only: reason",
                  "the child re-derives none of them"),
     "repair": ("as the continuation message rather than a new envelope",
                "if Implementation routing changed the profile or task pair, dispatch fresh under Gate economics instead"),
-    "verifier_agent": ("first causal error with file:line", "stage (setup | execution | assertion | cleanup)",
+    "verifier_agent": ("cases selected/passed/failed/skipped/not run", "first causal error with file:line", "stage (setup | execution | assertion | cleanup)",
                        "Group cases sharing one first causal error"),
     "implementation_contract": ("settled decision a later lane or repair owner must know",),
     "testing_strategy": (
@@ -689,6 +691,7 @@ RUN_ECONOMY_CONTRADICTIONS = {
         "keep work finishable in a handful of tool calls inline",
     ),
     "verifier_agent": ("concise error excerpts",),
+    "taxonomy": ("A command whose selector executed zero cases",),
 }
 
 

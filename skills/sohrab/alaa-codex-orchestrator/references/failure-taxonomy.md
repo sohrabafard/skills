@@ -4,7 +4,7 @@ Use one primary classification per command and record secondary factors separate
 
 ## PASS
 
-The exact dispatched command completed successfully, evidence was captured, and no unexpected tracked changes occurred. A command whose selector executed zero cases is `TEST-INFRA-FAILURE`, never `PASS`.
+The exact dispatched command completed successfully, evidence was captured, and no unexpected tracked changes occurred. A command whose selector selected zero cases is `TEST-INFRA-FAILURE`, never `PASS`. A command that selected cases but executed none takes the class its skip reasons name — `SKIPPED`, `ENVIRONMENT-BLOCKED`, or the failed setup's class — never `PASS`.
 
 ## PRODUCT-FAILURE
 

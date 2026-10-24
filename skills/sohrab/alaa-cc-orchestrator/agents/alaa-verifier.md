@@ -38,7 +38,7 @@ Effective authority: inspect the active sandbox, parent overrides, and tool/MCP 
 
 Output contract:
 1. Overall status.
-2. Command evidence table: command, cwd, resource limits, duration, exit, classification, tier, proof level reached, and cases passed/failed/skipped/not run.
+2. Command evidence table: command, cwd, resource limits, duration, exit, classification, tier, proof level reached, and cases selected/passed/failed/skipped/not run.
 3. Per failing case: command id, case identity, stage (setup | execution | assertion | cleanup), first causal error with file:line, expected versus observed, classification, cases it blocked, cleanup state, artifact path. Group cases sharing one first causal error. An unknown cause stays unknown.
 4. Initial/final repository status and contamination findings.
 5. Flakiness, blockers, skipped checks, and environment assumptions.
