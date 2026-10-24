@@ -5,62 +5,69 @@ description: Context economy and output discipline for non-trivial agent work in
 
 # Alaa Low Noise
 
-Two levers, routinely conflated. **Context economy** governs what enters the context window at all; **output noise** governs what gets printed for the user. Context economy is the more valuable of the two, because a long tool result is charged against every later turn of the session, not only the turn it arrives in. Neither lever reduces task effort, evidence, validation, or reviewability.
+## Introduction
 
-A companion skill: domain skills own implementation, `/alaa-workflow` owns durable planning and state, and this skill owns only these two levers — it gives no planning advice. The contract is identical across runtimes; runtime-dependent rules name their surface. The frontmatter owns trigger boundaries, including when not to use this skill.
+This skill keeps complex work inspectable while limiting context cost and output noise. **Context economy** controls what enters the context window. **Output discipline** controls what is printed for the user. Context economy matters more because long tool results cost context on every later turn. Neither control reduces task effort, evidence, validation, or reviewability.
+
+## Scope and ownership
+
+This companion skill owns context economy and output discipline only. Domain skills own implementation. `/alaa-workflow` owns durable planning and state; this skill gives no planning advice. Both runtimes share this contract. Runtime-dependent rules name their surface. The frontmatter owns activation boundaries, including exclusions.
 
 ## Contract
 
-Shared by both parts: complete the real task and keep repository files as the source of truth; preserve required facts, decisions, caveats, validation, blockers, and next steps while trimming introductions, repetition, proof-of-work narration, raw dumps, and optional background first; obey an explicit request for full logs, diffs, or file contents; and follow repository conventions, using the `/alaa-workflow` artifact family when that skill is active rather than a competing one.
+Apply these rules to both parts:
 
-Keep long-running work observable with bounded calls and concise updates required by the
-active host. Batch independent reads or checks when safe; keep dependent operations and
-mutations sequential. Do not infer a universal watchdog timeout or narrate every command.
-Repository validation policy owns any stricter invocation requirements.
+- Complete the real task. Keep repository files as the source of truth.
+- Preserve required facts, decisions, caveats, validation, blockers, and next steps.
+- Trim introductions, repetition, proof-of-work narration, raw dumps, and optional background first.
+- Obey explicit requests for full logs, diffs, or file contents.
+- Follow repository conventions. When `/alaa-workflow` is active, use its artifact family, not a competing family.
+- Keep long-running work observable through bounded calls and concise updates required by the active host.
+- Batch independent reads or checks when safe. Keep dependent operations and mutations sequential.
+- Do not infer a universal watchdog timeout. Do not narrate every command.
+
+Repository validation policy owns stricter invocation requirements.
 
 ### Part 1 — Context economy: what enters the window
 
-- Treat every tool result as a recurring cost rather than a one-turn cost, and decide on that basis.
-- Search or inventory before reading, then read the bounded slice around the match; read a whole file only when safe editing requires the whole file.
-- Do not re-read without a new reason. Your own edit, a failed check, or a changed hypothesis qualifies; re-confirming what is already in context does not.
-- Prefer a targeted tool result to a raw dump: a scoped search with a few lines of context, a changed-file list, or a count beats `cat`, a full tree, or an unbounded log.
-- Batch independent reads and searches into one turn where the runtime supports it, and prefer one well-chosen query to several exploratory ones.
-- Route bulky output to a path instead of into the window: capture it, inspect only the failing or relevant slice, and keep the path.
+- Treat each tool result as a recurring cost when choosing retrieval.
+- Search or inventory before reading. Then read the bounded slice around the match. Read a whole file only when safe editing requires it.
+- Re-read only for a new reason. Examples include your own edit, a failed check, or a changed hypothesis. Reconfirming content already in context does not qualify.
+- Prefer a scoped search with a few context lines, a changed-file list, or a count over raw dumps. Examples of raw dumps include `cat`, a full tree, or an unbounded log.
+- Batch independent reads and searches into one turn where the runtime supports it. Prefer one well-chosen query to several exploratory queries.
+- Capture bulky output in a file. Inspect only its failing or relevant slice. Keep the path.
 
 ### Part 2 — Output noise: what gets printed
 
-**The file is the medium; the message is the pointer.** Working material — logs, diffs, inventories, command output, intermediate results, generated data, and any state a later turn or another agent will need again — is written to a file and named by its path instead of printed. The terminal is not storage: what is printed there is charged once as output tokens, charged again against context on every later turn, and gone when the session ends. This is the rule the rest of this part implements, and it is the one most often skipped while the others are obeyed.
+**The file is the medium; the message is the pointer.** Save working material to a file and report its path instead of printing it. This includes logs, diffs, inventories, command output, intermediate results, generated data, and state needed by later turns or other agents. Terminal output costs output tokens and context on later turns. It is not storage and is gone when the session ends.
 
-**Deliver the answer; preserve admitted plans.** Reviews, assessments, explanations, and other requested advice belong in the reply. Before choosing an execution plan's medium, read `alaa-workflow references/artifact-lifecycle.md` for artifact admission and its exceptions. When admitted, save the plan/checkpoint and report their paths with a concise outcome. Outside that admission, read-only or advisory requests create no files unless explicitly requested. `/alaa-repo-docs` owns documents. Brevity never removes required checklists, resume context, or phase/task skill bindings.
+**Deliver the answer; preserve admitted plans.** Put reviews, assessments, explanations, and other requested advice in the reply. Before choosing an execution plan's medium, read `alaa-workflow references/artifact-lifecycle.md` for admission and its exceptions. When admitted, save the plan/checkpoint. Report their paths with a concise outcome. Outside that admission, create no files for read-only or advisory requests unless explicitly requested. `/alaa-repo-docs` owns documents. Preserve required checklists, resume context, and phase/task skill bindings when shortening output.
 
-- Report only milestones, blockers, scope changes, validation outcomes, and useful artifact paths, and never duplicate status the harness already surfaces.
-- Bound terminal output: no unbounded file, tree, manifest, or log dumps. Prefer purpose-built tools, changed-file lists, diff stats, and path-scoped diffs.
-- **Default progress budget: 12 lines of prose and excerpts up to 20 lines.** This bound applies to progress reports, not the requested deliverable or required findings. Preserve required content when it exceeds the default; put bulky working material in an authorized artifact.
-- Retain an artifact only when it helps the user inspect or resume; summarize the outcome, name the path, and remove throwaway files when that is safe. Implementation stays in normal repository files, never in temp, shell-history, or off-repo state.
-- Finish with changed paths, reasons, validation results, and remaining risks or blockers instead of a large pasted diff.
-- On sandbox, refresh, locking, quoting, or command-length failures, retry only the essential failed work serially and with bounded output. Under Codex, invoke `/alaa-codex-runtime-ops` first; it is Codex-only, with no Claude Code equivalent.
+- Report only milestones, blockers, scope changes, validation outcomes, and useful artifact paths. Never duplicate status already surfaced by the harness.
+- Bound terminal output. Do not dump unbounded files, trees, manifests, or logs. Prefer purpose-built tools, changed-file lists, diff stats, and path-scoped diffs.
+- **Default progress budget: 12 lines of prose and excerpts up to 20 lines.** Apply this budget to progress reports, not requested deliverables or required findings. Preserve required content that exceeds the default. Put bulky working material in an authorized artifact.
+- Retain an artifact only when it helps the user inspect or resume. Summarize its outcome and name its path. Remove throwaway files when safe. Keep implementation in normal repository files, never in temp, shell-history, or off-repo state.
+- Finish with changed paths, reasons, validation results, and remaining risks or blockers. Do not paste a large diff instead.
+- On sandbox, refresh, locking, quoting, or command-length failures, retry only the essential failed work. Retry serially with bounded output. Under Codex, first invoke `/alaa-codex-runtime-ops`. That recovery skill is Codex-only; it has no Claude Code equivalent.
 
 #### The three leaks
 
-These survive every general instruction to be concise, because each one feels like diligence rather than noise. Each has one replacement, and the replacement is what to do instead — not merely what to stop doing.
+These actions can feel like diligence. Use their replacements to avoid noise:
 
-1. **Narrating the plan before executing it.** What is about to happen is visible in what happens next. State a plan only when the user has to decide something before it runs; otherwise run it and report the outcome.
-2. **Pasting command output to show the command ran.** The outcome is the evidence; the transcript is not. Report the result, the one line that mattered, and the path to the rest.
-3. **Restating a file just written or edited.** The file is the deliverable and it can be opened. Name the path and what changed in it.
+1. **Narrating a plan before execution:** State a plan only when the user must decide something before it runs. Otherwise, run it and report the outcome; the next action shows the plan.
+2. **Pasting output to prove a command ran:** Report the result, the one line that mattered, and the path to the rest. The outcome is evidence; the transcript is not.
+3. **Restating a file just written or edited:** Name its path and what changed. The file is the deliverable and can be opened.
 
 ## Model calibration
 
-When output length or narration needs tuning, read `references/model-output-profiles.md` for output-calibration routing. It separates response, artifact and progress controls and routes model-specific claims to `/alaa-prompting-guide`; this skill defines no model profiles or effort policy.
+When output length or narration needs tuning, read `references/model-output-profiles.md`. It separates response, artifact, and progress controls. It routes model-specific claims to `/alaa-prompting-guide`. This skill defines no model profiles or effort policy.
 
 ## When NOT to use
 
-- The task is small enough that the whole of it fits in one read and one edit. The discipline then costs
-  more context than it saves.
-- The deliverable is the raw output itself — a full log, a complete file, a verbatim dump the user asked
-  for. Trimming it destroys the deliverable.
-- The question is a domain question. Nothing here substitutes for the skill that owns the subject.
-- The need is durable planning and state that survives compaction and handoff.
-  `/alaa-workflow` owns that, and nothing here replaces it.
+- The whole task fits in one read and one edit. This discipline then costs more context than it saves.
+- The deliverable is raw output: a full log, a complete file, or a requested verbatim dump. Trimming destroys that deliverable.
+- The question belongs to a domain skill. This skill does not replace that owner.
+- The need is durable planning and state through compaction and handoff. `/alaa-workflow` owns that work.
 
 ## References
 
@@ -73,4 +80,11 @@ Read only when needed:
 
 ## Check
 
-Confirm that task quality and evidence survived, that what entered context was bounded and justified, that what was printed stayed inside the budget, that nothing durable was left only in the conversation, that edits remain reviewable, and that workflow or domain ownership was not duplicated.
+Confirm each result:
+
+- Task quality and evidence survived.
+- Context input was bounded and justified.
+- Printed output followed the budget and its exceptions.
+- Nothing durable remains only in the conversation.
+- Edits remain reviewable.
+- Workflow and domain ownership were not duplicated.

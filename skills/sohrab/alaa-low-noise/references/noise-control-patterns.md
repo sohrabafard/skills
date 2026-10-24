@@ -1,6 +1,8 @@
 # Noise Control Patterns
 
-Concrete patterns for both levers. The first two sections govern what enters the context window; the rest govern what gets printed and where bulk output lives. Patterns are runtime-neutral unless a section names a runtime.
+## Introduction
+
+These patterns control context input and printed output. Discovery and runtime sections govern context input. Remaining patterns govern printed output and bulk storage. Patterns are runtime-neutral unless a section names a runtime.
 
 ## Table of contents
 
@@ -33,14 +35,27 @@ Avoid by default:
 
 - full-file dumps to prove a file was inspected;
 - full directory trees, especially of generated output;
-- re-reading a file with no new reason — an edit you made, a failed check, or a changed hypothesis is a reason, confirming what is already in context is not;
-- pulling a large result into the window when a count, a path, or a slice answers the question, since that result is re-read on every later turn.
+- Re-reading without a new reason. Your own edit, a failed check, or a changed hypothesis qualifies. Confirming content already in context does not qualify.
+- Pulling a large result into context when a count, path, or slice answers the question. Large results are re-read on every later turn.
 
 ## Runtime notes: Claude Code and Codex
 
-**Claude Code.** Prefer the file and search tools over shelling out: a search tool returning matching paths or matching lines is cheaper and more structured than `rg` piped through the terminal, and a read with an explicit offset and limit is cheaper than `cat` plus mental filtering. Read only the range you need. Dispatch independent searches in a single turn so they run concurrently. When a question needs a wide sweep across many files, delegate it to a subagent and require the return to be findings or paths rather than excerpts — the sweep then costs the subagent's context instead of the parent's.
+**Claude Code**
 
-**Codex.** Discovery mostly runs through the shell, so boundedness has to be expressed in the command itself: scope every search to real paths, keep `-C` context small, and pipe through `head`/`tail` or `Select-Object` rather than emitting whole files. Codex-specific sandbox, refresh, locking, quoting, and command-length failures belong to `$alaa-codex-runtime-ops`, which has no Claude Code equivalent; retry only the essential failed work afterward, serially and with bounded output.
+- Prefer file and search tools over shell commands. Matching paths or lines are cheaper and more structured than terminal `rg` output. Explicit offsets and limits cost less than `cat` plus mental filtering.
+- Read only the range you need.
+- Dispatch independent searches in one turn so they run concurrently.
+- When a question needs a wide sweep across many files, delegate it to a subagent. Require findings or paths, not excerpts. The sweep then consumes the child's context instead of the parent's.
+
+**Codex**
+
+Discovery mostly uses the shell. Express bounds in each command:
+
+- Scope every search to real paths.
+- Keep `-C` context small.
+- Pipe through `head`/`tail` or `Select-Object` instead of emitting whole files.
+
+Route Codex-specific sandbox, refresh, locking, quoting, and command-length failures to `/alaa-codex-runtime-ops`. It has no Claude Code equivalent. Afterward, retry only essential failed work, serially and with bounded output.
 
 ## Diff and reporting patterns
 
@@ -51,7 +66,7 @@ Prefer these reporting shapes before raw diff output:
 - `git diff --name-only`
 - `git diff -- <path>` for the one file that matters
 
-Default final reporting answers what changed, why it changed, what was validated, what remains risky or blocked, and where any saved artifacts live. Do not paste a repository-wide unified diff unless the user asked for it.
+By default, report changes, reasons, validation, remaining risks or blockers, and saved artifact paths. Do not paste a repository-wide unified diff unless requested.
 
 ## Large-log capture patterns
 
@@ -105,8 +120,13 @@ Notes:
 
 ## When the user wants raw output
 
-If the user explicitly wants the full log, full diff, or full file contents, obey that request. Still improve the handoff: say whether the output is file-local or repository-wide, identify the most relevant section first, and do not mix unrelated raw outputs together.
+- Obey explicit requests for full logs, full diffs, or full file contents.
+- State whether the output is file-local or repository-wide.
+- Identify the most relevant section first.
+- Keep unrelated raw outputs separate.
 
 ## Caveats
 
-Command flags and tool names here are the common cases for `rg`, `git`, PowerShell, and Bash, not a portable guarantee — verify against the shell and versions actually installed before scripting them. Tool-level guidance for Claude Code describes the general shape of its file and search tools rather than a fixed parameter surface, which changes between releases. `$alaa-codex-runtime-ops` is Codex-only by design; do not look for a Claude Code counterpart.
+- The `rg`, `git`, PowerShell, and Bash examples describe common cases, not portable guarantees. Before scripting them, verify flags and tool names against the installed shell and versions.
+- Claude Code guidance describes general file and search operations. Exact tool parameters change between releases.
+- `/alaa-codex-runtime-ops` is Codex-only. Do not look for a Claude Code counterpart.

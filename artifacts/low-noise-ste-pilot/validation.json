@@ -1,0 +1,80 @@
+{
+  "observed_utc": "2026-10-24T17:09:26.414158+00:00",
+  "head": "69eadc60dc969acf7356737f22fe1a31453bb73f",
+  "branch": "main",
+  "scope": "skills/sohrab/alaa-low-noise",
+  "manifest_method": "Sorted relative POSIX paths; each UTF-8 line is SHA256(file bytes), two spaces, path, LF. Hash the resulting manifest bytes.",
+  "scoped_sha256": "7c48f6f93facb6600a986f3e3d032bfeec842cd07995096d9a122430ef96a769",
+  "files": {
+    "SKILL.md": {
+      "before_words": 1209,
+      "after_words": 1089,
+      "before_bytes": 7884,
+      "after_bytes": 7330,
+      "changed": true
+    },
+    "agents/openai.yaml": {
+      "before_words": 29,
+      "after_words": 29,
+      "before_bytes": 240,
+      "after_bytes": 240,
+      "changed": false
+    },
+    "references/90-source-map.md": {
+      "before_words": 512,
+      "after_words": 514,
+      "before_bytes": 4333,
+      "after_bytes": 4390,
+      "changed": true
+    },
+    "references/model-output-profiles.md": {
+      "before_words": 202,
+      "after_words": 207,
+      "before_bytes": 1417,
+      "after_bytes": 1477,
+      "changed": true
+    },
+    "references/noise-control-patterns.md": {
+      "before_words": 855,
+      "after_words": 787,
+      "before_bytes": 5300,
+      "after_bytes": 5009,
+      "changed": true
+    },
+    "references/workflow-integration.md": {
+      "before_words": 415,
+      "after_words": 370,
+      "before_bytes": 2746,
+      "after_bytes": 2595,
+      "changed": true
+    }
+  },
+  "totals": {
+    "before_words": 3222,
+    "after_words": 2996,
+    "before_bytes": 21920,
+    "after_bytes": 21041
+  },
+  "checks": {
+    "all_five_markdown_files_refactored": true,
+    "all_markdown_files_have_introduction": true,
+    "frontmatter_unchanged": true,
+    "interface_metadata_unchanged": true,
+    "entry_point_router_unchanged": true,
+    "source_priority_unchanged": true,
+    "source_urls_preserved": true,
+    "code_examples_byte_identical": true,
+    "existing_headings_preserved": true,
+    "cross_skill_owners_preserved": true,
+    "reference_destinations_preserved": true,
+    "numeric_literals_preserved": false,
+    "progress_budget_literal_preserved": true,
+    "total_skill_size_not_increased": true
+  },
+  "limits": "Whole-skill structural checks and author semantic review. No live agent evaluation or independent review.",
+  "audit_note": "Supplementary numeric extraction failed twice. Initial pattern missed the suffix in baseline 404s; its one corrected retry consumed punctuation in candidate 404,. No further retry was made. Direct source inspection confirmed both mean HTTP 404 and preserve the documentation-root fallback. Native repository gates and other structural checks are separate evidence.",
+  "manual_numeric_review": {
+    "verdict": "pass",
+    "evidence": "Source priority 1-7 is byte-identical; all code fences are byte-identical; original and candidate retain the 2,000-line example, six-file example and 404 fallback. SKILL.md progress bounds remain 12 and 20. See review.md."
+  }
+}
