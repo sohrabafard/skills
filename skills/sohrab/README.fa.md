@@ -170,6 +170,7 @@
 | `alaa-async-messaging` | معماری صفحه پیام روی RabbitMQ، تنها broker ناوگان: درز بین commit پایگاه داده و پیام منتشرشده، outbox تراکنشی و سطح عملیاتی‌اش، publisher confirm، نقطه ack، prefetch و همروندی مصرف‌کننده، توپولوژی dead-letter، و رویه replay از DLQ |
 | `alaa-trust-gateway-auth` | صدور و اعتبارسنجی token و هدرهای معتمد در gateway |
 | `alaa-bale-provider` | یکپارچه‌سازی با پیام‌رسان بله |
+| `alaa-sms-provider-magfa` | فقط ارتباط با API مگفا برای ارسال پیامک، احراز هویت، پیگیری ارسال و وضعیت تحویل، و تفسیر پاسخ و خطا |
 | `alaa-sms-provider-mediana` | ارسال پیامک با مدیانا |
 | `tusd-upload-platform` | آپلود resumable با tusd |
 | `jitsi-platform-architect` | معماری پلتفرم Jitsi |
