@@ -54,7 +54,7 @@ Workflow records task scope/complexity, priority/reason, role authority identity
 
 ## Dependency and concurrency plan
 
-Use the selected task authority for dependency edges and ready sets through `references/task-tracking.md`. Each lane names disjoint write ownership, shared-resource conflicts (including fixtures, generators, ports and test environments), integration barriers and parallel/serialized rationale. Disjoint files alone do not prove independence. Keep coupled decisions together; serialize overlapping writes and conflicting resources.
+Use the selected task authority for dependency edges and ready sets through `references/task-tracking.md`. Each lane names disjoint write ownership, shared-resource conflicts (including fixtures, generators, ports and test environments), integration barriers and parallel/serialized rationale. Disjoint files alone do not prove independence. Keep coupled decisions together; serialize overlapping writes and conflicting resources. Record a dependency edge only where a lane or phase consumes another's output; an edge added for ordering convenience makes unrelated work wait. `alaa-codex-orchestrator` or `alaa-cc-orchestrator` Dispatch discipline owns when each lane starts.
 
 Record each phase's post-reconciliation test collection, combined repair/retest and declared review barriers, with responsible owners, exact check coverage, failure/blocker evidence and resume position. Route execution and the early-repair exception to `alaa-codex-orchestrator` or `alaa-cc-orchestrator` `references/verification-and-gates.md` Gate economics; workflow records these barriers without redefining their policy. Final-only review keeps phase test evidence separate from pending review.
 

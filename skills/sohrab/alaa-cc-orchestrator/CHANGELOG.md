@@ -1,5 +1,9 @@
 # Changelog
 
+## 5.5.0 - 2026-10-25
+
+- Start a dependent lane as soon as the lanes it consumes finish; join lanes behind a barrier only when the next step consumes all their outputs.
+
 ## 5.4.0 - 2026-10-24
 
 - Draw the fewest lanes that keep write scopes disjoint; the lane, not the subtask, is the dispatch unit, and the lead may make a mechanical local edit.

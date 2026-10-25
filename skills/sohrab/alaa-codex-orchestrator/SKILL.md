@@ -58,6 +58,8 @@ It must not implement beyond that mechanical-edit exception, run heavy verificat
 
 **One agent per lane.** No duplicate lane or summary-check agent. Independent verification and review inspect the actual artifact under separate authority. Dispatch independent lanes together; keep inspection and Orchestrator mode's mechanical edit inline.
 
+**Start a dependent lane as soon as the lanes it consumes finish.** Join lanes behind one barrier only when the next step consumes all of their outputs; a barrier over a lane whose output the next step never reads idles that step for the unrelated lane's whole runtime.
+
 **Keep dispatches lean.** Apply /alaa-prompting-guide. Carry lane facts only: outcome, owned files, exclusions, acceptance, commands, dependencies, resolved skills and return contract. Do not restate the native role definition, which dilutes both contracts. State instructions once; expose task-relevant tools and only requirement-bearing examples.
 
 **Preserve proportional verification.** Read `references/verification-and-gates.md` for gate economics and independent acceptance; /alaa-prompting-guide owns model-specific verification wording.
