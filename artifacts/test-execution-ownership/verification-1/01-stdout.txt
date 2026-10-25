@@ -1,0 +1,27 @@
+/home/sohrab/project/skills/skills/sohrab: 71 skills
+Errors:
+- repository-tooling-capability-check: missing a 'When not to use' or 'Do not use' section
+- repository-tooling-capability-check: missing agents/openai.yaml
+Warnings:
+- alaa-algorithms-data-structures: top-level body is 153 lines
+- alaa-bale-provider: top-level body is 139 lines
+- alaa-cc-orchestrator: top-level body is 165 lines
+- alaa-codex-orchestrator: top-level body is 170 lines
+- alaa-codex-runtime-ops: top-level body is 124 lines
+- alaa-gitlab-ci-cd: top-level body is 168 lines
+- alaa-golang-clean-code-principles: top-level body is 140 lines
+- alaa-laravel-job-rabbitmq: top-level body is 203 lines
+- alaa-laravel-public-api-contract-pack: top-level body is 178 lines
+- alaa-memory-os: top-level body is 208 lines
+- alaa-minio-object-storage: top-level body is 132 lines
+- alaa-octane-performance: top-level body is 151 lines
+- alaa-permission-generator: top-level body is 163 lines
+- alaa-php-clean-code: top-level body is 206 lines
+- alaa-project-constitution: top-level body is 210 lines
+- alaa-reliability-sla: top-level body is 129 lines
+- alaa-security-review: top-level body is 144 lines
+- alaa-services-contract: top-level body is 126 lines
+- alaa-sms-provider-magfa: top-level body is 200 lines
+- alaa-system-design: top-level body is 168 lines
+- alaa-testing-strategy: top-level body is 210 lines
+- vector-rust-observability-pipelines: top-level body is 131 lines

@@ -1,0 +1,7 @@
+Command: python3 -B skills/sohrab/alaa-testing-strategy/scripts/test_execution_runners.py --platform windows --powershell '/mnt/c/Program Files/PowerShell/7/pwsh.exe'
+Cwd: repository root
+Mode: require_escalated; one cause-specific retry after WSL IPC startup failure
+Exit: 1
+Result: Native PowerShell started, but Windows execution policy blocked the unsigned runner smoke.ps1 driver loaded from the WSL UNC temporary path. The runner behavior probes did not run.
+Evidence: SecurityError: File runner smoke.ps1 cannot be loaded. The file is not digitally signed. You cannot run this script on the current system.
+Disposition: Windows behavior gap; no execution-policy change, installation, host configuration edit, or further retry authorized by this evidence.

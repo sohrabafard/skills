@@ -1,0 +1,656 @@
+[
+  {
+    "id": "01",
+    "command": [
+      "python",
+      "scripts/validate_sohrab_skill_pack.py"
+    ],
+    "actual_argv": [
+      "bash",
+      "skills/sohrab/alaa-testing-strategy/scripts/run-low-priority.sh",
+      "--priority",
+      "BelowNormal",
+      "--cpu-count",
+      "2",
+      "--",
+      "python",
+      "scripts/validate_sohrab_skill_pack.py"
+    ],
+    "cwd": "/home/sohrab/project/skills",
+    "environment_overrides": {
+      "PYTHONDONTWRITEBYTECODE": "1"
+    },
+    "timeout_seconds": 300,
+    "start_utc": "2026-10-25T20:22:48.557205+00:00",
+    "end_utc": "2026-10-25T20:22:48.712603+00:00",
+    "duration_seconds": 0.155,
+    "exit": 1,
+    "classification": "PRODUCT-FAILURE",
+    "tier": "exhaustive",
+    "proof_level": "1 static",
+    "stdout": "01-stdout.txt",
+    "stderr": "01-stderr.txt"
+  },
+  {
+    "id": "02",
+    "command": [
+      "python",
+      "scripts/check_skill_index.py"
+    ],
+    "actual_argv": [
+      "bash",
+      "skills/sohrab/alaa-testing-strategy/scripts/run-low-priority.sh",
+      "--priority",
+      "BelowNormal",
+      "--cpu-count",
+      "2",
+      "--",
+      "python",
+      "scripts/check_skill_index.py"
+    ],
+    "cwd": "/home/sohrab/project/skills",
+    "environment_overrides": {
+      "PYTHONDONTWRITEBYTECODE": "1"
+    },
+    "timeout_seconds": 300,
+    "start_utc": "2026-10-25T20:22:48.712797+00:00",
+    "end_utc": "2026-10-25T20:22:48.780268+00:00",
+    "duration_seconds": 0.067,
+    "exit": 1,
+    "classification": "PRODUCT-FAILURE",
+    "tier": "exhaustive",
+    "proof_level": "1 static",
+    "stdout": "02-stdout.txt",
+    "stderr": "02-stderr.txt"
+  },
+  {
+    "id": "03",
+    "command": [
+      "python",
+      "scripts/check_fleet_references.py"
+    ],
+    "actual_argv": [
+      "bash",
+      "skills/sohrab/alaa-testing-strategy/scripts/run-low-priority.sh",
+      "--priority",
+      "BelowNormal",
+      "--cpu-count",
+      "2",
+      "--",
+      "python",
+      "scripts/check_fleet_references.py"
+    ],
+    "cwd": "/home/sohrab/project/skills",
+    "environment_overrides": {
+      "PYTHONDONTWRITEBYTECODE": "1"
+    },
+    "timeout_seconds": 300,
+    "start_utc": "2026-10-25T20:22:48.780516+00:00",
+    "end_utc": "2026-10-25T20:22:51.170136+00:00",
+    "duration_seconds": 2.389,
+    "exit": 0,
+    "classification": "PASS",
+    "tier": "exhaustive",
+    "proof_level": "1 static",
+    "stdout": "03-stdout.txt",
+    "stderr": "03-stderr.txt"
+  },
+  {
+    "id": "04",
+    "command": [
+      "python",
+      "scripts/check_lifecycle_contract.py"
+    ],
+    "actual_argv": [
+      "bash",
+      "skills/sohrab/alaa-testing-strategy/scripts/run-low-priority.sh",
+      "--priority",
+      "BelowNormal",
+      "--cpu-count",
+      "2",
+      "--",
+      "python",
+      "scripts/check_lifecycle_contract.py"
+    ],
+    "cwd": "/home/sohrab/project/skills",
+    "environment_overrides": {
+      "PYTHONDONTWRITEBYTECODE": "1"
+    },
+    "timeout_seconds": 300,
+    "start_utc": "2026-10-25T20:22:51.170384+00:00",
+    "end_utc": "2026-10-25T20:22:51.506343+00:00",
+    "duration_seconds": 0.336,
+    "exit": 0,
+    "classification": "PASS",
+    "tier": "exhaustive",
+    "proof_level": "1 static",
+    "stdout": "04-stdout.txt",
+    "stderr": "04-stderr.txt"
+  },
+  {
+    "id": "05",
+    "command": [
+      "python",
+      "skills/sohrab/alaa-codex-orchestrator/scripts/validate_pack.py"
+    ],
+    "actual_argv": [
+      "bash",
+      "skills/sohrab/alaa-testing-strategy/scripts/run-low-priority.sh",
+      "--priority",
+      "BelowNormal",
+      "--cpu-count",
+      "2",
+      "--",
+      "python",
+      "skills/sohrab/alaa-codex-orchestrator/scripts/validate_pack.py"
+    ],
+    "cwd": "/home/sohrab/project/skills",
+    "environment_overrides": {
+      "PYTHONDONTWRITEBYTECODE": "1"
+    },
+    "timeout_seconds": 300,
+    "start_utc": "2026-10-25T20:22:51.506579+00:00",
+    "end_utc": "2026-10-25T20:22:51.753331+00:00",
+    "duration_seconds": 0.246,
+    "exit": 0,
+    "classification": "PASS",
+    "tier": "exhaustive",
+    "proof_level": "1 static",
+    "stdout": "05-stdout.txt",
+    "stderr": "05-stderr.txt"
+  },
+  {
+    "id": "06",
+    "command": [
+      "python",
+      "skills/sohrab/alaa-cc-orchestrator/scripts/validate_pack.py"
+    ],
+    "actual_argv": [
+      "bash",
+      "skills/sohrab/alaa-testing-strategy/scripts/run-low-priority.sh",
+      "--priority",
+      "BelowNormal",
+      "--cpu-count",
+      "2",
+      "--",
+      "python",
+      "skills/sohrab/alaa-cc-orchestrator/scripts/validate_pack.py"
+    ],
+    "cwd": "/home/sohrab/project/skills",
+    "environment_overrides": {
+      "PYTHONDONTWRITEBYTECODE": "1"
+    },
+    "timeout_seconds": 300,
+    "start_utc": "2026-10-25T20:22:51.753578+00:00",
+    "end_utc": "2026-10-25T20:22:52.050954+00:00",
+    "duration_seconds": 0.297,
+    "exit": 0,
+    "classification": "PASS",
+    "tier": "exhaustive",
+    "proof_level": "1 static",
+    "stdout": "06-stdout.txt",
+    "stderr": "06-stderr.txt"
+  },
+  {
+    "id": "07",
+    "command": [
+      "python",
+      "skills/sohrab/alaa-codex-orchestrator/scripts/check_agent_contracts.py",
+      "--self-test"
+    ],
+    "actual_argv": [
+      "bash",
+      "skills/sohrab/alaa-testing-strategy/scripts/run-low-priority.sh",
+      "--priority",
+      "BelowNormal",
+      "--cpu-count",
+      "2",
+      "--",
+      "python",
+      "skills/sohrab/alaa-codex-orchestrator/scripts/check_agent_contracts.py",
+      "--self-test"
+    ],
+    "cwd": "/home/sohrab/project/skills",
+    "environment_overrides": {
+      "PYTHONDONTWRITEBYTECODE": "1"
+    },
+    "timeout_seconds": 300,
+    "start_utc": "2026-10-25T20:22:52.051228+00:00",
+    "end_utc": "2026-10-25T20:23:06.130759+00:00",
+    "duration_seconds": 14.079,
+    "exit": 0,
+    "classification": "PASS",
+    "tier": "exhaustive",
+    "proof_level": "2 unit structural fixtures",
+    "stdout": "07-stdout.txt",
+    "stderr": "07-stderr.txt"
+  },
+  {
+    "id": "08",
+    "command": [
+      "python",
+      "skills/sohrab/alaa-codex-orchestrator/scripts/check_agent_contracts.py"
+    ],
+    "actual_argv": [
+      "bash",
+      "skills/sohrab/alaa-testing-strategy/scripts/run-low-priority.sh",
+      "--priority",
+      "BelowNormal",
+      "--cpu-count",
+      "2",
+      "--",
+      "python",
+      "skills/sohrab/alaa-codex-orchestrator/scripts/check_agent_contracts.py"
+    ],
+    "cwd": "/home/sohrab/project/skills",
+    "environment_overrides": {
+      "PYTHONDONTWRITEBYTECODE": "1"
+    },
+    "timeout_seconds": 300,
+    "start_utc": "2026-10-25T20:23:06.131044+00:00",
+    "end_utc": "2026-10-25T20:23:06.257908+00:00",
+    "duration_seconds": 0.127,
+    "exit": 0,
+    "classification": "PASS",
+    "tier": "exhaustive",
+    "proof_level": "1 static",
+    "stdout": "08-stdout.txt",
+    "stderr": "08-stderr.txt"
+  },
+  {
+    "id": "09",
+    "command": [
+      "python",
+      "skills/sohrab/alaa-cc-orchestrator/scripts/check_agent_contracts.py",
+      "--self-test"
+    ],
+    "actual_argv": [
+      "bash",
+      "skills/sohrab/alaa-testing-strategy/scripts/run-low-priority.sh",
+      "--priority",
+      "BelowNormal",
+      "--cpu-count",
+      "2",
+      "--",
+      "python",
+      "skills/sohrab/alaa-cc-orchestrator/scripts/check_agent_contracts.py",
+      "--self-test"
+    ],
+    "cwd": "/home/sohrab/project/skills",
+    "environment_overrides": {
+      "PYTHONDONTWRITEBYTECODE": "1"
+    },
+    "timeout_seconds": 300,
+    "start_utc": "2026-10-25T20:23:06.258168+00:00",
+    "end_utc": "2026-10-25T20:23:19.837190+00:00",
+    "duration_seconds": 13.58,
+    "exit": 0,
+    "classification": "PASS",
+    "tier": "exhaustive",
+    "proof_level": "2 unit structural fixtures",
+    "stdout": "09-stdout.txt",
+    "stderr": "09-stderr.txt"
+  },
+  {
+    "id": "10",
+    "command": [
+      "python",
+      "skills/sohrab/alaa-cc-orchestrator/scripts/check_agent_contracts.py"
+    ],
+    "actual_argv": [
+      "bash",
+      "skills/sohrab/alaa-testing-strategy/scripts/run-low-priority.sh",
+      "--priority",
+      "BelowNormal",
+      "--cpu-count",
+      "2",
+      "--",
+      "python",
+      "skills/sohrab/alaa-cc-orchestrator/scripts/check_agent_contracts.py"
+    ],
+    "cwd": "/home/sohrab/project/skills",
+    "environment_overrides": {
+      "PYTHONDONTWRITEBYTECODE": "1"
+    },
+    "timeout_seconds": 300,
+    "start_utc": "2026-10-25T20:23:19.837500+00:00",
+    "end_utc": "2026-10-25T20:23:19.965615+00:00",
+    "duration_seconds": 0.128,
+    "exit": 0,
+    "classification": "PASS",
+    "tier": "exhaustive",
+    "proof_level": "1 static",
+    "stdout": "10-stdout.txt",
+    "stderr": "10-stderr.txt"
+  },
+  {
+    "id": "11",
+    "command": [
+      "python",
+      "skills/sohrab/alaa-cc-orchestrator/scripts/validate_pack.py",
+      "--self-test"
+    ],
+    "actual_argv": [
+      "bash",
+      "skills/sohrab/alaa-testing-strategy/scripts/run-low-priority.sh",
+      "--priority",
+      "BelowNormal",
+      "--cpu-count",
+      "2",
+      "--",
+      "python",
+      "skills/sohrab/alaa-cc-orchestrator/scripts/validate_pack.py",
+      "--self-test"
+    ],
+    "cwd": "/home/sohrab/project/skills",
+    "environment_overrides": {
+      "PYTHONDONTWRITEBYTECODE": "1"
+    },
+    "timeout_seconds": 300,
+    "start_utc": "2026-10-25T20:23:19.965969+00:00",
+    "end_utc": "2026-10-25T20:23:20.559157+00:00",
+    "duration_seconds": 0.593,
+    "exit": 0,
+    "classification": "PASS",
+    "tier": "exhaustive",
+    "proof_level": "2 unit structural fixtures",
+    "stdout": "11-stdout.txt",
+    "stderr": "11-stderr.txt"
+  },
+  {
+    "id": "12",
+    "command": [
+      "python",
+      "skills/sohrab/alaa-testing-strategy/scripts/test_execution_runners.py",
+      "--platform",
+      "posix"
+    ],
+    "actual_argv": [
+      "bash",
+      "skills/sohrab/alaa-testing-strategy/scripts/run-low-priority.sh",
+      "--priority",
+      "BelowNormal",
+      "--cpu-count",
+      "2",
+      "--",
+      "python",
+      "skills/sohrab/alaa-testing-strategy/scripts/test_execution_runners.py",
+      "--platform",
+      "posix"
+    ],
+    "cwd": "/home/sohrab/project/skills",
+    "environment_overrides": {
+      "PYTHONDONTWRITEBYTECODE": "1"
+    },
+    "timeout_seconds": 300,
+    "start_utc": "2026-10-25T20:23:20.559460+00:00",
+    "end_utc": "2026-10-25T20:23:20.904891+00:00",
+    "duration_seconds": 0.345,
+    "exit": 0,
+    "classification": "PASS",
+    "tier": "exhaustive",
+    "proof_level": "4 local smoke (POSIX subprocess runners)",
+    "stdout": "12-stdout.txt",
+    "stderr": "12-stderr.txt"
+  },
+  {
+    "id": "13",
+    "command": [
+      "python",
+      "skills/sohrab/alaa-workflow/scripts/validate_workflow_files.py",
+      "--plan",
+      "docs/_agent_plans/20261025-test-execution-ownership.md",
+      "--continuation",
+      "docs/agents/20261025-test-execution-ownership-state.md"
+    ],
+    "actual_argv": [
+      "bash",
+      "skills/sohrab/alaa-testing-strategy/scripts/run-low-priority.sh",
+      "--priority",
+      "BelowNormal",
+      "--cpu-count",
+      "2",
+      "--",
+      "python",
+      "skills/sohrab/alaa-workflow/scripts/validate_workflow_files.py",
+      "--plan",
+      "docs/_agent_plans/20261025-test-execution-ownership.md",
+      "--continuation",
+      "docs/agents/20261025-test-execution-ownership-state.md"
+    ],
+    "cwd": "/home/sohrab/project/skills",
+    "environment_overrides": {
+      "PYTHONDONTWRITEBYTECODE": "1"
+    },
+    "timeout_seconds": 300,
+    "start_utc": "2026-10-25T20:23:20.905181+00:00",
+    "end_utc": "2026-10-25T20:23:20.994429+00:00",
+    "duration_seconds": 0.089,
+    "exit": 0,
+    "classification": "PASS",
+    "tier": "exhaustive",
+    "proof_level": "1 static",
+    "stdout": "13-stdout.txt",
+    "stderr": "13-stderr.txt"
+  },
+  {
+    "id": "14",
+    "command": [
+      "python",
+      "skills/sohrab/alaa-workflow/scripts/validate_workflow_files.py",
+      "--plan",
+      "docs/_agent_plans/20261025-test-execution-ownership-design.md",
+      "--continuation",
+      "docs/agents/20261025-test-execution-ownership-design-state.md"
+    ],
+    "actual_argv": [
+      "bash",
+      "skills/sohrab/alaa-testing-strategy/scripts/run-low-priority.sh",
+      "--priority",
+      "BelowNormal",
+      "--cpu-count",
+      "2",
+      "--",
+      "python",
+      "skills/sohrab/alaa-workflow/scripts/validate_workflow_files.py",
+      "--plan",
+      "docs/_agent_plans/20261025-test-execution-ownership-design.md",
+      "--continuation",
+      "docs/agents/20261025-test-execution-ownership-design-state.md"
+    ],
+    "cwd": "/home/sohrab/project/skills",
+    "environment_overrides": {
+      "PYTHONDONTWRITEBYTECODE": "1"
+    },
+    "timeout_seconds": 300,
+    "start_utc": "2026-10-25T20:23:20.994748+00:00",
+    "end_utc": "2026-10-25T20:23:21.075490+00:00",
+    "duration_seconds": 0.08,
+    "exit": 0,
+    "classification": "PASS",
+    "tier": "exhaustive",
+    "proof_level": "1 static",
+    "stdout": "14-stdout.txt",
+    "stderr": "14-stderr.txt"
+  },
+  {
+    "id": "15",
+    "command": [
+      "bash",
+      "-n",
+      "skills/sohrab/alaa-testing-strategy/scripts/run-low-priority.sh"
+    ],
+    "actual_argv": [
+      "bash",
+      "skills/sohrab/alaa-testing-strategy/scripts/run-low-priority.sh",
+      "--priority",
+      "BelowNormal",
+      "--cpu-count",
+      "2",
+      "--",
+      "bash",
+      "-n",
+      "skills/sohrab/alaa-testing-strategy/scripts/run-low-priority.sh"
+    ],
+    "cwd": "/home/sohrab/project/skills",
+    "environment_overrides": {
+      "PYTHONDONTWRITEBYTECODE": "1"
+    },
+    "timeout_seconds": 300,
+    "start_utc": "2026-10-25T20:23:21.076012+00:00",
+    "end_utc": "2026-10-25T20:23:21.092313+00:00",
+    "duration_seconds": 0.016,
+    "exit": 0,
+    "classification": "PASS",
+    "tier": "exhaustive",
+    "proof_level": "1 static",
+    "stdout": "15-stdout.txt",
+    "stderr": "15-stderr.txt"
+  },
+  {
+    "id": "16",
+    "command": [
+      "bash",
+      "-n",
+      "skills/sohrab/alaa-codex-orchestrator/scripts/run-low-priority.sh"
+    ],
+    "actual_argv": [
+      "bash",
+      "skills/sohrab/alaa-testing-strategy/scripts/run-low-priority.sh",
+      "--priority",
+      "BelowNormal",
+      "--cpu-count",
+      "2",
+      "--",
+      "bash",
+      "-n",
+      "skills/sohrab/alaa-codex-orchestrator/scripts/run-low-priority.sh"
+    ],
+    "cwd": "/home/sohrab/project/skills",
+    "environment_overrides": {
+      "PYTHONDONTWRITEBYTECODE": "1"
+    },
+    "timeout_seconds": 300,
+    "start_utc": "2026-10-25T20:23:21.092633+00:00",
+    "end_utc": "2026-10-25T20:23:21.108752+00:00",
+    "duration_seconds": 0.016,
+    "exit": 0,
+    "classification": "PASS",
+    "tier": "exhaustive",
+    "proof_level": "1 static",
+    "stdout": "16-stdout.txt",
+    "stderr": "16-stderr.txt"
+  },
+  {
+    "id": "17",
+    "command": [
+      "bash",
+      "-n",
+      "skills/sohrab/alaa-cc-orchestrator/scripts/run-low-priority.sh"
+    ],
+    "actual_argv": [
+      "bash",
+      "skills/sohrab/alaa-testing-strategy/scripts/run-low-priority.sh",
+      "--priority",
+      "BelowNormal",
+      "--cpu-count",
+      "2",
+      "--",
+      "bash",
+      "-n",
+      "skills/sohrab/alaa-cc-orchestrator/scripts/run-low-priority.sh"
+    ],
+    "cwd": "/home/sohrab/project/skills",
+    "environment_overrides": {
+      "PYTHONDONTWRITEBYTECODE": "1"
+    },
+    "timeout_seconds": 300,
+    "start_utc": "2026-10-25T20:23:21.109080+00:00",
+    "end_utc": "2026-10-25T20:23:21.125260+00:00",
+    "duration_seconds": 0.016,
+    "exit": 0,
+    "classification": "PASS",
+    "tier": "exhaustive",
+    "proof_level": "1 static",
+    "stdout": "17-stdout.txt",
+    "stderr": "17-stderr.txt"
+  },
+  {
+    "id": "18",
+    "command": [
+      "shellcheck",
+      "skills/sohrab/alaa-testing-strategy/scripts/run-low-priority.sh",
+      "skills/sohrab/alaa-codex-orchestrator/scripts/run-low-priority.sh",
+      "skills/sohrab/alaa-cc-orchestrator/scripts/run-low-priority.sh"
+    ],
+    "actual_argv": [
+      "bash",
+      "skills/sohrab/alaa-testing-strategy/scripts/run-low-priority.sh",
+      "--priority",
+      "BelowNormal",
+      "--cpu-count",
+      "2",
+      "--",
+      "shellcheck",
+      "skills/sohrab/alaa-testing-strategy/scripts/run-low-priority.sh",
+      "skills/sohrab/alaa-codex-orchestrator/scripts/run-low-priority.sh",
+      "skills/sohrab/alaa-cc-orchestrator/scripts/run-low-priority.sh"
+    ],
+    "cwd": "/home/sohrab/project/skills",
+    "environment_overrides": {
+      "PYTHONDONTWRITEBYTECODE": "1"
+    },
+    "timeout_seconds": 300,
+    "start_utc": "2026-10-25T20:23:21.125579+00:00",
+    "end_utc": "2026-10-25T20:23:21.175969+00:00",
+    "duration_seconds": 0.05,
+    "exit": 0,
+    "classification": "PASS",
+    "tier": "exhaustive",
+    "proof_level": "1 static",
+    "stdout": "18-stdout.txt",
+    "stderr": "18-stderr.txt"
+  },
+  {
+    "id": "19",
+    "command": [
+      "shfmt",
+      "-d",
+      "-i",
+      "2",
+      "skills/sohrab/alaa-testing-strategy/scripts/run-low-priority.sh",
+      "skills/sohrab/alaa-codex-orchestrator/scripts/run-low-priority.sh",
+      "skills/sohrab/alaa-cc-orchestrator/scripts/run-low-priority.sh"
+    ],
+    "actual_argv": [
+      "bash",
+      "skills/sohrab/alaa-testing-strategy/scripts/run-low-priority.sh",
+      "--priority",
+      "BelowNormal",
+      "--cpu-count",
+      "2",
+      "--",
+      "shfmt",
+      "-d",
+      "-i",
+      "2",
+      "skills/sohrab/alaa-testing-strategy/scripts/run-low-priority.sh",
+      "skills/sohrab/alaa-codex-orchestrator/scripts/run-low-priority.sh",
+      "skills/sohrab/alaa-cc-orchestrator/scripts/run-low-priority.sh"
+    ],
+    "cwd": "/home/sohrab/project/skills",
+    "environment_overrides": {
+      "PYTHONDONTWRITEBYTECODE": "1"
+    },
+    "timeout_seconds": 300,
+    "start_utc": "2026-10-25T20:23:21.176304+00:00",
+    "end_utc": "2026-10-25T20:23:21.193018+00:00",
+    "duration_seconds": 0.016,
+    "exit": 1,
+    "classification": "PRODUCT-FAILURE",
+    "tier": "exhaustive",
+    "proof_level": "1 static",
+    "stdout": "19-stdout.txt",
+    "stderr": "19-stderr.txt"
+  }
+]

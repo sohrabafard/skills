@@ -1,19 +1,19 @@
 ---
 name: alaa-testing-strategy
-description: "Test design doctrine for services that must not fail: whether a test is owed, what makes a test catch a real defect, how tests are selected, share setup, and build once, which layer a behaviour belongs at, when to fake or stub or use the real dependency, which of six proof levels a claim requires, and telling flake from an intermittent product defect. Use when writing, reviewing, or repairing tests; deciding where a test belongs or whether a double is honest; when a suite is slow, flaky, or green against broken code; when a route, consumer, or job has no test; and before reporting any check as passed. Do not use for framework idiom and assertion syntax, which are the per-language skills and /golang-testing. Route fault injection to /alaa-reliability-sla; security controls to /alaa-security-review; envelopes and codes to /alaa-services-contract; Postman request tests to /alaa-postman-collections; command execution to /alaa-cc-orchestrator."
+description: "Test design and execution doctrine: owed tests, layers, doubles, proof strength, selectors, shared setup, build reuse, flake diagnosis, check collection, batch repair, result classification, CPU budgets and comparative timing. Use to write, review, repair or run tests and validation commands; investigate slow, flaky or falsely green suites; choose check breadth or resources; or report a check result, directly or through either runtime. Do not use for framework syntax, owned by per-language skills and /golang-testing; fault injection belongs to /alaa-reliability-sla, security controls to /alaa-security-review, contract values to /alaa-services-contract and Postman tests to /alaa-postman-collections. Runtime orchestrators own allocation, independence and phase/review scheduling; this skill requires no orchestrator."
 ---
 
 # Alaa Testing Strategy
 
 Decide what to test, where to test it, what to substitute for a real dependency, how strong the resulting proof is, and what a reviewer may accept as evidence — so every service in the fleet ships a test suite of the same shape. Uniformity is the deliverable: a suite whose shape differs per service can be read only by whoever wrote it, so no reviewer can tell a covered service from an uncovered one, and the fleet's real coverage becomes unknowable at exactly the scale where it matters.
 
-This skill owns the decision. It owns no framework, no assertion syntax, no fixture library, and no Ala value.
+This skill owns test design and generic execution policy, usable directly or through either runtime. It owns no framework syntax, fixture library or Ala value. Activating it installs nothing and grants no environment-mutation authority.
 
 ## When this applies
 
-Any change that adds or alters a behaviour, a control, a contract, a dependency call, a stored effect, or a failure path; any work on a test suite itself — writing, reviewing, repairing, quarantining, deleting, or speeding up; any diagnosis of a test that fails intermittently or passes against broken code; and any moment before a check is reported as passed.
+Any change that adds or alters a behaviour, a control, a contract, a dependency call, a stored effect, or a failure path; any work on a test suite itself — writing, reviewing, repairing, quarantining, deleting, or speeding up; any diagnosis of a test that fails intermittently or passes against broken code; and any selection, execution or reporting of validation commands, CPU-heavy checks or comparative timing.
 
-It does not apply to a change that alters no behaviour and no test: a comment, a formatting pass, a rename with no call-site semantics, or a docs-only edit.
+Test-design obligations do not apply to a change that alters no behaviour and no test: a comment, formatting pass, rename with no call-site semantics or docs-only edit. Execution and reporting policy still applies when that change runs validation.
 
 **No shipped surface is exempt.** Every route, queue consumer, job, scheduled task, and published request this project ships carries at least one test meeting the core rule below; which behaviour behind it is owed a test is decided under *Whether a test is owed*. The surface that issues credentials is the least exempt of all: a validator run over this platform's own API collection found 73 requests with no test at all, including the entire Auth folder — the requests that issue tokens asserted nothing. That is the failure this skill exists to prevent, because a credential surface is the one place where silent breakage grants access rather than removing it.
 
@@ -125,20 +125,15 @@ A required final aggregate may discharge covered narrower checks only when the c
 
 ### A failing tier is classified before it is repaired
 
-Classify first, then act, because a repair applied to the wrong class is how a host-environment problem becomes an edit to the product. Four classes stay separate: a defect in the product; a defect in the test harness, fixture, or runner; a host-environment block — the shell, the container runtime, a permission, a missing executable or service; and a contaminated tree, including stale build or test cache. `/alaa-cc-orchestrator` (`/alaa-codex-orchestrator` in Codex) `references/failure-taxonomy.md` owns the status vocabulary and the host sub-classes; this skill owns what each class licenses you to conclude, and no class licenses reporting the change as passed.
+Classify first, then act, because a repair applied to the wrong class is how a host-environment problem becomes an edit to the product. Four classes stay separate: a defect in the product; a defect in the test harness, fixture, or runner; a host-environment block — the shell, the container runtime, a permission, a missing executable or service; and a contaminated tree, including stale build or test cache. `references/120-result-classification.md` owns the status vocabulary and the host sub-classes; this skill owns what each class licenses you to conclude, and no class licenses reporting the change as passed.
 
 A tier is never made to pass by deleting an assertion, widening a tolerance, adding a retry, skipping a case, or lowering a threshold. An unreachable tier is reported unreached with its blocker named, under `references/80-evidence-and-reporting.md`.
 
-### On a Windows host, a long process-heavy gate runs in the CI job image
+## Executing checks
 
-When the host is Windows and an affected- or exhaustive-tier gate is long (its last host run, or the repository's documentation, exceeds ten minutes) and process-heavy — shell suites, or many short CLI invocations — run it in a container of the Linux image the repository's CI runs that gate in, as named by its CI configuration or documentation. Process creation under Git Bash or MSYS makes such a gate several times slower, and the CI image's tool variants (for example BusyBox instead of GNU utilities) expose defects a Windows run hides.
+For any direct or delegated validation run, use the execution routes in `references/00-topic-map.md` before choosing commands, resources or result status. Runtime orchestration is optional; role allocation, observer independence and phase/review scheduling remain with the caller's runtime orchestrator.
 
-- Mount the worktree read-only and run the gate on a copy inside the container's filesystem that includes the git metadata the gate reads: a bind mount is slow, and a writable one lets the gate change the tree.
-- Run the CI job's own setup steps and services once per pass, and run every gate of that pass in the same container.
-- Use the gate's own parallel mode when it has one, otherwise run it sequentially; never parallelize its steps yourself.
-- Report the image reference and that the result is container evidence. Host and container are different environments under the validity rule above, so neither result is cited for the other.
-- A tool the gate invokes that behaves differently in the CI image is a product or harness defect, because CI runs that image; a setup, mount, copy, or missing-service failure stays a host-environment block.
-- Run on the host instead, and report why, when Docker is unavailable, when the image is neither present locally nor pullable as a declared action from a registry the repository allows, or when repository policy places the gate on the host. Never substitute another image.
+When changing this skill's execution policy or consumer routes, run `python scripts/check_execution_contracts.py` from this skill directory; after checker logic changes also run `python scripts/check_execution_contracts.py --self-test`. For runner changes, run `python scripts/test_execution_runners.py --platform posix` for POSIX target coverage; use `python scripts/test_execution_runners.py --platform windows` only when native Windows is in the declared target coverage (`--platform all` requests both). The checker returns `0` clean, `1` findings, `2` unavailable input; the runner harness returns `0` probes passed, `1` probe failure, `2` requested native platform or input unavailable. Either nonzero blocks the affected claim: preserve evidence, repair within the caller's existing budget or report blocked; never treat `2` as a pass. These maintainer checks do not run on ordinary application tasks. Source checks prove no live-agent compliance.
 
 ## Output contract
 
@@ -158,6 +153,8 @@ Shared setup: per expensive resource, scope (run | package | worker) and per-tes
 Build reuse: per build, compile, render, or image -> the steps that consumed it
 Evidence: per claim -> command run, working directory, proof level reached, observed outcome, artifact path
 Tier: focused | task acceptance | affected | exhaustive -> run now, or cited from an earlier run with the four validity conditions named as still holding
+Execution: check-list snapshot, expected/selected/executed cases, machine-readable reports, resources and collection/repair/retest state
+Status: per command -> classification under references/120-result-classification.md; timing claims -> samples and limits under references/110-execution-resources.md
 Flake: any intermittent result -> classified product defect | broken test -> action taken and owner
 Gaps: claims with no test, levels not reached and the blocker, quarantined tests and their deadlines
 ```
@@ -172,7 +169,7 @@ Stop and report blocked when: a behaviour cannot be placed at any layer because 
 
 - The question is framework idiom or assertion syntax: which matcher to call, how to name the file, which
   helper the runner already provides. The per-language skill owns that.
-- No test is being written, reviewed, repaired, or claimed as passing.
+- No test is being designed, reviewed or repaired, and no validation command, resource decision, timing comparison or result claim is involved.
 - The question is fault injection, a security control, an envelope or code, or a Postman request test. The
   routing table below names each owner.
 
@@ -189,7 +186,7 @@ Before reading any reference, read `references/00-topic-map.md`; it names the co
 - `/alaa-observability-soc` owns the failure-mode enumeration table and the signal, query, and alert each mode needs — `references/10-signal-model.md`. This skill consumes the same enumeration to derive tests; neither skill maintains a second list.
 - `/alaa-controlled-ops` owns its own package and adopter release gates and its boundary-check script. This skill owns the proof-level vocabulary those gates report in.
 - The per-language skills and the vendored `/golang-testing` own framework idiom, assertion syntax, fixture and mock libraries, table-driven form, and runner flags. This skill owns the decision; it names no framework construct.
-- The `alaa-verifier` role in `/alaa-cc-orchestrator` (`/alaa-codex-orchestrator` in Codex) owns command execution, resource policy, low-priority runners, artifact directories, and the status vocabulary a run is reported in — `references/failure-taxonomy.md`. This skill owns what each status licenses a reader to conclude, which tier had the right to run, and whether an earlier result is still citable.
+- `/alaa-cc-orchestrator` and `/alaa-codex-orchestrator` own role authority, observer independence, allocation and phase/review scheduling. `/alaa-workflow` owns durable execution state, write ownership and resume. Generic execution, resources, runners and classification remain in this skill.
 - `/alaa-prompting-guide` owns model/effort capability evidence and runtime mechanics; the runtime orchestrator owns actual task allocation for every authority role. This skill names no model.
 
 ## Anti-patterns

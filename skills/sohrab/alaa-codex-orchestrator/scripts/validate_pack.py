@@ -5,7 +5,8 @@ import argparse
 import json
 from pathlib import Path
 from check_agent_contracts import (agent_failures, dispatch_failures, orchestrator_failures,
-                                   task_allocation_failures, cadence_failures, cadence_sources)
+                                   task_allocation_failures, cadence_failures, cadence_sources,
+                                   execution_contract_api)
 from render_agents import policy_api, expected_outputs, drift
 import re
 import subprocess
@@ -91,6 +92,13 @@ except (OSError, ValueError) as exc:
 
 errors: list[str] = []
 
+try:
+    execution = execution_contract_api()
+    errors.extend(execution.failures(execution.load_sources()))
+except (OSError, UnicodeError, ValueError, KeyError) as exc:
+    print(f"canonical execution policy unavailable: {exc}", file=sys.stderr)
+    raise SystemExit(2)
+
 skill = (ROOT / "SKILL.md").read_text(encoding="utf-8")
 errors.extend(orchestrator_failures(skill))
 errors.extend(cadence_failures(*cadence_sources()))
@@ -170,7 +178,11 @@ for name in REQUIRED:
     if name not in skill and name not in routing:
         errors.append(f"agent absent from skill/routing: {name}")
 
-if "--browser chromium" not in skill or "--browser chromium" not in (ROOT / "references/resource-policy.md").read_text(encoding="utf-8"):
+for relative in ("scripts/run-low-priority.sh", "scripts/Invoke-AlaaLowPriority.ps1"):
+    if not (execution.ROOT / relative).is_file():
+        errors.append(f"missing canonical execution runner: {relative}")
+
+if execution.RESOURCES not in skill or "--browser chromium" not in (execution.ROOT / execution.RESOURCES).read_text(encoding="utf-8"):
     errors.append("hard browser chromium preservation rule is missing")
 
 for path in sorted(ROOT.rglob("*")):

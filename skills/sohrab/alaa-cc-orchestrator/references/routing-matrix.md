@@ -81,7 +81,7 @@ Select the bounded semantic branch of `alaa-implementer-haiku` only when the pla
 
 Legacy exceptional IDs `alaa-implementer-fable` remain implementation authority identities. They set no model or effort. Apply the all-role exceptional model admission above only when the selected task pair is exceptional; record its evidence before dispatch. Missing facts, unavailable tools and unresolved product intent return to their owners. An unresolved decision alone never establishes model inadequacy.
 
-Reassess remaining work only at existing initial-assignment, material-scope-change and fix-follow-up boundaries. Continue while the same reason applies; do not switch during a command or ordinary progress update. Before replacing a writer, retire its assignment and reconcile surviving edits/checkpoint. Hand off remaining scope, acceptance criteria and evidence; preserve independent gates, never overlap writers or replay completed work.
+Reassess remaining work only at existing initial-assignment, material-scope-change and fix-follow-up boundaries. Continue while the same reason applies; do not switch during a command or ordinary progress update. Before replacing a writer, apply `alaa-workflow references/workspace-and-integration.md` stopped-writer recovery, then retire its assignment. Hand off remaining scope, acceptance criteria and evidence; preserve independent gates, never overlap writers or replay completed work.
 
 Read `model-effort-policy.md` before profile changes.
 

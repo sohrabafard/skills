@@ -47,6 +47,7 @@ Knowledge held only in the current agent's head disappears on compaction. Fill a
 
 | Skill | Source | Load before | When | If unavailable |
 |---|---|---|---|---|
+| alaa-testing-strategy | NEEDS_FILL | before designing implementation or verification, including workflow scripts | always for implementation/verification | block dependent work |
 | NEEDS_FILL | NEEDS_FILL | NEEDS_FILL | NEEDS_FILL | NEEDS_FILL |
 
 ## Ordered Work
@@ -71,7 +72,7 @@ Prompting-guide supplies capability/mechanics evidence; workflow stores decision
 - Keep shared-context work in the main conversation.
 - Independent lane ownership, if admitted: none.
 {{task_delegation}}
-- Disjoint writes and shared-resource conflicts: NEEDS_FILL
+- Disjoint writes and shared-resource conflicts: NEEDS_FILL; apply /alaa-workflow `references/workspace-and-integration.md` for shared-file ownership and stopped-writer recovery.
 - Integration barriers and parallel/serialized rationale: NEEDS_FILL
 - Consolidated tasks/checks and preserved outcome/evidence mappings: NEEDS_FILL
 - Phase collection, repair/retest and review barriers, owners and resume evidence: NEEDS_FILL; apply the active runtime orchestrator's verification-and-gates.md.

@@ -119,7 +119,7 @@ First resolve the artifact family and kind through `references/artifact-lifecycl
 5. **The files named in "read first on resume."**
 6. **JSON state**, only for a consumer that needs it; reconcile it with canonical owners rather than trusting it independently.
 
-Then verify position against reality: check `git status`, the diff, source/deliverable availability and attributable evidence against the cursor's touched surfaces. Reconcile stale task/phase/status snapshots before acting and record what was stale. `references/workspace-and-integration.md` owns evidence reuse: unchanged attributable proof survives a new session or PC, while affected proof does not. A remembered result or another PC's inaccessible source is insufficient.
+Before overlapping writes after interruption or replacement, apply `references/workspace-and-integration.md` `## Shared-file ownership and stopped-writer recovery`; compaction preserves living ownership. Then verify position against reality: check `git status`, the diff, source/deliverable availability and attributable evidence against the cursor's touched surfaces. Reconcile stale task/phase/status snapshots before acting and record what was stale. `references/workspace-and-integration.md` owns evidence reuse: unchanged attributable proof survives a new session or PC, while affected proof does not. A remembered result or another PC's inaccessible source is insufficient.
 
 Before the next execution task, resolve and load its phase bindings and task overrides through `references/companion-routing.md`. Recheck mapped availability when the runtime or installed catalog changed; historical mappings do not prove current availability.
 

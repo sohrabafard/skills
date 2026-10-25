@@ -10,7 +10,11 @@ allowed-tools: Read, Grep, Glob, Bash
 
 ## When to use
 
-Use for questions such as “is CodeGraph active?”, “does this Codex hook need approval?”, or “can Hindsight connect now?” in a repository. Do not use it to configure, upgrade, or remove those systems unless that work is explicitly requested.
+Use for questions such as “is CodeGraph active?”, “does this Codex hook need approval?”, or “can Hindsight connect now?” in a repository.
+
+## When NOT to use
+
+Do not use it to configure, upgrade, or remove those systems unless that work is explicitly requested.
 
 ## Inputs / context to gather
 

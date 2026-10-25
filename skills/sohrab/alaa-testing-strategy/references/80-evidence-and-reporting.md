@@ -44,7 +44,7 @@ Three rules settle the common disputes:
 
 Changing a command, a flag, a timeout, an environment variable, a fixture, or a seed produces a result for a *different* check. Report both: the original command with its failure, and the altered command with its result, stated as two separate rows. The reviewer decides whether the alteration was legitimate; the report does not decide it by omitting the first row.
 
-`/alaa-cc-orchestrator` (`$alaa-codex-orchestrator` in Codex) owns the execution-side rule about which commands may be run and under what resource policy through its `alaa-verifier` role. This file owns only how the result is reported and what it means.
+Before choosing or running commands, read `100-test-execution.md` for execution policy and `110-execution-resources.md` for resources; before interpreting outcomes, read `120-result-classification.md`. This file owns claim evidence and proof reporting.
 
 ## A removal or mutation experiment
 

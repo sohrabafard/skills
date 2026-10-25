@@ -1,0 +1,3 @@
+artifacts/test-execution-ownership/report.md: GREEN 34 physical lines
+outputs/README.md: GREEN 27 physical lines
+Validated links, line budgets in 2 Markdown file(s) under /home/sohrab/project/skills.

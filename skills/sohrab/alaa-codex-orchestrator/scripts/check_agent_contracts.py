@@ -11,6 +11,15 @@ import sys
 
 ROOT = Path(__file__).resolve().parent.parent
 
+
+def execution_contract_api():
+    import types
+    path = ROOT.parent / "alaa-testing-strategy/scripts/check_execution_contracts.py"
+    module = types.ModuleType("alaa_execution_contracts")
+    module.__file__ = str(path)
+    exec(compile(path.read_text(encoding="utf-8"), str(path), "exec"), module.__dict__)
+    return module
+
 # Complete reviewed clauses, never isolated keyword scores. This is a finite
 # source regression gate; arbitrary semantic equivalence still needs review.
 EQUIVALENT_REQUIREMENTS = {
@@ -146,20 +155,18 @@ IMPLEMENTER_REQUIREMENTS = (
     "this grants no boundary affected/exhaustive authority",
     "whole-engagement cadence and exact phase/task/subtask cursor",
 )
-GATE_REQUIREMENTS = (
-    "Before implementation or fix-cycle dispatch, classify actual command scope, never tier labels",
-    "send focused commands to subtask workers and explicitly bounded task-acceptance commands to the task owner",
-    "reserve affected/exhaustive commands for boundary gates",
-    "Retain required retrieval, focused implementer checks and independent acceptance gates",
-    "Role definitions own dispatch-conflict handling",
-    "reconcile every excluded command and unrun check before accepting the lane",
-    "reuse requires the correct observer as well as unchanged tree",
-    "tool/dependency versions, environment/service state, and flags/seed/cwd",
-    "Independent acceptance requires an observer independent of the implementation with authority for that gate",
-    "An implementer's broad PASS cannot discharge it, even with unchanged inputs",
-    "cite valid unchanged independent evidence instead of repeating it",
-    "excludes exhaustive results from reuse",
-    "Run any required exhaustive tier once, fresh on the final candidate after documentation",
+GATE_REQUIREMENTS = ('Before implementation or fix-cycle dispatch, classify actual command scope, never tier labels',
+ 'send focused commands to subtask workers and explicitly bounded task-acceptance commands to the '
+ 'task owner',
+ 'reserve affected/exhaustive commands for boundary gates',
+ 'Retain required retrieval, focused implementer checks and independent acceptance gates',
+ 'Role definitions own dispatch-conflict handling',
+ 'reconcile every excluded command and unrun check before accepting the lane',
+ 'Independent acceptance additionally requires an observer independent of the implementation with '
+ 'authority for that gate',
+ "An implementer's broad PASS cannot discharge it",
+ 'cite eligible independent evidence instead of repeating it',
+ 'Run any required exhaustive tier once, fresh on the final candidate after documentation',
 )
 
 
@@ -209,7 +216,7 @@ def economy_failures(skill: str, gates: str, routing: str | None = None) -> list
     for required in ("## Admission", "route a single bounded edit", "logical outcomes", "Coalesce compatible actions"):
         if required not in skill:
             errors.append(f"missing economical intake/pipeline contract: {required}")
-    for required in ("observed host slots", "resource ceilings", "integration barriers", "only one CPU-heavy", "Phase transitions and new agents alone earn no rerun", "workflow-selected", "references/context-curation.md"):
+    for required in ("observed host slots", "resource ceilings", "integration barriers", "references/110-execution-resources.md", "workflow-selected", "references/context-curation.md"):
         # Workspace selection is stated as current-checkout in the gates.
         if required == "workflow-selected":
             required = "current-checkout or isolation decision"
@@ -312,33 +319,40 @@ def task_allocation_failures(routing: str, controls: str) -> list[str]:
 
 # Cadence assertions are source contracts, not a simulation of agent obedience.
 # Workflow owns hierarchy validation; this consumer checks its scheduling seam.
-CADENCE_REQUIREMENTS = (
-    "Stages A-F name required orchestration outcomes and authority, not workflow phases",
-    "New phased/delegated work uses the bound Beads phase-task-subtask hierarchy",
-    "Existing unmarked/local families retain their original contract until explicit migration",
-    "`Review boundary: phase|final`", "`Final phase`", "`Commit authority`",
-    "`Review status`", "`Review evidence`",
-    "Pass that whole-engagement contract, plan reference and exact phase/task/subtask cursor into every nested invocation",
-    "Missing or inconsistent executing mappings block dependent dispatch",
-    "Nested goals never reset the boundary or relabel intermediate output as final",
-    "The implementer runs the smallest focused discriminating check",
-    "The task owner runs bounded task-acceptance selectors across its subtasks",
-    "Never dispatch independent subtask/task review or make a subtask/task commit",
-    "intermediate phases retain `REVIEW_PENDING`",
-    "tested issue closure advances readiness without claiming reviewed acceptance",
-    "Under `phase`, only the declared phase end earns review",
-    "Preserve stricter genuine repository gates and necessary focused feedback",
-    "return the conflict to the plan owner rather than silently skipping either rule",
-    "successful required review, accepted fixes and retests trigger the integration parent's Conventional Commit on the current branch",
-    "Reuse a recorded standing user grant; do not invent another approval",
-    "Without that grant, or after failed review/tests, preserve an identified uncommitted snapshot",
-    "Worker roles never gain commit authority",
-    "Stage C runs at each phase implementation end; Stage D and final E gates wait for the inherited boundary",
-    "The exhaustive tier belongs only to the whole engagement's final candidate after final documentation when required",
-    "covered inputs, environment, flags and required observer match demonstrably",
-    "Markdown and templates can be checker inputs: documentation-only change proves no equivalence",
-    "never weaken tests or review to obtain a pass",
-)
+CADENCE_REQUIREMENTS = ('Stages A-F name required orchestration outcomes and authority, not workflow phases',
+ 'New phased/delegated work uses the bound Beads phase-task-subtask hierarchy',
+ 'Existing unmarked/local families retain their original contract until explicit migration',
+ '`Review boundary: phase|final`',
+ '`Final phase`',
+ '`Commit authority`',
+ '`Review status`',
+ '`Review evidence`',
+ 'Pass that whole-engagement contract, plan reference and exact phase/task/subtask cursor into '
+ 'every nested invocation',
+ 'Missing or inconsistent executing mappings block dependent dispatch',
+ 'Nested goals never reset the boundary or relabel intermediate output as final',
+ 'The implementer runs the smallest focused discriminating check',
+ 'The task owner runs bounded task-acceptance selectors across its subtasks',
+ 'Never dispatch independent subtask/task review or make a subtask/task commit',
+ 'intermediate phases retain `REVIEW_PENDING`',
+ 'tested issue closure advances readiness without claiming reviewed acceptance',
+ 'Under `phase`, only the declared phase end earns review',
+ 'Preserve stricter genuine repository gates and necessary focused feedback',
+ 'return the conflict to the plan owner rather than silently skipping either rule',
+ "successful required review, accepted fixes and retests trigger the integration parent's "
+ 'Conventional Commit on the current branch',
+ 'Reuse a recorded standing user grant; do not invent another approval',
+ 'Without that grant, or after failed review/tests, preserve an identified uncommitted snapshot',
+ 'Worker roles never gain commit authority',
+ 'Stage C runs at each phase implementation end; Stage D and final E gates wait for the inherited '
+ 'boundary',
+ "The exhaustive tier belongs only to the whole engagement's final candidate after final "
+ 'documentation when required',
+ 'Independent acceptance additionally requires an observer independent of the implementation with '
+ 'authority for that gate',
+ 'references/100-test-execution.md',
+ 'references/120-result-classification.md',
+ 'Never weaken review to obtain a pass.')
 
 
 def cadence_failures(skill: str, gates: str, dispatch: str,
@@ -351,7 +365,7 @@ def cadence_failures(skill: str, gates: str, dispatch: str,
                    "Correct sparingly", "Calibrate length", "Keep dispatches lean",
                    "Do not restate the native role definition",
                    "for gate economics and independent acceptance",
-                   "hard user constraint on browser choice", "--browser chromium"):
+                   "references/110-execution-resources.md"):
         if not contract_present(clause, skill):
             errors.append(f"missing mirrored body contract: {clause}")
     if "Remove repetition only without new changes" in skill:
@@ -382,8 +396,13 @@ def cadence_failures(skill: str, gates: str, dispatch: str,
         r"commit on the work branch before expensive verification",
         r"(?:weaken|skip) (?:failed tests|assertions|review) to (?:obtain|force) a pass",
     )
+    # The required prohibition is not an instruction to perform the forbidden
+    # action. Remove only that complete negative clause before matching; a
+    # conflicting positive instruction elsewhere must still be rejected.
+    forbidden_text = re.sub(r"\bnever weaken review to obtain a pass\b", "",
+                            " ".join(gates.split()), flags=re.I)
     for pattern in forbidden:
-        if re.search(pattern, gates, re.I):
+        if re.search(pattern, forbidden_text, re.I):
             errors.append(f"contradictory scheduling instruction: {pattern}")
     return errors
 
@@ -490,11 +509,25 @@ def cadence_sources() -> tuple[str, ...]:
 def cadence_self_tests() -> list[tuple[str, bool]]:
     sources = cadence_sources()
     cases = [("inherited phase/final cadence accepted", not cadence_failures(*sources))]
+    # Topic: review integrity; layer: structural source contract. Negation,
+    # casing and wrapping do not turn a prohibition into a positive command.
+    prohibition = "Never weaken review to obtain a pass."
+    for variant in (prohibition, prohibition.upper(), prohibition.replace(" ", "\n")):
+        unchanged = list(sources)
+        unchanged[1] = unchanged[1].replace(prohibition, variant)
+        cases.append((f"review weakening prohibition accepted: {variant!r}",
+                      not cadence_failures(*unchanged)))
+    for positive in ("Weaken review to obtain a pass.", "Weaken\nreview to obtain a pass."):
+        broken = list(sources)
+        broken[1] += "\n" + positive
+        cases.append((f"review weakening command rejected with prohibition intact: {positive!r}",
+                      any(error.startswith("contradictory scheduling instruction:")
+                          for error in cadence_failures(*broken))))
     for clause in CADENCE_REQUIREMENTS:
         broken = list(sources)
         broken[1] = broken[1].replace(clause, "omitted")
         cases.append((f"cadence requires {clause}", bool(cadence_failures(*broken))))
-    for index, clause in ((0, "Correct sparingly"), (0, "hard user constraint on browser choice"),
+    for index, clause in ((0, "Correct sparingly"), (0, "references/110-execution-resources.md"),
                           (2, "<cadence>"), (2, "Delegated lanes"),
                           (3, "this grants no boundary affected/exhaustive authority"),
                           (4, "existing-family compatibility"), (5, "<review_boundary>")):
@@ -515,40 +548,33 @@ def cadence_self_tests() -> list[tuple[str, bool]]:
     return cases
 
 
-# Topic: phase collection and batch repair; layer: structural source contract.
-# These fixtures reject source regressions, not simulate a live agent scheduler.
+# Topic: runtime collection scheduling; layer: structural source contract.
+# Generic execution assertions and their mutations have one shared owner below.
 COLLECTION_REQUIREMENTS = (
-    "run every required runnable phase check centrally once through `alaa-verifier`",
-    "A failure does not cancel independent remaining checks",
-    "Record each command's exit/result and each unrun check's blocker",
-    "A fail-fast aggregate proves only executed coverage: dispatch its supported keep-going mode or exact uncovered child commands; preserve failure exits",
-    "Combine the full collection's failures verbatim into one serialized fix lane with explicit scope/ownership; retire conflicting writers",
-    "Classify first, use the failure analyst for ambiguous ownership and preserve environment/security authority limits",
-    "Only a failure blocking all or most remaining checks permits a minimal early repair",
-    "record blocked checks and cause, repair only that obstruction",
-    "then run or resume all required checks, including previously blocked checks, before any Review",
-    "Invalidate affected evidence",
-    "After batch repair, independent verification reruns the whole recorded check list, including checks it discharged by citation, before Stage D",
-    "Unresolved required checks block Review and acceptance",
-    "Keep existing retry/stop budgets",
-    "Continue safe independent checks; stop unsafe or contaminated execution and name affected unrun checks, without calling collection complete",
+    "At each phase implementation end, `alaa-verifier` executes the canonical collection barrier",
+    "Review waits until required collection, batch repair and retests pass",
+    "The canonical minimal early-repair exception returns to collection without Review",
+    "Assign the collected repair batch as one serialized implementation lane",
+    "reconcile conflicting writers through `alaa-workflow references/workspace-and-integration.md` before continuing",
+    "The analyst diagnoses and never fixes",
+    "Independent verification owns the canonical whole-list retest after batch repair",
+    "implementer evidence never replaces independent acceptance",
+    "Existing retry/stop budgets remain in force",
     "final-only review defers acceptance, not phase test collection",
     "Stage C runs at each phase implementation end; Stage D and final E gates wait for the inherited boundary",
-    "after Stage C's collection, batch repair and required retests pass",
 )
 COLLECTION_SEAMS = {
-    "taxonomy": (
-        "Identify its behavior owner; repair scheduling follows `verification-and-gates.md` Gate economics",
-        "Identify required infrastructure scope in the combined repair assignment under `verification-and-gates.md` Gate economics",
-    ),
+    "taxonomy": ("/alaa-testing-strategy", "references/120-result-classification.md"),
     "routing": (
         "Test failures, including clear single-owner failures: collect and route one combined batch",
         "never return each failure immediately to its original lane",
+        "Ambiguous, cross-lane, flaky, timeout, environment, or contamination failure: `alaa-failure-analyst` first",
+        "Environment actions require their existing authority",
     ),
-    "verifier": ("<collection_barrier>", "collect all runnable commands and failures; no fixes or Review during collection"),
+    "verifier": ("<collection_barrier>", "Execute the canonical collection barrier through this independent verifier"),
     "repair": ("single serialized batch fix lane", "For an admitted early repair, scope only the recorded obstruction and return to collection without Review"),
     "workflow": ("Record phase test-collection, repair/retest and inherited review barriers",),
-    "planning": ("Record each phase's post-reconciliation test collection, combined repair/retest and declared review barriers", "workflow records these barriers without redefining their policy"),
+    "planning": ("Record each phase's post-reconciliation test collection, combined repair/retest and declared review barriers", "Workflow records barriers without redefining them"),
     "plan_template": ("Phase collection, repair/retest and review barriers, owners and resume evidence",),
     "phase_template": ("Collection/repair/retest barrier and evidence owner",),
     "prompt_routing": ("Carry the plan's phase collection and repair/retest barriers and their evidence owner",),
@@ -565,14 +591,7 @@ COLLECTION_CONTRADICTIONS = (
     "Send a grounded fix request to the owning implementer afterward",
     "Resolve cheap findings before an expensive gate",
     "Stages C/D and final E gates wait for the inherited boundary",
-    "Stop collection after the first failed command",
-    "Start one repair lane for each failed test",
-    "Any failed check permits an early repair",
-    "Review immediately after the minimal early repair",
-    "A fail-fast aggregate proves all required checks ran",
-    "Skip previously blocked checks after early repair",
     "Under final-only review, defer all phase test collection until final review",
-    "Collection resets the retry budget",
 )
 
 
@@ -595,8 +614,7 @@ def collection_sources() -> dict[str, str]:
 
 def collection_failures(sources: dict[str, str]) -> list[str]:
     errors = []
-    requirements = {"gates": COLLECTION_REQUIREMENTS, **COLLECTION_SEAMS}
-    for name, clauses in requirements.items():
+    for name, clauses in {"gates": COLLECTION_REQUIREMENTS, **COLLECTION_SEAMS}.items():
         for clause in clauses:
             if not contract_present(clause, sources[name]):
                 errors.append(f"{name}: missing collection contract: {clause}")
@@ -608,94 +626,52 @@ def collection_failures(sources: dict[str, str]) -> list[str]:
 
 
 def collection_self_tests() -> list[tuple[str, bool]]:
-    # Immutable source setup; each mutation receives a fresh dictionary.
     sources = collection_sources()
-    cases = [("phase collect/repair/retest/review source accepted", not collection_failures(sources))]
+    cases = [("runtime collection scheduling accepted", not collection_failures(sources))]
     for name, clauses in {"gates": COLLECTION_REQUIREMENTS, **COLLECTION_SEAMS}.items():
         for clause in clauses:
             broken = {**sources, name: sources[name].replace(clause, "omitted")}
             diagnostic = f"{name}: missing collection contract: {clause}"
             cases.append((f"{name}: requires {clause}", diagnostic in collection_failures(broken)))
-    # Contradictions remain rejected when every positive clause is still present.
     for name in sources:
         for clause in COLLECTION_CONTRADICTIONS:
             broken = {**sources, name: sources[name] + "\n" + clause}
             diagnostic = f"{name}: contradictory collection contract: {clause}"
             cases.append((f"{name}: rejects {clause}", diagnostic in collection_failures(broken)))
-    # Isolate the load-bearing clauses in representative failure scenarios.
-    for scenario, clauses in (
-        ("A fails, B runs, C fails, then one combined repair", COLLECTION_REQUIREMENTS[:5]),
-        ("setup blocks most checks: minimal repair then full collection without Review", COLLECTION_REQUIREMENTS[6:10]),
-        ("one blocked test leaves safe independent checks runnable", (COLLECTION_REQUIREMENTS[1], COLLECTION_REQUIREMENTS[13])),
-        ("fail-fast coverage requires uncovered children with preserved failures", (COLLECTION_REQUIREMENTS[3],)),
-        ("final-only review still collects each phase", COLLECTION_REQUIREMENTS[14:16]),
-        ("retest before Review without a fresh retry budget", (COLLECTION_REQUIREMENTS[10], COLLECTION_REQUIREMENTS[12], COLLECTION_REQUIREMENTS[16])),
-    ):
-        for clause in clauses:
-            broken = {**sources, "gates": sources["gates"].replace(clause, "omitted")}
-            diagnostic = f"gates: missing collection contract: {clause}"
-            cases.append((scenario + ": " + clause, diagnostic in collection_failures(broken)))
     return cases
 
 
 # Topic: run economy and failure locality; layer: structural source contract.
 # Each pack carries the same behavioural rules; the sibling pack is checked too
 # because the mirrored pair must decide identically.
-RUN_ECONOMY_REQUIREMENTS = {
-    "gates": (
-        "Draw the fewest lanes that keep write scopes disjoint and buy real parallelism",
-        "sequential work in one scope stays one lane",
-        "The lane, not the subtask, is the dispatch unit",
-        "when the runner has a list or collect mode, dispatch it to the verifier as its own command before the first run",
-        "otherwise compare the selected cases in the first run's report with the expected ones",
-        "A command without a test selector, such as lint, type-check, build or render, skips this check",
-        "Then assign it by continuing the existing implementer whose still-valid assignment and context cover most failures",
-        "through a continuation tool the current host documents for that agent",
-        "dispatch fresh only when no continuation is available, that context is invalid, or Implementation routing selects another profile or task pair",
-        "After batch repair, independent verification reruns the whole recorded check list, including checks it discharged by citation, before Stage D",
-        "independently rerun the whole recorded check list, including outstanding required checks",
-    ),
-    "skill": ("mechanical-edit exception", "in files no active or pending lane owns",
-              "or the lead made a mechanical edit, select `standard`"),
-    "taxonomy": (
-        "whose selection is empty or differs from the expected cases recorded for it is `TEST-INFRA-FAILURE`, never `PASS`",
-        "including whole-suite discovery and each covered child of an aggregate",
-        "inside a container run, an incomplete copy or mount is instead `ENVIRONMENT-BLOCKED`",
-        "A list or collect selection check executes no case by design: it is `PASS` when it lists exactly the expected cases",
-        "A scoped lint, type-check or build command whose scope matches no file is `TEST-INFRA-FAILURE`",
-        "selected cases but executed none takes the class its skip reasons name",
-        "earns no further full run",
-    ),
-    "dispatch": ("proving command or selector -> expected result, or review-only: reason",
-                 "the child re-derives none of them"),
-    "repair": ("as the continuation message rather than a new envelope",
-               "if Implementation routing changed the profile or task pair, dispatch fresh under Gate economics instead"),
-    "verifier_agent": ("cases selected/passed/failed/skipped/not run (n/a without a test selector)",
-                       "the selected-case list or its report path", "first causal error with file:line", "stage (setup | execution | assertion | cleanup)",
-                       "Group cases sharing one first causal error"),
-    "implementation_contract": ("settled decision a later lane or repair owner must know",),
-    "testing_strategy": (
-        "any result in a collected check list after its batch repair",
-        "A case failing never stops an independent case from running",
-        "reported `SKIPPED` naming that precondition",
-        "makes every later result over that state `CONTAMINATED`",
-    ),
-    "test_economy": ("A failure alone never justifies deleting a test", "## Existing tests on a touched topic"),
-}
+RUN_ECONOMY_REQUIREMENTS = {'gates': ('Draw the fewest lanes that keep write scopes disjoint and buy real parallelism',
+           'sequential work in one scope stays one lane',
+           'The lane, not the subtask, is the dispatch unit',
+           'Continue the existing implementer whose valid assignment and context cover most '
+           'failures through a host-supported continuation tool',
+           'Dispatch fresh only when continuation is unavailable, context is invalid',
+           'selects another profile or task pair',
+           'Independent verification owns the canonical whole-list retest after batch repair'),
+ 'skill': ('mechanical-edit exception',
+           'in files no active or pending lane owns',
+           'or the lead made a mechanical edit, select `standard`'),
+ 'dispatch': ('proving command or selector -> expected result, or review-only: reason',
+              'the child re-derives none of them'),
+ 'repair': ('as the continuation message rather than a new envelope',
+            'if Implementation routing changed the profile or task pair, dispatch fresh under Gate '
+            'economics instead'),
+ 'verifier_agent': ('cases selected/passed/failed/skipped/not run (n/a without a test selector)',
+                    'the selected-case list or its report path',
+                    'first causal error with file:line',
+                    'stage (setup | execution | assertion | cleanup)',
+                    'Group cases sharing one first causal error',
+                    "runner's machine-readable report when it has one"),
+ 'implementation_contract': ('settled decision a later lane or repair owner must know',)}
 # Each retired phrase is checked only in the source that used to carry it.
-RUN_ECONOMY_CONTRADICTIONS = {
-    "gates": (
-        "Split into the smallest practical disjoint lanes",
-        "independent verification reruns failed and invalidated checks",
-        "rerun failed topic selectors and checks whose inputs changed",
-    ),
-    "skill": (
-        "It must not implement while viable implementers are available",
-        "keep work finishable in a handful of tool calls inline",
-    ),
-    "verifier_agent": ("concise error excerpts",),
-    "taxonomy": ("A command whose selector executed zero cases",),
-}
+RUN_ECONOMY_CONTRADICTIONS = {'gates': ('Split into the smallest practical disjoint lanes',),
+ 'skill': ('It must not implement while viable implementers are available',
+           'keep work finishable in a handful of tool calls inline'),
+ 'verifier_agent': ('concise error excerpts',)}
 
 
 def run_economy_sources(root: Path = ROOT) -> dict[str, str]:
@@ -834,12 +810,14 @@ def self_test() -> int:
         ("blanket no-verification rejected", bool(orchestrator_failures(skill + "\n**Do not add verification instructions.**"))),
         ("invented watchdog rejected", bool(orchestrator_failures(skill + "\nA watchdog ends a lane on silence rather than on duration"))),
     ]
+    shared = execution_contract_api()
+    cases.extend(shared.self_test())
     cases.extend(collection_self_tests())
     cases.extend(run_economy_self_tests())
     cases.extend(cadence_self_tests())
     cases.extend(specialist_cadence_self_tests())
     cases.append(("economical execution accepted", not economy_failures(skill, gates)))
-    for required in ("observed host slots", "resource ceilings", "integration barriers", "only one CPU-heavy", "Phase transitions and new agents alone earn no rerun", "current-checkout or isolation decision", "references/context-curation.md"):
+    for required in ("observed host slots", "resource ceilings", "integration barriers", "references/110-execution-resources.md", "current-checkout or isolation decision", "references/context-curation.md"):
         cases.append((f"economics {required} required", bool(economy_failures(skill, gates.replace(required, "omitted")))))
     for forbidden in ("at most two workspace-writing", "Dispatch one `alaa-implementer` per routine lane", "refuse to start on a tree carrying changes this run did not make"):
         cases.append((f"costly default {forbidden} rejected", bool(economy_failures(skill, gates + "\n" + forbidden))))
@@ -959,6 +937,8 @@ def main() -> int:
             (ROOT / "references/delegation-prompts/30-implementation.md").read_text(encoding="utf-8")))
         errors.extend(verification_failures(*verification_sources()))
         errors.extend(cadence_failures(*cadence_sources()))
+        shared = execution_contract_api()
+        errors.extend(shared.failures(shared.load_sources()))
         errors.extend(collection_failures(collection_sources()))
         errors.extend(run_economy_failures(run_economy_sources()))
         sibling = sibling_root()

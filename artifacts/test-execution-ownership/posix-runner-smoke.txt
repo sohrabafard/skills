@@ -1,0 +1,1 @@
+PASS: POSIX canonical + both adapters; 12 success/nonzero/help-rejection, argv/cwd/env/stdout/stderr probes

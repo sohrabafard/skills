@@ -1,0 +1,1 @@
+CONTRACT SELF-TEST OK: 1677 positive/negative structural fixtures

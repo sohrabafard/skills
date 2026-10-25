@@ -1,0 +1,58 @@
+{
+  "commands": [
+    [
+      "python",
+      "skills/sohrab/alaa-workflow/scripts/validate_workflow_files.py",
+      "--plan",
+      "docs/_agent_plans/20261025-test-execution-ownership.md",
+      "--continuation",
+      "docs/agents/20261025-test-execution-ownership-state.md"
+    ],
+    [
+      "python",
+      "skills/sohrab/alaa-repo-docs/scripts/check_markdown_links.py",
+      ".",
+      "--files",
+      "docs/_agent_plans/20261025-test-execution-ownership-design.md",
+      "docs/_agent_plans/20261025-test-execution-ownership.md",
+      "docs/agents/20261025-test-execution-ownership-design-state.md",
+      "docs/agents/20261025-test-execution-ownership-state.md"
+    ],
+    [
+      "git",
+      "diff",
+      "--check",
+      "--",
+      "skills/sohrab/alaa-testing-strategy",
+      "skills/sohrab/alaa-codex-orchestrator",
+      "skills/sohrab/alaa-cc-orchestrator",
+      "skills/sohrab/alaa-workflow",
+      "skills/sohrab/repository-tooling-capability-check",
+      "skills/sohrab/alaa-laravel-upgrade-all-packages/references/40-failure-classes.md",
+      "docs/_agent_plans/20261025-test-execution-ownership-design.md",
+      "docs/_agent_plans/20261025-test-execution-ownership.md",
+      "docs/agents/20261025-test-execution-ownership-design-state.md",
+      "docs/agents/20261025-test-execution-ownership-state.md",
+      "outputs/README.md",
+      "artifacts/test-execution-ownership"
+    ]
+  ],
+  "cwd": "/home/sohrab/project/skills",
+  "prefix": [
+    "bash",
+    "skills/sohrab/alaa-testing-strategy/scripts/run-low-priority.sh",
+    "--priority",
+    "BelowNormal",
+    "--cpu-count",
+    "2",
+    "--"
+  ],
+  "environment": {
+    "PYTHONDONTWRITEBYTECODE": "1"
+  },
+  "timeout_seconds": 300,
+  "tier": "focused finalization supplement",
+  "whitespace_scope_note": "Tracked unstaged diff only; named task source/doc paths. Shared skill indexes excluded because they also contain foreign changes; foreign runtime-ops/retirement and user docs/design/separate.md excluded. Untracked files not represented by git diff.",
+  "cited_design_validation": "verification-4/14 outputs; both design hashes match; unchanged checker/env/cwd/flags and independent observer",
+  "source_suite_reuse": "All19 checks verification-4 retained by exact284/2260 path rehash; external HEAD transition pending parent reconciliation."
+}

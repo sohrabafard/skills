@@ -6,8 +6,20 @@
 
 1. **Record the base and checkout.** Capture the current branch, HEAD SHA, and worktree path. If integration is requested, also capture the target branch and its base SHA. A resumed agent needs those identities to determine what changed.
 2. **Map existing changes.** Treat unowned modified and untracked paths as user or other-lane work. Preserve them and continue on disjoint paths. Resolve overlapping ownership before editing the same file; never stash, stage, overwrite, or commit another owner's change.
-3. **Choose an isolated surface when needed.** Use the current checkout when its ownership is clear. Create a branch or worktree for concurrent writes or integration when it materially reduces collision risk, and record the choice. Branch creation never grants commit or merge authority.
-4. **Cut lane worktrees from the recorded base.** When the local base branch is ahead of its remote, the lead creates each lane worktree from the HEAD SHA recorded in step 1 (`git worktree add -b <branch> <path> <base-sha>`) and passes its path in the dispatch instead of relying on a runtime isolation option, which can branch from the remote default branch (Claude Code: `alaa-prompting-guide references/41-claude-code-runtime-features.md`). Before its first edit, every lane verifies that its HEAD contains that commit (`git merge-base --is-ancestor <base-sha> HEAD`) and stops with a blocker when it does not.
+3. **Keep the checkout.** Continue in the same checkout and preserve its diff. Disjoint-file writers may share it. Do not create a branch or worktree automatically; use a different checkout only when the user or an already authorized explicit plan requires it. Reconcile overlapping ownership before writes through the protocol below.
+4. **Honor explicitly authorized isolation.** If a lane worktree is explicitly required, create it from the recorded HEAD SHA, pass its path to the lane and verify `git merge-base --is-ancestor <base-sha> HEAD` before editing. A remote default branch or runtime isolation option is no substitute for the recorded base; a mismatch blocks that lane. Branch/worktree authority grants no commit or merge authority.
+
+## Shared-file ownership and stopped-writer recovery
+
+Allow one active writer per file, generated output or shared runtime resource, not one writer per worktree. Record ownership and conflicts in the existing plan/dispatch and selected task authority. The runtime orchestrator allocates lanes and capacity; separate files permit concurrent writers only when their generated outputs and runtime resources are also disjoint. A task claim is no file or resource lock.
+
+Before replacing or resuming a stopped writer's overlapping scope:
+
+1. Verify the prior writer process and every descendant have stopped. A returned agent turn, interrupted session or closed terminal alone proves no process termination. Preserve process identity and observed liveness evidence; unknown descendant liveness is unresolved ownership.
+2. Observe the scoped files and generated/shared resources are stable after those processes stop. Preserve surviving edits and compare them with the existing progress journal, bound issue and checkpoint; reconcile completed work, remaining scope, ownership and attributable evidence. Create no journal or locking system for this check.
+3. Apply `references/task-tracking.md` `## Agent identity and ownership` for any authorized issue transfer and readback. Only then assign the remaining overlapping writes to the replacement. Preserve valid completed work; do not replay it or reset the diff.
+
+If liveness, stability or ownership remains ambiguous, block only overlapping writes and shared-resource use. Continue independently owned disjoint work. Recovery stays in the same checkout. Compaction does not transfer a living writer's ownership; recover the same actor and reconcile its active process before continuing. A replacement never takes over merely because context was lost.
 
 ## Record the tested state
 
@@ -19,9 +31,9 @@ Record explicit user commit authority and its scope once; a standing grant remai
 
 ## Reconcile evidence before running checks
 
-Record each required outcome's command, covered inputs, result, required observer and tested identity at its level owner in `references/task-tracking.md` `## Acceptance and evidence by level`. Before integration, resume or final validation, compare it with current files and relevant environment/configuration. Reuse a pass only when inputs and required authority match. Missing attribution, relevant changes, failures or unresolved concerns require affected checks; unrelated edits, phase transitions, new agents and interruptions alone do not. `/alaa-testing-strategy` owns stricter proof tiers.
+Record each required outcome and its evidence at the level owner in `references/task-tracking.md` `## Acceptance and evidence by level`, retaining the tested identity above.
 
-Inspect aggregate coverage before consolidating: every covered outcome, input scope and required observer must match. Cite identical covered child commands; run uncovered checks once. Aggregate names and lane-focused results prove neither combined behavior nor independent acceptance. Freeze tested scopes during gates; record which changed inputs invalidated which evidence. The parent reconciles the combined candidate and commissions only missing or invalidated proof, without blanket lane-check reruns.
+Before integration, resume or final validation, load /alaa-testing-strategy `references/100-test-execution.md` for execution evidence, aggregation and reuse; its `references/120-result-classification.md` decides whether a result is valid. Workflow reconciles those decisions with the current checkout and records which proof remains attributable. The runtime orchestrator owns independent acceptance and commissions missing or invalidated proof at its declared boundary.
 
 ## What still needs the user
 
@@ -58,5 +70,5 @@ If authorization is absent, leave the worktree and base intact and report the ve
 ## What this file does not own
 
 - Which tests run at which strength: `/alaa-testing-strategy`.
-- Which agent may write to which files inside one goal: `/alaa-cc-orchestrator` or `/alaa-codex-orchestrator` for the active runtime.
+- Lane allocation and capacity: `/alaa-cc-orchestrator` or `/alaa-codex-orchestrator` for the active runtime; this file owns shared-file exclusivity and recovery.
 - What is written into the plan, checkpoint, and handoff package: `references/context-continuity.md` and `references/artifact-lifecycle.md`.

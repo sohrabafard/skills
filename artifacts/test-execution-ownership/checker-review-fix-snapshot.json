@@ -1,0 +1,18 @@
+{
+  "observed_at": "2026-10-25T20:34:39.783126+00:00",
+  "head": "183f5c5a19daaa0c31c5aa41ce8ce2868181aa34",
+  "manifest_method": "Sorted repo-relative regular files in five named skill scopes; exclude __pycache__ and agents/openai.yaml (independently owned metadata, not inputs of this focused list); SHA-256 + two spaces + path + LF per file; SHA-256 of UTF-8 manifest bytes.",
+  "scopes": [
+    "alaa-testing-strategy",
+    "alaa-codex-orchestrator",
+    "alaa-cc-orchestrator",
+    "alaa-workflow",
+    "alaa-prompting-guide"
+  ],
+  "excluded": [
+    "__pycache__",
+    "agents/openai.yaml"
+  ],
+  "file_count": 274,
+  "manifest_sha256": "0c5c733e95845239af88663a7cacd759d4a204490e73a35175356994ca9bd823"
+}

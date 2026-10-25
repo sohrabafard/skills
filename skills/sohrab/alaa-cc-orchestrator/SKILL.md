@@ -26,6 +26,8 @@ Apply `references/routing-matrix.md` Planning profile selection and All-role tas
 
 ## 0. Inspect role availability
 
+The separately available companion /alaa-testing-strategy is required for test design/execution and legacy runner forwarding. If it is unavailable, report the missing owner and block dependent work; never auto-install it.
+
 Activation grants no installation or update authority. Inspect installed definitions, version and effective tools without writes; compare required roles with shipped definitions. Report missing, stale or unavailable roles before dispatch. Never silently substitute a model or a generic role. Continue only independent work with available required roles; report the rest blocked.
 
 Install or update only with explicit user authorization for the target paths. Validate model-neutral source roles, grants, and generated artifacts before the first target write. Run `python scripts/validate_pack.py` and `python scripts/check_agent_grants.py` before an authorized copy of the managed agent files. Do not change unrelated agents or settings.
@@ -70,7 +72,7 @@ The lead must not implement beyond that mechanical-edit exception, run heavy ver
 
 ## 3. Intake and planning
 
-Before dispatch inspect guidance/affected paths; settle outcome, acceptance, preserved behavior and irreversible actions; draw disjoint lanes. `references/verification-and-gates.md` owns intake, lane fields and infrastructure reuse.
+Before designing implementation or verification, load /alaa-testing-strategy. Before dispatch inspect guidance/affected paths; settle outcome, acceptance, preserved behavior and irreversible actions; draw disjoint lanes. `references/verification-and-gates.md` owns intake, lane fields and infrastructure reuse.
 
 Before Stage A evidence dispatch, apply triggered `/alaa-memory-os`: one bounded recall, verify useful claims in repository truth; keep active state in workflow. Route unresolved prior-session/ownership/shared-contract questions to `alaa-researcher`; `alaa-explorer` uses memory only when the repository cannot answer. Apply `/alaa-code-intelligence-routing` before code-evidence selection and reuse its result.
 
@@ -132,14 +134,7 @@ Schedule these commands through `references/verification-and-gates.md` Gate econ
 Run `python scripts/check_agent_contracts.py` after instruction-contract changes and `python scripts/check_agent_contracts.py --self-test` after checker changes. Exit `0` is clean, `1` is findings, and `2` is unavailable proof; either nonzero blocks completion. These fixtures check source requirements, not live model behavior.
 
 
-- Exact command semantics come from repository guidance and the dispatch. Never invent a flag merely to make a check pass.
-- After any change to `agents/`, the grant checker must pass before completion; `references/agent-catalog.md` states its exact invocation and exit-code contract.
-- Lowering process priority is mandatory for declared CPU-heavy local commands; limiting runner-level parallelism is separate and must also be explicit.
-- Preserve every explicit `--browser chromium` argument: it is a hard user constraint on browser choice. Never remove, replace, or change it without prior user approval.
-- Do not kill unrelated services, dev servers, containers, or processes; do not start duplicate services when a reusable declared service exists.
-- Do not update snapshots, golden files, lockfiles, generated clients, dependencies, or migrations during verification unless that change is an explicitly scoped implementation lane.
-
-Before resource/failure decisions apply the router below.
+Before planning or executing checks, load /alaa-testing-strategy and read its `references/100-test-execution.md` for execution, `references/110-execution-resources.md` for resources and timing, or `references/120-result-classification.md` for result classification and diagnosis. The router below retains legacy loading paths.
 
 ## 8. Safety and authority
 
@@ -158,7 +153,7 @@ Stop and report partial/blocked after the same lane/cause blocks twice, blockers
 
 ## 10. Failure discipline
 
-Reviewers only judge, verifiers only execute evidence commands, researchers only retrieve. Before product edits classify shell/runtime/permission/stale-cache failures through `references/failure-taxonomy.md`. Never report fail-then-pass as clean PASS. Report adversarial findings without another fix loop. Name only the lane's matching clean-code skill.
+Reviewers only judge, verifiers only execute evidence commands, researchers only retrieve. Before product edits, load /alaa-testing-strategy `references/120-result-classification.md` for classification and repair eligibility. Report adversarial findings without another fix loop. Name only the lane's matching clean-code skill.
 
 ## Direct references
 

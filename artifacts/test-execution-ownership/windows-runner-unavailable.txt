@@ -1,0 +1,4 @@
+Command: python3 -B scripts/test_execution_runners.py --platform windows --powershell /mnt/c/Program Files/PowerShell/7/pwsh.exe
+Cwd: /home/sohrab/project/skills
+Exit: 2
+UNAVAILABLE: PowerShell did not prove native Windows: <3>WSL (3 - ) ERROR: UtilBindVsockAnyPort:317: socket failed 1

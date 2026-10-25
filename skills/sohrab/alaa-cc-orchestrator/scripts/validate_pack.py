@@ -9,7 +9,8 @@ from __future__ import annotations
 
 from pathlib import Path
 from check_agent_contracts import (agent_failures, dispatch_failures, orchestrator_failures,
-                                   task_allocation_failures, cadence_failures, cadence_sources)
+                                   task_allocation_failures, cadence_failures, cadence_sources,
+                                   execution_contract_api)
 from check_agent_grants import frontmatter
 from render_agents import drift, expected_outputs, load_policy, OWNER
 import argparse
@@ -58,6 +59,8 @@ FORBIDDEN = re.compile(r"\b(codex|gpt-?[56]|openai|sol|terra|luna|astra)\b|opus 
 
 def validate() -> int:
     errors: list[str] = []
+    execution = execution_contract_api()
+    errors.extend(execution.failures(execution.load_sources()))
 
     skill = (ROOT / "SKILL.md").read_text(encoding="utf-8")
     errors.extend(orchestrator_failures(skill))
@@ -140,8 +143,12 @@ def validate() -> int:
             if name not in skill and name not in routing:
                 errors.append(f"agent absent from skill/routing: {name}")
 
-    resource_path = ROOT / "references/resource-policy.md"
-    if "--browser chromium" not in skill or (
+    for relative in ("scripts/run-low-priority.sh", "scripts/Invoke-AlaaLowPriority.ps1"):
+        if not (execution.ROOT / relative).is_file():
+            errors.append(f"missing canonical execution runner: {relative}")
+
+    resource_path = execution.ROOT / execution.RESOURCES
+    if execution.RESOURCES not in skill or (
         resource_path.is_file() and "--browser chromium" not in resource_path.read_text(encoding="utf-8")
     ):
         errors.append("hard browser chromium preservation rule is missing")

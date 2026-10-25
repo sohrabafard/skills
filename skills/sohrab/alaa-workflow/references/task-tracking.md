@@ -24,7 +24,7 @@ Before dependent implementation, read the issue and compare its actual assignee 
 
 Updates to owned issues use `--if-assignee <actor>` and, when relying on a status, `--if-status <expected-status>`. For guard mismatch/exit 13 or uncertain writes, re-read and reconcile before retrying; `## Beads capabilities in use` owns guard mechanics.
 
-Replacement or cross-device transfer requires authorized coordination, a stopped old writer and reconciled surviving files/evidence. Serialize transfer against closure and other ownership changes. The authorized transferring agent uses its own `--actor` with old-assignee/status guards and `--assignee <new-actor>`, then reads back. A refused transfer blocks dependent work; never force it. The new actor acts only after verified transfer.
+Before replacement or cross-device transfer, apply `references/workspace-and-integration.md` `## Shared-file ownership and stopped-writer recovery`; authorized coordination and reconciled surviving files/evidence remain required. Serialize transfer against closure and other ownership changes. The authorized transferring agent uses its own `--actor` with old-assignee/status guards and `--assignee <new-actor>`, then reads back. A refused transfer blocks dependent work; never force it. The new actor acts only after verified transfer.
 
 `bd close` has no assignee/status guard. Serialize ownership changes/transfers across pre-read, close and readback: verify your assignee and expected status, close with your actor after required acceptance/lint, then verify closure and assignee. This sequence is not atomic. Uncertain coordination blocks closure; report it rather than claiming race safety.
 

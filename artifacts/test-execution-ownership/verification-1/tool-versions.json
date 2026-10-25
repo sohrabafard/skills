@@ -1,0 +1,65 @@
+[
+  {
+    "command": [
+      "python",
+      "--version"
+    ],
+    "exit": 0,
+    "stdout": "Python 3.14.4\n",
+    "stderr": ""
+  },
+  {
+    "command": [
+      "bash",
+      "--version"
+    ],
+    "exit": 0,
+    "stdout": "GNU bash, version 5.3.9(1)-release (x86_64-pc-linux-gnu)\nCopyright (C) 2025 Free Software Foundation, Inc.\nLicense GPLv3+: GNU GPL version 3 or later <http://gnu.org/licenses/gpl.html>\n\nThis is free software; you are free to change and redistribute it.\nThere is NO WARRANTY, to the extent permitted by law.\n",
+    "stderr": ""
+  },
+  {
+    "command": [
+      "shellcheck",
+      "--version"
+    ],
+    "exit": 0,
+    "stdout": "ShellCheck - shell script analysis tool\nversion: 0.11.0\nlicense: GNU General Public License, version 3\nwebsite: https://www.shellcheck.net\n",
+    "stderr": ""
+  },
+  {
+    "command": [
+      "shfmt",
+      "--version"
+    ],
+    "exit": 0,
+    "stdout": "3.12.0\n",
+    "stderr": ""
+  },
+  {
+    "command": [
+      "git",
+      "--version"
+    ],
+    "exit": 0,
+    "stdout": "git version 2.53.0\n",
+    "stderr": ""
+  },
+  {
+    "command": [
+      "nice",
+      "--version"
+    ],
+    "exit": 0,
+    "stdout": "nice (uutils coreutils) 0.10.0\n",
+    "stderr": ""
+  },
+  {
+    "command": [
+      "taskset",
+      "--version"
+    ],
+    "exit": 0,
+    "stdout": "taskset from util-linux 2.41.3\n",
+    "stderr": ""
+  }
+]

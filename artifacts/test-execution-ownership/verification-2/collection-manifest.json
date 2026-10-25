@@ -1,0 +1,140 @@
+{
+  "cwd": "/home/sohrab/project/skills",
+  "environment_overrides": {
+    "PYTHONDONTWRITEBYTECODE": "1"
+  },
+  "timeout_seconds": 300,
+  "tier": "exhaustive",
+  "resources": {
+    "priority": "BelowNormal / nice10",
+    "cpu_count": 2,
+    "affinity": "0-1",
+    "parallel_commands": 1,
+    "python_workers": 1,
+    "containers": 0
+  },
+  "commands": [
+    [
+      "python",
+      "scripts/validate_sohrab_skill_pack.py"
+    ],
+    [
+      "python",
+      "scripts/check_skill_index.py"
+    ],
+    [
+      "python",
+      "scripts/check_fleet_references.py"
+    ],
+    [
+      "python",
+      "scripts/check_lifecycle_contract.py"
+    ],
+    [
+      "python",
+      "skills/sohrab/alaa-codex-orchestrator/scripts/validate_pack.py"
+    ],
+    [
+      "python",
+      "skills/sohrab/alaa-cc-orchestrator/scripts/validate_pack.py"
+    ],
+    [
+      "python",
+      "skills/sohrab/alaa-codex-orchestrator/scripts/check_agent_contracts.py",
+      "--self-test"
+    ],
+    [
+      "python",
+      "skills/sohrab/alaa-codex-orchestrator/scripts/check_agent_contracts.py"
+    ],
+    [
+      "python",
+      "skills/sohrab/alaa-cc-orchestrator/scripts/check_agent_contracts.py",
+      "--self-test"
+    ],
+    [
+      "python",
+      "skills/sohrab/alaa-cc-orchestrator/scripts/check_agent_contracts.py"
+    ],
+    [
+      "python",
+      "skills/sohrab/alaa-cc-orchestrator/scripts/validate_pack.py",
+      "--self-test"
+    ],
+    [
+      "python",
+      "skills/sohrab/alaa-testing-strategy/scripts/test_execution_runners.py",
+      "--platform",
+      "posix"
+    ],
+    [
+      "python",
+      "skills/sohrab/alaa-workflow/scripts/validate_workflow_files.py",
+      "--plan",
+      "docs/_agent_plans/20261025-test-execution-ownership.md",
+      "--continuation",
+      "docs/agents/20261025-test-execution-ownership-state.md"
+    ],
+    [
+      "python",
+      "skills/sohrab/alaa-workflow/scripts/validate_workflow_files.py",
+      "--plan",
+      "docs/_agent_plans/20261025-test-execution-ownership-design.md",
+      "--continuation",
+      "docs/agents/20261025-test-execution-ownership-design-state.md"
+    ],
+    [
+      "bash",
+      "-n",
+      "skills/sohrab/alaa-testing-strategy/scripts/run-low-priority.sh"
+    ],
+    [
+      "bash",
+      "-n",
+      "skills/sohrab/alaa-codex-orchestrator/scripts/run-low-priority.sh"
+    ],
+    [
+      "bash",
+      "-n",
+      "skills/sohrab/alaa-cc-orchestrator/scripts/run-low-priority.sh"
+    ],
+    [
+      "shellcheck",
+      "skills/sohrab/alaa-testing-strategy/scripts/run-low-priority.sh",
+      "skills/sohrab/alaa-codex-orchestrator/scripts/run-low-priority.sh",
+      "skills/sohrab/alaa-cc-orchestrator/scripts/run-low-priority.sh"
+    ],
+    [
+      "shfmt",
+      "-d",
+      "-i",
+      "2",
+      "skills/sohrab/alaa-testing-strategy/scripts/run-low-priority.sh",
+      "skills/sohrab/alaa-codex-orchestrator/scripts/run-low-priority.sh",
+      "skills/sohrab/alaa-cc-orchestrator/scripts/run-low-priority.sh"
+    ]
+  ],
+  "coverage": {
+    "shared_contract_check": "both pack validators execution.failures(load_sources())",
+    "shared_selftest": "both runtime selftests call shared.self_test(), 945 fixtures included not additive",
+    "render_check": "both pack validators drift(expected_outputs(...)) same implementation as renderer --check",
+    "grants": "both pack validators subprocess check_agent_grants.py same interpreter/environment/cwd",
+    "full_runtime_main": "separate no-flag execution; selftests do not call full main",
+    "codex_validate_selftest": "unsupported, not dispatched",
+    "unchanged_root_selftests": "excluded by parent",
+    "native_windows": "excluded by parent; unverified"
+  },
+  "expected_counts_from_parent": {
+    "shared_included_not_additive": 1577,
+    "Codex structural": 2309,
+    "Claude structural": 2252,
+    "POSIX subprocess": 12
+  },
+  "selection_reporting_limit": "No collect/list mode; stdout suite counts, individual case names only on failure.",
+  "pass": "verification-2 consolidated post-batch-repair full list",
+  "observed_counts": {
+    "Codex structural": 2309,
+    "Claude structural": 2252,
+    "POSIX subprocess": 12
+  }
+}

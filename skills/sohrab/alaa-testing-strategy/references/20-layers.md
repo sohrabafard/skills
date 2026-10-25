@@ -61,4 +61,4 @@ Each layer has a budget, because a suite past its budget is run less often and e
 - The contract suite runs wherever its artifact changes, on both sides of the agreement.
 - The end-to-end suite runs on merge to the mainline and before release, and it holds only crossings, so its size stays bounded by the number of crossings rather than by the number of features.
 
-`/alaa-cc-orchestrator` (`/alaa-codex-orchestrator` in Codex) owns how these commands are executed and under what resource policy; this file owns which suite exists and what belongs in it.
+Before executing these suites, read `100-test-execution.md` for scope and collection, and `110-execution-resources.md` for resource policy. This file owns which suite exists and what belongs in it.

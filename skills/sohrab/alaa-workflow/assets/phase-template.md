@@ -11,7 +11,7 @@
 - Work:
 {{phase_work}}
 - Acceptance criteria: NEEDS_FILL
-- Validation commands: NEEDS_FILL
+- Validation commands: NEEDS_FILL; load /alaa-testing-strategy before design or execution and use its canonical execution/resource/result references when triggered.
 - Collection/repair/retest barrier and evidence owner: NEEDS_FILL; scheduling follows the active runtime orchestrator's verification-and-gates.md.
 - Evidence observed: not run
 - Review status: REVIEW_PENDING

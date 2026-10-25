@@ -19,6 +19,7 @@
 <task>Execute browser QA for: <user-visible behavior>.</task>
 <environment><URL, existing server, auth/test data, viewport></environment>
 <scenarios><exact steps and expected results></scenarios>
-<browser_constraint>Preserve --browser chromium and configured profile. Do not start duplicate services.</browser_constraint>
+<execution_owner>Load /alaa-testing-strategy before verification design/execution; apply its references/100-test-execution.md and references/110-execution-resources.md, including the browser constraints.</execution_owner>
+<browser_constraint><declared browser, profile, existing server and supported worker limit></browser_constraint>
 <artifacts><absolute permitted artifact directory></artifacts>
 ```

@@ -1,0 +1,1 @@
+EXECUTION CONTRACTS OK: canonical ownership, standalone/runtime routes and recovery; 1796 mutation fixtures

@@ -1,0 +1,103 @@
+AM docs/design/separate.md
+ M skills/sohrab/README.fa.md
+ M skills/sohrab/README.md
+ M skills/sohrab/alaa-cc-orchestrator/SKILL.md
+ M skills/sohrab/alaa-cc-orchestrator/agents/alaa-browser-qa.md
+ M skills/sohrab/alaa-cc-orchestrator/agents/alaa-failure-analyst.md
+ M skills/sohrab/alaa-cc-orchestrator/agents/alaa-implementer-fable.md
+ M skills/sohrab/alaa-cc-orchestrator/agents/alaa-implementer-haiku-high.md
+ M skills/sohrab/alaa-cc-orchestrator/agents/alaa-implementer-haiku.md
+ M skills/sohrab/alaa-cc-orchestrator/agents/alaa-implementer-opus-high.md
+ M skills/sohrab/alaa-cc-orchestrator/agents/alaa-implementer-opus.md
+ M skills/sohrab/alaa-cc-orchestrator/agents/alaa-implementer-sonnet-high.md
+ M skills/sohrab/alaa-cc-orchestrator/agents/alaa-implementer.md
+ M skills/sohrab/alaa-cc-orchestrator/agents/alaa-performance-profiler.md
+ M skills/sohrab/alaa-cc-orchestrator/agents/alaa-planner-high.md
+ M skills/sohrab/alaa-cc-orchestrator/agents/alaa-planner.md
+ M skills/sohrab/alaa-cc-orchestrator/agents/alaa-verifier.md
+ M skills/sohrab/alaa-cc-orchestrator/assets/implementation-contract.md
+ M skills/sohrab/alaa-cc-orchestrator/assets/manifest.json
+ M skills/sohrab/alaa-cc-orchestrator/assets/planner-contract.md
+ M skills/sohrab/alaa-cc-orchestrator/references/delegation-prompts.md
+ M skills/sohrab/alaa-cc-orchestrator/references/delegation-prompts/40-verification.md
+ M skills/sohrab/alaa-cc-orchestrator/references/delegation-prompts/80-interface-review.md
+ M skills/sohrab/alaa-cc-orchestrator/references/delegation-prompts/90-completion/10-operability-evidence.md
+ M skills/sohrab/alaa-cc-orchestrator/references/failure-taxonomy.md
+ M skills/sohrab/alaa-cc-orchestrator/references/resource-policy.md
+ M skills/sohrab/alaa-cc-orchestrator/references/routing-matrix.md
+ M skills/sohrab/alaa-cc-orchestrator/references/verification-and-gates.md
+ M skills/sohrab/alaa-cc-orchestrator/scripts/Invoke-AlaaLowPriority.ps1
+ M skills/sohrab/alaa-cc-orchestrator/scripts/check_agent_contracts.py
+ M skills/sohrab/alaa-cc-orchestrator/scripts/run-low-priority.sh
+ M skills/sohrab/alaa-cc-orchestrator/scripts/validate_pack.py
+ M skills/sohrab/alaa-codex-orchestrator/SKILL.md
+ M skills/sohrab/alaa-codex-orchestrator/agents/alaa-browser-qa.toml
+ M skills/sohrab/alaa-codex-orchestrator/agents/alaa-failure-analyst.toml
+ M skills/sohrab/alaa-codex-orchestrator/agents/alaa-implementer-astra-medium.toml
+ M skills/sohrab/alaa-codex-orchestrator/agents/alaa-implementer-astra-xhigh.toml
+ M skills/sohrab/alaa-codex-orchestrator/agents/alaa-implementer-astra.toml
+ M skills/sohrab/alaa-codex-orchestrator/agents/alaa-implementer-high.toml
+ M skills/sohrab/alaa-codex-orchestrator/agents/alaa-implementer-low.toml
+ M skills/sohrab/alaa-codex-orchestrator/agents/alaa-implementer-luna-high.toml
+ M skills/sohrab/alaa-codex-orchestrator/agents/alaa-implementer-luna-low.toml
+ M skills/sohrab/alaa-codex-orchestrator/agents/alaa-implementer-luna.toml
+ M skills/sohrab/alaa-codex-orchestrator/agents/alaa-implementer-xhigh.toml
+ M skills/sohrab/alaa-codex-orchestrator/agents/alaa-implementer.toml
+ M skills/sohrab/alaa-codex-orchestrator/agents/alaa-performance-profiler.toml
+ M skills/sohrab/alaa-codex-orchestrator/agents/alaa-planner-high.toml
+ M skills/sohrab/alaa-codex-orchestrator/agents/alaa-planner.toml
+ M skills/sohrab/alaa-codex-orchestrator/agents/alaa-verifier.toml
+ M skills/sohrab/alaa-codex-orchestrator/assets/implementation-contract.md
+ M skills/sohrab/alaa-codex-orchestrator/assets/manifest.json
+ M skills/sohrab/alaa-codex-orchestrator/assets/planner-contract.md
+ M skills/sohrab/alaa-codex-orchestrator/references/delegation-prompts.md
+ M skills/sohrab/alaa-codex-orchestrator/references/delegation-prompts/40-verification.md
+ M skills/sohrab/alaa-codex-orchestrator/references/delegation-prompts/80-interface-review.md
+ M skills/sohrab/alaa-codex-orchestrator/references/delegation-prompts/90-completion/10-operability-evidence.md
+ M skills/sohrab/alaa-codex-orchestrator/references/failure-taxonomy.md
+ M skills/sohrab/alaa-codex-orchestrator/references/installation.md
+ M skills/sohrab/alaa-codex-orchestrator/references/resource-policy.md
+ M skills/sohrab/alaa-codex-orchestrator/references/routing-matrix.md
+ M skills/sohrab/alaa-codex-orchestrator/references/verification-and-gates.md
+ M skills/sohrab/alaa-codex-orchestrator/scripts/Invoke-AlaaLowPriority.ps1
+ M skills/sohrab/alaa-codex-orchestrator/scripts/check_agent_contracts.py
+ M skills/sohrab/alaa-codex-orchestrator/scripts/run-low-priority.sh
+ M skills/sohrab/alaa-codex-orchestrator/scripts/validate_pack.py
+ M skills/sohrab/alaa-codex-runtime-ops/SKILL.md
+ M skills/sohrab/alaa-codex-runtime-ops/agents/openai.yaml
+ M skills/sohrab/alaa-codex-runtime-ops/references/00-topic-map.md
+ D skills/sohrab/alaa-codex-runtime-ops/references/10-windows-sandbox-recovery.md
+ M skills/sohrab/alaa-codex-runtime-ops/references/20-command-and-path-discipline.md
+ M skills/sohrab/alaa-codex-runtime-ops/references/30-git-session-and-locked-file-recovery.md
+ M skills/sohrab/alaa-codex-runtime-ops/references/40-project-fallbacks.md
+ M skills/sohrab/alaa-codex-runtime-ops/references/90-source-map.md
+ M skills/sohrab/alaa-laravel-upgrade-all-packages/references/40-failure-classes.md
+ M skills/sohrab/alaa-testing-strategy/SKILL.md
+ M skills/sohrab/alaa-testing-strategy/agents/openai.yaml
+ M skills/sohrab/alaa-testing-strategy/references/00-topic-map.md
+ M skills/sohrab/alaa-testing-strategy/references/20-layers.md
+ M skills/sohrab/alaa-testing-strategy/references/80-evidence-and-reporting.md
+ M skills/sohrab/alaa-workflow/SKILL.md
+ M skills/sohrab/alaa-workflow/assets/phase-prompts-template.md
+ M skills/sohrab/alaa-workflow/assets/phase-template.md
+ M skills/sohrab/alaa-workflow/assets/plan-template.md
+ M skills/sohrab/alaa-workflow/references/artifact-lifecycle.md
+ M skills/sohrab/alaa-workflow/references/companion-routing.md
+ M skills/sohrab/alaa-workflow/references/context-continuity.md
+ M skills/sohrab/alaa-workflow/references/phase-prompts.md
+ M skills/sohrab/alaa-workflow/references/task-tracking.md
+ M skills/sohrab/alaa-workflow/references/workspace-and-integration.md
+ M skills/sohrab/repository-tooling-capability-check/SKILL.md
+?? _to_delete/
+?? artifacts/runtime-ops-wsl/
+?? artifacts/test-execution-ownership/
+?? docs/_agent_plans/20261025-test-execution-ownership-design.md
+?? docs/_agent_plans/20261025-test-execution-ownership.md
+?? docs/agents/20261025-test-execution-ownership-design-state.md
+?? docs/agents/20261025-test-execution-ownership-state.md
+?? skills/sohrab/alaa-codex-runtime-ops/references/10-wsl-sandbox-recovery.md
+?? skills/sohrab/alaa-testing-strategy/references/100-test-execution.md
+?? skills/sohrab/alaa-testing-strategy/references/110-execution-resources.md
+?? skills/sohrab/alaa-testing-strategy/references/120-result-classification.md
+?? skills/sohrab/alaa-testing-strategy/scripts/
+?? skills/sohrab/repository-tooling-capability-check/agents/

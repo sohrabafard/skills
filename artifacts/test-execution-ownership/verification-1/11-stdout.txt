@@ -1,0 +1,2 @@
+PACK VALID: 29 agents, skill version 5.5.0
+PACK SELF-TEST OK: dependency findings and unavailable proof cannot pass

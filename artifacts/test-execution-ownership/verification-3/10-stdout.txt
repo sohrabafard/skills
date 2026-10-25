@@ -1,0 +1,1 @@
+CONTRACT CHECK OK: metadata, dispatch scope and independent verification authority
