@@ -1,0 +1,26 @@
+{
+  "structure": {
+    "exit_code": 0,
+    "log": "artifacts/runtime-ops-wsl/structure.log"
+  },
+  "index": {
+    "exit_code": 0,
+    "log": "artifacts/runtime-ops-wsl/index.log"
+  },
+  "references": {
+    "exit_code": 0,
+    "log": "artifacts/runtime-ops-wsl/references.log"
+  },
+  "lifecycle": {
+    "exit_code": 0,
+    "log": "artifacts/runtime-ops-wsl/lifecycle.log"
+  },
+  "links": {
+    "exit_code": 0,
+    "log": "artifacts/runtime-ops-wsl/links.log"
+  },
+  "whitespace": {
+    "exit_code": 0,
+    "log": "artifacts/runtime-ops-wsl/whitespace.log"
+  }
+}

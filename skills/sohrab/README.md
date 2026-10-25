@@ -128,7 +128,7 @@ Every folder in this directory appears exactly once between the markers below, a
 
 - `alaa-cc-orchestrator` — production-grade multi-agent coding orchestration for Claude Code: installs the pack's managed agent roster, plans first, sizes the pipeline to that plan, and routes work through scoped implementation, verification, review, and specialist gates.
 - `alaa-codex-orchestrator` — the same production-grade multi-agent orchestration model as `alaa-cc-orchestrator`, built for Codex: managed agent TOMLs, plan-first sizing, and scoped implementation, verification, and review gates.
-- `alaa-codex-runtime-ops` — Codex runtime and harness recovery on Windows: sandbox setup failures, Git Bash/MSYS signal-pipe and `CreateFileMapping` errors, Docker named-pipe denial, locked session files, and exact-command escalation decisions.
+- `alaa-codex-runtime-ops` — Codex recovery inside WSL/Linux: sandbox failures, Bash and POSIX paths, filesystem/process permissions, Docker sockets, session state, and scoped exact-command escalation.
 - `alaa-memory-os` — a store-agnostic memory operating model: what is worth recording, in what note shape, and with what recall budget. Basic Memory and Hindsight each get one adapter reference and neither is the subject.
 - `alaa-extract-agent-lessons` — an intermediate and final curation gate that extracts evidence-backed decision interfaces, judgment rubrics, and durable knowledge cards, keeps active candidates in `alaa-workflow`, and publishes only authorized durable knowledge through `alaa-memory-os`.
 

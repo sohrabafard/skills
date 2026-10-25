@@ -1,0 +1,57 @@
+{
+  "head": "183f5c5a19daaa0c31c5aa41ce8ce2868181aa34",
+  "scoped_sha256": "8b835fb973edc24425e171a7b2a3b9e554c3421c448937a1ac77919a29d6a590",
+  "manifest_method": "SHA-256 of UTF-8 JSON with sorted keys and compact separators; entries sorted by POSIX path with file SHA-256, plus retired-path marker. No scoped writes between gate run and snapshot.",
+  "files": [
+    {
+      "path": "_to_delete/20261026-wsl-runtime-ops/10-windows-sandbox-recovery.md",
+      "sha256": "5e73f58eac385749a8080f5369f337c26bdee3aa8eca69ee71ba559408a6d2a5"
+    },
+    {
+      "path": "skills/sohrab/README.fa.md",
+      "sha256": "d26aaf46db1fd063461fd97cbb04b2303a23fe75501e06cab502900050d25db6"
+    },
+    {
+      "path": "skills/sohrab/README.md",
+      "sha256": "b23224ecc32fa8bf765b54b572865c8ea097bbafd0f1ee23d4d37dace26687a5"
+    },
+    {
+      "path": "skills/sohrab/alaa-codex-runtime-ops/SKILL.md",
+      "sha256": "2e252d48d252e0d321ceffe782ffeb9860eec33c84e56cd92311e78cf29fa869"
+    },
+    {
+      "path": "skills/sohrab/alaa-codex-runtime-ops/agents/openai.yaml",
+      "sha256": "4e59c389c2c0849dc21f841b5307da0aed0711a4c706100e98bb8d51a71964e9"
+    },
+    {
+      "path": "skills/sohrab/alaa-codex-runtime-ops/references/00-topic-map.md",
+      "sha256": "7b0022bdbd06bacc202380c60a015f937a0e6ca75a48b0026b3627d58088f6af"
+    },
+    {
+      "path": "skills/sohrab/alaa-codex-runtime-ops/references/10-wsl-sandbox-recovery.md",
+      "sha256": "f600898b34012134277e009e85a1cf49d1e361d3511d977d9ab55a9ff22215e8"
+    },
+    {
+      "path": "skills/sohrab/alaa-codex-runtime-ops/references/20-command-and-path-discipline.md",
+      "sha256": "26d70f18dc3682e4ef6c22dd2e7d9794894b012df15ecf3ec9d733ba8249041d"
+    },
+    {
+      "path": "skills/sohrab/alaa-codex-runtime-ops/references/30-git-session-and-locked-file-recovery.md",
+      "sha256": "4139ce64d4fdf49c55ed1f2dff1b273f4c60d3be791cd1e6dff2e57108285cb5"
+    },
+    {
+      "path": "skills/sohrab/alaa-codex-runtime-ops/references/40-project-fallbacks.md",
+      "sha256": "bfeb320504791f62f5a29fbef5c6fe673af1b8fe1f3480ca05c883e93ef192c3"
+    },
+    {
+      "path": "skills/sohrab/alaa-codex-runtime-ops/references/90-source-map.md",
+      "sha256": "63e7d271c2fc0f5f4f7f4f003aebeb43662e906b582c480739fbd480d0da3083"
+    },
+    {
+      "path": "skills/sohrab/alaa-codex-runtime-ops/references/10-windows-sandbox-recovery.md",
+      "state": "retired-to:_to_delete/20261026-wsl-runtime-ops/10-windows-sandbox-recovery.md"
+    }
+  ],
+  "observation_date": "2026-10-26",
+  "observation_timezone": "Asia/Tehran"
+}

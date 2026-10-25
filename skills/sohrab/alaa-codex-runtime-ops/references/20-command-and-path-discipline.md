@@ -1,104 +1,44 @@
-# Command And Path Discipline
+# Command and Path Discipline in WSL
+
+## Shell and executable identity
+
+Use the active Linux shell and the tool's working-directory field. Resolve the needed executable with `command -v`; inspect its target or file type when provenance is unclear. A mounted-drive file is not necessarily a Windows executable.
+
+For a missing Linux executable, use `SKILL.md` capability inquiry; report the gap if no authorized compatible tool exists. Do not install tools or switch to a Windows binary automatically.
+
+## Bash quoting and paths
+
+- **Symptom.** Bash syntax/quoting errors, a Windows drive path, backslash-separated arguments, `bad interpreter`, `^M`, or an executable selected from the wrong environment.
+- **Diagnosis.** Check the actual shell, current worktree, executable and exact failing path. A missing interpreter, CRLF line ending, execute bit or mount restriction is different from a sandbox denial; do not assume the tool and path are valid.
+- **Retry.** Correct only the invocation when that is the cause: use Bash syntax, quote path arguments and use the verified WSL path. Prefer a quoted heredoc for multiline Python or other code over nested `-c` escaping. Use `bash <script>` only when the repository declares Bash and invocation semantics remain valid.
+- **Fallback.** Report repository-owned script defects to their owner. Do not rewrite line endings, permissions or scripts as a harness workaround. Route service runtime environment generation to /service-runtime-kit-governance.
+
+Use the verified current checkout. Do not infer a second checkout by mechanically translating a drive letter or clone/move the repository as recovery. For an actual mounted-drive path, use its observed POSIX mount path. WSL path handling needs no MSYS path-conversion flags.
 
 ## Command length
 
-For `CreateProcessAsUserW failed: 206` or similar command-length errors:
+- **Symptom.** `Argument list too long` or `E2BIG` before the tool starts.
+- **Diagnosis.** Check expanded arguments and relevant environment size without dumping secret values; a smaller successful invocation supports the command-size diagnosis.
+- **Retry.** Split independent targets deterministically when batching preserves the operation. Prefer `rg --files` plus focused reads. Do not split a gate whose semantics require the complete input set.
+- **Fallback.** Use a tool-supported response file or an allowed useful task artifact for long lists. Do not change repository source to shorten a command.
 
-- split the operation into smaller batches
-- store long target lists in a repo-local artifact only when that artifact is useful and allowed
-- prefer `rg --files` plus focused follow-up reads instead of one giant command
-- avoid changing repo files merely to shorten a command
+## Filesystem and process permissions
 
-## Windows execution order
+- **Symptom.** `EACCES`, `EPERM`, `EROFS` or `spawn EPERM` while opening files, launching workers or cleaning build output.
+- **Diagnosis.** Identify the failing operation and whether validation started. Inspect the relevant Linux user/group, path ownership/mode and mount when necessary; check effective sandbox writable roots. For mounted-drive files, preserve the distinction between Linux and host filesystem permissions.
+- **Retry.** Use `references/10-wsl-sandbox-recovery.md` only when evidence supports a sandbox denial. Preserve the exact gate; affected independent package commands may run serially within the remaining budget.
+- **Fallback.** Report actual ownership, mount, executable or project-script problems. Do not apply recursive `chmod`/`chown`, change group membership, disable protection or delete generated output as a speculative fix.
 
-Resolve `pwsh` from the active environment and run tests and Windows-native commands with PowerShell 7 inside the sandbox first. Do not silently downlevel to Windows PowerShell when `pwsh` is unavailable or when the command cannot complete there; report the condition. If a required Bash-backed gate then fails before its validator runs with one of the Git Bash/MSYS IPC startup signatures below, the next shell attempt is the exact gate run directly with the installed Git Bash outside the sandbox under task-specific escalation approval. Do not insert an outside-sandbox PowerShell retry or another wrapper between that classified sandbox failure and the direct Git Bash retry. Resolve both shells from the active environment; do not hardcode a machine-specific executable path.
+## Docker access
 
-Prefer:
+- **Symptom.** Permission denied connecting to a Unix socket, missing socket, or failure to connect to the Docker daemon.
+- **Diagnosis.** Resolve the Linux Docker client and intended context/endpoint, including task-provided overrides. Inspect only needed context fields and socket metadata. Distinguish sandbox denial from an unavailable daemon, ordinary socket permissions, wrong context or missing WSL integration. Do not assume the endpoint is `/var/run/docker.sock` or that Docker Desktop is the backend.
+- **Retry.** When live Docker evidence is necessary and sandbox denial is supported, use `references/10-wsl-sandbox-recovery.md` for the exact authorized command.
+- **Fallback.** Inspect source/config and mark Docker validation blocked. If the verified backend is Docker Desktop, report missing integration for the active distribution. Do not switch contexts, install another engine, restart services or loosen socket permissions automatically. An endpoint access failure proves no container or application defect.
 
-- `Get-ChildItem -LiteralPath`
-- `Get-Content -LiteralPath -TotalCount`
-- `Select-String`
-- `Resolve-Path`
+## Port binding
 
-Use `rg` for search when available.
-
-## Windows excluded port ranges
-
-When Docker or a local server fails with an error like `ports are not available` or `bind: An attempt was made to access a socket in a way forbidden by its access permissions`, do not assume another process owns the port.
-
-On Windows, first check both listeners and excluded TCP ranges:
-
-- `Get-NetTCPConnection -LocalPort <port> -ErrorAction SilentlyContinue`
-- `netsh interface ipv4 show excludedportrange protocol=tcp`
-
-If the target port falls inside an excluded range, choose a host port outside the excluded ranges and update only the host-side binding. Keep the container port unchanged unless the application itself must listen on a different port.
-
-## Git Bash and path conversion
-
-Git Bash may rewrite slash-looking argument or environment values when invoking native Windows binaries. For Docker Compose and runtime scripts, route service-runtime env conversion issues to `/service-runtime-kit-governance`.
-
-After Git Bash has been selected by the Windows execution order, consider `MSYS_NO_PATHCONV=1` or `MSYS2_ARG_CONV_EXCL=*` only for the affected command.
-
-Those variables address argument conversion only. They do not fix MSYS process-creation, signal-pipe, file-mapping, shared-memory, or DLL-startup failures.
-
-## Git Bash/MSYS sandbox IPC startup failure
-
-Observed signatures include:
-
-- `fatal error - couldn't create signal pipe, Win32 error 5`
-- `CreateFileMapping ... Win32 error 5`
-- an MSYS child exit such as `0xc0000142` when evidence attributes it to `bash` or `sh` startup
-
-Recovery sequence:
-
-1. Preserve the exact Bash-backed command, working directory, environment, arguments, and flags. Confirm from the output that the shell failed before the requested test or validator ran.
-2. Do not apply `MSYS_NO_PATHCONV`, rewrite tests, or change repository configuration as a remedy for these IPC signatures.
-3. If the gate is required, apply the Windows execution order above to that exact Bash-backed command.
-4. Record the sandboxed failure and the outside-sandbox result separately. A passing outside-sandbox retry proves the gate but also documents sandbox friction; it does not make the first result disappear.
-5. Do not substitute a PowerShell approximation when the gate requires Bash semantics. An equivalent native validator may be useful supplemental evidence only when its proof boundary is stated.
-6. If the exact outside-sandbox retry fails with the same startup signature, inspect Git Bash/MSYS installation integrity and Defender or EDR detections, blocks, or process restrictions. Do not disable protection or add exclusions without separate evidence and authorization.
-
-## Shell syntax mismatch
-
-Recurring Windows failure modes:
-
-- PowerShell `ParserError` from complex regex, brace expansion, `awk`, or Bash quoting pasted into a PowerShell command.
-- `The term 'NAME=value' is not recognized` when Bash-style environment assignment is run in PowerShell.
-- Inline `python -c` commands fail because `\n`, quotes, or list literals were flattened into one PowerShell string.
-
-Recovery sequence:
-
-1. Do not retry the identical command string.
-2. If the command is conceptually PowerShell-native, rewrite it using PowerShell syntax: `$env:NAME = 'value'`, `Get-Content`, `Select-String`, arrays, and explicit path lists instead of Bash brace expansion.
-3. If the command is Bash-native, run it as Bash explicitly, for example `bash -lc 'cd /d/path && NAME=value command ...'`.
-4. For inline Python on PowerShell, prefer a here-string assigned to `$code`, then `python -c $code`; set `$env:PYTHONIOENCODING = 'utf-8'` when transcript text may contain non-ASCII.
-5. Keep the retry bounded to the failed command or smallest useful subset.
-
-## Escalated commands
-
-If a needed command fails because of sandbox permissions, rerun it with escalation and a concise task-specific justification. Do not request broad persistent prefixes for arbitrary scripting.
-
-## Windows EPERM during frontend validation
-
-Observed recurring pattern: on Windows, package validation can fail under the sandbox with `EPERM` while Vitest opens `.vite-temp/vitest.config.*.mjs` files or tsup/build cleanup unlinks package `dist` outputs such as `index.mjs` or `index.d.ts`.
-
-Recovery sequence:
-
-1. Treat the first `EPERM` as a runtime/permission failure, not evidence of a code regression.
-2. Rerun the exact failed validation or build command once with `sandbox_permissions: "require_escalated"` and a task-specific justification.
-3. Prefer the smallest gate that failed, such as `yarn test`, `yarn test:new`, `yarn build`, `yarn build:ssr`, `yarn workspace <pkg> test`, `yarn workspace <pkg> build`, or the exact Quasar build/dev command needed for app verification; if a multi-package loop failed, rerun affected packages serially or rerun the same loop elevated.
-4. Keep the retry scoped to validation. Do not edit source, rewrite config, or delete `node_modules`, `.vite-temp`, or `dist` as the first fix.
-5. If the exact escalated retry passes, record the runtime workaround and continue with normal validation.
-6. If it still fails, then inspect for a real lock holder, antivirus/indexer interference, stale generated output, or a project script issue before proposing cleanup.
-
-## Docker Desktop named-pipe permissions
-
-On Windows, Docker commands may fail with `permission denied while trying to connect to the docker API at npipe:////./pipe/dockerDesktopLinuxEngine`.
-
-Recovery sequence:
-
-1. Decide whether live Docker state is required for the user's task.
-2. If it is required, rerun the exact Docker command with escalation and a concise justification.
-3. If the task can proceed from source/config inspection, use that fallback and report that Docker runtime validation was blocked.
-4. Do not treat the named-pipe permission error as evidence that containers, Compose files, or application code are broken.
-5. If Docker access works after escalation, continue with the original validation path and keep any follow-up Docker reads scoped.
+- **Symptom.** `Address already in use`, `EADDRINUSE`, `Permission denied`, `EACCES` or `ports are not available` while binding a local port.
+- **Diagnosis.** Use available Linux listener evidence such as `ss -ltnp` for TCP; check address, protocol, port and the environment performing the bind. No visible WSL listener does not prove a Docker backend or host port is free. Privileged-port restrictions and sandbox restrictions differ from an occupied port.
+- **Retry.** If the task permits a host-binding change, select a verified available host port without changing the container/application port. For evidenced sandbox denial, follow `references/10-wsl-sandbox-recovery.md` instead.
+- **Fallback.** Report an unresolved backend/host restriction. Do not kill listeners, change kernel/network policy or run Windows administration commands as recovery.
