@@ -26,7 +26,7 @@ Before planning or executing tracked work, and after compaction or session resta
 4. Before Beads mutations, claims, ownership comparisons, resume or transfer, load `/alaa-workflow` `references/task-tracking.md` `## Agent identity and ownership`. It owns actor allocation, explicit mutation identity, guarded updates, transfer and closure coordination; its actor rules override actorless upstream examples. If unavailable, stop dependent work. Keep the assigned actor in the existing dispatch or admitted handoff.
 5. When resuming, read the active issue and linked plan/checkpoint/handoff. Check worktree state, scope, ownership, and blockers before continuing. A conversation summary or `bd prime` cannot replace task-state recovery. Resolve an ambiguous active task before implementation.
 
-Run each `bd` command separately; do not chain commands or add per-command environment overrides.
+Batch `bd` mutations in one script only when every command passes `--actor`, the script runs with `set -euo pipefail`, prints each command's result, and stops at the first failure; read back changed issues afterwards. Add no per-command environment overrides.
 
 ### Scope and issue lifecycle
 
