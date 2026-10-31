@@ -9,7 +9,7 @@
 - Task binding: {{task_binding}}
 {{hierarchy_header}}- Review boundary: {{review_boundary}}
 - Final phase: {{final_phase}}
-{{local_final_header}}- Commit authority: not granted
+{{local_final_header}}- Commit authority: {{commit_authority}}
 - Status: planning
 - Created: `{{created_at}}`
 - Parent plan: {{parent_plan_display}}

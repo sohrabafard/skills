@@ -146,7 +146,7 @@ Before planning or executing checks, load /alaa-testing-strategy and read its `r
 - Ask before destructive Git operations, force pushes, history rewrites, deployment, publishing, production access, data deletion, credential changes, shared-system configuration changes, or irreversible migrations.
 - Installation and updates require explicit user authorization for named target paths; activation grants none.
 - Agent files own code-intelligence grants; dispatches do not. `references/agent-catalog.md` assigns CodeGraph/Serena read/both/neither; `/alaa-code-intelligence-routing` owns rationale. Change grants here, not `~/.codex/agents`, because reinstall restores pack grants.
-- Commit only with explicit user authorization in the workflow-selected checkout. Otherwise preserve the reviewed diff and snapshot validation through workflow. Every external/destructive effect needs its own explicit authority. Never add Co-Authored tags.
+- Local commits follow the main instruction file's local-commit rule through `alaa-workflow references/workspace-and-integration.md`; do not wait for boundary review or request an already-granted permission again. Every external/destructive effect needs its own explicit authority. Never add Co-Authored tags.
 - Never expose secrets in prompts, logs, artifacts, or reports.
 
 ## 9. Stop conditions

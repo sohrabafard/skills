@@ -22,9 +22,9 @@ Read the plan's `Review boundary: phase|final`, `Final phase`, `Commit authority
 | Declared phase review end | Reconcile that phase's complete diff, required independent verification, correctness review and triggered specialists; triage findings under `alaa-workflow references/review-mode.md` `## Finding triage`, fixing blocking ones and retesting before acceptance. |
 | Whole-engagement final review end | Reconcile all remaining phases as one complete candidate; run the required independent review, one fix pass covering its findings and every deferred finding, then retests and final gates. |
 
-Never dispatch independent subtask/task review or make a subtask/task commit. Under `Review boundary: final`, intermediate phases retain `REVIEW_PENDING`; tested issue closure advances readiness without claiming reviewed acceptance. Defer independent acceptance and commits until that boundary. Under `phase`, only the declared phase end earns review. Preserve stricter genuine repository gates and necessary focused feedback; if a required earlier gate conflicts with the declared boundary, return the conflict to the plan owner rather than silently skipping either rule.
+Never dispatch independent subtask/task review. Under `Review boundary: final`, intermediate phases retain `REVIEW_PENDING`; tested issue closure advances readiness without claiming reviewed acceptance. Defer independent acceptance until that boundary; local checkpoints follow the commit protocol below. Under `phase`, only the declared phase end earns review. Preserve stricter genuine repository gates and necessary focused feedback; if a required earlier gate conflicts with the declared boundary, return the conflict to the plan owner rather than silently skipping either rule.
 
-At an authorized review boundary, successful required review, accepted fixes and retests trigger the integration parent's Conventional Commit on the current branch, limited to its owned candidate. Reuse a recorded standing user grant; do not invent another approval. Without that grant, or after failed review/tests, preserve an identified uncommitted snapshot and report pending authority or failure. `alaa-workflow references/workspace-and-integration.md` owns the commit protocol. Worker roles never gain commit authority.
+Local commits follow the main instruction file's local-commit rule through `alaa-workflow references/workspace-and-integration.md`. The integration parent commits each finished, validated topic or lane on the current work branch as it lands, at any phase, including before final review. A commit is a checkpoint, not acceptance; record review status separately. Reuse applicable standing authority without another approval. Preserve an identified snapshot when authority or validation is missing. The parent serializes commits and stages only owned changes; worker roles return evidence and do not write the shared index or commit. Pending worker review/commit handoffs never delay the parent's authorized checkpoint. Push, merge into another branch, tag and history rewrite still require explicit permission.
 
 Nested invocations complete applicable stage outcomes and return tested evidence, pending review/commit and the next cursor. Stage C runs at each phase implementation end; Stage D and final E gates wait for the inherited boundary. The exhaustive tier belongs only to the whole engagement's final candidate after final documentation when required; an intermediate phase may complete its local documentation without claiming final proof.
 
@@ -52,7 +52,7 @@ Record the check list and evidence at the workflow-selected owner before dispatc
 
 Assign the collected repair batch as one serialized implementation lane; reconcile conflicting writers through `alaa-workflow references/workspace-and-integration.md` before continuing. Continue the existing implementer whose valid assignment and context cover most failures through a host-supported continuation tool. Dispatch fresh only when continuation is unavailable, context is invalid, or `routing-matrix.md` selects another profile or task pair. The analyst diagnoses and never fixes. Independent verification owns the canonical whole-list retest after batch repair; implementer evidence never replaces independent acceptance. Existing retry/stop budgets remain in force.
 
-Freeze the tested scope through `alaa-workflow references/workspace-and-integration.md` before verification. Evidence needs no commit; commit only after the authorized review boundary passes.
+Freeze the tested scope through `alaa-workflow references/workspace-and-integration.md` before verification. Evidence needs no commit; local checkpoints follow the commit protocol above and never discharge review.
 
 ## Reusable-context owner
 
@@ -168,6 +168,6 @@ The orchestrator may report completion only when:
 - documentation ran or was explicitly skipped for a grounded reason;
 - the final reusable-context pass reported persisted, deferred, rejected, or no admitted candidates;
 - no `pipeline reopen required` result remains unresolved;
-- canonical task progress and workflow status match what landed; every changed subtask has tested diff evidence and the declared boundary has attributable review; commit only when authorized at that boundary;
+- canonical task progress and workflow status match what landed; every changed subtask has tested diff evidence and the declared boundary has attributable review; local checkpoints follow the main instruction rule independently of review status;
 - requested integration is complete or explicitly reported declined/blocked; local-only work needs no integration prompt;
 - no destructive/external action was performed without authorization.

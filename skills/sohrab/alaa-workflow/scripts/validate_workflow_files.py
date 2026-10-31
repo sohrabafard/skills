@@ -365,10 +365,14 @@ def validate_hierarchy_contract(content: str, status: str) -> list[str]:
     local_final = clean_scalar(field_value(header, "Local final phase") or final_phase)
     if not phases or local_final != phase_key(phases[-1][0]):
         messages.append(error("plan.final-phase", "Final phase is not the last declared phase.", "Name the whole engagement's actual final phase."))
-    authority = clean_scalar(field_value(header, "Commit authority") or "")
-    valid_grant = bool(re.fullmatch(r"explicit user grant:\s*\S.+", authority, re.I)) and not UNRESOLVED_RE.search(authority)
+    authorities = header_values(content, "Commit authority")
+    authority = authorities[0] if len(authorities) == 1 else ""
+    valid_grant = len(authorities) == 1 and (
+        authority == "local commits pre-authorized (main instruction file)"
+        or (bool(re.fullmatch(r"explicit user grant:\s*\S.+", authority, re.I)) and not UNRESOLVED_RE.search(authority))
+    )
     if authority != "not granted" and not valid_grant:
-        messages.append(error("plan.commit-authority", "Commit authority is unresolved.", "Record the explicit user grant and scope, or not granted."))
+        messages.append(error("plan.commit-authority", "Commit authority is missing, duplicated or unresolved.", "Record local commits pre-authorized (main instruction file), an explicit user grant and scope, or not granted; local authority grants no external Git action."))
     boundary = clean_scalar(field_value(header, "Review boundary") or "")
     approved = {"APPROVED", "APPROVED-WITH-NITS"}
     for title, block in phases:
@@ -388,11 +392,8 @@ def validate_hierarchy_contract(content: str, status: str) -> list[str]:
             messages.append(error("plan.node-boundary", "Task/subtask contains a review or commit field.", "Record boundary review and commit evidence at phase level."))
         commit = clean_scalar(field_value(block, "Commit") or "")
         if re.fullmatch(r"[0-9a-f]{7,40}", commit, re.I):
-            tested = clean_scalar(field_value(block, "Evidence observed") or "")
-            if (not valid_grant or verdict not in approved or not is_complete_status(field_value(block, "Status") or "")
-                    or not tested or tested == "not run" or UNRESOLVED_RE.search(tested)
-                    or (boundary == "final" and phase_key(title) != final_phase)):
-                messages.append(error("plan.commit-boundary", "Commit is unauthorized or precedes accepted boundary review.", "Preserve the snapshot and wait for explicit authority and accepted review/fixes/tests."))
+            if not valid_grant or not boundary_validation_observed(block):
+                messages.append(error("plan.commit-boundary", "Local commit checkpoint lacks authority or observed validation.", "Record applicable local authority and scoped validation evidence; keep boundary review separate."))
     if is_complete_status(status) and any(
         clean_scalar(field_value(block, "Review status") or "") not in approved
         for title, block in phases if boundary == "phase" or (not field_value(header, "Local final phase") and phase_key(title) == final_phase)

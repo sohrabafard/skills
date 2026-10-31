@@ -77,13 +77,16 @@ def orchestrator_failures(text: str) -> list[str]:
                      "alaa-workflow references/artifact-lifecycle.md",
                      "Plan-only work grants no product execution, branch, or commit authority",
                      "report saved plan/checkpoint paths when admitted",
-                     "Commit only with explicit user authorization",
+                     "Local commits follow the main instruction file's local-commit rule",
+                     "do not wait for boundary review or request an already-granted permission again",
+                     "Every external/destructive effect needs its own explicit authority",
                      "local-only completion requires no merge prompt",
                      "Independent verification and review inspect the actual artifact",
                      "Do not infer a universal watchdog timeout"):
         if not contract_present(required, text):
             errors.append(f"missing authority contract: {required}")
     for forbidden in ("On activation, idempotently installs", "Auto-install authority",
+                      "Commit only with explicit user authorization",
                       "Commit on the run's own work branch at each completed subtask",
                       "continue with general-purpose subagents",
                       "Every profile runs all six phases",
@@ -336,17 +339,21 @@ CADENCE_REQUIREMENTS = ('Stages A-F name required orchestration outcomes and aut
  'Nested goals never reset the boundary or relabel intermediate output as final',
  'The implementer runs the smallest focused discriminating check',
  'The task owner runs bounded task-acceptance selectors across its subtasks',
- 'Never dispatch independent subtask/task review or make a subtask/task commit',
+ 'Never dispatch independent subtask/task review',
  'intermediate phases retain `REVIEW_PENDING`',
  'tested issue closure advances readiness without claiming reviewed acceptance',
  'Under `phase`, only the declared phase end earns review',
  'Preserve stricter genuine repository gates and necessary focused feedback',
  'return the conflict to the plan owner rather than silently skipping either rule',
- "successful required review, accepted fixes and retests trigger the integration parent's "
- 'Conventional Commit on the current branch',
- 'Reuse a recorded standing user grant; do not invent another approval',
- 'Without that grant, or after failed review/tests, preserve an identified uncommitted snapshot',
- 'Worker roles never gain commit authority',
+ "Local commits follow the main instruction file's local-commit rule",
+ 'The integration parent commits each finished, validated topic or lane on the current work branch as it lands, at any phase, including before final review',
+ 'A commit is a checkpoint, not acceptance; record review status separately',
+ 'Reuse applicable standing authority without another approval',
+ 'Preserve an identified snapshot when authority or validation is missing',
+ 'The parent serializes commits and stages only owned changes',
+ 'worker roles return evidence and do not write the shared index or commit',
+ "Pending worker review/commit handoffs never delay the parent's authorized checkpoint",
+ 'Push, merge into another branch, tag and history rewrite still require explicit permission',
  'Stage C runs at each phase implementation end; Stage D and final E gates wait for the inherited '
  'boundary',
  "The exhaustive tier belongs only to the whole engagement's final candidate after final "
@@ -393,10 +400,13 @@ def cadence_failures(skill: str, gates: str, dispatch: str,
                 errors.append(f"missing {label} cadence: {clause}")
     forbidden = (
         r"(?:independent )?review (?:every|each) (?:subtask|task)\b",
-        r"commit (?:at|after) (?:every|each) (?:subtask|task)\b",
         r"(?:nested|child) (?:run|invocation) resets? (?:the )?review boundary",
         r"documentation-only changes? (?:always )?(?:preserve|prove) (?:test |input )?equivalence",
-        r"commit on the work branch before expensive verification",
+        r"commit on the work branch before validation",
+        r"defer (?:independent acceptance and )?commits until (?:that|the review) boundary",
+        r"commit only after (?:the authorized )?review boundary passes",
+        r"intermediate phases remain uncommitted",
+        r"never (?:dispatch independent subtask/task review or )?make a subtask/task commit",
         r"(?:weaken|skip) (?:failed tests|assertions|review) to (?:obtain|force) a pass",
     )
     # The required prohibition is not an instruction to perform the forbidden
@@ -512,6 +522,9 @@ def cadence_sources() -> tuple[str, ...]:
 def cadence_self_tests() -> list[tuple[str, bool]]:
     sources = cadence_sources()
     cases = [("inherited phase/final cadence accepted", not cadence_failures(*sources))]
+    checkpoint = list(sources)
+    checkpoint[1] += "\nCommit after each task when finished and validated under the main instruction rule."
+    cases.append(("validated task checkpoint before boundary accepted", not cadence_failures(*checkpoint)))
     # Topic: review integrity; layer: structural source contract. Negation,
     # casing and wrapping do not turn a prohibition into a positive command.
     prohibition = "Never weaken review to obtain a pass."
@@ -539,10 +552,13 @@ def cadence_self_tests() -> list[tuple[str, bool]]:
         cases.append((f"cadence seam requires {index}:{clause}", bool(cadence_failures(*broken))))
     for contradiction in (
         "Review every task independently", "independent review each subtask",
-        "Commit after each task", "commit at every subtask",
+        "Defer independent acceptance and commits until that boundary",
+        "Commit only after the authorized review boundary passes",
+        "Intermediate phases remain uncommitted",
+        "Never dispatch independent subtask/task review or make a subtask/task commit",
         "Child invocation resets the review boundary",
         "Documentation-only changes prove input equivalence",
-        "Commit on the work branch before expensive verification",
+        "Commit on the work branch before validation",
         "Weaken failed tests to obtain a pass",
     ):
         broken = list(sources)

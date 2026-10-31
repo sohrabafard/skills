@@ -27,7 +27,7 @@ Tested-state, integration-evidence and completion-lifecycle rules cover executio
 
 Before a gate, hold writes to its tested scope. Record the command, result, HEAD SHA, scoped paths, and a SHA-256 digest of a deterministic manifest of those paths and their file contents, including untracked files. Record the manifest method and observation time so a resumed agent can compare the same inputs. A commit SHA may replace the content digest only when the commit contains every tested change. A Git ref alone does not identify uncommitted contents.
 
-Record explicit user commit authority and its scope once; a standing grant remains valid within that scope and does not require repeated approval. After successful declared boundary review, accepted fixes and required retests, the parent stages only owned paths and commits on the current branch with a Conventional Commit subject and no agent attribution. No task/subtask commit is implied. Under final-only review, intermediate phases remain uncommitted; a failed boundary remains uncommitted unless the user expressly authorizes a partial checkpoint. `alaa-codex-orchestrator` and `alaa-cc-orchestrator` `references/verification-and-gates.md` schedule the action. Without commit authority, the observed snapshot identifies evidence and the uncommitted tree remains a reported recovery risk.
+Local commits follow the main instruction file's local-commit rule: commit each finished, validated topic or lane on the current work branch as it lands, at any phase, including before final review. Stage only its changes, preserving unrelated work. Use one Conventional Commit per topic or lane without agent attribution; authorized worktree lanes branch from the latest commit. Record authority once; never ask again within its scope. A commit is a checkpoint, not acceptance: record review separately and repair findings through subsequent validated commits, without rewriting history. Record scoped checkpoint validation even while its phase remains in progress. `alaa-codex-orchestrator` and `alaa-cc-orchestrator` `references/verification-and-gates.md` own scheduling and commit serialization. Without authority or validation, preserve an identified snapshot and report the gap.
 
 ## Reconcile evidence before running checks
 
@@ -37,7 +37,7 @@ Before integration, resume or final validation, load /alaa-testing-strategy `ref
 
 ## What still needs the user
 
-This skill grants no commit, merge, push, tag, publication, deployment, installation, history-rewrite, or branch-deletion authority. Each requires explicit user authorization covering the action; a recorded standing grant counts within its scope. A requested implementation authorizes local edits and validation within scope; activation of this skill grants no additional effect.
+The main instruction file supplies local-commit authority; skill activation supplies none. Push, merge into another branch, tag, history rewrite, remote sync, publication, deployment, installation and branch deletion require explicit user permission for that action; local-commit authority covers none of them. Requested implementation authorizes scoped local edits and validation.
 
 ## The completion lifecycle
 

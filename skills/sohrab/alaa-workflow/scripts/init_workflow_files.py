@@ -342,11 +342,16 @@ def run(args: argparse.Namespace) -> int:
     if parent_plan and not parent_plan.exists():
         raise Misuse(f"Parent plan not found: {parent_plan}")
     inherited = None
+    commit_authority = "local commits pre-authorized (main instruction file)"
     if parent_plan:
         # Share the validator's contract rather than inventing nested defaults.
-        from validate_workflow_files import resolve_review_contract
+        from validate_workflow_files import header_values, read_text, resolve_review_contract
         try:
             inherited = resolve_review_contract(parent_plan)
+            authorities = header_values(read_text(parent_plan), "Commit authority")
+            if len(authorities) != 1:
+                raise ValueError("Parent plan must record exactly one Commit authority.")
+            commit_authority = authorities[0]
         except (ValueError, OSError, UnicodeError) as exc:
             raise Misuse(f"Cannot inherit parent review contract: {exc}") from exc
         if args.review_boundary and args.review_boundary != inherited[0]:
@@ -375,6 +380,7 @@ def run(args: argparse.Namespace) -> int:
         "mode": mode,
         "profile": profile,
         "created_at": created_at,
+        "commit_authority": commit_authority,
         "plan_path": portable(plan_path),
         "parent_plan_display": display_path(parent_plan),
         "phase_prompts_display": display_path(prompt_path if include_prompts else None),

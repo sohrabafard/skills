@@ -1741,16 +1741,50 @@ class HierarchyUnitTest(unittest.TestCase):
         reviewed_early = family.replace("Review status: REVIEW_PENDING", "Review status: APPROVED", 1).replace("Review evidence: not run", "Review evidence: review.md", 1)
         self.assertTrue(self.errors(reviewed_early))
 
-    def test_commits_require_authority_and_accepted_boundary_not_leaf_review(self):
+    def test_local_commit_checkpoints_require_authority_not_boundary_review(self):
         commit = self.content().replace("- Review status:", "- Commit: abc1234\n- Review status:")
-        self.assertTrue(self.errors(commit))
-        accepted = commit.replace("Commit authority: not granted", "Commit authority: explicit user grant: current user instruction; accepted scoped changes").replace("Review status: REVIEW_PENDING", "Review status: APPROVED").replace("Review evidence: not run", "Review evidence: review.md; snapshot abc1234; fixes/retests passed").replace("Status: in_progress", "Status: complete")
-        self.assertEqual([], self.errors(accepted))
-        self.assertTrue(self.errors(accepted.replace("- Commit: abc1234", "    - Commit: abc1234")))
-        self.assertTrue(self.errors(accepted.replace("Review evidence: review.md; snapshot abc1234; fixes/retests passed", "Review evidence: not run")))
-        self.assertTrue(self.errors(accepted.replace("Status: complete", "Status: failed")))
-        self.assertTrue(self.errors(accepted.replace("Evidence observed: selected tests passed; snapshot evidence.md", "Evidence observed: not run")))
+        self.assertTrue(any("[plan.commit-boundary]" in error for error in self.errors(commit)))
+        for authority in ("local commits pre-authorized (main instruction file)",
+                          "explicit user grant: current user instruction; local scoped checkpoints"):
+            for boundary in ("phase", "final"):
+                with self.subTest(authority=authority, boundary=boundary):
+                    checkpoint = commit.replace("Commit authority: not granted", f"Commit authority: {authority}").replace("Review boundary: final", f"Review boundary: {boundary}")
+                    self.assertEqual([], self.errors(checkpoint))
+                    self.assertEqual([], self.errors(checkpoint.replace("Status: in_progress", "Status: complete")))
+                    self.assertTrue(self.errors(checkpoint.replace("- Commit: abc1234", "    - Commit: abc1234")))
+                    # A checkpoint never supplies missing independent review.
+                    completed = checkpoint.replace("- Status: executing", "- Status: complete")
+                    self.assertTrue(any("[plan.final-review]" in error for error in self.validator.validate_task_store(completed, "complete")))
+                    self.assertTrue(self.errors(checkpoint.replace("Review status: REVIEW_PENDING", "Review status: APPROVED")))
         self.assertTrue(self.errors(self.content().replace("Final phase: Phase 1", "Final phase: Phase 9")))
+
+    def test_local_commit_checkpoints_require_observed_validation(self):
+        checkpoint = self.content().replace("Commit authority: not granted", "Commit authority: local commits pre-authorized (main instruction file)").replace("- Review status:", "- Commit: abc1234\n- Review status:")
+        for old, new in (
+            ("- Validation commands: python -B targeted_check.py", ""),
+            ("Validation commands: python -B targeted_check.py", "Validation commands: NEEDS_FILL"),
+            ("Evidence observed: selected tests passed; snapshot evidence.md", "Evidence observed: not run"),
+            ("Evidence observed: selected tests passed; snapshot evidence.md", "Evidence observed: NEEDS_FILL"),
+        ):
+            with self.subTest(change=(old, new)):
+                self.assertTrue(any("[plan.commit-boundary]" in error for error in self.errors(checkpoint.replace(old, new))))
+
+    def test_local_commit_authority_rejects_ambiguous_or_expanded_grants(self):
+        for authority in ("", "NEEDS_FILL", "local commits pre-authorized (main instruction file)\n- Commit authority: not granted",
+                          "local commits pre-authorized (main instruction file); push, merge, tag and history rewrite allowed"):
+            with self.subTest(authority=authority):
+                content = self.content().replace("Commit authority: not granted", f"Commit authority: {authority}")
+                self.assertTrue(any("[plan.commit-authority]" in error for error in self.errors(content)))
+
+    def test_final_only_intermediate_phase_can_record_local_checkpoint(self):
+        first, cursor = self.content().split("## Execution Position", 1)
+        second = first.split("### Phase 1 - Implement", 1)[1]
+        for old, new in (("phase/one", "phase/final"), ("task/one", "task/final"), ("task/two", "task/final-two"), ("leaf/one", "leaf/final"), ("leaf/two", "leaf/final-two")):
+            second = second.replace(old, new)
+        first = first.replace("Final phase: Phase 1", "Final phase: Phase 2").replace("Commit authority: not granted", "Commit authority: local commits pre-authorized (main instruction file)").replace("- Review status:", "- Commit: abc1234\n- Review status:")
+        family = first + "### Phase 2 - Accept" + second + "## Execution Position" + cursor
+        self.assertEqual([], self.errors(family))
+        self.assertTrue(self.errors(family.replace("Review status: REVIEW_PENDING", "Review status: APPROVED", 1)))
 
     def test_completed_required_boundary_rejects_missing_or_unrun_validation(self):
         accepted = self.content().replace("- Status: executing", "- Status: complete").replace("Status: in_progress", "Status: complete").replace("Review status: REVIEW_PENDING", "Review status: APPROVED").replace("Review evidence: not run", "Review evidence: final-review.md; exact candidate")
@@ -1830,6 +1864,7 @@ class HierarchyCliTest(unittest.TestCase):
                 plan = root / str(payload["outputs"][0])
                 self.fill_skills(root, plan)
                 self.assertNotIn("Subtask issue:", plan.read_text())
+                self.assertIn("- Commit authority: local commits pre-authorized (main instruction file)\n", plan.read_text())
                 cursor = plan if profile == "direct" else root / str(payload["outputs"][1])
                 self.edit(cursor, "Current task: none", "Current task: opaque-task-1")
                 self.assertIn("Current subtask: none", cursor.read_text())
@@ -1909,6 +1944,21 @@ class HierarchyCliTest(unittest.TestCase):
                     self.assertIn("- Current phase: Phase 1\n", content)
                     self.assertNotIn("### Phase 4", content)
                     self.run_script(VALIDATE, ["--plan", current], root)
+                self.assertEqual(original, parent_path.read_bytes())
+
+    def test_nested_plan_preserves_parent_commit_authority(self):
+        for authority in ("not granted", "explicit user grant: user instruction; local scoped checkpoints",
+                          "local commits pre-authorized (main instruction file)"):
+            with self.subTest(authority=authority), workspace_tempdir() as tmp:
+                root = Path(tmp)
+                parent, _ = self.init(root)
+                parent_path = root / str(parent["outputs"][0])
+                self.edit(parent_path, "Commit authority: local commits pre-authorized (main instruction file)", f"Commit authority: {authority}")
+                original = parent_path.read_bytes()
+                result = self.run_script(INIT, ["--task", "child", "--parent-plan", str(parent_path.relative_to(root)), "--profile", "direct", "--task-store", "beads", "--beads-binding", "AGENTS.md#beads"], root)
+                child = root / json.loads(result.stdout)["outputs"][0]
+                self.assertIn(f"- Commit authority: {authority}\n", child.read_text())
+                self.run_script(VALIDATE, ["--plan", str(child.relative_to(root))], root)
                 self.assertEqual(original, parent_path.read_bytes())
 
     def test_nested_conflicting_override_is_rejected_without_writes(self):
