@@ -58,7 +58,7 @@ Semantics: `/alaa-workflow` `references/task-tracking.md` `## Beads capabilities
 - Beads owns newly tracked issue state and dependencies; do not add parallel durable TODO lists. Existing plans/checkpoints retain authority until explicitly migrated; do not import or duplicate their checklists during setup.
 - `alaa-workflow` and repository rules own planning, validation, completion criteria, and handoff structure. Task evidence follows `/alaa-workflow` `references/task-tracking.md` `## Acceptance and evidence by level`.
 - Route durable knowledge through `/alaa-memory-os`. `bd remember` only for a short reminder shared across the whole hub, with source, scope, and maintainer; write it without separate approval. Never put task status, evidence, lessons, or new rules in it; leaving it empty is correct. Owner: `/alaa-memory-os` `## Beads hub reminders and issue notes`. Keep issue descriptions and dependency explanations with their issues.
-- Git commits, pushes, and Dolt remote sync require explicit user authorization; a profile, hook, or skill grants none. Report unauthorized pending actions instead of executing them.
+- Local commits on the current work branch are pre-authorized: commit each finished, validated topic as it lands (one Conventional Commit per topic or lane), and let worktree lanes branch from the latest commit. Push, tag, merge into another branch, history rewrite and remote sync (Git or Dolt) still need explicit user authorization; a profile, hook, or skill grants none. Report unauthorized pending actions instead of executing them.
 
 ### Quick Reference
 
@@ -147,8 +147,9 @@ pass.
 - **Never write a path from one machine.** A `D:\...` path is wrong in a committed file; write it
   relative to the repository root. The one exception is the `Expected workspace` line of the Beads
   binding, which names the shared hub path.
-- **Ask before an action with an effect outside this working tree** — commit, tag, publish, deploy,
-  force-push, or credential rotation.
+- **Ask before an action with an effect outside this working tree** — tag, push, merge into another
+  branch, history rewrite, publish, deploy, force-push, or credential rotation. Local commits are
+  pre-authorized under the Beads binding's commit rule.
 - **No emoji in any artifact.** When a request is ambiguous, contradictory, or unsafe, say so, ask
   the smallest question that resolves it, and stop.
 
