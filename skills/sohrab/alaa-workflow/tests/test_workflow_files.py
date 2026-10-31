@@ -1190,7 +1190,7 @@ class TaskStoreFixture(unittest.TestCase):
             content = content.replace("\n## Task Allocation", "\n### Phase 2 - Validate and reconcile" + second + "\n## Task Allocation", 1)
         for number in (1, 2):
             content = content.replace(f"- Phase issue: opaque-phase-{number}\n", "")
-            content = content.replace(f"  - Task issue: opaque-task-{number} [skills: inherit]\n    - Subtask issue: opaque-subtask-{number} [skills: inherit]", f"  - Issue: NEEDS_FILL_ISSUE_{2 * number - 1} [skills: inherit]\n  - Issue: NEEDS_FILL_ISSUE_{2 * number} [skills: inherit]")
+            content = content.replace(f"  - Task issue: opaque-task-{number} [skills: inherit]", f"  - Issue: NEEDS_FILL_ISSUE_{2 * number - 1} [skills: inherit]\n  - Issue: NEEDS_FILL_ISSUE_{2 * number} [skills: inherit]")
         if store == "local":
             content = content.replace("- Task store: `beads`", "- Task store: `local`").replace("- Task binding: AGENTS.md#task-binding", "- Task binding: not applicable")
             tasks = (
@@ -1607,8 +1607,10 @@ class HierarchyUnitTest(unittest.TestCase):
 - Work:
   - Task issue: task/one [skills: inherit]
     - Subtask issue: leaf/one [skills: inherit]
+    - Subtask issue: leaf/one-check [skills: inherit]
   - Task issue: task/two [skills: inherit]
     - Subtask issue: leaf/two [skills: inherit]
+    - Subtask issue: leaf/two-check [skills: inherit]
 - Review status: REVIEW_PENDING
 - Review evidence: not run
 - Validation commands: python -B targeted_check.py
@@ -1630,6 +1632,38 @@ class HierarchyUnitTest(unittest.TestCase):
         self.assertEqual(("subtask", "task/one", "Phase 1"), nodes["leaf/one"])
         self.assertEqual(("task", "phase/one", "Phase 1"), nodes["task/two"])
         self.assertEqual([], self.errors(self.content()))
+
+    def test_task_leaf_and_decomposition_cardinality_at_each_task_boundary(self):
+        for task in ("one", "two"):
+            for count in (0, 1, 2, 3):
+                for status in ("planning", "executing"):
+                    with self.subTest(task=task, count=count, status=status):
+                        children = (f"    - Subtask issue: leaf/{task} [skills: inherit]\n"
+                                    f"    - Subtask issue: leaf/{task}-check [skills: inherit]\n")
+                        replacement = "".join(
+                            f"    - Subtask issue: part/{task}/{number} [skills: inherit]\n"
+                            for number in range(count)
+                        )
+                        content = self.content().replace(children, replacement)
+                        content = content.replace("Status: executing", f"Status: {status}")
+                        if status == "planning":
+                            content = content.replace("Status: in_progress", "Status: pending")
+                        nodes, messages = self.validator.hierarchy_nodes(content, status)
+                        self.assertEqual(("task", "phase/one", "Phase 1"), nodes[f"task/{task}"])
+                        if count == 1:
+                            self.assertEqual(1, len(messages), messages)
+                            self.assertIn(f"ERROR [plan.hierarchy] Task task/{task} has exactly one redundant subtask.", messages[0])
+                        else:
+                            self.assertEqual([], messages)
+
+    def test_cursor_accepts_task_leaf_without_a_subtask(self):
+        content = "\n".join(line for line in self.content().splitlines() if "- Subtask issue:" not in line)
+        content = content.replace("Current subtask: leaf/one", "Current subtask: none")
+        self.assertEqual([], self.errors(content))
+        companions = {"checkpoint": None, "state": None, "prompts": None}
+        self.assertEqual([], self.validator.validate_family_snapshots(Path("plan.md"), content, companions))
+        invalid = content.replace("Current subtask: none", "Current subtask: leaf/one")
+        self.assertTrue(self.validator.validate_family_snapshots(Path("plan.md"), invalid, companions))
 
     def test_optional_engagement_root_header_is_not_an_escaped_phase_node(self):
         content = self.content().replace("- Task store: beads", "- Root issue: `engagement`; discovered-from `origin`\n- Task store: beads")
@@ -1788,6 +1822,31 @@ class HierarchyCliTest(unittest.TestCase):
     write_files = WorkflowFilesTest.write_files
     edit = WorkflowFilesTest.edit
 
+    def test_generated_task_leaves_and_optional_decomposition_round_trip(self):
+        for profile in ("direct", "resumable", "orchestrated"):
+            with self.subTest(profile=profile), workspace_tempdir() as tmp:
+                root = Path(tmp)
+                payload, _ = self.init(root, "--profile", profile)
+                plan = root / str(payload["outputs"][0])
+                self.fill_skills(root, plan)
+                self.assertNotIn("Subtask issue:", plan.read_text())
+                cursor = plan if profile == "direct" else root / str(payload["outputs"][1])
+                self.edit(cursor, "Current task: none", "Current task: opaque-task-1")
+                self.assertIn("Current subtask: none", cursor.read_text())
+                if profile == "orchestrated":
+                    state = root / str(payload["outputs"][2])
+                    data = json.loads(state.read_text())
+                    data["current_task"] = "opaque-task-1"
+                    state.write_text(json.dumps(data), encoding="utf-8")
+                self.run_script(VALIDATE, ["--plan", str(plan.relative_to(root))], root)
+                task = "  - Task issue: opaque-task-1 [skills: inherit]"
+                child = "    - Subtask issue: distinct-part-a [skills: inherit]"
+                self.edit(plan, task, task + "\n" + child)
+                result = self.run_script(VALIDATE, ["--plan", str(plan.relative_to(root))], root, 1)
+                self.assertIn("Task opaque-task-1 has exactly one redundant subtask", result.stdout)
+                self.edit(plan, child, child + "\n    - Subtask issue: distinct-part-b [skills: inherit]")
+                self.run_script(VALIDATE, ["--plan", str(plan.relative_to(root))], root)
+
     def test_new_phased_generation_requires_explicit_binding_without_writes(self):
         for args in ([], ["--profile", "orchestrated"], ["--task-store", "local"], ["--profile", "direct", "--mode", "delegated"], ["--state-only", "--mode", "delegated"]):
             with self.subTest(args=args), workspace_tempdir() as tmp:
@@ -1821,7 +1880,10 @@ class HierarchyCliTest(unittest.TestCase):
             self.fill_skills(root, plan)
             self.write_files(root, {"skills/other-owner/SKILL.md": "---\nname: other-owner\n---\n"})
             self.edit(plan, SKILL_ROW, SKILL_ROW + "\n| other-owner | skills/other-owner/SKILL.md | changes | always | stop |")
-            self.edit(plan, "Task issue: opaque-task-1 [skills: inherit]", "Task issue: opaque-task-1 [skills: other-owner]")
+            self.edit(plan, "Task issue: opaque-task-1 [skills: inherit]",
+                      "Task issue: opaque-task-1 [skills: other-owner]\n"
+                      "    - Subtask issue: opaque-subtask-1 [skills: inherit]\n"
+                      "    - Subtask issue: opaque-subtask-2 [skills: inherit]")
             self.run_script(VALIDATE, ["--plan", str(plan.relative_to(root))], root)
             self.edit(plan, "Task issue: opaque-task-1 [skills: other-owner]", "Task issue: opaque-task-1 [skills: missing-owner]")
             result = self.run_script(VALIDATE, ["--plan", str(plan.relative_to(root))], root, 1)
@@ -2022,8 +2084,9 @@ class PlanKindTest(unittest.TestCase):
             result = self.execute(root, design, "--profile", "direct")
             plan = root / json.loads(result.stdout)["outputs"][0]
             content = plan.read_text()
-            for required in ("Plan kind: execution", "Approved design:", "Task hierarchy: phase-task-subtask", "Phase issue:", "Task issue:", "Subtask issue:"):
+            for required in ("Plan kind: execution", "Approved design:", "Task hierarchy: phase-task-subtask", "Phase issue:", "Task issue:"):
                 self.assertIn(required, content)
+            self.assertNotIn("Subtask issue:", content)
             self.assertNotIn("### Phase 2", content)
             self.cli(root, VALIDATE, "--plan", str(plan))
             self.assertEqual(before, design.read_bytes())

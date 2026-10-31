@@ -292,7 +292,7 @@ def hierarchy_nodes(content: str, status: str) -> tuple[dict[str, tuple[str, str
         phase_keys.add(key)
         phase_id: str | None = None
         task_id: str | None = None
-        task_has_child = False
+        subtask_count = 0
         phase_count = 0
         task_count = 0
         for match in HIERARCHY_NODE_RE.finditer(content, start, end):
@@ -318,23 +318,23 @@ def hierarchy_nodes(content: str, status: str) -> tuple[dict[str, tuple[str, str
                 phase_id = identifier
                 parent = None
             elif level == "task":
-                if task_id is not None and not task_has_child:
-                    messages.append(error("plan.hierarchy", f"Task {task_id} has no subtask.", "Map at least one executable leaf per task."))
+                if task_id is not None and subtask_count == 1:
+                    messages.append(error("plan.hierarchy", f"Task {task_id} has exactly one redundant subtask.", "Use the task itself as the leaf, or decompose into two or more distinct, independently checkable subtasks."))
                 if phase_id is None:
                     messages.append(error("plan.hierarchy", f"Orphan task {identifier}.", "Map its phase before its tasks."))
-                task_id, task_has_child = identifier, False
+                task_id, subtask_count = identifier, 0
                 task_count += 1
                 parent = phase_id
             else:
                 if task_id is None:
                     messages.append(error("plan.hierarchy", f"Orphan subtask {identifier}.", "Map its task before its subtasks."))
-                task_has_child = True
+                subtask_count += 1
                 parent = task_id
             nodes[identifier] = (level, parent, key)
         if phase_count != 1 or not task_count:
-            messages.append(error("plan.hierarchy", f"{key} requires exactly one phase issue and at least one task.", "Complete the three-level containment mapping."))
-        if task_id is not None and not task_has_child:
-            messages.append(error("plan.hierarchy", f"Task {task_id} has no subtask.", "Map at least one executable leaf per task."))
+            messages.append(error("plan.hierarchy", f"{key} requires exactly one phase issue and at least one task.", "Map each phase and its tasks; add subtasks only for decomposition."))
+        if task_id is not None and subtask_count == 1:
+            messages.append(error("plan.hierarchy", f"Task {task_id} has exactly one redundant subtask.", "Use the task itself as the leaf, or decompose into two or more distinct, independently checkable subtasks."))
     if not regions:
         messages.append(error("plan.hierarchy", "Hierarchy has no phases.", "Map the ordered phases before execution."))
     for match in HIERARCHY_NODE_RE.finditer(content):
@@ -359,7 +359,7 @@ def validate_hierarchy_contract(content: str, status: str) -> list[str]:
     _, node_messages = hierarchy_nodes(content, status)
     messages.extend(node_messages)
     if TASK_LINE_RE.search(content) or ISSUE_LINE_RE.search(content):
-        messages.append(error("plan.hierarchy-mixed", "Hierarchy contains flat issues or local tasks.", "Keep only the three-level mappings in this family."))
+        messages.append(error("plan.hierarchy-mixed", "Hierarchy contains flat issues or local tasks.", "Keep phase/task mappings and any decomposed subtasks in this family."))
     phases = phase_blocks(content)
     final_phase = clean_scalar(field_value(header, "Final phase") or "")
     local_final = clean_scalar(field_value(header, "Local final phase") or final_phase)

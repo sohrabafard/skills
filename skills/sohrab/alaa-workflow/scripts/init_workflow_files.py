@@ -274,8 +274,7 @@ def task_store_values(args: argparse.Namespace, checkpoint: Path | None, profile
         "  - [ ] T4: Reconcile documentation, status, blockers, and remaining work. [depends: T3] [skills: inherit]",
     )
     beads_work = tuple(
-        (f"  - Task issue: NEEDS_FILL_TASK_{number} [skills: inherit]\n"
-         f"    - Subtask issue: NEEDS_FILL_SUBTASK_{number} [skills: inherit]") if hierarchy else
+        f"  - Task issue: NEEDS_FILL_TASK_{number} [skills: inherit]" if hierarchy else
         "  - Issue: NEEDS_FILL_ISSUE_1 [skills: inherit]\n  - Issue: NEEDS_FILL_ISSUE_2 [skills: inherit]"
         for number in (1, 2)
     )

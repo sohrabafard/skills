@@ -47,7 +47,11 @@ Workflow plan contents follow `references/context-continuity.md`; task acceptanc
 
 Every new execution family declares `- Task hierarchy: phase-task-subtask` in the plan header, with `Task store: beads` and its portable `Task binding`. Existing unmarked or local families keep their original contract until explicit migration; omitting the marker cannot exempt a new execution plan.
 
-Register every phase, task and subtask, its acceptance and parent-child relation in bound Beads before dependent execution. A phase or milestone contains one or more tasks; each task contains one or more executable subtasks. Map milestones as `Phase N` in the plan. IDs are opaque and unique across the family. Preserve an optional enclosing engagement epic. The plan maps containment, never mutable issue status:
+Register every phase, task and any subtasks, their acceptance and parent-child relations in bound Beads before dependent execution. A phase or milestone contains one or more tasks. Map milestones as `Phase N` in the plan. IDs are opaque and unique across the family. Preserve an optional enclosing engagement epic.
+
+A coherent task is an executable leaf with zero subtasks. Use subtasks only to expose a checklist too broad for one agent to hold in mind, so no part is skipped: two or more separable parts, each independently checkable with acceptance different from its siblings. Each can be claimed, verified and closed on its own evidence. Never create a single subtask restating its parent; it adds tracking cost without visibility. The hierarchy validator accepts zero subtasks and rejects exactly one as redundant. Verify distinct scope and acceptance in the bound issues before execution.
+
+The plan maps containment, never mutable issue status:
 
 ```markdown
 ### Phase 1 - Implement
@@ -55,7 +59,9 @@ Register every phase, task and subtask, its acceptance and parent-child relation
 - Required skills: exact-owner
 - Work:
   - Task issue: opaque-task-id [skills: inherit]
-    - Subtask issue: opaque-subtask-id [skills: inherit]
+    - Subtask issue: opaque-subtask-a-id [skills: inherit]
+    - Subtask issue: opaque-subtask-b-id [skills: inherit]
+  - Task issue: opaque-leaf-task-id [skills: inherit]
 ```
 
 Use exactly zero, two and four spaces before the respective list markers. A task belongs to that phase and a subtask to its immediately preceding task. Inherit phase skills at a task and task skills at a subtask, or supply the complete override. Do not mix flat `Issue:` entries or local checkboxes into a marked hierarchy. Missing, duplicate, orphan or unresolved executing nodes block dependent work. Offline structure proves no live node, parent-child relation, binding or readiness: verify those through the bound owner and read them back.
