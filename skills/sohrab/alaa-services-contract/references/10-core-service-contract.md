@@ -21,8 +21,7 @@ Rules:
 | `ticket` | support-ticket management, ticket messages, queue-driven notifications, local user projection | protected routes trust gateway-derived context; cross-service consumers must go through the ticket API and must not couple to ticket tables |
 | `wa` | watch-time and analytics ingestion into ClickHouse via Vector and related intake flows | non-Laravel runtime is fine, but it must still align to Ala operational and observability naming where applicable |
 | `gateway` | HAProxy ingress gateway, JWT verification, trusted-header injection, request-time authz hop, structured gateway logs, and HAProxy metrics | do not force app middleware or app spans onto it; preserve HAProxy metrics and Vector log-pipeline ownership |
-| `entitlement-api` | normalized authorization business truth | other services must not treat OpenFGA tuples as the source of truth for business grants |
-| `entitlement-projector` (runtime `projector`) | derived OpenFGA tuple writer | business truth remains API-owned |
+| `entitlement-api` | normalized authorization business truth; its in-service `reflector` role is the derived OpenFGA tuple writer (D-AP-12) | other services must not treat OpenFGA tuples as the source of truth for business grants, and must not call OpenFGA; the `reflector` is the approved exception |
 | `authz-openfga` | canonical model, contracts and derived OpenFGA graph | business grants remain entitlement-api-owned |
 | `authz-sidecar` | request-time authorization runtime for gateway-protected route families | emit decision evidence, propagate trace context, and keep route-time decisions separate from service business authorization |
 | `notification` | in-development notification service and delivery workflows | converge on this contract before production readiness, including exception evidence when Sentry is absent |
@@ -44,7 +43,7 @@ Rules:
 Rules:
 - Derive the `service` field from `APP_NAME` or an equivalent service-level config.
 - Keep it stable and machine-readable.
-- Use the actual Ala service identifier such as `auth`, `content`, `comment`, `ticket`, `gateway`, `entitlement-api`, `projector`, `authz-sidecar`, `notification`, `vod`, or `wa`.
+- Use the actual Ala service identifier such as `auth`, `content`, `comment`, `ticket`, `gateway`, `entitlement-api`, `authz-sidecar`, `notification`, `vod`, or `wa`.
 - Do not return framework or runtime names such as `Laravel`, `Go`, `Node`, or `PHP`.
 - Do not decorate the value with environment or version strings.
 

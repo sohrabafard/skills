@@ -21,7 +21,7 @@ What this file does not own:
 ```
 
 - `{app}` is the canonical service identity from `10-core-service-contract.md`, byte for byte (`comment`, not
-  the repository name `comment-service`; `projector`, not `entitlement-projector`). A hyphen stays a hyphen.
+  the repository name `comment-service`). A hyphen stays a hyphen.
 - `{env}` is the service's `APP_ENV` value (`15-deployment-and-runtime-contract.md`), unchanged.
 - `{tenant}` is the canonical `project_id`. A key not scoped to a project omits the segment.
 - `{id}` may span several `:`-separated segments; `{version}` is `v<major>` and comes last.
@@ -121,7 +121,7 @@ their own logical database or instance.
 | `authz-sidecar:<env>:redis-mode-lease:v1` | `authz-sidecar: internal/decisioncache/keys.go:24,180-182`; `cache.go:20-33,507-530` | Marker that a redis-mode replica ran; an absent marker triggers the global-token rotation | 30 s, refreshed every 10 s | TTL | live (cache database 0) |
 | `authz-sidecar:<env>:<project_id>:clear-cooldown:project:v1`, `authz-sidecar:<env>:<project_id>:clear-cooldown:<scope>:<subject_hmac>:v1` (`<scope>` is `subject` or `decision`) | RFC 0007 §6.6 `:243`; `authz-sidecar: internal/decisioncache/keys.go:25-26,160-178`; `clear.go:53-54,187-212` | Project or subject clear cooldown (a limiter: limiter database, not the cache database; RFC 0007 §8 Eviction), `SET NX PX`; unlinked early when a clear is shed | 60 s project, 5 s subject and decision | TTL, or early release | live (limiter database `AUTHZ_SIDECAR_DECISION_CACHE_REDIS_LIMITER_DB`, default 1, never 0: `internal/config/decision_cache_clear.go:28-29,72`; `redis.go:71-79`) |
 
-Services with no Redis key found: `entitlement-projector`, `entitlement-spoa`, `gateway`, `wa`, `notif`,
+Services with no Redis key found: `entitlement-spoa`, `gateway`, `wa`, `notif`,
 `tusd`. `ticket` has an emptied working tree at `dfbe181` ("remove all to migrate to golang ticket service").
 
 ## Owner decisions

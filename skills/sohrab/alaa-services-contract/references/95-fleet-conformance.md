@@ -34,7 +34,7 @@ pending. No other repository was re-audited for this amendment.
 | `auth` | `2d062c2d843b7c502409e19599cd9b0c6336150b` |
 | `comment` | `2a87f3986963bf5eefd04884aa2a807c046e1e00` |
 | `content` | `922c5662c8e787c809184a065fa591f3296df9b4` |
-| `entitlement-platform` (`entitlement-api`, `projector`, `authz-sidecar`) | `20ba532322fa599d285bd3316b9eb87870104ea` |
+| `entitlement-platform` (`entitlement-api`, `authz-sidecar`; `projector` retired 2026-11-01) | `20ba532322fa599d285bd3316b9eb87870104ea` |
 | `gateway` | `779aea869315a5853d49de264a99bb2df6087550` |
 | `wa` | `691baf4473a78013087d4f5397fd2e9978b472ac` |
 | `alaa-go-chi` kit | `f166b57e579e0dedf4a2954944f98d42d9538fd6` |
@@ -91,7 +91,7 @@ Two further findings, same status as the ten:
 
 | # | Rule | Owning file | Conforms | Does not conform |
 |---|---|---|---|---|
-| 11 | Every consumer sets explicit prefetch | `22-failure-load-and-deprecation-contract.md` | `entitlement-api`, `projector` (50) | `comment`, `content`, `auth`, kit |
+| 11 | Every consumer sets explicit prefetch | `22-failure-load-and-deprecation-contract.md` | `entitlement-api` (50; `projector` retired 2026-11-01) | `comment`, `content`, `auth`, kit |
 | 12 | The gateway is the only end-user token verifier | `25-end-to-end-flow-and-boundaries.md` | all seven | none — freeze it |
 
 Six obligations the amendments created on 2026-07-25. They are new, so the fleet is behind on all of them by
@@ -312,7 +312,13 @@ special case into its own SDK, and each one is a second migration later.
    each name-keyed item at `app/Support/Operations/OperationalStatusService.php:268-290` — and the
    trusted-header set.
 
-### `entitlement-platform` (`entitlement-api`, `projector`, `authz-sidecar`)
+### `entitlement-platform` (`entitlement-api`, `authz-sidecar`; `projector` retired)
+
+*2026-11-01 (owner decisions D-AP-12, D-CT-6, D-AP-10 closure; the `entitlement-projector` repository is retired)*:
+the `reflector` role inside `entitlement-api` consumes `projector.command.rule_projection.task.v1` and is the only
+OpenFGA tuple writer. The receipt exchange and queues, `entitlement.projector.work` and `entitlement.reconciliation`
+are removed. Items below that name `projector`, those queues or the receipt path are historical evidence, not open
+work.
 
 1. **Stop publishing to the default exchange.** `projector` publishes with exchange `""` and the queue name
    as routing key, which binds the producer to one consumer's queue name. Declare `entitlement.events` and
