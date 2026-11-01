@@ -63,4 +63,4 @@ results only when caching is enabled; upstream's disabled-by-default cache does 
 capability does not authorize caching beyond `22-failure-load-and-deprecation-contract.md`. Before claiming
 revoke visibility, verify projection completion and lag, sidecar/server cache settings, deployed server/SDK
 semantics and the agreed end-to-end budget; missing evidence remains unknown. The request, pins, TTLs,
-projector-only writes and fail-closed behavior above are unchanged.
+reflector-only writes and fail-closed behavior above are unchanged.

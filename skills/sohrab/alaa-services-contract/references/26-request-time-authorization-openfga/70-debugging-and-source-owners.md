@@ -19,7 +19,7 @@ Work the path in order. The structured logs make this fast because every hop sha
    `check` against OpenFGA, then `read` the user/object tuples. The legacy
    `entitlement-platform` Postman `openfga-runtime` group is historical; its
    extracted destination is unconfirmed. If the tuple
-   is missing, look at `projector` (did the event arrive and validate?) and
+   is missing, look at the `entitlement-api` `reflector` (did the task arrive, and what outcome row did it record?) and
    `entitlement-api` (was the grant actually created?).
 6. **`401 AUTH_CONTEXT_MISSING`:** identity did not reach the sidecar. The JWT/trusted
    header step upstream is the suspect, not authorization.
@@ -38,12 +38,16 @@ pin is a subtle cause of "the tuple exists but the check still denies."
 
 - Calling OpenFGA, `authz-sidecar`, or `entitlement-spoa` directly from a frontend or a
   normal backend. Only the gateway calls the sidecar; only the sidecar checks OpenFGA;
-  only `projector` writes tuples.
+  only the `entitlement-api` `reflector` role writes tuples.
+  Approved exception (owner decisions D-AP-12 and D-CT-6, 2026-10-31; `entitlement-projector` retired
+  2026-11-01; Beads `alaa-vfwc`): the in-service `reflector` role of `entitlement-api` is the only holder of an
+  OpenFGA credential and the only tuple writer. It is not a request path. Every other backend still never calls
+  OpenFGA.
 - Checking a `grant_*` or `deny_*` relation at request time instead of a `can_*`.
 - Adding a gateway route group before the permission rule and tuples exist.
 - Adding a `canonical_from_param` route group without the Lua extractor branch.
 - Treating allow-side `X-Authz-*` headers as authorization input in a backend.
-- Letting `projector` and `authz-sidecar` drift onto different model ids.
+- Letting the `reflector` generation store and model and `authz-sidecar` drift onto different model ids.
 
 ## Source of truth
 
@@ -51,7 +55,7 @@ pin is a subtle cause of "the tuple exists but the check still denies."
   `<repo>/charts/gateway/templates/configmap.yaml`, `<repo>/haproxy/lua/authz-sidecar.lua`;
   diagrams: `<repo>/docs/authz-openfga-flow.md`.
 - Business truth/events: entitlement-api `<repo>/docs/api/event-contracts.md`.
-- Projection/reconciliation: entitlement-projector `<repo>/docs/projection-operations.md`.
+- Projection and tuple writing: entitlement-api `<repo>/docs/contracts/` (rule projection) and its `reflector` role.
 - Model/mapping: authz-openfga `<repo>/platform/openfga/contracts/authorization-contract.yaml`,
   `<repo>/platform/openfga/contracts/endpoint-permissions.yaml` and
   `<repo>/docs/architecture/06-domain-to-openfga-mapping.md`.

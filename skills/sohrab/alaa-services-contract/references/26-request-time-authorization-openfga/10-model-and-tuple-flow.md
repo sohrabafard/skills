@@ -20,22 +20,23 @@ bug is almost always "the tuple was never written" (write path) or "the route as
 the wrong question" (read path).
 
 - **Write path (truth -> graph):** `entitlement-api` owns business truth (who was
-  granted or denied what). On every change it emits an event. `projector` consumes
-  the event and writes or deletes the matching OpenFGA tuples. `projector` is the
-  **only** tuple writer.
+  granted or denied what). On every change it commits projection tasks in the same
+  transaction. The in-service `reflector` role of `entitlement-api` consumes each task and writes or
+  deletes the matching OpenFGA tuples (owner decision D-AP-12). The `reflector` is the **only** tuple writer
+  and the only holder of an OpenFGA credential outside the sidecar.
 - **Read path (request -> decision):** the gateway authenticates, builds a canonical
   object id, and asks `authz-sidecar` (or `entitlement-spoa`). The sidecar resolves
   the route to a final `can_*` permission and runs one OpenFGA `check`. The sidecar
   is **read-only**.
 
 ```
-entitlement-api --event--> projector --write tuples--> OpenFGA
+entitlement-api --task--> reflector (in entitlement-api) --write tuples--> OpenFGA
                                                           ^
 gateway --HEAD /internal/authz/check--> authz-sidecar --check--+
 ```
 
 Grant vs permission, the easiest thing to misread:
-- `projector` writes **grant**/**deny** relations: `grant_view`, `deny_access`, ...
+- the `reflector` writes **grant**/**deny** relations: `grant_view`, `deny_access`, ...
 - the OpenFGA **model** derives the final **`can_*`** permissions from those, applying
   inheritance (a course grant reaches its sets and contents) and deny precedence.
 - the sidecar always checks a final **`can_*`** relation, never a raw grant.
