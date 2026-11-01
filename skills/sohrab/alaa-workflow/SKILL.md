@@ -1,6 +1,6 @@
 ---
 name: alaa-workflow
-description: "Durable design and execution planning for long-running, multi-phase, resumable, delegated, handoff-sensitive, review, or prompt-pack work. Design plans discuss ideas and algorithms locally through explicit approval; execution plans follow an approved linked design with bound Beads tracking and exact phase/task skills. A plan request saves its admitted plan and checkpoint; plan-only authorizes no implementation. Respect native Plan Mode and explicit no-file, read-only, or chat-only limits; short advice, ordinary review, and small single-phase edits create no files unless requested."
+description: "Durable design and execution planning for long-running, multi-phase, resumable, delegated, handoff-sensitive, review, or prompt-pack work. Design plans discuss ideas and algorithms locally through explicit approval; execution plans follow an approved linked or embedded design with bound Beads tracking and exact phase/task skills. A plan request saves its admitted plan and checkpoint; plan-only authorizes no implementation. Respect native Plan Mode and explicit no-file, read-only, or chat-only limits; short advice, ordinary review, and small single-phase edits create no files unless requested."
 ---
 
 # Alaa Workflow
@@ -20,7 +20,7 @@ Keep long work resumable without imposing orchestration on every task. Plans own
 
 Select kind, approval admission, profile and execution phase/lane planning through `references/artifact-lifecycle.md`.
 
-Initialize design with `scripts/init_workflow_files.py --task <title> --plan-kind design`. Initialize execution with `scripts/init_workflow_files.py --task <title> --plan-kind execution --approved-design <path> --task-store beads --beads-binding <portable-reference> [--profile <profile>] [--review-boundary phase|final] [--with-prompts]`. The kind owner decides allowed flags; `references/task-tracking.md` owns execution binding arguments. Exit `0` means files were created. Exit `1` means a collision and no writes; continue that family instead of forcing over it. Exit `2` means the invocation could not run; do not assume an artifact set exists.
+Initialize design with `scripts/init_workflow_files.py --task <title> --plan-kind design`. Initialize execution with `scripts/init_workflow_files.py --task <title> --plan-kind execution --approved-design <path> --task-store beads --beads-binding <portable-reference> [--profile <profile>] [--review-boundary phase|final] [--with-prompts]`. For a design approved in this session, replace `--approved-design <path>` with `--approved-design embedded --design-source <path> --approval-by <approver> --approval-on <YYYY-MM-DD> --approval-evidence <evidence>`. The kind owner decides allowed flags; `references/task-tracking.md` owns execution binding arguments. Exit `0` means files were created. Exit `1` means a collision and no writes; continue that family instead of forcing over it. Exit `2` means the invocation could not run; do not assume an artifact set exists.
 
 ## Survive compaction and handoff
 

@@ -15,6 +15,17 @@ Rules:
 - load `$alaa-docker-production` for Dockerfile hardening, runtime-user rules, Compose and Swarm delivery mechanics, and registry-plumbing details
 - do not duplicate Kubernetes implementation detail in this file when the concern is already owned by `$alaa-k8s-helm` or `$caas-arvan-kuber`
 
+## Deploy-time environment contract
+
+Rules:
+- Services MUST declare supported runtime settings in image-bound `runtimeConfiguration`, referencing existing bindings and exact consumers/modes. Record type/range, sensitivity, authority, default owner, empty semantics and apply policy. Identify build-only settings explicitly.
+- Deploy MUST validate admitted inputs before effects and deliver them to their declared destinations. Each input has one writer; env readability grants no override of derived/reserved authority. Keep diagnostics value-free.
+- Explicit operator values override the owning default; unset preserves it. Metadata MUST NOT create defaults or invent required/Secret values. Main backend logging defaults to `info`.
+- Distinguish unset, empty (`omit|value|reject`) and explicit clear; preserve `false` and `0`. Reset requires removing the effective CI override and fresh Prepare/deployment, without inheriting the previous release override.
+- Declared backend booleans use `true|false`; sampling inputs use decimal `[0,1]`; empty rejects. Preserve declared Client/Secret empty semantics. Domain-specific values and parser behaviour remain with their existing owners.
+- Sensitivity and override authority are independent. Browser runtime configuration is explicitly public; Secret delivery follows the [Secret and key material contract](#secret-and-key-material-contract).
+- Supported value changes reuse the image; startup settings require recreation/rollout. New capabilities or image-bound declarations may require rebuilding. Adopt compatible readers/tools before publishing declarations; [delivery-artifact ownership](16-infrastructure-services-and-delivery-artifacts.md) remains unchanged.
+
 ## GitLab CI/CD baseline contract
 
 Rules:

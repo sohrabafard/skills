@@ -2,7 +2,7 @@
 
 - Plan kind: execution
 - Approved design: {{approved_design_display}}
-- Task ID: `{{task_id}}`
+{{embedded_approval_header}}- Task ID: `{{task_id}}`
 - Mode: `{{mode}}`
 - Profile: `{{profile}}`
 - Task store: `{{task_store}}`
@@ -82,3 +82,4 @@ Prompting-guide supplies capability/mechanics evidence; workflow stores decision
 - Before execution, verify the adopted Beads workspace, project, nodes, parent-child relations and blocking edges through the binding owner; initialization proves only offline syntax. Nested invocations inherit this engagement's review boundary and final phase.
 
 {{position_section}}
+{{approved_design_section}}

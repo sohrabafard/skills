@@ -2241,6 +2241,103 @@ class PlanKindTest(unittest.TestCase):
                 result = self.cli(root, VALIDATE, "--plan", str(plan), expected=1)
                 self.assertIn("ERROR [plan.execution-hierarchy]" if case == "hierarchy" else "ERROR [plan.approved-design]", result.stdout)
 
+    EMBEDDED_BODY = ("# Approved design\r\n\r\n## Handoff Package\n\n### Phase 9: design-only heading\n\n"
+                     "- [ ] design checklist item outside any plan phase\n- Status: complete\nNo trailing newline")
+
+    def plan_mode_source(self, root: Path, body: str = EMBEDDED_BODY) -> Path:
+        source = root.parent / "plan-mode.md"
+        source.write_bytes(("خلاصهٔ تصمیم برای کاربر\n<!-- design-body -->\n" + body).encode("utf-8"))
+        return source
+
+    def embed(self, root: Path, source: Path, *args: str, expected: int = 0, **approval: str):
+        flags = {"--approval-by": "fixture user", "--approval-on": "2026-07-10",
+                 "--approval-evidence": "synthetic in-session approval; no live authority"}
+        flags.update({f"--{key.replace('_', '-')}": value for key, value in approval.items()})
+        return self.cli(root, INIT, "--task", "Execute", "--timestamp", STAMP, "--plan-kind", "execution",
+                        "--approved-design", "embedded", "--design-source", str(source),
+                        *[item for pair in flags.items() for item in pair],
+                        "--task-store", "beads", "--beads-binding", "AGENTS.md#beads", *args, expected=expected)
+
+    def test_embedded_design_is_copied_verbatim_into_one_plan_that_validates(self):
+        with workspace_tempdir() as tmp:
+            root = Path(tmp)
+            source = self.plan_mode_source(root)
+            outputs = json.loads(self.embed(root, source).stdout)["outputs"]
+            plan = root / outputs[0]
+            self.assertEqual(2, len(self.inventory(root)), "no separate design plan or checkpoint")
+            raw = plan.read_bytes()
+            header, body = raw.split(b"<!-- approved-design:start -->\n", 1)
+            self.assertEqual(self.EMBEDDED_BODY.encode("utf-8"), body)
+            self.assertNotIn("خلاصه".encode("utf-8"), raw)
+            for required in ("- Approved design: embedded\n", "- Approval status: approved\n",
+                             "- Approval by: fixture user\n", "- Approval on: 2026-07-10\n", "\n## Approved Design\n"):
+                self.assertIn(required.encode("utf-8"), header)
+            self.cli(root, VALIDATE, "--plan", str(plan))
+
+    def test_embedded_design_text_is_never_template_rendered(self):
+        with workspace_tempdir() as tmp:
+            root = Path(tmp)
+            body = "# Design for {{task}}\n"
+            outputs = json.loads(self.embed(root, self.plan_mode_source(root, body)).stdout)["outputs"]
+            plan = root / outputs[0]
+            self.assertTrue(plan.read_text(encoding="utf-8").endswith("<!-- approved-design:start -->\n" + body))
+            # Same placeholder gate as a linked approved design.
+            result = self.cli(root, VALIDATE, "--plan", str(plan), expected=1)
+            self.assertIn("ERROR [plan.embedded-design-placeholders]", result.stdout)
+
+    def test_embedded_requires_source_text_and_attributable_approval_without_writes(self):
+        cases = {
+            "invalid-date": {"approval_on": "2026-02-30"},
+            "no-owner": {"approval_by": "not recorded"},
+            "no-evidence": {"approval_evidence": "pending"},
+            "multiline": {"approval_evidence": "first\nsecond"},
+        }
+        for case, approval in cases.items():
+            with self.subTest(case=case), workspace_tempdir() as tmp:
+                root = Path(tmp)
+                self.embed(root, self.plan_mode_source(root), expected=2, **approval)
+                self.assertEqual([], list(root.iterdir()))
+        for case in ("missing", "directory", "empty-body", "two-markers", "unreadable"):
+            with self.subTest(case=case), workspace_tempdir() as tmp:
+                root = Path(tmp)
+                source = {"missing": root.parent / "absent.md", "directory": root.parent}.get(case)
+                if source is None:
+                    source = self.plan_mode_source(root, {"empty-body": " \n", "two-markers": "a\n<!-- design-body -->\nb\n"}.get(case, "x"))
+                    if case == "unreadable":
+                        source.write_bytes(b"\xff")
+                self.embed(root, source, expected=2)
+                self.assertEqual([], list(root.iterdir()))
+        with workspace_tempdir() as tmp:
+            root = Path(tmp)
+            source = self.plan_mode_source(root)
+            self.cli(root, INIT, "--task", "Execute", "--plan-kind", "execution", "--approved-design", "embedded",
+                     "--task-store", "beads", "--beads-binding", "AGENTS.md#beads", expected=2)
+            self.execute(root, approved_design_fixture(root), "--design-source", str(source), expected=2)
+            self.cli(root, INIT, "--task", "Design", "--plan-kind", "design", "--design-source", str(source), expected=2)
+            self.cli(root, INIT, "--task", "Design", "--plan-kind", "design", "--approval-by", "fixture user", expected=2)
+            self.assertEqual([], list(root.iterdir()))
+
+    def test_embedded_validator_rejects_missing_text_or_revoked_approval(self):
+        edits = {
+            "no-marker": ("<!-- approved-design:start -->\n", "", "ERROR [plan.embedded-design]"),
+            "no-section": ("\n## Approved Design\n", "\n## Removed\n", "ERROR [plan.embedded-design]"),
+            "pending": ("Approval status: approved", "Approval status: pending", "ERROR [design.approval]"),
+            "no-evidence": ("Approval evidence: synthetic in-session approval; no live authority", "Approval evidence: not recorded", "ERROR [design.approval]"),
+        }
+        for case, (old, new, finding) in edits.items():
+            with self.subTest(case=case), workspace_tempdir() as tmp:
+                root = Path(tmp)
+                plan = root / json.loads(self.embed(root, self.plan_mode_source(root)).stdout)["outputs"][0]
+                self.edit(plan, old, new)
+                result = self.cli(root, VALIDATE, "--plan", str(plan), expected=1)
+                self.assertIn(finding, result.stdout)
+        with workspace_tempdir() as tmp:
+            root = Path(tmp)
+            plan = root / json.loads(self.embed(root, self.plan_mode_source(root)).stdout)["outputs"][0]
+            content = plan.read_text(encoding="utf-8")
+            plan.write_text(content.split("<!-- approved-design:start -->\n")[0] + "<!-- approved-design:start -->\n \n", encoding="utf-8")
+            self.assertIn("ERROR [plan.embedded-design]", self.cli(root, VALIDATE, "--plan", str(plan), expected=1).stdout)
+
     def test_dry_run_collision_and_design_overwrite_preflight_preserve_inputs(self):
         with workspace_tempdir() as tmp:
             root = Path(tmp)

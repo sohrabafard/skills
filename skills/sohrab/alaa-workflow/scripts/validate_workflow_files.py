@@ -91,6 +91,31 @@ def plan_kind(content: str) -> str | None:
     return values[0]
 
 
+EMBEDDED_DESIGN_HEADING_RE = re.compile(r"^##[ \t]+Approved Design[ \t]*\r?$", re.M)
+EMBEDDED_DESIGN_START_RE = re.compile(r"^<!-- approved-design:start -->[ \t]*(?:\r?\n|\Z)", re.M)
+
+
+def split_embedded_design(content: str) -> tuple[str, str | None]:
+    """Separate an embedded plan's execution text from its verbatim approved design.
+
+    The design is the user's approved text, so its checklists, phase headings or handoff
+    headings must never be read as this plan's own structure. The section is the plan's
+    last; everything after its start marker is design. A missing marker returns None.
+    """
+    if header_values(content, "Approved design") != ["embedded"]:
+        return content, None
+    heading = EMBEDDED_DESIGN_HEADING_RE.search(content)
+    if heading is None:
+        return content, None
+    start = EMBEDDED_DESIGN_START_RE.search(content, heading.end())
+    return content[:heading.start()], (content[start.end():] if start else None)
+
+
+def plan_text(path: Path) -> str:
+    """Read a plan without the verbatim design an embedded plan carries."""
+    return split_embedded_design(read_text(path))[0]
+
+
 def recorded_value(value: str) -> bool:
     return bool(value and not UNRESOLVED_RE.search(value) and value.lower() not in {
         "none", "none yet", "n/a", "pending", "not recorded", "not run", "not applicable", "unknown"})
@@ -230,7 +255,7 @@ def resolve_review_contract(path: Path) -> tuple[str, str]:
         if selected in seen:
             raise ValueError("Parent plan cycle; reconcile ancestry before initialization.")
         seen.add(selected)
-        content = read_text(path)
+        content = plan_text(path)
         header = plan_header(content)
 
         def scalar(label: str, optional: bool = False) -> str | None:
@@ -868,6 +893,15 @@ def validate_skill_bindings(content: str, path: Path, profile: str, status: str)
     return messages
 
 
+def validate_embedded_design(content: str, body: str | None) -> list[str]:
+    messages = design_approval(content, required=True)
+    if body is None or not body.strip():
+        messages.append(error("plan.embedded-design", "Embedded design text is missing.", "Keep ## Approved Design last with its start marker and the verbatim approved text after it."))
+    else:
+        messages.extend(unresolved_messages(body, True, "plan.embedded-design-placeholders"))
+    return messages
+
+
 def validate_plan(path: Path, profile: str) -> list[str]:
     content = read_text(path)
     try:
@@ -876,6 +910,7 @@ def validate_plan(path: Path, profile: str) -> list[str]:
         return [error("plan.kind", str(exc), "Restore exactly one supported header kind.")]
     if kind == "design":
         return validate_design_plan(path)
+    content, embedded_body = split_embedded_design(content)
     status = effective_plan_status(content, path, profile)
     complete = is_complete_status(status)
     messages: list[str] = []
@@ -883,7 +918,9 @@ def validate_plan(path: Path, profile: str) -> list[str]:
         if not hierarchy_family(content):
             messages.append(error("plan.execution-hierarchy", "Explicit execution requires the Beads phase-task-subtask hierarchy.", "Restore the hierarchy; direct changes cadence, never task authority."))
         designs = header_values(content, "Approved design")
-        if len(designs) != 1 or not recorded_value(designs[0]):
+        if designs == ["embedded"]:
+            messages.extend(validate_embedded_design(content, embedded_body))
+        elif len(designs) != 1 or not recorded_value(designs[0]):
             messages.append(error("plan.approved-design", "Execution requires one approved-design link.", "Link the valid approved design without modifying it."))
         else:
             design = path_from_reference(designs[0], path)
@@ -1335,6 +1372,7 @@ def main() -> int:
             if not had_error:
                 print("Validation completed without blocking errors (plan kind: design; profile: resumable).")
             return 1 if had_error else 0
+        content = split_embedded_design(content)[0]
         profile = detect_profile(content) if profile == "auto" else profile
         companions = resolve_companions(plan_path, content)
         had_error = report("plan", plan_path, validate_plan(plan_path, profile)) or had_error

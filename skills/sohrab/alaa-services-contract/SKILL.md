@@ -40,6 +40,8 @@ judgment cannot be debugged. Exact detail lives in `references/`; this file rout
 3. Select the repository role: frontend-facing backend behind the gateway, internal backend, auth-boundary
    service, or authz-runtime / control-plane service.
 4. Read the smallest reference file that owns the rule you need, not the largest one that mentions it.
+   For service env declarations or deploy delivery, read
+   [Deploy-time environment contract](references/15-deployment-and-runtime-contract.md#deploy-time-environment-contract).
 5. Load the companion skills that file names, before implementing outside this skill's ownership.
 6. Apply the change.
 7. Run the checklists in `references/40-apply-checklist-and-anti-patterns.md`.
