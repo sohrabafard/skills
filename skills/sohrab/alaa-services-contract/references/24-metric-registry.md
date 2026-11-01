@@ -231,25 +231,29 @@ platform dashboards.
 | `alaa_entitlement_expansion_duration_seconds` | histogram | `entitlement-api` (expansion-worker; not exposed) | audience-expansion duration | owed rename of `entitlement_expansion_duration_seconds` (`metrics.go:181`) |
 | `alaa_entitlement_worker_batches_total` | counter | `entitlement-api` (expansion-worker; not exposed) | worker batches claimed | owed rename of `entitlement_worker_batches_total` (`metrics.go:189`); its `worker` label is the pod hostname, not a closed set |
 | `alaa_entitlement_worker_attempts_total` | counter | `entitlement-api` (expansion-worker; not exposed) | worker attempts | owed rename of `entitlement_worker_attempts_total` (`metrics.go:196`) |
-| `alaa_entitlement_projection_receipts_total` | counter | `entitlement-api` (projection-worker) | receipts by accepted outcome or counted no-op disposition | `internal/observability/projection_metrics.go:103` |
-| `alaa_entitlement_projection_receipt_rejections_total` | counter | `entitlement-api` (projection-worker) | receipt deliveries rejected without processing, by violated rule | `internal/observability/projection_metrics.go:107` |
-| `alaa_entitlement_projection_relay_publications_total` | counter | `entitlement-api` (projection-worker) | task relay publication attempts, by outcome | `internal/observability/projection_metrics.go:111` |
-| `alaa_entitlement_projection_relay_resubmissions_total` | counter | `entitlement-api` (projection-worker) | tasks claimed again after a lease expiry or a receipt timeout | `internal/observability/projection_metrics.go:115` |
-| `alaa_entitlement_projection_bulk_pauses_total` | counter | `entitlement-api` (projection-worker) | bulk parts held back at the unresolved-task bound | `internal/observability/projection_metrics.go:119` |
-| `alaa_entitlement_projection_tasks_unresolved` | gauge | `entitlement-api` (projection-worker) | issued projection tasks without an accepted receipt, by phase | `internal/observability/projection_metrics.go:123` |
-| `alaa_entitlement_projection_oldest_unresolved_seconds` | gauge | `entitlement-api` (projection-worker) | age of the oldest unresolved projection task, by phase | `internal/observability/projection_metrics.go:127` |
-| `alaa_entitlement_projection_relay_pass_failures_total` | counter | `entitlement-api` (projection-worker) | failed relay pass steps, by stage | `internal/observability/projection_metrics.go:131` |
-| `alaa_entitlement_projection_blocked_rules` | gauge | `entitlement-api` (projection-worker) | rules blocked until exact-rule repair, by rule kind | `internal/observability/projection_metrics.go:135` |
-| `alaa_entitlement_projection_oldest_published_without_receipt_seconds` | gauge | `entitlement-api` (projection-worker) | age of the oldest published task still without a receipt, by phase | `internal/observability/projection_metrics.go:139` |
-| `alaa_entitlement_projection_failed_terminal_tasks` | gauge | `entitlement-api` (projection-worker) | tasks whose latest receipt is an unrecovered terminal failure, by phase | `internal/observability/projection_metrics.go:143` |
-| `alaa_entitlement_projection_receipt_consumer_paused` | gauge | `entitlement-api` (projection-worker) | 1 while the receipt consumer is cancelled for unready dependencies | `internal/observability/projection_metrics.go:147` |
-| `alaa_entitlement_projection_gauges_last_refresh_timestamp_seconds` | gauge | `entitlement-api` (projection-worker) | Unix time of the last projection gauge refresh | `internal/observability/projection_metrics.go:151` |
-| `alaa_entitlement_projection_relay_pass_duration_seconds` | histogram | `entitlement-api` (projection-worker) | duration of one relay pass, by result | `internal/observability/projection_metrics.go:155` |
-| `alaa_entitlement_projection_receipt_processing_duration_seconds` | histogram | `entitlement-api` (projection-worker) | duration of processing one receipt delivery, by disposition | `internal/observability/projection_metrics.go:160` |
-| `alaa_entitlement_projection_change_settle_seconds` | histogram | `entitlement-api` (projection-worker) | source commit to checkpoint settlement time | `internal/observability/projection_metrics.go:165` |
-| `alaa_entitlement_projection_fences_total` | counter | `entitlement-api` (projection-worker) | accepted fenced receipts of publish-class tasks, by rule kind and code | `internal/observability/projection_metrics.go:170` |
-| `alaa_entitlement_projection_pending_parts` | gauge | `entitlement-api` (projection-worker) | manifest parts accepted but not yet materialized into tasks | `internal/observability/projection_metrics.go:174` |
-| `alaa_entitlement_projection_write_fence_raised_seconds` | gauge | `entitlement-api` (projection-worker) | seconds the source write fence has been raised; 0 while lifted | `internal/observability/projection_metrics.go:178` |
+| `alaa_entitlement_projection_relay_publications_total` | counter | `entitlement-api` (projection-worker) | task relay publication attempts, by outcome | `internal/observability/projection_metrics.go:108` |
+| `alaa_entitlement_projection_relay_resubmissions_total` | counter | `entitlement-api` (projection-worker) | tasks claimed again after a lease expiry or an outcome timeout, by `reason` (`outcome_timeout`, `lease_expired`); still live | `internal/observability/projection_metrics.go:112` |
+| `alaa_entitlement_projection_bulk_pauses_total` | counter | `entitlement-api` (projection-worker) | bulk parts held back at the unresolved-task bound | `internal/observability/projection_metrics.go:116` |
+| `alaa_entitlement_projection_tasks_unresolved` | gauge | `entitlement-api` (projection-worker) | issued projection tasks without a recorded outcome, by phase | `internal/observability/projection_metrics.go:120` |
+| `alaa_entitlement_projection_oldest_unresolved_seconds` | gauge | `entitlement-api` (projection-worker) | age of the oldest unresolved projection task, by phase | `internal/observability/projection_metrics.go:124` |
+| `alaa_entitlement_projection_relay_pass_failures_total` | counter | `entitlement-api` (projection-worker) | failed relay pass steps, by stage | `internal/observability/projection_metrics.go:128` |
+| `alaa_entitlement_projection_blocked_rules` | gauge | `entitlement-api` (projection-worker) | rules blocked until exact-rule repair, by rule kind | `internal/observability/projection_metrics.go:132` |
+| `alaa_entitlement_projection_oldest_published_without_outcome_seconds` | gauge | `entitlement-api` (projection-worker) | age of the oldest published task still without a recorded outcome, by phase | `internal/observability/projection_metrics.go:136` |
+| `alaa_entitlement_projection_reflector_outcomes_total` | counter | `entitlement-api` (reflector) | outcome rows written by the reflector, by `phase`, `outcome` and `code` | `internal/observability/projection_metrics.go:166` |
+| `alaa_entitlement_projection_reflector_dispositions_total` | counter | `entitlement-api` (reflector) | reflector delivery decisions, by `disposition` | `internal/observability/projection_metrics.go:170` |
+| `alaa_entitlement_projection_reflector_handler_duration_seconds` | histogram | `entitlement-api` (reflector) | duration of one reflector handler invocation, by `result` (`recorded`, `settled`, `held`, `requeued`) | `internal/observability/projection_metrics.go:174` |
+| `alaa_entitlement_projection_reflector_openfga_requests_total` | counter | `entitlement-api` (reflector) | OpenFGA requests of the reflector, by `op` (`write`, `read_exact`, `read_page`) and `class` | `internal/observability/projection_metrics.go:179` |
+| `alaa_entitlement_projection_reflector_openfga_duration_seconds` | histogram | `entitlement-api` (reflector) | duration of one reflector OpenFGA request, by `op` | `internal/observability/projection_metrics.go:183` |
+| `alaa_entitlement_projection_reflector_paused` | gauge | `entitlement-api` (reflector) | 1 while a reflector consumer is cancelled because its dependencies are not ready | `internal/observability/projection_metrics.go:188` |
+| `alaa_entitlement_projection_reflector_held_deliveries` | gauge | `entitlement-api` (reflector) | deliveries the reflector holds unsettled during a dependency outage | `internal/observability/projection_metrics.go:192` |
+| `alaa_entitlement_projection_reflector_live_claims` | gauge | `entitlement-api` (reflector) | unexpired per-rule engine claims | `internal/observability/projection_metrics.go:196` |
+| `alaa_entitlement_projection_reflector_attempts_exhausted_total` | counter | `entitlement-api` (reflector) | tasks whose attempt counter reached the limit and were recorded `dead_lettered` | `internal/observability/projection_metrics.go:200` |
+| `alaa_entitlement_projection_failed_terminal_tasks` | gauge | `entitlement-api` (projection-worker) | tasks whose recorded outcome is a terminal failure, by phase | `internal/observability/projection_metrics.go:140` |
+| `alaa_entitlement_projection_gauges_last_refresh_timestamp_seconds` | gauge | `entitlement-api` (projection-worker) | Unix time of the last projection gauge refresh | `internal/observability/projection_metrics.go:144` |
+| `alaa_entitlement_projection_relay_pass_duration_seconds` | histogram | `entitlement-api` (projection-worker) | duration of one relay pass, by result | `internal/observability/projection_metrics.go:148` |
+| `alaa_entitlement_projection_change_settle_seconds` | histogram | `entitlement-api` (projection-worker) | source commit to checkpoint settlement time | `internal/observability/projection_metrics.go:153` |
+| `alaa_entitlement_projection_pending_parts` | gauge | `entitlement-api` (projection-worker) | manifest parts accepted but not yet materialized into tasks | `internal/observability/projection_metrics.go:158` |
+| `alaa_entitlement_projection_write_fence_raised_seconds` | gauge | `entitlement-api` (projection-worker) | seconds the source write fence has been raised; 0 while lifted | `internal/observability/projection_metrics.go:162` |
 | `alaa_authz_decisions_total` | counter | `authz-sidecar` | allow/deny decisions; label `cache` is a closed set (`hit`, `miss`, `bypass`, `disabled`, `error`, `rejected`), and an unknown value is forced to `bypass` (`authz-sidecar: internal/decision/engine.go:56-77`) | owed rename of `authz_sidecar_decisions_total`; the `cache` label is emitted today |
 | `alaa_authz_decision_duration_seconds` | histogram | `authz-sidecar` | decision duration | owed rename of `authz_sidecar_decision_duration_seconds` |
 | `alaa_authz_openfga_requests_total` | counter | `authz-sidecar` | outbound OpenFGA calls, by `operation` (check, batch_check, list_objects, read_model, validate_model, healthz) and outcome | owed rename of `authz_sidecar_openfga_requests_total` |
@@ -264,12 +268,10 @@ platform dashboards.
 | `alaa_authz_decision_cache_token_rollback_total` | counter | `authz-sidecar` | scope tokens read back at the value before the latest one (A, B, then A: a failover, restore or replay in the shared Redis that can undo a clear), by `scope` (`project`, `subject`, `global`); observation only, serving is unchanged | emitted in mode `redis` only (`authz-sidecar` `dd02250`: `internal/decisioncache/metrics.go:18,23-25,87-90,123-127`; `internal/decisioncache/cache.go:610-644`); not a `rejected_total` reason |
 | upstream OpenFGA families (pointer) | upstream | `authz-openfga` | the engine adds no metric of its own; upstream names stay, per the prefix rule. Load and capacity evidence uses `openfga_request_duration_ms`, `openfga_datastore_query_count`, `openfga_dispatch_count`, `grpc_server_handled_total`, `process_cpu_seconds_total`, `process_resident_memory_bytes`, scraped on port 2112. PgBouncer exports nothing (no exporter, no `stats_users`); the interim pooler signal is `pg_stat_activity` | `authz-openfga: docker-compose.yml:39`, `Dockerfile:8`, `scripts/openfga/delivery.py:624`; `docs/handoffs/mesh-145d79be-registry-inventory.md` section B |
 
-`entitlement-projector` (rule-executor) owns no family here: it emits only registered shared names —
-`alaa_service_ready`, `alaa_service_readiness_failures_total`, the six `alaa_queue_*` consumer and publisher
-counters and histogram, and `alaa_dependency_requests_total`, `alaa_dependency_request_failures_total`,
-`alaa_dependency_timeouts_total` with `dependency=openfga` and `operation` — and no `alaa_http_*` baseline,
-because it serves only `/metrics` and readiness (`entitlement-projector: internal/execruntime/telemetry.go:30-69`).
-Its `audit` and `hydration-evidence` modes emit no metrics.
+The `entitlement-projector` service is retired (owner decision D-AP-12; repository retired 2026-11-01). It emitted no
+family of its own, and its former receipt and executor series do not exist in `entitlement-api`; the receipt
+metrics were removed with the receipt transport (D-CT-6). Reflector tuple writes are observed through the
+`alaa_entitlement_projection_reflector_*` families above and the shared `alaa_queue_*` names.
 
 ### `alaa_gateway_totp_proof_verifications_total`: its label, and where it is produced
 
