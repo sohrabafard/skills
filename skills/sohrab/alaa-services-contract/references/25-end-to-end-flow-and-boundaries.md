@@ -10,7 +10,7 @@ The Ala platform is organized in layers with clear ownership:
 - the gateway verifies access tokens for protected routes, removes untrusted internal headers, injects trusted identity and project context, and forwards requests to the right backend
 - when a route family needs fine-grained request-time authorization, the gateway calls `authz-sidecar` or `entitlement-spoa`
 - backend services own their business domains and internal logic
-- `entitlement-api` keeps business truth; `entitlement-projector` writes derived tuples; `authz-sidecar` checks OpenFGA under the `authz-openfga` model contract; the steps are under "Authorization mesh flow" below
+- `entitlement-api` keeps business truth; the `reflector` role inside `entitlement-api` writes derived tuples (`entitlement-projector` is retired); `authz-sidecar` checks OpenFGA under the `authz-openfga` model contract; the steps are under "Authorization mesh flow" below
 
 Rules:
 - do not let services recreate browser-facing trust assumptions on internal hops
@@ -44,9 +44,7 @@ Rules:
 - `wa`
   - watch and analytics ingestion service for event intake and related processing flows
 - `entitlement-api`
-  - normalized authorization business truth
-- `entitlement-projector` (runtime `projector`)
-  - derived tuple writer into OpenFGA
+  - normalized authorization business truth; its in-service `reflector` role is the derived tuple writer into OpenFGA (the `entitlement-projector` service is retired)
 - `authz-openfga`
   - canonical model/contracts and derived OpenFGA graph for fast checks
 - `authz-sidecar`
@@ -69,7 +67,7 @@ Treat the default Ala flow like this:
 - gateway -> request-time authorization runtime such as `authz-sidecar` or `entitlement-spoa` when the route family uses fine-grained authorization
 - backend service -> backend service only for internal workloads that truly require a synchronous hop
 - backend service -> async infrastructure for queue, event, or job delivery when appropriate
-- normalized business change -> `entitlement-api` -> `projector` -> OpenFGA for derived fine-grained authorization state, as rule projection tasks on `projector.commands` with receipts back on `entitlement.commands` (see "Authorization mesh flow")
+- normalized business change -> `entitlement-api` (relay, then its `reflector` role) -> OpenFGA for derived fine-grained authorization state, as rule projection tasks on `projector.commands` with the outcome recorded in the service's own database and no receipt (see "Authorization mesh flow")
 
 ## Simple user journey
 
@@ -99,8 +97,7 @@ This contract applies only to media playback positions, media durations, timepoi
 
 - the gateway owns authentication
 - `authz-sidecar` owns request-time checks; `entitlement-spoa` is a future adapter
-- `entitlement-api` owns normalized authorization business truth
-- `entitlement-projector` writes derived tuples (runtime `projector`)
+- `entitlement-api` owns normalized authorization business truth and, in its `reflector` role, writes the derived tuples (`entitlement-projector` is retired)
 - `authz-openfga` owns model/contracts; OpenFGA stores derived effective authorization state
 
 For a normal backend behind gateway, the practical rule is:
@@ -114,17 +111,17 @@ Do not make a normal backend behave like the gateway, the request-time checker, 
 ## Authorization mesh flow
 
 Verified 2026-10-10 from each repository's `docs/handoffs/mesh-145d79be-registry-inventory.md`, which cites
-every step at `file:line`. Names are registered in `23-queue-and-exchange-registry.md`.
+every step at `file:line`. The write path was re-stated 2026-11-01 for the in-service `reflector` (D-AP-12, D-CT-6); the read path is unchanged. Names are registered in `23-queue-and-exchange-registry.md`.
 
 Write path:
 
 | # | Owner | Input | Action | Output |
 |---|---|---|---|---|
 | 1 | `entitlement-api` api | admin grant or deny mutation (HTTP or gRPC) | commits the business revisions and, in the same transaction, rule heads, change sequence, intent manifest, and per-generation tasks; never publishes (`internal/projectionsource/doc.go:1-12`) | `projection_tasks` rows |
-| 2 | `entitlement-api` projection-worker relay | due `projection_tasks` | publishes each task mandatory and confirmed with the relay's AMQP `user_id`, then claims it again after a receipt timeout or lease expiry (`internal/projectionrelay/relay.go:280-364`) | `rule_projection.task.v1` on `projector.commands` |
-| 3 | `entitlement-projector` rule-executor | task | validates it against the generation pins and managed-path allowlist, then writes or deletes tuples in the pinned generation store (`entitlement-projector: internal/execruntime/handler.go:195-198,299`) | OpenFGA tuples |
-| 4 | `entitlement-projector` rule-executor | task outcome | publishes the receipt, or a `dead_lettered` notice before the final attempt, mandatory with confirm, then acks the task (`internal/execruntime/receiptpool.go:123,193`) | `rule_projection.receipt.v1` on `entitlement.commands` |
-| 5 | `entitlement-api` projection-worker receipt consumer | receipt | authenticates the AMQP `user_id`, stores the receipt, blocks the rule on terminal failure, plans successor tasks, and acks after commit; the checkpoint advancer settles changes (`internal/projectionreceipts/consumer.go:62-125`) | settled tasks; successor `projection_tasks` |
+| 2 | `entitlement-api` projection-worker relay | due `projection_tasks` | publishes each task mandatory and confirmed, then claims it again after the fixed outcome timeout (`ENTITLEMENT_API_RELAY_OUTCOME_TIMEOUT`, audit reason `outcome_timeout`) or a lease expiry; there is no receipt and no backoff (D-CT-6) | `rule_projection.task.v1` on `projector.commands` |
+| 3 | `entitlement-api` `reflector` role | task | takes the per-rule engine claim under the head lock (transaction 1), calls OpenFGA with no transaction open, using the store and model of the `projection_generations` row (D-AP-12) | OpenFGA tuples |
+| 4 | `entitlement-api` `reflector` role | task outcome | records the outcome in `projection_task_outcomes` and releases the claim under the head lock (transaction 2), then acks the task; an exhausted attempt counter records `dead_lettered` (D-AP-12, D-AP-14) | outcome row |
+| 5 | `entitlement-api` projection-worker | outcome row | blocks the rule on terminal failure, plans successor tasks, and the checkpoint advancer settles changes | settled tasks; successor `projection_tasks` |
 
 Read path:
 
@@ -138,7 +135,7 @@ Read path:
 Side flows:
 - Expansion: `POST /api/v1/admin/expansions/object-access` queues a job; the `entitlement-api` expansion-worker consumes `notif.retrieve_users`, expands group principals through `notif.expand_users` (or gRPC to `auth`), and publishes `notif.recipient_chunks` when the job carries a notification id (`entitlement-api: internal/workers/expansion_worker.go:94-135`).
 - Content sync: the gRPC `ContentSyncService` calls `source.Apply`, so content changes enter write-path step 1 (`entitlement-api: internal/contentsync/service.go:214,318,349`).
-- Legacy until AP-6: the outbox-publisher still relays `grant.*` and `deny.*` rows to `entitlement.projector.work`, which has no consumer (`entitlement-api: internal/outbox/publisher.go:190`).
+- The legacy `grant.*` and `deny.*` relay to `entitlement.projector.work` and the `entitlement.reconciliation` trigger are removed (AP-6 closed, D-AP-10); `entitlement.events` remains `gap`.
 
 ## Frontend and gateway orientation
 
@@ -464,7 +461,7 @@ Rules:
 
 ### Entitlement repositories
 
-- keep model/contracts in `authz-openfga`, checks in `authz-sidecar`, business truth/events in `entitlement-api`, and projection in `entitlement-projector`
+- keep model/contracts in `authz-openfga`, checks in `authz-sidecar`, business truth/events in `entitlement-api`, and projection (relay and `reflector`) in `entitlement-api`
 - do not turn OpenFGA into business truth
 
 ## Why this file exists

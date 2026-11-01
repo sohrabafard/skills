@@ -25,7 +25,7 @@ relation.
 
 ## The store, the model, and pinning
 
-Three identifiers must agree across `projector` and `authz-sidecar`:
+Three identifiers must agree across the `reflector` and `authz-sidecar`:
 
 - `OPENFGA_STORE_ID`: the isolated authorization namespace that holds tuples and model
   versions. It is the `/stores/{store_id}/...` path segment. `OPENFGA_STORE_NAME` is
@@ -36,6 +36,6 @@ Three identifiers must agree across `projector` and `authz-sidecar`:
 - `OPENFGA_MODEL_LABEL` (default `authz_v1`): a human-readable label for that pinned
   version, echoed in logs and the `X-Authz-Model-Label` header.
 
-Rule: `projector` (writer) and `authz-sidecar` (reader) must use the **same** store
+Rule: the `reflector` (writer; it takes its store and model from the `projection_generations` row) and `authz-sidecar` (reader) must use the **same** store
 id, model id, and label. Upload a new model id before writing new tuple shapes, and
 roll back the label and model id together.

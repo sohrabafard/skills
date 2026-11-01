@@ -6,17 +6,17 @@ rule and tuples exist fails closed for everyone.
 In `authz-openfga` (canonical model and contracts):
 1. Confirm the target **type** and final **`can_*`** relation exist. For new ones,
    add/upload the model, re-pin `OPENFGA_AUTHORIZATION_MODEL_ID` and bump
-   `OPENFGA_MODEL_LABEL` for both `projector` and `authz-sidecar`.
+   `OPENFGA_MODEL_LABEL` for both the `reflector` generation and `authz-sidecar`.
 2. Add the `endpoint_category` + `target_type` -> `final_permission` rule to
    `<repo>/platform/openfga/contracts/endpoint-permissions.yaml`; the category must
    match the gateway.
 
-In `entitlement-api` and `entitlement-projector`:
-3. Ensure the API emits change events and the projector writes that scope type's
+In `entitlement-api`:
+3. Ensure the API commits projection tasks and its `reflector` role writes that scope type's
    grant/deny tuples (its per-scope managed-relation set). Without tuples, every
    `can_*` check returns `allowed: false`.
 
-`entitlement-api`, `entitlement-projector`, `authz-sidecar`: import reviewed bundles;
+`entitlement-api`, `authz-sidecar`: import reviewed bundles;
 verify canonical equality/shared pins before exposure. API runtime model SHA must
 match its validated manifest; follow `<repo>/docs/contracts/importer-provenance.md`
 migration/admission gates. Compatible consumer versions may differ.
@@ -36,7 +36,7 @@ In `gateway` (the route surface):
    example `assessment = "asm"`) so the object id can be built.
 7. Confirm the trusted headers the sidecar needs are in `authzSidecar.requestHeaderAllowlist`.
 8. Validate: render the chart and run the gateway authz smoke harness; verify the
-   store/model pins match across `projector` and `authz-sidecar`.
+   store/model pins match across the `reflector` and `authz-sidecar`.
 
 A `comment_service_bundle`-style route skips steps 5-6 but must be a supported
 normalization target in the contract.

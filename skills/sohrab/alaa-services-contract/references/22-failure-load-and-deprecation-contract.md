@@ -190,7 +190,7 @@ A call is retried only when repeating it cannot produce a second effect. There i
 
 - The gateway fails closed with `503` and the `AUTHZ_SERVICE_*` codes in
   `26-request-time-authorization-openfga.md`. The backend is not called.
-- A backend must not compensate. It must not call OpenFGA directly, must not allow the request because
+- A backend must not compensate. It must not call OpenFGA directly (the one exception is the `entitlement-api` `reflector` role, which writes tuples and is not a request path; see `26-request-time-authorization-openfga/70-debugging-and-source-owners.md`), must not allow the request because
   the check could not be reached, and must not cache a previous allow decision to serve a later request.
 - The only service permitted to cache an authorization decision is `authz-sidecar`, through its own
   short-TTL decision cache. That cache is not extended to survive an OpenFGA outage.

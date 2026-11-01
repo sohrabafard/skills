@@ -9,7 +9,7 @@ Hard-code the Ala backend contract for consistent agent outputs and predictable 
 Portability means filesystem independence across machines; this skill remains Ala-specific.
 
 Use it when:
-- creating or changing `auth`, `content`, `comment`, `ticket`, `gateway`, `entitlement-api`, `entitlement-projector`, `authz-openfga`, `authz-sidecar`, `vod`, `wa`, `notification`, `assessment`, or another Ala backend or platform service
+- creating or changing `auth`, `content`, `comment`, `ticket`, `gateway`, `entitlement-api`, `authz-openfga`, `authz-sidecar`, `vod`, `wa`, `notification`, `assessment`, or another Ala backend or platform service
 - explaining how a frontend-facing backend sits behind the gateway and inside the wider Ala platform
 - standardizing the shared `service-ci-kit` GitLab CI/CD baseline for new or refactored Ala services
 - standardizing `/api/health`
@@ -36,7 +36,7 @@ Use this picture before code changes when a repo needs platform orientation.
 Default Ala flow:
 - frontend or public client -> gateway -> backend service
 - gateway may call a request-time authorization runtime such as `authz-sidecar` or `entitlement-spoa`
-- `entitlement-api` owns business truth; `entitlement-projector` writes derived tuples; `authz-openfga` owns the model and contracts
+- `entitlement-api` owns business truth and, in its `reflector` role, writes derived tuples (`entitlement-projector` is retired); `authz-openfga` owns the model and contracts
 
 Plain meaning:
 - the gateway owns authentication, spoofed-header removal, and trusted header injection
