@@ -41,7 +41,7 @@ pin is a subtle cause of "the tuple exists but the check still denies."
   only the `entitlement-api` `reflector` role writes tuples.
   Approved exception (owner decisions D-AP-12 and D-CT-6, 2026-10-31; `entitlement-projector` retired
   2026-11-01; Beads `alaa-vfwc`): the in-service `reflector` role of `entitlement-api` is the only holder of an
-  OpenFGA credential and the only tuple writer. It is not a request path. Every other backend still never calls
+  OpenFGA credential outside the sidecar (the sidecar checks, the reflector writes) and the only tuple writer. It is not a request path. Every other backend still never calls
   OpenFGA.
 - Checking a `grant_*` or `deny_*` relation at request time instead of a `can_*`.
 - Adding a gateway route group before the permission rule and tuples exist.
