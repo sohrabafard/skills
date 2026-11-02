@@ -50,7 +50,7 @@ Before raising effort, resolve prompt bloat and missing context. Vendor lean-pro
 - Treating lower effort as a reliable verbosity or scope control instead of specifying the required output and boundaries.
 - Arbitrary model/effort escalation from a vague importance or sensitivity label; record consequence and priority through the runtime orchestrator allocation owner.
 - Pinning maximum effort by habit without measured quality benefit and a stated workload need.
-- Treating a supported effort as proof it is appropriate, or changing model and effort together.
+- Treating a supported effort as proof it is appropriate, or changing model and effort together in a comparison.
 - Setting an explicit thinking budget on a generation that no longer accepts one.
 - Passing `adaptive` as an effort value.
 - Raising effort to compensate for a bloated prompt or a badly assembled context.
