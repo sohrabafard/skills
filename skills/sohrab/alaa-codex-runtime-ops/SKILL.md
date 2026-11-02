@@ -5,7 +5,7 @@ description: "Codex runtime and harness recovery inside WSL/Linux. Use when sand
 
 # Alaa Codex Runtime Ops
 
-Recover blocked Codex commands inside WSL with the smallest permitted retry. Preserve scope and distinguish environment failures from check failures.
+Recover blocked Codex commands inside WSL with the smallest permitted retry. Preserve scope. Distinguish environment failures from check failures.
 
 ## Execution boundary
 
@@ -16,10 +16,10 @@ Outside-sandbox execution means running the scoped command in the same WSL envir
 ## Recovery procedure
 
 1. Preserve the exact command, working directory, relevant environment, arguments, flags, exit status and bounded error output. Redact sensitive values.
-2. Read `references/00-topic-map.md` to select the reference owning the observed failure. Identify whether the harness, shell, dependency or check failed before choosing recovery.
+2. Read `references/00-topic-map.md` to select the reference owning the observed failure. Identify whether the harness, shell, dependency or check failed before you choose recovery.
 3. Before a local-tool miss becomes a validation blocker, or an otherwise permitted additional repair has an unresolved owner, apply /alaa-memory-os `SKILL.md` capability inquiry. Reuse adequate current evidence. Distinguish missing local capability, unavailable compatible infrastructure, missing authority, actual failure and unknown availability. Recall adds no attempt and changes no native blocked threshold.
-4. Apply the selected recovery under the active permissions and retry budget. For one failed operation, allow at most one cause-specific repair and one materially different retry; a stricter host or task budget wins. A fallback or reference change does not reset that budget.
-5. Record sandboxed and retried outcomes separately. Return to the task when the required command succeeds. Otherwise report the exact blocker, preserved evidence and next safe action; continue only independent authorized work.
+4. Apply the selected recovery under the active permissions and retry budget. For one failed operation, allow at most one cause-specific repair and one materially different retry. A stricter host or task budget wins. A fallback or reference change does not reset that budget.
+5. Record sandboxed and retried outcomes separately. Return to the task when the required command succeeds. Otherwise report the exact blocker, preserved evidence and next safe action. Continue only independent authorized work.
 
 ## When NOT to use
 

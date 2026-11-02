@@ -7,21 +7,34 @@ description: "Version-aware control plane for Quasar CLI plus Vite on @quasar/ap
 
 ## Purpose and posture
 
-Version-aware Quasar CLI + Vite control plane, v3 first. It owns v2 -> v3 decisions and deltas, local exact-API lookup, `quasar.config`/env/boot/routing/layout/composable/mode patterns, production service workers with their offline, update, and failure behaviour, WebOTP and device-trust-bounded signals, permission-gated browser APIs, and Quasar-shaped accessibility, performance, and testing guardrails.
+Version-aware Quasar CLI + Vite control plane, v3 first. It owns:
 
-This is not exhaustive Quasar documentation. The references own workflows, deltas, guardrails, and high-value examples; the installed project and the official Quasar sources own exact API availability and current upstream behaviour. In ✅ Do / ❌ Don't pairs, ✅ is normative and ❌ preserves a real failure.
+- v2 -> v3 decisions and deltas;
+- local exact-API lookup;
+- `quasar.config`/env/boot/routing/layout/composable/mode patterns;
+- production service workers with their offline, update, and failure behaviour;
+- WebOTP and device-trust-bounded signals;
+- permission-gated browser APIs;
+- Quasar-shaped accessibility, performance, and testing guardrails.
+
+This is not exhaustive Quasar documentation. The references own workflows, deltas, guardrails, and high-value examples. The installed project and the official Quasar sources own exact API availability and current upstream behaviour. In ✅ Do / ❌ Don't pairs, ✅ is normative and ❌ preserves a real failure.
 
 ## Version rules
 
-- New apps use v3. Treat a production v2 migration as scheduled engineering through `references/10-v2-to-v3-migration.md`, never an opportunistic bump inside unrelated work.
-- A stated blocker — Node floor, an incompatible App Extension, a frozen release window — may keep a repo pinned to `@quasar/app-vite@^2`; unpinned installs now resolve v3. Use `references/12-v2-maintenance-playbook.md` shapes there.
-- **Detect the installed major before any config, import, env, alias, or mode advice.** Read `@quasar/app-vite` in `package.json`; a declared range is not proof of the installed version. v2 and v3 differ on `#q-app/wrappers` vs `#q-app`, `process.env.*` vs `import.meta.env.QUASAR_*`, legacy aliases vs `@/`, and mode folders.
-- Follow the lockfile's package manager; never switch it during a Quasar task.
-- **Every version number, peer range, and Node floor lives in `references/80-upstream-deltas-and-live-checks.md`.** State none from memory; run `node <skill-dir>/scripts/check-upstream-versions.mjs` first and treat exit code `2` as "could not run", not as "clean".
+- New apps use v3. Treat a production v2 migration as scheduled engineering through `references/10-v2-to-v3-migration.md`. Never make it an opportunistic bump inside unrelated work.
+- A stated blocker, such as a Node floor, an incompatible App Extension, or a frozen release window, may keep a repo pinned to `@quasar/app-vite@^2`; unpinned installs now resolve v3. Use `references/12-v2-maintenance-playbook.md` shapes there.
+- **Detect the installed major before any config, import, env, alias, or mode advice.** Read `@quasar/app-vite` in `package.json`. A declared range is not proof of the installed version. v2 and v3 differ on `#q-app/wrappers` vs `#q-app`, `process.env.*` vs `import.meta.env.QUASAR_*`, legacy aliases vs `@/`, and mode folders.
+- Follow the lockfile's package manager. Never switch it during a Quasar task.
+- **Every version number, peer range, and Node floor lives in `references/80-upstream-deltas-and-live-checks.md`.** State none from memory. Run `node <skill-dir>/scripts/check-upstream-versions.mjs` first. Treat exit code `2` as "could not run", not as "clean".
 
 ## Authority and exact APIs
 
-Match authority to the question: the live repo decides behaviour, constraints, conventions, and the installed line; the bundled bridge to the project-local `quasar describe` decides exact props, events, slots, methods, directive values, and plugin options; official Quasar docs and releases decide current upstream concepts and upgrades; these references decide workflow, guardrails, and migration.
+Match authority to the question:
+
+- the live repo decides behaviour, constraints, conventions, and the installed line;
+- the bundled bridge to the project-local `quasar describe` decides exact props, events, slots, methods, directive values, and plugin options;
+- official Quasar docs and releases decide current upstream concepts and upgrades;
+- these references decide workflow, guardrails, and migration.
 
 ```bash
 node <skill-dir>/scripts/query-installed-quasar-api.mjs --project <repo-root> QTable -p -s -e -m
@@ -39,12 +52,20 @@ Read `references/05-authority-and-api-lookup.md` for lookup and fallback. No MCP
 ## Companion boundary
 
 This skill owns Quasar wiring and mechanics. External doctrine, values, package/storage boundaries and
-runtime policy stay with their canonical owners in the topic map. Cite an owner; never restate its rule here.
+runtime policy stay with their canonical owners in the topic map. Cite an owner. Never restate its rule here.
 
 ## When NOT to use
 
-Do not use for plain Vue or Vite without the Quasar CLI — `@quasar/vite-plugin` is not app-vite. Do not use for broad non-Quasar frontend work, Vue/TypeScript code-quality review, CI or deployment authoring, browser storage design, gateway authentication, or backend and infrastructure tasks; route to the canonical external owner.
+Do not use for plain Vue or Vite without the Quasar CLI. `@quasar/vite-plugin` is not app-vite. Do not use for broad non-Quasar frontend work, Vue/TypeScript code-quality review, CI or deployment authoring, browser storage design, gateway authentication, or backend and infrastructure tasks. Route to the canonical external owner.
 
 ## Final response contract
 
-Report the repo evidence you read (installed line, modes, blockers); which exact-API or official source you queried when syntax mattered; the line-specific change or recommendation and why it is safe on the detected line; the commands you actually ran and their outcomes; and the modes, App Extensions, and claims you did not verify. For a migration, report every mode separately. Never claim an unrun check passed.
+Report:
+
+- the repo evidence you read (installed line, modes, blockers);
+- which exact-API or official source you queried, when syntax mattered;
+- the line-specific change or recommendation, and why it is safe on the detected line;
+- the commands you actually ran and their outcomes;
+- the modes, App Extensions, and claims you did not verify.
+
+For a migration, report every mode separately. Never claim an unrun check passed.

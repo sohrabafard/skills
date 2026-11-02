@@ -5,7 +5,7 @@ description: "Frontend engineering policy and routing hub for the Vue 3 + Quasar
 
 # Alaa Frontend Developer
 
-Execution contract for frontend work in the standard Vue 3 + Quasar + Vite app family. Every line here is a gate or a route. The only override is a repo-local `AGENTS.md` rule or an explicit user instruction that contradicts a named line; cite the file and line you are overriding.
+This is the execution contract for frontend work in the standard Vue 3 + Quasar + Vite app family. Every line is a gate or a route. Only a repo-local `AGENTS.md` rule or an explicit user instruction that contradicts a named line may override that line. When you override a line, cite the file and line you override.
 
 ## When NOT to use
 
@@ -13,20 +13,23 @@ Stop and route when the change touches **only** one of these, with no SSR, hydra
 
 ## Owned here
 
-SSR and hydration determinism and cleanup safety; which auth and session posture the repo is on and the client-side half of it; PWA and service-worker **policy** — what may change and what must not; the canonical Lighthouse and Core Web Vitals model in `references/41-lighthouse-and-web-vitals.md`, which two siblings route into instead of restating; the browser-automation gate and browser-debug evidence discipline; and the client-side expression of every contract below.
+SSR and hydration determinism and cleanup safety. Which auth and session posture the repo is on, and the client-side half of it. PWA and service-worker **policy**: what may change and what must not. The canonical Lighthouse and Core Web Vitals model in `references/41-lighthouse-and-web-vitals.md`, which two siblings route into instead of restating. The browser-automation gate and browser-debug evidence discipline. The client-side expression of every contract below.
 
 Do not use it for pure Quasar API lookup, pure visual design, browser-automation mechanics, or a task with no frontend surface.
 
 ## Non-negotiable gates
 
-1. **SSR determinism.** No hydration mismatch, no browser global on an SSR render path, no per-request state in a module-level singleton. A change that reintroduces one is reverted, not documented.
-2. **TypeScript under `strict`.** All new and modified frontend code is TypeScript. JavaScript is permitted only in a file already inside the repo's `allowJs` set.
-3. **No client-side authorization decision.** A permission read in the browser selects what to render; the server decides what is allowed. A route guard, a `v-if`, or a decoded bitmap is never the enforcement point.
-4. **Auth-state storage.** Apply `alaa-indexeddb-browser-storage references/61-authority-boundary.md` for credential-persistence prohibitions; hold the access token in a module-scoped variable owned by exactly one auth module.
-5. **Browser automation is opt-in.** Open it only when the user asks for browser, visual or responsive validation; when a repo rule requires reproduction; or when one static pass is complete and you can name the one observation source cannot produce — exact console warning text, a computed style value, or an HTTP status. State that observation first.
+1. **SSR determinism.** Allow no hydration mismatch, no browser global on an SSR render path, and no per-request state in a module-level singleton. Revert a change that reintroduces one; do not document it instead.
+2. **TypeScript under `strict`.** Write all new and modified frontend code in TypeScript. JavaScript is permitted only in a file already inside the repo's `allowJs` set.
+3. **No client-side authorization decision.** A permission read in the browser selects what to render. The server decides what is allowed. A route guard, a `v-if`, or a decoded bitmap is never the enforcement point.
+4. **Auth-state storage.** Apply `alaa-indexeddb-browser-storage references/61-authority-boundary.md` for credential-persistence prohibitions. Hold the access token in a module-scoped variable owned by exactly one auth module.
+5. **Browser automation is opt-in.** Open it only in one of these cases:
+   - the user asks for browser, visual or responsive validation;
+   - a repo rule requires reproduction;
+   - one static pass is complete and you can name the one observation source cannot produce: exact console warning text, a computed style value, or an HTTP status. State that observation first.
 6. **No service-worker strategy drift.** Do not add or widen a runtime-cache route matcher, change placeholder substitution, or alter registration and lifecycle orchestration unless that change is what was asked for.
 7. **No second envelope and no second error format.**
-8. **A performance budget breach blocks merge.** It clears only by a recorded exception in the repo's budget config naming the route, the new ceiling, and the approving maintainer.
+8. **A performance budget breach blocks merge.** It clears only by a recorded exception in the repo's budget config. The exception names the route, the new ceiling, and the approving maintainer.
 9. **Proof before "done".** Select the proof level for the change surface and run it. A repo with no runner for that level is a blocking finding, not a waiver.
 
 ## Router
@@ -36,6 +39,11 @@ all matching mandatory reads and companion routes.
 
 ## Workflow and maintenance
 
-Read the repo-local `AGENTS.md`; apply `/alaa-low-noise`; inspect the existing pattern first; name the root cause before choosing a fix; make the smallest change that removes it; run the proof level gate 9 selects.
+1. Read the repo-local `AGENTS.md`.
+2. Apply `/alaa-low-noise`.
+3. Inspect the existing pattern first.
+4. Name the root cause before choosing a fix.
+5. Make the smallest change that removes it.
+6. Run the proof level gate 9 selects.
 
-In this skill: search keys and retired-name aliases are in `references/00-topic-map.md`; sources and maintenance in `references/95-sources-and-maintenance.md`. It ships no scripts.
+In this skill: search keys and retired-name aliases are in `references/00-topic-map.md`. Sources and maintenance are in `references/95-sources-and-maintenance.md`. It ships no scripts.

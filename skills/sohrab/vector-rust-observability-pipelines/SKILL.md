@@ -6,18 +6,18 @@ description: "Production Vector pipelines: topology and per-path delivery contra
 # Vector observability pipelines
 
 **A log pipeline that drops silently under load is an observability outage that hides
-itself.** That is the failure this skill exists to prevent, and why every rule below
-is about making loss visible, chosen, and bounded rather than about tidy config.
+itself.** This skill exists to prevent that failure. Every rule below
+is about making loss visible, chosen, and bounded, not about tidy config.
 
 The current documentation target, retained consumer paths and proof limits live in
 `references/80-version-and-upgrade-deltas.md`. Vector changes interpolation,
-template confinement, buffer loss handling and internal metrics across releases,
-so state the version you verified against and re-derive every
-version-sensitive claim rather than recalling it: `references/90-source-map.md`.
+template confinement, buffer loss handling and internal metrics across releases.
+State the version you verified against. Re-derive every
+version-sensitive claim; do not recall it. Sources: `references/90-source-map.md`.
 
 ## Rules
 
-1. **Every path has a written delivery contract before it has a config.** Source,
+1. **Every path has a written delivery contract before it has a config.** The contract names source,
    transforms, sink, schema in and out, gate or contributor, tolerable outage
    duration, retry ceiling, the metric that proves it healthy, and how it is tested.
    A blank field is a decision nobody has made, and the default will make it.
@@ -29,54 +29,56 @@ version-sensitive claim rather than recalling it: `references/90-source-map.md`.
    `references/30-buffers-acks-and-backpressure.md`.
 
 3. **Fail open or fail closed follows what the data is for, not which tool moves it.**
-   `/alaa-security-review` owns the gate discriminator; `/alaa-reliability-sla`
+   `/alaa-security-review` owns the gate discriminator. `/alaa-reliability-sla`
    owns contributor failure behavior. For product telemetry forwarding/export,
    `/alaa-observability-soc` requires nonblocking delivery: `when_full: drop_newest`,
    sized for the burst, never `block`. A required audit write or product data under
-   an exactness ruling is a separate path; preserve its gate contract.
+   an exactness ruling is a separate path. Preserve its gate contract.
    `references/75-ala-ingest-pipeline.md` records the historical exactness example.
 
 4. **A path that must never slow its client is configured that way, or it is not
-   that path.** Acknowledgements decide whether the *response* waits for durability;
-   `when_full` decides what a full sink buffer does. Settle both, state the headroom
-   as a duration knowing the `buffer` block understates the real queue depth, alert
-   on the source-to-sink event differential and not on buffer utilisation alone, and
-   write in the contract that an immediate `202` is a receipt for accepted, not
-   stored. `references/35-pass-through-and-relay-paths.md`.
+   that path.** Acknowledgements decide whether the *response* waits for durability.
+   `when_full` decides what a full sink buffer does. Settle both. Then:
+   - State the headroom as a duration. The `buffer` block understates the real queue depth.
+   - Alert on the source-to-sink event differential, not on buffer utilisation alone.
+   - Write in the contract that an immediate `202` is a receipt for accepted, not stored.
+
+   `references/35-pass-through-and-relay-paths.md`.
 
 5. **Every fallible VRL call is handled deliberately.** `f(x)` returns an error and
-   can be coalesced with `??`; `f!(x)` aborts and cannot; a path lookup never fails,
+   can be coalesced with `??`. `f!(x)` aborts and cannot be coalesced. A path lookup never fails,
    so `??` after one is dead code. `??` coalesces errors, not null.
    `references/20-vrl-transforms.md`.
 
 6. **A config that interpolates a credential must fail loudly when interpolation is
-   off.** Vector 0.57.0 disabled `${VAR}` by default, and any string is a valid
+   off.** Vector 0.57.0 disabled `${VAR}` by default. Any string is a valid
    password, so a credential-only config validates clean either way and then
    authenticates with the literal `${VAR}` text. Prefer a `secret:` backend. An
-   environment variable is legitimate only with the opt-in on every command that
-   reads the config, a format-constrained interpolated value — endpoint, port,
-   duration — in the same config to force a load failure, and a standing gate
-   requiring exit 78 without the opt-in and exit 0 with it.
+   environment variable is legitimate only with all three of these:
+   - the opt-in on every command that reads the config
+   - a format-constrained interpolated value (endpoint, port, duration) in the same config, to force a load failure
+   - a standing gate requiring exit 78 without the opt-in and exit 0 with it
+
    `references/85-security-and-secrets.md`.
 
-7. **Keep routing templates confined.** Use a literal prefix for routing identifiers;
-   read `references/85-security-and-secrets.md` for version-qualified field exceptions
-   and URI authority rejection. Never generalize an exception to a destination or
-   enable the confinement opt-out to make an upgrade validate.
+7. **Keep routing templates confined.** Use a literal prefix for routing identifiers.
+   Read `references/85-security-and-secrets.md` for version-qualified field exceptions
+   and URI authority rejection. Never generalize an exception to a destination.
+   Never enable the confinement opt-out to make an upgrade validate.
 
 8. **Validate with `vector validate --skip-healthchecks --deny-warnings`, not with
-   `--no-environment`.** It suppresses component checks. The historical confinement
-   hole was fixed in the current release; that does not make it the full gate.
-   Warnings matter too: "acknowledgements are not supported
-   by this source" means the durability you configured does not exist, and an
+   `--no-environment`.** `--no-environment` suppresses component checks. The historical confinement
+   hole was fixed in the current release. That does not make `--no-environment` the full gate.
+   Warnings matter too. The warning "acknowledgements are not supported
+   by this source" means the durability you configured does not exist. An
    unconsumed `route` leg fails the gate rather than scrolling past.
    `references/50-validation-and-testing.md`.
 
-9. **Unit-test the failure classes, not the happy path.** Absent field, wrong type,
-   malformed payload, the event that must be dropped, and the count a transform must
-   emit: a suite that only proves the good input works cannot tell a correct
+9. **Unit-test the failure classes, not the happy path.** Test these: absent
+   field, wrong type, malformed payload, the event that must be dropped, and the count a transform must
+   emit. A suite that only proves the good input works cannot tell a correct
    transform from a broken one. Pass the test file together with the config defining
-   the transform, or it fails as an unknown component.
+   the transform. Otherwise it fails as an unknown component.
 
 10. **A critical path does not share an acknowledging source with an unreliable one.**
     Fanout acknowledgement uses the worst status, so one failing sink causes
@@ -85,10 +87,10 @@ version-sensitive claim rather than recalling it: `references/90-source-map.md`.
 
 11. **Disk buffers are a capacity dependency of the process.** A full volume makes
     Vector forcefully stop itself, by design, because it can no longer guarantee what
-    reached disk. Alert on free bytes on the `data_dir` volume and keep it larger than
-    the sum of every configured `max_size`, whose minimum is 268435488 bytes —
+    reached disk. Alert on free bytes on the `data_dir` volume, and keep it larger than
+    the sum of every configured `max_size`. The minimum `max_size` is 268435488 bytes;
     exactly 256 MiB is rejected on the historically observed binary. A full buffer
-    follows `when_full`; a full volume is an I/O failure. For invalid-record drops
+    follows `when_full`. A full volume is an I/O failure. For invalid-record drops
     that can still be acknowledged, read `references/30-buffers-acks-and-backpressure.md`
     before promising exact delivery.
 
@@ -110,17 +112,17 @@ node scripts/check-vector-configs.mjs      # shipped templates and unit tests, o
 node scripts/check-upstream-version.mjs    # version drift against upstream
 ```
 
-Both honour `0` clean, `1` findings, `2` could not run, and both take `--help`. **Exit
+Both use exit codes `0` clean, `1` findings, `2` could not run. Both take `--help`. **Exit
 `2` is not a pass.** Detail: `references/50-validation-and-testing.md`.
 
 ## Not owned here
 
 This skill owns what the pipeline writes into a ClickHouse table and how it behaves
-when that table is unreachable, and decides no schema. The three-way ClickHouse
-boundary against `/clickhouse-performance-schema-ops` and `/alaa-signoz-clickhouse-docs` is stated once, in `references/40-clickhouse-sink.md`.
-Every other owner — requirement levels, Ala names and values, reliability shape,
-design, testing, security, platform — is listed once in `references/00-topic-map.md`,
-at the question it governs.
+when that table is unreachable. It decides no schema. `references/40-clickhouse-sink.md` states the three-way ClickHouse
+boundary against `/clickhouse-performance-schema-ops` and `/alaa-signoz-clickhouse-docs` once.
+`references/00-topic-map.md` lists every other owner once, at the question it governs:
+requirement levels, Ala names and values, reliability shape,
+design, testing, security, platform.
 
 ## Output contract
 

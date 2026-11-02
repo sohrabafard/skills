@@ -18,29 +18,25 @@ that keeps them identical.
 
 ## Rules
 
-- Change all four implementations in one effort, then run `scripts/codec-conformance.sh` and record its output, because a change proved in one runtime is not proved in the other three.
-- Ship nothing while the harness reports a disagreement; the four files are one wire format and a partial fix splits it.
+- Change all four implementations in one effort. Then run `scripts/codec-conformance.sh` and record its output. A change proved in one runtime is not proved in the other three.
+- Ship nothing while the harness reports a disagreement. The four files are one wire format, and a partial fix splits it.
 - Copy assets unchanged except for the PHP namespace, so the harness result still describes the copied code.
-- Treat every non-zero exit from `scripts/crockford-base32-cli.sh` as a rejection and pass the failure on, because an empty or fallback substitute turns a rejected input into a wrong identifier downstream.
-- Use these UUIDv7 generators for correlation identifiers only, never for secrets or key material, because not every path uses a cryptographic PRNG.
+- Treat every non-zero exit from `scripts/crockford-base32-cli.sh` as a rejection. Pass the failure on. An empty or fallback substitute turns a rejected input into a wrong identifier downstream.
+- Use these UUIDv7 generators for correlation identifiers only. Never use them for secrets or key material. Not every path uses a cryptographic PRNG.
 
 ## When NOT to use
 
-- The value must be unguessable: a secret, a token, a session identifier, a password reset code. None of
-  these generators is cryptographically secure. Use a CSPRNG.
-- The task is HAProxy configuration or Lua-at-the-edge engineering rather than the codec those layers
-  share.
-- The task is deciding which identifier a public surface exposes, or which headers a trust boundary
-  accepts, rather than encoding bytes that decision already settled. The companion routing below names
-  each owner.
+- The value must be unguessable: a secret, a token, a session identifier, a password reset code. None of these generators is cryptographically secure. Use a CSPRNG.
+- The task is HAProxy configuration or Lua-at-the-edge engineering rather than the codec those layers share.
+- The task is deciding which identifier a public surface exposes, or which headers a trust boundary accepts, rather than encoding bytes that decision already settled. The companion routing below names each owner.
 
 ## Companion routing
 
-- `/alaa-haproxy-lua` (`$alaa-haproxy-lua`): Lua execution model, `lua-load` choice, edge error visibility.
-- `/alaa-php-clean-code` (`$alaa-php-clean-code`): adapting the PHP class into a PHP repository.
-- `/alaa-frontend-developer` (`$alaa-frontend-developer`): matching this contract in frontend JavaScript.
-- `/alaa-services-contract` (`$alaa-services-contract`): public identifier policy and envelope shapes.
-- `/alaa-trust-gateway-auth` (`$alaa-trust-gateway-auth`): trusted-header policy on a generated request ID.
-- `/alaa-security-review` (`$alaa-security-review`): an identifier here becoming a trust or authorization input.
-- `/alaa-testing-strategy` (`$alaa-testing-strategy`): what the harness proves and what it leaves unproved.
-- `/alaa-project-constitution` (`$alaa-project-constitution`) `references/quality-bar.md`: the bar these assets clear.
+- `/alaa-haproxy-lua`: Lua execution model, `lua-load` choice, edge error visibility.
+- `/alaa-php-clean-code`: adapting the PHP class into a PHP repository.
+- `/alaa-frontend-developer`: matching this contract in frontend JavaScript.
+- `/alaa-services-contract`: public identifier policy and envelope shapes.
+- `/alaa-trust-gateway-auth`: trusted-header policy on a generated request ID.
+- `/alaa-security-review`: an identifier here becoming a trust or authorization input.
+- `/alaa-testing-strategy`: what the harness proves and what it leaves unproved.
+- `/alaa-project-constitution` `references/quality-bar.md`: the bar these assets clear.

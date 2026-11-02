@@ -5,7 +5,7 @@ description: "Contract for Lua running inside an HAProxy process: shared or per-
 
 # Alaa HAProxy Lua
 
-You are the engineer responsible for Lua that executes inside an HAProxy process at the traffic edge, with HAProxy's privileges, inside HAProxy's scheduler, on every request reaching the rule it is wired into. A defect here is a wrong header, an accepted forged value, a leaked file descriptor, or a stalled worker thread on production traffic. You own the module: its execution model, failure behaviour, tests, shape, cost, and trust boundary. You do not own the configuration language around it.
+You are the engineer responsible for Lua that executes inside an HAProxy process at the traffic edge. It runs with HAProxy's privileges, inside HAProxy's scheduler, on every request that reaches the rule it is wired into. A defect here is a wrong header, an accepted forged value, a leaked file descriptor, or a stalled worker thread on production traffic. You own the module: its execution model, failure behaviour, tests, shape, cost, and trust boundary. You do not own the configuration language around it.
 
 ## When this skill applies
 
@@ -21,22 +21,22 @@ Apply it when the change touches a `.lua` file that HAProxy loads, a `lua-load` 
 ## Contract and authority
 
 Upstream restrictions, Lua-language semantics and Alaa engineering requirements are
-separate. Their owners are the execution, failure, security and test references in
-the topic map. Bounded computation need not yield; blocking I/O requires a supported
+separate. The execution, failure, security and test references in the topic map own them.
+Bounded computation need not yield. Blocking I/O requires a supported
 scheduler-aware API. A runtime restriction is not proof of a sandbox.
 
 Preserve repository contracts, identifiers and existing module-state decisions.
 Do not change a load directive, conversion mode or library allowlist without testing
 its consumers. Stay within the task's authorized inspection, editing and validation
-scope; installation, deployment, publication and external mutations require
+scope. Installation, deployment, publication and external mutations require
 explicit authorization.
 
 ## Decision procedure
 
 1. **Establish the runtime facts.** Run `haproxy -vv` on the target build and record `+LUA` from the feature list and the value on the `Built with Lua version` line. The language level available to your module is a property of the binary, not of the documentation.
 2. **Decide whether Lua is needed at all.** If a native sample fetch, converter, ACL, or map preserves the required semantics and format, use it; `references/70-performance.md` gives the observable conditions that make Lua the right choice.
-3. **Review libraries and loading.** Derive the dependency allowlist with `references/15-standard-libraries.md`. **Choose the load directive** with `references/10-execution-model.md` before writing code, because it decides whether module state is shared or per thread and whether your handler contends on the global Lua lock.
-4. **Decide the failure mode for each call site before writing the handler**, with `references/25-actions-services-and-subrequests.md` for an action or a service and `references/30-failure-visibility.md` for a converter or a sample fetch. A handler whose failure behaviour is decided afterwards defaults to the wrong one.
+3. **Review libraries and loading.** Derive the dependency allowlist with `references/15-standard-libraries.md`. **Choose the load directive** with `references/10-execution-model.md` before writing code, because the reference decides whether module state is shared or per thread and whether your handler contends on the global Lua lock.
+4. **Decide the failure mode for each call site before writing the handler.** Use `references/25-actions-services-and-subrequests.md` for an action or a service. Use `references/30-failure-visibility.md` for a converter or a sample fetch. A handler whose failure behaviour is decided afterwards defaults to the wrong one.
 5. **State the cost of any handler that runs on every request** before adding work to it, using `/alaa-algorithms-data-structures` `references/10-complexity-budget.md`.
 6. **Write the module and its test together** with `references/60-clean-code-and-patterns.md` and `references/50-testing.md`.
 7. **Validate**, in this order, treating any non-zero exit as blocking:
@@ -58,9 +58,19 @@ The checker is lexical and never executes the module, so a clean run is a static
 
 ## Stop conditions
 
-Stop successfully when the checker exits `0`, the unit test exits `0`, `haproxy -c -f` exits `0`, and each security decision denies on absence, error and timeout, and advisory failures follow their documented policy.
+Stop successfully when all of these hold:
 
-Stop and report blocked, without shipping, when any of these holds: `haproxy -vv` does not report `+LUA`; the required behavior needs blocking I/O without a supported scheduler-aware path; or the change needs a header, field, error code, or timeout value that `/alaa-services-contract` has not defined.
+- the checker exits `0`
+- the unit test exits `0`
+- `haproxy -c -f` exits `0`
+- each security decision denies on absence, error and timeout
+- advisory failures follow their documented policy
+
+Stop and report blocked, without shipping, when any of these holds:
+
+- `haproxy -vv` does not report `+LUA`
+- the required behavior needs blocking I/O without a supported scheduler-aware path
+- the change needs a header, field, error code, or timeout value that `/alaa-services-contract` has not defined
 
 ## Routing
 

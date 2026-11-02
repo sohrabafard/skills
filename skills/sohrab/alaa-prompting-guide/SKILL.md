@@ -16,15 +16,15 @@ Own instruction authoring, model/effort capability evidence and runtime control 
 
 ## The rule-writer specialist
 
-Before dispatching `alaa-rule-writer`, read `assets/rule-writer/dispatch.md`. It rewrites an existing draft and returns replacement text; authorship, decisions, research and edits stay with the caller.
+Before dispatching `alaa-rule-writer`, read `assets/rule-writer/dispatch.md`. It rewrites an existing draft and returns replacement text. Authorship, decisions, research and edits stay with the caller.
 
-Distributing it is not this skill's job. Under Claude Code the definition ships inside the plugin and loads from the plugin-root `agents/` directory once the plugin is installed or enabled, and the plugin manifest version is the installed agent-pack version: never copy a wrapper into `~/.claude/agents`, never write an installation sentinel, and never run the grants checker as an install gate. Under Codex, `install-skills.md` at this repository's root owns the one command that places `assets/rule-writer/codex/alaa-rule-writer.toml` into `~/.codex/agents`.
+Distributing it is not this skill's job. Under Claude Code, the definition ships inside the plugin. It loads from the plugin-root `agents/` directory once the plugin is installed or enabled. The plugin manifest version is the installed agent-pack version. Never copy a wrapper into `~/.claude/agents`. Never write an installation sentinel. Never run the grants checker as an install gate. Under Codex, `install-skills.md` at this repository's root owns the one command that places `assets/rule-writer/codex/alaa-rule-writer.toml` into `~/.codex/agents`.
 
-Managed wrappers omit model and effort; the orchestrator explicitly selects both controls for each task, including rule-writer. Validate effective controls separately from role authority. After changing `assets/rule-writer/`, run `python3 scripts/check_rule_writer_grants.py`.
+Managed wrappers omit model and effort. The orchestrator explicitly selects both controls for each task, including rule-writer. Validate effective controls separately from role authority. After changing `assets/rule-writer/`, run `python3 scripts/check_rule_writer_grants.py`.
 
 ## Codex policy validation
 
-`assets/codex-model-policy.json` owns supported-effort snapshots and model-neutral role/artifact registrations. It chooses no task pair; main controls stay externally configured. From this skill directory, after policy/pin changes run `python3 scripts/check_codex_model_policy.py --agent-root assets/rule-writer/codex`; repeat `--agent-root` for another pack.
+`assets/codex-model-policy.json` owns supported-effort snapshots and model-neutral role/artifact registrations. It chooses no task pair. Main controls stay externally configured. After policy/pin changes, run `python3 scripts/check_codex_model_policy.py --agent-root assets/rule-writer/codex` from this skill directory. Repeat `--agent-root` for another pack.
 
 ## Claude policy validation
 
@@ -32,17 +32,17 @@ Managed wrappers omit model and effort; the orchestrator explicitly selects both
 
 The gate needs the root checker's bundled YAML parser. A verified aggregate can discharge an identical covered command. The orchestrator owns consolidation. Uncovered managed roots still need checks. Source agreement proves neither installed activation nor calibration.
 
-All gates use `0` clean, `1` findings, `2` unavailable proof (including malformed/unreadable input). Either nonzero blocks the affected completion; repair the stated cause within the active retry budget or report blocked. Static checks prove neither live acceptance nor instruction compliance.
+All gates use `0` clean, `1` findings, `2` unavailable proof (including malformed/unreadable input). Either nonzero blocks the affected completion. Repair the stated cause within the active retry budget, or report blocked. Static checks prove neither live acceptance nor instruction compliance.
 
 ## Decision procedure
 
-1. Identify runtime, surface and model. Ask only for missing facts that change the artifact; a Desktop app name proves no tab's command support.
+1. Identify runtime, surface and model. Ask only for missing facts that change the artifact. A Desktop app name proves no tab's command support.
 2. Read `references/00-topic-map.md` before answering; load only references whose conditions hold.
 3. Resolve version-sensitive facts from sources, never recall.
-4. Draft, then compress every controlling artifact, including edits and dispatches, through `references/60-skill-authoring.md`. Ship the fewest words preserving behavior. Soft targets yield; hard limits require equivalent restructuring or a blocked report. Conversational prose is exempt.
+4. Draft, then compress every controlling artifact, including edits and dispatches, through `references/60-skill-authoring.md`. Ship the fewest words preserving behavior. Soft targets yield. Hard limits require equivalent restructuring or a blocked report. Conversational prose is exempt.
 5. Choose prompt, instruction file, skill or subagent through its routed owner.
 
-For a goal, follow `references/06-invocation-and-composition.md` for the compact condition and kickoff; `/alaa-workflow` owns plans and phase/task skill mappings.
+For a goal, follow `references/06-invocation-and-composition.md` for the compact condition and kickoff. `/alaa-workflow` owns plans and phase/task skill mappings.
 
 For a rendered Claude condition, run `python3 scripts/check_goal_condition.py --surface claude-desktop-code --condition-file <path>` here, substituting the observed surface.
 
@@ -52,9 +52,9 @@ For a rendered Claude condition, run `python3 scripts/check_goal_condition.py --
 
 **One instruction, one owner.** Duplication dilutes the contract. Check each reduction against the same acceptance criteria through `references/60-skill-authoring.md`.
 
-**Model-specific delegation.** Over-delegation needs bounds; reticence needs authorization. Read `references/06-invocation-and-composition.md` before tuning either.
+**Model-specific delegation.** Over-delegation needs bounds. Reticence needs authorization. Read `references/06-invocation-and-composition.md` before tuning either.
 
-**Proportional verification.** Preserve focused checks and independent acceptance. Remove repetition only without changed inputs, failures or unresolved concerns; a model upgrade proves no correctness. `references/80-subagent-authoring.md` owns the authority test.
+**Proportional verification.** Preserve focused checks and independent acceptance. Remove repetition only without changed inputs, failures or unresolved concerns. A model upgrade proves no correctness. `references/80-subagent-authoring.md` owns the authority test.
 
 **Missing evidence stays unknown.** Say what the source omits, use a named placeholder and preserve caveats.
 

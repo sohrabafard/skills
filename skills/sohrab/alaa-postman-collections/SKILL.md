@@ -1,6 +1,6 @@
 ---
 name: alaa-postman-collections
-description: "Create, update, synchronize, and validate Postman Collection v2.1 collections and environments so every request carries saved examples for its success case and for every error it can actually return, a post-response script that captures tokens and ids into the variables later requests consume, tests that would fail against a broken implementation, and documentation a frontend developer and a security tester can both work from — while the artifact stays importable into Insomnia. Use for Postman collections, environments, examples, scripts, tests, request documentation, mock servers, Insomnia portability, and proving a collection matches the repository's public API contract. Do not use for generic docs work with no Postman ownership, or to decide what a public contract says: on a Laravel service that is /alaa-laravel-public-api-contract-pack ($alaa-laravel-public-api-contract-pack)."
+description: "Create, update, synchronize, and validate Postman Collection v2.1 collections and environments so every request carries saved examples for its success case and for every error it can actually return, a post-response script that captures tokens and ids into the variables later requests consume, tests that would fail against a broken implementation, and documentation a frontend developer and a security tester can both work from — while the artifact stays importable into Insomnia. Use for Postman collections, environments, examples, scripts, tests, request documentation, mock servers, Insomnia portability, and proving a collection matches the repository's public API contract. Do not use for generic docs work with no Postman ownership, or to decide what a public contract says: on a Laravel service that is /alaa-laravel-public-api-contract-pack."
 ---
 
 # Alaa Postman Collections
@@ -9,9 +9,9 @@ description: "Create, update, synchronize, and validate Postman Collection v2.1 
 
 Use this skill when Postman artifacts are a primary deliverable or must stay synchronized
 with a public HTTP API contract. It is Postman-first, schema-aware, and
-repository-truth-first, and it produces Collection Format v2.1 collections and environment
+repository-truth-first. It produces Collection Format v2.1 collections and environment
 files that stay importable into Insomnia. It owns the Postman projection of a public API and
-proves that projection matches the canonical contract; it does not decide what the contract
+proves that projection matches the canonical contract. It does not decide what the contract
 says. `references/25-public-api-contract-and-sdk-readiness.md` names the owner per case.
 
 ## When to use
@@ -61,7 +61,7 @@ files the current task touches.
    Postman or Insomnia artifacts before editing.
 3. Read `references/00-topic-map.md` to pick the smallest set of reference files, and read
    `references/25-public-api-contract-and-sdk-readiness.md` when the repo owns a public API.
-4. Follow the ordered workflow in `references/10-scope-and-trigger-rules.md`, which also
+4. Follow the ordered workflow in `references/10-scope-and-trigger-rules.md`. It also
    holds the generated-artifact rule and the stop-and-ask conditions.
 5. Prefer a minimal update to an existing artifact over a rewrite.
 6. Validate before concluding. `references/60-validation-and-output-contract.md` holds both
@@ -109,11 +109,11 @@ Write cross-skill references as `/name`. This skill is named `/alaa-postman-coll
 
 ## Maintenance rules
 
-- Keep this file routing-first. Operational rules belong in `references/`; fill-in
+- Keep this file routing-first. Operational rules belong in `references/`. Fill-in
   templates belong in `assets/`. State every rule in exactly one file.
 - New mechanical rules go into `scripts/validate_postman_artifacts.py`, not into
   `scripts/audit_collection_contract.py`, because a consumer repository holds a
   byte-identical copy of the auditor that cannot be updated from here.
 - Refresh version-sensitive rules when official Postman, Insomnia, JSON Schema, or
-  API-provider behaviour changes, and carry the verification date with the claim.
+  API-provider behaviour changes. Carry the verification date with the claim.
 - Treat Insomnia compatibility as a validation target, not an assumption.

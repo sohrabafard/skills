@@ -10,23 +10,23 @@ what a service does while the analytical store is slow or gone.
 
 ## Two audiences, opposite authority
 
-Name the audience before proposing any DDL, because the deliverable differs. The **ingest-pipeline
-repository** — the one that owns the ClickHouse DDL directory and the Vector topology writing into
-it, and on this fleet that repository is `wa` — creates and alters every table and owns column
-type, ordering, partitioning, retention, and engine. A **kit consumer on the `chkit` read lane**
-owns none of that: every session is pinned to `readonly=2` as a kit invariant, the client exports
-no `Exec`, and a kit integration test fails if a `CREATE TABLE` issued over that lane succeeds.
-When the requester is a consumer, deliver a query, a rollup request filed against the ingest
-pipeline, or a `chkit` configuration change, and never DDL the requester cannot apply. Source
-evidence and the change path each audience follows: `references/10-authority-and-change-path.md`.
+Name the audience before proposing any DDL, because the deliverable differs.
+
+The **ingest-pipeline repository** owns the ClickHouse DDL directory and the Vector topology that writes into it. On this fleet that repository is `wa`. It creates and alters every table and owns column type, ordering, partitioning, retention, and engine.
+
+A **kit consumer on the `chkit` read lane** owns none of that. Every session is pinned to `readonly=2` as a kit invariant. The client exports no `Exec`. A kit integration test fails if a `CREATE TABLE` issued over that lane succeeds.
+
+When the requester is a consumer, deliver a query, a rollup request filed against the ingest pipeline, or a `chkit` configuration change. Never deliver DDL the requester cannot apply.
+
+`references/10-authority-and-change-path.md` holds the source evidence and the change path each audience follows.
 
 ## Rules that hold on every task
 
 1. Name the repository that owns every table you touch before writing SQL, because a consumer
    cannot apply DDL and a raw-table read is not a rollup read.
 2. Put the tenant column first in `ORDER BY` on every fleet-owned tenant-scoped table, and filter
-   every query against one of those tables by it, because such a table or query without it scans
-   every tenant's rows to answer one tenant's question. The rule stops at tables the fleet cannot
+   every query against one of those tables by it. Such a table or query without it scans every
+   tenant's rows to answer one tenant's question. The rule stops at tables the fleet cannot
    alter; `references/15-fleet-clickhouse-boundary.md` names those and gives the reason.
 3. Report, and do not edit, a defect in a table owned by another repository, because that
    repository ratifies its own schema and an outside edit is an unratified change.

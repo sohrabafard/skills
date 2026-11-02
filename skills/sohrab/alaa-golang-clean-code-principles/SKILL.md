@@ -7,9 +7,9 @@ description: Mandatory kit-era Go clean-code baseline for Ala services built on 
 
 ## Purpose
 
-This is the kit-era discipline layer for Ala Go services: the thirteen named principles (P1–P13) an agent holds
-while writing Go on the `alaa-go-chi` base. Each principle ships a summary, a wrong/right Go example, and the
-named check that fails when the principle is violated. It is the Go counterpart of
+This skill is the kit-era discipline layer for Ala Go services. It holds the thirteen named principles (P1–P13)
+an agent applies while writing Go on the `alaa-go-chi` base. Each principle ships a summary, a wrong/right Go
+example, and the named check that fails when the principle is violated. The skill is the Go counterpart of
 `/alaa-vue-typescript-clean-code` (`$alaa-vue-typescript-clean-code`).
 
 The one-sentence summary: **the kit writes shared things once; your service writes only its domain; every
@@ -23,23 +23,23 @@ boundary is a small interface; every identity, error, and side effect is explici
 - Deciding where logic belongs: kit vs service, domain vs infrastructure, port vs adapter.
 - Pre-commit / pre-PR self-review — run the completion checklist below.
 
-**Before consumer work**, resolve the phase through `/alaa-go-chi-development`: run its
-`../alaa-go-chi-development/scripts/phase-check.sh <kit-repo-root>` and apply
+**Before consumer work**, resolve the phase through `/alaa-go-chi-development`. Run its
+`../alaa-go-chi-development/scripts/phase-check.sh <kit-repo-root>`. Apply
 `../alaa-go-chi-development/references/05-phase-and-source-truth.md` for the specific action's capability,
 evidence, reactivation and stop rules, including the manual read when the script cannot run. This skill
-governs code only once that action is permitted; it grants no phase authority.
+governs code only once that action is permitted. It grants no phase authority.
 
 ## When NOT to use
 
 - Non-Go work (frontend, Laravel, infra-only tasks).
 - Generic Go questions with no Ala platform context — use `/alaa-golang` (`$alaa-golang`).
-- Kit-internal decisions — a kit contract change, a new kit package, a change request, a release, a consumer
-  registration, or a kit/consumer audit — belong to `/alaa-go-chi-development` (`$alaa-go-chi-development`).
+- Kit-internal decisions (a kit contract change, a new kit package, a change request, a release, a consumer
+  registration, or a kit/consumer audit) belong to `/alaa-go-chi-development` (`$alaa-go-chi-development`).
   This skill is for kit *consumers* writing service code.
 
 ## Read this next
 
-Read the target repository's `AGENTS.md` and `CLAUDE.md` first; repository truth outranks every example here.
+Read the target repository's `AGENTS.md` and `CLAUDE.md` first. Repository truth outranks every example here.
 Then match the task to the smallest set of files. When two rows match, read both.
 
 | You are about to… | Read |
@@ -61,9 +61,9 @@ Then match the task to the smallest set of files. When two rows match, read both
 | Ask which skill owns a Go topic, or a cost/complexity question | `references/50-skill-boundaries.md` |
 | Rely on a kit fact stated here — identity types, pooling lanes, metric names, provider idempotency, the scope phase | `references/90-source-map.md` |
 
-If you are about to write a shape the kit might own — an envelope, a table, a middleware, a metric name, a
-readiness payload — read P1 before writing it. The most expensive mistake this skill prevents is a
-correct-looking local implementation of something that already exists once.
+If you are about to write a shape the kit might own, read P1 before writing it. Such shapes include an envelope,
+a table, a middleware, a metric name and a readiness payload. The most expensive mistake this skill prevents is
+a correct-looking local implementation of something that already exists once.
 
 ## The thirteen principles
 
@@ -133,7 +133,7 @@ Run this before every commit and PR in an Ala Go service. It is the only checkli
 - Keep this file routing-first: the router, the principle table, the checklist, and the companion list. Every
   principle's detail, example, and proof lives in `references/`.
 - State each principle at one strength in one place. If a sentence here and a sentence in a reference file say
-  the same rule with different force, delete one — an agent follows the weaker.
+  the same rule with different force, delete one. An agent follows the weaker.
 - Name no model, no effort setting, and no runtime capability in this skill; route those to
   `/alaa-prompting-guide` (`$alaa-prompting-guide`).
 - When a proof named in a reference file changes name, moves, or starts to exist, update that proof line in the

@@ -7,23 +7,22 @@ description: "Trust-boundary authority for the Ala gateway: who may assert a tru
 
 This skill owns one question: **who may assert a trusted request header, and what
 may be believed about a request because it carries one.** The gateway authenticates
-and injects; the request-time checker decides the route; a backend normalizes
+and injects. The request-time checker decides the route. A backend normalizes
 trusted context once, then enforces its own business rules. This skill states the
 boundary between those, and every way it fails.
 
-Read this file, then the reference the router names, then the owning skill named
-below when your change lands on its ground, then the repository, and only then
-propose a change.
+Read in this order: this file; the reference the router names; the owning skill named
+below, when your change lands on its ground; the repository. Only then propose a change.
 
 ## Absolutes
 
 **Only the gateway treats `Authorization: Bearer` as raw bearer input.** No backend
-parses, verifies or introspects a bearer token on a gateway-fronted route, because
-two verifiers means two verification policies and the weaker one decides.
+parses, verifies or introspects a bearer token on a gateway-fronted route. Reason:
+two verifiers means two verification policies, and the weaker one decides.
 
 **The gateway deletes every spoofable inbound trusted header on every route,
 including public routes.** A public route skips token verification, not sanitizing.
-Observable: the delete list runs unconditionally and every header the gateway
+Observable: the delete list runs unconditionally, and every header the gateway
 injects appears in it.
 
 **Tenant and actor context are derived from the verified token** — never from a
@@ -31,27 +30,27 @@ request body, query string, route parameter or client-supplied header. When a
 client-supplied selector disagrees with the trusted context, deny rather than
 choose: a silent choice is a cross-tenant read nobody decided to ship. A tokenless
 route has no token to derive from, so a guest carries `project_id` in the body, or
-in the query string when the request has no body. That value attributes a write,
-scopes a read only on an explicitly listed route, authorizes nothing, and is not
-read at all once a verified claim is present.
+in the query string when the request has no body. That value attributes a write.
+That value scopes a read only on an explicitly listed route. That value authorizes nothing. Once a
+verified claim is present, nothing reads that value.
 
 **A public client never generates, sends or relies on a trusted internal header.**
 Every such header is on the gateway's delete list precisely so a client's copy
-cannot survive; a client sending one is confused or hostile, and neither earns an
+cannot survive. A client that sends one is confused or hostile, and neither earns an
 exception.
 
 **An authorization decision behind the gateway is taken from the decoded `X-Access`
 permission bitmap, and from no other source** — not a role string, not a per-request
 database lookup, not a claim read directly from a token. **The decoder is the one
 emitted and governed by `/alaa-permission-generator`,
-never a locally written one**, because a local decoder is only ever discovered to be
+never a locally written one.** Reason: a local decoder is only ever discovered to be
 wrong by the incident it causes. Take the decoder, the conformance vectors and the
 harness from `alaa-permission-generator` `references/shared-consumer-contract.md`
 and the per-language consumer references beside it. This skill states the
 obligation, not the bit contract.
 
 **A client-supplied opaque value carries no trust.** After decoding it, compare
-every scope-bearing field it yields against the trusted request context and deny on
+every scope-bearing field it yields against the trusted request context, and deny on
 mismatch. The decoded value never becomes a source of tenant, actor or scope. The
 mechanism stays with `/alaa-keyset-pagination` and
 `/alaa-services-contract`.
@@ -91,10 +90,14 @@ python3 scripts/trust_boundary_check.py --env-root <dir>
 python3 scripts/trust_boundary_check.py --bitmap <value> --max-permission-id <n>
 ```
 
-Exit `0` every requested check passed; `1` a defect was found, fixed before the
-change ships and in the gateway or environment configuration first; `2` the
-invocation was wrong; `3` a check could not run for want of input — supply it, and
-never report a pass for a check that did not run. `--help` carries the full
+Exit codes:
+
+- `0`: every requested check passed.
+- `1`: a defect was found. Fix it before the change ships. Fix it in the gateway or environment configuration first.
+- `2`: the invocation was wrong.
+- `3`: a check could not run for want of input. Supply it, and never report a pass for a check that did not run.
+
+`--help` carries the full
 contract. The canonical bitmap vectors and the cross-runtime harness belong to
 `/alaa-permission-generator`.
 
@@ -116,7 +119,7 @@ contract. The canonical bitmap vectors and the cross-runtime harness belong to
 ## When not to use
 
 Do not use this skill for authentication in a service that does not sit behind the
-Ala gateway: it assumes a verifying edge that such a service lacks, and its rules
+Ala gateway. It assumes a verifying edge that such a service lacks, and its rules
 will read as permission to trust headers nobody sanitized. Do not use it alone when
-the change also lands on an owner's ground above; read the matching skill and follow
+the change also lands on an owner's ground above. Read the matching skill, and follow
 the stricter rule where they overlap.

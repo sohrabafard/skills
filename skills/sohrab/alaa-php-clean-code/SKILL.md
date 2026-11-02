@@ -5,9 +5,9 @@ description: "PHP 8.5 and Laravel 13 code craft for Octane-safe services: naming
 
 # Alaa PHP Clean Code
 
-Make PHP and Laravel code written by many different agents read as if one careful author wrote it, and keep it correct inside a long-lived worker serving many tenants.
+Make PHP and Laravel code written by many different agents read as if one careful author wrote it. Keep it correct inside a long-lived worker serving many tenants.
 
-This skill owns code shape inside files, classes, methods, and local module boundaries. Inside a companion skill's boundary it stays the code-quality baseline; it never replaces that skill. Cross-skill calls follow the single `/name` convention in the [pack instructions](../AGENTS.md).
+This skill owns code shape inside files, classes, methods, and local module boundaries. Inside a companion skill's boundary it stays the code-quality baseline. It never replaces that skill. Cross-skill calls follow the single `/name` convention in the [pack instructions](../AGENTS.md).
 
 ## Quick start — do not skip a step
 
@@ -23,7 +23,7 @@ This skill owns code shape inside files, classes, methods, and local module boun
 
 ## Compatibility target
 
-PHP 8.5 and Laravel 13 are the current baseline for new Alaa Laravel services; `composer.json` in the target repository is the authority for what that repository runs. Use a newer feature only where the installed runtime and toolchain support it, and do not let a Laravel 13 repository drift back to Laravel 12 conventions in new code, refactors, reviews, or upgrade planning. `/alaa-laravel-upgrade-all-packages` owns dependency resolution and isolation, not framework code migration. For migration scope, follow its boundary and the official target-version upgrade guide; surviving code-level audit points are in `references/laravel-best-practices.md`.
+PHP 8.5 and Laravel 13 are the current baseline for new Alaa Laravel services. `composer.json` in the target repository is the authority for what that repository runs. Use a newer feature only where the installed runtime and toolchain support it. Do not let a Laravel 13 repository drift back to Laravel 12 conventions in new code, refactors, reviews, or upgrade planning. `/alaa-laravel-upgrade-all-packages` owns dependency resolution and isolation, not framework code migration. For migration scope, follow its boundary and the official target-version upgrade guide. Surviving code-level audit points are in `references/laravel-best-practices.md`.
 
 **Resolve runtime scope before relaxing worker safety.** Read `/alaa-octane-performance` `SKILL.md`, "Scope condition", for applicability. When it applies, use Octane-safe code shape by default, including code a planned worker will execute.
 
@@ -37,7 +37,7 @@ PHP 8.5 and Laravel 13 are the current baseline for new Alaa Laravel services; `
 
 ## Ownership boundary — what this skill does not own
 
-This table answers *who decides*. `references/00-topic-map.md` answers *when to read* — it is the only router in this skill, and its third table carries the read triggers.
+This table answers *who decides*. `references/00-topic-map.md` answers *when to read* — it is the only router in this skill. The third table in that topic map carries the read triggers.
 
 Where a row's condition fires, read that skill before editing the affected code, then apply this skill inside its boundary. **On conflict the named owner wins.** Claiming a companion skill was respected without reading it is a reporting failure.
 
@@ -71,11 +71,23 @@ Where a row's condition fires, read that skill before editing the affected code,
 | MongoDB design, only where the repo already uses MongoDB or the user asks | `/alaa-mongodb-patterns` |
 | Current OpenAI API, model, prompt, tool and product behaviour cited in docs | `/openai-docs` |
 
-Inside those boundaries this skill still contributes: the PHP mechanism carrying a contract name; the obligation that both timeouts are set explicitly; the code shape that makes the Octane invariants hold; where persistence access may live; the Laravel idiom carrying a chosen complexity answer; Pest and PHPUnit construct choice; job and listener shape with the run-twice proof; the local checks run before claiming done; and docblock and artifact expectations. **Never edit anything under `vendor/`** — those are upstream subtrees; wrap them from the owning skill.
+Inside those boundaries this skill still contributes:
+
+- the PHP mechanism carrying a contract name
+- the obligation that both timeouts are set explicitly
+- the code shape that makes the Octane invariants hold
+- where persistence access may live
+- the Laravel idiom carrying a chosen complexity answer
+- Pest and PHPUnit construct choice
+- job and listener shape with the run-twice proof
+- the local checks run before claiming done
+- docblock and artifact expectations
+
+**Never edit anything under `vendor/`.** Those are upstream subtrees. Wrap them from the owning skill.
 
 ## Task modes
 
-Mandatory. If the user names none, infer the narrowest one that satisfies the request, and never silently escalate from a scoped mode to a whole-project mode.
+Mandatory. If the user names none, infer the narrowest one that satisfies the request. Never silently escalate from a scoped mode to a whole-project mode.
 
 | The request is | Mode |
 |---|---|
@@ -84,22 +96,27 @@ Mandatory. If the user names none, infer the narrowest one that satisfies the re
 | A repo-wide cleanup with no explicit request to standardise | `whole-project-preserve-local` |
 | An explicit request to standardise the repo toward one Alaa convention set | `whole-project-normalize-alaa` |
 
-`references/refactor-modes.md` owns what each mode allows and forbids, the public-contract inventory preceding the two harder modes, the persistence-naming rules that apply only in `whole-project-normalize-alaa`, and the safe sequencing for whole-project work. Read it whenever the task includes refactoring, a new slice design, or more than one touched file.
+Read `references/refactor-modes.md` whenever the task includes refactoring, a new slice design, or more than one touched file. It owns:
+
+- what each mode allows and forbids
+- the public-contract inventory preceding the two harder modes
+- the persistence-naming rules that apply only in `whole-project-normalize-alaa`
+- the safe sequencing for whole-project work
 
 ## Uniformity rule
 
 Two statements are both true because they govern different code:
 
 - **Inside an existing repository, that repository's own convention wins for code that already exists there.** A repository written in two dialects costs every later reader more than either dialect costs alone. Converting an existing repository to the house convention happens only in `whole-project-normalize-alaa`, which the user must ask for explicitly.
-- **A new surface takes the house convention.** A new module, service, or file family with no sibling in the repository has no local convention to preserve, so it follows `references/consistency-and-naming.md` from its first file. Uniformity across services is the standing preference; an existing local dialect your change would otherwise fracture is the only reason to depart from it.
+- **A new surface takes the house convention.** A new module, service, or file family with no sibling in the repository has no local convention to preserve, so it follows `references/consistency-and-naming.md` from its first file. Uniformity across services is the standing preference. An existing local dialect your change would otherwise fracture is the only reason to depart from it.
 
 The observable test for "an existing convention": at least two files in the repository already do it the same way. One file is a precedent, not a convention.
 
-Repository reality outranks every style rule stated here — an existing public contract, a pinned framework version, and a repo-local rule each win. `references/consistency-and-naming.md` owns the naming rules themselves.
+Repository reality outranks every style rule stated here. An existing public contract, a pinned framework version, and a repo-local rule each win. `references/consistency-and-naming.md` owns the naming rules themselves.
 
 ## Pattern decision order
 
-Choose the simplest abstraction that fixes the real problem. When a pattern seems needed but the right one is unclear, run the symptom → pattern diagnostic at the top of `references/design-patterns.md`: pick by observable smell, then answer its confirming question. A "no" means the pattern is wrong.
+Choose the simplest abstraction that fixes the real problem. When a pattern seems needed but the right one is unclear, run the symptom → pattern diagnostic at the top of `references/design-patterns.md`. Pick by observable smell. Then answer its confirming question. A "no" means the pattern is wrong.
 
 1. A plain class, a private method extraction, or a better name.
 2. A service, when a controller, job, listener, or command does more than orchestration.
@@ -114,7 +131,7 @@ Choose the simplest abstraction that fixes the real problem. When a pattern seem
 11. A backed enum plus one transition authority, when statuses have guarded transitions — never scattered status `if`s.
 12. An interface, only where a real seam exists: multiple implementations, a package boundary, an external integration, or a test seam that genuinely improves clarity.
 
-Every abstraction removes a named smell or it does not go in; do not stack Repository + Factory + Strategy + Interface for aesthetics. **Wrap a framework capability rather than reimplementing it** — a wrapper survives an upgrade and a reimplementation does not.
+Every abstraction removes a named smell, or it does not go in. Do not stack Repository + Factory + Strategy + Interface for aesthetics. **Wrap a framework capability rather than reimplementing it.** A wrapper survives an upgrade. A reimplementation does not.
 
 `references/code-smells-and-refactoring-triggers.md` owns the diagnosis layer: the five smell families in Laravel terms with a treatment each, the Rule of Three, when to refactor, and when not to.
 
@@ -125,10 +142,10 @@ In Alaa Laravel code the Repository pattern is mandatory for application-layer p
 - Controllers, services, jobs, listeners, commands, policies, actions, pipelines, and adapters must not compose Eloquent or query-builder persistence directly. They call a repository.
 - Create or reuse one repository per aggregate, use case, read model, or persistence boundary the task touches. A generic `BaseRepository` is not one.
 - Repositories hold persistence and query composition only: business rules stay in services, authorization in policies and gates, serialization in resources.
-- Repositories accept typed DTOs, filter objects, value objects, or scalars — never a raw `Request` or an unvalidated array. A simple operation may have a simple repository method; the boundary still belongs in the repository.
-- **The allowed exceptions are enumerated in `references/laravel-best-practices.md` under "Repository-first persistence".** Read that list before wrapping a model relationship, scope, cast or accessor, a migration, a factory, a seeder, a test assertion, or a resource reading an already-loaded model — those are not violations.
-- Existing direct Eloquent outside a repository is legacy debt. **When a line in your diff composes Eloquent or the query builder outside a repository, that access moves behind a repository in the same change.** The trigger is a line in your diff, not a file you opened.
-- Caching domain data lives only in a repository **decorator** — a `Cached<Domain>Repository` implementing the same interface — never inside the concrete repository and never as a `Cache::` call in a controller or service. A complete repository layer is the precondition; its completeness definition and the gate are owned by `alaa-data-layer references/50-redis-laravel-octane.md`, "Step 0 — repository-pattern gate". The decorator's shape, stacking order, and the Redis-outage fall-through that makes it worth having are in `references/design-patterns.md` (Decorator).
+- Repositories accept typed DTOs, filter objects, value objects, or scalars — never a raw `Request` or an unvalidated array. A simple operation may have a simple repository method. The boundary still belongs in the repository.
+- **The allowed exceptions are enumerated in `references/laravel-best-practices.md` under "Repository-first persistence".** Read that list before wrapping a model relationship, scope, cast or accessor, a migration, a factory, a seeder, a test assertion, or a resource reading an already-loaded model. Those are not violations.
+- Existing direct Eloquent outside a repository is legacy debt. **When a line in your diff composes Eloquent or the query builder outside a repository, move that access behind a repository in the same change.** The trigger is a line in your diff, not a file you opened.
+- Cache domain data only in a repository **decorator**: a `Cached<Domain>Repository` implementing the same interface. Never cache inside the concrete repository. Never call `Cache::` in a controller or service. A complete repository layer is the precondition. `alaa-data-layer references/50-redis-laravel-octane.md` owns two things: the definition of a complete repository layer, and the gate, "Step 0 — repository-pattern gate". `references/design-patterns.md` (Decorator) holds the decorator's shape, stacking order, and the Redis-outage fall-through that makes it worth having.
 
 ## Non-negotiable defaults
 
@@ -139,7 +156,7 @@ In Alaa Laravel code the Repository pattern is mandatory for application-layer p
 - Public parameter names stay stable wherever a caller may use named arguments.
 - **Merge and partial-update logic decides by key presence, never by truthiness.** `$data['count'] ?? $existing` silently discards a legitimate `0`, `false`, or `''`. Where absence and empty are different facts, use `array_key_exists()`, `$request->has()`, or an explicit `!== null`.
 - `env()` is read only inside `config/*.php`; application code reads `config()` or receives typed config through its constructor.
-- Event names, error codes, cache-key prefixes, queue names, and metric names are backed enums or class constants, never inline strings — a typo in an inline string is a silent contract or observability hole. The canonical names come from `/alaa-services-contract`; this skill owns only the mechanism carrying them.
+- Event names, error codes, cache-key prefixes, queue names, and metric names are backed enums or class constants, never inline strings, because a typo in an inline string is a silent contract or observability hole. The canonical names come from `/alaa-services-contract`. This skill owns only the mechanism carrying them.
 - Never guess an external fact — a provider payload, another service's contract, a header's meaning. Write `NEEDS_<PROVIDER>_CONFIRMATION` or `[gap]` at the site and report it instead of inventing a plausible value.
 
 `references/php-modern-and-psr.md` owns the language-level rules: `readonly`, `DateTimeImmutable`, enums plus `match`, union and intersection types, the PHP 8.5 features, lazy objects, the PSR/PER baseline, and the language-level anti-patterns.
@@ -167,16 +184,16 @@ Apply SOLID where its absence causes real pain — untestable code, shotgun chan
 
 - Controllers stay thin and deterministic: receive validated input, call the service layer, return a resource.
 - **Declare route posture at registration.** Auth, permission, throttle, and tenant middleware live on the route or route group, visible where the route is defined — never as an ad-hoc check inside a controller body. A route whose trust posture must be inferred from its handler is a review failure.
-- **Every relation and every count read inside an API Resource is guarded by `whenLoaded()`, `whenCounted()`, or `whenAggregated()`.** An unguarded `$this->relation` fires one query per row whenever the caller did not eager-load it, and a Resource cannot see what the caller loaded — so the guard is mandatory, never conditional.
+- **Every relation and every count read inside an API Resource is guarded by `whenLoaded()`, `whenCounted()`, or `whenAggregated()`.** An unguarded `$this->relation` fires one query per row whenever the caller did not eager-load it. A Resource cannot see what the caller loaded, so the guard is mandatory, never conditional.
 - Follow the repository's existing folder structure. Where it has none and the task enters architecture territory, folder and layer decisions belong to `/alaa-laravel-architecture`.
-- Eager-loading strategy and large-dataset traversal carry a decision this skill does not own: when a collection grows with tenants, rows, history, or fan-out, `/alaa-algorithms-data-structures` owns the bound, whether the path streams or materialises, and which N+1 resolution applies. This skill owns the Laravel idiom that carries the answer — `references/laravel-best-practices.md`.
+- Eager-loading strategy and large-dataset traversal carry a decision this skill does not own. When a collection grows with tenants, rows, history, or fan-out, `/alaa-algorithms-data-structures` owns the bound, whether the path streams or materialises, and which N+1 resolution applies. This skill owns the Laravel idiom that carries the answer: `references/laravel-best-practices.md`.
 
 ## Octane-safe code shape
 
 Clean code is not acceptable if it leaks request state across a long-lived worker.
 
-- **No value belonging to one request is retained anywhere that outlives the request.** `/alaa-octane-performance` owns the enumerated list of those values, the sites where retaining them is forbidden, the reset mechanism, and the leak regression test. Read it before binding any service, adding any static property, or writing any observer, and treat its wording as the invariant.
-- **A service that needs a per-request value takes it as a method argument.** Constructor-injecting `Request`, the authenticated user, or a tenant-context holder into a service is a review failure — and it is the shape from which the binding-lifetime question disappears, because a service holding no per-request state is safe at any lifetime.
+- **No value belonging to one request is retained anywhere that outlives the request.** `/alaa-octane-performance` owns the enumerated list of those values, the sites where retaining them is forbidden, the reset mechanism, and the leak regression test. Read it before binding any service, adding any static property, or writing any observer. Treat its wording as the invariant.
+- **A service that needs a per-request value takes it as a method argument.** Constructor-injecting `Request`, the authenticated user, or a tenant-context holder into a service is a review failure. A method argument removes the binding-lifetime question, because a service holding no per-request state is safe at any lifetime.
 - **Every in-memory memoization key inside a long-lived object includes the tenant or project identifier**, unless the value is explicitly global. Cache key design, TTL, and invalidation belong to `alaa-data-layer references/50-redis-laravel-octane.md`.
 
 `references/octane-clean-code.md` holds how each design pattern is shaped so those invariants hold.
@@ -184,13 +201,13 @@ Clean code is not acceptable if it leaks request state across a long-lived worke
 ## Error-handling baseline
 
 - Throw specific exceptions with clear ownership, preserve the previous exception when wrapping a low-level failure, and translate centrally at the HTTP, CLI, queue, and integration boundaries.
-- **A definitive denial is never masked as success.** Validation failures, authorization failures, and non-transient 4xx never fall through to a path that behaves like success — a swallowed 403 turns a refusal into a silent grant.
-- **Every outbound call sets both `timeout()` and `connectTimeout()` explicitly**, at the call site or in the client macro that builds it. A call setting neither inherits a default long enough to hold a worker through an SLA breach. Whether that call may retry, how it backs off, and what happens when the dependency is gone belong to `/alaa-reliability-sla`; every number belongs to `alaa-services-contract references/22-failure-load-and-deprecation-contract.md`. This skill states no timeout and no retry count.
+- **A definitive denial is never masked as success.** Validation failures, authorization failures, and non-transient 4xx never fall through to a path that behaves like success. A swallowed 403 turns a refusal into a silent grant.
+- **Every outbound call sets both `timeout()` and `connectTimeout()` explicitly**, at the call site or in the client macro that builds it. A call setting neither inherits a default long enough to hold a worker through an SLA breach. Whether that call may retry, how it backs off, and what happens when the dependency is gone belong to `/alaa-reliability-sla`. Every number belongs to `alaa-services-contract references/22-failure-load-and-deprecation-contract.md`. This skill states no timeout and no retry count.
 - Client-visible error messages stay safe and stable; debugging detail goes into structured logs, never into a user-facing string.
 
 ## Performance baseline
 
-Measure before micro-optimizing. Avoid repeated encode/decode churn, broad object graphs, unnecessary temporary arrays, and reflection- or magic-heavy abstractions in hot code; use small immutable objects for stable data. Query shape and indexing belong to `/alaa-data-layer`; hot-path and worker behaviour to `/alaa-octane-performance`; the complexity bound itself to `/alaa-algorithms-data-structures`.
+Measure before micro-optimizing. Avoid repeated encode/decode churn, broad object graphs, unnecessary temporary arrays, and reflection- or magic-heavy abstractions in hot code. Use small immutable objects for stable data. Query shape and indexing belong to `/alaa-data-layer`. Hot-path and worker behaviour belong to `/alaa-octane-performance`. The complexity bound itself belongs to `/alaa-algorithms-data-structures`.
 
 ## Documentation baseline
 
@@ -198,12 +215,35 @@ Documentation is part of done when behaviour, contracts, setup, env vars, reques
 
 ## Validation before done
 
-Run the relevant checks, preferring repo scripts and CI-pinned versions: style via `vendor/bin/pint --test` or the repo's formatter; static analysis via `vendor/bin/phpstan analyse` at the repo's configured level; then the targeted test selector for the changed behaviour — `--filter`, or the topic's `--group`. The affected suite is the affected tier: the authority `/alaa-testing-strategy` assigns runs it, and a session with no such authority runs it once, on the final tree.
+Run the relevant checks. Prefer repo scripts and CI-pinned versions.
 
-**Report only what you observed run.** If a check could not run, state the exact blocked command and the reason — a check not observed to run has no result. Pipeline-level gating belongs to `/alaa-cicd-laravel-postgres`.
+- Style: `vendor/bin/pint --test` or the repo's formatter.
+- Static analysis: `vendor/bin/phpstan analyse` at the repo's configured level.
+- Then the targeted test selector for the changed behaviour: `--filter`, or the topic's `--group`.
 
-What makes a test worth having — whether it is owed at all (never for Laravel, package, or vendor behaviour, only for this application's use of it), the broken implementation it defends against, the layer it belongs at, whether a double is honest, the proof level a claim reaches, and whether an intermittent failure is a product defect or a broken test — is owned by `/alaa-testing-strategy`. This skill owns only the PHP-side construct choice: Pest and PHPUnit idiom, the database-refresh trait decision, and the run-twice proof for re-runnable units, all in `references/laravel-best-practices.md` under "Tests".
+The affected suite is the affected tier. The authority `/alaa-testing-strategy` assigns runs it. A session with no such authority runs it once, on the final tree.
+
+**Report only what you observed run.** If a check could not run, state the exact blocked command and the reason. A check not observed to run has no result. Pipeline-level gating belongs to `/alaa-cicd-laravel-postgres`.
+
+`/alaa-testing-strategy` owns what makes a test worth having:
+
+- whether it is owed at all (never for Laravel, package, or vendor behaviour, only for this application's use of it)
+- the broken implementation it defends against
+- the layer it belongs at
+- whether a double is honest
+- the proof level a claim reaches
+- whether an intermittent failure is a product defect or a broken test
+
+This skill owns only the PHP-side construct choice: Pest and PHPUnit idiom, the database-refresh trait decision, and the run-twice proof for re-runnable units, all in `references/laravel-best-practices.md` under "Tests".
 
 ## Output contract
 
-State, concisely and auditably: the selected task mode; which companion skills governed the work; whether public contracts were preserved and any intentional exception; the patterns introduced or deliberately avoided where the choice is non-obvious; each check run with its observed outcome, and the exact command and reason for any that did not run; documentation alignment status; and remaining risk or follow-up, including every budget blocker you reported rather than resolved.
+State, concisely and auditably:
+
+- the selected task mode
+- which companion skills governed the work
+- whether public contracts were preserved and any intentional exception
+- the patterns introduced or deliberately avoided where the choice is non-obvious
+- each check run with its observed outcome, and the exact command and reason for any that did not run
+- documentation alignment status
+- remaining risk or follow-up, including every budget blocker you reported rather than resolved

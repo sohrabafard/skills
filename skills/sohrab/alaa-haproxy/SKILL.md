@@ -13,19 +13,18 @@ HAProxy source of truth for this pack.
 
 ## What this skill does not decide, and when not to use it
 
-`alaa-haproxy` owns how a cache or routing decision is expressed as an HAProxy directive — the
-`http-response set-header Cache-Control` rule, the `cache` section, the `compression` settings, the
-path rewrite, the deep-link fallback, and the ACL or map that selects a backend — and it decides
-no policy: which `Cache-Control` value belongs to which response class is decided by
-`/alaa-frontend-devops`, `alaa-frontend-devops
-references/30-serving-caching-and-public-path.md`, because that policy follows from whether the
-build gave the file a content-hashed name and the build owns that. **When a caching or routing
-task arrives here without a stated policy, ask for the policy and emit no directive rather than
-choosing a default.**
+`alaa-haproxy` owns how a cache or routing decision is expressed as an HAProxy directive. That
+covers the `http-response set-header Cache-Control` rule, the `cache` section, the `compression`
+settings, the path rewrite, the deep-link fallback, and the ACL or map that selects a backend. It
+decides no policy. `/alaa-frontend-devops`, `alaa-frontend-devops
+references/30-serving-caching-and-public-path.md`, decides which `Cache-Control` value belongs to
+which response class. That policy follows from whether the build gave the file a content-hashed
+name, and the build owns that. **When a caching or routing task arrives here without a stated
+policy, ask for the policy and emit no directive rather than choosing a default.**
 
-Every other boundary — the owner, and the condition under which that owner decides — is in
-`references/90-companion-boundary.md`. Three that come up in almost every task, so that silence is
-never mistaken for authority:
+`references/90-companion-boundary.md` lists every other boundary: the owner, and the condition
+under which that owner decides. Three boundaries come up in almost every task. They appear here so
+that silence is never mistaken for authority:
 
 - **HAProxy Lua is not this skill's subject.** `/alaa-haproxy-lua` owns
   `lua-load`, `http-request lua.<name>`, Lua converters and fetches, and Lua-backed SPOE. Route
@@ -38,16 +37,16 @@ never mistaken for authority:
 ## Quick start
 
 1. Establish the branch that will actually run the config. `references/10-version-and-branch.md`
-   holds the branch table and the upgrade path; **3.4 is the current LTS**.
+   holds the branch table and the upgrade path. **3.4 is the current LTS.**
 2. Run `haproxy -vv` on that binary. It answers which features exist before any directive relies
    on one.
 3. Open `references/00-topic-map.md`. It maps the task to exactly one reference and names the
    example config to start from.
 4. Run `haproxy -c -f <cfg>` on a binary of that branch. A config checked on the wrong branch has
    not been checked.
-5. Run the applicable checkers below. `haproxy -c -f` proves the file parses; it does not prove the file is
-   correct, and the two most expensive HAProxy mistakes — a `defaults` section that governs a
-   proxy you did not intend, and a `peers` section that never activates — both pass it.
+5. Run the applicable checkers below. `haproxy -c -f` proves the file parses. It does not prove the
+   file is correct. The two most expensive HAProxy mistakes both pass it: a `defaults` section that
+   governs a proxy you did not intend, and a `peers` section that never activates.
 
 ## Checkers
 
@@ -63,18 +62,18 @@ python3 scripts/check_runtime_3_4.py --docker-image <cached-3.4.6-alpine-image>
 ```
 
 All take `--help`. Checker exit codes are
-**0 clean, 1 findings, 2 could not run**; a missing binary or an unreadable path is
+**0 clean, 1 findings, 2 could not run**. A missing binary or an unreadable path is
 2, never 0.
-Run commands from this package directory. Full contract and gate register:
-`references/80-gate-register.md`.
+Run commands from this package directory. `references/80-gate-register.md` holds the full contract
+and gate register.
 
 ## Maintenance
 
-- Keep this file routing-first. Every rule lives in exactly one reference; a rule written twice is
+- Keep this file routing-first. Every rule lives in exactly one reference. A rule written twice is
   a defect.
 - Every version-sensitive value in this skill is listed in `references/SOURCES.md` beside the one
   command or URL that re-derives it. Update both together, or neither.
-- Add an example only when it represents a production pattern no existing example covers, and give
+- Add an example only when it represents a production pattern no existing example covers. Give
   it the same header every other example has: charter, minimum branch, preconditions, variables,
   failure mode. `scripts/check_examples.py` enforces that header.
 
@@ -85,6 +84,6 @@ deployment and external mutation require explicit authority. Report target versi
 build, changed files, source/static/runtime proof and skipped or failed gates.
 Stop when the requested behavior and applicable gates agree. For a failed operation,
 allow one cause-specific repair and one materially different retry, as defined in
-`references/80-gate-register.md` "Failed-operation boundary"; then preserve
+`references/80-gate-register.md` "Failed-operation boundary". Then preserve
 the evidence and report the missing prerequisite. An unavailable binary/component
 leaves its gate unrun, never passed.

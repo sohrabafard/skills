@@ -6,12 +6,12 @@ description: "Build and audit a Laravel service's public API contract pack from 
 # Laravel Public API Contract Pack
 
 Build a public client API contract pack from executable repository truth, so an SDK or frontend
-engineer implements transport, types, errors, pagination, retries and versioning without reading
-backend source, and so a caller this service cannot deploy in lockstep with can pin what it
-built against.
+engineer can implement transport, types, errors, pagination, retries and versioning
+without reading backend source, and a caller this service cannot deploy in lockstep with can
+pin what it built against.
 
-The work is docs-only: no application code, test, or runtime behaviour changes unless the user
-explicitly expands scope, and the skill says so rather than doing it.
+The work is docs-only. Change no application code, test, or runtime behaviour unless the user
+explicitly expands scope. Report such a change as out of scope instead of making it.
 
 ## When this applies
 
@@ -93,10 +93,13 @@ that mentions a field does not support a claim about its type.
 
 ## The two uncertainty markers
 
-`NEEDS_BACKEND_CONFIRMATION` needs both, and its entry names the artifact: a cited repository
-artifact proves the surface exists and runs — a route declaration, a registered middleware, a
-config key that is read, a passing test — **and** the same repository does not fix the value or
-shape a consumer needs. The entry records that citation and the exact question a backend or
+`NEEDS_BACKEND_CONFIRMATION` needs both of these conditions:
+
+1. A cited repository artifact proves the surface exists and runs: a route declaration, a registered
+   middleware, a config key that is read, or a passing test.
+2. The same repository does not fix the value or shape a consumer needs.
+
+The entry names the artifact, records that citation, and records the exact question a backend or
 gateway owner must answer. No citation, no marker.
 
 `not_implemented` is a requested or previously documented surface with no route, controller, or
@@ -119,9 +122,9 @@ The method is this skill's; header names, identifier forms, and trust semantics 
    **trusted-injected** values the gateway sets after verification, and **forbidden input** the
    service reads that a client could set but must not.
 4. State what a public client sends for identity: the credential the gateway accepts on that
-   route, read from the gateway repository's route table and the service's auth middleware, with
-   its refresh behaviour. A trusted header is never documented as client input in any example; a
-   local-testing recipe needing one is labelled backend-only local testing in its own section.
+   route, with its refresh behaviour. Read it from the gateway repository's route table and the
+   service's auth middleware. Never document a trusted header as client input in any example. Label
+   a local-testing recipe that needs one as backend-only local testing, in its own section.
 5. Per forbidden-input value, document the status the service returns when a client sets it,
    proven by a middleware line or a test.
 

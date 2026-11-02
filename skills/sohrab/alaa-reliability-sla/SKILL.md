@@ -11,7 +11,20 @@ This skill owns doctrine — why a mechanism exists, how to choose its shape, wh
 
 ## When this applies
 
-Any change that adds or alters an outbound call, a timeout or deadline, a retry, a connection or worker pool bound, a circuit breaker, a bulkhead, a queue, an admission or shedding decision, a cache used as a fallback, a write a caller may repeat, or an SLO — and any diagnosis of a slow, flapping, or unavailable dependency.
+This skill applies to any change that adds or alters:
+
+- an outbound call
+- a timeout or deadline
+- a retry
+- a connection or worker pool bound
+- a circuit breaker or a bulkhead
+- a queue
+- an admission or shedding decision
+- a cache used as a fallback
+- a write a caller may repeat
+- an SLO
+
+It also applies to any diagnosis of a slow, flapping, or unavailable dependency.
 
 It does not apply to a change that makes no outbound call, holds no shared resource, and alters no failure path.
 
@@ -92,7 +105,13 @@ Gaps: mechanisms decided but unproven, and values with no recorded derivation
 
 Stop successfully when every dependency in scope is classified, bounded, and has a decided failure response; every mechanism has a test that fails without it; and every value traces to the platform contract or to a recorded derivation.
 
-Stop and report blocked when: a dependency cannot be classified as gate or contributor from the code and the repository's documentation; a required value is absent from the platform contract and the workload data needed to derive it does not exist; a required durable-work lifecycle decision is missing under `references/10-deadlines-and-timeouts.md`; a route's idempotency guarantee cannot be placed in the same transactional store as its effect and no reconciliation path exists; or a mechanism cannot be tested without a production experiment the user has not authorized.
+Stop and report blocked when any of these holds:
+
+- A dependency cannot be classified as gate or contributor from the code and the repository's documentation.
+- A required value is absent from the platform contract and the workload data needed to derive it does not exist.
+- A required durable-work lifecycle decision is missing under `references/10-deadlines-and-timeouts.md`.
+- A route's idempotency guarantee cannot be placed in the same transactional store as its effect and no reconciliation path exists.
+- A mechanism cannot be tested without a production experiment the user has not authorized.
 
 ## When NOT to use
 

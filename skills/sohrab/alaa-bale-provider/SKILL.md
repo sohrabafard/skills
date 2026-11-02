@@ -49,10 +49,10 @@ RabbitMQ is this platform's only broker; do not design an outbox here.
 - Put `api-access-key` on every request, and keep `bot_id` numeric.
 - Send `phone_number` as `989` plus nine digits: no `+`, no leading `0`, no separators, no Persian or
   Arabic digits.
-- This skill's Safir wire form is `989xxxxxxxxx` and Mediana's is `+989xxxxxxxxx`, and both render one platform
-  input form, so one shared normalisation function serving both channels is a defect unless it takes the
-  target channel as a parameter — a number rendered for the wrong channel is rejected by the vendor at best
-  and misdelivered at worst.
+- This skill's Safir wire form is `989xxxxxxxxx`. Mediana's wire form is `+989xxxxxxxxx`. Both render one
+  platform input form, so one shared normalisation function serving both channels is a defect unless it takes
+  the target channel as a parameter. A number rendered for the wrong channel is rejected by the vendor at
+  best and misdelivered at worst.
 - Put exactly one primary variant in `message_data`; `is_secure` is a modifier, not a variant. The
   variant-selection table is the first section of `references/10-wire-contract.md`.
 - Send only the fields `references/10-wire-contract.md` documents. `chat_id`, `parse_mode`, `callback_data`
@@ -67,7 +67,7 @@ distinguish an honest retry from an intentional repeat, so it suppresses the sec
 legitimate OTPs to one recipient collapse into one and the user cannot log in. Mechanics:
 `alaa-reliability-sla references/60-idempotency.md`.
 
-Scope it by **tenant or project, operation identity, and the key, all three together** — a global namespace
+Scope it by **tenant or project, operation identity, and the key, all three together**. A global namespace
 is a cross-tenant leak, not a duplicate-suppression bug, because one tenant's key colliding with another's
 returns the first tenant's result to the second.
 
@@ -76,10 +76,14 @@ Persist it before the first call, so a retry after a crash finds the same value.
 ## Secrets
 
 Keep `api-access-key`, OTP values, and full phone numbers out of **logs, traces, exceptions, screenshots,
-and final reports**. These exclusions cover all five required output surfaces. Phone defaults to omission or an independently
-approved stable internal reference. The separately approved diagnostic derivative is governed by `/alaa-observability-soc` `references/80-review-gates.md` under “Permitted phone derivative”; never use it as
-an identity or correlation key or metric label. For SOC/SIEM forwarding, follow `alaa-observability-soc references/70-soc-evidence.md`
-“SOC and SIEM egress”.
+and final reports**. These exclusions cover all five required output surfaces.
+
+A phone number defaults to omission or an independently approved stable internal reference. The separately
+approved diagnostic derivative is governed by `/alaa-observability-soc` `references/80-review-gates.md` under
+“Permitted phone derivative”. Never use it as an identity or correlation key or metric label.
+
+For SOC/SIEM forwarding, follow `alaa-observability-soc references/70-soc-evidence.md` “SOC and SIEM egress”.
+
 Never log an OTP or the key.
 
 ## Failure behaviour

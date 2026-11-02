@@ -24,9 +24,9 @@ kubectl api-resources --namespaced=false -o name              # catalog visibili
 kubectl auth can-i --list -n NS                               # what this identity may actually do
 ```
 
-An absent API proves no version range: APIs can be disabled or discovery unavailable. A visible kind grants no permission to use it; empty or forbidden discovery proves no namespace-only platform boundary. Report server version as unknown when unavailable, preserve discovery errors, and verify every required kind and verb before relying on it.
+An absent API proves no version range: APIs can be disabled or discovery unavailable. A visible kind grants no permission to use it. Empty or forbidden discovery proves no namespace-only platform boundary. Report server version as unknown when unavailable. Preserve discovery errors. Verify every required kind and verb before relying on it.
 
-`bash scripts/verify-cluster.sh NS [runner-serviceaccount]` collects this evidence without minting tokens or impersonating. With the optional ServiceAccount, the current context must already authenticate as that exact namespace/ServiceAccount principal; unavailable or mismatched identity blocks with exit `2`. A denied or absent required capability returns `1`; unavailable required proof returns `2`. Without that argument, the result covers only the caller.
+`bash scripts/verify-cluster.sh NS [runner-serviceaccount]` collects this evidence without minting tokens or impersonating. With the optional ServiceAccount, the current context must already authenticate as that exact namespace/ServiceAccount principal. Unavailable or mismatched identity blocks with exit `2`. A denied or absent required capability returns `1`. Unavailable required proof returns `2`. Without that argument, the result covers only the caller.
 
 ## Source precedence
 
@@ -52,11 +52,20 @@ Live discovery outranks every local file, because a local file describes a snaps
 | `/alaa-bash-shell`, `/alaa-makefile` | helper scripts and local invocation; keep discovery helpers non-mutating. |
 | `/alaa-prompting-guide` `references/50-effort-and-thinking.md` | model and reasoning effort. No model name appears in this skill, because one written into a skill goes stale silently and is copied forward because it looks authoritative. |
 
-Two runner-adjacent rules stay here because they are Arvan consequences, not runner settings: a job must not rely on `kubectl create namespace`, `kubectl get namespace`, or `helm --create-namespace` unless discovery proves the runner holds that scope; and an RBAC denial inside a job is an alias-versus-canonical identity question before it is a permissions question.
+Two runner-adjacent rules stay here because they are Arvan consequences, not runner settings:
 
-**Portable-chart routing.** When a chart targets Arvan CaaS and OpenShift or OKD, read `/alaa-k8s-helm` `references/openshift-and-managed-platforms.md` before setting `runAsUser`, `privileged`, or `hostPath`; that file owns the non-root, arbitrary-UID, and restricted-field rules. Before setting `fsGroup` or the `defaultMode` of a Secret or ConfigMap a non-root process reads, read `references/arvan-constraints.md` section 7, because Arvan documents no injected `fsGroup`. Passing Arvan checks does not prove OpenShift/OKD SCC admission or runtime compatibility; validate the rendered chart and image on each target with its deployment identity.
+- A job must not rely on `kubectl create namespace`, `kubectl get namespace`, or `helm --create-namespace` unless discovery proves the runner holds that scope.
+- An RBAC denial inside a job is an alias-versus-canonical identity question before it is a permissions question.
 
-**Stack versus platform (D8).** This skill owns the Arvan platform facts that change a manifest or a deployment decision, and contributes Arvan-only **predicates** to the gate register in `alaa-k8s-helm references/validation-workflows.md`: no rendered container omits resources and `requests` equals `limits`; no rendered document uses a kind absent from the discovered line's column of the capability matrix; no rendered manifest references a cluster-scoped object. It owns **no gate placement and no runner configuration**.
+**Portable-chart routing.** When a chart targets Arvan CaaS and OpenShift or OKD, read `/alaa-k8s-helm` `references/openshift-and-managed-platforms.md` before setting `runAsUser`, `privileged`, or `hostPath`. That file owns the non-root, arbitrary-UID, and restricted-field rules. Before setting `fsGroup` or the `defaultMode` of a Secret or ConfigMap a non-root process reads, read `references/arvan-constraints.md` section 7, because Arvan documents no injected `fsGroup`. Passing Arvan checks does not prove OpenShift/OKD SCC admission or runtime compatibility. Validate the rendered chart and image on each target with its deployment identity.
+
+**Stack versus platform (D8).** This skill owns the Arvan platform facts that change a manifest or a deployment decision. It contributes Arvan-only **predicates** to the gate register in `alaa-k8s-helm references/validation-workflows.md`:
+
+- Every rendered container sets resources, and its `requests` equal its `limits`.
+- No rendered document uses a kind absent from the discovered line's column of the capability matrix.
+- No rendered manifest references a cluster-scoped object.
+
+This skill owns **no gate placement and no runner configuration**.
 
 ## Reference list, with the condition that opens each file
 

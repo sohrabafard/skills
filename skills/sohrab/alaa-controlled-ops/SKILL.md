@@ -15,11 +15,14 @@ Identify the target by repository identity, never by a filesystem path:
 - **an adopter** — a service whose `composer.json` requires `alaa/controlled-ops`
 - **cross-repo release work** — cutting a package tag, publishing it, or moving an adopter onto it
 
-Also for dry-run hash, payload fingerprint, reviewed-hash, replay-or-conflict, write-boundary, and ControlledOps route or Postman parity questions in either repository.
+Also use this skill for dry-run hash, payload fingerprint, reviewed-hash, replay-or-conflict, write-boundary, and ControlledOps route or Postman parity questions in either repository.
 
 ## When NOT to use
 
-Beyond the negatives in the description: do not use it for approval-workflow design in a product that does not depend on `alaa/controlled-ops`, nor for domain feature work in an adopter where no ControlledOps contract, digest, or package version is touched.
+In addition to the description's negatives, do not use this skill for:
+
+- approval-workflow design in a product that does not depend on `alaa/controlled-ops`
+- domain feature work in an adopter where no ControlledOps contract, digest, or package version is touched
 
 ## Quick start
 
@@ -27,17 +30,21 @@ Beyond the negatives in the description: do not use it for approval-workflow des
 2. Classify the target as package, adopter, or cross-repo release work, and state that classification before editing anything.
 3. Establish current behaviour from the active repository under the ranking in `references/10-source-priority-and-boundaries.md` before using any route count, permission ID, package version, or phase name from elsewhere.
 4. Read only the reference matching the class.
-5. Close on `references/40-validation-and-release-gates.md`. A gate you did not run is reported as not run, never as passed.
+5. Close on `references/40-validation-and-release-gates.md`. Report a gate you did not run as not run, never as passed.
 
 ## Non-negotiables
 
 - Package availability does not create service runtime behavior. A service must implement and validate its own routes, requests, resources, locks, transactions, workers, and outbox behavior.
-- Every claim about dry-run, approval, execution, retry, cancellation, or recovery behaviour names the file and symbol it was read from, or is reported as unverified.
-- Creating or pushing a release tag, pushing package code, publishing a release, rebuilding Satis and adopting the
-  release in a consuming service each require explicit user authorization covering that effect and target.
-  Reuse applicable authorization already given in the session; ask only for missing or changed scope.
-  A generic "approval is not required" waiver does not authorize unrelated effects, and approval to push does
-  not itself authorize a Satis rebuild or adopter update.
+- For every claim about dry-run, approval, execution, retry, cancellation, or recovery behaviour, name the file and symbol you read it from. Otherwise report the claim as unverified.
+- Each of these effects requires explicit user authorization that covers that effect and target:
+  - creating or pushing a release tag
+  - pushing package code
+  - publishing a release
+  - rebuilding Satis
+  - adopting the release in a consuming service
+- Reuse applicable authorization already given in the session. Ask only for missing or changed scope.
+- A generic "approval is not required" waiver does not authorize unrelated effects.
+- Approval to push does not itself authorize a Satis rebuild or adopter update.
 
 ## References
 

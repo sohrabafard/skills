@@ -13,7 +13,9 @@ Stop and route when the task has **no package-boundary impact** — generic CI, 
 
 ## Ownership and the seam
 
-`alaa-mono-package` owns everything that determines what enters the bundling graph — a package's declared exports, its peer contract, its specifiers, and whether its CSS and assets are reachable from an entry — while `/alaa-frontend-devops` (`$alaa-frontend-devops`) owns everything that happens to that graph's output after `build` exits: where it lands, how it is served, how it is traced to a commit, and how it is rolled back.
+`alaa-mono-package` owns everything that determines what enters the bundling graph: a package's declared exports, its peer contract, its specifiers, and whether its CSS and assets are reachable from an entry.
+
+`/alaa-frontend-devops` (`$alaa-frontend-devops`) owns everything that happens to that graph's output after `build` exits: where it lands, how it is served, how it is traced to a commit, and how it is rolled back.
 
 Exactly one rule straddles that seam: package assets in the final client asset output. This skill owns whether the asset is reachable from an entry (`references/30-assets-css-and-ssr-client-assets.md`); `/alaa-frontend-devops` (`$alaa-frontend-devops`) owns whether the output landed where the deployment serves it (`alaa-frontend-devops` `references/10-build-contract-and-artifacts.md`). Neither restates the other.
 
@@ -21,11 +23,11 @@ Every other owner this skill depends on is listed with its file path in `referen
 
 ## Read the lockfile first
 
-Before writing any dependency specifier or running any workspace command, read the lockfile that exists in the repository. The manager decides the syntax, and a specifier written for the wrong manager installs a second copy instead of linking the workspace one. Detect; never assume. The protocols and filter syntax are `references/15-package-manager-modes.md`.
+Before you write a dependency specifier or run a workspace command, read the lockfile that exists in the repository. The manager decides the syntax. A specifier written for the wrong manager installs a second copy instead of linking the workspace one. Detect; never assume. `references/15-package-manager-modes.md` holds the protocols and filter syntax.
 
 ## Three rules that never cost a hop
 
-1. **Never import `packages/<name>/src/**` from outside that package.** It works locally every time, which is why it survives review. What it silently bypasses, and how to enforce the ban, are in `references/10-package-boundary-and-entrypoints.md`.
+1. **Never import `packages/<name>/src/**` from outside that package.** It works locally every time, which is why it survives review. `references/10-package-boundary-and-entrypoints.md` states what it silently bypasses and how to enforce the ban.
 2. **`vue`, `quasar`, `vue-router`, and `pinia` are peers of every internal package, never dependencies**, and each must resolve to exactly one real path across the workspace.
 3. **A package is not done until every condition its `exports` declares has been imported under that condition.** A declared condition pointing at a file that is absent or throws produces no error in the package that declares it; it fails in the consumer. Run `scripts/verify-package-entrypoints.mjs`; exit code 2 means unbuilt or unreadable and is not a pass.
 
@@ -39,6 +41,6 @@ Apply this when the user says "clean island", "only this package", "do not chang
 
 ## Navigation
 
-The router is `references/00-topic-map.md`, and it routes both by what you are about to do and by the symptom you are seeing. Open it, match one row, read that one file.
+The router is `references/00-topic-map.md`. It routes by what you are about to do and by the symptom you see. Open it, match one row, and read that one file.
 
 Model selection and reasoning effort: `/alaa-prompting-guide` (`$alaa-prompting-guide`), `references/50-effort-and-thinking.md`.

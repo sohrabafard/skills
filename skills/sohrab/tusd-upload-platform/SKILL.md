@@ -7,7 +7,7 @@ description: "Resumable-upload platform skill covering three registers: the offi
 
 ## Mission
 
-Make an agent correct on resumable uploads across three registers this skill keeps separate and never blends.
+Make an agent correct on resumable uploads across three registers. Keep the registers separate. Never blend them.
 
 | Register | What it is | Whose source is authoritative |
 |---|---|---|
@@ -15,7 +15,7 @@ Make an agent correct on resumable uploads across three registers this skill kee
 | **(b) Client** | Browser upload transport through `tus-js-client`. Stops at the network boundary and owns nothing server-side. | the `tus-js-client` version in the lockfile |
 | **(c) Ala** | What the Ala `tusd` repository decided on top of (a), including each upstream feature it declined. | the Ala `tusd` repository source |
 
-**When (a) and (c) disagree, (c) wins inside the Ala repository, and the answer names which register each half came from.** An upstream default presented as Ala behaviour is a defect, and so is the reverse: the Ala service runs no tusd binary, so no CLI flag describes it.
+**When (a) and (c) disagree, (c) wins inside the Ala repository. The answer names which register each half came from.** An upstream default presented as Ala behaviour is a defect. The reverse is also a defect: the Ala service runs no tusd binary, so no CLI flag describes it.
 
 ## What this skill does not own
 
@@ -38,24 +38,24 @@ Do not use this skill for a presigned-URL upload that speaks no tus protocol, or
 
 ## Binding rules
 
-1. Set a server-side maximum upload size on every deployment that accepts client bytes. Upstream treats an unset `MaxSize` and an absent `-max-size` as unlimited, so the only remaining ceiling is `s3store.MaxObjectSize`, 5 TiB.
-2. Never advertise a limit the same process does not enforce. `Tus-Max-Size` is a claim, not a control; a client that trusts it uploads until storage refuses.
+1. Set a server-side maximum upload size on every deployment that accepts client bytes. Upstream treats an unset `MaxSize` and an absent `-max-size` as unlimited. The only remaining ceiling is `s3store.MaxObjectSize`, 5 TiB.
+2. Never advertise a limit the same process does not enforce. `Tus-Max-Size` is a claim, not a control. A client that trusts it uploads until storage refuses.
 3. Define retention for unfinished uploads before the plane takes traffic: an age threshold, an owning job, a metric and a stated failure behaviour. A column that only gates intent reuse is not retention, because it frees no bytes.
-4. Derive chunk size on the server, below the smallest body cap on the narrowest hop, and return it with the upload plan. Raising a fleet-wide body cap to admit one upload disables a platform control on every route; the correct move is a dedicated ingress.
+4. Derive chunk size on the server, below the smallest body cap on the narrowest hop. Return it with the upload plan. Raising a fleet-wide body cap to admit one upload disables a platform control on every route. Use a dedicated ingress instead.
 5. Authorize `POST`, `HEAD`, `PATCH` and `DELETE` separately, before the byte-transfer handler runs. Creation-time authorization protects creation only, because every later request presents nothing but the upload URL.
 6. State the failure posture of every hook and callback individually, as "on error this call denies" or "on error this call proceeds and its record is lost". An unstated posture is read as fail-open by the next agent to arrive.
-7. A call that decides whether a caller may act denies when it cannot decide. A call that only records denies nothing, and must log its own failure, because a silently discarded error leaves bytes in storage with no control-plane row.
+7. A call that decides whether a caller may act denies when it cannot decide. A call that only records denies nothing. It must log its own failure, because a silently discarded error leaves bytes in storage with no control-plane row.
 8. Generate object keys on the server from upload and asset identity, with no client-supplied path segment and no client-supplied bucket. Client metadata never selects a tenant, a backend or a key.
 9. Treat the upload URL as a capability and re-check ownership on every method that accepts it. Storing it locally is a resume feature, not an authorization decision.
-10. Pin the tusd image and the tusd module to an exact release, and keep that version string in exactly one file so a bump is one edit. `latest` makes a rollback unreproducible.
+10. Pin the tusd image and the tusd module to an exact release. Keep that version string in exactly one file, so a bump is one edit. `latest` makes a rollback unreproducible.
 11. Keep upload URLs, object keys, filenames, raw `Upload-Metadata`, trusted header values and storage credentials out of logs, metrics labels, traces, Sentry and client analytics. Join on the upload identifier and the request or trace id.
 12. Read every claim about the Ala service from its source in the same session, or report it as unverified. It diverges from upstream defaults in places invisible from configuration.
 
 ## Default platform shape
 
-Public clients reach the gateway; the gateway verifies the token, strips spoofable internal headers, injects trusted context and forwards. The control plane issues an upload plan before any byte moves and owns the durable record of it. The tus layer moves bytes and nothing else. Completion of byte transfer is not readiness: scanning, extraction, relay or registration runs afterwards, and the client learns readiness from the control plane, not from the tus response.
+Public clients reach the gateway. The gateway verifies the token, strips spoofable internal headers, injects trusted context and forwards the request. The control plane issues an upload plan before any byte moves and owns the durable record of it. The tus layer moves bytes and nothing else. Completion of byte transfer is not readiness. Scanning, extraction, relay or registration runs afterwards. The client learns readiness from the control plane, not from the tus response.
 
-Choose the smallest shape that meets the requirement; justify any custom shape before proposing it.
+Choose the smallest shape that meets the requirement. Justify any custom shape before proposing it.
 
 ## Routing
 
@@ -63,10 +63,17 @@ Every reference and asset is routed by an observable condition in `references/00
 
 ## Expected output
 
-For an end-to-end design, return: each claim's register; the topology and rejected alternative;
-authorization for every tus method; the client-to-storage limit chain with each enforcer; retention's
-threshold, owner and metric; every hook/callback's failure posture; storage lifecycle and any two-copy
-window; observability; regression tests; and open risks. For a partial design or review, report the
-applicable items and cross-boundary effects, always identifying registers, tests and risks. A hook
-review includes failure posture, lifecycle and observability. For debugging, lead with ranked root
-causes and the exact request, response field, log line or query that confirms or eliminates each.
+For an end-to-end design, return:
+
+- each claim's register
+- the topology and rejected alternative
+- authorization for every tus method
+- the client-to-storage limit chain with each enforcer
+- retention's threshold, owner and metric
+- every hook/callback's failure posture
+- storage lifecycle and any two-copy window
+- observability
+- regression tests
+- open risks
+
+For a partial design or review, report the applicable items and cross-boundary effects. Always identify registers, tests and risks. A hook review includes failure posture, lifecycle and observability. For debugging, lead with ranked root causes and the exact request, response field, log line or query that confirms or eliminates each.

@@ -48,7 +48,7 @@ Repository validation policy owns stricter invocation requirements.
 - **Default progress budget: 12 lines of prose and excerpts up to 20 lines.** Apply this budget to progress reports, not requested deliverables or required findings. Preserve required content that exceeds the default. Put bulky working material in an authorized artifact.
 - Retain an artifact only when it helps the user inspect or resume. Summarize its outcome and name its path. Remove throwaway files when safe. Keep implementation in normal repository files, never in temp, shell-history, or off-repo state.
 - Finish with changed paths, reasons, validation results, and remaining risks or blockers. Do not paste a large diff instead.
-- On sandbox, refresh, locking, quoting, or command-length failures, retry only the essential failed work. Retry serially with bounded output. Under Codex, first invoke `/alaa-codex-runtime-ops`. That recovery skill is Codex-only; it has no Claude Code equivalent.
+- On sandbox, refresh, locking, quoting, or command-length failures, retry only the essential failed work. Retry serially with bounded output. Under Codex, first invoke `/alaa-codex-runtime-ops`. That recovery skill is Codex-only. It has no Claude Code equivalent.
 
 #### The three leaks
 

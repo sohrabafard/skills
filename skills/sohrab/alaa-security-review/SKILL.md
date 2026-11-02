@@ -5,7 +5,7 @@ description: "Security review gate for production multi-tenant services: trust b
 
 # Alaa Security Review
 
-Review a change against the rules in this skill and emit a verdict per item. The verdict is the deliverable: a named set of items, each with a named result. Orchestrators and platform contracts gate on this verdict, so a verdict emitted on ground the reviewer never examined is worse than no verdict - it launders an unexamined change as reviewed.
+Review a change against the rules in this skill and emit a verdict per item. The verdict is the deliverable: a named set of items, each with a named result. Orchestrators and platform contracts gate on this verdict. A verdict emitted on ground the reviewer never examined is worse than no verdict, because it launders an unexamined change as reviewed.
 
 Companion skills are written `/name` here; under Codex the same skill is `$name`.
 
@@ -23,7 +23,7 @@ Three verdicts exist per item, and only three:
 - **FAIL** - you read the code and it violates the rule, **or** you could not determine the answer from actual code. The second kind carries the reason `not determined`, what you examined, and what would settle it.
 - **N/A** - the change contains nothing the item applies to. Name why in one clause.
 
-An item you could not verify is FAIL with reason `not determined`. It is never omitted and never PASS. Absence of evidence is not evidence of a control, and silence about an item reads to every consumer of this verdict as a PASS on it.
+An item you could not verify is FAIL with reason `not determined`. It is never omitted and never PASS. Absence of evidence is not evidence of a control. Silence about an item reads to every consumer of this verdict as a PASS on it.
 
 A FAIL of the `not determined` kind is ranked at the severity the item would carry if the control were absent, not at the severity of an unknown. Leaving an item undetermined therefore costs the same as failing it, which is the point.
 
@@ -33,19 +33,28 @@ A PASS verdict on the change enumerates every item marked PASS and every item ma
 
 **A control that decides whether a caller may act denies when it cannot reach a decision.**
 
-"Cannot reach a decision" is the whole set, not only an explicit deny: the authorization service timed out, returned a non-success status, or returned a body the caller could not parse; the policy, permission map, or model version failed to load or is unpinned; the key material needed to verify a credential is unavailable; a required piece of verified context is absent, empty, or malformed; the rate-limit or lockout store is unreachable; the flag that gates the control cannot be read. In every one of those states the request is refused with the control's own error, the protected work does not run, and the failure is emitted as a distinct event rather than folded into a generic 500.
+"Cannot reach a decision" is the whole set, not only an explicit deny:
 
-Two consequences that reviews miss most often. A cache in front of a decision may absorb a *cache* outage by consulting the authoritative source, and must never absorb an *authoritative-source* outage by serving a stale allow. And a control skipped because its dependency was down has not degraded - it has been removed for the duration of the outage.
+- the authorization service timed out, returned a non-success status, or returned a body the caller could not parse;
+- the policy, permission map, or model version failed to load or is unpinned;
+- the key material needed to verify a credential is unavailable;
+- a required piece of verified context is absent, empty, or malformed;
+- the rate-limit or lockout store is unreachable;
+- the flag that gates the control cannot be read.
 
-`/alaa-services-contract` records this platform's own instance of the doctrine at its request-time authorization layer; that file owns the wire behaviour, and the general rule above binds a new service that has never read it.
+In every one of those states, the control refuses the request with the control's own error. The protected work does not run. The failure is emitted as a distinct event rather than folded into a generic 500.
+
+Reviews miss two consequences most often. First, a cache in front of a decision may absorb a *cache* outage by consulting the authoritative source. It must never absorb an *authoritative-source* outage by serving a stale allow. Second, a control skipped because its dependency was down has not degraded. It has been removed for the duration of the outage.
+
+`/alaa-services-contract` records this platform's own instance of the doctrine at its request-time authorization layer. That file owns the wire behaviour. The general rule above binds a new service that has never read it.
 
 ### Fail-closed versus fail-open, and which doctrine applies
 
 The two doctrines contradict each other by design. The deciding question is what the component's failure lets through, not how important the component is.
 
-- A component that answers "may this actor do this?" **fails closed**. Denying costs availability; allowing costs a breach. This skill owns those components.
-- A component that only observes, records, or reports **fails open** - a telemetry exporter, a metrics sink, a trace pipeline, the *shipping* of an audit record to a SOC. Dropping its output costs visibility; blocking the request costs availability and buys no security. `/alaa-reliability-sla` owns those, together with timeouts, retries, backpressure, shedding, and the error budget.
-- The line runs through the audit trail rather than around it: the *write* of an audit record for a privileged action is part of the control and fails closed where the repository states non-repudiation is required; the *forwarding* of that record downstream fails open, buffers, and counts what it dropped.
+- A component that answers "may this actor do this?" **fails closed**. Denying costs availability. Allowing costs a breach. This skill owns those components.
+- A component that only observes, records, or reports **fails open**: a telemetry exporter, a metrics sink, a trace pipeline, the *shipping* of an audit record to a SOC. Dropping its output costs visibility. Blocking the request costs availability and buys no security. `/alaa-reliability-sla` owns those, together with timeouts, retries, backpressure, shedding, and the error budget.
+- The line runs through the audit trail rather than around it. The *write* of an audit record for a privileged action is part of the control. It fails closed where the repository states non-repudiation is required. The *forwarding* of that record downstream fails open, buffers, and counts what it dropped.
 
 An agent implementing a control states which doctrine it chose, in the code or in its test. A component whose failure behaviour is undecided will have it decided by its library default, and library defaults are fail-open.
 
@@ -120,7 +129,7 @@ Always in this order:
 - The change is style cleanup, formatting, or documentation only, and moves no trust boundary.
 - The change is performance tuning that alters no authentication, authorization, tenant scope, input
   handling, outbound target, uploaded or served file, or stored secret.
-- The question is availability behaviour under load — retries, timeouts, degradation, shedding — rather
+- The question is availability behaviour under load (retries, timeouts, degradation, shedding) rather
   than whether an actor is permitted to act. The routing table below names each owner.
 
 ## Reference routing
@@ -138,10 +147,10 @@ Read the smallest set the surface inventory hits.
 
 ## What this skill does not own
 
-- `/alaa-trust-gateway-auth` owns how *this platform's* tokens and trusted headers are issued, verified, projected, and stripped: the claim set, the header names, the gateway configuration, key distribution. This skill owns the review questions that apply to *any* token system, plus the negative tests in `50-credentials-and-cryptography.md`. Read that skill to learn what this platform's credentials contain; the rules for judging a credential system live here, and every one of them binds a service that has never read it.
+- `/alaa-trust-gateway-auth` owns how *this platform's* tokens and trusted headers are issued, verified, projected, and stripped: the claim set, the header names, the gateway configuration, key distribution. This skill owns the review questions that apply to *any* token system, plus the negative tests in `50-credentials-and-cryptography.md`. Read that skill to learn what this platform's credentials contain. The rules for judging a credential system live here. Every one of them binds a service that has never read it.
 - `/alaa-reliability-sla` owns availability-side failure behaviour, as split under the fail-closed doctrine above.
 - `/alaa-services-contract` owns the wire contracts these invariants instantiate - header names, decision codes, endpoint categories, route registration, permission catalogs. Where a rule here and a contract there describe the same control, that file owns the wire and this file owns the invariant.
-- `/alaa-minio-object-storage` (`$alaa-minio-object-storage`) owns the object store's own posture: what a bucket policy may grant, how a storage identity is scoped and rotated, which transport carries the bytes, and how long a presigned URL may live. Read it when reviewing a bucket policy, a storage identity, a plaintext hop to an object store, or a presigned URL's lifetime; that skill owns the value the review measures against, and this skill owns the verdict.
+- `/alaa-minio-object-storage` (`$alaa-minio-object-storage`) owns the object store's own posture: what a bucket policy may grant, how a storage identity is scoped and rotated, which transport carries the bytes, and how long a presigned URL may live. Read it when reviewing a bucket policy, a storage identity, a plaintext hop to an object store, or a presigned URL's lifetime. That skill owns the value the review measures against. This skill owns the verdict.
 - `/alaa-observability-soc` owns what a security event contains and how it reaches a SOC. This skill names *that* an event is required at a decision point; its shape is owned there.
 - `/alaa-prompting-guide` owns model/effort capability evidence and runtime mechanics; the runtime orchestrator owns actual task allocation for every authority role.
 - Report length and noise discipline belong to `/alaa-low-noise`; they are not security decisions and never justify dropping an item.

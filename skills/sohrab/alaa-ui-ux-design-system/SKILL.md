@@ -13,7 +13,13 @@ The floor is the gate list in `references/90-quality-gates-and-review.md`. No ru
 
 ## When NOT to use
 
-Stop and route when the task carries **no visual-design decision** — frontend engineering, SSR, auth, PWA plumbing or performance work; when it needs an exact Quasar API, prop or config key, by the deciding test that a rule surviving a change of component library is this skill's and a rule naming a Quasar symbol is not; or when the repository already has a complete design system and the task only applies its existing tokens mechanically. The ownership section below names each owner.
+Stop and route in any of these cases:
+
+- The task carries **no visual-design decision**: frontend engineering, SSR, auth, PWA plumbing or performance work.
+- The task needs an exact Quasar API, prop or config key. Decide by this test: a rule that survives a change of component library is this skill's. A rule that names a Quasar symbol is not, so stop and route it.
+- The repository already has a complete design system and the task only applies its existing tokens mechanically.
+
+The ownership section below names each owner.
 
 ## Design authority model
 
@@ -29,24 +35,24 @@ This skill owns design direction, tokens, typography and color, visual style, la
 
 | Ground | Owner |
 |---|---|
-| The quality bar itself, breaking-change doctrine | `/alaa-project-constitution` (`$alaa-project-constitution`) |
-| Every registered name and value: metric and event names, permission-bit meanings, Jalali-vs-Gregorian wire format | `/alaa-services-contract` (`$alaa-services-contract`) |
-| Folding Persian, Arabic and other non-ASCII digits to ASCII at every input boundary | `/alaa-input-normalization` (`$alaa-input-normalization`) |
-| The permission-bitmap decoder | `/alaa-permission-generator` (`$alaa-permission-generator`) |
-| The server-side authorization boundary | `/alaa-trust-gateway-auth` (`$alaa-trust-gateway-auth`) |
-| Requirement levels for anything emitted from the UI | `/alaa-observability-soc` (`$alaa-observability-soc`) |
-| Threat classes for untrusted content, `v-html`, paste | `/alaa-security-review` (`$alaa-security-review`) |
-| Degradation doctrine behind offline, slow and partial states | `/alaa-reliability-sla` (`$alaa-reliability-sla`) |
-| Test design and the proof levels behind any check named here | `/alaa-testing-strategy` (`$alaa-testing-strategy`) |
-| Visual-regression baseline storage and CI wiring | `/alaa-frontend-devops` (`$alaa-frontend-devops`) |
-| Combinatorial-explosion doctrine behind the theme matrix | `/alaa-algorithms-data-structures` (`$alaa-algorithms-data-structures`) |
-| Pre-implementation design of a page or flow before pixels | `/alaa-system-design` (`$alaa-system-design`) |
-| Frontend engineering, Lighthouse scoring, browser gating | `/alaa-frontend-developer` (`$alaa-frontend-developer`) |
-| Component code shape, typing, composables | `/alaa-vue-typescript-clean-code` (`$alaa-vue-typescript-clean-code`) |
-| Runtime and effort doctrine across agent families | `/alaa-prompting-guide` (`$alaa-prompting-guide`) |
-| Output discipline | `/alaa-low-noise` (`$alaa-low-noise`) |
+| The quality bar itself, breaking-change doctrine | `/alaa-project-constitution` |
+| Every registered name and value: metric and event names, permission-bit meanings, Jalali-vs-Gregorian wire format | `/alaa-services-contract` |
+| Folding Persian, Arabic and other non-ASCII digits to ASCII at every input boundary | `/alaa-input-normalization` |
+| The permission-bitmap decoder | `/alaa-permission-generator` |
+| The server-side authorization boundary | `/alaa-trust-gateway-auth` |
+| Requirement levels for anything emitted from the UI | `/alaa-observability-soc` |
+| Threat classes for untrusted content, `v-html`, paste | `/alaa-security-review` |
+| Degradation doctrine behind offline, slow and partial states | `/alaa-reliability-sla` |
+| Test design and the proof levels behind any check named here | `/alaa-testing-strategy` |
+| Visual-regression baseline storage and CI wiring | `/alaa-frontend-devops` |
+| Combinatorial-explosion doctrine behind the theme matrix | `/alaa-algorithms-data-structures` |
+| Pre-implementation design of a page or flow before pixels | `/alaa-system-design` |
+| Frontend engineering, Lighthouse scoring, browser gating | `/alaa-frontend-developer` |
+| Component code shape, typing, composables | `/alaa-vue-typescript-clean-code` |
+| Runtime and effort doctrine across agent families | `/alaa-prompting-guide` |
+| Output discipline | `/alaa-low-noise` |
 
-**The Quasar seam, deciding test:** a rule that would still hold if the component library were replaced belongs here; a rule that names a Quasar prop, plugin, directive or config key belongs to `/alaa-quasar-app-vite-v3` (`$alaa-quasar-app-vite-v3`). The token that feeds `app.scss` is ours; the `setCssVar` call and the `transition-show` prop name are not.
+**The Quasar seam, deciding test:** a rule that would still hold if the component library were replaced belongs here. A rule that names a Quasar prop, plugin, directive or config key belongs to `/alaa-quasar-app-vite-v3`. The token that feeds `app.scss` is ours; the `setCssVar` call and the `transition-show` prop name are not.
 
 React, React Native and non-web desktop stacks are out of scope.
 
@@ -56,7 +62,7 @@ React, React Native and non-web desktop stacks are out of scope.
 
 ## Five rules that hold without reading any file
 
-1. A color, spacing, radius, shadow or z-index value written into a component is a defect; components consume semantic tokens only.
+1. A color, spacing, radius, shadow or z-index value written into a component is a defect. Components consume semantic tokens only.
 2. Contrast, visible focus, keyboard reach and `prefers-reduced-motion` block delivery. They are never traded for aesthetics and never waived by disclosure.
 3. Direction is set with the `dir` attribute and CSS. Never insert U+200E, U+200F or U+2066-U+2069 into content, and never treat a rendered Persian digit as evidence of the stored value.
 4. Hiding or disabling a control is a presentation choice and never a security control. The server re-checks every action.
@@ -67,7 +73,7 @@ React, React Native and non-web desktop stacks are out of scope.
 This is not the design procedure; the only ordered design procedure in this pack is in `references/10-design-workflow.md`. Before routing:
 
 1. Read the repo-local `AGENTS.md` and the repo's own token and theme sources. Repo tokens outrank every default in this pack.
-2. Apply `/alaa-low-noise` (`$alaa-low-noise`).
+2. Apply `/alaa-low-noise`.
 3. Open `references/00-topic-map.md`.
 
 ## Maintenance rules

@@ -12,31 +12,43 @@ the Dockerfile: `service-runtime-kit` generates none (`README.md:182`).
 ## Ownership, and when not to use this skill
 
 `alaa-docker-production` owns how the build and runtime images and any Compose or Swarm stack file
-are expressed — the Dockerfile and its stages, the order and contents of its layers, what survives
-into the final image, and every key in a Compose or stack file including the interpolation form of
-every variable written into it — and it decides no gate: `/alaa-frontend-devops`
-(`$alaa-frontend-devops`) owns the frontend delivery gate register and states the obligations an
-image must satisfy, `/alaa-gitlab-ci-cd` (`$alaa-gitlab-ci-cd`) owns how a gate is expressed on a
-runner, and `/alaa-haproxy` (`$alaa-haproxy`) owns how a cache or routing decision is expressed as
-a directive. When a gate names a property of an image or a Compose file, this skill writes the
-instruction or key that satisfies it and does not change the gate.
+are expressed. That covers:
 
-`/service-runtime-kit-governance` (`$service-runtime-kit-governance`) owns which generator variable
-expresses a runtime value — its name, its tracked default, which contract file holds it, and
-whether changing it forces a re-render. This skill owns the Docker or Compose construct that
-variable is interpolated into and the interpolation form it is written in. A new knob goes there;
-a change to what the generated file looks like comes here. Where a variable's
-default would silently disable a safety control, the interpolation form is this skill's call, and
-it is `${VAR:?message}` with no default, whatever tracked default the generator carries.
+- the Dockerfile and its stages
+- the order and contents of its layers
+- what survives into the final image
+- every key in a Compose or stack file, including the interpolation form of every variable written
+  into it
+
+This skill decides no gate:
+
+- `/alaa-frontend-devops` owns the frontend delivery gate register and states the obligations an
+  image must satisfy.
+- `/alaa-gitlab-ci-cd` owns how a gate is expressed on a runner.
+- `/alaa-haproxy` owns how a cache or routing decision is expressed as a directive.
+
+When a gate names a property of an image or a Compose file, write the instruction or key that
+satisfies it. Do not change the gate.
+
+`/service-runtime-kit-governance` owns which generator variable expresses a runtime value: its
+name, its tracked default, which contract file holds it, and whether changing it forces a
+re-render. This skill owns the Docker or Compose construct that variable is interpolated into, and
+the interpolation form it is written in. A new knob goes to `/service-runtime-kit-governance`. A
+change to what the generated file looks like comes here. Where a variable's default would silently
+disable a safety control, the interpolation form is this skill's call. Write `${VAR:?message}`
+with no default, whatever tracked default the generator carries.
 
 ## Three rules that never cost a hop
 
-1. **A production-shaped file fails closed on every safety control.** Mandatory is `${VAR:?why}`;
-   optional is `${VAR:-default}`, and writing that asserts the default is correct in production. A
-   credential, key, token, cap, auth toggle or TLS flag takes `:?` with no default permitted,
-   including `:-0` and bare `:-`, because an empty password and a cap of zero both mean "no
-   control". Compose interpolation reads the shell and `--env-file` only, never a service's
-   `env_file:` key. `references/25-fail-closed-interpolation.md`.
+1. **A production-shaped file fails closed on every safety control.**
+   - A mandatory variable uses `${VAR:?why}`.
+   - An optional variable uses `${VAR:-default}`. Writing that form asserts the default is correct
+     in production.
+   - A credential, key, token, cap, auth toggle or TLS flag takes `:?` and permits no default,
+     including `:-0` and bare `:-`. An empty password and a cap of zero both mean "no control".
+   - Compose interpolation reads the shell and `--env-file` only, never a service's `env_file:` key.
+
+   `references/25-fail-closed-interpolation.md`.
 2. **Harden the final image and the runtime separately.** The final image has a non-root `USER`
    and no package manager, compiler or dev dependency (`references/10-dockerfile-authorship.md`).
    Compose supplies `cap_drop: [ALL]`, `security_opt: [no-new-privileges:true]` and a read-only root
@@ -48,7 +60,7 @@ it is `${VAR:?message}` with no default, whatever tracked default the generator 
 
 ## Navigation
 
-`references/00-topic-map.md` routes every task and symptom here to one file; open it when you do
-not know which file you need. Model and effort decisions belong to `/alaa-prompting-guide`
-(`$alaa-prompting-guide`), `references/50-effort-and-thinking.md`; never write a model name or an
-effort key into anything this skill emits.
+`references/00-topic-map.md` routes every task and symptom here to one file. Open it when you do
+not know which file you need. Model and effort decisions belong to `/alaa-prompting-guide`,
+`alaa-prompting-guide references/50-effort-and-thinking.md`. Never write a model name or an effort key into anything
+this skill emits.

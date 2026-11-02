@@ -6,17 +6,26 @@ description: "RabbitMQ message-plane architecture for the Ala fleet: the seam be
 # Alaa Async Messaging
 
 RabbitMQ is the only broker this fleet runs. This skill owns the seam between a database transaction and a
-message on it: how a fact leaves a committed transaction, when a consumer acknowledges, how many deliveries
-it holds unacknowledged, where a failed message goes, and how it is replayed. One property holds through
-every failure below — no committed fact is lost, no user-facing request waits on broker recovery, and no
-redelivery produces a second business effect.
+message on it:
+
+- how a fact leaves a committed transaction
+- when a consumer acknowledges
+- how many deliveries it holds unacknowledged
+- where a failed message goes
+- how it is replayed
+
+One property holds through every failure below. It has three clauses, and all three hold at once:
+
+- no committed fact is lost
+- no user-facing request waits on broker recovery
+- no redelivery produces a second business effect
 
 ## Gate — does this service have a broker lane
 
-Read the service's configured lanes first. `alaa-go-chi docs/CONSUMERS.md:23` runs `wa-api` with no `mqkit`
-and no `outboxkit`: no configured broker connection means no message plane, so say so and stop rather than
-adding a broker for a rule to apply to. `tusd` is the mirror — a broker-free upload plane that still runs an
-outbox dispatched to RabbitMQ from a separate command.
+Read the service's configured lanes first. No configured broker connection means no message plane. Say so
+and stop. Do not add a broker for a rule to apply to. `alaa-go-chi docs/CONSUMERS.md:23` runs `wa-api` with
+no `mqkit` and no `outboxkit`. `tusd` is the mirror: a broker-free upload plane that still runs an outbox
+dispatched to RabbitMQ from a separate command.
 
 ## Hard constraints
 
@@ -25,17 +34,17 @@ outbox dispatched to RabbitMQ from a separate command.
 2. **Every consumer sets an explicit prefetch and concurrency bound at its construction site.** A library
    default holds unbounded unacknowledged deliveries, stranding the queue's working set in one process.
 3. **A consumer commits its receipt row and business effect first, and acknowledges second.** A crash between
-   ack and commit loses the message; the reverse order only redelivers, which rule 1 has made safe.
+   ack and commit loses the message. In the reverse order, a crash only redelivers the message, which rule 1 makes safe.
 4. **Every live queue declares a dead-letter target and a verified retry bound in the same change.**
    Quorum delivery limits bound counted failures; other return paths need an explicit application bound.
    Broker-version rules and the DLQ exception are `references/40-dead-letter-and-replay.md`.
-5. **A message is published only after the transaction that made its fact true commits, and a fact that must
-   survive an unreachable broker goes to a durable outbox row inside that transaction.** Publishing inside it
-   exposes a row that may roll back; publishing after commit without the row loses the fact on a crash.
+5. **Publish a message only after the transaction that made its fact true commits. A fact that must
+   survive an unreachable broker goes to a durable outbox row inside that transaction.** Publishing inside the
+   transaction exposes a row that may roll back. Publishing after commit without the row loses the fact on a crash.
 6. **Every exchange, queue and routing-key name comes from `alaa-services-contract
-   references/23-queue-and-exchange-registry.md`, registered before the declaring code merges.** An
-   unregistered queue is one nobody drains, and it grows until the broker refuses publishes for the vhost.
-7. **A message body is untrusted input: validate it against a schema, and take tenant, actor and scope from
+   references/23-queue-and-exchange-registry.md`, registered before the declaring code merges.** Nobody
+   drains an unregistered queue. It grows until the broker refuses publishes for the vhost.
+7. **A message body is untrusted input. Validate it against a schema. Take tenant, actor and scope from
    it only when no trusted source carries them.** The broker authenticates the connection, never the payload.
 
 ## References — read the row you match
@@ -74,9 +83,9 @@ outbox dispatched to RabbitMQ from a separate command.
 Both ship with every change to a consumer or dead-letter route; assertions in `references/60-telemetry-and-proof.md`.
 
 - **A redelivery test** delivers one message twice to the real handler and asserts one business effect and
-  one receipt row. Idempotency established by inspection is not established.
+  one receipt row. Inspection does not establish idempotency.
 - **A dead-letter test** exhausts the actual versioned retry path and asserts the message lands on
-  `<queue>.dlq` with key `<live-key>.failed`; non-counting returns need their own bounded-path proof.
+  `<queue>.dlq` with key `<live-key>.failed`. Non-counting returns need their own bounded-path proof.
 
 ## Gate script
 
@@ -84,14 +93,19 @@ Both ship with every change to a consumer or dead-letter route; assertions in `r
 sh scripts/check-consumer-bounds.sh --root .
 ```
 
-Exit **0** no findings. Exit **1** findings with file and line: resolve every one before reporting the change
-complete. Exit **2** could not determine — no broker lane or no recognisable declaration: run the three
-checks by hand and report each, because exit 2 is never a pass. Detection is narrow like the kit's
-pooled-lane analyzer, so a constant or a wrapper escapes it.
+- Exit **0**: no findings.
+- Exit **1**: findings with file and line. Resolve every one before reporting the change complete.
+- Exit **2**: could not determine (no broker lane or no recognisable declaration). Run the three checks by
+  hand and report each. Exit 2 is never a pass.
+
+Detection is narrow, like the kit's pooled-lane analyzer, so a constant or a wrapper escapes it.
 
 ## What you report
 
-Report each, or that it does not apply and why: the prefetch set and the measured handler p99 behind it; the
-acknowledgement route per outcome — ack, requeue, reject-without-requeue; the dead-letter target for every
-queue touched; for a replay, the precondition proving the cause was gone and the count replayed; and every
-absent kit capability and what replaced it.
+Report each item, or that it does not apply and why:
+
+- the prefetch set and the measured handler p99 behind it
+- the acknowledgement route per outcome: ack, requeue, reject-without-requeue
+- the dead-letter target for every queue touched
+- for a replay, the precondition proving the cause was gone and the count replayed
+- every absent kit capability and what replaced it

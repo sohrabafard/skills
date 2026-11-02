@@ -14,8 +14,14 @@ substrate under it.
 ## When not to use, and when object storage is the wrong store
 
 Object storage holds immutable opaque byte sequences, addressed by a key the server computes, read and written
-whole. Put the fact in Postgres instead whenever it must be queried by anything other than its key, updated in
-place, read inside a transaction, or joined to another fact; that decision belongs to `/alaa-data-layer`, which owns store selection. Do not load this skill for a change touching no bucket, no
+whole. Put the fact in Postgres instead whenever it must be:
+
+- queried by anything other than its key
+- updated in place
+- read inside a transaction
+- joined to another fact
+
+That decision belongs to `/alaa-data-layer`, which owns store selection. Do not load this skill for a change touching no bucket, no
 object key, no storage credential and no storage policy.
 
 ## Constraints that hold on every task
@@ -33,8 +39,8 @@ object key, no storage credential and no storage policy.
 4. **Credentials reach the process from configuration, never from a committed file, and appear in no log line,
    exception message, URL, metric label, span attribute, report or command line.** A credential in git history or
    in a log outlives whatever carried it, so the only remedy left is rotation. A credential on a command line is
-   the same defect by a quieter route: the shell expands it before the program starts, so it sits in that
-   process's `argv`, where the process list exposes it and the shell's history file records it. Pass it in the
+   the same defect by a quieter route. The shell expands it before the program starts, so it sits in that
+   process's `argv`. The process list exposes it there, and the shell's history file records it. Pass it in the
    environment instead, or in a file whose mode restricts it.
 5. **Credentials are rotatable without a code change**, so the process re-reads them from their source on restart
    or refreshes them from a credential provider. A credential captured once at client construction turns a leak
@@ -46,9 +52,9 @@ object key, no storage credential and no storage policy.
    `STORAGE_PRESIGN_MAX_SECONDS`, or through the application, and never by making the bucket publicly readable.**
    A file that lands in the store has to reach the user who is entitled to it, so this constraint names the path
    that carries it rather than forbidding the wrong one and stopping there. Public read is an unbounded,
-   unauthenticated and unrevocable grant over every object in the bucket: it cannot be narrowed to one object, it
-   asks the reader for nothing, and it cannot be withdrawn from anyone who already knows a key. A presigned URL is
-   scoped to one object and one operation and it expires on its own, which is why it is the replacement rather
+   unauthenticated and unrevocable grant over every object in the bucket. It cannot be narrowed to one object. It
+   asks the reader for nothing. It cannot be withdrawn from anyone who already knows a key. A presigned URL is
+   scoped to one object and one operation, and it expires on its own. That is why it is the replacement rather
    than a softer version of the same thing. Put genuinely public content, such as a logo or a published document,
    in a separate bucket whose entire contents are intended to be public, so no policy mistake can widen the
    private one. `references/60-presigned-urls-and-delivery.md` owns the download path in full.
@@ -60,7 +66,7 @@ object key, no storage credential and no storage policy.
    default this skill states, and validate it before the storage client is constructed.** A number compiled into
    code costs a code change, a review, a build and a deploy on the day the provider turns out to want a different
    one, and that day arrives under incident pressure. `STORAGE_PROVIDER_PROFILE` selects the bundle of defaults a
-   provider needs, every variable still overrides its profile default from its own environment value, and no
+   provider needs. Every variable still overrides its profile default from its own environment value. No
    service branches on the profile name, because a branch turns adopting a fourth provider into a code change in
    every service. `references/05-environment-contract.md` owns the names, the
    defaults, the profile table, the evidence behind each default and the validation, and `/alaa-arvan-object-storage` `references/15-environment-contract-deltas.md` states only where ArvanCloud's
@@ -70,11 +76,11 @@ object key, no storage credential and no storage policy.
 
 The fleet's only object-storage consumer violates constraints 2, 3, 4, 5 and 6, and leaves 7 unproven because it
 sets no bucket policy and issues no presigned URL `[source: Ala tusd repository, read: 2026-07-27]`.
-Its Compose and Swarm files put the application on the store's root credentials, and those files describe the
-local development and test stack rather than production, so that is a constraint 1 finding against the test stack
-and an open question against production — `references/80-topology.md` states the boundary and
-`references/30-identity-credentials-and-access.md` carries the question. It meets the logging half of constraint 4 — its runtime config plan and its forbidden-log-field list
-already redact the credential, the object key and the presigned URL — and breaks the command-line half, passing
+Its Compose and Swarm files put the application on the store's root credentials. Those files describe the
+local development and test stack rather than production. So that is a constraint 1 finding against the test stack
+and an open question against production. `references/80-topology.md` states the boundary and
+`references/30-identity-credentials-and-access.md` carries the question. It meets the logging half of constraint 4: its runtime config plan and its forbidden-log-field list
+already redact the credential, the object key and the presigned URL. It breaks the command-line half, passing
 the access key and the secret key positionally to `mc alias set` in both Compose files and three smoke scripts.
 Every reference carries the evidence for its own topic with the file it came from. Those are observations of one
 consumer, never platform policy, and never a precedent for a new bucket.
@@ -91,12 +97,12 @@ you. Do not read the others.
    what deletes a tenant's data.
 2. **A write whose response never arrived.** Treat it as unknown rather than failed, hold the database row
    pending, and let a reconciliation pass re-check the key. A repeated `PUT` to the same key is safe because the
-   key determines the object; a repeated multipart completion is not, so re-check before completing again.
-3. **A delete you cannot confirm.** Hold the row pending-deletion and retry, and never mark it deleted on an
+   key determines the object. A repeated multipart completion is not safe, so re-check before completing again.
+3. **A delete you cannot confirm.** Hold the row pending-deletion and retry. Never mark it deleted on an
    unconfirmed response, because that orphans bytes no query will find again. Where a lifecycle rule owns the
    removal, record that and stop retrying.
 
-Retry counts, backoff shape, breaker thresholds and degradation policy are `/alaa-reliability-sla`; this section states only what a failure is allowed to mean.
+Retry counts, backoff shape, breaker thresholds and degradation policy are `/alaa-reliability-sla`. This section states only what a failure is allowed to mean.
 
 ## Checker and output
 
@@ -108,10 +114,16 @@ repository declares and not how the running bucket is configured.
   a date, before shipping.
 - exit `2`: bad arguments or an unreadable root, so nothing was checked. Correct the invocation and rerun.
 
-Report the bucket, the key template with its tenant segment shown, every lifecycle rule with its window, the
-identity and its policy statements, the transport, encryption, versioning and replication state, and the credential
-source and rotation procedure — each marked implemented, declared-but-absent, or not-applicable with a reason. Give
-the checker's exit code, cite every upstream API claim with its read date, and state an unverified claim as
+Report each of these, marked implemented, declared-but-absent, or not-applicable with a reason:
+
+- the bucket
+- the key template, with its tenant segment shown
+- every lifecycle rule, with its window
+- the identity and its policy statements
+- the transport, encryption, versioning and replication state
+- the credential source and rotation procedure
+
+Give the checker's exit code. Cite every upstream API claim with its read date. State an unverified claim as
 unverified.
 
 ## Not owned here

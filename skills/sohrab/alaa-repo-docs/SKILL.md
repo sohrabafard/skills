@@ -7,7 +7,7 @@ description: "Repository-level documentation control for Ala-style projects: REA
 
 ## Purpose
 
-Produce repository-level documentation that stays aligned with implementation and operational reality, and keep the documents that describe one system consistent with each other.
+Produce repository-level documentation that stays aligned with implementation and operational reality. Keep the documents that describe one system consistent with each other.
 
 This skill owns repository Markdown. For source comments and docblocks, use the stack-specific routes in
 `## Ground this skill does not own`; Markdown ownership does not transfer source-annotation policy.
@@ -37,9 +37,9 @@ Keep this file routing-first. Load only the reference whose condition holds.
 2. Read `references/00-topic-map.md` and load only the rows whose condition holds.
 3. Verify behaviour from source before writing any claim: routes, validation, handlers, exception mapping, events, listeners, queue config, migrations, models, cache code, observability config, and tests.
 4. For a broad or multi-document refresh, split discovery using `references/70-subagent-doc-workflows.md` before editing anything.
-5. Assign each touched topic one canonical document, then use `references/15-document-size-and-clustering.md` to classify every created or refreshed file, grade and cluster eligible narrative documents, and preserve exempt artifacts whole before following the production workflow in `references/40-sync-workflow-and-evidence.md`.
-6. Repair documentation-hub navigation and repo-local links, then run
-   `python $SKILL_DIR/scripts/check_markdown_links.py <repo-root>` and resolve every finding as
+5. Assign each touched topic one canonical document. Then use `references/15-document-size-and-clustering.md` to classify every created or refreshed file, grade and cluster eligible narrative documents, and preserve exempt artifacts whole. Then follow the production workflow in `references/40-sync-workflow-and-evidence.md`.
+6. Repair documentation-hub navigation and repo-local links. Run
+   `python $SKILL_DIR/scripts/check_markdown_links.py <repo-root>`. Resolve every finding as
    `references/10-language-and-links.md` directs.
 
 ## Default document set
@@ -53,7 +53,7 @@ Keep this file routing-first. Load only the reference whose condition holds.
 | `docs/errors-events-observability.md` | error envelopes, status codes, exception mapping, event names, payloads, listener or job flows, logs, traces, metrics, or alerts changed |
 | `remaining-task.md` | the user asks for remaining work, or a document or Postman request describes behaviour current code does not implement |
 
-If the repository already has a stronger equivalent document under another name, update that file instead of creating a duplicate, then repair README and cross-links so each document's role stays obvious.
+If the repository already has a stronger equivalent document under another name, update that file instead of creating a duplicate. Then repair README and cross-links so each document's role stays obvious.
 
 ## Documentation language
 
@@ -62,7 +62,7 @@ If the repository already has a stronger equivalent document under another name,
 - Create a translated or localized companion only when the user explicitly requests that companion. The presence of `.fa.md`, `-fa.md`, or `docs/fa/` files is not permission to create or update another Persian document.
 - When the user asks for a Persian companion and no stronger repository convention applies, name it with `.fa.md`, such as `README.fa.md`.
 - Never translate an identifier in any output language.
-- Read `references/10-language-and-links.md` before writing; it owns language selection, explicit localized companions, canonical topic ownership, de-duplication, and links.
+- Read `references/10-language-and-links.md` before writing. It owns language selection, explicit localized companions, canonical topic ownership, de-duplication, and links.
 
 ## Non-negotiables
 
@@ -70,7 +70,7 @@ If the repository already has a stronger equivalent document under another name,
 - Never weaken an existing strong document into a shorter, more generic one. A shorter parent is valid only when every moved fact survives in an informatively linked child under `references/15-document-size-and-clustering.md`.
 - Do not patch business logic in a documentation-only request.
 - Every link is repo-portable. Never emit a machine-local absolute path, a backslash, or a `file://` link.
-- A committed example never carries a real secret, token, API key, `.env` value, production hostname, internal IP address, or real tenant or user identifier. Use placeholder values that are obviously placeholders, and route any doubt about whether a value is safe to publish to `/alaa-security-review`.
+- A committed example never carries a real secret, token, API key, `.env` value, production hostname, internal IP address, or real tenant or user identifier. Use placeholder values that are obviously placeholders. Route any doubt about whether a value is safe to publish to `/alaa-security-review`.
 - Validate repo-local links and heading anchors before finishing.
 - The repository `AGENTS.md` may rename or relocate any document above and may add required sections. It may not waive link validation, traceability, redaction, language preservation, or explicit authorization for localized companions.
 
@@ -103,7 +103,7 @@ Route by name rather than restating.
 ## Subagent strategy
 
 - Use parallel subagents only for read-heavy discovery on a broad refresh when the runtime supports them.
-  `/alaa-prompting-guide` owns spawning mechanics; the active runtime orchestrator owns allocation. Keep
+  `/alaa-prompting-guide` owns spawning mechanics. The active runtime orchestrator owns allocation. Keep
   runtime mechanics out of documentation rules.
 - Keep final wording, conflict resolution, and every write in the parent agent unless a delegated file is fully isolated from the others.
 - The track split, the return contract, the fan-out bound, and the rule for a subagent that fails or returns nothing are in `references/70-subagent-doc-workflows.md`.
@@ -115,5 +115,5 @@ Read `references/00-topic-map.md` first. It routes each condition to exactly one
 ## Maintenance rules
 
 - Keep this file routing-first. New detail goes into the reference that owns the topic, never into a second copy of it here.
-- Every rule lives in exactly one file. Do not create a combined guide: the previous one, `full-guide.md`, reproduced 96% of the references verbatim, then drifted from them, and was retired in this batch.
+- Every rule lives in exactly one file. Do not create a combined guide. The previous one, `full-guide.md`, reproduced 96% of the references verbatim, then drifted from them, and was retired in this batch.
 - Re-check the ownership table when a boundary moves.

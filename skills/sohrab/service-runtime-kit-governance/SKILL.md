@@ -15,9 +15,9 @@ Load before changing any runtime-related file in a service repo driven by `servi
 
 ## Goal
 
-Every generated file in the repository is byte-identical to what a fresh render would produce from the current inputs, and every runtime change lands in the layer that owns it.
+Every generated file in the repository is byte-identical to what a fresh render would produce from the current inputs. Every runtime change lands in the layer that owns it.
 
-`service-runtime-kit` owns shared runtime generation; the service repo owns its supported runtime inputs and the copied thin wrappers under `scripts/runtime/`, nothing more.
+`service-runtime-kit` owns shared runtime generation. The service repo owns its supported runtime inputs and the copied thin wrappers under `scripts/runtime/`, and nothing more.
 
 ## Ownership Model
 
@@ -27,41 +27,41 @@ Classify before editing. `references/change-routing.md` holds the routing table 
 2. **Shared runtime generation change.** Choose this when the request changes how runtime files are generated, or bootstrap support is copied, for many services. The fix belongs in the sibling `service-runtime-kit` repo, never in the generated file.
 3. **Deployment concern, not local runtime.** Choose this when the request is cluster deployment rather than local Compose or Swarm.
 
-Normal application env always goes in the service `.env` and never in `runtime/service.runtime.env`, because that file carries only generation-time metadata and the application never reads it at runtime.
+Always put normal application env in the service `.env`. Never put it in `runtime/service.runtime.env`. That file carries only generation-time metadata, and the application never reads it at runtime.
 
 ## Non-negotiable Rule
 
-Every path catalogued as a generated output in `references/runtime-contract-map.md` is an output, not an authoring surface. Only `AGENTS.md` or `CLAUDE.md` at the service repo root may declare an exception; absent a statement there, treat the path as generated.
+Every path catalogued as a generated output in `references/runtime-contract-map.md` is an output, not an authoring surface. Only `AGENTS.md` or `CLAUDE.md` at the service repo root may declare an exception. Absent a statement there, treat the path as generated.
 
-Editing a generated file to reproduce or isolate a fault is allowed. Then: revert that edit, fix the owning layer, rerender, and confirm the regenerated file carries the change.
+You may edit a generated file to reproduce or isolate a fault. Then: revert that edit, fix the owning layer, rerender, and confirm the regenerated file carries the change.
 
 ## Shared Runtime Contract Ownership
 
 `alaa-services-contract` `references/15-deployment-and-runtime-contract.md` owns the canonical shared-infra identity, the reuse-or-fail-fast obligation, and the host-published port defaults. That contract outranks any single generator, so do not restate its values here. This skill owns only which generator variable expresses each: `DOCKER_SHARED_INFRA_PROJECT_DEFAULT`, `DOCKER_SHARED_NETWORK_NAME_DEFAULT`, `DOCKER_VOLUME_PREFIX_DEFAULT`, and the `*_FORWARD_PORT` knobs.
 
-Generator behavior is this skill's: a wrapper reuses an already-running shared instance untouched rather than recreating it, and on an indeterminable state it refuses to recreate rather than clobber a peer's data.
+This skill owns generator behavior. A wrapper reuses an already-running shared instance untouched, and does not recreate it. On an indeterminable state, the wrapper refuses to recreate, so it does not clobber a peer's data.
 
 ## Working Method
 
-**Service-specific change.** Edit the service-owned input, regenerate and validate with the command pair in `references/change-routing.md`, then review the generated diff and keep only the intended change.
+**Service-specific change.** Edit the service-owned input. Regenerate and validate with the command pair in `references/change-routing.md`. Review the generated diff. Keep only the intended change.
 
 **Shared `service-runtime-kit` change.**
 
 1. Change the sibling `service-runtime-kit` repo.
 2. Bump the pin in `runtime/runtime-kit.env`, or refresh the copied `scripts/runtime/*` wrappers, when the bootstrap layer changed.
 3. Rerender and validate in the service repo.
-4. Confirm no generated file about to be committed carries secret material — no `APP_KEY` value, no Passport key contents, no DB or broker password, no token — because generated outputs are committed, so a secret rendered into one is a secret published. `alaa-services-contract` `references/15-deployment-and-runtime-contract.md:184-191` holds the contract; `alaa-security-review` owns the doctrine.
+4. Confirm that no generated file about to be committed carries secret material: no `APP_KEY` value, no Passport key contents, no DB or broker password, no token. Generated outputs are committed, so a secret rendered into one is a secret published. `alaa-services-contract` `references/15-deployment-and-runtime-contract.md:184-191` holds the contract. `alaa-security-review` owns the doctrine.
 5. Commit the regenerated outputs only with explicit user authorization. Otherwise leave them uncommitted and report the pending commit.
 
-**Change to the shared contract both generators implement.** That contract is `alaa-services-contract`'s, and a change to it must land in both `service-runtime-kit` and the `alaa-go-chi` kit, or the Laravel and Go fleets stop reusing one shared instance. When the `alaa-go-chi` kit is not in the workspace: change nothing in the shared contract, report which generator you can reach and which you cannot, and stop.
+**Change to the shared contract both generators implement.** That contract is `alaa-services-contract`'s. A change to it must land in both `service-runtime-kit` and the `alaa-go-chi` kit, or the Laravel and Go fleets stop reusing one shared instance. When the `alaa-go-chi` kit is not in the workspace: change nothing in the shared contract, report which generator you can reach and which you cannot, and stop.
 
 ## Load-Dependent Configuration
 
-This skill owns which generated file and variable carries a tuning value, never the value. Pool sizing, worker retry, and lock-timeout values come from `alaa-reliability-sla` for doctrine and `alaa-services-contract` `references/22-failure-load-and-deprecation-contract.md` for Ala values; generated telemetry values come from `alaa-observability-soc`. Choose no number here. `references/runtime-contract-map.md` maps each knob to its owner and holds the `PGBOUNCER_MODE` topology rule.
+This skill owns which generated file and variable carries a tuning value, never the value. For pool sizing, worker retry, and lock-timeout values, take the doctrine from `alaa-reliability-sla` and the Ala values from `alaa-services-contract` `references/22-failure-load-and-deprecation-contract.md`. Take generated telemetry values from `alaa-observability-soc`. Choose no number here. `references/runtime-contract-map.md` maps each knob to its owner and holds the `PGBOUNCER_MODE` topology rule.
 
 ## Expected Response Behavior
 
-State the ownership decision in one explicit sentence before editing, such as:
+Before editing, state the ownership decision in one explicit sentence, such as:
 
 - `This is a service-specific runtime contract change; I will update .env or runtime/.`
 - `This is a shared runtime generation change; the real fix belongs in service-runtime-kit.`
@@ -69,7 +69,13 @@ State the ownership decision in one explicit sentence before editing, such as:
 
 ## Validation Standard
 
-Complete only when all hold: the correct layer was chosen; no generated file was hand-edited as the final fix; outputs were regenerated; `bash scripts/runtime/validate-runtime.sh` exited `0` or the blocker was named explicitly; the diff matches the intended behavior and carries no secret material.
+The work is complete only when all of these hold:
+
+- The correct layer was chosen.
+- No generated file was hand-edited as the final fix.
+- Outputs were regenerated.
+- `bash scripts/runtime/validate-runtime.sh` exited `0`, or the blocker was named explicitly.
+- The diff matches the intended behavior and carries no secret material.
 
 ## Failure Modes To Watch For
 
@@ -80,16 +86,19 @@ Complete only when all hold: the correct layer was chosen; no generated file was
 
 ## When NOT to use
 
-- The change is application logic — a controller, a job, a migration, a test — with no effect on generated
-  runtime files, `runtime/*.env` values, hooks, or the kit pin.
+- The change is application logic — a controller, a job, a migration, a test — with no effect on generated runtime files, `runtime/*.env` values, hooks, or the kit pin.
 - The repository does not consume `service-runtime-kit` and no task proposes adopting it.
-- The target is a Kubernetes, OpenShift, or Helm deployment, or a CI pipeline, rather than local Compose or
-  Swarm runtime. The ownership section below names each owner.
+- The target is a Kubernetes, OpenShift, or Helm deployment, or a CI pipeline, rather than local Compose or Swarm runtime. The ownership section below names each owner.
 
 ## What This Skill Does Not Own
 
-The description names the deployment-side boundaries. Within local runtime, hand off image and container hardening to `alaa-docker-production`, Laravel queue-worker and RabbitMQ application behavior to `alaa-laravel-job-rabbitmq`, Postgres/PgBouncer/Redis data-layer design to `alaa-data-layer`, and model or effort selection to `alaa-prompting-guide`.
+The description names the deployment-side boundaries. Within local runtime, hand off these topics:
+
+- image and container hardening: `alaa-docker-production`
+- Laravel queue-worker and RabbitMQ application behavior: `alaa-laravel-job-rabbitmq`
+- Postgres/PgBouncer/Redis data-layer design: `alaa-data-layer`
+- model or effort selection: `alaa-prompting-guide`
 
 ## Subagent Strategy
 
-Parallelize only after the ownership class is decided, and only when the task spans both the service repo and the sibling kit, or touches more than three generated files. One read-only lane inspects service-owned inputs and the generated diff; one read-only lane inspects the sibling renderer, templates, or bootstrap files. Keep the ownership decision, the edit, the rerender, and the validation in the main lane so the change cannot split across two layers.
+Parallelize only after you decide the ownership class, and only when the task spans both the service repo and the sibling kit or touches more than three generated files. Use one read-only lane to inspect service-owned inputs and the generated diff. Use one read-only lane to inspect the sibling renderer, templates, or bootstrap files. Keep the ownership decision, the edit, the rerender, and the validation in the main lane, so the change cannot split across two layers.

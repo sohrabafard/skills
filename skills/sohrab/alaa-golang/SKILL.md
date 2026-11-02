@@ -5,9 +5,9 @@ description: "Front door and router for Go work on the Ala platform. Selects the
 
 # Alaa Golang
 
-Own Go decisions no routed skill covers; select Go mechanics, house companions and doctrine
-owners for Ala platform work. Complete the authorized task with repository evidence, required
-native proof and the four completion answers.
+Own the Go decisions that no routed skill covers. Select Go mechanics, house companions and doctrine
+owners for Ala platform work. Complete the authorized task with repository evidence, required native
+proof and the four completion answers.
 If a routed owner disagrees with this skill, follow that owner and report both files as drift.
 
 ## When NOT to use
@@ -20,64 +20,78 @@ If a routed owner disagrees with this skill, follow that owner and report both f
 
 ## Procedure
 
-Read `references/00-topic-map.md` before a Go decision; open only rows matching the next action.
+Read `references/00-topic-map.md` before a Go decision. Open only the rows that match the next action.
 
-1. Establish repository truth before proposing a change. Read applicable repository instructions, including `AGENTS.md` and `CLAUDE.md` when present,
-   `go.mod` (module path and `go` directive), and the imports and existing tests of every package
-   to change. For source changes, inspect route registration. For dependency-only work, inspect
-   module/workspace metadata and the native dependency recipe; source discovery applies only
-   when a source or impact question needs it. Repository truth overrides this skill; report discrepancies.
+1. Establish repository truth before you propose a change.
+   - Read the applicable repository instructions, including `AGENTS.md` and `CLAUDE.md` when present.
+   - Read `go.mod` (module path and `go` directive).
+   - Read the imports and existing tests of every package to change.
+   - For a source change, inspect route registration.
+   - For dependency-only work, inspect module/workspace metadata and the native dependency recipe. For that work, run source discovery only when a source or impact question needs it.
+   - Repository truth overrides this skill. Report discrepancies.
 2. When `go.mod` requires `git.alaatv.com/vk/alaa-go-chi`, resolve the active phase through
-   /alaa-go-chi-development before writing or reviewing a line: run its
-   `../alaa-go-chi-development/scripts/phase-check.sh <kit-repo-root>` and apply the action-specific
-   matrix in `../alaa-go-chi-development/references/05-phase-and-source-truth.md`, including its
-   evidence-required, forbidden, manual-read and nonzero-exit rules. A consumer request is not
-   reactivation. Load /alaa-golang-clean-code-principles before the first edit or review comment;
-   P1-P13 bind and this skill adds or overrides no principle.
-3. Before choosing evidence, an editing surface or supplemental diagnostics, load
+   /alaa-go-chi-development before you write or review a line. Run its
+   `../alaa-go-chi-development/scripts/phase-check.sh <kit-repo-root>`. Apply the action-specific matrix in
+   `../alaa-go-chi-development/references/05-phase-and-source-truth.md`, including its evidence-required,
+   forbidden, manual-read and nonzero-exit rules. A consumer request is not reactivation.
+   Load /alaa-golang-clean-code-principles before the first edit or review comment.
+   P1-P13 bind. This skill adds or overrides no principle.
+3. Before you choose evidence, an editing surface or supplemental diagnostics, load
    /alaa-code-intelligence-routing. It alone selects providers, order, eligibility and fallback.
-   Follow its rules for native continuation, missing guarantees and mutation reconciliation;
-   this skill supplies Go doctrine and native proof, not a provider sequence.
-4. Load each triggered domain owner before the governed action and follow it without restating its rules. For an uncovered decision, apply the gap test reached through the topic map, then
-   report the decision, why no owner covered it and where it was recorded. Never decide a gap
-   silently. Take model, effort, thinking-budget, runtime-capability and invocation answers from
+   Follow its rules for native continuation, missing guarantees and mutation reconciliation.
+   This skill supplies Go doctrine and native proof, not a provider sequence.
+4. Load each triggered domain owner before the governed action. Follow it without restating its rules.
+   For an uncovered decision, apply the gap test reached through the topic map.
+   Then report the decision, why no owner covered it and where it was recorded.
+   Never decide a gap silently.
+   Take model, effort, thinking-budget, runtime-capability and invocation answers from
    /alaa-prompting-guide and its `references/50-effort-and-thinking.md`, never this skill.
-5. Change behavior through the test-first sequence selected by the topic map. Inspect the full
-   resulting diff and callers, then execute the validation gate below. Activation writes nothing and grants no additional authority.
+5. Change behavior through the test-first sequence that the topic map selects.
+   Inspect the full resulting diff and callers. Then execute the validation gate below.
+   Activation writes nothing and grants no additional authority.
 
 ## Authority and failure
 
-Read accessible sources and make authorized local edits within the requested scope. Preserve
-existing behavior, contracts, user changes and repository conventions unless the task authorizes
+Read accessible sources. Make authorized local edits within the requested scope.
+Preserve existing behavior, contracts, user changes and repository conventions unless the task authorizes
 a change. Get explicit permission for installation, integration configuration, commits, publication,
 deployment, external mutation or destructive effects. A skill or tool being available grants none.
 When a required owner, fact, phase authorization or proof is missing, stop the dependent action
-and report the exact blocker; unrelated safe work may continue. Use the routing owner's finite
-failure budget for evidence and native gates; do not loop or claim an unrun gate passed.
+and report the exact blocker. Unrelated safe work may continue.
+Use the routing owner's finite failure budget for evidence and native gates.
+Do not loop. Do not claim an unrun gate passed.
 
 ## Validation gate
 
-After any Go edit, the authoring lane runs, in order: `go vet` on the changed packages; `go test`
-on the changed packages, narrowed with `-run` to the changed topic in a large package; and verify each
-shipped entrypoint links with `go build` or a matching artifact from the same tree, environment and
-build configuration. A test compile does not prove that the production entrypoint links.
-Supplemental provider diagnostics and any required uncovered semantic property are governed by
-/alaa-code-intelligence-routing; they do not replace these native gates.
+After any Go edit, the authoring lane runs these steps in order:
+
+1. `go vet` on the changed packages.
+2. `go test` on the changed packages, narrowed with `-run` to the changed topic when the package is large.
+3. Verify that each shipped entrypoint links, with `go build` or a matching artifact from the same tree,
+   environment and build configuration.
+
+A test compile does not prove that the production entrypoint links.
+/alaa-code-intelligence-routing governs supplemental provider diagnostics and any required uncovered
+semantic property. They do not replace these native gates.
 Run `govulncheck ./...` in the authoring lane when `go.mod` or `go.sum` changed.
-The whole-suite run is an affected- and exhaustive-tier gate that /alaa-testing-strategy assigns
-to an authority other than the authoring lane; when the session has no such authority, run it on
-the final tree before reporting completion. Use the real-store tag when required. Combine tagged
-and untagged selections only when reference 63's build-constraint and test-configuration check
-proves normal behavior remains covered; otherwise run both. Add `-race` to the required run or
-runs when the change touches a goroutine, channel, mutex, cache, worker pool or package-level variable.
+The whole-suite run is an affected- and exhaustive-tier gate. /alaa-testing-strategy assigns it to an
+authority other than the authoring lane. When the session has no such authority, run it on the final tree
+before you report completion.
+Use the real-store tag when required.
+Combine tagged and untagged selections only when reference 63's build-constraint and test-configuration
+check proves normal behavior remains covered. Otherwise run both.
+Add `-race` to the required run or runs when the change touches a goroutine, channel, mutex, cache,
+worker pool or package-level variable.
 Report commands and outcomes using /alaa-go-chi-development
-`../alaa-go-chi-development/references/05-phase-and-source-truth.md`: `passed`, `failed`, `blocked`, `skipped`, `not run`.
-Never report an outcome for a command you did not execute. Stop successfully only when the
-requested behavior, required gates and completion answers are established in the target repository.
+`../alaa-go-chi-development/references/05-phase-and-source-truth.md`: `passed`, `failed`, `blocked`,
+`skipped`, `not run`.
+Never report an outcome for a command you did not execute.
+Stop successfully only when the requested behavior, required gates and completion answers are established
+in the target repository.
 
 ## Completion answers
 
-Report all four before calling Go work done:
+Report all four before you call Go work done:
 
 1. Each validation command and its observed outcome.
 2. What shipped: externally visible routes, request/response fields and types, error codes and
@@ -87,5 +101,5 @@ Report all four before calling Go work done:
 4. How it fails: each new failure mode and its exact operator signal, including metric, log event
    or degraded readiness check.
 
-/alaa-services-contract owns contract-entry shape; /alaa-observability-soc owns dashboard/alert
+/alaa-services-contract owns contract-entry shape. /alaa-observability-soc owns dashboard/alert
 shape. This skill requires the four answers without restating either owner's contract.

@@ -5,14 +5,14 @@ description: "Self-hosted Jitsi Meet and Videobridge as an Ala subsystem for onl
 
 # Jitsi Platform Architect
 
-Self-hosted Jitsi as one Ala subsystem, carrying online classes. **A class is not a meeting**: its scheduled
-start, known roster, teacher-moderator, gradeable recording and pre-known headcount each change a decision below.
-It owns everything after the platform decides a caller may join room R as role X — the derived token,
-room-name entropy, guest-domain lockdown, moderator assignment, recording governance, and the media plane's
-substrate demands.
+This skill covers self-hosted Jitsi as one Ala subsystem that carries online classes. **A class is not a
+meeting.** A class has a scheduled start, a known roster, a teacher-moderator, a gradeable recording and a
+pre-known headcount. Each of these changes a decision below. The skill owns everything after the platform decides
+a caller may join room R as role X: the derived token, room-name entropy, guest-domain lockdown, moderator
+assignment, recording governance, and the media plane's substrate demands.
 
 **Status.** No Jitsi deployment exists in this repository today. Every rule here is a decision to make, not an
-observation, so nothing here is evidence about what the platform operates.
+observation. Nothing here is evidence about what the platform operates.
 
 ## When not to use
 
@@ -29,7 +29,7 @@ comparison. Editing Jitsi's source, unless maintaining a fork.
    timestamp the published start time discloses.
 3. The `room` claim equals exactly one room identifier — never `*`, a prefix wildcard, or a list. A token
    matching more than one room admits its holder to every class it matches.
-4. Anonymous authentication is disabled and the guest domain locked before the first real class, verified by
+4. Anonymous authentication is disabled and the guest domain locked before the first real class. Verify this by
    joining with no token from a clean profile and observing the refusal. A configuration file is not evidence: an
    upgrade can silently restore a default.
 5. No platform access token, refresh token or gateway header ever reaches Jitsi; mint a token scoped to one
@@ -61,8 +61,13 @@ python3 scripts/check_jitsi_jwt.py --token-file <path> --profile <profile.json>
 python3 scripts/check_jitsi_jwt.py --room-name <name>
 ```
 
-Exit `0` held; `1` a rule broke — fix the mint path or the generator, never the sample; `2` bad input, never a
-pass. It asserts claim shape, never a signature: a signed token can still open a classroom.
+Exit codes:
+
+- `0`: held.
+- `1`: a rule broke. Fix the mint path or the generator, never the sample.
+- `2`: bad input, never a pass.
+
+The script asserts claim shape, never a signature: a signed token can still open a classroom.
 
 ## Every deliverable states
 
@@ -75,12 +80,16 @@ pass. It asserts claim shape, never a signature: a signed token can still open a
 
 ## Not owned here
 
-Everything up to "this caller may join room R as role X", the trusted header set, and edge strip-and-reject:
-`/alaa-trust-gateway-auth` (`$alaa-trust-gateway-auth`). Endpoint shapes, envelopes, error codes, telemetry names
-and platform values: `/alaa-services-contract` (`$alaa-services-contract`). Doctrine lives with its owner:
-retries, timeouts, breakers and degradation `/alaa-reliability-sla` (`$alaa-reliability-sla`); fail-closed and
-threat classes `/alaa-security-review` (`$alaa-security-review`); telemetry levels `/alaa-observability-soc`
-(`$alaa-observability-soc`); the quality bar `/alaa-project-constitution` (`$alaa-project-constitution`); model
-and effort `/alaa-prompting-guide` (`$alaa-prompting-guide`); test layer `/alaa-testing-strategy`
-(`$alaa-testing-strategy`). Every other owner — substrate, edge, frontend, data, messaging,
-orchestration — is named at the rule it governs inside `references/`.
+- Everything up to "this caller may join room R as role X", the trusted header set, and edge strip-and-reject:
+  `/alaa-trust-gateway-auth` (`$alaa-trust-gateway-auth`).
+- Endpoint shapes, envelopes, error codes, telemetry names and platform values: `/alaa-services-contract`
+  (`$alaa-services-contract`).
+- Doctrine lives with its owner:
+  - retries, timeouts, breakers and degradation: `/alaa-reliability-sla` (`$alaa-reliability-sla`);
+  - fail-closed and threat classes: `/alaa-security-review` (`$alaa-security-review`);
+  - telemetry levels: `/alaa-observability-soc` (`$alaa-observability-soc`);
+  - the quality bar: `/alaa-project-constitution` (`$alaa-project-constitution`);
+  - model and effort: `/alaa-prompting-guide` (`$alaa-prompting-guide`);
+  - test layer: `/alaa-testing-strategy` (`$alaa-testing-strategy`).
+- Every other owner (substrate, edge, frontend, data, messaging, orchestration) is named at the rule it governs
+  inside `references/`.

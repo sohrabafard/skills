@@ -66,7 +66,7 @@ load on a concern no reference file keys on:
 
 This skill owns **names, values, shapes, and wire behaviour**. It does not own the requirement levels,
 verdicts, or doctrine attached to them. Where a rule here and a rule in one of these skills disagree, the
-skill named below wins for its half, and the weaker statement here is deleted rather than kept as a second
+skill named below wins for its half. Maintainers delete the weaker statement here rather than keep it as a second
 opinion.
 
 - **`alaa-observability-soc`** owns every observability requirement level, gate, threshold, alert, Collector
@@ -92,7 +92,7 @@ opinion.
   envelope.
 - **`alaa-data-layer`** owns pool mechanics inside a driver and persistence invariants. This skill keeps the
   pool bounds and the acquire timeout.
-- **`/alaa-minio-object-storage`** (`$alaa-minio-object-storage`) owns the object store as a platform component: the
+- **`/alaa-minio-object-storage`** owns the object store as a platform component: the
   bucket, the tenant scope carried inside an object key, lifecycle and retention policy, storage-credential supply and
   rotation, and presigned-URL issuance. Load it when shaping a bucket, writing a lifecycle or retention policy,
   scoping an object key to a tenant, granting or rotating a storage credential, or issuing a presigned URL.
@@ -112,7 +112,7 @@ opinion.
 - Feature work inside one service that changes no shared surface: no envelope, header, event, code, route
   family, permission, queue, metric name, or package boundary.
 - Visual or design polish with no package-boundary, SDK-consumption, trust-boundary, or observability
-  contract in scope. Use `$alaa-frontend-developer`, and `$alaa-ui-ux-design-system` for design-system work.
+  contract in scope. Use `/alaa-frontend-developer`, and `/alaa-ui-ux-design-system` for design-system work.
 - Overriding a repository-specific blocker. Report the incompatibility under the three-case rule above.
 
 ## Maintenance rules

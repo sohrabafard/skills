@@ -43,66 +43,69 @@ The modes use different AMQP primitives, so the difference is behavioural.
 | Unacked window | 1 | the prefetch count |
 | Requeue on worker stop | yes — `close()` can requeue the in-flight job | no — the queue's current-job slot stays empty |
 
-**`rabbitmq:consume`** when one Deployment serves one queue and throughput matters. **`queue:work`** when one
+Use **`rabbitmq:consume`** when one Deployment serves one queue and throughput matters. Use **`queue:work`** when one
 process must drain several queues in priority order, or when an unacked window of 1 is worth the round trip.
-Never pass more than one queue to `rabbitmq:consume`: its own help text says there is no support for it, and
-a second queue means a second Deployment.
+Never pass more than one queue to `rabbitmq:consume`. Its own help text says there is no support for it.
+A second queue means a second Deployment.
 
 # Hard constraints
 
 **1. Delivery is at-least-once; every handler is idempotent.** The guarantee lives in a database uniqueness
-constraint on the business key; a Redis or cache dedupe key is a fast path in front of it, never a
+constraint on the business key. A Redis or cache dedupe key is a fast path in front of it, never a
 replacement. Key contract, scope, retention, two-in-flight: `/alaa-reliability-sla` `alaa-reliability-sla references/60-idempotency.md`.
 
-**2. Ack and nack policy.** Three outcomes, one route each. **Ack**: the handler completed and Laravel
-deleted the job, or Laravel released it — never call `ack()` from application code. **Reject without
-requeue**: Laravel marked the job failed; this driver path reaches a dead-letter exchange. Take
-it deliberately for a non-retryable business error with `$this->fail($e)` rather than throwing and burning
-every attempt. **Reject with requeue**: permitted in exactly one place, the driver's own `close()` on worker
-stop — application code, job middleware and handlers must not call `reject($job, true)`. To retry, call
-`$job->release($delay)`: release increments the attempt count, requeue does not.
+**2. Ack and nack policy.** Three outcomes, one route each.
+
+- **Ack**: the handler completed and Laravel deleted the job, or Laravel released it. Never call `ack()` from application code.
+- **Reject without requeue**: Laravel marked the job failed; this driver path reaches a dead-letter exchange. Take
+  it deliberately for a non-retryable business error with `$this->fail($e)` rather than throwing and burning
+  every attempt.
+- **Reject with requeue**: permitted in exactly one place, the driver's own `close()` on worker
+  stop. Application code, job middleware and handlers must not call `reject($job, true)`.
+
+To retry, call `$job->release($delay)`: release increments the attempt count, requeue does not.
 
 **3. Every quorum queue carries a broker-policy delivery limit; every worker passes an explicit `--tries`.** The
-limit is a quorum-queue policy, never a queue argument — the driver emits no `x-delivery-limit` and silently
+limit is a quorum-queue policy, never a queue argument. The driver emits no `x-delivery-limit` and silently
 drops an invented one. It is required because a requeue or unacked redelivery returns the identical message
-with its attempt header unchanged. Repeated returns below `--tries` never spend that bound; a job dying
+with its attempt header unchanged. Repeated returns below `--tries` never spend that bound. A job dying
 before release can loop indefinitely, including across `--max-jobs` or `--max-time` recycling.
-Delivery limits bound only counted failures: verify the actual return path under
-`alaa-async-messaging references/40-dead-letter-and-replay.md`; non-counting returns and classic queues need
+Delivery limits bound only counted failures. Verify the actual return path under
+`alaa-async-messaging references/40-dead-letter-and-replay.md`. Non-counting returns and classic queues need
 a separately proven application bound. Derivation: `references/driver-facts.md`. Diagnosis: `references/failure-classes.md` class 8. Values:
 `alaa-services-contract references/22-failure-load-and-deprecation-contract.md`. Doctrine:
 `alaa-reliability-sla references/20-retries.md`.
 
-**4. Two timeout relationships bound duplicate execution.** `retry_after` is not one of them; it is inert on
-this connection (`references/driver-facts.md`). Worker `--timeout` times the depth of the unacked window
+**4. Two timeout relationships bound duplicate execution.** `retry_after` is not one of them. It is inert on
+this connection (`references/driver-facts.md`). Worker `--timeout` multiplied by the depth of the unacked window
 stays below the applicable broker acknowledgement timeout. Timeout scope and cancellation versus channel
-closure depend on broker version, queue type and negotiated capability; verify recovery through
+closure depend on broker version, queue type and negotiated capability. Verify recovery through
 `alaa-async-messaging references/30-consuming-ack-and-prefetch.md`. An open channel alone is not health. Pod `terminationGracePeriodSeconds` exceeds worker
-`--timeout` plus the shutdown margin — below that, every rollout SIGKILLs a worker mid-job and replays the
+`--timeout` plus the shutdown margin. Below that, every rollout SIGKILLs a worker mid-job and replays the
 delivery with its attempt count unchanged. Both values and the margin: the contract file above.
 
-**5. Pass `--prefetch-count` explicitly in consume mode.** The pinned command's default is `1000`;
-verify the installed default through `references/driver-facts.md`. Before choosing the value, read
+**5. Pass `--prefetch-count` explicitly in consume mode.** The pinned command's default is `1000`.
+Verify the installed default through `references/driver-facts.md`. Before choosing the value, read
 `alaa-async-messaging references/30-consuming-ack-and-prefetch/40-prefetch.md` for the measured-p99
 window derivation, and report both the count and measured duration. The contract file above owns values.
 
 **6. Publisher confirms — a decision, not silence.** This driver never calls `confirm_select`, so a publish
-reports success once the frame reaches the socket and a broker that dies before persisting it loses the
-message while the application believes it succeeded. The decision: a request-path publish does not wait on a
-confirm, and durability comes from the durable outbox row the contract file above already requires. The
-outbox drain worker is the one place a confirm is required, because that contract forbids deleting an outbox
-row before the broker acknowledges the publish and `basic_publish` is not an acknowledgement. How to add it,
+reports success once the frame reaches the socket. A broker that dies before persisting the message loses it
+while the application believes it succeeded. The decision: a request-path publish does not wait on a
+confirm. Durability comes from the durable outbox row the contract file above already requires. The
+outbox drain worker is the one place a confirm is required, because the contract file above forbids deleting an outbox
+row before the broker acknowledges the publish, and `basic_publish` is not an acknowledgement. How to add it,
 and its cost: `references/driver-facts.md`.
 
 **7. Broker unreachable on the request path.** A request-path publish never blocks the user-facing response
-on broker recovery and never fails the business write; the outbox above is the mechanism. Doctrine:
+on broker recovery and never fails the business write. The outbox above is the mechanism. Doctrine:
 `alaa-reliability-sla references/50-degradation.md`. Values: the contract file above. Driver mechanics
 that change the answer — lazy connect, and one host chosen at random per connection with no retry inside a
 publish call — are in `references/driver-facts.md`.
 
 **8. The seam carries the trace.** The trace field travels as a constructor property inside the serialised
-job payload, set at dispatch and read at the top of `handle()`, because this driver exposes no AMQP header
-injection point; the `correlation_id` it already sets is the broker-side join key for the same message. Field
+job payload, set at dispatch and read at the top of `handle()`. The reason: this driver exposes no AMQP header
+injection point. The `correlation_id` it already sets is the broker-side join key for the same message. Field
 name: `/alaa-services-contract`. Whether carrying it is required:
 `/alaa-observability-soc`. Signals this seam uniquely produces, to be registered
 rather than invented — queue depth, consumer count, unacked count, oldest-unacked age, redelivery rate,
@@ -110,14 +113,14 @@ worker restart rate — are named in `alaa-services-contract references/24-metri
 `/alaa-observability-soc`.
 
 **9. Horizon is not the control plane for these workers.** `'worker' => 'default'` on the connection and
-`RABBITMQ_WORKER` unset or `default` everywhere. Horizon is Redis-queue tooling; its dashboard, metrics and
+`RABBITMQ_WORKER` unset or `default` everywhere. Horizon is Redis-queue tooling. Its dashboard, metrics and
 supervisor semantics do not observe a RabbitMQ queue. Observe these workers through broker metrics, worker
 logs and application metrics, plus `queue:monitor` as a ready-depth threshold alarm and nothing more
 (`references/driver-facts.md`).
 
 **10. Dead-lettering and delivery limits come from broker policies, never queue arguments.** A queue argument
-is fixed at declare time and this driver never re-declares an existing queue, so an argument changed in
-config does nothing to a queue that already exists; a policy applies to existing queues and reverts without a
+is fixed at declare time and this driver never re-declares an existing queue. So an argument changed in
+config does nothing to a queue that already exists. A policy applies to existing queues and reverts without a
 deploy. Pre-create exchange, queue and binding in infrastructure or a release job before consumers scale.
 
 **11. Every outbound call inside a handler carries a client timeout strictly below the worker `--timeout`**,
@@ -129,9 +132,9 @@ commit; every value comes from a Secret or a secret file.
 
 **13. Redis touches inside jobs.** RabbitMQ is the transport; Redis never carries these jobs. Job middleware
 backed by Redis (`RateLimited`, `WithoutOverlapping`, `Redis::throttle` funnels) has a defined outage
-behaviour recorded in the change — the fail-closed discriminator is `/alaa-security-review`, and keys, TTL and the Redis-down fallback contract are
-`alaa-data-layer references/50-redis-laravel-octane.md` via `/alaa-data-layer`. No cache or Redis read in a
-provider `register()` or `boot()`, or a Redis outage stops workers from starting.
+behaviour recorded in the change. The fail-closed discriminator is `/alaa-security-review`. Keys, TTL and the Redis-down fallback contract are
+`alaa-data-layer references/50-redis-laravel-octane.md` via `/alaa-data-layer`. Make no cache or Redis read in a
+provider `register()` or `boot()`. Otherwise a Redis outage stops workers from starting.
 
 **14. Uniformity over local preference in job policy.** Use whichever form the repository already uses for
 every job in it — attributes (`#[Tries]`, `#[Backoff]`, `#[Timeout]`, `#[FailOnTimeout]`) or properties and
@@ -145,16 +148,19 @@ change. Where queue or connection selection would otherwise repeat across dispat
 test; a change adding such a handler without it is incomplete.
 
 Read `alaa-async-messaging references/60-telemetry-and-proof.md`, "The two required tests", for the
-redelivery assertion set. This driver adds two checks: deliver the **same payload with the attempt count
-unchanged**, as a requeue does; assert the duplicate is acked rather than released, so requeueing cannot
-masquerade as deduplication. Keep the owner's effect, receipt and duplicate-counter proof.
+redelivery assertion set. This driver adds two checks:
+
+- Deliver the **same payload with the attempt count unchanged**, as a requeue does.
+- Assert the duplicate is acked rather than released, so requeueing cannot masquerade as deduplication.
+
+Keep the owner's effect, receipt and duplicate-counter proof.
 
 What makes this a test rather than a replay of the happy path, which layer it belongs at, and whether the
 broker is real or faked: `/alaa-testing-strategy`
 `alaa-testing-strategy references/70-failure-mode-first.md` and
 `alaa-testing-strategy references/30-doubles.md`. Pest and PHPUnit syntax comes from the
-repository-local `pest-testing` skill, which this repository does **not** own and which can change between
-runs — on conflict about what the test must prove, `/alaa-testing-strategy` wins and this rule stands
+repository-local `pest-testing` skill. This repository does **not** own that skill, and it can change between
+runs. On conflict about what the test must prove, `/alaa-testing-strategy` wins and this rule stands
 regardless of syntax. Real-infrastructure verification of the same property is step 3 of
 `references/running-workers.md`.
 
@@ -199,8 +205,14 @@ elsewhere, and the named owner wins on conflict.
 
 # Output contract
 
-Report: files changed; the installed driver version and the grep that confirmed its monitor methods; each
-config key changed and the behaviour it produces; the worker mode and why; the prefetch count with the
-measured p99 handler duration behind it; the delivery limit and where its policy is set; the redelivery test
-and its assertion; the rollback step; and every assumption, monitoring limitation and unresolved risk,
-naming which are limits of this driver rather than of the change.
+Report:
+
+- files changed
+- the installed driver version and the grep that confirmed its monitor methods
+- each config key changed and the behaviour it produces
+- the worker mode and why
+- the prefetch count with the measured p99 handler duration behind it
+- the delivery limit and where its policy is set
+- the redelivery test and its assertion
+- the rollback step
+- every assumption, monitoring limitation and unresolved risk, naming which are limits of this driver rather than of the change

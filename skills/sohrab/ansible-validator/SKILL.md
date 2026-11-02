@@ -8,7 +8,7 @@ description: Validate, lint, security-audit and dry-run existing Ansible playboo
 ## Overview
 
 Validate existing Ansible content and report a verdict. This `SKILL.md` is the
-router; the procedure is `references/playbook.md`, the enforcement is
+router. The procedure is `references/playbook.md`. The enforcement is
 `scripts/`. Load reference files by skill-relative path, never absolute.
 
 ## Source freshness
@@ -46,19 +46,19 @@ table, the report format and the stopping condition.
 
 Installed system or cached tools remain usable without installation authority.
 Missing tools block by default without creating a cache or installing packages.
-`scripts/lib/common.sh` permits installation only with `AV_ALLOW_BOOTSTRAP=1`;
-set it only after the user has authorized installation. `AV_NO_BOOTSTRAP=1`
+`scripts/lib/common.sh` permits installation only with `AV_ALLOW_BOOTSTRAP=1`.
+Set it only after the user has authorized installation. `AV_NO_BOOTSTRAP=1`
 overrides that opt-in. Prior automatic bootstrap behavior is retired.
 
 ## Workflow
 
-1. `setup_tools.sh`. A floor not met is a blocked audit.
-2. `validate_playbook.sh` or `validate_role.sh` on the target.
-3. `check_fqcn.sh` and `check_module_currency.py`.
-4. All three security commands, on every audit.
-5. `--check --diff --limit <hosts>` when an inventory exists; a Molecule
+1. Run `setup_tools.sh`. A floor not met is a blocked audit.
+2. Run `validate_playbook.sh` or `validate_role.sh` on the target.
+3. Run `check_fqcn.sh` and `check_module_currency.py`.
+4. Run all three security commands on every audit.
+5. Run `--check --diff --limit <hosts>` when an inventory exists. Run a Molecule
    scenario only under the condition in `references/molecule.md`.
-6. Report `PASS`, `FAIL` or `BLOCKED`, never a mixture, citing the reference
+6. Report `PASS`, `FAIL` or `BLOCKED`, never a mixture. Cite the reference
    line behind each finding.
 
 ## Boundaries

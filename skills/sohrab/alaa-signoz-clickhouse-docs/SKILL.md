@@ -9,31 +9,31 @@ Write and repair raw ClickHouse SQL against SigNoz's vendor-owned tables, and ro
 
 ## Three facts that decide every task here
 
-**1. The SigNoz schema is vendor-owned and read-only to this fleet.** SigNoz's schema migrator creates and alters every table in `signoz_logs`, `signoz_traces`, `signoz_metrics`, `signoz_metadata` and `signoz_meter`, and the schema changes only when SigNoz is upgraded. Propose no `CREATE`, `ALTER`, `DROP`, `TRUNCATE`, `OPTIMIZE` or `SYSTEM` statement against a `signoz_*` table; report a schema defect to the vendor instead, because an unratified local change is overwritten by the next upgrade.
+**1. The SigNoz schema is vendor-owned and read-only to this fleet.** SigNoz's schema migrator creates and alters every table in `signoz_logs`, `signoz_traces`, `signoz_metrics`, `signoz_metadata` and `signoz_meter`. The schema changes only when SigNoz is upgraded. Propose no `CREATE`, `ALTER`, `DROP`, `TRUNCATE`, `OPTIMIZE` or `SYSTEM` statement against a `signoz_*` table. Report a schema defect to the vendor instead, because an unratified local change is overwritten by the next upgrade.
 
-**2. A tenant predicate is not required on a SigNoz query.** All tenants report into one shared SigNoz, and everyone with access to that SigNoz is authorised to see every tenant's telemetry, because seeing it is how they fix it. A project whose telemetry must not be shared gets a separate SigNoz address selected by an environment variable, so the isolation is the address, not a `WHERE` clause. `clickhouse-performance-schema-ops` requires the tenant column first in `ORDER BY` and a tenant filter on every query; that rule governs tables the fleet's own ingest pipeline owns and does not transfer to `signoz_*` tables, because the fleet owns neither their sorting key nor their write path and cannot add a tenant column to either. Do not add a tenant predicate to a SigNoz query to satisfy that rule, and do not report its absence as a defect.
+**2. A tenant predicate is not required on a SigNoz query.** All tenants report into one shared SigNoz. Everyone with access to that SigNoz is authorised to see every tenant's telemetry, because seeing it is how they fix it. A project whose telemetry must not be shared gets a separate SigNoz address, selected by an environment variable. The isolation is the address, not a `WHERE` clause. `clickhouse-performance-schema-ops` requires the tenant column first in `ORDER BY` and a tenant filter on every query. That rule governs tables the fleet's own ingest pipeline owns. It does not transfer to `signoz_*` tables, because the fleet owns neither their sorting key nor their write path and cannot add a tenant column to either. Do not add a tenant predicate to a SigNoz query to satisfy that rule. Do not report its absence as a defect.
 
 **3. The ClickHouse alert surface is unconfirmed, and this skill fails closed on it.** See the next section.
 
 ## The alert-surface gate
 
-The vendor contradicts itself about whether a SigNoz alert rule accepts ClickHouse SQL, and the conflict remains in the public docs at the refresh date in `references/90-versions.md`. Public documentation cannot confirm an installation. `references/query-language-routing.md` owns released API lifecycle evidence and the deployment discovery test.
+The vendor contradicts itself about whether a SigNoz alert rule accepts ClickHouse SQL. The conflict remains in the public docs at the refresh date in `references/90-versions.md`. Public documentation cannot confirm an installation. `references/query-language-routing.md` owns released API lifecycle evidence and the deployment discovery test.
 
 Read `assets/alert-surface.json` before answering any request for alert SQL. While its `status` is `unconfirmed`:
 
 1. Run the discovery test in `references/query-language-routing.md` only with explicit authorization for the target and its effects. A source-only refresh performs no live discovery and leaves `assets/alert-surface.json` unconfirmed.
-2. When the test cannot be run in this session, deliver the dashboard-panel form of the query and the Query Builder alert path, and state that the ClickHouse alert surface is unconfirmed on this install. Do not label SQL as alert SQL, because a rule the surface rejects is work that cannot ship.
+2. When the test cannot be run in this session, deliver the dashboard-panel form of the query and the Query Builder alert path. State that the ClickHouse alert surface is unconfirmed on this install. Do not label SQL as alert SQL, because a rule the surface rejects is work that cannot ship.
 
 `check-signoz-sql.py --surface alert` reports finding `S11` for exactly this case, so the gate is enforced rather than remembered.
 
 ## Rules that hold on every query
 
-1. Name the signal before writing SQL — logs, traces, or metrics — and read only that signal's reference. Joining two `signoz_*` databases needs an explicit `JOIN ... ON`, a shared key and one time window, because the three families share no fingerprint space.
-2. Bound every query in time with the variables that signal's reference names, and pair a logs or traces query with the `ts_bucket_start` predicate, because `ts_bucket_start` is the first column of the sorting key and a query without it reads every part in the partition.
-3. Group only by a column whose distinct-value count is inside the ceiling that `/alaa-observability-soc` `references/30-quantitative-budgets.md` sets. That file states the number; this skill states none and enforces the denylist as `check-signoz-sql.py` rule `S7`.
+1. Name the signal before writing SQL: logs, traces, or metrics. Read only that signal's reference. A join across two `signoz_*` databases needs an explicit `JOIN ... ON`, a shared key and one time window, because the three families share no fingerprint space.
+2. Bound every query in time with the variables that signal's reference names. Pair a logs or traces query with the `ts_bucket_start` predicate. `ts_bucket_start` is the first column of the sorting key, and a query without it reads every part in the partition.
+3. Group only by a column whose distinct-value count is inside the ceiling that `/alaa-observability-soc` `references/30-quantitative-budgets.md` sets. That file states the number. This skill states none. It enforces the denylist as `check-signoz-sql.py` rule `S7`.
 4. Return the panel shape the widget expects: `ts` and `value` for a timeseries, one column named `value` for a value widget, labelled columns and a `LIMIT` for a table.
-5. Keep an unknown value as an explicit placeholder — `{{service_name}}`, `{{metric_name}}`, `{{attribute_key}}` — rather than inventing one, and never put a credential, token or real customer payload in an example.
-6. When the live schema cannot be reached, emit the query with a literal `-- UNVERIFIED SCHEMA: db.table` comment above it and name the command that verifies it. Never silently downgrade to this reference's assumption.
+5. Keep an unknown value as an explicit placeholder (`{{service_name}}`, `{{metric_name}}`, `{{attribute_key}}`) rather than inventing one. Never put a credential, token or real customer payload in an example.
+6. When the live schema cannot be reached, emit the query with a literal `-- UNVERIFIED SCHEMA: db.table` comment above it. Name the command that verifies it. Never silently downgrade to this reference's assumption.
 
 ## References
 
@@ -41,7 +41,7 @@ Route the task through `references/00-topic-map.md`, which maps the situation yo
 
 ## Checkers
 
-Run these from the skill directory. Exit `0` clean, `1` findings, `2` could not run; a `2` is never a pass.
+Run these from the skill directory. Exit `0` is clean, `1` is findings, `2` is could not run. A `2` is never a pass.
 
 - `python3 scripts/check-signoz-links.py --skill-dir .` — every documentation URL resolves 200 and does not silently redirect to a docs index. Exits `2` when the network is unreachable, so a dead link can never read as clean.
 - `python3 scripts/check-signoz-schema.py --describe-dir DIR` (or `--dsn URL`) — every table and column this skill claims is present on the target, and `signoz_index_v3` still sorts by `ts_bucket_start, resource_fingerprint` first. Missing sorting-key evidence blocks the traces assertion. A finding identifies a mismatch with the selected target: retain older consumer paths, qualify the reference, then repair the query.
@@ -49,11 +49,15 @@ Run these from the skill directory. Exit `0` clean, `1` findings, `2` could not 
 
 ## Not owned here
 
-`clickhouse-performance-schema-ops` owns what a ClickHouse table must be — engine, sorting key, partitioning, TTL, compression — for tables the fleet controls.
+`clickhouse-performance-schema-ops` owns what a ClickHouse table must be (engine, sorting key, partitioning, TTL, compression) for tables the fleet controls.
 `alaa-signoz-clickhouse-docs` owns how a SigNoz-owned table is queried, and states that those tables are vendor-owned and read-only to the fleet.
-`vector-rust-observability-pipelines` owns what the pipeline writes into a ClickHouse table and how it behaves when that table is unreachable, and decides no schema.
+`vector-rust-observability-pipelines` owns what the pipeline writes into a ClickHouse table and how it behaves when that table is unreachable. It decides no schema.
 
-Read-lane settings and scan-cost reasoning over `signoz_*` tables: `/clickhouse-performance-schema-ops` `references/40-query-tuning-and-read-lane.md`. Telemetry requirement levels, gates and reasons: `/alaa-observability-soc`. Who may hold a SigNoz credential, and what a saved panel executes with: `/alaa-security-review`. Model and effort: `/alaa-prompting-guide` `references/50-effort-and-thinking.md`. Every other owner is named at the rule it governs inside `references/`.
+- Read-lane settings and scan-cost reasoning over `signoz_*` tables: `/clickhouse-performance-schema-ops` `references/40-query-tuning-and-read-lane.md`.
+- Telemetry requirement levels, gates and reasons: `/alaa-observability-soc`.
+- Who may hold a SigNoz credential, and what a saved panel executes with: `/alaa-security-review`.
+- Model and effort: `/alaa-prompting-guide` `references/50-effort-and-thinking.md`.
+- Every other owner is named at the rule it governs inside `references/`.
 
 ## When NOT to use
 
@@ -67,8 +71,15 @@ Read-lane settings and scan-cost reasoning over `signoz_*` tables: `/clickhouse-
 
 For a docs task, return the one best page, why it fits, and only the alternates that change the setup path.
 
-For a query task, return the panel type and signal, the assumptions and placeholders, the SQL in one block, and validation notes covering time bounds, table family, variables, resource filters, limits and any unresolved uncertainty. For a repair, name the defect, give the corrected query, and skip the research diary.
+For a query task, return:
+
+- the panel type and signal;
+- the assumptions and placeholders;
+- the SQL in one block;
+- validation notes covering time bounds, table family, variables, resource filters, limits and any unresolved uncertainty.
+
+For a repair, name the defect, give the corrected query, and skip the research diary.
 
 ## Stop rules
 
-Make the smallest safe assumption when a detail is missing. Ask only when the missing detail changes the signal, the table family, the time variables, the schema version, a production side effect, or what data is exposed. Never invent a SigNoz table, column, macro or UI capability; when the current docs or the live schema are required to answer, say so and name the command that would answer it.
+Make the smallest safe assumption when a detail is missing. Ask only when the missing detail changes one of these: the signal, the table family, the time variables, the schema version, a production side effect, or what data is exposed. Never invent a SigNoz table, column, macro or UI capability. When the current docs or the live schema are required to answer, say so and name the command that would answer it.

@@ -5,27 +5,32 @@ description: "Use this skill for a documentation-only pass over frontend code: J
 
 # Frontend doc annotations
 
-**The seam.** A rule whose violation can be caught by compiling, type-checking or running the code belongs
-to `/alaa-vue-typescript-clean-code` (`$alaa-vue-typescript-clean-code`). A rule whose violation is visible
-only by reading a comment against the code it claims to describe — in a diff whose build output must be
-byte-identical before and after — belongs here. This pass changes comments; nothing else moves.
+**The seam.** A rule whose violation a compile, a type check or a run of the code can catch belongs
+to `/alaa-vue-typescript-clean-code`. A rule whose violation shows only when you read a comment against
+the code it claims to describe, in a diff whose build output must be byte-identical
+before and after, belongs here. This pass changes comments. Nothing else moves.
 
-**Every comment in a file is English and ASCII-range** — no Persian text or digits, no
-typographic dash or quote. Persian belongs in terminal replies and in Persian-language deliverables,
-which are `/alaa-repo-docs` (`$alaa-repo-docs`).
+**Every comment in a file is English and ASCII-range.** Use no Persian text or digits and no
+typographic dash or quote. Persian belongs in terminal replies and in Persian-language deliverables.
+`/alaa-repo-docs` owns those deliverables.
 
-**The prefix set is closed.** Five prefixes exist and no sixth may be invented: `SSR NOTE:`,
-`HYDRATION NOTE:`, `STORE NOTE:`, `AUTH NOTE:`, `SECURITY NOTE:`. Closed means `grep -rn "AUTH NOTE:" src/`
+**The prefix set is closed.** Five prefixes exist: `SSR NOTE:`, `HYDRATION NOTE:`, `STORE NOTE:`,
+`AUTH NOTE:`, `SECURITY NOTE:`. Do not invent a sixth. Closed means `grep -rn "AUTH NOTE:" src/`
 returns every auth assumption in the repo. Every `AUTH NOTE:` and `SECURITY NOTE:` carries
 `verified:<ISO-date>` in the same block.
 
-**Run `node scripts/check-annotations.mjs src/ packages/*/src` before reporting done.** Exit `0`
-clean, `1` findings as `path:line: RULE message`, `2` could not run — `2` is not `0` because an unparsed
-file is not a clean file.
+**Run `node scripts/check-annotations.mjs src/ packages/*/src` before you report done.**
+- Exit `0` means clean.
+- Exit `1` means findings, printed as `path:line: RULE message`.
+- Exit `2` means the script could not run. `2` is not `0`, because an unparsed file is not a clean file.
 
 ## When NOT to use
 
-Stop when the diff would **change behaviour** — this skill runs only when the build output is byte-identical before and after — and when the rule's violation is already caught by compiling, type-checking or running the code. The section below names each owner.
+Stop in two cases:
+- The diff would **change behaviour**. This skill runs only when the build output is byte-identical before and after.
+- Compiling, type-checking or running the code already catches the rule's violation.
+
+The section "Ground this skill does not own" names each owner.
 
 ## Router
 
@@ -42,12 +47,9 @@ Stop when the diff would **change behaviour** — this skill runs only when the 
 
 ## Ground this skill does not own
 
-- Comment-versus-extract, SOLID, `any`, abort and double-fire correctness:
-  `/alaa-vue-typescript-clean-code` (`$alaa-vue-typescript-clean-code`).
-- Threat classes: `/alaa-security-review` (`$alaa-security-review`). Gateway and trusted-header facts:
-  `/alaa-trust-gateway-auth` (`$alaa-trust-gateway-auth`).
-- SSR, hydration, lifecycle: `/alaa-frontend-developer` (`$alaa-frontend-developer`). Quasar API and
-  config: `/alaa-quasar-app-vite-v3` (`$alaa-quasar-app-vite-v3`).
-- Every name and value a comment quotes: `/alaa-services-contract` (`$alaa-services-contract`).
-- Model and effort: `/alaa-prompting-guide` (`$alaa-prompting-guide`), `references/50-effort-and-thinking.md`.
+- Comment-versus-extract, SOLID, `any`, abort and double-fire correctness: `/alaa-vue-typescript-clean-code`.
+- Threat classes: `/alaa-security-review`. Gateway and trusted-header facts: `/alaa-trust-gateway-auth`.
+- SSR, hydration, lifecycle: `/alaa-frontend-developer`. Quasar API and config: `/alaa-quasar-app-vite-v3`.
+- Every name and value a comment quotes: `/alaa-services-contract`.
+- Model and effort: `/alaa-prompting-guide`, `references/50-effort-and-thinking.md`.
 - Every other owner: the table in `references/10-annotation-boundaries.md`.

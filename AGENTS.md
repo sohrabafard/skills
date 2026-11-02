@@ -1,8 +1,8 @@
 # Repository instructions
 
 This repository is a skill pack for coding agents, not an application. It ships Agent Skills that
-Claude Code and Codex both load. `CLAUDE.md` beside this file is a symlink to this file, so
-every shared rule is edited here and nowhere else. The host is WSL Linux with Bash and `python3`.
+Claude Code and Codex both load. Edit every shared rule here and nowhere else, because
+`CLAUDE.md` beside this file is a symlink to this file. The host is WSL Linux with Bash and `python3`.
 
 <!-- BEGIN ALAA BEADS BINDING -->
 
@@ -92,23 +92,23 @@ bd prime
 ## Layout
 
 - `skills/sohrab/` — the first-party pack. `skills/sohrab/AGENTS.md` is the binding contract for any
-  change inside it. Read that file before editing a skill, and do not restate its rules here.
+  change inside it. Read that file before editing a skill. Do not restate its rules here.
 - `vendor/` — upstream git subtrees, listed in `vendor/subtrees.json`. Off limits: never edit a file
   under it. `skills/sohrab/AGENTS.md` states that rule in full and owns it.
 - `skills/.curated/`, `skills/.system/` — third-party skills. Referenceable, not pack-local.
 - `scripts/` — this repository's checkers. `install-skills.md` is authoritative for install paths.
-- `artifacts/`, `outputs/`, `test-results/` — task artifacts. Cluster the products of one piece of work into
-  a single directory named for its subject under one of these, creating it if absent.
+- `artifacts/`, `outputs/`, `test-results/` — task artifacts. Put the products of one piece of work in
+  one directory, named for its subject, under one of these. Create the directory if absent.
 
 ## Upgrade history
 
-Before upgrading first-party skills or their model policy, read [the upgrade evidence index](outputs/README.md)
-for prior assessments, plans and verification records. Treat those records as dated evidence;
-verify current repository and upstream facts before reusing their conclusions.
+Before upgrading first-party skills or their model policy, read [the upgrade evidence index](outputs/README.md).
+It lists prior assessments, plans and verification records. Treat those records as dated evidence.
+Verify current repository and upstream facts before reusing their conclusions.
 
 ## Commands
 
-Run from the repository root with `python3`. The first four commands ran in normal mode on 2026-11-02 and each exited `0`; `vendor_subtrees.py refresh-docs` was not part of that run.
+Run each command from the repository root with `python3`. The first four commands ran in normal mode on 2026-11-02. Each exited `0`. `vendor_subtrees.py refresh-docs` was not part of that run.
 
 - `python3 scripts/validate_sohrab_skill_pack.py` — per-skill structure: frontmatter, description
   budget, the "When NOT to use" heading, `agents/openai.yaml` shape, and reference-path resolution.
@@ -120,17 +120,17 @@ Run from the repository root with `python3`. The first four commands ran in norm
 - `python3 scripts/vendor_subtrees.py refresh-docs` — regenerates the marked blocks in the root
   `README.md` and in `install-skills.md` from `vendor/subtrees.json`.
 
-Every script here shares one exit-code contract — `0` clean, `1` findings, `2` could not run — and a
+Every script here shares one exit-code contract: `0` clean, `1` findings, `2` could not run. A
 `2` is a failed gate, never a pass.
 
 ## Rules
 
 - **Nothing is deleted.** Move a retired file to `_to_delete/<YYYYMMDD>-<reason>/` and confirm with
-  `ls -la` that it arrived at its original size. `skills/sohrab/AGENTS.md` owns this rule; it is
-  named here because `_to_delete/` is a root-level directory.
+  `ls -la` that it arrived at its original size. `skills/sohrab/AGENTS.md` owns this rule. This file
+  names it because `_to_delete/` is a root-level directory.
 - **Keep capability evidence and runtime control mechanics in one owner:** `/alaa-prompting-guide`.
   It owns supported model/effort pairs and checked model-neutral role projections. Runtime
-  orchestrators own actual task allocation/admission for every authority role; workflow records it.
+  orchestrators own actual task allocation/admission for every authority role. Workflow records it.
   A role name or metadata default never chooses a task pair.
 - **Before writing skill calls or reference routers, read `skills/sohrab/AGENTS.md`.** It owns
   the single `/name` repository form, metadata and generated-prompt exceptions, legacy conversion,
@@ -138,14 +138,14 @@ Every script here shares one exit-code contract — `0` clean, `1` findings, `2`
 - **Before shortening or editing any text that will control another agent** — a prompt, a rule, a
   skill, this file, a `CLAUDE.md`, a constitution, or a subagent dispatch — apply the compression
   contract in `skills/sohrab/alaa-prompting-guide/references/60-skill-authoring.md`. It owns what
-  may never be cut and the test the rewrite must pass. It is named here because the rule binds work
+  may never be cut and the test the rewrite must pass. This file names it because the rule binds work
   anywhere in this repository, including work that never touches `skills/sohrab/`.
 - **Write English into every file.** A Persian document is a mirror of an English source, and
   `alaa-repo-docs` owns when one is produced. A reply to the user may be Persian; a file is not.
-- **Require an authoritative source for a concrete claim,** and never read a missing result as a
+- **Require an authoritative source for a concrete claim.** Never read a missing result as a
   negative result. Use a named placeholder rather than an invented specific.
-- **Never write a path from one machine.** A Windows drive path or an absolute home path is wrong in
-  a committed file; write it relative to the repository root. Two exceptions: the `Expected workspace`
+- **Never write a path from one machine.** Never put a Windows drive path or an absolute home path in
+  a committed file. Write it relative to the repository root. Two exceptions: the `Expected workspace`
   line of the Beads binding, which names the shared hub path, and `alaa-legacy-path-map`, which owns
   legacy Windows-to-WSL path translation.
 - **Ask before an action with an effect outside this working tree** — tag, push, merge into another

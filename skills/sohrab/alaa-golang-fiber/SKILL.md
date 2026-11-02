@@ -18,15 +18,15 @@ any Fiber work that would otherwise be a kit consumer.
 
 ## Standing facts, verified 2026-07-26
 
-Re-read the kit's current consumer registry before relying on this dated precedent; report any drift.
+Re-read the kit's current consumer registry before relying on this dated precedent. Report any drift.
 State the verified facts to the user before writing Fiber code for an Ala service. They are facts, not
 preferences, and an agent that omits them lets the user assume a precedent that does not exist.
 
 - **No Ala service runs on Fiber.** The kit consumer registry (`docs/CONSUMERS.md` in the
   `alaa-go-chi` repository) lists `news`, `notif`, `entitlement-api`, `tusd` and `wa-api`. Every
   one is chi. The string "Fiber" appears zero times in the whole `alaa-go-chi-development`
-  governance skill. A Fiber service on this platform has no production precedent; do not infer
-  one from a neighbouring service's code, and do not copy a kit consumer's transport layer and
+  governance skill. A Fiber service on this platform has no production precedent. Do not infer
+  one from a neighbouring service's code. Do not copy a kit consumer's transport layer and
   assume the Fiber equivalent has been reviewed.
 - **Choosing Fiber for a service that would otherwise be a kit consumer is the project owner's
   decision.** It is recorded as a change request through `/alaa-go-chi-development`. It is never an agent's decision, and never a conclusion drawn
@@ -34,7 +34,7 @@ preferences, and an agent that omits them lets the user assume a precedent that 
 - **The framework-choice procedure is owned elsewhere.** `alaa-golang`
   `references/30-http-api-framework-choice.md` (`/alaa-golang`) is the single
   place that decides chi versus Fiber. This skill states no competing criteria. If you are being
-  asked *which* framework to use, you are in the wrong skill: stop and read that file.
+  asked *which* framework to use, you are in the wrong skill. Stop and read that file.
 
 ## When NOT to use
 
@@ -66,12 +66,12 @@ exists, the rule names who grants it and in what record.
 - **Copy every `fiber.Ctx`-derived value before it outlives the handler.** Values from `Params`,
   `Query`, `Get`, `Body`, `Cookies` and their siblings are valid only inside the handler. Wrap
   each one in `utils.CopyString` or `utils.CopyBytes` at the point you take it. `Immutable` is a
-  boot-time, service-wide `fiber.Config` decision made once by the service owner; it is never a
+  boot-time, service-wide `fiber.Config` decision made once by the service owner. It is never a
   reason to skip a copy at an individual call site. Details and the mechanism:
   `references/10-fiber-v3-core.md`.
 - **Set `ReadTimeout`, `WriteTimeout` and `IdleTimeout` in `fiber.Config` on every service.** All
   three default to `0`, which means unbounded. An unset value is a slowloris-open server. Take the
-  values from `/alaa-services-contract`; do not invent them.
+  values from `/alaa-services-contract`. Do not invent them.
 - **Set `BodyLimit` in `fiber.Config` explicitly.** Its default is 4 MiB, which is larger than the
   platform's request cap.
 - **Never cache an authorization decision.** An exception is granted by `/alaa-security-review`
@@ -80,10 +80,9 @@ exists, the rule names who grants it and in what record.
 - **Register `/api/health` and `/api/ready` before any auth, trust, gateway-proof or rate-limit
   middleware**, so a probe cannot be failed by a dependency of the thing it is probing.
 - **Register every route before the listener starts.** Route-inventory and contract checks read the
-  route table once at boot; a route added afterwards is invisible to them and ships unverified.
-- **Retry only idempotent operations, under a bounded budget.** The retry, timeout, backoff and
-  degradation doctrine is owned by `/alaa-reliability-sla`; the numbers
-  are owned by `/alaa-services-contract`.
+  route table once at boot. A route added afterwards is invisible to them and ships unverified.
+- **Retry only idempotent operations, under a bounded budget.** `/alaa-reliability-sla` owns the retry, timeout, backoff and
+  degradation doctrine. `/alaa-services-contract` owns the numbers.
 - **Keep `fiber` types out of `internal/domain`, `internal/application` and repository code.** The
   transport package converts; nothing below it imports Fiber.
 - **For behavior changes and validation, follow `/alaa-golang`'s validation gate** and
@@ -98,9 +97,9 @@ A Fiber service uses the same package layout as a kit service and differs only a
 adapter. Uniformity across the fleet outranks local optimality: an operator, a reviewer and an
 auditor should be able to open any Ala Go service and find the same shape.
 
-The layout itself is owned by `alaa-golang` `references/60-service-architecture-patterns.md`
-(`/alaa-golang`): `internal/domain/`, `internal/application/` with its ports file,
-`internal/infrastructure/composition/`, and a health service package. Read it there; this skill
+`alaa-golang` `references/60-service-architecture-patterns.md`
+(`/alaa-golang`) owns the layout itself: `internal/domain/`, `internal/application/` with its ports file,
+`internal/infrastructure/composition/`, and a health service package. Read it there. This skill
 does not restate it.
 
 The Fiber-specific seam is one package: the transport adapter that owns the `*fiber.App`, its

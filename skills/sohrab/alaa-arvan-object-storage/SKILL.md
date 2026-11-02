@@ -6,75 +6,78 @@ description: "ArvanCloud Object Storage differences layer over the fleet's share
 # Alaa ArvanCloud Object Storage
 
 This skill states only what ArvanCloud Object Storage does differently from S3 and MinIO, and what breaks for an agent
-who assumes AWS or MinIO behaviour. Everything shared — key design, tenant scoping, lifecycle mechanics, multipart
-strategy, presigned-URL policy, credential hygiene, failure classes and observability — lives in
-`/alaa-minio-object-storage` and is not repeated here.
+who assumes AWS or MinIO behaviour. `/alaa-minio-object-storage` owns everything shared, and this skill does not repeat
+it: key design, tenant scoping, lifecycle mechanics, multipart strategy, presigned-URL policy, credential hygiene,
+failure classes and observability.
 
 ## Read that skill first, then this one
 
 Apply the nine constraints of `/alaa-minio-object-storage` as the baseline. Return here
 when the endpoint host ends in `arvanstorage.ir`, or when the task moves data or a client between MinIO and ArvanCloud.
-Where the two disagree, this skill wins for Arvan endpoints only, and every disagreement appears below with its reason.
+Where the two disagree, this skill wins for Arvan endpoints only. Every disagreement appears below with its reason.
 
 ## When not to use this skill
 
 Do not load this skill when no endpoint host in the task ends in `arvanstorage.ir` and no data or client moves between
-MinIO and ArvanCloud, because it adds provider constraints that do not apply and the shared rules already live in
-`/alaa-minio-object-storage`. Do not use it to decide whether object storage is the
-right store for a fact at all, which is `/alaa-data-layer`. Do not use it for Arvan's managed
-Kubernetes, its CaaS RBAC or its container registry, which is `/caas-arvan-kuber`: that skill
-owns Arvan's compute platform and this one owns Arvan's object storage, and neither states a rule about the other's
-surface.
+MinIO and ArvanCloud. It adds provider constraints that do not apply, and the shared rules already live in
+`/alaa-minio-object-storage`.
+
+Do not use it to decide whether object storage is the right store for a fact at all. `/alaa-data-layer` owns that
+decision.
+
+Do not use it for Arvan's managed Kubernetes, its CaaS RBAC or its container registry. `/caas-arvan-kuber` owns them.
+That skill owns Arvan's compute platform and this skill owns Arvan's object storage. Neither states a rule about the
+other's surface.
 
 ## Constraints that hold on every Arvan task
 
 1. **Pin the regional endpoint host in configuration, and let no client fall back to a default region.** A bucket is
    reachable only at its own region's endpoint `[source: https://docs.arvancloud.ir/en/object-storage/limits/, read:
-   2026-07-27]`, and the wrong region returns a not-found identical to a deleted object, so the fault reads as data
+   2026-07-27]`. The wrong region returns a not-found identical to a deleted object, so the fault reads as data
    loss.
 2. **Fix the region and the bucket name before creating the bucket, and treat both as permanent.** Neither can change
-   afterwards `[source: https://docs.arvancloud.ir/en/object-storage/limits/, read: 2026-07-27]`, so the only
+   afterwards `[source: https://docs.arvancloud.ir/en/object-storage/limits/, read: 2026-07-27]`. The only
    correction is copying every object into a new bucket.
 3. **Set `STORAGE_MAX_PART_SIZE_BYTES` to `400000000` on every Arvan endpoint, and keep every part at or below
-   it.** Arvan's part ceiling is published as 400 MB `[source:
+   it.** Arvan publishes its part ceiling as 400 MB `[source:
    https://docs.arvancloud.ir/en/object-storage/limits/, read: 2026-07-28]` where AWS S3 allows 5 GB, so a part
    size taken from an AWS or MinIO guide is rejected only after the bytes crossed the network. The value is
-   `400000000` rather than `419430400` because Arvan's own example labels 400 mebibytes as 400 MB and the smaller
-   reading is the one that cannot be exceeded by accident — `references/15-environment-contract-deltas.md` carries
+   `400000000` rather than `419430400` because Arvan's own example labels 400 mebibytes as 400 MB, and the smaller
+   reading is the one that cannot be exceeded by accident. `references/15-environment-contract-deltas.md` carries
    the arithmetic.
 4. **Send any payload above 5 GB as a multipart upload**, because one upload request is capped at 5 GB `[source:
    https://docs.arvancloud.ir/en/object-storage/limits/, read: 2026-07-27]`.
 5. **Abort a failed multipart upload from the client as well as from the lifecycle rule the MinIO skill requires.**
    Immediate abort releases failed-upload parts without waiting for age-based cleanup. Arvan documents panel
    cleanup of incomplete multipart uploads `[source: https://docs.arvancloud.ir/en/object-storage/buckets/lifecycle,
-   read: 2026-09-29]`; S3 API parity for that action remains unverified.
+   read: 2026-09-29]`. S3 API parity for that action remains unverified.
 6. **Choose a documented lifecycle control surface and verify the configured rule.** The panel supports current
    and noncurrent version expiry and incomplete multipart cleanup `[source:
    https://docs.arvancloud.ir/en/object-storage/buckets/lifecycle, read: 2026-09-29]`. The S3 SDK example proves
    `PutBucketLifecycleConfiguration` with `Expiration`, not API parity for every panel action
    `[source: https://docs.arvancloud.ir/fa/developer-tools/sdk/object-storage/put-bucket-lifecycle-config/,
-   read: 2026-07-28]`; use `references/20-s3-compatibility-matrix.md` before automating one.
+   read: 2026-07-28]`. Use `references/20-s3-compatibility-matrix.md` before automating one.
 7. **Treat every Arvan access key as account-wide, and separate services by Arvan account or bucket policy rather than
    by key scope.** The documented credential is one Access Key and Secret Key belonging to the user account `[source:
-   https://docs.arvancloud.ir/en/developer-tools/sdk/object-storage/credentials/, read: 2026-07-27]` with no documented
+   https://docs.arvancloud.ir/en/developer-tools/sdk/object-storage/credentials/, read: 2026-07-27]`. Arvan documents no
    scoped machine user, so MinIO constraint 1 cannot be met by key scope and a leaked key exposes every bucket.
 8. **After switching a bucket's public access off, re-check every object that was public while it was on.** The change
    "will not be applied to all of the objects present in the bucket" `[source:
-   https://docs.arvancloud.ir/en/object-storage/buckets, read: 2026-07-27]`, so objects stay readable afterwards.
+   https://docs.arvancloud.ir/en/object-storage/buckets, read: 2026-07-27]`. Objects therefore stay readable afterwards.
 9. **Purge the CDN cache as part of any delete or overwrite of a publicly readable object.** Arvan Object Storage uses
    the Arvan CDN by default `[source: https://docs.arvancloud.ir/en/object-storage/buckets/custom-domain, read:
-   2026-07-27]`, so a deleted object is still served from the edge until its cache entry expires.
+   2026-07-27]`. A deleted object is therefore still served from the edge until its cache entry expires.
 10. **Set `STORAGE_USE_PATH_STYLE` to `false` on every Arvan endpoint, so buckets are addressed virtual-hosted as
     `<bucket>.s3.<region>.arvanstorage.ir`.** Arvan states the virtual host format is required for CDN caching
-    `[source: https://docs.arvancloud.ir/en/object-storage/limits/, read: 2026-07-28]`, and a client forced to
+    `[source: https://docs.arvancloud.ir/en/object-storage/limits/, read: 2026-07-28]`. A client forced to
     path-style loses edge caching silently instead of failing, so the cost arrives as a traffic bill.
 11. **Re-read any provider fact here whose read date is more than 90 days old before relying on it for a production
-    change.** ArvanCloud moves its compatibility surface and limits with no changelog this skill can follow, so an
-    unchecked fact is a guess wearing a citation.
+    change.** ArvanCloud moves its compatibility surface and limits with no changelog this skill can follow. An
+    unchecked fact is a guess, even with a citation.
 
 ## Routing
 
-Load only the file whose condition matches the task in front of you. Do not read the others.
+Load only the file whose condition matches the task. Do not read the others.
 
 | You are about to | Read |
 |---|---|
@@ -88,11 +91,14 @@ Load only the file whose condition matches the task in front of you. Do not read
 
 ## Configuration checker
 
-`python3 scripts/check_arvan_storage_config.py --root <repo>`, with `--help` for the check list. It reads files
-lexically and contacts no endpoint, so a clean run proves what the repository declares and not how the live bucket
-behaves. Exit `0` no finding; exit `1` findings printed with file and line, each fixed or recorded as an accepted defect
-with an owner and a date before shipping; exit `2` bad arguments or an unreadable root, so nothing was checked and the
-invocation is rerun.
+The invocation is `python3 scripts/check_arvan_storage_config.py --root <repo>`. `--help` lists the checks. The script
+reads files lexically and contacts no endpoint. A clean run therefore proves what the repository declares and not how
+the live bucket behaves.
+
+- Exit `0`: no finding.
+- Exit `1`: findings printed with file and line. Before shipping, fix each finding or record it as an accepted defect
+  with an owner and a date.
+- Exit `2`: bad arguments or an unreadable root. Nothing was checked, so the run is not a pass. Fix the cause, then rerun the invocation.
 
 ## Not owned here
 

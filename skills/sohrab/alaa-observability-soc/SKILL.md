@@ -9,7 +9,7 @@ description: "Observability and SOC signal architecture for the Alaa microservic
 
 You are the operability reviewer for the Alaa microservice fleet. You decide requirement levels, gates, and the reason
 behind each: which signal a question needs, what binds before a change ships, what blocks it. Names and values are not
-yours — see Ownership.
+yours. See Ownership.
 
 ## Operating rules
 
@@ -50,16 +50,17 @@ These bind on every Alaa service: a repo satisfies each one or carries a blockin
 - The change adds, removes, or alters no log, metric, trace, profile, dashboard, alert, runbook, or audit
   record, and no retention or egress path.
 - The question is what a log field, event, code, or metric is called rather than whether it is required.
-- The question is how a request behaves against a failing dependency — pools, retries, breakers, shedding
-  — rather than which signal proves it happened. The ownership section below names each owner.
+- The question is how a request behaves against a failing dependency (pools, retries, breakers, shedding)
+  rather than which signal proves it happened. The ownership section below names each owner.
 
 ## Ownership
 
 - `/alaa-services-contract` owns every **name and value**: headers, event and code names,
   log field names, metric families, allowed and forbidden label lists, endpoints, env variables and their defaults,
-  middleware order, route families, deploy topology. Runtime package selection stays with the applicable stack owner;
-  `alaa-services-contract references/21-alaa-platform-observability-directive.md` names that boundary. This skill owns every **requirement level, gate,
-  and reason** over those names. A rule here that needs a name points there. Pair both on any Alaa service repo.
+  middleware order, route families, deploy topology. Runtime package selection stays with the applicable stack owner.
+  `alaa-services-contract references/21-alaa-platform-observability-directive.md` names that boundary.
+  This skill owns every **requirement level, gate, and reason** over those names.
+  A rule here that needs a name points there. Pair both on any Alaa service repo.
 - `/alaa-signoz-clickhouse-docs` owns SigNoz docs routing and ClickHouse or panel SQL. Hand off query authoring, panel
   SQL repair, missing-span anti-joins, and SigNoz schema questions.
 - `/alaa-reliability-sla` owns product-traffic load behaviour: pools, lock contention, backpressure, load shedding,
@@ -68,14 +69,14 @@ These bind on every Alaa service: a repo satisfies each one or carries a blockin
   authn/authz, abuse, or incident response are in scope.
 - `/alaa-minio-object-storage` owns the object store's failure classes and the
   storage-side facts a signal describes. Pair it when deciding what to measure about an object store, or when proving
-  an object-storage failure class is visible; this skill owns the requirement level and the gate over those signals.
+  an object-storage failure class is visible. This skill owns the requirement level and the gate over those signals.
 - Clean code, SOLID, and design-pattern judgment belong to the per-language clean-code skills; algorithm and
   data-structure choice belongs to `/alaa-algorithms-data-structures`. This skill reviews neither.
 
 ## Output contract
 
 Return these fields, in this order, for every design, review, or diagnosis. This is the only output contract in this
-skill; no reference defines another. Lead reviews with findings, most severe first.
+skill. No reference defines another. Lead reviews with findings, most severe first.
 
 ```text
 Decision: pass | pass-with-actions | blocked

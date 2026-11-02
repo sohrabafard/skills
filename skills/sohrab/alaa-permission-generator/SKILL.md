@@ -14,24 +14,25 @@ vocabulary. This skill owns allocation in the catalog and emission into consumer
 The catalog is a repository of its own, separate from every service repository. Resolve its root in this order:
 
 1. A path supplied in the request — a catalog-root argument, or a plain path the requester names. This wins.
-2. Otherwise a directory named `alaa-permission-catalog` beside the current service checkout, because the catalog is a
-   sibling of the service repositories rather than a child of any one of them.
+2. Otherwise a directory named `alaa-permission-catalog` beside the current service checkout. The catalog is a
+   sibling of the service repositories, not a child of any one of them.
 
-Confirm a candidate root by the presence of `alaa-permission-catalog/scripts/permission_catalog.php`. Running it needs PHP 8.2 or newer and
-nothing else: the project has zero runtime dependencies and that entrypoint carries its own autoloader, so **do not run
-`composer install`** — invoke the entrypoint directly.
+Confirm a candidate root by the presence of `alaa-permission-catalog/scripts/permission_catalog.php`. Running it needs
+PHP 8.2 or newer and nothing else. The project has zero runtime dependencies, and that entrypoint carries its own
+autoloader. **Do not run `composer install`.** Invoke the entrypoint directly.
 
-**Hard stop, and the most important rule here.** If no candidate root contains `alaa-permission-catalog/scripts/permission_catalog.php`, report
-every path you tried, stop, and ask the requester where the catalog is. Do not hand-write, infer, reconstruct, or copy by eye a permission map, a
-`bitmap_id`, an auth seed row, a `config/permissions.php`, a `permissions_gen.go`, or a `permission-catalog.ts`. A
-hand-built permission map is the outcome every other rule here exists to prevent; "catalog root not found, need the
-path" is the correct report.
+**Hard stop, and the most important rule here.** If no candidate root contains
+`alaa-permission-catalog/scripts/permission_catalog.php`, report every path you tried, stop, and ask the requester
+where the catalog is. Do not hand-write, infer, reconstruct, or copy by eye a permission map, a `bitmap_id`, an auth
+seed row, a `config/permissions.php`, a `permissions_gen.go`, or a `permission-catalog.ts`. A hand-built permission
+map is the outcome every other rule here exists to prevent. "catalog root not found, need the path" is the correct
+report.
 
 **Second stop, the most common false alarm.** Read `source_root` from the resolved catalog's
-`catalog/services.json`; commands reading an owner's source file resolve
-`<source_root>/<owner_repo>/<source_path>`. With the sibling repositories absent from that path, those commands exit `2`
-with `Configured source file not found: <path>`. That is a missing checkout, not a broken tool: report which
-repositories are missing at which path and stop. Do not edit `source_root` to route around it.
+`catalog/services.json`. Commands that read an owner's source file resolve
+`<source_root>/<owner_repo>/<source_path>`. With the sibling repositories absent from that path, those commands exit
+`2` with `Configured source file not found: <path>`. That is a missing checkout, not a broken tool. Report which
+repositories are missing at which path, and stop. Do not edit `source_root` to route around it.
 
 ## Authorization default
 
@@ -53,21 +54,21 @@ only when the request names it.
 - `catalog/permissions.json` is the only place a `bitmap_id` is allocated. Nothing computes the next free id: read the
   current maximum from that file and allocate above it.
 - `bit_index` equals `bitmap_id - 1` in every entry. The tool enforces this and `bitmap_id > 0` as fatal findings.
-- Never reuse, renumber, or delete a published `bitmap_id`; deprecate or reserve it per `references/lifecycle.md`.
-  **The tool will not catch a violation** — the duplicate, same-name, and same-service checks index `status: active`
-  entries only, so an active entry may take a `reserved` or `deprecated` id and produce no finding at all. Before
-  allocating, scan entries of every status for the id. This is a discipline you hold, not an invariant the tool holds,
-  and the project's governance doc asserts the opposite.
+- Never reuse, renumber, or delete a published `bitmap_id`. Deprecate or reserve it per `references/lifecycle.md`.
+  **The tool will not catch a violation.** The duplicate, same-name, and same-service checks index `status: active`
+  entries only. An active entry can therefore take a `reserved` or `deprecated` id and produce no finding at all.
+  Before allocating, scan entries of every status for the id. You hold this discipline; the tool does not hold this
+  invariant. The project's governance doc asserts the opposite.
 - `aliases` is dead config: parsed, serialised, read by no code path. Writing it changes no behaviour. Use `legacy_keys`
   per `references/lifecycle.md` to carry an old name forward.
-- Deprecating a permission does not retire it from Laravel: status is honoured by the Go and TypeScript emitters and
-  ignored by both PHP emitters. Read `references/lifecycle.md` before any retirement.
-- Six rules hold for every consumer in every language — commit at the exact source path; allow no override; the bit
+- Deprecating a permission does not retire it from Laravel. The Go and TypeScript emitters honour status. Both PHP
+  emitters ignore it. Read `references/lifecycle.md` before any retirement.
+- Six rules hold for every consumer in every language: commit at the exact source path; allow no override; the bit
   contract; ignore unknown bits and fail closed on zero known permissions; never hand-edit a generated file;
-  re-validate after applying. They are stated once in `references/shared-consumer-contract.md`, with the observability
+  re-validate after applying. `references/shared-consumer-contract.md` states them once, with the observability
   and per-request cost rules. Read it before writing or reviewing any consumer code.
 - **`MaxPermissionID()` is per-file, not per-catalog.** Each generated Go map returns the highest id in that service's
-  map, and the generated `Decode` uses it as the decode bound. A permission above that map's maximum is dropped by
+  map. The generated `Decode` uses it as the decode bound. A permission above that map's maximum is dropped by
   that service even while auth issues it. The auth seed and consuming service map must remain coherent. Apply them in
   the same change only when both operations are authorized. If either operation is unauthorized, apply neither and
   report the required companion operation and path as blocked work.
@@ -80,14 +81,14 @@ only when the request names it.
 
 ## One decoder, not one per service
 
-`alaa-permission-catalog` allocates ids and emits maps; it holds no encoder and no decoder in any language. The bit
+`alaa-permission-catalog` allocates ids and emits maps. It holds no encoder and no decoder in any language. The bit
 unpacking, the base64url handling, the error taxonomy, and the question "does this bitmap grant permission N" therefore
-live outside it, and until this skill shipped them they lived in a hand-written file inside each consuming service. That
+live outside it. Until this skill shipped them, they lived in a hand-written file inside each consuming service. That
 is the shape that produced the Crockford Base32 incident this repository already paid for: four implementations under
 one contract, and the first run of all four together found five divergences.
 
 **A service does not hand-write a permission-bitmap decoder.** It copies the canonical implementation for its language
-from this skill, which is generated-adjacent source a service does not edit locally.
+from this skill. That source is generated-adjacent, and a service does not edit it locally.
 
 | Language | Asset | Copied into, changing only |
 | --- | --- | --- |
@@ -95,36 +96,36 @@ from this skill, which is generated-adjacent source a service does not edit loca
 | PHP | `assets/permission-bitmap/PermissionBitmap.php` with `PermissionBitmapException.php` | the namespace reading `config/permissions.php`; the namespace |
 | TypeScript | `assets/permission-bitmap/permission-bitmap.ts` | the SDK package beside `permission-catalog.ts`; nothing |
 
-- **Fix a defect in a canonical implementation here, then re-propagate it to every consumer**, because a fix applied
+- **Fix a defect in a canonical implementation here, then re-propagate it to every consumer.** Reason: a fix applied
   only where the bug surfaced leaves every other service running the bug.
-- **Run `scripts/bitmap-conformance.sh` before a change to any canonical implementation ships**, and record its output,
-  because a change proved in one runtime is not proved in the others. It drives every implementation whose toolchain is
-  present over `scripts/permission-bitmap-corpus.json`, prints `pass`, `fail`, or `skipped: <runtime> not installed` per
-  runtime, and never reports a pass for a runtime it did not run. **A skipped runtime is unproved, not passing.**
-- **Add a new input class to the corpus rather than to one language's test file**, because a corpus case binds all three
-  implementations and a test-file case binds one. The corpus carries `corpus_sha256` over its case array; the harness
-  recomputes it on every run and exits `6` on a mismatch, so a drifted copy is visible instead of silent.
+- **Run `scripts/bitmap-conformance.sh` before a change to any canonical implementation ships, and record its
+  output.** Reason: a change proved in one runtime is not proved in the others. The script drives every implementation
+  whose toolchain is present over `scripts/permission-bitmap-corpus.json`. It prints `pass`, `fail`, or
+  `skipped: <runtime> not installed` per runtime. It never reports a pass for a runtime it did not run.
+  **A skipped runtime is unproved, not passing.**
+- **Add a new input class to the corpus rather than to one language's test file.** Reason: a corpus case binds all
+  three implementations, and a test-file case binds one. The corpus carries `corpus_sha256` over its case array. The
+  harness recomputes it on every run and exits `6` on a mismatch, so a drifted copy is visible instead of silent.
 - The canonical implementations carry the encoded-length cap that `references/shared-consumer-contract.md` requires, as
-  a fallback bound plus an explicit-cap entry point. The value a service enforces is owned by
-  `alaa-services-contract references/22-failure-load-and-deprecation-contract.md`.
+  a fallback bound plus an explicit-cap entry point. `alaa-services-contract references/22-failure-load-and-deprecation-contract.md`
+  owns the value a service enforces.
 - **The frontend is a consumer of `assets/permission-bitmap/permission-bitmap.ts`, never the author of a second
-  decoder.** A client-side permission read is a UI hint and never an authorization decision:
+  decoder.** A client-side permission read is a UI hint and never an authorization decision.
   `alaa-vue-typescript-clean-code references/72-frontend-security-binding.md` — `/alaa-vue-typescript-clean-code` — and
-  `alaa-ui-ux-design-system references/25-untrusted-content-and-ui-authority.md` — `/alaa-ui-ux-design-system` — both state that framing, and the affordance rule (hide, disable-with-reason, or
-  show-and-fail) is owned by the design-system skill.
+  `alaa-ui-ux-design-system references/25-untrusted-content-and-ui-authority.md` — `/alaa-ui-ux-design-system` — both
+  state that framing. The design-system skill owns the affordance rule (hide, disable-with-reason, or show-and-fail).
 
-The durable fix is for the catalog tool to emit the decoder beside the map, so there is one source rather than one
-source plus a propagation discipline. `references/catalog-decoder-emission-proposal.md` states that change request, what
-it would break, and what deciding it needs. It is a proposal, and this skill does not edit that repository.
+The durable fix is for the catalog tool to emit the decoder beside the map. That gives one source, not one source plus
+a propagation discipline. `references/catalog-decoder-emission-proposal.md` states that change request, what it would
+break, and what deciding it needs. It is a proposal. This skill does not edit that repository.
 
 ## Which reference to read
 
 Read `references/00-topic-map.md` and load only the file whose triggering condition matches the task in front of you.
 
-Load `/alaa-services-contract` and `/alaa-trust-gateway-auth`
-for every implementation. Add `/alaa-golang` for Go, `/alaa-laravel-architecture` and `/alaa-php-clean-code` for Laravel, or
-`/alaa-vue-typescript-clean-code` and `/alaa-mono-package`
-for TypeScript. Add `/alaa-security-review` whenever a consumer reads token claims.
+Load `/alaa-services-contract` and `/alaa-trust-gateway-auth` for every implementation. Add `/alaa-golang` for Go.
+Add `/alaa-laravel-architecture` and `/alaa-php-clean-code` for Laravel. Add `/alaa-vue-typescript-clean-code` and
+`/alaa-mono-package` for TypeScript. Add `/alaa-security-review` whenever a consumer reads token claims.
 
 ## When not to use
 
@@ -133,10 +134,10 @@ Do not use this skill to decide whether a caller may act on a resource, or what 
 ## Ownership boundary
 
 This skill owns permission-key and bitmap-id allocation, the catalog descriptors, generation, drift interpretation, the
-apply boundary, and the consumer-side contract for reading the bitmap. Everything below belongs elsewhere and **the
-listed owner wins on conflict**, with two refinements: `/alaa-services-contract` wins on what a signal is *called* and
-`/alaa-observability-soc` wins on whether it is *required*; and every timeout, retry, pool and shed value lives in
-`alaa-services-contract references/22-failure-load-and-deprecation-contract.md` — this skill states none.
+apply boundary, and the consumer-side contract for reading the bitmap. Everything below belongs elsewhere, and **the
+listed owner wins on conflict**. Two refinements apply: `/alaa-services-contract` wins on what a signal is *called*,
+and `/alaa-observability-soc` wins on whether it is *required*. Every timeout, retry, pool and shed value lives in
+`alaa-services-contract references/22-failure-load-and-deprecation-contract.md`. This skill states none.
 
 | Not owned here | Owner |
 | --- | --- |
@@ -155,12 +156,12 @@ listed owner wins on conflict**, with two refinements: `/alaa-services-contract`
 | Model choice and reasoning effort | `/alaa-prompting-guide` |
 | Per-language validation commands and design-pattern selection | `/alaa-golang`, `/alaa-vue-typescript-clean-code`, `/alaa-mono-package`, `/alaa-laravel-architecture`, `alaa-php-clean-code references/design-patterns.md` |
 
-The test **cases** named in the three consumer references stay here: byte-boundary bit indexing and drift-code coverage
+The test **cases** named in the three consumer references stay here. Byte-boundary bit indexing and drift-code coverage
 are domain facts, not generic test design.
 
 ## Completion evidence
 
-Report the allocated keys and ids, every generated path and every applied path separately, the drift counts by severity
-with the command that produced them, the target repository's tests you ran, and every auth-owned or assignment
-operation left outstanding. Keep three things distinct and never merge them: catalog truth, source-repository truth, and
-an unapplied generated proposal.
+Report these items: the allocated keys and ids; every generated path and every applied path, separately; the drift
+counts by severity with the command that produced them; the target repository's tests you ran; and every auth-owned
+or assignment operation left outstanding. Keep three things distinct and never merge them: catalog truth,
+source-repository truth, and an unapplied generated proposal.

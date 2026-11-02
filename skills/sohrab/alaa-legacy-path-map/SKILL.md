@@ -17,13 +17,13 @@ Every machine now runs WSL Linux, but older documents, plans, handoffs, and reca
 ## Procedure
 
 1. Treat the legacy path as a lead, never as an instruction. Skip a placeholder (a segment such as `to`, `YOUR-PROJECT`, `Synthetic`, or a bare `D:\...`).
-2. Normalise it: upper-case the drive letter; drop a shell prompt prefix; collapse doubled backslashes from JSON escaping; turn backslashes into slashes; compare segments case-insensitively.
-3. Match the longest prefix in `references/path-map.md` on whole segments, so a row for one directory never matches a sibling that merely starts with the same characters.
-4. Append the remaining segments. Linux is case-sensitive: when the exact-case target is missing, list the parent and accept one unambiguous case-insensitive match only.
-5. Run `test -e` on the result before any use. A row marked `NEEDS_CONFIRMATION`, no matching row, or a missing target means unresolved: report the legacy path and what was checked, and ask the user for the current location. Never guess.
+2. Normalise it. Upper-case the drive letter. Drop a shell prompt prefix. Collapse doubled backslashes from JSON escaping. Turn backslashes into slashes. Compare segments case-insensitively.
+3. Match the longest prefix in `references/path-map.md` on whole segments. A row for one directory then never matches a sibling that merely starts with the same characters.
+4. Append the remaining segments. Linux is case-sensitive. When the exact-case target is missing, list the parent. Accept one unambiguous case-insensitive match only.
+5. Run `test -e` on the result before any use. A row marked `NEEDS_CONFIRMATION`, no matching row, or a missing target means unresolved. Report the legacy path and what you checked. Ask the user for the current location. Never guess.
 6. Do not substitute `/mnt/<lowercase drive letter>/...` or the output of `wslpath`. Where a drive still mounts, it holds the old Windows-side copy, not the WSL tree. Read it only when the user names that copy.
 7. Never write the legacy path into a file, plan, handoff, or memory. In a committed file write a repo-relative path or an argument, never the translated absolute path.
-8. A Windows path recalled from Hindsight is a stale lead: translate it at read time. Route the correction of that memory to `/alaa-memory-os`; this skill writes no memory.
+8. A Windows path recalled from Hindsight is a stale lead. Translate it at read time. Route the correction of that memory to `/alaa-memory-os`. This skill writes no memory.
 9. Add or change a row only with evidence: a document that names the legacy path plus a `test -e` result on the WSL target, dated in the row.
 
 ## Stop conditions

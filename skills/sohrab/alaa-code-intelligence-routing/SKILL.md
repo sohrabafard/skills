@@ -10,13 +10,13 @@ Route each named question to its best available evidence owner, consume the answ
 ## Decision procedure
 
 1. Name independently answerable questions and their intended worktree/environment.
-2. Before selecting an owner, handling its result or failure, choosing a grant, or advising on Serena contexts/REPL APIs, read `references/00-topic-map.md`; it selects the sole reference owning that decision.
+2. Before selecting an owner, handling its result or failure, choosing a grant, or advising on Serena contexts or REPL APIs, read `references/00-topic-map.md`. It selects the sole reference owning that decision.
 3. Apply the routing contract: select one primary owner, reuse adequate evidence, and ask only the missing question.
 4. Treat editing, runtime observation and proof as distinct questions; execute applicable authorized native gates.
 
 ## Authority
 
-Routing grants no additional authority. Do not change MCP, hooks, CodeGraph, Serena, Boost or language-server integrations/configuration unless explicitly asked for setup, upgrade, repair or removal. Index lifecycle effects require authorization too. Native sandbox restrictions do not establish MCP enforcement; use the scoped grant owner before assigning tools.
+Routing grants no additional authority. Do not change MCP, hooks, CodeGraph, Serena, Boost or language-server integrations/configuration unless explicitly asked for setup, upgrade, repair or removal. Index lifecycle effects require authorization too. Native sandbox restrictions do not establish MCP enforcement. Use the scoped grant owner before assigning tools.
 
 ## When NOT to use
 
@@ -31,4 +31,4 @@ Report outcome, question, primary owner, established evidence, fallback gaps/own
 
 ## Stop and failure
 
-Success requires answered questions, aligned artifacts and observed passing mandatory native gates in the same worktree. Stop a dependent step when missing facts, mismatched identity, unsupported safe operations, unauthorized effects or failed mandatory proof prevent it; report the blocker and continue unrelated safe work. The routing contract owns fallback termination and retry budgets.
+Success requires answered questions, aligned artifacts and observed passing mandatory native gates in the same worktree. Stop a dependent step when missing facts, mismatched identity, unsupported safe operations, unauthorized effects or failed mandatory proof prevent it. Report the blocker and continue unrelated safe work. The routing contract owns fallback termination and retry budgets.

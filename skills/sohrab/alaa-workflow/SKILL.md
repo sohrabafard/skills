@@ -5,26 +5,32 @@ description: "Durable design and execution planning for long-running, multi-phas
 
 # Alaa Workflow
 
-Keep long work resumable without imposing orchestration on every task. Plans own design decisions and workflow gates; the selected task store owns execution task progress. Secondary artifacts exist only for a real consumer.
+Keep long work resumable without imposing orchestration on every task. Plans own design decisions and workflow gates. The selected task store owns execution task progress. Secondary artifacts exist only for a real consumer.
 
 ## Start
 
 1. Read repository instructions and every user-named read-first artifact.
-2. If a plan already exists, read it before execution, resume, delegation, review, or handoff, and follow the resume protocol in `references/context-continuity.md`.
-3. When `/alaa-memory-os` says its trigger holds, invoke it before planning from prior context or publishing durable knowledge. Memory may contribute verified leads; it never owns this workflow's plan, checkpoint, evidence, or handoff.
-4. Before the first non-trivial repository discovery or code-evidence choice, invoke `/alaa-code-intelligence-routing` once and reuse its routed result instead of retrieving the same fact through a second surface.
+2. If a plan already exists, read it before execution, resume, delegation, review, or handoff. Follow the resume protocol in `references/context-continuity.md`.
+3. When `/alaa-memory-os` says its trigger holds, invoke it before planning from prior context or publishing durable knowledge. Memory may contribute verified leads. It never owns this workflow's plan, checkpoint, evidence, or handoff.
+4. Before the first non-trivial repository discovery or code-evidence choice, invoke `/alaa-code-intelligence-routing` once. Reuse its routed result instead of retrieving the same fact through a second surface.
 5. Pair with `/alaa-low-noise` and the narrowest domain skill needed for technical decisions. Before designing implementation or verification, load `/alaa-testing-strategy`.
-6. Before writing, resolve plan kind, approval and artifact/profile admission through `references/artifact-lifecycle.md`. Resolve Beads availability, execution task authority and evidence through `references/task-tracking.md`, and exact skill bindings through `references/companion-routing.md`.
+6. Before writing, resolve plan kind, approval and artifact/profile admission through `references/artifact-lifecycle.md`. Resolve Beads availability, execution task authority and evidence through `references/task-tracking.md`. Resolve exact skill bindings through `references/companion-routing.md`.
 
 ## Select the profile
 
 Select kind, approval admission, profile and execution phase/lane planning through `references/artifact-lifecycle.md`.
 
-Initialize design with `scripts/init_workflow_files.py --task <title> --plan-kind design`. Initialize execution with `scripts/init_workflow_files.py --task <title> --plan-kind execution --approved-design <path> --task-store beads --beads-binding <portable-reference> [--profile <profile>] [--review-boundary phase|final] [--with-prompts]`. When `references/task-tracking.md` finds Beads unavailable, replace the two Beads flags with `--task-store local --beads-unavailable-reason <observed failure>`. For a design approved in this session, replace `--approved-design <path>` with `--approved-design embedded --design-source <path> --approval-by <approver> --approval-on <YYYY-MM-DD> --approval-evidence <evidence>`. The kind owner decides allowed flags; `references/task-tracking.md` owns execution binding arguments. Exit `0` means files were created. Exit `1` means a collision and no writes; continue that family instead of forcing over it. Exit `2` means the invocation could not run; do not assume an artifact set exists.
+Initialize design with `scripts/init_workflow_files.py --task <title> --plan-kind design`. Initialize execution with `scripts/init_workflow_files.py --task <title> --plan-kind execution --approved-design <path> --task-store beads --beads-binding <portable-reference> [--profile <profile>] [--review-boundary phase|final] [--with-prompts]`. When `references/task-tracking.md` finds Beads unavailable, replace the two Beads flags with `--task-store local --beads-unavailable-reason <observed failure>`. For a design approved in this session, replace `--approved-design <path>` with `--approved-design embedded --design-source <path> --approval-by <approver> --approval-on <YYYY-MM-DD> --approval-evidence <evidence>`. The kind owner decides allowed flags. `references/task-tracking.md` owns execution binding arguments.
+
+Exit codes of `scripts/init_workflow_files.py`:
+
+- Exit `0` means files were created.
+- Exit `1` means a collision and no writes. Continue that family instead of forcing over it.
+- Exit `2` means the invocation could not run. Do not assume an artifact set exists.
 
 ## Survive compaction and handoff
 
-This is why the artifacts exist, and `references/context-continuity.md` owns the rules: how the three artifacts divide the work, what the handoff package holds, when to write, the cold-start test, and the resume protocol.
+This is why the artifacts exist. `references/context-continuity.md` owns the rules: how the three artifacts divide the work, what the handoff package holds, when to write, the cold-start test, and the resume protocol.
 
 That reference owns artifact roles, event-driven updates and recovery when current position is uncertain. Follow its mode-aware resume protocol before acting after context loss.
 
@@ -35,13 +41,13 @@ This section applies to execution engagements and issue-only implementation.
 - Work through the selected task authority and any admitted plan; apply the resume protocol after interruption, compaction, or a branch or worktree change.
 - Apply the execution hierarchy and task authority in `references/task-tracking.md` before dependent work.
 - Bring canonical workflow/task owners and derived snapshots current before the next phase, handoff, or report.
-- Record the engagement's review boundary and final phase; pass them into nested orchestration. `alaa-codex-orchestrator` and `alaa-cc-orchestrator` `references/verification-and-gates.md` own cadence scheduling.
+- Record the engagement's review boundary and final phase. Pass them into nested orchestration. `alaa-codex-orchestrator` and `alaa-cc-orchestrator` `references/verification-and-gates.md` own cadence scheduling.
 - Record phase test-collection, repair/retest and inherited review barriers in the plan through `references/artifact-lifecycle.md`.
-  Route generic execution and the early-repair exception to /alaa-testing-strategy `references/100-test-execution.md`; the runtime orchestrators own phase/review scheduling and independent observers through the cadence owner above.
-- Fix defects and retest the failing path within the active retry budget; never weaken assertions, hard-code expected results, suppress findings or lower review standards. Record an unresolved blocker and next safe action; continue independent safe work.
+  Route generic execution and the early-repair exception to /alaa-testing-strategy `references/100-test-execution.md`. The runtime orchestrators own phase/review scheduling and independent observers through the cadence owner above.
+- Fix defects and retest the failing path within the active retry budget. Never weaken assertions, hard-code expected results, suppress findings or lower review standards. Record an unresolved blocker and next safe action. Continue independent safe work.
 - On resume, follow the read order in `references/context-continuity.md` before taking any action.
 - Complete only when implementation, validation evidence, documentation, artifact status, and the final reusable-context curation outcome agree.
-- Report completion as four independent states — `IMPLEMENTED`, `MERGE_CANDIDATE`, `RELEASE_CANDIDATE`, `PUBLISHED` — each with its own verdict, never collapsed into a single one. This skill owns that lifecycle for execution runs, and `references/workspace-and-integration.md` owns what earns each state.
+- Report completion as four independent states — `IMPLEMENTED`, `MERGE_CANDIDATE`, `RELEASE_CANDIDATE`, `PUBLISHED` — each with its own verdict, never collapsed into a single one. This skill owns that lifecycle for execution runs. `references/workspace-and-integration.md` owns what earns each state.
 
 ## Preserve workspace evidence
 
@@ -49,33 +55,39 @@ Before writing, identify the base, checkout and unrelated changes through `refer
 
 ## Curate reusable context
 
-For execution completion and signal-bearing boundaries, apply `/alaa-extract-agent-lessons` through `references/context-curation.md`; it owns intermediate signal triggers, the mandatory final full-engagement gate, recording locations and pipeline reopening. Curation grants no additional artifact or publication authority.
+For execution completion and signal-bearing boundaries, apply `/alaa-extract-agent-lessons` through `references/context-curation.md`. It owns intermediate signal triggers, the mandatory final full-engagement gate, recording locations and pipeline reopening. Curation grants no additional artifact or publication authority.
 
 ## Delegate selectively
 
 Delegate only genuinely independent work with disjoint write scopes, or high-volume exploration whose output should stay isolated. Keep shared-context phases in the main conversation when they need frequent coordination or latency matters.
 
-A dispatch is a one-way context wall; `references/context-continuity.md` covers what that requires of the dispatch text and the return.
+A dispatch is a one-way context wall. `references/context-continuity.md` covers what that requires of the dispatch text and the return.
 
-The parent owns the plan, integration, conflict resolution and final validation. Reconcile combined evidence through `references/workspace-and-integration.md` before deciding what still needs a run. Put lane ownership inside the parent plan or dispatch; do not create a separate lane-plan artifact.
+The parent owns the plan, integration, conflict resolution and final validation. Reconcile combined evidence through `references/workspace-and-integration.md` before deciding what still needs a run. Put lane ownership inside the parent plan or dispatch. Do not create a separate lane-plan artifact.
 
-A phase that is itself one bounded goal with parallel role lanes may be executed by invoking `/alaa-codex-orchestrator` in Codex or `/alaa-cc-orchestrator` in Claude Code for that phase. The workflow parent still owns the plan, integration, and evidence recording, and records the orchestrator's final report as the phase evidence. Keep simple phases direct; do not stack both orchestration layers on work one agent can finish.
+A phase that is itself one bounded goal with parallel role lanes may be executed by invoking `/alaa-codex-orchestrator` in Codex or `/alaa-cc-orchestrator` in Claude Code for that phase. The workflow parent still owns the plan, integration, and evidence recording. It records the orchestrator's final report as the phase evidence. Keep simple phases direct. Do not stack both orchestration layers on work one agent can finish.
 
 ## Generate prompts only on request
 
-Start from `assets/phase-prompts-template.md`; `references/phase-prompts.md` owns roles, six-field shape, word target and its exceptions. Review prompts inherit the declared engagement boundary.
+Start from `assets/phase-prompts-template.md`. `references/phase-prompts.md` owns roles, six-field shape, word target and its exceptions. Review prompts inherit the declared engagement boundary.
 
 Before resolving any runtime name, model name, effort level, feature syntax, or skill-trigger syntax, load `/alaa-prompting-guide` and verify current official documentation. `references/phase-prompts.md` owns the freshness gate, the role definitions, and where a resolved value is allowed to live.
 
 ## Review
 
-Review the requested surface directly. Lead with actionable findings and exact evidence; create workflow artifacts only when explicitly requested or when a continuing fix loop needs them. `references/review-mode.md` owns the evidence order, the must-check areas, the verdict vocabulary a phase can hand across a lane boundary, and finding triage before any fix.
+Review the requested surface directly. Lead with actionable findings and exact evidence. Create workflow artifacts only when explicitly requested or when a continuing fix loop needs them. `references/review-mode.md` owns the evidence order, the must-check areas, the verdict vocabulary a phase can hand across a lane boundary, and finding triage before any fix.
 
 ## Validate the workflow artifacts
 
-When a workflow artifact family is admitted, run `scripts/validate_workflow_files.py --plan <path>` before handoff and completion. It applies kind-specific offline checks and correlates explicit references or the selected stem while preserving unmarked history. `references/artifact-lifecycle.md` owns approval-proof limits; `references/task-tracking.md` owns live Beads-proof limits. Issue-only work creates no plan just to run this artifact validator; required behavior validation still runs, with results recorded in its issue through `references/task-tracking.md`, or in the final report when Beads is unavailable.
+When a workflow artifact family is admitted, run `scripts/validate_workflow_files.py --plan <path>` before handoff and completion. It applies kind-specific offline checks and correlates explicit references or the selected stem while preserving unmarked history. `references/artifact-lifecycle.md` owns approval-proof limits. `references/task-tracking.md` owns live Beads-proof limits. Issue-only work creates no plan just to run this artifact validator. Required behavior validation still runs, with results recorded in its issue through `references/task-tracking.md`, or in the final report when Beads is unavailable.
 
-For admitted families, exit `0` is clean; warnings alone do not fail it. Exit `1` is a blocking artifact error to repair before advancement, never report as a pass. Exit `2` means validation failed to run; a missing selected plan, uncorrelatable companion, or unreadable file is a failed gate, never evidence that artifacts are clean. No artifact validation runs for issue-only work; report that distinction without implying its required behavior validation passed.
+For admitted families:
+
+- Exit `0` is clean. Warnings alone do not fail it.
+- Exit `1` is a blocking artifact error. Repair it before advancement. Never report it as a pass.
+- Exit `2` means validation failed to run. A missing selected plan, uncorrelatable companion, or unreadable file is a failed gate. It is never evidence that artifacts are clean.
+
+No artifact validation runs for issue-only work. Report that distinction without implying its required behavior validation passed.
 
 ## When NOT to use
 
@@ -83,7 +95,7 @@ For admitted families, exit `0` is clean; warnings alone do not fail it. Exit `1
 
 ## Direct references
 
-This skill owns coordination and continuity, not architecture, security, data, runtime, frontend, infrastructure, or documentation rules. This table selects references; their named sections own the detailed procedures.
+This skill owns coordination and continuity, not architecture, security, data, runtime, frontend, infrastructure, or documentation rules. This table selects references. Their named sections own the detailed procedures.
 
 | You are about to | Read |
 |---|---|

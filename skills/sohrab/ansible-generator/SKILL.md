@@ -13,11 +13,11 @@ the first run. This `SKILL.md` is the router; the procedure is
 
 ## Source freshness
 
-Version-sensitive claims are `ansible-validator references/source-map.md`,
-which carries every pinned value and the command that re-derives it. For a
-module name look nothing up: run
-`python3 <ansible-validator>/scripts/check_module_currency.py <path>`, which
-reads ansible-core's routing table offline.
+Version-sensitive claims come only from `ansible-validator references/source-map.md`.
+It carries every pinned value and the command that re-derives it. For a module
+name, look nothing up: run
+`python3 <ansible-validator>/scripts/check_module_currency.py <path>`. It reads
+ansible-core's routing table offline.
 
 ## When NOT to use
 
@@ -39,15 +39,16 @@ main artifact, nor for one-off shell automation that should stay a script.
    placeholder convention and the substitution commands.
 4. Write idempotent tasks: fully qualified actions, an end state, an explicit
    quoted `mode`, role-prefixed variables, a handler per restart, tags.
-5. Run every command in `references/playbook.md` section 6, the sole delivery
-   gate register; apply its acceptance, exemption and stopping conditions.
+5. Run every command in `references/playbook.md` section 6. It is the sole
+   delivery gate register. Apply its acceptance, exemption and stopping
+   conditions.
 6. Deliver in the format at `references/playbook.md` section 7: checks, summary,
    usage command, prerequisites.
 
 ## Boundaries
 
 This skill owns the bytes. `references/playbook.md` section 8 states each seam
-in full; the one-line form:
+in full. The list gives the one-line form:
 
 - **Verdicts, and everything a checker can test,** are `/ansible-validator`'s:
   the ruleset, variable precedence, the module-name mapping, both lint configs,
@@ -66,8 +67,8 @@ in full; the one-line form:
 - **Fail-closed** is `/alaa-security-review`'s: a play
   that cannot decrypt a vault stops.
 - **Retry, timeout, `serial`, `forks`, degradation** are
-  `/alaa-reliability-sla`'s. Write the mechanism; let
-  that skill pick the number.
+  `/alaa-reliability-sla`'s. Write the mechanism.
+  Let that skill pick the number.
 - **Model and effort settings** are `/alaa-prompting-guide`'s, at
   `alaa-prompting-guide references/50-effort-and-thinking.md`. No emitted
   artifact carries a model key.
