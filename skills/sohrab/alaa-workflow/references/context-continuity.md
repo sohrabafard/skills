@@ -38,7 +38,7 @@ Issue-only Beads work creates no plan, checkpoint, or six-field handoff package;
 
 ## Status and position
 
-The plan header owns overall workflow status. Checkpoint and JSON status snapshot that header; they make no independent status decision. Every admitted checkpoint contains its exact `Plan` reference, status, last verified result, blockers, next action, touched surfaces and update time. The last verified result references its evidence owner. Keep a cross-PC handoff record when applicable. Checkpoint-bearing plans link to their checkpoint instead of copying position, blockers or next action.
+The plan header owns overall workflow status. Checkpoint and JSON status snapshot that header; they make no independent status decision. Every admitted checkpoint contains its exact `Plan` reference, status, last verified result, blockers, next action, touched surfaces and update time, plus the optional `Pending Beads reconciliation` list defined in `references/task-tracking.md` `## Outage and uncertain writes`. The last verified result references its evidence owner. Keep a cross-PC handoff record when applicable. Checkpoint-bearing plans link to their checkpoint instead of copying position, blockers or next action.
 
 A design checkpoint uses `Current position` to name the current design question, decision or approval step. It has no phase/task/subtask cursor. Its in-plan handoff uses the six fields below for verified ideas, assumptions, rejected algorithms and continuation evidence. Design validation evidence belongs to that design plan; the checkpoint references it.
 
