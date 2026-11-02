@@ -141,7 +141,7 @@ def parse_args() -> argparse.Namespace:
     parser.add_argument("--with-prompts", action="store_true", help="Create the same-stem role prompt pack.")
     parser.add_argument("--task-store", choices=("local", "beads"), default="local", help="Task authority. Execution plans use beads with --beads-binding; local requires --beads-unavailable-reason. Design plans use local. No live tracker access.")
     parser.add_argument("--beads-binding", help="Portable project-relative binding owner reference for Beads.")
-    parser.add_argument("--beads-unavailable-reason", help="Execution with --task-store local only: one line naming the observed reason Beads is unavailable (bd missing, bd where failed or mismatched, bd ping failed, or no binding).")
+    parser.add_argument("--beads-unavailable-reason", help="Execution with --task-store local only: one line naming the observed reason Beads is unavailable (bd missing, bd where failed or mismatched, bd ping failed, or no binding). The check rejects empty, multiline and placeholder values; it does not verify the named failure.")
     parser.add_argument("--review-boundary", choices=("phase", "final"), help="Declared engagement review boundary; defaults to phase at the root, inherited from a parent plan.")
     parser.add_argument("--slug", help="Optional explicit slug.")
     parser.add_argument("--plan-dir", default="auto", help="Plan directory, or auto.")

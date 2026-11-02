@@ -79,7 +79,7 @@ Review the requested surface directly. Lead with actionable findings and exact e
 
 ## Validate the workflow artifacts
 
-When a workflow artifact family is admitted, run `scripts/validate_workflow_files.py --plan <path>` before handoff and completion. It applies kind-specific offline checks and correlates explicit references or the selected stem while preserving unmarked history. `references/artifact-lifecycle.md` owns approval-proof limits. `references/task-tracking.md` owns live Beads-proof limits. Issue-only work creates no plan just to run this artifact validator. Required behavior validation still runs, with results recorded in its issue through `references/task-tracking.md`, or in the final report when Beads is unavailable.
+When a workflow artifact family is admitted, run `scripts/validate_workflow_files.py --plan <path>` from the repository root before handoff and completion. It applies kind-specific offline checks and correlates explicit references or the selected stem while preserving unmarked history. `references/artifact-lifecycle.md` owns approval-proof limits. `references/task-tracking.md` owns live Beads-proof limits. Issue-only work creates no plan just to run this artifact validator. Required behavior validation still runs, with results recorded in its issue through `references/task-tracking.md`, or in the final report when Beads is unavailable.
 
 For admitted families:
 

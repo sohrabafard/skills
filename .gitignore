@@ -12,6 +12,4 @@ __pycache__/
 /other/
 /.idea
 
-# FUSE mount artifacts left by delete-while-open on a mount that forbids unlink.
-.fuse_hidden*
 *.log
