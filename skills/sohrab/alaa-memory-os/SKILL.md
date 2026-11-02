@@ -6,9 +6,8 @@ description: "Use when Alaa work must record or recall durable cross-session kno
 # Alaa Memory OS
 
 This skill owns what Alaa work remembers, when, in what shape, and what it derives instead of remembering.
-The backing store sits behind one adapter reference per store. This body names no memory-adapter store command
+Each backing store has one adapter reference. This body names no memory-adapter store command
 (Beads surfaces are outside the adapter). Reason: the fleet routes here for the capability, not the product.
-Replacing the store changes one adapter file and leaves every rule below intact.
 
 ## Active adapter
 
@@ -28,7 +27,7 @@ concurrency assumptions, and disagreement later leaves notes duplicated or missi
 For a supported store switch, change the selector. Do not rewrite the neutral knowledge/drift rules here,
 in `references/knowledge-shape.md` or in `references/drift-management.md`. Conditional selected-store policy,
 including Hindsight bank/admission policy, stays here and applies only to its store. Product commands stay
-in its adapter. A store assumption in a neutral knowledge/drift rule is a policy leak. Repair it. Do not fork
+in its adapter. Repair a store assumption in a neutral knowledge/drift rule, which is a policy leak. Do not fork
 those rules.
 
 Handle these failures separately. Never switch adapters around either:
@@ -40,7 +39,7 @@ Handle these failures separately. Never switch adapters around either:
   knowledge survives the outage.
 
 Activation evidence and temporary ingestion restrictions belong in the selected adapter or owning
-repository checkpoint, never in a second selection sentence here.
+repository checkpoint, never in a second selection sentence.
 
 ## Use this skill when
 
@@ -71,7 +70,7 @@ returns nothing and still spends the budget below.
 ## The four surfaces
 
 Repository code/docs are truth. Memory is a map, not proof. `/alaa-project-constitution` owns which
-repository files carry authority. The store indexes that truth. Skills define agent behaviour: never copy
+repository files carry authority. Skills define agent behaviour: never copy
 an installed skill into memory. Any human editing surface is navigation, not runtime truth. Never edit
 upstream store packs under `vendor/`. This skill owns the opinion and routes to upstream-documented
 mechanics, including whichever pack backs a successor store.

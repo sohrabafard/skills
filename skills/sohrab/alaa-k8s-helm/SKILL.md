@@ -5,8 +5,6 @@ description: Unified Kubernetes, Helm, OpenShift, and kubectl or oc skill for ge
 
 # Alaa K8s + Helm
 
-Single entrypoint for Helm, Kubernetes YAML, OpenShift, and day-2 troubleshooting.
-
 ## Start here
 
 1. Read `references/00-topic-map.md`. It is the only router in this skill. It maps a task phrasing to the smallest set of files to open across the five lanes (authoring, validation, runtime debugging, platform fit, networking and tuning). It also lists the scripts.
@@ -23,7 +21,7 @@ Single entrypoint for Helm, Kubernetes YAML, OpenShift, and day-2 troubleshootin
 - **Version-aware first**: `references/version-awareness.md` owns release, support and compatibility facts. Read it when compatibility, skew, or "latest" behaviour affects the answer. Its sources and `scripts/check_versions.py` define what must be revalidated.
 - **Access-aware first**: never assume cluster-admin. `references/openshift-and-managed-platforms.md` states what each of the four access surfaces unlocks and which `auth can-i` call proves it. Run that call before recommending a cluster-scoped object or a node-level action.
 - **Emit only API versions the target serves**: emit an `apiVersion` only when `kubectl api-versions` on the target reports it. When the cluster is unknown, emit only versions served throughout the authoring compatibility band in `references/version-awareness.md`, and state that floor in the output.
-- **Namespace-safe by default**: generate namespaced resources. Emit a cluster-scoped resource only after `kubectl auth can-i create RESOURCE` returns `yes` for the identity that will apply it. If proof is unavailable or the API is unreachable, report permission as unknown and state the assumption explicitly. Proceed only with independently valid namespaced work. A required cluster-scoped dependency remains blocked. Do not replace it with a namespaced lookalike. Do not present the incomplete workload as deployable.
+- **Namespace-safe by default**: generate namespaced resources. Emit a cluster-scoped resource only after `kubectl auth can-i create RESOURCE` returns `yes` for the identity that will apply it. If proof is unavailable or the API is unreachable, report permission as unknown and state the assumption. Proceed only with independently valid namespaced work. A required cluster-scoped dependency remains blocked. Do not replace it with a namespaced lookalike. Do not present the incomplete workload as deployable.
 - **Evidence before edits**: for debugging, collect status, describe output, events, logs, and access errors before proposing a fix.
 - **OpenShift-safe by default**: when the target might be OpenShift or an OpenShift-like managed platform, assume arbitrary UID, non-root execution, stricter admission, and no node access until a command proves otherwise.
 - **Report-only when asked to audit**: when the user said validate, lint, review, or audit, return findings and change nothing. When the user said fix, generate, refactor, or patch, make the change and rerun the gates.
@@ -39,8 +37,6 @@ Single entrypoint for Helm, Kubernetes YAML, OpenShift, and day-2 troubleshootin
 
 ## Companion boundaries
 
-Each line names an owner and the condition under which that owner decides the matter.
-
 - `/alaa-reliability-sla` decides why a timeout, retry, backoff, circuit breaker, backpressure, or degradation mechanism exists and what shape it takes. `references/failure-and-load.md` holds only the Kubernetes expression of that decision.
 - `/alaa-security-review` decides review triggers, threat classes, and fail-closed doctrine. Route a manifest change there when it widens an access surface, adds a Secret, or relaxes a security context.
 - `/alaa-observability-soc` decides whether a signal is required and what gates on it.
@@ -49,7 +45,7 @@ Each line names an owner and the condition under which that owner decides the ma
 - `/alaa-algorithms-data-structures` decides the complexity budget behind a request, a limit, or a replica count.
 - `/alaa-minio-object-storage` decides the bucket, policy, lifecycle, and credential posture behind an object-storage volume or an S3 Secret. `/alaa-arvan-object-storage` decides the same for an `arvanstorage.ir` endpoint. This skill keeps only the Kubernetes expression, because a Secret, a PVC, or a CSI volume carries whatever storage policy it is handed and enforces none of it.
 - `/caas-arvan-kuber` decides Arvan CaaS platform facts, under the deciding test above.
-- `/alaa-prompting-guide` `references/50-effort-and-thinking.md` decides model and reasoning effort. No model name appears in this skill, because a model name written into a skill goes stale silently and is copied forward because it looks authoritative.
+- `/alaa-prompting-guide` `references/50-effort-and-thinking.md` decides model and reasoning effort. No model name appears in this skill, because a model name in a skill goes stale silently and is copied forward as if authoritative.
 
 **Stack versus platform (D8).** `references/validation-workflows.md` is the **Kubernetes and Helm delivery gate register**. This skill decides which checks must pass before a Kubernetes or Helm change is applied and what artifact each inspects. This skill writes no provider YAML and no Dockerfile. `/alaa-gitlab-ci-cd` owns how each gate is placed on a runner, including the `[runners.kubernetes]` block, and decides no gate. `/alaa-docker-production` owns how the image a chart references is built and hardened, and decides no gate. `/alaa-makefile` owns making a local Make target return the runner's verdict. `/alaa-frontend-devops` owns the frontend gate register; this file is its backend counterpart.
 

@@ -9,14 +9,14 @@ description: "Audit PostgreSQL repositories for incomplete foreign keys into par
 
 PostgreSQL requires a foreign key's referenced columns to match a full unique or primary key on the referenced
 table. A partitioned parent's key must contain every partition column, so the key is composite. An `id`-only
-reference into it therefore fails with `SQLSTATE[42830]: no unique constraint matching given keys`, or it was
+reference into it fails with `SQLSTATE[42830]: no unique constraint matching given keys`, or it was
 never enforced and is silently wrong. `scripts/partitioned_fk_audit.py` decides this from schema source alone.
 An unreachable database blocks no step here.
 
 Report the detector's source result and the repository's durable regression-guard status separately.
 A missing guard is a finding. It is not a reason to suppress detector results or to install files without
 authorization. This audit is a **level 1 static** proof. Proving that the constraint holds in the engine is
-level 6. Level 6 is unreachable here. Report it as a gap in the words "level 6, unreachable here".
+level 6, unreachable here. Report it as a gap in the words "level 6, unreachable here".
 
 ## When to use
 
@@ -38,7 +38,8 @@ level 6. Level 6 is unreachable here. Report it as a gap in the words "level 6, 
    Reason: a fix that ignores its lock and phasing rules trades one outage for another.
 2. Run `python3 scripts/partitioned_fk_audit.py <root> [<root> ...]` over every root that holds schema source:
    migrations, raw `.sql`, schema dumps, docs showing DDL, vendor-published migrations.
-   Reason: a root you do not pass is not audited. Act on the exit code's obligation line in `--help`.
+   Reason: a root you do not pass is not audited.
+   Act on the exit code's obligation line in `--help`.
 3. Confirm each parent the detector printed. Reason: its evidence kinds differ in strength, and one of them
    means the migration that produced it cannot run at all.
 4. Review each flagged reference. Then search by hand for the forms the detector cannot see.
@@ -47,7 +48,7 @@ level 6. Level 6 is unreachable here. Report it as a gap in the words "level 6, 
    Never drop the foreign key to clear a finding. Reason: that removes the enforcement this audit exists to prove.
 6. Size the lock window before you run that fix against a database that holds rows.
    Reason: the statement locks the parent and every partition against writes until it completes.
-7. Check whether the target repository already has a durable regression guard. Report its path and selector
+7. Check whether the target repository has a durable regression guard. Report its path and selector
    separately. The detector scans only supplied roots. It does not verify guard installation.
    If no guard exists, report that as a finding. It does not block reporting the detector's source findings.
    Install and wire the shipped detector only when the request explicitly authorizes changes to the named

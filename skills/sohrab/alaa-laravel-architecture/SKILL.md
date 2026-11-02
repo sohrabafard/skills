@@ -15,7 +15,7 @@ Cross-skill calls follow the single `/name` convention in the [pack instructions
 
 **A rule verifiable by reading one class in isolation belongs to `/alaa-php-clean-code`. A rule whose verification requires reading two layers, or reading the public surface a caller sees, belongs here.**
 
-Method length, naming, types, injection style, and pattern choice inside a file are all checkable in one file. They belong to `/alaa-php-clean-code`. These rules are visible in no single file. They belong to this skill:
+Method length, naming, types, injection style, and pattern choice inside a file are checkable in one file. They belong to `/alaa-php-clean-code`. These rules are visible in no single file. They belong to this skill:
 
 - a Controller never reaches a Repository;
 - no internal identifier reaches a response;
@@ -26,7 +26,7 @@ When both skills could state a rule, this skill points and `/alaa-php-clean-code
 
 ## The call graph
 
-These are the legal edges, and the only legal edges:
+These are the only legal edges:
 
 - `Controller → Service → Repository → DB`
 - `Controller → Resource → JSON`
@@ -45,7 +45,7 @@ Every forbidden edge, with what to write instead:
 | Provider `register()` or `boot()` → cache, Redis, DB, HTTP, filesystem | defer it — `references/20-composition-and-boot.md` |
 | Controller → assembling an error or degraded response body | raise a domain exception; one handler renders it — `references/40-degraded-mode.md` |
 
-None of these is a style preference. Each edge produces a defect that no single-file review can see. That is why `scripts/architecture-gate.sh` exists.
+None of these is a style preference. Each edge produces a defect that no single-file review can see, which is why `scripts/architecture-gate.sh` exists.
 
 ## Where to read next
 
@@ -57,8 +57,7 @@ Run `sh scripts/architecture-gate.sh --app-dir app`. Exit 0 is required. The gat
 
 ## When NOT to use
 
-- The rule can be checked by reading one class on its own: naming, types, method length, or a pattern
-  applied inside a single file. Nothing crosses a boundary, so there is no call graph to test.
+- The rule can be checked by reading one class on its own. Nothing crosses a boundary, so there is no call graph to test.
 - The change stays inside one layer and adds, moves, or removes no route, controller, service, repository,
   DTO, resource, policy, provider binding, or emitted event.
 - The task is choosing a design before any code exists, or picking a timeout, retry, page-size, or
@@ -84,7 +83,7 @@ When a rule here and a rule in the owning skill disagree, **the owning skill win
 | Tenant derivation, JWT verification, header sanitisation, who may assert a trusted header | `/alaa-trust-gateway-auth`; object-level relationship authorization `/openfga` |
 | Threat classes, review triggers, the fail-closed discriminator, every security verdict | `/alaa-security-review` |
 | What a long-lived worker may retain between requests, reset mechanics, worker sizing | `/alaa-octane-performance` |
-| Pre-implementation design: bounding a subsystem, extend-versus-new-service, contract-before-code, data ownership, candidate comparison | `/alaa-system-design`. Read it **before** the change, not during it, whenever the change meets any of the six trigger conditions that skill lists. It owns the list. It settles the answer. This skill places the answer in a Laravel tree. |
+| Pre-implementation design: bounding a subsystem, extend-versus-new-service, contract-before-code, data ownership, candidate comparison | `/alaa-system-design`. Read it **before** the change, not during it, whenever the change meets any of the six trigger conditions that skill lists. It owns the list and settles the answer. This skill places the answer in a Laravel tree. |
 | Docs workflow, README, Postman, and diagram alignment | `/alaa-repo-docs`; docblocks and artifact rules `alaa-php-clean-code references/documentation-and-artifacts.md` |
 | Running the gate as a pipeline stage, static analysis, and release gating | `/alaa-cicd-laravel-postgres` |
 | Project policy, archetypes, and the ten-criterion quality bar itself | `/alaa-project-constitution` |

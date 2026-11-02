@@ -12,23 +12,23 @@ Decide which checks may block a Laravel-on-Postgres release, and at what thresho
 ## Always true
 
 - **One test run, on production's Postgres, with SQLite only as its fallback.**
-  - Run the suite once per pipeline, on the Postgres major **and** minor of the running production instance. Read that version from the instance with `SELECT version()`.
+  - Run the suite once per pipeline, on the Postgres major **and** minor of the running production instance, read from the instance with `SELECT version()`.
   - Probe reachability in a step separate from the suite.
-  - Reachable: run the suite on Postgres and make its exit status final. A Postgres-only failure then fails the pipeline.
-  - Unreachable: run the suite on SQLite in-memory instead and make that run's exit status final. Write a `parity-unproven` artifact naming the pipeline.
-  - Never run the suite on both engines in one pipeline, because once Postgres has answered, a SQLite run repeats the whole suite and proves nothing more.
+  - Reachable: run the suite on Postgres and make its exit status final. A Postgres-only failure fails the pipeline.
+  - Unreachable: run the suite on SQLite in-memory and make that run's exit status final. Write a `parity-unproven` artifact naming the pipeline.
+  - Never run the suite on both engines in one pipeline, because after Postgres answers, a SQLite run repeats the suite and proves nothing more.
   - **Only unreachability may trigger the fallback.** A `|| true` around the whole job converts a real Postgres-only defect into a warning and makes the lane worthless.
-  - On a pipeline that gates a release, the fallback is not permitted. An unreachable parity database fails that pipeline.
+  - On a release-gating pipeline, the fallback is not permitted: an unreachable parity database fails it.
   - A third engine, neither SQLite nor production's Postgres, is a deviation and needs the register entry below.
   - Never run migration reversibility on SQLite. See `references/30-migration-reversibility.md`.
-- **Version coherence.** Change repo-pinned PHP, Composer and Node versions, Docker images, CI matrices and cache keys in one change. Bumping `composer.json` alone leaves the toolchain split-brained, and the pipeline then proves a combination that never ships.
+- **Version coherence.** Change repo-pinned PHP, Composer and Node versions, Docker images, CI matrices and cache keys in one change. Bumping `composer.json` alone splits the toolchain, and the pipeline then proves a combination that never ships.
 - **No value lives here.** Take timeout, retry, pool and worker-budget numbers from `alaa-services-contract references/22-failure-load-and-deprecation-contract.md`. Take the reason from `/alaa-reliability-sla`.
 
 Before you finish any CI-file change, run `scripts/check-ci-determinism.sh`. Its `--help` states each exit code.
 
 ## When NOT to use
 
-- The change touches application code only. It alters no pipeline stage, no gate threshold, no test database, no migration job, no image tag, no cache key, and no CI credential.
+- The change touches application code only. It alters no pipeline stage, gate threshold, test database, migration job, image tag, cache key or CI credential.
 - The question is provider YAML syntax, runner configuration, or how a protected variable is declared, rather than what the pipeline must gate on and at what threshold.
 - The question is what makes a test a test, or whether a migration is lock-safe on a large table. The routing section below names each owner.
 

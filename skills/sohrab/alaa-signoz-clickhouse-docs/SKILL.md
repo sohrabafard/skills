@@ -50,7 +50,7 @@ Run these from the skill directory. Exit `0` is clean, `1` is findings, `2` is c
 ## Not owned here
 
 `clickhouse-performance-schema-ops` owns what a ClickHouse table must be (engine, sorting key, partitioning, TTL, compression) for tables the fleet controls.
-`alaa-signoz-clickhouse-docs` owns how a SigNoz-owned table is queried, and states that those tables are vendor-owned and read-only to the fleet.
+`alaa-signoz-clickhouse-docs` owns how a SigNoz-owned table is queried.
 `vector-rust-observability-pipelines` owns what the pipeline writes into a ClickHouse table and how it behaves when that table is unreachable. It decides no schema.
 
 - Read-lane settings and scan-cost reasoning over `signoz_*` tables: `/clickhouse-performance-schema-ops` `references/40-query-tuning-and-read-lane.md`.

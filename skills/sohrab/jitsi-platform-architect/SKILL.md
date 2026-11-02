@@ -11,8 +11,8 @@ pre-known headcount. Each of these changes a decision below. The skill owns ever
 a caller may join room R as role X: the derived token, room-name entropy, guest-domain lockdown, moderator
 assignment, recording governance, and the media plane's substrate demands.
 
-**Status.** No Jitsi deployment exists in this repository today. Every rule here is a decision to make, not an
-observation. Nothing here is evidence about what the platform operates.
+**Status.** No Jitsi deployment exists in this repository today. Every rule here is a decision to make, not
+evidence about what the platform operates.
 
 ## When not to use
 
@@ -81,15 +81,14 @@ The script asserts claim shape, never a signature: a signed token can still open
 ## Not owned here
 
 - Everything up to "this caller may join room R as role X", the trusted header set, and edge strip-and-reject:
-  `/alaa-trust-gateway-auth` (`$alaa-trust-gateway-auth`).
-- Endpoint shapes, envelopes, error codes, telemetry names and platform values: `/alaa-services-contract`
-  (`$alaa-services-contract`).
+  `/alaa-trust-gateway-auth`.
+- Endpoint shapes, envelopes, error codes, telemetry names and platform values: `/alaa-services-contract`.
 - Doctrine lives with its owner:
-  - retries, timeouts, breakers and degradation: `/alaa-reliability-sla` (`$alaa-reliability-sla`);
-  - fail-closed and threat classes: `/alaa-security-review` (`$alaa-security-review`);
-  - telemetry levels: `/alaa-observability-soc` (`$alaa-observability-soc`);
-  - the quality bar: `/alaa-project-constitution` (`$alaa-project-constitution`);
-  - model and effort: `/alaa-prompting-guide` (`$alaa-prompting-guide`);
-  - test layer: `/alaa-testing-strategy` (`$alaa-testing-strategy`).
+  - retries, timeouts, breakers and degradation: `/alaa-reliability-sla`;
+  - fail-closed and threat classes: `/alaa-security-review`;
+  - telemetry levels: `/alaa-observability-soc`;
+  - the quality bar: `/alaa-project-constitution`;
+  - model and effort: `/alaa-prompting-guide`;
+  - test layer: `/alaa-testing-strategy`.
 - Every other owner (substrate, edge, frontend, data, messaging, orchestration) is named at the rule it governs
   inside `references/`.

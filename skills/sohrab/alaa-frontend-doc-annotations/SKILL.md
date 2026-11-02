@@ -11,8 +11,8 @@ the code it claims to describe, in a diff whose build output must be byte-identi
 before and after, belongs here. This pass changes comments. Nothing else moves.
 
 **Every comment in a file is English and ASCII-range.** Use no Persian text or digits and no
-typographic dash or quote. Persian belongs in terminal replies and in Persian-language deliverables.
-`/alaa-repo-docs` owns those deliverables.
+typographic dash or quote. Persian belongs in terminal replies and in Persian-language deliverables, which
+`/alaa-repo-docs` owns.
 
 **The prefix set is closed.** Five prefixes exist: `SSR NOTE:`, `HYDRATION NOTE:`, `STORE NOTE:`,
 `AUTH NOTE:`, `SECURITY NOTE:`. Do not invent a sixth. Closed means `grep -rn "AUTH NOTE:" src/`

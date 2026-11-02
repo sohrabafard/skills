@@ -5,7 +5,7 @@ description: "Use this skill when the task involves CI or pipeline gates for a f
 
 # Alaa Frontend DevOps
 
-Frontend delivery covers what a build must emit. It also covers what happens to that artifact afterwards: where it lands, how it is served, how it is traced to a commit, and how it is undone.
+Frontend delivery covers what a build must emit and what happens to that artifact afterwards: where it lands, how it is served, how it traces to a commit, and how it is undone.
 
 ## When NOT to use
 
@@ -21,11 +21,11 @@ The ownership section below names each owner.
 
 `alaa-frontend-devops` owns the frontend delivery gate register. For each gate, the register holds the predicate it asserts, the command that evaluates it, and the artifact it inspects. This skill writes no provider YAML and no Dockerfile.
 
-- `/alaa-gitlab-ci-cd` (`$alaa-gitlab-ci-cd`) owns how a gate is expressed on a runner. It decides no gate.
-- `/alaa-docker-production` (`$alaa-docker-production`) owns how the build and runtime images and any Compose file are expressed. It decides no gate.
-- `/alaa-haproxy` (`$alaa-haproxy`) owns how a cache or routing decision is expressed as a directive. It decides no policy.
+- `/alaa-gitlab-ci-cd` owns how a gate is expressed on a runner. It decides no gate.
+- `/alaa-docker-production` owns how the build and runtime images and any Compose file are expressed. It decides no gate.
+- `/alaa-haproxy` owns how a cache or routing decision is expressed as a directive. It decides no policy.
 
-Seam with the package graph: `/alaa-mono-package` (`$alaa-mono-package`) owns everything that determines what enters the bundling graph. That means a package's declared exports, its peer contract, its specifiers, and whether its CSS and assets are reachable from an entry. This skill owns everything that happens to that graph's output after `build` exits.
+Seam with the package graph: `/alaa-mono-package` owns everything that determines what enters the bundling graph. That means a package's declared exports, its peer contract, its specifiers, and whether its CSS and assets are reachable from an entry. This skill owns everything that happens to that graph's output after `build` exits.
 
 `references/90-companion-boundary.md` lists every other owner this skill depends on, with its file path. Do not write in another owner's ground. State the obligation the frontend needs, and route.
 
@@ -43,4 +43,4 @@ A delivery change ships with its rollback unit, its rollback command, its precon
 
 The router is `references/00-topic-map.md`. Open it, match your situation to one row, read that one file.
 
-Model selection and reasoning effort: `/alaa-prompting-guide` (`$alaa-prompting-guide`), `references/50-effort-and-thinking.md`.
+Model selection and reasoning effort: `/alaa-prompting-guide`, `references/50-effort-and-thinking.md`.

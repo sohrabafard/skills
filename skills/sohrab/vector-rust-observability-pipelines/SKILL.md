@@ -6,7 +6,7 @@ description: "Production Vector pipelines: topology and per-path delivery contra
 # Vector observability pipelines
 
 **A log pipeline that drops silently under load is an observability outage that hides
-itself.** This skill exists to prevent that failure. Every rule below
+itself.** Every rule below
 is about making loss visible, chosen, and bounded, not about tidy config.
 
 The current documentation target, retained consumer paths and proof limits live in
@@ -69,7 +69,7 @@ version-sensitive claim; do not recall it. Sources: `references/90-source-map.md
 8. **Validate with `vector validate --skip-healthchecks --deny-warnings`, not with
    `--no-environment`.** `--no-environment` suppresses component checks. The historical confinement
    hole was fixed in the current release. That does not make `--no-environment` the full gate.
-   Warnings matter too. The warning "acknowledgements are not supported
+   The warning "acknowledgements are not supported
    by this source" means the durability you configured does not exist. An
    unconsumed `route` leg fails the gate rather than scrolling past.
    `references/50-validation-and-testing.md`.

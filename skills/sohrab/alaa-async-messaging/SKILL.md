@@ -6,19 +6,9 @@ description: "RabbitMQ message-plane architecture for the Ala fleet: the seam be
 # Alaa Async Messaging
 
 RabbitMQ is the only broker this fleet runs. This skill owns the seam between a database transaction and a
-message on it:
+message on it: how a fact leaves a committed transaction, when a consumer acknowledges, how many deliveries it holds unacknowledged, where a failed message goes, and how it is replayed.
 
-- how a fact leaves a committed transaction
-- when a consumer acknowledges
-- how many deliveries it holds unacknowledged
-- where a failed message goes
-- how it is replayed
-
-One property holds through every failure below. It has three clauses, and all three hold at once:
-
-- no committed fact is lost
-- no user-facing request waits on broker recovery
-- no redelivery produces a second business effect
+One property holds through every failure below, and all three clauses hold at once: no committed fact is lost; no user-facing request waits on broker recovery; no redelivery produces a second business effect.
 
 ## Gate — does this service have a broker lane
 
@@ -34,16 +24,15 @@ dispatched to RabbitMQ from a separate command.
 2. **Every consumer sets an explicit prefetch and concurrency bound at its construction site.** A library
    default holds unbounded unacknowledged deliveries, stranding the queue's working set in one process.
 3. **A consumer commits its receipt row and business effect first, and acknowledges second.** A crash between
-   ack and commit loses the message. In the reverse order, a crash only redelivers the message, which rule 1 makes safe.
+   ack and commit loses the message. In the reverse order, a crash only redelivers, which rule 1 makes safe.
 4. **Every live queue declares a dead-letter target and a verified retry bound in the same change.**
    Quorum delivery limits bound counted failures; other return paths need an explicit application bound.
    Broker-version rules and the DLQ exception are `references/40-dead-letter-and-replay.md`.
 5. **Publish a message only after the transaction that made its fact true commits. A fact that must
-   survive an unreachable broker goes to a durable outbox row inside that transaction.** Publishing inside the
-   transaction exposes a row that may roll back. Publishing after commit without the row loses the fact on a crash.
+   survive an unreachable broker goes to a durable outbox row inside that transaction.** Publishing inside it
+   exposes a row that may roll back. Publishing after commit without the row loses the fact on a crash.
 6. **Every exchange, queue and routing-key name comes from `alaa-services-contract
-   references/23-queue-and-exchange-registry.md`, registered before the declaring code merges.** Nobody
-   drains an unregistered queue. It grows until the broker refuses publishes for the vhost.
+   references/23-queue-and-exchange-registry.md`, registered before the declaring code merges.** Nobody drains an unregistered queue. It grows until the broker refuses publishes for the vhost.
 7. **A message body is untrusted input. Validate it against a schema. Take tenant, actor and scope from
    it only when no trusted source carries them.** The broker authenticates the connection, never the payload.
 
@@ -102,10 +91,4 @@ Detection is narrow, like the kit's pooled-lane analyzer, so a constant or a wra
 
 ## What you report
 
-Report each item, or that it does not apply and why:
-
-- the prefetch set and the measured handler p99 behind it
-- the acknowledgement route per outcome: ack, requeue, reject-without-requeue
-- the dead-letter target for every queue touched
-- for a replay, the precondition proving the cause was gone and the count replayed
-- every absent kit capability and what replaced it
+Report each item, or that it does not apply and why: the prefetch set and the measured handler p99 behind it; the acknowledgement route per outcome (ack, requeue, reject-without-requeue); the dead-letter target for every queue touched; for a replay, the precondition proving the cause was gone and the count replayed; every absent kit capability and what replaced it.

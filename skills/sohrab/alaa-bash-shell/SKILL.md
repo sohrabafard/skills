@@ -9,7 +9,7 @@ One skill for the full Bash and POSIX shell lifecycle. Every rule with an owning
 
 ## First decisions
 
-Settle these three decisions before you write or edit a line. They select every reference that follows.
+Settle these three decisions before you write or edit a line. They select every later reference.
 
 1. **Target shell.** Use Bash where arrays, `[[ ]]`, `mapfile`, process substitution, or multi-file tooling earn their cost. Use POSIX `sh` for `/bin/sh`, minimal containers, init and packaging hooks, Alpine, and Debian. When the user did not say, `generation-workflow.md` owns the inference rule.
 2. **Platform matrix.** Linux only, Linux plus macOS, Alpine or BusyBox, Debian, or mixed GNU/BSD. Answer `/bin/sh` portability and external utility portability separately.
@@ -24,7 +24,7 @@ Settle these three decisions before you write or edit a line. They select every 
 
 ## Reference navigation
 
-Before you choose references, read `references/00-topic-map.md`. Load only its relevant routes.
+Before you choose references, read `references/00-topic-map.md`. Load only the relevant routes.
 
 ## Bundled tools
 
@@ -38,9 +38,9 @@ Before you choose references, read `references/00-topic-map.md`. Load only its r
 
 ## Delegation
 
-Delegate only a lane that is genuinely independent and would otherwise flood the parent context. Portability inventory (shebangs, Bashisms, and GNU-only flags across a tree) and lint or format collection are bounded lanes. Their criteria are fixed before the lane starts, so they search and report rather than decide. Cross-platform redesign is a judgment lane, because the decision is still open when it starts. The open decision is how a Bash-only construct becomes portable, or whether the script should stop being shell.
+Delegate only a genuinely independent lane that would otherwise flood the parent context. Portability inventory (shebangs, Bashisms, and GNU-only flags across a tree) and lint or format collection are bounded lanes. Their criteria are fixed before the lane starts, so they search and report rather than decide. Cross-platform redesign is a judgment lane: it starts with the decision open, namely how a Bash-only construct becomes portable, or whether the script should stop being shell.
 
-Pick the model from the kind of judgment the lane requires. Pick the effort from how much search that judgment needs. Do not hardcode a model name here. At dispatch time, read `/alaa-prompting-guide`, specifically its `references/50-effort-and-thinking.md`, so routing follows the current roster instead of a pin that quietly goes stale.
+Pick the model from the judgment the lane requires and the effort from the search that judgment needs. Hardcode no model name here. At dispatch, read `/alaa-prompting-guide`, specifically its `references/50-effort-and-thinking.md`, so routing follows the current roster, not a pin that goes stale.
 
 The parent keeps the final shell choice, every edit, and the validation summary. Do not spawn a lane whose only job is to re-check another lane's output. Required artifact verification and review follow the active orchestrator's declared review boundary.
 

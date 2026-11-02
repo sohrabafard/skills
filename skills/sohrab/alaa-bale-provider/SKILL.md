@@ -28,14 +28,14 @@ here becomes a second source of truth the day the real one lands.
 
 ## What this skill does not own
 
-- Retry legality, backoff, budgets, idempotency mechanics → `/alaa-reliability-sla` (`$alaa-reliability-sla`)
-- Timeout **values**, metric and event **names**, the command envelope → `/alaa-services-contract` (`$alaa-services-contract`)
-- Telemetry requirement levels and gates → `/alaa-observability-soc` (`$alaa-observability-soc`)
-- Queue, prefetch, ack point, DLQ, outbox behind an async send → `/alaa-async-messaging` (`$alaa-async-messaging`)
-- Secret storage, rotation, threat classes → `/alaa-security-review` (`$alaa-security-review`)
-- SMS through Mediana/IPPanel → `/alaa-sms-provider-mediana` (`$alaa-sms-provider-mediana`)
-- Mini-app UI beyond the `web_app` button payload → `/alaa-frontend-developer` (`$alaa-frontend-developer`)
-- Code shape → `/alaa-php-clean-code` (`$alaa-php-clean-code`), `/alaa-golang-clean-code-principles` (`$alaa-golang-clean-code-principles`)
+- Retry legality, backoff, budgets, idempotency mechanics → `/alaa-reliability-sla`
+- Timeout **values**, metric and event **names**, the command envelope → `/alaa-services-contract`
+- Telemetry requirement levels and gates → `/alaa-observability-soc`
+- Queue, prefetch, ack point, DLQ, outbox behind an async send → `/alaa-async-messaging`
+- Secret storage, rotation, threat classes → `/alaa-security-review`
+- SMS through Mediana/IPPanel → `/alaa-sms-provider-mediana`
+- Mini-app UI beyond the `web_app` button payload → `/alaa-frontend-developer`
+- Code shape → `/alaa-php-clean-code`, `/alaa-golang-clean-code-principles`
 
 RabbitMQ is this platform's only broker; do not design an outbox here.
 
@@ -98,8 +98,7 @@ appear only when Safir is slow rather than down. `references/30-failure-classes.
 
 ## Observability
 
-Instrument every Safir call with the four `alaa_dependency_*` families named at `/alaa-services-contract`
-(`$alaa-services-contract`) `references/24-metric-registry.md` section “Downstream dependency” —
+Instrument every Safir call with the four `alaa_dependency_*` families named at `/alaa-services-contract` `references/24-metric-registry.md` section “Downstream dependency” —
 `alaa_dependency_requests_total`, `alaa_dependency_request_duration_seconds`,
 `alaa_dependency_request_failures_total`, and `alaa_dependency_timeouts_total`. Count a read timeout in the timeout
 family, not only the failure family, because the ambiguous outcome is the one an operator must find.
@@ -122,8 +121,7 @@ python3 scripts/validate_bale_payload.py --normalize '0912 383 0000' --channel b
 
 Also required: payload-builder tests per variant in scope, corpus-driven normalisation tests, error-mapping
 tests for the documented codes, a test proving a retry reuses the same `request_id`, and one proving
-`message_id` with non-empty `error_data` is not success. Layering: `/alaa-testing-strategy`
-(`$alaa-testing-strategy`).
+`message_id` with non-empty `error_data` is not success. Layering: `/alaa-testing-strategy`.
 
 Every send is side-effecting. Make a live send only when the user authorises it and names a test bot and a
 safe recipient; then use a synthetic OTP, and record the command redacted.

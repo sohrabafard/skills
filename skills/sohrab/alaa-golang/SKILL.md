@@ -1,6 +1,6 @@
 ---
 name: alaa-golang
-description: "Front door and router for Go work on the Ala platform. Selects the right Go skill, holds the Go rules no other skill owns, and reaches the whole Go surface — the vendor golang-* pack, the house companions, and the doctrine owners for reliability, contracts, observability, security and data — so a project can load only this skill plus alaa-golang-clean-code-principles. Owns the HTTP framework decision (the alaa-go-chi kit is chi and is the default for every new Ala Go service), deadline propagation and server bounds at the call site, request-decoding limits, repository and cache boundaries, TDD, the modern-Go baseline, and package choice. Use it before writing, reviewing, refactoring, or debugging any Go code. Do not use it for kit-conformance-only review of an existing kit service — that is alaa-golang-clean-code-principles — or for kit governance, change requests, and the active scope phase — that is alaa-go-chi-development."
+description: "Front door and router for Go work on the Ala platform. Selects the right Go skill, holds the Go rules no other skill owns, and reaches the whole Go surface — the vendor golang-* pack, the house companions, and the doctrine owners for reliability, contracts, observability, security and data — so a project can load only this skill plus alaa-golang-clean-code-principles. Owns the HTTP framework decision (the alaa-go-chi kit is chi and is the default for every new Ala Go service), deadline propagation and server bounds at the call site, request-decoding limits, repository and cache boundaries, TDD, the modern-Go baseline, and package choice. Use it before writing, reviewing, refactoring, or debugging any Go code. Do not use it for kit-conformance-only review of an existing kit service (alaa-golang-clean-code-principles) or for kit governance, change requests, and the active scope phase (alaa-go-chi-development)."
 ---
 
 # Alaa Golang
@@ -63,7 +63,7 @@ Do not loop. Do not claim an unrun gate passed.
 
 ## Validation gate
 
-After any Go edit, the authoring lane runs these steps in order:
+After any Go edit, the authoring lane runs in order:
 
 1. `go vet` on the changed packages.
 2. `go test` on the changed packages, narrowed with `-run` to the changed topic when the package is large.
@@ -80,7 +80,7 @@ before you report completion.
 Use the real-store tag when required.
 Combine tagged and untagged selections only when reference 63's build-constraint and test-configuration
 check proves normal behavior remains covered. Otherwise run both.
-Add `-race` to the required run or runs when the change touches a goroutine, channel, mutex, cache,
+Add `-race` to each required run when the change touches a goroutine, channel, mutex, cache,
 worker pool or package-level variable.
 Report commands and outcomes using /alaa-go-chi-development
 `../alaa-go-chi-development/references/05-phase-and-source-truth.md`: `passed`, `failed`, `blocked`,

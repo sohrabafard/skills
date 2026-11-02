@@ -9,10 +9,10 @@ description: Mandatory kit-era Go clean-code baseline for Ala services built on 
 
 This skill is the kit-era discipline layer for Ala Go services. It holds the thirteen named principles (P1–P13)
 an agent applies while writing Go on the `alaa-go-chi` base. Each principle ships a summary, a wrong/right Go
-example, and the named check that fails when the principle is violated. The skill is the Go counterpart of
-`/alaa-vue-typescript-clean-code` (`$alaa-vue-typescript-clean-code`).
+example, and the named check that fails on a violation. It is the Go counterpart of
+`/alaa-vue-typescript-clean-code`.
 
-The one-sentence summary: **the kit writes shared things once; your service writes only its domain; every
+In one sentence: **the kit writes shared things once; your service writes only its domain; every
 boundary is a small interface; every identity, error, and side effect is explicit.**
 
 ## When to use
@@ -32,9 +32,9 @@ governs code only once that action is permitted. It grants no phase authority.
 ## When NOT to use
 
 - Non-Go work (frontend, Laravel, infra-only tasks).
-- Generic Go questions with no Ala platform context — use `/alaa-golang` (`$alaa-golang`).
+- Generic Go questions with no Ala platform context — use `/alaa-golang`.
 - Kit-internal decisions (a kit contract change, a new kit package, a change request, a release, a consumer
-  registration, or a kit/consumer audit) belong to `/alaa-go-chi-development` (`$alaa-go-chi-development`).
+  registration, or a kit/consumer audit) belong to `/alaa-go-chi-development`.
   This skill is for kit *consumers* writing service code.
 
 ## Read this next
@@ -45,7 +45,7 @@ Then match the task to the smallest set of files. When two rows match, read both
 | You are about to… | Read |
 |---|---|
 | Register a route or write an HTTP handler | `references/10-kit-and-trust-boundary.md` (P1, P2, P3) + `references/20-domain-data-and-consistency.md` (P4) |
-| Decide whether a permission, TOTP, or tenancy check is correct in code | `references/10-kit-and-trust-boundary.md` (P2, P3); pair with `/alaa-trust-gateway-auth` (`$alaa-trust-gateway-auth`) |
+| Decide whether a permission, TOTP, or tenancy check is correct in code | `references/10-kit-and-trust-boundary.md` (P2, P3); pair with `/alaa-trust-gateway-auth` |
 | Write or change a use case or a business rule | `references/20-domain-data-and-consistency.md` (P4, P5, P6) |
 | Write SQL, a repository, or a migration | `references/20-domain-data-and-consistency.md` (P5, P6, P7) |
 | Publish an event or a command | `references/20-domain-data-and-consistency.md` (P6, P8) |
@@ -53,9 +53,9 @@ Then match the task to the smallest set of files. When two rows match, read both
 | Define a wire struct, a DTO, or a command payload | `references/20-domain-data-and-consistency.md` (P8) |
 | Start a goroutine, worker, ticker, or in-memory buffer | `references/30-runtime-and-observability.md` (P9) |
 | Read an env var, add a config key, or name an event, code, or metric | `references/30-runtime-and-observability.md` (P10) |
-| Add a log line, metric, span, or Sentry capture | `references/30-runtime-and-observability.md` (P11); pair with `/alaa-observability-soc` (`$alaa-observability-soc`) |
-| Write or review a test | `references/40-testing-and-contracts.md` (P12); pair with `/alaa-testing-strategy` (`$alaa-testing-strategy`) |
-| Call another service, consume its events, or hit an unknown external fact | `references/40-testing-and-contracts.md` (P13); pair with `/alaa-services-contract` (`$alaa-services-contract`) |
+| Add a log line, metric, span, or Sentry capture | `references/30-runtime-and-observability.md` (P11); pair with `/alaa-observability-soc` |
+| Write or review a test | `references/40-testing-and-contracts.md` (P12); pair with `/alaa-testing-strategy` |
+| Call another service, consume its events, or hit an unknown external fact | `references/40-testing-and-contracts.md` (P13); pair with `/alaa-services-contract` |
 | Build a whole feature end to end, or review a whole package | `references/10-kit-and-trust-boundary.md`, `references/20-domain-data-and-consistency.md`, `references/30-runtime-and-observability.md`, then `references/40-testing-and-contracts.md` |
 | Choose, name, or review a design pattern | `references/60-design-patterns-kit-era.md` |
 | Ask which skill owns a Go topic, or a cost/complexity question | `references/50-skill-boundaries.md` |
@@ -67,7 +67,7 @@ a correct-looking local implementation of something that already exists once.
 
 ## The thirteen principles
 
-Each row is the rule at full strength. The reference file for each principle adds the example and the proof.
+Each row is the rule at full strength. Each principle's reference file adds the example and the proof.
 
 | # | Principle | The rule |
 |---|---|---|
@@ -87,33 +87,33 @@ Each row is the rule at full strength. The reference file for each principle add
 
 ## Companion routing
 
-- `/alaa-golang` (`$alaa-golang`) — the mandatory router for every Go depth topic; see
+- `/alaa-golang` — the mandatory router for every Go depth topic; see
   `references/50-skill-boundaries.md` for the exact division.
-- `/alaa-go-chi-development` (`$alaa-go-chi-development`) — the active scope phase, the kit capability and
+- `/alaa-go-chi-development` — the active scope phase, the kit capability and
   surface inventory that P1 is checked against, and the change-request channel P1 sends a misfitting shape to.
-- `/alaa-services-contract` (`$alaa-services-contract`) — exact platform contracts, and the *names* of metrics,
+- `/alaa-services-contract` — exact platform contracts, and the *names* of metrics,
   events, error codes, queues, and headers.
-- `/alaa-trust-gateway-auth` (`$alaa-trust-gateway-auth`) — trusted-header semantics, permission bitmap, gateway
+- `/alaa-trust-gateway-auth` — trusted-header semantics, permission bitmap, gateway
   boundary.
-- `/alaa-observability-soc` (`$alaa-observability-soc`) — the signal model, requirement levels, the
+- `/alaa-observability-soc` — the signal model, requirement levels, the
   definition-of-done gate for a shipped feature, SOC evidence, alert and runbook quality.
-- `/alaa-reliability-sla` (`$alaa-reliability-sla`) — retry shape, backoff policy, timeout budgets, degradation,
+- `/alaa-reliability-sla` — retry shape, backoff policy, timeout budgets, degradation,
   and the ambiguous-timeout rule.
-- `/alaa-testing-strategy` (`$alaa-testing-strategy`) — test layer choice, test doubles, flake control, coverage
+- `/alaa-testing-strategy` — test layer choice, test doubles, flake control, coverage
   policy.
-- `/alaa-system-design` (`$alaa-system-design`) — capacity, topology, and consistency decisions above one service.
-- `/alaa-project-constitution` (`$alaa-project-constitution`) — `references/quality-bar.md` is the platform
+- `/alaa-system-design` — capacity, topology, and consistency decisions above one service.
+- `/alaa-project-constitution` — `references/quality-bar.md` is the platform
   quality bar. This skill restates no bar of its own; read that file when asked how good is good enough.
-- `/alaa-async-messaging` (`$alaa-async-messaging`) — broker architecture beyond `mqkit`'s surface.
-- `/alaa-security-review` (`$alaa-security-review`) — mandatory when authn, authz, tenant isolation, or a trust
+- `/alaa-async-messaging` — broker architecture beyond `mqkit`'s surface.
+- `/alaa-security-review` — mandatory when authn, authz, tenant isolation, or a trust
   boundary changes.
 - Model choice, reasoning effort, and runtime capability (whether subagents, plan mode, or background jobs
-  exist) are owned by `/alaa-prompting-guide` (`$alaa-prompting-guide`) `references/50-effort-and-thinking.md`.
+  exist) are owned by `/alaa-prompting-guide` `references/50-effort-and-thinking.md`.
   This skill names no model and assumes no runtime feature.
 
 ## Completion checks (the pre-commit checklist)
 
-Run this before every commit and PR in an Ala Go service. It is the only checklist in this skill.
+Run this before every commit and PR in an Ala Go service. It is the only checklist here.
 
 - [ ] Nothing kit-owned re-implemented locally (P1); route postures declared (P2).
 - [ ] No raw trusted headers past the edge; identity types UUIDv7-project / int64-user (P3).
@@ -135,7 +135,7 @@ Run this before every commit and PR in an Ala Go service. It is the only checkli
 - State each principle at one strength in one place. If a sentence here and a sentence in a reference file say
   the same rule with different force, delete one. An agent follows the weaker.
 - Name no model, no effort setting, and no runtime capability in this skill; route those to
-  `/alaa-prompting-guide` (`$alaa-prompting-guide`).
+  `/alaa-prompting-guide`.
 - When a proof named in a reference file changes name, moves, or starts to exist, update that proof line in the
   same effort. A proof line that names a check which does not run is worse than an admitted gap.
 - When the kit changes a contract this skill cites — envelope, env keys, metric names, pooling lanes, readiness

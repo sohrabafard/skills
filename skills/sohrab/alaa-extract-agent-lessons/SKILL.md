@@ -13,7 +13,7 @@ Novelty or interest alone is insufficient. Without the candidate, a future agent
 
 /alaa-workflow `references/context-curation.md` owns scan timing, intermediate/final distinctions, evidence stability, candidate location and reopening consequences. Consume its selected scan scope and recording destination. Create no second phase schedule, handoff schema or task state here.
 
-Intermediate scans assess only evidence since the previous recorded boundary. Final scans reconcile engagement evidence and provisional candidates. Final scans also merge duplicates and return each disposition. If no candidate passes admission, return an empty result. Never manufacture a lesson to satisfy a gate.
+Intermediate scans assess only evidence since the previous recorded boundary. Final scans reconcile engagement evidence and provisional candidates, merge duplicates, and return each disposition. If no candidate passes admission, return an empty result. Never manufacture a lesson to satisfy a gate.
 
 ## When NOT to use
 
@@ -63,6 +63,6 @@ Report:
 - notes created, updated or deliberately unwritten
 - promotion or drift still needing an owner
 
-Stop successfully when every admitted candidate has one form, scoped authority, source pointer and destination, no prohibited content, and a reported disposition. An empty retained set meets this condition. A reopening verdict is unresolved work, not completion. Return `pipeline reopen required` when an authorized canonical repository change remains after evidence freeze.
+Stop successfully when every admitted candidate has one form, scoped authority, source pointer and destination, no prohibited content, and a reported disposition. An empty retained set meets this condition. A `pipeline reopen required` verdict is unresolved work, not completion. Return it when an authorized canonical repository change remains after evidence freeze.
 
 Stop blocked only when a required source cannot be inspected, an authorized drift record cannot be written, or a mandatory owner rejects the handoff. Do not loop extraction or memory searches for reassurance. /alaa-memory-os owns bounded search-before-create.

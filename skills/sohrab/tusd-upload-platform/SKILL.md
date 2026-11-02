@@ -34,7 +34,7 @@ Make an agent correct on resumable uploads across three registers. Keep the regi
 
 ## When not to use
 
-Do not use this skill for a presigned-URL upload that speaks no tus protocol, or for a one-off non-resumable form post. Do not use it to author an HAProxy directive — that is `/alaa-haproxy`. Do not use it for Vue component structure, store shape or boot-file convention, which are `/alaa-quasar-app-vite-v3` and `/alaa-vue-typescript-clean-code`. Do not use it for bucket lifecycle policy, storage identity or credential rotation, which are `/alaa-minio-object-storage`. Do not use it for queue or consumer mechanics, which are `/alaa-async-messaging`.
+Do not use this skill for a presigned-URL upload that speaks no tus protocol, or for a one-off non-resumable form post. Do not use it for Vue component structure, store shape or boot-file convention, which are `/alaa-quasar-app-vite-v3` and `/alaa-vue-typescript-clean-code`. Do not use it for queue or consumer mechanics, which are `/alaa-async-messaging`. Do not use it to author an HAProxy directive — that is `/alaa-haproxy`. Do not use it for bucket lifecycle policy, storage identity or credential rotation, which are `/alaa-minio-object-storage`.
 
 ## Binding rules
 
@@ -55,7 +55,7 @@ Do not use this skill for a presigned-URL upload that speaks no tus protocol, or
 
 Public clients reach the gateway. The gateway verifies the token, strips spoofable internal headers, injects trusted context and forwards the request. The control plane issues an upload plan before any byte moves and owns the durable record of it. The tus layer moves bytes and nothing else. Completion of byte transfer is not readiness. Scanning, extraction, relay or registration runs afterwards. The client learns readiness from the control plane, not from the tus response.
 
-Choose the smallest shape that meets the requirement. Justify any custom shape before proposing it.
+Choose the smallest shape that meets the requirement. Justify a custom shape before proposing it.
 
 ## Routing
 

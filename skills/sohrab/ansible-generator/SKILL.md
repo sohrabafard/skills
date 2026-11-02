@@ -21,7 +21,7 @@ ansible-core's routing table offline.
 
 ## When NOT to use
 
-The deciding test between this skill and its sibling: **does a file that does
+Deciding test: **does a file that does
 not yet exist have to exist when you are done? If yes, `/ansible-generator`.
 If every file you need already exists and your job is to produce a verdict about
 it, `/ansible-validator`.**
@@ -48,7 +48,7 @@ main artifact, nor for one-off shell automation that should stay a script.
 ## Boundaries
 
 This skill owns the bytes. `references/playbook.md` section 8 states each seam
-in full. The list gives the one-line form:
+in full. One-line form:
 
 - **Verdicts, and everything a checker can test,** are `/ansible-validator`'s:
   the ruleset, variable precedence, the module-name mapping, both lint configs,

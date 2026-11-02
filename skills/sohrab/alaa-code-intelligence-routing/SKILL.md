@@ -5,7 +5,7 @@ description: "Evidence routing for CodeGraph, optional Serena, gopls, PHPantom, 
 
 # Alaa Code Intelligence Routing
 
-Route each named question to its best available evidence owner, consume the answer, and finish with native proof. This skill owns routing, not domain implementation, documentation authoring, workflow state, agent allocation or proof itself.
+Route each named question to its best available evidence owner, consume the answer, and finish with native proof. This skill owns routing only.
 
 ## Decision procedure
 

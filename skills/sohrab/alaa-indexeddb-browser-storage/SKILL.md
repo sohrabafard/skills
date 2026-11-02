@@ -49,12 +49,12 @@ python3 scripts/capability_contract_conformance.py --root .
 The Vitest examples require the consumer's installed `vitest` and `fake-indexeddb`. Do not install dependencies implicitly.
 
 - Exit **0**: no findings.
-- Exit **1**: findings, each with file and line. Resolve every one before you report the change complete.
-- Exit **2**: could not run, because a required file is missing or unreadable. Exit 2 is never a pass. Run the checks by hand and report each.
+- Exit **1**: findings, each with file and line. Resolve every one before you report completion.
+- Exit **2**: could not run (a required file is missing or unreadable), never a pass. Run the checks by hand and report each.
 
 ## What you report
 
-Report each item below, or that it does not apply and why:
+Report each item below, or state why it does not apply:
 
 - the data class and its source of truth
 - the capability tier the path assumes, and what it does one tier down

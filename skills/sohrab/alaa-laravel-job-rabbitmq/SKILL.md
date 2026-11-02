@@ -33,8 +33,6 @@ verification is needed.
 
 ## Worker mode
 
-The modes use different AMQP primitives, so the difference is behavioural.
-
 | | `queue:work rabbitmq` | `rabbitmq:consume rabbitmq` |
 | --- | --- | --- |
 | Primitive | `basic_get`, a round trip per message | `basic_consume`, broker pushes |
@@ -45,7 +43,7 @@ The modes use different AMQP primitives, so the difference is behavioural.
 
 Use **`rabbitmq:consume`** when one Deployment serves one queue and throughput matters. Use **`queue:work`** when one
 process must drain several queues in priority order, or when an unacked window of 1 is worth the round trip.
-Never pass more than one queue to `rabbitmq:consume`. Its own help text says there is no support for it.
+Never pass more than one queue to `rabbitmq:consume`: its help text says it has no support.
 A second queue means a second Deployment.
 
 # Hard constraints
@@ -119,7 +117,7 @@ logs and application metrics, plus `queue:monitor` as a ready-depth threshold al
 (`references/driver-facts.md`).
 
 **10. Dead-lettering and delivery limits come from broker policies, never queue arguments.** A queue argument
-is fixed at declare time and this driver never re-declares an existing queue. So an argument changed in
+is fixed at declare time and this driver never re-declares an existing queue, so an argument changed in
 config does nothing to a queue that already exists. A policy applies to existing queues and reverts without a
 deploy. Pre-create exchange, queue and binding in infrastructure or a release job before consumers scale.
 
@@ -190,7 +188,7 @@ elsewhere, and the named owner wins on conflict.
 - **Observability requirement levels, gates and alerts** — `/alaa-observability-soc`.
 - **Messaging architecture**: transport choice, event design, fan-out, DLQ replay procedure, prefetch tuning
   — `/alaa-async-messaging`. Retry and DLQ **strategy** is `/alaa-reliability-sla`,
-  not this skill and not `/alaa-async-messaging`; earlier versions of this file mis-routed it.
+  not this skill and not `/alaa-async-messaging`.
 - **Deployment**: chart keys, probes, rollout strategy and autoscaler shapes — `/alaa-k8s-helm`; runtime image contents including `ext-pcntl` — `/alaa-docker-production`; broker cluster, vhost and permission administration and Arvan defaults —
   `/caas-arvan-kuber`.
 - **Correctness and testability**: what makes a test a test, layers, doubles, proof strength, flake —

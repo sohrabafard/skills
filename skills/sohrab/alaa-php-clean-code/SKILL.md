@@ -37,7 +37,7 @@ PHP 8.5 and Laravel 13 are the current baseline for new Alaa Laravel services. `
 
 ## Ownership boundary — what this skill does not own
 
-This table answers *who decides*. `references/00-topic-map.md` answers *when to read* — it is the only router in this skill. The third table in that topic map carries the read triggers.
+This table answers *who decides*. `references/00-topic-map.md` answers *when to read*. The third table in that topic map carries the read triggers.
 
 Where a row's condition fires, read that skill before editing the affected code, then apply this skill inside its boundary. **On conflict the named owner wins.** Claiming a companion skill was respected without reading it is a reporting failure.
 
@@ -145,7 +145,7 @@ In Alaa Laravel code the Repository pattern is mandatory for application-layer p
 - Repositories accept typed DTOs, filter objects, value objects, or scalars — never a raw `Request` or an unvalidated array. A simple operation may have a simple repository method. The boundary still belongs in the repository.
 - **The allowed exceptions are enumerated in `references/laravel-best-practices.md` under "Repository-first persistence".** Read that list before wrapping a model relationship, scope, cast or accessor, a migration, a factory, a seeder, a test assertion, or a resource reading an already-loaded model. Those are not violations.
 - Existing direct Eloquent outside a repository is legacy debt. **When a line in your diff composes Eloquent or the query builder outside a repository, move that access behind a repository in the same change.** The trigger is a line in your diff, not a file you opened.
-- Cache domain data only in a repository **decorator**: a `Cached<Domain>Repository` implementing the same interface. Never cache inside the concrete repository. Never call `Cache::` in a controller or service. A complete repository layer is the precondition. `alaa-data-layer references/50-redis-laravel-octane.md` owns two things: the definition of a complete repository layer, and the gate, "Step 0 — repository-pattern gate". `references/design-patterns.md` (Decorator) holds the decorator's shape, stacking order, and the Redis-outage fall-through that makes it worth having.
+- Cache domain data only in a repository **decorator**: a `Cached<Domain>Repository` implementing the same interface. Never cache inside the concrete repository. Never call `Cache::` in a controller or service. A complete repository layer is the precondition. `alaa-data-layer references/50-redis-laravel-octane.md` owns its definition and the gate, "Step 0 — repository-pattern gate". `references/design-patterns.md` (Decorator) holds the decorator's shape, stacking order, and the Redis-outage fall-through that makes it worth having.
 
 ## Non-negotiable defaults
 
@@ -202,12 +202,12 @@ Clean code is not acceptable if it leaks request state across a long-lived worke
 
 - Throw specific exceptions with clear ownership, preserve the previous exception when wrapping a low-level failure, and translate centrally at the HTTP, CLI, queue, and integration boundaries.
 - **A definitive denial is never masked as success.** Validation failures, authorization failures, and non-transient 4xx never fall through to a path that behaves like success. A swallowed 403 turns a refusal into a silent grant.
-- **Every outbound call sets both `timeout()` and `connectTimeout()` explicitly**, at the call site or in the client macro that builds it. A call setting neither inherits a default long enough to hold a worker through an SLA breach. Whether that call may retry, how it backs off, and what happens when the dependency is gone belong to `/alaa-reliability-sla`. Every number belongs to `alaa-services-contract references/22-failure-load-and-deprecation-contract.md`. This skill states no timeout and no retry count.
+- **Every outbound call sets both `timeout()` and `connectTimeout()` explicitly**, at the call site or in the client macro that builds it. A call setting neither inherits a default long enough to hold a worker through an SLA breach. Whether that call may retry, how it backs off, and what happens when the dependency is gone belong to `/alaa-reliability-sla`; every number belongs to `alaa-services-contract references/22-failure-load-and-deprecation-contract.md`. This skill states no timeout and no retry count.
 - Client-visible error messages stay safe and stable; debugging detail goes into structured logs, never into a user-facing string.
 
 ## Performance baseline
 
-Measure before micro-optimizing. Avoid repeated encode/decode churn, broad object graphs, unnecessary temporary arrays, and reflection- or magic-heavy abstractions in hot code. Use small immutable objects for stable data. Query shape and indexing belong to `/alaa-data-layer`. Hot-path and worker behaviour belong to `/alaa-octane-performance`. The complexity bound itself belongs to `/alaa-algorithms-data-structures`.
+Measure before micro-optimizing. Avoid repeated encode/decode churn, broad object graphs, unnecessary temporary arrays, and reflection- or magic-heavy abstractions in hot code. Use small immutable objects for stable data. Query shape and indexing: `/alaa-data-layer`. Hot-path and worker behaviour: `/alaa-octane-performance`. The complexity bound itself: `/alaa-algorithms-data-structures`.
 
 ## Documentation baseline
 

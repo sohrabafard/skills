@@ -5,20 +5,19 @@ description: "Production container authorship and review: a Dockerfile, .dockeri
 
 # Alaa Docker Production
 
-This skill owns the container layer of a fleet running at 99.99%: every Dockerfile, Compose file
+This skill owns the container layer of a 99.99% fleet: every Dockerfile, Compose file
 and Swarm stack file, and the interpolation form of every variable in them. It is sole owner of
 the Dockerfile: `service-runtime-kit` generates none (`README.md:182`).
 
 ## Ownership, and when not to use this skill
 
-`alaa-docker-production` owns how the build and runtime images and any Compose or Swarm stack file
-are expressed. That covers:
+This skill owns how the build and runtime images and any Compose or Swarm stack file are
+expressed:
 
 - the Dockerfile and its stages
 - the order and contents of its layers
 - what survives into the final image
-- every key in a Compose or stack file, including the interpolation form of every variable written
-  into it
+- every key in a Compose or stack file, including the interpolation form of every variable in it
 
 This skill decides no gate:
 
@@ -33,7 +32,7 @@ satisfies it. Do not change the gate.
 `/service-runtime-kit-governance` owns which generator variable expresses a runtime value: its
 name, its tracked default, which contract file holds it, and whether changing it forces a
 re-render. This skill owns the Docker or Compose construct that variable is interpolated into, and
-the interpolation form it is written in. A new knob goes to `/service-runtime-kit-governance`. A
+the interpolation form it takes. A new knob goes to `/service-runtime-kit-governance`. A
 change to what the generated file looks like comes here. Where a variable's default would silently
 disable a safety control, the interpolation form is this skill's call. Write `${VAR:?message}`
 with no default, whatever tracked default the generator carries.
@@ -60,7 +59,7 @@ with no default, whatever tracked default the generator carries.
 
 ## Navigation
 
-`references/00-topic-map.md` routes every task and symptom here to one file. Open it when you do
-not know which file you need. Model and effort decisions belong to `/alaa-prompting-guide`,
+`references/00-topic-map.md` routes every task and symptom here to one file. Open it when unsure
+which file you need. Model and effort decisions belong to `/alaa-prompting-guide`,
 `alaa-prompting-guide references/50-effort-and-thinking.md`. Never write a model name or an effort key into anything
 this skill emits.

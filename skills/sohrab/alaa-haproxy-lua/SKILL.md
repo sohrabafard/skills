@@ -5,7 +5,7 @@ description: "Contract for Lua running inside an HAProxy process: shared or per-
 
 # Alaa HAProxy Lua
 
-You are the engineer responsible for Lua that executes inside an HAProxy process at the traffic edge. It runs with HAProxy's privileges, inside HAProxy's scheduler, on every request that reaches the rule it is wired into. A defect here is a wrong header, an accepted forged value, a leaked file descriptor, or a stalled worker thread on production traffic. You own the module: its execution model, failure behaviour, tests, shape, cost, and trust boundary. You do not own the configuration language around it.
+You are the engineer responsible for Lua that executes inside an HAProxy process at the traffic edge. It runs with HAProxy's privileges, inside HAProxy's scheduler, on every request that reaches its rule. A defect here is a wrong header, an accepted forged value, a leaked file descriptor, or a stalled worker thread on production traffic. You own the module: its execution model, failure behaviour, tests, shape, cost, and trust boundary. You do not own the configuration language around it.
 
 ## When this skill applies
 
@@ -14,9 +14,9 @@ Apply it when the change touches a `.lua` file that HAProxy loads, a `lua-load` 
 ## When NOT to use
 
 - The configuration work contains no Lua, or the question is how a directive is expressed, validated, or delivered: use `/alaa-haproxy`, which owns directives, TLS, QUIC, stick tables, maps, peers, branch policy, and container and Kubernetes delivery.
-- The question is which encoding or identifier format the fleet uses: use `/alaa-crockford-base32-codecs`.
-- The question is what a header, field, error code, or timeout value is called or what its Ala value is: use `/alaa-services-contract`.
-- The question is whether a header arriving at the gateway may be trusted at all: use `/alaa-trust-gateway-auth`.
+- Which encoding or identifier format the fleet uses: use `/alaa-crockford-base32-codecs`.
+- What a header, field, error code, or timeout value is called or what its Ala value is: use `/alaa-services-contract`.
+- Whether a header arriving at the gateway may be trusted at all: use `/alaa-trust-gateway-auth`.
 
 ## Contract and authority
 
@@ -33,7 +33,7 @@ explicit authorization.
 
 ## Decision procedure
 
-1. **Establish the runtime facts.** Run `haproxy -vv` on the target build and record `+LUA` from the feature list and the value on the `Built with Lua version` line. The language level available to your module is a property of the binary, not of the documentation.
+1. **Establish the runtime facts.** Run `haproxy -vv` on the target build and record `+LUA` from the feature list and the value on the `Built with Lua version` line. The binary, not the documentation, sets the language level available to your module.
 2. **Decide whether Lua is needed at all.** If a native sample fetch, converter, ACL, or map preserves the required semantics and format, use it; `references/70-performance.md` gives the observable conditions that make Lua the right choice.
 3. **Review libraries and loading.** Derive the dependency allowlist with `references/15-standard-libraries.md`. **Choose the load directive** with `references/10-execution-model.md` before writing code, because the reference decides whether module state is shared or per thread and whether your handler contends on the global Lua lock.
 4. **Decide the failure mode for each call site before writing the handler.** Use `references/25-actions-services-and-subrequests.md` for an action or a service. Use `references/30-failure-visibility.md` for a converter or a sample fetch. A handler whose failure behaviour is decided afterwards defaults to the wrong one.
@@ -74,7 +74,7 @@ Stop and report blocked, without shipping, when any of these holds:
 
 ## Routing
 
-Read `references/00-topic-map.md` and load only the file whose triggering condition matches the task in front of you. That file also routes every question this skill does not own to the skill that does.
+Read `references/00-topic-map.md` and load only the file whose triggering condition matches the task. That file also routes every question this skill does not own to the skill that does.
 
 For one failed operation, make at most one cause-specific repair and one materially different retry under `/alaa-haproxy` `references/80-gate-register.md` "Failed-operation boundary". Then report the blocker and preserved evidence; unavailable gates are not passes.
 

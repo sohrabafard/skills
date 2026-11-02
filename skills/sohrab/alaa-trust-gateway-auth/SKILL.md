@@ -95,7 +95,7 @@ Exit codes:
 - `0`: every requested check passed.
 - `1`: a defect was found. Fix it before the change ships. Fix it in the gateway or environment configuration first.
 - `2`: the invocation was wrong.
-- `3`: a check could not run for want of input. Supply it, and never report a pass for a check that did not run.
+- `3`: a check could not run for want of input. Supply it; never report a pass for a check that did not run.
 
 `--help` carries the full
 contract. The canonical bitmap vectors and the cross-runtime harness belong to

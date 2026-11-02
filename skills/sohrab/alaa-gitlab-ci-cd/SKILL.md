@@ -25,19 +25,9 @@ Three consequences apply to every task:
 
 ## Start fast
 
-Collect only the facts that change the design:
+Collect only the facts that change the design: GitLab.com, Dedicated or self-managed, and the instance version; runner type, shared or dedicated, and the trust model; whether the job needs Docker daemon behaviour or only an image build; the registry, cloud or secret manager involved; and the failure symptom, if this is a debugging task.
 
-- GitLab.com, Dedicated or self-managed, and the instance version
-- runner type, shared or dedicated, and the trust model
-- whether the job needs Docker daemon behaviour or only an image build
-- the registry, cloud or secret manager involved
-- the failure symptom, if this is a debugging task
-
-Where a fact is missing, apply these defaults and say which you assumed:
-
-- Design against the current stable GitLab and Runner line, not a version number you did not check.
-- Use dedicated runners for privileged work.
-- Use protected refs for release and deploy jobs.
+Where a fact is missing, apply these defaults and say which you assumed: design against the current stable GitLab and Runner line, not a version number you did not check; use dedicated runners for privileged work; use protected refs for release and deploy jobs.
 
 `references/feature-version-notes.md` gives the cadence that computes the
 current line and the URL that confirms it.
@@ -67,21 +57,11 @@ the narrowest file that matches and do not read the rest.
 - Reuse through a hidden job, `extends`, an include or a component only when the same text appears in three or more jobs or
   when two jobs must change together.
 
-Open the reference that matches the task:
-
-- `references/pipeline-authoring.md` for workflow and job rules, environments
-  and rollback, includes and components.
-- `references/job-graph-and-scheduling.md` for `needs:`, `resource_group`, `interruptible`, job `timeout:`, `retry:` and
-  `parallel:`.
-- `references/cache-artifacts-and-pinning.md` for any cache key,
-  `policy:`, `fallback_keys`, `expire_in` or image pin.
+Open `references/pipeline-authoring.md` for workflow and job rules, environments and rollback, includes and components; `references/job-graph-and-scheduling.md` for `needs:`, `resource_group`, `interruptible`, job `timeout:`, `retry:` and `parallel:`; `references/cache-artifacts-and-pinning.md` for any cache key, `policy:`, `fallback_keys`, `expire_in` or image pin.
 
 ## Variable and input rules
 
-- Use `spec:inputs` for a value that should be validated before the pipeline is created.
-- Use a CI/CD variable for a runtime value.
-- Use a file variable for content a tool reads from a path.
-- Never write a secret literal into YAML.
+Use `spec:inputs` for a value that should be validated before the pipeline is created, a CI/CD variable for a runtime value, and a file variable for content a tool reads from a path. Never write a secret literal into YAML.
 
 GitLab expands `$VAR` and `${VAR}` only. So `${VAR:-default}` in a `variables:` value yields an
 empty string and overwrites any predefined variable of that name. Open
@@ -94,11 +74,7 @@ Outside the Ala fleet the Kubernetes executor is the default. Read the target
 Runner's executor before writing a job. For each Ala Runner's executor, job image
 and tool limits, read
 `/alaa-services-contract` `references/16-infrastructure-services-and-delivery-artifacts.md`,
-section "Runner shapes and the CI job image". A shell runner is correct only where all of these hold:
-
-- the host serves no other tenant
-- the runner is tagged so only the intended projects reach it
-- the jobs that use it run on protected refs
+section "Runner shapes and the CI job image". A shell runner is correct only where the host serves no other tenant, the runner is tagged so only the intended projects reach it, and the jobs that use it run on protected refs.
 
 `values.yaml` is YAML and the `runners.config` inside it is TOML. Open
 `references/runner-shell-and-kubernetes.md` for executor choice, `config.toml`,
@@ -107,12 +83,7 @@ namespaces and restricted clusters.
 
 ## Container build strategy rules
 
-Choose the first eligible build path from this list before writing YAML:
-
-1. rootless BuildKit
-2. Podman or Buildah
-3. a shell runner against a host daemon, only when its four stated preconditions all hold
-4. Docker-in-Docker on a dedicated privileged runner
+Choose the first eligible build path, in this order, before writing YAML: rootless BuildKit, then Podman or Buildah, then a shell runner against a host daemon when its four stated preconditions all hold, then Docker-in-Docker on a dedicated privileged runner.
 
 Do not use kaniko; GitLab states it is unmaintained. Open
 `references/container-build-strategies.md` before designing any image-build job.
@@ -161,8 +132,7 @@ python3 scripts/validate_gitlab_ci.py <file> [more files]
 python3 scripts/validate_runner_config.py <file> [more files]
 ```
 
-Both accept `--help`, `--json` and `--fail-on-warnings`, and both
-exit **0 clean, 1 findings, 2 could not run**. Exit 2 is never a clean result.
+Both accept `--help`, `--json` and `--fail-on-warnings`, and exit **0 clean, 1 findings, 2 could not run**. Exit 2 is never a clean result.
 Invoke them by absolute path when the working directory is not the skill root.
 What each asserts, what neither can see, and which findings are gate-eligible are
 in `references/validation-and-debugging.md`.
