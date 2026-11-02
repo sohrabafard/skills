@@ -15,7 +15,20 @@ Rules:
 - load `$alaa-docker-production` for Dockerfile hardening, runtime-user rules, Compose and Swarm delivery mechanics, and registry-plumbing details
 - do not duplicate Kubernetes implementation detail in this file when the concern is already owned by `$alaa-k8s-helm` or `$caas-arvan-kuber`
 
+## Deploy-time environment contract
+
+Rules:
+- Services MUST declare supported runtime settings in image-bound `runtimeConfiguration`, referencing existing bindings and exact consumers/modes. Record type/range, sensitivity, authority, default owner, empty semantics and apply policy. Identify build-only settings explicitly.
+- Deploy MUST validate admitted inputs before effects and deliver them to their declared destinations. Each input has one writer; env readability grants no override of derived/reserved authority. Keep diagnostics value-free.
+- Explicit operator values override the owning default; unset preserves it. Metadata MUST NOT create defaults or invent required/Secret values. Main backend logging defaults to `info`.
+- Distinguish unset, empty (`omit|value|reject`) and explicit clear; preserve `false` and `0`. Reset requires removing the effective CI override and fresh Prepare/deployment, without inheriting the previous release override.
+- Declared backend booleans use `true|false`; sampling inputs use decimal `[0,1]`; empty rejects. Preserve declared Client/Secret empty semantics. Domain-specific values and parser behaviour remain with their existing owners.
+- Sensitivity and override authority are independent. Browser runtime configuration is explicitly public; Secret delivery follows the [Secret and key material contract](#secret-and-key-material-contract).
+- Supported value changes reuse the image; startup settings require recreation/rollout. New capabilities or image-bound declarations may require rebuilding. Adopt compatible readers/tools before publishing declarations; [delivery-artifact ownership](16-infrastructure-services-and-delivery-artifacts.md) remains unchanged.
+
 ## GitLab CI/CD baseline contract
+
+Milestone 1 exception (scope and end condition: `16-infrastructure-services-and-delivery-artifacts.md`, "Runner shapes and the CI job image"): while that scope holds, a missing, unwired, or unrun `service-ci-kit` pipeline is not a deviation, and an agent adds, automates, or converges no CI unless the user requests it. A kit-managed `<repo>/scripts/manual-release.sh` copy is not copied shared CI logic. The rules below stay the baseline, and any CI change made still follows them.
 
 Rules:
 - for every Ala service image, default to the shared `service-ci-kit` project for GitLab CI/CD: Laravel and PHP services include its PHP pipeline, other services its stack-neutral contract-and-handoff include (`16-infrastructure-services-and-delivery-artifacts.md` names both)
@@ -147,6 +160,8 @@ Two hard rules: (1) **services running in Docker always connect to the in-networ
 host-published ports — those exist for host tools, local SDKs, and host-run tests; (2) destructive or
 exact-assertion tests still use a disposable container, never the shared instance's data.
 
+Shared Redis authentication (one rule): the shared local Redis reads `REDIS_PASS`. Non-blank starts Redis with `requirepass` and the health check authenticates with the same value; blank keeps the private local default without authentication. `service-runtime-kit` and deploy's `docker-compose-dev-only-infra.yaml` use one startup form: `--appendonly yes`, the password expanded inside the container (`sh -c` with `$$REDIS_PASSWORD`, never in argv), and `docker-entrypoint.sh` kept so the drop to the `redis` user survives. `alaa-go-chi` matches auth and AOF but still execs `redis-server` without `docker-entrypoint.sh` (Redis runs as root) and uses other health-check timings, so a recreate from a go-chi file changes the container config. Whichever generator recreates the container last would otherwise change auth or persistence, so every consumer's generated shared-infra file must carry this form. A password set with `CONFIG SET` is lost on restart and is not a supported setting. Each service's local runtime needs the same value: Laravel sets both `REDIS_PASS` (read by the generated shared-infra file) and `REDIS_PASSWORD` (read by the app); Go sets `REDIS_PASS`; an app that reads a URL embeds the password in it (for example `redis://:<pw>@redis:6379/0`). Never derive `REDIS_PASS` from `REDIS_PASSWORD`: Laravel's `REDIS_PASSWORD=null` would become a literal password.
+
 Environment philosophy (owner-finalized 2026-07-19): committed `.env` values and examples are written for the
 **Docker deploy** — in-network aliases (`amqp://…@rabbitmq:5672/`, `redis://redis:6379/0`,
 `postgres://…@postgres:5432/<db>`, `clickhouse:9000`). When a service deploys to Kubernetes/OpenShift instead, the
@@ -234,7 +249,7 @@ Rules:
 Flag a problem when you see:
 - no `deploy/service.yaml` for the Kubernetes/OpenShift production path
 - no Compose or no Swarm story and no explicit blocker
-- no shared `service-ci-kit` baseline for an Ala service image
+- no shared `service-ci-kit` baseline for an Ala service image, outside the [Milestone 1 exception](#gitlab-cicd-baseline-contract)
 - a releasable chart, release values, deploy job, or cluster credential in a service repository
 - a non-thin `.gitlab-ci.yml` in a service repo that should use the shared kit
 - shared `ci/scripts/*` or local semantic-release helper trees reintroduced into a service repo

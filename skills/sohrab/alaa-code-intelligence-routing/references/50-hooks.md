@@ -2,6 +2,8 @@
 
 The vendor or runtime owns executable hook syntax and lifecycle behavior. This skill owns only which routing behavior may coexist without creating duplicate discovery.
 
+Apply Serena hook guidance only where Serena is configured and hook work is authorized. Without Serena, skip its hook profiles entirely; CodeGraph, native language operations and Boost need no Serena activation, reminder or cleanup hook.
+
 ## Ownership
 
 - The CodeGraph installer owns its MCP registration, marker-fenced instructions, permissions, and any compatible prompt hook. Do not copy a second CodeGraph hook from this pack.
@@ -23,6 +25,8 @@ The vendor or runtime owns executable hook syntax and lifecycle behavior. This s
 5. Parse the effective JSON or TOML and inspect the runtime's effective hook list.
 6. Exercise activation, one known-symbol Serena request, cleanup, and—only in the no-CodeGraph profile—one reminder case.
 7. Record the project-local delta and rollback path. Hook activation does not change evidence ownership. Do not modify hook or MCP configuration unless the task explicitly requests setup, upgrade, repair, or removal.
+
+For REPL, verify how the installed hook classifies `serena_repl` and its composed calls. Legacy symbolic-tool matchers prove neither counter resets nor per-API approval or plan-mode enforcement. The topic map's grant owner decides execution boundaries; do not add auto-approval to compensate for missing API-level matching.
 
 ## Rollback
 

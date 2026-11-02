@@ -1,6 +1,6 @@
 baseline_phase=PRE-EDIT
 cwd=
-D:\Sohrab\Project\skills
+/home/sohrab/project/skills
 HEAD=
 4fdd8b709a745314a0575c25c06d0a390847bde6
 branch=

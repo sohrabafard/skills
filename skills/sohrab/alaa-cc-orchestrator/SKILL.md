@@ -26,6 +26,8 @@ Apply `references/routing-matrix.md` Planning profile selection and All-role tas
 
 ## 0. Inspect role availability
 
+The separately available companion /alaa-testing-strategy is required for test design/execution and legacy runner forwarding. If it is unavailable, report the missing owner and block dependent work; never auto-install it.
+
 Activation grants no installation or update authority. Inspect installed definitions, version and effective tools without writes; compare required roles with shipped definitions. Report missing, stale or unavailable roles before dispatch. Never silently substitute a model or a generic role. Continue only independent work with available required roles; report the rest blocked.
 
 Install or update only with explicit user authorization for the target paths. Validate model-neutral source roles, grants, and generated artifacts before the first target write. Run `python scripts/validate_pack.py` and `python scripts/check_agent_grants.py` before an authorized copy of the managed agent files. Do not change unrelated agents or settings.
@@ -36,7 +38,7 @@ Inspect effective sandbox, parent overrides and MCP grants before relying on iso
 
 ### Orchestrator mode
 
-Use when the user asks to build, fix, refactor, migrate, integrate, optimize, or otherwise change a repository. The lead plans, dispatches, reconciles, gates and reports. It must not implement while viable implementers are available; the verifier runs heavy suites.
+Use when the user asks to build, fix, refactor, migrate, integrate, optimize, or otherwise change a repository. The lead plans, dispatches, reconciles, gates and reports. It implements only a mechanical local edit with known scope, no design decision, and a few tool calls, in files no active or pending lane owns, because dispatching such an edit costs more than making it; viable implementers own all other implementation, and the verifier runs heavy suites.
 
 ### Advisor mode
 
@@ -52,11 +54,13 @@ Use `references/routing-matrix.md` for the actual lead-session task selection an
 
 The lead owns goal normalization/scope control, repository-aware lanes, selection/dispatch authority, reconciliation, verification/review, specialist triggers, truthful reporting and stopping.
 
-The lead must not implement while implementers are viable, run heavy verification, silently take over failed lanes, permit self-approval, soften/omit review findings, claim unobserved checks or overlap writers. Save bulky output and report its path. Destructive, publication, deployment, force-push, data-deletion and external effects require explicit user permission.
+The lead must not implement beyond that mechanical-edit exception, run heavy verification, silently take over failed lanes, permit self-approval, soften/omit review findings, claim unobserved checks or overlap writers. Save bulky output and report its path. Destructive, publication, deployment, force-push, data-deletion and external effects require explicit user permission.
 
 ### Dispatch discipline
 
-**One agent per lane.** No duplicate lane or summary-check agent. Independent verification and review inspect the actual artifact under separate authority. Dispatch independent lanes together; keep work finishable in a handful of tool calls inline.
+**One agent per lane.** No duplicate lane or summary-check agent. Independent verification and review inspect the actual artifact under separate authority. Dispatch independent lanes together; keep inspection and Orchestrator mode's mechanical edit inline.
+
+**Start a dependent lane as soon as the lanes it consumes finish.** Join lanes behind one barrier only when the next step consumes all of their outputs; a barrier over a lane whose output the next step never reads idles that step for the unrelated lane's whole runtime.
 
 **Keep dispatches lean.** Apply /alaa-prompting-guide. Carry lane facts only: outcome, owned files, exclusions, acceptance, commands, dependencies, resolved skills and return contract. Do not restate the native role definition, which dilutes both contracts. State instructions once; expose task-relevant tools and only requirement-bearing examples.
 
@@ -68,7 +72,7 @@ The lead must not implement while implementers are viable, run heavy verificatio
 
 ## 3. Intake and planning
 
-Before dispatch inspect guidance/affected paths; settle outcome, acceptance, preserved behavior and irreversible actions; draw disjoint lanes. `references/verification-and-gates.md` owns intake, lane fields and infrastructure reuse.
+Before designing implementation or verification, load /alaa-testing-strategy. Before dispatch inspect guidance/affected paths; settle outcome, acceptance, preserved behavior and irreversible actions; draw disjoint lanes. `references/verification-and-gates.md` owns intake, lane fields and infrastructure reuse.
 
 Before Stage A evidence dispatch, apply triggered `/alaa-memory-os`: one bounded recall, verify useful claims in repository truth; keep active state in workflow. Route unresolved prior-session/ownership/shared-contract questions to `alaa-researcher`; `alaa-explorer` uses memory only when the repository cannot answer. Apply `/alaa-code-intelligence-routing` before code-evidence selection and reuse its result.
 
@@ -107,7 +111,7 @@ Orchestrator mode preserves A–E; F requires requested integration and explicit
 | `standard` | anything that is neither `lean` nor `hardened` | Stages A–E with every required gate; F only when requested |
 | `hardened` | the change meets the adversarial reviewer's blast-radius condition in `references/routing-matrix.md` | `standard`, plus the architecture design record in Stage A and critic/adversarial judgment at the declared review boundary |
 
-`lean` review is independent: the lead authored no diff. If it leaves the lane plan, select `standard` and dispatch `alaa-reviewer` on the complete change.
+`lean` review is independent: the lead authored no diff. If it leaves the lane plan, or the lead made a mechanical edit, select `standard` and dispatch `alaa-reviewer` on the complete change.
 
 **No profile suppresses a specialist.** Apply only `references/routing-matrix.md` triggers, identically across profiles.
 
@@ -130,14 +134,7 @@ Schedule these commands through `references/verification-and-gates.md` Gate econ
 Run `python scripts/check_agent_contracts.py` after instruction-contract changes and `python scripts/check_agent_contracts.py --self-test` after checker changes. Exit `0` is clean, `1` is findings, and `2` is unavailable proof; either nonzero blocks completion. These fixtures check source requirements, not live model behavior.
 
 
-- Exact command semantics come from repository guidance and the dispatch. Never invent a flag merely to make a check pass.
-- After any change to `agents/`, the grant checker must pass before completion; `references/agent-catalog.md` states its exact invocation and exit-code contract.
-- Lowering process priority is mandatory for declared CPU-heavy local commands; limiting runner-level parallelism is separate and must also be explicit.
-- Preserve every explicit `--browser chromium` argument: it is a hard user constraint on browser choice. Never remove, replace, or change it without prior user approval.
-- Do not kill unrelated services, dev servers, containers, or processes; do not start duplicate services when a reusable declared service exists.
-- Do not update snapshots, golden files, lockfiles, generated clients, dependencies, or migrations during verification unless that change is an explicitly scoped implementation lane.
-
-Before resource/failure decisions apply the router below.
+Before planning or executing checks, load /alaa-testing-strategy and read its `references/100-test-execution.md` for execution, `references/110-execution-resources.md` for resources and timing, or `references/120-result-classification.md` for result classification and diagnosis. The router below retains legacy loading paths.
 
 ## 8. Safety and authority
 
@@ -145,7 +142,7 @@ Before resource/failure decisions apply the router below.
 - Ask before destructive Git operations, force pushes, history rewrites, deployment, publishing, production access, data deletion, credential changes, shared-system configuration changes, or irreversible migrations.
 - Installation and updates require explicit user authorization for named target paths; activation grants none.
 - Agent files own code-intelligence grants; dispatches do not. `references/agent-catalog.md` assigns CodeGraph/Serena read/both/neither; `/alaa-code-intelligence-routing` owns rationale. Change grants here, not `~/.claude/agents`, because reinstall restores pack grants.
-- Commit only with explicit user authorization in the workflow-selected checkout. Otherwise preserve the reviewed diff and snapshot validation through workflow. Every external/destructive effect needs its own explicit authority. Never add Co-Authored tags.
+- Local commits follow the main instruction file's local-commit rule through `alaa-workflow references/workspace-and-integration.md`; do not wait for boundary review or request an already-granted permission again. Every external/destructive effect needs its own explicit authority. Never add Co-Authored tags.
 - Never expose secrets in prompts, logs, artifacts, or reports.
 
 ## 9. Stop conditions
@@ -156,7 +153,7 @@ Stop and report partial/blocked after the same lane/cause blocks twice, blockers
 
 ## 10. Failure discipline
 
-Reviewers only judge, verifiers only execute evidence commands, researchers only retrieve. Before product edits classify shell/runtime/permission/stale-cache failures through `references/failure-taxonomy.md`. Never report fail-then-pass as clean PASS. Report adversarial findings without another fix loop. Name only the lane's matching clean-code skill.
+Reviewers only judge, verifiers only execute evidence commands, researchers only retrieve. Before product edits, load /alaa-testing-strategy `references/120-result-classification.md` for classification and repair eligibility. Report adversarial findings without another fix loop. Name only the lane's matching clean-code skill.
 
 ## Direct references
 

@@ -1,0 +1,34 @@
+{
+  "time": "2026-10-25T21:07:59.325561+00:00",
+  "head": "17d0572b77ee97167be7e454759ee065d670b358",
+  "sources": {
+    "scope": {
+      "count": 284,
+      "expected_manifest_sha256": "9f25664ba53311cd8fe16a7a8b608835ca5ff07316881edb24bb23963d5dea86",
+      "actual_manifest_sha256": "9f25664ba53311cd8fe16a7a8b608835ca5ff07316881edb24bb23963d5dea86",
+      "mismatches": []
+    },
+    "tested-inputs": {
+      "count": 2260,
+      "expected_manifest_sha256": "847f3c801966d478b1b7c71339f5a701daa48959d42f7145ddd0446423f187c8",
+      "actual_manifest_sha256": "847f3c801966d478b1b7c71339f5a701daa48959d42f7145ddd0446423f187c8",
+      "mismatches": []
+    }
+  },
+  "workflow_hashes": {
+    "docs/_agent_plans/20261025-test-execution-ownership-design.md": "ed7a730d38fdabebdd899512b2f211040443b3cd503c08652fe9c921652b0296",
+    "docs/_agent_plans/20261025-test-execution-ownership.md": "f93bb25d942f3379bbf9a068fe3eb47c19fd8d94d792e284f9216f5085239954",
+    "docs/agents/20261025-test-execution-ownership-design-state.md": "73bd6c27270f481c91bb08424174a29248dae5d09abbf664b9f3662826613474",
+    "docs/agents/20261025-test-execution-ownership-state.md": "f20eb9a57873884ab6a97b8c10fe2eaa15b9655eb7012bea1a7c6b102beb7d35"
+  },
+  "protected_index": "e69de29bb2d1d6434b8b29ae775ad8c2e48c5391",
+  "protected_worktree": "2cb840fe4688eb9d4debc15ddb3488a962035811",
+  "stability": {
+    "head": true,
+    "sources": true,
+    "workflow_hashes": true,
+    "protected_index": true,
+    "protected_worktree": true
+  },
+  "git_status_unchanged": true
+}

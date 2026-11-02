@@ -1,4 +1,4 @@
-**Overall: PASS for the dispatched static checks, with a candidate snapshot identity discrepancy.** The verification report is saved at [verification.md](/D:/Sohrab/Project/skills/outputs/20261007-entitlement-skill-source-owners/verification.md).
+**Overall: PASS for the dispatched static checks, with a candidate snapshot identity discrepancy.** The verification report is saved at [verification.md](//home/sohrab/project/skills/outputs/20261007-entitlement-skill-source-owners/verification.md).
 
 All 10 dispatched commands exited 0, sequentially, without retries. Each reached **proof level 1 — static**; none verifies runtime or deployed behavior. Per-command evidence logs are in the artifact directory.
 

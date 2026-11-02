@@ -10,7 +10,7 @@ every shared rule is edited here and nowhere else.
 
 Project label: `repo:skills`
 
-Expected workspace: `D:/Sohrab/Project/alaa-task-hub/.beads`
+Expected workspace: `/home/sohrab/project/alaa-task-hub/.beads`
 
 User, repository, and orchestrator constraints govern. This binding overrides conflicting upstream Beads skill or hook guidance and grants no additional authority.
 
@@ -26,7 +26,7 @@ Before planning or executing tracked work, and after compaction or session resta
 4. Before Beads mutations, claims, ownership comparisons, resume or transfer, load `/alaa-workflow` `references/task-tracking.md` `## Agent identity and ownership`. It owns actor allocation, explicit mutation identity, guarded updates, transfer and closure coordination; its actor rules override actorless upstream examples. If unavailable, stop dependent work. Keep the assigned actor in the existing dispatch or admitted handoff.
 5. When resuming, read the active issue and linked plan/checkpoint/handoff. Check worktree state, scope, ownership, and blockers before continuing. A conversation summary or `bd prime` cannot replace task-state recovery. Resolve an ambiguous active task before implementation.
 
-Run each `bd` command separately; do not chain commands or add per-command environment overrides.
+Batch `bd` mutations in one script only when every command passes `--actor`, the script runs with `set -euo pipefail`, prints each command's result, and stops at the first failure; read back changed issues afterwards. Add no per-command environment overrides.
 
 ### Scope and issue lifecycle
 
@@ -58,7 +58,7 @@ Semantics: `/alaa-workflow` `references/task-tracking.md` `## Beads capabilities
 - Beads owns newly tracked issue state and dependencies; do not add parallel durable TODO lists. Existing plans/checkpoints retain authority until explicitly migrated; do not import or duplicate their checklists during setup.
 - `alaa-workflow` and repository rules own planning, validation, completion criteria, and handoff structure. Task evidence follows `/alaa-workflow` `references/task-tracking.md` `## Acceptance and evidence by level`.
 - Route durable knowledge through `/alaa-memory-os`. `bd remember` only for a short reminder shared across the whole hub, with source, scope, and maintainer; write it without separate approval. Never put task status, evidence, lessons, or new rules in it; leaving it empty is correct. Owner: `/alaa-memory-os` `## Beads hub reminders and issue notes`. Keep issue descriptions and dependency explanations with their issues.
-- Git commits, pushes, and Dolt remote sync require explicit user authorization; a profile, hook, or skill grants none. Report unauthorized pending actions instead of executing them.
+- Local commits on the current work branch are pre-authorized: commit each finished, validated topic as it lands (one Conventional Commit per topic or lane), and let worktree lanes branch from the latest commit. Push, tag, merge into another branch, history rewrite and remote sync (Git or Dolt) still need explicit user authorization; a profile, hook, or skill grants none. Report unauthorized pending actions instead of executing them.
 
 ### Quick Reference
 
@@ -147,8 +147,9 @@ pass.
 - **Never write a path from one machine.** A `D:\...` path is wrong in a committed file; write it
   relative to the repository root. The one exception is the `Expected workspace` line of the Beads
   binding, which names the shared hub path.
-- **Ask before an action with an effect outside this working tree** — commit, tag, publish, deploy,
-  force-push, or credential rotation.
+- **Ask before an action with an effect outside this working tree** — tag, push, merge into another
+  branch, history rewrite, publish, deploy, force-push, or credential rotation. Local commits are
+  pre-authorized under the Beads binding's commit rule.
 - **No emoji in any artifact.** When a request is ambiguous, contradictory, or unsafe, say so, ask
   the smallest question that resolves it, and stop.
 

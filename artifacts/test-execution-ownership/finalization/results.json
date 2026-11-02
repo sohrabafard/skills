@@ -1,0 +1,140 @@
+[
+  {
+    "id": "01",
+    "command": [
+      "python",
+      "skills/sohrab/alaa-workflow/scripts/validate_workflow_files.py",
+      "--plan",
+      "docs/_agent_plans/20261025-test-execution-ownership.md",
+      "--continuation",
+      "docs/agents/20261025-test-execution-ownership-state.md"
+    ],
+    "actual_argv": [
+      "bash",
+      "skills/sohrab/alaa-testing-strategy/scripts/run-low-priority.sh",
+      "--priority",
+      "BelowNormal",
+      "--cpu-count",
+      "2",
+      "--",
+      "python",
+      "skills/sohrab/alaa-workflow/scripts/validate_workflow_files.py",
+      "--plan",
+      "docs/_agent_plans/20261025-test-execution-ownership.md",
+      "--continuation",
+      "docs/agents/20261025-test-execution-ownership-state.md"
+    ],
+    "cwd": "/home/sohrab/project/skills",
+    "environment": {
+      "PYTHONDONTWRITEBYTECODE": "1"
+    },
+    "start_utc": "2026-10-25T21:07:50.116202+00:00",
+    "end_utc": "2026-10-25T21:07:50.203904+00:00",
+    "duration_seconds": 0.088,
+    "exit": 0,
+    "classification": "PASS",
+    "tier": "focused",
+    "proof_level": "1 static",
+    "resource_limits": "BelowNormal/nice10,CPU2 affinity0-1,serial,300s"
+  },
+  {
+    "id": "02",
+    "command": [
+      "python",
+      "skills/sohrab/alaa-repo-docs/scripts/check_markdown_links.py",
+      ".",
+      "--files",
+      "docs/_agent_plans/20261025-test-execution-ownership-design.md",
+      "docs/_agent_plans/20261025-test-execution-ownership.md",
+      "docs/agents/20261025-test-execution-ownership-design-state.md",
+      "docs/agents/20261025-test-execution-ownership-state.md"
+    ],
+    "actual_argv": [
+      "bash",
+      "skills/sohrab/alaa-testing-strategy/scripts/run-low-priority.sh",
+      "--priority",
+      "BelowNormal",
+      "--cpu-count",
+      "2",
+      "--",
+      "python",
+      "skills/sohrab/alaa-repo-docs/scripts/check_markdown_links.py",
+      ".",
+      "--files",
+      "docs/_agent_plans/20261025-test-execution-ownership-design.md",
+      "docs/_agent_plans/20261025-test-execution-ownership.md",
+      "docs/agents/20261025-test-execution-ownership-design-state.md",
+      "docs/agents/20261025-test-execution-ownership-state.md"
+    ],
+    "cwd": "/home/sohrab/project/skills",
+    "environment": {
+      "PYTHONDONTWRITEBYTECODE": "1"
+    },
+    "start_utc": "2026-10-25T21:07:50.204054+00:00",
+    "end_utc": "2026-10-25T21:07:50.270804+00:00",
+    "duration_seconds": 0.067,
+    "exit": 0,
+    "classification": "PASS",
+    "tier": "focused",
+    "proof_level": "1 static",
+    "resource_limits": "BelowNormal/nice10,CPU2 affinity0-1,serial,300s"
+  },
+  {
+    "id": "03",
+    "command": [
+      "git",
+      "diff",
+      "--check",
+      "--",
+      "skills/sohrab/alaa-testing-strategy",
+      "skills/sohrab/alaa-codex-orchestrator",
+      "skills/sohrab/alaa-cc-orchestrator",
+      "skills/sohrab/alaa-workflow",
+      "skills/sohrab/repository-tooling-capability-check",
+      "skills/sohrab/alaa-laravel-upgrade-all-packages/references/40-failure-classes.md",
+      "docs/_agent_plans/20261025-test-execution-ownership-design.md",
+      "docs/_agent_plans/20261025-test-execution-ownership.md",
+      "docs/agents/20261025-test-execution-ownership-design-state.md",
+      "docs/agents/20261025-test-execution-ownership-state.md",
+      "outputs/README.md",
+      "artifacts/test-execution-ownership"
+    ],
+    "actual_argv": [
+      "bash",
+      "skills/sohrab/alaa-testing-strategy/scripts/run-low-priority.sh",
+      "--priority",
+      "BelowNormal",
+      "--cpu-count",
+      "2",
+      "--",
+      "git",
+      "diff",
+      "--check",
+      "--",
+      "skills/sohrab/alaa-testing-strategy",
+      "skills/sohrab/alaa-codex-orchestrator",
+      "skills/sohrab/alaa-cc-orchestrator",
+      "skills/sohrab/alaa-workflow",
+      "skills/sohrab/repository-tooling-capability-check",
+      "skills/sohrab/alaa-laravel-upgrade-all-packages/references/40-failure-classes.md",
+      "docs/_agent_plans/20261025-test-execution-ownership-design.md",
+      "docs/_agent_plans/20261025-test-execution-ownership.md",
+      "docs/agents/20261025-test-execution-ownership-design-state.md",
+      "docs/agents/20261025-test-execution-ownership-state.md",
+      "outputs/README.md",
+      "artifacts/test-execution-ownership"
+    ],
+    "cwd": "/home/sohrab/project/skills",
+    "environment": {
+      "PYTHONDONTWRITEBYTECODE": "1"
+    },
+    "start_utc": "2026-10-25T21:07:50.271018+00:00",
+    "end_utc": "2026-10-25T21:07:50.310595+00:00",
+    "duration_seconds": 0.04,
+    "exit": 0,
+    "classification": "PASS",
+    "tier": "focused",
+    "proof_level": "1 static",
+    "resource_limits": "BelowNormal/nice10,CPU2 affinity0-1,serial,300s"
+  }
+]

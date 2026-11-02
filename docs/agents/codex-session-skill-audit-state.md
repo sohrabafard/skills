@@ -10,7 +10,7 @@ Complete: 2026-06-27 last-48-hours refresh.
 
 ## Current Understanding
 
-- Active workspace: `D:\Sohrab\Project\skills`.
+- Active workspace: `/home/sohrab/project/skills`.
 - No repo-local `AGENTS.md` exists at the workspace root, so the pasted global operating rules are the active repo guidance for this task.
 - Relevant skills loaded this run: `alaa-codex-runtime-ops`, `skill-creator`, `alaa-workflow`, `alaa-low-noise`, `alaa-mono-package`, and `alaa-frontend-developer`.
 - Prior memory indicates a June 11 runtime audit already updated `alaa-codex-runtime-ops` for EPERM, Docker named-pipe, and shell-routing failures.
@@ -54,7 +54,7 @@ Complete: 2026-06-27 last-48-hours refresh.
 - `frontmatter-ok alaa-codex-runtime-ops`
 - `git diff --check` passed.
 - Secret-pattern scan over changed skill/audit docs only matched policy wording, not secret values.
-- `C:\Users\CIT\.codex\.codex-global-state.json` was parsed in bounded form: active workspace root was `D:\Sohrab\Project\skills`; saved workspace roots, project order, thread hints, pinned threads, and prompt-history presence were confirmed without dumping values.
+- `C:\Users\CIT\.codex\.codex-global-state.json` was parsed in bounded form: active workspace root was `/home/sohrab/project/skills`; saved workspace roots, project order, thread hints, pinned threads, and prompt-history presence were confirmed without dumping values.
 - 2026-06-15 targeted `quick_validate.py` passed for reviewed owning skills: `alaa-codex-runtime-ops`, `alaa-workflow`, `alaa-low-noise`, `alaa-controlled-ops`, `service-runtime-kit-governance`, `alaa-services-contract`, `alaa-mono-package`, `alaa-frontend-developer`, and `alaa-postman-collections`.
 - 2026-06-15 transcript classifier read 69/69 files with no skips. Last-three-day subset contained 37 files across 15 parent-thread groups.
 - 2026-06-15 `git diff --check` passed for tracked changes; direct trailing-whitespace and secret-pattern scans passed for the changed state file and new plan file.

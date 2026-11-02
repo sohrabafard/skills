@@ -7,7 +7,7 @@
   "receipts": [
     {
       "command": "python -B scripts/check_fleet_references.py --skill alaa-golang --skill alaa-code-intelligence-routing",
-      "cwd": "D:/Sohrab/Project/skills",
+      "cwd": "/home/sohrab/project/skills",
       "resource_policy": "ordinary bounded static command",
       "chunk_id": "8fcac1",
       "wall_time_seconds": 0.4284835,
@@ -17,7 +17,7 @@
     },
     {
       "command": "git diff --check -- skills/sohrab/alaa-golang skills/sohrab/alaa-code-intelligence-routing",
-      "cwd": "D:/Sohrab/Project/skills",
+      "cwd": "/home/sohrab/project/skills",
       "resource_policy": "ordinary bounded static command",
       "chunk_id": "f54461",
       "wall_time_seconds": 0.2662366,
@@ -27,7 +27,7 @@
     },
     {
       "command": "git diff --cached --check -- skills/sohrab/alaa-golang skills/sohrab/alaa-code-intelligence-routing",
-      "cwd": "D:/Sohrab/Project/skills",
+      "cwd": "/home/sohrab/project/skills",
       "resource_policy": "ordinary bounded static command",
       "chunk_id": "10eb75",
       "wall_time_seconds": 0.2480456,

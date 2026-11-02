@@ -1,5 +1,17 @@
 # Changelog
 
+## 5.5.0 - 2026-10-25
+
+- Start a dependent lane as soon as the lanes it consumes finish; join lanes behind a barrier only when the next step consumes all their outputs.
+
+## 5.4.0 - 2026-10-24
+
+- Draw the fewest lanes that keep write scopes disjoint; the lane, not the subtask, is the dispatch unit, and the lead may make a mechanical local edit.
+- Require each acceptance criterion to name its proving check, and carry established anchors in dispatch context.
+- Report verification failures per case with stage, first causal error and blocked dependents; zero selected cases never pass.
+- Continue the original implementer for the batch repair when its context is valid, then rerun the whole recorded check list.
+- Route a recurring harness or environment failure to a bounded reproduction instead of another full run.
+
 ## 5.3.0 - 2026-10-09
 
 - Coalesce logical phase outcomes; preserve independent verification, review and triggered gates.

@@ -1,0 +1,4 @@
+interface:
+  display_name: "Repository Tooling Capability Check"
+  short_description: "Verify repository tooling with live evidence"
+  default_prompt: "Use $repository-tooling-capability-check to check the requested worktree tooling capabilities with current-session live evidence and report each capability outcome and its precise scope."

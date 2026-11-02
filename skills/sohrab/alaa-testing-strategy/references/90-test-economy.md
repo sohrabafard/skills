@@ -1,6 +1,6 @@
 # Test Economy
 
-Read when deciding whether a candidate is owed a test, giving a test its selector, creating or sharing setup, choosing which commands a gate runs, or finding a build, compile, render, or image produced more than once in a pass. `SKILL.md` holds the binding rules: *Whether a test is owed* and non-negotiables 10, 13, and 14. This file holds the detail; the per-stack skills own the native mechanism for each rule.
+Read when deciding whether a candidate is owed a test, giving a test its selector, creating or sharing setup, repairing or deleting an existing test on a touched topic, choosing which commands a gate runs, or finding a build, compile, render, or image produced more than once in a pass. `SKILL.md` holds the binding rules: *Whether a test is owed* and non-negotiables 10, 13, and 14. This file holds the detail; the per-stack skills own the native mechanism for each rule.
 
 ## Candidates that are not owed a test
 
@@ -19,6 +19,12 @@ The always-owed tests in `SKILL.md` — named security controls, reported-defect
 **The boundary that decides a hard case: could this project's code be wrong in a way the test catches?** If only the dependency could be wrong, the dependency's suite owns the test. If this project's choice, input, or wiring could be wrong, the test is owed and it asserts that choice.
 
 A test already in the suite that falls into a row above is reported as a finding with its reason, because it passes against every implementation this project can ship. It is deleted only after an independent reviewer accepts that finding, never by the lane whose change it is failing on, and never when it is an always-owed test.
+
+A failure alone never justifies deleting a test: a failing test is repaired, or classified under `50-flake.md`, whose quarantine deadline is the only failure-driven deletion. Every other deletion follows the independent-acceptance rule above and keeps the coverage obligations of `60-coverage.md`.
+
+## Existing tests on a touched topic
+
+Repair, in the same change, only the existing tests of topics the change touches, and only to: name the failure a test defends against, add its topic and layer selector, split independent scenarios into independent cases, and remove a duplicate that the layer discriminator in `SKILL.md` proves. Redesigning shared test infrastructure or migrating untouched topics is a separate task, recorded as a follow-up, because it widens the change's review scope and retest breadth beyond the behaviour that changed.
 
 ## Topic and layer selectors
 

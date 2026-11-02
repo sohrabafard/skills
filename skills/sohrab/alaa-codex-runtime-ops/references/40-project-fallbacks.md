@@ -1,32 +1,23 @@
 # Project Fallbacks
 
-Read this file only when the failing stack is Node, Vite, Vitest, Quasar, or a Yarn gate. Everything below is recorded from real sessions in one workspace. Treat it as local operational fact, not as general guidance for other repositories or ecosystems.
+For a Node, Vite, Vitest, Quasar or Yarn failure, verify the current repository's scripts, installed Linux tools and supported flags first. Historical command shapes are candidates, not evidence that a command exists or passes in this checkout.
 
-## Validation candidates for the normal escalation path
+## Normal escalation path
 
-After a necessary sandboxed gate fails and prevents completion, follow
-`references/20-command-and-path-discipline.md` for its exact-command retry under task authority and harness
-approval policy. These Quasar/Vite command shapes are candidates; they record no approval, authorize no
-unsandboxed execution and replace no harness prompt.
+A necessary gate blocked by the sandbox follows `references/10-wsl-sandbox-recovery.md`. Preserve the failed command and its proof scope. Common candidates, only when declared locally, include:
 
-- `yarn test`
-- `yarn test:new`
-- `yarn build`
-- `yarn build:ssr`
-- `yarn workspace <pkg> test`
-- `yarn workspace <pkg> build`
+- `yarn test`, `yarn test:new`
+- `yarn build`, `yarn build:ssr`
+- `yarn workspace <pkg> test`, `yarn workspace <pkg> build`
 - `quasar build --mode ssr`
-- `yarn dev`
-- `quasar dev`
+- `yarn dev`, `quasar dev` when a development server is required for the task
 
-Keep the command exact and scoped. Do not combine it with cleanup or unrelated commands; those effects
-require their own authority decision. Record any claimed prior approval's approver, date, source and scope
-before relying on it; this file supplies none.
+These examples grant no installation or unsandboxed authority and replace no harness approval. Do not combine a gate with cleanup or unrelated effects. Verify any claimed prior approval's source and scope before relying on it.
 
-## `entekhabat-front` `/new` package lane
+## Historical `entekhabat-front` `/new` lane
 
-Keep these proven fallback shapes here in runtime-ops instead of repeating them in repo or package `AGENTS.md` files.
+These Linux adaptations of historical fallbacks have no observed WSL passes; verify them against the current repository before use.
 
-- **`vue-tsc` not resolved.** If `yarn typecheck:new` cannot resolve `vue-tsc`, retry `.\node_modules\.bin\vue-tsc.cmd --noEmit -p tsconfig.new.json`.
-- **Vitest config-loader or worker-spawn friction.** If a focused Vitest run hits config-loader or worker-spawn friction, retry `node node_modules\vitest\vitest.mjs run -c <config> --configLoader native --pool threads <spec...>`.
-- **`EPERM` before validation starts.** If Vitest, Vite, tsup, Quasar, or esbuild fails before the intended validation starts with `EPERM` or `spawn EPERM`, follow the exact-command retry and escalation path in `references/20-command-and-path-discipline.md` before changing source.
+- **`vue-tsc` resolution failure.** If `yarn typecheck:new` cannot resolve it, verify the installed Linux entry point and equivalent script options before considering `./node_modules/.bin/vue-tsc --noEmit -p tsconfig.new.json` from the same worktree.
+- **Vitest loader or worker failure.** First classify the failure. A sandbox permission retry keeps the original command. Only with repository/version evidence that alternative flags are supported and appropriate, consider `node node_modules/vitest/vitest.mjs run -c <config> --configLoader native --pool threads <spec...>`. Changed loader/pool/spec flags are alternate evidence, not proof that the original gate passed.
+- **Permission error before validation.** For Vitest, Vite, tsup, Quasar or esbuild, use the filesystem/process diagnosis in `references/20-command-and-path-discipline.md`. An error code alone does not establish sandbox causation or justify changing source.

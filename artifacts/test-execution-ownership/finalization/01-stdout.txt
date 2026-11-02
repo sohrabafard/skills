@@ -1,0 +1,5 @@
+plan: docs/_agent_plans/20261025-test-execution-ownership.md
+WARN [plan.beads-offline] Offline structure only; live binding, nodes, parent-child edges and readiness are not verified. Remediation: Verify the bound owner before dependent execution.
+checkpoint: docs/agents/20261025-test-execution-ownership-state.md
+family: docs/_agent_plans/20261025-test-execution-ownership.md
+Validation completed without blocking errors (profile: resumable).

@@ -1,0 +1,16 @@
+check_skill_index.py
+  README.md map located by: markers
+  README.md map entries: 70
+  README.fa.md table entries: 70
+  skill directories: 71
+
+FINDINGS (3):
+- X1-DIR-NOT-IN-README repository-tooling-capability-check
+    at: skills/sohrab/README.md
+    the directory exists and the skill map does not list it, so README.md's own sentence 'Every folder in this directory appears exactly once below' is false.
+- X3-DIR-NOT-IN-README-FA repository-tooling-capability-check
+    at: skills/sohrab/README.fa.md
+    the directory exists and the Persian index does not list it.
+- X8-MISSING-OPENAI-YAML repository-tooling-capability-check
+    at: skills/sohrab/repository-tooling-capability-check/agents/openai.yaml
+    no agents/openai.yaml, so a Codex agent cannot load this skill. README.md allows exactly one shape of exception -- a Claude-Code-only skill whose Codex twin ships one. If that is this skill, record it in the baseline with the twin named in the comment, so the exception is written down and expires when the file appears rather than living in a hand-maintained list inside a checker.

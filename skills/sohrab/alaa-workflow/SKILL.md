@@ -1,6 +1,6 @@
 ---
 name: alaa-workflow
-description: "Durable design and execution planning for long-running, multi-phase, resumable, delegated, handoff-sensitive, review, or prompt-pack work. Design plans discuss ideas and algorithms locally through explicit approval; execution plans follow an approved linked design with bound Beads tracking and exact phase/task skills. A plan request saves its admitted plan and checkpoint; plan-only authorizes no implementation. Respect native Plan Mode and explicit no-file, read-only, or chat-only limits; short advice, ordinary review, and small single-phase edits create no files unless requested."
+description: "Durable design and execution planning for long-running, multi-phase, resumable, delegated, handoff-sensitive, review, or prompt-pack work. Design plans discuss ideas and algorithms locally through explicit approval; execution plans follow an approved linked or embedded design with bound Beads tracking and exact phase/task skills. A plan request saves its admitted plan and checkpoint; plan-only authorizes no implementation. Respect native Plan Mode and explicit no-file, read-only, or chat-only limits; short advice, ordinary review, and small single-phase edits create no files unless requested."
 ---
 
 # Alaa Workflow
@@ -13,14 +13,14 @@ Keep long work resumable without imposing orchestration on every task. Plans own
 2. If a plan already exists, read it before execution, resume, delegation, review, or handoff, and follow the resume protocol in `references/context-continuity.md`.
 3. When `/alaa-memory-os` says its trigger holds, invoke it before planning from prior context or publishing durable knowledge. Memory may contribute verified leads; it never owns this workflow's plan, checkpoint, evidence, or handoff.
 4. Before the first non-trivial repository discovery or code-evidence choice, invoke `/alaa-code-intelligence-routing` once and reuse its routed result instead of retrieving the same fact through a second surface.
-5. Pair with `/alaa-low-noise` and the narrowest domain skill needed for technical decisions.
+5. Pair with `/alaa-low-noise` and the narrowest domain skill needed for technical decisions. Before designing implementation or verification, load `/alaa-testing-strategy`, including for this workflow's own scripts.
 6. Before writing, resolve plan kind, approval and artifact/profile admission through `references/artifact-lifecycle.md`. Resolve execution task authority and evidence through `references/task-tracking.md`, and exact skill bindings through `references/companion-routing.md`.
 
 ## Select the profile
 
 Select kind, approval admission, profile and execution phase/lane planning through `references/artifact-lifecycle.md`.
 
-Initialize design with `scripts/init_workflow_files.py --task <title> --plan-kind design`. Initialize execution with `scripts/init_workflow_files.py --task <title> --plan-kind execution --approved-design <path> --task-store beads --beads-binding <portable-reference> [--profile <profile>] [--review-boundary phase|final] [--with-prompts]`. The kind owner decides allowed flags; `references/task-tracking.md` owns execution binding arguments. Exit `0` means files were created. Exit `1` means a collision and no writes; continue that family instead of forcing over it. Exit `2` means the invocation could not run; do not assume an artifact set exists.
+Initialize design with `scripts/init_workflow_files.py --task <title> --plan-kind design`. Initialize execution with `scripts/init_workflow_files.py --task <title> --plan-kind execution --approved-design <path> --task-store beads --beads-binding <portable-reference> [--profile <profile>] [--review-boundary phase|final] [--with-prompts]`. For a design approved in this session, replace `--approved-design <path>` with `--approved-design embedded --design-source <path> --approval-by <approver> --approval-on <YYYY-MM-DD> --approval-evidence <evidence>`. The kind owner decides allowed flags; `references/task-tracking.md` owns execution binding arguments. Exit `0` means files were created. Exit `1` means a collision and no writes; continue that family instead of forcing over it. Exit `2` means the invocation could not run; do not assume an artifact set exists.
 
 ## Survive compaction and handoff
 
@@ -36,7 +36,8 @@ This section applies to execution engagements and issue-only implementation.
 - Apply the execution hierarchy and task authority in `references/task-tracking.md` before dependent work.
 - Bring canonical workflow/task owners and derived snapshots current before the next phase, handoff, or report.
 - Record the engagement's review boundary and final phase; pass them into nested orchestration. `alaa-codex-orchestrator` and `alaa-cc-orchestrator` `references/verification-and-gates.md` own cadence scheduling.
-- Record phase test-collection, repair/retest and inherited review barriers in the plan through `references/artifact-lifecycle.md`. Route their execution order to the runtime orchestrator pair's `references/verification-and-gates.md`; cite eligible unchanged evidence. Repository validation policy and `/alaa-testing-strategy` own stricter proof.
+- Record phase test-collection, repair/retest and inherited review barriers in the plan through `references/artifact-lifecycle.md`.
+  Route generic execution and the early-repair exception to /alaa-testing-strategy `references/100-test-execution.md`; the runtime orchestrators own phase/review scheduling and independent observers through the cadence owner above.
 - Fix defects and retest the failing path within the active retry budget; never weaken assertions, conceal failures through fixtures, suppress findings or lower review standards. Record an unresolved blocker and next safe action; continue independent safe work.
 - On resume, follow the read order in `references/context-continuity.md` before taking any action.
 - Complete only when implementation, validation evidence, documentation, artifact status, and the final reusable-context curation outcome agree.

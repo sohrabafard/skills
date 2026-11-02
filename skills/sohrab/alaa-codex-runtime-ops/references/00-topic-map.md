@@ -1,43 +1,15 @@
 # Alaa Codex Runtime Ops Topic Map
 
-Use this file to choose the smallest recovery reference. Each entry names the failure classes in `SKILL.md` that it expands.
+Match the observed condition. Apply every recovery under `SKILL.md` procedure and safety rules.
 
-- `references/10-windows-sandbox-recovery.md`
-- sandbox setup or refresh failure
-- sandbox-related DNS, registry, package-index, or remote-doc failure
-- serial retry after failed parallel reads
-- preserving scope after harness errors
-
-- `references/20-command-and-path-discipline.md`
-- command-length failure, including `CreateProcessAsUserW failed: 206`
-- Windows `EPERM` during validation or build cleanup
-- PowerShell 7 discovery and Windows-native command execution
-- Git Bash/MSYS signal-pipe, shared-memory, or child-startup failure
-- shell syntax, quoting, and path confusion across PowerShell and Git Bash
-- Docker named-pipe permission failure
-- port binding exclusion or reservation
-- escalation boundaries
-
-- `references/30-git-session-and-locked-file-recovery.md`
-- Git dubious ownership and `safe.directory` for read-only inspection
-- locked session JSONL and transcript audit
-- active log scanning safety and evidence classification
-- missing Codex app chat, `config.toml`, or global-state diagnosis
-
-- `references/40-project-fallbacks.md`
-- Node, Vite, Vitest, Quasar, and Yarn-gate fallbacks recorded from real sessions
-- validation command candidates and their normal escalation/authority conditions
-- the `entekhabat-front` `/new` package lane
-
-- `references/90-source-map.md`
-- freshness triggers for Codex, shell, OS, and pinned project fallback commands
-
-## Working rule
-
-Recover the blocked command, not the whole world. Keep retries bounded and return to the original task.
+| You are about to | Read | Decision owned there |
+|---|---|---|
+| Recover sandbox setup/launch failure, a denied filesystem operation, or blocked network access; decide whether a command may run outside the sandbox | `references/10-wsl-sandbox-recovery.md` | Evidence, exact-command escalation, authority and denial handling |
+| Diagnose Bash syntax, executable/path mismatch, command length, filesystem permissions, Docker socket access or port binding | `references/20-command-and-path-discipline.md` | Linux command diagnosis and smallest permitted recovery |
+| Inspect Git dubious ownership, an unreadable/active transcript, missing chats or Codex state/config | `references/30-git-session-and-locked-file-recovery.md` | Scoped trust, active-file safety and private-state evidence |
+| Recover a Node, Vite, Vitest, Quasar or Yarn gate | `references/40-project-fallbacks.md` | Repository-verified command candidates and proof limits |
+| Make a durable claim about Codex, WSL, Bash, Docker, Git or a project-specific fallback | `references/90-source-map.md` | Current primary sources and freshness limits |
 
 ## Maintenance
 
-- Keep `SKILL.md` recovery-focused. Project-specific commands belong in `references/40-project-fallbacks.md`, and domain, framework, or repository policy belongs in its own skill.
-- Add a failure class only when a recurring Codex or Windows failure appears in real sessions, and give it the same four fields: symptom, diagnosis, smallest retry, escalation or fallback.
-- Update examples only from observed sessions, and check historical findings against the current files before editing.
+Keep the existing external router as the single reference map. Put recovery details in the owning reference and domain policy in its owning skill. Add recurring failure signatures only from observed evidence, with symptom, diagnosis, smallest retry and fallback. Historical findings require confirmation against current sources.

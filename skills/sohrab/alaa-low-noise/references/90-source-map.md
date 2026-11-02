@@ -1,5 +1,9 @@
 # Source Map
 
+## Introduction
+
+Source priority and freshness guide context and output policy. Runtime, shell, and model behavior can change.
+
 Read this file when context or output policy depends on current runtime behavior, shell behavior, or model guidance.
 
 ## Source priority
@@ -25,29 +29,32 @@ Read this file when context or output policy depends on current runtime behavior
 
 Re-check current behavior when the task mentions:
 
-- the latest Claude Code or Codex release, or new tool, terminal, PowerShell, Bash, or Windows behavior;
-- very large generated logs, new validation runners, or new output caps;
-- a model change affecting reasoning, verbosity, narration, tool eagerness, or delegation polarity — read `references/model-output-profiles.md` first, and re-verify it against the vendor docs when the model is newer than that file;
-- subagent fan-out that could flood the parent's context;
-- context-window, compaction, or caching behavior, since these change what a long tool result actually costs.
+- The latest Claude Code or Codex release, or new tool, terminal, PowerShell, Bash, or Windows behavior.
+- Very large generated logs, new validation runners, or new output caps.
+- A model change affecting reasoning, verbosity, narration, tool eagerness, or delegation polarity. First read `references/model-output-profiles.md`. For a model newer than that file, re-verify it against vendor documentation.
+- Subagent fan-out that could flood the parent's context.
+- Context-window, compaction, or caching behavior. These change the actual cost of a long tool result.
 
 ## Standing policy
 
-- Start with the smallest instruction set that reliably preserves task quality, and add a rule only for a demonstrated gap. Repetition costs context without raising compliance.
-- Prioritize required facts, evidence, caveats, validation, blockers, and next steps before trimming repetition or optional background. A generic brevity instruction suppresses required artifacts first.
-- Treat fewer tokens, calls, or turns as improvements only when the final output still meets its quality bar.
-- State the desired output shape positively and explicitly, and avoid model-specific rituals or repeated phrasing.
-- Newer models still need bounded reads, reviewable edits, and validation evidence; capability does not remove the discipline.
+- Start with the smallest instruction set that reliably preserves task quality. Add a rule only for a demonstrated gap.
+- Repetition costs context without raising compliance.
+- Prioritize required facts, evidence, caveats, validation, blockers, and next steps before trimming repetition or optional background. Generic brevity instructions suppress required artifacts first.
+- Treat fewer tokens, calls, or turns as improvements only when final output still meets its quality bar.
+- State the desired output shape positively and explicitly. Avoid model-specific rituals and repeated phrasing.
+- Keep bounded reads, reviewable edits, and validation evidence with newer models. Greater capability does not remove this discipline.
 
 ## Domain-bounded anti-patterns
 
-Bad: pasting a 2,000-line validation log into chat to prove a command ran. Good: capture it to a repo-local artifact when useful, read the failing slice, and report the command, the result, and the path.
+**Pasting a 2,000-line validation log to prove a command ran:** Capture it in a repo-local artifact when useful. Read the failing slice. Report the command, result, and path.
 
-Bad: reading six full files to answer a question about one function. Good: search for the symbol, read the bounded range around it, and stop.
+**Reading six full files to answer a question about one function:** Search for the symbol. Read the bounded range around it, then stop.
 
 ## Caveats
 
-The documentation URLs above are current entry points and are restructured periodically; if one 404s, navigate from the vendor's docs root rather than guessing a path. Runtime-specific behavior for Claude Code and Codex diverges between releases, so a rule verified on one runtime is not automatically true on the other. Model and runtime claims belong to `/alaa-prompting-guide`; `references/model-output-profiles.md` routes there and defines no copied model policy.
+- The URLs above are current documentation entry points and can change. If one returns 404, navigate from the vendor's documentation root instead of guessing a path.
+- Claude Code and Codex behavior diverges between releases. Verification on one runtime does not automatically apply to the other.
+- `/alaa-prompting-guide` owns model and runtime claims. The `references/model-output-profiles.md` file routes there and defines no copied model policy.
 
 ## Sources
 

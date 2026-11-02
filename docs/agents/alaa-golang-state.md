@@ -34,7 +34,7 @@
 - Validation summary:
   - research validation complete through official Go, Fiber, and Uber sources plus the requested MCP Market pages
   - `python C:\Users\CIT\.codex\skills\.system\skill-creator\scripts\quick_validate.py skills\sohrab\alaa-golang` returned `Skill is valid!`
-  - `git -c safe.directory=D:/Sohrab/Project/skills diff --check -- docs/_agent_plans/20260404-2235-alaa-golang.md docs/agents/alaa-golang-state.md skills/sohrab/alaa-golang` returned clean output
+  - `git -c safe.directory=/home/sohrab/project/skills diff --check -- docs/_agent_plans/20260404-2235-alaa-golang.md docs/agents/alaa-golang-state.md skills/sohrab/alaa-golang` returned clean output
   - `2026-05-31T12:47:51+03:30` pre-edit route audit found `vendor=43 routed=42 missing=golang-how-to extra=0`
   - `2026-05-31T12:51:51+03:30` quick skill validation passed with `Skill is valid!`
   - `2026-05-31T12:51:51+03:30` full pack validation passed with existing body-length warnings in unrelated skills

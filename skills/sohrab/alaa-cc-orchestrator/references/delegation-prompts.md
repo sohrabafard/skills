@@ -6,12 +6,12 @@ Use the smallest applicable template. Replace placeholders with concrete reposit
 
 ```xml
 <goal><one-sentence outcome></goal>
-<context><relevant repository facts, prior lane outcomes, and preserved behavior></context>
+<context><established anchors (file:line, contracts, settled decisions), prior lane outcomes, cited discovery artifacts and preserved behavior; the child re-derives none of them></context>
 <scope>
   <owned>files/modules or read-only questions</owned>
   <excluded>explicit exclusions</excluded>
 </scope>
-<acceptance_criteria><numbered checkable criteria></acceptance_criteria>
+<acceptance_criteria><numbered: observable behavior -> proving command or selector -> expected result, or review-only: reason></acceptance_criteria>
 <constraints><safety, compatibility, resource, and user constraints></constraints>
 <authority>what the agent may and may not change or execute</authority>
 <cadence><whole-engagement plan, declared phase|final review boundary, final phase, current phase/task/subtask, pending review/commit and supplied task-owner acceptance authority></cadence>
@@ -29,7 +29,7 @@ For Beads-bound dispatches, resolve `<beads_identity>` through `alaa-workflow re
 
 For the `<return>` shape, length bound and context rationale, read `alaa-low-noise references/workflow-integration.md` section `Delegated lanes`. Workflow owns persistence; `verification-and-gates.md` owns the inherited cadence carried in `<cadence>`.
 
-Resolve `<skills>` through `alaa-workflow references/companion-routing.md`; copy the lane's resolved entries into the dispatch because a child cannot inherit the parent's context.
+Before designing implementation or verification, include /alaa-testing-strategy in `<skills>` and load it; read its `references/100-test-execution.md` before planning or executing checks. Resolve `<skills>` through `alaa-workflow references/companion-routing.md`; copy the lane's resolved entries into the dispatch because a child cannot inherit the parent's context.
 
 Every dispatch that can run long carries `<progress>` with the active host's reporting requirements. Do not infer a universal watchdog timeout or require narration between every command. Follow `SKILL.md` for interrupted-lane recovery.
 

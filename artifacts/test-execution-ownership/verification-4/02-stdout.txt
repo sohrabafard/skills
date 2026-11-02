@@ -1,0 +1,7 @@
+check_skill_index.py
+  README.md map located by: markers
+  README.md map entries: 71
+  README.fa.md table entries: 71
+  skill directories: 71
+
+FINDINGS: none

@@ -2,11 +2,11 @@ Overall: PASS for dispatched source gates 3–7 only. Each exited 0; affected ti
 
 | Command | CWD | Limits | Duration | Exit | Class | Tier | Proof |
 |---|---|---|---:|---:|---|---|---|
-| `python -B scripts/validate_sohrab_skill_pack.py` | `D:\Sohrab\Project\skills` | BelowNormal; sequential; 120s | 0.227s | 0 | PASS | affected | Level 1 — static |
-| `python -B scripts/check_skill_index.py` | `D:\Sohrab\Project\skills` | BelowNormal; sequential; 120s | 0.128s | 0 | PASS | affected | Level 1 — static |
-| `python -B scripts/check_fleet_references.py` | `D:\Sohrab\Project\skills` | BelowNormal; sequential; 120s | 2.891s | 0 | PASS | affected | Level 1 — static |
-| `python -B scripts/check_lifecycle_contract.py` | `D:\Sohrab\Project\skills` | BelowNormal; sequential; 120s | 0.348s | 0 | PASS | affected | Level 1 — static |
-| `python -B skills/sohrab/alaa-codex-orchestrator/scripts/check_agent_contracts.py` | `D:\Sohrab\Project\skills` | BelowNormal; sequential; 120s | 0.098s | 0 | PASS | affected | Level 1 — static |
+| `python -B scripts/validate_sohrab_skill_pack.py` | `/home/sohrab/project/skills` | BelowNormal; sequential; 120s | 0.227s | 0 | PASS | affected | Level 1 — static |
+| `python -B scripts/check_skill_index.py` | `/home/sohrab/project/skills` | BelowNormal; sequential; 120s | 0.128s | 0 | PASS | affected | Level 1 — static |
+| `python -B scripts/check_fleet_references.py` | `/home/sohrab/project/skills` | BelowNormal; sequential; 120s | 2.891s | 0 | PASS | affected | Level 1 — static |
+| `python -B scripts/check_lifecycle_contract.py` | `/home/sohrab/project/skills` | BelowNormal; sequential; 120s | 0.348s | 0 | PASS | affected | Level 1 — static |
+| `python -B skills/sohrab/alaa-codex-orchestrator/scripts/check_agent_contracts.py` | `/home/sohrab/project/skills` | BelowNormal; sequential; 120s | 0.098s | 0 | PASS | affected | Level 1 — static |
 
 All five started 2026-09-25 UTC; per-command start/end and output are in adjacent JSON/log artifacts. Candidate manifest SHA-256: `df86cde6dc83d0486e00a8aedc3325654831659ca88c6272de25539d7e82c8e2`; all 58 listed file hashes matched before and after the gates.
 

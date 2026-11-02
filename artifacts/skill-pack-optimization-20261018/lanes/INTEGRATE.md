@@ -13,7 +13,7 @@ Full-read provenance: all four affected skill trees were read completely after t
 
 Draft/compression decisions: `INTEGRATE-draft.md` records A1/A6. A1 points to the canonical narrow trigger instead of restating its test; A6 removes dual-runtime invocation text while retaining source-reference convention, the metadata exception, and the limited call-site scope.
 
-Verification from `D:\Sohrab\Project\skills` (workspace-write, ordinary host execution):
+Verification from `/home/sohrab/project/skills` (workspace-write, ordinary host execution):
 - `python -B scripts\check_fleet_references.py --skill alaa-postman-collections --skill alaa-algorithms-data-structures --skill alaa-system-design --skill alaa-codex-runtime-ops` â€” exit 0; findings none; 3 informational unmarked target-repository paths in Postman.
 - `python -B skills\sohrab\alaa-repo-docs\scripts\check_markdown_links.py . --files skills/sohrab/README.md skills/sohrab/README.fa.md skills/sohrab/alaa-postman-collections/SKILL.md skills/sohrab/alaa-algorithms-data-structures/SKILL.md skills/sohrab/alaa-system-design/SKILL.md skills/sohrab/alaa-codex-runtime-ops/SKILL.md skills/sohrab/alaa-codex-runtime-ops/references/20-command-and-path-discipline.md` â€” exit 0; seven Markdown files validated.
 - `git diff --check -- <same seven paths>` â€” exit 0.

@@ -6,6 +6,7 @@ instructions. An archived result does not establish today's repository state or 
 
 | Date | Archive | Coverage |
 |---|---|---|
+| 2026-10-26 | [Test execution ownership](../artifacts/test-execution-ownership/report.md) | Canonical testing execution/resource/classification ownership, mirrored runtime consumers and workflow writer recovery; independent source/POSIX proof and five proposal-only extraction options |
 | 2026-10-13 | [Capability recall and lesson economy](20261012-capability-recall/report.md) | Capability recall, memory/lesson ownership, nonwriting hook behavior, decision evaluation and independent source verification |
 | 2026-10-13 | [Dual task-store workflow](20261013-workflow-task-stores/report.md) | Local default and explicitly bound Beads authority, workflow continuity boundaries, compatibility, source review and verification limits |
 | 2026-10-12 | [Orchestrator routing](20261012-orchestrator-routing-plan/execution-report.md) | Cross-runtime role routing, neutral role authority, explicit task-selected model/effort, checker policy, independent source review, and runtime-proof handoff |

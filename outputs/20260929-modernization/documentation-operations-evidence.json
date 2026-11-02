@@ -2,7 +2,7 @@
   "lane": "documentation-operations",
   "state": "D4/D5/D8 operations repair cycle 1 complete; source frozen; independent full-scope verification and re-review pending",
   "candidate": "candidate-5 plus operations repair cycle 1",
-  "workspace": "D:/Sohrab/Project/skills",
+  "workspace": "/home/sohrab/project/skills",
   "read_coverage": {
     "full_read": [
       "skills/sohrab/AGENTS.md",

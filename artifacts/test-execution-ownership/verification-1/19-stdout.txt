@@ -1,0 +1,48 @@
+diff skills/sohrab/alaa-testing-strategy/scripts/run-low-priority.sh.orig skills/sohrab/alaa-testing-strategy/scripts/run-low-priority.sh
+--- skills/sohrab/alaa-testing-strategy/scripts/run-low-priority.sh.orig
++++ skills/sohrab/alaa-testing-strategy/scripts/run-low-priority.sh
+@@ -9,10 +9,22 @@
+ 
+ while [[ $# -gt 0 ]]; do
+   case "$1" in
+-    --priority) priority="$2"; shift 2 ;;
+-    --cpu-count) cpu_count="$2"; shift 2 ;;
+-    --) shift; break ;;
+-    *) echo "Unknown option: $1" >&2; exit 2 ;;
++  --priority)
++    priority="$2"
++    shift 2
++    ;;
++  --cpu-count)
++    cpu_count="$2"
++    shift 2
++    ;;
++  --)
++    shift
++    break
++    ;;
++  *)
++    echo "Unknown option: $1" >&2
++    exit 2
++    ;;
+   esac
+ done
+ 
+@@ -22,10 +34,13 @@
+ fi
+ 
+ case "$priority" in
+-  Normal) nice_value=0 ;;
+-  BelowNormal) nice_value=10 ;;
+-  Idle) nice_value=19 ;;
+-  *) echo "Invalid priority: $priority" >&2; exit 2 ;;
++Normal) nice_value=0 ;;
++BelowNormal) nice_value=10 ;;
++Idle) nice_value=19 ;;
++*)
++  echo "Invalid priority: $priority" >&2
++  exit 2
++  ;;
+ esac
+ 
+ cmd=("$@")

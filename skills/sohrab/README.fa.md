@@ -85,6 +85,7 @@
 | `alaa-testing-strategy` | طراحی تست: لایه‌ها، test double ها، شش سطح قدرت اثبات، کنترل flake، و پوشش | تصمیم‌گیری درباره اینکه چه چیزی و در کدام لایه تست شود |
 | `alaa-algorithms-data-structures` | بودجه پیچیدگی، پیدا کردن کران واقعی ورودی، انتخاب ساختار داده از روی الگوی دسترسی، و خانواده N+1 | مسیری که ورودی‌اش با تعداد کاربر، تاریخچه یا fan-out رشد می‌کند |
 | `alaa-code-intelligence-routing` | هدایت قطعی شواهد میان CodeGraph، Serena، Laravel Boost، مالک‌های native/domain و proof مخزن؛ جلوگیری از retrieval تکراری و الزام اعتبارسنجی در همان worktree | وقتی باید برای discovery، ویرایش معنایی، مستندسازی، artifact، review یا proof یک مالک انتخاب کنید |
+| `repository-tooling-capability-check` | بررسی CodeGraph، محدوده hook/approval در Codex و اتصال Hindsight با شواهد زنده همین session | وقتی باید قابلیت ابزارهای worktree را بررسی کنید |
 | `alaa-keyset-pagination` | طراحی pagination مبتنی بر cursor: ترتیب قطعی با tie-breaker، ایندکس متناظر، امضا و اعتبارسنجی cursor، و استثنای offset برای جدول‌های ادمین | هر route لیستی که کلاینت صفحه‌به‌صفحه می‌خواند |
 | `alaa-input-normalization` | تبدیل ارقام فارسی و عربی و هر رقم غیر-ASCII به ASCII در هر دو مرز ورودی، یعنی مرورگر در لحظه submit و middleware هر سرویس backend، با یک قرارداد و چهار پیاده‌سازی و یک harness انطباق | نوشتن یا بازبینی مسیر submit فرم، validator، middleware تازه، یا فیلد OTP و موبایل و کد ملی؛ و وقتی مقداری که با ارقام فارسی تایپ شده در validation یا unique index یا idempotency شکست می‌خورد |
 
@@ -94,7 +95,7 @@
 |---|---|
 | `alaa-cc-orchestrator` | هدایت چند-agent در Claude Code با ۲۸ نقش اجرایی و ۳۱ profile canonical، دروازه‌های تایید و بازبینی مستقل |
 | `alaa-codex-orchestrator` | هدایت چند-agent در Codex با ۲۷ نقش اجرایی و ۳۰ profile canonical؛ review استاندارد و deep یک قرارداد دارند |
-| `alaa-codex-runtime-ops` | بازیابی از خطاهای runtime در Codex و ویندوز |
+| `alaa-codex-runtime-ops` | بازیابی Codex داخل WSL/Linux: خطاهای sandbox، مسیر و Bash، مجوزهای فایل و پردازش، Docker socket و اجرای محدود بیرون از sandbox |
 | `alaa-memory-os` | مدل عملیاتی حافظه، مستقل از انبار: اینکه چه چیزی ارزش ثبت دارد، در چه شکل یادداشتی، و با چه بودجه بازخوانی و مسیر fail-open. ثبت drift وقتی دو منبع حقیقت اختلاف دارند. Basic Memory و Hindsight هر کدام یک reference آداپتور دارند و هیچ‌کدام موضوع این skill نیستند |
 | `alaa-extract-agent-lessons` | دروازه میانی و پایانی برای استخراج رابط‌های تصمیم‌گیری، معیارهای قضاوت، و کارت‌های دانش ماندگارِ مبتنی بر شواهد؛ نگهداری نامزدهای فعال در `alaa-workflow` و انتشار فقط دانش ماندگارِ مجاز از مسیر `alaa-memory-os` |
 
@@ -170,6 +171,7 @@
 | `alaa-async-messaging` | معماری صفحه پیام روی RabbitMQ، تنها broker ناوگان: درز بین commit پایگاه داده و پیام منتشرشده، outbox تراکنشی و سطح عملیاتی‌اش، publisher confirm، نقطه ack، prefetch و همروندی مصرف‌کننده، توپولوژی dead-letter، و رویه replay از DLQ |
 | `alaa-trust-gateway-auth` | صدور و اعتبارسنجی token و هدرهای معتمد در gateway |
 | `alaa-bale-provider` | یکپارچه‌سازی با پیام‌رسان بله |
+| `alaa-sms-provider-magfa` | فقط ارتباط با API مگفا برای ارسال پیامک، احراز هویت، پیگیری ارسال و وضعیت تحویل، و تفسیر پاسخ و خطا |
 | `alaa-sms-provider-mediana` | ارسال پیامک با مدیانا |
 | `tusd-upload-platform` | آپلود resumable با tusd |
 | `jitsi-platform-architect` | معماری پلتفرم Jitsi |

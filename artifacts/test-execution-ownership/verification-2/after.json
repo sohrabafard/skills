@@ -1,0 +1,23 @@
+{
+  "time": "2026-10-25T20:39:34.746846+00:00",
+  "head": "183f5c5a19daaa0c31c5aa41ce8ce2868181aa34",
+  "count": 283,
+  "manifest_sha256": "48811805b608a72f83bf3e934d10926dcf7c4b4cd120d953a9ef3791940cc84d",
+  "plans": {
+    "docs/_agent_plans/20261025-test-execution-ownership-design.md": "ed7a730d38fdabebdd899512b2f211040443b3cd503c08652fe9c921652b0296",
+    "docs/_agent_plans/20261025-test-execution-ownership.md": "ed640d6bd120ecda2caa0d63a0a4dbb27325bc920f0b143f0c7617d53af96a02",
+    "docs/agents/20261025-test-execution-ownership-design-state.md": "73bd6c27270f481c91bb08424174a29248dae5d09abbf664b9f3662826613474",
+    "docs/agents/20261025-test-execution-ownership-state.md": "4403e4e893034bd23258f0c536e97549054fca0ce6f87b5923dd5c3484d78e60"
+  },
+  "protected_index": "e69de29bb2d1d6434b8b29ae775ad8c2e48c5391",
+  "protected_worktree": "2cb840fe4688eb9d4debc15ddb3488a962035811",
+  "stability": {
+    "head": true,
+    "count": true,
+    "manifest_sha256": true,
+    "plans": true,
+    "protected_index": true,
+    "protected_worktree": true
+  },
+  "git_status_unchanged": true
+}

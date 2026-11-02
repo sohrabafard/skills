@@ -1,6 +1,6 @@
 # Focused implementation evidence
 
-Source worktree: `D:/Sohrab/Project/skills`, branch `codex/tune-implementation-routing`.
+Source worktree: `/home/sohrab/project/skills`, branch `codex/tune-implementation-routing`.
 Policy: cheap focused checks at normal priority; no CPU-heavy commands, full suites, new test infrastructure, or live installation.
 
 | Command | Working directory | Observed result |

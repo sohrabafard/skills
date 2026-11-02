@@ -1,0 +1,14 @@
+{
+  "observed_at": "2026-10-25T20:17:27.371698+00:00",
+  "head": "183f5c5a19daaa0c31c5aa41ce8ce2868181aa34",
+  "manifest_method": "Sorted repo-relative regular files in five named skill scopes, excluding __pycache__; SHA-256 + two spaces + path + LF per file; SHA-256 of UTF-8 manifest bytes.",
+  "scopes": [
+    "alaa-testing-strategy",
+    "alaa-codex-orchestrator",
+    "alaa-cc-orchestrator",
+    "alaa-workflow",
+    "alaa-prompting-guide"
+  ],
+  "file_count": 279,
+  "manifest_sha256": "f10812a6195e584a5579527102afc6de5701da5fc1104f6b71296a20d30a601b"
+}

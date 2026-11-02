@@ -1,0 +1,19 @@
+{
+  "observed_at": "2026-10-25T20:49:14.582831+00:00",
+  "head": "183f5c5a19daaa0c31c5aa41ce8ce2868181aa34",
+  "manifest_method": "Sorted repo-relative regular files in five named skill scopes; exclude __pycache__ and independently owned agents/openai.yaml metadata, which is not read by this focused list; SHA-256 + two spaces + path + LF per file; SHA-256 of UTF-8 manifest bytes.",
+  "scopes": [
+    "alaa-testing-strategy",
+    "alaa-codex-orchestrator",
+    "alaa-cc-orchestrator",
+    "alaa-workflow",
+    "alaa-prompting-guide"
+  ],
+  "excluded": [
+    "__pycache__",
+    "agents/openai.yaml"
+  ],
+  "file_count": 274,
+  "manifest_sha256": "a906cebc6bda4e1255427c90f268b0127e6db24743977b63769b9194c8ab1401",
+  "provisional_evidence": "checker-preservation-fix snapshot and two early logs are invalidated by the later 110 caller correction; final evidence uses this new snapshot only."
+}

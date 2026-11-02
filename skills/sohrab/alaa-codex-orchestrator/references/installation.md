@@ -4,6 +4,8 @@ Activation inspects role availability; it never installs or updates agents. Obta
 
 ## Source prerequisites
 
+Test design/execution and legacy runner entrypoints require the separately available sibling `alaa-testing-strategy`. Preserve its `references/100-test-execution.md`, `references/110-execution-resources.md`, `references/120-result-classification.md` and canonical runners. A missing owner or runner is a blocking unavailable dependency, never implicit installation authority; obtain authorization for any companion installation.
+
 Keep the complete orchestrator source beside `alaa-prompting-guide`, or pass its root explicitly (`-PolicyRoot` in PowerShell; the third agent-installer argument or second skill-installer argument in shell). Validation fails with exit `2` when the canonical policy owner cannot be loaded. Never substitute a local copy of model policy.
 
 The agent installer accepts only its own resolved canonical `agents/` directory. An alternate source directory is rejected before target writes, even when its sibling canonical source validates. Source TOMLs under `agents/` are transport-neutral templates and cannot be installed by plain copy. All installers validate model-neutral policy roles, role grants, generated reviewer wrappers, and the source manifest before writing to the target. A source failure leaves the destination untouched. Materialization then resolves the live parent MCP inventory, retains each transport discriminator, applies exact per-role grants, disables unassigned or unknown servers, and validates resolved definitions. Missing inventory or transport information fails closed.

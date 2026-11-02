@@ -1,5 +1,5 @@
 argv=python -B skills\sohrab\alaa-prompting-guide\scripts\check_claude_agent_evals.py --self-test
-cwd=D:\Sohrab\Project\skills
+cwd=/home/sohrab/project/skills
 env-overrides=none
 resource=BelowNormal; serial; timeout=180s
 started=2026-09-25T15:44:12.492317+03:30

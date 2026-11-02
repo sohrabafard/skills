@@ -1,7 +1,7 @@
 # Queue And Exchange Registry
 
-This file owns two things and nothing else: the **grammar** every Ala broker name follows, and the
-**registry** of every exchange and queue that exists in the fleet or is owed to it. A service that needs to
+This file owns broker-name **grammar**, the exchange and queue **registry**, and service-owned topology
+deployment. A service that needs to
 talk to another service reads the registry to learn where to publish and what to bind, instead of reading
 the other service's code.
 
@@ -51,6 +51,30 @@ to be changed when a listener is added, it is a command that has been mislabelle
 Observable that decides which kind a message is: search the producing repository for the receiver's service
 name. A publisher whose call site names one specific receiving service is publishing a command and must use
 the command topology; a publisher whose call site names only its own exchange is publishing an event.
+
+## Service-owned topology deployment
+
+Each service owns an idempotent command for its RabbitMQ topology, declared as a pre-deploy job in its
+service deploy contract so release retries converge. Command names, job keys, and configuration keys are
+service-owned. If the deploy schema cannot express the job, stop that integration and report its owner
+and blocker; invent no field and claim no running job.
+
+Expose ensure, verify, and policy-only admin export operations with an explicitly selected mode:
+
+- `full`: configure/write/read permissions on the vhost plus the `policymaker` tag; create the owned
+  exchanges, queues, bindings, and policies.
+- `restricted`: no `policymaker`; create permitted objects and verify administrator-owned policies.
+  Missing or drifted policies fail with their policy names. If management policy reads are unavailable,
+  report policies as unverified and follow only an explicit service-owned exit contract. AMQP declarations
+  or exit 0 never prove administrator policies match.
+
+For Auth's restricted-mode unreadable-policy exception and blocked job integration, read the
+[Auth topology adoption snapshot](95-fleet-conformance.md).
+
+Export only policies as RabbitMQ definitions JSON and equivalent `rabbitmqctl set_policy` commands;
+include no credentials or other topology objects. Use one service-owned topology source for declarations,
+verification, and export. Keep bounds in policies, not new queue arguments on existing lanes, to preserve
+redeclaration compatibility.
 
 ## Naming grammar
 
@@ -145,14 +169,23 @@ Every row carries exactly one status, and each means one thing:
 | `auth.events` | `auth` | event, topic | `auth` domain facts: sessions, tokens, profile changes | `auth` | any service that binds | `conforming` in code (`config/outbox.php:6` default), `non-conforming` in `.env.example:238`, which overrides it to `auth-profile.events` |
 | `content.events` | `content` | event, topic | `content` domain facts: course, set, content changes | `content` | any service that binds | `gap` — `content` publishes to an exchange literally named `events` (`app/Support/Content/RabbitMqIntegrationEventPublisher.php:19`, `.env.example:101`) |
 | `comment.events` | `comment` | event, topic | `comment` domain facts: comments, replies, likes, moderation | `comment` | any service that binds | `gap` — no exchange is configured at all (`config/queue.php:84` carries a queue name only) |
-| `entitlement.events` | `entitlement-api` | event, topic | grant and entitlement facts | `entitlement-api` | any service that binds | `gap` — not declared; only `entitlement-api`'s legacy outbox relay publishes these facts, through the default exchange (see `entitlement.projector.work`) |
+| `entitlement.events` | `entitlement-api` | event, topic | grant and entitlement facts | `entitlement-api` | any service that binds | `gap` — not declared; no `entitlement-api` code publishes to it today (on `projector.commands` its only publication is the rule projection task; `internal/mq` also publishes the `notif.*` expansion commands) |
 | `notification.commands` | `notification` | command, direct | the fleet's only cross-service ingress into `notification` | every producer service | `notification`; `notif` when it takes over a family | `conforming` |
 | `notification.commands.dlx` | `notification` | command dead-letter, direct | dead-lettered commands from the queues below | broker on nack | operator replay | `conforming` |
-| `projector.commands` (+ `projector.commands.dlx`) | `entitlement-projector` | command, direct | rule projection tasks, routing key `rule_projection.task.v1` | `entitlement-api` projection relay | `entitlement-projector` executor | `conforming` (`entitlement-api/docs/contracts/source-owned-rule-projection-v1/`, `internal/mq/projection.go:17-24`); production declarer unverified: the executor only passive-declares its queue (`entitlement-projector: internal/execruntime/runtime.go:585`), and `entitlement-api` declares this topology only with `ENTITLEMENT_API_PROJECTION_DECLARE_TASK_TOPOLOGY` on, for tests and local (`entitlement-api: internal/app/projection_worker.go:164-168`) |
-| `entitlement.commands` (+ `entitlement.commands.dlx`) | `entitlement-api` | command, direct | rule projection receipts, routing key `rule_projection.receipt.v1` | `entitlement-projector` | `entitlement-api` projection worker | `conforming` (same sources) |
-| `auth.commands` | `auth` | command, direct | `auth`'s own SMS lane commands; routing key = lane queue name | `auth` SMS outbox relay (`sms:relay`) | `auth` lane workers | `conforming` (`app/Enums/SmsQueue.php:18-20`); internal: `auth` is both sender and receiver |
-| `auth.commands.dlx` | `auth` | command dead-letter, direct | dead-lettered SMS lane commands, routing key `<lane>.failed` | broker on nack, by policy | operator replay | `conforming` (`app/Enums/SmsQueue.php:22`, `runtime/hooks/after-migrate/ensure-sms-command-topology.sh:44-46`); on Kubernetes an operator applies the exchange, queues and policies (`auth` `docs/ops/sms-magfa-cutover.md`) |
-| `<service>.commands` for `content`, `comment`, `wa`, and other services for inbound cross-service work | each service | command, direct | inbound work another service requires this service to do | the requesting service | the owning service | `gap` — only `notification`, `entitlement-projector` and `entitlement-api` (projection receipts) accept commands today, so every other cross-service instruction is either an HTTP call or absent |
+| `projector.commands` (+ `projector.commands.dlx`) | `entitlement-api` | command, direct | rule projection tasks, routing key `rule_projection.task.v1`; the name keeps the retired projector prefix and is **live**: the in-service `reflector` consumes it (owner decision D-AP-12, 2026-10-31) | `entitlement-api` projection relay | `entitlement-api` `reflector` role | `conforming` (`entitlement-api: internal/mq/projection.go:16-19`); a deployed environment gets the topology from a broker administrator, and `ENTITLEMENT_API_PROJECTION_DECLARE_TASK_TOPOLOGY` is for tests and local only (`internal/mq/projection.go:149-151`) |
+| `auth.commands` | `auth` | command, direct | `auth`'s own SMS lane commands; routing key = lane queue name | `auth` SMS outbox relay (`sms:relay`) | `auth` lane workers | `conforming` in source (`<repo>/app/Enums/SmsQueue.php`, `<repo>/app/Services/Messaging/BrokerTopology.php`, `<repo>/app/Console/Commands/BrokerTopologyCommand.php`); internal: `auth` sends and receives; deployment-job status is in the [Auth topology adoption snapshot](95-fleet-conformance.md) |
+| `auth.commands.dlx` | `auth` | command dead-letter, direct | dead-lettered SMS lane commands, routing key `<lane>.failed` | broker on nack, by policy | operator replay | `conforming` in source (`<repo>/app/Enums/SmsQueue.php`, `<repo>/app/Services/Messaging/BrokerTopology.php`, `<repo>/app/Console/Commands/BrokerTopologyCommand.php`); the command owns declarations and policies; contract-job integration is blocked by the migrate-only deploy schema under `alaa-csmd`, as recorded in the [Auth topology adoption snapshot](95-fleet-conformance.md); no deployment proof |
+| `<service>.commands` for `content`, `comment`, `wa`, and other services for inbound cross-service work | each service | command, direct | inbound work another service requires this service to do | the requesting service | the owning service | `gap` — only `notification` and `entitlement-api` (the `reflector` task queue) accept commands today, so every other cross-service instruction is either an HTTP call or absent |
+
+Retired names, removed from this registry 2026-11-01. Never recreate, bind or consume them:
+`entitlement.commands`, `entitlement.commands.dlx`, `entitlement.command.rule_projection.receipt.v1` and its `.dlq`
+(receipt transport removed by owner decision D-CT-6, 2026-10-31); `entitlement.projector.work` and
+`entitlement.reconciliation` with their `.retry` and `.dlq` legs (legacy path gone at AP-6 closure, D-AP-10;
+`entitlement-api: internal/mq/topology.go:14-18` manages only `notif.retrieve_users`).
+
+One broker user per service (owner decision D-AP-13, 2026-10-31): `entitlement-api` connects with one
+`RABBITMQ_URL` user for every role, and RabbitMQ TLS and credentials are the trust boundary. A registry row never
+requires a per-role user or `user_id` identity check.
 
 ## Registry: queues
 
@@ -163,17 +196,14 @@ Every row carries exactly one status, and each means one thing:
 | `notification.command.notification.store.v1` | `notification` | command | store an in-app inbox message | any producer, routing key `notification.store.v1` | `notification` | `conforming` (`config/queue.php:214-220`); stays on `notification` and does not migrate to `notif` |
 | `notification.command.user_projection.upsert.v1` | `notification` | command | keep notification's user projection resolvable | every service that owns users | `notification` | `conforming` (`config/queue.php:225-226`) |
 | `notification.command.<family>.v1.dlq` for each of the four above | `notification` | dead-letter | failed commands, routing key `<family>.v1.failed` | broker | operator replay | `conforming` |
-| `projector.command.rule_projection.task.v1` (+ `.dlq`) | `entitlement-projector` | command | one rule projection task | `entitlement-api` projection relay | `entitlement-projector` executor | `conforming`; replaces `entitlement.projector.work` |
-| `entitlement.command.rule_projection.receipt.v1` (+ `.dlq`) | `entitlement-api` | command | one projection receipt | `entitlement-projector` | `entitlement-api` projection worker | `conforming` |
-| `entitlement.projector.work` (+ `.retry`, `.dlq`) | `entitlement-api` | command | legacy tuple-projection work | `entitlement-api` outbox relay and `projection-replay` | none since the source-owned rule projection; never add a consumer | `legacy` — removed at the AP-6 cutover (owner decision D2, `source-owned-rule-projection-v1/80-bounds-and-cutover.md`); until then a deployment running the rule projection stops the outbox relay, or the queue grows unbounded |
-| `entitlement.reconciliation` (+ `.retry`, `.dlq`) | `entitlement-api` | command | `reconciliation.requested` repair trigger for the legacy projector `reconcile` lane | `entitlement-api` api role, `POST /api/v1/admin/reconciliation/run` | none: the projector `reconcile` consumer was removed 2026-10-09 (`entitlement-projector` `515cdb0`, constitution 3.0.0); never add a consumer | `legacy` — route and event deprecated by owner decision 2026-10-10 and removed at the AP-6 cutover with the legacy outbox publication; until then the route answers `202`, the message is never consumed, and the queue (no `x-max-length`) grows. Replacements: `projection-repair-rule`, `projection-reopen-task`, generation replacement, and the projector drift audit (`entitlement-api: internal/reconciliation/service.go:114`, `internal/mq/topology.go:30-35`, `docs/handoffs/mesh-145d79be-registry-inventory.md` section B; `entitlement-projector: docs/rfc/projector-bounds-defaults.md:291`) |
-| `notif.retrieve_users` (+ `.retry`, `.dlq`) | `entitlement-api` | command | resolve an object audience into recipients | requester unverified; no publisher in `entitlement-api` | `entitlement-api` `expansion-worker`; it writes `.retry` and `.dlq` itself | `conforming` (`entitlement-api: internal/mq/types.go:17`, `internal/workers/expansion_worker.go:262-309`) |
-| `notif.expand_users` | unverified — `entitlement-api` only publishes and does not declare it; its doc names `notification` as declarer (`entitlement-api: docs/delivery-operators/20-local-bring-up.md:109`, doc only) | command | expand one group principal into users | `entitlement-api` `expansion-worker` (default `AUTH_EXPANSION_PROVIDER_MODE=queue`) | audience/expansion provider, unverified; no reply is read from the queue | `conforming` name (`entitlement-api: internal/mq/types.go:18`, `internal/mq/topology.go:14-20`); `.retry`/`.dlq` unverified |
-| `notif.recipient_chunks` | unverified — same as `notif.expand_users` | command | deliver resolved recipient chunks | `entitlement-api` `expansion-worker`, only for a job carrying a `notification_id` | reserved — no consumer is wired | `conforming` name, undrained consumer (`entitlement-api: internal/mq/types.go:19`, `internal/expansion/service.go:576-582`); `.retry`/`.dlq` unverified |
-| `auth.jobs.sms_otp` (+ `.dlq`) | `auth` | internal job | OTP and security-notice sends; lane policy `message-ttl` 900000 ms (owner decision 2026-10-21, F25), and `max-length` 100000 on the `.dlq` | `auth` through `auth.commands` | `auth` `worker-sms-otp` | `conforming` (`app/Enums/SmsQueue.php:14`) |
-| `auth.jobs.sms_bulk` (+ `.dlq`) | `auth` | internal job | admin campaign batches of at most 100 recipients; `max-length` 100000 on the `.dlq` (owner decision 2026-10-21, F25) | `auth` through `auth.commands` | `auth` `worker-sms-bulk` | `conforming` (`app/Enums/SmsQueue.php:15`) |
-| `auth.jobs.sms_control` (+ `.dlq`) | `auth` | internal job | campaign preparation, reconciliation lookups, delivery-status polls; `max-length` 100000 on the `.dlq` (owner decision 2026-10-21, F25) | `auth` through `auth.commands` | `auth` `worker-sms-control` | `conforming` (`app/Enums/SmsQueue.php:16`) |
-| `auth.jobs.sms_bale` (+ `.dlq`) | `auth` | internal job | Bale Safir sends, a bulkhead apart from the Magfa lanes; lane policy `message-ttl` 900000 ms (owner decision 2026-10-21, F25), and `max-length` 100000 on the `.dlq` | `auth` through `auth.commands` | `auth` `worker-sms-bale` | `conforming` (`app/Enums/SmsQueue.php:19`); the policy values are an owner decision that `auth` main code does not yet declare [question] |
+| `projector.command.rule_projection.task.v1` (+ `.dlq`) | `entitlement-api` | command | one rule projection task; **live**, consumed by the `reflector` role (`internal/mq/projection.go:19`) | `entitlement-api` projection relay | `entitlement-api` `reflector` role | `conforming`; replaces `entitlement.projector.work` |
+| `notif.retrieve_users` (+ `.retry`, `.dlq`) | `entitlement-api` | command | resolve an object audience into recipients | requester unverified; no publisher in `entitlement-api` | `entitlement-api` `expansion-worker`; it writes `.retry` and `.dlq` itself | `conforming` (`entitlement-api: internal/mq/types.go:14`, `internal/workers/expansion_worker.go:262-309`) |
+| `notif.expand_users` | unverified — `entitlement-api` only publishes and does not declare it; its doc names `notification` as declarer (`entitlement-api: docs/delivery-operators/20-local-bring-up.md:109`, doc only) | command | expand one group principal into users | `entitlement-api` `expansion-worker` (default `AUTH_EXPANSION_PROVIDER_MODE=queue`) | audience/expansion provider, unverified; no reply is read from the queue | `conforming` name (`entitlement-api: internal/mq/types.go:15`, `internal/mq/topology.go:14-20`); `.retry`/`.dlq` unverified |
+| `notif.recipient_chunks` | unverified — same as `notif.expand_users` | command | deliver resolved recipient chunks | `entitlement-api` `expansion-worker`, only for a job carrying a `notification_id` | reserved — no consumer is wired | `conforming` name, undrained consumer (`entitlement-api: internal/mq/types.go:16`, `internal/expansion/service.go:576-582`); `.retry`/`.dlq` unverified |
+| `auth.jobs.sms_otp` (+ `.dlq`) | `auth` | internal job | OTP and security-notice sends; lane policy `message-ttl` 900000 ms (owner decision 2026-10-21, F25), and `max-length` 100000 on the `.dlq` | `auth` through `auth.commands` | `auth` `worker-sms-otp` | `conforming` in source (`<repo>/app/Enums/SmsQueue.php`, `<repo>/app/Services/Messaging/BrokerTopology.php`); deployment-job status: [Auth topology adoption](95-fleet-conformance.md) |
+| `auth.jobs.sms_bulk` (+ `.dlq`) | `auth` | internal job | admin campaign batches of at most 100 recipients; `max-length` 100000 on the `.dlq` (owner decision 2026-10-21, F25) | `auth` through `auth.commands` | `auth` `worker-sms-bulk` | `conforming` in source (`<repo>/app/Enums/SmsQueue.php`, `<repo>/app/Services/Messaging/BrokerTopology.php`); deployment-job status: [Auth topology adoption](95-fleet-conformance.md) |
+| `auth.jobs.sms_control` (+ `.dlq`) | `auth` | internal job | campaign preparation, reconciliation lookups, delivery-status polls; `max-length` 100000 on the `.dlq` (owner decision 2026-10-21, F25) | `auth` through `auth.commands` | `auth` `worker-sms-control` | `conforming` in source (`<repo>/app/Enums/SmsQueue.php`, `<repo>/app/Services/Messaging/BrokerTopology.php`); deployment-job status: [Auth topology adoption](95-fleet-conformance.md) |
+| `auth.jobs.sms_bale` (+ `.dlq`) | `auth` | internal job | Bale Safir sends, a bulkhead apart from the Magfa lanes; lane policy `message-ttl` 900000 ms (owner decision 2026-10-21, F25), and `max-length` 100000 on the `.dlq` | `auth` through `auth.commands` | `auth` `worker-sms-bale` | `conforming` in source (`<repo>/app/Enums/SmsQueue.php`, `<repo>/app/Services/Messaging/BrokerTopology.php`); the command declares both policies; deployment-job status: [Auth topology adoption](95-fleet-conformance.md) |
 | `sms` | `auth` | internal job | legacy Mediana notification jobs left from before the Magfa cutover; each now fails with `MEDIANA_DELIVERY_DISABLED` | none since the cutover | `auth` `worker-sms` | `non-conforming` — a bare name in a shared vhost (`runtime/service.runtime.env:129`); retire it with `worker-sms` once it is drained, never add a publisher |
 | `comment.jobs.outbox` | `comment` | internal job | `comment`'s own outbox relay job | `comment` | `comment` | `gap` — the queue is named `events` today (`config/queue.php:84`, `.env.example:128`) |
 | `content.jobs.outbox` | `content` | internal job | `content`'s own outbox relay job | `content` | `content` | `gap` — the queue is named `events` today (`.env.example:101`) |
@@ -191,7 +221,7 @@ Every row carries exactly one status, and each means one thing:
 Not rows, verified 2026-10-10:
 - `authz-sidecar` uses no broker: a synchronous HTTP checker with no AMQP module (`authz-sidecar: go.mod:5-22`, `internal/httpserver/server.go:51-55`).
 - `authz-openfga` uses no broker: the engine is PostgreSQL-only (`authz-openfga: docker-compose.yml:27`). The queues its `verification/extraction-handoff/broker/` harness polls are non-runtime test fixtures.
-- `entitlement-api`'s projection-worker startup probe publishes to an undeclared `entitlement.projection.probe.<uuid>` on the default exchange, unroutable by design, to prove the broker rejects a forged AMQP `user_id`; no queue exists (`entitlement-api: internal/mq/user_probe.go:20-27`).
+- `entitlement-api` no longer runs a broker identity probe: the projection-worker and its forged-`user_id` probe were retired with the receipt transport (one broker user per service, D-AP-13); no probe queue or routing key exists.
 
 ## The `auth` to `notification` command path
 

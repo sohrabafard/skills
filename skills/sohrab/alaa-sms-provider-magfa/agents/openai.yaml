@@ -1,0 +1,7 @@
+interface:
+  display_name: "Alaa SMS Provider Magfa"
+  short_description: "Magfa HTTP v2 SMS API integration contract"
+  default_prompt: "Use $alaa-sms-provider-magfa only to implement, review, debug, or test communication with Magfa for SMS delivery. Keep general SMS/OTP flows, provider selection, queues, and other providers outside its scope."
+
+policy:
+  allow_implicit_invocation: true

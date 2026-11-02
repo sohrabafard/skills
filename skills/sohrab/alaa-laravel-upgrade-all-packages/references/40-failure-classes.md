@@ -2,7 +2,7 @@
 
 Each class is symptom, diagnosis, smallest retry, escalation. "Smallest retry" always names what changes on the retry; an identical re-run is not a retry. Two things are never a retry step: `composer update` used to undo something (`10-rollback-and-blast-radius.md`), and a hand-edited `composer.lock`.
 
-Windows sandbox specifics, locked files and path discipline are `/alaa-codex-runtime-ops` `references/10-windows-sandbox-recovery.md`, which wins wherever both describe the same Windows behaviour.
+When a sandbox, locked-file or path failure falls within the declared scope of /alaa-codex-runtime-ops, read its `references/00-topic-map.md` before choosing recovery.
 
 Command forms are given for both shells, because both occur on the same machine: native PowerShell for a Codex session on Windows, POSIX or Git-Bash for a Claude Code Bash-tool call. `$env:VAR = "value"` is PowerShell-only and, pasted into a POSIX shell, fails silently as a literal command rather than erroring. Translate; never paste one form into the other runtime.
 

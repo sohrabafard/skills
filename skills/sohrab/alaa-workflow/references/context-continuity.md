@@ -50,7 +50,7 @@ Optional schema-2 JSON is a compact consumer snapshot with no task table or grap
 
 Task state belongs to the authority selected through `references/task-tracking.md`; neither a checkpoint nor JSON becomes an offline issue register.
 
-For a `phase-task-subtask` family the cursor also records `Current task` and `Current subtask` as exact mapped issue IDs, or `none` before selection/after completion. A selected subtask requires its actual task and phase; a selected task requires its actual phase. Clear finished cursors before moving phases. Schema-3 JSON adds `current_task` and `current_subtask` and derives them exactly from the checkpoint (or direct cursor); schema-2 snapshots remain valid for existing families. Keep the inherited review boundary, pending review/commit and next safe leaf recoverable through the plan and cursor, without copying issue state.
+For a `phase-task-subtask` family the cursor also records `Current task` and `Current subtask` as exact mapped issue IDs, or `none` before selection/after completion. Executing a task leaf selects its task ID and leaves `Current subtask: none`. A selected subtask requires its actual task and phase; a selected task requires its actual phase. Clear finished cursors before moving phases. Schema-3 JSON adds `current_task` and `current_subtask` and derives them exactly from the checkpoint (or direct cursor); schema-2 snapshots remain valid for existing families. Keep the inherited review boundary, pending review/commit and next safe leaf recoverable through the plan and cursor, without copying issue state.
 
 ## The handoff package
 
@@ -119,7 +119,7 @@ First resolve the artifact family and kind through `references/artifact-lifecycl
 5. **The files named in "read first on resume."**
 6. **JSON state**, only for a consumer that needs it; reconcile it with canonical owners rather than trusting it independently.
 
-Then verify position against reality: check `git status`, the diff, source/deliverable availability and attributable evidence against the cursor's touched surfaces. Reconcile stale task/phase/status snapshots before acting and record what was stale. `references/workspace-and-integration.md` owns evidence reuse: unchanged attributable proof survives a new session or PC, while affected proof does not. A remembered result or another PC's inaccessible source is insufficient.
+Before overlapping writes after interruption or replacement, apply `references/workspace-and-integration.md` `## Shared-file ownership and stopped-writer recovery`; compaction preserves living ownership. Then verify position against reality: check `git status`, the diff, source/deliverable availability and attributable evidence against the cursor's touched surfaces. Reconcile stale task/phase/status snapshots before acting and record what was stale. `references/workspace-and-integration.md` owns evidence reuse: unchanged attributable proof survives a new session or PC, while affected proof does not. A remembered result or another PC's inaccessible source is insufficient.
 
 Before the next execution task, resolve and load its phase bindings and task overrides through `references/companion-routing.md`. Recheck mapped availability when the runtime or installed catalog changed; historical mappings do not prove current availability.
 

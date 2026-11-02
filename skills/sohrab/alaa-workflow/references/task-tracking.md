@@ -24,7 +24,7 @@ Before dependent implementation, read the issue and compare its actual assignee 
 
 Updates to owned issues use `--if-assignee <actor>` and, when relying on a status, `--if-status <expected-status>`. For guard mismatch/exit 13 or uncertain writes, re-read and reconcile before retrying; `## Beads capabilities in use` owns guard mechanics.
 
-Replacement or cross-device transfer requires authorized coordination, a stopped old writer and reconciled surviving files/evidence. Serialize transfer against closure and other ownership changes. The authorized transferring agent uses its own `--actor` with old-assignee/status guards and `--assignee <new-actor>`, then reads back. A refused transfer blocks dependent work; never force it. The new actor acts only after verified transfer.
+Before replacement or cross-device transfer, apply `references/workspace-and-integration.md` `## Shared-file ownership and stopped-writer recovery`; authorized coordination and reconciled surviving files/evidence remain required. Serialize transfer against closure and other ownership changes. The authorized transferring agent uses its own `--actor` with old-assignee/status guards and `--assignee <new-actor>`, then reads back. A refused transfer blocks dependent work; never force it. The new actor acts only after verified transfer.
 
 `bd close` has no assignee/status guard. Serialize ownership changes/transfers across pre-read, close and readback: verify your assignee and expected status, close with your actor after required acceptance/lint, then verify closure and assignee. This sequence is not atomic. Uncertain coordination blocks closure; report it rather than claiming race safety.
 
@@ -47,7 +47,11 @@ Workflow plan contents follow `references/context-continuity.md`; task acceptanc
 
 Every new execution family declares `- Task hierarchy: phase-task-subtask` in the plan header, with `Task store: beads` and its portable `Task binding`. Existing unmarked or local families keep their original contract until explicit migration; omitting the marker cannot exempt a new execution plan.
 
-Register every phase, task and subtask, its acceptance and parent-child relation in bound Beads before dependent execution. A phase or milestone contains one or more tasks; each task contains one or more executable subtasks. Map milestones as `Phase N` in the plan. IDs are opaque and unique across the family. Preserve an optional enclosing engagement epic. The plan maps containment, never mutable issue status:
+Register every phase, task and any subtasks, their acceptance and parent-child relations in bound Beads before dependent execution. A phase or milestone contains one or more tasks. Map milestones as `Phase N` in the plan. IDs are opaque and unique across the family. Preserve an optional enclosing engagement epic.
+
+A coherent task is an executable leaf with zero subtasks. Use subtasks only to expose a checklist too broad for one agent to hold in mind, so no part is skipped: two or more separable parts, each independently checkable with acceptance different from its siblings. Each can be claimed, verified and closed on its own evidence. Never create a single subtask restating its parent; it adds tracking cost without visibility. The hierarchy validator accepts zero subtasks and rejects exactly one as redundant. Verify distinct scope and acceptance in the bound issues before execution.
+
+The plan maps containment, never mutable issue status:
 
 ```markdown
 ### Phase 1 - Implement
@@ -55,14 +59,16 @@ Register every phase, task and subtask, its acceptance and parent-child relation
 - Required skills: exact-owner
 - Work:
   - Task issue: opaque-task-id [skills: inherit]
-    - Subtask issue: opaque-subtask-id [skills: inherit]
+    - Subtask issue: opaque-subtask-a-id [skills: inherit]
+    - Subtask issue: opaque-subtask-b-id [skills: inherit]
+  - Task issue: opaque-leaf-task-id [skills: inherit]
 ```
 
 Use exactly zero, two and four spaces before the respective list markers. A task belongs to that phase and a subtask to its immediately preceding task. Inherit phase skills at a task and task skills at a subtask, or supply the complete override. Do not mix flat `Issue:` entries or local checkboxes into a marked hierarchy. Missing, duplicate, orphan or unresolved executing nodes block dependent work. Offline structure proves no live node, parent-child relation, binding or readiness: verify those through the bound owner and read them back.
 
 Containment does not establish ordering. Record genuine prerequisites as separate blocking edges through `## Record task prerequisites`; preserve independently ready leaves. Register the hierarchy and reconcile barriers before dispatch, not after writes.
 
-The plan header records `Review boundary: phase` or `final`, `Final phase: Phase N`, and `Commit authority: explicit user grant: <source and scope>` or `Commit authority: not granted`. Offline syntax never proves that the user actually granted authority. Each phase records `Review status` and `Review evidence`. Pending review is `REVIEW_PENDING`; completed review uses the verdict from `references/review-mode.md` with attributable evidence. `alaa-codex-orchestrator` and `alaa-cc-orchestrator` `references/verification-and-gates.md` own when review, independent verification and commits run; the plan passes this whole-engagement contract into nested invocations rather than resetting it.
+The plan header records `Review boundary: phase` or `final`, `Final phase: Phase N`, and `Commit authority`. New plans default to `local commits pre-authorized (main instruction file)`; verify the main instruction rule before acting. Use `explicit user grant: <source and scope>` for a separate grant or `not granted` when no grant applies. Offline syntax proves no authority; local-commit authority covers no push, merge into another branch, tag or history rewrite. Each phase records `Review status` and `Review evidence` separately from any commit checkpoint. Pending review is `REVIEW_PENDING`; completed review uses the verdict from `references/review-mode.md` with attributable evidence. `alaa-codex-orchestrator` and `alaa-cc-orchestrator` `references/verification-and-gates.md` own when review, independent verification and commits run; the plan passes this whole-engagement contract into nested invocations rather than resetting it.
 
 New nested plans retain the canonical engagement's `Review boundary` and `Final phase`, reached through `Parent plan`, and record their own last phase as `Local final phase`. Their cursor remains local. Nested final-only phases keep `REVIEW_PENDING`; the canonical engagement owns final acceptance. Resolve ancestry before writing; malformed, conflicting, cyclic, missing or over-limit ancestry blocks initialization. A parent without representable cadence requires explicit reconciliation; never infer legacy defaults or migrate its authority. Existing families remain readable under their recorded contract.
 

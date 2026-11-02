@@ -2,14 +2,14 @@
 
 - Plan kind: execution
 - Approved design: {{approved_design_display}}
-- Task ID: `{{task_id}}`
+{{embedded_approval_header}}- Task ID: `{{task_id}}`
 - Mode: `{{mode}}`
 - Profile: `{{profile}}`
 - Task store: `{{task_store}}`
 - Task binding: {{task_binding}}
 {{hierarchy_header}}- Review boundary: {{review_boundary}}
 - Final phase: {{final_phase}}
-{{local_final_header}}- Commit authority: not granted
+{{local_final_header}}- Commit authority: {{commit_authority}}
 - Status: planning
 - Created: `{{created_at}}`
 - Parent plan: {{parent_plan_display}}
@@ -47,6 +47,7 @@ Knowledge held only in the current agent's head disappears on compaction. Fill a
 
 | Skill | Source | Load before | When | If unavailable |
 |---|---|---|---|---|
+| alaa-testing-strategy | NEEDS_FILL | before designing implementation or verification, including workflow scripts | always for implementation/verification | block dependent work |
 | NEEDS_FILL | NEEDS_FILL | NEEDS_FILL | NEEDS_FILL | NEEDS_FILL |
 
 ## Ordered Work
@@ -71,7 +72,7 @@ Prompting-guide supplies capability/mechanics evidence; workflow stores decision
 - Keep shared-context work in the main conversation.
 - Independent lane ownership, if admitted: none.
 {{task_delegation}}
-- Disjoint writes and shared-resource conflicts: NEEDS_FILL
+- Disjoint writes and shared-resource conflicts: NEEDS_FILL; apply /alaa-workflow `references/workspace-and-integration.md` for shared-file ownership and stopped-writer recovery.
 - Integration barriers and parallel/serialized rationale: NEEDS_FILL
 - Consolidated tasks/checks and preserved outcome/evidence mappings: NEEDS_FILL
 - Phase collection, repair/retest and review barriers, owners and resume evidence: NEEDS_FILL; apply the active runtime orchestrator's verification-and-gates.md.
@@ -81,3 +82,4 @@ Prompting-guide supplies capability/mechanics evidence; workflow stores decision
 - Before execution, verify the adopted Beads workspace, project, nodes, parent-child relations and blocking edges through the binding owner; initialization proves only offline syntax. Nested invocations inherit this engagement's review boundary and final phase.
 
 {{position_section}}
+{{approved_design_section}}

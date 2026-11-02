@@ -1,0 +1,5 @@
+SELF-TEST FAILED: runtime collection scheduling accepted
+SELF-TEST FAILED: inherited phase/final cadence accepted
+SELF-TEST FAILED: gate boundary references/100-test-execution.md required
+SELF-TEST FAILED: gate boundary references/110-execution-resources.md required
+SELF-TEST FAILED: gate boundary references/120-result-classification.md required

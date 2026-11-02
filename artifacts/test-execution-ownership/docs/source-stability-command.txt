@@ -1,0 +1,15 @@
+python - <<'PY'
+from pathlib import Path
+import hashlib
+for label in ('scope', 'tested-inputs'):
+    p = Path(f'artifacts/test-execution-ownership/verification-4/before-{label}-manifest.sha256')
+    rows = p.read_text().splitlines()
+    mismatches = []
+    for row in rows:
+        expected, name = row.split('  ', 1)
+        f = Path(name)
+        if not f.is_file() or hashlib.sha256(f.read_bytes()).hexdigest() != expected:
+            mismatches.append(name)
+    print(label, len(rows), 'mismatches', mismatches, 'manifest-sha256', hashlib.sha256(p.read_bytes()).hexdigest())
+    assert not mismatches
+PY

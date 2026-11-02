@@ -34,10 +34,19 @@ pending. No other repository was re-audited for this amendment.
 | `auth` | `2d062c2d843b7c502409e19599cd9b0c6336150b` |
 | `comment` | `2a87f3986963bf5eefd04884aa2a807c046e1e00` |
 | `content` | `922c5662c8e787c809184a065fa591f3296df9b4` |
-| `entitlement-platform` (`entitlement-api`, `projector`, `authz-sidecar`) | `20ba532322fa599d285bd3316b9eb87870104ea` |
+| `entitlement-platform` (`entitlement-api`, `authz-sidecar`; `projector` retired 2026-11-01) | `20ba532322fa599d285bd3316b9eb87870104ea` |
 | `gateway` | `779aea869315a5853d49de264a99bb2df6087550` |
 | `wa` | `691baf4473a78013087d4f5397fd2e9978b472ac` |
 | `alaa-go-chi` kit | `f166b57e579e0dedf4a2954944f98d42d9538fd6` |
+
+## Topology deployment adoption — 2026-10-24
+
+This amendment records local implementation and isolated real-broker validation under `alaa-ubec`, not a fleet re-survey, production deployment, or release proof.
+
+| Component | Local implementation | Contract integration | Evidence and limits |
+|---|---|---|---|
+| `auth` | Implemented locally: `php artisan broker:topology ensure`, `export-admin`, and `verify`; explicit `AUTH_BROKER_TOPOLOGY_MODE=full` or `restricted` | **BLOCKED**: deploy's `<repo>/schemas/service-contract.v1.json` permits only `preDeployJobs.migrate` with `additionalProperties: false`; `alaa-csmd` owns schema expansion | Auth `<repo>/docs/ops/sms-magfa-cutover.md`, Broker topology; `<repo>/app/Console/Commands/BrokerTopologyCommand.php`; `<repo>/runtime/hooks/after-migrate/ensure-sms-command-topology.sh`. Full-mode `verify` fails when policy or topology-object inspection is unavailable. Only restricted mode warns and exits 0 when management inspection is unreadable; policies remain unverified and require separate administrator verification before delivery. Command/model evidence: `<repo>/app/Services/Messaging/BrokerTopology.php`; regression evidence: `<repo>/tests/Feature/BrokerTopologyCommandTest.php`. Final independent SQLite suite: 2713 tests, 40693 assertions, zero errors or failures, 125 skips, and two notices. Fresh local RabbitMQ validation in a source-mounted runtime image on the Docker network passed one test with 35 assertions; isolated fixture cleanup was verified. Evidence: `alaa-ubec` artifacts `final-exhaustive.log`, `final-live-summary.json`, and `final-fixture-cleanup-check.json`. No contract-declared topology job, running-app-container validation, packaged-image validation, production deployment, or release proof. |
+| `deploy` | Implemented locally under `alaa-csmd` (2026-10-24): `preDeployJobs` is a map of named `{command}` jobs (`^[a-z][a-zA-Z0-9]{0,31}$`, `migrate` required for class laravel); Compose runs every migrate, then each service's other jobs by name, before workloads; keeps each job output as `cd-artifacts/pre-deploy/<service>/<job>.log`; refuses `PRE_DEPLOY_UNVERIFIED` on a `verification=incomplete` line unless `PRE_DEPLOY_ACCEPT_UNVERIFIED=true`; shared variable `BROKER_TOPOLOGY_MODE` (`full`/`restricted`, default `restricted`) fills `<PREFIX>_BROKER_TOPOLOGY_MODE` | Unblocks the `auth` row once its contract declares the jobs; service contracts not yet changed | Deploy `<repo>/docs/delivery-topology.md`, Pre-deploy jobs; `<repo>/values/derived-inputs.yaml` `sharedInputs`; EO-55. Static and unit evidence only; no GitLab run, live broker or Helm hook execution. |
 
 ## How to refresh this file
 
@@ -82,7 +91,7 @@ Two further findings, same status as the ten:
 
 | # | Rule | Owning file | Conforms | Does not conform |
 |---|---|---|---|---|
-| 11 | Every consumer sets explicit prefetch | `22-failure-load-and-deprecation-contract.md` | `entitlement-api`, `projector` (50) | `comment`, `content`, `auth`, kit |
+| 11 | Every consumer sets explicit prefetch | `22-failure-load-and-deprecation-contract.md` | `entitlement-api` (50; `projector` retired 2026-11-01) | `comment`, `content`, `auth`, kit |
 | 12 | The gateway is the only end-user token verifier | `25-end-to-end-flow-and-boundaries.md` | all seven | none — freeze it |
 
 Six obligations the amendments created on 2026-07-25. They are new, so the fleet is behind on all of them by
@@ -303,7 +312,13 @@ special case into its own SDK, and each one is a second migration later.
    each name-keyed item at `app/Support/Operations/OperationalStatusService.php:268-290` — and the
    trusted-header set.
 
-### `entitlement-platform` (`entitlement-api`, `projector`, `authz-sidecar`)
+### `entitlement-platform` (`entitlement-api`, `authz-sidecar`; `projector` retired)
+
+*2026-11-01 (owner decisions D-AP-12, D-CT-6, D-AP-10 closure; the `entitlement-projector` repository is retired)*:
+the `reflector` role inside `entitlement-api` consumes `projector.command.rule_projection.task.v1` and is the only
+OpenFGA tuple writer. The receipt exchange and queues, `entitlement.projector.work` and `entitlement.reconciliation`
+are removed. Items below that name `projector`, those queues or the receipt path are historical evidence, not open
+work.
 
 1. **Stop publishing to the default exchange.** `projector` publishes with exchange `""` and the queue name
    as routing key, which binds the producer to one consumer's queue name. Declare `entitlement.events` and

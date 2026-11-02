@@ -1,13 +1,13 @@
 ---
 name: alaa-sms-provider-magfa
-description: "Magfa SMS provider contract (HTTP v2, REST/JSON) for Alaa services: wire shapes, sender and recipient rendering, uid-based duplicate prevention, delivery-status polling, and error-code classes. Use when implementing, reviewing, debugging or testing a Magfa SMS driver or adapter — Basic auth with USERNAME/DOMAIN, send with parallel senders/recipients/messages arrays, the 100-recipient cap, uids and the mid lookup after a timeout, statuses polling, inbound messages, balance, encodings and segments, per-item result parsing, and Magfa error codes. Do not use for Mediana/IPPanel (alaa-sms-provider-mediana) or Bale Safir (alaa-bale-provider); not for queue, outbox or consumer design (alaa-async-messaging); not for retry legality or backoff values (alaa-reliability-sla)."
+description: "Magfa HTTP v2 SMS API integration: authentication, request and response formats, uid/mid duplicate handling, delivery status and error codes. Use only when implementing, reviewing, debugging or testing communication with Magfa for SMS delivery. Do not use for general SMS/OTP flows, provider selection or other providers. Use /alaa-async-messaging for queues, outboxes and workers; /alaa-reliability-sla for retry policy; and the respective provider skill for Mediana or Bale."
 ---
 
 # Alaa SMS Provider — Magfa HTTP v2
 
-## Scope and owners
+## When NOT to use
 
-This skill owns one vendor: the Magfa HTTP v2 API — its wire shapes, rendering, idempotency mechanism, status model and error codes. Route everything else:
+Use this skill only for communication with the Magfa HTTP v2 SMS API: wire shapes, rendering, duplicate prevention, delivery status and error codes. Mentioning SMS or OTP alone does not trigger it. General SMS/OTP flows and provider selection belong to the caller's application owner. Route other decisions:
 
 - Retry legality, backoff, idempotency doctrine, ambiguity doctrine → `/alaa-reliability-sla`
 - Timeout and retry-budget values, metric and event names, the notification envelope → `/alaa-services-contract`

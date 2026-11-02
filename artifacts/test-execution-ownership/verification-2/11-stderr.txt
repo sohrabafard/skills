@@ -1,0 +1,10 @@
+PACK VALIDATION FAILED
+- canonical Claude policy exited 1: fixture
+PACK VALIDATION FAILED
+- canonical Claude policy exited 2: fixture
+PACK VALIDATION FAILED
+- agent grants exited 1: fixture
+PACK VALIDATION FAILED
+- agent grants exited 2: fixture
+PACK VALIDATION FAILED
+- canonical Claude policy exited 9: fixture

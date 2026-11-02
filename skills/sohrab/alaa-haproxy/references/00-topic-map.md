@@ -16,7 +16,7 @@ to start from. Every rule in this skill is stated in exactly one of these files.
 | `20-core-config-and-timeouts/30-connection-capacity.md` | connection ceilings, queueing or backend connection reuse |
 | `20-core-config-and-timeouts/40-maps-and-preprocessor.md` | choosing native ACL/fetch/converter samples, header/URI handling, maps, DNS discovery, environment variables or preprocessing |
 | `20-core-config-and-timeouts/50-symptom-diagnosis.md` | diagnosing bursts of 502/503, tail latency, file descriptor exhaustion or backend flapping |
-| `25-tls-and-mtls.md` | certificates, `crt-store`, `ssl-f-use`, TLS version and ticket policy, SNI, client certificates, backend TLS, or ACME |
+| `25-tls-and-mtls.md` | certificates, `crt-store`, `ssl-f-use`, TLS version, cipher list, `prefer-client-ciphers` or ticket policy, a TLS failure missing from the logs, `error-log-format`, a handshake failure counter, SNI, client certificates, backend TLS, or ACME |
 | `30-quic-http3.md` | Before any QUIC configuration, read its build-requirements guide; then follow the frontend, backend, or tuning route for the mode being changed, or the build guide when `haproxy -vv` reports no QUIC |
 | `40-rate-limiting-and-peers.md` | stick tables, rate limiting, abuse counters, `peers`, or what a limiter does when a peer is gone |
 | `50-caching-routing-and-rewrites.md` | caching, `Cache-Control`, compression, path rewrites, deep-link fallback, or backend selection |

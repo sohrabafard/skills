@@ -91,6 +91,31 @@ def plan_kind(content: str) -> str | None:
     return values[0]
 
 
+EMBEDDED_DESIGN_HEADING_RE = re.compile(r"^##[ \t]+Approved Design[ \t]*\r?$", re.M)
+EMBEDDED_DESIGN_START_RE = re.compile(r"^<!-- approved-design:start -->[ \t]*(?:\r?\n|\Z)", re.M)
+
+
+def split_embedded_design(content: str) -> tuple[str, str | None]:
+    """Separate an embedded plan's execution text from its verbatim approved design.
+
+    The design is the user's approved text, so its checklists, phase headings or handoff
+    headings must never be read as this plan's own structure. The section is the plan's
+    last; everything after its start marker is design. A missing marker returns None.
+    """
+    if header_values(content, "Approved design") != ["embedded"]:
+        return content, None
+    heading = EMBEDDED_DESIGN_HEADING_RE.search(content)
+    if heading is None:
+        return content, None
+    start = EMBEDDED_DESIGN_START_RE.search(content, heading.end())
+    return content[:heading.start()], (content[start.end():] if start else None)
+
+
+def plan_text(path: Path) -> str:
+    """Read a plan without the verbatim design an embedded plan carries."""
+    return split_embedded_design(read_text(path))[0]
+
+
 def recorded_value(value: str) -> bool:
     return bool(value and not UNRESOLVED_RE.search(value) and value.lower() not in {
         "none", "none yet", "n/a", "pending", "not recorded", "not run", "not applicable", "unknown"})
@@ -230,7 +255,7 @@ def resolve_review_contract(path: Path) -> tuple[str, str]:
         if selected in seen:
             raise ValueError("Parent plan cycle; reconcile ancestry before initialization.")
         seen.add(selected)
-        content = read_text(path)
+        content = plan_text(path)
         header = plan_header(content)
 
         def scalar(label: str, optional: bool = False) -> str | None:
@@ -292,7 +317,7 @@ def hierarchy_nodes(content: str, status: str) -> tuple[dict[str, tuple[str, str
         phase_keys.add(key)
         phase_id: str | None = None
         task_id: str | None = None
-        task_has_child = False
+        subtask_count = 0
         phase_count = 0
         task_count = 0
         for match in HIERARCHY_NODE_RE.finditer(content, start, end):
@@ -318,23 +343,23 @@ def hierarchy_nodes(content: str, status: str) -> tuple[dict[str, tuple[str, str
                 phase_id = identifier
                 parent = None
             elif level == "task":
-                if task_id is not None and not task_has_child:
-                    messages.append(error("plan.hierarchy", f"Task {task_id} has no subtask.", "Map at least one executable leaf per task."))
+                if task_id is not None and subtask_count == 1:
+                    messages.append(error("plan.hierarchy", f"Task {task_id} has exactly one redundant subtask.", "Use the task itself as the leaf, or decompose into two or more distinct, independently checkable subtasks."))
                 if phase_id is None:
                     messages.append(error("plan.hierarchy", f"Orphan task {identifier}.", "Map its phase before its tasks."))
-                task_id, task_has_child = identifier, False
+                task_id, subtask_count = identifier, 0
                 task_count += 1
                 parent = phase_id
             else:
                 if task_id is None:
                     messages.append(error("plan.hierarchy", f"Orphan subtask {identifier}.", "Map its task before its subtasks."))
-                task_has_child = True
+                subtask_count += 1
                 parent = task_id
             nodes[identifier] = (level, parent, key)
         if phase_count != 1 or not task_count:
-            messages.append(error("plan.hierarchy", f"{key} requires exactly one phase issue and at least one task.", "Complete the three-level containment mapping."))
-        if task_id is not None and not task_has_child:
-            messages.append(error("plan.hierarchy", f"Task {task_id} has no subtask.", "Map at least one executable leaf per task."))
+            messages.append(error("plan.hierarchy", f"{key} requires exactly one phase issue and at least one task.", "Map each phase and its tasks; add subtasks only for decomposition."))
+        if task_id is not None and subtask_count == 1:
+            messages.append(error("plan.hierarchy", f"Task {task_id} has exactly one redundant subtask.", "Use the task itself as the leaf, or decompose into two or more distinct, independently checkable subtasks."))
     if not regions:
         messages.append(error("plan.hierarchy", "Hierarchy has no phases.", "Map the ordered phases before execution."))
     for match in HIERARCHY_NODE_RE.finditer(content):
@@ -359,16 +384,20 @@ def validate_hierarchy_contract(content: str, status: str) -> list[str]:
     _, node_messages = hierarchy_nodes(content, status)
     messages.extend(node_messages)
     if TASK_LINE_RE.search(content) or ISSUE_LINE_RE.search(content):
-        messages.append(error("plan.hierarchy-mixed", "Hierarchy contains flat issues or local tasks.", "Keep only the three-level mappings in this family."))
+        messages.append(error("plan.hierarchy-mixed", "Hierarchy contains flat issues or local tasks.", "Keep phase/task mappings and any decomposed subtasks in this family."))
     phases = phase_blocks(content)
     final_phase = clean_scalar(field_value(header, "Final phase") or "")
     local_final = clean_scalar(field_value(header, "Local final phase") or final_phase)
     if not phases or local_final != phase_key(phases[-1][0]):
         messages.append(error("plan.final-phase", "Final phase is not the last declared phase.", "Name the whole engagement's actual final phase."))
-    authority = clean_scalar(field_value(header, "Commit authority") or "")
-    valid_grant = bool(re.fullmatch(r"explicit user grant:\s*\S.+", authority, re.I)) and not UNRESOLVED_RE.search(authority)
+    authorities = header_values(content, "Commit authority")
+    authority = authorities[0] if len(authorities) == 1 else ""
+    valid_grant = len(authorities) == 1 and (
+        authority == "local commits pre-authorized (main instruction file)"
+        or (bool(re.fullmatch(r"explicit user grant:\s*\S.+", authority, re.I)) and not UNRESOLVED_RE.search(authority))
+    )
     if authority != "not granted" and not valid_grant:
-        messages.append(error("plan.commit-authority", "Commit authority is unresolved.", "Record the explicit user grant and scope, or not granted."))
+        messages.append(error("plan.commit-authority", "Commit authority is missing, duplicated or unresolved.", "Record local commits pre-authorized (main instruction file), an explicit user grant and scope, or not granted; local authority grants no external Git action."))
     boundary = clean_scalar(field_value(header, "Review boundary") or "")
     approved = {"APPROVED", "APPROVED-WITH-NITS"}
     for title, block in phases:
@@ -388,11 +417,8 @@ def validate_hierarchy_contract(content: str, status: str) -> list[str]:
             messages.append(error("plan.node-boundary", "Task/subtask contains a review or commit field.", "Record boundary review and commit evidence at phase level."))
         commit = clean_scalar(field_value(block, "Commit") or "")
         if re.fullmatch(r"[0-9a-f]{7,40}", commit, re.I):
-            tested = clean_scalar(field_value(block, "Evidence observed") or "")
-            if (not valid_grant or verdict not in approved or not is_complete_status(field_value(block, "Status") or "")
-                    or not tested or tested == "not run" or UNRESOLVED_RE.search(tested)
-                    or (boundary == "final" and phase_key(title) != final_phase)):
-                messages.append(error("plan.commit-boundary", "Commit is unauthorized or precedes accepted boundary review.", "Preserve the snapshot and wait for explicit authority and accepted review/fixes/tests."))
+            if not valid_grant or not boundary_validation_observed(block):
+                messages.append(error("plan.commit-boundary", "Local commit checkpoint lacks authority or observed validation.", "Record applicable local authority and scoped validation evidence; keep boundary review separate."))
     if is_complete_status(status) and any(
         clean_scalar(field_value(block, "Review status") or "") not in approved
         for title, block in phases if boundary == "phase" or (not field_value(header, "Local final phase") and phase_key(title) == final_phase)
@@ -867,6 +893,15 @@ def validate_skill_bindings(content: str, path: Path, profile: str, status: str)
     return messages
 
 
+def validate_embedded_design(content: str, body: str | None) -> list[str]:
+    messages = design_approval(content, required=True)
+    if body is None or not body.strip():
+        messages.append(error("plan.embedded-design", "Embedded design text is missing.", "Keep ## Approved Design last with its start marker and the verbatim approved text after it."))
+    else:
+        messages.extend(unresolved_messages(body, True, "plan.embedded-design-placeholders"))
+    return messages
+
+
 def validate_plan(path: Path, profile: str) -> list[str]:
     content = read_text(path)
     try:
@@ -875,6 +910,7 @@ def validate_plan(path: Path, profile: str) -> list[str]:
         return [error("plan.kind", str(exc), "Restore exactly one supported header kind.")]
     if kind == "design":
         return validate_design_plan(path)
+    content, embedded_body = split_embedded_design(content)
     status = effective_plan_status(content, path, profile)
     complete = is_complete_status(status)
     messages: list[str] = []
@@ -882,7 +918,9 @@ def validate_plan(path: Path, profile: str) -> list[str]:
         if not hierarchy_family(content):
             messages.append(error("plan.execution-hierarchy", "Explicit execution requires the Beads phase-task-subtask hierarchy.", "Restore the hierarchy; direct changes cadence, never task authority."))
         designs = header_values(content, "Approved design")
-        if len(designs) != 1 or not recorded_value(designs[0]):
+        if designs == ["embedded"]:
+            messages.extend(validate_embedded_design(content, embedded_body))
+        elif len(designs) != 1 or not recorded_value(designs[0]):
             messages.append(error("plan.approved-design", "Execution requires one approved-design link.", "Link the valid approved design without modifying it."))
         else:
             design = path_from_reference(designs[0], path)
@@ -1334,6 +1372,7 @@ def main() -> int:
             if not had_error:
                 print("Validation completed without blocking errors (plan kind: design; profile: resumable).")
             return 1 if had_error else 0
+        content = split_embedded_design(content)[0]
         profile = detect_profile(content) if profile == "auto" else profile
         companions = resolve_companions(plan_path, content)
         had_error = report("plan", plan_path, validate_plan(plan_path, profile)) or had_error
