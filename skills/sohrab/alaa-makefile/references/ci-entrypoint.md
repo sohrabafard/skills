@@ -70,7 +70,7 @@ Three constructs destroy a verdict, and all three are blocking:
 | `.ONESHELL:` without `-e` in `.SHELLFLAGS` | the whole recipe is one shell whose status is its **last** command's status | `.SHELLFLAGS := -eu -o pipefail -c` |
 
 The third is the one that hides. This Makefile prints its message and exits 0 while the deploy did not
-happen; it ships as `scripts/fixtures/oneshell-swallow.mk` so the repair stays proven:
+happen:
 
 ```makefile
 SHELL := bash
@@ -157,8 +157,7 @@ after the tool it happens to use. `ci/build` survives a move from `docker build`
 | `runtime/interpolation` | `bash $(RUNTIME)/test-fail-closed-interpolation.sh` | service-runtime-kit |
 | `runtime/up` | `bash scripts/docker/up-local.sh $(COMPOSE_MODE)` | service-runtime-kit |
 
-`scripts/generate_makefile_template.sh fleet <name>` writes exactly this file, preamble included, and
-`--self-test` asserts that what it writes passes `validate_makefile.sh` with exit 0.
+`scripts/generate_makefile_template.sh fleet <name>` writes exactly this file, preamble included.
 
 Renaming any of these targets is a contract change: a runner job, a developer's muscle memory and another
 skill's route may all name it. Treat it as you would renaming a runner job.

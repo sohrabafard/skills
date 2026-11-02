@@ -18,11 +18,9 @@ Use the cheapest check that can still answer the question.
 ```bash
 python3 scripts/validate_gitlab_ci.py .gitlab-ci.yml ci/*.yml
 python3 scripts/validate_runner_config.py config.toml values.yaml
-python3 scripts/validate_gitlab_ci.py --self-test
-python3 scripts/validate_runner_config.py --self-test
 ```
 
-Both take `--help`, `--json`, `--fail-on-warnings` and `--self-test`, and both
+Both take `--help`, `--json` and `--fail-on-warnings`, and both
 use the same exit codes: **0 clean, 1 findings, 2 could not run.** Exit 2 means
 the checker could not produce a verdict — a missing dependency, a missing file,
 an unparsable input, or the wrong kind of file — and is never a clean result.

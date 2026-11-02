@@ -1,6 +1,6 @@
 ---
 name: alaa-haproxy-lua
-description: "Contract for Lua running inside an HAProxy process: shared or per-thread execution, actions and services, subrequests over the yieldable Socket class, failure visibility at the edge, testing outside HAProxy, per-request cost, and security. Use when writing, reviewing, testing or hardening a .lua file HAProxy loads; when registering an action, service, converter, sample fetch, applet, filter, task or CLI handler; when a handler runs on every request; or when deciding whether Lua is the right tool. Ships a checker with committed red fixtures for CPU-time-as-clock, unsafe nil returns, error level, clock seeding and load-time core access. Do not use for HAProxy directives, TLS, QUIC, stick tables, maps or peers, owned by /alaa-haproxy, nor for the Crockford Base32 and UUIDv7 codec contract, owned by /alaa-crockford-base32-codecs."
+description: "Contract for Lua running inside an HAProxy process: shared or per-thread execution, actions and services, subrequests over the yieldable Socket class, failure visibility at the edge, testing outside HAProxy, per-request cost, and security. Use when writing, reviewing, testing or hardening a .lua file HAProxy loads; when registering an action, service, converter, sample fetch, applet, filter, task or CLI handler; when a handler runs on every request; or when deciding whether Lua is the right tool. Ships a checker for CPU-time-as-clock, unsafe nil returns, error level, clock seeding and load-time core access. Do not use for HAProxy directives, TLS, QUIC, stick tables, maps or peers, owned by /alaa-haproxy, nor for the Crockford Base32 and UUIDv7 codec contract, owned by /alaa-crockford-base32-codecs."
 ---
 
 # Alaa HAProxy Lua
@@ -48,11 +48,11 @@ explicit authorization.
 
 ## Checker
 
-`python3 scripts/check_haproxy_lua.py <file.lua> [<file.lua> …]`, with `--help` for the check list and `--self-test` for its committed red and green fixtures in `test/fixtures/`.
+`python3 scripts/check_haproxy_lua.py <file.lua> [<file.lua> …]`, with `--help` for the check list.
 
 - exit `0`: no finding. Continue to the unit test.
-- exit `1`: findings printed, or a self-test assertion failed. Fix every one and rerun; do not ship while any finding stands.
-- exit `2`: a path could not be read, the fixtures are missing, or the arguments were wrong, so nothing was checked. Correct the invocation and rerun before drawing any conclusion.
+- exit `1`: findings printed. Fix every one and rerun; do not ship while any finding stands.
+- exit `2`: a path could not be read or the arguments were wrong, so nothing was checked. Correct the invocation and rerun before drawing any conclusion.
 
 The checker is lexical and never executes the module, so a clean run is a static-level result and not a substitute for the unit test.
 

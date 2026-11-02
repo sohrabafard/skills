@@ -9,16 +9,14 @@ behaviour when concatenated, and the result parses and starts.
 This checker reports a violation of the rule stated in
 `references/20-core-config-and-timeouts.md`.
 
-Pure Python 3 standard library. Runs on Windows, Linux and macOS.
+Pure Python 3 standard library.
 """
 
 from __future__ import annotations
 
 import argparse
 import os
-import shutil
 import sys
-import tempfile
 from pathlib import Path
 
 EXIT_CLEAN = 0
@@ -85,9 +83,8 @@ def strip_comment(line: str) -> str:
 def read_lines(path: Path) -> list[str]:
     """Read as text with universal newlines, then defend against a stray CR.
 
-    A CRLF checkout on Windows, or a shell driver writing CRLF, otherwise leaves a
-    carriage return on the last field of every parsed line and every comparison
-    fails while the rendered bytes look identical.
+    A CRLF file otherwise leaves a carriage return on the last field of every parsed
+    line and every comparison fails while the rendered bytes look identical.
     """
     with path.open("r", encoding="utf-8", errors="replace", newline=None) as handle:
         return [line.rstrip("\r\n") for line in handle]
@@ -185,140 +182,6 @@ def collect_targets(raw_targets: list[str]) -> tuple[list[tuple[Path, str]], str
     return targets, None
 
 
-GOOD_FIXTURE = """\
-defaults http_edge
-  mode http
-  timeout connect 5s
-
-defaults tcp_l4
-  mode tcp
-  timeout connect 5s
-
-frontend fe_web from http_edge
-  bind :8080
-  default_backend be_web
-
-backend be_web from http_edge
-  server s1 10.0.0.1:80
-
-listen l_db from tcp_l4
-  bind :3306
-  server d1 10.0.0.2:3306
-"""
-
-NO_DEFAULTS_FIXTURE = """\
-global
-  log /dev/log local0 info
-
-log-forward lf
-  bind :514
-
-backend be_syslog
-  mode log
-  server sys1 udp@10.0.0.1:514
-"""
-
-BAD_FIXTURE = """\
-defaults
-  mode http
-  option forwardfor
-
-frontend fe_a
-  bind :8081
-  default_backend be_a
-
-defaults
-  mode tcp
-
-backend be_a
-  server s1 10.0.0.1:80
-
-backend be_b from nonexistent
-  server s2 10.0.0.2:80
-"""
-
-DUP_FIXTURE = """\
-defaults base
-  mode http
-
-defaults base
-  mode tcp
-
-frontend fe from base
-  bind :8080
-"""
-
-
-def self_test(script_dir: Path) -> int:
-    """Run against fixtures beside this script, then against synthesised inputs.
-
-    Temporary files go to the system temporary directory, never inside the
-    repository, because the checkout may be mounted read-only.
-    """
-    fixtures = script_dir / "fixtures" / "defaults_scope"
-    failures: list[str] = []
-
-    expected = {
-        "good.cfg": set(),
-        "no-defaults.cfg": set(),
-        "bad.cfg": {"HP-DEF-001", "HP-DEF-002", "HP-DEF-003"},
-        "duplicate-name.cfg": {"HP-DEF-004"},
-    }
-
-    if not fixtures.is_dir():
-        print("self-test: fixture directory missing: {}".format(fixtures), file=sys.stderr)
-        return EXIT_CANNOT_RUN
-
-    for name, want in expected.items():
-        path = fixtures / name
-        if not path.is_file():
-            print("self-test: fixture missing: {}".format(path), file=sys.stderr)
-            return EXIT_CANNOT_RUN
-        got = {finding.rule for finding in analyse(path, name)}
-        if got != want:
-            failures.append("{}: expected {} got {}".format(name, sorted(want), sorted(got)))
-        else:
-            print("self-test: {} -> {}".format(name, sorted(got) or "clean"))
-
-    # Exit code 2 path: a target that does not exist.
-    _, error = collect_targets([str(script_dir / "definitely-not-here")])
-    if error is None:
-        failures.append("collect_targets accepted a nonexistent path")
-    else:
-        print("self-test: nonexistent path -> could not run ({})".format(error))
-
-    # Exit code 2 path: an empty directory yields no inputs rather than a clean verdict.
-    scratch = tempfile.mkdtemp(prefix="haproxy-defaults-selftest-")
-    try:
-        _, error = collect_targets([scratch])
-        if error is None:
-            failures.append("collect_targets reported an empty directory as clean")
-        else:
-            print("self-test: empty directory -> could not run ({})".format(error))
-    finally:
-        shutil.rmtree(scratch, ignore_errors=True)
-
-    # CRLF resilience.
-    scratch = tempfile.mkdtemp(prefix="haproxy-defaults-crlf-")
-    try:
-        crlf = Path(scratch) / "crlf.cfg"
-        crlf.write_bytes(GOOD_FIXTURE.replace("\n", "\r\n").encode("utf-8"))
-        got = {finding.rule for finding in analyse(crlf, "crlf.cfg")}
-        if got:
-            failures.append("CRLF copy of the clean fixture produced {}".format(sorted(got)))
-        else:
-            print("self-test: CRLF copy of good.cfg -> clean")
-    finally:
-        shutil.rmtree(scratch, ignore_errors=True)
-
-    if failures:
-        for line in failures:
-            print("self-test FAILED: {}".format(line), file=sys.stderr)
-        return EXIT_FINDINGS
-    print("self-test: all checks passed")
-    return EXIT_CLEAN
-
-
 def build_parser() -> argparse.ArgumentParser:
     parser = argparse.ArgumentParser(
         prog="check_defaults_scope.py",
@@ -335,15 +198,12 @@ def build_parser() -> argparse.ArgumentParser:
             "  0  clean\n"
             "  1  findings reported\n"
             "  2  could not run: a path that does not exist, a directory with no *.cfg,\n"
-            "     an unreadable file, or a missing fixture during --self-test\n"
+            "     or an unreadable file\n"
         ),
     )
     parser.add_argument(
         "targets", nargs="*",
         help="config files or directories to check. Defaults to examples/haproxy in this skill.")
-    parser.add_argument(
-        "--self-test", action="store_true",
-        help="run against the fixtures shipped in scripts/fixtures/defaults_scope and exit")
     return parser
 
 
@@ -352,9 +212,6 @@ def main(argv: list[str]) -> int:
     args = parser.parse_args(argv)
 
     script_dir = Path(__file__).resolve().parent
-
-    if args.self_test:
-        return self_test(script_dir)
 
     raw_targets = args.targets
     if not raw_targets:

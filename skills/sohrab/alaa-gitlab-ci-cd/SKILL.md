@@ -144,7 +144,7 @@ python3 scripts/validate_gitlab_ci.py <file> [more files]
 python3 scripts/validate_runner_config.py <file> [more files]
 ```
 
-Both accept `--help`, `--json`, `--fail-on-warnings` and `--self-test`, and both
+Both accept `--help`, `--json` and `--fail-on-warnings`, and both
 exit **0 clean, 1 findings, 2 could not run**. Exit 2 is never a clean result.
 Invoke them by absolute path when the working directory is not the skill root.
 What each asserts, what neither can see, and which findings are gate-eligible are

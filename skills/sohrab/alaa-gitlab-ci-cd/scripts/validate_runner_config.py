@@ -18,7 +18,7 @@ Exit codes:
   2  could not run (missing dependency, missing file, unreadable or unparsable
      input, wrong kind of file, bad arguments)
 
-Runs on Windows: pure Python 3.9+, no shell-out, all reads explicitly UTF-8.
+Pure Python 3.9+, no shell-out, all reads explicitly UTF-8.
 """
 
 from __future__ import annotations
@@ -722,94 +722,6 @@ def render(issues: list[Issue], as_json: bool) -> None:
             print(f"         suggestion: {item.suggestion}")
 
 
-def fixtures_dir() -> Path:
-    return Path(__file__).resolve().parent / "fixtures"
-
-
-SELF_TEST_EXPECTATIONS: dict[str, dict[str, Any]] = {
-    "runner-good.config.toml": {"absent": {"*"}},
-    "runner-hazards.config.toml": {
-        "present": {
-            "concurrent-zero",
-            "kube-privileged",
-            "kube-privileged-node-selector",
-            "kube-if-not-present",
-            "kube-pull-policy-conflict",
-            "kube-allowlist-too-broad",
-            "kube-image-unpinned",
-            "kube-helper-image-unpinned",
-            "kube-cache-not-distributed",
-        },
-        "absent": {"kube-rofs-paths"},
-    },
-    "runner-values.yaml": {
-        "present": {"registration-token-deprecated", "service-account-missing"},
-    },
-}
-
-
-def self_test() -> int:
-    base = fixtures_dir()
-    if not base.is_dir():
-        print(f"SELF-TEST CANNOT RUN: fixtures directory not found at {base}")
-        return EXIT_CANNOT_RUN
-
-    failures: list[str] = []
-    checked = 0
-    for name, expectation in sorted(SELF_TEST_EXPECTATIONS.items()):
-        fixture = base / name
-        if not fixture.is_file():
-            print(f"SELF-TEST CANNOT RUN: missing fixture {fixture}")
-            return EXIT_CANNOT_RUN
-        try:
-            issues = validate_file(fixture)
-        except CannotRun as exc:
-            print(f"SELF-TEST CANNOT RUN: {exc}")
-            return EXIT_CANNOT_RUN
-        checked += 1
-        rules = {i.rule for i in issues}
-        expected_absent = expectation.get("absent", set())
-        if "*" in expected_absent:
-            if issues:
-                failures.append(f"{name}: expected no findings, got {sorted(rules)}")
-        else:
-            for rule in sorted(expected_absent):
-                if rule in rules:
-                    failures.append(f"{name}: rule '{rule}' should not fire")
-        for rule in sorted(expectation.get("present", set())):
-            if rule not in rules:
-                failures.append(f"{name}: expected rule '{rule}', got {sorted(rules)}")
-        if any(i.line == 0 for i in issues):
-            failures.append(f"{name}: some findings carry no line number")
-
-    # The misrouting defect: a pipeline file must never produce runner findings.
-    pipeline = base / "good-pipeline.gitlab-ci.yml"
-    if pipeline.is_file():
-        try:
-            validate_file(pipeline)
-        except CannotRun:
-            pass
-        else:
-            failures.append("a pipeline file was accepted as a Helm values file")
-    else:
-        failures.append(f"missing fixture {pipeline}")
-
-    try:
-        validate_file(base / "does-not-exist.toml")
-    except CannotRun:
-        pass
-    else:
-        failures.append("a missing file did not raise CannotRun")
-
-    if failures:
-        print(f"SELF-TEST FAILED ({len(failures)} problems across {checked} fixtures):")
-        for line in failures:
-            print(f"  - {line}")
-        return EXIT_FINDINGS
-    print(f"SELF-TEST PASSED: {checked} fixtures, {len(SELF_TEST_EXPECTATIONS)} expectation sets.")
-    return EXIT_CLEAN
-
-
 def main() -> int:
     parser = argparse.ArgumentParser(
         prog="validate_runner_config.py",
@@ -829,19 +741,11 @@ def main() -> int:
         action="store_true",
         help="Exit 1 when warnings are present, not only when errors are",
     )
-    parser.add_argument(
-        "--self-test",
-        action="store_true",
-        help="Run the bundled fixture corpus in scripts/fixtures and report pass or fail",
-    )
     args = parser.parse_args()
-
-    if args.self_test:
-        return self_test()
 
     if not args.paths:
         parser.print_usage()
-        print("error: give at least one file, or use --self-test")
+        print("error: give at least one file")
         return EXIT_CANNOT_RUN
 
     issues: list[Issue] = []

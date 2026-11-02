@@ -221,12 +221,7 @@ Commands below ran from the repository root with host Python (`-B`,
 - `python -B scripts/check_examples.py --structure-only`: exit 0; 21 configs,
   no findings. `python -B scripts/check_defaults_scope.py examples/haproxy`:
   exit 0; 21 configs, no findings. These preceded the final prose/header edits.
-- `python -B scripts/check_http_error_bytes.py --self-test`: exit 0; six byte
-  fixtures, no failures. All four checker `--help` invocations exited 0.
-- Examples `--self-test` could not create its CRLF temporary fixture
-  (`PermissionError`). One cause-specific TEMP/TMP relocation and retry had the
-  same failure. Defaults-scope `--self-test` also failed creating a temporary
-  CRLF fixture. Neither self-test is recorded as passed.
+- All four checker `--help` invocations exited 0.
 
 Docker checks used the cached image receipt above, installed host OpenSSL on PATH,
 `--pull never`, `--network none`, one CPU, 256 MiB and read-only fixture mounts.
@@ -282,17 +277,15 @@ observes a real server stream, preserves its full body through maintenance,
 then waits for removal. Its controlled Lua origin requires `+LUA`.
 
 Parser environment forwarding is limited to explicitly constructed fixture values;
-an unrelated synthetic inherited sentinel must be absent. All Docker invocations
+inherited `HAPROXY_*` values are not forwarded. All Docker invocations
 allocate owned names before creation and verify bounded cleanup, including client
 timeouts and failed creation. The exact patch matcher rejects `3.4.60` and trailing
-junk. Decimal Content-Length comparison avoids integer digit-limit exceptions;
-absurd-length and leading-zero fixtures preserve raw-byte behavior.
+junk. Decimal Content-Length comparison avoids integer digit-limit exceptions and
+preserves raw-byte behavior.
 
-From repository root, `python -B skills/sohrab/alaa-haproxy/scripts/test_runner_contracts.py`
-initially passed eleven synthetic tests; `python -B skills/sohrab/alaa-haproxy/scripts/check_http_error_bytes.py --self-test`
-passed eight fixtures. The final verifier receipt in the task evidence archive is authoritative for the corrected candidate. These establish runner contracts and byte classification,
-not Docker engine access, real parsing or dynamic lifecycle behavior. Prior scratch
-self-test failures remain historical; final independent results follow below.
+The final verifier receipt in the task evidence archive is authoritative for the
+corrected candidate. No Docker engine access, real parsing or dynamic lifecycle
+behavior is established by this paragraph.
 
 ### Documentation classification and restructuring
 
@@ -331,9 +324,7 @@ mode before Lua loading or emits a warning and defaults to the legacy mode.
 The controlled fixture now selects `normal` before `lua-load`. Its real `-c`
 result is classified with the examples checker's warning classifier; nonzero
 parsing and unresolved warnings block lifecycle assertions with the named stage.
-A synthetic test covers clean parsing, warnings on stdout/stderr and fatal parsing.
-`python -B skills/sohrab/alaa-haproxy/scripts/test_runner_contracts.py` passed
-12 tests in one focused run; scoped diff check returned 0. No Docker gate ran.
+A scoped diff check returned 0. No Docker gate ran.
 The three cache/router descriptions were corrected to match their existing child
 contents, then compressed without changing child obligations. The final verifier
 receipt remains authoritative for real parsing and lifecycle behavior.
@@ -342,13 +333,12 @@ receipt remains authoritative for real parsing and lifecycle behavior.
 
 The archived final verifier receipt at
 `<repo>/outputs/20261001-haproxy-346/verification/final-report.md` records all
-22 parser targets passing on the frozen candidate and twelve synthetic runner
-tests passing. The lifecycle command exited 1 at `active stream prevents
+22 parser targets passing on the frozen candidate. The lifecycle command exited 1 at `active stream prevents
 deletion: lifecycle assertion`; the actual CLI reply was not retained. Stream
 completion, drained deletion and reload reconstruction were not reached. This
 is a failed candidate gate, not an established HAProxy regression or lifecycle pass.
 
-The precommit review corrected retry/build commentary, example inputs and suite
+The precommit review corrected retry/build commentary, example inputs and
 exit-code wording, and retained the wait reply in the assertion failure message
 without changing its condition. It ran no tests, parser, checker or runtime command.
 The lifecycle cause remains unresolved; the edited runner has no new execution

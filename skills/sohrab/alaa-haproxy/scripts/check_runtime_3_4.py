@@ -3,7 +3,7 @@
 
 Requires Docker and image-provided sh/nc/wget; no pulls or published ports.
 Exit 0 observed scenarios passed, 1 assertion failed, 2 prerequisite/operation unavailable.
-Temporary fixture/container only; no production/config changes or deployment proof.
+Temporary scratch tree and container only; no production/config changes or deployment proof.
 """
 from __future__ import annotations
 

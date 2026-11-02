@@ -26,8 +26,6 @@ Converters and sample fetches return values that HAProxy converts into samples, 
 
 `examples/haproxy-lua/token-guard.lua` is a complete correct converter, `examples/haproxy-lua/token-guard.test.lua` is its test with a mock `core` object, and `examples/haproxy-lua/token-guard.cfg` is the smallest configuration that loads it and fails closed. Copy that shape when starting a new converter instead of writing one from the descriptions in these references. For an action or a service, copy the shape in `references/25-actions-services-and-subrequests.md` instead, because a converter's failure contract does not transfer to them.
 
-The fixtures under `test/fixtures/` demonstrate lexical findings, not deployable services. Most red fixtures exercise one rule; the historical HL008 filename is retained as a green regression for valid coarse unit conversion. Do not deploy the action fixture as a subrequest implementation.
-
 ## Out of this skill
 
 | You are about to | Use |

@@ -24,8 +24,8 @@ invocation whose exit status is its **last** command's status.
 
 **Smallest fix.** `.SHELLFLAGS := -eu -o pipefail -c`.
 
-**Reproduce.** `scripts/fixtures/oneshell-swallow.mk`:
-`make -f oneshell-swallow.mk deploy ; echo "exit=$?"` prints the failure and `exit=0`.
+**Reproduce.** The Makefile in `ci-entrypoint.md` section 2: `make -f oneshell-swallow.mk deploy ; echo "exit=$?"`
+prints the failure and `exit=0`.
 
 **Escalate.** `makefile-structure.md` for the preamble; `ci-entrypoint.md` for what a gate-fronting
 target must do.
@@ -82,9 +82,8 @@ Vim `autocmd FileType make setlocal noexpandtab`; VS Code
 `"[makefile]": {"editor.insertSpaces": false}`.
 
 **Note.** `scripts/validate_makefile.sh` distinguishes a space-indented recipe line from a legal
-space-indented variable continuation. A previous revision did not, and reported
-`SOURCES = main.c \` continued by four-space-indented `utils.c` as a hard error;
-`scripts/fixtures/continuation.mk` is the regression test.
+space-indented variable continuation such as `SOURCES = main.c \` continued by a
+four-space-indented `utils.c`.
 
 ### B2. A command fails with a message whose bytes look correct
 
@@ -94,16 +93,7 @@ plainly exists.
 **Cause.** The Makefile has CRLF line endings. Make passes the trailing carriage return to the shell as
 part of the last argument.
 
-**Smallest fix.** `sed -i $'s/\r$//' Makefile`, then add to `.gitattributes`:
-
-```gitattributes
-Makefile   text eol=lf
-*.mk       text eol=lf
-*.sh       text eol=lf
-```
-
-Without the `.gitattributes` entry, a Windows checkout with `core.autocrlf=true` reintroduces it on the
-next clone. The validator reports any CR in the file.
+**Smallest fix.** `sed -i $'s/\r$//' Makefile`. The validator reports any CR in the file.
 
 ### B3. `*** unterminated variable reference` or a value that vanished
 
@@ -306,7 +296,7 @@ Ordered by cost, highest first.
 - [ ] `.DELETE_ON_ERROR:` present
 - [ ] Every non-file target declared in `.PHONY`
 - [ ] No credential-shaped assignment; every required value fails closed with `$(error …)`
-- [ ] LF line endings, and `.gitattributes` pinning them
+- [ ] LF line endings
 - [ ] Tabs, not spaces, for every recipe line
 - [ ] Directory prerequisites in the order-only form
 - [ ] `$(MAKE)`, never bare `make`

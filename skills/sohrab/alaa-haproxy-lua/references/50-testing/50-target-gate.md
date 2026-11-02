@@ -3,9 +3,7 @@
 From this package run:
 
 ```text
-python3 scripts/check_haproxy_lua.py --self-test
 python3 scripts/check_haproxy_lua.py examples/haproxy-lua/token-guard.lua
-python3 -B test/test_runtime_runner.py
 python3 scripts/check_runtime.py --image <cached-3.4.6-image>
 ```
 
@@ -22,8 +20,7 @@ missing runtime/prerequisite. Preserve stderr for a nonzero result before repair
 The runner checks both sample modes, nil from converter/fetch, booleans, sanitized
 error levels, stale variables, action error denial and `act.DENY`, 12/13 argument
 boundaries, library dependencies/order and the complete token example. Parser
-checks use HAProxy itself. Fixtures use generated responses, so no hand-written
-Content-Length body crosses CRLF conversion. Deployments with custom HTTP error
+checks use HAProxy itself. Deployments with custom HTTP error
 files still need byte-level Content-Length checks owned by `/alaa-haproxy`.
 
 The lexical checker cannot prove guard conditions, helper reachability, dynamic

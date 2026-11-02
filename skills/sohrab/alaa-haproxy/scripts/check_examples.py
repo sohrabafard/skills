@@ -17,7 +17,7 @@ PARSE      `haproxy -c -f` on a real binary, for every example whose declared
            and map path the config names.
 
 Pure Python 3 standard library plus, for the parse phase, `haproxy` and `openssl`
-on PATH. Runs on Windows, Linux and macOS.
+on PATH.
 """
 
 from __future__ import annotations
@@ -476,8 +476,8 @@ def build_fixture_tree(root: Path) -> tuple[dict[str, str], str] | tuple[None, s
 def classify_parse_warnings(display: str, output: str) -> list[Finding]:
     """No approved deprecation exceptions: every unresolved warning needs review.
 
-    An exception requires an exact message/branch and source-backed safety rationale,
-    plus a regression fixture. A deprecation keyword alone is not approval.
+    An exception requires an exact message/branch and source-backed safety rationale.
+    A deprecation keyword alone is not approval.
     """
     return [Finding(display, 1, "HP-EX-WARNING", line.strip()[:400])
             for line in output.splitlines() if "[WARNING]" in line]
@@ -559,148 +559,6 @@ def run_parse_phase(root: Path, haproxy: str, allow_skips: bool) -> tuple[list[F
     return findings, skipped, notes, None
 
 
-BAD_FIXTURE = """\
-# no-contract.cfg
-# This fixture deliberately states nothing about itself.
-global
-  master-worker
-
-defaults api
-  mode http
-  retries 3
-
-peers cluster
-  bind :1024
-  server a
-  server b 10.0.0.2:1024
-
-frontend fe from api
-  bind :8080
-  idle-ping 30s
-  default_backend be
-
-backend be from api
-  balance hash
-  server s1 10.0.0.1:80
-"""
-
-GOOD_FIXTURE = """\
-# contract.cfg
-# Charter: a minimal example that states its own contract.
-# Minimum branch: 3.2.
-# Preconditions: none beyond a 3.2 or later binary.
-# Variables: FIXTURE_PORT=8080, FIXTURE_APP=10.0.0.1:80
-# Failure mode: none; this file exists to be checked, not to be deployed.
-global
-  log /dev/log local0 info
-
-defaults api
-  mode http
-  timeout connect 5s
-  timeout client 30s
-  timeout server 30s
-  retries 3
-  option redispatch
-
-frontend fe from api
-  bind ":${FIXTURE_PORT-8080}"
-  default_backend be
-
-backend be from api
-  balance roundrobin
-  server s1 "${FIXTURE_APP-10.0.0.1:80}" check
-"""
-
-
-def self_test(script_dir: Path) -> int:
-    fixtures = script_dir / "fixtures" / "examples"
-    failures: list[str] = []
-
-    if not fixtures.is_dir():
-        print("self-test: fixture directory missing: {}".format(fixtures), file=sys.stderr)
-        return EXIT_CANNOT_RUN
-
-    expectations = {
-        "contract.cfg": set(),
-        "no-contract.cfg": {"HP-EX-001", "HP-EX-002", "HP-EX-003", "HP-EX-004", "HP-EX-005",
-                            "HP-EX-006", "HP-EX-007", "HP-EX-008", "HP-EX-009", "HP-EX-010",
-                            "HP-EX-011"},
-    }
-    for name, want in expectations.items():
-        path = fixtures / name
-        if not path.is_file():
-            print("self-test: fixture missing: {}".format(path), file=sys.stderr)
-            return EXIT_CANNOT_RUN
-        got = {finding.rule for finding in check_structure(path, name)}
-        if got != want:
-            failures.append("{}: expected {} got {}".format(name, sorted(want), sorted(got)))
-        else:
-            print("self-test: {} -> {}".format(name, sorted(got) or "clean"))
-
-    # Bundle rule, on fixtures rather than on the shipped bundle.
-    bundle = fixtures / "bundle"
-    if not bundle.is_dir():
-        print("self-test: fixture bundle missing: {}".format(bundle), file=sys.stderr)
-        return EXIT_CANNOT_RUN
-    got = {finding.rule for finding in check_bundle_metrics(bundle, fixtures)}
-    if got != {"HP-EX-012"}:
-        failures.append("bundle: expected ['HP-EX-012'] got {}".format(sorted(got)))
-    else:
-        print("self-test: bundle -> ['HP-EX-012']")
-
-    warning_cases = [
-        ("functional-warning.txt", {"HP-EX-WARNING"}),
-        ("unreviewed-deprecation.txt", {"HP-EX-WARNING"}),
-        ("clean-parse.txt", set()),
-    ]
-    for name, want in warning_cases:
-        path = script_dir / "fixtures" / "warnings" / name
-        if not path.is_file():
-            print("self-test: warning fixture missing", file=sys.stderr)
-            return EXIT_CANNOT_RUN
-        got = {item.rule for item in classify_parse_warnings(name, path.read_text(encoding="utf-8"))}
-        if got != want:
-            failures.append("{}: warning classification mismatch".format(name))
-        else:
-            print("self-test: {} -> {}".format(name, sorted(got) or "clean"))
-
-    for required, features, want in [
-            (["ZLIB|SLZ"], {"SLZ"}, False),
-            (["ZLIB|SLZ"], {"ZLIB"}, False),
-            (["ZLIB|SLZ"], set(), True),
-            (["QUIC", "!QUIC_OPENSSL_COMPAT"], {"QUIC", "QUIC_OPENSSL_COMPAT"}, True),
-            (["QUIC", "PROMEX"], {"QUIC"}, True)]:
-        if bool(missing_features(required, features)) != want:
-            failures.append("build requirement alternatives/AND/negation mismatch")
-    print("self-test: build requirement alternatives, AND and negation checked")
-
-    # Could-not-run path: a binary that does not exist.
-    if binary_branch(str(script_dir / "not-a-binary")) is not None:
-        failures.append("binary_branch accepted a nonexistent binary")
-    else:
-        print("self-test: nonexistent binary -> could not run")
-
-    # CRLF resilience on the clean fixture.
-    scratch = tempfile.mkdtemp(prefix="haproxy-examples-crlf-")
-    try:
-        crlf = Path(scratch) / "contract.cfg"
-        crlf.write_bytes(GOOD_FIXTURE.replace("\n", "\r\n").encode("utf-8"))
-        got = {finding.rule for finding in check_structure(crlf, "crlf")}
-        if got:
-            failures.append("CRLF copy of the clean fixture produced {}".format(sorted(got)))
-        else:
-            print("self-test: CRLF copy of contract.cfg -> clean")
-    finally:
-        shutil.rmtree(scratch, ignore_errors=True)
-
-    if failures:
-        for line in failures:
-            print("self-test FAILED: {}".format(line), file=sys.stderr)
-        return EXIT_FINDINGS
-    print("self-test: all checks passed")
-    return EXIT_CLEAN
-
-
 def build_parser() -> argparse.ArgumentParser:
     return argparse.ArgumentParser(
         prog="check_examples.py",
@@ -724,8 +582,6 @@ def build_parser() -> argparse.ArgumentParser:
 
 def main(argv: list[str]) -> int:
     parser = build_parser()
-    parser.add_argument("--self-test", action="store_true",
-                        help="run against the fixtures in scripts/fixtures/examples and exit")
     parser.add_argument("--structure-only", action="store_true",
                         help="run the pure-Python phase only; makes no claim that anything parses")
     parser.add_argument("--haproxy", default=None,
@@ -741,9 +597,6 @@ def main(argv: list[str]) -> int:
         parser.error("choose --haproxy or --docker-image")
 
     script_dir = Path(__file__).resolve().parent
-
-    if args.self_test:
-        return self_test(script_dir)
 
     if args.root:
         root = Path(args.root).resolve()

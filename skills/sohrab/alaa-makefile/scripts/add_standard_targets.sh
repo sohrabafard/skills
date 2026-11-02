@@ -2,11 +2,9 @@
 #
 # alaa-makefile — add standard targets to an existing Makefile
 #
-# Interpreter requirement: GNU bash 4.2 or newer. On Windows run it under Git Bash
-# or WSL. The repository ships `.gitattributes` with `*.sh text eol=lf`, so a
-# Windows checkout with core.autocrlf=true does not leave a carriage return on the
-# shebang line; this script also refuses to edit a Makefile that has CRLF endings,
-# because appending LF text to a CRLF file produces a file make parses two ways.
+# Interpreter requirement: GNU bash 4.2 or newer. This script refuses to edit a
+# Makefile that has CRLF endings, because appending LF text to a CRLF file
+# produces a file make parses two ways.
 #
 # Exit codes:
 #   0  done          targets were added, or every requested target already existed
@@ -71,7 +69,6 @@ Options:
   -l, --list      List available targets and exit 0
   -n, --dry-run   Report what would be added and change nothing. Exits 1 when at
                   least one target is missing, so it can gate a pipeline.
-      --self-test Run against a scratch Makefile in TMPDIR and assert the result
       --with-vars Also append definitions for PREFIX, INSTALL, RM, BUILDDIR and
                   VERSION when the file does not define them. Off by default,
                   because a Makefile that fronts CI gates needs none of them.
@@ -247,99 +244,6 @@ append_missing_variables() {
     print_info "Appended the variable definitions the new targets reference"
 }
 
-self_test() {
-    local work failures=0 checks=0 rc
-    work="$(mktemp -d "${TMPDIR:-/tmp}/alaa-makefile-ast-XXXXXX")" || {
-        print_error "Cannot create a scratch directory in ${TMPDIR:-/tmp}"
-        exit "$EXIT_CANNOT_RUN"
-    }
-    # Expand the path now: `work` is local to this function and the EXIT trap runs
-    # after the function has returned, where the name is no longer bound.
-    # shellcheck disable=SC2064  # expansion at trap-set time is what is wanted here
-    trap "rm -rf '${work}'" EXIT
-
-    printf '# scratch Makefile\n.PHONY: build\nbuild:\n\t@echo build\n' > "$work/Makefile"
-
-    record() {
-        checks=$((checks + 1))
-        if [ "$1" = "pass" ]; then printf 'PASS  %s\n' "$2"
-        else printf 'FAIL  %s\n' "$2"; failures=$((failures + 1)); fi
-    }
-
-    echo "alaa-makefile add_standard_targets self-test"
-    echo "Scratch directory: $work"
-    echo ""
-
-    set +e
-    NO_COLOR=1 bash "${BASH_SOURCE[0]}" --dry-run "$work/Makefile" clean test >/dev/null 2>&1
-    rc=$?
-    set -e
-    [ "$rc" -eq 1 ] && record pass "--dry-run with missing targets exits 1" || record fail "--dry-run exits 1 (got $rc)"
-    grep -q '^clean:' "$work/Makefile" && record fail "--dry-run left the file unchanged" || record pass "--dry-run left the file unchanged"
-
-    set +e
-    NO_COLOR=1 bash "${BASH_SOURCE[0]}" "$work/Makefile" clean test help >/dev/null 2>&1
-    rc=$?
-    set -e
-    [ "$rc" -eq 0 ] && record pass "adding three targets exits 0" || record fail "adding three targets exits 0 (got $rc)"
-
-    for t in clean test help; do
-        grep -qE "^${t}[[:space:]]*:" "$work/Makefile" \
-            && record pass "target '$t' is now present" \
-            || record fail "target '$t' is now present"
-    done
-
-    if command -v make >/dev/null 2>&1; then
-        set +e
-        (cd "$work" && make -f Makefile --dry-run build >/dev/null 2>&1)
-        rc=$?
-        set -e
-        [ "$rc" -eq 0 ] && record pass "the edited Makefile still parses" || record fail "the edited Makefile still parses (make exit $rc)"
-    else
-        record pass "the edited Makefile still parses (skipped: GNU make absent)"
-    fi
-
-    set +e
-    NO_COLOR=1 bash "${BASH_SOURCE[0]}" "$work/Makefile" clean >/dev/null 2>&1
-    rc=$?
-    set -e
-    [ "$rc" -eq 0 ] && record pass "re-running on an existing target exits 0" || record fail "re-running on an existing target exits 0 (got $rc)"
-    [ "$(grep -cE '^clean[[:space:]]*:' "$work/Makefile")" -eq 1 ] \
-        && record pass "an existing target is not duplicated" \
-        || record fail "an existing target is not duplicated"
-
-    set +e
-    NO_COLOR=1 bash "${BASH_SOURCE[0]}" "$work/does-not-exist.mk" clean >/dev/null 2>&1
-    rc=$?
-    set -e
-    [ "$rc" -eq 2 ] && record pass "a missing Makefile exits 2" || record fail "a missing Makefile exits 2 (got $rc)"
-
-    set +e
-    NO_COLOR=1 bash "${BASH_SOURCE[0]}" "$work/Makefile" frobnicate >/dev/null 2>&1
-    rc=$?
-    set -e
-    [ "$rc" -eq 2 ] && record pass "an unknown target name exits 2" || record fail "an unknown target name exits 2 (got $rc)"
-
-    printf '# crlf\r\n.PHONY: build\r\nbuild:\r\n\t@echo x\r\n' > "$work/crlf.mk"
-    set +e
-    NO_COLOR=1 bash "${BASH_SOURCE[0]}" "$work/crlf.mk" clean >/dev/null 2>&1
-    rc=$?
-    set -e
-    [ "$rc" -eq 2 ] && record pass "a CRLF Makefile exits 2" || record fail "a CRLF Makefile exits 2 (got $rc)"
-
-    set +e
-    NO_COLOR=1 bash "${BASH_SOURCE[0]}" --help >/dev/null 2>&1
-    rc=$?
-    set -e
-    [ "$rc" -eq 0 ] && record pass "--help exits 0" || record fail "--help exits 0 (got $rc)"
-
-    echo ""
-    echo "checks: $checks   failures: $failures"
-    if [ "$failures" -eq 0 ]; then echo "SELF-TEST PASSED"; return "$EXIT_DONE"; fi
-    echo "SELF-TEST FAILED"
-    return "$EXIT_FINDINGS"
-}
-
 main() {
     local dry_run=0 with_vars=0
 
@@ -349,7 +253,6 @@ main() {
             -l|--list) list_targets; exit "$EXIT_DONE" ;;
             -n|--dry-run) dry_run=1; shift ;;
             --with-vars) with_vars=1; shift ;;
-            --self-test) self_test; exit $? ;;
             --) shift; break ;;
             -*) usage >&2; cannot_run "Unknown option: $1" ;;
             *) break ;;

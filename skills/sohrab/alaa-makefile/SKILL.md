@@ -22,13 +22,13 @@ each with a checker in `scripts/validate_makefile.sh`:
    no effort key.
 
 Owners across that boundary:
-- `/alaa-gitlab-ci-cd` (`$alaa-gitlab-ci-cd`) owns how a gate is expressed on a runner. When a target
+- `/alaa-gitlab-ci-cd` owns how a gate is expressed on a runner. When a target
   and the runner job disagree about a command, the runner job is correct and the target changes.
-- `/alaa-docker-production` (`$alaa-docker-production`) owns the Dockerfile, the image expression and
+- `/alaa-docker-production` owns the Dockerfile, the image expression and
   the Compose file a target fronts, including the fail-closed interpolation invariant.
-- `/alaa-frontend-devops` (`$alaa-frontend-devops`) owns the frontend gate register: which gates exist
+- `/alaa-frontend-devops` owns the frontend gate register: which gates exist
   and what each asserts. A frontend target invokes a gate from that register and adds none.
-- `/service-runtime-kit-governance` (`$service-runtime-kit-governance`) decides which generator
+- `/service-runtime-kit-governance` decides which generator
   variable expresses a runtime value when a target renders runtime files.
 
 ## Start fast
@@ -75,7 +75,7 @@ A review leaving any of these open does not pass. Each has a checker in `validat
 
 - `bash scripts/validate_makefile.sh <file>` on every change. `0` clean, `1` findings, `2` could not
   run; a caller treating `2` as a pass has no gate. `--no-venv` skips the mbake install on a prepared
-  image; `--self-test` checks the checker.
+  image.
 - `make -n <target>`, diffed against the command the runner runs: that diff is the proof of parity.
 - `make --shuffle=random -j$(nproc)` on GNU Make 4.4 or newer before claiming parallel safety.
 - A portability finding on a GNU-only feature is resolved by confirming the feature is intentional, not
@@ -85,23 +85,23 @@ A review leaving any of these open does not pass. Each has a checker in `validat
 
 Each owner decides its matter; this skill states only how the invocation is shaped.
 
-- `/alaa-bash-shell` (`$alaa-bash-shell`) — shell logic once a recipe becomes a script.
-- `/alaa-k8s-helm` (`$alaa-k8s-helm`) — chart and release when a target runs `helm` or `kubectl`.
-- `/caas-arvan-kuber` (`$caas-arvan-kuber`) — manifest and API versions when a target deploys to Arvan
+- `/alaa-bash-shell` — shell logic once a recipe becomes a script.
+- `/alaa-k8s-helm` — chart and release when a target runs `helm` or `kubectl`.
+- `/caas-arvan-kuber` — manifest and API versions when a target deploys to Arvan
   CaaS, whose Kubernetes version is pinned.
-- `/alaa-reliability-sla` (`$alaa-reliability-sla`) — whether a target may retry, how long it may wait
+- `/alaa-reliability-sla` — whether a target may retry, how long it may wait
   and what degradation is acceptable. This skill adds no retry and no timeout of its own.
-- `/alaa-observability-soc` (`$alaa-observability-soc`) — what a failing target emits and what gates on
+- `/alaa-observability-soc` — what a failing target emits and what gates on
   it.
-- `/alaa-services-contract` (`$alaa-services-contract`) — every shared name a target prints or passes:
+- `/alaa-services-contract` — every shared name a target prints or passes:
   log fields, metric names, `OTEL_*` values, host ports.
 - `/alaa-testing-strategy` — what `test:` and `check:` assert, test topic selection, and building once per tree state. Expose a focused test target that takes the topic selector and an exhaustive target, both depending on one build target.
-- `/alaa-security-review` (`$alaa-security-review`) — review triggers and fail-closed doctrine when a
+- `/alaa-security-review` — review triggers and fail-closed doctrine when a
   target handles a secret, signature or credential.
-- `/alaa-controlled-ops` (`$alaa-controlled-ops`) — change control when a target deploys or migrates.
-- `/alaa-project-constitution` (`$alaa-project-constitution`) — the quality bar, at
+- `/alaa-controlled-ops` — change control when a target deploys or migrates.
+- `/alaa-project-constitution` — the quality bar, at
   `alaa-project-constitution references/quality-bar.md`.
-- `/alaa-prompting-guide` (`$alaa-prompting-guide`) — every model and effort question, at
+- `/alaa-prompting-guide` — every model and effort question, at
   `alaa-prompting-guide references/50-effort-and-thinking.md`.
 
 ## Deliverables

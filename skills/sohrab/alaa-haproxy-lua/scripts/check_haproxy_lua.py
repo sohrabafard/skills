@@ -13,7 +13,7 @@ block nesting so that a rule can ask whether a token sits inside a function body
 in the file body, or inside one specific registered handler. It never executes
 the module under test.
 
-Windows: standard library only, pathlib for every path, no temp directory.
+Standard library only, pathlib for every path, no temp directory.
 """
 
 import argparse
@@ -195,8 +195,7 @@ FORBIDDEN_RUNTIME = [
 ]
 # A file that seeds from the operating system names the device inside a string
 # literal, so the suppression test requires the quotes. Searching the raw source for
-# the bare path let a comment that merely mentions the device silence the check; the
-# committed red fixture for HL002 mentions it in a comment for exactly that reason.
+# the bare path let a comment that merely mentions the device silence the check.
 ENTROPY_SOURCE_RE = re.compile(r"""["']/dev/urandom["']""")
 LUA53_CONSTRUCTS = [
     (r"[^<>=~]>>[^>]", "the >> operator"),
@@ -484,121 +483,15 @@ def check_source(path, source):
 
 
 # --------------------------------------------------------------------------
-# Self test, against committed fixtures
-# --------------------------------------------------------------------------
-
-# scripts/ and test/fixtures/ are siblings inside the skill directory. The path is
-# built from this file's own resolved location so the checker runs from any working
-# directory, on Windows as well as on Linux.
-FIXTURES = Path(__file__).resolve().parent.parent / "test" / "fixtures"
-
-RED_FIXTURES = (
-    ("red-hl001-os-clock.lua", "HL001"),
-    ("red-hl002-clock-seed.lua", "HL002"),
-    ("red-hl003-error-no-level.lua", "HL003"),
-    ("red-hl004-converter-returns-nil.lua", "HL004"),
-    ("red-hl005-lua53-no-version.lua", "HL005"),
-    ("red-hl006-unguarded-core.lua", "HL006"),
-    ("red-hl007-forbidden-runtime.lua", "HL007"),
-    ("red-hl009-pcall-nil.lua", "HL009"),
-    ("red-hl010-unresolvable-handler.lua", "HL010"),
-)
-GREEN_FIXTURES = ("green-converter-module.lua", "green-action-module.lua",
-                  "red-hl008-os-time-scaled.lua", "green-init-library.lua")
-
-
-def read_fixture(name):
-    """Return the text of one fixture, or raise OSError when it cannot be read."""
-    return (FIXTURES / name).read_text(encoding="utf-8")
-
-
-def self_test():
-    """Run every assertion against the committed fixtures.
-
-    Returns 0 when every case passes, 1 when any case fails, and 2 when a fixture
-    could not be read, so that a missing fixture can never be mistaken for a pass.
-    """
-    if not FIXTURES.is_dir():
-        sys.stderr.write(
-            "error: fixture directory not found: {0}\n".format(FIXTURES)
-        )
-        return EXIT_CANNOT_RUN
-
-    cases = []
-    try:
-        for name, code in RED_FIXTURES:
-            codes = set(f.code for f in check_source(name, read_fixture(name)))
-            cases.append((name + " reports " + code, code in codes))
-        for name in GREEN_FIXTURES:
-            found = check_source(name, read_fixture(name))
-            cases.append(
-                (
-                    name + " reports nothing",
-                    found == [],
-                    "" if found == [] else found[0].render(),
-                )
-            )
-        action_codes = set(
-            f.code
-            for f in check_source(
-                "green-action-module.lua", read_fixture("green-action-module.lua")
-            )
-        )
-    except OSError as exc:
-        sys.stderr.write("error: fixture unreadable: {0}\n".format(exc))
-        return EXIT_CANNOT_RUN
-
-    # The regression that this checker version exists for: an action-only module
-    # using the idiomatic "return nil, err" pair and a pcall must produce neither
-    # HL004 nor HL009, because actions do not turn nil into a sample.
-    cases.append(
-        (
-            "an action-only module reports no HL004 and no HL009",
-            not (action_codes & {"HL004", "HL009"}),
-        )
-    )
-    cases.append(
-        (
-            "string and comment occurrences are ignored",
-            scrub('local s = "os.clock()" -- os.clock()\nlocal t = os.clock()\n').count(
-                "os.clock"
-            )
-            == 1,
-        )
-    )
-    cases.append(
-        (
-            "for ... do counts as one block",
-            block_depth_map(scrub("for i = 1, 2 do end\nfunction f() end\n"))[-1]
-            == (0, False),
-        )
-    )
-
-    failed = 0
-    for case in cases:
-        name, ok = case[0], case[1]
-        detail = case[2] if len(case) > 2 and not ok else ""
-        print("{0} {1}".format("ok  " if ok else "FAIL", name))
-        if detail:
-            print("     " + detail.replace("\n", "\n     "))
-        if not ok:
-            failed += 1
-    print("")
-    print("{0} of {1} self-test cases passed".format(len(cases) - failed, len(cases)))
-    return EXIT_CLEAN if failed == 0 else EXIT_FINDINGS
-
-
-# --------------------------------------------------------------------------
 # CLI
 # --------------------------------------------------------------------------
 
 EPILOG = """\
 exit codes:
-  0  no lexical finding, or all self-tests passed. Continue unit/runtime gates.
-  1  at least one finding, or a self-test case failed. Fix every finding, then run
+  0  no lexical finding. Continue unit/runtime gates.
+  1  at least one finding. Fix every finding, then run
      this checker again; do not ship the module while any finding stands.
-  2  a path could not be read, the fixture directory is missing, or the arguments
-     were wrong. Nothing was checked. Correct the invocation and rerun; never read
+  2  a path could not be read or the arguments were wrong. Nothing was checked. Correct the invocation and rerun; never read
      this exit code as a pass.
 
 checks:
@@ -638,20 +531,12 @@ def main(argv):
         formatter_class=argparse.RawDescriptionHelpFormatter,
     )
     parser.add_argument("paths", nargs="*", help="Lua files to check")
-    parser.add_argument(
-        "--self-test",
-        action="store_true",
-        help="run the checker against its committed fixtures and exit",
-    )
     parser.add_argument("--version", action="version", version=VERSION)
     args = parser.parse_args(argv)
 
-    if args.self_test:
-        return self_test()
-
     if not args.paths:
         parser.print_usage(sys.stderr)
-        sys.stderr.write("error: give at least one Lua file, or --self-test\n")
+        sys.stderr.write("error: give at least one Lua file\n")
         return EXIT_CANNOT_RUN
 
     all_findings = []

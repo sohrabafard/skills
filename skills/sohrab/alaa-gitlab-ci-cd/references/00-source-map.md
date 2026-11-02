@@ -90,7 +90,7 @@ re-derives it. To re-baseline the whole skill:
 2. For each template, open the URL in its header comment, compare the pinned tag
    against the current supported line, and repin where the pinned line has
    reached end of support.
-3. Run both checkers' `--self-test`, then run them over `assets/templates/`.
+3. Run both checkers over `assets/templates/`.
 4. Record the date and what changed in this file's log below.
 
 ## Verification log

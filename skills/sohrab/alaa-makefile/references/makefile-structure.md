@@ -30,7 +30,7 @@ it. "Simplicity" is not such an environment.
 | `--no-builtin-rules` | make inventing a rule for a target you did not write, and searching roughly ninety built-in suffix rules per target | 4.0 |
 
 `.ONESHELL:` and `.SHELLFLAGS` belong together and never apart. `.ONESHELL` without `-e` is this
-skill's single worst silent-success mode; `ci-entrypoint.md` demonstrates it with a runnable fixture.
+skill's single worst silent-success mode; `ci-entrypoint.md` demonstrates it with a runnable example.
 
 On `.DELETE_ON_ERROR`, the GNU manual is explicit that the behaviour it enables is what you want and
 that you must ask for it: *"This is almost always what you want make to do, but it is not historical

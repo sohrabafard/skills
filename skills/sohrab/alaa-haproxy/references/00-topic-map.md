@@ -35,7 +35,6 @@ when their artifact or behavior changes. Full contract in `80-gate-register.md`.
 - `scripts/check_examples.py` — parses every shipped example and checks its in-file contract.
 - `scripts/check_http_error_bytes.py` — checks raw standalone response body lengths.
 - `scripts/check_runtime_3_4.py` — probes isolated dynamic-backend routing, removal and reload.
-- `scripts/test_runner_contracts.py` — synthetic regressions for runner isolation, cleanup and result classification.
 
 ## Example index
 

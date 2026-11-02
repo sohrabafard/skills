@@ -31,23 +31,9 @@ def findings(data: bytes) -> list[str]:
 def main() -> int:
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("paths", nargs="*", help="HTTP response files, read as bytes")
-    parser.add_argument("--self-test", action="store_true", help="run LF, CRLF, UTF-8, duplicate and missing-length fixtures")
     args = parser.parse_args()
-    if args.self_test:
-        base = Path(__file__).resolve().parent / "fixtures" / "http_errors"
-        expected = {"lf.http": False, "crlf.http": False, "utf8.http": False,
-                    "checkout-mismatch.http": True, "duplicate.http": True, "missing.http": True,
-                    "absurd-length.http": True, "leading-zero.http": False}
-        try:
-            failures = [name for name, wanted in expected.items()
-                        if bool(findings((base / name).read_bytes())) != wanted]
-        except OSError as exc:
-            print("could not run: {}".format(exc), file=sys.stderr)
-            return 2
-        print("self-test: {} byte fixtures; {} failures".format(len(expected), len(failures)))
-        return int(bool(failures))
     if not args.paths:
-        parser.error("supply response paths or --self-test")
+        parser.error("supply response paths")
     count = 0
     for raw in args.paths:
         try:

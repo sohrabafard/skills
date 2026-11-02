@@ -10,21 +10,16 @@ negative parser cases (missing os, three late ordering cases, invalid name, mixe
 none, 13 arguments); both mode HTTP matrices (nil converter/fetch, false/true,
 12 arguments, stale variable versus explicit reset, error-level logs, action error
 denial, `act.DENY` and success); token example parsing and four HTTP cases.
-One prior attempt failed before tests because Windows checkout/writing produced
-CRLF shell input. The runner now normalizes only shell transport to LF on stdin;
-one repaired retry passed. Lua/configuration source remains mounted read-only.
+The runner normalizes only shell transport to LF on stdin. Lua/configuration
+source remains mounted read-only.
 
 Independent verification on **1 October 2026** ran the final runner successfully
-at `19:00:12Z` (34/34 embedded checks and all runtime probes); the synthetic cleanup
-suite passed 4/4 at `18:59:44Z`. Its 38-file before/after manifests matched.
+at `19:00:12Z` (34/34 embedded checks and all runtime probes). Its 38-file before/after manifests matched.
 Repository archive: `<repo>/outputs/20261001-haproxy-346/verification/verification-report.md`;
 raw output and input manifests are beside that receipt. This is a repository
 evidence path, not an installed-package dependency. Later documentation-only
 clustering does not assert that its changed Markdown matches that earlier manifest.
 
-`python3 scripts/check_haproxy_lua.py --self-test`: 16/16 cases passed. The original
-HL008 fixture now asserts valid coarse unit conversion; init I/O is a green
-regression and the clock-seed fixture includes a misleading entropy path literal.
 `python3 scripts/check_haproxy_lua.py examples/haproxy-lua/token-guard.lua` is the
 production-example static gate; observed exit 0 with zero findings. The independent repository verifier owns broad
 pack checks and final receipt capture; these focused results are not those gates.

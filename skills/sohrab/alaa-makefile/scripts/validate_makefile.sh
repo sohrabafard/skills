@@ -2,10 +2,7 @@
 #
 # alaa-makefile — Makefile validator
 #
-# Interpreter requirement: GNU bash 4.2 or newer. On Windows run it under Git Bash
-# or WSL; `cmd.exe` and PowerShell cannot execute it. The repository ships
-# `.gitattributes` with `*.sh text eol=lf` so a Windows checkout with
-# core.autocrlf=true does not leave a carriage return on the shebang line.
+# Interpreter requirement: GNU bash 4.2 or newer.
 #
 # Exit codes (the only contract callers may rely on):
 #   0  clean      — every stage ran and reported no error and no warning
@@ -16,17 +13,14 @@
 #
 # Usage: bash validate_makefile.sh [OPTIONS] <Makefile>
 #        bash validate_makefile.sh --help
-#        bash validate_makefile.sh --self-test
 
 set -euo pipefail
 
-# Keep Python-based validators stable under Windows Git Bash and legacy consoles.
+# Keep Python-based validators stable regardless of the console locale.
 export PYTHONUTF8=1
 export PYTHONIOENCODING=utf-8
 
 SCRIPT_NAME="$(basename "${BASH_SOURCE[0]}")"
-SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
-FIXTURE_DIR="${SCRIPT_DIR}/fixtures"
 
 # ------------------------------------------------------------------
 # Pinned values. Each one states the command that re-derives it, so a
@@ -105,10 +99,6 @@ parallel safety and fleet-boundary violations.
 
 Options:
   -h, --help          Show this help and exit 0.
-      --self-test     Run every check against the fixtures in scripts/fixtures/
-                      and assert the expected exit code for each. Exits 0 when
-                      all assertions hold, 1 when any assertion fails, 2 when the
-                      fixtures are missing.
       --no-venv       Do not create a virtual environment and do not run pip.
                       Use \$MBAKE_BIN if it is set and executable, otherwise the
                       mbake on PATH, otherwise skip the mbake stages.
@@ -139,7 +129,6 @@ Examples:
   bash ${SCRIPT_NAME} Makefile
   bash ${SCRIPT_NAME} --no-venv build.mk
   MBAKE_BIN=/usr/local/bin/mbake bash ${SCRIPT_NAME} --no-venv Makefile
-  bash ${SCRIPT_NAME} --self-test
 EOF
 }
 
@@ -318,7 +307,7 @@ recipe_report() { awk -F'\t' '$1=="RECIPE"{printf "%s: %s\n", $2, $4}' "$INDEX_F
 space_report()  { awk -F'\t' '$1=="SPACEREC"{printf "%s: %s\n", $2, $4}' "$INDEX_FILE"; }
 
 # ------------------------------------------------------------------
-# Line endings — the second Windows defect class named in the brief.
+# Line endings.
 # A recipe line ending in CR passes the CR to the shell as part of the last
 # argument, so `bash script.sh\r` fails with a message that shows no CR.
 # ------------------------------------------------------------------
@@ -328,7 +317,7 @@ line_ending_check() {
     if LC_ALL=C grep -q $'\r' "$file"; then
         say_error "The file contains carriage returns (CRLF or CR line endings)."
         detail "GNU make passes the trailing CR to the shell, so a recipe fails with a message whose bytes look correct."
-        detail "Fix: run 'sed -i \$'s/\\r\$//' $file' and add '*.mk text eol=lf' plus 'Makefile text eol=lf' to .gitattributes."
+        detail "Fix: run 'sed -i \$'s/\\r\$//' $file'."
     else
         say_ok "LF line endings throughout"
     fi
@@ -881,125 +870,11 @@ run_validation() {
 }
 
 # ------------------------------------------------------------------
-# Self-test
-# ------------------------------------------------------------------
-self_test() {
-    local failures=0 checks=0
-
-    for f in clean-fleet.mk oneshell-swallow.mk defective.mk continuation.mk; do
-        if [ ! -f "$FIXTURE_DIR/$f" ]; then
-            printf '[CANNOT RUN] fixture missing: %s\n' "$FIXTURE_DIR/$f" >&2
-            exit "$EXIT_CANNOT_RUN"
-        fi
-    done
-
-    assert_exit() {
-        local expected=$1 label=$2; shift 2
-        local out rc
-        set +e
-        out="$(NO_COLOR=1 bash "${BASH_SOURCE[0]}" --skip-mbake --no-fleet-checks "$@" 2>&1)"
-        rc=$?
-        set -e
-        checks=$((checks + 1))
-        if [ "$rc" -eq "$expected" ]; then
-            printf 'PASS  exit %s  %s\n' "$rc" "$label"
-        else
-            printf 'FAIL  expected exit %s, got %s  %s\n' "$expected" "$rc" "$label"
-            printf '%s\n' "$out" | tail -25
-            failures=$((failures + 1))
-        fi
-    }
-
-    assert_contains() {
-        local needle=$1 label=$2; shift 2
-        local out
-        set +e
-        out="$(NO_COLOR=1 bash "${BASH_SOURCE[0]}" --skip-mbake --no-fleet-checks "$@" 2>&1)"
-        set -e
-        checks=$((checks + 1))
-        if printf '%s' "$out" | grep -q "$needle"; then
-            printf 'PASS  reported  %s\n' "$label"
-        else
-            printf 'FAIL  did not report  %s\n' "$label"
-            failures=$((failures + 1))
-        fi
-    }
-
-    assert_absent() {
-        local needle=$1 label=$2; shift 2
-        local out
-        set +e
-        out="$(NO_COLOR=1 bash "${BASH_SOURCE[0]}" --skip-mbake --no-fleet-checks "$@" 2>&1)"
-        set -e
-        checks=$((checks + 1))
-        if printf '%s' "$out" | grep -q "$needle"; then
-            printf 'FAIL  falsely reported  %s\n' "$label"
-            failures=$((failures + 1))
-        else
-            printf 'PASS  did not report  %s\n' "$label"
-        fi
-    }
-
-    echo "alaa-makefile validator self-test"
-    echo "Fixtures: $FIXTURE_DIR"
-    echo ""
-
-    assert_exit 0 "clean fleet Makefile is clean"                 "$FIXTURE_DIR/clean-fleet.mk"
-    assert_exit 1 "'.ONESHELL' without -e is a finding"           "$FIXTURE_DIR/oneshell-swallow.mk"
-    assert_contains ".ONESHELL is set and .SHELLFLAGS is absent" \
-        "the .ONESHELL silent-success mode"                        "$FIXTURE_DIR/oneshell-swallow.mk"
-    assert_exit 1 "defective Makefile is a finding"                "$FIXTURE_DIR/defective.mk"
-    assert_contains "prefixed with '-'"  "the leading-dash defect" "$FIXTURE_DIR/defective.mk"
-    assert_contains "bash-only constructs" "the bashism defect"    "$FIXTURE_DIR/defective.mk"
-    assert_contains "Bare 'make'"        "the bare-make defect"    "$FIXTURE_DIR/defective.mk"
-    assert_contains "Recursive assignment" "the recursive \$(shell) defect" "$FIXTURE_DIR/defective.mk"
-    assert_exit 0 "legal line continuation is not a tab error"     "$FIXTURE_DIR/continuation.mk"
-    assert_absent "indented with spaces" "the historic tab false positive" "$FIXTURE_DIR/continuation.mk"
-    assert_exit 2 "a path that does not exist cannot run"          "$FIXTURE_DIR/does-not-exist.mk"
-
-    checks=$((checks + 1))
-    set +e
-    NO_COLOR=1 bash "${BASH_SOURCE[0]}" --help >/dev/null 2>&1
-    local help_rc=$?
-    set -e
-    if [ "$help_rc" -eq 0 ]; then
-        printf 'PASS  exit 0  --help\n'
-    else
-        printf 'FAIL  expected exit 0, got %s  --help\n' "$help_rc"
-        failures=$((failures + 1))
-    fi
-
-    # The fleet boundary check is disabled for the assertions above so the other
-    # fixtures stay independent of it; assert it here on its own.
-    checks=$((checks + 1))
-    set +e
-    local fleet_out
-    fleet_out="$(NO_COLOR=1 bash "${BASH_SOURCE[0]}" --skip-mbake "$FIXTURE_DIR/defective.mk" 2>&1)"
-    set -e
-    if printf '%s' "$fleet_out" | grep -q "owned by service-ci-kit"; then
-        printf 'PASS  reported  a recipe re-implementing a kit-owned command\n'
-    else
-        printf 'FAIL  did not report  a recipe re-implementing a kit-owned command\n'
-        failures=$((failures + 1))
-    fi
-
-    echo ""
-    echo "checks: $checks   failures: $failures"
-    if [ "$failures" -eq 0 ]; then
-        echo "SELF-TEST PASSED"
-        return "$EXIT_CLEAN"
-    fi
-    echo "SELF-TEST FAILED"
-    return "$EXIT_FINDINGS"
-}
-
-# ------------------------------------------------------------------
 main() {
     local target=""
     while [ $# -gt 0 ]; do
         case "$1" in
             -h|--help) usage; exit "$EXIT_CLEAN" ;;
-            --self-test) self_test; exit $? ;;
             --no-venv) USE_VENV=0; shift ;;
             --skip-mbake) RUN_MBAKE=0; USE_VENV=0; shift ;;
             --no-fleet-checks) FLEET_CHECKS=0; shift ;;

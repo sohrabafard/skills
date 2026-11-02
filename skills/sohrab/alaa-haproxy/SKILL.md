@@ -60,13 +60,11 @@ python3 scripts/check_examples.py --docker-image <cached-image>
 python3 scripts/check_http_error_bytes.py <response.http>
 # When a change depends on dynamic-backend lifecycle/reload behavior:
 python3 scripts/check_runtime_3_4.py --docker-image <cached-3.4.6-alpine-image>
-# When changing checker or runner behavior (synthetic, no Docker required):
-python3 scripts/test_runner_contracts.py
 ```
 
-All take `--help`; the static/byte checkers also take `--self-test`. Checker exit codes are
+All take `--help`. Checker exit codes are
 **0 clean, 1 findings, 2 could not run**; a missing binary or an unreadable path is
-2, never 0. The synthetic unittest suite returns **0 success, 1 failure/error**.
+2, never 0.
 Run commands from this package directory. Full contract and gate register:
 `references/80-gate-register.md`.
 

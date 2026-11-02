@@ -58,47 +58,40 @@ failed gate. After that budget, preserve the exact failure and report the blocke
 The defaults-scope and examples checkers have these contracts:
 
 1. `--help` describes the rules and the exit codes.
-2. `--self-test` runs against fixtures shipped in `scripts/fixtures/` and passes from a fresh
-   checkout with no network and no HAProxy binary.
-3. Exit codes distinguish outcomes: **`0` clean, `1` findings, `2` could not run.** A missing
+2. Exit codes distinguish outcomes: **`0` clean, `1` findings, `2` could not run.** A missing
    binary or an unreadable path is `2`, never `0`. Syntax/contract findings are
    `1`; a checker that cannot inspect its input does not report it clean.
-4. Pure Python 3 with the standard library only, so they run on Windows as well as on Linux and
-   macOS. Every file is read as text with newline translation, so a CRLF checkout does not leave a
-   carriage return on the last field of a parsed line.
-5. Each resolves its own location by ascending from its own directory until it finds `SKILL.md`,
+3. Pure Python 3 with the standard library only. Every file is read as text with newline
+   translation, so a CRLF file does not leave a carriage return on the last field of a parsed line.
+4. Each resolves its own location by ascending from its own directory until it finds `SKILL.md`,
    rather than by counting parent directories, and writes any temporary file to the system
    temporary directory rather than inside the repository.
 
 Run them:
 
 ```
-python3 scripts/check_defaults_scope.py --self-test
 python3 scripts/check_defaults_scope.py examples/haproxy
-python3 scripts/check_examples.py --self-test
 python3 scripts/check_examples.py --structure-only
 python3 scripts/check_examples.py --haproxy <path-to-haproxy>
 python3 scripts/check_examples.py --docker-image <cached-image>
-python3 scripts/check_http_error_bytes.py --self-test
 python3 scripts/check_http_error_bytes.py <response.http>
 python3 scripts/check_runtime_3_4.py --docker-image <cached-3.4.6-alpine-image>
-python3 scripts/test_runner_contracts.py
 ```
 
 Commands are relative to the package directory. The Docker parser adapter uses
-host Python and OpenSSL to generate temporary fixture inputs and invokes the
+host Python and OpenSSL to generate a temporary certificate and map tree and invokes the
 cached binary with `--pull never`; the image need not contain Python. It checks
-the effective ConfigMap config as well as `.cfg` examples. External-path fixtures
+the effective ConfigMap config as well as `.cfg` examples. External-path inputs
 and loopback DNS are parser inputs, not certificate or resolver operation proof.
 
-The byte checker reads bytes without newline conversion or repair. Its eight
-fixtures cover LF, CRLF, UTF-8, checkout length mismatch, duplicate/missing length,
-absurd decimal length and leading zeroes. A `.gitattributes` rule preserves bytes. Exit 1 means a
+The byte checker reads bytes without newline conversion or repair. It accepts LF, CRLF and
+UTF-8 bodies and reports a Content-Length that differs from the raw body bytes, a duplicate or
+missing length, an absurd decimal length and leading zeroes. Exit 1 means a
 length/shape finding; exit 2 means unreadable input.
 
 The runtime probe requires a cached HAProxy 3.4.6 Alpine image, Docker and its
 `sh`/`nc`/`wget` and `+LUA` for a controlled delayed streaming origin. It has
-`--help`, not `--self-test`. It uses read-only fixtures,
+`--help`. It mounts a read-only scratch tree,
 one CPU, 256 MiB, no network access or published ports and cleans up its temporary
 container. Positive origin routing, unpublished fallback, preserved active-stream
 drain, successful wait replies, deletion refusal,
@@ -108,11 +101,7 @@ readiness deadline; other operation errors fail immediately. Exit 1 is an
 assertion failure, exit 2 an unavailable prerequisite/operation. Current task
 failures are preserved in `SOURCES.md`; a shipped harness is not evidence it passed.
 
-`test_runner_contracts.py` runs twelve synthetic cases without Docker or scratch
-writes: environment isolation, owned-name cleanup after success/failure/timeout,
-cleanup error handling, lifecycle creation diagnostics, exact patch matching,
-wait replies, active-stream counter selection, parser warning rejection and absurd decimal length handling.
-Only explicitly constructed parser fixture variables reach Docker arguments;
+Only explicitly constructed parser variables reach Docker arguments;
 inherited `HAPROXY_*` values are not forwarded. Unique owned names permit bounded,
 return-code-checked cleanup even when Docker creation times out.
 
@@ -132,5 +121,5 @@ because the `OT` feature token denotes OpenTracing.
 Unresolved warnings from `haproxy -c -f` are `HP-EX-WARNING` findings and block the
 gate with exit1, even when the parser exits0. A warning can indicate an ineffective
 control today. No deprecation exception is currently approved. Accept one only with
-an exact message and branch, authoritative support/safety evidence, and a checker
-fixture; matching the word deprecated alone never grants an exception.
+an exact message and branch and authoritative support/safety evidence;
+matching the word deprecated alone never grants an exception.

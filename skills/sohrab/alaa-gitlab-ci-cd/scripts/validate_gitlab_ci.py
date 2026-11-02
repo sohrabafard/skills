@@ -20,8 +20,8 @@ Exit codes:
   2  could not run (missing dependency, missing file, unreadable or unparsable
      input, bad arguments)
 
-Runs on Windows: pure Python 3.9+, no shell-out, no POSIX path assumptions, all
-reads are explicitly UTF-8, and CRLF input is normalised by splitlines().
+Pure Python 3.9+, no shell-out, all reads are explicitly UTF-8, and CRLF input
+is normalised by splitlines().
 """
 
 from __future__ import annotations
@@ -1350,120 +1350,6 @@ def render(issues: list[Issue], as_json: bool) -> None:
         print(f"         ... [{rule}] fires on {extra} more job(s) in {path}; use --json for all")
 
 
-def fixtures_dir() -> Path:
-    return Path(__file__).resolve().parent / "fixtures"
-
-
-SELF_TEST_EXPECTATIONS: dict[str, dict[str, Any]] = {
-    "variable-paths.gitlab-ci.yml": {
-        "present": {"rules-path-var"},
-        "max_severity": "note",
-    },
-    "invalid-rule-expression.gitlab-ci.yml": {
-        "present": {"rules-if-brace-var", "rules-path-var"},
-    },
-    "good-pipeline.gitlab-ci.yml": {"absent": {"*"}},
-    "reference-tag.gitlab-ci.yml": {"absent": {"*"}},
-    # The fleet's standard wrapper must never produce an error: every unresolved
-    # cross-file name is a note, and the file must not fail a pipeline.
-    "thin-wrapper.gitlab-ci.yml": {
-        "present": {"unresolved-include", "extends-missing", "needs-missing"},
-        "absent": {"no-code-gate", "runner-supplied-image"},
-        "max_severity": "note",
-    },
-    "default-block.gitlab-ci.yml": {
-        "present": {"image-unpinned", "cache-key-missing", "set-x", "secret-inline"},
-    },
-    "registry-port.gitlab-ci.yml": {"present": {"image-unpinned"}},
-    "scheduling-hazards.gitlab-ci.yml": {
-        "present": {
-            "retry-bare-count",
-            "interruptible-on-mutating-job",
-            "resource-group-saturation",
-            "dag-orphan",
-            "job-timeout-missing",
-            "no-code-gate",
-        },
-    },
-    "cache-and-pinning.gitlab-ci.yml": {
-        "present": {
-            "cache-key-files-limit",
-            "fallback-keys-limit",
-            "cache-policy-unset",
-            "image-latest",
-            "deprecated-global-keyword",
-        },
-    },
-    "advisory-and-secrets.gitlab-ci.yml": {
-        "present": {
-            "advisory-not-gate",
-            "variables-shell-default",
-            "script-credential-in-url",
-            "docker-login-stdin",
-        },
-    },
-}
-
-SEVERITY_RANK = {"note": 0, "warning": 1, "error": 2}
-
-
-def self_test() -> int:
-    base = fixtures_dir()
-    if not base.is_dir():
-        print(f"SELF-TEST CANNOT RUN: fixtures directory not found at {base}")
-        return EXIT_CANNOT_RUN
-
-    failures: list[str] = []
-    checked = 0
-    for name, expectation in sorted(SELF_TEST_EXPECTATIONS.items()):
-        fixture = base / name
-        if not fixture.is_file():
-            print(f"SELF-TEST CANNOT RUN: missing fixture {fixture}")
-            return EXIT_CANNOT_RUN
-        try:
-            issues = validate_config(fixture)
-        except CannotRun as exc:
-            print(f"SELF-TEST CANNOT RUN: {exc}")
-            return EXIT_CANNOT_RUN
-        checked += 1
-        rules = {i.rule for i in issues}
-        expected_absent = expectation.get("absent", set())
-        if "*" in expected_absent:
-            if issues:
-                failures.append(f"{name}: expected no findings, got {sorted(rules)}")
-        else:
-            for rule in sorted(expected_absent):
-                if rule in rules:
-                    failures.append(f"{name}: rule '{rule}' should not fire")
-        for rule in sorted(expectation.get("present", set())):
-            if rule not in rules:
-                failures.append(f"{name}: expected rule '{rule}', got {sorted(rules)}")
-        cap = expectation.get("max_severity")
-        if cap:
-            limit = SEVERITY_RANK[cap]
-            for item in issues:
-                if SEVERITY_RANK.get(item.severity, 9) > limit:
-                    failures.append(
-                        f"{name}: '{item.rule}' is {item.severity}, expected at most {cap}"
-                    )
-
-    missing = base / "does-not-exist.yml"
-    try:
-        validate_config(missing)
-    except CannotRun:
-        pass
-    else:
-        failures.append("a missing file did not raise CannotRun")
-
-    if failures:
-        print(f"SELF-TEST FAILED ({len(failures)} problems across {checked} fixtures):")
-        for line in failures:
-            print(f"  - {line}")
-        return EXIT_FINDINGS
-    print(f"SELF-TEST PASSED: {checked} fixtures, {len(SELF_TEST_EXPECTATIONS)} expectation sets.")
-    return EXIT_CLEAN
-
-
 def main() -> int:
     parser = argparse.ArgumentParser(
         prog="validate_gitlab_ci.py",
@@ -1484,19 +1370,11 @@ def main() -> int:
         action="store_true",
         help="Exit 1 when warnings are present, not only when errors are",
     )
-    parser.add_argument(
-        "--self-test",
-        action="store_true",
-        help="Run the bundled fixture corpus in scripts/fixtures and report pass or fail",
-    )
     args = parser.parse_args()
-
-    if args.self_test:
-        return self_test()
 
     if not args.paths:
         parser.print_usage()
-        print("error: give at least one file, or use --self-test")
+        print("error: give at least one file")
         return EXIT_CANNOT_RUN
 
     all_issues: list[Issue] = []

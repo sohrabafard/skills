@@ -7,7 +7,7 @@ Glitch detection predates 3.4; HTTP/1 coverage is new. Global
 (no threshold). A nonzero threshold enables closure and a graceful close is
 attempted at 75% of it. `fc_glitches`/`bc_glitches` and stick-table glitch counters
 help distinguish malformed peers from ordinary load. Do not relax HTTP parsing
-to create test traffic on a production listener; use isolated malformed fixtures.
+to create test traffic on a production listener; use isolated malformed inputs.
 
 3.4 adds H2 frame/RST fairness controls (`tune.h2.{fe,be}.max-frames-at-once`,
 `tune.h2.fe.max-rst-at-once`), whose default zero imposes no such limit.

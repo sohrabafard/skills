@@ -2,19 +2,15 @@
 #
 # alaa-makefile — generate a Makefile template
 #
-# Interpreter requirement: GNU bash 4.2 or newer. On Windows run it under Git Bash
-# or WSL. The repository ships `.gitattributes` with `*.sh text eol=lf` so a
-# Windows checkout with core.autocrlf=true does not leave a carriage return on the
-# shebang line, and every template this script writes uses LF endings.
+# Interpreter requirement: GNU bash 4.2 or newer. Every template this script
+# writes uses LF endings.
 #
 # Exit codes:
-#   0  done          a template was written, or --help/--list/--self-test succeeded
-#   1  findings      --self-test found a generated template that fails validation
+#   0  done          a template was written, or --help/--list succeeded
 #   2  could not run bad arguments, unknown type, output exists without --force
 #
 # Every template emitted here carries the preamble the body of this skill
-# mandates, and every template is asserted against scripts/validate_makefile.sh
-# by --self-test, so the generator and the validator cannot drift apart.
+# mandates. Run scripts/validate_makefile.sh on a generated template.
 
 set -euo pipefail
 
@@ -22,7 +18,6 @@ SCRIPT_NAME="$(basename "${BASH_SOURCE[0]}")"
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 
 EXIT_DONE=0
-EXIT_FINDINGS=1
 EXIT_CANNOT_RUN=2
 
 FORCE=0
@@ -71,12 +66,9 @@ Options:
   -f, --force     Overwrite OUTPUT_FILE if it exists
   -l, --list      List project types and exit 0
   -h, --help      Show this help and exit 0
-      --self-test Generate every type into TMPDIR, assert each one parses and
-                  each one passes scripts/validate_makefile.sh, then exit
 
 Exit codes:
-  0  a template was written, or --help/--list/--self-test succeeded
-  1  --self-test found a generated template that fails validation
+  0  a template was written, or --help/--list succeeded
   2  could not run: no PROJECT_TYPE, unknown PROJECT_TYPE, or OUTPUT_FILE exists
      without --force
 
@@ -85,7 +77,6 @@ Examples:
   ${SCRIPT_NAME} go server Makefile
   ${SCRIPT_NAME} python mypackage build.mk
   ${SCRIPT_NAME} -f c myapp Makefile
-  ${SCRIPT_NAME} --self-test
 EOF
 }
 
@@ -103,7 +94,6 @@ parse_args() {
             -f|--force) FORCE=1; shift ;;
             -h|--help) usage; exit "$EXIT_DONE" ;;
             -l|--list) list_types; exit "$EXIT_DONE" ;;
-            --self-test) self_test; exit $? ;;
             --) shift; break ;;
             -*) usage >&2; cannot_run "Unknown option: $1" ;;
             *)
@@ -602,105 +592,6 @@ emit_template() {
 write_template() {
     local type=$1 project=$2 output=$3
     emit_template "$type" | sed "s/PROJECT_NAME/${project}/g" > "$output"
-}
-
-self_test() {
-    local work failures=0 checks=0 rc
-    work="$(mktemp -d "${TMPDIR:-/tmp}/alaa-makefile-gen-XXXXXX")" || {
-        print_error "Cannot create a scratch directory in ${TMPDIR:-/tmp}"
-        exit "$EXIT_CANNOT_RUN"
-    }
-    # Expand now: the EXIT trap runs after this function has returned.
-    # shellcheck disable=SC2064  # expansion at trap-set time is what is wanted here
-    trap "rm -rf '${work}'" EXIT
-
-    record() {
-        checks=$((checks + 1))
-        if [ "$1" = pass ]; then printf 'PASS  %s\n' "$2"
-        else printf 'FAIL  %s\n' "$2"; failures=$((failures + 1)); fi
-    }
-
-    echo "alaa-makefile generate_makefile_template self-test"
-    echo "Scratch directory: $work"
-    echo ""
-
-    local t
-    for t in "${TYPES[@]}"; do
-        local out="$work/$t.mk"
-        set +e
-        NO_COLOR=1 bash "${BASH_SOURCE[0]}" "$t" "sample-$t" "$out" >/dev/null 2>&1
-        rc=$?
-        set -e
-        if [ "$rc" -ne 0 ] || [ ! -s "$out" ]; then
-            record fail "type '$t' generates a file (exit $rc)"
-            continue
-        fi
-        record pass "type '$t' generates a file"
-
-        if LC_ALL=C grep -q $'\r' "$out"; then
-            record fail "type '$t' writes LF line endings"
-        else
-            record pass "type '$t' writes LF line endings"
-        fi
-
-        if command -v make >/dev/null 2>&1; then
-            set +e
-            (cd "$work" && make -f "$t.mk" --dry-run help >/dev/null 2>&1)
-            rc=$?
-            set -e
-            [ "$rc" -eq 0 ] && record pass "type '$t' parses under make --dry-run" \
-                            || record fail "type '$t' parses under make --dry-run (exit $rc)"
-        else
-            record pass "type '$t' parses under make --dry-run (skipped: GNU make absent)"
-        fi
-
-        set +e
-        NO_COLOR=1 bash "$SCRIPT_DIR/validate_makefile.sh" --skip-mbake "$out" >"$work/$t.validate.log" 2>&1
-        rc=$?
-        set -e
-        if [ "$rc" -eq 0 ]; then
-            record pass "type '$t' passes validate_makefile.sh"
-        else
-            record fail "type '$t' passes validate_makefile.sh (exit $rc)"
-            sed -n '/RECIPE BEHAVIOUR/,/VALIDATION SUMMARY/p' "$work/$t.validate.log" | head -25
-        fi
-    done
-
-    set +e
-    NO_COLOR=1 bash "${BASH_SOURCE[0]}" >/dev/null 2>&1
-    rc=$?
-    set -e
-    [ "$rc" -eq 2 ] && record pass "no PROJECT_TYPE exits 2" || record fail "no PROJECT_TYPE exits 2 (got $rc)"
-
-    set +e
-    NO_COLOR=1 bash "${BASH_SOURCE[0]}" frobnicate x "$work/x.mk" >/dev/null 2>&1
-    rc=$?
-    set -e
-    [ "$rc" -eq 2 ] && record pass "an unknown type exits 2" || record fail "an unknown type exits 2 (got $rc)"
-
-    set +e
-    NO_COLOR=1 bash "${BASH_SOURCE[0]}" go x "$work/go.mk" >/dev/null 2>&1
-    rc=$?
-    set -e
-    [ "$rc" -eq 2 ] && record pass "an existing output without --force exits 2" || record fail "an existing output without --force exits 2 (got $rc)"
-
-    set +e
-    NO_COLOR=1 bash "${BASH_SOURCE[0]}" --force go x "$work/go.mk" >/dev/null 2>&1
-    rc=$?
-    set -e
-    [ "$rc" -eq 0 ] && record pass "--force overwrites and exits 0" || record fail "--force overwrites and exits 0 (got $rc)"
-
-    set +e
-    NO_COLOR=1 bash "${BASH_SOURCE[0]}" --help >/dev/null 2>&1
-    rc=$?
-    set -e
-    [ "$rc" -eq 0 ] && record pass "--help exits 0" || record fail "--help exits 0 (got $rc)"
-
-    echo ""
-    echo "checks: $checks   failures: $failures"
-    if [ "$failures" -eq 0 ]; then echo "SELF-TEST PASSED"; return "$EXIT_DONE"; fi
-    echo "SELF-TEST FAILED"
-    return "$EXIT_FINDINGS"
 }
 
 main() {

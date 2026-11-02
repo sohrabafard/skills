@@ -41,7 +41,7 @@ other file is out of date.
   `mbake-tool.md` — **owner** of everything mbake. This file is about mbake, the Python Makefile
   formatter this skill installs; it has nothing to do with Docker Buildx Bake.
 - The bundled scripts: `../scripts/validate_makefile.sh`, `../scripts/generate_makefile_template.sh`,
-  `../scripts/add_standard_targets.sh`. Each carries `--help` and `--self-test`; read `--help` rather
+  `../scripts/add_standard_targets.sh`. Each carries `--help`; read `--help` rather
   than a reference file.
 
 ## Compile native code with Make
