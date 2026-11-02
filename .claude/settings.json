@@ -14,17 +14,7 @@
       "Bash(bd blocked *)",
       "Bash(bd create *)",
       "Bash(bd update *)",
-      "Bash(bd close *)",
-      "PowerShell(bd where *)",
-      "PowerShell(bd version *)",
-      "PowerShell(bd prime *)",
-      "PowerShell(bd ready *)",
-      "PowerShell(bd list *)",
-      "PowerShell(bd show *)",
-      "PowerShell(bd blocked *)",
-      "PowerShell(bd create *)",
-      "PowerShell(bd update *)",
-      "PowerShell(bd close *)"
+      "Bash(bd close *)"
     ]
   },
   "hooks": {

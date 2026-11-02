@@ -177,30 +177,5 @@
     }
   },
   "active": "aab9a03067b434bb",
-  "lastOpenFiles": [
-    "vendor/basic-memory/memory-tasks/SKILL.md",
-    "vendor/basic-memory/memory-tasks",
-    "vendor/basic-memory/memory-schema/SKILL.md",
-    "vendor/basic-memory/memory-schema",
-    "vendor/basic-memory/memory-research/SKILL.md",
-    "vendor/basic-memory/memory-research",
-    "vendor/basic-memory/memory-reflect/SKILL.md",
-    "vendor/basic-memory/memory-reflect",
-    "vendor/basic-memory/memory-notes/SKILL.md",
-    "vendor/basic-memory/memory-notes",
-    "vendor/basic-memory/memory-metadata-search/SKILL.md",
-    "vendor/basic-memory/memory-metadata-search",
-    "vendor/basic-memory/memory-literary-analysis/SKILL.md",
-    "vendor/basic-memory/memory-literary-analysis",
-    "vendor/basic-memory/memory-lifecycle/SKILL.md",
-    "vendor/basic-memory/memory-lifecycle",
-    "vendor/basic-memory/memory-ingest/SKILL.md",
-    "vendor/basic-memory/memory-ingest",
-    "vendor/basic-memory/memory-defrag/SKILL.md",
-    "vendor/basic-memory/memory-defrag",
-    "vendor/basic-memory/memory-curate/SKILL.md",
-    "vendor/basic-memory/memory-continue/SKILL.md",
-    "vendor/basic-memory/memory-ci-capture/SKILL.md",
-    "vendor/basic-memory/memory-capture/SKILL.md"
-  ]
+  "lastOpenFiles": []
 }
