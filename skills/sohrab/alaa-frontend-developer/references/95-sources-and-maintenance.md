@@ -8,7 +8,7 @@ This skill states no package versions. A version written into prose is stale the
 written, and this skill previously carried five copies of one snapshot. The source of truth is the live
 check, which belongs to `/alaa-quasar-app-vite-v3` (`$alaa-quasar-app-vite-v3`)
 `scripts/check-upstream-versions.mjs` — the fleet's only copy. Run it from that skill's root before any
-version-sensitive change; it takes `--help` and `--self-test`, honours `HTTPS_PROXY`, applies a request
+version-sensitive change; it takes `--help`, honours `HTTPS_PROXY`, applies a request
 timeout, and isolates a failing package so one unreachable registry entry does not lose the rest.
 
 The `@quasar/app-vite` line in use, and what each line supports, is that skill's `references/00-topic-map.md`.

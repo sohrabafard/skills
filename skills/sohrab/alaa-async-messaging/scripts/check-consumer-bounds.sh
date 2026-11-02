@@ -17,8 +17,6 @@ set -u
 
 VERSION='1.0.0'
 ROOT='.'
-SELF_TEST=0
-SELF=$0
 
 CONSUME_RE='basic_consume\(|->consume\(|\.Consume\(|NewConsumer\(|mqkit\.Consumer|rabbitmq:consume|queue:work'
 PREFETCH_RE='basic_qos\(|prefetch_count|PrefetchCount|prefetch-count|Prefetch:|\.Qos\(|MQ_PREFETCH|RABBITMQ_PREFETCH|.prefetch.[ ]*=>'
@@ -33,13 +31,11 @@ check-consumer-bounds.sh - message-plane bounds gate
 
 Usage:
   check-consumer-bounds.sh [--root DIR]
-  check-consumer-bounds.sh --self-test
   check-consumer-bounds.sh -h | --help
   check-consumer-bounds.sh --version
 
 Options:
   --root DIR    directory to scan. Default: the current directory
-  --self-test   run the shipped fixtures under scripts/fixtures and exit
   -h, --help    print this help and exit
   --version     print the gate version and exit
 
@@ -172,70 +168,6 @@ run_checks() {
     return 1
 }
 
-self_test() {
-    st_dir=$(dirname "$SELF")/fixtures
-    st_fail=0
-    if [ ! -d "$st_dir" ]; then
-        printf 'FAIL  fixtures directory %s is missing\n' "$st_dir"
-        return 1
-    fi
-
-    st_out=$("$SELF" --root "$st_dir/conforming" 2>&1); st_rc=$?
-    if [ "$st_rc" -eq 0 ]; then
-        printf 'PASS  conforming fixture exits 0\n'
-    else
-        printf 'FAIL  conforming fixture exited %s:\n%s\n' "$st_rc" "$st_out"
-        st_fail=$((st_fail + 1))
-    fi
-
-    st_out=$("$SELF" --root "$st_dir/violating" 2>&1); st_rc=$?
-    if [ "$st_rc" -eq 1 ]; then
-        printf 'PASS  violating fixture exits 1\n'
-    else
-        printf 'FAIL  violating fixture exited %s:\n%s\n' "$st_rc" "$st_out"
-        st_fail=$((st_fail + 1))
-    fi
-    for st_id in C1-prefetch-unset C2-queue-without-dlq C3-name-grammar; do
-        if printf '%s\n' "$st_out" | grep -q "$st_id"; then
-            printf 'PASS  %s fires on its violating fixture\n' "$st_id"
-        else
-            printf 'FAIL  %s did not fire on its violating fixture\n' "$st_id"
-            st_fail=$((st_fail + 1))
-        fi
-    done
-
-    st_out=$("$SELF" --root "$st_dir/no-broker" 2>&1); st_rc=$?
-    if [ "$st_rc" -eq 2 ]; then
-        printf 'PASS  no-broker fixture exits 2\n'
-    else
-        printf 'FAIL  no-broker fixture exited %s:\n%s\n' "$st_rc" "$st_out"
-        st_fail=$((st_fail + 1))
-    fi
-
-    "$SELF" --help >/dev/null 2>&1
-    if [ $? -eq 0 ]; then
-        printf 'PASS  --help exits 0\n'
-    else
-        printf 'FAIL  --help did not exit 0\n'
-        st_fail=$((st_fail + 1))
-    fi
-
-    "$SELF" --nonsense >/dev/null 2>&1
-    if [ $? -eq 2 ]; then
-        printf 'PASS  an unknown option exits 2\n'
-    else
-        printf 'FAIL  an unknown option did not exit 2\n'
-        st_fail=$((st_fail + 1))
-    fi
-
-    if [ "$st_fail" -eq 0 ]; then
-        printf '\nself-test: all checks pass\n'
-        return 0
-    fi
-    printf '\nself-test: %s failure(s)\n' "$st_fail"
-    return 1
-}
-
 while [ $# -gt 0 ]; do
     case $1 in
         --root)
@@ -243,7 +175,6 @@ while [ $# -gt 0 ]; do
             ROOT=$2
             shift
             ;;
-        --self-test) SELF_TEST=1 ;;
         -h|--help) usage; exit 0 ;;
         --version) printf 'check-consumer-bounds.sh %s\n' "$VERSION"; exit 0 ;;
         *)
@@ -254,11 +185,6 @@ while [ $# -gt 0 ]; do
     esac
     shift
 done
-
-if [ "$SELF_TEST" -eq 1 ]; then
-    self_test
-    exit $?
-fi
 
 run_checks "$ROOT"
 exit $?

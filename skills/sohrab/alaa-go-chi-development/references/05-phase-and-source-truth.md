@@ -18,10 +18,9 @@ For any factual or permission question, trust in this order, and verify before a
 5. This skill and its references.
 6. Memory, handoffs, old plans, historical architecture documents, and consumer-origin claims.
 
-When sources disagree, that is drift. Do not silently pick a side: record it (a Basic Memory drift note when that
-tool is available, otherwise a timestamped document), continue on the behaviour verified at the highest rank
-above, and say which rank you followed. A statement in this skill is never proof that the kit implements a
-feature; the capability map is navigation, not a second contract.
+When sources disagree, that is drift. Do not silently pick a side: record it in a timestamped drift document, continue on the
+behaviour verified at the highest rank above, and say which rank you followed. A statement in this skill is
+never proof that the kit implements a feature; the capability map is navigation, not a second contract.
 
 ## Reading the active phase
 

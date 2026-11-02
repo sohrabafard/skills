@@ -32,7 +32,7 @@ skill's ground: its violation is visible only by reading the comment against the
 ## What `vue-tsc` does and does not check
 
 **Tested against the live `client` on 2026-07-28**, with the repository's own installed toolchain —
-`vue-tsc` 3.3.6 on TypeScript 6.0.3, Quasar `app-vite` 3.0.0 — by compiling fixtures outside the repository
+`vue-tsc` 3.3.6 on TypeScript 6.0.3, Quasar `app-vite` 3.0.0 — by compiling sample files outside the repository
 with that binary. Not asserted from documentation.
 
 | Configuration | JSDoc types in a `.js` file | JSDoc types in `<script>` with no `lang` | JSDoc types in `.ts` or `<script lang="ts">` |

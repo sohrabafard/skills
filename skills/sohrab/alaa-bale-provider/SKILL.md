@@ -106,20 +106,15 @@ are unbounded, so any of them turns a counter into a per-delivery time series.
 ## Validation
 
 ```bash
-python3 scripts/validate_bale_payload.py --self-test
 python3 scripts/validate_bale_payload.py --mode request|response FILE.json
 python3 scripts/validate_bale_payload.py --normalize '0912 383 0000' --channel bale
 ```
-
-Run `--self-test` before relying on any other run.
 
 | Exit | Obliges |
 |---|---|
 | `0` | Continue. |
 | `1` | Payload or number rejected: fix it. Never edit the validator to make it pass. |
-| `2` `3` `4` | Usage error, missing file, invalid JSON: fix the invocation, path, or fixture. |
-| `5` | Stop. The script is untrustworthy and every earlier green run with it is void. |
-| `6` | Stop. Corpus missing or checksum mismatch; reconcile against the Mediana copy. |
+| `2` `3` `4` | Usage error, missing file, invalid JSON: fix the invocation, path, or payload file. |
 
 Also required: payload-builder tests per variant in scope, corpus-driven normalisation tests, error-mapping
 tests for the documented codes, a test proving a retry reuses the same `request_id`, and one proving

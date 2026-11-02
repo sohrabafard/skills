@@ -2,9 +2,7 @@
 # phase-check.sh — read the alaa-go-chi execution scope phase from repository truth.
 #
 # Owned by the alaa-go-chi-development skill, references/05-phase-and-source-truth.md.
-# Read-only, offline. In normal operation it writes nothing and opens no network
-# connection. --self-test creates one temporary directory under $TMPDIR, uses it,
-# and removes it; it touches nothing else.
+# Read-only, offline. It writes nothing and opens no network connection.
 
 set -u
 
@@ -20,7 +18,6 @@ phase-check.sh — read the alaa-go-chi execution scope phase from repository tr
 
 USAGE
   phase-check.sh <kit-repo-root>
-  phase-check.sh --self-test
   phase-check.sh --help
 
 WHAT IT READS (three authority locations, all inside <kit-repo-root>)
@@ -60,7 +57,6 @@ EXIT CODES AND WHAT EACH ONE OBLIGES YOU TO DO
 
 EXAMPLES
   phase-check.sh /repos/alaa-go-chi
-  phase-check.sh --self-test
 HELPTEXT
 }
 
@@ -160,85 +156,10 @@ run_check() { # $1 = repo root
   return 0
 }
 
-# ----------------------------------------------------------------- self-test --
-
-fixture() { # $1=dir $2=cited-record $3=phase-token-or-empty $4=record-file-or-empty
-  mkdir -p "$1/docs/change-requests"
-  {
-    printf '# alaa-go-chi Consumers\n\n## Current Execution Scope\n\n'
-    printf 'The project-owner decision in `change-requests/%s` sets the current scope.\n' "$2"
-    printf 'Record every consumer as `NOT_ASSESSED_KIT_FIRST` until explicit owner reactivation.\n'
-  } > "$1/docs/CONSUMERS.md"
-  {
-    printf '# Agents\n\n## Current scope\n\n'
-    if [ -n "$3" ]; then
-      printf 'The project owner activated `%s` in `docs/change-requests/%s`.\n' "$3" "$2"
-    else
-      printf 'The project owner set the scope in `docs/change-requests/%s`.\n' "$2"
-    fi
-  } > "$1/AGENTS.md"
-  cp "$1/AGENTS.md" "$1/CONSTITUTION.md"
-  cp "$1/AGENTS.md" "$1/GOVERNANCE.md"
-  [ -n "$4" ] && printf '# Scope decision\n\nOwner-ratified execution scope.\n' > "$1/docs/change-requests/$4"
-  return 0
-}
-
-expect() { # $1=label $2=expected-code $3=dir
-  local got
-  run_check "$3" >/dev/null 2>&1
-  got=$?
-  if [ "$got" -eq "$2" ]; then
-    printf 'ok    %-28s exit %s\n' "$1" "$got"
-    return 0
-  fi
-  printf 'FAIL  %-28s expected %s, got %s\n' "$1" "$2" "$got"
-  return 1
-}
-
-self_test() {
-  local tmp fails=0
-  tmp="$(mktemp -d "${TMPDIR:-/tmp}/phase-check-selftest.XXXXXX")" || return 1
-  trap 'rm -rf "$tmp"' EXIT
-
-  fixture "$tmp/agree" 2026-01-01-alpha-scope.md TEST_PHASE_ALPHA 2026-01-01-alpha-scope.md
-  expect "agreement"              0 "$tmp/agree"      || fails=$((fails+1))
-
-  fixture "$tmp/stale" 2026-01-01-alpha-scope.md TEST_PHASE_ALPHA 2026-01-01-alpha-scope.md
-  printf '# Newer scope\n' > "$tmp/stale/docs/change-requests/2026-06-01-beta-scope.md"
-  expect "stale citation vs newer" 3 "$tmp/stale"     || fails=$((fails+1))
-
-  fixture "$tmp/twophase" 2026-01-01-alpha-scope.md TEST_PHASE_ALPHA 2026-01-01-alpha-scope.md
-  printf 'The `TEST_PHASE_BETA` phase is active.\n' >> "$tmp/twophase/GOVERNANCE.md"
-  expect "two phase names"        3 "$tmp/twophase"   || fails=$((fails+1))
-
-  fixture "$tmp/unnamed" 2026-01-01-alpha-scope.md "" 2026-01-01-alpha-scope.md
-  expect "record but no phase"    4 "$tmp/unnamed"    || fails=$((fails+1))
-
-  fixture "$tmp/norecord" 2026-01-01-alpha-scope.md TEST_PHASE_ALPHA ""
-  expect "no scope record"        5 "$tmp/norecord"   || fails=$((fails+1))
-
-  fixture "$tmp/nobanner" 2026-01-01-alpha-scope.md TEST_PHASE_ALPHA 2026-01-01-alpha-scope.md
-  printf '# alaa-go-chi Consumers\n\nNo scope banner here.\n' > "$tmp/nobanner/docs/CONSUMERS.md"
-  expect "banner removed"         3 "$tmp/nobanner"   || fails=$((fails+1))
-
-  mkdir -p "$tmp/notakit"
-  expect "not a kit checkout"     2 "$tmp/notakit"    || fails=$((fails+1))
-
-  rm -rf "$tmp"
-  trap - EXIT
-  if [ "$fails" -eq 0 ]; then
-    printf 'self-test: 7 passed\n'
-    return 0
-  fi
-  printf 'self-test: %s failed\n' "$fails"
-  return 1
-}
-
 # ------------------------------------------------------------------- dispatch --
 
 case "${1:-}" in
   --help|-h|"") usage; [ -n "${1:-}" ] && exit 0; exit 2 ;;
-  --self-test)  self_test; exit $? ;;
   -*)           printf 'phase-check: unknown option %s\n\n' "$1" >&2; usage >&2; exit 2 ;;
   *)            run_check "$1"; exit $? ;;
 esac

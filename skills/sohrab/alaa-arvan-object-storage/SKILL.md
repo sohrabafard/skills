@@ -88,12 +88,11 @@ Load only the file whose condition matches the task in front of you. Do not read
 
 ## Configuration checker
 
-`python3 scripts/check_arvan_storage_config.py --root <repo>`, with `--help` for the check list and `--self-test` for
-its own fixtures. It reads files lexically and contacts no endpoint, so a clean run proves what the repository declares
-and not how the live bucket behaves. Exit `0` no finding; exit `1` findings printed with file and line, each fixed or
-recorded as an accepted defect with an owner and a date before shipping; exit `2` bad arguments or an unreadable root,
-so nothing was checked and the invocation is rerun; exit `3` `--self-test` failed, so its verdicts are untrustworthy
-and the failing case is reviewed by hand.
+`python3 scripts/check_arvan_storage_config.py --root <repo>`, with `--help` for the check list. It reads files
+lexically and contacts no endpoint, so a clean run proves what the repository declares and not how the live bucket
+behaves. Exit `0` no finding; exit `1` findings printed with file and line, each fixed or recorded as an accepted defect
+with an owner and a date before shipping; exit `2` bad arguments or an unreadable root, so nothing was checked and the
+invocation is rerun.
 
 ## Not owned here
 

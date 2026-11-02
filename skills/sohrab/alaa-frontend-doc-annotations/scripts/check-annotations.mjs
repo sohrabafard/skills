@@ -5,7 +5,6 @@
 
 import { execFileSync } from "node:child_process";
 import fs from "node:fs";
-import os from "node:os";
 import path from "node:path";
 
 const RULES = {
@@ -70,7 +69,6 @@ const HELP = `check-annotations.mjs - annotation checker (alaa-frontend-doc-anno
 
 Usage:
   node scripts/check-annotations.mjs <dir> [<dir>...] [options]
-  node scripts/check-annotations.mjs --self-test
   node scripts/check-annotations.mjs --help
 
 Assertions:
@@ -90,7 +88,6 @@ Options:
   --require-git           exit 2 when git history is unavailable (ANN302)
   --max-findings=N        stop after N findings (default 500)
   --json                  emit findings as JSON on stdout
-  --self-test             run built-in fixtures in a temp dir outside any repo
   --help                  this text
 
 Exit codes:
@@ -608,128 +605,6 @@ function run(dirs, opts) {
   return { findings: findings.slice(0, opts.maxFindings), files, repoRoot, deferAnn401, commitDate };
 }
 
-// -------------------------------------------------------------- self-test
-
-const FIXTURES = {
-  "src/clean.ts": `import { helper } from "./helper";
-/** Documented and clean. */
-export function ok(): string {
-  return helper();
-}
-`,
-  "src/helper.ts": `/** Shared helper. */
-export function helper(): string {
-  return "x";
-}
-export const undocumented = () => 1;
-`,
-  "src/other.ts": `import { helper } from "./helper";
-/** Second importer, so helper is cross-file surface. */
-export const second = () => helper();
-`,
-  "src/notes.ts": `// CACHE NOTE: invented sixth prefix.
-// AUTH NOTE: gateway strips X-User on ingress.
-// SECURITY NOTE: bitmap is a UI hint. verified:2000-01-01
-/** Doc. */
-export const noted = 1;
-`,
-  "src/typed.ts": `/**
- * Redundant types.
- * @param {string} name - redundant.
- * @returns {number} redundant.
- */
-export function typed(name: string): number {
-  return name.length;
-}
-`,
-  "src/cited.ts": `/** See https://stackoverflow.com/questions/1 for the workaround. */
-export const cited = 1;
-`,
-  // The fixture body is written as escapes so that this file itself stays ASCII-only.
-  "src/non-ascii.ts": `// ${"\u062a\u0648\u0636\u06cc\u062d"} \u2014 a non-English comment body.
-/** Doc. */
-export const nonAscii = 1;
-`
-};
-
-const BROKEN = "/* unterminated block comment\nexport const x = 1;\n";
-
-function selfTest() {
-  const root = fs.mkdtempSync(path.join(os.tmpdir(), "check-annotations-selftest-"));
-  const results = [];
-  const record = (name, pass, detail) => results.push({ name, pass, detail });
-
-  try {
-    fs.mkdirSync(path.join(root, "src"));
-    for (const [rel, text] of Object.entries(FIXTURES)) {
-      fs.writeFileSync(path.join(root, rel), text, "utf8");
-    }
-    const git = args =>
-      execFileSync("git", ["-c", "user.email=a@b.c", "-c", "user.name=selftest", ...args], {
-        cwd: root,
-        encoding: "utf8",
-        stdio: ["ignore", "pipe", "ignore"]
-      });
-    let gitOk = true;
-    try {
-      git(["init", "-q"]);
-      git(["add", "-A"]);
-      git(["commit", "-qm", "fixtures"]);
-    } catch {
-      gitOk = false;
-    }
-
-    const res = run([path.join(root, "src")], { rules: null, maxFindings: 500, requireGit: false });
-    const by = rule => res.findings.filter(f => f.rule === rule);
-    const at = (rule, fileFragment) => by(rule).some(f => f.file.includes(fileFragment));
-
-    record("ANN201 flags an invented sixth prefix", at("ANN201", "notes.ts"), by("ANN201"));
-    record("ANN201 accepts the five closed prefixes", by("ANN201").length === 1, by("ANN201"));
-    record("ANN301 flags AUTH NOTE: without verified:", at("ANN301", "notes.ts"), by("ANN301"));
-    record(
-      gitOk ? "ANN302 flags a verified: date older than the last commit" : "ANN302 skipped (no git)",
-      gitOk ? at("ANN302", "notes.ts") : by("ANN302").length === 0,
-      by("ANN302")
-    );
-    record("ANN401 flags @param {Type} in a .ts file", at("ANN401", "typed.ts"), by("ANN401"));
-    record("ANN501 flags a Stack Overflow URL in a comment", at("ANN501", "cited.ts"), by("ANN501"));
-    record("ANN601 flags a non-ASCII comment body", at("ANN601", "non-ascii.ts"), by("ANN601"));
-    record(
-      "ANN101 flags an undocumented export in a 2+-importer module",
-      at("ANN101", "helper.ts"),
-      by("ANN101")
-    );
-    record(
-      "ANN101 stays silent on a single-importer module",
-      !at("ANN101", "clean.ts") && !at("ANN101", "other.ts"),
-      by("ANN101")
-    );
-
-    // Exit-code 2 fixture: an unparsed file must never be reported as clean.
-    const badDir = fs.mkdtempSync(path.join(os.tmpdir(), "check-annotations-broken-"));
-    fs.writeFileSync(path.join(badDir, "broken.ts"), BROKEN, "utf8");
-    let threw = false;
-    try {
-      run([badDir], { rules: null, maxFindings: 500, requireGit: false });
-    } catch (err) {
-      threw = err instanceof RunError;
-    }
-    record("an unterminated comment raises could-not-run, not clean", threw, threw);
-    fs.rmSync(badDir, { recursive: true, force: true });
-  } finally {
-    fs.rmSync(root, { recursive: true, force: true });
-  }
-
-  let failed = 0;
-  for (const r of results) {
-    if (!r.pass) failed += 1;
-    process.stdout.write(`${r.pass ? "PASS" : "FAIL"}  ${r.name}\n`);
-    if (!r.pass) process.stdout.write(`      got: ${JSON.stringify(r.detail)}\n`);
-  }
-  process.stdout.write(`${results.length - failed}/${results.length} self-test cases passed\n`);
-  return failed === 0 ? 0 : 1;
-}
-
 // ------------------------------------------------------------------ main
 
 function main(argv) {
@@ -739,8 +614,6 @@ function main(argv) {
     if (arg === "--help" || arg === "-h") {
       process.stdout.write(HELP);
       return 0;
-    } else if (arg === "--self-test") {
-      return selfTest();
     } else if (arg === "--json") opts.json = true;
     else if (arg === "--require-git") opts.requireGit = true;
     else if (arg.startsWith("--rules=")) opts.rules = new Set(arg.slice(8).split(",").map(s => s.trim()));

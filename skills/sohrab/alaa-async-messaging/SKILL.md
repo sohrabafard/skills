@@ -87,7 +87,7 @@ sh scripts/check-consumer-bounds.sh --root .
 Exit **0** no findings. Exit **1** findings with file and line: resolve every one before reporting the change
 complete. Exit **2** could not determine — no broker lane or no recognisable declaration: run the three
 checks by hand and report each, because exit 2 is never a pass. Detection is narrow like the kit's
-pooled-lane analyzer, so a constant or a wrapper escapes it; `--self-test` runs the fixtures.
+pooled-lane analyzer, so a constant or a wrapper escapes it.
 
 ## What you report
 

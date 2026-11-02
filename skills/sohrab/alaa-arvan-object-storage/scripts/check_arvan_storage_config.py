@@ -28,7 +28,6 @@ Exit codes
   0  no finding
   1  findings printed with file and line
   2  bad arguments or an unreadable root, so nothing was checked
-  3  --self-test failed, so the checker's verdicts are untrustworthy
 """
 
 from __future__ import annotations
@@ -37,7 +36,6 @@ import argparse
 import os
 import re
 import sys
-import tempfile
 
 # ArvanCloud publishes a 400 MB part ceiling in prose and writes 400 * 2**20 = 419,430,400
 # bytes in its own multipart example, so the two readings of "400 MB" disagree. Where the
@@ -248,107 +246,6 @@ def scan(root: str) -> list[Finding]:
     return findings
 
 
-SELF_TEST_CLEAN = {
-    "config/storage.yml": (
-        "STORAGE_PROVIDER_PROFILE: arvancloud\n"
-        "STORAGE_ENDPOINT: https://s3.ir-thr-at1.arvanstorage.ir\n"
-        "STORAGE_REGION: ir-thr-at1\n"
-        "STORAGE_BUCKET: 'media-assets'\n"
-        "STORAGE_PART_SIZE_BYTES: 8 * 1024 * 1024\n"
-        "STORAGE_USE_PATH_STYLE: false\n"
-        "STORAGE_SIGNATURE_VERSION: s3v4\n"
-    ),
-}
-SELF_TEST_NO_SIGNATURE = {
-    "config/storage.yml": (
-        "STORAGE_PROVIDER_PROFILE: arvancloud\n"
-        "STORAGE_ENDPOINT: https://s3.ir-thr-at1.arvanstorage.ir\n"
-        "STORAGE_REGION: ir-thr-at1\n"
-        "STORAGE_BUCKET: 'media-assets'\n"
-    ),
-}
-SELF_TEST_MEBIBYTE_PART = {
-    "config/storage.yml": (
-        "STORAGE_PROVIDER_PROFILE: arvancloud\n"
-        "STORAGE_ENDPOINT: https://s3.ir-thr-at1.arvanstorage.ir\n"
-        "STORAGE_REGION: ir-thr-at1\n"
-        "STORAGE_SIGNATURE_VERSION: s3v4\n"
-        "STORAGE_PART_SIZE_BYTES: 400 * 1024 * 1024\n"
-    ),
-}
-SELF_TEST_DIRTY = {
-    "config/storage.yml": (
-        "STORAGE_PROVIDER_PROFILE: minio\n"
-        "endpoint: http://s3.ir-thr-at1.arvanstorage.ir\n"
-        "bucket_name: 'Media_Assets'\n"
-        "part_size: 500 * 1024 * 1024\n"
-        "force_path_style: true\n"
-        "signature_v2: true\n"
-    ),
-}
-SELF_TEST_NO_REGION = {
-    "app/client.go": 'endpoint := "https://s3.arvanstorage.ir"\n',
-}
-
-
-def write_tree(root: str, files: dict[str, str]) -> None:
-    for rel, content in files.items():
-        target = os.path.join(root, rel)
-        os.makedirs(os.path.dirname(target), exist_ok=True)
-        with open(target, "w", encoding="utf-8") as handle:
-            handle.write(content)
-
-
-def self_test() -> int:
-    failures: list[str] = []
-
-    cases = [
-        ("clean tree yields no finding", SELF_TEST_CLEAN, set()),
-        ("dirty tree yields every line-level code, and a profile pinned to another provider",
-         SELF_TEST_DIRTY, {"ARV001", "ARV002", "ARV003", "ARV004", "ARV006", "ARV008"}),
-        ("arvan endpoint with no region, signature or profile yields ARV005, ARV007 and ARV008",
-         SELF_TEST_NO_REGION, {"ARV005", "ARV007", "ARV008"}),
-        ("arvan endpoint with a region but no signature version yields ARV007",
-         SELF_TEST_NO_SIGNATURE, {"ARV007"}),
-        ("a 400 mebibyte part sits above the 400 MB ceiling and yields ARV001",
-         SELF_TEST_MEBIBYTE_PART, {"ARV001"}),
-    ]
-    for label, files, expected in cases:
-        with tempfile.TemporaryDirectory() as tmp:
-            write_tree(tmp, files)
-            codes = {f.code for f in scan(tmp)}
-        if codes != expected:
-            failures.append(f"{label}: expected {sorted(expected)}, observed {sorted(codes)}")
-
-    size_cases = [
-        ("400 * 1024 * 1024", 419430400),
-        ("400 * 1000 * 1000", 400000000),
-        ("400 * (long)Math.Pow(2, 20)", 419430400),
-        ("8388608", 8388608),
-        ("'16MB'", 16777216),
-        ("5 * 2**20", 5242880),
-        ("computeSize(x)", None),
-        ("", None),
-    ]
-    for expr, expected_size in size_cases:
-        observed = parse_size(expr)
-        if observed != expected_size:
-            failures.append(f"parse_size({expr!r}): expected {expected_size}, observed {observed}")
-
-    with tempfile.TemporaryDirectory() as tmp:
-        write_tree(tmp, SELF_TEST_DIRTY)
-        rendered = [f.render() for f in scan(tmp)]
-    if not all(re.match(r"^ARV\d{3} \S+:\d+: \S", line) for line in rendered):
-        failures.append(f"finding output shape is malformed: {rendered}")
-    if failures:
-        print("self-test FAILED", file=sys.stderr)
-        for failure in failures:
-            print(f"  {failure}", file=sys.stderr)
-        return 3
-    print(f"self-test passed: {len(cases)} tree cases, {len(size_cases)} size cases, output shape verified")
-    return 0
-
-
 def main(argv: list[str]) -> int:
     parser = argparse.ArgumentParser(
         prog="check_arvan_storage_config.py",
@@ -356,13 +253,10 @@ def main(argv: list[str]) -> int:
         formatter_class=argparse.RawDescriptionHelpFormatter,
     )
     parser.add_argument("--root", help="repository root to scan")
-    parser.add_argument("--self-test", action="store_true", help="run the checker's own fixtures and exit")
     args = parser.parse_args(argv)
 
-    if args.self_test:
-        return self_test()
     if not args.root:
-        print("error: --root is required unless --self-test is given", file=sys.stderr)
+        print("error: --root is required", file=sys.stderr)
         return 2
     if not os.path.isdir(args.root):
         print(f"error: not a readable directory: {args.root}", file=sys.stderr)

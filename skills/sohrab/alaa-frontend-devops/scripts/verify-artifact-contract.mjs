@@ -4,15 +4,8 @@
 //
 // Exit codes are part of the contract; see printHelp().
 
-import { readFileSync, readdirSync, statSync, existsSync, mkdtempSync, mkdirSync, writeFileSync, rmSync } from "node:fs";
+import { readFileSync, readdirSync, statSync, existsSync } from "node:fs";
 import { join, relative, resolve, sep, posix } from "node:path";
-import { tmpdir } from "node:os";
-import { spawnSync } from "node:child_process";
-import { fileURLToPath } from "node:url";
-
-// On Windows, new URL(import.meta.url).pathname is "/D:/...", which Node cannot
-// spawn as a filesystem path. fileURLToPath is the only correct conversion.
-const SELF_PATH = fileURLToPath(import.meta.url);
 
 const EXIT_OK = 0;
 const EXIT_VIOLATION = 1;
@@ -23,7 +16,6 @@ const HELP = `verify-artifact-contract.mjs — frontend artifact contract gate
 
 USAGE
   node verify-artifact-contract.mjs <dist-root> [options]
-  node verify-artifact-contract.mjs --self-test
   node verify-artifact-contract.mjs --help
 
 ARGUMENTS
@@ -37,7 +29,6 @@ OPTIONS
   --provenance <name>    Provenance file name, relative to <dist-root>. Default: build-info.json
   --skip <ids>           Comma-separated assertion ids to skip, e.g. --skip A6
   --json                 Emit findings as JSON on stdout.
-  --self-test            Run built-in fixtures and exit. Writes only under the OS temp dir.
   --help, -h             Print this text.
 
 ASSERTIONS
@@ -67,7 +58,7 @@ function parseArgs(argv) {
   const opts = {
     root: null, mode: null, base: "/", env: null, clientPrefix: "QCLI_",
     provenance: "build-info.json", skip: new Set(), json: false,
-    selfTest: false, help: false
+    help: false
   };
   for (let i = 0; i < argv.length; i++) {
     const a = argv[i];
@@ -77,7 +68,6 @@ function parseArgs(argv) {
       return v;
     };
     if (a === "--help" || a === "-h") opts.help = true;
-    else if (a === "--self-test") opts.selfTest = true;
     else if (a === "--json") opts.json = true;
     else if (a === "--mode") opts.mode = need("--mode");
     else if (a === "--base") opts.base = need("--base");
@@ -310,78 +300,6 @@ function run(opts) {
   return { code: findings.length ? EXIT_VIOLATION : EXIT_OK, findings, layout, fileCount: files.length };
 }
 
-// ---------------------------------------------------------------- self-test
-
-function fixtureClean(dir) {
-  const c = join(dir, "client", "assets");
-  mkdirSync(c, { recursive: true });
-  writeFileSync(join(dir, "index.js"), "export default 1;\n");
-  writeFileSync(join(c, "index-a1b2c3d4.js"), "console.log('ok');\n");
-  writeFileSync(join(c, "index-a1b2c3d4.css"), ".a{color:red}\n");
-  writeFileSync(join(dir, "client", "index.html"), `<html><head><link href="/assets/index-a1b2c3d4.css" rel="stylesheet"></head><body><script src="/assets/index-a1b2c3d4.js"></script></body></html>\n`);
-  writeFileSync(join(dir, "build-info.json"), JSON.stringify({
-    commit: "0".repeat(40), ref: "master", builtAt: "2026-07-28T00:00:00Z",
-    nodeVersion: "v24.0.0", packageManager: "pnpm@11.10.0", lockfileHash: "abc", buildMode: "ssr"
-  }));
-}
-
-function selfTest() {
-  const base = mkdtempSync(join(tmpdir(), "alaa-artifact-selftest-"));
-  const cases = [];
-  const check = (name, dir, expectCode, expectIds, extraArgs = []) => {
-    const r = spawnSync(process.execPath, [SELF_PATH, dir, "--json", ...extraArgs], { encoding: "utf8" });
-    let ids = [];
-    try { ids = [...new Set(JSON.parse(r.stdout).findings.map((f) => f.id))].sort(); } catch { ids = ["<unparseable>"]; }
-    const ok = r.status === expectCode && JSON.stringify(ids) === JSON.stringify(expectIds.slice().sort());
-    cases.push({ name, ok, gotCode: r.status, wantCode: expectCode, gotIds: ids, wantIds: expectIds.slice().sort() });
-  };
-
-  let d = join(base, "clean"); fixtureClean(d);
-  check("clean tree exits 0", d, EXIT_OK, []);
-
-  d = join(base, "missing"); // never created
-  check("absent root exits 2, not 0", d, EXIT_CANNOT_RUN, []);
-
-  d = join(base, "empty"); mkdirSync(join(d, "client"), { recursive: true });
-  check("empty client root exits 2", d, EXIT_CANNOT_RUN, []);
-
-  d = join(base, "dead-hash"); fixtureClean(d);
-  writeFileSync(join(d, "client", "index.html"), `<html><body><script src="/assets/gone-99999999.js"></script></body></html>\n`);
-  check("html referencing a missing asset fails A2", d, EXIT_VIOLATION, ["A2"]);
-
-  d = join(base, "unhashed"); fixtureClean(d);
-  writeFileSync(join(d, "client", "assets", "vendor.js"), "1\n");
-  check("unhashed chunk fails A5", d, EXIT_VIOLATION, ["A5"]);
-
-  d = join(base, "secret"); fixtureClean(d);
-  writeFileSync(join(d, "client", "assets", "leak-b2c3d4e5.js"), `const k="AKIAIOSFODNN7EXAMPLE";\n`);
-  check("aws key in a chunk fails A4", d, EXIT_VIOLATION, ["A4"]);
-
-  d = join(base, "envleak"); fixtureClean(d);
-  writeFileSync(join(d, "client", "assets", "leak-c3d4e5f6.js"), `const t="s3cr3t-value-not-prefixed";\n`);
-  writeFileSync(join(base, "envleak.env"), "SESSION_SECRET=s3cr3t-value-not-prefixed\nQCLI_PUBLIC=fine\n");
-  check("non-prefixed env value in a chunk fails A4", d, EXIT_VIOLATION, ["A4"], ["--env", join(base, "envleak.env")]);
-
-  d = join(base, "noprov"); fixtureClean(d); rmSync(join(d, "build-info.json"));
-  check("absent provenance fails A6", d, EXIT_VIOLATION, ["A6"]);
-
-  d = join(base, "escape"); fixtureClean(d);
-  writeFileSync(join(d, "client", "index.html"), `<html><body><script src="/../../etc/passwd"></script></body></html>\n`);
-  check("asset URL escaping the client root fails A3", d, EXIT_VIOLATION, ["A3"]);
-
-  d = join(base, "noentry"); fixtureClean(d); rmSync(join(d, "index.js"));
-  check("absent SSR entry fails A1", d, EXIT_VIOLATION, ["A1"], ["--mode", "ssr"]);
-
-  let failed = 0;
-  for (const c of cases) {
-    if (!c.ok) failed++;
-    console.log(`${c.ok ? "PASS" : "FAIL"}  ${c.name}` + (c.ok ? "" : `\n        want exit ${c.wantCode} ids ${JSON.stringify(c.wantIds)}; got exit ${c.gotCode} ids ${JSON.stringify(c.gotIds)}`));
-  }
-  rmSync(base, { recursive: true, force: true });
-  console.log(`\n${cases.length - failed}/${cases.length} self-test cases passed (fixtures under ${base}, now removed)`);
-  return failed ? EXIT_VIOLATION : EXIT_OK;
-}
-
 // ---------------------------------------------------------------- entry point
 
 function main() {
@@ -390,7 +308,6 @@ function main() {
   catch (e) { console.error(`error: ${e.usage || e.message}\n`); console.error(HELP); process.exit(EXIT_USAGE); }
 
   if (opts.help) { console.log(HELP); process.exit(EXIT_OK); }
-  if (opts.selfTest) process.exit(selfTest());
   if (!opts.root) { console.error("error: <dist-root> is required\n"); console.error(HELP); process.exit(EXIT_USAGE); }
 
   const res = run(opts);

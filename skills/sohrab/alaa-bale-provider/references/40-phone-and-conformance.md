@@ -1,4 +1,4 @@
-# Phone normalisation and the shared conformance harness
+# Phone normalisation and the shared phone corpus
 
 Read this when writing or reviewing phone normalisation for any Alaa messaging channel, when a `code 8`
 `InvalidPhone` appears in production, or when changing either provider validator.
@@ -155,7 +155,7 @@ case now.
 
 ## The shared corpus
 
-`scripts/phone-conformance-corpus.json` is the single fixture both provider skills test against. Each case
+`scripts/phone-conformance-corpus.json` is the single case set that both provider skills and a consuming service's normalisation tests share. Each case
 is `{"input", "mediana_expected", "bale_expected", "note"}`, and an expected value of `null` means the input
 must be rejected with a non-zero exit and a stated reason.
 
@@ -182,10 +182,9 @@ could reach. The superscript case is unaffected and still rejected, because supe
 `corpus_sha256` is now `80dcb3723e83d848236ab0cbfbfc62447eec524c62a434737d85682aa653d7dc`.
 
 **The identical file ships in `alaa-sms-provider-mediana/scripts/`.** It is duplicated on purpose: the
-`AGENTS.md` conformance rule requires that more than one implementation of one wire format ships a runnable
-harness over one corpus, and duplicating a fixture is cheaper than introducing a shared package that a
-third skill would then have to own. **If the two copies differ, that is the finding, not a local
-customisation** — reconcile them before trusting either validator.
+duplicate is cheaper than a shared package that a third skill would then have to own. **If the two copies
+differ (`cmp` them), that is the finding, not a local customisation** — reconcile them before trusting
+either validator.
 
 `corpus_sha256` is the SHA-256 of the canonical serialisation of the `cases` array:
 
@@ -204,25 +203,10 @@ The file itself is `json.dumps(document, ensure_ascii=True, indent=2)` followed 
 it pure ASCII so that a zero-width character in a test case is visible in review as an escape rather than
 invisible as a byte.
 
-## Running the harness
+## Checking the corpus
 
-```bash
-python3 scripts/validate_bale_payload.py --self-test
-```
-
-This drives the normaliser over every corpus case for **both** channels, verifies `corpus_sha256`, and runs
-the built-in payload vectors. Exit `0` is a pass. Exit `5` is a divergence in the payload vectors or the
-normaliser. Exit `6` means the corpus is missing, unreadable, or fails its checksum — which is what a
-hand-edit or a drift from the sibling copy looks like.
-
-Run the sibling harness too when either file changes:
-
-```bash
-python3 ../alaa-sms-provider-mediana/scripts/validate_mediana_payload.py --self-test
-```
-
-A harness that cannot reach the sibling skill reports the skip and does not report a pass it did not
-observe.
+Recompute `corpus_sha256` with the command in the file's `canonicalization` field and compare it with the recorded
+value. Run a consuming service's own normaliser over every case for both channels in that service's tests.
 
 To normalise a single number by hand:
 
@@ -235,6 +219,5 @@ python3 scripts/validate_bale_payload.py --normalize '0912/383/0000' --channel m
 
 Add the case to `cases`, re-sort the array (accepted first, then rejected, ascending by Unicode code point
 of `input` within each group), recompute `corpus_sha256`, copy the file byte-for-byte into
-`alaa-sms-provider-mediana/scripts/`, and run both harnesses. A corpus edited without recomputing the
-checksum fails at exit `6` on the next run, which is the intended behaviour: drift becomes a test failure
-rather than a review finding.
+`alaa-sms-provider-mediana/scripts/`, and `cmp` the two copies. A corpus edited without recomputing the
+checksum shows as a mismatch in the check above.

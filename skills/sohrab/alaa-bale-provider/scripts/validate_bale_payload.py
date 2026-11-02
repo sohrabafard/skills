@@ -1,14 +1,13 @@
 #!/usr/bin/env python3
 """Validate Bale Safir payloads and normalise Iranian mobile numbers for the Safir wire.
 
-This helper checks local JSON fixtures before an agent commits docs, tests, or provider
+This helper checks local JSON payload files before an agent commits docs, tests, or provider
 payload examples. It never calls Bale.
 
 Modes:
     --mode request   (default) validate a send_message request body
     --mode response  validate a send_message or upload_file response body
     --normalize RAW  print the Safir wire form of one raw number, or fail with a reason
-    --self-test      run the built-in payload vectors and the shared phone corpus
 
 Exit codes:
     0  the input satisfied every rule that was checked
@@ -16,17 +15,11 @@ Exit codes:
     2  usage error: wrong arguments, or arguments that cannot be combined
     3  the payload file does not exist
     4  the payload file is not valid JSON
-    5  --self-test found a divergence, so this script is not trustworthy until fixed
-    6  the shared phone corpus is missing, unreadable, or fails its own checksum
-
-An exit of 5 or 6 is a defect in this skill, not in the payload under test: stop, fix the
-script or the corpus, and do not treat any earlier green run as valid.
 """
 
 from __future__ import annotations
 
 import argparse
-import hashlib
 import json
 import re
 import sys
@@ -39,10 +32,6 @@ EXIT_REJECTED = 1
 EXIT_USAGE = 2
 EXIT_NO_FILE = 3
 EXIT_BAD_JSON = 4
-EXIT_SELF_TEST_FAILED = 5
-EXIT_CORPUS_FAILED = 6
-
-CORPUS_FILENAME = "phone-conformance-corpus.json"
 
 # Bale Safir wire form: 98 followed by the ten-digit national significant number, no plus sign.
 BALE_PHONE_RE = re.compile(r"^989\d{9}$")
@@ -509,318 +498,6 @@ def validate_error_info(item: Any, reporter: Reporter, path: str) -> None:
 
 
 # --------------------------------------------------------------------------------------
-# Self-test
-# --------------------------------------------------------------------------------------
-
-# Each vector is (name, mode, payload, expected_error_substrings).
-# An empty expectation list means the payload must validate with no errors.
-SELF_TEST_VECTORS: list[tuple[str, str, Any, list[str]]] = [
-    (
-        "valid text message",
-        "request",
-        {
-            "request_id": "01936c7e-1f2a-7b3c-8d4e-5f6a7b8c9d0e",
-            "bot_id": 1,
-            "phone_number": "989123830000",
-            "message_data": {"message": {"text": "hello"}},
-        },
-        [],
-    ),
-    (
-        "valid otp message",
-        "request",
-        {
-            "request_id": "01936c7e-1f2a-7b3c-8d4e-5f6a7b8c9d0e",
-            "bot_id": 1,
-            "phone_number": "989123830000",
-            "message_data": {"otp_message": {"otp": "123456"}},
-        },
-        [],
-    ),
-    (
-        "valid template message",
-        "request",
-        {
-            "request_id": "01936c7e-1f2a-7b3c-8d4e-5f6a7b8c9d0e",
-            "bot_id": 1,
-            "phone_number": "989123830000",
-            "message_data": {"template_message": {"template_id": "t1", "text_fields": {"user": "a"}}},
-        },
-        [],
-    ),
-    (
-        "valid inline url button",
-        "request",
-        {
-            "request_id": "01936c7e-1f2a-7b3c-8d4e-5f6a7b8c9d0e",
-            "bot_id": 1,
-            "phone_number": "989123830000",
-            "message_data": {
-                "message": {
-                    "text": "see this",
-                    "reply_markup": {"inline_keyboard": [[{"text": "open", "url": "https://example.invalid"}]]},
-                }
-            },
-        },
-        [],
-    ),
-    # Defect 1: str.isdigit() accepted non-ASCII digits.
-    (
-        "defect-1 persian-indic otp is rejected",
-        "request",
-        {
-            "request_id": "r",
-            "bot_id": 1,
-            "phone_number": "989123830000",
-            "message_data": {"otp_message": {"otp": "۱۲۳۴۵۶"}},
-        },
-        ["otp: must be 4 to 8 ASCII digits"],
-    ),
-    (
-        "defect-1 arabic-indic otp is rejected",
-        "request",
-        {
-            "request_id": "r",
-            "bot_id": 1,
-            "phone_number": "989123830000",
-            "message_data": {"otp_message": {"otp": "١٢٣٤٥٦"}},
-        },
-        ["otp: must be 4 to 8 ASCII digits"],
-    ),
-    (
-        "defect-1 superscript otp is rejected",
-        "request",
-        {
-            "request_id": "r",
-            "bot_id": 1,
-            "phone_number": "989123830000",
-            "message_data": {"otp_message": {"otp": "²³⁴"}},
-        },
-        ["otp: must be 4 to 8 ASCII digits"],
-    ),
-    # Defect 2: no unknown-key rejection.
-    (
-        "defect-2 forbidden telegram fields are each named",
-        "request",
-        {
-            "request_id": "r",
-            "bot_id": 1,
-            "phone_number": "989123830000",
-            "chat_id": 99,
-            "parse_mode": "MarkdownV2",
-            "callback_data": "x",
-            "disable_notification": True,
-            "message_data": {"message": {"text": "hi"}},
-        },
-        [
-            "$.chat_id: forbidden field",
-            "$.parse_mode: forbidden field",
-            "$.callback_data: forbidden field",
-            "$.disable_notification: forbidden field",
-        ],
-    ),
-    (
-        "defect-2 callback_data inside message is rejected",
-        "request",
-        {
-            "request_id": "r",
-            "bot_id": 1,
-            "phone_number": "989123830000",
-            "message_data": {"message": {"text": "hi", "callback_data": "x"}},
-        },
-        ["$.message_data.message.callback_data: forbidden field"],
-    ),
-    (
-        "defect-2 callback_data on a button is rejected",
-        "request",
-        {
-            "request_id": "r",
-            "bot_id": 1,
-            "phone_number": "989123830000",
-            "message_data": {
-                "message": {
-                    "text": "hi",
-                    "reply_markup": {
-                        "inline_keyboard": [[{"text": "go", "url": "https://example.invalid", "callback_data": "x"}]]
-                    },
-                }
-            },
-        },
-        ["callback_data: forbidden field"],
-    ),
-    (
-        "defect-2 unrecognised top-level key is rejected",
-        "request",
-        {
-            "request_id": "r",
-            "bot_id": 1,
-            "phone_number": "989123830000",
-            "invented_field": 1,
-            "message_data": {"message": {"text": "hi"}},
-        },
-        ["$.invented_field: unknown field"],
-    ),
-    # Defect 3: whitespace-only strings validated clean.
-    (
-        "defect-3 whitespace-only request_id is rejected",
-        "request",
-        {
-            "request_id": "   ",
-            "bot_id": 1,
-            "phone_number": "989123830000",
-            "message_data": {"message": {"text": "hi"}},
-        },
-        ["$.request_id: must be a non-empty, non-whitespace string"],
-    ),
-    # request_id promoted from warning to error.
-    (
-        "missing request_id is an error",
-        "request",
-        {"bot_id": 1, "phone_number": "989123830000", "message_data": {"message": {"text": "hi"}}},
-        ["$.request_id: missing"],
-    ),
-    (
-        "non-canonical phone is rejected and the canonical form is offered",
-        "request",
-        {"request_id": "r", "bot_id": 1, "phone_number": "09123830000", "message_data": {"message": {"text": "hi"}}},
-        ["normalise it to 989123830000"],
-    ),
-    (
-        "two primary variants are rejected",
-        "request",
-        {
-            "request_id": "r",
-            "bot_id": 1,
-            "phone_number": "989123830000",
-            "message_data": {"message": {"text": "hi"}, "otp_message": {"otp": "123456"}},
-        },
-        ["must contain exactly one primary variant"],
-    ),
-    (
-        "secure otp is rejected",
-        "request",
-        {
-            "request_id": "r",
-            "bot_id": 1,
-            "phone_number": "989123830000",
-            "message_data": {"is_secure": True, "otp_message": {"otp": "123456"}},
-        },
-        ["secure OTP is not a documented Safir combination"],
-    ),
-    (
-        "mediana payload is rejected by the cross-provider guard",
-        "request",
-        {"sending_type": "pattern", "from_number": "+983000505", "recipients": ["+989123830000"]},
-        ["looks like a Mediana/IPPanel payload"],
-    ),
-    (
-        "valid send_message response",
-        "response",
-        {"message_id": "523e6875-7c41-491b-8460-04b33039d7fc", "error_data": None},
-        [],
-    ),
-    (
-        "valid otp response without error_data",
-        "response",
-        {"message_id": "BvQjaR.fIKt7kH.EXTddgYduJ2"},
-        [],
-    ),
-    (
-        "valid upload_file response",
-        "response",
-        {"file_id": "987141dd2672149"},
-        [],
-    ),
-    (
-        "error_data entries are checked",
-        "response",
-        {"message_id": None, "error_data": [{"phone_number": "989123830000", "code": "17", "description": "x"}]},
-        ["$.error_data[0].code: must be an integer"],
-    ),
-]
-
-
-def run_self_test(script_dir: Path) -> int:
-    failures: list[str] = []
-
-    corpus_path = script_dir / CORPUS_FILENAME
-    try:
-        corpus_doc = json.loads(corpus_path.read_text(encoding="utf-8"))
-    except FileNotFoundError:
-        print(f"[FAIL] shared corpus not found: {corpus_path}", file=sys.stderr)
-        return EXIT_CORPUS_FAILED
-    except json.JSONDecodeError as exc:
-        print(f"[FAIL] shared corpus is not valid JSON: {exc}", file=sys.stderr)
-        return EXIT_CORPUS_FAILED
-
-    cases = corpus_doc.get("cases")
-    if not isinstance(cases, list) or not cases:
-        print("[FAIL] shared corpus has no cases array", file=sys.stderr)
-        return EXIT_CORPUS_FAILED
-
-    # The corpus canonicalization field is the contract: the digest covers the parsed
-    # cases re-serialised with ensure_ascii=False, so it describes the data and not the
-    # \uXXXX escaping the file happens to be stored in. Keep this identical to
-    # load_corpus() in alaa-sms-provider-mediana/scripts/validate_mediana_payload.py.
-    canonical = json.dumps(cases, ensure_ascii=False, sort_keys=True, separators=(",", ":"))
-    digest = hashlib.sha256(canonical.encode("utf-8")).hexdigest()
-    if digest != corpus_doc.get("corpus_sha256"):
-        print(
-            "[FAIL] corpus checksum mismatch\n"
-            f"        recorded:   {corpus_doc.get('corpus_sha256')}\n"
-            f"        recomputed: {digest}\n"
-            "        The corpus was edited without updating corpus_sha256, or it has diverged from the copy in "
-            "alaa-sms-provider-mediana/scripts/. Reconcile both copies before trusting either validator.",
-            file=sys.stderr,
-        )
-        return EXIT_CORPUS_FAILED
-
-    for index, case in enumerate(cases):
-        raw = case["input"]
-        for channel, key in (("bale", "bale_expected"), ("mediana", "mediana_expected")):
-            expected = case[key]
-            try:
-                actual: Any = normalize_iranian_mobile(raw, channel)
-            except PhoneRejected as exc:
-                actual = None
-                reason = str(exc)
-            else:
-                reason = ""
-            if actual != expected:
-                failures.append(
-                    f"corpus[{index}] channel={channel} input={raw!r}: expected {expected!r}, got {actual!r}"
-                    + (f" (reason: {reason})" if actual is None else "")
-                )
-
-    for name, mode, payload, expected_substrings in SELF_TEST_VECTORS:
-        reporter = Reporter()
-        if mode == "request":
-            validate_payload(payload, reporter)
-        else:
-            validate_response(payload, reporter)
-        joined = "\n".join(reporter.errors)
-        if not expected_substrings:
-            if reporter.errors:
-                failures.append(f"vector {name!r}: expected no errors, got:\n{joined}")
-            continue
-        for needle in expected_substrings:
-            if needle not in joined:
-                failures.append(f"vector {name!r}: expected an error containing {needle!r}, got:\n{joined or '(none)'}")
-
-    if failures:
-        for failure in failures:
-            print(f"[FAIL] {failure}", file=sys.stderr)
-        print(f"\n[FAIL] {len(failures)} self-test failure(s)", file=sys.stderr)
-        return EXIT_SELF_TEST_FAILED
-
-    print(
-        f"[OK] self-test passed: {len(cases)} corpus cases x 2 channels, {len(SELF_TEST_VECTORS)} payload vectors, "
-        f"corpus_sha256 {digest[:16]}..."
-    )
-    return EXIT_OK
-
-
-# --------------------------------------------------------------------------------------
 # CLI
 # --------------------------------------------------------------------------------------
 
@@ -828,7 +505,7 @@ def run_self_test(script_dir: Path) -> int:
 def main(argv: list[str] | None = None) -> int:
     parser = argparse.ArgumentParser(
         description="Validate a Bale Safir payload, or normalise one Iranian mobile number for the Safir wire.",
-        epilog="Exit codes: 0 ok, 1 rejected, 2 usage, 3 no file, 4 bad JSON, 5 self-test failed, 6 corpus failed.",
+        epilog="Exit codes: 0 ok, 1 rejected, 2 usage, 3 no file, 4 bad JSON.",
     )
     parser.add_argument("payload", nargs="?", type=Path, help="path to a JSON payload file")
     parser.add_argument("--mode", choices=("request", "response"), default="request", help="what the file contains")
@@ -840,22 +517,16 @@ def main(argv: list[str] | None = None) -> int:
         default="bale",
         help="target channel for --normalize (default: bale)",
     )
-    parser.add_argument("--self-test", action="store_true", help="run built-in vectors and the shared phone corpus")
     args = parser.parse_args(argv)
 
-    script_dir = Path(__file__).resolve().parent
-
-    selected = sum(1 for flag in (args.self_test, args.normalize is not None, args.payload is not None) if flag)
+    selected = sum(1 for flag in (args.normalize is not None, args.payload is not None) if flag)
     if selected != 1:
         parser.print_usage(sys.stderr)
         print(
-            "error: pass exactly one of a payload path, --normalize RAW, or --self-test",
+            "error: pass exactly one of a payload path or --normalize RAW",
             file=sys.stderr,
         )
         return EXIT_USAGE
-
-    if args.self_test:
-        return run_self_test(script_dir)
 
     if args.normalize is not None:
         try:

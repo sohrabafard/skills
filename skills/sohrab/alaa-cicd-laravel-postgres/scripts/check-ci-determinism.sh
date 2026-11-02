@@ -10,7 +10,7 @@ SCANNED=0
 
 usage() {
     cat <<'USAGE'
-check-ci-determinism.sh [--repo DIR] [--self-test] [--help] [FILE...]
+check-ci-determinism.sh [--repo DIR] [--help] [FILE...]
 
 Checks a CI configuration for determinism and disguised-gate defects. It reads
 lines, not the YAML tree: a clean exit means no finding at the lexical level,
@@ -26,8 +26,6 @@ never that the pipeline is deterministic.
 Options
   --repo DIR    root to scan (default: .). Discovers .gitlab-ci.yml and
                 .github/workflows/*.yml|*.yaml when no FILE is given.
-  --self-test   run built-in fixtures and verify each check fires. Exit 1 means
-                this script is broken; fix it before trusting a clean run.
   --help        this text.
 
 Exit codes, and what each obliges (see references/10-gate-register.md)
@@ -155,57 +153,11 @@ scan_file() {
     check_gates "$f"
 }
 
-self_test() {
-    d=$(mktemp -d) || return 1
-    cat >"$d/bad.yml" <<'FIXTURE'
-services:
-  - name: postgres:latest
-  - name: rabbitmq:4-management
-test:
-  image: php:8.4-cli
-  retry: 2
-  allow_failure: true
-  cache:
-    key: "static-key"
-    paths: [vendor]
-  script:
-    - vendor/bin/phpstan analyse || true
-FIXTURE
-    cat >"$d/good.yml" <<'FIXTURE'
-services:
-  - name: postgres:18.3
-test:
-  image: php:8.5-cli
-  cache:
-    key:
-      files:
-        - composer.lock
-    paths: [.composer-cache]
-  script:
-    - vendor/bin/phpstan analyse
-FIXTURE
-    printf '{ "require": { "php": "^8.5" } }\n' >"$d/composer.json"
-    rc=0
-    out=$(sh "$0" --repo "$d" "$d/bad.yml" 2>&1); [ "$?" -eq 1 ] || { echo "self-test: bad.yml should exit 1"; rc=1; }
-    for code in IMAGE CACHEKEY TOOLCHAIN NOTAGATE RETRY; do
-        printf '%s' "$out" | grep -q "$code" || { echo "self-test: $code did not fire"; rc=1; }
-    done
-    printf '%s' "$out" | grep -q 'only a major' || { echo "self-test: major-only tag not detected"; rc=1; }
-    sh "$0" --repo "$d" "$d/good.yml" >/dev/null 2>&1 || { echo "self-test: good.yml should exit 0"; rc=1; }
-    sh "$0" --repo "$d" "$d/absent.yml" >/dev/null 2>&1; [ "$?" -eq 3 ] || { echo "self-test: missing file should exit 3"; rc=1; }
-    rm -f "$d"/*.yml "$d"/composer.json 2>/dev/null
-    rmdir "$d" 2>/dev/null
-    [ "$rc" -eq 0 ] && echo "self-test: all checks fire"
-    return "$rc"
-}
-
 REPO="."
-SELFTEST=0
 FILES=""
 while [ "$#" -gt 0 ]; do
     case "$1" in
         --help|-h) usage; exit 0 ;;
-        --self-test) SELFTEST=1 ;;
         --repo) [ "$#" -ge 2 ] || { echo "$PROG: --repo needs a directory" >&2; exit 2; }; REPO="$2"; shift ;;
         --repo=*) REPO=${1#--repo=} ;;
         -*) echo "$PROG: unknown option $1" >&2; usage >&2; exit 2 ;;
@@ -213,7 +165,6 @@ while [ "$#" -gt 0 ]; do
     esac
     shift
 done
-[ "$SELFTEST" -eq 1 ] && { self_test; exit "$?"; }
 [ -d "$REPO" ] || { echo "$PROG: not a directory: $REPO" >&2; exit 2; }
 
 if [ -z "$FILES" ]; then

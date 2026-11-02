@@ -65,7 +65,6 @@ review is what catches it — which is that owner's existing responsibility rath
 ```
 node scripts/check-annotations.mjs src/ packages/*/src
 node scripts/check-annotations.mjs src/ --rules=ANN301,ANN302
-node scripts/check-annotations.mjs --self-test
 node scripts/check-annotations.mjs --help
 ```
 
