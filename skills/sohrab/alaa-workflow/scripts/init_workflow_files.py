@@ -281,9 +281,9 @@ def task_store_values(args: argparse.Namespace, checkpoint: Path | None, profile
     if args.task_store == "local":
         if binding is not None:
             raise Misuse("--beads-binding requires --task-store beads.")
-        if reason is None or not reason.strip() or re.search(r"[\r\n]", reason) or re.search(
-                r"\{\{|\}\}|NEEDS_(?:FILL|CONFIRMATION|LIVE_VERIFICATION)|\[(?:todo|question|gap)\]", reason, re.I):
-            raise Misuse("Execution needs --task-store beads with --beads-binding, or --task-store local with a one-line --beads-unavailable-reason recording why Beads is unavailable.")
+        from validate_workflow_files import recorded_value
+        if reason is None or re.search(r"[\r\n]", reason) or not recorded_value(reason.strip()):
+            raise Misuse("Execution needs --task-store beads with --beads-binding, or --task-store local with a one-line --beads-unavailable-reason naming the observed failure (not none, unknown, n/a, pending, not recorded, not run, not applicable, or a placeholder).")
         reason = reason.strip()
     elif reason is not None:
         raise Misuse("--beads-unavailable-reason requires --task-store local.")

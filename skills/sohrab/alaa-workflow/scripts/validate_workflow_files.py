@@ -374,10 +374,9 @@ def hierarchy_nodes(content: str, status: str) -> tuple[dict[str, tuple[str, str
 def validate_hierarchy_contract(content: str, status: str) -> list[str]:
     header = plan_header(content)
     messages: list[str] = []
-    for label, allowed in (("Task hierarchy", {"phase-task-subtask"}), ("Review boundary", {"phase", "final"})):
-        values = re.findall(rf"^[-*][ \t]+{label}:[ \t]*([^\r\n]*)$", header, re.I | re.M)
-        if len(values) != 1 or clean_scalar(values[0]) not in allowed:
-            messages.append(error("plan.hierarchy-contract", f"Invalid or duplicate {label} header.", "Restore the declared hierarchy/review contract."))
+    values = re.findall(r"^[-*][ \t]+Task hierarchy:[ \t]*([^\r\n]*)$", header, re.I | re.M)
+    if len(values) != 1 or clean_scalar(values[0]) != "phase-task-subtask":
+        messages.append(error("plan.hierarchy-contract", "Invalid or duplicate Task hierarchy header.", "Restore the declared hierarchy/review contract."))
     stores, bindings = task_store_headers(content)
     if len(stores) != 1 or clean_scalar(stores[0]) != "beads" or len(bindings) != 1:
         messages.append(error("plan.hierarchy-binding", "Hierarchy requires an explicit Beads store and binding.", "Use the adopted portable binding; do not substitute local tracking."))
@@ -385,6 +384,20 @@ def validate_hierarchy_contract(content: str, status: str) -> list[str]:
     messages.extend(node_messages)
     if TASK_LINE_RE.search(content) or ISSUE_LINE_RE.search(content):
         messages.append(error("plan.hierarchy-mixed", "Hierarchy contains flat issues or local tasks.", "Keep phase/task mappings and any decomposed subtasks in this family."))
+    messages.extend(validate_review_contract(content, status))
+    return messages
+
+
+def validate_review_contract(content: str, status: str) -> list[str]:
+    """Review boundary, final phase, commit authority and phase review fields.
+
+    Runs for every execution plan, with or without a Task hierarchy.
+    """
+    header = plan_header(content)
+    messages: list[str] = []
+    values = re.findall(r"^[-*][ \t]+Review boundary:[ \t]*([^\r\n]*)$", header, re.I | re.M)
+    if len(values) != 1 or clean_scalar(values[0]) not in {"phase", "final"}:
+        messages.append(error("plan.review-contract", "Invalid or duplicate Review boundary header.", "Restore the declared review contract."))
     phases = phase_blocks(content)
     final_phase = clean_scalar(field_value(header, "Final phase") or "")
     local_final = clean_scalar(field_value(header, "Local final phase") or final_phase)
@@ -510,7 +523,11 @@ def validate_task_store(content: str, status: str) -> list[str]:
     for identifier, issue in migrated.items():
         if issue not in issues:
             messages.append(error("plan.local-migrated", f"Migrated task {identifier} names issue {issue} with no mapping in this plan.", "Add the issue mapping in the same plan, or restore the task as local."))
-    if store == "beads" or issues:
+    for identifier in migrated:
+        for dependency in tasks[identifier][1]:
+            if dependency not in migrated and not tasks.get(dependency, (False,))[0]:
+                messages.append(error("plan.local-dependency", f"Migrated task {identifier} has prerequisite {dependency} that is neither completed nor migrated.", "Complete or migrate the prerequisite first; Beads cannot depend on an open local task."))
+    if store == "beads" or has_issues:
         messages.append(warning("plan.beads-offline", "Offline structure only; issue existence, workspace, scope and readiness are not verified.", "Verify the adopted binding and live issue state before tracking-dependent work."))
         for issue in ISSUE_LINE_RE.finditer(content):
             if not any(start <= issue.start() < end for _, start, end in phase_regions(content)):
@@ -955,6 +972,8 @@ def validate_plan(path: Path, profile: str) -> list[str]:
                 require_approved_design(design)
             except (ValueError, OSError, UnicodeError) as exc:
                 messages.append(error("plan.approved-design", str(exc), "Restore a readable valid approved design; never infer approval."))
+    if kind == "execution" and not hierarchy_family(content):
+        messages.extend(validate_review_contract(content, status))
     if field_value(plan_header(content), "Local final phase") is not None:
         try:
             resolve_review_contract(path)

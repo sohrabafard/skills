@@ -87,7 +87,7 @@ For admitted families:
 - Exit `1` is a blocking artifact error. Repair it before advancement. Never report it as a pass.
 - Exit `2` means validation failed to run. A missing selected plan, uncorrelatable companion, or unreadable file is a failed gate. It is never evidence that artifacts are clean.
 
-No artifact validation runs for issue-only work. Report that distinction without implying its required behavior validation passed.
+No artifact validation runs for issue-only work without an admitted plan. Report that distinction without implying its required behavior validation passed.
 
 ## When NOT to use
 
