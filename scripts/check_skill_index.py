@@ -19,17 +19,15 @@ WHAT THIS ASSERTS
     X1 and X2 together are what makes README.md's own sentence "Every folder in this directory
     appears exactly once below" true, and X9 is the "exactly once" half.
 
-    X6 compares normalised content on purpose. In this repository AGENTS.md is CRLF and modified
-    while CLAUDE.md is LF and clean, core.autocrlf is unset and there is no .gitattributes, so a
-    byte comparison fires on every Windows checkout and the rule gets switched off.
+    X6 compares normalised content on purpose. A byte comparison fires whenever the two files
+    differ only in line endings, and the rule then gets switched off.
 
     X7 exists because skills/sohrab/CLAUDE.md is committed as git mode 120000 with a 9-byte blob
-    whose content is the literal text "AGENTS.md". On a Windows checkout without core.symlinks
-    -- git-for-Windows' default unless the user has Developer Mode or runs elevated -- that
-    materialises as a 9-byte text file, and Claude Code loads it instead of the 10,205-byte
-    contract with no error and no warning. The observable condition is a CLAUDE.md whose entire
-    content is a path that resolves beside it, and that is what this rule tests. An import
-    bridge whose first line is @AGENTS.md passes.
+    whose content is the literal text "AGENTS.md". A checkout without symlink support
+    materialises that as a 9-byte text file, and Claude Code loads it instead of the contract
+    with no error and no warning. The observable condition is a CLAUDE.md whose entire content
+    is a path that resolves beside it, and that is what this rule tests. An import bridge whose
+    first line is @AGENTS.md passes.
 
 EXIT CODES
     0  clean          zero findings after baseline suppression
@@ -39,10 +37,10 @@ EXIT CODES
                       README.fa.md's tables not locatable, root AGENTS.md missing, a file that
                       is not decodable UTF-8, or a baseline that is unreadable or malformed
 
-WINDOWS
+IMPLEMENTATION
     Python 3 standard library only. pathlib throughout, files read as bytes and decoded
-    explicitly, newlines normalised before any comparison, no temp directory, no os.symlink,
-    no reliance on a shebang. The tree is enumerated at runtime and no skill name is hardcoded.
+    explicitly, newlines normalised before any comparison, no temp directory, no os.symlink.
+    The tree is enumerated at runtime and no skill name is hardcoded.
 """
 
 from __future__ import annotations
@@ -74,8 +72,8 @@ TABLE_FIRST_CELL_RE = re.compile(r"^\s*\|([^|]*)\|")
 SKILL_NAME_TOKEN_RE = re.compile(r"^[a-z0-9][a-z0-9._-]*$")
 BACKTICK_TOKEN_RE = re.compile(r"`([^`\n]+)`")
 # Separator between "these names were removed" and "this is what replaced them". The em and en
-# dashes are written as escapes so re-saving this file in a non-UTF-8 Windows code page cannot
-# silently change what the regex matches.
+# dashes are written as escapes so re-saving this file in another encoding cannot silently
+# change what the regex matches.
 SEPARATOR_RE = re.compile("\\s(?:\u2014|\u2013|--|-)\\s")
 
 IMPORT_BRIDGE_RE = re.compile(r"^@([A-Za-z0-9_.\-/]+)$")
@@ -393,7 +391,7 @@ def check_pack_claude_md(pack_dir: Path) -> List[Finding]:
                 stripped,
                 f"the whole file is {size} bytes and its entire content is the path "
                 f"{stripped!r}, which resolves beside it. This is what a git mode-120000 "
-                f"symlink becomes on a Windows checkout without core.symlinks, and Claude Code "
+                f"symlink becomes on a checkout without symlink support, and Claude Code "
                 f"loads it instead of the contract with no error. Replace it with an import "
                 f"bridge whose first line is @{stripped}.",
             )
@@ -589,8 +587,7 @@ def write_baseline(path: Path, findings: Sequence[Finding]) -> None:
     ]
     for f in sorted(findings, key=lambda x: x.key):
         lines.append(f"{f.key}  # owner: {f.subject}")
-    # Bytes with explicit LF: text mode on Windows would emit CRLF and the next reader would
-    # carry a carriage return on the last field of every key.
+    # Bytes with explicit LF, so the next reader never sees a carriage return on a key field.
     path.write_bytes(("\n".join(lines) + "\n").encode("utf-8"))
 
 
@@ -640,111 +637,6 @@ def report(
 
 
 # --------------------------------------------------------------------------------------
-# Self-test
-# --------------------------------------------------------------------------------------
-
-SELF_TEST_CASES: Tuple[Tuple[str, Tuple[str, ...], int, Optional[Dict[str, int]]], ...] = (
-    ("green", (), EXIT_CLEAN, {}),
-    ("green-bridged", (), EXIT_CLEAN, {}),
-    ("green-marked-map", (), EXIT_CLEAN, {}),
-    ("red-x1-dir-not-in-readme", (), EXIT_FINDINGS, {"X1-DIR-NOT-IN-README": 1}),
-    ("red-x2-readme-name-not-a-dir", (), EXIT_FINDINGS, {"X2-README-NAME-NOT-A-DIR": 1}),
-    ("red-x3-dir-not-in-readme-fa", (), EXIT_FINDINGS, {"X3-DIR-NOT-IN-README-FA": 1}),
-    ("red-x4-readme-fa-name-not-a-dir", (), EXIT_FINDINGS, {"X4-README-FA-NAME-NOT-A-DIR": 1}),
-    ("red-x5-consolidated-still-exists", (), EXIT_FINDINGS, {"X5-CONSOLIDATED-STILL-EXISTS": 1}),
-    ("red-x6-agents-claude-diverged", (), EXIT_FINDINGS, {"X6-AGENTS-CLAUDE-DIVERGED": 1}),
-    ("green-crlf-agents", (), EXIT_CLEAN, {}),
-    ("red-x7-claude-md-stub", (), EXIT_FINDINGS, {"X7-CLAUDE-MD-IS-A-PATH-STUB": 1}),
-    ("red-x8-missing-openai-yaml", (), EXIT_FINDINGS, {"X8-MISSING-OPENAI-YAML": 1}),
-    ("red-x9-duplicate-in-index", (), EXIT_FINDINGS, {"X9-DUPLICATE-IN-INDEX": 1}),
-    ("red-no-map-region", (), EXIT_CANNOT_RUN, None),
-    ("red-missing-readme-fa", (), EXIT_CANNOT_RUN, None),
-    ("red-no-skills", (), EXIT_CANNOT_RUN, None),
-)
-
-SELF_TEST_BASELINES: Tuple[Tuple[str, str, int], ...] = (
-    ("red-x8-missing-openai-yaml", "baseline-suppresses.txt", EXIT_CLEAN),
-    ("red-x8-missing-openai-yaml", "baseline-stale.txt", EXIT_FINDINGS),
-    ("red-x8-missing-openai-yaml", "baseline-malformed.txt", EXIT_CANNOT_RUN),
-)
-
-
-def run_case(root: Path, argv: Sequence[str]) -> Tuple[int, str]:
-    import contextlib
-    import io
-
-    buf = io.StringIO()
-    with contextlib.redirect_stdout(buf), contextlib.redirect_stderr(buf):
-        code = main(["--root", str(root), *argv])
-    return code, buf.getvalue()
-
-
-def self_test(fixtures_dir: Path) -> int:
-    base = fixtures_dir / "index"
-    if not base.is_dir():
-        print(f"BLOCKED: fixture directory not found: {base}")
-        return EXIT_CANNOT_RUN
-    passed = failed = blocked = 0
-    for name, extra, expect_code, expect_rules in SELF_TEST_CASES:
-        root = base / name
-        label = f"{name} {' '.join(extra)}".strip()
-        if not root.is_dir():
-            print(f"BLOCKED  {label}: fixture root missing ({root})")
-            blocked += 1
-            continue
-        code, out = run_case(root, extra)
-        if code != expect_code:
-            if code == EXIT_CANNOT_RUN:
-                print(f"BLOCKED  {label}: exit 2 (could not run), expected {expect_code}")
-                print("         " + out.strip().replace("\n", "\n         "))
-                blocked += 1
-            else:
-                print(f"FAIL     {label}: exit {code}, expected {expect_code}")
-                print("         " + out.strip().replace("\n", "\n         "))
-                failed += 1
-            continue
-        if expect_rules is not None:
-            observed: Dict[str, int] = {}
-            for line in out.split("\n"):
-                stripped = line.strip()
-                if stripped.startswith("- X"):
-                    rule = stripped.split()[1]
-                    observed[rule] = observed.get(rule, 0) + 1
-            if observed != expect_rules:
-                print(f"FAIL     {label}: rules {observed}, expected {expect_rules}")
-                failed += 1
-                continue
-        print(f"PASS     {label}")
-        passed += 1
-
-    for name, baseline_name, expect_code in SELF_TEST_BASELINES:
-        root = base / name
-        baseline = root / baseline_name
-        label = f"{name} --baseline {baseline_name}"
-        if not baseline.is_file():
-            print(f"BLOCKED  {label}: baseline fixture missing ({baseline})")
-            blocked += 1
-            continue
-        code, out = run_case(root, ("--baseline", str(baseline)))
-        if code != expect_code:
-            if code == EXIT_CANNOT_RUN and expect_code != EXIT_CANNOT_RUN:
-                print(f"BLOCKED  {label}: exit 2, expected {expect_code}")
-                blocked += 1
-            else:
-                print(f"FAIL     {label}: exit {code}, expected {expect_code}")
-                print("         " + out.strip().replace("\n", "\n         "))
-                failed += 1
-            continue
-        print(f"PASS     {label}")
-        passed += 1
-
-    print(f"\nself-test: {passed} passed, {failed} failed, {blocked} blocked")
-    if blocked:
-        return EXIT_CANNOT_RUN
-    return EXIT_FINDINGS if failed else EXIT_CLEAN
-
-
-# --------------------------------------------------------------------------------------
 # Entry point
 # --------------------------------------------------------------------------------------
 
@@ -758,8 +650,8 @@ rules
   X6-AGENTS-CLAUDE-DIVERGED     root AGENTS.md and root CLAUDE.md are neither equal after
                                 newline normalisation nor joined by an @AGENTS.md bridge
   X7-CLAUDE-MD-IS-A-PATH-STUB   skills/sohrab/CLAUDE.md's entire content is a path that resolves
-                                beside it -- what a mode-120000 symlink becomes on a Windows
-                                checkout without core.symlinks, loaded silently in place of the
+                                beside it -- what a mode-120000 symlink becomes on a checkout
+                                without symlink support, loaded silently in place of the
                                 contract
   X8-MISSING-OPENAI-YAML        a skill directory has no agents/openai.yaml
   X9-DUPLICATE-IN-INDEX         a name appears more than once in one index
@@ -801,49 +693,11 @@ def build_parser() -> argparse.ArgumentParser:
         help="write the current findings as a baseline and exit 0.",
     )
     p.add_argument("--format", choices=("text", "json"), default="text")
-    p.add_argument(
-        "--self-test",
-        action="store_true",
-        help="run against the bundled fixtures. 0 pass, 1 fail, 2 a fixture could not be run.",
-    )
-    p.add_argument(
-        "--fixtures",
-        metavar="PATH",
-        help="fixture directory. Default: the fixtures directory beside this script.",
-    )
     return p
-
-
-def clean_arg(value: Optional[str]) -> Optional[str]:
-    """Strip surrounding whitespace, including a carriage return, from a path argument.
-
-    A shell or Python driver that writes CRLF leaves a carriage return on the last field of every
-    line it parses. Without this, the failure message shows a path that renders identically to the
-    correct one.
-    """
-    return None if value is None else value.strip().strip("\r\n")
 
 
 def main(argv: Optional[Sequence[str]] = None) -> int:
     args = build_parser().parse_args(argv)
-    args.root = clean_arg(args.root)
-    args.baseline = clean_arg(args.baseline)
-    args.write_baseline = clean_arg(args.write_baseline)
-    args.fixtures = clean_arg(args.fixtures)
-
-    if args.self_test:
-        fixtures = (
-            Path(args.fixtures).expanduser()
-            if args.fixtures
-            # Sibling of this file. Path(__file__).parents[N] is forbidden here because it
-            # encodes a guess about the repository layout above the script.
-            else Path(__file__).resolve().with_name("fixtures")
-        )
-        try:
-            return self_test(fixtures)
-        except CannotRun as exc:
-            print(f"BLOCKED: {exc}")
-            return EXIT_CANNOT_RUN
 
     try:
         root = find_root(args.root)

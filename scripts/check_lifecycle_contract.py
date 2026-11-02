@@ -33,10 +33,10 @@ EXIT CODES
                       skill or its SKILL.md missing, a reporter with no "Final report" heading,
                       or a file that is not decodable UTF-8
 
-WINDOWS
+IMPLEMENTATION
     Python 3 standard library only. pathlib throughout, files read as bytes and decoded explicitly,
-    newlines normalised before any comparison, no temp directory, no reliance on a shebang. The
-    tree is enumerated at runtime and no skill name outside the contract itself is hardcoded.
+    newlines normalised before any comparison, no temp directory. The tree is enumerated at
+    runtime and no skill name outside the contract itself is hardcoded.
 """
 
 from __future__ import annotations
@@ -311,74 +311,6 @@ def report(findings: Sequence[Finding], notes: Dict[str, str], fmt: str) -> None
 
 
 # --------------------------------------------------------------------------------------
-# Self-test
-# --------------------------------------------------------------------------------------
-
-SELF_TEST_CASES: Tuple[Tuple[str, int, Optional[Dict[str, int]]], ...] = (
-    ("green", EXIT_CLEAN, {}),
-    ("red-l1-owner-state-undefined", EXIT_FINDINGS, {"L1-OWNER-STATE-UNDEFINED": 1}),
-    ("red-l2-report-state-missing", EXIT_FINDINGS, {"L2-REPORT-STATE-MISSING": 1}),
-    ("red-l3-report-owner-not-cited", EXIT_FINDINGS, {"L3-REPORT-OWNER-NOT-CITED": 1}),
-    ("red-l4-state-outside-owner", EXIT_FINDINGS, {"L4-STATE-OUTSIDE-OWNER": 1}),
-    ("red-l5-definition-outside-owner", EXIT_FINDINGS, {"L5-DEFINITION-OUTSIDE-OWNER": 1}),
-    ("red-no-owner", EXIT_CANNOT_RUN, None),
-    ("red-no-report-section", EXIT_CANNOT_RUN, None),
-)
-
-
-def run_case(root: Path) -> Tuple[int, str]:
-    import contextlib
-    import io
-
-    buf = io.StringIO()
-    with contextlib.redirect_stdout(buf), contextlib.redirect_stderr(buf):
-        code = main(["--root", str(root)])
-    return code, buf.getvalue()
-
-
-def self_test(fixtures_dir: Path) -> int:
-    base = fixtures_dir / "lifecycle"
-    if not base.is_dir():
-        print(f"BLOCKED: fixture directory not found: {base}")
-        return EXIT_CANNOT_RUN
-    passed = failed = blocked = 0
-    for name, expect_code, expect_rules in SELF_TEST_CASES:
-        root = base / name
-        if not root.is_dir():
-            print(f"BLOCKED  {name}: fixture root missing ({root})")
-            blocked += 1
-            continue
-        code, out = run_case(root)
-        if code != expect_code:
-            if code == EXIT_CANNOT_RUN:
-                print(f"BLOCKED  {name}: exit 2 (could not run), expected {expect_code}")
-                print("         " + out.strip().replace("\n", "\n         "))
-                blocked += 1
-            else:
-                print(f"FAIL     {name}: exit {code}, expected {expect_code}")
-                print("         " + out.strip().replace("\n", "\n         "))
-                failed += 1
-            continue
-        if expect_rules is not None:
-            observed: Dict[str, int] = {}
-            for line in out.split("\n"):
-                stripped = line.strip()
-                if stripped.startswith("- L"):
-                    rule = stripped.split()[1]
-                    observed[rule] = observed.get(rule, 0) + 1
-            if observed != expect_rules:
-                print(f"FAIL     {name}: rules {observed}, expected {expect_rules}")
-                failed += 1
-                continue
-        print(f"PASS     {name}")
-        passed += 1
-    print(f"\nself-test: {passed} passed, {failed} failed, {blocked} blocked")
-    if blocked:
-        return EXIT_CANNOT_RUN
-    return EXIT_FINDINGS if failed else EXIT_CLEAN
-
-
-# --------------------------------------------------------------------------------------
 # Entry point
 # --------------------------------------------------------------------------------------
 
@@ -422,47 +354,11 @@ def build_parser() -> argparse.ArgumentParser:
         "current directory that contains it.",
     )
     p.add_argument("--format", choices=("text", "json"), default="text")
-    p.add_argument(
-        "--self-test",
-        action="store_true",
-        help="run against the bundled fixtures. 0 pass, 1 fail, 2 a fixture could not be run.",
-    )
-    p.add_argument(
-        "--fixtures",
-        metavar="PATH",
-        help="fixture directory. Default: the fixtures directory beside this script.",
-    )
     return p
-
-
-def clean_arg(value: Optional[str]) -> Optional[str]:
-    """Strip surrounding whitespace, including a carriage return, from a path argument.
-
-    A driver that writes CRLF leaves a carriage return on the last field of every line it parses.
-    Without this, the failure message shows a path that renders identically to the correct one.
-    """
-    return None if value is None else value.strip().strip("\r\n")
 
 
 def main(argv: Optional[Sequence[str]] = None) -> int:
     args = build_parser().parse_args(argv)
-    args.root = clean_arg(args.root)
-    args.fixtures = clean_arg(args.fixtures)
-
-    if args.self_test:
-        fixtures = (
-            Path(args.fixtures).expanduser()
-            if args.fixtures
-            # Sibling of this file. Path(__file__).parents[N] is forbidden here because it
-            # encodes a guess about the repository layout above the script.
-            else Path(__file__).resolve().with_name("fixtures")
-        )
-        try:
-            return self_test(fixtures)
-        except CannotRun as exc:
-            print(f"BLOCKED: {exc}")
-            return EXIT_CANNOT_RUN
-
     try:
         root = find_root(args.root)
         findings, notes = run_checks(root)

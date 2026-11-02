@@ -103,7 +103,7 @@ def install_names_for_vendor_skills(vendor: VendorEntry, skill_dirs: list[Path])
 
 
 def normalize_path(path: Path) -> str:
-    return os.path.normcase(str(path.resolve(strict=False)))
+    return str(path.resolve(strict=False))
 
 
 def destination_for(record: SkillRecord, dest_root: Path) -> Path:
@@ -180,8 +180,7 @@ def create_symlink(source: Path, dest: Path) -> None:
         os.symlink(str(source), str(dest), target_is_directory=True)
     except OSError as exc:
         raise SystemExit(
-            "[vendor-skill-links] failed to create symlink. "
-            "On Windows, enable Developer Mode or run with the required permissions."
+            f"[vendor-skill-links] failed to create symlink {dest} -> {source}: {exc}"
         ) from exc
 
 

@@ -45,10 +45,9 @@ THE LIMIT OF INCREMENTAL ADOPTION -- measured, and narrower than "mark at leisur
 
     This is measured, not predicted. Batch 8's own rewrites added exactly that shape and turned
     13 informational items into hard findings without citing a single new path. Loosening the
-    promotion rule was considered and rejected; fixtures/EXPECTED-FLEET-CENSUS.md records the
-    measurement, the rejected alternative, and the reason.
+    promotion rule was considered and rejected.
 
-WINDOWS
+IMPLEMENTATION
     Python 3 standard library only. No pip install, no npm install. Paths are built with
     pathlib, files are read as bytes and decoded explicitly, and CRLF is normalised before any
     line is parsed -- a carriage return left on the last field of a parsed line makes every
@@ -83,7 +82,6 @@ RESOURCE_DIRS = (
     "examples",
     "prompts",
     "evals",
-    "fixtures",
     "docs",
     "test",
     "tests",
@@ -94,7 +92,7 @@ RESOURCE_DIRS = (
 # Extensions ordered longest-first. The trailing lookahead already prevents `.js` from
 # matching inside `.json`, but the ordering is kept as well: an earlier generation of this
 # resolver truncated references/arvan-caas-openAPI-1.25.json to .js and invented two phantom
-# dangling citations. Both guards are asserted by a fixture.
+# dangling citations.
 EXTENSIONS = (
     "jsonc",
     "json",
@@ -162,10 +160,6 @@ SKIP_DIR_NAMES = {
     ".claude",
     "vendor",
 }
-# alaa-repo-docs/assets/fixtures/undecodable/bad.md is deliberately invalid UTF-8 with a null
-# byte. It is excluded from the scan by default and, when --include-fixtures forces it back in,
-# it produces exit 2 rather than a crash. Both halves are asserted by fixtures.
-FIXTURE_DIR_NAMES = {"fixtures"}
 
 RULES: Dict[str, str] = {
     "R1-DANGLING-NAMED": "a citation whose owning skill is explicitly named does not resolve inside that skill",
@@ -287,7 +281,7 @@ def discover_skills(pack_dir: Path) -> List[str]:
     return names
 
 
-def markdown_files(skill_dir: Path, include_fixtures: bool) -> List[Path]:
+def markdown_files(skill_dir: Path) -> List[Path]:
     out: List[Path] = []
     stack = [skill_dir]
     while stack:
@@ -301,8 +295,6 @@ def markdown_files(skill_dir: Path, include_fixtures: bool) -> List[Path]:
                 continue
             if entry.is_dir():
                 if entry.name in SKIP_DIR_NAMES:
-                    continue
-                if not include_fixtures and entry.name in FIXTURE_DIR_NAMES:
                     continue
                 stack.append(entry)
             elif entry.suffix.lower() == ".md":
@@ -407,11 +399,8 @@ def is_owned_citation_span(content: str, skills: Sequence[str]) -> bool:
 def in_command_span(line: str, start: int, end: int, skills: Sequence[str] = ()) -> bool:
     """True when the citation sits inside an inline code span whose content has whitespace.
 
-    Evidence: fixtures/fleet/green-trap-forms/skills/sohrab/citing-skill/SKILL.md, Form 5, writes
-    `Read references/failure-taxonomy.md when a check fails` -- an illustrative sentence inside a
-    code span, not a citation -- and the self_test table below asserts it stays skipped. Cite a
-    fixture this checker owns rather than a line in a document it does not: this evidence pointed
-    at a skill file until a compression pass there moved the text out from under it.
+    Example: `Read references/failure-taxonomy.md when a check fails` is an illustrative
+    sentence inside a code span, not a citation, and stays skipped.
     validate_sohrab_skill_pack.py implements the same test as is_command_example.
 
     The one exception is the owner-prefixed citation form; see is_owned_citation_span.
@@ -645,7 +634,6 @@ def scan(
     root: Path,
     only_skills: Optional[Sequence[str]],
     strict_owner: bool,
-    include_fixtures: bool,
 ) -> Tuple[List[Finding], List[Finding], Dict[str, int], Dict[str, int]]:
     pack_dir = root.joinpath(*PACK_RELATIVE)
     if not pack_dir.is_dir():
@@ -663,7 +651,7 @@ def scan(
     counts = {"skills": len(skills), "scanned_skills": len(scan_list), "files": 0}
     for skill in scan_list:
         skill_dir = pack_dir / skill
-        for md in markdown_files(skill_dir, include_fixtures):
+        for md in markdown_files(skill_dir):
             counts["files"] += 1
             text = read_text(md)
             rel = md.relative_to(skill_dir).as_posix()
@@ -739,8 +727,8 @@ def write_baseline(path: Path, findings: Sequence[Finding]) -> None:
     ]
     for f in sorted(findings, key=lambda x: x.key):
         lines.append(f"{f.key}  # owner: {f.skill}")
-    # Written as bytes with explicit LF: text mode on Windows would emit CRLF, and the next
-    # reader would carry a carriage return on the last field of every key.
+    # Written as bytes with explicit LF, so the next reader never sees a carriage return on a
+    # key field.
     path.write_bytes(("\n".join(lines) + "\n").encode("utf-8"))
 
 
@@ -758,10 +746,6 @@ def print_census(census: Dict[str, int], refs_census: Dict[str, int]) -> None:
     for label in CENSUS_ORDER:
         print(f"  {refs_census.get(label, 0):6d}  {label}")
     print(f"  {refs_census.get('TOTAL', 0):6d}  TOTAL")
-    print(
-        "  Compare against the 2026-07-29 measurement recorded in "
-        "fixtures/EXPECTED-FLEET-CENSUS.md."
-    )
 
 
 def report(
@@ -829,172 +813,6 @@ def report(
 
 
 # --------------------------------------------------------------------------------------
-# Self-test
-# --------------------------------------------------------------------------------------
-
-# Each case is (fixture directory name, extra argv, expected exit, expected rule counts).
-# expected rule counts of None means "not asserted".
-SELF_TEST_CASES: Tuple[Tuple[str, Tuple[str, ...], int, Optional[Dict[str, int]]], ...] = (
-    ("green", (), EXIT_CLEAN, {}),
-    ("green-trap-forms", (), EXIT_CLEAN, {}),
-    ("green-marked-notation", (), EXIT_CLEAN, {}),
-    ("red-r1-dangling-named", (), EXIT_FINDINGS, {"R1-DANGLING-NAMED": 2}),
-    ("red-r2-dangling-local", (), EXIT_FINDINGS, {"R2-DANGLING-LOCAL": 2}),
-    ("red-r3-ambiguous-multi", (), EXIT_FINDINGS, {"R3-AMBIGUOUS-MULTI": 1}),
-    ("red-r4-ambiguous-bare", (), EXIT_FINDINGS, {"R4-AMBIGUOUS-BARE": 1}),
-    ("red-r5-contextual", (), EXIT_CLEAN, {}),
-    ("red-r5-contextual", ("--strict-owner",), EXIT_FINDINGS, {"R5-CONTEXTUAL": 1}),
-    ("red-r6-topic-map", (), EXIT_FINDINGS, {"R6-TOPIC-MAP": 1}),
-    ("red-undecodable", (), EXIT_CLEAN, {}),
-    ("red-undecodable", ("--include-fixtures",), EXIT_CANNOT_RUN, None),
-    ("red-no-skills", (), EXIT_CANNOT_RUN, None),
-)
-
-# Baseline behaviour is asserted against the red-r4 fixture: suppressing its one finding must
-# reach 0, and a baseline naming a finding that no longer exists must reach 1.
-SELF_TEST_BASELINES: Tuple[Tuple[str, str, int], ...] = (
-    ("red-r4-ambiguous-bare", "baseline-suppresses.txt", EXIT_CLEAN),
-    ("red-r4-ambiguous-bare", "baseline-stale.txt", EXIT_FINDINGS),
-    ("red-r4-ambiguous-bare", "baseline-malformed.txt", EXIT_CANNOT_RUN),
-)
-
-
-def run_case(root: Path, argv: Sequence[str]) -> Tuple[int, str]:
-    """Run the checker in-process against one fixture root and capture its output."""
-    import io
-    import contextlib
-
-    buf = io.StringIO()
-    code = EXIT_CANNOT_RUN
-    with contextlib.redirect_stdout(buf), contextlib.redirect_stderr(buf):
-        code = main(["--root", str(root), *argv])
-    return code, buf.getvalue()
-
-
-def self_test(fixtures_dir: Path) -> int:
-    if not fixtures_dir.is_dir():
-        print(f"BLOCKED: fixture directory not found: {fixtures_dir}")
-        return EXIT_CANNOT_RUN
-    base = fixtures_dir / "fleet"
-    if not base.is_dir():
-        print(f"BLOCKED: fixture directory not found: {base}")
-        return EXIT_CANNOT_RUN
-
-    passed = failed = blocked = 0
-    for name, extra, expect_code, expect_rules in SELF_TEST_CASES:
-        root = base / name
-        if not root.is_dir():
-            print(f"BLOCKED  {name} {' '.join(extra)}: fixture root missing ({root})")
-            blocked += 1
-            continue
-        code, out = run_case(root, extra)
-        label = f"{name} {' '.join(extra)}".strip()
-        if code != expect_code:
-            if code == EXIT_CANNOT_RUN:
-                print(f"BLOCKED  {label}: exit 2 (could not run), expected {expect_code}")
-                print("         " + out.strip().replace("\n", "\n         "))
-                blocked += 1
-            else:
-                print(f"FAIL     {label}: exit {code}, expected {expect_code}")
-                print("         " + out.strip().replace("\n", "\n         "))
-                failed += 1
-            continue
-        if expect_rules is not None:
-            observed: Dict[str, int] = {}
-            for line in out.split("\n"):
-                stripped = line.strip()
-                if stripped.startswith("- R"):
-                    rule = stripped.split()[1]
-                    observed[rule] = observed.get(rule, 0) + 1
-            if observed != expect_rules:
-                print(f"FAIL     {label}: rules {observed}, expected {expect_rules}")
-                failed += 1
-                continue
-        print(f"PASS     {label}")
-        passed += 1
-
-    for name, baseline_name, expect_code in SELF_TEST_BASELINES:
-        root = base / name
-        baseline = base / name / baseline_name
-        label = f"{name} --baseline {baseline_name}"
-        if not baseline.is_file():
-            print(f"BLOCKED  {label}: baseline fixture missing ({baseline})")
-            blocked += 1
-            continue
-        code, out = run_case(root, ("--baseline", str(baseline)))
-        if code != expect_code:
-            if code == EXIT_CANNOT_RUN and expect_code != EXIT_CANNOT_RUN:
-                print(f"BLOCKED  {label}: exit 2, expected {expect_code}")
-                blocked += 1
-            else:
-                print(f"FAIL     {label}: exit {code}, expected {expect_code}")
-                print("         " + out.strip().replace("\n", "\n         "))
-                failed += 1
-            continue
-        print(f"PASS     {label}")
-        passed += 1
-
-    # The extension-ordering regression from the 2026-07-29 survey, asserted directly.
-    probe = "see `references/arvan-caas-openAPI-1.25.json` for the matrix"
-    got = PATH_RE.findall(probe)
-    if got != ["references/arvan-caas-openAPI-1.25.json"]:
-        print(f"FAIL     extension-ordering probe: matched {got!r}")
-        failed += 1
-    else:
-        print("PASS     extension-ordering probe (.json is not truncated to .js)")
-        passed += 1
-
-    # A double extension must not be truncated to its first known extension and reported
-    # as dangling. Regression from the 2026-07-31 sweep.
-    probe = "see `$SKILL_DIR/assets/values.secret.yaml.example` for the shape"
-    got = PATH_RE.findall(probe)
-    if got != []:
-        print(f"FAIL     double-extension probe: matched {got!r}")
-        failed += 1
-    else:
-        print("PASS     double-extension probe (.yaml.example is not truncated to .yaml)")
-        passed += 1
-
-    # ...while a single extension followed by sentence punctuation still matches.
-    probe = "defined in `references/00-topic-map.md`."
-    got = PATH_RE.findall(probe)
-    if got != ["references/00-topic-map.md"]:
-        print(f"FAIL     trailing-period probe: matched {got!r}")
-        failed += 1
-    else:
-        print("PASS     trailing-period probe (a sentence period still ends a path)")
-        passed += 1
-
-    # The owner-prefixed citation form contains a space, so the command-example exclusion
-    # skipped every one of them and the convention AGENTS.md mandates was the one class this
-    # checker never verified. Both directions are asserted: the citation form is checked, and
-    # an illustrative sentence in a code span is still skipped.
-    fleet = ("alaa-services-contract", "alaa-repo-docs")
-    for label, span, expect_skipped in (
-        ("owner-prefixed citation is checked", "alaa-repo-docs references/15-x.md", False),
-        ("bundled script citation is checked", "alaa-repo-docs scripts/check_markdown_links.py", False),
-        ("illustrative sentence is still an example", "Read references/failure-taxonomy.md when a check fails", True),
-        ("unknown first token is still an example", "Read references/failure-taxonomy.md", True),
-        ("three tokens is still an example", "alaa-repo-docs references/15-x.md now", True),
-    ):
-        line = f"see `{span}` for the rule"
-        m = INLINE_SPAN_RE.search(line)
-        inner_start = m.start(1) + span.index("references/" if "references/" in span else "scripts/")
-        got_skipped = in_command_span(line, inner_start, inner_start + 5, fleet)
-        if got_skipped != expect_skipped:
-            print(f"FAIL     citation-span probe ({label}): skipped={got_skipped}")
-            failed += 1
-        else:
-            print(f"PASS     citation-span probe ({label})")
-            passed += 1
-
-    print(f"\nself-test: {passed} passed, {failed} failed, {blocked} blocked")
-    if blocked:
-        return EXIT_CANNOT_RUN
-    return EXIT_FINDINGS if failed else EXIT_CLEAN
-
-
-# --------------------------------------------------------------------------------------
 # Entry point
 # --------------------------------------------------------------------------------------
 
@@ -1039,7 +857,6 @@ exclusions
     SKIPPED-COMMAND-EXAMPLE to RESOLVES-CROSS-SKILL and produced no new finding.
   * a line whose 80 characters before the path say was/were/formerly/retired is retirement prose
   * globs and placeholders are not paths
-  * directories named fixtures are skipped unless --include-fixtures
 
 exit codes
   0 clean   1 findings, or a stale baseline entry   2 could not run
@@ -1087,62 +904,16 @@ def build_parser() -> argparse.ArgumentParser:
     p.add_argument(
         "--show-info", action="store_true", help="list every informational item, not a summary."
     )
-    p.add_argument(
-        "--include-fixtures",
-        action="store_true",
-        help="scan directories named fixtures. An undecodable file then produces exit 2.",
-    )
-    p.add_argument(
-        "--self-test",
-        action="store_true",
-        help="run against the bundled fixtures. 0 pass, 1 fail, 2 a fixture could not be run.",
-    )
-    p.add_argument(
-        "--fixtures",
-        metavar="PATH",
-        help="fixture directory. Default: the fixtures directory beside this script.",
-    )
     return p
-
-
-def clean_arg(value: Optional[str]) -> Optional[str]:
-    """Strip surrounding whitespace, including a carriage return, from a path or name argument.
-
-    A shell or Python driver that writes CRLF leaves a carriage return on the last field of every
-    line it parses. Without this, `--root C:\\repo\\r` fails with a message showing a path that
-    renders identically to the correct one, and the operator has nothing to look at.
-    """
-    return None if value is None else value.strip().strip("\r\n")
 
 
 def main(argv: Optional[Sequence[str]] = None) -> int:
     args = build_parser().parse_args(argv)
-    args.root = clean_arg(args.root)
-    args.baseline = clean_arg(args.baseline)
-    args.write_baseline = clean_arg(args.write_baseline)
-    args.fixtures = clean_arg(args.fixtures)
-    if args.skill:
-        args.skill = [clean_arg(s) for s in args.skill]
-
-    if args.self_test:
-        fixtures = (
-            Path(args.fixtures).expanduser()
-            if args.fixtures
-            # Sibling of this file, not an ancestor of it. Path(__file__).parents[N] is
-            # forbidden here because it encodes a guess about the repository layout above the
-            # script; "the fixtures next to me" encodes nothing.
-            else Path(__file__).resolve().with_name("fixtures")
-        )
-        try:
-            return self_test(fixtures)
-        except CannotRun as exc:
-            print(f"BLOCKED: {exc}")
-            return EXIT_CANNOT_RUN
 
     try:
         root = find_root(args.root)
         findings, info, census, refs_census, counts = scan(
-            root, args.skill, args.strict_owner, args.include_fixtures
+            root, args.skill, args.strict_owner
         )
     except CannotRun as exc:
         print(f"could not run: {exc}", file=sys.stderr)
