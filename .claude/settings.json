@@ -14,7 +14,13 @@
       "Bash(bd blocked *)",
       "Bash(bd create *)",
       "Bash(bd update *)",
-      "Bash(bd close *)"
+      "Bash(bd close *)",
+      "Bash(bd ping *)",
+      "Bash(bd lint *)",
+      "Bash(bd stale *)",
+      "Bash(bd --sandbox --actor * create *)",
+      "Bash(bd --sandbox --actor * update *)",
+      "Bash(bd --sandbox --actor * close *)"
     ]
   },
   "hooks": {

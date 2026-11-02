@@ -1,7 +1,7 @@
 prefix_rule(
     pattern=[
         "bd",
-        ["where", "version", "prime", "ready", "list", "show", "blocked", "create", "update", "close"],
+        ["where", "version", "prime", "ready", "list", "show", "blocked", "create", "update", "close", "ping", "lint", "stale"],
     ],
     decision="allow",
 )
