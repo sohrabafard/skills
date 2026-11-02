@@ -1,6 +1,6 @@
 ---
 name: alaa-services-contract
-description: "Normative shared-surface contract for Ala backend services and `@alaa/*` packages: response and error envelopes, health and readiness shapes, trusted gateway headers, public identifiers, event and code names, permission catalogs, broker and metric registries, deadlines, the runtime and CI baseline, and delivery-artifact ownership. Use when a change must look identical across the fleet, before creating a shared Ala image, chart, CI include, or generator, or when touching @alaa/sdk, Page Kit, UI Kit, app-shell, or widgets. Do not use for feature work in one service that changes no shared surface. Route Docker, Kubernetes, HAProxy, Laravel, and Go work to /alaa-docker-production, /alaa-k8s-helm, /alaa-haproxy, /alaa-laravel-architecture, /alaa-golang; observability gates to /alaa-observability-soc; reliability doctrine to /alaa-reliability-sla; security verdicts to /alaa-security-review; UI design to /alaa-frontend-developer."
+description: "Normative shared-surface contract for Ala backend services and `@alaa/*` packages: response/error envelopes, health/readiness, trusted gateway headers, public IDs, event/code names, permission catalogs, broker/metric registries, deadlines, runtime and CI baseline, delivery-artifact ownership. Use when a change must look identical across the fleet, before creating a shared Ala image, chart, CI include, or generator, for Ala Runner, executor, job image, ci-image tools, CI Docker daemon, manual image release, or when touching @alaa/sdk, Page Kit, UI Kit, app-shell, widgets. Not for single-service feature work changing no shared surface. Route Docker, Kubernetes, HAProxy, Laravel, Go to /alaa-docker-production, /alaa-k8s-helm, /alaa-haproxy, /alaa-laravel-architecture, /alaa-golang; observability gates to /alaa-observability-soc; reliability doctrine to /alaa-reliability-sla; security verdicts to /alaa-security-review; UI design to /alaa-frontend-developer."
 ---
 
 # Alaa Services Contract
@@ -20,7 +20,7 @@ judgment cannot be debugged. Exact detail lives in `references/`; this file rout
   (2) the repo's own `AGENTS.md` or a repo-owned contract document states the opposite rule, so the owner
   must settle which wins; (3) convergence requires an edit in a second repository outside the current
   task's scope. In those three, stop at the boundary, state the conflicting rule and both file paths, and
-  change nothing else. In every other case, converge.
+  change nothing else. In every other case, converge. A CI gap under the [Milestone 1 exception](references/15-deployment-and-runtime-contract.md#gitlab-cicd-baseline-contract) is not a deviation.
 - When this skill replaces a header, field, event, code, route, or helper, remove the old implementation in
   the same change. Anything a consumer can observe goes through the deprecation procedure in
   `references/22-failure-load-and-deprecation-contract.md` first.

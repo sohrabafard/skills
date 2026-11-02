@@ -21,7 +21,7 @@ Runner architecture and configuration. Failure triage lives in
 
 | Use | When |
 |---|---|
-| Kubernetes executor | the default. Each job is a fresh pod, isolation is real, capacity is elastic, and cleanup is the cluster's problem |
+| Kubernetes executor | the default outside the Ala fleet (`SKILL.md`, Runner rules). Each job is a fresh pod, isolation is real, capacity is elastic, and cleanup is the cluster's problem |
 | shell executor | the job needs a tool that only exists on a specific host, or a daemon that host already runs, **and** the host serves no other tenant, the runner is tagged so only the intended projects reach it, and the jobs that use it run on protected refs |
 | Docker executor | a single host that should still give each job a container boundary |
 
@@ -112,8 +112,7 @@ the block. `validate_runner_config.py` parses the embedded block and reports
 `embedded-toml` when it is not valid TOML.
 
 Use `assets/templates/values-k8s-runner.yaml` as the baseline. The Helm chart
-itself — templating, releases, upgrade strategy — is `/alaa-k8s-helm`
-(`$alaa-k8s-helm`)'s subject; this file covers only the runner's own values.
+itself — templating, releases, upgrade strategy — is `/alaa-k8s-helm`'s subject; this file covers only the runner's own values.
 
 Register with a runner **authentication token** (prefix `glrt-`), through
 `runnerToken` or `runnerTokenSecret`. Registration tokens are the legacy workflow
@@ -198,8 +197,8 @@ that runner is a no-op that still costs upload time.
 `Shared = true` puts every project's cache in one bucket path, which is a
 cross-project read path; leave it false unless a single trusted tenant uses the
 runner. Bucket naming, lifecycle rules and credential rotation for the store
-belong to `/alaa-minio-object-storage` (`$alaa-minio-object-storage`) or
-`/alaa-arvan-object-storage` (`$alaa-arvan-object-storage`).
+belong to `/alaa-minio-object-storage` or
+`/alaa-arvan-object-storage`.
 
 `validate_runner_config.py` reports `kube-cache-not-distributed`.
 
@@ -225,7 +224,7 @@ Do not assume a runner job may create or read namespaces, or run
 scope. When a job hits an RBAC denial, check whether the namespace identity the
 job used matches the one the role binding names before broadening any privilege.
 What a specific managed platform permits is that platform's skill to state; for
-Arvan-managed Kubernetes that is `/caas-arvan-kuber` (`$caas-arvan-kuber`).
+Arvan-managed Kubernetes that is `/caas-arvan-kuber`.
 
 ## Restricted and read-only clusters
 

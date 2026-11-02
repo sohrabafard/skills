@@ -28,6 +28,8 @@ Rules:
 
 ## GitLab CI/CD baseline contract
 
+Milestone 1 exception (scope and end condition: `16-infrastructure-services-and-delivery-artifacts.md`, "Runner shapes and the CI job image"): while that scope holds, a missing, unwired, or unrun `service-ci-kit` pipeline is not a deviation, and an agent adds, automates, or converges no CI unless the user requests it. A kit-managed `<repo>/scripts/manual-release.sh` copy is not copied shared CI logic. The rules below stay the baseline, and any CI change made still follows them.
+
 Rules:
 - for every Ala service image, default to the shared `service-ci-kit` project for GitLab CI/CD: Laravel and PHP services include its PHP pipeline, other services its stack-neutral contract-and-handoff include (`16-infrastructure-services-and-delivery-artifacts.md` names both)
 - keep `.gitlab-ci.yml` as a thin include-based wrapper and pin the kit only through the include `ref:`; do not set `SERVICE_CI_KIT_REF` in a wrapper
@@ -247,7 +249,7 @@ Rules:
 Flag a problem when you see:
 - no `deploy/service.yaml` for the Kubernetes/OpenShift production path
 - no Compose or no Swarm story and no explicit blocker
-- no shared `service-ci-kit` baseline for an Ala service image
+- no shared `service-ci-kit` baseline for an Ala service image, outside the [Milestone 1 exception](#gitlab-cicd-baseline-contract)
 - a releasable chart, release values, deploy job, or cluster credential in a service repository
 - a non-thin `.gitlab-ci.yml` in a service repo that should use the shared kit
 - shared `ci/scripts/*` or local semantic-release helper trees reintroduced into a service repo
