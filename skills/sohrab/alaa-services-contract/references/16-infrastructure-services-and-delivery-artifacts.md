@@ -66,7 +66,7 @@ cause), `planned`, `being decided` (names the deciding document). Deploy items `
 | Service CI kit | `<repo>/gitlab/contract-and-handoff.yml`, `<repo>/VERSION` and the repository's tags | `service-ci-kit` `<repo>/README.md`, `<repo>/docs/rfc/`; the handoff definition is `deploy` `<repo>/ci/handoff-inputs.yaml`, which wins on a conflict | `$alaa-gitlab-ci-cd` | `published`: the tag matching `<repo>/VERSION` is on `origin` (`git ls-remote --tags`, 2026-11-02); recheck the same way. Use by a service pipeline unproven; Milestone 1 scope: Runner shapes below |
 | Service runtime kit | `<repo>/scripts/render-runtime.sh`, `<repo>/VERSION`; in a consumer, `runtime/service.runtime.env` and the generated files | `service-runtime-kit` `<repo>/README.md`, `<repo>/docs/02-service-ci-kit-vs-service-runtime-kit.md`, `<repo>/docs/requests-for-change/` | `$service-runtime-kit-governance`, `$alaa-docker-production` | `live` for local runtime; read `<repo>/VERSION` against the tags for the current line |
 | PHP base image | `octane-base` `<repo>/README.md` registry line; the consumer's `OCTANE_BASE_IMAGE` | `octane-base` `<repo>/README.md`, `<repo>/CHANGELOG.md` | `$alaa-docker-production`, `$alaa-octane-performance` | `live` |
-| Gateway | `<repo>/charts/gateway`, `<repo>/scripts/gateway-start`, `<repo>/snapshots/README.md` | `gateway` `<repo>/AGENTS.md`, `<repo>/docs/route-set.md`, `<repo>/docs/error-code-registry.md`, `<repo>/docs/DOCKER_SHARED_RUNTIME.md` | `$alaa-haproxy`, `$alaa-trust-gateway-auth` | Compose CD path `live` on `gitlab.vk`, the test CD GitLab (`deploy` `<repo>/docs/delivery-topology.md`). Kubernetes path `unpublished`, as the deploy toolkit's. Swarm production artifacts absent (inferred from absence). Production target `being decided` by `deploy`: gateway section below |
+| Gateway | `<repo>/charts/gateway`, `<repo>/scripts/gateway-start`, `<repo>/snapshots/README.md` | `gateway` `<repo>/AGENTS.md`, `<repo>/docs/route-set.md`, `<repo>/docs/error-code-registry.md`, `<repo>/docs/DOCKER_SHARED_RUNTIME.md` | `$alaa-haproxy`, `$alaa-trust-gateway-auth` | Compose CD path `live` on `gitlab.vk`, the test CD GitLab (`deploy` `<repo>/docs/delivery-topology.md`). Kubernetes path `unpublished`, as the deploy toolkit's. Production target and Swarm production artifacts `being decided` by `deploy` (deploy RFC 0006, Proposed; absence of Swarm artifacts is inferred) |
 | Nexus | The consumer's `.env.example` variable | `deploy` `<repo>/docs/employer-open-items.md` | `$alaa-docker-production`, `$alaa-gitlab-ci-cd` | `live`; individual repositories missing from it are EO items |
 
 External platform services (GitLab, OpenShift, Arvan CaaS) are not entries: `$alaa-gitlab-ci-cd`,
@@ -301,8 +301,8 @@ the Compose CD path was not observed. The gateway has no Swarm production artifa
 Swarm release, no operator procedure (inferred from absence). This is an artifact gap, not a mode restriction: `APP_ENV`
 sets the environment class in every mode (`15-deployment-and-runtime-contract.md`). Deploy RFC 0006
 (`<repo>/docs/rfc/0006-production-gateway-on-a-non-kubernetes-target.md`, status Proposed) tracks the open question and
-describes the `up-local.sh` route set, widened overlay, and placeholder digests as local, not production; it does not
-describe Compose CD, and `<repo>/docs/delivery-topology.md` wins on that path. Report a request for production
+describes the `up-local.sh` route set, widened overlay, and placeholder digests as local, not production; a term search
+finds no mention of Compose CD in it, and `<repo>/docs/delivery-topology.md` wins on that path. Report a request for production
 artifacts as owner work.
 
 ## Open items
