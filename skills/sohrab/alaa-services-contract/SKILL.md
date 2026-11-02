@@ -20,8 +20,7 @@ judgment cannot be debugged. Exact detail lives in `references/`; this file rout
   (2) the repo's own `AGENTS.md` or a repo-owned contract document states the opposite rule, so the owner
   must settle which wins; (3) convergence requires an edit in a second repository outside the current
   task's scope. In those three, stop at the boundary, state the conflicting rule and both file paths, and
-  change nothing else. In every other case, converge. A CI gap under the Milestone 1 exception is not a deviation:
-  [GitLab CI/CD baseline contract](references/15-deployment-and-runtime-contract.md#gitlab-cicd-baseline-contract).
+  change nothing else. In every other case, converge. A CI gap under the [Milestone 1 exception](references/15-deployment-and-runtime-contract.md#gitlab-cicd-baseline-contract) is not a deviation.
 - When this skill replaces a header, field, event, code, route, or helper, remove the old implementation in
   the same change. Anything a consumer can observe goes through the deprecation procedure in
   `references/22-failure-load-and-deprecation-contract.md` first.
