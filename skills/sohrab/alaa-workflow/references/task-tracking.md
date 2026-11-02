@@ -187,7 +187,7 @@ Beads unreachable before a plan exists selects `local` under `## Select before t
 
 A `beads` family that loses Beads mid-run keeps its store. Preserve existing evidence, record the outage in the checkpoint, create no local copy of a Beads-owned task, never convert issues to checkboxes, and never claim a failed update as saved. Pause claims, dispatch and closure that need Beads state; continue independent authorized work on tasks already claimed and read back, and reconcile through Beads when it returns.
 
-When `bd ping` fails, a failed heartbeat is an outage, not a lost claim. Continue only independent authorized work on a task already claimed and read back. Record the outage in the checkpoint. When Beads is available, re-read the issue. If another actor holds it or the lease expired, stop, report and wait. Never re-claim or take over automatically.
+When `bd ping` fails, a failed heartbeat is an outage, not a lost claim. Continue only independent authorized work on a task already claimed and read back. Record the outage in the checkpoint. When Beads is available, re-read the issue. If another actor holds it or the lease expired, stop, report and wait for the user's instruction. Never re-claim or take over automatically.
 
 With no claimed task, a `beads` family waits for the hub. The user may instead name one task as unclaimed and choose to proceed on it. Record that statement in the checkpoint as unverified and create no local copy of the task. When Beads is available, read the issue back. If another actor holds it, stop and report the collision. If it is unassigned, claim it with `--claim` before more work.
 

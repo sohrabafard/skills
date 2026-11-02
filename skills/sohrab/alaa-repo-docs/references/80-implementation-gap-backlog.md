@@ -7,7 +7,7 @@ This file contains rules for producing a `remaining-task.md` in a target reposit
 backlog items of its own, and none are ever added here: the backlog lives in the repository the
 task is about.
 
-`remaining-task.md` is a documentation-gap report. It owns no task state. When the target repository is Beads-bound, register each item as an issue under `/alaa-workflow` `references/task-tracking.md`. When Beads is unavailable, park the item in the checkpoint's `Pending Beads reconciliation` list when a workflow checkpoint exists (`/alaa-workflow` `references/task-tracking.md` `## Outage and uncertain writes`); otherwise keep it in the report, marked unregistered, and register it at the next availability test (`/alaa-workflow` `references/task-tracking.md` `## Select before tracking-dependent work`). A parked item stays in the report until registered.
+`remaining-task.md` is a documentation-gap report. It owns no task state. When the target repository is Beads-bound, register each item as an issue under `/alaa-workflow` `references/task-tracking.md`. When Beads is unavailable, park the item in the checkpoint's `Pending Beads reconciliation` list when a workflow checkpoint exists (`/alaa-workflow` `references/task-tracking.md` `## Outage and uncertain writes`); otherwise keep it in the report, marked unregistered, and register it at the next availability test or the next refresh of the report, whichever comes first (`/alaa-workflow` `references/task-tracking.md` `## Select before tracking-dependent work`). A parked item stays in the report until registered.
 
 ## When to create or refresh `remaining-task.md`
 
