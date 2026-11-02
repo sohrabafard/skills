@@ -22,13 +22,13 @@ Under Codex, read each `/name` skill reference in this block as `$name`.
 
 Before planning or executing tracked work, and after compaction or session restart:
 
-1. Read `.agents/skills/beads/SKILL.md` unless its full instructions remain in context; hook output is not a substitute. If missing, report it. Beads is then unavailable; apply the store-selection rule above.
+1. Read `.agents/skills/beads/SKILL.md` unless its full instructions remain in context; hook output is not a substitute. If missing, report it. Then follow `/alaa-workflow` `references/task-tracking.md` `## Select before tracking-dependent work` to decide whether Beads is available.
 2. Before issuing other Beads commands, run `bd where` with the configured `BEADS_DIR` and verify the expected workspace. Recheck after workspace or connection changes. On failure or mismatch, report it. Beads is then unavailable; apply the store-selection rule above. Never initialize another database or silently change the connection.
 3. Reuse current hook-injected `bd prime` context; run it manually only if missing or stale.
 4. Before Beads mutations, claims, ownership comparisons, resume or transfer, load `/alaa-workflow` `references/task-tracking.md` `## Agent identity and ownership`. It owns actor allocation, explicit mutation identity, guarded updates, transfer and closure coordination; its actor rules override actorless upstream examples. If that file cannot be loaded, stop the dependent Beads mutation. Keep the assigned actor in the existing dispatch or admitted handoff.
 5. When resuming, read the active issue and linked plan/checkpoint/handoff. Check worktree state, scope, ownership, and blockers before continuing. A conversation summary or `bd prime` cannot replace task-state recovery. Resolve an ambiguous active task before implementation.
 
-Batch `bd` mutations in one script only when every command passes `--actor`, the script runs with `set -euo pipefail`, prints each command's result, and stops at the first failure; read back changed issues afterwards. Add no per-command environment overrides.
+Pass every global flag that `/alaa-workflow` `references/task-tracking.md` `## Beads capabilities in use` requires. Batch `bd` mutations in one script only when every command passes `--actor`, the script runs with `set -euo pipefail`, prints each command's result, and stops at the first failure; read back changed issues afterwards. Add no per-command environment overrides.
 
 ### Scope and issue lifecycle
 
