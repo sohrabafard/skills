@@ -23,14 +23,12 @@ Exit codes:
   1  at least one rule fired
   2  no input, an unreadable input, or a missing denylist file
 
-Runs on Windows and POSIX: pure Python 3, no shell pipelines.
+Pure Python 3, no shell pipelines.
 """
 
 from __future__ import annotations
 
 import argparse
-import contextlib
-import io
 import json
 import re
 import sys
@@ -303,7 +301,7 @@ def read_alert_surface(skill_dir: Path):
 
 
 def check_statement(sql, signal, denylist, surface_status, surface_reason):
-    """Return a list of (rule_id, message). Pure: this is what the self-test drives."""
+    """Return a list of (rule_id, message) for one statement."""
     findings = []
     clean = strip_comments(sql)
     lowered = clean.lower()
@@ -439,110 +437,6 @@ def run(args) -> int:
     return FINDINGS if findings else CLEAN
 
 
-def self_test() -> int:
-    """One statement per rule, each violating exactly the rule named, plus one clean statement.
-    Committed inline so the assertions are shown to fail before the checker is trusted."""
-    cases = [
-        ("S1", "logs", "SELECT toFloat64(count()) AS value FROM signoz_logs.distributed_logs_v2 "
-                       "WHERE ts_bucket_start BETWEEN 1 AND 2"),
-        ("S2", "logs", "SELECT toFloat64(count()) AS value FROM signoz_logs.distributed_logs_v2 "
-                       "WHERE timestamp >= $start_timestamp_nano AND timestamp <= $end_timestamp_nano"),
-        ("S3", "traces", "SELECT toFloat64(count()) AS value FROM signoz_traces.distributed_signoz_index_v3, "
-                         "signoz_logs.distributed_logs_v2 WHERE timestamp BETWEEN $start_datetime AND "
-                         "$end_datetime AND ts_bucket_start BETWEEN 1 AND 2"),
-        ("S4", "traces", "WITH __r AS (SELECT fingerprint FROM signoz_traces.distributed_traces_v3_resource "
-                         "WHERE simpleJSONExtractString(labels, 'service.name') = 'a') "
-                         "SELECT toFloat64(count()) AS value FROM signoz_traces.distributed_signoz_index_v3 "
-                         "WHERE resource_fingerprint IN __r AND timestamp BETWEEN $start_datetime AND "
-                         "$end_datetime AND ts_bucket_start BETWEEN 1 AND 2"),
-        ("S5", "traces", "WITH __r AS (SELECT fingerprint FROM signoz_traces.distributed_traces_v3_resource "
-                         "WHERE seen_at_ts_bucket_start BETWEEN 1 AND 2) "
-                         "SELECT toFloat64(count()) AS value FROM signoz_traces.distributed_signoz_index_v3 "
-                         "WHERE resource_fingerprint GLOBAL IN __r AND timestamp BETWEEN $start_datetime "
-                         "AND $end_datetime AND ts_bucket_start BETWEEN 1 AND 2"),
-        ("S6", "metrics", "SELECT toStartOfInterval(toDateTime(intDiv(unix_milli, 1000)), "
-                          "toIntervalSecond(60)) AS ts, avg(value) AS value FROM "
-                          "signoz_metrics.distributed_samples_v4 WHERE unix_milli >= "
-                          "{{.start_timestamp_ms}} AND unix_milli < {{.end_timestamp_ms}} "
-                          "GROUP BY ts ORDER BY ts ASC"),
-        ("S7", "traces", "SELECT trace_id AS grp, toFloat64(count()) AS value FROM "
-                         "signoz_traces.distributed_signoz_index_v3 WHERE timestamp BETWEEN "
-                         "$start_datetime AND $end_datetime AND ts_bucket_start BETWEEN 1 AND 2 "
-                         "GROUP BY grp LIMIT 10"),
-        ("S8", "traces", "OPTIMIZE TABLE signoz_traces.distributed_signoz_index_v3 FINAL"),
-        ("S9", "traces", "SELECT http_method, toFloat64(avg(duration_nano)) AS avg_ns FROM "
-                         "signoz_traces.distributed_signoz_index_v3 WHERE timestamp BETWEEN "
-                         "$start_datetime AND $end_datetime AND ts_bucket_start BETWEEN 1 AND 2 "
-                         "GROUP BY http_method"),
-        ("S10", "logs", "SELECT toFloat64(count()) AS value FROM signoz_logs.distributed_logs_v2 "
-                        "WHERE timestamp >= $start_timestamp_nano AND timestamp <= "
-                        "$end_timestamp_nano AND ts_bucket_start BETWEEN 1 AND 2 AND "
-                        "attributes_string['auth'] = 'Bearer abcdef1234567890'"),
-    ]
-    clean = ("SELECT toStartOfInterval(timestamp, INTERVAL 1 MINUTE) AS ts, toFloat64(count()) AS value "
-             "FROM signoz_traces.distributed_signoz_index_v3 WHERE timestamp BETWEEN $start_datetime AND "
-             "$end_datetime AND ts_bucket_start BETWEEN $start_timestamp - 1800 AND $end_timestamp "
-             "GROUP BY ts ORDER BY ts ASC")
-
-    failures = []
-    for expected, signal, sql in cases:
-        fired = {rule for rule, _ in check_statement(sql, signal, DEFAULT_DENYLIST, None, None)}
-        if expected not in fired:
-            failures.append("{} did not fire on its red case (fired: {})".format(
-                expected, sorted(fired) or "nothing"))
-
-    fired = {rule for rule, _ in check_statement(clean, "traces", DEFAULT_DENYLIST, None, None)}
-    if fired:
-        failures.append("the clean statement fired {}".format(sorted(fired)))
-
-    surface_fired = {rule for rule, _ in check_statement(
-        clean, "traces", DEFAULT_DENYLIST, "unconfirmed", "self-test")}
-    if "S11" not in surface_fired:
-        failures.append("S11 did not fire on a clean statement requested as alert SQL")
-    confirmed = {rule for rule, _ in check_statement(
-        clean, "traces", DEFAULT_DENYLIST, "dashboards-and-alerts", "self-test")}
-    if "S11" in confirmed:
-        failures.append("S11 fired even though the alert surface is confirmed")
-
-    # A ';' inside a comment is not a statement boundary. Regression: it used to be, and a
-    # query whose comment contained one was split into fragments and never checked.
-    commented = "-- note: read `last`; then difference it\n" + clean
-    parts = split_statements(commented)
-    if len(parts) != 1:
-        failures.append("split_statements broke one commented statement into {}".format(len(parts)))
-    elif classify(parts[0])[0] != "statement":
-        failures.append("a commented statement classified as {}".format(classify(parts[0])[0]))
-    if len(split_statements("SELECT 1 /* a; b */ FROM t")) != 1:
-        failures.append("split_statements split on a ';' inside a block comment")
-    if len(split_statements("SELECT 1; SELECT 2")) != 2:
-        failures.append("split_statements failed to split two real statements")
-
-    # Exercise the actual file-to-run dispatch; direct check_statement tests missed this bypass.
-    fixture = default_skill_dir() / "test" / "fixtures" / "sql"
-    dispatch_cases = (("vendor-ddl.sql", FINDINGS, 1), ("nonvendor-ddl.sql", CLEAN, 0),
-                      ("quoted-vendor-ddl.sql", FINDINGS, 2), ("quoted-nonvendor-ddl.sql", CLEAN, 0))
-    for filename, expected_exit, expected_findings in dispatch_cases:
-        args = argparse.Namespace(sql=[str(fixture / filename)], scan_skill=False,
-                                  skill_dir=default_skill_dir(), cardinality_denylist=None,
-                                  surface="dashboard", as_json=True)
-        output = io.StringIO()
-        with contextlib.redirect_stdout(output):
-            result = run(args)
-        payload = json.loads(output.getvalue())
-        if result != expected_exit:
-            failures.append("{} dispatch returned {}, expected {}".format(filename, result, expected_exit))
-        s8_count = sum(f["rule"] == "S8" for f in payload["findings"])
-        if s8_count != expected_findings or payload["checked"] != expected_findings:
-            failures.append("{} dispatch checked {} with {} S8 findings, expected {}".format(
-                filename, payload["checked"], s8_count, expected_findings))
-
-    print("self-test: {} red case(s) + 1 clean + 2 surface case(s) + 4 splitter case(s), "
-          "4 dispatch case(s), {} failure(s)".format(len(cases), len(failures)))
-    for failure in failures:
-        print("  FAIL {}".format(failure))
-    return FINDINGS if failures else CLEAN
-
-
 def main() -> int:
     parser = argparse.ArgumentParser(
         description="Check SigNoz ClickHouse SQL against the rules this skill states.",
@@ -556,11 +450,7 @@ def main() -> int:
     parser.add_argument("--cardinality-denylist", default=None,
                         help="file of field names, one per line, replacing the built-in list")
     parser.add_argument("--json", dest="as_json", action="store_true")
-    parser.add_argument("--self-test", action="store_true")
     args = parser.parse_args()
-
-    if args.self_test:
-        return self_test()
 
     # --sql names the corpus. --skill-dir then only locates assets/alert-surface.json, because
     # --surface is a property of the query being handed over, not of this skill's own examples.

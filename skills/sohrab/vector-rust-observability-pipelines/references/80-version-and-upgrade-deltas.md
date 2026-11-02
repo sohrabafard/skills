@@ -48,8 +48,7 @@ redirected to [vdev-v0.3.24](https://github.com/vectordotdev/vector/releases/tag
 the tag of the `vdev` developer tool that lives in the same repository, not a
 Vector release. A resolver that trusts it reports the wrong product, and every version
 comparison downstream is then wrong in the direction that looks safe.
-`scripts/check-upstream-version.mjs --self-test` asserts this trap is rejected,
-using the committed fixture `assets/fixtures/upstream-releases.sample.json`.
+`scripts/check-upstream-version.mjs` rejects `vdev-*` tags.
 
 Resolve chart releases separately with the `vector-X.Y.Z` pattern and the same
 publication filters, then read `Chart.yaml` at that released tag. Neither a raw

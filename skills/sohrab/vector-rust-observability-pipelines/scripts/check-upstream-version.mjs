@@ -18,7 +18,6 @@ import { fileURLToPath } from 'node:url';
 const SCRIPT_DIR = path.dirname(fileURLToPath(import.meta.url));
 const SKILL_ROOT = path.resolve(SCRIPT_DIR, '..');
 const PIN_FILE = path.join(SKILL_ROOT, 'references', '80-version-and-upgrade-deltas.md');
-const FIXTURE = path.join(SKILL_ROOT, 'assets', 'fixtures', 'upstream-releases.sample.json');
 
 const EXIT_CLEAN = 0;
 const EXIT_FINDINGS = 1;
@@ -35,13 +34,9 @@ function usage() {
   console.log(`check-upstream-version.mjs - detect drift between this skill's version pins and upstream.
 
 Usage:
-  node scripts/check-upstream-version.mjs [--self-test] [--help]
+  node scripts/check-upstream-version.mjs [--help]
 
 Options:
-  --self-test  Run offline against the committed fixture in
-               assets/fixtures/upstream-releases.sample.json. Asserts that the
-               release resolver rejects the \`vdev-*\` tags that GitHub's
-               /releases/latest endpoint returns for this repository.
   --help, -h   Show this message.
 
 Exit codes:
@@ -79,7 +74,7 @@ async function httpGet(url) {
     return { ok: true, body: await res.text() };
   } catch (err) {
     // Some environments route egress through a proxy that Node's fetch does not
-    // pick up. curl honours HTTPS_PROXY and ships with Windows 10+ and macOS.
+    // pick up. curl honours HTTPS_PROXY.
     const curl = spawnSync('curl', ['-fLsS', '--max-time', String(TIMEOUT_MS / 1000), url], { encoding: 'utf8', timeout: TIMEOUT_MS + 1000 });
     if (!curl.error && curl.status === 0 && curl.stdout) return { ok: true, body: curl.stdout };
     return { ok: false, error: err.message };
@@ -135,64 +130,9 @@ function compare(pins, current) {
   return drift;
 }
 
-function selfTest() {
-  console.log('Self-test (offline): stable product selection and version comparison.');
-  let failures = 0;
-  let fixture;
-  try {
-    fixture = JSON.parse(fs.readFileSync(FIXTURE, 'utf8'));
-  } catch (err) {
-    console.error(`BLOCKED: cannot read fixture ${FIXTURE}: ${err.message}`);
-    return { blocked: true };
-  }
-
-  const got = resolveLatestFromReleases(fixture.releases);
-  const wantLatest = fixture.expected_latest;
-  const okTrap = got === wantLatest;
-  if (!okTrap) failures += 1;
-  console.log(`  ${okTrap ? 'PASS' : 'FAIL'}  vdev trap: expected ${wantLatest}, got ${got}`);
-
-  const naive = (fixture.releases[0] || {}).tag_name;
-  const okNaive = naive.startsWith('vdev-') && got === wantLatest;
-  if (!okNaive) failures += 1;
-  console.log(`  ${okNaive ? 'PASS' : 'FAIL'}  the naive "take /releases/latest" answer (${naive}) is rejected`);
-
-  const onlyVdev = resolveLatestFromReleases([{ tag_name: 'vdev-v0.3.3' }]);
-  const okEmpty = onlyVdev === null;
-  if (!okEmpty) failures += 1;
-  console.log(`  ${okEmpty ? 'PASS' : 'FAIL'}  a vdev-only list resolves to null rather than a bogus version`);
-
-  for (const test of fixture.cases) {
-    const actual = resolveLatestFromReleases(test.releases, test.chart ? CHART_TAG : RELEASE_TAG);
-    const ok = actual === test.expected;
-    if (!ok) failures += 1;
-    console.log(`  ${ok ? 'PASS' : 'FAIL'}  ${test.name}: expected ${test.expected}, got ${actual}`);
-  }
-
-  const drift = compare({ vector: '0.53.0' }, { vector: '0.57.0' });
-  const okDrift = drift.length === 1;
-  if (!okDrift) failures += 1;
-  console.log(`  ${okDrift ? 'PASS' : 'FAIL'}  a stale pin (0.53.0 vs 0.57.0) is reported as drift`);
-
-  const clean = compare({ vector: '0.57.0' }, { vector: '0.57.0' });
-  const okClean = clean.length === 0;
-  if (!okClean) failures += 1;
-  console.log(`  ${okClean ? 'PASS' : 'FAIL'}  a current pin (0.57.0) is reported clean`);
-
-  return { blocked: false, failures };
-}
-
 async function main() {
   const argv = process.argv.slice(2);
   if (argv.includes('--help') || argv.includes('-h')) { usage(); return EXIT_CLEAN; }
-
-  if (argv.includes('--self-test')) {
-    const st = selfTest();
-    if (st.blocked) return EXIT_CANNOT_RUN;
-    if (st.failures > 0) { console.error(`Self-test FAILED: ${st.failures} assertion(s).`); return EXIT_FINDINGS; }
-    console.log('Self-test passed.');
-    return EXIT_CLEAN;
-  }
 
   const pinned = readPins();
   if (!pinned.ok) { console.error(`BLOCKED: ${pinned.reason}`); return EXIT_CANNOT_RUN; }

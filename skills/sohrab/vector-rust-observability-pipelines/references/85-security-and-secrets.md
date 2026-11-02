@@ -177,7 +177,6 @@ URI templates inside the host or immediately adjacent without `/` are now reject
 at build time. Use a static, approved host and a literal path separator, for example
 `https://ingest.example.com/events/{{ route }}`. A static hostname alone is not a
 path allowlist: validate event-derived routing values and keep confinement enabled.
-The versioned authority red fixture in `assets/fixtures/v0.58/` catches this case.
 
 ## New-release credential and transport regression cases
 

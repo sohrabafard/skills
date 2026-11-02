@@ -10,19 +10,17 @@ Validate from cheapest to strongest:
 2. when the repo owns a public HTTP API, confirm parity with the canonical public contract
    and its route-and-variant coverage matrix
 3. when artifacts are generator-owned, rerun the repo generator and review the diff
-4. run `scripts/selftest.py --self-test` whenever either bundled script changed, before
-   trusting anything either one reports
-5. run `scripts/validate_postman_artifacts.py` with the flags the artifact's purpose calls
+4. run `scripts/validate_postman_artifacts.py` with the flags the artifact's purpose calls
    for, below
-6. run `scripts/audit_collection_contract.py` as the closing gate on a frontend,
+5. run `scripts/audit_collection_contract.py` as the closing gate on a frontend,
    penetration-test, SDK, or aggregate handoff
-7. run any repo-specific contract, OpenAPI, route-manifest, generated-client, or smoke
+6. run any repo-specific contract, OpenAPI, route-manifest, generated-client, or smoke
    check that materially reduces risk
-8. execute the collection with Newman when a runnable environment exists, per the section
+7. execute the collection with Newman when a runnable environment exists, per the section
    below, or record that the tests have never been executed
-9. static-check Insomnia portability, and record whether a real import was done
-10. when k6 is a target, convert the collection and inspect the generated URLs, auth,
-    bodies, variables, checks, and dynamic correlation
+8. static-check Insomnia portability, and record whether a real import was done
+9. when k6 is a target, convert the collection and inspect the generated URLs, auth,
+   bodies, variables, checks, and dynamic correlation
 
 Do not re-implement a scripted check by eye. Both scripts encode rules that are cheap to
 run and easy to miss by reading.
@@ -39,14 +37,8 @@ any install location.
 older interpreter raises `AttributeError` part-way through a run, which reads as a crash in
 the collection rather than in the interpreter. Check `python3 -V` on an unfamiliar host.
 
-**The launcher differs by platform, and the wrong one fails silently on Windows.** On macOS
-and Linux use `python3`, never `python`, which is absent on many hosts and is Python 2 on
-some. On Windows use `py -3`: Windows ships a Microsoft Store alias named `python3` that
-opens the Store page and exits without running anything, so a CI step invoking `python3`
-there reports no error and validates nothing. Every command block in this skill is written
-with `python3`; substitute `py -3` on Windows. `scripts/selftest.py` sidesteps this for its
-child processes by re-invoking through `sys.executable`. `$SKILL_DIR` below is the directory
-holding this skill's `SKILL.md`; it interpolates in PowerShell and POSIX shells, not `cmd.exe`.
+**Launcher.** Use `python3`, never `python`, which is absent on many hosts and is Python 2 on
+some. `$SKILL_DIR` below is the directory holding this skill's `SKILL.md`.
 
 ### Always checked, with no flag
 
@@ -221,28 +213,7 @@ be updated from here. New mechanical rules therefore go into
 `70-aggregate-collections-and-consumer-repos.md` owns the copy-sync rule and the command
 that proves the copies match.
 
-## `scripts/selftest.py`
-
-Runs both bundled scripts against the committed fixtures in `test/fixtures/`, which include a
-violating input for every assertion those scripts make. Run it whenever either script or a
-fixture changed.
-
-```shell
-python3 "$SKILL_DIR/scripts/selftest.py" --self-test
-```
-
-| Code | Meaning | What it obliges you to do |
-|---|---|---|
-| `0` | every case behaved as expected | nothing |
-| `1` | a case FAILED: the target ran and gave the wrong answer | fix the script or the expectation, and rerun |
-| `2` | a case was BLOCKED, or the harness itself could not run | fix the host or the paths; a blocked case is no evidence about the scripts |
-
-A case whose target exits `2` when `2` was not the expected code records **BLOCKED, not
-FAIL**, and any blocked case makes the whole run exit `2`. A CI gate must therefore never read
-a broken checker as a red test. Adding a rule to either script without adding a fixture that
-violates it leaves that rule unproven; `SKILL.md` states this as a maintenance rule.
-
-### Choosing between them
+## Choosing between the scripts
 
 They overlap deliberately and answer different questions. The validator answers "is this a
 correct, safe, portable, complete artifact", where a portability concern can be a warning

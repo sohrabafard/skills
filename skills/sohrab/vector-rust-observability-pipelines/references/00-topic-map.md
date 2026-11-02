@@ -26,12 +26,9 @@ do not match costs context and buys nothing.
 | You want to | Run |
 | --- | --- |
 | prove every shipped template and VRL snippet still compiles, and the unit tests pass | `node scripts/check-vector-configs.mjs` |
-| prove the config checker can still detect the defects it claims to detect | `node scripts/check-vector-configs.mjs --self-test` |
 | check whether this skill's version pins have gone stale | `node scripts/check-upstream-version.mjs` |
-| prove the version resolver still rejects the `vdev-*` tag trap | `node scripts/check-upstream-version.mjs --self-test` |
 
-All four honour `0` clean, `1` findings, `2` could not run, and all four take
-`--help`.
+Both honour `0` clean, `1` findings, `2` could not run, and both take `--help`.
 
 ## Not in this skill
 

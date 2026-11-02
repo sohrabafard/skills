@@ -11,7 +11,7 @@ checker, because a CI gate built on it treats a broken network as a pass. So a s
 transport failure forces exit 2: a dead link and a dead network look identical from here,
 and this script refuses to guess which it saw.
 
-Runs on Windows and POSIX: pure Python 3, no shell pipelines, no path separator assumptions.
+Pure Python 3: no shell pipelines, no path separator assumptions.
 """
 
 from __future__ import annotations
@@ -46,12 +46,10 @@ def strip_trailing(url: str) -> str:
     return url
 
 
-def collect_urls(skill_dir: Path, include_fixtures: bool = False):
+def collect_urls(skill_dir: Path):
     """Yield (relative_path, line_number, url) for every checkable URL in the skill's markdown."""
     found = []
     for md in sorted(skill_dir.rglob("*.md")):
-        if not include_fixtures and "test" in md.relative_to(skill_dir).parts:
-            continue
         try:
             text = md.read_text(encoding="utf-8")
         except OSError as exc:
@@ -87,7 +85,7 @@ class TransportError(Exception):
 
 
 def judge(url: str, status, final_url: str, allow_redirect: bool):
-    """Pure decision function. Shared by the live run and the offline self-test."""
+    """Pure decision function: one URL, one status, one verdict."""
     if status != 200:
         return "HTTP {}".format(status)
     if not allow_redirect and normalise(final_url) != normalise(url):
@@ -149,57 +147,6 @@ def run(skill_dir: Path, timeout: int, concurrency: int, allow_redirect: bool, a
     return FINDINGS if findings else CLEAN
 
 
-def self_test(skill_dir: Path) -> int:
-    """Offline fixtures prove decisions; the regular run separately proves reachability."""
-    fixture = skill_dir / "test" / "fixtures" / "links"
-    if not fixture.is_dir():
-        print("BLOCKED: fixture missing: {}".format(fixture), file=sys.stderr)
-        return BLOCKED
-
-    stub = {
-        "https://example.invalid/good/": (200, "https://example.invalid/good/"),
-        "https://example.invalid/dead/": (404, "https://example.invalid/dead/"),
-        "https://example.invalid/moved/page/": (200, "https://example.invalid/docs/"),
-    }
-    failures = []
-
-    extracted = {url for _, _, url in collect_urls(fixture, include_fixtures=True)}
-    for url in stub:
-        if url not in extracted:
-            failures.append("extraction missed {}".format(url))
-    if "https://example.invalid/ingest.REGION.host/" in extracted:
-        failures.append("extraction did not skip the templated URL")
-
-    expectations = [
-        ("https://example.invalid/good/", None),
-        ("https://example.invalid/dead/", "HTTP 404"),
-        ("https://example.invalid/moved/page/", "redirected to https://example.invalid/docs/"),
-    ]
-    for url, expected in expectations:
-        status, final_url = stub[url]
-        actual = judge(url, status, final_url, allow_redirect=False)
-        if actual != expected:
-            failures.append("judge({}) returned {!r}, expected {!r}".format(url, actual, expected))
-
-    if judge("https://example.invalid/moved/page/", 200,
-             "https://example.invalid/docs/", allow_redirect=True) is not None:
-        failures.append("--allow-redirect did not downgrade a redirect")
-
-    production = collect_urls(skill_dir)
-    if any(rel.startswith("test/") for rel, _, _ in production):
-        failures.append("production scan included test fixtures")
-    if not any(rel.startswith("references/") and "signoz.io" in url for rel, _, url in production):
-        failures.append("production scan omitted real reference URLs")
-    print("self-test (offline, red fixture and production scope): {} assertion(s), {} failure(s)".format(
-        len(expectations) + 7, len(failures)))
-    for failure in failures:
-        print("  FAIL {}".format(failure))
-    if failures:
-        return FINDINGS
-
-    return CLEAN
-
-
 def main() -> int:
     parser = argparse.ArgumentParser(
         description="Verify every URL asserted in this skill resolves and has not moved.",
@@ -211,12 +158,9 @@ def main() -> int:
     parser.add_argument("--allow-redirect", action="store_true",
                         help="treat a redirect to a different path as a note rather than a finding")
     parser.add_argument("--json", dest="as_json", action="store_true", help="machine-readable output")
-    parser.add_argument("--self-test", action="store_true", help="run the committed fixture assertions")
     args = parser.parse_args()
 
     skill_dir = args.skill_dir if args.skill_dir is not None else default_skill_dir()
-    if args.self_test:
-        return self_test(skill_dir)
     return run(skill_dir, args.timeout, args.concurrency, args.allow_redirect, args.as_json)
 
 

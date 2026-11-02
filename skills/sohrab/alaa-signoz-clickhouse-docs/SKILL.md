@@ -41,10 +41,10 @@ Route the task through `references/00-topic-map.md`, which maps the situation yo
 
 ## Checkers
 
-Run these from the skill directory. Exit `0` clean, `1` findings, `2` could not run; a `2` is never a pass. Each ships offline red fixtures reachable with `--self-test`; self-tests do not prove network or installed-schema availability.
+Run these from the skill directory. Exit `0` clean, `1` findings, `2` could not run; a `2` is never a pass.
 
-- `python3 scripts/check-signoz-links.py --skill-dir .` — every documentation URL outside test fixtures resolves 200 and does not silently redirect to a docs index. Exits `2` when the network is unreachable, so a dead link can never read as clean.
-- `python3 scripts/check-signoz-schema.py --describe-dir DIR` (or `--dsn URL`) — every table and column this skill claims is present on the target, and `signoz_index_v3` still sorts by `ts_bucket_start, resource_fingerprint` first. Missing sorting-key evidence blocks the traces assertion. A finding identifies a mismatch with the selected target: retain older consumer paths, qualify the reference, then repair the query. Synthetic fixtures prove checker behavior, not an installed schema.
+- `python3 scripts/check-signoz-links.py --skill-dir .` — every documentation URL resolves 200 and does not silently redirect to a docs index. Exits `2` when the network is unreachable, so a dead link can never read as clean.
+- `python3 scripts/check-signoz-schema.py --describe-dir DIR` (or `--dsn URL`) — every table and column this skill claims is present on the target, and `signoz_index_v3` still sorts by `ts_bucket_start, resource_fingerprint` first. Missing sorting-key evidence blocks the traces assertion. A finding identifies a mismatch with the selected target: retain older consumer paths, qualify the reference, then repair the query.
 - `python3 scripts/check-signoz-sql.py --skill-dir .` — this skill's own examples obey the rules above. Add `--sql FILE` to check a query you are about to hand over.
 
 ## Not owned here

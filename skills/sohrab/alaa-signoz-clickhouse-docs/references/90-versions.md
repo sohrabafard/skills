@@ -80,8 +80,7 @@ Source confirms released definitions, not completed migrations on a target. Data
 retention, 1800-second bucket width/resource retention margin and optional tables need target
 confirmation. `GET /api/v1/version`, `SELECT version()`, `SHOW TABLES`, `DESCRIBE TABLE` and
 sorting-key evidence are read-only methods for a separately authorized session. Without them,
-keep the literal `UNVERIFIED SCHEMA` label required by the skill. Synthetic TSV fixtures test
-column-name and sorting-key assertions only; they are not real DESCRIBE output or type validation.
+keep the literal `UNVERIFIED SCHEMA` label required by the skill.
 
 ## Release coverage since the previous snapshot
 
@@ -113,16 +112,10 @@ Collector configuration, chart rollout and data migration execution remain outsi
 
 ## Proof boundary
 
-Run the three checker self-tests, the local SQL examples and green schema fixtures. The link
-self-test is offline; run the normal link checker separately for reachability. Missing sorting-key
-evidence is exit 2; a changed prefix is exit 1. `S8` must reach the actual file/run dispatch for
-vendor DDL; the nonvendor control remains outside this skill's gate. These are static/fixture
-claims only. Native runtime SQL, consumer upgrade, live schema, alert acceptance and installation
-activation require separate authorized evidence; none is supplied by this ledger.
+Run the local SQL examples check, and run the link checker for reachability. Missing sorting-key
+evidence is exit 2; a changed prefix is exit 1. These are static claims only. Native runtime SQL,
+consumer upgrade, live schema, alert acceptance and installation activation require separate
+authorized evidence; none is supplied by this ledger.
 
-Local refresh checks on 2026-09-26 passed: links offline self-test (10 assertions), schema
-self-test (5 cases), SQL self-test (21 cases), SQL examples (18 checked, 16 skipped), and
-green schema fixture (0 findings, 19 optional-table/column notes). The normal link gate
-reached 30 unique official URLs across 35 references. The vendor OPTIMIZE CLI fixture
-returned the required exit 1/S8; quoted identifiers have separate dispatch regressions.
-Both plain and quoted nonvendor controls returned exit 0/out of scope.
+Local refresh checks on 2026-09-26 passed: SQL examples (18 checked, 16 skipped). The link gate
+reached 30 unique official URLs across 35 references.

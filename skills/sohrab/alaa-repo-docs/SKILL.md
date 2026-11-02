@@ -69,7 +69,7 @@ If the repository already has a stronger equivalent document under another name,
 - Every statement is traceable to source code, config, migrations, schema, tests, current documents, or runtime artifacts. When a claim is uncertain, state the verification path instead of guessing.
 - Never weaken an existing strong document into a shorter, more generic one. A shorter parent is valid only when every moved fact survives in an informatively linked child under `references/15-document-size-and-clustering.md`.
 - Do not patch business logic in a documentation-only request.
-- Every link is repo-portable. Never emit a machine-local absolute path, a Windows backslash, or a `file://` link.
+- Every link is repo-portable. Never emit a machine-local absolute path, a backslash, or a `file://` link.
 - A committed example never carries a real secret, token, API key, `.env` value, production hostname, internal IP address, or real tenant or user identifier. Use placeholder values that are obviously placeholders, and route any doubt about whether a value is safe to publish to `/alaa-security-review`.
 - Validate repo-local links and heading anchors before finishing.
 - The repository `AGENTS.md` may rename or relocate any document above and may add required sections. It may not waive link validation, traceability, redaction, language preservation, or explicit authorization for localized companions.

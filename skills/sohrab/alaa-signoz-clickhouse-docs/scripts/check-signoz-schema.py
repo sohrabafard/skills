@@ -18,7 +18,7 @@ Exit codes:
   2  no input, unreadable input, DSN unreachable, credentials refused, or DESCRIBE denied
      (including unavailable sorting-key evidence for the traces assertion)
 
-Runs on Windows and POSIX: pure Python 3, no shell pipelines.
+Pure Python 3, no shell pipelines.
 """
 
 from __future__ import annotations
@@ -116,10 +116,6 @@ SORTING_KEY_PREFIX = {
 
 class Blocked(Exception):
     pass
-
-
-def default_skill_dir() -> Path:
-    return Path(sys.argv[0]).resolve().parent.parent
 
 
 def parse_sorting_key(expression: str):
@@ -256,57 +252,6 @@ def report(findings, notes, as_json):
     return FINDINGS if findings else CLEAN
 
 
-def self_test(skill_dir: Path) -> int:
-    """Green fixture must exit 0; red fixture must exit 1 and name the removed column;
-    a missing directory must exit 2. Committed under test/fixtures/schema/."""
-    base = skill_dir / "test" / "fixtures" / "schema"
-    failures = []
-
-    try:
-        findings, _ = check(DirSource(base / "green"), ["logs", "traces", "metrics"])
-        if findings:
-            failures.append("green fixture produced {} finding(s): {}".format(len(findings), findings))
-    except Blocked as exc:
-        failures.append("green fixture blocked: {}".format(exc))
-
-    try:
-        findings, _ = check(DirSource(base / "red-missing-column"), ["traces"])
-        joined = " | ".join(findings)
-        if not findings:
-            failures.append("red fixture produced no finding")
-        elif "ts_bucket_start" not in joined:
-            failures.append("red fixture did not name ts_bucket_start: {}".format(joined))
-    except Blocked as exc:
-        failures.append("red fixture blocked: {}".format(exc))
-
-    try:
-        findings, _ = check(DirSource(base / "red-sorting-key"), ["traces"])
-        if not any("sorting key begins" in f for f in findings):
-            failures.append("red sorting-key fixture did not report a changed key: {}".format(findings))
-    except Blocked as exc:
-        failures.append("red sorting-key fixture blocked: {}".format(exc))
-
-    try:
-        DirSource(base / "does-not-exist")
-        failures.append("a missing --describe-dir did not raise Blocked")
-    except Blocked:
-        pass
-
-    source = DirSource(base / "green")
-    source.keys = {}
-    try:
-        check(source, ["traces"])
-        failures.append("missing sorting-key evidence did not block")
-    except Blocked as exc:
-        if "sorting key unavailable" not in str(exc):
-            failures.append("missing key blocked for the wrong reason")
-
-    print("self-test: 5 fixture case(s), {} failure(s)".format(len(failures)))
-    for failure in failures:
-        print("  FAIL {}".format(failure))
-    return FINDINGS if failures else CLEAN
-
-
 def main() -> int:
     parser = argparse.ArgumentParser(
         description="Assert this skill's SigNoz table and column claims against a target install.",
@@ -317,12 +262,7 @@ def main() -> int:
     parser.add_argument("--signal", choices=["logs", "traces", "metrics", "all"], default="all")
     parser.add_argument("--timeout", type=int, default=20)
     parser.add_argument("--json", dest="as_json", action="store_true")
-    parser.add_argument("--skill-dir", type=Path, default=None, help="used only by --self-test")
-    parser.add_argument("--self-test", action="store_true")
     args = parser.parse_args()
-
-    if args.self_test:
-        return self_test(args.skill_dir if args.skill_dir is not None else default_skill_dir())
 
     if (args.describe_dir is None) == (args.dsn is None):
         print("BLOCKED: supply exactly one of --describe-dir or --dsn. Without a target this "

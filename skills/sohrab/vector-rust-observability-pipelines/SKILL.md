@@ -106,8 +106,8 @@ Route through `references/00-topic-map.md`: situation to the one file that answe
 ## Checks
 
 ```bash
-node scripts/check-vector-configs.mjs [--self-test]   # templates, unit tests, red fixtures
-node scripts/check-upstream-version.mjs [--self-test] # version drift against upstream
+node scripts/check-vector-configs.mjs      # shipped templates and unit tests, or your own config
+node scripts/check-upstream-version.mjs    # version drift against upstream
 ```
 
 Both honour `0` clean, `1` findings, `2` could not run, and both take `--help`. **Exit

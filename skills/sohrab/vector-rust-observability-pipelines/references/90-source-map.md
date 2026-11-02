@@ -84,11 +84,11 @@ production overflow and retains fatal flush I/O behavior. Tagged chart metadata
 replaces the earlier mutable-branch pairing. Runtime claims below remain historical.
 No installed Vector execution or consumer/deployment inventory was established.
 
-Official sources were readable through web retrieval. Local PowerShell HTTPS and
+Official sources were readable through web retrieval. Local HTTPS retrieval and
 the one curl retry failed TLS initialization; that environment failure is not a
 source-content result. The Node upstream checker independently completed and
 matched both release pins and chart appVersion. Config checks could not launch
-Vector (`spawnSync vector.exe EPERM`); no runtime result is claimed. A successful
+Vector (`EPERM`); no runtime result is claimed. A successful
 version check does not establish executable validation or deployment behavior.
 
 Two passes with different provenance. Claims taken from documentation rather than

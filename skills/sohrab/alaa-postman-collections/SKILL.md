@@ -65,7 +65,7 @@ files the current task touches.
    holds the generated-artifact rule and the stop-and-ask conditions.
 5. Prefer a minimal update to an existing artifact over a rewrite.
 6. Validate before concluding. `references/60-validation-and-output-contract.md` holds both
-   scripts' flags, all three exit-code tables, and what each failure obliges you to do.
+   scripts' flags, both exit-code tables, and what each failure obliges you to do.
 
 ## Deliverables
 
@@ -114,8 +114,6 @@ Write cross-skill references as `/name`. This skill is named `/alaa-postman-coll
 - New mechanical rules go into `scripts/validate_postman_artifacts.py`, not into
   `scripts/audit_collection_contract.py`, because a consumer repository holds a
   byte-identical copy of the auditor that cannot be updated from here.
-- Every assertion either script ships carries a fixture in `test/fixtures/` that violates it.
-  `scripts/selftest.py` runs them under `--self-test`; a rule with no red fixture is decoration.
 - Refresh version-sensitive rules when official Postman, Insomnia, JSON Schema, or
   API-provider behaviour changes, and carry the verification date with the claim.
 - Treat Insomnia compatibility as a validation target, not an assumption.

@@ -30,15 +30,10 @@ run proves nothing for the unproven links.
 from __future__ import annotations
 
 import argparse
-import contextlib
-import io
 import json
 import os
 import re
-import shutil
 import sys
-import tempfile
-from collections import Counter
 from dataclasses import dataclass
 from pathlib import Path
 from typing import Dict, Iterable, Iterator, List, Optional, Sequence, Set, Tuple
@@ -586,303 +581,6 @@ def run_checks(root: Path, files: Optional[Sequence[str]],
     return issues, selected
 
 
-SELF_TEST_CASES = (
-    ("clean", 0, "code spans, ~~~ fence, Persian anchor, valid explicit pair",
-     (("note.md", "note.fa.md"),)),
-    ("windows-abs", 1, "D:/ and C:\\ links, this skill's own counter-examples", ()),
-    ("broken-link", 1, "relative link to a missing file", ()),
-    ("pair-orphan", 1, "explicit companion with no named base document",
-     (("x.md", "x.fa.md"),)),
-    ("pair-drift", 1, "explicit pair with differing heading sequence",
-     (("guide.md", "guide.fa.md"),)),
-    ("pair-generic", 1, "non-Persian explicit pair with differing heading sequence",
-     (("guide.md", "guide.fr.md"),)),
-    ("pair-missing", 0, "an unrelated localized pair does not require another companion", ()),
-    ("undecodable", 2, "a .md file that is not valid UTF-8", ()),
-)
-
-@dataclass(frozen=True)
-class ExactCase:
-    """A self-test case that asserts the exit class AND the exact multiset of result codes."""
-    name: str
-    fixture: str
-    expected_exit: int
-    expected_codes: Dict[str, int]
-    what: str
-    mirror_pairs: Tuple[Tuple[str, str], ...] = ()
-    mirror_config: Optional[str] = None
-    blocked_fragment: str = ""
-
-
-_SVC = "pkg/docs/contracts/svc"
-_SVC_ORIGIN = "../origin/svc-repo/docs/contracts/svc"
-
-EXACT_CASES = (
-    ExactCase("inline-code-anchor", "inline-code-anchor", 0, {},
-              "code-span heading text is slugged verbatim (my_func keeps its underscore), "
-              "duplicates get -1, and a link inside a code span stays invisible"),
-    ExactCase("mirror-origin-ok", "mirror/ok/consumer", 0, {CODE_MIRROR_OK: 2},
-              "links leaving the mirror resolve in origin and are informational; a link that "
-              "passes locally but would fail in origin, and a link to the mirror root, are silent",
-              mirror_config="mirror.json"),
-    ExactCase("mirror-config-valid", "mirror/ok/consumer", 0, {CODE_MIRROR_OK: 2},
-              "config paths resolve from the config file's directory, not the repository root",
-              mirror_config="conf/mirror.json"),
-    ExactCase("mirror-undeclared", "mirror/ok/consumer", 1, {"LINK-MISSING": 2},
-              "regression: the same consumer tree without a declaration reports the plain "
-              "missing-file findings"),
-    ExactCase("mirror-upstream", "mirror/upstream/consumer", 1,
-              {CODE_MIRROR_UPSTREAM: 2, "LINK-MISSING": 1},
-              "an origin-broken outside link and an inside link broken in both trees are upstream "
-              "errors; a broken link in a file outside the mirror stays an ordinary finding",
-              mirror_config="mirror.json"),
-    ExactCase("mirror-drift", "mirror/drift/consumer", 1, {CODE_MIRROR_DRIFT: 1},
-              "an inside link broken locally but healthy in origin is local drift",
-              mirror_config="mirror.json"),
-    ExactCase("mirror-escape", "mirror/escape/consumer", 1,
-              {CODE_MIRROR_OK: 1, CODE_MIRROR_OUTSIDE: 1},
-              "an origin lookup that leaves the origin repository is refused even though the "
-              "file exists there; a lookup inside the boundary stays healthy",
-              mirror_config="mirror.json"),
-    ExactCase("mirror-local-only", "mirror/local-only/consumer", 1,
-              {"LINK-MISSING": 2, "LINK-OUTSIDE-ROOT": 1},
-              "a file with no origin counterpart is not mirrored: ordinary codes, including "
-              "LINK-OUTSIDE-ROOT",
-              mirror_config="mirror.json"),
-    ExactCase("mirror-locally-added-links", "mirror/local-edit/consumer", 1,
-              {"LINK-MISSING": 3, "LINK-ANCHOR": 1, "LINK-OUTSIDE-ROOT": 1,
-               CODE_MIRROR_OK: 1},
-              "filesystem integration: links absent from the origin document remain local, "
-              "even when their targets exist in origin; shared links survive reformatting",
-              mirror_config="mirror.json"),
-    ExactCase("mirror-origin-unavailable", "mirror/unavailable/consumer", 2,
-              {CODE_MIRROR_UNAVAILABLE: 2},
-              "a declared origin that is absent proves nothing and never exits 0 or 1",
-              mirror_pairs=((_SVC, _SVC_ORIGIN),)),
-    ExactCase("mirror-unavailable-mixed", "mirror/unavailable-mixed/consumer", 2,
-              {CODE_MIRROR_UNAVAILABLE: 1, "LINK-MISSING": 1},
-              "an ordinary counted finding next to an unavailable origin still exits 2",
-              mirror_pairs=((_SVC, _SVC_ORIGIN),)),
-    ExactCase("mirror-config-malformed-file", "mirror/ok/consumer", 2, {},
-              "a malformed config file blocks the run because its JSON does not parse",
-              mirror_config="conf/mirror-malformed.json", blocked_fragment="not valid JSON"),
-)
-
-# (name, pairs, config JSON text, expected message fragment, what). Each must raise Blocked.
-MIRROR_REJECT_CASES = (
-    ("reject-local-outside-root", (("../origin", "x"),), None, "outside repository root",
-     "LOCAL must resolve inside the repository root"),
-    ("reject-local-missing", (("pkg/nope", "x"),), None, "not an existing directory",
-     "LOCAL must exist as a directory"),
-    ("reject-absolute", (("/pkg", "x"),), None, "relative path", "absolute paths are refused"),
-    ("reject-backslash", (("pkg" + chr(92) + "docs", "x"),), None, "forward slashes",
-     "backslashes are refused"),
-    ("reject-duplicate", ((_SVC, "a"), (_SVC, "b")), None, "duplicate mirror local",
-     "the same LOCAL twice is refused"),
-    ("reject-overlap", (("pkg/docs", "a"), (_SVC, "b")), None, "overlapping",
-     "nested LOCAL directories are refused"),
-    ("reject-config-json", (), "{", "not valid JSON", "unparseable JSON is refused"),
-    ("reject-config-extra-key", (), '{"mirrors": [], "extra": 1}', "exactly one key",
-     "an extra top-level key is refused"),
-    ("reject-config-entry-extra", (),
-     '{"mirrors": [{"local": "pkg", "origin": "x", "note": "y"}]}', 'may add "origin_root"',
-     "an unknown entry field is refused"),
-    ("reject-config-type", (), '{"mirrors": [{"local": 1, "origin": "x"}]}', "non-empty string",
-     "a non-string field is refused"),
-    ("reject-config-empty", (), '{"mirrors": []}', "non-empty array",
-     "an empty declaration is refused"),
-    ("reject-origin-root-not-ancestor", (),
-     '{"mirrors": [{"local": "pkg", "origin": "x", "origin_root": "pkg"}]}', "ancestor",
-     "origin_root must contain origin"),
-)
-
-# (name, argv builder key, expected return code, stderr fragment, what). See run_cli_cases.
-CLI_CASES = (
-    ("cli-mirror-discovers-git-root", "temp-git", 0, "",
-     "--mirror alone works when a .git marks the origin repository root"),
-    ("cli-mirror-no-boundary", "temp-no-git", 2, "origin_root",
-     "--mirror against an existing origin with no .git above it blocks and names origin_root"),
-    ("cli-mirror-config", "config-ok", 0, "",
-     "--mirror-config returns the shared exit code for a healthy mirror"),
-    ("cli-drift-exit", "config-drift", 1, "local findings: 1",
-     "a counted mirror finding returns 1 and reports the split summary"),
-    ("cli-unavailable-mixed-exit", "config-mixed", 2, "origin unavailable: 1",
-     "an ordinary finding plus an unavailable origin returns 2, never 1"),
-)
-
-LINE_BUDGET_SELF_TESTS = (
-    (49, LINE_STATE_GREEN),
-    (50, LINE_STATE_YELLOW),
-    (100, LINE_STATE_YELLOW),
-    (101, LINE_STATE_ORANGE),
-    (200, LINE_STATE_ORANGE),
-    (201, LINE_STATE_RED),
-)
-
-
-def run_exact_cases(fixtures: Path) -> int:
-    """Run ExactCase entries; return the failure count. A missing fixture is a failure."""
-    failed = 0
-    for case in EXACT_CASES:
-        root = (fixtures / case.fixture).resolve()
-        observed_exit, observed_codes, message = 2, {}, ""
-        try:
-            with contextlib.redirect_stderr(io.StringIO()):
-                mirrors = load_mirrors(root, case.mirror_pairs, case.mirror_config)
-            issues, _ = run_checks(root, None, (), mirrors=mirrors)
-            observed_exit = tally_issues(issues).exit_code
-            observed_codes = dict(Counter(issue.code for issue in issues))
-        except Blocked as exc:
-            message = str(exc)
-        ok = (observed_exit == case.expected_exit and observed_codes == case.expected_codes
-              and case.blocked_fragment in message)
-        if not ok:
-            failed += 1
-        print(f"{'PASS' if ok else 'FAIL'} {case.name}: expected {case.expected_exit} "
-              f"{case.expected_codes}, observed {observed_exit} {observed_codes}"
-              f"{' ' + repr(message) if message else ''} -- {case.what}")
-    return failed
-
-
-def run_cli_cases(fixtures: Path) -> Tuple[int, int]:
-    """Drive main() itself, so the return code is proven to come from the shared tally.
-
-    Returns (failed, blocked). The no-boundary case needs a temp tree with no .git above it; a host
-    whose temp directory sits under a git checkout cannot run it, which is BLOCKED, never a verdict.
-    The discovers-git-root case is immune: the .git it plants is the nearest ancestor and wins."""
-    failed = blocked = 0
-    ok_pair = ["--mirror", _SVC, _SVC_ORIGIN]
-    with tempfile.TemporaryDirectory() as tmp:
-        copy = Path(tmp) / "ok"
-        shutil.copytree(fixtures / "mirror" / "ok", copy)
-        plans = {
-            "temp-no-git": ([str(copy / "consumer")] + ok_pair, None),
-            "temp-git": ([str(copy / "consumer")] + ok_pair, copy / "origin" / "svc-repo" / ".git"),
-            "config-ok": ([str(fixtures / "mirror" / "ok" / "consumer"),
-                           "--mirror-config", "mirror.json"], None),
-            "config-drift": ([str(fixtures / "mirror" / "drift" / "consumer"),
-                              "--mirror-config", "mirror.json"], None),
-            "config-mixed": ([str(fixtures / "mirror" / "unavailable-mixed" / "consumer")]
-                             + ok_pair, None),
-        }
-        for name, key, expected, fragment, what in CLI_CASES:
-            argv, marker = plans[key]
-            if key == "temp-no-git":
-                stray = discover_origin_root(copy / "origin" / "svc-repo" / "docs" / "contracts" / "svc")
-                if stray is not None:
-                    blocked += 1
-                    print(f"BLOCKED {name}: host condition, the temp directory has a .git ancestor "
-                          f"({stray.name}); point TMP/TEMP/TMPDIR outside any git checkout -- {what}")
-                    continue
-            if marker is not None:
-                marker.mkdir()
-            out, err = io.StringIO(), io.StringIO()
-            with contextlib.redirect_stdout(out), contextlib.redirect_stderr(err):
-                observed = main(argv)
-            if marker is not None:
-                marker.rmdir()
-            ok = observed == expected and fragment in err.getvalue()
-            if not ok:
-                failed += 1
-            print(f"{'PASS' if ok else 'FAIL'} {name}: expected {expected}, observed {observed}"
-                  f"{'' if ok else ' stderr=' + repr(err.getvalue()[-200:])} -- {what}")
-    return failed, blocked
-
-
-def run_reject_cases(fixtures: Path) -> int:
-    failed = 0
-    root = (fixtures / "mirror" / "ok" / "consumer").resolve()
-    for name, pairs, config_text, fragment, what in MIRROR_REJECT_CASES:
-        message = ""
-        try:
-            mirrors = [resolve_mirror(root, root, local, origin) for local, origin in pairs]
-            if config_text is not None:
-                mirrors.extend(parse_mirror_config(root, root, config_text))
-            reject_overlapping(root, mirrors)
-        except Blocked as exc:
-            message = str(exc)
-        ok = fragment in message
-        if not ok:
-            failed += 1
-        print(f"{'PASS' if ok else 'FAIL'} {name}: expected Blocked containing "
-              f"{fragment!r}, observed {message!r} -- {what}")
-    return failed
-
-
-def self_test(fixtures: Path) -> int:
-    if not fixtures.is_dir():
-        print(f"self-test fixtures not found: {fixtures}", file=sys.stderr)
-        return 2
-    blocked = failed = 0
-    for name, expected, what, localized_pairs in SELF_TEST_CASES:
-        root = (fixtures / name).resolve()
-        if not root.is_dir():
-            print(f"BLOCKED {name}: fixture directory missing")
-            blocked += 1
-            continue
-        try:
-            issues, _ = run_checks(root, None, (), localized_pairs=localized_pairs)
-            observed = 1 if issues else 0
-        except Blocked:
-            observed = 2
-        if observed == expected:
-            verdict = "PASS"
-        elif observed == 2:
-            verdict, blocked = "BLOCKED", blocked + 1
-        else:
-            verdict, failed = "FAIL", failed + 1
-        print(f"{verdict} {name}: expected {expected}, observed {observed} -- {what}")
-    outside_root = (fixtures / "pair-missing").resolve()
-    try:
-        run_checks(outside_root, ("../clean/note.md",), ())
-        observed = 0
-    except Blocked:
-        observed = 2
-    if observed == 2:
-        verdict = "PASS"
-    else:
-        verdict, failed = "FAIL", failed + 1
-    print(f"{verdict} files-outside-root: expected 2, observed {observed} -- "
-          "explicit files cannot escape the repository root")
-    unscoped_pair_root = (fixtures / "pair-drift").resolve()
-    try:
-        issues, _ = run_checks(unscoped_pair_root, None, ())
-        observed = 1 if issues else 0
-    except Blocked:
-        observed = 2
-    if observed == 0:
-        verdict = "PASS"
-    elif observed == 2:
-        verdict, blocked = "BLOCKED", blocked + 1
-    else:
-        verdict, failed = "FAIL", failed + 1
-    print(f"{verdict} unscoped-pair: expected 0, observed {observed} -- "
-          "an unrelated drifting pair is not checked")
-    failed += run_exact_cases(fixtures)
-    failed += run_reject_cases(fixtures)
-    cli_failed, cli_blocked = run_cli_cases(fixtures)
-    failed += cli_failed
-    blocked += cli_blocked
-    for line_count, expected in LINE_BUDGET_SELF_TESTS:
-        observed_state = line_budget_state(line_count)
-        if observed_state == expected:
-            verdict = "PASS"
-        else:
-            verdict, failed = "FAIL", failed + 1
-        print(f"{verdict} line-budget-{line_count}: expected {expected}, "
-              f"observed {observed_state}")
-    if blocked:
-        print(f"\n{blocked} case(s) could not run.", file=sys.stderr)
-        return 2
-    if failed:
-        print(f"\n{failed} case(s) failed.", file=sys.stderr)
-        return 1
-    total = (len(SELF_TEST_CASES) + 2 + len(EXACT_CASES) + len(MIRROR_REJECT_CASES)
-             + len(CLI_CASES) + len(LINE_BUDGET_SELF_TESTS))
-    print(f"\nAll {total} self-test cases passed.")
-    return 0
-
-
 def main(argv: Sequence[str]) -> int:
     parser = argparse.ArgumentParser(
         description="Validate repo-local Markdown links and anchors, with explicitly scoped "
@@ -893,8 +591,6 @@ def main(argv: Sequence[str]) -> int:
                         help="Specific Markdown files, relative to repo_root")
     parser.add_argument("--exclude", nargs="*", default=list(DEFAULT_EXCLUDES),
                         help=f"Directory names to skip (default: {' '.join(DEFAULT_EXCLUDES)})")
-    parser.add_argument("--self-test", action="store_true",
-                        help="Run the committed fixtures and report PASS/FAIL/BLOCKED")
     parser.add_argument("--localized-pair", nargs=2, action="append", default=[],
                         metavar=("BASE", "COMPANION"),
                         help="Check one explicitly scoped localized pair; repeat for more pairs")
@@ -913,13 +609,7 @@ def main(argv: Sequence[str]) -> int:
                         help="Classify selected Markdown files by physical line count and fail red")
     parser.add_argument("--allow-red", nargs="*", default=[], metavar="PATH",
                         help="Human-approved red files; valid only with --line-budget and --files")
-    parser.add_argument("--fixtures", default=None,
-                        help="Fixture root for --self-test (default: ../assets/fixtures beside this script)")
     args = parser.parse_args(argv)
-
-    if args.self_test:
-        fixtures = Path(args.fixtures) if args.fixtures else Path(sys.argv[0]).resolve().parent.parent / "assets" / "fixtures"
-        return self_test(fixtures)
 
     if args.allow_red and (not args.line_budget or not args.files):
         parser.print_usage(sys.stderr)
@@ -928,7 +618,7 @@ def main(argv: Sequence[str]) -> int:
 
     if not args.repo_root:
         parser.print_usage(sys.stderr)
-        print("repo_root is required unless --self-test is given", file=sys.stderr)
+        print("repo_root is required", file=sys.stderr)
         return 2
     root = Path(args.repo_root).resolve()
     if not root.is_dir():

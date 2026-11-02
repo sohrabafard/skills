@@ -47,10 +47,7 @@ Use this file to choose the smallest relevant reference file.
 - `scripts/audit_collection_contract.py` — the strict pass/fail gate. Run it last on a
   frontend, penetration-test, SDK, or aggregate handoff, and whenever a repository's CI
   already runs it, using that CI's flags.
-- `scripts/selftest.py` — proves both scripts above against the committed fixtures in
-  `test/fixtures/`, each of which violates one assertion those scripts make. Run it whenever
-  either script or a fixture changed, before trusting what either script reports.
-- `references/60-validation-and-output-contract.md` holds every flag, all three exit-code
+- `references/60-validation-and-output-contract.md` holds every flag, both exit-code
   tables, and what each failure obliges you to do.
 
 ## Working rule

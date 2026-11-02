@@ -50,9 +50,6 @@ The wrong form is the more dangerous of the two defects, because it *looks* like
 timestamp defaulting. Fixing only the diagnostic — deleting the `??` — leaves
 events with no timestamp.
 
-`assets/fixtures/red-e651.yaml` is a committed fixture asserting the checker still
-catches this class.
-
 ## Constraints, not preferences
 
 "Keep programs short" is a preference an agent can satisfy while writing something

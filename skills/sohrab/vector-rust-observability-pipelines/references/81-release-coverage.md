@@ -30,7 +30,7 @@ it does not mean local runtime proof.
 | 13 | Kubernetes merged-line truncation | Same owner; file-level oversize still drops |
 | 14 | MQTT configured ALPN honored | `85-security-and-secrets.md`: authenticated egress regression cases |
 | 15 | Untagged-enum generated schema fixed | `50-validation-and-testing.md`: schema versus binary evidence |
-| 16 | No-environment validation catches confinement | `50-validation-and-testing.md`; existing confinement red fixture remains strict |
+| 16 | No-environment validation catches confinement | `50-validation-and-testing.md`; the strict gate remains required |
 | 17 | Hyphenated secret backend names resolve | `85-security-and-secrets.md`: retain portable non-hyphenated example |
 | 18 | dnstap `httpProtocol` restored | `82-capability-surface.md`: payload shape compatibility |
 | 19 | Loki label/metadata values no longer confined | `85-security-and-secrets.md`: exact field exceptions, keys/tenant remain confined |
@@ -52,7 +52,7 @@ it does not mean local runtime proof.
 | 35 | Disk writer progress notification ordering fixed | `30-buffers-acks-and-backpressure.md`: recovery matrix |
 | 36 | Integer histogram upper limits deserialize | `82-capability-surface.md`: payload shape compatibility |
 | 37 | GCP Stackdriver label templates unconfined | `85-security-and-secrets.md`: field-qualified exception |
-| 38 | HTTP source encoding removed | `80-version-and-upgrade-deltas.md`; `assets/fixtures/v0.58/` green/red encoding pair |
+| 38 | HTTP source encoding removed | `80-version-and-upgrade-deltas.md` |
 | 39 | Influx logs namespace removed | `80-version-and-upgrade-deltas.md`: preserve effective measurement |
 | 40 | Influx API version selector | `82-capability-surface.md`: optional now, future requirement unversioned |
 | 41 | Kafka application-payload decompression | `82-capability-surface.md`: before framing, distinct from broker compression |
@@ -69,7 +69,7 @@ it does not mean local runtime proof.
 | 52 | Sink endpoint validation and scheme default | `80-version-and-upgrade-deltas.md`; affected components below |
 | 53 | Optional source TLS handshake timeout | `85-security-and-secrets.md`: unset default still permits held slots |
 | 54 | TLS server name applies to hostname verification | Same owner: proxy certificate host remains separate |
-| 55 | URI authority templates rejected at build | Same owner; `assets/fixtures/v0.58/` red authority fixture |
+| 55 | URI authority templates rejected at build | Same owner |
 | 56 | Non-numeric URI port gives validation error | `50-validation-and-testing.md`: changed parser cases |
 | 57 | Split varint frame decoder corrected | Same owner: split-read regression case |
 | 58 | WebHDFS scheme-less endpoint becomes HTTPS | `80-version-and-upgrade-deltas.md`: explicit scheme migration |
@@ -89,6 +89,5 @@ sink (credentials/resources and consumer versions are unknown); no crash, disk-f
 network, timing or throughput harness (runtime unavailable and no live workload
 authorized); no claimed exactness or benchmark improvement from upstream fixes.
 The table maps those changes to selection/migration/testing instructions instead.
-Only the local configuration regressions and stable-release resolver receive new
-fixtures. Their runtime versus offline proof is stated in
-`50-validation-and-testing.md`; documentation coverage is not execution coverage.
+Runtime versus offline proof is stated in `50-validation-and-testing.md`;
+documentation coverage is not execution coverage.

@@ -157,9 +157,9 @@ reviewing a paired document does and does not oblige.
 
 - Every link must be repo-portable: valid after clone, valid in a GitHub or GitLab web viewer, and
   independent of the local machine path.
-- Never use a local filesystem absolute path such as `D:/...`, `C:\...`, `/home/...`, or
-  `file:///...` in generated Markdown.
-- Use POSIX-style separators only. Never use a Windows backslash in a link.
+- Never use a local filesystem absolute path in generated Markdown: a `/home/...` path, a
+  drive-letter path, or `file:///...`.
+- Use POSIX-style separators only. Never use a backslash in a link.
 - Prefer a relative link from the current document location, such as `./file.md`, `../file.md`, or
   `../../platform/openfga/model.fga`.
 - Before finalising, confirm the target exists in the repository, the relative path is correct from
@@ -169,9 +169,8 @@ reviewing a paired document does and does not oblige.
 - Correct: `OpenFGA model -> ../../platform/openfga/model.fga`;
   `Data architecture -> ./data-architecture.md#representative-request-walkthrough`;
   `platform/openfga/model.fga`.
-- Incorrect: `model.fga -> D:/repo/platform/openfga/model.fga`;
-  `model.fga -> C:\repo\platform\openfga\model.fga`;
-  `model.fga -> file:///D:/repo/...`.
+- Incorrect: `model.fga -> /home/user/repo/platform/openfga/model.fga`;
+  `model.fga -> file:///home/user/repo/...`.
 
 ## Documentation graph and internal linking rules
 
