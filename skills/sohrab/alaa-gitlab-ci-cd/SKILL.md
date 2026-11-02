@@ -1,6 +1,6 @@
 ---
 name: alaa-gitlab-ci-cd
-description: GitLab CI/CD pipeline generation, validation, review, and debugging for reusable CI components, runner configs, and container-build workflows for GitLab Runner shell and Kubernetes executors. Use when the task involves one or more `.gitlab-ci.yml` files, included CI files, CI components, GitLab Runner `config.toml`, Helm `values.yaml`, GitLab Kubernetes executor behavior, Docker or daemonless image builds, cache keys, artifact retention, variables or inputs, job routing via tags, pipeline security, or CI failure triage. Prefer it for both authoring and debugging. Do not use it for unrelated Kubernetes manifests, unrelated Dockerfiles, or non-GitLab CI systems, and do not use it to decide whether a check should block a pipeline; that belongs to the skill that owns the stack.
+description: GitLab CI/CD pipeline generation, validation, review, and debugging for reusable CI components, runner configs, and container-build workflows for GitLab Runner shell, Docker, and Kubernetes executors. Use when the task involves one or more `.gitlab-ci.yml` files, included CI files, CI components, GitLab Runner `config.toml`, Helm `values.yaml`, GitLab Docker or Kubernetes executor behavior, Docker or daemonless image builds, cache keys, artifact retention, variables or inputs, job routing via tags, pipeline security, or CI failure triage. Prefer it for both authoring and debugging. Do not use it for unrelated Kubernetes manifests, unrelated Dockerfiles, or non-GitLab CI systems, and do not use it to decide whether a check should block a pipeline; that belongs to the skill that owns the stack.
 ---
 
 Act like a production GitLab CI/CD specialist, not a generic YAML writer.
@@ -11,18 +11,15 @@ Act like a production GitLab CI/CD specialist, not a generic YAML writer.
 `rules:` and `needs:`, every expression of a cache key, artifact retention and
 `expire_in`, and the runner image reference — and **decides no gate**. Which
 checks must exist, what each asserts, and whether a non-zero exit blocks or
-informs belong to the skill that owns that stack: `/alaa-frontend-devops`
-(`$alaa-frontend-devops`) for a frontend repository, `/alaa-cicd-laravel-postgres`
-(`$alaa-cicd-laravel-postgres`) for a PHP or Laravel service. When a request asks
+informs belong to the skill that owns that stack: `/alaa-frontend-devops` for a frontend repository, `/alaa-cicd-laravel-postgres` for a PHP or Laravel service. When a request asks
 this skill to decide whether a check should block, name that owner and write the
 mechanism, not the verdict.
 
 Three consequences needed on every task: this skill writes how a timeout or a
-retry is expressed and never the value, which is `/alaa-reliability-sla`
-(`$alaa-reliability-sla`)'s; it writes the build job and never the image contents,
-which are `/alaa-docker-production` (`$alaa-docker-production`)'s; it ships the
+retry is expressed and never the value, which is `/alaa-reliability-sla`'s; it writes the build job and never the image contents,
+which are `/alaa-docker-production`'s; it ships the
 hardened form of a risky path and never the exception, which is
-`/alaa-security-review` (`$alaa-security-review`)'s.
+`/alaa-security-review`'s.
 `references/90-companion-boundary.md` holds the full table.
 
 ## Start fast
@@ -83,7 +80,11 @@ empty string and overwrites any predefined variable of that name. Open
 
 ## Runner rules
 
-The Kubernetes executor is the default. A shell runner is correct only where the
+Outside the Ala fleet the Kubernetes executor is the default. The Ala fleet runs
+Docker and Kubernetes executors, so read the target Runner's executor before
+writing a job; for each Ala Runner's executor, job image and tool limits, read
+`/alaa-services-contract` `references/16-infrastructure-services-and-delivery-artifacts.md`,
+section "Runner shapes and the CI job image". A shell runner is correct only where the
 host serves no other tenant, the runner is tagged so only the intended projects
 reach it, and the jobs that use it run on protected refs. `values.yaml` is YAML
 and the `runners.config` inside it is TOML. Open
@@ -165,7 +166,6 @@ findings agree. Describe a lane by the judgment it needs, not by a tier: decidin
 trade-offs across a pipeline needs the escalated lane; read-only inventory or
 mechanical validation does not.
 
-Take every model and reasoning-effort choice from `/alaa-prompting-guide`
-(`$alaa-prompting-guide`) `references/50-effort-and-thinking.md`, and name no
+Take every model and reasoning-effort choice from `/alaa-prompting-guide` `references/50-effort-and-thinking.md`, and name no
 model here, because a model name written into a skill goes stale silently and is
 copied forward because it looks authoritative.
