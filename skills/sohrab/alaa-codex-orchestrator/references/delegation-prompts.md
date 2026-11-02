@@ -25,7 +25,7 @@ Use the smallest applicable template. Replace placeholders with concrete reposit
 
 Every dispatch carries `<task_controls>` and `<return>`. Normalize omitted controls through `model-effort-policy.md` before recording and invoking the pair. Resolve task controls through `routing-matrix.md` and verify the actual invocation through `model-effort-policy.md`; this envelope records the choice and cannot set runtime controls by prose. Every role template below inherits this requirement.
 
-For Beads-bound dispatches, resolve `<beads_identity>` through `alaa-workflow references/task-tracking.md` section `Agent identity and ownership`; pass its literal actor, binding, issue IDs and ownership action. Read-only gates use action `none` unless separately authorized to mutate issue state.
+For Beads-bound dispatches, resolve `<beads_identity>` through `alaa-workflow references/task-tracking.md` section `Agent identity and ownership`; pass its literal actor, binding, issue IDs, ownership action and the global `bd` flag it requires (`--sandbox` for a write-capable lane, `--readonly` for a read-only lane). Read-only gates use action `none` unless separately authorized to mutate issue state.
 
 For the `<return>` shape, length bound and context rationale, read `alaa-low-noise references/workflow-integration.md` section `Delegated lanes`. Workflow owns persistence; `verification-and-gates.md` owns the inherited cadence carried in `<cadence>`.
 

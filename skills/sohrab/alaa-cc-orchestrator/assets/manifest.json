@@ -105,12 +105,12 @@
     {
       "name": "alaa-planner-high",
       "file": "agents/alaa-planner-high.md",
-      "sha256": "36d9104908363f9f866948000e90385cc9b1738be1c6026c7a42b1653e456b7a"
+      "sha256": "11d89dcfe0534e6c1be639eec73a014e29290b35de5fdd05628a2f08c5320f37"
     },
     {
       "name": "alaa-planner",
       "file": "agents/alaa-planner.md",
-      "sha256": "65c34f3d038047eaae34239acc483a1b8784d8f2225df6cda915634c4cdd89f7"
+      "sha256": "f9167416dcb5e6ad3c907760384f8f695eaef8d60b654e9c05bfe232acdea6f5"
     },
     {
       "name": "alaa-release-guardian",

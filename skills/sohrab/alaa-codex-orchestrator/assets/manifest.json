@@ -120,12 +120,12 @@
     {
       "name": "alaa-planner-high",
       "file": "agents/alaa-planner-high.toml",
-      "sha256": "d65bbbb878e740879e7f14f9c100e868b20921b6cdb7cf28c007e04f0f7048f2"
+      "sha256": "968005b49b826bd33b4f3e62480c44ccc602b8ac7df5169e50bc6ff42faf48d0"
     },
     {
       "name": "alaa-planner",
       "file": "agents/alaa-planner.toml",
-      "sha256": "1cb7e05afd9858d983908c7bc4307a8e20e96e9b2664c0b477b0723b0bd3c362"
+      "sha256": "8c57858ca024ccf23ef15e90bde3920c1cd85504bea8c9a750fa8968f501fab1"
     },
     {
       "name": "alaa-release-guardian",
