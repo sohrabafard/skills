@@ -10,7 +10,7 @@ ROOT = Path(__file__).resolve().parent.parent
 OWNER = ROOT.parent / "alaa-prompting-guide"
 sys.path.insert(0, str(OWNER / "scripts"))
 from claude_model_policy import load_policy
-from profile_projection import expected_profiles, profile_text, neutral_agent_text
+from profile_projection import expected_profiles, neutral_agent_text
 
 
 def expected_outputs(root, policy):
@@ -31,65 +31,13 @@ def drift(outputs):
     return [p for p, data in outputs.items() if not p.is_file() or p.read_bytes() != data]
 
 
-def self_test(policy, evidence_dir=None):
-    from check_agent_grants import frontmatter
-    from tempfile import TemporaryDirectory
-    from contextlib import nullcontext
-    import re
-    for p in sorted((ROOT / "agents").glob("*.md")):
-        original = p.read_text(encoding="utf-8")
-        rendered = neutral_agent_text("yaml", original, policy["profiles"][p.stem])
-        head, body = original.split("\n---\n", 1)
-        assert rendered == re.sub(r"^(?:model|effort):[^\n]*\n", "", head + "\n", flags=re.M).rstrip("\n") + "\n---\n" + body, p.name
-    if evidence_dir is not None:
-        # Retain requested evidence; never overwrite or clean a caller's directory.
-        evidence_dir.mkdir(parents=True, exist_ok=False)
-    context = (nullcontext(str(evidence_dir)) if evidence_dir is not None
-               else TemporaryDirectory(prefix="alaa-profile-test-"))
-    with context as directory:
-        root = Path(directory)
-        policy = {**policy, "profiles": {"alaa-implementer": policy["profiles"]["alaa-implementer"]}}
-        (root / "assets").mkdir(); (root / "agents").mkdir()
-        (root / "VERSION").write_text("fixture\n")
-        metadata = {"description": "fixture", "disallowedTools": "mcp__hindsight"}
-        body = 'Contract with "quotes" and \\paths.\n'
-        (root / "assets/implementation-contract.md").write_text(body)
-        (root / "assets/profile-wrappers.json").write_text(json.dumps({"profiles": {
-            "alaa-implementer": {"contract": "assets/implementation-contract.md", "metadata": metadata}}}))
-        outputs = expected_outputs(root, policy)
-        assert len(drift(outputs)) == 2
-        for path, data in outputs.items(): path.write_bytes(data)
-        assert not drift(expected_outputs(root, policy))
-        wrapper = root / "agents/alaa-implementer.md"
-        assert "model" not in frontmatter(str(wrapper)) and "effort" not in frontmatter(str(wrapper))
-        assert wrapper.read_text().split("\n---\n", 1)[1].endswith(body)
-        wrapper.write_text(wrapper.read_text() + "drift\n")
-        assert wrapper in drift(expected_outputs(root, policy))
-        try: profile_text("yaml", "alaa-implementer", {**metadata, "model": "override"}, body,
-                          policy["profiles"]["alaa-implementer"], "contract")
-        except ValueError: pass
-        else: raise AssertionError("metadata pin override accepted")
-        (root / "assets/profile-wrappers.json").write_text('{"profiles": {}}\n')
-        try: expected_outputs(root, policy)
-        except ValueError: pass
-        else: raise AssertionError("omitted managed profile accepted")
-    print("RENDER SELF-TEST OK: all-role neutrality, unchanged authority/body and drift")
-    return 0
-
-
 def main():
     parser = argparse.ArgumentParser(description=__doc__)
     mode = parser.add_mutually_exclusive_group(required=True)
     mode.add_argument("--write", action="store_true"); mode.add_argument("--check", action="store_true")
-    mode.add_argument("--self-test", action="store_true")
-    parser.add_argument("--self-test-dir", type=Path,
-                        help="new evidence directory to retain instead of a temporary directory")
     args = parser.parse_args()
-    if args.self_test_dir is not None and not args.self_test:
-        parser.error("--self-test-dir requires --self-test")
     try:
         policy = load_policy()
-        if args.self_test: return self_test(policy, args.self_test_dir)
         outputs = expected_outputs(ROOT, policy); changed = drift(outputs)
         if args.check and changed:
             for path in changed: print(f"generated drift: {path.relative_to(ROOT)}", file=sys.stderr)

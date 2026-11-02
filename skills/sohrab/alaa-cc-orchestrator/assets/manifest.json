@@ -105,12 +105,12 @@
     {
       "name": "alaa-planner-high",
       "file": "agents/alaa-planner-high.md",
-      "sha256": "b33f3ac7b50d4f8c60618b8aa7693051cfe32447b0e114bf0ff5288b184a7865"
+      "sha256": "36d9104908363f9f866948000e90385cc9b1738be1c6026c7a42b1653e456b7a"
     },
     {
       "name": "alaa-planner",
       "file": "agents/alaa-planner.md",
-      "sha256": "2a973b42769bebd622ec483dca2e9a4542a84dcf08eec2f07491eb1f1c2cc96d"
+      "sha256": "65c34f3d038047eaae34239acc483a1b8784d8f2225df6cda915634c4cdd89f7"
     },
     {
       "name": "alaa-release-guardian",
@@ -135,12 +135,12 @@
     {
       "name": "alaa-spec-analyst",
       "file": "agents/alaa-spec-analyst.md",
-      "sha256": "a775562658349e95f377bf0856546fd63e76110c07dd4b336e1ced721bf20123"
+      "sha256": "519e8ba6ceaf60cf06135574e5eab06db78cad07fb46d7a5c6ac7aee26262f50"
     },
     {
       "name": "alaa-test-strategist",
       "file": "agents/alaa-test-strategist.md",
-      "sha256": "b94b91499d70f5cca545969dc05a64e95137d77cce3d57d4804f73f089d17003"
+      "sha256": "421b7e3f102b88a6cf8f34141b4cad117df3c148cb3e30cdbae5daca729f4cca"
     },
     {
       "name": "alaa-verifier",

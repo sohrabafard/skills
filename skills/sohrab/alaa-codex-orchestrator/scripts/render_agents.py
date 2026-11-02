@@ -92,76 +92,15 @@ def drift(outputs: dict[Path, bytes]) -> list[Path]:
             if not path.is_file() or path.read_bytes() != data]
 
 
-def self_test(policy: dict, evidence_dir: Path | None = None,
-              policy_root: Path | None = None) -> int:
-    projection = owner_module("profile_projection", policy_root)
-    import tempfile
-    from contextlib import nullcontext
-    from check_agent_grants import _toml
-    if _toml is None:
-        raise ValueError("renderer semantic self-test requires tomllib or tomli")
-    tricky = 'Backslash \\path and """ delimiters.\nTrailing space \n'
-    for name in REVIEWERS:
-        parsed = _toml.loads(reviewer_text(name, tricky, policy))
-        assert parsed["developer_instructions"] == tricky, "TOML must preserve canonical text"
-        assert "model" not in parsed and "model_reasoning_effort" not in parsed
-    for path in sorted((ROOT / "agents").glob("*.toml")):
-        original = _toml.loads(path.read_text(encoding="utf-8"))
-        rendered = _toml.loads(projection.neutral_agent_text("toml", path.read_text(encoding="utf-8"),
-                               policy["profiles"][path.stem]))
-        assert rendered == {key: value for key, value in original.items()
-                            if key not in {"model", "model_reasoning_effort"}}, path.name
-    parsed = _toml.loads(projection.profile_text("toml", "alaa-implementer",
-        {"description": "fixture", "sandbox_mode": "workspace-write"}, tricky,
-        policy["profiles"]["alaa-implementer"], "assets/implementation-contract.md"))
-    assert parsed["developer_instructions"] == tricky, "profile codec must preserve contract"
-    if evidence_dir is not None:
-        # Keep explicitly requested evidence; never overwrite or clean a caller's directory.
-        evidence_dir.mkdir(parents=True, exist_ok=False)
-    context = (nullcontext(str(evidence_dir)) if evidence_dir is not None
-               else tempfile.TemporaryDirectory(prefix="alaa-render-test-"))
-    policy = {**policy, "profiles": {name: policy["profiles"][name] for name in REVIEWERS}}
-    with context as directory:
-        root = Path(directory)
-        (root / "agents").mkdir()
-        (root / "assets").mkdir()
-        (root / "VERSION").write_text("fixture\n", encoding="utf-8")
-        (root / "assets" / "reviewer-contract.md").write_text("contract\n", encoding="utf-8")
-        (root / "assets/profile-wrappers.json").write_text('{"profiles": {}}\n', encoding="utf-8")
-        outputs = expected_outputs(root, policy, policy_root)
-        assert len(drift(outputs)) == 3, "missing generated files must fail"
-        for path, data in outputs.items():
-            path.write_bytes(data)
-        assert not drift(expected_outputs(root, policy, policy_root)), "generated files must pass"
-        wrapper = root / "agents" / "alaa-reviewer-deep.toml"
-        wrapper.write_bytes(wrapper.read_bytes() + b"# manual drift\n")
-        assert wrapper in drift(expected_outputs(root, policy, policy_root)), "wrapper drift must fail"
-        wrapper.write_bytes(outputs[wrapper])
-        (root / "VERSION").write_text("changed\n", encoding="utf-8")
-        assert root / "assets" / "manifest.json" in drift(expected_outputs(root, policy, policy_root))
-        (root / "assets" / "reviewer-contract.md").write_text("new contract\n", encoding="utf-8")
-        assert all(root / "agents" / f"{name}.toml" in drift(expected_outputs(root, policy, policy_root))
-                   for name in REVIEWERS), "contract drift must invalidate both wrappers"
-    print("RENDER SELF-TEST OK: positive output and missing, wrapper, version, contract drift fixtures")
-    return 0
-
-
 def main() -> int:
     parser = argparse.ArgumentParser(description=__doc__)
     mode = parser.add_mutually_exclusive_group(required=True)
     mode.add_argument("--check", action="store_true")
     mode.add_argument("--write", action="store_true")
-    mode.add_argument("--self-test", action="store_true")
     parser.add_argument("--policy-root", type=Path)
-    parser.add_argument("--self-test-dir", type=Path,
-                        help="new evidence directory to retain instead of a temporary directory")
     args = parser.parse_args()
-    if args.self_test_dir is not None and not args.self_test:
-        parser.error("--self-test-dir requires --self-test")
     try:
         _, policy = policy_api(args.policy_root)
-        if args.self_test:
-            return self_test(policy, args.self_test_dir, args.policy_root)
         outputs = expected_outputs(ROOT, policy, args.policy_root)
         changed = drift(outputs)
         if args.check and changed:

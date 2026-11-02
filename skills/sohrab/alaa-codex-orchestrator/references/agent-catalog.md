@@ -100,8 +100,7 @@ TOMLs, and record an inventory fingerprint. A changed inventory requires a newly
 dispatch; activation never installs. A catalog server absent from the live inventory remains unavailable rather than being
 invented with a machine-specific transport.
 
-Run `python scripts/check_agent_grants.py` after any source-agent change and
-`python scripts/check_agent_grants.py --self-test` after changing the checker. Exit `0` is clean,
+Run `python3 scripts/check_agent_grants.py` after any source-agent change. Exit `0` is clean,
 exit `1` reports a grant mismatch, and exit `2` means the checker could not run; both nonzero results
 fail the gate. The pack validator checks the templates, and both installers materialize and validate
 the resolved live grants. Plain copies are unsupported because they would inherit the parent grant.

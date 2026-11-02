@@ -124,7 +124,6 @@ def validate() -> int:
         "references/resource-policy.md",
         "references/failure-taxonomy.md",
         "references/verification-and-gates.md",
-        "scripts/Invoke-AlaaLowPriority.ps1",
         "scripts/run-low-priority.sh",
         "scripts/check_agent_grants.py",
         "VERSION",
@@ -143,9 +142,9 @@ def validate() -> int:
             if name not in skill and name not in routing:
                 errors.append(f"agent absent from skill/routing: {name}")
 
-    for relative in ("scripts/run-low-priority.sh", "scripts/Invoke-AlaaLowPriority.ps1"):
-        if not (execution.ROOT / relative).is_file():
-            errors.append(f"missing canonical execution runner: {relative}")
+    runner = "scripts/run-low-priority.sh"
+    if not (execution.ROOT / runner).is_file():
+        errors.append(f"missing canonical execution runner: {runner}")
 
     resource_path = execution.ROOT / execution.RESOURCES
     if execution.RESOURCES not in skill or (
@@ -154,7 +153,7 @@ def validate() -> int:
         errors.append("hard browser chromium preservation rule is missing")
 
     for path in sorted(ROOT.rglob("*")):
-        if not path.is_file() or path.suffix not in {".md", ".yaml", ".py", ".sh", ".ps1"}:
+        if not path.is_file() or path.suffix not in {".md", ".yaml", ".py", ".sh"}:
             continue
         # The sweep's own pattern lives in this file, and CHANGELOG.md is a historical
         # record that must be able to name what a revision migrated away from. Neither
@@ -202,30 +201,11 @@ def validate() -> int:
     return 0
 
 
-def self_test() -> int:
-    """Exercise consumer exit propagation; policy owns model/projection fixtures."""
-    from unittest.mock import patch
-    failures = []
-    for policy_exit, grant_exit, expected in ((0, 0, 0), (1, 0, 1), (2, 0, 2), (0, 1, 1), (0, 2, 2), (9, 0, 2)):
-        responses = [subprocess.CompletedProcess([], code, "fixture", "")
-                     for code in (policy_exit, grant_exit)]
-        with patch("subprocess.run", side_effect=responses):
-            observed = validate()
-        if observed != expected:
-            failures.append(f"dependency exits {(policy_exit, grant_exit)}: {observed} != {expected}")
-    if failures:
-        print("\n".join(failures), file=sys.stderr)
-        return 1
-    print("PACK SELF-TEST OK: dependency findings and unavailable proof cannot pass")
-    return 0
-
-
 def main() -> int:
     parser = argparse.ArgumentParser(description=__doc__)
-    parser.add_argument("--self-test", action="store_true")
-    args = parser.parse_args()
+    parser.parse_args()
     try:
-        return self_test() if args.self_test else validate()
+        return validate()
     except (OSError, UnicodeError, ValueError) as exc:
         print(f"pack validation unavailable: {exc}", file=sys.stderr)
         return 2

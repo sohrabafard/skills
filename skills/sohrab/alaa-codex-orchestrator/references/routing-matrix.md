@@ -42,8 +42,7 @@ Do not spawn when the relevant paths and contracts are already established in cu
 - acceptance criteria are easy to satisfy superficially;
 - legacy behavior has weak coverage;
 - concurrency, retry, idempotency, migration, security, or failure-mode testing matters;
-- test layer selection and flake control need design;
-- an agent, model, effort, or prompt comparison needs representative tasks, rejection criteria, or controlled experiments. Design here; execute through the verifier and judge independently through the reviewer.
+- test layer selection and flake control need design.
 
 `/alaa-testing-strategy` is the doctrine this role applies. Name it in the dispatch, and read it directly when deciding which layer a behaviour is tested at, whether a double is honest enough to stand in for the real dependency, which of the six proof levels a claim actually reaches, or which scope tier has earned the right to run at this moment.
 

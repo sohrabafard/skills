@@ -1,5 +1,11 @@
 # Changelog
 
+## Unreleased
+
+- Task tracking follows the Beads-first policy owned by `alaa-workflow references/task-tracking.md`: Beads when available, plan-held local tasks when not, never a replacement Beads database.
+- Remove the `--self-test` modes and the red-fixture corpora from the checkers and renderer; the normal-mode checkers are the validation gate.
+- Remove the PowerShell helpers; the pack runs on WSL Linux with Bash and python3.
+
 ## 5.5.0 - 2026-10-25
 
 - Start a dependent lane as soon as the lanes it consumes finish; join lanes behind a barrier only when the next step consumes all their outputs.

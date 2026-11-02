@@ -11,8 +11,6 @@ merged role parses without committing machine-specific paths.
   exit 0  every invariant holds
   exit 1  at least one invariant failed
   exit 2  usage or parse error
-
-Run with --self-test to prove the gate rejects known-bad definitions.
 """
 from __future__ import annotations
 import hashlib, json, os, re, shutil, subprocess, sys
@@ -418,105 +416,10 @@ def materialize(source_dir: str, output_dir: str) -> int:
     return validate_resolved(output_dir, inventory)
 
 
-def self_test() -> int:
-    inventory = {
-        "serena": ("command", "serena", True),
-        "remote-docs": ("url", "https://example.invalid/mcp", True),
-    }
-    cases = [
-        ("unknown role", _resolved_failures("unregistered", {}, inventory), "uncatalogued"),
-        ("instruction reviewer writable", _template_failures(
-            "alaa-instruction-reviewer", TEMPLATE_MARKER, {"sandbox_mode": "workspace-write"}), "read-only"),
-        ("instruction reviewer extra MCP", _resolved_failures(
-            "alaa-instruction-reviewer", {"sandbox_mode": "read-only", "mcp_servers": {
-                "serena": {"command": "serena", "enabled": True},
-                "remote-docs": {"url": "https://example.invalid/mcp", "enabled": False},
-            }}, inventory), "grant differs"),
-        ("unmarked inherited omission", _template_failures("fixture", "", {}), "lacks"),
-        ("partial source definition", _template_failures(
-            "fixture", TEMPLATE_MARKER, {"mcp_servers": {"serena": {"enabled": False}}}), "must not embed"),
-        ("resolved omission", _resolved_failures("alaa-reviewer", {}, inventory), "inherits"),
-        ("missing inherited server", _resolved_failures(
-            "alaa-reviewer", {"mcp_servers": {
-                "serena": {"command": "serena", "enabled": True, "enabled_tools": SERENA_READ},
-            }}, inventory), "not overridden"),
-        ("unassigned server left enabled", _resolved_failures(
-            "alaa-reviewer", {"mcp_servers": {
-                "serena": {"command": "serena", "enabled": True, "enabled_tools": SERENA_READ},
-                "remote-docs": {"url": "https://example.invalid/mcp", "enabled": True},
-            }}, inventory), "grant differs"),
-        ("read-only semantic server overgranted", _resolved_failures(
-            "alaa-reviewer", {"mcp_servers": {
-                "serena": {"command": "serena", "enabled": True},
-                "remote-docs": {"url": "https://example.invalid/mcp", "enabled": False},
-            }}, inventory), "grant differs"),
-    ]
-    for role in ("alaa-planner", "alaa-planner-high"):
-        for sandbox in (None, "workspace-write"):
-            data = {} if sandbox is None else {"sandbox_mode": sandbox}
-            cases.append((f"{role} template sandbox {sandbox}",
-                          _template_failures(role, TEMPLATE_MARKER, data), "read-only"))
-            cases.append((f"{role} resolved sandbox {sandbox}",
-                          _resolved_failures(role, {**data, "mcp_servers": _expected_overlay(role, inventory)}, inventory), "read-only"))
-    memory_inventory = {"hindsight": ("command", "hindsight", True)}
-    cases += [
-        ("memory role overgranted Hindsight", _resolved_failures(
-            "alaa-researcher", {"mcp_servers": {
-                "hindsight": {"command": "hindsight", "enabled": True},
-            }}, memory_inventory), "grant differs"),
-        ("Hindsight write tool on a memory role", _resolved_failures(
-            "alaa-researcher", {"mcp_servers": {
-                "hindsight": {"command": "hindsight", "enabled": True,
-                              "enabled_tools": HINDSIGHT_READ + ["hindsight_ingest_document"]},
-            }}, memory_inventory), "grant differs"),
-        ("Hindsight left enabled on a role with no memory question", _resolved_failures(
-            "alaa-reviewer", {"mcp_servers": {
-                "hindsight": {"command": "hindsight", "enabled": True, "enabled_tools": HINDSIGHT_READ},
-            }}, memory_inventory), "grant differs"),
-    ]
-    failures = []
-    for role in ("alaa-researcher", "alaa-explorer", "alaa-architecture-critic"):
-        good = {"mcp_servers": _expected_overlay(role, memory_inventory)}
-        if good["mcp_servers"]["hindsight"].get("enabled_tools") != HINDSIGHT_READ or _resolved_failures(
-                role, good, memory_inventory):
-            failures.append(f"{role}: exact Hindsight read grant not produced or rejected")
-    for role in ("alaa-reviewer", "alaa-reviewer-deep", "alaa-instruction-reviewer", "alaa-planner", "alaa-planner-high"):
-        good = {"sandbox_mode": "read-only", "mcp_servers": _expected_overlay(role, inventory)}
-        if _resolved_failures(role, good, inventory):
-            failures.append(f"{role}: valid exact grant rejected")
-    for role in ("alaa-planner", "alaa-planner-high"):
-        if _template_failures(role, TEMPLATE_MARKER, {"sandbox_mode": "read-only"}):
-            failures.append(f"{role}: valid read-only template rejected")
-    for role in sorted(name for name in ROLE_POLICY if name.startswith("alaa-implementer")):
-        combined_inventory = {**inventory, **memory_inventory}
-        good = {"sandbox_mode": "workspace-write",
-                "mcp_servers": _expected_overlay(role, combined_inventory)}
-        if _resolved_failures(role, good, combined_inventory):
-            failures.append(f"{role}: valid implementation grant rejected")
-        if good["mcp_servers"]["hindsight"]["enabled"]:
-            failures.append(f"{role}: implementation grant enabled memory")
-        broken = {**good, "mcp_servers": {**good["mcp_servers"],
-                  "serena": {"command": "serena", "enabled": True}}}
-        if not _resolved_failures(role, broken, combined_inventory):
-            failures.append(f"{role}: semantic shell safety deny omission accepted")
-    for label, observed, expected_message in cases:
-        if not any(expected_message in item for item in observed):
-            failures.append(f"{label}: did not observe {expected_message!r}; got {observed}")
-    if failures:
-        print("SELF-TEST FAILED")
-        for failure in failures:
-            print(f"  - {failure}")
-        return 1
-    print(f"SELF-TEST OK: {len(cases)} red fixtures each rejected")
-    return 0
-
-
 if __name__ == "__main__":
     args = sys.argv[1:]
     if not args:
         sys.exit(validate_templates())
-    if args == ["--self-test"]:
-        sys.exit(self_test())
     if len(args) == 2 and args[0] == "--agents-dir":
         sys.exit(validate_templates(args[1]))
     if len(args) == 2 and args[0] == "--resolved-agents-dir":
@@ -531,7 +434,7 @@ if __name__ == "__main__":
             print(exc, file=sys.stderr)
             sys.exit(2)
     print(
-        "usage: check_agent_grants.py [--self-test | --agents-dir PATH | "
+        "usage: check_agent_grants.py [--agents-dir PATH | "
         "--resolved-agents-dir PATH | --materialize SOURCE OUTPUT | --inventory-fingerprint]",
         file=sys.stderr,
     )

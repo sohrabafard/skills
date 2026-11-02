@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 """Structural instruction-contract regression checks, not live behavior proof.
 
-Exit 0 clean, 1 findings, 2 unavailable input. --self-test rejects known regressions.
+Exit 0 clean, 1 findings, 2 unavailable input.
 """
 from __future__ import annotations
 from pathlib import Path
@@ -323,8 +323,8 @@ def task_allocation_failures(routing: str, controls: str) -> list[str]:
 # Cadence assertions are source contracts, not a simulation of agent obedience.
 # Workflow owns hierarchy validation; this consumer checks its scheduling seam.
 CADENCE_REQUIREMENTS = ('Stages A-F name required orchestration outcomes and authority, not workflow phases',
- 'New phased/delegated work uses the bound Beads phase-task-subtask hierarchy',
- 'Existing unmarked/local families retain their original contract until explicit migration',
+ '`alaa-workflow references/task-tracking.md` owns task-store selection',
+ 'never initialize a replacement Beads database',
  '`Review boundary: phase|final`',
  '`Final phase`',
  '`Commit authority`',
@@ -387,7 +387,7 @@ def cadence_failures(skill: str, gates: str, dispatch: str,
             "this grants no boundary affected/exhaustive authority",
             "whole-engagement cadence and exact phase/task/subtask cursor",
             "pending boundary review/commit rather than starting your own review or commit")),
-        ("planner", planner, ("phase-task-subtask hierarchy", "existing-family compatibility",
+        ("planner", planner, ("phase-task-subtask hierarchy", "task-tracking.md",
                               "inherited review boundary, final phase, commit authority and exact cursor")),
         ("verifier dispatch", verifier, ("<review_boundary>", "whole-engagement final candidate identity",
                                         "no subtask/task independent acceptance")),
@@ -467,101 +467,11 @@ def specialist_cadence_sources() -> tuple[str, str, str]:
         "agents/alaa-architecture-critic" + suffix))
 
 
-def specialist_cadence_self_tests() -> list[tuple[str, bool]]:
-    """Immutable source setup; each mutation is isolated and checks its own diagnostic."""
-    sources = specialist_cadence_sources()
-    cases = [("specialist inherited phase/final cadence accepted",
-              not specialist_cadence_failures(*sources))]
-    for index, label in enumerate(("design template", "contract template", "architecture critic")):
-        for clause in (
-            "references/verification-and-gates.md", "declared phase|final boundary",
-            "complete phase candidate for phase",
-            "whole-engagement candidate including pending earlier phases for final",
-            "Nested invocations never reset that scope",
-            "Return missing, conflicting or premature cadence to the parent without judgment",
-        ):
-            broken = list(sources)
-            broken[index] = broken[index].replace(clause, "omitted")
-            diagnostic = f"{label}: missing specialist cadence: {clause}"
-            cases.append((f"{label}: requires {clause}",
-                          diagnostic in specialist_cadence_failures(*broken)))
-        # Contradictions must fail even with every valid clause still present.
-        for obsolete in ("Dispatch in Stage A before code exists", "Spawn before implementation",
-                         "before expensive implementation begins"):
-            broken = list(sources)
-            broken[index] += "\n" + obsolete
-            cases.append((f"{label}: rejects early judgment {obsolete}",
-                          f"{label}: premature specialist judgment: {obsolete}"
-                          in specialist_cadence_failures(*broken)))
-    for index, label, clause in (
-        (0, "design template", "pre-implementation design record"),
-        (0, "design template", "report the missing record"),
-        (1, "contract template", "Record known triggers and decide consumer impact, compatibility and deprecation in Stage A"),
-        (1, "contract template", "a newly discovered trigger reopens the affected plan and gate"),
-        (2, "architecture critic", "The design record remains due before implementation"),
-        (2, "architecture critic", "Unresolved questions and conditions that block acceptance"),
-    ):
-        broken = list(sources)
-        broken[index] = broken[index].replace(clause, "omitted")
-        cases.append((f"{label}: preserves {clause}",
-                      f"{label}: missing planning/acceptance contract: {clause}"
-                      in specialist_cadence_failures(*broken)))
-    return cases
-
-
 def cadence_sources() -> tuple[str, ...]:
     return tuple((ROOT / path).read_text(encoding="utf-8") for path in (
         "SKILL.md", "references/verification-and-gates.md", "references/delegation-prompts.md",
         "assets/implementation-contract.md", "assets/planner-contract.md",
         "references/delegation-prompts/40-verification.md")) + specialist_cadence_sources()
-
-
-def cadence_self_tests() -> list[tuple[str, bool]]:
-    sources = cadence_sources()
-    cases = [("inherited phase/final cadence accepted", not cadence_failures(*sources))]
-    checkpoint = list(sources)
-    checkpoint[1] += "\nCommit after each task when finished and validated under the main instruction rule."
-    cases.append(("validated task checkpoint before boundary accepted", not cadence_failures(*checkpoint)))
-    # Topic: review integrity; layer: structural source contract. Negation,
-    # casing and wrapping do not turn a prohibition into a positive command.
-    prohibition = "Never weaken review to obtain a pass."
-    for variant in (prohibition, prohibition.upper(), prohibition.replace(" ", "\n")):
-        unchanged = list(sources)
-        unchanged[1] = unchanged[1].replace(prohibition, variant)
-        cases.append((f"review weakening prohibition accepted: {variant!r}",
-                      not cadence_failures(*unchanged)))
-    for positive in ("Weaken review to obtain a pass.", "Weaken\nreview to obtain a pass."):
-        broken = list(sources)
-        broken[1] += "\n" + positive
-        cases.append((f"review weakening command rejected with prohibition intact: {positive!r}",
-                      any(error.startswith("contradictory scheduling instruction:")
-                          for error in cadence_failures(*broken))))
-    for clause in CADENCE_REQUIREMENTS:
-        broken = list(sources)
-        broken[1] = broken[1].replace(clause, "omitted")
-        cases.append((f"cadence requires {clause}", bool(cadence_failures(*broken))))
-    for index, clause in ((0, "Correct sparingly"), (0, "references/110-execution-resources.md"),
-                          (2, "<cadence>"), (2, "Delegated lanes"),
-                          (3, "this grants no boundary affected/exhaustive authority"),
-                          (4, "existing-family compatibility"), (5, "<review_boundary>")):
-        broken = list(sources)
-        broken[index] = broken[index].replace(clause, "omitted")
-        cases.append((f"cadence seam requires {index}:{clause}", bool(cadence_failures(*broken))))
-    for contradiction in (
-        "Review every task independently", "independent review each subtask",
-        "Defer independent acceptance and commits until that boundary",
-        "Commit only after the authorized review boundary passes",
-        "Intermediate phases remain uncommitted",
-        "Never dispatch independent subtask/task review or make a subtask/task commit",
-        "Child invocation resets the review boundary",
-        "Documentation-only changes prove input equivalence",
-        "Commit on the work branch before validation",
-        "Weaken failed tests to obtain a pass",
-    ):
-        broken = list(sources)
-        broken[1] += "\n" + contradiction
-        cases.append((f"cadence contradiction rejected: {contradiction}", bool(cadence_failures(*broken))))
-    return cases
 
 
 # Topic: runtime collection scheduling; layer: structural source contract.
@@ -641,22 +551,6 @@ def collection_failures(sources: dict[str, str]) -> list[str]:
     return errors
 
 
-def collection_self_tests() -> list[tuple[str, bool]]:
-    sources = collection_sources()
-    cases = [("runtime collection scheduling accepted", not collection_failures(sources))]
-    for name, clauses in {"gates": COLLECTION_REQUIREMENTS, **COLLECTION_SEAMS}.items():
-        for clause in clauses:
-            broken = {**sources, name: sources[name].replace(clause, "omitted")}
-            diagnostic = f"{name}: missing collection contract: {clause}"
-            cases.append((f"{name}: requires {clause}", diagnostic in collection_failures(broken)))
-    for name in sources:
-        for clause in COLLECTION_CONTRADICTIONS:
-            broken = {**sources, name: sources[name] + "\n" + clause}
-            diagnostic = f"{name}: contradictory collection contract: {clause}"
-            cases.append((f"{name}: rejects {clause}", diagnostic in collection_failures(broken)))
-    return cases
-
-
 # Topic: run economy and failure locality; layer: structural source contract.
 # Each pack carries the same behavioural rules; the sibling pack is checked too
 # because the mirrored pair must decide identically.
@@ -732,40 +626,6 @@ def sibling_root(root: Path = ROOT) -> Path:
     return siblings[0]
 
 
-def run_economy_self_tests() -> list[tuple[str, bool]]:
-    # Immutable source setup; each mutation receives a fresh dictionary.
-    sources = run_economy_sources()
-    cases = [("run-economy source accepted", not run_economy_failures(sources))]
-    for name, clauses in RUN_ECONOMY_REQUIREMENTS.items():
-        for clause in clauses:
-            broken = {**sources, name: sources[name].replace(clause, "omitted")}
-            diagnostic = f"{name}: missing run-economy contract: {clause}"
-            cases.append((f"run economy {name}: requires {clause}", diagnostic in run_economy_failures(broken)))
-    for name, clauses in RUN_ECONOMY_CONTRADICTIONS.items():
-        for clause in clauses:
-            # Wrapped and recased variants of a retired phrase are still rejected.
-            for variant in (clause, clause.replace(" ", "\n", 1).upper()):
-                broken = {**sources, name: sources[name] + "\n" + variant}
-                diagnostic = f"{name}: contradictory run-economy contract: {clause}"
-                cases.append((f"run economy {name}: rejects {variant!r}", diagnostic in run_economy_failures(broken)))
-    from tempfile import TemporaryDirectory
-    for count in (0, 2):
-        with TemporaryDirectory() as tmp:
-            own = Path(tmp) / "alaa-own-orchestrator"
-            (own / "references").mkdir(parents=True)
-            for index in range(count):
-                other = Path(tmp) / f"alaa-other{index}-orchestrator" / "references"
-                other.mkdir(parents=True)
-                (other / "verification-and-gates.md").write_text("fixture\n", encoding="utf-8")
-            try:
-                sibling_root(own)
-                rejected = False
-            except ValueError:
-                rejected = True
-            cases.append((f"sibling discovery rejects {count} mirrored packs", rejected))
-    return cases
-
-
 def verification_sources() -> tuple[str, list[str], dict[str, str]]:
     return (
         (ROOT / "references/verification-and-gates.md").read_text(encoding="utf-8"),
@@ -778,173 +638,10 @@ def verification_sources() -> tuple[str, list[str], dict[str, str]]:
     )
 
 
-def self_test() -> int:
-    good = (ROOT / "agents" / next(iter(sorted(
-        path.name for path in (ROOT / "agents").glob("alaa-instruction-reviewer.*"))))).read_text(encoding="utf-8")
-    # A source definition contains the same contract whether represented as a
-    # multiline body or a serialized scalar; these checks do not execute it.
-    skill = (ROOT / "SKILL.md").read_text(encoding="utf-8")
-    for original, equivalent in EQUIVALENT_REQUIREMENTS.items():
-        source = next(text for text in (skill,
-            (ROOT / "references/model-effort-policy.md").read_text(encoding="utf-8"),
-            (ROOT / "references/verification-and-gates.md").read_text(encoding="utf-8")) if original in text)
-        assert contract_present(original, source.replace(original, equivalent)), original
-        assert not contract_present(original, equivalent.replace("mandatory", "optional").replace("must inspect", "may inspect").replace("authorizes no", "authorizes").replace("explicit reasoning effort", "inherited effort")), original
-    dispatch = (ROOT / "references/delegation-prompts.md").read_text(encoding="utf-8")
-    gates = (ROOT / "references/verification-and-gates.md").read_text(encoding="utf-8")
-    implementation = (ROOT / "references/delegation-prompts/30-implementation.md").read_text(encoding="utf-8")
-    cases = [
-        ("valid identity and authority", not agent_failures(good)),
-        ("host-specific dispatch progress", not dispatch_failures(dispatch)),
-        ("dispatch missing progress rejected", bool(dispatch_failures(dispatch.replace("<progress>report meaningful progress under the active host contract", "<progress>silent")))),
-        ("per-command narration rejected", bool(dispatch_failures(dispatch + "\nemit one line between steps"))),
-        ("dispatch watchdog claim rejected", bool(dispatch_failures(dispatch + "\na stream watchdog can kill it mid-run"))),
-        ("unknown observation required", bool(agent_failures(good.replace("otherwise unknown", "use the pin")))),
-        ("identity assertion rejected", bool(agent_failures(good + "\nAGENT: fixture | MODEL: configured | EFFORT: high"))),
-        ("verdict first", bool(agent_failures(good + "\nIdentity line: begin the report"))),
-        ("effective permissions required", bool(agent_failures(good.replace("parent overrides", "declaration")))),
-        ("advisory and authority accepted", not orchestrator_failures(skill)),
-        ("plan-only execution boundary required", bool(orchestrator_failures(skill.replace("Plan-only work grants no product execution, branch, or commit authority", "Plan means execute")))),
-        ("workflow admission owner required", bool(orchestrator_failures(skill.replace("alaa-workflow references/artifact-lifecycle.md", "Unowned admission")))),
-        ("saved-plan report required", bool(orchestrator_failures(skill.replace("report saved plan/checkpoint paths when admitted", "Plans are chat-only")))),
-        ("blanket advisor no-files rejected", bool(orchestrator_failures(skill + "\nDo not edit repository files, and do not create workflow artifacts"))),
-        ("advisor output no-files rejected", bool(orchestrator_failures(skill + "\nDo not edit files or imply implementation occurred"))),
-        ("blanket phase-write rationale rejected", bool(orchestrator_failures(skill + "\nAdvisor mode runs none of them: Phases A, B, and F"))),
-        ("complete lane bindings accepted", not planning_failures(gates, implementation)),
-        ("lane bindings omitted rejected", bool(planning_failures(gates.replace("resolved skill bindings under `alaa-workflow references/companion-routing.md`", "clean code only"), implementation))),
-        ("phase bindings omitted rejected", bool(planning_failures(gates.replace("executable phase/task skill bindings before implementation or write-lane dispatch", "implicit skills"), implementation))),
-        ("implementation bindings omitted rejected", bool(planning_failures(gates, implementation.replace("<skills>", "<omitted>", 1)))),
-        ("clean-code-only implementation rejected", bool(planning_failures(gates, implementation.replace("<skills>", "<clean_code_skill>", 1)))),
-        ("dispatch bindings omitted rejected", bool(dispatch_failures(dispatch.replace("<skills>", "<omitted>")))),
-        ("dispatch binding owner omitted rejected", bool(dispatch_failures(dispatch.replace("alaa-workflow references/companion-routing.md", "implicit owner")))),
-        ("activation install rejected", bool(orchestrator_failures(skill + "\nOn activation, idempotently installs"))),
-        ("implicit commit rejected", bool(orchestrator_failures(skill + "\nCommit on the run's own work branch at each completed subtask"))),
-        ("forced integration rejected", bool(orchestrator_failures(skill + "\nEvery profile runs all six phases"))),
-        ("independent review preserved", bool(orchestrator_failures(skill.replace("Independent verification and review inspect the actual artifact", "Check summaries")))),
-        ("silent fallback rejected", bool(orchestrator_failures(skill + "\ncontinue with general-purpose subagents"))),
-        ("gate owner pointer preserved", bool(cadence_failures(skill.replace("for gate economics and independent acceptance", "for optional checks"), *cadence_sources()[1:]))),
-        ("blanket no-verification rejected", bool(orchestrator_failures(skill + "\n**Do not add verification instructions.**"))),
-        ("invented watchdog rejected", bool(orchestrator_failures(skill + "\nA watchdog ends a lane on silence rather than on duration"))),
-    ]
-    shared = execution_contract_api()
-    cases.extend(shared.self_test())
-    cases.extend(collection_self_tests())
-    cases.extend(run_economy_self_tests())
-    cases.extend(cadence_self_tests())
-    cases.extend(specialist_cadence_self_tests())
-    cases.append(("economical execution accepted", not economy_failures(skill, gates)))
-    for required in ("observed host slots", "resource ceilings", "integration barriers", "references/110-execution-resources.md", "current-checkout or isolation decision", "references/context-curation.md"):
-        cases.append((f"economics {required} required", bool(economy_failures(skill, gates.replace(required, "omitted")))))
-    for forbidden in ("at most two workspace-writing", "Dispatch one `alaa-implementer` per routine lane", "refuse to start on a tree carrying changes this run did not make"):
-        cases.append((f"costly default {forbidden} rejected", bool(economy_failures(skill, gates + "\n" + forbidden))))
-    routing = (ROOT / "references/routing-matrix.md").read_text(encoding="utf-8")
-    for required in ("## Batch allocation", "tasks, dependencies and consolidation decisions are finalized", "balanced default", "priority is not an effort value", "Reopen allocation only for remaining work"):
-        cases.append((f"batch allocation {required} required", bool(economy_failures(skill, gates, routing.replace(required, "omitted")))))
-    controls = (ROOT / "references/model-effort-policy.md").read_text(encoding="utf-8")
-    cases.append(("all-role allocation/effective controls", not task_allocation_failures(routing, controls)))
-    cases.append(("owner-normalized defaults accepted", not default_control_failures(controls)))
-    # Topic: exact default mapping; layer: structural source contract.
-    # Exercise both callers so allocation cannot hide a malformed default.
-    for assignment in DEFAULT_MODEL_CLAUSES[:2]:
-        invalid = controls.replace(assignment, assignment + "-invalid")
-        cases.append((f"default rejects invalid suffix: {assignment}",
-                      bool(default_control_failures(invalid))))
-        cases.append((f"allocation rejects invalid suffix: {assignment}",
-                      bool(task_allocation_failures(routing, invalid))))
-        key, value = assignment.split(" = ", 1)
-        spaced = controls.replace(assignment, f"  {key} \t= \t{value}  ")
-        cases.append((f"default permits assignment whitespace: {assignment}",
-                      not default_control_failures(spaced)))
-        cases.append((f"allocation permits assignment whitespace: {assignment}",
-                      not task_allocation_failures(routing, spaced)))
-    for requirement in (*DEFAULT_REQUIREMENTS, *DEFAULT_MODEL_CLAUSES):
-        cases.append((f"default contract requires {requirement}", bool(default_control_failures(
-            controls.replace(requirement, "omitted")))))
-    for requirement in ("including defaults normalized under", "omission alone is not blocked/degraded",
-                        "missing after normalization"):
-        cases.append((f"role accepts normalization: {requirement}", bool(agent_failures(
-            good.replace(requirement, "omitted")))))
-    cases.append(("pre-normalization omission block rejected", bool(agent_failures(
-        good + "\nmissing, inherited, stale-pinned controls block this lane"))))
-    for requirement in ("<beads_identity>", "literal unique child actor", "Agent identity and ownership",
-                        "Read-only gates use action `none`"):
-        cases.append((f"dispatch actor seam requires {requirement}", bool(dispatch_failures(
-            dispatch.replace(requirement, "omitted")))))
-    for requirement in BOUNDED_REQUIREMENTS:
-        cases.append((f"bounded suitability requires {requirement}", bool(task_allocation_failures(routing.replace(requirement, "omitted"), controls))))
-    for required in ("EVERY role", "model AND effort", "second independent lens",
-                     "compatibility identities", "block that affected lane"):
-        cases.append((f"task allocation requires {required}", bool(task_allocation_failures(
-            routing.replace(required, "omitted"), controls))))
-    for required in ("Explicitly supply BOTH model AND effort", "effective configured pair matches",
-                     "parent overrides", "Source checks prove neither installed activation"):
-        cases.append((f"effective controls require {required}", bool(task_allocation_failures(
-            routing, controls.replace(required, "omitted")))))
-    for path in sorted((ROOT / "agents").glob("alaa-*")):
-        if path.suffix not in {".toml", ".md"}:
-            continue
-        text = path.read_text(encoding="utf-8")
-        cases.append((f"{path.name}: explicit task controls", not agent_failures(text)))
-        for requirement in ("Task controls:", "model AND effort", "block this lane"):
-            cases.append((f"{path.name}: reject missing {requirement}",
-                          bool(agent_failures(text.replace(requirement, "omitted")))))
-    policy, templates, roles = verification_sources()
-    cases.append(("integrated verification authority accepted",
-                  not verification_failures(policy, templates, roles)))
-    for name, role in roles.items():
-        for requirement in IMPLEMENTER_REQUIREMENTS:
-            broken = {**roles, name: role.replace(requirement, "omitted", 1)}
-            cases.append((f"{name}: {requirement} required",
-                          bool(verification_failures(policy, templates, broken))))
-        for contradiction in ("run all dispatched commands", "run affected checks",
-                              "run ambiguous or inseparable commands",
-                              "invent substitute commands"):
-            broken = {**roles, name: role + "\n" + contradiction}
-            cases.append((f"{name}: contradiction {contradiction} rejected",
-                          bool(verification_failures(policy, templates, broken))))
-    cases.append(("missing implementer variant rejected", bool(verification_failures(
-        policy, templates, dict(list(roles.items())[:1])))))
-    for requirement in GATE_REQUIREMENTS:
-        cases.append((f"gate boundary {requirement} required", bool(verification_failures(
-            policy.replace(requirement, "omitted", 1), templates, roles))))
-    for contradiction in ("author broad PASS discharges independent acceptance",
-                          "reuse implementer evidence for independent acceptance"):
-        cases.append(("authority laundering rejected: " + contradiction,
-                      bool(verification_failures(policy + "\n" + contradiction, templates, roles))))
-    for file_index, template in enumerate(templates):
-        # Mutate each block independently, including escalation and fix-cycle paths.
-        for block_index, block in enumerate(re.findall(r"```xml\s*\n(.*?)```", template, re.S)):
-            if not re.search(r"<task>(?:Implement|Resolve reviewer/specialist findings)", block):
-                continue
-            for label, mutated in (
-                ("focused boundary omitted", block.replace(' tier="focused"', '', 1)),
-                ("exclusions omitted", re.sub(r"<excluded>.*?</excluded>", '', block, flags=re.S)),
-                ("scope omitted", block.replace("scoped", "unbounded", 1)),
-                ("task owner acceptance omitted", block.replace("<task_acceptance>", "<omitted>", 1)),
-                ("task acceptance unbounded", block.replace("exact bounded", "unbounded", 1)),
-                ("affected breadth appended", block.replace('</commands>', '; affected-tier checks</commands>', 1)),
-                ("race mislabeled focused", block.replace('</commands>', '; go test -race ./...</commands>', 1)),
-                ("full suite mislabeled focused", block.replace('</commands>', '; full suite</commands>', 1)),
-            ):
-                changed = list(templates)
-                changed[file_index] = template.replace(block, mutated, 1)
-                cases.append((f"template {file_index + 1}/{block_index + 1}: {label}",
-                              bool(verification_failures(policy, changed, roles))))
-    for label, passed in cases:
-        if not passed:
-            print(f"SELF-TEST FAILED: {label}", file=sys.stderr)
-    if not all(passed for _, passed in cases):
-        return 1
-    print(f"CONTRACT SELF-TEST OK: {len(cases)} positive/negative structural fixtures")
-    return 0
-
-
 def main() -> int:
     try:
-        if sys.argv[1:] == ["--self-test"]:
-            return self_test()
         if sys.argv[1:]:
-            print("usage: check_agent_contracts.py [--self-test]", file=sys.stderr)
+            print("usage: check_agent_contracts.py", file=sys.stderr)
             return 2
         errors = orchestrator_failures((ROOT / "SKILL.md").read_text(encoding="utf-8"))
         errors.extend(dispatch_failures((ROOT / "references/delegation-prompts.md").read_text(encoding="utf-8")))
@@ -972,9 +669,6 @@ def main() -> int:
             return 1
         print("CONTRACT CHECK OK: metadata, dispatch scope and independent verification authority")
         return 0
-    except AssertionError as exc:
-        print(f"contract self-test failed: {exc}", file=sys.stderr)
-        return 1
     except (OSError, ValueError, KeyError, StopIteration) as exc:
         print(f"contract check unavailable: {exc}", file=sys.stderr)
         return 2

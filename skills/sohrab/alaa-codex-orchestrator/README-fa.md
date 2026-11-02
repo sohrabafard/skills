@@ -11,7 +11,7 @@
 - عدم تغییر agentها و تنظیمات دیگر کاربر
 - تفکیک implementation، verification، diagnosis، review و documentation
 - specialist gate برای architecture، security، migration، browser QA، performance، observability و release
-- اجرای تست‌های سنگین با اولویت `BelowNormal` در Windows
+- اجرای تست‌های سنگین با اولویت `BelowNormal` (معادل `nice`) در WSL
 - پشتیبانی از محدودیت CPU، timeout و artifact directory
 - حفظ اجباری آرگومان `--browser chromium`
 - review مستقل و حداکثر دو چرخه اصلاح
@@ -20,16 +20,16 @@
 
 ## نصب Skill
 
-پس از دریافت مجوز صریح نصب، بستهٔ کامل را کنار `alaa-prompting-guide` قرار بده. سپس این دستور PowerShell را اجرا کن:
+پس از دریافت مجوز صریح نصب، بستهٔ کامل را کنار `alaa-prompting-guide` قرار بده. سپس این دستور Bash را اجرا کن:
 
-```powershell
-& ".\alaa-codex-orchestrator\scripts\Install-AlaaCodexOrchestrator.ps1"
+```bash
+./alaa-codex-orchestrator/scripts/install-skill.sh
 ```
 
 این دستور Skill را در مسیر زیر نصب می‌کند:
 
 ```text
-%USERPROFILE%\.codex\skills\alaa-codex-orchestrator
+~/.codex/skills/alaa-codex-orchestrator
 ```
 
 سپس Codex را اجرا و Skill را صدا بزن:
@@ -41,7 +41,7 @@
 Activation inspects roles only. An explicitly authorized installer validates model-neutral roles, wrappers, manifests and resolved MCP grants before writing the TOML files to the following path:
 
 ```text
-%USERPROFILE%\.codex\agents
+~/.codex/agents
 ```
 
 به دلیل محافظت sandbox از مسیرهای خارج workspace، ممکن است Codex برای اجرای installer یک approval محدود درخواست کند. این installer فقط فایل‌های agent همین بسته را مدیریت می‌کند.
@@ -80,23 +80,18 @@ Role triggers and actual task model AND effort allocation are owned by `referenc
 
 ## تست نصب
 
-```powershell
-& "$env:USERPROFILE\.codex\skills\alaa-codex-orchestrator\scripts\Get-AlaaCodexAgentStatus.ps1"
+```bash
+python3 ~/.codex/skills/alaa-codex-orchestrator/scripts/check_agent_grants.py --resolved-agents-dir ~/.codex/agents
 ```
 
 ## اجرای تست با اولویت پایین
 
 نمونه Go:
 
-```powershell
-$runner = "$env:USERPROFILE\.codex\skills\alaa-codex-orchestrator\scripts\Invoke-AlaaLowPriority.ps1"
-
-& $runner `
-  -Priority BelowNormal `
-  -CpuCount 2 `
-  -Environment @{ GOMAXPROCS = "2" } `
-  -FilePath "go" `
-  -ArgumentList @("test", "-p", "1", "-parallel", "2", "-count=1", "./...")
+```bash
+bash ~/.codex/skills/alaa-codex-orchestrator/scripts/run-low-priority.sh \
+  --priority BelowNormal --cpu-count 2 -- \
+  env GOMAXPROCS=2 go test -p 1 -parallel 2 -count=1 ./...
 ```
 
 فقط پایین آوردن priority کافی نیست؛ concurrency داخلی test runner نیز باید جداگانه محدود شود.

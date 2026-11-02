@@ -2,18 +2,18 @@
 
 ## Shell and executable identity
 
-Use the active Linux shell and the tool's working-directory field. Resolve the needed executable with `command -v`; inspect its target or file type when provenance is unclear. A mounted-drive file is not necessarily a Windows executable.
+Use the active Linux shell and the tool's working-directory field. Resolve the needed executable with `command -v`; inspect its target or file type when provenance is unclear.
 
-For a missing Linux executable, use `SKILL.md` capability inquiry; report the gap if no authorized compatible tool exists. Do not install tools or switch to a Windows binary automatically.
+For a missing Linux executable, use `SKILL.md` capability inquiry; report the gap if no authorized compatible tool exists. Do not install tools automatically.
 
 ## Bash quoting and paths
 
-- **Symptom.** Bash syntax/quoting errors, a Windows drive path, backslash-separated arguments, `bad interpreter`, `^M`, or an executable selected from the wrong environment.
+- **Symptom.** Bash syntax/quoting errors, a drive-letter or backslash path, `bad interpreter`, `^M`, or an executable selected from the wrong environment.
 - **Diagnosis.** Check the actual shell, current worktree, executable and exact failing path. A missing interpreter, CRLF line ending, execute bit or mount restriction is different from a sandbox denial; do not assume the tool and path are valid.
 - **Retry.** Correct only the invocation when that is the cause: use Bash syntax, quote path arguments and use the verified WSL path. Prefer a quoted heredoc for multiline Python or other code over nested `-c` escaping. Use `bash <script>` only when the repository declares Bash and invocation semantics remain valid.
 - **Fallback.** Report repository-owned script defects to their owner. Do not rewrite line endings, permissions or scripts as a harness workaround. Route service runtime environment generation to /service-runtime-kit-governance.
 
-Use the verified current checkout. Do not infer a second checkout by mechanically translating a drive letter or clone/move the repository as recovery. For an actual mounted-drive path, use its observed POSIX mount path. WSL path handling needs no MSYS path-conversion flags.
+Use the verified current checkout. Resolve a drive-letter path cited by a document through /alaa-legacy-path-map; never clone or move the repository as recovery. For a path on a mounted drive, use its observed POSIX mount path.
 
 ## Command length
 
@@ -41,4 +41,4 @@ Use the verified current checkout. Do not infer a second checkout by mechanicall
 - **Symptom.** `Address already in use`, `EADDRINUSE`, `Permission denied`, `EACCES` or `ports are not available` while binding a local port.
 - **Diagnosis.** Use available Linux listener evidence such as `ss -ltnp` for TCP; check address, protocol, port and the environment performing the bind. No visible WSL listener does not prove a Docker backend or host port is free. Privileged-port restrictions and sandbox restrictions differ from an occupied port.
 - **Retry.** If the task permits a host-binding change, select a verified available host port without changing the container/application port. For evidenced sandbox denial, follow `references/10-wsl-sandbox-recovery.md` instead.
-- **Fallback.** Report an unresolved backend/host restriction. Do not kill listeners, change kernel/network policy or run Windows administration commands as recovery.
+- **Fallback.** Report an unresolved backend/host restriction. Do not kill listeners, change kernel/network policy or run host administration commands as recovery.

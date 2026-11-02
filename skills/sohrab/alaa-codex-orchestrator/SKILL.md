@@ -131,13 +131,12 @@ When generating a goal condition, read `alaa-prompting-guide references/06-invoc
 
 Schedule these commands through `references/verification-and-gates.md` Gate economics. Proven aggregate coverage discharges only identical child invocations with the same scope/observer.
 
-Run `python scripts/check_agent_contracts.py` after instruction-contract changes and `python scripts/check_agent_contracts.py --self-test` after checker changes. Exit `0` is clean, `1` is findings, and `2` is unavailable proof; either nonzero blocks completion. These fixtures check source requirements, not live model behavior.
+Run `python3 scripts/check_agent_contracts.py` after instruction-contract changes. Exit `0` is clean, `1` is findings, and `2` is unavailable proof; either nonzero blocks completion. It checks source requirements, not live model behavior.
 
+After changing reviewer instructions, pins, agents, or version, run `python3 scripts/render_agents.py --write`, then `python3 scripts/render_agents.py --check` and `python3 scripts/validate_pack.py`. Exit `0` is clean, `1` is findings/drift, and `2` means unavailable proof; either nonzero blocks completion. Review both generated wrappers against `assets/reviewer-contract.md`.
 
-After changing reviewer instructions, pins, agents, or version, run `python scripts/render_agents.py --write`, then `python scripts/render_agents.py --check` and `python scripts/validate_pack.py`. Run `python scripts/render_agents.py --self-test` after renderer changes. Exit `0` is clean, `1` is findings/drift, and `2` means unavailable proof; either nonzero blocks completion. Review both generated wrappers against `assets/reviewer-contract.md`.
+After any change to `agents/`, run `python3 scripts/check_agent_grants.py`; it verifies the transport-neutral templates. To exercise live resolution manually, run `python3 scripts/check_agent_grants.py --materialize agents <new-empty-output-directory>` and inspect only the generated scratch directory. Exit `0` is clean, exit `1` means grant findings, and exit `2` means the checker could not run; both nonzero results fail completion. `scripts/validate_pack.py` checks the templates, and both agent installers materialize and validate the live resolved grants before writing.
 
-
-- After any change to `agents/`, run `python scripts/check_agent_grants.py`; it verifies the transport-neutral templates. To exercise live resolution manually, run `python scripts/check_agent_grants.py --materialize agents <new-empty-output-directory>` and inspect only the generated scratch directory. Exit `0` is clean, exit `1` means grant findings, and exit `2` means the checker could not run; both nonzero results fail completion. Run `python scripts/check_agent_grants.py --self-test` when changing the checker itself. `scripts/validate_pack.py` checks the templates, and both agent installers materialize and validate the live resolved grants before writing.
 Before planning or executing checks, load /alaa-testing-strategy and read its `references/100-test-execution.md` for execution, `references/110-execution-resources.md` for resources and timing, or `references/120-result-classification.md` for result classification and diagnosis. The router below retains legacy loading paths.
 
 ## 8. Safety and authority

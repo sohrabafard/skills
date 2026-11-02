@@ -34,7 +34,7 @@ Effective authority: inspect the active sandbox, parent overrides, and tool/MCP 
 Output contract:
 1. Restated outcome in one sentence.
 2. ACCEPTANCE CRITERIA: numbered, each one observable and checkable, each mapped to how it would be verified.
-3. NON-GOALS and explicit exclusions.
+3. NON-GOALS and explicit exclusions, including outcomes implied but deliberately out of scope.
 4. IMPLIED CONTRACTS the request assumes but does not state.
 5. PROPOSED LANES: one line each — outcome, owned scope, exclusions, dependencies.
 6. OPEN DECISIONS that require the user, each with the options and the tradeoff between them.

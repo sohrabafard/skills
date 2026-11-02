@@ -19,28 +19,7 @@
 <action_safety>No unrelated work, commit, deploy, publish, destructive action, or global configuration change.</action_safety>
 ```
 
-Use `routing-matrix.md` to select directly from the ratified lane record. Pass the same bounded lane block to the real registered variant; the compatibility role name never selects model or effort; explicitly supply the recorded task pair on the verified invocation surface. Preserve surviving work; no trial ladder or replay of completed work.
-
-## Implementer escalation lane
-
-```xml
-<task>Implement escalated lane <n>: <bounded outcome whose design is not yet decided>.</task>
-<role_selection><outcome/scope; settled and open decisions; failure/invariant reasoning; registered profile, selection reason and exceptional-admission evidence go once in `<task_controls>`></role_selection>
-<scope><owned files/modules>; exclude <everything else>.</scope>
-<acceptance_criteria><numbered, in the envelope criterion shape></acceptance_criteria>
-<dependencies><completed lane contracts or none></dependencies>
-<design_constraints><architecture decisions, contracts, call sites, tests, and documented failure semantics that bound the design></design_constraints>
-<skills><resolved lane bindings, including its matching clean-code owner or explicit repository baseline></skills>
-<verification tier="focused">
-  <commands><exact targeted commands: this lane's failure-mode tests plus lint, type, and build checks scoped to its files></commands>
-  <low_priority_runner><absolute path when CPU-heavy></low_priority_runner>
-  <resource_limits><priority, CPU count, workers, timeout></resource_limits>
-  <excluded>the full suite, the race detector, the end-to-end suite, and any other lane's checks</excluded>
-</verification>
-<task_acceptance><only for the explicitly assigned task owner: exact bounded task-acceptance selectors at task end, or not assigned; never boundary affected/exhaustive checks></task_acceptance>
-<action_safety>No unrelated work, commit, deploy, publish, destructive action, or global configuration change.</action_safety>
-<output>Lane outcome in one sentence; design decision, alternatives rejected, and the deciding evidence; touched files and why each changed, plus each contract, interface or settled decision a later lane or repair owner must know, with file:line; acceptance criteria mapped to implementation/tests; verification evidence with command, cwd, resource policy, exit/result; residual risks and checks not run; blockers or boundary conflicts.</output>
-```
+Use `routing-matrix.md` to select directly from the ratified lane record. Pass the same bounded lane block to the real registered variant; the compatibility role name never selects model or effort; explicitly supply the recorded task pair on the verified invocation surface. Preserve surviving work; no trial ladder or replay of completed work. Demanding work alone does not admit the exceptional implementation profile.
 
 ## Collected verification repair
 

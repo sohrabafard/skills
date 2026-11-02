@@ -19,7 +19,7 @@
 <action_safety>No unrelated work, commit, deploy, publish, destructive action, or global configuration change.</action_safety>
 ```
 
-Select the exact registered variant from the ratified lane record using `routing-matrix.md`; demanding workhorse work alone does not admit the exceptional implementation profile.
+Select the exact registered variant from the ratified lane record using `routing-matrix.md`; demanding workhorse work alone does not admit the exceptional implementation profile. Preserve surviving work; no trial ladder or replay of completed work.
 
 ## Collected verification repair
 

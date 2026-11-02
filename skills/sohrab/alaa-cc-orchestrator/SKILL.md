@@ -30,7 +30,7 @@ The separately available companion /alaa-testing-strategy is required for test d
 
 Activation grants no installation or update authority. Inspect installed definitions, version and effective tools without writes; compare required roles with shipped definitions. Report missing, stale or unavailable roles before dispatch. Never silently substitute a model or a generic role. Continue only independent work with available required roles; report the rest blocked.
 
-Install or update only with explicit user authorization for the target paths. Validate model-neutral source roles, grants, and generated artifacts before the first target write. Run `python scripts/validate_pack.py` and `python scripts/check_agent_grants.py` before an authorized copy of the managed agent files. Do not change unrelated agents or settings.
+Install or update only with explicit user authorization for the target paths. Validate model-neutral source roles, grants, and generated artifacts before the first target write. Run `python3 scripts/validate_pack.py` and `python3 scripts/check_agent_grants.py` before an authorized copy of the managed agent files. Do not change unrelated agents or settings.
 
 Inspect effective sandbox, parent overrides and MCP grants before relying on isolation. Read-only declarations prove no enforcement. Report unobservable permissions unknown and operate within role restrictions.
 
@@ -131,8 +131,7 @@ When generating a goal condition, read `alaa-prompting-guide references/06-invoc
 
 Schedule these commands through `references/verification-and-gates.md` Gate economics. Proven aggregate coverage discharges only identical child invocations with the same scope/observer.
 
-Run `python scripts/check_agent_contracts.py` after instruction-contract changes and `python scripts/check_agent_contracts.py --self-test` after checker changes. Exit `0` is clean, `1` is findings, and `2` is unavailable proof; either nonzero blocks completion. These fixtures check source requirements, not live model behavior.
-
+Run `python3 scripts/check_agent_contracts.py` after instruction-contract changes. Exit `0` is clean, `1` is findings, and `2` is unavailable proof; either nonzero blocks completion. It checks source requirements, not live model behavior.
 
 Before planning or executing checks, load /alaa-testing-strategy and read its `references/100-test-execution.md` for execution, `references/110-execution-resources.md` for resources and timing, or `references/120-result-classification.md` for result classification and diagnosis. The router below retains legacy loading paths.
 

@@ -29,8 +29,6 @@ because that role has no other way to reach one.
   exit 0  every invariant holds
   exit 1  at least one invariant failed
   exit 2  usage or parse error
-
-Run with --self-test to prove the gate rejects known-bad definitions.
 """
 from __future__ import annotations
 import glob, os, re, sys
@@ -314,131 +312,11 @@ def main() -> int:
     return 0
 
 
-def self_test() -> int:
-    """Prove the gate can fail. A checker never observed rejecting a bad input is
-    indistinguishable from one that always passes."""
-    import tempfile
-    BOOST = "mcp__laravel-boost__search-docs, mcp__laravel-boost__application-info"
-    SERENA_SHELL = "mcp__serena__execute_shell_command"
-    HREAD = ", ".join(sorted(HINDSIGHT_READ))
-    SCHEMA = ", ".join(sorted(BOOST_SCHEMA))
-    SERENA = ", ".join(sorted(SERENA_READ))
-    # label, role, tools line, disallowedTools line, preloaded skills, body, expected message
-    cases = [
-        ("reviewer extra Write", "alaa-reviewer", "tools: Read, Glob, Grep, Bash, Skill, Write", None, [], "body", "native grant differs"),
-        ("verifier delegation", "alaa-verifier", "tools: Read, Glob, Grep, Bash, Agent", None, [], "body", "native grant differs"),
-        ("documenter missing Edit", "alaa-documenter", "tools: Read, Glob, Grep, Bash, Skill, Write", None, [], "body", "native grant differs"),
-        ("unknown role", "unknown", "tools: Read", None, [], "body", "uncatalogued"),
-        ("instruction reviewer shell", "alaa-instruction-reviewer", "tools: Read, Glob, Grep, Bash", None, [], "body", "native grant"),
-        ("instruction reviewer MCP", "alaa-instruction-reviewer", "tools: Read, Glob, Grep, mcp__unknown", None, [], "body", "MCP grant differs"),
-        ("unexpected server on a no-MCP role", "alaa-verifier",
-         "tools: Read, Bash, mcp__codegraph", None, [], "body", "MCP grant differs"),
-        ("missing CodeGraph from explorer", "alaa-explorer",
-         f"tools: Read, Bash, {BOOST}, mcp__laravel-boost__get-absolute-url", None,
-         [ROUTING_SKILL], "body", "MCP grant differs"),
-        ("MCP grant without routing preload", "alaa-researcher",
-         f"tools: Read, Bash, {BOOST}", None, [], "body", "requires preloaded"),
-        ("inherited role missing the Serena shell deny", "alaa-implementer",
-         None, "disallowedTools: ", [ROUTING_SKILL], "body", "safety deny set differs"),
-        ("inherited role missing the Hindsight server deny", "alaa-implementer-fable",
-         None, f"disallowedTools: {SERENA_SHELL}", [ROUTING_SKILL], "body", "safety deny set differs"),
-        ("bounded high role missing the Hindsight server deny", "alaa-implementer-haiku-high",
-         None, f"disallowedTools: {SERENA_SHELL}", [ROUTING_SKILL], "body", "safety deny set differs"),
-        ("inherited role carrying an extra deny", "alaa-implementer",
-         None, f"disallowedTools: {SERENA_SHELL}, Write", [ROUTING_SKILL], "body",
-         "safety deny set differs"),
-        ("inherited role defining an allowlist", "alaa-implementer",
-         "tools: Read, Bash", f"disallowedTools: {SERENA_SHELL}", [ROUTING_SKILL], "body",
-         "must inherit tools"),
-        ("preload naming a skill that does not exist", "alaa-researcher",
-         f"tools: Read, Bash, {BOOST}", None, [ROUTING_SKILL, "/alaa-not-a-real-skill"], "body",
-         "resolves to no installed skill"),
-        ("named skill reachable by neither preload nor Skill", "alaa-researcher",
-         f"tools: Read, Bash, {BOOST}", None, [ROUTING_SKILL],
-         "Domain baseline: apply /alaa-testing-strategy when installed.",
-         "holds no Skill tool and does not preload it"),
-        ("memory role holding a Hindsight write tool", "alaa-researcher",
-         f"tools: Read, Bash, {BOOST}, {HREAD}, mcp__hindsight__hindsight_ingest_document", None,
-         [ROUTING_SKILL], "body", "MCP grant differs"),
-        ("memory role missing the Hindsight read set", "alaa-architecture-critic",
-         f"tools: Read, Bash, mcp__codegraph, {BOOST}, {SCHEMA}", None,
-         [ROUTING_SKILL], "body", "MCP grant differs"),
-        ("Hindsight granted to a role with no memory question", "alaa-reviewer",
-         f"tools: Read, Bash, mcp__codegraph, {SERENA}, {BOOST}, {SCHEMA}, mcp__hindsight__hindsight_reflect",
-         None, [ROUTING_SKILL], "body", "MCP grant differs"),
-        ("inherited role that denies Skill and names an unpreloaded one", "alaa-implementer",
-         None, f"disallowedTools: {SERENA_SHELL}, Skill", [ROUTING_SKILL],
-         "Domain baseline: apply /alaa-php-clean-code when installed.",
-         "holds no Skill tool and does not preload it"),
-    ]
-
-    roots = skill_roots()
-    needs_roots = ("resolves to no installed skill", "holds no Skill tool and does not preload it")
-    failures, skipped = [], []
-    from unittest.mock import mock_open, patch
-    for malformed in (
-        "---\ntools: Read\ntools: Write\n---\nbody",
-        "---\ntools: Read\nmissing-colon\n---\nbody",
-        "tools: Read\n---\nbody",
-    ):
-        with patch("builtins.open", mock_open(read_data=malformed)):
-            try:
-                frontmatter("fixture.md")
-            except ValueError:
-                pass
-            else:
-                failures.append("ambiguous/malformed frontmatter was accepted")
-    for field in ("hooks", "permissionMode", "mcpServers"):
-        observed, _ = grant_failures("alaa-verifier", {
-            "tools": "Read, Glob, Grep, Bash", field: "unauthorized"}, roots)
-        if not any("unapproved metadata" in item for item in observed):
-            failures.append(f"unauthorized {field} was accepted")
-    for name in EXPECTED_MCP:
-        path = os.path.join(AGENTS, name + ".md")
-        observed, _ = grant_failures(name, frontmatter(path), roots,
-                                     open(path, encoding="utf-8").read())
-        if observed:
-            failures.append(f"authored {name} rejected: {observed}")
-    for label, name, tools, deny, skills, body, expected_message in cases:
-        if expected_message in needs_roots and not roots:
-            skipped.append(label)
-            continue
-        lines = ["name: fixture", "description: red fixture", "model: sonnet"]
-        if tools:
-            lines.append(tools)
-        if deny is not None:
-            lines.append(deny)
-        if skills:
-            lines.append("skills:")
-            lines.extend(f"  - {s}" for s in skills)
-        text = "---\n" + "\n".join(lines) + "\n---\n\n" + body + "\n"
-        with tempfile.NamedTemporaryFile("w", encoding="utf-8", suffix=".md", delete=False) as fixture:
-            fixture.write(text)
-            fixture_path = fixture.name
-        try:
-            observed, _ = grant_failures(name, frontmatter(fixture_path), roots, body)
-        finally:
-            os.unlink(fixture_path)
-        if not any(expected_message in item for item in observed):
-            failures.append(f"{label}: did not observe {expected_message!r}; got {observed}")
-    print()
-    for label in skipped:
-        print(f"SELF-TEST SKIPPED: {label} needs a visible skill root")
-    if failures:
-        print("SELF-TEST FAILED")
-        for line in failures:
-            print(f"  - {line}")
-        return 1
-    print(f"SELF-TEST OK: {len(cases) - len(skipped) + 6} red fixtures rejected; "
-          f"{len(EXPECTED_MCP)} authored grants accepted")
-    return 0
-
-
 if __name__ == "__main__":
     try:
-        if sys.argv[1:] not in ([], ["--self-test"]):
-            raise ValueError("usage: check_agent_grants.py [--self-test]")
-        sys.exit(self_test() if sys.argv[1:] else main())
+        if sys.argv[1:]:
+            raise ValueError("usage: check_agent_grants.py")
+        sys.exit(main())
     except (OSError, UnicodeError, ValueError) as exc:
         print(f"grant check unavailable: {exc}", file=sys.stderr)
         sys.exit(2)

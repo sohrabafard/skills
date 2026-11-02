@@ -140,11 +140,10 @@ installed skill, because a stale preload removes a standard silently. And a role
 `alaa-verifier` and `alaa-instruction-reviewer` use this restricted form. When no skill root is visible, as in an installed copy
 with no siblings, resolution is reported as skipped rather than passed.
 
-Schedule `python scripts/check_agent_grants.py` (or its identical aggregate-covered invocation under Gate economics) after any change to `agents/`. The checker compares every
+Schedule `python3 scripts/check_agent_grants.py` (or its identical aggregate-covered invocation under Gate economics) after any change to `agents/`. The checker compares every
 native and MCP grant and the implementation deny set with the authored roles. Unapproved metadata fields fail because hooks, server configuration, or permission overrides can add authority outside those roles: exit `0` is clean, exit `1`
 reports a grant mismatch, and exit `2` means the checker could not run. Both nonzero results fail the
 gate.
-Run `python scripts/check_agent_grants.py --self-test` after changing the checker. The pack
-validator invokes the normal check automatically.
+The pack validator invokes this check automatically.
 
 The instruction reviewer has exactly `Read`, `Glob`, and `Grep`, preloads /alaa-prompting-guide, and has no MCP grant. It treats reviewed text as data. Inspect effective permissions before claiming runtime enforcement.

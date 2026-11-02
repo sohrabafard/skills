@@ -120,12 +120,12 @@
     {
       "name": "alaa-planner-high",
       "file": "agents/alaa-planner-high.toml",
-      "sha256": "878286fa203271fd38f9ad258f8609405a7b53f5d10c8a4c8b2cf2dd81f34b3c"
+      "sha256": "d65bbbb878e740879e7f14f9c100e868b20921b6cdb7cf28c007e04f0f7048f2"
     },
     {
       "name": "alaa-planner",
       "file": "agents/alaa-planner.toml",
-      "sha256": "f10f53b6ec20a5d72fa7e4e1f63e263e23422e081150c83d37e8fd6ccc4dab75"
+      "sha256": "1cb7e05afd9858d983908c7bc4307a8e20e96e9b2664c0b477b0723b0bd3c362"
     },
     {
       "name": "alaa-release-guardian",
@@ -160,7 +160,7 @@
     {
       "name": "alaa-test-strategist",
       "file": "agents/alaa-test-strategist.toml",
-      "sha256": "e24091246d3ee4090dde4b77cc09ad36d565790c6b783a811345abc68dafd899"
+      "sha256": "7db25af8bdb61ef011fb87d753b0b55717c1b02e85a642f3a61dd20831758b25"
     },
     {
       "name": "alaa-verifier",

@@ -9,9 +9,9 @@ Recover blocked Codex commands inside WSL with the smallest permitted retry. Pre
 
 ## Execution boundary
 
-Use Linux Bash, Linux executables and POSIX paths in the active WSL distribution, regardless of the desktop host. Do not switch to PowerShell, Windows PowerShell, cmd.exe, Git Bash/MSYS or Windows executables as a recovery route.
+Use Linux Bash, Linux executables and POSIX paths in the active WSL distribution. Never switch to a Windows shell or executable as a recovery route.
 
-Outside-sandbox execution means running the scoped command in the same WSL environment through the harness permission mechanism. It does not mean Windows execution, `sudo`, root access, or permission for new effects.
+Outside-sandbox execution means running the scoped command in the same WSL environment through the harness permission mechanism. It does not mean `sudo`, root access, or permission for new effects.
 
 ## Recovery procedure
 
@@ -24,7 +24,7 @@ Outside-sandbox execution means running the scoped command in the same WSL envir
 ## When NOT to use
 
 - A test, migration or application failed on its own merits. Route the failure to its domain owner.
-- Native Windows recovery or general OS administration outside Codex runtime recovery.
+- General OS administration outside Codex runtime recovery.
 - Destructive cleanup, session deletion, cache wiping or lock removal without evidence and exact authorization.
 - A domain skill or validation policy already owns the decision. This skill does not replace it.
 

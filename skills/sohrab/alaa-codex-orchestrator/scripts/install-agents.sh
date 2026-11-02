@@ -15,10 +15,8 @@ policy_root="${3:-$(dirname "$source_root")/alaa-prompting-guide}"
 
 if command -v python3 >/dev/null 2>&1; then
   python_cmd=(python3)
-elif command -v python >/dev/null 2>&1; then
-  python_cmd=(python)
 else
-  echo "Python 3 is required to validate agent grants before installation" >&2
+  echo "python3 is required to validate agent grants before installation" >&2
   exit 2
 fi
 

@@ -153,11 +153,7 @@ for rel in [
     "references/failure-taxonomy.md",
     "references/verification-and-gates.md",
     "references/installation.md",
-    "scripts/Install-AlaaCodexAgents.ps1",
-    "scripts/Install-AlaaCodexOrchestrator.ps1",
-    "scripts/Get-AlaaCodexAgentStatus.ps1",
     "scripts/check_agent_grants.py",
-    "scripts/Invoke-AlaaLowPriority.ps1",
     "scripts/install-agents.sh",
     "scripts/install-skill.sh",
     "scripts/run-low-priority.sh",
@@ -178,15 +174,15 @@ for name in REQUIRED:
     if name not in skill and name not in routing:
         errors.append(f"agent absent from skill/routing: {name}")
 
-for relative in ("scripts/run-low-priority.sh", "scripts/Invoke-AlaaLowPriority.ps1"):
-    if not (execution.ROOT / relative).is_file():
-        errors.append(f"missing canonical execution runner: {relative}")
+runner = "scripts/run-low-priority.sh"
+if not (execution.ROOT / runner).is_file():
+    errors.append(f"missing canonical execution runner: {runner}")
 
 if execution.RESOURCES not in skill or "--browser chromium" not in (execution.ROOT / execution.RESOURCES).read_text(encoding="utf-8"):
     errors.append("hard browser chromium preservation rule is missing")
 
 for path in sorted(ROOT.rglob("*")):
-    if not path.is_file() or path.suffix not in {".md", ".toml", ".yaml", ".py", ".sh", ".ps1"}:
+    if not path.is_file() or path.suffix not in {".md", ".toml", ".yaml", ".py", ".sh"}:
         continue
     # The sweep's own pattern lives in this file, and CHANGELOG.md is a historical
     # record that must be able to name what a revision migrated away from. Neither
