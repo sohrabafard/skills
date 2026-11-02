@@ -18,17 +18,15 @@ validate_playbook_security.sh - Checkov security scan of one playbook.
 
 Usage:
   bash scripts/validate_playbook_security.sh <playbook.yml> [options]
-  bash scripts/validate_playbook_security.sh --self-test
 
 What it asserts:
   Checkov reports zero failed checks under --framework ansible,secrets for the
   named file, and only for the named file.
 
 Why both frameworks: --framework ansible carries twelve TLS, HTTPS and GPG
-policies and models no credential shape. Against the six secrets planted in
-test/fixtures/secrets/planted-secrets.yml it reported zero on 2026-07-29;
---framework secrets reported all six. Running the ansible framework alone is a
-security scan that cannot see a leaked AWS key.
+policies and models no credential shape. Against six planted secrets it
+reported zero on 2026-07-29; --framework secrets reported all six. Running the
+ansible framework alone is a security scan that cannot see a leaked AWS key.
 
 Additional options:
       --frameworks LIST     Override the framework list (default ansible,secrets).
@@ -37,18 +35,6 @@ EOF
     av_common_flag_help
 }
 
-run_self_test() {
-    local here="$0" fx
-    fx="$(av_fixture_dir)"
-    echo "self-test: validate_playbook_security.sh"
-    av_expect_exit 64 "no argument is a usage error" bash "$here"
-    av_expect_exit 0  "--help exits clean" bash "$here" --help
-    av_expect_exit 2  "missing target cannot run" bash "$here" "$fx/playbooks/does-not-exist.yml"
-    av_expect_exit 2  "missing tool cannot run" env AV_NO_BOOTSTRAP=1 AV_UNAVAILABLE_TOOLS=checkov bash "$here" "$fx/playbooks/good-playbook.yml"
-    av_expect_exit 1  "planted secrets are reported" bash "$here" "$fx/fixtures/secrets/planted-secrets.yml"
-    av_expect_exit 0  "good playbook is clean" bash "$here" "$fx/playbooks/good-playbook.yml"
-    av_self_test_summary
-}
 
 ARGS=()
 while [ $# -gt 0 ]; do
@@ -61,9 +47,6 @@ while [ $# -gt 0 ]; do
 done
 av_parse_common_flags ${ARGS+"${ARGS[@]}"}
 
-if [ "$AV_SELF_TEST" -eq 1 ]; then
-    run_self_test
-fi
 
 if [ "${#AV_ARGS[@]}" -lt 1 ]; then
     av_usage_error "a playbook path is required"

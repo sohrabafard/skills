@@ -29,8 +29,7 @@ not partly eaten by `CHANGE_ME_service`.
 **Do not reintroduce the bracketed form.** `[ role_name ]_port: [ default_port ]`
 is not a placeholder: YAML reads `[ role_name ]` as a one-element flow sequence,
 so the line is a mapping key that begins with a sequence and the file does not
-load. `check_templates.py` reports it as `placeholder[bracketed]`, and
-`test/fixtures/broken-bracket-placeholder.yml` is the regression fixture.
+load. `check_templates.py` reports it as `placeholder[bracketed]`.
 
 ## What each template is
 
@@ -69,14 +68,13 @@ the values.
 |---|---|
 | `ansible.cfg` | validated clean by `ansible-config validate -t all`; `host_key_checking = True`, no blanket `become`, fact cache outside `/tmp` |
 | `requirements.yml` | the two collections a normal project needs, with floors, and commented examples for the rest |
-| `.ansible-lint` | **a copy**, owned by `ansible-validator` (`/ansible-validator`, `$ansible-validator`) at its `assets/.ansible-lint` |
+| `.ansible-lint` | **a copy**, owned by `/ansible-validator` at its `assets/.ansible-lint` |
 
 **On `.ansible-lint`.** This skill does not own a lint configuration. The file
 in `assets/templates/project/` is a copy with a header comment naming the owner,
 because two divergent forks of one config mean the lint result depends on which
 copy an agent happened to pick. To change it, change it in `ansible-validator`,
-where `scripts/check_assets.sh` proves that every rule in its `enable_list`
-still fires on a fixture built to violate it, then copy the result back.
+then copy the result back.
 
 The 267-line file this scaffold shipped until 2026-07-29 was rejected outright
 by ansible-lint with exit 3 — `'severity' was unexpected`, from a per-rule
@@ -110,12 +108,6 @@ bash    <ansible-validator>/scripts/validate_role.sh   roles/$ROLE
 `placeholder[unsubstituted]`, which is the observable form of the old
 instruction "replace all `[PLACEHOLDERS]` with actual values".
 
-`test/fixtures/scaffold_role/` is that procedure carried out once and committed:
-the shipped scaffold with `ROLE_NAME` set to `demo_nginx` and every token
-supplied. `scripts/check_templates.py --self-test` asserts it is clean in output
-mode, and `validate_role.sh` passes it with no findings. When you change a
-template, regenerate that fixture in the same change.
-
 ## Creating a project
 
 ```bash
@@ -145,6 +137,4 @@ python3 <ansible-validator>/scripts/check_module_currency.py assets/templates
 
 The first proves every template still parses, still uses canonical booleans and
 still carries its substitution tokens. The second proves no example names a
-module that ansible-core no longer provides directly. Then regenerate
-`test/fixtures/scaffold_role/` and re-run
-`bash <ansible-validator>/scripts/validate_role.sh test/fixtures/scaffold_role`.
+module that ansible-core no longer provides directly.

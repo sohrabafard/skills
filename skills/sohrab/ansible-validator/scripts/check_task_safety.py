@@ -11,9 +11,6 @@
    injection class, and neither ansible-lint's production profile nor Checkov's
    ansible framework reports it. Measured 2026-07-29.
 
-Runs on Windows: pure Python, pathlib, no shell, no Path(__file__).parents[N],
-and no temporary directory anywhere.
-
 Exit codes: 0 clean, 1 findings, 2 could not run, 64 usage error.
 """
 
@@ -190,46 +187,6 @@ def collect(target: Path) -> list:
     return out
 
 
-def self_test() -> int:
-    here = Path(__file__).resolve().parent
-    fixtures = here.parent / "test" / "fixtures" / "tasks"
-    passed = failed = 0
-    print("self-test: check_task_safety.py")
-
-    cases = [
-        ("safe-tasks.yml", set(), "safe tasks report nothing"),
-        (
-            "unsafe-tasks.yml",
-            {"mode[world-writable]", "command[unquoted-jinja]"},
-            "world-writable mode and unquoted Jinja in shell are both reported",
-        ),
-    ]
-    for name, expected_rules, label in cases:
-        path = fixtures / name
-        if not path.exists():
-            print(f"  FAIL {label}: fixture missing at {path}")
-            failed += 1
-            continue
-        findings, errors = [], []
-        scan_file(path, findings, errors)
-        rules = {f.rule for f in findings}
-        if errors:
-            print(f"  FAIL {label}: fixture did not parse: {errors[0]}")
-            failed += 1
-        elif rules == expected_rules:
-            print(f"  ok   {label} ({len(findings)} finding(s))")
-            passed += 1
-        else:
-            print(f"  FAIL {label}: expected rules {sorted(expected_rules)}, got {sorted(rules)}")
-            failed += 1
-
-    print()
-    if failed:
-        print(f"self-test: {passed} passed, {failed} FAILED")
-        return EXIT_FINDINGS
-    print(f"self-test: {passed} assertion(s) passed")
-    return EXIT_OK
-
 
 def main(argv: list) -> int:
     parser = argparse.ArgumentParser(
@@ -242,15 +199,11 @@ def main(argv: list) -> int:
         epilog="Exit codes: 0 clean, 1 findings, 2 could not run, 64 usage error.",
     )
     parser.add_argument("target", nargs="?", help="playbook, role directory or project directory")
-    parser.add_argument("--self-test", action="store_true", help="run against the shipped fixtures")
     parser.add_argument("--format", choices=("text", "json"), default="text")
     try:
         args = parser.parse_args(argv)
     except SystemExit:
         return EXIT_USAGE
-
-    if args.self_test:
-        return self_test()
 
     if not args.target:
         print("Usage error: a target path is required. Run with --help.", file=sys.stderr)

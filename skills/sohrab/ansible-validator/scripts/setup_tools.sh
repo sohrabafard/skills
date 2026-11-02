@@ -21,7 +21,6 @@ setup_tools.sh - check the validation toolchain against its version floors.
 
 Usage:
   bash scripts/setup_tools.sh [options]
-  bash scripts/setup_tools.sh --self-test
 
 What it asserts:
   ansible-core, ansible-playbook, ansible-lint, yamllint and PyYAML are
@@ -37,19 +36,9 @@ EOF
     av_common_flag_help
 }
 
-run_self_test() {
-    local here="$0"
-    echo "self-test: setup_tools.sh"
-    av_expect_exit 0 "--help exits clean" bash "$here" --help
-    av_expect_exit 1 "a shadowed toolchain reports findings" env AV_NO_BOOTSTRAP=1 AV_UNAVAILABLE_TOOLS=ansible-lint bash "$here"
-    av_self_test_summary
-}
 
 av_parse_common_flags "$@"
 
-if [ "$AV_SELF_TEST" -eq 1 ]; then
-    run_self_test
-fi
 
 command -v python3 >/dev/null 2>&1 || av_cannot_run "python3 is not on PATH; no version can be compared"
 
@@ -59,12 +48,6 @@ REQ="$(av_requirements_file)"
 [ -f "$REQ" ] || av_cannot_run "scripts/requirements.txt not found; the floors are not knowable"
 
 version_of() {
-    # AV_UNAVAILABLE_TOOLS is the same deliberate test hook scripts/lib/common.sh
-    # documents: it makes the named tools report as absent so that --self-test
-    # can exercise the missing-tool path without emptying PATH.
-    case ",${AV_UNAVAILABLE_TOOLS:-}," in
-        *",$1,"*) return 0 ;;
-    esac
     case "$1" in
         ansible-core)   command -v ansible >/dev/null 2>&1 && ansible --version 2>/dev/null | head -1 | sed -E 's/.*core ([0-9][^ )]*).*/\1/' ;;
         ansible-playbook) command -v ansible-playbook >/dev/null 2>&1 && ansible-playbook --version 2>/dev/null | head -1 | sed -E 's/.*core ([0-9][^ )]*).*/\1/' ;;

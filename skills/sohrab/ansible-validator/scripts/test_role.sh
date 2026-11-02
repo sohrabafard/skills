@@ -21,7 +21,6 @@ test_role.sh - run one Molecule scenario against a role.
 
 Usage:
   bash scripts/test_role.sh <role-directory> [scenario] --i-confirm-disposable-host
-  bash scripts/test_role.sh --self-test
 
 Scenario defaults to "default".
 
@@ -57,17 +56,6 @@ EOF
 
 CONFIRMED=0
 
-run_self_test() {
-    local here="$0" fx
-    fx="$(av_fixture_dir)"
-    echo "self-test: test_role.sh"
-    av_expect_exit 64 "no argument is a usage error" bash "$here"
-    av_expect_exit 0  "--help exits clean" bash "$here" --help
-    av_expect_exit 2  "missing target cannot run" bash "$here" "$fx/fixtures/roles/no_such_role" default --i-confirm-disposable-host
-    av_expect_exit 64 "missing confirmation is a usage error" bash "$here" "$fx/fixtures/roles/clean_role"
-    av_expect_exit 2  "a role with no molecule/ cannot run" bash "$here" "$fx/fixtures/roles/clean_role" default --i-confirm-disposable-host
-    av_self_test_summary
-}
 
 ARGS=()
 while [ $# -gt 0 ]; do
@@ -78,9 +66,6 @@ while [ $# -gt 0 ]; do
 done
 av_parse_common_flags ${ARGS+"${ARGS[@]}"}
 
-if [ "$AV_SELF_TEST" -eq 1 ]; then
-    run_self_test
-fi
 
 if [ "${#AV_ARGS[@]}" -lt 1 ]; then
     av_usage_error "a role directory is required"

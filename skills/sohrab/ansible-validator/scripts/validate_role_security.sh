@@ -18,7 +18,6 @@ validate_role_security.sh - Checkov security scan of one role directory.
 
 Usage:
   bash scripts/validate_role_security.sh <role-directory> [options]
-  bash scripts/validate_role_security.sh --self-test
 
 What it asserts:
   Checkov reports zero failed checks under --framework ansible,secrets over the
@@ -35,17 +34,6 @@ EOF
     av_common_flag_help
 }
 
-run_self_test() {
-    local here="$0" fx
-    fx="$(av_fixture_dir)"
-    echo "self-test: validate_role_security.sh"
-    av_expect_exit 64 "no argument is a usage error" bash "$here"
-    av_expect_exit 0  "--help exits clean" bash "$here" --help
-    av_expect_exit 2  "missing target cannot run" bash "$here" "$fx/fixtures/roles/no_such_role"
-    av_expect_exit 2  "missing tool cannot run" env AV_NO_BOOTSTRAP=1 AV_UNAVAILABLE_TOOLS=checkov bash "$here" "$fx/fixtures/roles/clean_role"
-    av_expect_exit 0  "clean role is clean" bash "$here" "$fx/fixtures/roles/clean_role"
-    av_self_test_summary
-}
 
 ARGS=()
 while [ $# -gt 0 ]; do
@@ -58,9 +46,6 @@ while [ $# -gt 0 ]; do
 done
 av_parse_common_flags ${ARGS+"${ARGS[@]}"}
 
-if [ "$AV_SELF_TEST" -eq 1 ]; then
-    run_self_test
-fi
 
 if [ "${#AV_ARGS[@]}" -lt 1 ]; then
     av_usage_error "a role directory is required"

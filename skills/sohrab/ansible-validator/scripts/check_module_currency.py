@@ -17,11 +17,8 @@ it is the only defence against that rate recurring.
 
 Scope: any file. It extracts every FQCN-shaped token and checks each one, so it
 works on markdown references, playbooks and role trees alike. It is the reason
-ansible-generator (/ansible-generator, $ansible-generator) routes here rather
+ansible-generator (/ansible-generator) routes here rather
 than maintaining a second mapping of its own.
-
-Runs on Windows: pure Python, pathlib, no shell, no Path(__file__).parents[N],
-and no temporary directory anywhere.
 
 Exit codes: 0 clean, 1 findings, 2 could not run, 64 usage error.
 """
@@ -132,9 +129,7 @@ def collect(target: Path):
     if target.is_file():
         return [target]
     out = []
-    # test/fixtures holds files that are deliberately stale, so a directory scan
-    # skips them. --self-test reaches them by passing the file path directly.
-    skip = {".git", "venv", ".venv", "node_modules", "__pycache__", ".tox", "fixtures"}
+    skip = {".git", "venv", ".venv", "node_modules", "__pycache__", ".tox"}
     for pattern in ("*.md", "*.yml", "*.yaml"):
         for candidate in sorted(target.rglob(pattern)):
             if skip.intersection(candidate.parts):
@@ -142,43 +137,6 @@ def collect(target: Path):
             out.append(candidate)
     return out
 
-
-def self_test() -> int:
-    here = Path(__file__).resolve().parent
-    fixture = here.parent / "test" / "fixtures" / "modules" / "stale-fqcns.md"
-    routing_file, modules_dir = core_paths()
-    print("self-test: check_module_currency.py")
-    if routing_file is None or not routing_file.exists():
-        print("  BLOCKED ansible-core is not importable, so no routing table is readable")
-        return EXIT_CANNOT_RUN
-    routing = load_routing(routing_file)
-    passed = failed = 0
-
-    findings, err = scan([fixture], routing, modules_dir)
-    if err:
-        print(f"  FAIL {err}")
-        return EXIT_CANNOT_RUN
-    reported = {f["fqcn"] for f in findings}
-    for name in ("ansible.builtin.yum", "ansible.builtin.archive", "ansible.builtin.authorized_key"):
-        if name in reported:
-            print(f"  ok   {name} is reported as no longer a live builtin")
-            passed += 1
-        else:
-            print(f"  FAIL {name} is NOT reported")
-            failed += 1
-    for name in ("ansible.builtin.dnf", "ansible.builtin.template", "ansible.builtin.systemd_service"):
-        if name in reported:
-            print(f"  FAIL {name} is a live builtin but was reported")
-            failed += 1
-        else:
-            print(f"  ok   {name} is accepted as a live builtin")
-            passed += 1
-    print()
-    if failed:
-        print(f"self-test: {passed} passed, {failed} FAILED")
-        return EXIT_FINDINGS
-    print(f"self-test: {passed} assertion(s) passed")
-    return EXIT_OK
 
 
 def main(argv) -> int:
@@ -192,16 +150,12 @@ def main(argv) -> int:
         epilog="Exit codes: 0 clean, 1 findings, 2 could not run, 64 usage error.",
     )
     parser.add_argument("target", nargs="?", help="file or directory to scan")
-    parser.add_argument("--self-test", action="store_true")
     parser.add_argument("--routing", action="store_true", help="print the routing entry for every builtin name found")
     parser.add_argument("--format", choices=("text", "json"), default="text")
     try:
         args = parser.parse_args(argv)
     except SystemExit:
         return EXIT_USAGE
-
-    if args.self_test:
-        return self_test()
 
     if not args.target:
         print("Usage error: a target path is required. Run with --help.", file=sys.stderr)

@@ -5,7 +5,7 @@
 **2.1 Every task has a `name`.** The name is what an operator reads in the
 output of a failing run at 03:00.
 *Reported by:* `ansible-lint` rule `name[missing]`, which `assets/.ansible-lint`
-enables. `scripts/check_assets.sh` asserts that it fires.
+enables.
 
 **2.2 A task name starts with a capital letter and a verb in the imperative:**
 "Install nginx", "Ensure the configuration directory exists", "Reload the web

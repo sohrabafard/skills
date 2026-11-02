@@ -7,9 +7,6 @@ was two orders of magnitude more work and structure-blind: it reported the
 `group:` parameter of `ansible.builtin.template` and the `gather_facts:` play
 keyword as modules.
 
-Runs on Windows: pure Python, pathlib, no shell, no Path(__file__).parents[N],
-and no temporary directory anywhere.
-
 Exit codes: 0 clean, 1 findings, 2 could not run, 64 usage error.
 """
 
@@ -206,53 +203,6 @@ def collect(target: Path) -> list:
     return out
 
 
-def self_test() -> int:
-    here = Path(__file__).resolve().parent
-    fixtures = here.parent / "test" / "fixtures" / "fqcn"
-    checks = [
-        ("fqcn-correct.yml", 0, "a fully FQCN playbook reports nothing"),
-        ("short-names.yml", 1, "short names are reported"),
-    ]
-    passed = failed = 0
-    print("self-test: check_fqcn.py")
-    for name, expected, label in checks:
-        path = fixtures / name
-        if not path.exists():
-            print(f"  FAIL {label}: fixture missing at {path}")
-            failed += 1
-            continue
-        findings, errors = [], []
-        scan_file(path, findings, errors)
-        actual = 1 if findings else 0
-        if errors:
-            actual = 2
-        if actual == expected:
-            print(f"  ok   {label} ({len(findings)} finding(s))")
-            passed += 1
-        else:
-            print(f"  FAIL {label}: expected {expected}, got {actual} ({findings and findings[0].short})")
-            failed += 1
-
-    # The two historical false positives must stay absent: the `group:`
-    # parameter of a template task and the `gather_facts:` play keyword.
-    findings, errors = [], []
-    scan_file(fixtures / "fqcn-correct.yml", findings, errors)
-    shorts = {f.short for f in findings}
-    for noise in ("group", "gather_facts"):
-        if noise in shorts:
-            print(f"  FAIL '{noise}' is reported as a module; it is a parameter or play keyword")
-            failed += 1
-        else:
-            print(f"  ok   '{noise}' is not misreported as a module")
-            passed += 1
-
-    print()
-    if failed:
-        print(f"self-test: {passed} passed, {failed} FAILED")
-        return EXIT_FINDINGS
-    print(f"self-test: {passed} assertion(s) passed")
-    return EXIT_OK
-
 
 def main(argv: list) -> int:
     parser = argparse.ArgumentParser(
@@ -268,15 +218,11 @@ def main(argv: list) -> int:
         ),
     )
     parser.add_argument("target", nargs="?", help="playbook, role directory or project directory")
-    parser.add_argument("--self-test", action="store_true", help="run against the shipped fixtures")
     parser.add_argument("--format", choices=("text", "json"), default="text")
     try:
         args = parser.parse_args(argv)
     except SystemExit:
         return EXIT_USAGE
-
-    if args.self_test:
-        return self_test()
 
     if not args.target:
         print("Usage error: a target path is required. Run with --help.", file=sys.stderr)

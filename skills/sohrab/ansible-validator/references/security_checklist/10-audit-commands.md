@@ -11,7 +11,7 @@ python3 scripts/check_task_safety.py <target>         # world-writable modes, sh
 ```
 
 **Why three and not one.** Each covers what the others cannot, measured
-2026-07-29 against `test/fixtures/secrets/planted-secrets.yml`:
+2026-07-29 against a playbook carrying six planted credentials:
 
 | Tool | Catches | Misses |
 |---|---|---|

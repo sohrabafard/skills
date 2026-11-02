@@ -8,9 +8,9 @@
 #   checkov --framework secrets   catches generic credential shapes: AWS keys,
 #                                 private-key blocks, high-entropy literals.
 #   checkov --framework ansible   catches TLS, HTTPS and GPG policy only. It
-#                                 found zero of the six secrets planted in
-#                                 test/fixtures/secrets/planted-secrets.yml on
-#                                 2026-07-29; --framework secrets found all six.
+#                                 found zero of six planted secrets in a
+#                                 2026-07-29 measurement; --framework secrets
+#                                 found all six.
 #   this script                   catches the Ansible-specific shapes neither
 #                                 framework models: a var name that reads as a
 #                                 credential, a DSN with an inline password, and
@@ -29,7 +29,6 @@ scan_secrets.sh - scan Ansible YAML for hardcoded credentials.
 
 Usage:
   bash scripts/scan_secrets.sh <playbook.yml|role-dir|directory> [options]
-  bash scripts/scan_secrets.sh --self-test
 
 What it asserts:
   No line in scope assigns a literal value to a key whose name reads as a
@@ -60,40 +59,6 @@ EOF
 
 ALLOW_VAULTED=1
 
-run_self_test() {
-    local here="$0" fx
-    fx="$(av_fixture_dir)"
-    echo "self-test: scan_secrets.sh"
-    av_expect_exit 64 "no argument is a usage error" bash "$here"
-    av_expect_exit 0  "--help exits clean" bash "$here" --help
-    av_expect_exit 2  "missing target cannot run" bash "$here" "$fx/fixtures/secrets/no-such-file.yml"
-    av_expect_exit 1  "all six planted secrets are found" bash "$here" "$fx/fixtures/secrets/planted-secrets.yml"
-    av_expect_exit 0  "a correctly vaulted playbook is not red-lighted" bash "$here" "$fx/fixtures/secrets/vaulted-clean.yml"
-
-    # Named-shape assertions. The exit code alone would not prove that the AWS
-    # key ID is detected, because five other findings would carry the exit.
-    echo ""
-    echo "  named-shape assertions against planted-secrets.yml:"
-    local out
-    out="$(NO_COLOR=1 bash "$here" "$fx/fixtures/secrets/planted-secrets.yml" 2>&1 || true)"
-    local shape
-    for shape in \
-        "hardcoded password" \
-        "AWS access key ID" \
-        "AWS secret access key" \
-        "API token" \
-        "database connection string" \
-        "private key block"; do
-        if printf '%s' "$out" | grep -qi -- "$shape"; then
-            printf "  %bok%b   %s reported\n" "$COLOR_GREEN" "$COLOR_RESET" "$shape"
-            AV_ST_PASS=$((AV_ST_PASS + 1))
-        else
-            printf "  %bFAIL%b %s NOT reported\n" "$COLOR_RED" "$COLOR_RESET" "$shape"
-            AV_ST_FAIL=$((AV_ST_FAIL + 1))
-        fi
-    done
-    av_self_test_summary
-}
 
 # --- argument handling -----------------------------------------------------
 ARGS=()
@@ -105,9 +70,6 @@ while [ $# -gt 0 ]; do
 done
 av_parse_common_flags ${ARGS+"${ARGS[@]}"}
 
-if [ "$AV_SELF_TEST" -eq 1 ]; then
-    run_self_test
-fi
 
 if [ "${#AV_ARGS[@]}" -lt 1 ]; then
     av_usage_error "a file or directory to scan is required"

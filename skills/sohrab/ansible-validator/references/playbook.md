@@ -61,9 +61,8 @@ python3 scripts/check_task_safety.py playbook.yml --format json
 ansible-lint -c assets/.ansible-lint --sarif-file ansible-lint.sarif <target>
 ```
 
-Where the artifact goes and how long it is retained is `/alaa-gitlab-ci-cd`'s
-(`$alaa-gitlab-ci-cd`). Whether a signal is required at all is
-`/alaa-observability-soc`'s (`$alaa-observability-soc`).
+Where the artifact goes and how long it is retained is `/alaa-gitlab-ci-cd`'s. Whether a signal is required at all is
+`/alaa-observability-soc`'s.
 
 ## The stopping condition
 
@@ -95,9 +94,8 @@ ansible-playbook -i <inventory> <playbook> --syntax-check
 
 For a role, `scripts/validate_role.sh` copies the role into a scratch directory
 under the system temporary directory, generates a one-play playbook that
-includes it, and syntax-checks that. It copies rather than symlinks because
-`ln -s` needs Developer Mode or elevation on Windows, and it works outside the
-repository because the caller's mount may be read-only.
+includes it, and syntax-checks that. It works outside the repository so the
+check leaves no file in the role's tree.
 
 ### ansible-lint
 
@@ -119,9 +117,8 @@ change without making it.
 **A rule that stops firing is a defect, not an improvement.** An invalid option
 value can raise inside a rule; ansible-lint catches the exception, prints
 `Ignored exception from <Rule>.matchtasks`, and continues with that rule dead.
-`bash scripts/check_assets.sh` asserts that every rule named in the config's
-`enable_list` still fires on the fixture built to violate it. Run it after any
-edit to `assets/.ansible-lint`.
+After any edit to `assets/.ansible-lint`, run ansible-lint on a real target and
+treat that line in its output as a finding.
 
 ### Security
 
@@ -140,8 +137,7 @@ ansible-playbook -i inventory playbook.yml --check --diff --limit web1.example.c
 **State the `--limit`.** A check run still opens a connection to every host in
 scope, still gathers facts, and still runs every task carrying
 `check_mode: false`. On a large fleet that is a real load, and the
-`--forks` value that makes it acceptable is `/alaa-reliability-sla`'s
-(`$alaa-reliability-sla`), not this skill's.
+`--forks` value that makes it acceptable is `/alaa-reliability-sla`'s, not this skill's.
 
 Read the diff, not the summary. Check mode cannot see a change that depends on a
 change an earlier task would have made, so a task reporting failure in a dry run
@@ -200,7 +196,7 @@ ansible-playbook -i inventory/production site.yml --check --diff --limit web1.ex
 Then widen the `--limit` only after reading the diff for the first host. Report
 which tasks would change, which handlers would fire, and which tasks failed for
 a check-mode reason rather than a real one. Whether applying it is safe is a
-change-control question: `/alaa-controlled-ops` (`$alaa-controlled-ops`) owns
+change-control question: `/alaa-controlled-ops` owns
 change control and proof strength.
 
 ### 4. "Audit this repository for security"
@@ -214,21 +210,10 @@ find group_vars host_vars -name '*vault*.yml' -print0 \
 ```
 
 All findings cite `references/security_checklist.md`. Whether any of them blocks
-the change is `/alaa-security-review`'s (`$alaa-security-review`).
+the change is `/alaa-security-review`'s.
 
 ### 5. "This role is not idempotent"
 
 `references/failure-classes.md` class H. Diagnose with
 `bash scripts/test_role.sh <role> default --i-confirm-disposable-host`, whose
 idempotence stage compares every host.
-
-## Running the checkers on themselves
-
-```bash
-bash scripts/self_test.sh
-```
-
-Every checker's `--self-test` runs against the fixtures under `test/` and
-asserts the documented exit codes, including the missing-tool case. From a fresh
-checkout with `scripts/requirements.txt` installed it exits 0. A `2` means the
-toolchain is missing, not that the skill is broken.

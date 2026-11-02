@@ -24,8 +24,7 @@ fact_caching_timeout = 86400
 ```
 
 86400 is the pair's single value for `fact_caching_timeout`; rule 6.5 states
-that. Do not put the cache in `/tmp`: it is world-writable on a shared host and
-does not exist on a Windows control node.
+that. Do not put the cache in `/tmp`: it is world-writable on a shared host.
 
 **9.3 `gather_facts: false` unless the play reads an `ansible_*` fact.** When it
 reads fewer than three, set `gather_subset` naming exactly those. Fact gathering

@@ -83,8 +83,7 @@ warns when it is below 3.12 for exactly this reason.
 
 `checkov --framework ansible,secrets`. Never `--framework ansible` alone.
 
-Measured 2026-07-29 with checkov 3.3.8 against
-`test/fixtures/secrets/planted-secrets.yml`, which carries six planted
+Measured 2026-07-29 with checkov 3.3.8 against a playbook carrying six planted
 credentials, using `-o json --skip-download --quiet`:
 
 | Invocation | passed | failed | Check IDs |
@@ -96,17 +95,18 @@ credentials, using `-o json --skip-download --quiet`:
 The Ansible framework models TLS, HTTPS and GPG policy and models no credential
 shape at all, so running it alone is a security scan that cannot see a leaked
 AWS key. Neither framework replaces `scripts/scan_secrets.sh`: on the same
-fixture Checkov did not report the plaintext `db_password: "hunter2-plaintext"`
+playbook Checkov did not report the plaintext `db_password: "hunter2-plaintext"`
 that `scan_secrets.sh` reports, because that value is neither high-entropy nor a
 generic credential shape. `references/security_checklist.md` states the division
 of labour once, and `scripts/lib/checkov_scan.sh` implements it.
 
-Re-derive the table with:
+Re-derive the table with a playbook of your own that carries planted
+credentials:
 
 ```bash
 for fw in ansible secrets ansible,secrets; do
   echo "== $fw"
-  checkov -f test/fixtures/secrets/planted-secrets.yml \
+  checkov -f <planted-credentials-playbook> \
     --framework "$fw" -o json --skip-download --quiet
 done
 ```

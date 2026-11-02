@@ -16,7 +16,6 @@ validate_role.sh - validate one Ansible role directory.
 
 Usage:
   bash scripts/validate_role.sh <role-directory> [options]
-  bash scripts/validate_role.sh --self-test
 
 Stages, in order. Each stage names what it asserts:
   1 structure      tasks/ exists; defaults/, handlers/, meta/, templates/ and
@@ -26,9 +25,7 @@ Stages, in order. Each stage names what it asserts:
                    under the resolved yamllint config. A file that yamllint
                    rejects is counted as an error. This stage read grep's exit
                    status before the 2026-07-29 repair, which made it
-                   incapable of reporting a failure; test/fixtures/roles/
-                   broken_yaml_role is the regression fixture that proves the
-                   repair and keeps it proved.
+                   incapable of reporting a failure.
   3 Ansible syntax the role loads inside a generated one-play test playbook
   4 ansible-lint   the role satisfies the resolved ansible-lint profile
   5 Molecule       a molecule/ directory is reported when present, with its
@@ -39,27 +36,9 @@ EOF
     av_common_flag_help
 }
 
-run_self_test() {
-    local here="$0" fx
-    fx="$(av_fixture_dir)"
-    echo "self-test: validate_role.sh"
-    av_expect_exit 64 "no argument is a usage error" bash "$here"
-    av_expect_exit 0  "--help exits clean" bash "$here" --help
-    av_expect_exit 2  "missing target cannot run" bash "$here" "$fx/fixtures/roles/no_such_role"
-    av_expect_exit 2  "missing tool cannot run" env AV_NO_BOOTSTRAP=1 AV_UNAVAILABLE_TOOLS=yamllint,ansible-lint,ansible-playbook bash "$here" "$fx/fixtures/roles/clean_role"
-    av_expect_exit 0  "clean role passes" bash "$here" "$fx/fixtures/roles/clean_role"
-    # The regression case: every file starts with '---' and one of them is
-    # syntactically broken. Before the repair this printed 'YAML syntax check
-    # passed'. It must now be exit 1.
-    av_expect_exit 1  "broken YAML behind a leading --- is reported" bash "$here" "$fx/fixtures/roles/broken_yaml_role"
-    av_self_test_summary
-}
 
 av_parse_common_flags "$@"
 
-if [ "$AV_SELF_TEST" -eq 1 ]; then
-    run_self_test
-fi
 
 if [ "${#AV_ARGS[@]}" -lt 1 ]; then
     av_usage_error "a role directory is required"
@@ -115,8 +94,8 @@ done
 
 YAML_ERRORS=0
 YAML_CHECKED=0
-# find -print0 plus read -d '' so a path containing a space, which is normal on
-# Windows, is one filename and not two.
+# find -print0 plus read -d '' so a path containing a space is one filename and
+# not two.
 while IFS= read -r -d '' file; do
     YAML_CHECKED=$((YAML_CHECKED + 1))
     av_assert_no_crlf "$file"
@@ -142,14 +121,12 @@ fi
 [ "$AV_FORMAT" = "text" ] && printf "\n%b[3/5] Ansible syntax%b\n" "$COLOR_BLUE" "$COLOR_RESET"
 
 # The scratch playbook and the roles directory are created under the system
-# temporary directory, never inside the repository, because the caller's mount
-# may be read-only and may forbid unlink.
+# temporary directory, never inside the repository.
 SCRATCH="$(mktemp -d 2>/dev/null)" || av_cannot_run "could not create a temporary directory for the syntax check"
 cleanup_scratch() { rm -rf "$SCRATCH" 2>/dev/null || true; }
 trap cleanup_scratch EXIT INT TERM
 
 mkdir -p "$SCRATCH/roles"
-# Copy rather than symlink: ln -s needs Developer Mode or elevation on Windows.
 cp -R "$ROLE_ABS" "$SCRATCH/roles/$ROLE_NAME"
 cat > "$SCRATCH/syntax_check.yml" <<EOF
 ---

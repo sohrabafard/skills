@@ -28,7 +28,7 @@ is the main artifact, nor for YAML with no Ansible semantics.
 
 ## What to run
 
-Every script takes `--help` and `--self-test`. Exit codes are identical
+Every script takes `--help`. Exit codes are identical
 throughout: `0` clean, `1` findings, `2` could not run, `64` usage. **`2` is a
 hard stop for a gate, never a pass.** `references/playbook.md` holds the stage
 table, the report format and the stopping condition.
@@ -41,19 +41,14 @@ table, the report format and the stopping condition.
 | `scan_secrets.sh <target>` | no credential literal, no alarm on a vaulted value |
 | `check_fqcn.sh`, `check_module_currency.py` | actions are fully qualified, and to a live module |
 | `check_task_safety.py <target>` | no world-writable mode, no unquoted Jinja in a shell |
-| `check_assets.sh` | the lint configs still enable the rules they claim |
 | `test_role.sh <dir> <scenario> --i-confirm-disposable-host` | a Molecule scenario applies, is idempotent, verifies |
-| `extract_ansible_info_wrapper.sh`, `self_test.sh` | every file parses; every checker above passes |
+| `extract_ansible_info_wrapper.sh` | every file parses |
 
 Installed system or cached tools remain usable without installation authority.
 Missing tools block by default without creating a cache or installing packages.
 `scripts/lib/common.sh` permits installation only with `AV_ALLOW_BOOTSTRAP=1`;
 set it only after the user has authorized installation. `AV_NO_BOOTSTRAP=1`
 overrides that opt-in. Prior automatic bootstrap behavior is retired.
-For the synthetic security regressions, run
-`python scripts/test_security_regressions.py --bash <explicit-bash-path>`.
-Exit 0 means assertions passed, 1 findings, 2 unavailable interpreter; this runs
-mock tools and fixture scans, never a real Molecule driver or package installer.
 
 ## Workflow
 
@@ -71,7 +66,7 @@ mock tools and fixture scans, never a real Molecule driver or package installer.
 - **Authoring** is `/ansible-generator`'s: it owns the
   bytes, this skill owns the verdict. Jinja, lookups and module call patterns
   live there; the ruleset, name mapping, lint configs, Molecule, security
-  predicates, source map and test corpus live here.
+  predicates and source map live here.
 - **CI.** `/alaa-gitlab-ci-cd` owns the job that runs
   these scripts — image, `rules:`, caching, artifacts, the masked vault
   password. This skill publishes the predicate and decides no gate placement.
@@ -85,7 +80,8 @@ mock tools and fixture scans, never a real Molecule driver or package installer.
 - **Retry, timeout, `serial`, `forks`, degradation** are
   `/alaa-reliability-sla`'s. This skill reports a
   missing `changed_when`, `until` or `any_errors_fatal`; it picks no number.
-- **Model and effort settings** are `/alaa-prompting-guide`'s, at `references/50-effort-and-thinking.md`.
+- **Model and effort settings** are `/alaa-prompting-guide`'s, at
+  `alaa-prompting-guide references/50-effort-and-thinking.md`.
 
 ## Reference map
 

@@ -4,8 +4,8 @@
 # Verified 2026-07-29 against yamllint 1.38.0. Re-derive the rule list with
 #   yamllint --list-rules
 #
-# Two settings in this file used to contradict assets/.ansible-lint, and
-# scripts/check_assets.sh now asserts that they no longer do:
+# Two settings in this file used to contradict assets/.ansible-lint and no
+# longer do:
 #
 #   truthy.allowed-values used to include yes, no, on and off, so yamllint
 #   passed `become: yes` while ansible-lint failed the same line with
@@ -104,4 +104,3 @@ ignore: |
   .molecule/
   .cache/
   .tox/
-  test/roles/

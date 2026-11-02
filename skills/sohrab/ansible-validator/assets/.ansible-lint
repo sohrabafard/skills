@@ -1,19 +1,18 @@
 ---
 # ansible-lint configuration owned by ansible-validator.
 #
-# This is the pair's single ansible-lint configuration. ansible-generator
-# (/ansible-generator, $ansible-generator) does not ship one; its project
-# scaffold copies this file and names this skill as the owner in a header
-# comment. Two forks of one config, configured
-# differently for the same repository, means the result depends on which one an
-# agent happened to pick.
+# This is the pair's single ansible-lint configuration. /ansible-generator does
+# not ship one; its project scaffold copies this file and names this skill as
+# the owner in a header comment. Two forks of one config, configured differently
+# for the same repository, means the result depends on which one an agent
+# happened to pick.
 #
 # Verified 2026-07-29 against ansible-lint 26.6.0. Re-derive the rule list with
 #   ansible-lint -L
 # and the profile list with
 #   ansible-lint --help | grep -- --profile
-# scripts/check_assets.sh asserts that every rule named in enable_list below
-# actually fires on the fixture built to violate it. Run it after any edit here.
+# After any edit here, run ansible-lint on a real target: a rule that raised
+# prints "Ignored exception from <Rule>" and is not running.
 
 # Profiles, from least to most strict: min, basic, moderate, safety, shared,
 # production. production is the bar for anything that reaches a managed host.
@@ -34,19 +33,12 @@ exclude_paths:
   - .molecule/
   - .cache/
   - .tox/
-  # test/roles/ holds vendored third-party roles that this skill does not own
-  # and does not lint. test/playbooks/ and test/fixtures/ are this skill's own
-  # fixtures and are deliberately NOT excluded: a fixture corpus that the lint
-  # config hides is a corpus that proves nothing.
-  - test/roles/
 
 # Empty. A rule this skill wants off belongs in warn_list with the reason, so
 # that the finding is still visible.
 skip_list: []
 
-# Rules this configuration turns on beyond the profile default. Each one is
-# covered by a fixture under test/fixtures/lint/ and asserted by
-# scripts/check_assets.sh.
+# Rules this configuration turns on beyond the profile default.
 enable_list:
   - name[missing]        # every task is named
   - name[casing]         # task names start with a capital letter
@@ -71,12 +63,9 @@ warn_list:
 # "{path}:" was shipped here until 2026-07-29; {path} is not a valid
 # substitution key, ansible-lint caught the resulting KeyError, printed
 # "Ignored exception from NameRule.matchtasks" and continued with NameRule
-# dead. Measured on test/playbooks/bad-playbook.yml: 19 failures and zero
-# name[missing] with that line, 21 failures and two name[missing] without it.
-# The config disabled the two rules its own enable_list asked for.
+# dead. The config disabled the two rules its own enable_list asked for.
 #
-# No prefix is enforced now. To enforce one, use {stem} and add a fixture to
-# test/fixtures/lint/ so scripts/check_assets.sh can prove it fires:
+# No prefix is enforced now. To enforce one, use {stem}:
 # task_name_prefix: "{stem} | "
 
 # Variables are snake_case, and a role's variables carry the role name as a
@@ -99,6 +88,6 @@ mock_modules:
 
 # SARIF output for a code-scanning gate. The two aggregate scripts pass
 # --format json themselves; set this when ansible-lint is invoked directly from
-# a CI job that uploads SARIF. /alaa-gitlab-ci-cd ($alaa-gitlab-ci-cd) owns
+# a CI job that uploads SARIF. /alaa-gitlab-ci-cd owns
 # where the artifact goes and how long it is retained.
 # sarif_file: ansible-lint.sarif

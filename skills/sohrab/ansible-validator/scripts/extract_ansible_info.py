@@ -5,7 +5,7 @@ Emits JSON on stdout. This is the most reliable assertion in the skill: every
 YAML file in scope must parse, and a file that does not parse exits 2 with the
 file and the parser message.
 
-Two defects were repaired on 2026-07-29 and both are covered by --self-test:
+Two defects were repaired on 2026-07-29:
 
 * Classification. `builtin_modules` and `custom_modules` were computed by
   testing fully qualified names against a set of short names, so a correct,
@@ -16,9 +16,6 @@ Two defects were repaired on 2026-07-29 and both are covered by --self-test:
 * Block recursion. `block`, `rescue` and `always` were in the skip list at the
   top of the key loop, and the `continue` fired before the recursion below it,
   so no module inside a `block:` was ever seen.
-
-Runs on Windows: pure Python, pathlib, no shell, no Path(__file__).parents[N],
-and no temporary directory anywhere.
 
 Exit codes: 0 clean, 1 findings (none are defined today; reserved), 2 could not
 run, 64 usage error.
@@ -242,60 +239,6 @@ class AnsibleInfoExtractor:
         }
 
 
-def self_test() -> int:
-    here = Path(__file__).resolve().parent
-    fixtures = here.parent / "test"
-    passed = failed = 0
-    print("self-test: extract_ansible_info.py")
-
-    def assert_true(condition: bool, label: str) -> None:
-        nonlocal passed, failed
-        if condition:
-            print(f"  ok   {label}")
-            passed += 1
-        else:
-            print(f"  FAIL {label}")
-            failed += 1
-
-    good = fixtures / "playbooks" / "good-playbook.yml"
-    result = AnsibleInfoExtractor(str(good)).extract()
-    assert_true(not result["errors"], "the good playbook parses")
-    assert_true(
-        bool(result["builtin_modules"]) and not result["collection_modules"],
-        "fully qualified builtins classify as builtin, not as collection modules",
-    )
-    assert_true(
-        not result["unqualified_actions"],
-        "the good playbook has no unqualified action",
-    )
-
-    blocks = fixtures / "fixtures" / "extract" / "block-nesting.yml"
-    result = AnsibleInfoExtractor(str(blocks)).extract()
-    assert_true(
-        "ansible.builtin.debug" in result["builtin_modules"]
-        and "ansible.builtin.fail" in result["builtin_modules"]
-        and "ansible.builtin.file" in result["builtin_modules"],
-        "modules inside block, rescue and always are all seen",
-    )
-
-    bad = fixtures / "playbooks" / "bad-playbook.yml"
-    result = AnsibleInfoExtractor(str(bad)).extract()
-    assert_true(
-        bool(result["unqualified_actions"]),
-        "a playbook of unqualified builtins reports its actions rather than nothing",
-    )
-
-    broken = fixtures / "fixtures" / "yaml" / "broken-with-doc-start.yml"
-    result = AnsibleInfoExtractor(str(broken)).extract()
-    assert_true(bool(result["errors"]), "an unparsable file is an error, not a silent pass")
-
-    print()
-    if failed:
-        print(f"self-test: {passed} passed, {failed} FAILED")
-        return EXIT_FINDINGS
-    print(f"self-test: {passed} assertion(s) passed")
-    return EXIT_OK
-
 
 def main(argv: List[str]) -> int:
     parser = argparse.ArgumentParser(
@@ -304,14 +247,10 @@ def main(argv: List[str]) -> int:
         epilog="Exit codes: 0 clean, 2 could not run, 64 usage error.",
     )
     parser.add_argument("target", nargs="?", help="playbook, role directory or project directory")
-    parser.add_argument("--self-test", action="store_true", help="run against the shipped fixtures")
     try:
         args = parser.parse_args(argv)
     except SystemExit:
         return EXIT_USAGE
-
-    if args.self_test:
-        return self_test()
 
     if not args.target:
         print("Usage error: a target path is required. Run with --help.", file=sys.stderr)

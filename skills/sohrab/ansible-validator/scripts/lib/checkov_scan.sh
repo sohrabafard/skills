@@ -14,8 +14,8 @@ AV_CHECKOV_SOURCED=1
 #
 # --framework ansible alone is not a secrets scanner. It carries twelve
 # policies and every one of them is about TLS, HTTPS or GPG. Measured
-# 2026-07-29 against checkov 3.3.8 and test/fixtures/secrets/planted-secrets.yml
-# (six planted credentials), with `-o json --skip-download`:
+# 2026-07-29 against checkov 3.3.8 and a file of six planted credentials, with
+# `-o json --skip-download`:
 #
 #   --framework ansible          passed=0 failed=0   nothing at all
 #   --framework secrets          passed=0 failed=5   CKV_SECRET_2 (AWS access
@@ -30,7 +30,7 @@ AV_CHECKOV_SOURCED=1
 # running the ansible framework alone is a security scan that cannot see a
 # leaked AWS key. Neither framework replaces scripts/scan_secrets.sh, which
 # catches the Ansible-specific shapes that are about vault indirection rather
-# than entropy: on the same fixture Checkov missed the plaintext
+# than entropy: on the same file Checkov missed the plaintext
 # `db_password: "hunter2-plaintext"` that scan_secrets.sh reports.
 AV_CHECKOV_FRAMEWORKS="${AV_CHECKOV_FRAMEWORKS:-ansible,secrets}"
 
@@ -135,6 +135,6 @@ All three run on every audit. A scan that could not run is a blocked audit, not
 a clean one, and exits 2.
 
 Whether a finding blocks the change is not this skill's decision:
-/alaa-security-review ($alaa-security-review) owns fail-closed doctrine.
+/alaa-security-review owns fail-closed doctrine.
 EOF
 }

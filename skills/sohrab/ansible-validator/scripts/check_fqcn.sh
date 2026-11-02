@@ -3,9 +3,9 @@
 # check_fqcn.sh - report task actions written as short names instead of FQCN.
 #
 # The detection is a single YAML parse per file, implemented in
-# scripts/check_fqcn.py so that it runs identically on Windows. This wrapper
-# exists because the rule identifier `check_fqcn.sh` is cited elsewhere; it
-# resolves the interpreter and passes every argument through unchanged.
+# scripts/check_fqcn.py. This wrapper exists because the rule identifier
+# `check_fqcn.sh` is cited elsewhere; it resolves the interpreter and passes
+# every argument through unchanged.
 #
 # Exit codes: 0 clean, 1 findings, 2 could not run, 64 usage error. FQCN is an
 # error here, not advice, because assets/.ansible-lint enables fqcn[action-core]

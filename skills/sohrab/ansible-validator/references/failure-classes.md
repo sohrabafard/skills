@@ -43,9 +43,8 @@ the style findings.
    placeholder; YAML reads `[ role_name ]` as a one-element flow sequence, so
    the line is a mapping key that begins with a sequence. Fix: use a bare token
    such as `ROLE_NAME_port: CHANGE_ME_port`. This is the defect class that made
-   six of the eight template files in `ansible-generator`'s
-   (`/ansible-generator`, `$ansible-generator`) scaffold unparsable
-   until 2026-07-29.
+   six of the eight template files in the `/ansible-generator` scaffold
+   unparsable until 2026-07-29.
 
 **Escalate when** the file parses in isolation but fails inside a role. That is
 class B, not class A.
@@ -195,7 +194,7 @@ ansible ALL=(root) NOPASSWD: /usr/bin/systemctl, /usr/bin/apt-get, /usr/bin/dnf
 
 **Escalate when** the grant the play needs cannot be enumerated. That is a
 design question about what the automation is allowed to do, and
-`/alaa-security-review` (`$alaa-security-review`) owns it.
+`/alaa-security-review` owns it.
 
 ## F. A handler does not run
 
@@ -280,7 +279,7 @@ idempotence.
 
 **Escalate when** the role is idempotent in Molecule and not on the real fleet.
 That is drift on the fleet, and it is a change-control question:
-`/alaa-controlled-ops` (`$alaa-controlled-ops`) owns change control and proof
+`/alaa-controlled-ops` owns change control and proof
 strength.
 
 ## I. A check could not run
@@ -309,13 +308,12 @@ python3 -m pip install --upgrade -r scripts/requirements.txt
 
 **Escalate when** the tool is installed and the script still exits 2. Read the
 message: an ansible-lint exit of 3 means the configuration file itself is
-rejected, and `bash scripts/check_assets.sh` reports which assertion the shipped
-configuration no longer satisfies.
+rejected, and ansible-lint's output names the option it rejected.
 
 **Never** treat exit 2 as a pass. A test that could not run is not a passing
 test. Report `BLOCKED` with the reason. A blocked security scan is a failure,
-per `/alaa-security-review` (`$alaa-security-review`); a blocked idempotence
-test is a warning, per `/alaa-reliability-sla` (`$alaa-reliability-sla`).
+per `/alaa-security-review`; a blocked idempotence
+test is a warning, per `/alaa-reliability-sla`.
 
 ## J. ansible-lint reports a rule you disagree with
 
@@ -336,16 +334,15 @@ ansible-lint --profile <name> <target>
   diff before committing. There is no mode that shows the change without making
   it.
 - The rule genuinely does not apply here: move it to `warn_list` in
-  `assets/.ansible-lint` with a comment stating why, and add a fixture under
-  `test/fixtures/lint/` so `scripts/check_assets.sh` still proves what the
-  config does. Do not add it to `skip_list`: a skipped rule is invisible, and
-  the next reader cannot tell a considered exception from an accident.
+  `assets/.ansible-lint` with a comment stating why. Do not add it to
+  `skip_list`: a skipped rule is invisible, and the next reader cannot tell a
+  considered exception from an accident.
 
 **Escalate when** a rule you enabled stops firing. That is the
 `task_name_prefix: "{path}:"` failure class: an invalid option value raises
 inside a rule, ansible-lint catches the exception, prints
 `Ignored exception from <Rule>.matchtasks`, and continues with the rule dead.
-`scripts/check_assets.sh` reports it.
+Treat that line in the output as a finding.
 
 ## K. Corrections carried over from the retired `common_errors.md`
 

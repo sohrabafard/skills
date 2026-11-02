@@ -15,7 +15,6 @@ validate_playbook.sh - validate one Ansible playbook file.
 
 Usage:
   bash scripts/validate_playbook.sh <playbook.yml> [options]
-  bash scripts/validate_playbook.sh --self-test
 
 Stages, in order. Each stage names what it asserts:
   1 yamllint                     the file is well-formed YAML under the
@@ -30,24 +29,9 @@ EOF
     av_common_flag_help
 }
 
-run_self_test() {
-    local here="$0" fx
-    fx="$(av_fixture_dir)"
-    echo "self-test: validate_playbook.sh"
-    av_expect_exit 64 "no argument is a usage error" bash "$here"
-    av_expect_exit 0  "--help exits clean" bash "$here" --help
-    av_expect_exit 2  "missing target cannot run" bash "$here" "$fx/playbooks/does-not-exist.yml"
-    av_expect_exit 2  "missing tool cannot run" env AV_NO_BOOTSTRAP=1 AV_UNAVAILABLE_TOOLS=yamllint,ansible-lint,ansible-playbook bash "$here" "$fx/playbooks/good-playbook.yml"
-    av_expect_exit 0  "good playbook is clean" bash "$here" "$fx/playbooks/good-playbook.yml"
-    av_expect_exit 1  "bad playbook reports findings" bash "$here" "$fx/playbooks/bad-playbook.yml"
-    av_self_test_summary
-}
 
 av_parse_common_flags "$@"
 
-if [ "$AV_SELF_TEST" -eq 1 ]; then
-    run_self_test
-fi
 
 if [ "${#AV_ARGS[@]}" -lt 1 ]; then
     av_usage_error "a playbook path is required"

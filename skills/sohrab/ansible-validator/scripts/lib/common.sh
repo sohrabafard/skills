@@ -4,12 +4,10 @@
 # Source it with:
 #   source "$(dirname "${BASH_SOURCE[0]}")/lib/common.sh"
 #
-# Interpreter requirement: bash 4.0 or newer. macOS ships bash 3.2 as
-# /bin/bash; install a current bash (`brew install bash`) and invoke the
-# scripts as `bash scripts/<name>.sh`, which resolves the newer bash from
-# PATH. On Windows run them under Git Bash or WSL.
+# Interpreter requirement: bash 4.0 or newer, invoked as
+# `bash scripts/<name>.sh`.
 #
-# Exit-code contract, identical in all ten scripts:
+# Exit-code contract, identical in every script:
 #   0   clean      - the check ran and found nothing
 #   1   findings   - the check ran and found something the caller must fix
 #   2   could not run - a required tool is missing, an input does not parse,
@@ -95,8 +93,7 @@ av_assert_no_crlf() {
 #
 # The venv lives under the user cache directory, keyed by the hash of
 # scripts/requirements.txt, so repeated invocations reuse it instead of paying
-# a pip install per file reviewed. It is never created inside the repository,
-# because the owner's mount is read-only in places and forbids unlink.
+# a pip install per file reviewed. It is never created inside the repository.
 #
 # Installation requires prior user authorization and AV_ALLOW_BOOTSTRAP=1.
 # Default resolution is read-only; AV_NO_BOOTSTRAP always overrides the opt-in.
@@ -104,13 +101,7 @@ av_assert_no_crlf() {
 AV_VENV=""
 
 av_venv_bin() {
-    # Windows venvs place executables in Scripts/, POSIX venvs in bin/.
-    local venv="$1"
-    if [ -d "$venv/Scripts" ]; then
-        echo "$venv/Scripts"
-    else
-        echo "$venv/bin"
-    fi
+    echo "$1/bin"
 }
 
 av_requirements_file() {
@@ -141,7 +132,7 @@ av_bootstrap() {
     venv="$root/venv-$key"
     bindir="$(av_venv_bin "$venv")"
 
-    if [ -x "$bindir/python" ] || [ -x "$bindir/python.exe" ]; then
+    if [ -x "$bindir/python" ]; then
         AV_VENV="$venv"
         return 0
     fi
@@ -182,14 +173,6 @@ av_resolve_tool() {
     # Prefers the system tool; falls back to the cached venv; bootstraps only
     # when explicitly authorized via AV_ALLOW_BOOTSTRAP=1 and not forbidden.
     local name="$1" bindir
-    # AV_UNAVAILABLE_TOOLS is a deliberate test hook, not a workaround. Each
-    # script's --self-test uses it to exercise the "tool is missing" path and
-    # assert exit 2, because emptying PATH would also remove the interpreter and
-    # produce 127, and a self-test that cannot reach the code path it is testing
-    # proves nothing. Set it to a comma-separated list of tool names.
-    case ",${AV_UNAVAILABLE_TOOLS:-}," in
-        *",$name,"*) return 1 ;;
-    esac
     if command -v "$name" >/dev/null 2>&1; then
         command -v "$name"
         return 0
@@ -280,7 +263,6 @@ av_resolve_ansible_lint_config() {
 # positional arguments in AV_ARGS.
 # ---------------------------------------------------------------------------
 AV_ARGS=()
-AV_SELF_TEST=0
 AV_FORMAT="text"
 
 av_parse_common_flags() {
@@ -290,12 +272,6 @@ av_parse_common_flags() {
             -h|--help)
                 av_print_help
                 exit "$AV_EXIT_OK"
-                ;;
-            --self-test)
-                # Read by sourcing entrypoints after av_parse_common_flags returns.
-                # shellcheck disable=SC2034
-                AV_SELF_TEST=1
-                shift
                 ;;
             --yamllint-config)
                 [ $# -ge 2 ] || av_usage_error "--yamllint-config needs a path"
@@ -334,8 +310,6 @@ av_common_flag_help() {
     cat <<'EOF'
 Common options:
   -h, --help                    Print this help and exit 0.
-      --self-test               Run this script against the fixtures under
-                                test/ and assert the documented exit codes.
       --yamllint-config PATH    Use PATH instead of the resolved yamllint config.
       --ansible-lint-config PATH
                                 Use PATH instead of the resolved ansible-lint config.
@@ -424,52 +398,4 @@ av_summary() {
         return "$AV_EXIT_FINDINGS"
     fi
     return "$AV_EXIT_OK"
-}
-
-# ---------------------------------------------------------------------------
-# Self-test helper. Runs a command and asserts its exit code.
-# ---------------------------------------------------------------------------
-AV_ST_PASS=0
-AV_ST_FAIL=0
-AV_ST_BLOCKED=0
-
-av_expect_exit() {
-    # av_expect_exit <expected> <label> <command...>
-    local expected="$1" label="$2"
-    shift 2
-    local actual=0
-    "$@" >/dev/null 2>&1 || actual=$?
-    if [ "$actual" = "$expected" ]; then
-        printf "  %bok%b   %s (exit %s)\n" "$COLOR_GREEN" "$COLOR_RESET" "$label" "$actual"
-        AV_ST_PASS=$((AV_ST_PASS + 1))
-    elif [ "$actual" = "$AV_EXIT_CANNOT_RUN" ] && [ "$expected" != "$AV_EXIT_CANNOT_RUN" ]; then
-        # The assertion did not fail; it could not be evaluated, because the
-        # script under test reported a missing tool. Recording that as a failure
-        # is the defect this whole exit-code contract exists to prevent, so it is
-        # counted separately and it makes the self-test exit 2, not 1.
-        printf "  %bBLOCKED%b %s (expected exit %s, tool unavailable)\n" "$COLOR_YELLOW" "$COLOR_RESET" "$label" "$expected"
-        AV_ST_BLOCKED=$((AV_ST_BLOCKED + 1))
-    else
-        printf "  %bFAIL%b %s (expected exit %s, got %s)\n" "$COLOR_RED" "$COLOR_RESET" "$label" "$expected" "$actual"
-        AV_ST_FAIL=$((AV_ST_FAIL + 1))
-    fi
-}
-
-av_self_test_summary() {
-    echo ""
-    if [ "$AV_ST_FAIL" -eq 0 ] && [ "$AV_ST_BLOCKED" -eq 0 ]; then
-        printf "%bself-test: %d assertion(s) passed%b\n" "$COLOR_GREEN" "$AV_ST_PASS" "$COLOR_RESET"
-        exit "$AV_EXIT_OK"
-    fi
-    if [ "$AV_ST_FAIL" -eq 0 ]; then
-        printf "%bself-test: %d passed, %d BLOCKED by a missing tool%b\n" "$COLOR_YELLOW" "$AV_ST_PASS" "$AV_ST_BLOCKED" "$COLOR_RESET"
-        printf "Install scripts/requirements.txt and run again. Nothing failed; nothing was proved either.\n"
-        exit "$AV_EXIT_CANNOT_RUN"
-    fi
-    printf "%bself-test: %d passed, %d FAILED, %d blocked%b\n" "$COLOR_RED" "$AV_ST_PASS" "$AV_ST_FAIL" "$AV_ST_BLOCKED" "$COLOR_RESET"
-    exit "$AV_EXIT_FINDINGS"
-}
-
-av_fixture_dir() {
-    echo "$AV_SKILL_DIR/test"
 }

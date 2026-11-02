@@ -1,6 +1,6 @@
 ---
 name: ansible-generator
-description: Production-ready Ansible generation for playbooks, roles, task files, inventories and project scaffolding with FQCN-correct modules, idempotent tasks, declared role interfaces and explicit file modes, followed by validator handoff. Use when a file that does not yet exist has to exist when you are done. Do not use when every file you need already exists and your job is to produce a verdict about it (use /ansible-validator, $ansible-validator), for Terraform, Helm, Dockerfile or CI authoring unless Ansible is the main artifact, or for one-off shell automation that should stay a script.
+description: Production-ready Ansible generation for playbooks, roles, task files, inventories and project scaffolding with FQCN-correct modules, idempotent tasks, declared role interfaces and explicit file modes, followed by validator handoff. Use when a file that does not yet exist has to exist when you are done. Do not use when every file you need already exists and your job is to produce a verdict about it (use /ansible-validator), for Terraform, Helm, Dockerfile or CI authoring unless Ansible is the main artifact, or for one-off shell automation that should stay a script.
 ---
 
 # Ansible Generator
@@ -13,18 +13,18 @@ the first run. This `SKILL.md` is the router; the procedure is
 
 ## Source freshness
 
-Version-sensitive claims are `ansible-validator references/source-map.md`
-(`/ansible-validator`, `$ansible-validator`), which carries every pinned value
-and the command that re-derives it. For a module name look nothing up: run
+Version-sensitive claims are `ansible-validator references/source-map.md`,
+which carries every pinned value and the command that re-derives it. For a
+module name look nothing up: run
 `python3 <ansible-validator>/scripts/check_module_currency.py <path>`, which
 reads ansible-core's routing table offline.
 
 ## When NOT to use
 
 The deciding test between this skill and its sibling: **does a file that does
-not yet exist have to exist when you are done? If yes, `/ansible-generator`
-(`$ansible-generator`). If every file you need already exists and your job is to
-produce a verdict about it, `/ansible-validator` (`$ansible-validator`).**
+not yet exist have to exist when you are done? If yes, `/ansible-generator`.
+If every file you need already exists and your job is to produce a verdict about
+it, `/ansible-validator`.**
 
 Also not for Terraform, Helm, Dockerfile or CI authoring unless Ansible is the
 main artifact, nor for one-off shell automation that should stay a script.
@@ -49,28 +49,28 @@ main artifact, nor for one-off shell automation that should stay a script.
 This skill owns the bytes. `references/playbook.md` section 8 states each seam
 in full; the one-line form:
 
-- **Verdicts, and everything a checker can test,** are `/ansible-validator`'s
-  (`$ansible-validator`): the ruleset, variable precedence, the module-name
-  mapping, both lint configs, Molecule, the security predicates, Vault
-  mechanics, check mode, the source map and the test corpus.
-- **CI:** `/alaa-gitlab-ci-cd` (`$alaa-gitlab-ci-cd`) owns the job. The boundary
+- **Verdicts, and everything a checker can test,** are `/ansible-validator`'s:
+  the ruleset, variable precedence, the module-name mapping, both lint configs,
+  Molecule, the security predicates, Vault mechanics, check mode and the source
+  map.
+- **CI:** `/alaa-gitlab-ci-cd` owns the job. The boundary
   is the `ansible-playbook` command line — the arguments are that skill's,
   everything the command reads is this one's.
-- **Containers:** `/alaa-docker-production` (`$alaa-docker-production`) owns the
+- **Containers:** `/alaa-docker-production` owns the
   Dockerfile and the Compose file, including the fail-closed `${VAR:?}`
   invariant; this skill owns the host state a play manages around them.
-- **Kubernetes:** `/alaa-k8s-helm` (`$alaa-k8s-helm`) owns the manifest; this
+- **Kubernetes:** `/alaa-k8s-helm` owns the manifest; this
   skill writes the `kubernetes.core.k8s` task that applies it.
-- **Proxy:** `/alaa-haproxy` (`$alaa-haproxy`) chooses the directives; this
+- **Proxy:** `/alaa-haproxy` chooses the directives; this
   skill owns the `template:` task, its `validate:` argument and the handler.
-- **Fail-closed** is `/alaa-security-review`'s (`$alaa-security-review`): a play
+- **Fail-closed** is `/alaa-security-review`'s: a play
   that cannot decrypt a vault stops.
 - **Retry, timeout, `serial`, `forks`, degradation** are
-  `/alaa-reliability-sla`'s (`$alaa-reliability-sla`). Write the mechanism; let
+  `/alaa-reliability-sla`'s. Write the mechanism; let
   that skill pick the number.
-- **Model and effort settings** are `/alaa-prompting-guide`'s
-  (`$alaa-prompting-guide`), at `references/50-effort-and-thinking.md`. No
-  emitted artifact carries a model key.
+- **Model and effort settings** are `/alaa-prompting-guide`'s, at
+  `alaa-prompting-guide references/50-effort-and-thinking.md`. No emitted
+  artifact carries a model key.
 
 ## Reference map
 
