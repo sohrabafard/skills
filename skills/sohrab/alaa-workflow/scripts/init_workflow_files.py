@@ -141,7 +141,7 @@ def parse_args() -> argparse.Namespace:
     parser.add_argument("--with-prompts", action="store_true", help="Create the same-stem role prompt pack.")
     parser.add_argument("--task-store", choices=("local", "beads"), default="local", help="Task authority. Execution plans use beads with --beads-binding; local requires --beads-unavailable-reason. Design plans use local. No live tracker access.")
     parser.add_argument("--beads-binding", help="Portable project-relative binding owner reference for Beads.")
-    parser.add_argument("--beads-unavailable-reason", help="Execution with --task-store local only: one line naming the observed reason Beads is unavailable (bd missing, bd where failed or mismatched, or no binding).")
+    parser.add_argument("--beads-unavailable-reason", help="Execution with --task-store local only: one line naming the observed reason Beads is unavailable (bd missing, bd where failed or mismatched, bd ping failed, or no binding).")
     parser.add_argument("--review-boundary", choices=("phase", "final"), help="Declared engagement review boundary; defaults to phase at the root, inherited from a parent plan.")
     parser.add_argument("--slug", help="Optional explicit slug.")
     parser.add_argument("--plan-dir", default="auto", help="Plan directory, or auto.")
@@ -334,7 +334,7 @@ def task_store_values(args: argparse.Namespace, checkpoint: Path | None, profile
         "json_cursor_fields": '  "current_task": "none",\n  "current_subtask": "none",\n' if hierarchy else "",
         "task_delegation": ("- Dependency edges and ready sets: Local task prerequisites above own dependency edges; derive readiness before dispatch."
                             if args.task_store == "local" else "- Dependency edges and ready sets: Beads owns issue dependencies and readiness; the plan owns phase barriers and shared-resource conflicts."),
-        "task_verification": ("- Before execution, reread the Task store reason; when Beads is reachable again, register every new task in Beads under `alaa-workflow references/task-tracking.md`."
+        "task_verification": ("- Before execution, reread the Task store reason; when Beads is available again, register every new task in Beads under `alaa-workflow references/task-tracking.md`."
                               if args.task_store == "local" else "- Before execution, verify the adopted Beads workspace, project, nodes, parent-child relations and blocking edges through the binding owner; initialization proves only offline syntax."),
         "position_section": position,
     }

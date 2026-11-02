@@ -4,10 +4,12 @@ This file owns task-store selection, the Beads-first policy, task authority, whe
 
 ## Select before tracking-dependent work
 
-Resolve kind and admission through `references/artifact-lifecycle.md` first. Then test Beads availability. Beads is available only when all three hold: `bd` is installed (`command -v bd`), `bd where` succeeds, and the workspace it reports matches the project binding. A CLI, installed skill, hook context or local `.beads` directory alone selects nothing. A reachable wrong hub is unavailable, not the configured store. A valid binding can point to an external hub without a repository-local database. The project binding alone decides whether a missing upstream Beads skill (`.agents/skills/beads/SKILL.md`) makes Beads unavailable; with no such rule, a missing skill changes nothing.
+Resolve kind and admission through `references/artifact-lifecycle.md` first. Then test Beads availability. Beads is available only when all four hold: `bd` is installed (`command -v bd`), `bd where` succeeds, the workspace it reports matches the project binding, and `bd ping` succeeds. `bd where` only resolves the path. `bd ping` opens the store and runs a trivial query, so it detects a dead database. A CLI, installed skill, hook context or local `.beads` directory alone selects nothing. A reachable wrong hub is unavailable, not the configured store. A valid binding can point to an external hub without a repository-local database. The project binding alone decides whether a missing upstream Beads skill (`.agents/skills/beads/SKILL.md`) makes Beads unavailable; with no such rule, a missing skill changes nothing.
 
 - **Available:** Beads is the task authority. Register every new execution plan, every new task in any family, including an existing `local` family, and every issue-only task in Beads. A new execution plan follows `## Phase-task-subtask hierarchy`.
 - **Unavailable:** the plan records `Task store: local` with a `Task store reason` naming the observed failure, tracks its tasks in the plan, and continues. When Beads returns, retest availability before the next new task; new tasks then go to Beads under `## Migrating a local family`.
+
+A design plan is always local. It takes no `Task store reason` and sits outside the availability test.
 
 A task lives in exactly one store. Never initialize a replacement database or install hooks. Remote sync, including Dolt auto-push, needs the user's authorization under `## Ready tasks and workflow gates`.
 
@@ -136,7 +138,7 @@ For Beads, inspect existing issues and edges and verify IDs and project scope th
 
 ## Beads capabilities in use
 
-Verified on 2026-11-02 against installed `bd` 1.3.1 (c1c4b642a): the `--help` of every command named below (integration and setup commands: the `bd --help` list), plus read-only `bd where`, `ready`, `list`, `show`, `config`, `formula list`, `gate list`, `human list`, `orphans`, `dep cycles`, `graph check` and `lint`. Recheck after a Beads upgrade. Use a capability only as its row states. No row grants remote or destructive authority.
+Verified on 2026-11-02 against installed `bd` 1.3.1 (c1c4b642a): the `--help` of every command named below (integration and setup commands: the `bd --help` list), plus read-only `bd where`, `ping`, `ready`, `list`, `show`, `config`, `formula list`, `gate list`, `human list`, `orphans`, `dep cycles`, `graph check` and `lint`. Recheck after a Beads upgrade. Use a capability only as its row states. No row grants remote or destructive authority.
 
 | Capability | Decision | Rule and reason |
 |---|---|---|
@@ -146,6 +148,7 @@ Verified on 2026-11-02 against installed `bd` 1.3.1 (c1c4b642a): the `--help` of
 | `bd create --graph`, `--file`, `bd batch`, `bd q` | Not adopted | Help prints no graph-file schema. `bd batch` creates with no parent, acceptance or guards. `bd q` sets parent, labels, priority and type, but no acceptance, spec-id or guards. |
 | `bd dep add`, `bd link` | Adopt | Record each prerequisite as a blocking edge (`## Record task prerequisites`). Create each follow-up `discovered-from` its origin (`--deps discovered-from:<origin-id>`); that edge records provenance and does not block. Per Beads v1.3.1 source (`internal/types/types.go` `AffectsReadyWork`, checked 2026-10-13), readiness counts only blocks, parent-child, conditional-blocks and waits-for edges. |
 | `bd dep cycles`, `bd graph check`, `bd swarm validate` | Adopt, read-only | Run after registering or changing edges and before dispatch. `bd swarm create` is not adopted. |
+| `bd where`, `bd ping`, `bd prime` | Adopt, read-only | `bd where` and `bd ping` are the availability test (`## Select before tracking-dependent work`). `bd prime` prints workflow context; run it only when hook context is missing or stale. |
 | `bd ready`, `bd blocked`, `bd children`, `bd show --children --refs --long`, `bd graph --open`, `bd epic status`, `bd list`, `bd query`, `bd count`, `bd status` | Adopt, read-only | Filter by the project label. Run `bd ready --explain` when readiness is unexpected. `bd show --long` shows the lease. |
 | `bd ready --claim`, `bd close --claim-next`, `bd close --continue`, `bd epic close-eligible`, `bd orphans --fix` | Not adopted | Each claims or closes an issue the plan did not designate or acceptance evidence did not approve. Read-only `bd orphans` is adopted at handoff review. |
 | `bd update --claim`, `--if-assignee`, `--if-status` | Adopt | Per `## Agent identity and ownership`. A mismatch exits 13 and writes nothing (installed help). Guards check only the local database, prove no cross-PC exclusivity, require a field update in the same command and never combine with `--claim`. On exit 13, re-read actual state and follow `## Outage and uncertain writes`; never retry blindly. |
@@ -180,9 +183,11 @@ A claim does not lock files, fixtures, generators, ports or test environments, a
 
 ## Outage and uncertain writes
 
-Beads unreachable before a plan exists selects `local` under `## Select before tracking-dependent work`. Issue-only work that needs tracking gets a local plan: admit it through `references/artifact-lifecycle.md` as an execution plan with the `direct` profile and `Task store: local`. Other issue-only work proceeds untracked and reports its result.
+Beads unreachable before a plan exists selects `local` under `## Select before tracking-dependent work`. Issue-only work needs tracking when it spans more than one session, delegates work or ends in a handoff. Admit such work through `references/artifact-lifecycle.md` as an execution plan with the `direct` profile and `Task store: local`. Other issue-only work proceeds untracked and reports its result. When Beads is available again, register an issue for untracked issue-only work only if the work is still open.
 
 A `beads` family that loses Beads mid-run keeps its store. Preserve existing evidence, record the outage in the checkpoint, create no local copy of a Beads-owned task, never convert issues to checkboxes, and never claim a failed update as saved. Pause claims, dispatch and closure that need Beads state; continue independent authorized work on tasks already claimed and read back, and reconcile through Beads when it returns.
+
+Park newly discovered work, evidence and notes in a dated `pending Beads reconciliation` list in the checkpoint. Write them as plain list entries, never as tasks or checkboxes. When Beads is available, register each entry there, then clear the list.
 
 After a mutation with an uncertain outcome, read actual task state through the bound owner before retrying. Reconcile whether the requested effect landed, then perform only the still-required authorized change. Do not retry blindly or report success without evidence. Resume and evidence reconciliation follow `references/context-continuity.md` and `references/workspace-and-integration.md`.
 

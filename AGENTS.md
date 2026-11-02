@@ -14,7 +14,7 @@ Expected workspace: `/home/sohrab/project/alaa-task-hub/.beads`
 
 User, repository, and orchestrator constraints govern. This binding overrides conflicting upstream Beads skill or hook guidance and grants no additional authority.
 
-Beads is the task authority whenever `bd` is installed and `bd where` resolves the expected workspace. When it does not, run no Beads command, initialize no replacement database, and select the task store per `/alaa-workflow` `references/task-tracking.md` `## Select before tracking-dependent work`. Once Beads is reachable, register every new task there; a task lives in exactly one store.
+Beads is the task authority whenever it is available, as `/alaa-workflow` `references/task-tracking.md` `## Select before tracking-dependent work` defines. When it is not available, run no Beads command except the availability test, initialize no replacement database, and select the task store per `/alaa-workflow` `references/task-tracking.md` `## Select before tracking-dependent work`. Once Beads is available, register every new task there; a task lives in exactly one store.
 
 Under Codex, read each `/name` skill reference in this block as `$name`.
 
@@ -23,7 +23,7 @@ Under Codex, read each `/name` skill reference in this block as `$name`.
 Before planning or executing tracked work, and after compaction or session restart:
 
 1. Read `.agents/skills/beads/SKILL.md` unless its full instructions remain in context; hook output is not a substitute. If missing, report it. Then follow `/alaa-workflow` `references/task-tracking.md` `## Select before tracking-dependent work` to decide whether Beads is available.
-2. Before issuing other Beads commands, run `bd where` with the configured `BEADS_DIR` and verify the expected workspace. Recheck after workspace or connection changes. On failure or mismatch, report it. Beads is then unavailable; apply the store-selection rule above. Never initialize another database or silently change the connection.
+2. Before issuing other Beads commands, run `bd where` with the configured `BEADS_DIR` and verify the expected workspace, then run `bd ping`. Recheck after workspace or connection changes. On failure or mismatch, report it. Beads is then unavailable; apply the store-selection rule above. Never initialize another database or silently change the connection.
 3. Reuse current hook-injected `bd prime` context; run it manually only if missing or stale.
 4. Before Beads mutations, claims, ownership comparisons, resume or transfer, load `/alaa-workflow` `references/task-tracking.md` `## Agent identity and ownership`. It owns actor allocation, explicit mutation identity, guarded updates, transfer and closure coordination; its actor rules override actorless upstream examples. If that file cannot be loaded, stop the dependent Beads mutation. Keep the assigned actor in the existing dispatch or admitted handoff.
 5. When resuming, read the active issue and linked plan/checkpoint/handoff. Check worktree state, scope, ownership, and blockers before continuing. A conversation summary or `bd prime` cannot replace task-state recovery. Resolve an ambiguous active task before implementation.
@@ -71,18 +71,18 @@ bd ready --label "<project-label>"
 bd list --status=in_progress --label "<project-label>"
 bd ready --explain --label "<project-label>"
 bd blocked --label "<project-label>"
-bd --actor "<actor>" create "<title>" --description "<goal, scope, output, plan link>" --acceptance "<criterion or exact plan reference>" --labels "<project-label>" --type <type>
+bd --sandbox --actor "<actor>" create "<title>" --description "<goal, scope, output, plan link>" --acceptance "<criterion or exact plan reference>" --labels "<project-label>" --type <type>
 # add when a plan exists:  --spec-id "<repo-name>:<repo-relative plan path>"
 # add for a follow-up:     --deps "discovered-from:<origin-id>"
 bd show <id>
-bd --actor "<actor>" update <id> --claim
+bd --sandbox --actor "<actor>" update <id> --claim
 bd show <id>
-bd --actor "<actor>" update <id> --if-assignee "<actor>" --if-status in_progress --append-notes "<position, blockers, next step>"
+bd --sandbox --actor "<actor>" update <id> --if-assignee "<actor>" --if-status in_progress --append-notes "<position, blockers, next step>"
 bd show <id>
 bd lint <id>
 bd stale --label "<project-label>"
 bd show <id>
-bd --actor "<actor>" close <id> --reason "<verdict>; <commit | HEAD+scoped sha256>; <evidence address>"
+bd --sandbox --actor "<actor>" close <id> --reason "<verdict>; <commit | HEAD+scoped sha256>; <evidence address>"
 bd show <id>
 bd prime
 ```

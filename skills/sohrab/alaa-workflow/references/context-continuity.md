@@ -34,7 +34,7 @@ For admitted families, the three artifacts divide the work accordingly:
 
 The handoff package is a section inside the plan rather than a separate file, because knowledge is only useful next to the route it belongs to, and because a fourth file is a fourth thing to keep honest.
 
-Issue-only Beads work creates no plan, checkpoint, or six-field handoff package; its issue owns position, results and knowledge as `## Task resume and phase resume` states. An issue-only local plan (Beads unavailable) uses the `direct` profile and follows the plan resume path.
+Issue-only Beads work creates no plan, checkpoint, or six-field handoff package; its issue owns position, results and knowledge as `## Task resume and phase resume` states. Issue-only work that needs tracking while Beads is unavailable gets a local plan (`direct` profile) and follows the plan resume path. `references/task-tracking.md` `## Outage and uncertain writes` defines that need.
 
 ## Status and position
 

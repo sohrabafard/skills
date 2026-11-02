@@ -19,7 +19,7 @@ ACTIVE_ADAPTER: hindsight
 Valid values are `local` and `hindsight`. No other store exists.
 
 **This line is the sole selection.** Before a task's first recall or write, load
-`references/store-<value>.md`. Use only its mechanics for task store operations. A format-only section
+`references/store-<value>.md`. Use only its mechanics for memory store operations. A format-only section
 that the adapter explicitly routes shares serialization, not adapter activation or operation authority.
 
 Exactly one adapter is active. Reason: two adapters write the same knowledge under different indexing, commit and
@@ -175,16 +175,16 @@ Each kind of information has one owner:
 |---|---|
 | Generalizable experience usable in later work | The active adapter store |
 | A short reminder shared across the whole Beads hub | `bd remember` |
-| A task's position and next step | Beads issue `notes`; `/alaa-workflow` `references/task-tracking.md` section `## Issue fields` owns the field contract |
+| A task's position and next step | Beads issue `notes`, or the plan cursor under `Task store: local`; `/alaa-workflow` `references/task-tracking.md` section `## Issue fields` owns the field contract |
 | A binding rule | The owning repository or skill; memory only references it |
 
 A reminder is a short pointer every hub reader must see at session start. Experience with a reason and
 evidence goes to the active adapter store, and a reminder may point to it.
 
-Write `bd remember` without separate approval only when Beads is reachable and its binding has verified the hub
+Write `bd remember` without separate approval only when Beads is available and its binding has verified the hub
 (`/alaa-workflow` `references/task-tracking.md`), and only for a short reminder shared across the hub.
-On an unavailable hub or an uncertain write, follow `/alaa-workflow` `references/task-tracking.md`
-section `## Outage and uncertain writes`. Reason: `bd prime` injects every memory by default (`--no-memories`
+On an unavailable hub, write no reminder and re-evaluate it when Beads is available. On an uncertain write, follow
+`/alaa-workflow` `references/task-tracking.md` section `## Outage and uncertain writes`. Reason: `bd prime` injects every memory by default (`--no-memories`
 and the caps exist), with no label or project filter, and `bd remember` takes no label or project option.
 
 - Each entry carries its source, scope and maintainer.
