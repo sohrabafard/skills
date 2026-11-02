@@ -28,6 +28,8 @@ Rules:
 
 ## GitLab CI/CD baseline contract
 
+Milestone 1 delivery scope: `16-infrastructure-services-and-delivery-artifacts.md`, "Runner shapes and the CI job image". It changes the delivery path for that milestone and does not retire this baseline.
+
 Rules:
 - for every Ala service image, default to the shared `service-ci-kit` project for GitLab CI/CD: Laravel and PHP services include its PHP pipeline, other services its stack-neutral contract-and-handoff include (`16-infrastructure-services-and-delivery-artifacts.md` names both)
 - keep `.gitlab-ci.yml` as a thin include-based wrapper and pin the kit only through the include `ref:`; do not set `SERVICE_CI_KIT_REF` in a wrapper
