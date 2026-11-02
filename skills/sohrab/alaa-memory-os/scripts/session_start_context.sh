@@ -18,7 +18,8 @@ Emit conditional owner pointers and the unresolved drift-record count for a
 SessionStart hook.
 
 Options:
-  --drift-dir DIR   drift registry, relative to the repo root (default: docs/drift)
+  --drift-dir DIR   drift registry, relative to the repo root (default: docs/drift);
+                    an empty or absolute value is rejected and reported as unobserved
   --repo-root DIR   repository root (default: current directory)
   -h, --help        show this help and exit
 
@@ -76,7 +77,11 @@ count_open_drift() {
   echo "$open"
 }
 
-open_count=$(count_open_drift "$repo_root/$drift_dir")
+# An empty or absolute value would scan the whole repository root or an outside tree.
+case "$drift_dir" in
+"" | /*) open_count=-1 ;;
+*) open_count=$(count_open_drift "$repo_root/$drift_dir") ;;
+esac
 
 # The condition tests the observed count, not command success: announcing possible
 # drift on a zero count trains the reader to ignore the line.

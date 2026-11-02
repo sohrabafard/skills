@@ -58,14 +58,21 @@ def resolve_vault(arg):
     return root.resolve()
 
 
+def _walk_failed(err):
+    raise Blocked("vault enumeration is incomplete or unreadable.")
+
+
 def list_notes(root):
-    try:
-        notes = sorted(
-            p for p in root.rglob("*.md")
-            if p.is_file() and not SKIPPED_DIRS.intersection(p.relative_to(root).parts[:-1])
-        )
-    except OSError:
-        raise Blocked("vault enumeration is incomplete or unreadable.")
+    notes = []
+    # os.walk reports an unreadable directory through onerror. Path.rglob skips it silently.
+    for current, dirnames, filenames in os.walk(root, onerror=_walk_failed):
+        dirnames[:] = [d for d in dirnames if d not in SKIPPED_DIRS]
+        for name in filenames:
+            if name.endswith(".md"):
+                path = Path(current) / name
+                if path.is_file():
+                    notes.append(path)
+    notes.sort()
     if not notes:
         raise Blocked("no markdown notes found under %s" % root)
     return notes

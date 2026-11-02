@@ -16,6 +16,17 @@ is worse than no checker at all, because a gate built on it reads a missing tool
 green while checking nothing. A `2` is a failed gate, never a pass.
 
 Run the checker in normal mode against the real vault and read `--help` first. Report the observed exit code.
+Set `SKILL_DIR` to the installed skill directory. Run one command per subcommand.
+
+```bash
+python3 "$SKILL_DIR/scripts/alaa_memory_vault_check.py" --help
+python3 "$SKILL_DIR/scripts/alaa_memory_vault_check.py" linkcheck --vault-path "$ALAA_MEMORY_VAULT"
+python3 "$SKILL_DIR/scripts/alaa_memory_vault_check.py" staleness --vault-path "$ALAA_MEMORY_VAULT"
+```
+
+The checker reads strict UTF-8 only. It accepts a freshness stamp only as `YYYY-MM-DD` with an optional time suffix.
+It reports any other form as an unparseable date.
+An unreadable directory or an undecodable note exits `2`.
 `/alaa-testing-strategy` owns test design beyond this rule.
 
 ## Checker inventory
