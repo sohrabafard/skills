@@ -103,5 +103,5 @@ Historical import is optional. Use the upstream `--import-conversations` path on
 
 ## Self-hosted security
 
-For self-hosted mode, require API authentication before any non-loopback bind. Keep the tracked default on loopback; use only a specific trusted-LAN address when explicitly selected, never `0.0.0.0`. Keep raw LLM traces disabled for normal operation. Tokens, transcripts, real sessions, and production/personal data are never test fixtures.
+For self-hosted mode, require API authentication before any non-loopback bind. Keep the tracked default on loopback; use only a specific trusted-LAN address when explicitly selected, never `0.0.0.0`. Keep raw LLM traces disabled for normal operation. Tokens, transcripts, real sessions, and production/personal data are never used as sample data.
 

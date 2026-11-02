@@ -10,26 +10,26 @@ skill does not locate. The rules below hold whatever invokes them.
 ## Every path here is unconfirmed, and must be checked before use
 
 The warehouse is on a volume this skill cannot reach from a normal session, so none of the paths below was
-verified when this file was written. **Treat each as a candidate, not a fact.** Resolve `$warehouseRoot` from the task or user, then run the check first:
+verified when this file was written. **Treat each as a candidate, not a fact.** Resolve `$warehouse_root` from the task or user, then run the check first:
 
-```powershell
+```bash
 # Exit 0 and a listing means the path is real. Anything else means stop.
-Get-ChildItem -LiteralPath (Join-Path $warehouseRoot '_global') -ErrorAction Stop
+ls -- "$warehouse_root/_global"
 ```
 
 If that fails, do not proceed on the assumption that the layout matches. Ask the user for the current
 warehouse root, or for read access to it, and record the answer in a note with `canonical_source_paths` set to
 the confirmed path so the next session inherits a checked fact rather than this caveat.
 
-Resolve input paths using the confirmed warehouse layout and platform. These input examples impose no
+Resolve input paths using the confirmed warehouse layout. These input examples impose no
 path syntax or destination on the selected memory adapter.
 
 Candidate inputs, in the order they are read:
 
-- `_global\lessons.md` — cross-project lessons.
-- `_global\work\` — per-session work products.
-- `_global\_index.md` — the warehouse index, including when the pipeline last ran.
-- A specific project's `_lessons.md`, `work\`, and `_index.md`, only when that project is in scope.
+- `_global/lessons.md` — cross-project lessons.
+- `_global/work/` — per-session work products.
+- `_global/_index.md` — the warehouse index, including when the pipeline last ran.
+- A specific project's `_lessons.md`, `work/`, and `_index.md`, only when that project is in scope.
 
 The warehouse index carries a session count and a last-run date. Both are claims about disk, not about this
 file: read them, do not restate them here, and never plan a publication on a remembered figure.

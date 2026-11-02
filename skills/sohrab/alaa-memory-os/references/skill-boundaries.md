@@ -24,7 +24,7 @@ is this skill's.
 | Why a mechanism fails open or closed, and how to shape it | `/alaa-reliability-sla` |
 | Fail-closed doctrine for a security decision, and exceptions to it | `/alaa-security-review` |
 | Complexity budgets and structure choice for a growing pass | `/alaa-algorithms-data-structures` |
-| Test design beyond "every assertion needs a red fixture" | `/alaa-testing-strategy` |
+| Test design and proof level | `/alaa-testing-strategy` |
 | Subsystem design | `/alaa-system-design` |
 | Which repository files carry authority | `/alaa-project-constitution` |
 | Editing shared or global configuration, including a settings file | `/alaa-controlled-ops` |
@@ -60,6 +60,5 @@ list, and the missing half was who produces the storable form.
 ## Selected product mechanics
 
 Read only the `ACTIVE_ADAPTER` adapter for product packs, note/schema syntax and search commands.
-Basic Memory's historical pack inventory is reachable only from `references/store-basic-memory.md`;
-Hindsight's upstream routing only from `references/store-hindsight.md`. An inactive adapter is an archive,
-not an additional recall or write surface.
+Hindsight's upstream routing is reachable only from `references/store-hindsight.md`. An inactive adapter is an
+archive, not an additional recall or write surface.

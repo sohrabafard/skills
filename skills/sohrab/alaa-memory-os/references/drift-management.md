@@ -108,5 +108,5 @@ pack, which is not in this repository; the separation holds whatever invokes it.
 - Do not resolve a record while any affected repository remains unfixed.
 - Do not delete a drift record; archive it. The audit trail is the point.
 - Do not treat a schema-versus-usage report from the store's own tooling as contract drift. That is metadata
-  maintenance, and the store adapter covers it.
+  maintenance.
 - Do not assign a severity level in the record without naming where the level came from.

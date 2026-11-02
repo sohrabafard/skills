@@ -4,18 +4,14 @@ Mechanics for reading and writing the vault with ordinary file tools and no inde
 with the store; nothing here is policy. The policy is in `SKILL.md`, `references/knowledge-shape.md`, and
 `references/drift-management.md`.
 
-**Use this adapter only when `ACTIVE_ADAPTER: local` is selected.** The Basic Memory CLI is being retired;
-`references/store-basic-memory.md` stays for the period while `bm` is still installed and for anyone who
-reinstates it. Nothing was migrated when the tool was dropped, because the tool was never where the notes lived.
-
-The `File-vault serialization` section also owns the shared on-disk format for the Basic Memory adapter.
-Reading that section for format does not select this adapter or authorize its file operations.
+**Use this adapter only when `ACTIVE_ADAPTER: local` is selected.**
 
 ## What the store actually is
 
-`<vault-root>` — plain markdown notes in a git repository, with its root resolved from the task or `ALAA_MEMORY_VAULT`. Basic Memory indexed this directory; it never owned it. The consequence worth internalising: **dropping
-the index loses search, not content**, and every note remains readable by any agent in any runtime that can read
-a file, which is the property the server-backed adapter never had.
+`<vault-root>` — plain markdown notes in a git repository, with its root resolved from the task or `ALAA_MEMORY_VAULT`.
+The consequence worth internalising: **no index sits between the agent and the content**, and every note is
+readable by any agent in any runtime that can read a file, which is the property the server-backed adapter
+never had.
 
 Top-level layout, which is also the routing map for recall:
 
@@ -36,34 +32,34 @@ archive/       superseded notes, kept rather than deleted
 
 ## Recall
 
-Resolve `$vaultRoot` from the authorized task or `ALAA_MEMORY_VAULT`; an invalid selected root is unavailable,
+Resolve `$vault_root` from the authorized task or `ALAA_MEMORY_VAULT`; an invalid selected root is unavailable,
 not permission to search another vault.
 
 Search the tree, then read only the matching note. There is no ranking, so the query has to carry the
-discrimination that a hybrid search used to.
+discrimination.
 
-```powershell
+```bash
 # by topic, across the vault
-rg -i -l "notification command contract" $vaultRoot
+rg -i -l "notification command contract" "$vault_root"
 
 # by lifecycle field, which is ordinary frontmatter here
-rg -l "^status: needs_review" $vaultRoot
+rg -l "^status: needs_review" "$vault_root"
 
 # by relation, to walk the graph by hand
-rg -l "\[\[Alaa System Architecture Map\]\]" $vaultRoot
+rg -l "\[\[Alaa System Architecture Map\]\]" "$vault_root"
 
-# what changed recently, the replacement for recent-activity
-git -C $vaultRoot log --oneline -20 --name-only
+# what changed recently
+git -C "$vault_root" log --oneline -20 --name-only
 ```
 
-Three recall behaviours change, and pretending they did not is how an agent reports a miss as an absence:
+Three recall properties hold, and ignoring them is how an agent reports a miss as an absence:
 
 - **No semantic search.** A note about "pool exhaustion" will not surface for a query about "connection
   starvation". Search two or three phrasings before concluding a topic is unrecorded, and say "not found under
   these terms" rather than "not recorded".
-- **No `build_context` traversal.** Relations are `[[wikilinks]]` in the body; follow them by searching for the
+- **No graph traversal tool.** Relations are `[[wikilinks]]` in the body; follow them by searching for the
   target title. One hop is cheap, three is a research task — budget accordingly.
-- **Recall still fails open**, and now it rarely needs to: a file search over a few hundred notes returns well
+- **Recall still fails open**, though it rarely needs to: a file search over a few hundred notes returns well
   inside the five-second budget `SKILL.md` sets. The budget is no longer the binding constraint; query quality is.
 
 ## File-vault serialization
@@ -75,7 +71,7 @@ Three recall behaviours change, and pretending they did not is how an agent repo
 - Keep `permalink` stable and in the `alaa-memory/<folder>/<slug>` shape already used across the vault, so a
   future indexed store can adopt the vault without rewriting every cross-reference.
 - Write UTF-8 without a byte-order mark. A mark immediately before the YAML delimiter breaks the frontmatter
-  parse, and on Windows PowerShell 5.1 `Set-Content -Encoding UTF8` emits one.
+  parse.
 
 For curated publication, map the topics in `references/prompt-3-publishing.md` to:
 
@@ -86,13 +82,13 @@ For curated publication, map the topics in `references/prompt-3-publishing.md` t
 - `projects/PROJECT-KEY/Learned Patterns.md`
 
 Use `last_curated` for curated lessons and patterns. Check file-backed source paths and dates with
-`scripts/alaa_memory_staleness.ps1`; this checker reads frontmatter, not server-backed memories.
+`scripts/alaa_memory_vault_check.py staleness`; this checker reads frontmatter, not server-backed memories.
 For invocation and exit-code handling, read `references/checkers-and-hooks.md` before running it.
 
 In Obsidian or similar editors, quote wiki links in YAML values because unquoted `[[…]]` is invalid YAML.
 Keep typed relations in the note body so they remain queryable. Editors provide navigation and review,
 not runtime truth. Use backlink/orphan views to locate graph issues and
-`scripts/alaa_obsidian_linkcheck.ps1` to check them, following `references/checkers-and-hooks.md`.
+`scripts/alaa_memory_vault_check.py linkcheck` to check them, following `references/checkers-and-hooks.md`.
 A correct note findable by search is not defective merely because it is an orphan.
 
 ## Writing
@@ -105,25 +101,15 @@ Report changed paths and uncommitted status. Commit only with explicit permissio
 otherwise preserve the uncommitted note and its pointer in the authorized handoff. Git history offers
 recovery only after a permitted commit; never imply it protects uncommitted content.
 
-## What is lost, and what replaces it
+## No schema gate
 
-| Retired | Replacement |
-|---|---|
-| `bm tool search-notes` | `rg` over the vault, two or three phrasings |
-| `bm tool build-context` | follow `[[wikilinks]]` by title search |
-| `bm tool recent-activity` | `git log --name-only` |
-| `bm doctor`, `bm orphans` | a link check over `[[...]]` targets, when one is worth writing |
-| `bm schema validate` / `diff` | frontmatter review at write time; no automated schema gate |
-| `bm reindex` | nothing to reindex |
-
-The schema gate is the real loss. Without it, a malformed or missing frontmatter field is found by a reader
-rather than by a checker, so the write-time discipline in `references/knowledge-shape.md` carries weight it did
-not have to carry before. Treat a note you are editing as a chance to fix its frontmatter.
+No tool validates frontmatter here, so a malformed or missing field is found by a reader rather than by a
+checker. The write-time discipline in `references/knowledge-shape.md` carries that weight. Treat a note you are
+editing as a chance to fix its frontmatter.
 
 ## Concurrency
 
-Unchanged from the file-backed store, and now the only mechanism: two agents writing the same note is
-last-writer-wins with no warning and no merge. One agent owns a note during a task; an agent that must update a
+Two agents writing the same note is last-writer-wins with no warning and no merge. One agent owns a note during a task; an agent that must update a
 note it did not read this session re-reads it immediately before writing; new authorized captures use a unique filename rather than overwrite an existing note. Repository hooks
 create no vault notes; `references/checkers-and-hooks.md` owns their nonwriting contract.
 

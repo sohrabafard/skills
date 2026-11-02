@@ -1,7 +1,7 @@
 # Checkers And Hooks
 
 Two kinds of script ship with this skill, and they obey opposite exit-code contracts. Confusing them is the
-failure this file exists to prevent.
+failure this file exists to prevent. The host is WSL Linux: checkers run with `python3`, hooks with `bash`.
 
 ## The checker contract
 
@@ -13,79 +13,30 @@ Every checker exits:
 
 The third code is the one that matters. A checker whose "could not run" is indistinguishable from its "clean"
 is worse than no checker at all, because a gate built on it reads a missing tool as a pass and keeps reporting
-green while checking nothing. Both shipped checkers previously failed this in both directions at once, which is
-why the contract is stated here rather than assumed.
+green while checking nothing. A `2` is a failed gate, never a pass.
 
-## Every assertion has a red fixture
-
-A checker that has only ever been observed to pass is decoration. Before any checker is allowed to report
-clean, each assertion it makes must be shown to fail on an input that violates it, in a fixture committed
-beside the script.
-
-- `test/fixtures/red-vault/` — violates every assertion at once: a broken wiki link, a note nothing links to, a
-  note with no Relations section, a recorded source path that does not exist, and a `last_verified` far past
-  the threshold.
-- `test/fixtures/green-vault/` — satisfies every assertion.
-
-Each checker takes `-SelfTest`, which runs it against both fixtures and asserts the exit codes rather than the
-report text. Report text is prose and drifts; the exit code is the contract.
-
-`test/run-tests.ps1` runs `-SelfTest` only for `alaa_obsidian_linkcheck.ps1`,
-`alaa_memory_staleness.ps1`, `alaa_memory_health.ps1`, `alaa_memory_reindex.ps1`, and
-`alaa_memory_post_task.ps1`. It excludes the Python hook-safety, checker-input-failure and repository
-capability-contract checks below. Target exit `2` is **BLOCKED, not FAIL**; the harness exits `2` because
-unavailable checkers and reported findings require different actions. Never collapse that distinction.
-
-Run separately from the repository root:
-
-```text
-python skills/sohrab/alaa-memory-os/test/test-hook-safety.py
-python skills/sohrab/alaa-memory-os/test/test-hook-safety.py --self-test
-python skills/sohrab/alaa-memory-os/test/test-checker-input-failures.py
-python scripts/check_capability_recall.py
-python scripts/check_capability_recall.py --self-test
-```
-
-Hook-safety and checker-input-failure commands execute synthetic process/fixture regressions, proving
-neither installed hook activation nor live store behavior. The capability checker/self-test inspect
-scoped source/scenario contracts and red fixtures; they execute no model/memory operation and prove no
-runtime instruction compliance. These Python commands return `0` for covered checks passing, `1` for
-findings/assertion failures, and `2` for unavailable execution/unreadable inputs. Either nonzero blocks
-the affected claim; unrun commands never pass. Passing the PowerShell harness covers none of them. Keep
-the independent consolidated verification gate; implementation-lane focused evidence does not discharge
-it. `/alaa-testing-strategy` owns test design beyond this rule.
+Run the checker in normal mode against the real vault and read `--help` first. Report the observed exit code.
+`/alaa-testing-strategy` owns test design beyond this rule.
 
 ## Checker inventory
 
-| Script | Asserts | Bound |
+One script, `scripts/alaa_memory_vault_check.py`, with two subcommands. Both read note frontmatter and the file
+system, call no store command, and change nothing except an optional `--out-file` report. The vault root is
+`--vault-path`, else `ALAA_MEMORY_VAULT`; an invalid selected path exits `2` and never falls through to another
+vault. No machine-specific default is supplied.
+
+| Subcommand | Asserts | Bound |
 |---|---|---|
-| `scripts/alaa_obsidian_linkcheck.ps1` | Every wiki link resolves to a note filename, title, alias, or permalink; every note has an incoming link; every note has a Relations section. | Builds one name-to-note index, then one constant-time lookup per link: linear in total links. The earlier version scanned every note for every link, which is quadratic and unusable on a vault of a few thousand notes. |
-| `scripts/alaa_memory_staleness.ps1` | Every path in `canonical_source_paths` still resolves, and `last_verified` is no older than the threshold. | Linear in notes; one file-existence test per recorded path. |
+| `linkcheck` | Every wiki link resolves to a note filename, title, alias, or permalink. With `--strict-hygiene`, every note also has an incoming link and a `## Relations` section; without it only a broken link is a finding, because a correct, findable orphan is no defect and a checker that exits `1` on every real vault gets switched off. | One name-to-note index, then one constant-time lookup per link: linear in notes plus links. |
+| `staleness` | Every path in `canonical_source_paths` still resolves, `last_verified` (or `last_curated`) is an ISO date no older than `--max-age-days` (default 90), and a note of a source-derived type carries both fields. Relative source paths resolve against `--source-root`, else `ALAA_SOURCE_ROOT`, else the vault. | Linear in notes; one existence test per recorded path. |
 
-The staleness checker is the one that makes the staleness rule enforceable. `canonical_source_paths` and
-`last_verified` were required fields with nothing checking them, which is the same as advisory.
-
-## Store-side scripts
-
-`scripts/alaa_memory_health.ps1`, `scripts/alaa_memory_reindex.ps1`, and `scripts/alaa_memory_post_task.ps1`
-are store-specific and thin. They follow the same contract, with one discrimination that the earlier versions
-collapsed: **a missing store binary or an unreachable store exits `2`; a store that ran and reported a problem
-exits `1`.** Previously every path used `throw`, so both exited `1` and a CI gate could not tell "no tool
-installed" from "validation failed".
-
-They share `scripts/_common.ps1`, which owns vault-root resolution, boundary validation on that path, store
-invocation that returns only an exit code, and the exit mapping. Root selection chooses one explicit
-`-VaultPath`, else `ALAA_MEMORY_VAULT`, else a caller-supplied documented default; an invalid selected
-path returns unavailable without trying another root. No machine-specific default is supplied. Store
-invocation emits no raw argv echo; third-party output is not thereby proven sanitized. Store invocation is the reason the module
-exists: a PowerShell function returns its whole output stream, so a helper that runs a command and then
-`return $code` hands the caller an array of output lines with the code appended. Comparing that array against
-zero is a filter, not a comparison, and it is truthy whenever the command printed anything — which made the
-earlier health check report failure on every clean run.
+The staleness checker makes the staleness rule enforceable: `canonical_source_paths` and `last_verified` were
+required fields with nothing checking them, which is the same as advisory. Both subcommands skip `.obsidian/`
+and `archive/`.
 
 ## Hook scripts are exempt, and inverting their exit codes breaks them
 
-`scripts/precompact_checkpoint.ps1` and `scripts/session_start_context.ps1` are Claude Code hooks. Their
+`scripts/precompact_checkpoint.sh` and `scripts/session_start_context.sh` are Claude Code hooks. Their
 protocol contradicts the checker contract:
 
 - `0` — success. Output handling is event-specific; never assume JSON reaches the agent.
@@ -94,8 +45,8 @@ protocol contradicts the checker contract:
   notice to the user.
 
 A hook must exit `0` on success and never exit `2` unless it intends to block. Both shipped hooks always
-exit `0`, including from their error handler. Do not "fix" them to `0/1/2`. Confirm semantics at
-`https://code.claude.com/docs/en/hooks` before changing either script.
+exit `0`. Do not "fix" them to `0/1/2`. Confirm semantics at `https://code.claude.com/docs/en/hooks` before
+changing either script.
 
 Official hook semantics were checked at https://code.claude.com/docs/en/hooks on 2026-10-12
 America/Los_Angeles (UTC date 2026-10-13): an access date, not a publication date. `SessionStart` stdout
@@ -103,23 +54,20 @@ enters session context; the event cannot block. `PreCompact` discards `systemMes
 compatibility JSON emission proves no model reminder delivery. Refresh event-specific semantics before
 changing or registering hooks.
 
-`precompact_checkpoint.ps1` is a nonwriting compatibility entrypoint preserving `VaultPath` and exit 0.
-It reads no transcript, writes no vault/checkpoint and invokes no adapter. Its emitted owner pointer
+`precompact_checkpoint.sh` is a nonwriting compatibility entrypoint that exits 0. It reads no payload,
+transcript or vault, writes no vault/checkpoint and invokes no adapter. Its emitted owner pointer
 proves no continuity; /alaa-workflow must record continuity proactively through its own admitted artifacts.
-The old transcript-tail opt-in has no effect.
 
-`session_start_context.ps1` reads repository drift counts and emits conditional owner pointers. It copies
+`session_start_context.sh` reads repository drift counts and emits conditional owner pointers. It copies
 no recall budgets, drift decisions, note policy or active workflow state. A missing/unreadable drift path
 is unknown, not zero drift. If the task touches counted contracts, inspect their records through
 `references/drift-management.md` before planning. Keep this hook fast; it runs every session.
 
 ## Registering the hooks
 
-These two scripts previously shipped with no registration path at all, so nobody could install them from the
-skill. The snippets below are the missing half.
-
 Editing a settings file is a shared-configuration change. Do not apply it on the user's behalf:
-`/alaa-controlled-ops` owns that action, and the user applies it themselves.
+`/alaa-controlled-ops` owns that action, and the user applies it themselves. Replace the placeholder path with
+the absolute path of the installed skill's `scripts/` directory.
 
 ```json
 {
@@ -128,7 +76,7 @@ Editing a settings file is a shared-configuration change. Do not apply it on the
       {
         "matcher": "startup",
         "hooks": [
-          { "type": "command", "command": "pwsh -NoProfile -File C:\\path\\to\\session_start_context.ps1" }
+          { "type": "command", "command": "bash /path/to/session_start_context.sh" }
         ]
       }
     ],
@@ -136,7 +84,7 @@ Editing a settings file is a shared-configuration change. Do not apply it on the
       {
         "matcher": "manual",
         "hooks": [
-          { "type": "command", "command": "pwsh -NoProfile -File C:\\path\\to\\precompact_checkpoint.ps1" }
+          { "type": "command", "command": "bash /path/to/precompact_checkpoint.sh" }
         ]
       }
     ]
@@ -148,13 +96,10 @@ Editing a settings file is a shared-configuration change. Do not apply it on the
 case that actually loses context. Confirm the current matcher values and the settings shape against the hooks
 documentation above before applying, because this schema is upstream and moves.
 
-## Windows is the target, and these are the traps already hit here
+## Script rules
 
-- Write frontmatter with a mark-less UTF-8 encoder. `Set-Content -Encoding UTF8` emits a byte-order mark on
-  Windows PowerShell 5.1 and none on PowerShell 7, and a mark immediately before the opening `---` can break
-  the YAML parse on the reader that later loads the note.
-- Normalise path separators before comparing. Exclusion globs written with backslashes match nothing on a
-  non-Windows host, which silently widens the checked set instead of failing.
+- Write frontmatter without a byte-order mark: a mark immediately before the opening `---` can break the YAML
+  parse on the reader that later loads the note.
 - For an authorized capture outside these nonwriting hooks, use a unique filename; timestamps alone can
   collide within a second and overwrite evidence.
 - Do not create a temporary directory inside the repository, and do not locate files by walking a fixed number

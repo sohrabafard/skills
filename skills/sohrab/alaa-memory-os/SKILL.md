@@ -1,6 +1,6 @@
 ---
 name: alaa-memory-os
-description: "Use when Alaa work must record or recall durable cross-session knowledge, whichever memory store backs it: deciding what to remember and in what shape; architecture, ownership, contract, operations, lesson, project, handoff or research notes; whether information belongs in the memory store, a Beads hub reminder or Beads issue notes; drift between sources of truth; fail-open recall budgets; and capability recall before a local-tool miss becomes a validation blocker or a permitted environment repair has an unknown owner. One adapter is active at a time; local file vault, Basic Memory and Hindsight each get one adapter reference. Do not use for tiny deterministic edits, as a second task system, for active plans or handoff contents owned by alaa-workflow, for candidate admission owned by alaa-extract-agent-lessons, or for service dependency edges, which are always derived."
+description: "Use when Alaa work must record or recall durable cross-session knowledge, whichever memory store backs it: deciding what to remember and in what shape; architecture, ownership, contract, operations, lesson, project, handoff or research notes; whether information belongs in the memory store, a Beads hub reminder or Beads issue notes; drift between sources of truth; fail-open recall budgets; and capability recall before a local-tool miss becomes a validation blocker or a permitted environment repair has an unknown owner. One adapter is active at a time; the local file vault and Hindsight each get one adapter reference. Do not use for tiny deterministic edits, as a second task system, for active plans or handoff contents owned by alaa-workflow, for candidate admission owned by alaa-extract-agent-lessons, or for service dependency edges, which are always derived."
 ---
 
 # Alaa Memory OS
@@ -15,6 +15,8 @@ replacing the store changes one adapter file and leaves every rule below intact.
 ```text
 ACTIVE_ADAPTER: hindsight
 ```
+
+Valid values are `local` and `hindsight`; no other store exists.
 
 **This line is the sole selection.** Before a task's first recall/write, load
 `references/store-<value>.md` and use only its mechanics for task store operations. A format-only section
@@ -178,9 +180,8 @@ Each kind of information has one owner:
 A reminder is a short pointer every hub reader must see at session start. Experience with a reason and
 evidence goes to the active adapter store, and a reminder may point to it.
 
-Write `bd remember` without separate approval only when the repository selects Beads and its binding has
-verified the hub (`/alaa-workflow` `references/task-tracking.md`), and only for a short reminder shared across
-the hub. On an unavailable hub or an uncertain write, follow `/alaa-workflow` `references/task-tracking.md`
+Write `bd remember` without separate approval only when Beads is reachable and its binding has verified the hub
+(`/alaa-workflow` `references/task-tracking.md`), and only for a short reminder shared across the hub. On an unavailable hub or an uncertain write, follow `/alaa-workflow` `references/task-tracking.md`
 section `## Outage and uncertain writes`. Reason: `bd prime` injects every memory by default (`--no-memories`
 and the caps exist), with no label or project filter, and `bd remember` takes no label or project option.
 
