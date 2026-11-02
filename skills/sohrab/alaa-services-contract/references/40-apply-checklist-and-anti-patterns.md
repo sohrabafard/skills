@@ -178,7 +178,7 @@ Flag a problem when you see any of these:
 - `/api/health` calls PostgreSQL, Redis, RabbitMQ, ClickHouse, or another service
 - `/api/ready` depends on tokens, cookies, OTP, or end-user state
 - the readiness envelope or key names differ from the contract
-- a new or refactored Ala service invents repo-local GitLab CI instead of defaulting to `service-ci-kit`
+- a new or refactored Ala service invents repo-local GitLab CI instead of defaulting to `service-ci-kit`; for a missing or unrun pipeline, or a kit-managed publisher copy, apply the Milestone 1 exception in `15-deployment-and-runtime-contract.md` first
 - `.gitlab-ci.yml` is not a thin wrapper in a repo that should follow the shared kit
 - shared `ci/scripts/*` or local semantic-release helper trees appear in a service repo without an explicit blocker
 - the repository diverges from the shared kit baseline without documenting the reason
