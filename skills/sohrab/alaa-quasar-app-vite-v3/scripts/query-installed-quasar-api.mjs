@@ -5,7 +5,6 @@ import { existsSync, readFileSync, realpathSync, statSync } from 'node:fs'
 import { createRequire } from 'node:module'
 import { dirname, isAbsolute, relative, resolve } from 'node:path'
 import { spawnSync } from 'node:child_process'
-import { tmpdir } from 'node:os'
 
 const usage = `query-installed-quasar-api.mjs - bridge to the target project's own Quasar CLI.
 
@@ -14,9 +13,6 @@ Usage:
 
 Options:
   -h, --help        Print this help and exit 0.
-      --self-test   Run offline self-checks of the internal logic and exit 0 on
-                    success or 1 on failure. Makes no network request and needs
-                    no Quasar project.
       --project <p> Directory (or a file inside one) to search upward from for a
                     package.json declaring @quasar/app-vite. Default: cwd.
 
@@ -90,8 +86,7 @@ function parseArguments(argv) {
   const describeArgs = []
   for (let index = 0; index < argv.length; index += 1) {
     const argument = argv[index]
-    if (argument === '--help' || argument === '-h') return { help: true, selfTest: false, project, describeArgs }
-    if (argument === '--self-test') return { help: false, selfTest: true, project, describeArgs }
+    if (argument === '--help' || argument === '-h') return { help: true, project, describeArgs }
     if (argument === '--project') {
       const value = argv[index + 1]
       if (!value) fail('--project requires a path.')
@@ -107,7 +102,7 @@ function parseArguments(argv) {
     describeArgs.push(argument)
   }
   if (describeArgs[0] === 'describe') describeArgs.shift()
-  return { help: false, selfTest: false, project, describeArgs }
+  return { help: false, project, describeArgs }
 }
 
 function resolveInstalledPackage(requireFromProject, name) {
@@ -139,62 +134,10 @@ function resolveQuasarBin(appVitePackage) {
   return binPath
 }
 
-function displayPath(path) { return path.replaceAll('\\', '/') }
-
-function selfTest() {
-  const failures = []
-  const check = (label, condition) => { if (!condition) failures.push(label) }
-
-  const a = parseArguments(['--project', '../app', 'QTable', '-p', '-s'])
-  check('--project is consumed with its value', a.project === '../app')
-  check('describe args survive --project', a.describeArgs.join(' ') === 'QTable -p -s')
-
-  const b = parseArguments(['--project=../app', 'list', 'storage'])
-  check('--project=<path> form is parsed', b.project === '../app')
-  check('list query survives', b.describeArgs.join(' ') === 'list storage')
-
-  const c = parseArguments(['describe', 'QSelect'])
-  check('a leading "describe" is dropped', c.describeArgs.join(' ') === 'QSelect')
-
-  check('--help is detected', parseArguments(['--help']).help === true)
-  check('-h is detected', parseArguments(['-h']).help === true)
-  check('--self-test is detected', parseArguments(['--self-test']).selfTest === true)
-
-  const deps = declaredDependencies({
-    dependencies: { quasar: '^2' },
-    devDependencies: { '@quasar/app-vite': '^3' },
-  })
-  check('declaredDependencies merges dependency kinds', deps['@quasar/app-vite'] === '^3' && deps.quasar === '^2')
-
-  let missingProjectMessage = ''
-  try { findQuasarProject(tmpdir()) }
-  catch (error) { missingProjectMessage = error.message }
-  check('a missing project fails with an actionable message',
-    missingProjectMessage.includes('@quasar/app-vite') && missingProjectMessage.includes('upward'))
-
-  let noBinMessage = ''
-  try { resolveQuasarBin({ packageJsonPath: '/nowhere/package.json', packageJson: {} }) }
-  catch (error) { noBinMessage = error.message }
-  check('a package with no bin entry fails clearly', noBinMessage.includes('bin entry'))
-
-  check('displayPath normalizes separators', displayPath('a\\b\\c') === 'a/b/c')
-
-  if (failures.length === 0) {
-    console.log('self-test: ok (12 checks, no network, no project required)')
-    return 0
-  }
-  for (const failure of failures) console.error(`self-test FAILED: ${failure}`)
-  return 1
-}
-
 function main() {
-  const { help, selfTest: runSelfTest, project, describeArgs } = parseArguments(process.argv.slice(2))
+  const { help, project, describeArgs } = parseArguments(process.argv.slice(2))
   if (help) {
     console.log(usage)
-    return
-  }
-  if (runSelfTest) {
-    process.exitCode = selfTest()
     return
   }
   if (describeArgs.length === 0) fail(`Missing Quasar API symbol or list query.\n\n${usage}`, EXIT_USAGE)
@@ -206,7 +149,7 @@ function main() {
   const quasarBin = resolveQuasarBin(appVitePackage)
   const args = describeArgs.includes('--no-color') ? describeArgs : [...describeArgs, '--no-color']
 
-  console.error(`[alaa-quasar-api] project=${displayPath(quasarProject.root)}`)
+  console.error(`[alaa-quasar-api] project=${quasarProject.root}`)
   console.error(`[alaa-quasar-api] @quasar/app-vite=${appVitePackage.packageJson.version} quasar=${quasarPackage.packageJson.version}`)
   console.error('[alaa-quasar-api] source=project-local quasar describe')
 

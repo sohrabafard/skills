@@ -35,8 +35,6 @@ Usage:
 
 Options:
   -h, --help            Print this help and exit 0.
-      --self-test       Run offline self-checks of the internal logic and exit
-                        0 on success or 1 on failure. Makes no network request.
       --timeout <ms>    Per-request timeout. Default ${DEFAULT_TIMEOUT_MS}.
       --retries <n>     Retries per package after a timeout or network error.
                         Default ${DEFAULT_RETRIES}.
@@ -60,7 +58,6 @@ Proxy:
 function parseArguments(argv) {
   const options = {
     help: false,
-    selfTest: false,
     timeoutMs: DEFAULT_TIMEOUT_MS,
     retries: DEFAULT_RETRIES,
     packages: [],
@@ -68,7 +65,6 @@ function parseArguments(argv) {
   for (let i = 0; i < argv.length; i += 1) {
     const arg = argv[i]
     if (arg === '-h' || arg === '--help') { options.help = true; continue }
-    if (arg === '--self-test') { options.selfTest = true; continue }
     if (arg === '--timeout') {
       const value = Number(argv[++i])
       if (!Number.isFinite(value) || value <= 0) throw new Error('--timeout needs a positive number of milliseconds')
@@ -226,45 +222,6 @@ async function getPackageInfo(name, timeoutMs, retries) {
   throw lastError
 }
 
-function selfTest() {
-  const failures = []
-  const check = (label, condition) => { if (!condition) failures.push(label) }
-
-  check('compareVersions orders patch releases', compareVersions('3.0.1', '3.0.10') < 0)
-  check('compareVersions orders majors', compareVersions('2.6.2', '3.0.0') < 0)
-  check('compareVersions treats equal versions as equal', compareVersions('3.2.0', '3.2.0') === 0)
-
-  const versions = ['2.6.2', '3.0.0-beta.45', '3.0.1', '3.2.0', '3.10.0', '4.0.0']
-  check('highestStableForMajor skips prereleases', highestStableForMajor(versions, 3) === '3.10.0')
-  check('highestStableForMajor finds v2', highestStableForMajor(versions, 2) === '2.6.2')
-  check('highestStableForMajor returns null for an absent major', highestStableForMajor(versions, 9) === null)
-
-  check('NO_PROXY exact host matches', shouldBypassProxy('registry.npmjs.org', 'registry.npmjs.org') === true)
-  check('NO_PROXY suffix matches', shouldBypassProxy('registry.npmjs.org', '.npmjs.org') === true)
-  check('NO_PROXY does not match an unrelated host', shouldBypassProxy('example.com', 'registry.npmjs.org') === false)
-  check('NO_PROXY wildcard matches', shouldBypassProxy('anything.test', '*') === true)
-
-  const summary = summarize('@quasar/app-vite', {
-    'dist-tags': { latest: '3.2.0', beta: '3.0.0-beta.45' },
-    time: { '3.2.0': '2026-07-22T15:52:19.159Z', '2.6.2': '2026-06-03T08:58:05.346Z' },
-    versions: {
-      '2.6.2': {},
-      '3.2.0': { engines: { node: '^22.22.0' }, peerDependencies: { pinia: '^2.0.0 || ^3.0.0 || ^4.0.0' } },
-    },
-  })
-  check('summarize reports latest', summary.latest === '3.2.0')
-  check('summarize reports both stable majors', summary.latestStableByMajor.v2.version === '2.6.2' && summary.latestStableByMajor.v3.version === '3.2.0')
-  check('summarize reports the peer range', summary.peerDependencies.pinia === '^2.0.0 || ^3.0.0 || ^4.0.0')
-  check('summarize reports engines', summary.engines.node === '^22.22.0')
-
-  if (failures.length === 0) {
-    console.log('self-test: ok (14 checks, no network)')
-    return 0
-  }
-  for (const failure of failures) console.error(`self-test FAILED: ${failure}`)
-  return 1
-}
-
 async function main() {
   let options
   try { options = parseArguments(process.argv.slice(2)) }
@@ -276,7 +233,6 @@ async function main() {
   }
 
   if (options.help) { console.log(HELP); return }
-  if (options.selfTest) { process.exitCode = selfTest(); return }
 
   const names = options.packages.length ? options.packages : PACKAGES
   const result = {

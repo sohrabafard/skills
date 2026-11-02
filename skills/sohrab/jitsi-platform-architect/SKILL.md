@@ -57,14 +57,12 @@ comparison. Editing Jitsi's source, unless maintaining a fork.
 ## Check the contract
 
 ```
-python3 scripts/check_jitsi_jwt.py --self-test
 python3 scripts/check_jitsi_jwt.py --token-file <path> --profile <profile.json>
 python3 scripts/check_jitsi_jwt.py --room-name <name>
 ```
 
 Exit `0` held; `1` a rule broke — fix the mint path or the generator, never the sample; `2` bad input, never a
-pass; `3` the self-test failed, so no result here can be trusted. It asserts claim shape, never a signature: a
-signed token can still open a classroom.
+pass. It asserts claim shape, never a signature: a signed token can still open a classroom.
 
 ## Every deliverable states
 

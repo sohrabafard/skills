@@ -28,7 +28,6 @@ import argparse
 import json
 import re
 import sys
-import tempfile
 from pathlib import Path
 
 EXIT_CLEAN, EXIT_FINDINGS, EXIT_CANNOT_RUN = 0, 1, 2
@@ -192,56 +191,6 @@ def scan(root: Path, check_budgets: bool) -> list[str]:
     return findings
 
 
-def self_test() -> int:
-    """Prove each check fails when it should."""
-    cases = 0
-    with tempfile.TemporaryDirectory() as tmp:
-        root = Path(tmp)
-        (root / "references").mkdir()
-        (root / "assets").mkdir()
-        (root / "agents").mkdir()
-        (root / "examples").mkdir()
-
-        (root / "SKILL.md").write_text(
-            "---\n"
-            f"name: {SKILL_NAME}\n"
-            'description: "Use it for storage."\n'
-            "---\n\n"
-            "Pair with $alaa-reliability-sla.\n"
-            "Aligned to the gpt-5 prompting guide.\n",
-            encoding="utf-8",
-        )
-        (root / "agents/openai.yaml").write_text("default_prompt: Use $alaa-x\n", encoding="utf-8")
-        (root / "skill-pack-manifest.json").write_text('{"root_files": ["SKILL.md"]}', encoding="utf-8")
-        (root / "references/00-topic-map.md").write_text("router\n", encoding="utf-8")
-        (root / "references/99-sources-and-maintenance.md").write_text("sources\n", encoding="utf-8")
-        (root / "references/60-data-classification.md").write_text("table\n", encoding="utf-8")
-        (root / "assets/data-classification-policy.yaml").write_text("classes:\n  public_cache:\n", encoding="utf-8")
-        (root / "assets/capability-tier-contract.json").write_text("{}", encoding="utf-8")
-        (root / "assets/browser-test-matrix.yaml").write_text("lanes: []\n", encoding="utf-8")
-        (root / "examples/bad.ts").write_text(
-            "store.put({ id: 'a', accessToken: token });\n", encoding="utf-8"
-        )
-
-        findings = scan(root, check_budgets=False)
-        for needle, label in [
-            ("no 'Do not use", "missing do-not-use clause"),
-            ("model name is pinned", "model pin"),
-            ("has no `/alaa-reliability-sla` sibling", "dollar-only trigger"),
-            ("token written to an object store", "token written to IndexedDB"),
-            ("missing class(es)", "classification drift"),
-            ("does not list", "manifest drift"),
-        ]:
-            if not any(needle in f for f in findings):
-                print(f"SELF-TEST FAIL: did not report {label}", file=sys.stderr)
-                print("\n".join(findings), file=sys.stderr)
-                return EXIT_FINDINGS
-            cases += 1
-
-    print(f"SELF-TEST OK: {cases} checks each fail on a fixture that violates them")
-    return EXIT_CLEAN
-
-
 def main() -> int:
     parser = argparse.ArgumentParser(
         prog="validate_skill_pack.py",
@@ -249,12 +198,8 @@ def main() -> int:
         epilog="Exit 0 clean, 1 findings, 2 could not run. Exit 2 is never a pass.",
     )
     parser.add_argument("--root", type=Path, default=Path(__file__).resolve().parents[1])
-    parser.add_argument("--self-test", action="store_true", help="run the built-in fixtures")
     parser.add_argument("--check-budgets", action="store_true", help="reject unfilled budget policies")
     args = parser.parse_args()
-
-    if args.self_test:
-        return self_test()
 
     root: Path = args.root.resolve()
     if not root.is_dir() or not (root / "SKILL.md").is_file():

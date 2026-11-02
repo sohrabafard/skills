@@ -2,7 +2,6 @@
 
 ```sh
 sh scripts/architecture-gate.sh --app-dir app          # 0 clean, 1 findings, 2 usage or config error
-sh scripts/architecture-gate.sh --self-test            # fixture suite; run after editing the script
 sh scripts/architecture-gate.sh --help
 ```
 

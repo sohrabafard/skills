@@ -57,7 +57,7 @@ Every consequence is silent:
   stops matching.
 - **The conformance harness reports what looks like a digit bug.** The implementations agree
   on the fold and differ only in composition, and the mismatch line shows two strings that
-  render identically. The harness's own self-test carries this vector for that reason.
+  render identically.
 
 ## E. NFKC was used instead of NFC
 

@@ -25,7 +25,7 @@ This skill owns four things: recovery of a dependency change, the baseline that 
 - Image build, registry and digest mechanics for a revert target -- `/alaa-docker-production` (`$alaa-docker-production`).
 - Pipeline stages and release gates in CI -- `/alaa-cicd-laravel-postgres` (`$alaa-cicd-laravel-postgres`), GitLab specifics `/alaa-gitlab-ci-cd` (`$alaa-gitlab-ci-cd`).
 - Frontend build and delivery when the build ships -- `/alaa-frontend-devops` (`$alaa-frontend-devops`).
-- Windows sandbox recovery, locked files, path discipline -- `/alaa-codex-runtime-ops` (`$alaa-codex-runtime-ops`).
+- Sandbox recovery, locked files, path discipline -- `/alaa-codex-runtime-ops`.
 - Runtime names, model names, effort levels, feature and skill-trigger syntax -- `/alaa-prompting-guide` (`$alaa-prompting-guide`) `references/50-effort-and-thinking.md`. No model name appears anywhere in this skill.
 
 ## `vendor/` is never edited

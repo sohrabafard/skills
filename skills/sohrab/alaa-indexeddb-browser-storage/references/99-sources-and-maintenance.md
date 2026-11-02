@@ -95,6 +95,6 @@ or the `client` repository adding a store or changing storage ownership.
    never asserted.
 3. Update `assets/browser-test-matrix.yaml` and `assets/capability-tier-contract.json` together; they share
    a joining dimension and the harness enforces it.
-4. Run all three scripts with `--self-test`, per `SKILL.md`.
+4. Run the three gate scripts in `SKILL.md`.
 5. Exercise the pack on five real prompts: design an outbox; fix a migration whose index is empty; audit
    quota handling; answer a token-storage proposal; plan offline media for iOS.

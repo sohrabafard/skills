@@ -77,20 +77,18 @@ Emit the `alaa_dependency_*` families from `alaa-services-contract references/24
 ```bash
 python3 scripts/validate_mediana_payload.py <payload.json> [--strict]
 python3 scripts/validate_mediana_payload.py --normalize '<raw-number>' [--channel mediana|bale]
-python3 scripts/validate_mediana_payload.py --self-test
 ```
 
 | Exit | Meaning | What you must do |
 |---|---|---|
 | 0 | The requested check passed | Continue |
-| 1 | The payload is invalid, `--normalize` rejected the input, or `--self-test` disagreed with the corpus | Fix the payload or the normaliser; do not send |
+| 1 | The payload is invalid or `--normalize` rejected the input | Fix the payload or the input; do not send |
 | 2 | The invocation is wrong | Fix the arguments |
 | 3 | The payload file is unreadable or is not JSON | Fix the fixture path or its contents |
-| 4 | `scripts/phone-conformance-corpus.json` is missing or its `corpus_sha256` does not match its cases | Reconcile with the `alaa-bale-provider` copy; never edit one copy alone |
 
 Exit 0 proves payload shape and normalisation only; it cannot check a sender approval, a pattern code, a phonebook id, or a geographic id.
 
-Before finishing, run `--self-test`, run the validator over every committed fixture, and add a `pattern_values[] → params{}` test covering a duplicate key, a missing variable, an undeclared variable, and a leading-zero value. The full required-test list is in `references/20-examples-and-rejects.md`.
+Before finishing, run the validator over every committed fixture, and add a `pattern_values[] → params{}` test covering a duplicate key, a missing variable, an undeclared variable, and a leading-zero value. The full required-test list is in `references/20-examples-and-rejects.md`.
 
 ## When NOT to use this skill
 

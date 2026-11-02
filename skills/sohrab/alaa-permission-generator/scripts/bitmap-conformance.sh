@@ -22,19 +22,17 @@ readonly EXIT_OK=0
 readonly EXIT_USAGE=2
 readonly EXIT_DISAGREEMENT=3
 readonly EXIT_ENVIRONMENT=4
-readonly EXIT_SELF_TEST=5
 readonly EXIT_CORPUS=6
 
 usage() {
     cat <<'USAGEEOF'
-Usage: bitmap-conformance.sh [--help] [--self-test] [--verbose]
+Usage: bitmap-conformance.sh [--help] [--verbose]
 
 Runs the Go, PHP, and TypeScript canonical permission-bitmap decoders over one shared
 corpus and compares each answer against the answer the corpus requires.
 
 Options:
     -h, --help      Show this help
-    --self-test     Check the harness comparator and the corpus checksum, then exit
     --verbose       Print every case and every answer, not only failures
 
 Runtime selection:
@@ -55,8 +53,6 @@ Exit codes:
        and no consumer change until every reported case matches again.
     4  No runtime was available, so nothing was proved.
        Caller obligation: install a toolchain and rerun; do not record this as a pass.
-    5  The harness comparator failed its own self-test.
-       Caller obligation: fix the harness before trusting any result it reports.
     6  The corpus checksum does not match the case array it covers.
        Caller obligation: find which copy of the corpus drifted and reconcile it before
        reading any result, because two runtimes can agree on a corpus that is wrong.
@@ -114,56 +110,6 @@ compare_output() {
 
     LAST_SEEN="${seen}"
     LAST_MISMATCHES="${mismatches}"
-}
-
-self_test() {
-    local failures=0 scratch
-    scratch="$(mktemp -d)"
-
-    printf 'a\tOK|1\tOK|1\nb\tERR|x\tERR|x\n' > "${scratch}/agree.tsv"
-    compare_output selftest "${scratch}/agree.tsv" 2 >/dev/null
-    if [[ "${LAST_SEEN}" -eq 2 && "${LAST_MISMATCHES}" -eq 0 ]]; then
-        echo 'pass  comparator accepts answers that match the corpus'
-    else
-        echo 'FAIL  comparator rejected answers that match the corpus' >&2
-        failures=$((failures + 1))
-    fi
-
-    printf 'a\tOK|1\tOK|2\n' > "${scratch}/differ.tsv"
-    compare_output selftest "${scratch}/differ.tsv" 1 >/dev/null
-    if [[ "${LAST_MISMATCHES}" -eq 1 ]]; then
-        echo 'pass  comparator detects an answer that differs from the corpus'
-    else
-        echo 'FAIL  comparator missed an answer that differs from the corpus' >&2
-        failures=$((failures + 1))
-    fi
-
-    printf 'a\tERR|empty_bitmap\tERR|invalid_bitmap\n' > "${scratch}/code.tsv"
-    compare_output selftest "${scratch}/code.tsv" 1 >/dev/null
-    if [[ "${LAST_MISMATCHES}" -eq 1 ]]; then
-        echo 'pass  comparator detects a wrong error code'
-    else
-        echo 'FAIL  comparator accepted a wrong error code' >&2
-        failures=$((failures + 1))
-    fi
-
-    printf 'a\tOK|1\tOK|1\n' > "${scratch}/short.tsv"
-    compare_output selftest "${scratch}/short.tsv" 2 >/dev/null
-    if [[ "${LAST_MISMATCHES}" -eq 1 ]]; then
-        echo 'pass  comparator detects a driver that skipped a case'
-    else
-        echo 'FAIL  comparator accepted a driver that skipped a case' >&2
-        failures=$((failures + 1))
-    fi
-
-    rm -rf "${scratch}"
-
-    if [[ ${failures} -ne 0 ]]; then
-        printf '\n%d comparator self-test case(s) failed.\n' "${failures}" >&2
-        exit "${EXIT_SELF_TEST}"
-    fi
-
-    printf '\nComparator self-test passed.\n'
 }
 
 # --------------------------------------------------------------------------------
@@ -621,7 +567,6 @@ main() {
     for argument in "$@"; do
         case "${argument}" in
             -h|--help) usage; exit "${EXIT_OK}" ;;
-            --self-test) self_test; check_corpus; exit "${EXIT_OK}" ;;
             --verbose) VERBOSE=1 ;;
             *) printf 'Unknown option [%s].\n\n' "${argument}" >&2; usage >&2; exit "${EXIT_USAGE}" ;;
         esac

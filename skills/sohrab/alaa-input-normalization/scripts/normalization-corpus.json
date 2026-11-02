@@ -3,7 +3,7 @@
   "corpus_version": 1,
   "status": "ACTIVE",
   "owner_skill": "alaa-input-normalization",
-  "purpose": "One shared fixture for every implementation of the Alaa input-boundary normalization contract. The browser normalizes at submit and every backend service normalizes in middleware; a harness drives every implementation over this file and fails on any disagreement, because a document asserting parity is not evidence of it.",
+  "purpose": "One shared corpus for every implementation of the Alaa input-boundary normalization contract. The browser normalizes at submit and every backend service normalizes in middleware; a harness drives every implementation over this file and fails on any disagreement, because a document asserting parity is not evidence of it.",
   "modes": {
     "text": "NFC(fold_decimal_digits(input)). The global rule for any string field, including free text. Folds every Unicode general-category-Nd code point to its ASCII 0-9 equivalent, one code point in and one code point out. Deletes nothing, inserts nothing, rewrites no letter. Then NFC, never NFKC.",
     "typed": "NFC(strip_display_separators(text)). The rule for a field whose entire value is a number or a code - a mobile number, a national code, an OTP, a postal code. Separators are matched by Unicode general category {Cf, Zs, Zl, Zp, Pd}, plus str.isspace(), plus the literal set '()._/' - never by an enumerated character list. This block is the rule already settled by alaa-bale-provider and alaa-sms-provider-mediana."

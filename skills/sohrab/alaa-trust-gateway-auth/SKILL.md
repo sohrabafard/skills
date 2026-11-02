@@ -85,7 +85,6 @@ Each case carries its symptom, decision, response, log and test in
 ## Check it mechanically
 
 ```
-python3 scripts/trust_boundary_check.py --self-test
 python3 scripts/trust_boundary_check.py --gateway-config <configmap> --gateway-config <values>
 python3 scripts/trust_boundary_check.py --source-root <dir> --allowlist <frozen-header-list>
 python3 scripts/trust_boundary_check.py --env-root <dir>

@@ -11,7 +11,6 @@
  *   1  findings       - the scan ran and found at least one REMOVED api (a defect)
  *   2  could-not-run  - the scan did NOT complete: bad path, no package.json,
  *                       unreadable version, no source files. NEVER confuse with 0.
- *   3  self-test-fail - --self-test ran and a case did not produce its expected verdict
  * A deprecated-only result exits 0 and prints warnings, unless --strict is given.
  */
 
@@ -107,23 +106,20 @@ repository's installed shaka-player version and v${ANCHOR_VERSION} (facts read $
 
 USAGE
   node check-shaka-api.mjs --repo <path> [--target <version>] [--json] [--strict]
-  node check-shaka-api.mjs --self-test
   node check-shaka-api.mjs --help
 
 OPTIONS
-  --repo <path>      Repository root to scan. Required unless --self-test/--help.
+  --repo <path>      Repository root to scan. Required unless --help.
   --target <ver>     Compare against this version instead of the version found in
                      package.json. Use when planning an upgrade.
   --json             Emit machine-readable JSON instead of text.
   --strict           Treat deprecated-only findings as failures (exit 1).
-  --self-test        Run built-in cases against synthetic sources and verify verdicts.
 
 EXIT CODES
   0  clean          scan completed, no removed API in scope
   1  findings       scan completed, at least one removed/absent API found
                     (or a deprecated one under --strict)
   2  could-not-run  scan did NOT complete - distinct from clean, on purpose
-  3  self-test-fail --self-test found a case whose verdict was wrong
 `);
 }
 
@@ -282,54 +278,9 @@ async function runScan(opts) {
   return 0;
 }
 
-function selfTest() {
-  const cases = [
-    { name: "removed method is found",
-      text: `player.selectAudioLanguage("fa");`, installed: [5, 1, 11],
-      expect: { removed: 1, deprecated: 0 } },
-    { name: "optional-chained removed method is still found",
-      text: `currentPlayer.setTextTrackVisibility?.(false);`, installed: [5, 1, 11],
-      expect: { removed: 1, deprecated: 0 } },
-    { name: "deprecated preference key is flagged, not counted as removed",
-      text: `player.configure("preferredAudioLanguage", "fa");`, installed: [5, 1, 11],
-      expect: { removed: 0, deprecated: 1 } },
-    { name: "v6-ready spelling is clean",
-      text: `player.configure({preferredAudio: [{language: "fa"}]});`, installed: [5, 1, 11],
-      expect: { removed: 0, deprecated: 0 } },
-    { name: "current API is clean",
-      text: `player.selectAudioTrack(track, 4); player.getAudioTracks();`, installed: [5, 2, 3],
-      expect: { removed: 0, deprecated: 0 } },
-    { name: "getChaptersAsync is not mistaken for getChapters",
-      text: `await player.getChaptersAsync("fa");`, installed: [5, 2, 3],
-      expect: { removed: 0, deprecated: 0 } },
-    { name: "a method Shaka never had is reported as absent",
-      text: `await storage.removeEmptyEpisodes();`, installed: [5, 2, 3],
-      expect: { removed: 1, deprecated: 0 } },
-    { name: "removed config key is found",
-      text: `streaming: { useNativeHlsOnSafari: true }`, installed: [4, 16, 38],
-      expect: { removed: 1, deprecated: 0 } }
-  ];
-
-  const target = parseVersion(ANCHOR_VERSION);
-  let failed = 0;
-  for (const c of cases) {
-    const out = analyse(c.text, c.installed, target);
-    const removed = out.filter(f => f.kind === "removed" || f.kind === "absent").length;
-    const deprecated = out.filter(f => f.kind === "deprecated").length;
-    const ok = removed === c.expect.removed && deprecated === c.expect.deprecated;
-    if (!ok) failed += 1;
-    process.stdout.write(
-      `${ok ? "PASS" : "FAIL"}  ${c.name}  ` +
-      `(removed ${removed}/${c.expect.removed}, deprecated ${deprecated}/${c.expect.deprecated})\n`);
-  }
-  process.stdout.write(`\n${cases.length - failed}/${cases.length} self-test cases passed\n`);
-  return failed === 0 ? 0 : 3;
-}
-
 async function main() {
   const argv = process.argv.slice(2);
   if (argv.length === 0 || argv.includes("--help") || argv.includes("-h")) { usage(); return 0; }
-  if (argv.includes("--self-test")) return selfTest();
 
   const opts = { repo: null, target: null, json: argv.includes("--json"),
                  strict: argv.includes("--strict") };

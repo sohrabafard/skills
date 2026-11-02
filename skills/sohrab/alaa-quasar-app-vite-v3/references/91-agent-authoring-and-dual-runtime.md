@@ -25,7 +25,7 @@ The Quasar-specific reason this convention earns its space: the two app-vite lin
 - `scripts/check-upstream-versions.mjs` exists because every version number in this pack expires, and a live registry read is deterministic while model memory is not. It is the fleet's only copy; `/alaa-frontend-developer` routes here rather than keeping a duplicate.
 - `scripts/query-installed-quasar-api.mjs` exists because exact Quasar APIs belong to the target project's installed version, not to this pack. It resolves the project-local CLI, preserves its exit status, and refuses to execute a binary that resolves outside the installed package. This script is why the atlases can be judgment references rather than API mirrors.
 
-Both take `--help` and `--self-test`, and both distinguish "could not run" from "clean" in their exit codes. Keep those three properties in any change.
+Both take `--help`, and both distinguish "could not run" from "clean" in their exit codes. Keep those two properties in any change.
 
 ## 3. Structure rules for this pack
 
@@ -42,9 +42,9 @@ Both take `--help` and `--self-test`, and both distinguish "could not run" from 
 
 1. A version, import path, config key, or folder changed: update `references/80-upstream-deltas-and-live-checks.md` and every occurrence of the old string across the pack. Updating one place leaves the pack contradicting itself.
 2. Recheck the v2 and v3 config, CLI, mode, SSR, and PWA examples; remove any contradiction; add a Do/Don't pair only where it changes behaviour.
-3. Run `node scripts/check-upstream-versions.mjs --self-test`, then a live run; refresh the snapshot and its date.
-4. Run `node scripts/query-installed-quasar-api.mjs --self-test`, then the project checks in `references/80-upstream-deltas-and-live-checks.md` §7.
+3. Run `node scripts/check-upstream-versions.mjs` live; refresh the snapshot and its date.
+4. Run the project checks in `references/80-upstream-deltas-and-live-checks.md` §7.
 5. Confirm realistic prompts still route correctly through `SKILL.md` and `references/00-topic-map.md`.
 6. Confirm no file states a version number that `80` does not, and that no file states a model name.
 
-Search: `authoring`, `do dont pair`, `router`, `body ceiling`, `snapshot ownership`, `self-test`, `trigger form`, `maintenance checklist`.
+Search: `authoring`, `do dont pair`, `router`, `body ceiling`, `snapshot ownership`, `trigger form`, `maintenance checklist`.

@@ -33,7 +33,3 @@ When setting or measuring storage latency, read [Performance budgets](./80-testi
 ## Release checklist
 
 Before releasing a storage change, read [Release checklist](./80-testing-and-proof-levels/50-release-checklist.md) for the required storage-change review and release checks.
-
-## Real IndexedDB regression harness
-
-Before release, when running the real IndexedDB regression suite, read the [Real IndexedDB harness](./80-testing-and-proof-levels/60-real-indexeddb-harness.md) for isolated browser regression setup, execution, and retained evidence.

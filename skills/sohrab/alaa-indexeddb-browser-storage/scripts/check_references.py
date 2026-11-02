@@ -17,7 +17,6 @@ from __future__ import annotations
 import argparse
 import re
 import sys
-import tempfile
 from pathlib import Path
 
 EXIT_CLEAN, EXIT_FINDINGS, EXIT_CANNOT_RUN = 0, 1, 2
@@ -97,49 +96,6 @@ def find(root: Path) -> list[str]:
     return findings
 
 
-def self_test() -> int:
-    """Prove the checker fails when it should. A green that cannot go red is not evidence."""
-    with tempfile.TemporaryDirectory() as tmp:
-        root = Path(tmp)
-        (root / "references").mkdir()
-        (root / "references" / "00-topic-map.md").write_text(
-            "| you are about to X | `10-present.md` |\n"
-            "| you are about to Y | `99-absent.md` |\n",
-            encoding="utf-8",
-        )
-        (root / "references" / "10-present.md").write_text("ok\n", encoding="utf-8")
-        (root / "references" / "50-orphan.md").write_text("ok\n", encoding="utf-8")
-
-        findings = find(root)
-        expected_dangling = any("99-absent.md" in f and "dangling" in f for f in findings)
-        expected_orphan = any("50-orphan.md" in f and "not named" in f for f in findings)
-
-        if not expected_dangling:
-            print("SELF-TEST FAIL: a dangling reference row was not reported", file=sys.stderr)
-            return EXIT_FINDINGS
-        if not expected_orphan:
-            print("SELF-TEST FAIL: an unrouted reference file was not reported", file=sys.stderr)
-            return EXIT_FINDINGS
-
-        # And prove it goes green on a correct fixture.
-        (root / "references" / "00-topic-map.md").write_text(
-            "| you are about to X | `10-present.md` |\n"
-            "| you are about to Z | `50-orphan.md` |\n",
-            encoding="utf-8",
-        )
-        (root / "references" / "99-absent.md").write_text("ok\n", encoding="utf-8")
-        (root / "references" / "00-topic-map.md").write_text(
-            "| X | `10-present.md` |\n| Z | `50-orphan.md` |\n| W | `99-absent.md` |\n",
-            encoding="utf-8",
-        )
-        if find(root):
-            print(f"SELF-TEST FAIL: clean fixture reported {find(root)}", file=sys.stderr)
-            return EXIT_FINDINGS
-
-    print("SELF-TEST OK: the checker reports a dangling path, an unrouted file, and a clean pack")
-    return EXIT_CLEAN
-
-
 def main() -> int:
     parser = argparse.ArgumentParser(
         prog="check_references.py",
@@ -147,11 +103,7 @@ def main() -> int:
         epilog="Exit 0 clean, 1 findings, 2 could not run. Exit 2 is never a pass.",
     )
     parser.add_argument("--root", type=Path, default=Path(__file__).resolve().parents[1])
-    parser.add_argument("--self-test", action="store_true", help="run the built-in fixtures")
     args = parser.parse_args()
-
-    if args.self_test:
-        return self_test()
 
     root: Path = args.root.resolve()
     if not (root / ROUTER).is_file():

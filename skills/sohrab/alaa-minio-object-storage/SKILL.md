@@ -100,15 +100,13 @@ Retry counts, backoff shape, breaker thresholds and degradation policy are `/ala
 
 ## Checker and output
 
-`python3 scripts/check_object_storage_posture.py --root <repo>`, with `--help` for the check list and `--self-test`
-for its own fixtures. It reads files lexically and contacts no object store, so a clean run proves what the
+`python3 scripts/check_object_storage_posture.py --root <repo>`, with `--help` for the check list. It reads files lexically and contacts no object store, so a clean run proves what the
 repository declares and not how the running bucket is configured.
 
 - exit `0`: no finding. Continue to the service's own tests.
 - exit `1`: findings printed with file and line. Fix each one, or record it as an accepted defect with an owner and
   a date, before shipping.
 - exit `2`: bad arguments or an unreadable root, so nothing was checked. Correct the invocation and rerun.
-- exit `3`: `--self-test` failed, so its verdicts are untrustworthy. Report the failing case and review by hand.
 
 Report the bucket, the key template with its tenant segment shown, every lifecycle rule with its window, the
 identity and its policy statements, the transport, encryption, versioning and replication state, and the credential

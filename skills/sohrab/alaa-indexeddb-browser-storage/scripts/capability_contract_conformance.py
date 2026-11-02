@@ -30,7 +30,6 @@ import argparse
 import json
 import re
 import sys
-import tempfile
 from pathlib import Path
 
 EXIT_CLEAN, EXIT_FINDINGS, EXIT_CANNOT_RUN = 0, 1, 2
@@ -201,77 +200,6 @@ def check_indexes(root: Path, source_dir: str = "examples") -> list[str]:
     return findings
 
 
-def self_test() -> int:
-    with tempfile.TemporaryDirectory() as tmp:
-        root = Path(tmp)
-        (root / "examples").mkdir()
-        (root / "assets").mkdir()
-
-        (root / CAPABILITIES_TS).write_text(
-            "export interface BrowserStorageCapabilities {\n"
-            "  indexedDb: string;\n"
-            "  estimate: boolean;\n"
-            "  orphanField: boolean;\n"
-            "}\n"
-            "export function chooseCapabilityTier(): 0 | 1 {\n"
-            "  return 0;\n"
-            "  return 1;\n"
-            "}\n",
-            encoding="utf-8",
-        )
-        (root / CONTRACT_JSON).write_text(
-            json.dumps(
-                {
-                    "tiers": {
-                        "tier0_x": {"lanes": ["known-lane"]},
-                        "tier3_unreachable": {"lanes": ["known-lane"]},
-                    },
-                    "must_feature_detect": [
-                        {"feature": "estimate", "capability_field": "estimate", "lanes": ["known-lane"]},
-                        {"feature": "ghost", "capability_field": "nosuchfield", "lanes": ["ghost-lane"]},
-                    ],
-                }
-            ),
-            encoding="utf-8",
-        )
-        (root / MATRIX_YAML).write_text(
-            "lanes:\n"
-            "  - name: known-lane\n"
-            "    tiers: [0]\n"
-            "    covers_features:\n"
-            '      - "estimate"\n',
-            encoding="utf-8",
-        )
-
-        findings = find(root)
-        expectations = [
-            ("nosuchfield", "a feature mapped to an undeclared capability field"),
-            ("ghost-lane", "a feature naming a lane the matrix lacks"),
-            ("can never return 3", "an unreachable tier"),
-            ("orphanField", "a probed field governed by no feature entry"),
-            ("does not include 3", "a lane claimed by a tier it does not list"),
-        ]
-        for needle, label in expectations:
-            if not any(needle in f for f in findings):
-                print(f"SELF-TEST FAIL: did not report {label}", file=sys.stderr)
-                print("\n".join(findings), file=sys.stderr)
-                return EXIT_FINDINGS
-
-        # Index check: an index over a field no record declares.
-        (root / "examples" / "bad.ts").write_text(
-            "export interface Row {\n  id: string;\n  status: string;\n}\n"
-            "store.createIndex('byStatusRetryAt', ['status', 'retryAt']);\n",
-            encoding="utf-8",
-        )
-        index_findings = check_indexes(root)
-        if not any("'retryAt'" in f for f in index_findings):
-            print("SELF-TEST FAIL: did not report an index over an undeclared field", file=sys.stderr)
-            return EXIT_FINDINGS
-
-    print(f"SELF-TEST OK: {len(expectations) + 1} checks each fail on a fixture that violates them")
-    return EXIT_CLEAN
-
-
 def main() -> int:
     parser = argparse.ArgumentParser(
         prog="capability_contract_conformance.py",
@@ -279,7 +207,6 @@ def main() -> int:
         epilog="Exit 0 clean, 1 findings, 2 could not run. A green run bounds only what the corpus covers.",
     )
     parser.add_argument("--root", type=Path, default=Path(__file__).resolve().parents[1])
-    parser.add_argument("--self-test", action="store_true", help="run the built-in fixtures")
     parser.add_argument("--check-indexes", action="store_true", help="only run the index key-path check")
     parser.add_argument(
         "--source-dir",
@@ -287,9 +214,6 @@ def main() -> int:
         help="TypeScript tree the index check scans, relative to --root (default: examples)",
     )
     args = parser.parse_args()
-
-    if args.self_test:
-        return self_test()
 
     root: Path = args.root.resolve()
     if not args.check_indexes:

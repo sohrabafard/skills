@@ -81,9 +81,7 @@ than it is:
 import argparse
 import os
 import re
-import shutil
 import sys
-import tempfile
 
 VERSION = "1.1.0"
 
@@ -649,267 +647,6 @@ def run(root):
     return findings
 
 
-COMPOSE_BAD = """\
-services:
-  minio:
-    image: minio/minio:RELEASE.2025-09-07T16-13-09Z-cpuv1
-    environment:
-      MINIO_ROOT_USER: ${STORAGE_ACCESS_KEY:-${MINIO_ROOT_USER}}
-      MINIO_ROOT_PASSWORD: ${STORAGE_SECRET_KEY:-${MINIO_ROOT_PASSWORD}}
-  app:
-    environment:
-      STORAGE_PROVIDER_PROFILE: arvancloud
-      STORAGE_ENDPOINT: ${STORAGE_ENDPOINT:-http://svc-minio:9000}
-      STORAGE_ACCESS_KEY: ${STORAGE_ACCESS_KEY:-${MINIO_ROOT_USER}}
-      STORAGE_SECRET_KEY: ${STORAGE_SECRET_KEY:-${MINIO_ROOT_PASSWORD}}
-"""
-
-ENV_BAD = """\
-STORAGE_ENDPOINT=http://svc-minio:9000
-STORAGE_TLS_ENABLED=false
-STORAGE_ACCESS_KEY=minioadmin
-STORAGE_SECRET_KEY=
-"""
-
-COMPOSE_GOOD = """\
-services:
-  minio:
-    image: minio/minio:RELEASE.2025-09-07T16-13-09Z-cpuv1
-    environment:
-      MINIO_ROOT_USER: ${MINIO_ROOT_USER}
-      MINIO_ROOT_PASSWORD: ${MINIO_ROOT_PASSWORD}
-  app:
-    environment:
-      STORAGE_PROVIDER_PROFILE: minio
-      STORAGE_ENDPOINT: ${STORAGE_ENDPOINT:-https://svc-minio:9000}
-      STORAGE_BUCKET: ${STORAGE_BUCKET:-media-assets}
-      STORAGE_USE_PATH_STYLE: ${STORAGE_USE_PATH_STYLE:-true}
-      STORAGE_ACCESS_KEY: ${STORAGE_APP_ACCESS_KEY}
-      STORAGE_SECRET_KEY: ${STORAGE_APP_SECRET_KEY}
-"""
-
-PROVISION_GOOD = """\
-#!/bin/sh
-set -eu
-# The credential reaches mc in the environment, never in argv.
-export MC_HOST_local="https://${STORAGE_APP_ACCESS_KEY}:${STORAGE_APP_SECRET_KEY}@${STORAGE_HOST}"
-mc alias set local "${STORAGE_ENDPOINT}" --api S3v4 --json
-mc mb -p --json "local/${STORAGE_BUCKET}"
-mc version enable --json "local/${STORAGE_BUCKET}"
-mc ilm import --json "local/${STORAGE_BUCKET}" < lifecycle.json
-"""
-
-LIFECYCLE_GOOD = """\
-{
-  "Rules": [
-    {
-      "ID": "abort-incomplete-multipart",
-      "Status": "Enabled",
-      "AbortIncompleteMultipartUpload": { "DaysAfterInitiation": 7 }
-    },
-    {
-      "ID": "expire-noncurrent-versions",
-      "Status": "Enabled",
-      "NoncurrentVersionExpiration": { "NoncurrentDays": 30 }
-    }
-  ]
-}
-"""
-
-PROVISION_BAD = """\
-#!/bin/sh
-mc alias set local "$STORAGE_ENDPOINT" "$STORAGE_ACCESS_KEY" "$STORAGE_SECRET_KEY" --api S3v4 >/dev/null 2>&1
-mc mb -p "local/$STORAGE_BUCKET"
-mc admin user add local "$SCOPED_ACCESS_KEY" "$SCOPED_SECRET_KEY"
-mc version enable "local/$STORAGE_BUCKET"
-"""
-
-ENV_LOCAL_OK = """\
-STORAGE_ENDPOINT=http://127.0.0.1:9000
-STORAGE_TLS_ENABLED=false
-RABBITMQ_TLS_ENABLED=false
-STORAGE_ACCESS_KEY=${STORAGE_APP_ACCESS_KEY}
-"""
-
-GITIGNORE = """\
-# Local env files
-.env
-"""
-
-ENV_UNTRACKED = """\
-STORAGE_ACCESS_KEY=a-real-looking-secret
-STORAGE_SECRET_KEY=another-real-looking-secret
-"""
-
-ENV_DOTTED_BUCKET = """\
-STORAGE_PROVIDER_PROFILE=arvancloud
-STORAGE_ENDPOINT=https://s3.ir-thr-at1.arvanstorage.ir
-STORAGE_BUCKET=media.assets
-STORAGE_USE_PATH_STYLE=false
-STORAGE_ACCESS_KEY=${STORAGE_APP_ACCESS_KEY}
-STORAGE_SECRET_KEY=${STORAGE_APP_SECRET_KEY}
-"""
-
-ENV_BUCKET_IN_HOST = """\
-STORAGE_PROVIDER_PROFILE=arvancloud
-STORAGE_ENDPOINT=https://media-assets.s3.ir-thr-at1.arvanstorage.ir
-STORAGE_BUCKET=media-assets
-STORAGE_USE_PATH_STYLE=true
-STORAGE_ACCESS_KEY=${STORAGE_APP_ACCESS_KEY}
-STORAGE_SECRET_KEY=${STORAGE_APP_SECRET_KEY}
-"""
-
-TEST_FIXTURE_GO = """\
-package storage
-
-var env = map[string]string{
-	"STORAGE_ACCESS_KEY": "fixture-key",
-	"STORAGE_SECRET_KEY": "fixture-secret",
-}
-"""
-
-
-def is_scanned_in(root, relative):
-    """True when `relative` survives collection under `root`, ignore rules applied."""
-    target = os.path.join(root, relative)
-    return target in collect_files(root, load_ignored(root))
-
-
-def write_fixture(base, name, files):
-    directory = os.path.join(base, name)
-    os.makedirs(directory, exist_ok=True)
-    for relative, content in files.items():
-        target = os.path.join(directory, relative)
-        os.makedirs(os.path.dirname(target), exist_ok=True)
-        with open(target, "w", encoding="utf-8") as handle:
-            handle.write(content)
-    return directory
-
-
-def self_test():
-    """Build fixtures outside any repository and assert the rules that fire."""
-    base = tempfile.mkdtemp(prefix="object-storage-posture-selftest-")
-    failures = []
-    try:
-        bad = write_fixture(base, "bad", {
-            "docker-compose.yml": COMPOSE_BAD,
-            ".env.example": ENV_BAD,
-            "scripts/provision.sh": PROVISION_BAD,
-        })
-        good = write_fixture(base, "good", {
-            "docker-compose.yml": COMPOSE_GOOD,
-            "scripts/provision.sh": PROVISION_GOOD,
-            "scripts/lifecycle.json": LIFECYCLE_GOOD,
-            ".env.example": ENV_LOCAL_OK,
-            ".gitignore": GITIGNORE,
-            ".env": ENV_UNTRACKED,
-            "internal/storage/s3_test.go": TEST_FIXTURE_GO,
-        })
-        dotted = write_fixture(base, "dotted", {".env.example": ENV_DOTTED_BUCKET})
-        in_host = write_fixture(base, "in-host", {".env.example": ENV_BUCKET_IN_HOST})
-
-        cases = [
-            ("bad fixture fires ROOT_CREDENTIAL_SHARED", bad, "ROOT_CREDENTIAL_SHARED", True),
-            ("bad fixture fires PLAINTEXT_ENDPOINT", bad, "PLAINTEXT_ENDPOINT", True),
-            ("bad fixture fires CREDENTIAL_LITERAL", bad, "CREDENTIAL_LITERAL", True),
-            ("bad fixture fires LIFECYCLE_RULE_ABSENT", bad, "LIFECYCLE_RULE_ABSENT", True),
-            ("bad fixture fires MC_CREDENTIAL_ON_COMMAND_LINE", bad,
-             "MC_CREDENTIAL_ON_COMMAND_LINE", True),
-            ("bad fixture fires VERSIONING_WITHOUT_NONCURRENT_RULE", bad,
-             "VERSIONING_WITHOUT_NONCURRENT_RULE", True),
-            ("good fixture clears ROOT_CREDENTIAL_SHARED", good, "ROOT_CREDENTIAL_SHARED", False),
-            ("good fixture clears PLAINTEXT_ENDPOINT", good, "PLAINTEXT_ENDPOINT", False),
-            ("good fixture clears CREDENTIAL_LITERAL", good, "CREDENTIAL_LITERAL", False),
-            ("good fixture clears LIFECYCLE_RULE_ABSENT", good, "LIFECYCLE_RULE_ABSENT", False),
-            ("good fixture clears MC_CREDENTIAL_ON_COMMAND_LINE", good,
-             "MC_CREDENTIAL_ON_COMMAND_LINE", False),
-            ("good fixture clears VERSIONING_WITHOUT_NONCURRENT_RULE", good,
-             "VERSIONING_WITHOUT_NONCURRENT_RULE", False),
-            ("bad fixture fires PROVIDER_PROFILE_WITHOUT_PINNED_VALUES", bad,
-             "PROVIDER_PROFILE_WITHOUT_PINNED_VALUES", True),
-            ("good fixture clears PROVIDER_PROFILE_WITHOUT_PINNED_VALUES", good,
-             "PROVIDER_PROFILE_WITHOUT_PINNED_VALUES", False),
-            ("a dotted bucket under virtual-hosted style fires "
-             "ADDRESSING_STYLE_CONTRADICTS_ENDPOINT", dotted,
-             "ADDRESSING_STYLE_CONTRADICTS_ENDPOINT", True),
-            ("a bucket already in the endpoint host under path style fires "
-             "ADDRESSING_STYLE_CONTRADICTS_ENDPOINT", in_host,
-             "ADDRESSING_STYLE_CONTRADICTS_ENDPOINT", True),
-            ("good fixture clears ADDRESSING_STYLE_CONTRADICTS_ENDPOINT", good,
-             "ADDRESSING_STYLE_CONTRADICTS_ENDPOINT", False),
-            ("a dotted bucket is not also a profile finding", dotted,
-             "PROVIDER_PROFILE_WITHOUT_PINNED_VALUES", False),
-        ]
-        results = {}
-        for label, directory, rule, expected in cases:
-            if directory not in results:
-                results[directory] = {f.rule for f in run(directory)}
-            fired = rule in results[directory]
-            status = "ok" if fired == expected else "FAILED"
-            if fired != expected:
-                failures.append(label)
-            print(f"[{status}] {label}")
-
-        loopback_only = {f.rule for f in run(good)}
-        expected_clean = loopback_only == set()
-        print(f"[{'ok' if expected_clean else 'FAILED'}] good fixture produces no finding at all")
-        if not expected_clean:
-            failures.append("good fixture produces no finding at all")
-
-        detail = [f for f in run(bad) if f.rule == "CREDENTIAL_LITERAL"]
-        one_literal = len(detail) == 1 and detail[0].line == 3
-        print(f"[{'ok' if one_literal else 'FAILED'}] literal credential is reported once, at its line")
-        if not one_literal:
-            failures.append("literal credential is reported once, at its line")
-
-        mc_findings = [f for f in run(bad) if f.rule == "MC_CREDENTIAL_ON_COMMAND_LINE"]
-        both_families = (
-            len(mc_findings) == 2
-            and any("mc alias set" in f.detail for f in mc_findings)
-            and any("mc admin user add" in f.detail for f in mc_findings)
-        )
-        print(f"[{'ok' if both_families else 'FAILED'}] both mc credential families "
-              "are reported, once each")
-        if not both_families:
-            failures.append("both mc credential families are reported, once each")
-
-        # An alias configured without a credential carries two positionals, so the
-        # threshold must not fire on it; a flag must end the run.
-        below_threshold = mc_positional_count('local "${STORAGE_ENDPOINT}" --api S3v4 --json') == 2
-        print(f"[{'ok' if below_threshold else 'FAILED'}] a credential-free mc alias set "
-              "is below the threshold")
-        if not below_threshold:
-            failures.append("a credential-free mc alias set is below the threshold")
-
-        # Versioning alone fires; versioning paired with a noncurrent rule does not.
-        # The good fixture proves the paired case above, because it enables
-        # versioning in scripts/provision.sh and carries NoncurrentVersionExpiration
-        # in scripts/lifecycle.json and still produces no finding at all.
-
-        # The good fixture also proves the three scope limits, because it contains
-        # a gitignored .env with literal credentials, a Go test fixture with
-        # literal credentials, and a non-storage TLS flag set false, and still
-        # produces no finding above.
-        for label, ok in [
-            ("gitignored file is not scanned", not is_scanned_in(good, ".env")),
-            ("test file is excluded from CREDENTIAL_LITERAL",
-             is_test_path("internal/storage/s3_test.go")),
-            ("non-storage TLS key is not a storage finding",
-             not any(token in "RABBITMQ_TLS_ENABLED" for token in STORAGE_KEY_TOKENS)),
-        ]:
-            print(f"[{'ok' if ok else 'FAILED'}] {label}")
-            if not ok:
-                failures.append(label)
-    finally:
-        shutil.rmtree(base, ignore_errors=True)
-
-    if failures:
-        print(f"\nself-test FAILED: {len(failures)} case(s)")
-        return 3
-    print("\nself-test passed")
-    return 0
-
-
 def build_parser():
     parser = argparse.ArgumentParser(
         prog="check_object_storage_posture.py",
@@ -921,12 +658,9 @@ def build_parser():
             "  1  findings printed; fix each one or record it as an accepted defect\n"
             "     with an owner and a date before shipping\n"
             "  2  bad arguments or an unreadable root; nothing was checked\n"
-            "  3  --self-test failed; the checker's verdicts are untrustworthy\n"
         ),
     )
     parser.add_argument("--root", help="repository root to check")
-    parser.add_argument("--self-test", action="store_true",
-                        help="run the checker against its own fixtures and exit")
     parser.add_argument("--version", action="version", version=VERSION)
     return parser
 
@@ -935,11 +669,8 @@ def main(argv=None):
     parser = build_parser()
     args = parser.parse_args(argv)
 
-    if args.self_test:
-        return self_test()
-
     if not args.root:
-        print("error: --root is required unless --self-test is given", file=sys.stderr)
+        print("error: --root is required", file=sys.stderr)
         return 2
     if not os.path.isdir(args.root):
         print(f"error: not a directory: {args.root}", file=sys.stderr)

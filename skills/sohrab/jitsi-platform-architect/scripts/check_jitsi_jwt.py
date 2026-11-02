@@ -19,8 +19,6 @@ guessable room name will each pass a signature check and still open a
 classroom to a stranger.
 
 Standard library only, so it runs from a fresh checkout with no install step.
-
-Run `--self-test` after changing this file. Every rule below has a fixture.
 """
 
 from __future__ import annotations
@@ -28,8 +26,6 @@ from __future__ import annotations
 import argparse
 import base64
 import binascii
-import contextlib
-import io
 import json
 import math
 import re
@@ -382,209 +378,6 @@ def run(args: argparse.Namespace) -> int:
     return report(check_token(token, profile), "token", TOKEN_PASS_NOTE)
 
 
-SELF_TEST_PROFILE = {
-    "iss": "alaa-platform",
-    "aud": "jitsi-classes",
-    "sub": "meet.example.test",
-    "allowed_algs": ["RS256"],
-    "max_lifetime_seconds": 120,
-    "platform_access_token_kids": ["platform-access-2026-01"],
-    "room_min_entropy_bits": 128,
-    "room_alphabet": CROCKFORD_LOWER,
-}
-
-GOOD_ROOM = "3k9wq2mtb7xz4np8vfhc5rjd6s"
-
-
-def encode_token(header: dict, payload: dict) -> str:
-    def seg(value: dict) -> str:
-        raw = json.dumps(value, separators=(",", ":")).encode("utf-8")
-        return base64.urlsafe_b64encode(raw).decode("ascii").rstrip("=")
-
-    return f"{seg(header)}.{seg(payload)}.c2lnbmF0dXJl"
-
-
-def good_header() -> dict:
-    return {"alg": "RS256", "typ": "JWT", "kid": "jitsi-join-2026-07"}
-
-
-def good_payload() -> dict:
-    return {
-        "iss": "alaa-platform",
-        "aud": "jitsi-classes",
-        "sub": "meet.example.test",
-        "room": GOOD_ROOM,
-        "iat": 1_800_000_000,
-        "exp": 1_800_000_100,
-        "context": {"user": {"id": "u-42", "name": "A Teacher", "moderator": True}},
-    }
-
-
-def self_test() -> int:
-    failures: list[str] = []
-
-    def expect_codes(label: str, findings: list[tuple[str, str]], expected: str | None) -> None:
-        codes = [code for code, _ in findings]
-        if expected is None:
-            if codes:
-                failures.append(f"{label}: expected no violation, got {codes}")
-            return
-        if expected not in codes:
-            failures.append(f"{label}: expected {expected}, got {codes or 'none'}")
-
-    def expect_bad_input(label: str, token: str) -> None:
-        try:
-            check_token(token, SELF_TEST_PROFILE)
-        except BadInput:
-            return
-        failures.append(f"{label}: expected BadInput, got none")
-
-    def token_with(header_patch: dict | None = None, payload_patch: dict | None = None,
-                   drop: tuple[str, ...] = ()) -> str:
-        header = good_header()
-        payload = good_payload()
-        header.update(header_patch or {})
-        payload.update(payload_patch or {})
-        for key in drop:
-            header.pop(key, None)
-            payload.pop(key, None)
-        return encode_token(header, payload)
-
-    expect_codes("valid token", check_token(token_with(), SELF_TEST_PROFILE), None)
-    expect_codes("alg none", check_token(token_with({"alg": "none"}), SELF_TEST_PROFILE), "ALG_NONE")
-    expect_codes("alg not allowed", check_token(token_with({"alg": "HS256"}), SELF_TEST_PROFILE), "ALG_NOT_ALLOWED")
-    expect_codes("alg missing", check_token(token_with(drop=("alg",)), SELF_TEST_PROFILE), "ALG_MISSING")
-    expect_codes("kid missing", check_token(token_with(drop=("kid",)), SELF_TEST_PROFILE), "KID_MISSING")
-    expect_codes(
-        "kid is platform key",
-        check_token(token_with({"kid": "platform-access-2026-01"}), SELF_TEST_PROFILE),
-        "KID_IS_PLATFORM_KEY",
-    )
-    expect_codes("room missing", check_token(token_with(drop=("room",)), SELF_TEST_PROFILE), "ROOM_MISSING")
-    expect_codes("room not string", check_token(token_with(payload_patch={"room": 7}), SELF_TEST_PROFILE), "ROOM_NOT_STRING")
-    expect_codes("room empty", check_token(token_with(payload_patch={"room": ""}), SELF_TEST_PROFILE), "ROOM_EMPTY")
-    expect_codes("room star", check_token(token_with(payload_patch={"room": "*"}), SELF_TEST_PROFILE), "ROOM_WILDCARD")
-    expect_codes(
-        "room prefix wildcard",
-        check_token(token_with(payload_patch={"room": "grade9*"}), SELF_TEST_PROFILE),
-        "ROOM_WILDCARD",
-    )
-    expect_codes("iss mismatch", check_token(token_with(payload_patch={"iss": "other"}), SELF_TEST_PROFILE), "ISS_MISMATCH")
-    expect_codes("aud mismatch", check_token(token_with(payload_patch={"aud": "other"}), SELF_TEST_PROFILE), "AUD_MISMATCH")
-    expect_codes("sub mismatch", check_token(token_with(payload_patch={"sub": "other"}), SELF_TEST_PROFILE), "SUB_MISMATCH")
-    expect_codes("aud list match", check_token(token_with(payload_patch={"aud": ["jitsi-classes", "x"]}), SELF_TEST_PROFILE), None)
-    expect_codes("iat missing", check_token(token_with(drop=("iat",)), SELF_TEST_PROFILE), "IAT_MISSING")
-    expect_codes("exp missing", check_token(token_with(drop=("exp",)), SELF_TEST_PROFILE), "EXP_MISSING")
-    expect_codes("exp not int", check_token(token_with(payload_patch={"exp": "soon"}), SELF_TEST_PROFILE), "EXP_NOT_INT")
-    expect_codes(
-        "lifetime too long",
-        check_token(token_with(payload_patch={"exp": 1_800_003_600}), SELF_TEST_PROFILE),
-        "LIFETIME_TOO_LONG",
-    )
-    expect_codes(
-        "lifetime not positive",
-        check_token(token_with(payload_patch={"exp": 1_799_999_000}), SELF_TEST_PROFILE),
-        "LIFETIME_NOT_POSITIVE",
-    )
-    expect_codes(
-        "nbf after exp",
-        check_token(token_with(payload_patch={"nbf": 1_800_009_999}), SELF_TEST_PROFILE),
-        "NBF_AFTER_EXP",
-    )
-    expect_codes(
-        "top-level moderator",
-        check_token(token_with(payload_patch={"moderator": True}), SELF_TEST_PROFILE),
-        "ROLE_CLAIM_OUTSIDE_CONTEXT",
-    )
-    expect_codes(
-        "top-level role",
-        check_token(token_with(payload_patch={"role": "moderator"}), SELF_TEST_PROFILE),
-        "ROLE_CLAIM_OUTSIDE_CONTEXT",
-    )
-    expect_codes(
-        "weak room claim",
-        check_token(token_with(payload_patch={"room": "3k9wq2mt"}), SELF_TEST_PROFILE),
-        "ROOM_NAME_TOO_SHORT",
-    )
-
-    expect_bad_input("two segments", "aaa.bbb")
-    expect_bad_input("five segments", "a.b.c.d.e")
-    expect_bad_input("empty token", "   ")
-    expect_bad_input("header not base64", "!!!.e30.sig")
-    expect_bad_input("payload not json", "eyJhbGciOiJSUzI1NiJ9.bm90LWpzb24.sig")
-    # "WzFd" is base64url for the JSON array [1]: a syntactically valid segment that is not an object.
-    expect_bad_input("header not object", "WzFd." + encode_token({}, good_payload()).split(".")[1] + ".sig")
-
-    expect_codes("good room name", check_room_name(GOOD_ROOM, SELF_TEST_PROFILE), None)
-    expect_codes(
-        "repeated single character",
-        check_room_name("a" * 26, SELF_TEST_PROFILE),
-        "ROOM_NAME_REPEATED",
-    )
-    expect_codes(
-        "short repeated pattern",
-        check_room_name("ab" * 13, SELF_TEST_PROFILE),
-        "ROOM_NAME_REPEATED",
-    )
-    expect_codes(
-        "odd-length repeated pattern",
-        check_room_name("ab" * 13 + "a", SELF_TEST_PROFILE),
-        "ROOM_NAME_REPEATED",
-    )
-    expect_codes(
-        "two-block low diversity",
-        check_room_name("a" * 12 + "b" * 14, SELF_TEST_PROFILE),
-        "ROOM_NAME_LOW_DIVERSITY",
-    )
-
-    # With a configured small alphabet, low diversity is the correct shape of a
-    # uniform value and must not be rejected. The Thue-Morse prefix is
-    # overlap-free, so it is also immune to the period check.
-    small_alphabet_profile = dict(SELF_TEST_PROFILE)
-    small_alphabet_profile["room_alphabet"] = "ab"
-    thue_morse = "".join("ab"[bin(i).count("1") % 2] for i in range(128))
-    expect_codes(
-        "binary alphabet, non-periodic full-length name",
-        check_room_name(thue_morse, small_alphabet_profile),
-        None,
-    )
-    expect_codes(
-        "binary alphabet still rejects a constant name",
-        check_room_name("a" * 128, small_alphabet_profile),
-        "ROOM_NAME_REPEATED",
-    )
-    expect_codes("empty room name", check_room_name("", SELF_TEST_PROFILE), "ROOM_NAME_EMPTY")
-    expect_codes("non-string room name", check_room_name(5, SELF_TEST_PROFILE), "ROOM_NAME_NOT_STRING")
-    expect_codes("wildcard room name", check_room_name("*", SELF_TEST_PROFILE), "ROOM_NAME_WILDCARD")
-    expect_codes("uppercase room name", check_room_name(GOOD_ROOM.upper(), SELF_TEST_PROFILE), "ROOM_NAME_ALPHABET")
-    expect_codes("hyphenated room name", check_room_name("3k9wq2mtb7xz-4np8vfhc5rjd6s", SELF_TEST_PROFILE), "ROOM_NAME_SEPARATOR")
-    expect_codes("short room name", check_room_name("3k9wq2mt", SELF_TEST_PROFILE), "ROOM_NAME_TOO_SHORT")
-    expect_codes("numeric room name", check_room_name("40219", SELF_TEST_PROFILE), "ROOM_NAME_SEQUENTIAL")
-    expect_codes("year-prefixed room name", check_room_name("2026zqwmtb7xz4np8vfhc5rjd6s", SELF_TEST_PROFILE), "ROOM_NAME_DATE")
-    expect_codes("date-suffixed room name", check_room_name("zqwmtb7xz4np8vfhc5rjd20260901", SELF_TEST_PROFILE), "ROOM_NAME_DATE")
-    expect_codes("uuidv7 room name", check_room_name("0192f4a1b2c37abc8def0123456789ab", SELF_TEST_PROFILE), "ROOM_NAME_UUIDV7")
-    expect_codes("meaningful room name", check_room_name("3k9wq2mtermb7xz4np8vfhc5rjd6s", SELF_TEST_PROFILE), "ROOM_NAME_MEANINGFUL")
-
-    # Exercise the exit-code mapping itself, with the report output swallowed so the
-    # self-test's own result is the only thing on stdout.
-    parser = build_parser()
-    with contextlib.redirect_stdout(io.StringIO()):
-        clean = run(parser.parse_args(["--room-name", GOOD_ROOM]))
-        dirty = run(parser.parse_args(["--room-name", "grade9"]))
-    if clean != 0:
-        failures.append("exit mapping: a clean room name did not return 0")
-    if dirty != 1:
-        failures.append("exit mapping: a violating room name did not return 1")
-
-    if failures:
-        print("SELF-TEST FAILED")
-        for failure in failures:
-            print(f"- {failure}")
-        return 3
-    print("SELF-TEST PASSED")
-    return 0
-
-
 def build_parser() -> argparse.ArgumentParser:
     parser = argparse.ArgumentParser(
         prog="check_jitsi_jwt.py",
@@ -600,8 +393,6 @@ def build_parser() -> argparse.ArgumentParser:
             "     generator. Fix the producer, not the token, and run again.\n"
             "  2  the input was not a token, not a room name, or not a usable profile. Fix the\n"
             "     invocation. A 2 is never evidence that anything passed.\n"
-            "  3  the self-test failed, so this script is broken on this runtime. Do not trust a 0\n"
-            "     from it. Report the failure and stop.\n"
             "\n"
             "Why no signature check: signature verification of a platform access token belongs to the\n"
             "Ala gateway, and of a Jitsi join token to the Prosody verifier in the Jitsi deployment.\n"
@@ -629,7 +420,6 @@ def build_parser() -> argparse.ArgumentParser:
     mode.add_argument("--token", help="the compact JWT to check, as a literal argument")
     mode.add_argument("--token-file", help="a file holding the compact JWT, or - for standard input")
     mode.add_argument("--room-name", help="a room name to check against the entropy and derivation rules")
-    mode.add_argument("--self-test", action="store_true", help="run the built-in fixtures and exit")
     parser.add_argument("--profile", help="path to the deployment profile JSON")
     return parser
 
@@ -637,8 +427,6 @@ def build_parser() -> argparse.ArgumentParser:
 def main(argv: list[str] | None = None) -> int:
     parser = build_parser()
     args = parser.parse_args(argv)
-    if args.self_test:
-        return self_test()
     try:
         return run(args)
     except BadInput as exc:

@@ -92,21 +92,7 @@ Any normaliser in the service — PHP, Go, TypeScript, SQL — must produce the 
 
 The file records `corpus_sha256`: the SHA-256 of `json.dumps(cases, ensure_ascii=False, sort_keys=True, separators=(",", ":"))` encoded as UTF-8. As of this writing it is `80dcb3723e83d848236ab0cbfbfc62447eec524c62a434737d85682aa653d7dc`, set on 2026-07-28 when the Devanagari case was re-ratified from rejected to rendered and the split moved from 48/32 to 49/31. The digest covers the parsed cases rather than the on-disk `\uXXXX` escaping, so any language can reproduce it, and case order is part of the hashed bytes: accepted cases first, then rejected ones, ascending by Unicode code point of `input` within each group. The file's own `canonicalization` field states the rule and carries a one-line command that recomputes the digest from the file alone.
 
-**The identical file ships at `alaa-bale-provider/scripts/phone-conformance-corpus.json`.** The two copies are byte-identical by design, and a difference between them is a finding rather than a local customisation. `AGENTS.md` binds this: more than one implementation of one wire format ships a conformance harness, because a document asserting that two implementations agree is not evidence that they do.
-
-## Running the harness
-
-```bash
-python3 scripts/validate_mediana_payload.py --self-test
-```
-
-It drives the corpus through the normaliser for both channels and runs the payload cases, then prints how many of each it exercised. It exits `1` on any disagreement, naming the case index, the channel, the expected value and the observed one. It exits `4` when the corpus is missing or its checksum does not match its cases — which is the signal that the two copies have drifted, and the obligation then is to reconcile both, never to edit one.
-
-Run it before finishing any change to a normaliser, to the corpus, to either provider skill's validator, or to any service-side phone handling that these skills govern. Run the sibling harness in the same sitting:
-
-```bash
-python3 ../alaa-bale-provider/scripts/validate_bale_payload.py --self-test
-```
+**The identical file ships at `alaa-bale-provider/scripts/phone-conformance-corpus.json`.** The two copies are byte-identical by design, and a difference between them is a finding rather than a local customisation.
 
 ## What is not normalised
 

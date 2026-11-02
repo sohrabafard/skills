@@ -208,8 +208,6 @@ character outside the base64url alphabet, a value of impossible length, a value
 whose set bits are all outside this service's range, and a value wider than this
 service's maximum id. The first four deny with `AUTH_ACCESS_BITMAP_INVALID`, the
 fifth denies with the same code, and the sixth decodes normally.
-`scripts/trust_boundary_check.py --self-test` carries these as executable
-vectors.
 
 ---
 

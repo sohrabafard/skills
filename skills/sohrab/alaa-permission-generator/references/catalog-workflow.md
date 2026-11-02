@@ -137,7 +137,7 @@ Reading this table:
 - `DANGEROUS_BITMAP_COLLISION` means one id maps to two names. Correct ownership in `catalog/permissions.json`; never
   resolve it by remapping a consumer or by reusing an id.
 - Every `AGGREGATE_CONSUMER_*` finding has one remedy: regenerate, copy the generated file over the applied file, never
-  hand-edit. CRLF is normalised before comparison, so a Windows checkout reports no false drift.
+  hand-edit. CRLF is normalised before comparison, so a CRLF checkout reports no false drift.
 
 ## Apply boundaries
 

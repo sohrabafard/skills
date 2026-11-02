@@ -25,5 +25,5 @@ outcomes and quota/abort categories through existing observability budgets; neve
 Prove fresh v4, v1-to-v4 and v3-to-v4 preservation, indexing of existing metadata, blocked upgrade and
 versionchange closure, old-v3 rejection and aborted-upgrade preservation. Purge proof additionally
 covers every data store, orphan metadata, other accounts, data-only counts, repeat calls, missing-index
-preflight and rollback after a queued deletion. `80-testing-and-proof-levels.md` names the browser
-harness; source-function doubles alone do not prove IndexedDB engine atomicity.
+preflight and rollback after a queued deletion. Source-function doubles alone do not prove IndexedDB engine
+atomicity: that needs a real-engine lane from `80-testing-and-proof-levels.md`.

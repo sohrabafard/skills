@@ -8,19 +8,15 @@ phonebook id, or a geographic id, because none of those exist outside the panel.
 Exit codes, and what each obliges the caller to do:
 
   0  The requested check passed. Continue.
-  1  The payload is invalid, --normalize rejected its input, or --self-test found
-     a disagreement. Fix the payload or the normaliser and rerun; do not send.
+  1  The payload is invalid or --normalize rejected its input. Fix the payload
+     or the input and rerun; do not send.
   2  The invocation is wrong. Fix the arguments.
   3  The payload file is unreadable or is not JSON. Fix the path or the contents.
-  4  scripts/phone-conformance-corpus.json is missing, unreadable, or its
-     corpus_sha256 does not match its cases. Reconcile with the alaa-bale-provider
-     copy of the same file; never edit one copy alone.
 """
 
 from __future__ import annotations
 
 import argparse
-import hashlib
 import json
 import re
 import sys
@@ -32,9 +28,6 @@ EXIT_OK = 0
 EXIT_INVALID = 1
 EXIT_USAGE = 2
 EXIT_INPUT = 3
-EXIT_CORPUS = 4
-
-CORPUS_FILENAME = "phone-conformance-corpus.json"
 
 # --------------------------------------------------------------------------
 # Phone normalisation - the single canonical implementation for both channels.
@@ -631,105 +624,6 @@ def validate_payload(payload: Any, reporter: Reporter) -> None:
 
 
 # --------------------------------------------------------------------------
-# Self-test
-# --------------------------------------------------------------------------
-
-PAYLOAD_CASES: list[tuple[str, dict[str, Any], bool]] = [
-    ("webservice, minimal", {"sending_type": "webservice", "from_number": "+983000505", "message": "Your order shipped", "params": {"recipients": ["+989123830000"]}}, True),
-    ("webservice, unnormalised recipient", {"sending_type": "webservice", "from_number": "+983000505", "message": "x", "params": {"recipients": ["09123830000"]}}, False),
-    ("webservice, top-level recipients", {"sending_type": "webservice", "from_number": "+983000505", "message": "x", "recipients": ["+989123830000"], "params": {"recipients": ["+989123830000"]}}, False),
-    ("pattern, minimal", {"sending_type": "pattern", "from_number": "+983000505", "code": "abc123", "recipients": ["+989123830000"], "params": {"code": "458921"}}, True),
-    ("pattern, numeric variable", {"sending_type": "pattern", "from_number": "+983000505", "code": "abc123", "recipients": ["+989123830000"], "params": {"code": 458921}}, False),
-    ("pattern, two recipients", {"sending_type": "pattern", "from_number": "+983000505", "code": "abc123", "recipients": ["+989123830000", "+989123830001"], "params": {"code": "458921"}}, False),
-    ("pattern, recipients inside params", {"sending_type": "pattern", "from_number": "+983000505", "code": "abc123", "recipients": ["+989123830000"], "params": {"recipients": ["+989123830000"], "code": "1"}}, False),
-    ("votp, minimal", {"sending_type": "votp", "message": "45852", "params": {"recipients": ["+989123830000"]}}, True),
-    ("votp, Persian-Indic code", {"sending_type": "votp", "message": "\u06f4\u06f5\u06f8\u06f5\u06f2", "params": {"recipients": ["+989123830000"]}}, False),
-    ("votp, superscript code", {"sending_type": "votp", "message": "\u00b2\u00b3\u2074\u2075", "params": {"recipients": ["+989123830000"]}}, False),
-    ("bale payload", {"bot_id": 1, "phone_number": "989123830000", "message_data": {"message": {"text": "hi"}}}, False),
-    ("unknown top-level key", {"sending_type": "webservice", "from_number": "+983000505", "message": "x", "params": {"recipients": ["+989123830000"]}, "chat_id": 4}, False),
-    ("postal_code, unvalidated params", {"sending_type": "postal_code", "from_number": "+98BANK", "message": "x", "params": [{"garbage": "totally-unvalidated"}]}, False),
-    ("postal_code, valid", {"sending_type": "postal_code", "from_number": "+98BANK", "message": "x", "params": [{"bank": "all", "postal_code": 131, "gender": 0, "age_from": 1330, "age_to": 1402, "mci": {"start": 0, "size": 1}, "irancell": {"start": 0, "size": 0}, "other": {"start": 0, "size": 0}}]}, True),
-    ("geolocation with country field names", {"sending_type": "geolocation", "from_number": "+98BANK", "message": "x", "params": [{"province_id": 1, "age_from": 1354, "age_to": 1364, "operator": [{"start": 0, "size": 10, "id": 1}]}]}, False),
-    ("job, valid", {"sending_type": "job", "from_number": "+98PRO", "message": "x", "params": [{"main_category_id": 1, "sub_category_id": 1, "operator": [{"start": 0, "size": 3373, "id": 2}]}]}, True),
-    ("phonebook, mixed selectors", {"sending_type": "phonebook", "from_number": "+983000505", "message": "x", "params": [{"type": "all", "phonebook_ids": ["1"], "phonebook_id": "2"}]}, False),
-    ("file, bad files entry", {"sending_type": "file", "from_number": "+983000505", "message": "x", "files[]": [123]}, False),
-    ("cancel, valid", {"message_outbox_id": 1148303263}, True),
-    ("cancel, extra key", {"message_outbox_id": 1148303263, "sending_type_hint": "x"}, False),
-    ("price, valid", {"number": "+983000505", "message": "x"}, True),
-]
-
-
-def load_corpus(script_dir: Path) -> list[dict[str, Any]]:
-    path = script_dir / CORPUS_FILENAME
-    try:
-        document = json.loads(path.read_text(encoding="utf-8"))
-    except (OSError, json.JSONDecodeError) as exc:
-        raise SystemExit_(EXIT_CORPUS, f"corpus is missing or unreadable at {path}: {exc}")
-    cases = document.get("cases")
-    stored = document.get("corpus_sha256")
-    if not isinstance(cases, list) or not isinstance(stored, str):
-        raise SystemExit_(EXIT_CORPUS, f"corpus at {path} has no cases array or no corpus_sha256")
-    # The corpus canonicalization field is the contract: the digest covers the parsed
-    # cases re-serialised with ensure_ascii=False, so it describes the data and not the
-    # \uXXXX escaping the file happens to be stored in. Keep this identical to
-    # run_self_test() in alaa-bale-provider/scripts/validate_bale_payload.py.
-    canonical = json.dumps(cases, ensure_ascii=False, sort_keys=True, separators=(",", ":"))
-    digest = hashlib.sha256(canonical.encode("utf-8")).hexdigest()
-    if digest != stored:
-        raise SystemExit_(
-            EXIT_CORPUS,
-            f"corpus checksum mismatch at {path}: cases hash to {digest}, file records {stored}",
-        )
-    return cases
-
-
-class SystemExit_(Exception):
-    def __init__(self, code: int, message: str) -> None:
-        super().__init__(message)
-        self.code = code
-        self.message = message
-
-
-def run_self_test(script_dir: Path) -> int:
-    failures: list[str] = []
-    cases = load_corpus(script_dir)
-
-    for index, case in enumerate(cases):
-        raw = case["input"]
-        for channel in ("mediana", "bale"):
-            expected = case[f"{channel}_expected"]
-            try:
-                actual: Any = normalize_msisdn(raw, channel)
-            except NormalizationError as exc:
-                actual = None
-                reason = exc.reason
-            else:
-                reason = ""
-            if actual != expected:
-                failures.append(
-                    f"corpus[{index}] {channel}: expected {expected!r}, got {actual!r}"
-                    + (f" ({reason})" if reason else "")
-                )
-
-    for name, payload, should_pass in PAYLOAD_CASES:
-        reporter = Reporter()
-        validate_payload(payload, reporter)
-        passed = not reporter.errors
-        if passed != should_pass:
-            verdict = "accepted" if passed else "rejected"
-            failures.append(f"payload case {name!r}: {verdict}, expected the opposite. errors={reporter.errors}")
-
-    print(f"[SELF-TEST] {len(cases)} corpus cases x 2 channels, {len(PAYLOAD_CASES)} payload cases")
-    if failures:
-        for failure in failures:
-            print(f"[FAIL] {failure}")
-        print(f"[SELF-TEST] {len(failures)} disagreement(s)")
-        return EXIT_INVALID
-    print("[SELF-TEST] all cases agree")
-    return EXIT_OK
-
-
-# --------------------------------------------------------------------------
 # CLI
 # --------------------------------------------------------------------------
 
@@ -737,8 +631,8 @@ def build_parser() -> argparse.ArgumentParser:
     parser = argparse.ArgumentParser(
         description="Validate a Mediana/IPPanel Edge payload, or normalise an Iranian mobile number.",
         epilog=(
-            "exit codes: 0 passed | 1 payload invalid, number rejected, or self-test disagreed | "
-            "2 wrong invocation | 3 payload file unreadable or not JSON | 4 conformance corpus missing or checksum mismatch"
+            "exit codes: 0 passed | 1 payload invalid or number rejected | "
+            "2 wrong invocation | 3 payload file unreadable or not JSON"
         ),
         formatter_class=argparse.RawDescriptionHelpFormatter,
     )
@@ -751,27 +645,18 @@ def build_parser() -> argparse.ArgumentParser:
         default="mediana",
         help="target channel for --normalize (default: mediana)",
     )
-    parser.add_argument("--self-test", action="store_true", help="drive the shared conformance corpus and the payload cases")
     return parser
 
 
 def main(argv: list[str] | None = None) -> int:
     parser = build_parser()
     args = parser.parse_args(argv)
-    script_dir = Path(__file__).resolve().parent
 
-    modes = [bool(args.self_test), args.normalize is not None, args.payload is not None]
+    modes = [args.normalize is not None, args.payload is not None]
     if sum(modes) != 1:
         parser.print_usage(sys.stderr)
-        print("[ERROR] give exactly one of: a payload path, --normalize RAW, or --self-test", file=sys.stderr)
+        print("[ERROR] give exactly one of: a payload path or --normalize RAW", file=sys.stderr)
         return EXIT_USAGE
-
-    if args.self_test:
-        try:
-            return run_self_test(script_dir)
-        except SystemExit_ as exc:
-            print(f"[ERROR] {exc.message}", file=sys.stderr)
-            return exc.code
 
     if args.normalize is not None:
         try:

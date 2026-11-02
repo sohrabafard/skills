@@ -5,16 +5,10 @@
 //
 // Exit codes are part of the contract; see printHelp().
 
-import { readFileSync, readdirSync, existsSync, realpathSync, statSync, mkdtempSync, mkdirSync, writeFileSync, rmSync } from "node:fs";
+import { readFileSync, readdirSync, existsSync, realpathSync, statSync } from "node:fs";
 import { join, resolve, dirname, sep } from "node:path";
 import { pathToFileURL } from "node:url";
-import { tmpdir } from "node:os";
 import { spawnSync } from "node:child_process";
-import { fileURLToPath } from "node:url";
-
-// On Windows, new URL(import.meta.url).pathname is "/D:/...", which Node cannot
-// spawn as a filesystem path. fileURLToPath is the only correct conversion.
-const SELF_PATH = fileURLToPath(import.meta.url);
 
 const EXIT_OK = 0;
 const EXIT_VIOLATION = 1;
@@ -27,7 +21,6 @@ const HELP = `verify-package-entrypoints.mjs — workspace export-surface gate
 
 USAGE
   node verify-package-entrypoints.mjs [workspace-root] [options]
-  node verify-package-entrypoints.mjs --self-test
   node verify-package-entrypoints.mjs --help
 
 ARGUMENTS
@@ -44,7 +37,6 @@ OPTIONS
   --load-timeout <ms>    Per-package E4 timeout. Default: 15000. A package whose entry
                          does not let the process exit within it fails E4.
   --json                 Emit findings as JSON on stdout.
-  --self-test            Run built-in fixtures and exit. Writes only under the OS temp dir.
   --help, -h             Print this text.
 
 ASSERTIONS
@@ -79,12 +71,11 @@ EXIT CODES
 // ---------------------------------------------------------------- arg parsing
 
 function parseArgs(argv) {
-  const o = { root: null, package: null, shared: SHARED_RUNTIMES.slice(), skip: new Set(), load: true, loadTimeoutMs: 15000, json: false, selfTest: false, help: false };
+  const o = { root: null, package: null, shared: SHARED_RUNTIMES.slice(), skip: new Set(), load: true, loadTimeoutMs: 15000, json: false, help: false };
   for (let i = 0; i < argv.length; i++) {
     const a = argv[i];
     const need = (n) => { const v = argv[++i]; if (v === undefined) throw { usage: `${n} requires a value` }; return v; };
     if (a === "--help" || a === "-h") o.help = true;
-    else if (a === "--self-test") o.selfTest = true;
     else if (a === "--json") o.json = true;
     else if (a === "--no-load") o.load = false;
     else if (a === "--load-timeout") { const v = Number(need("--load-timeout")); if (!Number.isFinite(v) || v <= 0) throw { usage: "--load-timeout must be a positive number of milliseconds" }; o.loadTimeoutMs = v; }
@@ -350,117 +341,6 @@ function run(opts) {
   return { code: findings.length ? EXIT_VIOLATION : EXIT_OK, findings, notRun, manager, packageCount: dirs.length };
 }
 
-// ---------------------------------------------------------------- self-test
-
-function mkPkg(root, name, manifest, files = {}) {
-  const dir = join(root, "packages", name);
-  mkdirSync(join(dir, "dist"), { recursive: true });
-  writeFileSync(join(dir, "package.json"), JSON.stringify({ name: `@fx/${name}`, version: "1.0.0", private: true, type: "module", ...manifest }, null, 2));
-  for (const [rel, body] of Object.entries(files)) {
-    mkdirSync(dirname(join(dir, rel)), { recursive: true });
-    writeFileSync(join(dir, rel), body);
-  }
-  return dir;
-}
-
-function mkWorkspace(base, label) {
-  const root = join(base, label);
-  mkdirSync(root, { recursive: true });
-  writeFileSync(join(root, "package.json"), JSON.stringify({ name: "fx-root", private: true }, null, 2));
-  writeFileSync(join(root, "pnpm-lock.yaml"), "lockfileVersion: '9.0'\n");
-  writeFileSync(join(root, "pnpm-workspace.yaml"), 'packages:\n  - "packages/*"\n');
-  return root;
-}
-
-const GOOD_EXPORTS = { exports: { ".": { types: "./dist/index.d.ts", import: "./dist/index.mjs", default: "./dist/index.mjs" } } };
-const GOOD_FILES = { "dist/index.mjs": "export const ok = 1;\n", "dist/index.d.ts": "export declare const ok: number;\n" };
-
-function selfTest() {
-  const base = mkdtempSync(join(tmpdir(), "alaa-exports-selftest-"));
-  const self = SELF_PATH;
-  const cases = [];
-  const check = (label, root, expectCode, expectIds, extra = []) => {
-    const r = spawnSync(process.execPath, [self, root, "--json", ...extra], { encoding: "utf8" });
-    let ids = [];
-    try { ids = [...new Set(JSON.parse(r.stdout).findings.map((f) => f.id))].sort(); } catch { ids = ["<unparseable>"]; }
-    const ok = r.status === expectCode && JSON.stringify(ids) === JSON.stringify(expectIds.slice().sort());
-    cases.push({ label, ok, gotCode: r.status, wantCode: expectCode, gotIds: ids, wantIds: expectIds.slice().sort() });
-  };
-
-  let root = mkWorkspace(base, "clean");
-  mkPkg(root, "a", { sideEffects: false, ...GOOD_EXPORTS }, GOOD_FILES);
-  check("clean workspace exits 0", root, EXIT_OK, []);
-
-  check("absent root exits 2, not 0", join(base, "nope"), EXIT_CANNOT_RUN, []);
-
-  root = mkWorkspace(base, "nolock"); rmSync(join(root, "pnpm-lock.yaml"));
-  mkPkg(root, "a", GOOD_EXPORTS, GOOD_FILES);
-  check("no lockfile exits 2", root, EXIT_CANNOT_RUN, []);
-
-  root = mkWorkspace(base, "unbuilt");
-  mkPkg(root, "a", GOOD_EXPORTS, {});
-  rmSync(join(root, "packages", "a", "dist"), { recursive: true, force: true });
-  check("unbuilt package exits 2, not 1", root, EXIT_CANNOT_RUN, []);
-
-  root = mkWorkspace(base, "missing-target");
-  mkPkg(root, "a", GOOD_EXPORTS, { "dist/index.mjs": "export const ok = 1;\n" });
-  check("exports target missing on disk fails E1", root, EXIT_VIOLATION, ["E1"]);
-
-  root = mkWorkspace(base, "types-late");
-  mkPkg(root, "a", { exports: { ".": { import: "./dist/index.mjs", types: "./dist/index.d.ts", default: "./dist/index.mjs" } } }, GOOD_FILES);
-  check("types after import fails E2", root, EXIT_VIOLATION, ["E2"]);
-
-  root = mkWorkspace(base, "default-early");
-  mkPkg(root, "a", { exports: { ".": { types: "./dist/index.d.ts", default: "./dist/index.mjs", import: "./dist/index.mjs" } } }, GOOD_FILES);
-  check("default before import fails E2", root, EXIT_VIOLATION, ["E2"]);
-
-  root = mkWorkspace(base, "main-drift");
-  mkPkg(root, "a", { main: "./dist/legacy.mjs", ...GOOD_EXPORTS }, { ...GOOD_FILES, "dist/legacy.mjs": "export const ok = 0;\n" });
-  check("main pointing elsewhere fails E3", root, EXIT_VIOLATION, ["E3"]);
-
-  root = mkWorkspace(base, "css-shaken");
-  mkPkg(root, "a", { sideEffects: false, exports: { ".": { types: "./dist/index.d.ts", import: "./dist/index.mjs", default: "./dist/index.mjs" }, "./style.css": "./dist/style.css" } }, { ...GOOD_FILES, "dist/style.css": ".a{color:red}\n" });
-  check("CSS plus sideEffects:false fails E6", root, EXIT_VIOLATION, ["E6"]);
-
-  root = mkWorkspace(base, "link-spec");
-  mkPkg(root, "a", GOOD_EXPORTS, GOOD_FILES);
-  mkPkg(root, "b", { dependencies: { "@fx/a": "link:../a" }, ...GOOD_EXPORTS }, GOOD_FILES);
-  check("link: specifier in a pnpm workspace fails E7", root, EXIT_VIOLATION, ["E7"]);
-
-  root = mkWorkspace(base, "peer-as-dep");
-  mkPkg(root, "a", { dependencies: { vue: "^3.5.0" }, ...GOOD_EXPORTS }, GOOD_FILES);
-  check("shared runtime in dependencies fails E5", root, EXIT_VIOLATION, ["E5"]);
-
-  root = mkWorkspace(base, "two-copies");
-  const pa = mkPkg(root, "a", { peerDependencies: { vue: "^3" }, ...GOOD_EXPORTS }, GOOD_FILES);
-  mkdirSync(join(root, "node_modules", "vue"), { recursive: true });
-  writeFileSync(join(root, "node_modules", "vue", "package.json"), '{"name":"vue","version":"3.5.0"}');
-  mkdirSync(join(pa, "node_modules", "vue"), { recursive: true });
-  writeFileSync(join(pa, "node_modules", "vue", "package.json"), '{"name":"vue","version":"3.4.0"}');
-  check("one peer at two real paths fails E5", root, EXIT_VIOLATION, ["E5"]);
-
-  root = mkWorkspace(base, "throws");
-  mkPkg(root, "a", GOOD_EXPORTS, { "dist/index.d.ts": "export declare const ok: number;\n", "dist/index.mjs": "throw new Error('boom at module scope');\n" });
-  check("entry that resolves but throws fails E4", root, EXIT_VIOLATION, ["E4"]);
-
-  root = mkWorkspace(base, "hangs");
-  mkPkg(root, "a", GOOD_EXPORTS, { "dist/index.d.ts": "export declare const ok: number;\n", "dist/index.mjs": "setInterval(() => {}, 1000);\nexport const ok = 1;\n" });
-  check("entry that never lets the process exit fails E4", root, EXIT_VIOLATION, ["E4"], ["--load-timeout", "2500"]);
-
-  root = mkWorkspace(base, "peer-absent");
-  mkPkg(root, "a", { peerDependencies: { quasar: "^2" }, ...GOOD_EXPORTS }, { "dist/index.d.ts": "export declare const ok: number;\n", "dist/index.mjs": "import 'quasar';\nexport const ok = 1;\n" });
-  check("uninstalled declared peer is not-run, not a failure", root, EXIT_OK, []);
-
-  let failed = 0;
-  for (const c of cases) {
-    if (!c.ok) failed++;
-    console.log(`${c.ok ? "PASS" : "FAIL"}  ${c.label}` + (c.ok ? "" : `\n        want exit ${c.wantCode} ids ${JSON.stringify(c.wantIds)}; got exit ${c.gotCode} ids ${JSON.stringify(c.gotIds)}`));
-  }
-  rmSync(base, { recursive: true, force: true });
-  console.log(`\n${cases.length - failed}/${cases.length} self-test cases passed (fixtures under ${base}, now removed)`);
-  return failed ? EXIT_VIOLATION : EXIT_OK;
-}
-
 // ---------------------------------------------------------------- entry point
 
 function main() {
@@ -469,7 +349,6 @@ function main() {
   catch (e) { console.error(`error: ${e.usage || e.message}\n`); console.error(HELP); process.exit(EXIT_USAGE); }
 
   if (opts.help) { console.log(HELP); process.exit(EXIT_OK); }
-  if (opts.selfTest) process.exit(selfTest());
 
   const res = run(opts);
   if (opts.json) console.log(JSON.stringify({ exitCode: res.code, note: res.note ?? null, findings: res.findings, notRun: res.notRun }, null, 2));

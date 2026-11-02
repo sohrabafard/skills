@@ -19,7 +19,6 @@ from, so every expectation in the corpus was produced by running code rather tha
 
 ```
 scripts/normalization-conformance.sh            # every installed runtime, over the corpus
-scripts/normalization-conformance.sh --self-test # the comparator and the checksum only
 scripts/normalization-conformance.sh --verbose  # every answer, not only the failures
 scripts/normalization-conformance.sh --help     # options, runtimes, environment, exit codes
 ```
@@ -32,7 +31,6 @@ Paste the output into the change record. "I ran it" is not the evidence; the out
 | 2 | Usage error | fix the invocation; do not retry unchanged |
 | 3 | A runtime disagreed, a driver failed to execute, or a runtime's Unicode data is older than the pin | treat the contract as broken; ship no implementation, no middleware and no browser change |
 | 4 | Fewer than two runtimes ran | install a toolchain and rerun; **do not record as a pass** |
-| 5 | The comparator failed its own self-test | fix the harness before trusting any result |
 | 6 | The corpus is missing or drifted, or an implementation file is absent | find which copy drifted and reconcile before reading any result |
 
 Exit `4` is deliberately set at *two* runtimes rather than one: this contract's entire claim
@@ -43,12 +41,7 @@ for it.
 
 1. **Verifies the corpus digest** against the cases it covers, and refuses to run on a
    mismatch. Two runtimes can agree perfectly on a corpus that is wrong.
-2. **Self-tests its own comparator** against five synthetic vectors — answers that match,
-   an answer that differs, an answer that differs *only in Unicode composition*, a driver
-   that skipped an answer, and a metadata line that must not be counted as an answer — plus
-   the Unicode version guard in both directions. A comparator that cannot detect a
-   disagreement cannot report the absence of one.
-3. **Probes each runtime** and reports an absent one as `skipped: <reason>`, excluded from
+2. **Probes each runtime** and reports an absent one as `skipped: <reason>`, excluded from
    the comparison. **The harness never reports a pass for a runtime it did not run.**
 
 Each driver compares its answer against the corpus rather than against a reference runtime.

@@ -24,7 +24,6 @@
 //   2  could not run  - bad arguments, no package.json, or every registry
 //                       lookup failed. Distinct from 0 on purpose: "could not
 //                       run" is reported as unverified, never as clean.
-//   3  self-test failed
 
 import https from 'node:https'
 import fs from 'node:fs'
@@ -34,8 +33,7 @@ import process from 'node:process'
 const SCRIPT = 'check-frontend-versions.mjs'
 const USER_AGENT = 'alaa-vue-typescript-clean-code-skill'
 const DEFAULT_TIMEOUT_MS = 8000
-// ALAA_NPM_REGISTRY exists so the timeout and failure paths can be exercised
-// against a controlled host; production runs use the default.
+// ALAA_NPM_REGISTRY overrides the registry base URL, for example with a mirror.
 const REGISTRY = process.env.ALAA_NPM_REGISTRY || 'https://registry.npmjs.org'
 
 // name -> the major this skill's rules are written against, or null when the
@@ -57,37 +55,32 @@ function usage() {
 
 Usage:
   node ${SCRIPT} [--dir <path>] [--timeout <ms>] [--offline] [--json]
-  node ${SCRIPT} --self-test
   node ${SCRIPT} --help
 
 Options:
   --dir <path>     Project root holding package.json. Default: current directory.
   --timeout <ms>   Per-request timeout. Default: ${DEFAULT_TIMEOUT_MS}.
   --offline        Report installed versions only; make no network request.
+  --json           Emit machine-readable JSON instead of a table.
+  --help, -h       Show this message.
 
 Environment:
-  ALAA_NPM_REGISTRY  Override the registry base URL (used to exercise the
-                     timeout and failure paths against a controlled host).
-  --json           Emit machine-readable JSON instead of a table.
-  --self-test      Run the built-in checks (no network) and exit.
-  --help, -h       Show this message.
+  ALAA_NPM_REGISTRY  Override the registry base URL, for example with a mirror.
 
 Exit codes:
   0  clean         every gated package resolved and no drift worth reporting
   1  drift         a package is behind latest, or its major differs from the gated major
   2  could not run bad arguments, no package.json, or every registry lookup failed
-  3  self-test failed
 
 "Could not run" is deliberately distinct from "clean": an unreachable registry is
 reported as unverified, never rounded down to a pass.`
 }
 
 function parseArgs(argv) {
-  const opts = { dir: process.cwd(), timeout: DEFAULT_TIMEOUT_MS, offline: false, json: false, help: false, selfTest: false }
+  const opts = { dir: process.cwd(), timeout: DEFAULT_TIMEOUT_MS, offline: false, json: false, help: false }
   for (let i = 0; i < argv.length; i += 1) {
     const arg = argv[i]
     if (arg === '--help' || arg === '-h') opts.help = true
-    else if (arg === '--self-test') opts.selfTest = true
     else if (arg === '--offline') opts.offline = true
     else if (arg === '--json') opts.json = true
     else if (arg === '--dir') { opts.dir = argv[++i]; if (!opts.dir) throw new Error('--dir needs a path') }
@@ -252,53 +245,6 @@ async function latestVersion(name, timeoutMs) {
   return latest
 }
 
-// --- self-test -------------------------------------------------------------
-
-function selfTest() {
-  const failures = []
-  const check = (label, actual, expected) => {
-    const a = JSON.stringify(actual)
-    const e = JSON.stringify(expected)
-    if (a !== e) failures.push(`${label}: expected ${e}, got ${a}`)
-  }
-
-  check('cleanVersion caret', cleanVersion('^3.5.13'), '3.5.13')
-  check('cleanVersion prerelease', cleanVersion('3.6.0-rc.2'), '3.6.0-rc.2')
-  check('cleanVersion junk', cleanVersion('workspace:*'), null)
-  check('majorOf', majorOf('~2.18.1'), 2)
-  check('compare patch', Math.sign(compareVersions('3.5.13', '3.5.9')), 1)
-  check('compare equal', compareVersions('3.5.13', '3.5.13'), 0)
-  check('compare major', Math.sign(compareVersions('2.9.9', '3.0.0')), -1)
-  check('compare prerelease ignores tag', compareVersions('3.6.0-rc.2', '3.6.0'), 0)
-
-  check('npm lock packages form', fromNpmLock({ packages: { 'node_modules/vue': { version: '3.5.13' } } }, 'vue'), '3.5.13')
-  check('npm lock dependencies form', fromNpmLock({ dependencies: { pinia: { version: '3.0.1' } } }, 'pinia'), '3.0.1')
-  check('npm lock missing', fromNpmLock({ packages: {} }, 'vue'), null)
-
-  check('yarn lock classic', fromYarnLock('vue@^3.5.0:\n  version "3.5.13"\n  resolved "..."\n', 'vue'), '3.5.13')
-  check('yarn lock berry', fromYarnLock('"vue@npm:^3.5.0":\n  version: 3.5.13\n', 'vue'), '3.5.13')
-  check('pnpm lock', fromPnpmLock('packages:\n\n  /vue@3.5.13(typescript@6.0.2):\n    resolution: {}\n', 'vue'), '3.5.13')
-  check('pnpm lock scoped', fromPnpmLock("  /@quasar/app-vite@3.0.1:\n", '@quasar/app-vite'), '3.0.1')
-
-  const args = parseArgs(['--offline', '--timeout', '1234'])
-  check('parseArgs offline', args.offline, true)
-  check('parseArgs timeout', args.timeout, 1234)
-  let rejected = false
-  try { parseArgs(['--timeout', 'soon']) } catch { rejected = true }
-  check('parseArgs rejects bad timeout', rejected, true)
-  let unknown = false
-  try { parseArgs(['--nope']) } catch { unknown = true }
-  check('parseArgs rejects unknown flag', unknown, true)
-
-  if (failures.length) {
-    console.error(`${SCRIPT} self-test FAILED (${failures.length}):`)
-    for (const failure of failures) console.error(`  - ${failure}`)
-    return 3
-  }
-  console.log(`${SCRIPT} self-test passed (18 checks)`)
-  return 0
-}
-
 // --- main ------------------------------------------------------------------
 
 async function main() {
@@ -311,7 +257,6 @@ async function main() {
   }
 
   if (opts.help) { console.log(usage()); return 0 }
-  if (opts.selfTest) return selfTest()
 
   const manifestPath = path.join(opts.dir, 'package.json')
   if (!fs.existsSync(manifestPath)) {

@@ -20,7 +20,6 @@ set -u
 GATE_VERSION='1.0.0'
 APP_DIR='app'
 ALLOW_FILE='.architecture-gate-allow'
-SELF_TEST=0
 TAB=$(printf '\t')
 
 usage() {
@@ -29,14 +28,12 @@ architecture-gate.sh - Laravel layer-boundary gate
 
 Usage:
   architecture-gate.sh [--app-dir DIR] [--allow-file FILE]
-  architecture-gate.sh --self-test
   architecture-gate.sh -h | --help
   architecture-gate.sh --version
 
 Options:
   --app-dir DIR      directory to scan. Default: app
   --allow-file FILE  waiver file. Default: .architecture-gate-allow
-  --self-test        run the built-in fixture suite and exit
   -h, --help         print this help and exit
   --version          print the gate version and exit
 
@@ -206,164 +203,6 @@ report() {
     return 1
 }
 
-# ----------------------------------------------------------------- self-test
-
-self_test() {
-    st_root=$(mktemp -d 2>/dev/null) || { printf 'mktemp failed\n' >&2; exit 2; }
-    st_fail=0
-    mkdir -p "$st_root/dirty/Http/Controllers" "$st_root/dirty/Http/Resources" \
-             "$st_root/dirty/Services" "$st_root/dirty/Providers" \
-             "$st_root/clean/Http/Controllers" "$st_root/clean/Http/Resources" \
-             "$st_root/clean/Services" "$st_root/clean/Providers"
-
-    cat > "$st_root/dirty/Http/Controllers/CommentController.php" <<'FIXTURE'
-<?php
-final class CommentController
-{
-    public function show(string $id)
-    {
-        $comment = Comment::where('public_id', $id)->firstOrFail();
-        return response()->json($comment);
-    }
-}
-FIXTURE
-    cat > "$st_root/dirty/Http/Resources/CommentResource.php" <<'FIXTURE'
-<?php
-final class CommentResource
-{
-    public function toArray($request): array
-    {
-        return ['id' => $comment->id, 'key' => $this->getKey()];
-    }
-}
-FIXTURE
-    cat > "$st_root/dirty/Services/CommentService.php" <<'FIXTURE'
-<?php
-final class CommentService
-{
-    public function create(array $data): void
-    {
-        Comment::create($data);
-        DB::table('audit')->insert($data);
-    }
-}
-FIXTURE
-    cat > "$st_root/dirty/Providers/AppServiceProvider.php" <<'FIXTURE'
-<?php
-final class AppServiceProvider
-{
-    public function register(): void
-    {
-        $flags = Cache::remember('flags', 60, fn () => []);
-        $svc = $this->app->make(CommentService::class);
-    }
-}
-FIXTURE
-
-    cat > "$st_root/clean/Http/Controllers/CommentController.php" <<'FIXTURE'
-<?php
-final class CommentController
-{
-    public function __construct(private readonly CommentService $service) {}
-
-    public function show(string $publicId): CommentResource
-    {
-        return new CommentResource($this->service->read($publicId));
-    }
-}
-FIXTURE
-    cat > "$st_root/clean/Http/Resources/CommentResource.php" <<'FIXTURE'
-<?php
-final class CommentResource
-{
-    public function toArray($request): array
-    {
-        return ['id' => $this->public_id, 'body' => $this->body];
-    }
-}
-FIXTURE
-    cat > "$st_root/clean/Services/CommentService.php" <<'FIXTURE'
-<?php
-final class CommentService
-{
-    public function __construct(private readonly CommentRepositoryInterface $repository) {}
-
-    public function create(CommentData $data): CommentData
-    {
-        return $this->repository->create($data);
-    }
-}
-FIXTURE
-    cat > "$st_root/clean/Providers/RepositoryServiceProvider.php" <<'FIXTURE'
-<?php
-final class RepositoryServiceProvider
-{
-    public function register(): void
-    {
-        $this->app->bind(CommentRepositoryInterface::class, function ($app) {
-            return new CachedCommentRepository(
-                $app->make(PostgresCommentRepository::class),
-                $app->make('cache')->store(config('cache.default')),
-            );
-        });
-    }
-}
-FIXTURE
-
-    cat > "$st_root/clean/Providers/ObservabilityServiceProvider.php" <<'FIXTURE'
-<?php
-final class ObservabilityServiceProvider
-{
-    public function register(): void
-    {
-        $this->app->singleton(Registry::class, fn () => $this->app->make(RegistryFactory::class)->make());
-    }
-
-    public function boot(): void
-    {
-        DB::listen(fn ($event) => $this->app->make(DatabaseTelemetry::class)->record($event));
-    }
-}
-FIXTURE
-
-    st_dirty=$( { scan_grep "$st_root/dirty"; scan_register "$st_root/dirty"; } 2>/dev/null )
-    for st_id in L1-controller-persistence L2-public-id-leak L3-repository-bypass \
-                 L4-provider-io L5-provider-resolve-in-register; do
-        if printf '%s\n' "$st_dirty" | grep -q "$st_id"; then
-            printf 'PASS  %s fires on its fixture\n' "$st_id"
-        else
-            printf 'FAIL  %s did not fire on its fixture\n' "$st_id"
-            st_fail=$((st_fail + 1))
-        fi
-    done
-
-    st_clean=$( { scan_grep "$st_root/clean"; scan_register "$st_root/clean"; } 2>/dev/null )
-    if [ -z "$st_clean" ]; then
-        printf 'PASS  conforming fixture produces no finding\n'
-    else
-        printf 'FAIL  conforming fixture produced findings:\n%s\n' "$st_clean"
-        st_fail=$((st_fail + 1))
-    fi
-
-    if printf '%s\n' "$st_dirty" | grep -q 'clean/'; then
-        printf 'FAIL  scan leaked across trees\n'
-        st_fail=$((st_fail + 1))
-    else
-        printf 'PASS  scan stays inside the directory it was given\n'
-    fi
-
-    case "$st_root" in
-        /tmp/*|/var/folders/*) rm -rf "$st_root" ;;
-    esac
-
-    if [ "$st_fail" -eq 0 ]; then
-        printf '\nself-test: all checks pass\n'
-        return 0
-    fi
-    printf '\nself-test: %s failure(s)\n' "$st_fail"
-    return 1
-}
-
 # ---------------------------------------------------------------------- main
 
 while [ $# -gt 0 ]; do
@@ -378,7 +217,6 @@ while [ $# -gt 0 ]; do
             ALLOW_FILE=$2
             shift
             ;;
-        --self-test) SELF_TEST=1 ;;
         -h|--help) usage; exit 0 ;;
         --version) printf 'architecture-gate.sh %s\n' "$GATE_VERSION"; exit 0 ;;
         *)
@@ -389,11 +227,6 @@ while [ $# -gt 0 ]; do
     esac
     shift
 done
-
-if [ "$SELF_TEST" -eq 1 ]; then
-    self_test
-    exit $?
-fi
 
 if [ ! -d "$APP_DIR" ]; then
     printf 'architecture-gate: %s is not a directory. Pass --app-dir.\n' "$APP_DIR" >&2

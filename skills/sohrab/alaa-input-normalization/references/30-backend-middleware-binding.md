@@ -73,10 +73,8 @@ final class NormalizeRequestInput extends TransformsRequest
 }
 ```
 
-Run `php scripts/test_laravel_middleware_example.php /path/to/vendor/autoload.php` from
-this skill's directory against an existing Laravel installation. Exit `0` proves the
-example on that version; `1` means a failed scenario and `2` means unavailable runtime
-input. Syntax checking alone does not prove traversal.
+Syntax checking alone does not prove traversal: exercise the middleware against a real Laravel
+installation before relying on it.
 
 Register it globally, before validation, and before `TrimStrings` where that exists:
 

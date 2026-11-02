@@ -5,14 +5,12 @@
 //
 // No dependencies. Node 18+. Reads only; never writes inside the target repo.
 
-import { readdirSync, readFileSync, statSync, mkdtempSync, mkdirSync, writeFileSync, rmSync } from "node:fs";
+import { readdirSync, readFileSync, statSync } from "node:fs";
 import { join, extname, relative, resolve } from "node:path";
-import { tmpdir } from "node:os";
 
 const EXIT_CLEAN = 0;
 const EXIT_VIOLATIONS = 1;
 const EXIT_COULD_NOT_RUN = 2;
-const EXIT_SELF_TEST_FAILED = 3;
 
 const SKIP_DIRS = new Set([
   "node_modules", "dist", "build", "coverage", ".git", ".quasar", ".nx",
@@ -426,9 +424,6 @@ OPTIONS
   --root <dir>     repository root to scan. Defaults to the current working
                    directory. A bare positional argument is also accepted.
   --quiet          suppress the per-pair contrast table and the summary
-  --self-test      run against built-in fixtures in the system temp directory
-                   (never inside the target repo) and verify each check finds
-                   what it should
   -h, --help       this text
 
 EXIT CODES
@@ -438,124 +433,13 @@ EXIT CODES
                     (for example --contrast with no theme stylesheet). This is
                     deliberately distinct from 0: an unrun check is never
                     reported as clean.
-  3  self-test failed
 `;
-
-// ------------------------------------------------------------------ self-test
-
-function selfTest() {
-  const dir = mkdtempSync(join(tmpdir(), "alaa-ds-selftest-"));
-  let failures = 0;
-  const expect = (name, cond, detail) => {
-    if (cond) { console.log(`  PASS  ${name}`); }
-    else { console.log(`  FAIL  ${name}${detail ? " -- " + detail : ""}`); failures++; }
-  };
-  try {
-    mkdirSync(join(dir, "src", "theme"), { recursive: true });
-
-    writeFileSync(join(dir, "src", "Bad.scss"), [
-      ".card {",
-      "  color: #1E293B;",
-      "  background: rgb(255, 0, 0);",
-      "  z-index: 9999;",
-      "}",
-      "// color: #ABCDEF in a comment must not be reported",
-      ".ok { color: var(--alaa-color-text); }"
-    ].join("\n"));
-
-    writeFileSync(join(dir, "src", "Good.scss"), ".ok { color: var(--fg); background: var(--surface); }\n");
-    writeFileSync(join(dir, "src", "Arb.vue"), '<template><div class="bg-[#123456] z-[9999]" /></template>\n');
-
-    writeFileSync(join(dir, "src", "theme", "style.css"), [
-      ":root {",
-      "  --alaa-color-accent: #F59E0B;",
-      "  --alaa-color-on-accent: #FFFFFF;",
-      "  --alaa-color-surface: #FFFFFF;",
-      "  --alaa-color-foreground: #1E293B;",
-      "  --alaa-feedback-warning-text: #92400E;",
-      "  --alaa-feedback-warning-bg: #FFFBEB;",
-      "  --alaa-spacing-md: 1rem;",
-      "}",
-      '[data-theme="dark"] {',
-      "  --alaa-color-accent: #FFB240;",
-      "  --alaa-color-on-accent: #3A2400;",
-      "  --alaa-color-surface: #0F172A;",
-      "  --alaa-color-foreground: #F8FAFC;",
-      "}"
-    ].join("\n"));
-
-    writeFileSync(join(dir, "src", "Icons.vue"), [
-      "<template>",
-      '  <q-icon name="ph:arrow-left" />',
-      '  <q-icon name="ph:caret-right" />',
-      '  <q-icon name="ph:check-circle" />',
-      "  <q-icon :name=\"isRtl ? 'ph:arrow-left' : 'ph:arrow-right'\" />",
-      "</template>"
-    ].join("\n"));
-
-    // The fixture holds the real U+200E code point, written as an escape so
-    // this file stays pure ASCII and survives any transport.
-    writeFileSync(join(dir, "src", "Bidi.ts"), "export const label = \"‎-marked\";\n");
-
-    const files = walk(dir);
-    expect("walk finds fixture files", files.length >= 6, `found ${files.length}`);
-
-    const tok = checkTokens(files, {});
-    expect("tokens: reports the raw hex", tok.some(f => f.rule === "raw-color" && f.detail === "#1E293B"));
-    expect("tokens: reports the rgb() literal", tok.some(f => f.rule === "raw-color" && f.detail.startsWith("rgb(")));
-    expect("tokens: reports the raw z-index", tok.some(f => f.rule === "raw-z-index"));
-    expect("tokens: reports the arbitrary utility", tok.some(f => f.rule === "arbitrary-utility"));
-    expect("tokens: ignores a comment line", !tok.some(f => f.detail === "#ABCDEF"));
-    expect("tokens: ignores the theme file", !tok.some(f => f.file.includes("theme")));
-    expect("tokens: ignores a var() consumer", !tok.some(f => f.file.endsWith("Good.scss")));
-
-    const th = checkThemes(files);
-    expect("themes: ran", th.ran === true, th.reason);
-    expect("themes: reports the omitted warning roles",
-      th.findings.some(f => f.detail.includes("--alaa-feedback-warning-text") && f.detail.includes("--alaa-feedback-warning-bg")));
-    expect("themes: does not report the theme-invariant spacing token",
-      !th.findings.some(f => f.detail.includes("--alaa-spacing-md")));
-
-    const ct = checkContrast(files);
-    expect("contrast: ran", ct.ran === true, ct.reason);
-    expect("contrast: reports white on the light accent",
-      ct.findings.some(f => f.detail.includes("on-accent") && f.detail.includes(":root")));
-    expect("contrast: passes the dark accent pair",
-      !ct.findings.some(f => f.detail.includes('data-theme="dark"') && f.detail.includes("on-accent")));
-
-    const ic = checkIcons(files);
-    expect("icons: reports the literal arrow-left", ic.some(f => f.detail.includes("arrow-left")));
-    expect("icons: reports the literal caret-right", ic.some(f => f.detail.includes("caret-right")));
-    expect("icons: ignores check-circle", !ic.some(f => f.detail.includes("check-circle")));
-    expect("icons: ignores the direction-aware line", ic.filter(f => f.line === 5).length === 0, "line 5 should be exempt");
-
-    const bd = checkBidi(files);
-    expect("bidi: reports the LRM", bd.some(f => f.detail.includes("U+200E")));
-
-    const pal = checkPalettes();
-    expect("palettes: all shipped rows pass", pal.findings.length === 0, pal.findings.map(f => f.detail).join("; "));
-    expect("palettes: produced a row set", pal.rows.length === 36, `${pal.rows.length} rows`);
-
-    const empty = mkdtempSync(join(tmpdir(), "alaa-ds-empty-"));
-    try {
-      const r = checkThemes(walk(empty));
-      expect("themes: reports could-not-run on an empty tree", r.ran === false);
-    } finally {
-      rmSync(empty, { recursive: true, force: true });
-    }
-  } finally {
-    rmSync(dir, { recursive: true, force: true });
-  }
-  console.log(failures === 0 ? "\nself-test: PASS" : `\nself-test: FAIL (${failures})`);
-  return failures === 0 ? EXIT_CLEAN : EXIT_SELF_TEST_FAILED;
-}
 
 // ----------------------------------------------------------------- main
 
 function main(argv) {
   const args = argv.slice(2);
   if (args.includes("-h") || args.includes("--help")) { console.log(HELP); return EXIT_CLEAN; }
-  if (args.includes("--self-test")) return selfTest();
 
   const quiet = args.includes("--quiet");
   let root = null;

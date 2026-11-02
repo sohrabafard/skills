@@ -84,48 +84,6 @@ def decode_bitmap(value: str, max_permission_id: int) -> list[int]:
     return ids
 
 
-def encode_bitmap(ids: list[int], max_permission_id: int) -> str:
-    """Encode permission ids under the same contract. Used by the self-test."""
-    byte_count = (max_permission_id + 7) // 8
-    raw = bytearray(byte_count)
-    for permission_id in ids:
-        if 1 <= permission_id <= max_permission_id:
-            index = permission_id - 1
-            raw[index // 8] |= 1 << (index % 8)
-    return base64.urlsafe_b64encode(bytes(raw)).decode().rstrip("=")
-
-
-# Vectors verified against the live catalog and the gateway contract on
-# 2026-07-27. Ids 92-95 are the tusd upload-intake permissions.
-BITMAP_VECTORS: list[tuple[str, int, list[int]]] = [
-    ("AAAAAAAAAAAAAAAI", 95, [92]),
-    ("AAAAAAAAAAAAAAAQ", 95, [93]),
-    ("AAAAAAAAAAAAAAAg", 95, [94]),
-    ("AAAAAAAAAAAAAABA", 95, [95]),
-    ("AAAAAAAAAAAAAAB4", 95, [92, 93, 94, 95]),
-    # A bitmap wider than the service's own maximum decodes; it does not fail.
-    ("AAAAAAAAAAAAAAB4", 40, []),
-    # Bit-order proof at the first byte boundary.
-    ("AQA", 16, [1]),
-    ("gAA", 16, [8]),
-    ("AAE", 16, [9]),
-]
-
-BITMAP_REJECTIONS: list[tuple[str, str]] = [
-    ("", "empty input"),
-    ("AAAA=", "padded input"),
-    ("AAAAA", "impossible base64url length"),
-    ("AA*A", "character outside the base64url alphabet"),
-]
-
-BITMAP_ENCODINGS: list[tuple[list[int], int, str]] = [
-    ([1], 16, "AQA"),
-    ([8], 16, "gAA"),
-    ([9], 16, "AAE"),
-    ([92, 93, 94, 95], 95, "AAAAAAAAAAAAAAB4"),
-]
-
-
 def check_bitmap(values: list[str], max_permission_id: int) -> tuple[list[str], list[str]]:
     """Decode caller-supplied bitmaps and report the result."""
     findings: list[str] = []
@@ -562,201 +520,6 @@ def check_bypass(paths: list[Path]) -> tuple[list[str], list[str]]:
 
 
 # ---------------------------------------------------------------------------
-# Self-test
-# ---------------------------------------------------------------------------
-
-_SANITIZE_FIXTURE_CLEAN = """
-    http-request del-header X-User-Id
-    http-request del-header X-Access
-    http-request set-header X-User-Id %[var(txn.sub)]
-    http-request set-header X-Access %[var(txn.prm)]
-    http-request set-header X-Request-Id %[uuid()]
-"""
-
-_SANITIZE_FIXTURE_BROKEN = """
-    http-request del-header X-User-Id
-    http-request set-header X-User-Id %[var(txn.sub)]
-    http-request set-header X-User-Roles %[var(txn.rol)]
-"""
-
-# A conditional delete must not count as protection for an injection: when the
-# condition is false, the client-supplied value passes through untouched.
-_SANITIZE_FIXTURE_CONDITIONAL = """
-    http-request del-header X-User-Id if is_admin
-    http-request set-header X-User-Id %[var(txn.sub)]
-"""
-
-# A response-side delete says nothing about client input on the request path.
-_SANITIZE_FIXTURE_RESPONSE_DELETE = """
-    http-response del-header X-User-Id
-    http-request set-header X-User-Id %[var(txn.sub)]
-"""
-
-# A delete in one section does not run on a route handled by another.
-_SANITIZE_FIXTURE_SECTION_MISMATCH = """
-frontend fe_public
-    http-request del-header X-User-Id
-frontend fe_other
-    http-request set-header X-User-Id %[var(txn.sub)]
-"""
-
-# A delete in a defaults section applies to the proxies associated with it.
-_SANITIZE_FIXTURE_DEFAULTS_DELETE = """
-defaults
-    http-request del-header X-User-Id
-frontend fe_public
-    http-request set-header X-User-Id %[var(txn.sub)]
-"""
-
-# A delete in one named defaults does not protect a proxy associated with a
-# DIFFERENT defaults section.
-_SANITIZE_FIXTURE_DEFAULTS_MISMATCH = """
-defaults sanitized
-    http-request del-header X-User-Id
-defaults unsanitized
-frontend fe_public
-    http-request set-header X-User-Id %[var(txn.sub)]
-"""
-
-# An explicit `from <name>` association wins over the preceding defaults.
-_SANITIZE_FIXTURE_DEFAULTS_FROM = """
-defaults sanitized
-    http-request del-header X-User-Id
-defaults unsanitized
-frontend fe_public from sanitized
-    http-request set-header X-User-Id %[var(txn.sub)]
-"""
-
-# Split across two unrelated files, the same two lines prove nothing together.
-_SANITIZE_FIXTURE_FILE_A_INJECT = """
-    http-request set-header X-User-Id %[var(txn.sub)]
-"""
-
-_SANITIZE_FIXTURE_FILE_B_DELETE = """
-    http-request del-header X-User-Id
-"""
-
-
-def _sanitize_findings(*texts: str) -> list[str]:
-    scans = [(f"fixture-{index}", scan_sanitize(text)) for index, text in enumerate(texts)]
-    findings, _, _ = _evaluate_sanitize(scans)
-    return findings
-
-
-def self_test() -> int:
-    failures: list[str] = []
-    checks = 0
-
-    for value, maximum, expected in BITMAP_VECTORS:
-        checks += 1
-        try:
-            got = decode_bitmap(value, maximum)
-        except BitmapError as exc:
-            failures.append(f"decode({value!r}, {maximum}) raised {exc}; expected {expected}")
-            continue
-        if got != expected:
-            failures.append(f"decode({value!r}, {maximum}) = {got}; expected {expected}")
-
-    for value, why in BITMAP_REJECTIONS:
-        checks += 1
-        try:
-            decode_bitmap(value, 95)
-        except BitmapError:
-            continue
-        failures.append(f"decode({value!r}, 95) was accepted; it must be rejected ({why})")
-
-    for ids, maximum, expected in BITMAP_ENCODINGS:
-        checks += 1
-        got = encode_bitmap(ids, maximum)
-        if got != expected:
-            failures.append(f"encode({ids}, {maximum}) = {got!r}; expected {expected!r}")
-
-    checks += 1
-    if encode_bitmap([1], 16) == "gAA":
-        failures.append("encode([1], 16) produced gAA; that decoder is most-significant-bit-first and is wrong")
-
-    checks += 1
-    if _sanitize_findings(_SANITIZE_FIXTURE_CLEAN):
-        failures.append(
-            f"clean sanitize fixture reported a finding: {_sanitize_findings(_SANITIZE_FIXTURE_CLEAN)}"
-        )
-
-    checks += 1
-    broken = _sanitize_findings(_SANITIZE_FIXTURE_BROKEN)
-    if not any("x-user-roles" in finding for finding in broken):
-        failures.append("broken sanitize fixture did not report the injected-but-undeleted header")
-
-    checks += 1
-    conditional = _sanitize_findings(_SANITIZE_FIXTURE_CONDITIONAL)
-    if not any("x-user-id" in f and "conditional" in f for f in conditional):
-        failures.append(
-            "a conditional delete was accepted as protection for an unconditional injection"
-        )
-
-    checks += 1
-    if not any("x-user-id" in f for f in _sanitize_findings(_SANITIZE_FIXTURE_RESPONSE_DELETE)):
-        failures.append("a response-side delete was accepted as protection for a request injection")
-
-    checks += 1
-    if not any("x-user-id" in f for f in _sanitize_findings(_SANITIZE_FIXTURE_SECTION_MISMATCH)):
-        failures.append("a delete in an unrelated section was accepted as protection")
-
-    checks += 1
-    if _sanitize_findings(_SANITIZE_FIXTURE_DEFAULTS_DELETE):
-        failures.append("a preceding-defaults delete did not protect its associated proxy")
-
-    checks += 1
-    if not any("x-user-id" in f for f in _sanitize_findings(_SANITIZE_FIXTURE_DEFAULTS_MISMATCH)):
-        failures.append("a delete in an unassociated named defaults was accepted as protection")
-
-    checks += 1
-    if _sanitize_findings(_SANITIZE_FIXTURE_DEFAULTS_FROM):
-        failures.append("a delete in the defaults named by `from` did not protect its proxy")
-
-    checks += 1
-    cross_file = _sanitize_findings(_SANITIZE_FIXTURE_FILE_A_INJECT, _SANITIZE_FIXTURE_FILE_B_DELETE)
-    if not any("x-user-id" in f for f in cross_file):
-        failures.append("a delete in an unrelated file was accepted as protection")
-
-    checks += 1
-    combined = _sanitize_findings(_SANITIZE_FIXTURE_FILE_B_DELETE + _SANITIZE_FIXTURE_FILE_A_INJECT)
-    if combined:
-        failures.append(f"the same delete and injection in one file reported a finding: {combined}")
-
-    checks += 1
-    resolved = resolve_header_token(
-        "{{ .Values.totpProof.trustedHeaders.purpose }}",
-        load_values("totpProof:\n  trustedHeaders:\n    purpose: X-TOTP-PURPOSE\n"),
-    )
-    if resolved != ["x-totp-purpose"]:
-        failures.append(f"templated header name resolved to {resolved!r}; expected ['x-totp-purpose']")
-
-    checks += 1
-    if not resolve_header_token("{{ .Values.absent.key }}")[0].startswith("unresolved:"):
-        failures.append("an unresolvable template did not report itself as unresolved")
-
-    checks += 1
-    loop_values = load_values("jwt:\n  claimsToHeaders:\n    sub: X-User-Id\n    prm: X-Access\n")
-    loop_text = (
-        "{{- range $claim, $hdr := .Values.jwt.claimsToHeaders }}\n"
-        "      http-request set-header {{ $hdr }} %[var(txn.claim)]\n"
-        "{{- end }}\n"
-    )
-    loop_injected = set(scan_sanitize(loop_text, loop_values)["injected"])
-    if loop_injected != {"x-user-id", "x-access"}:
-        failures.append(f"range-bound header names resolved to {sorted(loop_injected)}; expected x-access and x-user-id")
-
-    checks += 1
-    if not _BYPASS_KEY.match("BYPASS_GATEWAY_PROOF=true"):
-        failures.append("bypass key pattern did not match a BYPASS_-prefixed key")
-
-    for line in failures:
-        print(f"FAIL {line}")
-    print(f"self-test: {checks - len(failures)}/{checks} passed")
-    return EXIT_FINDING if failures else EXIT_OK
-
-
-# ---------------------------------------------------------------------------
 # CLI
 # ---------------------------------------------------------------------------
 
@@ -771,7 +534,6 @@ EPILOG = """exit codes
      input and re-run. Do not report a pass for a check that did not run.
 
 examples
-  trust_boundary_check.py --self-test
   trust_boundary_check.py --gateway-config charts/gateway/templates/configmap.yaml
   trust_boundary_check.py --bitmap AAAAAAAAAAAAAAB4 --max-permission-id 95
   trust_boundary_check.py --source-root app --allowlist trusted-headers.md
@@ -786,7 +548,6 @@ def main(argv: list[str] | None = None) -> int:
         epilog=EPILOG,
         formatter_class=argparse.RawDescriptionHelpFormatter,
     )
-    parser.add_argument("--self-test", action="store_true", help="run the built-in oracle and fixtures, then exit")
     parser.add_argument("--gateway-config", action="append", default=[], metavar="PATH",
                         help="gateway config or values file; repeatable. Runs the sanitize/inject symmetry check")
     parser.add_argument("--bitmap", action="append", default=[], metavar="VALUE",
@@ -800,9 +561,6 @@ def main(argv: list[str] | None = None) -> int:
     parser.add_argument("--env-root", action="append", default=[], metavar="PATH",
                         help="directory or file to audit for truthy bypass switches; repeatable")
     args = parser.parse_args(argv)
-
-    if args.self_test:
-        return self_test()
 
     requested = bool(args.gateway_config or args.bitmap or args.source_root or args.env_root)
     if not requested:

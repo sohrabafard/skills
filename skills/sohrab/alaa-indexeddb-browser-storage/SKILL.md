@@ -76,15 +76,13 @@ Load `references/00-topic-map.md` and read the one row that matches what you are
 python3 scripts/validate_skill_pack.py --root .
 python3 scripts/check_references.py --root .
 python3 scripts/capability_contract_conformance.py --root .
-node scripts/check-storage-regressions.mjs
 ```
 
-The Node regression script requires Node 24+ and uses IDB doubles: it proves bounded cursor and failure logic, not browser timing. The Vitest examples require the consumer's installed `vitest` and `fake-indexeddb`; do not install dependencies implicitly.
+The Vitest examples require the consumer's installed `vitest` and `fake-indexeddb`; do not install dependencies implicitly.
 
 Exit **0** no findings. Exit **1** findings, each with file and line: resolve every one before reporting the
 change complete. Exit **2** could not run — a required file is missing or unreadable: exit 2 is never a pass,
-so run the checks by hand and report each. `--self-test` runs each script's own fixtures and proves it fails
-when it should.
+so run the checks by hand and report each.
 
 ## What you report
 

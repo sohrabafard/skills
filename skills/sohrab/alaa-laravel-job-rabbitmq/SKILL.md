@@ -193,7 +193,7 @@ elsewhere, and the named owner wins on conflict.
 - **Clean code, SOLID and design-pattern selection** — `alaa-php-clean-code references/design-patterns.md` via `/alaa-php-clean-code`.
 - **Complexity budgets, structure choice and the N+1 family inside handlers** —
   `/alaa-algorithms-data-structures`.
-- **Long-lived worker hygiene, cross-request state and memory drift** — `/alaa-octane-performance`. **Pre-implementation design pass** — `/alaa-system-design`. **Generated wrappers and MSYS path conversion** —
+- **Long-lived worker hygiene, cross-request state and memory drift** — `/alaa-octane-performance`. **Pre-implementation design pass** — `/alaa-system-design`. **Generated runtime wrappers** —
   `/service-runtime-kit-governance`. **Plan files and phasing** —
   `/alaa-workflow`.
 

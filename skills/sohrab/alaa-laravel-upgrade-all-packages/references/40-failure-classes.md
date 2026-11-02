@@ -4,8 +4,6 @@ Each class is symptom, diagnosis, smallest retry, escalation. "Smallest retry" a
 
 When a sandbox, locked-file or path failure falls within the declared scope of /alaa-codex-runtime-ops, read its `references/00-topic-map.md` before choosing recovery.
 
-Command forms are given for both shells, because both occur on the same machine: native PowerShell for a Codex session on Windows, POSIX or Git-Bash for a Claude Code Bash-tool call. `$env:VAR = "value"` is PowerShell-only and, pasted into a POSIX shell, fails silently as a literal command rather than erroring. Translate; never paste one form into the other runtime.
-
 ## 1. Resolution conflict
 
 **Symptom.** `composer update` exits non-zero with "Your requirements could not be resolved".
@@ -36,19 +34,19 @@ Command forms are given for both shells, because both occur on the same machine:
 
 **Symptom.** A regeneration command fails to write while the rest of the run succeeds -- typically `php artisan boost:install --guidelines --mcp --skills --no-interaction` or `boost:update` failing on `.codex/config.toml` or a path under `.agents/skills/`.
 
-**Diagnosis.** In order: does the parent directory exist and is it writable by the current user; is another process holding the file (editor, language server, second agent -- the common Windows case); is the target a symlink into a read-only mount or container bind.
+**Diagnosis.** In order: does the parent directory exist and is it writable by the current user; is another process holding the file (editor, language server, second agent); is the target a symlink into a read-only mount or container bind.
 
-**Smallest retry.** Re-run the same command with exactly one thing changed, and name which: the holding process closed, or a shell with write access to that path (an elevated PowerShell on Windows). Once. A second identical retry is not an escalation.
+**Smallest retry.** Re-run the same command with exactly one thing changed, and name which: the holding process closed, or a shell with write access to that path. Once. A second identical retry is not an escalation.
 
 **Escalation.** Report the artifact as not regenerated, naming the path and the operating system's error text, and leave the dependency change intact. A stale generated artifact is reported, never accepted as fresh, because the next run reads it as current state.
 
 ## 5. Cache permission error
 
-**Symptom.** `composer update` or an `npm` command fails with a rename or permission error on a path inside the global cache. Common on Windows and wherever the cache is shared between users or containers.
+**Symptom.** `composer update` or an `npm` command fails with a rename or permission error on a path inside the global cache. Common wherever the cache is shared between users or containers.
 
 **Diagnosis.** The error names a path under the global Composer or npm cache, not under the repository.
 
-**Smallest retry.** Re-run with an isolated cache anchored to the manifest root -- not the working directory, which in a monorepo is not the manifest root, and not `$PWD`, which in PowerShell is a `PathInfo` object whose interpolation yields a provider-qualified path that breaks on a PSDrive or a UNC path. Register the ignore patterns before creating anything, per the exclude rule in `10-rollback-and-blast-radius.md`:
+**Smallest retry.** Re-run with an isolated cache anchored to the manifest root -- not the working directory, which in a monorepo is not the manifest root. Register the ignore patterns before creating anything, per the exclude rule in `10-rollback-and-blast-radius.md`:
 
 ```bash
 MANIFEST_ROOT=/absolute/path/to/manifest/root      # the root this run covers
@@ -58,16 +56,6 @@ export COMPOSER_CACHE_DIR="$MANIFEST_ROOT/.composer-cache"
 export npm_config_cache="$MANIFEST_ROOT/.npm-cache"
 # Re-run the accepted scoped apply command from 20-breaking-change-detection.md.
 rm -rf "$COMPOSER_HOME" "$COMPOSER_CACHE_DIR" "$npm_config_cache"
-```
-
-```powershell
-$ManifestRoot = 'C:\absolute\path\to\manifest\root'   # a literal, or (Convert-Path $PWD)
-Add-Content -Path (git rev-parse --git-path info/exclude) -Value '.composer-home/', '.composer-cache/', '.npm-cache/'
-$env:COMPOSER_HOME      = Join-Path $ManifestRoot '.composer-home'
-$env:COMPOSER_CACHE_DIR = Join-Path $ManifestRoot '.composer-cache'
-$env:npm_config_cache   = Join-Path $ManifestRoot '.npm-cache'
-# Re-run the accepted scoped apply command from 20-breaking-change-detection.md.
-Remove-Item -Recurse -Force $env:COMPOSER_HOME, $env:COMPOSER_CACHE_DIR, $env:npm_config_cache -ErrorAction SilentlyContinue
 ```
 
 **Escalation.** Confirm cleanup by both checks, since either can pass while the other fails: `git status --short` shows only intended files, and none of the three directories still exists on disk. Then `/alaa-codex-runtime-ops`. Do not escalate privileges broadly and do not abandon the sweep over a cache error.

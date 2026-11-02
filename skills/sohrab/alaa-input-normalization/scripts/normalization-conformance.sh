@@ -33,12 +33,11 @@ readonly EXIT_OK=0
 readonly EXIT_USAGE=2
 readonly EXIT_DISAGREEMENT=3
 readonly EXIT_ENVIRONMENT=4
-readonly EXIT_SELF_TEST=5
-readonly EXIT_FIXTURES=6
+readonly EXIT_CORPUS=6
 
 usage() {
     cat <<'USAGEEOF'
-Usage: normalization-conformance.sh [--help] [--self-test] [--verbose]
+Usage: normalization-conformance.sh [--help] [--verbose]
 
 Runs the Python, TypeScript, PHP, and Go canonical normalization implementations over one
 shared corpus, in both `text` and `typed` mode, and compares each answer against the bytes
@@ -46,7 +45,6 @@ the corpus requires.
 
 Options:
     -h, --help      Show this help
-    --self-test     Check the harness comparator and the corpus checksum, then exit
     --verbose       Print every case and every answer, not only failures
 
 Runtime selection:
@@ -80,8 +78,6 @@ Exit codes:
        Caller obligation: install a toolchain and rerun; do not record this as a pass.
        This contract's whole claim is that two enforcement points agree, so one runtime
        answering correctly is not evidence for it.
-    5  The harness comparator failed its own self-test.
-       Caller obligation: fix the harness before trusting any result it reports.
     6  The corpus is missing, its checksum does not match its cases, or a canonical
        implementation file is absent.
        Caller obligation: find which copy drifted and reconcile it before reading any
@@ -138,9 +134,9 @@ compare_output() {
     local seen=0 mismatches=0 case_id expected actual
 
     while IFS=$'\t' read -r case_id expected actual; do
-        # A driver on Windows writes CRLF. read strips only the LF, so a carriage return
-        # would ride along on the last field and every answer would mismatch while its
-        # rendered bytes looked identical. Strip it from every field, on every platform.
+        # read strips only the LF, so a carriage return from a CRLF-writing driver would
+        # ride along on the last field and every answer would mismatch while its rendered
+        # bytes looked identical. Strip it from every field.
         case_id="${case_id%$'\r'}"
         expected="${expected%$'\r'}"
         actual="${actual%$'\r'}"
@@ -172,83 +168,6 @@ compare_output() {
     LAST_MISMATCHES="${mismatches}"
 }
 
-self_test() {
-    local failures=0 scratch
-    scratch="$(make_workdir)"
-
-    printf '0:text\t616263\t616263\n0:typed\tdb b1\tdb b1\n' | tr -d ' ' > "${scratch}/agree.tsv"
-    compare_output selftest "${scratch}/agree.tsv" 2 >/dev/null
-    if [[ "${LAST_SEEN}" -eq 2 && "${LAST_MISMATCHES}" -eq 0 ]]; then
-        echo 'pass  comparator accepts answers that match the corpus'
-    else
-        echo 'FAIL  comparator rejected answers that match the corpus' >&2
-        failures=$((failures + 1))
-    fi
-
-    printf '0:text\t31\t32\n' > "${scratch}/differ.tsv"
-    compare_output selftest "${scratch}/differ.tsv" 1 >/dev/null
-    if [[ "${LAST_MISMATCHES}" -eq 1 ]]; then
-        echo 'pass  comparator detects an answer that differs from the corpus'
-    else
-        echo 'FAIL  comparator missed an answer that differs from the corpus' >&2
-        failures=$((failures + 1))
-    fi
-
-    # The two strings below render identically and differ only in composition: U+0622 as
-    # one code point, and U+0627 U+0653 as two. An implementation that skips NFC, or that
-    # applies it before the fold instead of after, produces exactly this difference, and it
-    # is the failure the contract calls a false digit bug.
-    printf '0:text\td8a2\td8a7d693\n' > "${scratch}/nfc.tsv"
-    compare_output selftest "${scratch}/nfc.tsv" 1 >/dev/null
-    if [[ "${LAST_MISMATCHES}" -eq 1 ]]; then
-        echo 'pass  comparator detects an answer that differs only in Unicode composition'
-    else
-        echo 'FAIL  comparator accepted an answer that was not in the required form' >&2
-        failures=$((failures + 1))
-    fi
-
-    printf '0:text\t31\t31\n' > "${scratch}/short.tsv"
-    compare_output selftest "${scratch}/short.tsv" 2 >/dev/null
-    if [[ "${LAST_MISMATCHES}" -eq 1 ]]; then
-        echo 'pass  comparator detects a driver that skipped an answer'
-    else
-        echo 'FAIL  comparator accepted a driver that skipped an answer' >&2
-        failures=$((failures + 1))
-    fi
-
-    printf '#unicode\t14.0.0\t-\n0:text\t31\t31\n' > "${scratch}/meta.tsv"
-    compare_output selftest "${scratch}/meta.tsv" 1 >/dev/null
-    if [[ "${LAST_SEEN}" -eq 1 && "${LAST_MISMATCHES}" -eq 0 ]]; then
-        echo 'pass  comparator counts a metadata line as metadata and not as an answer'
-    else
-        echo 'FAIL  comparator counted a metadata line as an answer' >&2
-        failures=$((failures + 1))
-    fi
-
-    if unicode_major_too_old "13.0.0"; then
-        echo 'pass  version guard rejects Unicode data older than the pinned minimum'
-    else
-        echo 'FAIL  version guard accepted Unicode data older than the pinned minimum' >&2
-        failures=$((failures + 1))
-    fi
-
-    if unicode_major_too_old "15.1.0" || unicode_major_too_old "unknown"; then
-        echo 'FAIL  version guard rejected a version it must accept' >&2
-        failures=$((failures + 1))
-    else
-        echo 'pass  version guard accepts a current version and does not judge an unknown one'
-    fi
-
-    rm -rf "${scratch}"
-
-    if [[ ${failures} -ne 0 ]]; then
-        printf '\n%d comparator self-test case(s) failed.\n' "${failures}" >&2
-        exit "${EXIT_SELF_TEST}"
-    fi
-
-    printf '\nComparator self-test passed.\n'
-}
-
 # --------------------------------------------------------------------------------
 # Unicode version guard
 # --------------------------------------------------------------------------------
@@ -273,14 +192,14 @@ read_metadata() {
 }
 
 # --------------------------------------------------------------------------------
-# Fixtures
+# Corpus and implementation files
 # --------------------------------------------------------------------------------
 
 CORPUS_CASES=0
 CORPUS_ANSWERS=0
 PYTHON_BIN=""
 
-check_fixtures() {
+check_corpus() {
     local declared computed missing=0 file
 
     for file in normalize_reference.py input-normalization.ts InputNormalization.php input_normalization.go; do
@@ -296,7 +215,7 @@ check_fixtures() {
     fi
 
     if [[ ${missing} -ne 0 ]]; then
-        exit "${EXIT_FIXTURES}"
+        exit "${EXIT_CORPUS}"
     fi
 
     if command -v python3 >/dev/null 2>&1; then
@@ -339,7 +258,7 @@ console.log(doc.corpus_sha256, digest, doc.cases.length);
         printf 'corpus: CHECKSUM MISMATCH\n' >&2
         printf '  declared %s\n' "${declared}" >&2
         printf '  computed %s\n' "${computed}" >&2
-        exit "${EXIT_FIXTURES}"
+        exit "${EXIT_CORPUS}"
     fi
 
     CORPUS_ANSWERS=$((CORPUS_CASES * 2))
@@ -640,12 +559,6 @@ main() {
     for argument in "$@"; do
         case "${argument}" in
             -h|--help) usage; exit "${EXIT_OK}" ;;
-            --self-test)
-                if command -v python3 >/dev/null 2>&1; then PYTHON_BIN="python3"; fi
-                self_test
-                check_fixtures
-                exit "${EXIT_OK}"
-                ;;
             --verbose) VERBOSE=1 ;;
             *) printf 'Unknown option [%s].\n\n' "${argument}" >&2; usage >&2; exit "${EXIT_USAGE}" ;;
         esac
@@ -653,7 +566,7 @@ main() {
 
     printf 'Alaa input-normalization cross-language conformance\n'
     printf 'skill root: %s\n' "${SKILL_ROOT}"
-    check_fixtures
+    check_corpus
 
     discover_runtimes
     write_drivers

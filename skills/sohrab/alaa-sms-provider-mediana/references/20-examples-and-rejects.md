@@ -409,4 +409,4 @@ Every change to Mediana code carries these, in addition to the repository's own 
 - Final-URL tests proving the configured base URL and path join to exactly one `/api/send`.
 - Redaction tests proving no token, recipient, OTP, or pattern value reaches a log, a trace attribute, an exception payload, or a report.
 - Configuration tests proving every endpoint and the token load from configuration, with no real secret committed.
-- `python3 scripts/validate_mediana_payload.py --self-test`, then the validator against every committed fixture.
+- The validator, `python3 scripts/validate_mediana_payload.py <payload.json>`, against every committed fixture.

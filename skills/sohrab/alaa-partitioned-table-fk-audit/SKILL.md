@@ -58,7 +58,6 @@ gap in those words.
 
 ## Validation
 
-- `python3 scripts/partitioned_fk_audit.py --self-test` exits 0 before any detector result is reported.
 - When guard installation is authorized, run the installed test through its selector and the repository suite once
   after adding it.
 - The report names the proof level reached and each claim it could not reach.

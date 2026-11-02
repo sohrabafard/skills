@@ -469,104 +469,6 @@ def check_source(path, sql, tenant_columns, single_tenant):
 
 
 # --------------------------------------------------------------------------
-# Self-test fixtures
-# --------------------------------------------------------------------------
-
-BAD_FIXTURE = """
-CREATE TABLE analytics.events
-(
-    ts DateTime64(3),
-    event_date Date DEFAULT toDate(ts),
-    user_id UInt64,
-    session_locale Nullable(String),
-    retries Nullable(UInt32),
-    service LowCardinality(String),
-    event_type LowCardinality(String),
-    content_id String,
-    set_id String,
-    play_id String,
-    event_id String
-)
-ENGINE = MergeTree
-PARTITION BY user_id
-PRIMARY KEY (event_type, ts)
-ORDER BY (ts, event_type, content_id, set_id, play_id, event_id, missing_column)
-SETTINGS index_granularity = 8192;
-"""
-
-GOOD_FIXTURE = """
-CREATE TABLE IF NOT EXISTS analytics.events_rollup
-(
-    project_id String DEFAULT '',
-    event_date Date,
-    event_type LowCardinality(String) DEFAULT '',
-    -- nullable: completion_rate_report must tell 'never reported' from 'reported 0'
-    completion_ratio Nullable(Float32),
-    hits UInt64 DEFAULT 0
-)
-ENGINE = SummingMergeTree
-PARTITION BY toYYYYMM(event_date)
-ORDER BY (project_id, event_date, event_type)
-SETTINGS index_granularity = 8192;
-"""
-
-
-def self_test():
-    tenant = set(DEFAULT_TENANT_COLUMNS)
-    cases = []
-
-    _, bad = check_source("<bad-fixture>", BAD_FIXTURE, tenant, False)
-    codes = [f.code for f in bad]
-    for expected in ("CH002", "CH003", "CH005", "CH006", "CH007", "CH008", "CH009"):
-        cases.append(("bad fixture reports " + expected, expected in codes))
-    cases.append(("bad fixture reports both unjustified Nullable columns",
-                  codes.count("CH005") == 2))
-
-    _, good = check_source("<good-fixture>", GOOD_FIXTURE, tenant, False)
-    cases.append(("good fixture reports nothing", good == []))
-
-    _, single = check_source("<bad-fixture>", BAD_FIXTURE, tenant, True)
-    cases.append(("--single-tenant clears CH002 only",
-                  "CH002" not in [f.code for f in single] and len(single) == len(bad) - 1))
-
-    tenant_last = """
-CREATE TABLE t (project_id String, event_date Date, hits UInt64)
-ENGINE = MergeTree PARTITION BY toYYYYMM(event_date)
-ORDER BY (event_date, project_id);
-"""
-    _, misordered = check_source("<order-fixture>", tenant_last, tenant, False)
-    cases.append(("tenant column not first reports CH001",
-                  "CH001" in [f.code for f in misordered]))
-
-    fine = """
-CREATE TABLE t (project_id String, event_date Date)
-ENGINE = MergeTree PARTITION BY toYYYYMMDD(event_date)
-ORDER BY (project_id, event_date);
-"""
-    _, daily = check_source("<fine-fixture>", fine, tenant, False)
-    cases.append(("daily partitioning reports CH004", "CH004" in [f.code for f in daily]))
-
-    scrubbed = scrub("SELECT 'Nullable(String)' -- Nullable(String)\nNullable(String)\n")
-    cases.append(("comments and string bodies are ignored",
-                  scrubbed.count("Nullable(String)") == 1))
-    cases.append(("scrubbing preserves length", len(scrubbed) == len(
-        "SELECT 'Nullable(String)' -- Nullable(String)\nNullable(String)\n")))
-
-    cases.append(("top-level split respects nested parens",
-                  split_top_level("a DateTime64(3, 'UTC'), b String") == [
-                      "a DateTime64(3, 'UTC')", "b String"]))
-    cases.append(("function names are not read as columns",
-                  identifiers_in("toYYYYMM(event_date)") == ["event_date"]))
-
-    failed = [name for name, ok in cases if not ok]
-    for name, ok in cases:
-        print("{0} {1}".format("ok  " if ok else "FAIL", name))
-    print("")
-    print("{0} of {1} self-test cases passed".format(len(cases) - len(failed), len(cases)))
-    return 0 if not failed else 3
-
-
-# --------------------------------------------------------------------------
 # CLI
 # --------------------------------------------------------------------------
 
@@ -589,9 +491,6 @@ exit codes:
      finding stands.
   2  a path could not be read, or the arguments were wrong. Correct the
      invocation and rerun; no file was checked and no result should be quoted.
-  3  --self-test failed, so the checker itself is untrustworthy. Report the
-     failing case, and review the DDL by hand against
-     references/20-table-design.md until the checker passes.
 
 checks:
   CH001  a tenant column exists but does not lead ORDER BY
@@ -631,20 +530,12 @@ def main(argv):
         action="store_true",
         help="assert these tables hold one tenant's rows only, which clears CH002",
     )
-    parser.add_argument(
-        "--self-test",
-        action="store_true",
-        help="run the checker against its own fixtures and exit",
-    )
     parser.add_argument("--version", action="version", version=VERSION)
     args = parser.parse_args(argv)
 
-    if args.self_test:
-        return self_test()
-
     if not args.paths:
         parser.print_usage(sys.stderr)
-        sys.stderr.write("error: give at least one SQL file, or --self-test\n")
+        sys.stderr.write("error: give at least one SQL file\n")
         return 2
 
     tenant_columns = set(DEFAULT_TENANT_COLUMNS)

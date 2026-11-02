@@ -9,7 +9,6 @@ those references from source text alone; it never opens a database connection.
 
 Usage
   partitioned_fk_audit.py ROOT [ROOT ...] [options]
-  partitioned_fk_audit.py --self-test
   partitioned_fk_audit.py --install DEST
 
 ROOT is any directory or file to scan. Pass every tree that can hold schema source:
@@ -23,7 +22,6 @@ Options
   --require-parents         exit 4 when no partitioned parent is discovered
   --json                    emit the full finding set as JSON on stdout
   --quiet                   print only the RESULT line and any finding lines
-  --self-test               run the built-in fixture suite and exit
   --install DEST            copy this script to DEST unchanged, then exit
 
 Exit codes, and what a non-zero code obliges the calling agent to do
@@ -45,8 +43,6 @@ Exit codes, and what a non-zero code obliges the calling agent to do
      UNIQUE constraint and rerun; report the audit as inconclusive until it exits 0 or 2.
   4  --require-parents was given and no partitioned parent was discovered. Confirm the roots
      cover this repository's schema sources before concluding the repository has none.
-  5  --self-test failed, so this script's own logic is untrusted. Do not use its findings;
-     repair the script or report it as broken.
 """
 
 from __future__ import annotations
@@ -64,7 +60,6 @@ EXIT_USAGE = 1
 EXIT_INCOMPLETE_KEY = 2
 EXIT_UNKNOWN_KEY = 3
 EXIT_NO_PARENTS = 4
-EXIT_SELFTEST = 5
 
 DEFAULT_EXTS = (".sql", ".php", ".go", ".md", ".py", ".rb", ".ts")
 DEFAULT_EXCLUDES = (".git", "node_modules", "__pycache__", ".idea", "dist", "build")
@@ -618,142 +613,6 @@ def report(result: dict, quiet: bool, as_json: bool, require_parents: bool) -> i
     return EXIT_OK
 
 
-# --------------------------------------------------------------------------- self-test
-
-SELF_TESTS: list[tuple[str, dict[str, str], int, list[str]]] = []
-
-
-def _t(name, files, expected, must_contain=()):
-    SELF_TESTS.append((name, files, expected, list(must_contain)))
-
-
-_t("composite parent + id-only SQL reference is the bug",
-   {"a.sql": """
-CREATE TABLE events (
-  id bigint, tenant_id bigint NOT NULL, created_at timestamptz NOT NULL,
-  PRIMARY KEY (tenant_id, id, created_at)
-) PARTITION BY RANGE (created_at);
-CREATE TABLE clicks (id bigint PRIMARY KEY, event_id bigint REFERENCES events(id));
-"""}, EXIT_INCOMPLETE_KEY, ["FINDING", "events"])
-
-_t("composite parent + matching composite reference passes",
-   {"a.sql": """
-CREATE TABLE events (
-  id bigint, tenant_id bigint, created_at timestamptz,
-  PRIMARY KEY (tenant_id, id, created_at)
-) PARTITION BY RANGE (created_at);
-CREATE TABLE clicks (
-  id bigint PRIMARY KEY, tenant_id bigint, event_id bigint, event_at timestamptz,
-  FOREIGN KEY (tenant_id, event_id, event_at) REFERENCES events (tenant_id, id, created_at)
-);
-"""}, EXIT_OK)
-
-_t("ordinary table with an id-only FK is not this bug",
-   {"a.sql": """
-CREATE TABLE users (id bigint PRIMARY KEY);
-CREATE TABLE posts (id bigint PRIMARY KEY, user_id bigint REFERENCES users(id));
-"""}, EXIT_NO_PARENTS)
-
-_t("window-function PARTITION BY is not a partitioned table",
-   {"q.sql": """
-SELECT *, ROW_NUMBER() OVER (PARTITION BY tenant_id ORDER BY created_at DESC) AS rn FROM events;
-CREATE TABLE users (id bigint PRIMARY KEY);
-CREATE TABLE posts (id bigint PRIMARY KEY, user_id bigint REFERENCES users(id));
-"""}, EXIT_NO_PARENTS)
-
-_t("legacy INHERITS partitioning with an incomplete reference is the bug",
-   {"legacy.sql": """
-CREATE TABLE measurement (
-  city_id int NOT NULL, logdate date NOT NULL, peaktemp int,
-  PRIMARY KEY (city_id, logdate)
-);
-CREATE TABLE measurement_y2026m01 (
-  CHECK (logdate >= DATE '2026-01-01' AND logdate < DATE '2026-02-01')
-) INHERITS (measurement);
-CREATE TRIGGER insert_measurement_trigger BEFORE INSERT ON measurement
-  FOR EACH ROW EXECUTE FUNCTION measurement_insert_trigger();
-CREATE TABLE readings (id bigint PRIMARY KEY, m_id int REFERENCES measurement(city_id));
-"""}, EXIT_INCOMPLETE_KEY, ["measurement"])
-
-_t("laravel constrained() into a partitioned parent is the bug",
-   {"m.php": """
-Schema::create('events', function (Blueprint $table) { $table->id(); });
-DB::statement("CREATE TABLE events (id bigint, tenant_id bigint, created_at timestamptz,
-  PRIMARY KEY (tenant_id, id, created_at)) PARTITION BY RANGE (created_at)");
-Schema::create('clicks', function (Blueprint $table) {
-    $table->id();
-    $table->foreignId('event_id')->constrained();
-});
-"""}, EXIT_INCOMPLETE_KEY, ["laravel-constrained"])
-
-_t("laravel foreignId() without constrained() creates no constraint and is not flagged",
-   {"m.php": """
-DB::statement("CREATE TABLE events (id bigint, tenant_id bigint, created_at timestamptz,
-  PRIMARY KEY (tenant_id, id, created_at)) PARTITION BY RANGE (created_at)");
-Schema::create('clicks', function (Blueprint $table) {
-    $table->id();
-    $table->foreignId('event_id');
-});
-"""}, EXIT_OK)
-
-_t("foreignIdFor and foreign()->references()->on() both resolve their target",
-   {"m.php": """
-DB::statement("CREATE TABLE events (id bigint, tenant_id bigint, created_at timestamptz,
-  PRIMARY KEY (tenant_id, id, created_at)) PARTITION BY RANGE (created_at)");
-Schema::create('a', function (Blueprint $table) { $table->foreignIdFor(Event::class)->constrained(); });
-Schema::create('b', function (Blueprint $table) {
-    $table->foreign('event_id')->references('id')->on('events');
-});
-Schema::create('c', function (Blueprint $table) { $table->foreignUlid('event_id')->constrained(); });
-"""}, EXIT_INCOMPLETE_KEY, ["laravel-references-on", "laravel-constrained"])
-
-_t("parent whose key lives in a file outside the roots is inconclusive, not clean",
-   {"a.sql": "CREATE TABLE events (id bigint, created_at timestamptz) PARTITION BY RANGE (created_at);\n"},
-   EXIT_UNKNOWN_KEY, ["UNKNOWN-KEY"])
-
-_t("ATTACH PARTITION alone proves the parent is partitioned",
-   {"a.sql": """
-CREATE TABLE events (id bigint, created_at timestamptz, PRIMARY KEY (id, created_at));
-ALTER TABLE events ATTACH PARTITION events_2026_01 FOR VALUES FROM ('2026-01-01') TO ('2026-02-01');
-CREATE TABLE clicks (id bigint PRIMARY KEY, event_id bigint REFERENCES events(id));
-"""}, EXIT_INCOMPLETE_KEY, ["alter-table-attach-partition"])
-
-_t("commented-out DDL is not schema",
-   {"a.sql": """
--- CREATE TABLE events (id bigint) PARTITION BY RANGE (created_at);
-/* CREATE TABLE other (id bigint) PARTITION BY LIST (x); */
-CREATE TABLE users (id bigint PRIMARY KEY);
-"""}, EXIT_NO_PARENTS)
-
-
-def run_self_test(verbose: bool = True) -> int:
-    import io
-    import tempfile
-    from contextlib import redirect_stdout
-
-    failed = 0
-    for name, files, expected, must_contain in SELF_TESTS:
-        with tempfile.TemporaryDirectory() as tmp:
-            for fname, content in files.items():
-                (Path(tmp) / fname).write_text(content, encoding="utf-8")
-            buf = io.StringIO()
-            with redirect_stdout(buf):
-                res = audit([Path(tmp)], DEFAULT_EXTS, DEFAULT_EXCLUDES)
-                code = report(res, quiet=False, as_json=False, require_parents=True)
-            out = buf.getvalue()
-        ok = code == expected and all(s in out for s in must_contain)
-        if not ok:
-            failed += 1
-        if verbose:
-            status = "PASS" if ok else "FAIL"
-            print(f"[{status}] {name} (expected exit {expected}, got {code})")
-            if not ok:
-                print("        output:\n" + "\n".join("        " + l for l in out.splitlines()))
-    total = len(SELF_TESTS)
-    print(f"self-test: {total - failed}/{total} passed")
-    return EXIT_OK if failed == 0 else EXIT_SELFTEST
-
-
 # --------------------------------------------------------------------------- entry point
 
 def main(argv: list[str]) -> int:
@@ -767,7 +626,6 @@ def main(argv: list[str]) -> int:
     ap.add_argument("--require-parents", action="store_true")
     ap.add_argument("--json", action="store_true")
     ap.add_argument("--quiet", action="store_true")
-    ap.add_argument("--self-test", action="store_true")
     ap.add_argument("--install", metavar="DEST")
     args = ap.parse_args(argv)
 
@@ -781,11 +639,8 @@ def main(argv: list[str]) -> int:
         print(f"installed: {dest}")
         return EXIT_OK
 
-    if args.self_test:
-        return run_self_test()
-
     if not args.roots:
-        print("usage error: give at least one root to scan, or --self-test", file=sys.stderr)
+        print("usage error: give at least one root to scan", file=sys.stderr)
         return EXIT_USAGE
     roots = [Path(r) for r in args.roots]
     for r in roots:

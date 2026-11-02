@@ -102,10 +102,3 @@ removed two majors ago — that no amount of visual QA finds, because an optiona
 produces no error at all.
 **Common mistake.** Doing a full visual pass when the defect is in a request filter, or concluding
 event correctness from a screenshot. Both waste the expensive mode on a claim it cannot prove.
-
-## Template regression gate
-
-Run `node --experimental-vm-modules scripts/check-template-regressions.mjs` from this skill
-on Node 24+. It executes the templates with Vue/Shaka doubles to check source clearing, pending
-attachment/disposal, rejection handling and QoE queue retention during concurrent sends. It proves
-logic only; the browser/device matrix remains required for consumer playback claims.

@@ -75,8 +75,7 @@ or to any `isdigit()`-style predicate would break that case, and it must be refu
 file's own invariant, `corpus_version` 3 → 4, the digest); the fold step in both providers'
 normalisation contract, which now folds by category and names this skill as the owner; both
 providers' validators, whose enumerated two-family table became a category test; and the
-corpus counts and digest wherever they were quoted. Both provider harnesses pass, and the
-Bale harness verifies the digest as part of its self-test.
+corpus counts and digest wherever they were quoted.
 
 ## Open item — one implementation per language, four copies to retire
 

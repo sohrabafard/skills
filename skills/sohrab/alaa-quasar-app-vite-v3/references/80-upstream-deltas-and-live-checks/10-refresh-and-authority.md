@@ -3,7 +3,6 @@
 ```bash
 node <skill-dir>/scripts/check-upstream-versions.mjs
 node <skill-dir>/scripts/check-upstream-versions.mjs --help
-node <skill-dir>/scripts/check-upstream-versions.mjs --self-test
 ```
 
 Exit codes: `0` clean, `2` one or more packages could not be fetched (the rest are still printed), `3` bad usage. Treat `2` as "could not run", never as "clean". Manual fallback when the script cannot run:

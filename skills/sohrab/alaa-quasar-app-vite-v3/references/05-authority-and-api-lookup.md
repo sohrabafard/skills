@@ -16,7 +16,7 @@ On disagreement, report drift and use the authority for that question; never sil
 
 1. Find app root; read lockfile and `package.json`.
 2. Confirm installed `@quasar/app-vite` and `quasar`; a declared range is not installed-version proof.
-3. For components, directives, and plugins, run `node <skill-dir>/scripts/query-installed-quasar-api.mjs` with minimal filters. It takes `--help` and `--self-test`; exit code 2 means the bridge could not run, which is never a clean result.
+3. For components, directives, and plugins, run `node <skill-dir>/scripts/query-installed-quasar-api.mjs` with minimal filters. It takes `--help`; exit code 2 means the bridge could not run, which is never a clean result.
 4. `-f` narrows; it never proves completeness. Query concepts separately or retry unfiltered—nested plugin config/method-option objects may not appear under `-p`.
 5. For composables/utils, inspect installed exports/types plus version-matched docs; `quasar describe` does not cover them.
 6. Use atlases for intent, alternatives, gotchas, a11y, performance, and vocabulary.

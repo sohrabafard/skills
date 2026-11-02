@@ -15,8 +15,7 @@ operations: `/caas-arvan-kuber`.
   consumers idle and healthy.
 - **Diagnosis.** Lazy connection, so this is TCP connect or handshake, not heartbeat loss.
   `getent hosts $RABBITMQ_HOST` separates DNS from reachability. `ACCESS_REFUSED` means credentials or vhost
-  permission. `NOT_ALLOWED - vhost ... not found` means the vhost, and on Windows Git Bash usually means the
-  value was path-converted (last section).
+  permission. `NOT_ALLOWED - vhost ... not found` means the vhost.
 - **Smallest retry.** `Queue::connection('rabbitmq')->pushRaw('{}', 'diagnostic')` from the same pod —
   exercises connect, handshake, permission and declare without touching the application path.
 - **Escalation.** Diagnostic publish fails while other services publish: the vhost user lost permissions,
@@ -138,11 +137,3 @@ The class this skill exists to prevent; the rule and mechanism are `SKILL.md` co
   existing queue while the reader believes DLQ is now on. Prove it with a forced failure that lands a
   message in the dead-letter queue.
 - **`RABBITMQ_WORKER=horizon` in any env or values file.** Remove it; the rule is `SKILL.md` constraint 9.
-
-## Windows Git Bash vhost path conversion
-
-On Git Bash / MSYS a slash-valued variable in a generated wrapper is rewritten to a Windows path, so
-`RABBITMQ_VHOST=/` becomes something like `C:/Program Files/Git/` and the connection fails with
-`NOT_ALLOWED - vhost ... not found`. Local-only; absent in CI and Linux containers. Confirm by echoing the
-variable **inside the generated wrapper**, not your own shell. The fix belongs to the wrapper generator:
-`/service-runtime-kit-governance`.

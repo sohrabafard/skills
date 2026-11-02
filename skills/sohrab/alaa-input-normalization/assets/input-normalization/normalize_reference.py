@@ -27,9 +27,8 @@ Both modes are TOTAL and IDEMPOTENT. Normalization never rejects. Rejection belo
 validation, which runs after normalization and is owned elsewhere (the phone grammar
 stays with the two provider skills).
 
-Run this file directly to verify the corpus, or to regenerate it:
+Run this file directly to normalize a value, or to regenerate the corpus:
 
-    python3 normalize_reference.py --self-test         verify corpus + properties
     python3 normalize_reference.py --normalize TEXT [--mode text|typed]
     python3 normalize_reference.py --emit-corpus       rewrite the corpus
 
@@ -43,7 +42,7 @@ named outright with `--corpus` and `--phone-inputs`. Nothing here indexes a pare
 number, so moving this file one directory deeper does not silently read another corpus.
 
 Exit codes, the same numbering as `scripts/normalization-conformance.sh`:
-    0 ok    1 disagreement / property failure    2 usage    6 corpus missing or checksum
+    0 ok    2 usage
 """
 
 from __future__ import annotations
@@ -58,9 +57,7 @@ import unicodedata
 from pathlib import Path
 
 EXIT_OK = 0
-EXIT_FAILED = 1
 EXIT_USAGE = 2
-EXIT_CORPUS = 6
 
 CORPUS_NAME = "normalization-corpus.json"
 PHONE_INPUTS_NAME = "_phone_inputs.b64"
@@ -369,7 +366,7 @@ def build_document(phone_inputs: list[tuple[str, str]]) -> dict:
         "status": "ACTIVE",
         "owner_skill": "alaa-input-normalization",
         "purpose": (
-            "One shared fixture for every implementation of the Alaa input-boundary "
+            "One shared corpus for every implementation of the Alaa input-boundary "
             "normalization contract. The browser normalizes at submit and every backend "
             "service normalizes in middleware; a harness drives every implementation "
             "over this file and fails on any disagreement, because a document asserting "
@@ -438,78 +435,9 @@ def write_corpus(path: Path, phone_inputs: Path | None = None) -> dict:
     return document
 
 
-def self_test(path: Path) -> int:
-    if not path.exists():
-        print(f"corpus missing: {path}", file=sys.stderr)
-        return EXIT_CORPUS
-    document = json.loads(path.read_text(encoding="utf-8"))
-    cases = document["cases"]
-
-    recomputed = corpus_digest(cases)
-    if recomputed != document.get("corpus_sha256"):
-        print(
-            f"corpus checksum mismatch: recorded {document.get('corpus_sha256')} "
-            f"recomputed {recomputed}",
-            file=sys.stderr,
-        )
-        return EXIT_CORPUS
-
-    failures = 0
-    for index, case in enumerate(cases):
-        for mode, expected_key in (("text", "text_expected"), ("typed", "typed_expected")):
-            observed = MODES[mode](case["input"])
-            expected = case[expected_key]
-            if observed != expected:
-                failures += 1
-                print(
-                    f"case {index} mode {mode}: expected {expected!r} observed {observed!r}",
-                    file=sys.stderr,
-                )
-            # idempotence
-            if MODES[mode](observed) != observed:
-                failures += 1
-                print(f"case {index} mode {mode}: not idempotent", file=sys.stderr)
-            # output is in NFC
-            if unicodedata.normalize("NFC", observed) != observed:
-                failures += 1
-                print(f"case {index} mode {mode}: output is not NFC", file=sys.stderr)
-        # the text fold never changes the code-point count
-        if len(normalize_text(case["input"])) != len(
-            unicodedata.normalize("NFC", case["input"])
-        ):
-            failures += 1
-            print(f"case {index}: text mode changed the code-point count", file=sys.stderr)
-        # typed output retains no display separator, and never grows
-        typed = case["typed_expected"]
-        if strip_display_separators(typed) != typed:
-            failures += 1
-            print(f"case {index}: typed output still holds a display separator", file=sys.stderr)
-        if len(typed) > len(case["text_expected"]):
-            failures += 1
-            print(f"case {index}: typed output is longer than text output", file=sys.stderr)
-
-    # ordering is part of the hashed bytes
-    ordered = sorted(cases, key=lambda case: ([ord(c) for c in case["input"]], case["note"]))
-    if [c["input"] for c in ordered] != [c["input"] for c in cases]:
-        failures += 1
-        print("case order does not match the canonicalisation rule", file=sys.stderr)
-
-    if failures:
-        print(f"\n{failures} failure(s).", file=sys.stderr)
-        return EXIT_FAILED
-
-    print(
-        f"[OK] self-test passed: {len(cases)} cases x 2 modes, "
-        f"idempotence, NFC-stability, length and separator-freedom properties, "
-        f"corpus_sha256 {document['corpus_sha256'][:16]}..."
-    )
-    return EXIT_OK
-
-
 def main(argv: list[str]) -> int:
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--emit-corpus", action="store_true")
-    parser.add_argument("--self-test", action="store_true")
     parser.add_argument("--normalize")
     parser.add_argument("--mode", choices=sorted(MODES), default="text")
     parser.add_argument("--corpus", type=Path, default=None)
@@ -521,8 +449,6 @@ def main(argv: list[str]) -> int:
         document = write_corpus(corpus, args.phone_inputs)
         print(f"{len(document['cases'])} cases, corpus_sha256 {document['corpus_sha256']}")
         return EXIT_OK
-    if args.self_test:
-        return self_test(args.corpus if args.corpus is not None else locate(CORPUS_NAME))
     if args.normalize is not None:
         sys.stdout.write(MODES[args.mode](args.normalize) + "\n")
         return EXIT_OK

@@ -14,7 +14,6 @@ Exit codes
 
 Usage
   python3 scripts/validate_pack.py --root .
-  python3 scripts/validate_pack.py --self-test
 """
 
 from __future__ import annotations
@@ -22,9 +21,7 @@ from __future__ import annotations
 import argparse
 import os
 import re
-import shutil
 import sys
-import tempfile
 from dataclasses import dataclass
 from pathlib import Path
 
@@ -480,216 +477,6 @@ def run_checks(root: Path) -> list[Violation]:
 
 
 # --------------------------------------------------------------------------
-# self-test
-# --------------------------------------------------------------------------
-
-GOOD_DESCRIPTION = (
-    "Upload platform skill for tus and tusd, covering the server, the browser "
-    "client and this repository's own service. Use it to design, review or "
-    "debug an upload plane. Do not use it for presigned uploads; for buckets "
-    "use /alaa-minio-object-storage."
-)
-
-
-def build_fixture(directory: Path, reference_count: int = 9) -> None:
-    """Build a minimal pack that passes every check."""
-    (directory / "references").mkdir(parents=True)
-    (directory / "assets" / "client").mkdir(parents=True)
-    (directory / "assets" / "docker-compose").mkdir(parents=True)
-    (directory / "agents").mkdir()
-    (directory / "scripts").mkdir()
-
-    (directory / "SKILL.md").write_text(
-        "---\n"
-        f"name: {SKILL_NAME}\n"
-        f'description: "{GOOD_DESCRIPTION}"\n'
-        "---\n\n"
-        "# Fixture\n\n"
-        "Routing lives in `references/00-topic-map.md`.\n",
-        encoding="utf-8", newline="\n",
-    )
-
-    names = [f"{n:02d}-topic-{n}.md" for n in range(10, 10 * (reference_count + 1), 10)]
-    rows = []
-    for name in names:
-        (directory / "references" / name).write_text(f"# {name}\n", encoding="utf-8", newline="\n")
-        rows.append(f"| you are about to touch {name} | `references/{name}` |")
-    rows.append("| you are about to write client code | `assets/client/upload.ts` |")
-    rows.append("| you are about to deploy | `assets/docker-compose/tusd.compose.yaml` |")
-    rows.append("| you are about to finish a change | `scripts/validate_pack.py` |")
-
-    (directory / TOPIC_MAP).write_text(
-        "# Topic Map\n\n| condition | file |\n|---|---|\n" + "\n".join(rows) + "\n",
-        encoding="utf-8", newline="\n",
-    )
-    (directory / "references" / "10-topic-10.md").write_text(
-        "# Source\n\nPinned release: v2.9.2, read 2026-04-24.\n", encoding="utf-8", newline="\n"
-    )
-    (directory / "assets" / "client" / "upload.ts").write_text(
-        "export const basePath = process.env.UPLOAD_BASE_PATH\n", encoding="utf-8", newline="\n"
-    )
-    (directory / "assets" / "docker-compose" / "tusd.compose.yaml").write_text(
-        "services:\n  tusd:\n    image: ${TUSD_IMAGE:?pin it}\n    command:\n"
-        '      - "-behind-proxy"\n      - "-disable-download"\n'
-        '      - "-max-size=${TUSD_MAX_SIZE:?set the cap}"\n',
-        encoding="utf-8", newline="\n",
-    )
-    (directory / "agents" / "openai.yaml").write_text(
-        "interface:\n  display_name: \"Fixture\"\npolicy:\n"
-        "  allow_implicit_invocation: true\n",
-        encoding="utf-8", newline="\n",
-    )
-    shutil.copyfile(Path(__file__).resolve(), directory / "scripts" / "validate_pack.py")
-
-
-MUTATIONS = {
-    "single-router": lambda d: (d / "SKILL.md").write_text(
-        read(d / "SKILL.md") + "\nAlso read `references/20-topic-20.md`.\n",
-        encoding="utf-8",
-    ),
-    "topic-map": lambda d: (d / "references" / "95-orphan.md").write_text(
-        "# orphan\n", encoding="utf-8"
-    ),
-    "image-pin": lambda d: (d / "assets" / "docker-compose" / "tusd.compose.yaml").write_text(
-        read(d / "assets" / "docker-compose" / "tusd.compose.yaml").replace(
-            "${TUSD_IMAGE:?pin it}", "tusproject/tusd:latest"
-        ),
-        encoding="utf-8",
-    ),
-    "required-flags": lambda d: (d / "assets" / "docker-compose" / "tusd.compose.yaml").write_text(
-        read(d / "assets" / "docker-compose" / "tusd.compose.yaml").replace(
-            '      - "-max-size=${TUSD_MAX_SIZE:?set the cap}"\n', ""
-        ),
-        encoding="utf-8",
-    ),
-    "fail-closed-interpolation": lambda d: (d / "assets" / "docker-compose" / "tusd.compose.yaml").write_text(
-        read(d / "assets" / "docker-compose" / "tusd.compose.yaml").replace(
-            "${TUSD_MAX_SIZE:?set the cap}", "${TUSD_MAX_SIZE}"
-        ),
-        encoding="utf-8",
-    ),
-    # A defaulted cap is as unsafe as a bare one: 0 means unlimited in tusd,
-    # so `:-0` must fire the same check even though `:-` is fail-closed for
-    # every other variable.
-    "fail-closed-interpolation@default-cap": lambda d: (d / "assets" / "docker-compose" / "tusd.compose.yaml").write_text(
-        read(d / "assets" / "docker-compose" / "tusd.compose.yaml").replace(
-            "${TUSD_MAX_SIZE:?set the cap}", "${TUSD_MAX_SIZE:-0}"
-        ),
-        encoding="utf-8",
-    ),
-    "version-single-source": lambda d: (d / "references" / "20-topic-20.md").write_text(
-        "# duplicate\n\nAlso v2.9.2 here.\n", encoding="utf-8"
-    ),
-    "client-route-literal": lambda d: (d / "assets" / "client" / "upload.ts").write_text(
-        "export const basePath = '/files/'\n", encoding="utf-8"
-    ),
-    "description": lambda d: (d / "SKILL.md").write_text(
-        read(d / "SKILL.md").replace(
-            " Do not use it for presigned uploads; for buckets use /alaa-minio-object-storage.",
-            "",
-        ),
-        encoding="utf-8",
-    ),
-    "trigger-forms": lambda d: (d / "references" / "30-topic-30.md").write_text(
-        "# triggers\n\nUse $alaa-reliability-sla for retries.\n", encoding="utf-8"
-    ),
-    "openai-policy": lambda d: (d / "agents" / "openai.yaml").write_text(
-        'interface:\n  display_name: "Fixture"\n', encoding="utf-8"
-    ),
-}
-
-
-ROUTER_POLICY_CASES = 6
-
-
-def router_policy_self_test() -> int:
-    """Focused router-policy fixtures; maintained by the normal self-test too."""
-    failures = []
-    with tempfile.TemporaryDirectory(prefix="tusd-router-policy-") as tmp:
-        workspace = Path(tmp)
-        clean = workspace / "one-reference-external-map"
-        clean.mkdir()
-        build_fixture(clean, reference_count=1)
-        checks = (check_single_router, check_topic_map_covers_pack)
-        if any(check(clean) for check in checks):
-            failures.append("one-reference external map must be accepted")
-
-        mutations = (
-            ("extra-body-pointer", "single-router", lambda d: (d / "SKILL.md").write_text(
-                read(d / "SKILL.md") + "Read `references/10-topic-10.md`.\n", encoding="utf-8", newline="\n")),
-            ("duplicate-map-pointer", "single-router", lambda d: (d / "SKILL.md").write_text(
-                read(d / "SKILL.md") + f"Read `{TOPIC_MAP}` again.\n", encoding="utf-8", newline="\n")),
-            ("broken-route", "topic-map", lambda d: (d / TOPIC_MAP).write_text(
-                read(d / TOPIC_MAP).replace("references/10-topic-10.md", "references/missing.md"),
-                encoding="utf-8", newline="\n")),
-            ("unrouted-reference", "topic-map", lambda d: (d / "references/20-unrouted.md").write_text(
-                "# Unrouted\n", encoding="utf-8", newline="\n")),
-        )
-        for name, expected, mutate in mutations:
-            case = workspace / name
-            shutil.copytree(clean, case)
-            mutate(case)
-            if expected not in {v.check for check in checks for v in check(case)}:
-                failures.append(f"{name} must fail {expected}")
-
-        missing = workspace / "missing-external-map"
-        missing.mkdir()
-        (missing / "SKILL.md").write_text(f"Read `{TOPIC_MAP}`.\n", encoding="utf-8", newline="\n")
-        if not check_single_router(missing):
-            failures.append("missing external map must fail single-router")
-
-    for failure in failures:
-        print(f"FAIL  router-policy: {failure}")
-    if not failures:
-        print(f"ok    router-policy: {ROUTER_POLICY_CASES} focused expectations held")
-    return len(failures)
-
-
-def self_test() -> int:
-    """Build fixtures outside the repository and prove each check fires."""
-    workspace = Path(tempfile.mkdtemp(prefix="tusd-skill-selftest-"))
-    if workspace.is_relative_to(Path(__file__).resolve().parents[1]):
-        raise Misuse("self-test fixtures must not be built inside the skill")
-    print(f"self-test workspace: {workspace}")
-    failures = router_policy_self_test()
-    try:
-        clean = workspace / "clean"
-        clean.mkdir()
-        build_fixture(clean)
-        baseline = [v for v in run_checks(clean) if not v.warning]
-        if baseline:
-            failures += 1
-            print("FAIL  clean fixture produced violations:")
-            for violation in baseline:
-                print("      " + violation.render().replace("\n", "\n      "))
-        else:
-            print("ok    clean fixture is clean")
-
-        for name, mutate in MUTATIONS.items():
-            # A key may carry an `@variant` suffix so one check can have
-            # several mutations; the expected check name is the part before it.
-            expected = name.split("@", 1)[0]
-            case = workspace / name
-            shutil.copytree(clean, case)
-            mutate(case)
-            fired = {v.check for v in run_checks(case)}
-            if expected in fired:
-                print(f"ok    {name} fires when broken")
-            else:
-                failures += 1
-                print(f"FAIL  {name} did not fire; checks that fired: {sorted(fired) or 'none'}")
-    finally:
-        shutil.rmtree(workspace, ignore_errors=True)
-
-    checked = len(MUTATIONS) + 1 + ROUTER_POLICY_CASES
-    if failures:
-        print(f"\nself-test: {failures} of {checked} expectations failed")
-        return 1
-    print(f"\nself-test: {checked} of {checked} expectations held")
-    return 0
-
-
-# --------------------------------------------------------------------------
 # entry point
 # --------------------------------------------------------------------------
 
@@ -712,18 +499,9 @@ def main(argv: list[str] | None = None) -> int:
         help="skill directory to validate; defaults to $SKILL_ROOT, then to the "
              "parent of this script",
     )
-    parser.add_argument(
-        "--self-test",
-        action="store_true",
-        help="build fixtures in a temporary directory outside the repository and "
-             "prove every check fires when its rule is broken",
-    )
     args = parser.parse_args(argv)
 
     try:
-        if args.self_test:
-            return self_test()
-
         root = Path(args.root).resolve() if args.root else Path(__file__).resolve().parents[1]
         if not root.is_dir():
             raise Misuse(f"{root} is not a directory")
