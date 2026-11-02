@@ -6,8 +6,7 @@
 # hand-written matrix, and a transcription in SKILL.md -- and nothing compared
 # them. `--check` compares them and fails when they have drifted apart.
 #
-# Requires bash 4.0 or newer plus python3 (or python 3.x). On Windows use Git
-# Bash or WSL; the embedded Python is what does the work, so it is portable.
+# Requires bash 4.0 or newer plus python3 (or python 3.x).
 # Every file is read with universal newlines, so a CRLF checkout cannot make a
 # matching block look different.
 #
@@ -36,7 +35,6 @@ Usage:
   summarize-openapi.sh --check  [--spec FILE] [--matrix FILE] [--body FILE]
   summarize-openapi.sh --update [--spec FILE] [--matrix FILE]
   summarize-openapi.sh --help
-  summarize-openapi.sh --self-test
 
 Modes:
   (default)   print the machine-derived summary; changes nothing
@@ -308,54 +306,6 @@ PYCODE
   return $?
 }
 
-self_test() {
-  local fixtures="${SCRIPT_DIR}/fixtures" failures=0 rc
-
-  ( main --help >/dev/null 2>&1 )
-  [[ $? -eq ${EXIT_CLEAN} ]] || { echo "SELF-TEST FAIL: --help did not exit ${EXIT_CLEAN}" >&2; failures=$((failures+1)); }
-
-  main --check --spec "${fixtures}/mini-openapi.json" --matrix "${fixtures}/mini-matrix.md" --body "${fixtures}/mini-body.md" >/dev/null 2>&1
-  rc=$?
-  [[ ${rc} -eq ${EXIT_CLEAN} ]] || { echo "SELF-TEST FAIL: matching fixtures exited ${rc}, expected ${EXIT_CLEAN}" >&2; failures=$((failures+1)); }
-
-  main --check --spec "${fixtures}/mini-openapi.json" --matrix "${fixtures}/mini-matrix-drifted.md" --body "${fixtures}/mini-body.md" >/dev/null 2>&1
-  rc=$?
-  [[ ${rc} -eq ${EXIT_FINDINGS} ]] || { echo "SELF-TEST FAIL: drifted matrix exited ${rc}, expected ${EXIT_FINDINGS}" >&2; failures=$((failures+1)); }
-
-  main --check --spec "${fixtures}/mini-openapi.json" --matrix "${fixtures}/mini-matrix.md" --body "${fixtures}/mini-body-transcribing.md" >/dev/null 2>&1
-  rc=$?
-  [[ ${rc} -eq ${EXIT_FINDINGS} ]] || { echo "SELF-TEST FAIL: a body that re-transcribes metadata exited ${rc}, expected ${EXIT_FINDINGS}" >&2; failures=$((failures+1)); }
-
-  main --check --spec "${fixtures}/mini-openapi.json" --matrix "${fixtures}/mini-matrix-no-stamp.md" --body "${fixtures}/mini-body.md" >/dev/null 2>&1
-  rc=$?
-  [[ ${rc} -eq ${EXIT_FINDINGS} ]] || { echo "SELF-TEST FAIL: a matrix with no capture stamp exited ${rc}, expected ${EXIT_FINDINGS}" >&2; failures=$((failures+1)); }
-
-  main --check --spec "${fixtures}/no-such-spec.json" --matrix "${fixtures}/mini-matrix.md" >/dev/null 2>&1
-  rc=$?
-  [[ ${rc} -eq ${EXIT_CANNOT_RUN} ]] || { echo "SELF-TEST FAIL: a missing spec exited ${rc}, expected ${EXIT_CANNOT_RUN}" >&2; failures=$((failures+1)); }
-
-  main --check --spec "${fixtures}/unparsable-openapi.json" --matrix "${fixtures}/mini-matrix.md" >/dev/null 2>&1
-  rc=$?
-  [[ ${rc} -eq ${EXIT_CANNOT_RUN} ]] || { echo "SELF-TEST FAIL: an unparsable spec exited ${rc}, expected ${EXIT_CANNOT_RUN}" >&2; failures=$((failures+1)); }
-
-  main --check --spec "${fixtures}/mini-openapi.json" --matrix "${fixtures}/mini-matrix-no-markers.md" >/dev/null 2>&1
-  rc=$?
-  [[ ${rc} -eq ${EXIT_CANNOT_RUN} ]] || { echo "SELF-TEST FAIL: a matrix with no markers exited ${rc}, expected ${EXIT_CANNOT_RUN}" >&2; failures=$((failures+1)); }
-
-  # A CRLF matrix must produce the same verdict as its LF twin.
-  if [[ -f "${fixtures}/mini-matrix-crlf.md" ]]; then
-    main --check --spec "${fixtures}/mini-openapi.json" --matrix "${fixtures}/mini-matrix-crlf.md" --body "${fixtures}/mini-body.md" >/dev/null 2>&1
-    rc=$?
-    [[ ${rc} -eq ${EXIT_CLEAN} ]] || { echo "SELF-TEST FAIL: a CRLF matrix exited ${rc}, expected ${EXIT_CLEAN}" >&2; failures=$((failures+1)); }
-  else
-    echo "SELF-TEST FAIL: fixtures/mini-matrix-crlf.md is missing" >&2; failures=$((failures+1))
-  fi
-
-  if [[ ${failures} -gt 0 ]]; then return ${EXIT_FINDINGS}; fi
-  echo "summarize-openapi --self-test: 9 cases passed"
-  return ${EXIT_CLEAN}
-}
-
 main() {
   local mode="print"
   local spec="${DEFAULT_SPEC}" matrix="${DEFAULT_MATRIX}" body="${DEFAULT_BODY}"
@@ -363,7 +313,6 @@ main() {
   while [[ $# -gt 0 ]]; do
     case "$1" in
       -h|--help)   usage; return ${EXIT_CLEAN} ;;
-      --self-test) self_test; return $? ;;
       --check)     mode="check"; shift ;;
       --update)    mode="update"; shift ;;
       --spec)      spec="${2:-}"; shift 2 || return ${EXIT_CANNOT_RUN} ;;

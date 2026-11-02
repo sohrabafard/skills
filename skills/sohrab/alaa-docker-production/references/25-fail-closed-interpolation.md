@@ -76,9 +76,8 @@ anything. A `$VAR` written in a comment is never substituted and is never a find
 whole-line comment and a trailing `# ...` outside quotes count.
 
 `service-runtime-kit/scripts/validate-runtime.sh:82,88-96` handles both, and the checker in this
-skill ports that logic and extends it to trailing comments. The fixture
-`scripts/fixtures/compose/escapes.compose.yml` is six lines that a naive grep reports as six
-violations and that are all correct.
+skill ports that logic and extends it to trailing comments. A naive grep reports every escaped
+`$$VAR` and every commented `$VAR` as a violation; the checker reports none of them.
 
 ## 4. The register: variables for which `:-` is a defect regardless of syntax
 
@@ -176,12 +175,12 @@ A waiver is a written argument, not a silencer. It sits on the line immediately 
 and states a reason:
 
 ```yaml
-# safety-control-waiver: LOCAL_ONLY_TOKEN reason=fixture value; this file is never deployed
-LOCAL_ONLY_TOKEN: ${LOCAL_ONLY_TOKEN:-fixture}
+# safety-control-waiver: LOCAL_ONLY_TOKEN reason=sample value; this file is never deployed
+LOCAL_ONLY_TOKEN: ${LOCAL_ONLY_TOKEN:-sample}
 ```
 
 A waiver with no `reason=` is itself a finding (`waiver-without-reason`). Waivers are legitimate in
-exactly two places: a fixture file that is never deployed, and a development-only Compose file
+exactly two places: a sample file that is never deployed, and a development-only Compose file
 where the value is a known-bad placeholder and the file carries no production path. A waiver in
 `docker-compose.yml` or `docker-compose.swarm.yml` is a defect being renamed.
 

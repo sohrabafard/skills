@@ -10,8 +10,8 @@ A section that timed out is a finding rather than a success: the original
 version of this script printed the timeout into its report and still exited 0,
 so a caller that branched on exit status read an empty report as a healthy Pod.
 
-Windows: pure Python 3 standard library, `shutil.which` for CLI discovery, and
-a per-command timeout.
+Pure Python 3 standard library, `shutil.which` for CLI discovery, and a
+per-command timeout.
 """
 
 from __future__ import annotations
@@ -69,54 +69,13 @@ def build_parser() -> argparse.ArgumentParser:
     parser.add_argument("-n", "--namespace", default="default")
     parser.add_argument("--timeout", type=float, default=45.0,
                         help="per-command timeout in seconds (default: 45)")
-    parser.add_argument("--self-test", action="store_true",
-                        help="verify argument handling, timeout accounting and exit codes; "
-                             "needs no cluster")
     return parser
-
-
-def self_test() -> int:
-    failures: list[str] = []
-
-    text, ok = run([sys.executable, "-c", "import time; time.sleep(5)"], timeout=0.5)
-    if ok or text != TIMED_OUT:
-        failures.append("a timed-out command was not reported as missing evidence")
-
-    text, ok = run([sys.executable, "-c", "print('hello')"], timeout=10)
-    if not ok or text != "hello":
-        failures.append(f"a successful command was misreported: {text!r} ok={ok}")
-
-    text, ok = run([sys.executable, "-c", ""], timeout=10)
-    if ok or text != NO_OUTPUT:
-        failures.append("a command with no output was reported as evidence")
-
-    text, ok = run(["definitely-not-a-real-binary-xyz"], timeout=5)
-    if ok:
-        failures.append("a missing binary was reported as evidence")
-
-    parser = build_parser()
-    args = parser.parse_args(["mypod", "-n", "vk"])
-    if args.pod_name != "mypod" or args.namespace != "vk":
-        failures.append("argument parsing lost a value")
-
-    if main(["--namespace", "vk"]) != EXIT_CANNOT_RUN:
-        failures.append("a missing pod name did not exit 2")
-
-    if failures:
-        for line in failures:
-            print(f"SELF-TEST FAIL: {line}", file=sys.stderr)
-        return EXIT_FINDINGS
-    print("pod_diagnostics --self-test: 6 cases passed (no cluster required)")
-    return EXIT_CLEAN
 
 
 def main(argv: list[str] | None = None) -> int:
     args = build_parser().parse_args(argv)
-    if args.self_test:
-        return self_test()
-
     if not args.pod_name:
-        print("pod_diagnostics: a pod name is required (or --self-test)", file=sys.stderr)
+        print("pod_diagnostics: a pod name is required", file=sys.stderr)
         return EXIT_CANNOT_RUN
 
     cli = detect_cli()

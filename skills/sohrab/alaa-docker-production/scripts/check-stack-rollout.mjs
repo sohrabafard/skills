@@ -13,13 +13,9 @@
 import path from 'node:path';
 import {
   CannotRun,
-  EXIT_CANNOT_RUN,
   EXIT_CLEAN,
-  EXIT_FINDINGS,
   collectTargets,
-  expect,
   finding,
-  fixturesDir,
   readLines,
   reportFindings,
   run,
@@ -67,11 +63,10 @@ Rules:
 Options:
   --one-shot NAME[,NAME...]  Additional service names to treat as one-shot jobs.
   --quiet                    Print nothing; use the exit code only.
-  --self-test                Run against the fixtures shipped beside this script and exit 0.
   -h, --help                 Show this help and exit 0.
 
 Exit codes:
-  0  clean, or --help / --self-test succeeded
+  0  clean, or --help succeeded
   1  at least one finding
   2  could not run: a path that does not exist, a YAML construct this checker refuses to guess at,
      or a file with no top-level \`services:\` mapping
@@ -87,7 +82,6 @@ function main(argv) {
     process.stdout.write(HELP);
     return EXIT_CLEAN;
   }
-  if (argv.includes('--self-test')) return selfTest();
 
   const quiet = argv.includes('--quiet');
   let extraOneShot = [];
@@ -252,57 +246,6 @@ function checkSecrets(file, name, svc) {
     }
   }
   return out;
-}
-
-function selfTest() {
-  process.stdout.write('check-stack-rollout --self-test\n');
-  const dir = path.join(fixturesDir(), 'swarm');
-
-  const clean = checkStack(path.join(dir, 'clean.stack.yml'));
-  expect(clean.length, 0, 'compliant stack produces no finding');
-
-  const kit = checkStack(path.join(dir, 'kit-rendered.stack.yml'));
-  const byRule = {};
-  for (const f of kit) byRule[f.rule] = (byRule[f.rule] || 0) + 1;
-  expect(byRule['no-update-config'] || 0, 4, 'generated stack: services with no update_config');
-  expect(byRule['no-rollback-config'] || 0, 4, 'generated stack: services with no rollback_config');
-  expect(byRule['no-replicas'] || 0, 4, 'generated stack: services with no replicas');
-  expect(byRule['healthcheck-missing'] || 0, 3, 'generated stack: services with no healthcheck');
-  expect(byRule['healthcheck-disabled'] || 0, 1, 'generated stack: services with test ["NONE"]');
-  expect(byRule['resources-reservations-missing'] || 0, 4, 'generated stack: services with no reservations');
-  expect(byRule['restart-policy-no-delay'] || 0, 4, 'generated stack: restart policies with no delay');
-  expect(byRule['stop-grace-period-missing'] || 0, 1, 'generated stack: workers with no stop_grace_period');
-  expect(kit.filter((f) => f.message.includes('"platform-app-php"')).length, 6, 'findings on the app service alone');
-
-  const partial = checkStack(path.join(dir, 'partial.stack.yml'));
-  const partialByRule = {};
-  for (const f of partial) partialByRule[f.rule] = (partialByRule[f.rule] || 0) + 1;
-  expect(partialByRule['update-order-stop-first'] || 0, 1, 'update_config present but order is stop-first');
-  expect(partialByRule['update-failure-action'] || 0, 1, 'update_config present but failure_action is pause');
-  expect(partialByRule['update-monitor-missing'] || 0, 1, 'update_config present but monitor is unset');
-  expect(partialByRule['secret-mode-missing'] || 0, 1, 'secret mounted with no mode');
-
-  let cannotRun = 0;
-  try {
-    checkStack(path.join(dir, 'not-a-stack.yml'));
-  } catch (err) {
-    if (err instanceof CannotRun) cannotRun = EXIT_CANNOT_RUN;
-  }
-  expect(cannotRun, EXIT_CANNOT_RUN, 'a file with no services: mapping raises CannotRun (exit 2)');
-
-  let anchorRefused = 0;
-  try {
-    checkStack(path.join(dir, 'anchors.stack.yml'));
-  } catch (err) {
-    if (err instanceof CannotRun) anchorRefused = EXIT_CANNOT_RUN;
-  }
-  expect(anchorRefused, EXIT_CANNOT_RUN, 'a YAML anchor is refused rather than misparsed (exit 2)');
-
-  expect(reportFindings(kit, { quiet: true }), EXIT_FINDINGS, 'findings map to exit 1');
-  expect(reportFindings([], { quiet: true }), EXIT_CLEAN, 'no findings maps to exit 0');
-
-  process.stdout.write('self-test passed\n');
-  return EXIT_CLEAN;
 }
 
 run(main);

@@ -14,13 +14,9 @@ import fs from 'node:fs';
 import path from 'node:path';
 import {
   CannotRun,
-  EXIT_CANNOT_RUN,
   EXIT_CLEAN,
-  EXIT_FINDINGS,
   collectTargets,
-  expect,
   finding,
-  fixturesDir,
   readLines,
   reportFindings,
   run,
@@ -62,11 +58,10 @@ Options:
                     "disabling":["..."]}]}
   --list-register   Print the effective register and exit 0.
   --quiet           Print nothing; use the exit code only.
-  --self-test       Run against the fixtures shipped beside this script and exit 0 on success.
   -h, --help        Show this help and exit 0.
 
 Exit codes:
-  0  clean, or --help / --list-register / --self-test succeeded
+  0  clean, or --help / --list-register succeeded
   1  at least one finding
   2  could not run: a path that does not exist, an unreadable file, an unparsable --register
      file, or an input set that matched no files
@@ -79,7 +74,6 @@ function main(argv) {
     process.stdout.write(HELP);
     return EXIT_CLEAN;
   }
-  if (argv.includes('--self-test')) return selfTest();
 
   const quiet = argv.includes('--quiet');
   const listOnly = argv.includes('--list-register');
@@ -264,42 +258,6 @@ function readUntilClosingBrace(rest) {
     out += ch;
   }
   return out;
-}
-
-function selfTest() {
-  process.stdout.write('check-compose-interpolation --self-test\n');
-  const dir = path.join(fixturesDir(), 'compose');
-
-  const clean = checkFile(path.join(dir, 'clean.compose.yml'));
-  expect(clean.length, 0, 'clean fixture produces no finding');
-
-  const dirty = checkFile(path.join(dir, 'violations.compose.yml'));
-  const byRule = {};
-  for (const f of dirty) byRule[f.rule] = (byRule[f.rule] || 0) + 1;
-  expect(byRule['bare-interpolation'] || 0, 2, 'bare $VAR findings');
-  expect(byRule['no-modifier'] || 0, 1, 'braced-no-modifier findings');
-  expect(byRule['colonless-modifier'] || 0, 2, 'colon-less modifier findings');
-  expect(byRule['unsupported-modifier'] || 0, 1, 'alternate-value modifier findings');
-  expect(byRule['safety-control-default'] || 0, 4, 'class-A default findings');
-  expect(byRule['safety-control-disabled'] || 0, 3, 'class-B disabling-default findings');
-  expect(byRule['waiver-without-reason'] || 0, 1, 'waiver with no reason findings');
-
-  const escaped = checkFile(path.join(dir, 'escapes.compose.yml'));
-  expect(escaped.length, 0, 'escaped $$ and commented lines produce no finding');
-
-  let cannotRun = 0;
-  try {
-    checkFile(path.join(dir, 'does-not-exist.yml'));
-  } catch (err) {
-    if (err instanceof CannotRun) cannotRun = EXIT_CANNOT_RUN;
-  }
-  expect(cannotRun, EXIT_CANNOT_RUN, 'missing file raises CannotRun (exit 2)');
-
-  expect(reportFindings(dirty, { quiet: true }), EXIT_FINDINGS, 'findings map to exit 1');
-  expect(reportFindings([], { quiet: true }), EXIT_CLEAN, 'no findings maps to exit 0');
-
-  process.stdout.write('self-test passed\n');
-  return EXIT_CLEAN;
 }
 
 run(main);

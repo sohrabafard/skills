@@ -64,7 +64,7 @@ Read:
 - `references/version-awareness.md`
 
 ### Answer Arvan Cloud Container questions
-This skill does not own Arvan CaaS platform facts. Load `/caas-arvan-kuber` (`$caas-arvan-kuber`) only when the answer depends on a fact that is true of Arvan CaaS and false of stock Kubernetes at the same minor version; otherwise stay in `/alaa-k8s-helm` (`$alaa-k8s-helm`) and use the generic managed-namespace-platform posture in `references/openshift-and-managed-platforms.md`.
+This skill does not own Arvan CaaS platform facts. Load `/caas-arvan-kuber` only when the answer depends on a fact that is true of Arvan CaaS and false of stock Kubernetes at the same minor version; otherwise stay in `/alaa-k8s-helm` and use the generic managed-namespace-platform posture in `references/openshift-and-managed-platforms.md`.
 
 ### Networking, observability, or tuning question
 Read:
@@ -93,7 +93,7 @@ Read only what the task needs. The default order is:
 
 ## Script map
 
-Every script accepts `--help` and `--self-test`, and every script uses the same exit codes: `0` clean, `1` findings, `2` could not run.
+Every script accepts `--help`, and every script uses the same exit codes: `0` clean, `1` findings, `2` could not run.
 
 - `scripts/check_manifests.py`: gate a rendered manifest set on resources, probes, security context, host-level fields, port mapping, and, with `--baseline`, selector and storage-identity drift
 - `scripts/check_versions.py`: compare the pinned values in `references/version-awareness.md` against the vendors' own release pages

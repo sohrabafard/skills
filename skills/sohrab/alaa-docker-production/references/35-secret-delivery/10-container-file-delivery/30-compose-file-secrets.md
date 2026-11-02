@@ -38,7 +38,7 @@ secrets:
 - The generator materialises these files through
   `templates/generated/scripts/docker/ensure-local-secrets.sh`. That script's `chmod 600 "${dst}"
   || true` (`:51,118`) swallows the failure it exists to catch: on a filesystem where `chmod` is a
-  no-op — a Windows bind mount, a mounted share — the file stays world-readable and the script
+  no-op — a bind mount or network share whose filesystem ignores POSIX modes — the file stays world-readable and the script
   reports success. The correct form is `chmod 600 "${dst}"` with no `|| true`, and the script exits
   non-zero when it fails. Replacing "validate permissions" with a specific mode and a specific
   failure behaviour is the point: "permissions" is not a checkable word.

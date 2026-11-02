@@ -71,6 +71,6 @@ Open the file whose trigger matches; if none matches, the subject may not be thi
 | `scripts/check-stack-rollout.mjs` | Every long-lived Swarm service has update, rollback, replica, reservation, restart-delay, healthcheck and secret-mode control. | `node scripts/check-stack-rollout.mjs docker-compose.swarm.yml` |
 | `scripts/check-image-pinning.mjs` | No floating or bare-major reference, including inside a `${VAR:-default}`; no end-of-life upstream line; digests on a release; mirror coverage. | `node scripts/check-image-pinning.mjs --mirror-var PUBLIC_DOCKER_REGISTRY docker-compose.yml` |
 
-All four take `--help` and `--self-test`, and exit **0** clean, **1** findings, **2** could not run.
+All four take `--help` and exit **0** clean, **1** findings, **2** could not run.
 Exit 2 is not a pass. `node scripts/check-image-pinning.mjs --versions` prints every pinned upstream
 value in this skill with the command or URL that re-derives it.

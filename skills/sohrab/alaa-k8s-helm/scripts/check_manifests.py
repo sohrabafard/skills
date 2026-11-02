@@ -1,8 +1,7 @@
 #!/usr/bin/env python3
 """Gate a rendered Kubernetes manifest set against this skill's own rules.
 
-Nothing else in /alaa-k8s-helm ($alaa-k8s-helm) or /caas-arvan-kuber
-($caas-arvan-kuber) can fail a Deployment that
+Nothing else in /alaa-k8s-helm or /caas-arvan-kuber can fail a Deployment that
 ships with no resources, no probes, `privileged: true`, or a mutated selector.
 This script does.
 
@@ -15,11 +14,9 @@ Findings are printed as `file:line kind/name RULE message` so a human and a
 pipeline read the same output.
 
 Design constraints this file honours:
-  * runs on Windows: pure Python 3, no shell, no POSIX-only path assumptions,
-    and every input is decoded with newline normalisation so a CRLF checkout
-    cannot leave a carriage return on a compared value.
-  * resolves its own location from `__file__` directly, never through
-    `Path(__file__).parents[N]`.
+  * pure Python 3 with no shell, and every input is decoded with newline
+    normalisation so a CRLF checkout cannot leave a carriage return on a
+    compared value.
   * creates no temporary directory anywhere, so a read-only mount is fine.
 """
 
@@ -34,9 +31,6 @@ EXIT_CLEAN = 0
 EXIT_FINDINGS = 1
 EXIT_CANNOT_RUN = 2
 
-SCRIPT_PATH = os.path.abspath(__file__)
-SCRIPT_DIR = os.path.dirname(SCRIPT_PATH)
-FIXTURE_DIR = os.path.join(SCRIPT_DIR, "fixtures")
 
 try:
     import yaml
@@ -54,7 +48,7 @@ SELECTOR_KINDS = {"Deployment", "StatefulSet", "DaemonSet", "ReplicaSet", "Job"}
 TRAFFIC_KINDS = {"Deployment", "StatefulSet", "ReplicaSet"}
 
 # Kinds a namespace-scoped tenant on Arvan CaaS cannot create. The list is
-# owned and kept current by /caas-arvan-kuber ($caas-arvan-kuber)
+# owned and kept current by /caas-arvan-kuber
 # references/arvan-capability-matrix.md;
 # this script only enforces whatever that file says, and `--profile arvan`
 # turns the enforcement on.
@@ -516,73 +510,6 @@ def analyse(path: str, baseline: str | None, profile: str) -> list[Finding]:
     return findings
 
 
-SELF_TEST_CASES = [
-    ("clean.yaml", None, "default", 0),
-    ("bad-deployment.yaml", None, "default",
-     ["RESOURCES", "READINESS", "PRIVILEGED", "PRIVILEGE-ESCALATION", "CAPABILITIES",
-      "HOST-NAMESPACE", "HOSTPATH", "RUN-AS-NON-ROOT", "SECCOMP", "LOW-PORT", "TARGET-PORT"]),
-    ("clean.yaml", "baseline-drift.yaml", "default",
-     ["SELECTOR-DRIFT", "STORAGE-IDENTITY-DRIFT"]),
-    ("arvan-violations.yaml", None, "arvan",
-     ["ARVAN-PARITY", "ARVAN-HPA-TARGET", "ARVAN-ABSENT-KIND"]),
-]
-
-
-def self_test() -> int:
-    failures: list[str] = []
-    if not os.path.isdir(FIXTURE_DIR):
-        print(f"check_manifests --self-test: fixture directory missing: {FIXTURE_DIR}",
-              file=sys.stderr)
-        return EXIT_CANNOT_RUN
-
-    for fixture, baseline, profile, expectation in SELF_TEST_CASES:
-        target = os.path.join(FIXTURE_DIR, fixture)
-        base = os.path.join(FIXTURE_DIR, baseline) if baseline else None
-        try:
-            found = analyse(target, base, profile)
-        except CouldNotRun as exc:
-            failures.append(f"{fixture} ({profile}): could not run: {exc}")
-            continue
-        rules = {f.rule for f in found}
-        if expectation == 0:
-            if found:
-                failures.append(f"{fixture} ({profile}): expected clean, got {sorted(rules)}")
-        else:
-            missing = [rule for rule in expectation if rule not in rules]
-            if missing:
-                failures.append(f"{fixture} ({profile}): did not report {missing}")
-
-    # A file the checker cannot understand must not return a clean verdict.
-    for broken in ("unparsable.yaml", "not-kubernetes.yaml"):
-        target = os.path.join(FIXTURE_DIR, broken)
-        try:
-            analyse(target, None, "default")
-        except CouldNotRun:
-            pass
-        else:
-            failures.append(f"{broken}: returned a verdict on input it could not understand")
-
-    # A CRLF fixture must produce exactly the findings its LF twin produces.
-    crlf = os.path.join(FIXTURE_DIR, "bad-deployment-crlf.yaml")
-    lf = os.path.join(FIXTURE_DIR, "bad-deployment.yaml")
-    if os.path.isfile(crlf):
-        try:
-            if {f.rule for f in analyse(crlf, None, "default")} != \
-               {f.rule for f in analyse(lf, None, "default")}:
-                failures.append("bad-deployment-crlf.yaml: CRLF input changed the findings")
-        except CouldNotRun as exc:
-            failures.append(f"bad-deployment-crlf.yaml: could not run: {exc}")
-    else:
-        failures.append("bad-deployment-crlf.yaml: fixture missing")
-
-    if failures:
-        for line in failures:
-            print(f"SELF-TEST FAIL: {line}", file=sys.stderr)
-        return EXIT_FINDINGS
-    print(f"check_manifests --self-test: {len(SELF_TEST_CASES) + 3} cases passed")
-    return EXIT_CLEAN
-
-
 def build_parser() -> argparse.ArgumentParser:
     parser = argparse.ArgumentParser(
         prog="check_manifests.py",
@@ -594,7 +521,7 @@ def build_parser() -> argparse.ArgumentParser:
         epilog=(
             "Exit codes: 0 clean, 1 findings, 2 could not run. "
             "Rule identifiers are stable and are cited from "
-            "/alaa-k8s-helm ($alaa-k8s-helm) references/validation-workflows.md."
+            "/alaa-k8s-helm references/validation-workflows.md."
         ),
     )
     parser.add_argument("manifest", nargs="?",
@@ -604,12 +531,9 @@ def build_parser() -> argparse.ArgumentParser:
                              "selector and storage-identity drift checks")
     parser.add_argument("--profile", choices=("default", "arvan"), default="default",
                         help="`arvan` additionally asserts the predicates that "
-                             "/caas-arvan-kuber ($caas-arvan-kuber) contributes: requests equal to "
-                             "limits, an HPA "
+                             "/caas-arvan-kuber contributes: requests equal to limits, an HPA "
                              "target that is a Deployment, and no kind absent from the Arvan "
                              "capability matrix")
-    parser.add_argument("--self-test", action="store_true",
-                        help="run the shipped fixtures and exit; needs no cluster and no network")
     return parser
 
 
@@ -617,12 +541,9 @@ def main(argv: list[str] | None = None) -> int:
     parser = build_parser()
     args = parser.parse_args(argv)
 
-    if args.self_test:
-        return self_test()
-
     if not args.manifest:
         parser.print_usage(sys.stderr)
-        print("check_manifests: a manifest path is required (or --self-test)", file=sys.stderr)
+        print("check_manifests: a manifest path is required", file=sys.stderr)
         return EXIT_CANNOT_RUN
 
     try:

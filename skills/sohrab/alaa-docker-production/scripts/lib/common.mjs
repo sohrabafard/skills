@@ -1,43 +1,21 @@
 // Shared helpers for the alaa-docker-production checkers.
 //
-// Every checker in this directory obeys the same five contracts:
+// Every checker in this directory obeys the same four contracts:
 //   1. `--help` prints usage, the rules it enforces, and the exit-code table.
-//   2. `--self-test` runs against the fixtures in `scripts/fixtures/` and needs no repository.
-//   3. Exit 0 means clean, 1 means findings, 2 means the checker could not run. A file it could
+//   2. Exit 0 means clean, 1 means findings, 2 means the checker could not run. A file it could
 //      not read, a directory that does not exist, a YAML construct it does not support and an
 //      unparsable register are all exit 2 and never exit 0.
-//   4. It runs on Windows. It resolves its own directory with `fileURLToPath(import.meta.url)`
-//      and never `new URL(import.meta.url).pathname`, which yields `/D:/...` on Windows. It
-//      strips a trailing carriage return from every line it reads, so a CRLF checkout compares
+//   3. It strips a trailing carriage return from every line it reads, so a CRLF checkout compares
 //      the same as an LF one.
-//   5. It writes nothing. No temporary directory is created anywhere, because the owner's
+//   4. It writes nothing. No temporary directory is created anywhere, because the owner's
 //      checkout is read-only in places.
 
-import { fileURLToPath } from 'node:url';
 import path from 'node:path';
 import fs from 'node:fs';
 
 export const EXIT_CLEAN = 0;
 export const EXIT_FINDINGS = 1;
 export const EXIT_CANNOT_RUN = 2;
-
-/** Directory of the calling module. Windows-safe: never use new URL(...).pathname here. */
-export function dirOf(importMetaUrl) {
-  return path.dirname(fileURLToPath(importMetaUrl));
-}
-
-/** Absolute path of the `scripts/` directory that holds the checkers and their fixtures. */
-export function scriptsDir(importMetaUrl) {
-  // The checkers live in scripts/ and this module lives in scripts/lib/. Resolve from this
-  // module's own location so a checker never has to count parent directories.
-  return path.dirname(dirOf(import.meta.url)) === dirOf(import.meta.url)
-    ? dirOf(importMetaUrl)
-    : path.resolve(dirOf(import.meta.url), '..');
-}
-
-export function fixturesDir() {
-  return path.resolve(dirOf(import.meta.url), '..', 'fixtures');
-}
 
 export class CannotRun extends Error {}
 
@@ -142,19 +120,4 @@ export function run(main) {
     process.stderr.write(`could not run: unexpected error: ${err && err.stack ? err.stack : err}\n`);
     process.exit(EXIT_CANNOT_RUN);
   }
-}
-
-/** Assert helper used by every --self-test. Throws a plain Error so a bug is not reported as clean. */
-export function expect(actual, wanted, label) {
-  if (actual !== wanted) {
-    throw new Error(`self-test failed: ${label}: expected ${wanted}, got ${actual}`);
-  }
-  process.stdout.write(`  ok  ${label} => ${actual}\n`);
-}
-
-export function expectIncludes(haystack, needle, label) {
-  if (!haystack.includes(needle)) {
-    throw new Error(`self-test failed: ${label}: output did not contain ${JSON.stringify(needle)}`);
-  }
-  process.stdout.write(`  ok  ${label}\n`);
 }

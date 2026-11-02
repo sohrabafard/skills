@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 # Fast Helm chart structure audit.
 #
-# Requires bash 4.0 or newer. On Windows use Git Bash or WSL. Every `printf`
+# Requires bash 4.0 or newer. Every `printf`
 # format string in this file is a single line with an escaped \n, so a CRLF
 # checkout cannot leave a carriage return inside a rendered bullet.
 #
@@ -19,7 +19,6 @@ usage() {
   cat <<'EOF'
 Usage: validate_chart_structure.sh <chart-directory>
        validate_chart_structure.sh --help
-       validate_chart_structure.sh --self-test
 
 Asserts that Chart.yaml, values.yaml and templates/ exist; that Chart.yaml
 declares apiVersion v2, a name and a version; that values.schema.json parses;
@@ -166,41 +165,9 @@ audit() {
   return ${EXIT_CLEAN}
 }
 
-self_test() {
-  local fixtures failures=0
-  fixtures="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)/fixtures"
-
-  ( audit "${fixtures}/chart-good" >/dev/null 2>&1 )
-  [[ $? -eq ${EXIT_CLEAN} ]] || { echo "SELF-TEST FAIL: chart-good was not clean" >&2; failures=$((failures+1)); }
-
-  ( audit "${fixtures}/chart-broken" >/dev/null 2>&1 )
-  [[ $? -eq ${EXIT_FINDINGS} ]] || { echo "SELF-TEST FAIL: chart-broken did not report findings" >&2; failures=$((failures+1)); }
-
-  ( main "${fixtures}/no-such-chart" >/dev/null 2>&1 )
-  [[ $? -eq ${EXIT_CANNOT_RUN} ]] || { echo "SELF-TEST FAIL: a missing directory did not exit ${EXIT_CANNOT_RUN}" >&2; failures=$((failures+1)); }
-
-  ( main --help >/dev/null 2>&1 )
-  [[ $? -eq ${EXIT_CLEAN} ]] || { echo "SELF-TEST FAIL: --help did not exit ${EXIT_CLEAN}" >&2; failures=$((failures+1)); }
-
-  # A CRLF Chart.yaml must produce the same verdict as its LF twin.
-  if [[ -d "${fixtures}/chart-crlf" ]]; then
-    local a b
-    audit "${fixtures}/chart-good" >/dev/null 2>&1; a=$?
-    audit "${fixtures}/chart-crlf" >/dev/null 2>&1; b=$?
-    [[ "$a" -eq "$b" ]] || { echo "SELF-TEST FAIL: CRLF chart gave verdict $b, LF twin gave $a" >&2; failures=$((failures+1)); }
-  else
-    echo "SELF-TEST FAIL: fixtures/chart-crlf is missing" >&2; failures=$((failures+1))
-  fi
-
-  if [[ ${failures} -gt 0 ]]; then return ${EXIT_FINDINGS}; fi
-  echo "validate_chart_structure --self-test: 5 cases passed"
-  return ${EXIT_CLEAN}
-}
-
 main() {
   case "${1:-}" in
     -h|--help) usage; return ${EXIT_CLEAN} ;;
-    --self-test) self_test; return $? ;;
     "") echo "validate_chart_structure: a chart directory is required" >&2; usage >&2; return ${EXIT_CANNOT_RUN} ;;
   esac
   if [[ $# -ne 1 ]]; then

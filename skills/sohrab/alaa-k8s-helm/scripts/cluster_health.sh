@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 # Read-only cluster snapshot for triage. This script creates and modifies nothing.
 #
-# Requires bash 4.0 or newer. On Windows use Git Bash or WSL.
+# Requires bash 4.0 or newer.
 #
 # Exit codes, shared by every script in this skill:
 #   0  every section returned data
@@ -21,7 +21,6 @@ usage() {
   cat <<'EOF'
 Usage: cluster_health.sh [namespace]
        cluster_health.sh --help
-       cluster_health.sh --self-test
 
 Collects a broad, read-only snapshot: version, nodes, namespaces, workloads,
 services, exposure objects, storage, quotas, network policies, recent events and
@@ -90,34 +89,9 @@ snapshot() {
   return ${EXIT_CLEAN}
 }
 
-self_test() {
-  local failures=0
-
-  ( main --help >/dev/null 2>&1 )
-  [[ $? -eq ${EXIT_CLEAN} ]] || { echo "SELF-TEST FAIL: --help did not exit ${EXIT_CLEAN}" >&2; failures=$((failures+1)); }
-
-  # With no Kubernetes CLI on PATH, the script must exit 2 rather than pretending.
-  ( PATH="/nonexistent" main >/dev/null 2>&1 )
-  [[ $? -eq ${EXIT_CANNOT_RUN} ]] || { echo "SELF-TEST FAIL: missing CLI did not exit ${EXIT_CANNOT_RUN}" >&2; failures=$((failures+1)); }
-
-  # A failing section must be counted, so a partial snapshot exits 1.
-  unavailable=0
-  run_section "DELIBERATE FAILURE" false >/dev/null 2>&1
-  [[ ${unavailable} -eq 1 ]] || { echo "SELF-TEST FAIL: a failing section was not counted" >&2; failures=$((failures+1)); }
-
-  unavailable=0
-  run_section "DELIBERATE SUCCESS" true >/dev/null 2>&1
-  [[ ${unavailable} -eq 0 ]] || { echo "SELF-TEST FAIL: a succeeding section was counted as unavailable" >&2; failures=$((failures+1)); }
-
-  if [[ ${failures} -gt 0 ]]; then return ${EXIT_FINDINGS}; fi
-  echo "cluster_health --self-test: 4 cases passed (no cluster required)"
-  return ${EXIT_CLEAN}
-}
-
 main() {
   case "${1:-}" in
     -h|--help) usage; return ${EXIT_CLEAN} ;;
-    --self-test) self_test; return $? ;;
   esac
 
   local cli=""

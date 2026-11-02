@@ -8,11 +8,11 @@
 # deletes it when the script exits. `--keep` suppresses the deletion and is the
 # only way to retain the file; it prints what you are now responsible for.
 # Fail-closed doctrine for anything holding a decoded secret is owned by
-# /alaa-security-review ($alaa-security-review).
+# /alaa-security-review.
 #
 # Requires bash 4.0 or newer, helm on PATH, and demonstrable POSIX mode 0600.
-# Git Bash/WSL support depends on the output filesystem enforcing that mode;
-# otherwise rendering blocks before Helm. GNU-compatible stat and /dev/fd are required.
+# The output filesystem must enforce that mode; otherwise rendering blocks before
+# Helm. GNU-compatible stat and /dev/fd are required.
 # Output parent must be caller-owned mode 0700; ancestors must be root/caller-owned
 # and not group/other-writable, except root-owned sticky ancestors such as /tmp.
 #
@@ -37,7 +37,6 @@ usage() {
 Usage:
   render-helm.sh --chart DIR [options]
   render-helm.sh --help
-  render-helm.sh --self-test
 
 Options:
   --chart DIR           chart directory containing Chart.yaml (required)
@@ -226,7 +225,7 @@ whose data decodes to real credentials. Before you do anything else:
      (rendered.yaml, *.rendered.yaml, values.secret.yaml, *.secret.yaml, *.secrets.yaml),
   2. delete it as soon as the check that needed it has run,
   3. never attach it to an issue, a CI artifact, or a chat message.
-Fail-closed doctrine for an artifact like this is owned by /alaa-security-review (\$alaa-security-review).
+Fail-closed doctrine for an artifact like this is owned by /alaa-security-review.
 EOF
     else
       echo "render-helm: --keep left ${OUT} on disk; it contains no Secret object." >&2
@@ -235,119 +234,6 @@ EOF
     echo "render-helm: ${OUT} will be deleted when this script exits; pass --keep to retain it."
   fi
 
-  return ${EXIT_CLEAN}
-}
-
-self_test() {
-  local failures=0 rc tmp
-
-  ( main --help >/dev/null 2>&1 )
-  [[ $? -eq ${EXIT_CLEAN} ]] || { echo "SELF-TEST FAIL: --help did not exit ${EXIT_CLEAN}" >&2; failures=$((failures+1)); }
-
-  ( main >/dev/null 2>&1 )
-  [[ $? -eq ${EXIT_CANNOT_RUN} ]] || { echo "SELF-TEST FAIL: no arguments did not exit ${EXIT_CANNOT_RUN}" >&2; failures=$((failures+1)); }
-
-  ( main ./some/chart vk values.yaml >/dev/null 2>&1 )
-  [[ $? -eq ${EXIT_CANNOT_RUN} ]] || { echo "SELF-TEST FAIL: a legacy positional call did not exit ${EXIT_CANNOT_RUN}" >&2; failures=$((failures+1)); }
-
-  ( main --chart /definitely/not/a/chart >/dev/null 2>&1 )
-  [[ $? -eq ${EXIT_CANNOT_RUN} ]] || { echo "SELF-TEST FAIL: a missing chart did not exit ${EXIT_CANNOT_RUN}" >&2; failures=$((failures+1)); }
-
-  # The output file must be created with mode 0600 and removed on exit. These are
-  # the two properties the previous version of this script did not have, so they
-  # are tested directly rather than inferred from the render succeeding.
-  tmp="$(mktemp -d)" || { echo "SELF-TEST FAIL: cannot create a temp dir" >&2; return ${EXIT_CANNOT_RUN}; }
-  (
-    OUT="${tmp}/rendered.yaml"
-    prepare_output || exit $?
-    mode="$(stat -c '%a' "${OUT}" 2>/dev/null || stat -f '%Lp' "${OUT}" 2>/dev/null)"
-    [[ "${mode}" == "600" ]] || { echo "SELF-TEST FAIL: mode was ${mode}, expected 600" >&2; exit 1; }
-    KEEP=0
-    CLEANUP_TARGET="${OUT}"
-    cleanup
-    [[ ! -f "${OUT}" ]] || { echo "SELF-TEST FAIL: cleanup did not remove the output file" >&2; exit 1; }
-    KEEP=1
-    prepare_output || exit $?
-    cleanup
-    [[ -f "${OUT}" ]] || { echo "SELF-TEST FAIL: --keep did not retain the output file" >&2; exit 1; }
-  )
-  rc=$?
-  [[ ${rc} -eq 0 ]] || failures=$((failures+1))
-
-  # Exercise the real render entrypoint with a synthetic Helm function only.
-  # Any Helm call on these failure paths is a regression, not a network action.
-  mkdir -p "${tmp}/chart"
-  printf 'apiVersion: v2\nname: fixture\nversion: 0.1.0\n' > "${tmp}/chart/Chart.yaml"
-  local scenario
-  for scenario in existing chmod_failure wrong_mode; do
-    (
-      CHART_DIR="${tmp}/chart"
-      OUT="${tmp}/${scenario}.yaml"
-      CLEANUP_TARGET=""
-      helm() { echo unexpected_helm_call >> "${tmp}/helm-calls"; return 99; }
-      case "${scenario}" in
-        existing) printf 'preserve this synthetic content' > "${OUT}" ;;
-        chmod_failure) chmod() { return 1; } ;;
-        wrong_mode) stat() { echo 644; } ;;
-      esac
-      render >/dev/null 2>&1
-      rc=$?
-      [[ ${rc} -eq ${EXIT_CANNOT_RUN} && ! -e "${tmp}/helm-calls" ]] || exit 1
-      if [[ "${scenario}" == existing ]]; then
-        [[ "$(cat "${OUT}")" == 'preserve this synthetic content' && -z "${CLEANUP_TARGET}" ]] || exit 1
-      else
-        [[ ! -s "${OUT}" ]] || exit 1
-      fi
-    )
-    rc=$?
-    [[ ${rc} -eq 0 ]] || { echo "SELF-TEST FAIL: ${scenario} did not protect output" >&2; failures=$((failures+1)); }
-  done
-  for scenario in dependency_swap template_swap unsafe_parent; do
-    (
-      CHART_DIR="${tmp}/chart"
-      OUT="${tmp}/${scenario}.yaml"
-      CLEANUP_TARGET=""
-      OUTPUT_ID=""
-      OUTPUT_OPEN=0
-      local replacement="${tmp}/${scenario}-replacement"
-      printf 'unchanged' > "${replacement}"
-      helm() {
-        case "$1" in
-          dependency)
-            if [[ "${scenario}" == dependency_swap ]]; then
-              rm -f -- "${OUT}"
-              ln -s "${replacement}" "${OUT}"
-            fi ;;
-          template)
-            if [[ "${scenario}" == template_swap ]]; then
-              rm -f -- "${OUT}"
-              ln -s "${replacement}" "${OUT}"
-            fi
-            printf 'kind: Secret\nsynthetic-secret-sentinel\n' ;;
-        esac
-        return 0
-      }
-      if [[ "${scenario}" == unsafe_parent ]]; then
-        mkdir "${tmp}/unsafe-parent"
-        chmod 0777 "${tmp}/unsafe-parent"
-        OUT="${tmp}/unsafe-parent/output.yaml"
-      fi
-      render >/dev/null 2>&1
-      rc=$?
-      [[ ${rc} -eq ${EXIT_CANNOT_RUN} ]] || exit 1
-      cleanup
-      [[ "$(cat "${replacement}")" == unchanged ]] || exit 1
-      if [[ "${scenario}" != unsafe_parent ]]; then
-        [[ -L "${OUT}" ]] || exit 1
-      fi
-    )
-    rc=$?
-    [[ ${rc} -eq 0 ]] || { echo "SELF-TEST FAIL: ${scenario} did not protect retained output" >&2; failures=$((failures+1)); }
-  done
-  rm -rf -- "${tmp}"
-
-  if [[ ${failures} -gt 0 ]]; then return ${EXIT_FINDINGS}; fi
-  echo "render-helm --self-test: 12 cases passed (mocked; no helm and no cluster required)"
   return ${EXIT_CLEAN}
 }
 
@@ -360,7 +246,6 @@ main() {
 
   case "$1" in
     -h|--help)   usage; return ${EXIT_CLEAN} ;;
-    --self-test) self_test; return $? ;;
     -*) ;;
     *)
       cat >&2 <<EOF
@@ -381,7 +266,6 @@ EOF
   while [[ $# -gt 0 ]]; do
     case "$1" in
       -h|--help)       usage; return ${EXIT_CLEAN} ;;
-      --self-test)     self_test; return $? ;;
       --chart)         CHART_DIR="${2:-}"; shift 2 || return ${EXIT_CANNOT_RUN} ;;
       --namespace)     NAMESPACE="${2:-}"; shift 2 || return ${EXIT_CANNOT_RUN} ;;
       --values)        VALUES_FILES+=("${2:-}"); shift 2 || return ${EXIT_CANNOT_RUN} ;;

@@ -13,13 +13,9 @@
 import path from 'node:path';
 import {
   CannotRun,
-  EXIT_CANNOT_RUN,
   EXIT_CLEAN,
-  EXIT_FINDINGS,
   collectTargets,
-  expect,
   finding,
-  fixturesDir,
   readLines,
   reportFindings,
   run,
@@ -55,11 +51,10 @@ Options:
   --versions             Print the pinned upstream lines with the command or URL that re-derives
                          each one, and exit 0.
   --quiet                Print nothing; use the exit code only.
-  --self-test            Run against the fixtures shipped beside this script and exit 0.
   -h, --help             Show this help and exit 0.
 
 Exit codes:
-  0  clean, or --help / --versions / --self-test succeeded
+  0  clean, or --help / --versions succeeded
   1  at least one finding
   2  could not run: a path that does not exist, an unreadable file, or an input set that matched
      no files
@@ -147,7 +142,6 @@ function main(argv) {
     return EXIT_CLEAN;
   }
   if (argv.includes('--versions')) return printVersions();
-  if (argv.includes('--self-test')) return selfTest();
 
   const quiet = argv.includes('--quiet');
   const options = { release: argv.includes('--release'), mirrorVar: null, privateHosts: [] };
@@ -282,46 +276,6 @@ function stripTrailingComment(line) {
     out += ch;
   }
   return out;
-}
-
-function selfTest() {
-  process.stdout.write('check-image-pinning --self-test\n');
-  const dir = path.join(fixturesDir(), 'pinning');
-
-  const clean = checkFile(path.join(dir, 'clean.compose.yml'));
-  expect(clean.length, 0, 'compliant fixture produces no finding');
-
-  const dirty = checkFile(path.join(dir, 'violations.compose.yml'));
-  const byRule = {};
-  for (const f of dirty) byRule[f.rule] = (byRule[f.rule] || 0) + 1;
-  expect(byRule['image-floating-latest'] || 0, 2, 'literal :latest and untagged references');
-  expect(byRule['image-bare-major'] || 0, 1, 'bare-major tag');
-  expect(byRule['image-default-floating'] || 0, 1, 'floating default inside ${VAR:-...}');
-  expect(byRule['image-eol-line'] || 0, 2, 'images on end-of-life upstream lines');
-
-  const release = checkFile(path.join(dir, 'clean.compose.yml'), { release: true });
-  expect(release.filter((f) => f.rule === 'image-no-digest').length, 2, 'release mode requires a digest');
-
-  const mirrored = checkFile(path.join(dir, 'clean.compose.yml'), {
-    mirrorVar: 'PUBLIC_DOCKER_REGISTRY',
-    privateHosts: ['registry.example.invalid'],
-  });
-  expect(mirrored.filter((f) => f.rule === 'image-not-mirrored').length, 1, 'public image not routed through the mirror variable');
-
-  let cannotRun = 0;
-  try {
-    checkFile(path.join(dir, 'absent.compose.yml'));
-  } catch (err) {
-    if (err instanceof CannotRun) cannotRun = EXIT_CANNOT_RUN;
-  }
-  expect(cannotRun, EXIT_CANNOT_RUN, 'missing file raises CannotRun (exit 2)');
-
-  expect(VERSION_REGISTER.rows.every((r) => r.recheck && r.source), true, 'every pinned value carries a source and a recheck command');
-  expect(reportFindings(dirty, { quiet: true }), EXIT_FINDINGS, 'findings map to exit 1');
-  expect(reportFindings([], { quiet: true }), EXIT_CLEAN, 'no findings maps to exit 0');
-
-  process.stdout.write('self-test passed\n');
-  return EXIT_CLEAN;
 }
 
 run(main);

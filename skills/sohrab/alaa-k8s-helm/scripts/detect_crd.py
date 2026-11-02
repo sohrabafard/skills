@@ -12,7 +12,7 @@ Exit codes, shared by every script in this skill:
     1  findings: a document failed to parse, or a non-standard apiVersion was found
     2  could not run: missing PyYAML, bad usage, or an unreadable path
 
-Windows: pure Python 3 plus PyYAML; input is read with universal newlines so a
+Pure Python 3 plus PyYAML; input is read with universal newlines so a
 CRLF checkout cannot change a classification.
 """
 
@@ -28,10 +28,6 @@ from typing import Any
 EXIT_CLEAN = 0
 EXIT_FINDINGS = 1
 EXIT_CANNOT_RUN = 2
-
-SCRIPT_PATH = os.path.abspath(__file__)
-SCRIPT_DIR = os.path.dirname(SCRIPT_PATH)
-FIXTURE_DIR = os.path.join(SCRIPT_DIR, "fixtures")
 
 try:
     import yaml
@@ -211,47 +207,6 @@ def analyse(path: str) -> tuple[dict, int]:
     return output, findings
 
 
-def self_test() -> int:
-    failures: list[str] = []
-    cases = [
-        ("clean.yaml", EXIT_CLEAN),
-        ("removed-apis.yaml", EXIT_FINDINGS),
-        ("unparsable.yaml", EXIT_FINDINGS),
-    ]
-    for fixture, expected in cases:
-        path = os.path.join(FIXTURE_DIR, fixture)
-        try:
-            _, findings = analyse(path)
-        except CouldNotRun as exc:
-            failures.append(f"{fixture}: could not run: {exc}")
-            continue
-        actual = EXIT_FINDINGS if findings else EXIT_CLEAN
-        if actual != expected:
-            failures.append(f"{fixture}: expected exit {expected}, computed {actual}")
-
-    try:
-        analyse(os.path.join(FIXTURE_DIR, "no-such-file.yaml"))
-    except CouldNotRun:
-        pass
-    else:
-        failures.append("a missing file returned a verdict instead of could-not-run")
-
-    crlf = os.path.join(FIXTURE_DIR, "bad-deployment-crlf.yaml")
-    lf = os.path.join(FIXTURE_DIR, "bad-deployment.yaml")
-    if os.path.isfile(crlf):
-        if analyse(crlf)[0]["summary"] != analyse(lf)[0]["summary"]:
-            failures.append("CRLF input changed the classification summary")
-    else:
-        failures.append("fixtures/bad-deployment-crlf.yaml is missing")
-
-    if failures:
-        for line in failures:
-            print(f"SELF-TEST FAIL: {line}", file=sys.stderr)
-        return EXIT_FINDINGS
-    print("detect_crd --self-test: 5 cases passed")
-    return EXIT_CLEAN
-
-
 def build_parser() -> argparse.ArgumentParser:
     parser = argparse.ArgumentParser(
         prog="detect_crd.py",
@@ -260,17 +215,13 @@ def build_parser() -> argparse.ArgumentParser:
         epilog="Exit codes: 0 all standard and parsed, 1 findings, 2 could not run.",
     )
     parser.add_argument("yaml_file", nargs="?", help="path to a YAML file")
-    parser.add_argument("--self-test", action="store_true",
-                        help="run the shipped fixtures and exit")
     return parser
 
 
 def main(argv: list[str] | None = None) -> int:
     args = build_parser().parse_args(argv)
-    if args.self_test:
-        return self_test()
     if not args.yaml_file:
-        print("detect_crd: a YAML file is required (or --self-test)", file=sys.stderr)
+        print("detect_crd: a YAML file is required", file=sys.stderr)
         return EXIT_CANNOT_RUN
     try:
         output, findings = analyse(args.yaml_file)

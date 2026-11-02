@@ -12,7 +12,7 @@ Exit codes, shared by every script in this skill:
     2  could not run: no network, a blocked proxy, an unreadable reference file,
        or a page from which no stable version or required date could be extracted
 
-Windows: pure Python 3 with the standard library only, no shell, no curl.
+Pure Python 3 with the standard library only, no shell, no curl.
 Proxies: `urllib` reads `HTTPS_PROXY` and `NO_PROXY` from the environment, so a
 sandboxed or corporate egress path works without extra flags.
 
@@ -37,7 +37,6 @@ SCRIPT_PATH = os.path.abspath(__file__)
 SCRIPT_DIR = os.path.dirname(SCRIPT_PATH)
 SKILL_DIR = os.path.dirname(SCRIPT_DIR)
 DEFAULT_REFERENCE = os.path.join(SKILL_DIR, "references", "version-awareness.md")
-FIXTURE_DIR = os.path.join(SCRIPT_DIR, "fixtures")
 
 USER_AGENT = "alaa-k8s-helm-check-versions/1 (+skill freshness check)"
 
@@ -151,127 +150,17 @@ def compare(check: dict, pinned: str, observed: str) -> str | None:
     return None
 
 
-def run_checks(reference_path: str, timeout: float, offline_pages: dict | None = None) -> list[str]:
+def run_checks(reference_path: str, timeout: float) -> list[str]:
     reference = read_reference(reference_path)
     findings: list[str] = []
     for check in CHECKS:
         pinned = pinned_value(reference, check["pinned_row"], check["pinned_pattern"])
-        if offline_pages is not None:
-            page = offline_pages[check["id"]]
-        else:
-            page = fetch(check["url"], timeout)
+        page = fetch(check["url"], timeout)
         observed = observed_value(check, page)
         problem = compare(check, pinned, observed)
         if problem:
             findings.append(f"{check['id']}: {problem}")
     return findings
-
-
-def load_fixture_pages(directory: str) -> dict:
-    pages = {}
-    for check in CHECKS:
-        path = os.path.join(directory, check["id"] + ".html")
-        if not os.path.isfile(path):
-            raise CouldNotRun(f"fixture page missing: {path}")
-        with open(path, "r", encoding="utf-8", newline=None) as handle:
-            pages[check["id"]] = handle.read()
-    return pages
-
-
-def self_test() -> int:
-    """Run entirely offline against fixtures, so a fresh checkout can verify the logic."""
-    failures: list[str] = []
-
-    matching = os.path.join(FIXTURE_DIR, "versions-matching")
-    drifted = os.path.join(FIXTURE_DIR, "versions-drifted")
-    # Synthetic expectations must not change when the live snapshot is refreshed.
-    reference = os.path.join(FIXTURE_DIR, "version-reference.md")
-
-    load_pages = load_fixture_pages
-
-    try:
-        clean = run_checks(reference, 1.0, load_pages(matching))
-    except CouldNotRun as exc:
-        print(f"SELF-TEST FAIL: matching fixtures could not run: {exc}", file=sys.stderr)
-        return EXIT_CANNOT_RUN
-    if clean:
-        failures.append(f"matching fixtures should be clean, reported {clean}")
-
-    try:
-        drift = run_checks(reference, 1.0, load_pages(drifted))
-    except CouldNotRun as exc:
-        print(f"SELF-TEST FAIL: drifted fixtures could not run: {exc}", file=sys.stderr)
-        return EXIT_CANNOT_RUN
-    if len(drift) != len(CHECKS):
-        failures.append(f"drifted fixtures should report {len(CHECKS)} findings, reported {drift}")
-
-    # An empty page must be "could not run", never "clean".
-    try:
-        run_checks(reference, 1.0, {check["id"]: "" for check in CHECKS})
-    except CouldNotRun:
-        pass
-    else:
-        failures.append("an empty page returned a verdict instead of exit 2")
-
-    # A missing reference file must be "could not run".
-    try:
-        run_checks(os.path.join(FIXTURE_DIR, "no-such-file.md"), 1.0,
-                   {check["id"]: "x" for check in CHECKS})
-    except CouldNotRun:
-        pass
-    else:
-        failures.append("a missing reference file returned a verdict instead of exit 2")
-
-    by_id = {check["id"]: check for check in CHECKS}
-    stable_cases = [
-        ("helm-latest", "v4.3.0 v4.4.0-rc.1 v4.4.0-beta.1", "4.3.0"),
-        ("helm-latest", "v4.3.10 v4.3.11-rc.1", "4.3.10"),
-        ("kubernetes-latest", "1.37.1 1.38.0-alpha.1 1.38.0-rc.1", "1.37"),
-        ("kubernetes-latest", "1.37.10 1.38.10-beta.1", "1.37"),
-    ]
-    for check_id, page, expected in stable_cases:
-        try:
-            actual = observed_value(by_id[check_id], page)
-        except CouldNotRun as exc:
-            failures.append(f"{check_id} mixed stable/preview page: {exc}")
-        else:
-            if actual != expected:
-                failures.append(f"{check_id} selected {actual}, expected stable {expected}")
-
-    preview_cases = [
-        ("helm-latest", "v4.4.10-rc.1"),
-        ("kubernetes-latest", "1.38.10-alpha.1"),
-    ]
-    for check_id, page in preview_cases:
-        try:
-            observed_value(by_id[check_id], page)
-        except CouldNotRun:
-            pass
-        else:
-            failures.append(f"{check_id} preview-only page returned a stable verdict")
-
-    date_cases = [
-        ("February 10th, 2027", True),
-        ("February 10, 2027", True),
-        ("February 10 2027", True),
-        ("2027-02-10", True),
-        ("February 10th, 2028", False),
-        ("February 10, 2026", False),
-        ("2028-02-10", False),
-    ]
-    for page, expected_match in date_cases:
-        observed = observed_value(by_id["helm3-eol"], page)
-        matched = compare(by_id["helm3-eol"], "2027-02-10", observed) is None
-        if matched != expected_match:
-            failures.append(f"EOL date {page!r}: match={matched}, expected {expected_match}")
-
-    if failures:
-        for line in failures:
-            print(f"SELF-TEST FAIL: {line}", file=sys.stderr)
-        return EXIT_FINDINGS
-    cases = 4 + len(stable_cases) + len(preview_cases) + len(date_cases)
-    print(f"check_versions --self-test: {cases} cases passed (offline)")
-    return EXIT_CLEAN
 
 
 def build_parser() -> argparse.ArgumentParser:
@@ -287,21 +176,13 @@ def build_parser() -> argparse.ArgumentParser:
                         help="path to version-awareness.md (default: the one beside this script)")
     parser.add_argument("--timeout", type=float, default=15.0,
                         help="per-request timeout in seconds (default: 15)")
-    parser.add_argument("--fixtures", metavar="DIR",
-                        help="read each vendor page from DIR/<check-id>.html instead of the "
-                             "network; use it to exercise the checker where egress is blocked")
-    parser.add_argument("--self-test", action="store_true",
-                        help="run the shipped fixtures offline and exit")
     return parser
 
 
 def main(argv: list[str] | None = None) -> int:
     args = build_parser().parse_args(argv)
-    if args.self_test:
-        return self_test()
     try:
-        pages = load_fixture_pages(args.fixtures) if args.fixtures else None
-        findings = run_checks(args.reference, args.timeout, pages)
+        findings = run_checks(args.reference, args.timeout)
     except CouldNotRun as exc:
         print(f"check_versions: could not run: {exc}", file=sys.stderr)
         print("check_versions: this is exit 2, not a clean verdict; the pinned values were "

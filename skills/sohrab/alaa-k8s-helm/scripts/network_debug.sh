@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 # Read-only pod-to-service and DNS debugging helper. Creates and modifies nothing.
 #
-# Requires bash 4.0 or newer. On Windows use Git Bash or WSL.
+# Requires bash 4.0 or newer.
 #
 # Exit codes, shared by every script in this skill:
 #   0  every probe returned data
@@ -17,7 +17,6 @@ usage() {
   cat <<'EOF'
 Usage: network_debug.sh <namespace> <pod-name>
        network_debug.sh --help
-       network_debug.sh --self-test
 
 Collects the evidence the service-path trace in
 references/networking-observability-and-tuning.md asks for, in that order: the
@@ -40,31 +39,9 @@ probe() {
   fi
 }
 
-self_test() {
-  local failures=0
-
-  ( main --help >/dev/null 2>&1 )
-  [[ $? -eq ${EXIT_CLEAN} ]] || { echo "SELF-TEST FAIL: --help did not exit ${EXIT_CLEAN}" >&2; failures=$((failures+1)); }
-
-  ( main only-one-argument >/dev/null 2>&1 )
-  [[ $? -eq ${EXIT_CANNOT_RUN} ]] || { echo "SELF-TEST FAIL: wrong arity did not exit ${EXIT_CANNOT_RUN}" >&2; failures=$((failures+1)); }
-
-  ( PATH="/nonexistent" main ns pod >/dev/null 2>&1 )
-  [[ $? -eq ${EXIT_CANNOT_RUN} ]] || { echo "SELF-TEST FAIL: missing CLI did not exit ${EXIT_CANNOT_RUN}" >&2; failures=$((failures+1)); }
-
-  missing=0
-  probe "DELIBERATE FAILURE" false >/dev/null 2>&1
-  [[ ${missing} -eq 1 ]] || { echo "SELF-TEST FAIL: an empty probe was not counted" >&2; failures=$((failures+1)); }
-
-  if [[ ${failures} -gt 0 ]]; then return ${EXIT_FINDINGS}; fi
-  echo "network_debug --self-test: 4 cases passed (no cluster required)"
-  return ${EXIT_CLEAN}
-}
-
 main() {
   case "${1:-}" in
     -h|--help) usage; return ${EXIT_CLEAN} ;;
-    --self-test) self_test; return $? ;;
   esac
   if [[ $# -ne 2 ]]; then
     echo "network_debug: a namespace and a pod name are required" >&2

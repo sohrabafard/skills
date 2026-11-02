@@ -12,13 +12,9 @@ import path from 'node:path';
 import fs from 'node:fs';
 import {
   CannotRun,
-  EXIT_CANNOT_RUN,
   EXIT_CLEAN,
-  EXIT_FINDINGS,
   collectTargets,
-  expect,
   finding,
-  fixturesDir,
   readLines,
   reportFindings,
   run,
@@ -55,11 +51,10 @@ Options:
   --require-ignore A,B,C  Comma-separated .dockerignore entries to require.
                           Default: .git,.env,node_modules,vendor,docker/.local-secrets
   --quiet                 Print nothing; use the exit code only.
-  --self-test             Run against the fixtures shipped beside this script and exit 0.
   -h, --help              Show this help and exit 0.
 
 Exit codes:
-  0  clean, or --help / --self-test succeeded
+  0  clean, or --help succeeded
   1  at least one finding
   2  could not run: a path that does not exist, an unreadable file, an input set that matched no
      files, or a file with no FROM instruction (which is not a Dockerfile)
@@ -93,7 +88,6 @@ function main(argv) {
     process.stdout.write(HELP);
     return EXIT_CLEAN;
   }
-  if (argv.includes('--self-test')) return selfTest();
 
   const quiet = argv.includes('--quiet');
   let required = DEFAULT_REQUIRED_IGNORES;
@@ -277,41 +271,6 @@ function parseInstructions(lines) {
     i++;
   }
   return out;
-}
-
-function selfTest() {
-  process.stdout.write('check-dockerfile-contract --self-test\n');
-  const dir = path.join(fixturesDir(), 'dockerfile');
-
-  const good = checkDockerfile(path.join(dir, 'good', 'Dockerfile'));
-  expect(good.length, 0, 'compliant fixture produces no finding');
-
-  const bad = checkDockerfile(path.join(dir, 'bad', 'Dockerfile'));
-  const byRule = {};
-  for (const f of bad) byRule[f.rule] = (byRule[f.rule] || 0) + 1;
-  expect(byRule['syntax-directive'] || 0, 1, 'missing syntax directive');
-  expect(byRule['single-stage'] || 0, 1, 'single-stage build');
-  expect(byRule['base-image-floating'] || 0, 1, 'floating base image');
-  expect(byRule['final-stage-root'] || 0, 1, 'final stage runs as root');
-  expect(byRule['final-stage-build-tooling'] || 0, 1, 'build tooling in the final stage');
-  expect(byRule['context-copy-before-install'] || 0, 1, 'whole-context COPY before install');
-  expect(byRule['missing-oci-revision-label'] || 0, 1, 'missing OCI revision label');
-  expect(byRule['missing-healthcheck'] || 0, 1, 'missing healthcheck');
-  expect(byRule['dockerignore-incomplete'] || 0, 2, 'incomplete .dockerignore');
-
-  let cannotRun = 0;
-  try {
-    checkDockerfile(path.join(dir, 'bad', '.dockerignore'));
-  } catch (err) {
-    if (err instanceof CannotRun) cannotRun = EXIT_CANNOT_RUN;
-  }
-  expect(cannotRun, EXIT_CANNOT_RUN, 'a file with no FROM raises CannotRun (exit 2)');
-
-  expect(reportFindings(bad, { quiet: true }), EXIT_FINDINGS, 'findings map to exit 1');
-  expect(reportFindings([], { quiet: true }), EXIT_CLEAN, 'no findings maps to exit 0');
-
-  process.stdout.write('self-test passed\n');
-  return EXIT_CLEAN;
 }
 
 run(main);

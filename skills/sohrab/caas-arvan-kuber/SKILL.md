@@ -16,7 +16,7 @@ Being on Arvan is not by itself a reason to load this skill. The four facts that
 The reviewed Arvan sources establish no current server version; the vendored spec describes a 1.25-era surface. **Discover the server version and required capabilities separately.** This needs only read access:
 
 ```bash
-kubectl api-versions | tr -d '\r' | sort > /tmp/arvan-api-versions.txt
+kubectl api-versions | sort > /tmp/arvan-api-versions.txt
 grep -qx 'autoscaling/v2beta2' /tmp/arvan-api-versions.txt && echo 'Legacy API observed; removed upstream in 1.26'
 grep -qx 'resource.k8s.io/v1'  /tmp/arvan-api-versions.txt && echo 'API observed; stable upstream since 1.34'
 kubectl version -o json                                      # inspect serverVersion, not clientVersion
@@ -69,7 +69,7 @@ Two runner-adjacent rules stay here because they are Arvan consequences, not run
 | `references/arvan-task-templates.md` | you want a prompt scaffold for a Helm implementation, an RBAC triage, or an exposure choice |
 | `references/SOURCES.md` | current Arvan, Kubernetes, Helm, or GitLab behaviour matters, or a web search is about to run |
 
-Scripts: `verify-cluster.sh` (read-only capability and identity proof), `render-helm.sh` (new mode-0600 output, removed on exit; existing `--out` paths or unverifiable permissions block before Helm), `summarize-openapi.sh` (`--check` fails on matrix/spec drift). Each takes `--help` and `--self-test` and exits `0` clean, `1` findings, `2` could not run. Assets: the two operator templates for production or stateful scope, and `assets/values.secret.yaml.example`.
+Scripts: `verify-cluster.sh` (read-only capability and identity proof), `render-helm.sh` (new mode-0600 output, removed on exit; existing `--out` paths or unverifiable permissions block before Helm), `summarize-openapi.sh` (`--check` fails on matrix/spec drift). Each takes `--help` and exits `0` clean, `1` findings, `2` could not run. Assets: the two operator templates for production or stateful scope, and `assets/values.secret.yaml.example`.
 
 ## Definition of done
 
@@ -96,4 +96,4 @@ For retained renders, use a caller-owned mode-0700 output directory with trusted
 ancestors; do not reuse a shared build directory. The helper creates missing parents
 privately, writes through one retained descriptor, and blocks on unprovable ownership,
 permissions or a replaced output path. Existing files remain untouched. GNU-compatible
-`stat` and `/dev/fd` are required; use a supported POSIX environment when unavailable.
+`stat` and `/dev/fd` are required.

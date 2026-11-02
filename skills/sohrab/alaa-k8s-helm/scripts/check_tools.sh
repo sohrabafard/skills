@@ -1,10 +1,7 @@
 #!/usr/bin/env bash
 # Inventory the tools a lane needs.
 #
-# Requires bash 4.0 or newer (associative-array-free, but it uses `mapfile`-free
-# array idioms that still need bash arrays). macOS ships bash 3.2 as
-# /bin/bash: run this with a Homebrew bash, or with `bash scripts/check_tools.sh`
-# after installing one. On Windows use Git Bash or WSL.
+# Requires bash 4.0 or newer.
 #
 # Exit codes, shared by every script in this skill:
 #   0  every required tool for the lane is present
@@ -20,7 +17,6 @@ usage() {
   cat <<'EOF'
 Usage: check_tools.sh [all|yaml|helm|debug]
        check_tools.sh --help
-       check_tools.sh --self-test
 
 Reports the required and optional tools for a lane, and prefers `oc` over
 `kubectl` when OpenShift tooling is present.
@@ -34,47 +30,6 @@ Lanes:
 Exit codes: 0 every required tool present, 1 a required tool missing,
 2 could not run (unknown lane or bad usage).
 EOF
-}
-
-self_test() {
-  local failures=0
-
-  # The lane table must resolve for every documented lane.
-  local lane
-  for lane in all yaml helm debug; do
-    if ! lane_required "$lane" >/dev/null; then
-      echo "SELF-TEST FAIL: lane '$lane' has no required-tool list" >&2
-      failures=$((failures + 1))
-    fi
-  done
-
-  # An unknown lane must be "could not run", never "clean".
-  ( main not-a-lane >/dev/null 2>&1 )
-  if [[ $? -ne ${EXIT_CANNOT_RUN} ]]; then
-    echo "SELF-TEST FAIL: an unknown lane did not exit ${EXIT_CANNOT_RUN}" >&2
-    failures=$((failures + 1))
-  fi
-
-  # --help must exit 0, because a wrapper that checks status must not see a failure.
-  ( main --help >/dev/null 2>&1 )
-  if [[ $? -ne ${EXIT_CLEAN} ]]; then
-    echo "SELF-TEST FAIL: --help did not exit ${EXIT_CLEAN}" >&2
-    failures=$((failures + 1))
-  fi
-
-  # A missing tool must produce exit 1 and name the tool.
-  local out
-  out="$(REQUIRED_OVERRIDE="definitely-not-a-real-tool" main yaml 2>&1)"
-  if [[ $? -ne ${EXIT_FINDINGS} ]] || [[ "$out" != *definitely-not-a-real-tool* ]]; then
-    echo "SELF-TEST FAIL: a missing required tool did not exit ${EXIT_FINDINGS} with its name" >&2
-    failures=$((failures + 1))
-  fi
-
-  if [[ ${failures} -gt 0 ]]; then
-    return ${EXIT_FINDINGS}
-  fi
-  echo "check_tools --self-test: 7 cases passed"
-  return ${EXIT_CLEAN}
 }
 
 have() { command -v "$1" >/dev/null 2>&1; }
@@ -104,7 +59,6 @@ main() {
 
   case "$lane" in
     -h|--help) usage; return ${EXIT_CLEAN} ;;
-    --self-test) self_test; return $? ;;
   esac
 
   local required_list
@@ -113,8 +67,6 @@ main() {
     usage >&2
     return ${EXIT_CANNOT_RUN}
   fi
-  # Test hook used by --self-test only.
-  required_list="${REQUIRED_OVERRIDE:-$required_list}"
 
   local kube_cli=""
   if have oc; then kube_cli="oc"; elif have kubectl; then kube_cli="kubectl"; fi

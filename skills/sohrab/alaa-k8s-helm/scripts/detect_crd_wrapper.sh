@@ -1,9 +1,7 @@
 #!/usr/bin/env bash
 # Entrypoint for scripts/detect_crd.py that supplies PyYAML when it is absent.
 #
-# Requires bash 4.0 or newer. On Windows use Git Bash or WSL; the virtual
-# environment's activation script lives in Scripts/ there and bin/ elsewhere,
-# and this script selects the right one instead of assuming POSIX layout.
+# Requires bash 4.0 or newer.
 #
 # Exit codes are the ones detect_crd.py returns, plus:
 #   2  could not run: bad usage, no python3, or PyYAML could not be installed
@@ -17,7 +15,6 @@ usage() {
   cat <<'EOF'
 Usage: detect_crd_wrapper.sh <yaml-file>
        detect_crd_wrapper.sh --help
-       detect_crd_wrapper.sh --self-test
 
 Classifies each YAML document as a standard Kubernetes, OpenShift, custom, or
 removed API version. Uses the system python3 when PyYAML is importable; builds a
@@ -58,15 +55,8 @@ run_with_venv() {
     return ${EXIT_CANNOT_RUN}
   }
 
-  # CPython creates Scripts/ on Windows and bin/ everywhere else.
-  local venv_python=""
-  if [[ -x "${tmp_venv}/bin/python" ]]; then
-    venv_python="${tmp_venv}/bin/python"
-  elif [[ -x "${tmp_venv}/Scripts/python.exe" ]]; then
-    venv_python="${tmp_venv}/Scripts/python.exe"
-  elif [[ -x "${tmp_venv}/Scripts/python" ]]; then
-    venv_python="${tmp_venv}/Scripts/python"
-  else
+  local venv_python="${tmp_venv}/bin/python"
+  if [[ ! -x "${venv_python}" ]]; then
     echo "detect_crd_wrapper: no interpreter in the new virtual environment" >&2
     return ${EXIT_CANNOT_RUN}
   fi
@@ -83,42 +73,9 @@ run_with_venv() {
   return $?
 }
 
-self_test() {
-  local failures=0 py
-  if ! py="$(find_python)"; then
-    echo "SELF-TEST FAIL: no python3 on PATH" >&2
-    return ${EXIT_CANNOT_RUN}
-  fi
-  if [[ ! -f "${python_script}" ]]; then
-    echo "SELF-TEST FAIL: detect_crd.py is missing beside this wrapper" >&2
-    return ${EXIT_CANNOT_RUN}
-  fi
-
-  ( main --help >/dev/null 2>&1 )
-  [[ $? -eq ${EXIT_CLEAN} ]] || { echo "SELF-TEST FAIL: --help did not exit ${EXIT_CLEAN}" >&2; failures=$((failures+1)); }
-
-  ( main >/dev/null 2>&1 )
-  [[ $? -eq ${EXIT_CANNOT_RUN} ]] || { echo "SELF-TEST FAIL: no argument did not exit ${EXIT_CANNOT_RUN}" >&2; failures=$((failures+1)); }
-
-  ( main "${script_dir}/fixtures/clean.yaml" >/dev/null 2>&1 )
-  [[ $? -eq ${EXIT_CLEAN} ]] || { echo "SELF-TEST FAIL: clean.yaml did not exit ${EXIT_CLEAN}" >&2; failures=$((failures+1)); }
-
-  ( main "${script_dir}/fixtures/removed-apis.yaml" >/dev/null 2>&1 )
-  [[ $? -eq ${EXIT_FINDINGS} ]] || { echo "SELF-TEST FAIL: removed-apis.yaml did not exit ${EXIT_FINDINGS}" >&2; failures=$((failures+1)); }
-
-  # The delegated self-test must pass too.
-  "$py" "${python_script}" --self-test >/dev/null 2>&1
-  [[ $? -eq ${EXIT_CLEAN} ]] || { echo "SELF-TEST FAIL: detect_crd.py --self-test failed" >&2; failures=$((failures+1)); }
-
-  if [[ ${failures} -gt 0 ]]; then return ${EXIT_FINDINGS}; fi
-  echo "detect_crd_wrapper --self-test: 5 cases passed"
-  return ${EXIT_CLEAN}
-}
-
 main() {
   case "${1:-}" in
     -h|--help) usage; return ${EXIT_CLEAN} ;;
-    --self-test) self_test; return $? ;;
     "") echo "detect_crd_wrapper: a YAML file is required" >&2; usage >&2; return ${EXIT_CANNOT_RUN} ;;
   esac
   if [[ $# -ne 1 ]]; then

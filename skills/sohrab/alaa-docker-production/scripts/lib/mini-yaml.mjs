@@ -1,7 +1,7 @@
 // A deliberately small YAML reader for Compose and Swarm stack files.
 //
-// Why not a YAML library: the checkers must run from a fresh checkout with no `npm install`, on
-// Windows, against a read-only tree. A dependency-free reader that supports exactly the subset
+// Why not a YAML library: the checkers must run from a fresh checkout with no `npm install`,
+// against a read-only tree. A dependency-free reader that supports exactly the subset
 // Compose files use, and refuses everything else, is safer than a full parser that guesses.
 //
 // Supported: block mappings, block sequences, single-line flow sequences and single-line flow

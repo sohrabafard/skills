@@ -1,6 +1,6 @@
 # Version Awareness
 
-This file owns release, support, compatibility and feature-version facts. Other files may carry API identifiers and synthetic fixture versions, but route compatibility decisions here. Target discovery outranks this snapshot; an upstream release does not prove a consumer upgrade.
+This file owns release, support, compatibility and feature-version facts. Other files may carry API identifiers, but route compatibility decisions here. Target discovery outranks this snapshot; an upstream release does not prove a consumer upgrade.
 
 ## Rules that do not rot
 
@@ -109,4 +109,4 @@ oc version
 kubectl api-versions | grep -E 'gateway.networking.k8s.io|route.openshift.io|security.openshift.io'
 ```
 
-`scripts/check_versions.py` compares the three stated fields against vendor pages: exit `0` means those fields match, `1` means drift, and `2` means unavailable evidence, including fetch or parse failure. It is read-only; resolve findings before version-sensitive advice and never turn unavailable evidence into a pass. `--self-test` uses fixed synthetic fixtures, not live release evidence.
+`scripts/check_versions.py` compares the three stated fields against vendor pages: exit `0` means those fields match, `1` means drift, and `2` means unavailable evidence, including fetch or parse failure. It is read-only; resolve findings before version-sensitive advice and never turn unavailable evidence into a pass.
