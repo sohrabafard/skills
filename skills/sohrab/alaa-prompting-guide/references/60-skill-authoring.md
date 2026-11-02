@@ -72,6 +72,10 @@ Choose router placement by actual always-loaded cost and selective routing needs
 
 **A soft target yields; a hard limit does not.** An author target, a recommended line count, or a default word budget yields when required behavior-affecting content does not fit: exceed it, say so, and compress the rest as normal — yielding is never permission to stop compressing. A limit that rejects or truncates the artifact, such as a packaging validator or a runtime byte budget, cannot yield: meet it by restructuring without semantic loss, and report blocked when no restructuring satisfies both. Restructuring moves content, so it is a separate change with its own reason and not a compress pass.
 
+## ASD-STE100 style
+
+Write every controlling text in ASD-STE100-style English. Put one idea in each sentence. Keep a procedure sentence to 20 words or fewer. Use the active voice and the command form for an action. Use one term for one concept and never rotate synonyms. Remove filler and idioms. Keep technical names, paths, commands and numbers exact. The style never overrides the done-test above: a shorter text that changes agent behavior fails.
+
 ## Lean prompts must preserve behavior
 
 Current OpenAI guidance favors small routers, precise triggers, conditional reads, and lean

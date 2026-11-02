@@ -82,7 +82,7 @@ Apply it to every sentence you write: **could a competent agent follow this exac
 - a constraint buried mid-paragraph — one rule per sentence, rule before rationale;
 - a rule with no reason attached — an unexplained rule gets rationalised away the first time an agent meets a case you did not anticipate.
 
-`alaa-prompting-guide/references/60-skill-authoring.md` has the full treatment and owns this subject.
+`alaa-prompting-guide/references/60-skill-authoring.md` has the full treatment and owns this subject, including the ASD-STE100 style every skill text follows: short sentences, one idea each, active voice, one term per concept.
 
 ## The description is the highest-leverage line in a skill
 
