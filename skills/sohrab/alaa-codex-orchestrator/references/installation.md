@@ -40,6 +40,16 @@ python3 scripts/check_agent_grants.py --materialize agents <new-empty-scratch-di
 
 Inspect only that fresh directory. This validates grants against the live parent inventory; it neither installs nor proves model availability, effective parent sandbox overrides, runtime identity, or task quality. Record those evidence levels separately.
 
+## Installed-set check
+
+```bash
+python3 scripts/check_agent_grants.py --resolved-agents-dir ~/.codex/agents
+```
+
+The command reads every `*.toml` in the directory. It checks three things. The set of agent names must equal the catalog set, so a missing role or an unmanaged agent file fails. Each role must carry the required `sandbox_mode` declaration. Each role's `mcp_servers` overrides must match the live MCP inventory and the catalog grant for that role. Exit `0` is clean, `1` is findings, and `2` means the checker could not run.
+
+The command does not compare an installed file with its source. It reports no per-agent Current or Different status, so content drift outside the checked fields stays invisible. To detect that drift, run `python3 scripts/check_agent_grants.py --materialize agents <new-empty-scratch-directory>` and compare the scratch files with the installed files. It also does not prove model availability or runtime identity.
+
 ## Upgrade contract
 
 Version 5 renames `alaa-implementer-sol` to `alaa-implementer-astra` without a source alias. Update dispatch callers. During an explicitly authorized installed upgrade, materialize the new wrapper with the supported installer and archive the old managed wrapper outside the agent discovery directory under that upgrade's target-path authority. The current installers preserve files absent from the new source; installation alone therefore does not retire the old role. Verify the new role and absence of the retired role before claiming activation.

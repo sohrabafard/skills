@@ -84,6 +84,16 @@ Role triggers and actual task model AND effort allocation are owned by `referenc
 python3 ~/.codex/skills/alaa-codex-orchestrator/scripts/check_agent_grants.py --resolved-agents-dir ~/.codex/agents
 ```
 
+این دستور هر فایل `*.toml` در آن مسیر را می‌خواند و سه چیز را بررسی می‌کند:
+
+- مجموعهٔ نام agentها باید با کاتالوگ برابر باشد. نبود یک نقش یا وجود یک agent مدیریت‌نشده، دستور را `FAILED` می‌کند.
+- هر نقش لازم است اعلان `sandbox_mode` موردنیاز خود را داشته باشد.
+- هر override در `mcp_servers` باید با inventory زندهٔ MCP و grant کاتالوگ همان نقش یکی باشد.
+
+کد خروج `0` یعنی سالم، `1` یعنی یافته، و `2` یعنی دستور اجرا نشد.
+
+این دستور فایل نصب‌شده را با منبع مقایسه نمی‌کند. وضعیت Current یا Different هر agent را گزارش نمی‌دهد. پس drift در محتوای خارج از فیلدهای بالا دیده نمی‌شود. برای دیدن آن، خروجی `check_agent_grants.py --materialize agents <پوشهٔ-خالی-جدید>` را با فایل‌های نصب‌شده مقایسه کن. این دستور در دسترس‌بودن مدل یا هویت runtime را هم ثابت نمی‌کند.
+
 ## اجرای تست با اولویت پایین
 
 نمونه Go:

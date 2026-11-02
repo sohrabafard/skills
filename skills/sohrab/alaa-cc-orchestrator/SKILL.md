@@ -117,7 +117,7 @@ Orchestrator mode preserves A–E. F requires requested integration and explicit
 
 ### Final report
 
-Report outcome; independent lifecycle verdicts (`IMPLEMENTED`, `MERGE_CANDIDATE`, `RELEASE_CANDIDATE`, `PUBLISHED`) under `alaa-workflow references/workspace-and-integration.md`; lane changes and files; commands and results, marked run or cited, with tier; review and specialist verdicts and dispositions; each touched document's outcome and grade; curation as persisted, deferred or empty; risks, skipped checks, follow-ups. List each dispatched agent once with its configured and requested pair, separately observed identity or unknown, observable mismatches and named escalated-lane admission.
+Report outcome; independent lifecycle verdicts (`IMPLEMENTED`, `MERGE_CANDIDATE`, `RELEASE_CANDIDATE`, `PUBLISHED`) under `alaa-workflow references/workspace-and-integration.md`; lane changes and files; commands and results, marked run or cited, with tier; review and specialist verdicts and dispositions; each touched document's outcome and grade; curation as persisted, deferred or empty; risks, skipped checks, follow-ups. List each dispatched agent once with its configured and requested pair, separately observed identity or unknown, observable mismatches and any exceptional-model admission evidence.
 
 Close with one line from the existing plan, roster and evidence: dispatches and distinct roles; underlying checks run or cited, covered children counted once; span from plan `Created` to last authorized commit, or unavailable. Use no timer, extra command or invented budget.
 
@@ -132,6 +132,8 @@ When generating a goal condition, read `alaa-prompting-guide references/06-invoc
 Schedule these commands through `references/verification-and-gates.md` Gate economics. Proven aggregate coverage discharges only identical child invocations with the same scope and observer.
 
 Run `python3 scripts/check_agent_contracts.py` after instruction-contract changes. Exit `0` is clean, `1` is findings, and `2` is unavailable proof. Either nonzero exit blocks completion. The script checks source requirements, not live model behavior.
+
+After changing agent instructions, pins, agents, or version, run `python3 scripts/render_agents.py --write`, then `python3 scripts/render_agents.py --check` and `python3 scripts/validate_pack.py`. Exit `0` is clean, `1` is findings or drift, and `2` means unavailable proof. Either nonzero exit blocks completion. Review the generated wrappers against `assets/implementation-contract.md` and `assets/planner-contract.md`.
 
 Before planning or executing checks, load /alaa-testing-strategy. Read its `references/100-test-execution.md` for execution, `references/110-execution-resources.md` for resources and timing, or `references/120-result-classification.md` for result classification and diagnosis. The router below retains legacy loading paths.
 

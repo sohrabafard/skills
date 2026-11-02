@@ -8,7 +8,7 @@ import tomllib
 from pathlib import Path
 
 sys.dont_write_bytecode = True
-from codex_model_policy import PolicyLoadError, load_policy, validate_agent_pin, validate_policy
+from codex_model_policy import PolicyLoadError, load_policy, validate_agent_pin
 
 
 def main() -> int:

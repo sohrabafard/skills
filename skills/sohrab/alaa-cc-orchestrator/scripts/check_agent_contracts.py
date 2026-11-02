@@ -76,11 +76,11 @@ def orchestrator_failures(text: str) -> list[str]:
                      "Do not implement product changes",
                      "alaa-workflow references/artifact-lifecycle.md",
                      "Plan-only work grants no product execution, branch, or commit authority",
-                     "report saved plan/checkpoint paths when admitted",
+                     "report its saved plan and checkpoint paths",
                      "Local commits follow the main instruction file's local-commit rule",
                      "do not wait for boundary review or request an already-granted permission again",
-                     "Every external/destructive effect needs its own explicit authority",
-                     "local-only completion requires no merge prompt",
+                     "Every external or destructive effect needs its own explicit authority",
+                     "Local-only completion needs no integration prompt",
                      "Independent verification and review inspect the actual artifact",
                      "Do not infer a universal watchdog timeout"):
         if not contract_present(required, text):
