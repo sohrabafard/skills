@@ -199,7 +199,7 @@ final class PermissionBitmap
      * decode entry points take. The generated config is keyed by permission name and each
      * block carries `id`, `name`, and `description`.
      *
-     * @param  array<string, array{id: int, name: string, description?: string}>  $config
+     * @param  array<string, array{id: int, name?: string|null, description?: string}>  $config
      * @return array<int, string>
      */
     public static function namesByIdFromConfig(array $config): array
