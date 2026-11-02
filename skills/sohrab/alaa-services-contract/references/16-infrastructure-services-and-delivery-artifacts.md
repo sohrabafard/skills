@@ -11,8 +11,10 @@ ownership stay in `25-end-to-end-flow-and-boundaries.md`.
 
 Notation: `<repo>/<path>` is a path inside the repository named in the same row or sentence. This file carries
 no version, tag, or digest; the owning repository's files are the live source for every pin, name, and status
-(`90-source-map.md`). Entries were verified read-only on 2026-10-03, except the CI job image and deploy-tools
-image rows and the Runner shapes section, verified on 2026-11-02.
+(`90-source-map.md`). Entries were verified read-only on 2026-10-03, except the CI job image, deploy toolkit,
+deploy-tools image, and Gateway status rows, the `deploy` project role, the Runner shapes section, and the
+flow notes that name the unincluded Helm path, verified on 2026-11-02. Of those, Runner and image observations
+come from one host (operator PC, Docker Desktop); the rest is a read-only file review.
 
 When a sibling repository is not checked out, or a command or registry is unreachable, mark the entry
 unverified and continue. Never conclude from a missing checkout that an artifact does not exist.
@@ -39,16 +41,16 @@ updates its entry in the same effort that adds, renames, moves, or retires it.
 
 ## Registry
 
-Status values: `live` (published and in use), `published` (in the registry; use in the target unproven; the
-pointer names the item recording the gap), `unpublished` (implemented in the owning repository, not yet
+Status values: `live` (published and in use), `published` (in the registry; the pointer names the item recording
+availability, and the entry states which use is unproven), `unpublished` (implemented in the owning repository, not yet
 published or run in the target; the pointer names the blocking item), `planned`, `being decided` (names the
 deciding document). Deploy items `EO-NN` live in `<repo>/docs/employer-open-items.md` of `deploy`.
 
 | Name | Owner | Artifact and reference form | Provides | Consumers |
 |---|---|---|---|---|
 | CI job image | `ci-image` | Image `alaa/ci/image` in Nexus. Tool pins in `<repo>/tools/versions.env` and `<repo>/tools/tool-images.env`. The Runner pin is `RUNNER_JOB_IMAGE` in the `deploy` `.env.example`; `deploy` is its only writer | kubectl, helm with plugins, kubeconform, yamllint, python3, shellcheck, GNU grep, yq, jq, docker CLI and buildx (no daemon; see Runner shapes below), skopeo, psql and pg_dump, node, and the other tools its README lists | The deploy-tools image; Runner-default jobs through `RUNNER_JOB_IMAGE` (shapes and limits: Runner shapes below) |
-| Deploy toolkit | `deploy` | Charts `<repo>/helm/alaa-service` and `<repo>/helm/gitlab-runner-wrapper`; class layers `<repo>/values/classes/`; `<repo>/scripts/helm-release.sh`; `<repo>/scripts/alaa-deploy`; schemas `<repo>/schemas/service-contract.v1.json` and `<repo>/schemas/gateway-route-set.v1.json`; `<repo>/scripts/monitor-release.sh`; operator scripts `<repo>/scripts/sync-openshift-secret.sh`, `<repo>/scripts/db-ensure-privileges.sh`, `<repo>/scripts/db-export.sh`; CD pipeline `<repo>/.gitlab-ci.yml` and `<repo>/ci/` | Per-service release, Runner install, ServiceContract validation and label encoding, route-set assembly, release monitoring, Secret sync, DB grants and export | Operators; the CD pipeline; `service-ci-kit` (contract validation through the deploy-tools image); `gateway` local runtime (`alaa-deploy route-set assemble`) |
-| Deploy-tools image | `deploy` | Image `alaa/deploy-tools`, built from `<repo>/docker/deploy-tools/Dockerfile` `FROM` the CI job image (`DEPLOY_TOOLS_BASE_IMAGE` defaults to `RUNNER_JOB_IMAGE`); consumers pin `DEPLOY_TOOLS_IMAGE` by digest | Deploy-owned content only; the Dockerfile owns the full list (including `alaa-deploy`, charts `alaa-service` and `authz-openfga`, release and migration scripts, schemas, class layers, `ci/handoff-inputs.yaml`; CD jobs run `ci/*.sh` from their own checkout); entrypoint `image-entry`, which forwards to `alaa-deploy`. Installs no tool | Service pipelines (validate and label, no network); the `deploy` release jobs |
+| Deploy toolkit | `deploy` | Charts `<repo>/helm/alaa-service` and `<repo>/helm/gitlab-runner-wrapper`; class layers `<repo>/values/classes/`; `<repo>/scripts/helm-release.sh`; `<repo>/scripts/alaa-deploy`; schemas `<repo>/schemas/service-contract.v1.json` and `<repo>/schemas/gateway-route-set.v1.json`; `<repo>/scripts/monitor-release.sh`; operator scripts `<repo>/scripts/sync-openshift-secret.sh`, `<repo>/scripts/db-ensure-privileges.sh`, `<repo>/scripts/db-export.sh`; CD pipeline `<repo>/.gitlab-ci.yml` and `<repo>/ci/`; unincluded Helm jobs `<repo>/k8s.gitlab-ci.yml` | Per-service release, Runner install, ServiceContract validation and label encoding, route-set assembly, release monitoring, Secret sync, DB grants and export | Operators; the CD pipeline; `service-ci-kit` (contract validation through the deploy-tools image); `gateway` local runtime (`alaa-deploy route-set assemble`) |
+| Deploy-tools image | `deploy` | Image `alaa/deploy-tools`, built from `<repo>/docker/deploy-tools/Dockerfile` `FROM` the CI job image (`DEPLOY_TOOLS_BASE_IMAGE` defaults to `RUNNER_JOB_IMAGE`); consumers pin `DEPLOY_TOOLS_IMAGE` by digest | Deploy-owned content only; the Dockerfile owns the full list (including `alaa-deploy`, charts `alaa-service` and `authz-openfga`, release and migration scripts, schemas, class layers, `ci/handoff-inputs.yaml`; CD jobs run `bash scripts/alaa-deploy central <command>` from their own checkout; only `k8s.gitlab-ci.yml` runs `ci/release.sh` and `ci/handoff.sh`); entrypoint `image-entry`, which forwards to `alaa-deploy`. Installs no tool | Service pipelines (validate and label, no network); the `deploy` CD jobs |
 | Service CI kit | `service-ci-kit` | GitLab includes `<repo>/gitlab/php-service.yml` (full PHP pipeline) and `<repo>/gitlab/contract-and-handoff.yml` (stack-neutral build, label, smoke, handoff); the consumer pins it only through the include `ref:` | Image build with the two contract labels, smoke by digest, semantic release, handoff of `SERVICE` and `IMAGE_DIGEST` to `deploy`. Never deploys and holds no cluster credential | Laravel services (PHP include); `gateway` and `client` (stack-neutral include) |
 | Service runtime kit | `service-runtime-kit` | Generator `<repo>/scripts/render-runtime.sh`, `<repo>/scripts/validate-runtime.sh`, `<repo>/scripts/up-local.sh`, `<repo>/scripts/bootstrap-service-repos.sh` with `<repo>/contracts/service-bootstrap.tsv`; repo-support pack `<repo>/templates/repo-support/` (managed `.gitattributes`, LF and BOM hook scripts) | Compose and Swarm runtime generation, PgBouncer and Octane files, the LF/BOM repo-support pack. Not CI and not Kubernetes | Laravel and PHP service repositories |
 | PHP base image | `octane-base` | Image `alaa/services/octane-base` in Nexus; the consumer pins it in its `Dockerfile` (`OCTANE_BASE_IMAGE`) and `runtime/service.runtime.env` | PHP Octane base with the Laravel runtime extensions, Nexus APK key, provenance and SBOM | Laravel service images |
@@ -57,13 +59,13 @@ deciding document). Deploy items `EO-NN` live in `<repo>/docs/employer-open-item
 
 | Name | Verify presence | Decisions live in | Mechanics owner | Status |
 |---|---|---|---|---|
-| CI job image | `<repo>/tools/versions.env` in `ci-image`; a registry read of `alaa/ci/image` where network access is authorized | `ci-image` `<repo>/README.md` ("Consumers and Ownership"), `<repo>/CHANGELOG.md` | `$alaa-gitlab-ci-cd`, `$alaa-docker-production` | `published` (EO-32 records availability); GitLab Runner use unproven, and no EO item records that gap yet; the Kubernetes Runner install awaits EO-18 |
-| Deploy toolkit | Files named in the entry; `deploy` `<repo>/docs/BIG_PICTURE.md` repository map | `deploy` `<repo>/AGENTS.md`, `<repo>/docs/service-contract.md`, `<repo>/docs/rfc/`, `<repo>/docs/employer-open-items.md` | `$alaa-k8s-helm`, `$caas-arvan-kuber`, `$alaa-bash-shell` | CD pipeline `unpublished`: never run on GitLab (EO-12, EO-30) |
-| Deploy-tools image | `<repo>/docker/deploy-tools/Dockerfile`; `DEPLOY_TOOLS_IMAGE` in the `deploy` `.env.example` | As the deploy toolkit | `$alaa-docker-production` | `published` (EO-32); GitLab variable and dependent pipelines unproven (EO-30); a deploy pipeline is not created while `DEPLOY_TOOLS_IMAGE` lacks a digest |
+| CI job image | `<repo>/tools/versions.env` in `ci-image`; a registry read of `alaa/ci/image` where network access is authorized | `ci-image` `<repo>/README.md` ("Consumers and Ownership"), `<repo>/CHANGELOG.md` | `$alaa-gitlab-ci-cd`, `$alaa-docker-production` | `published` (EO-32 records availability). As a direct job image, unproven: EO-32 notes publication is not proof of GitLab or cluster execution, and no open EO item tracks Runner use of the job image. As deploy-tools base layers, it runs in every CD job. The Kubernetes Runner install awaits EO-18 |
+| Deploy toolkit | Files named in the entry; `deploy` `<repo>/docs/BIG_PICTURE.md` repository map | `deploy` `<repo>/AGENTS.md`, `<repo>/docs/service-contract.md`, `<repo>/docs/rfc/`, `<repo>/docs/employer-open-items.md` | `$alaa-k8s-helm`, `$caas-arvan-kuber`, `$alaa-bash-shell` | Compose CD pipeline `live` on `gitlab.vk`, the test CD GitLab (`<repo>/docs/delivery-topology.md`). Kubernetes path `unpublished`: `<repo>/k8s.gitlab-ci.yml` is not included. Other CD GitLab settings: EO-12, EO-30 |
+| Deploy-tools image | `<repo>/docker/deploy-tools/Dockerfile`; `DEPLOY_TOOLS_IMAGE` in the `deploy` `.env.example` | As the deploy toolkit | `$alaa-docker-production` | `published` (EO-32); in use by CD jobs on `gitlab.vk`; service CI use unproven (EO-30) |
 | Service CI kit | `<repo>/gitlab/contract-and-handoff.yml`, `<repo>/VERSION` and the repository's tags | `service-ci-kit` `<repo>/README.md`, `<repo>/docs/rfc/`; the handoff definition is `deploy` `<repo>/ci/handoff-inputs.yaml`, which wins on a conflict | `$alaa-gitlab-ci-cd` | Current major `unpublished` while its tag is missing; read `<repo>/VERSION` against the tags |
 | Service runtime kit | `<repo>/scripts/render-runtime.sh`, `<repo>/VERSION`; in a consumer, `runtime/service.runtime.env` and the generated files | `service-runtime-kit` `<repo>/README.md`, `<repo>/docs/02-service-ci-kit-vs-service-runtime-kit.md`, `<repo>/docs/requests-for-change/` | `$service-runtime-kit-governance`, `$alaa-docker-production` | `live` for local runtime; read `<repo>/VERSION` against the tags for the current line |
 | PHP base image | `octane-base` `<repo>/README.md` registry line; the consumer's `OCTANE_BASE_IMAGE` | `octane-base` `<repo>/README.md`, `<repo>/CHANGELOG.md` | `$alaa-docker-production`, `$alaa-octane-performance` | `live` |
-| Gateway | `<repo>/charts/gateway`, `<repo>/scripts/gateway-start`, `<repo>/snapshots/README.md` | `gateway` `<repo>/AGENTS.md`, `<repo>/docs/route-set.md`, `<repo>/docs/error-code-registry.md`, `<repo>/docs/DOCKER_SHARED_RUNTIME.md` | `$alaa-haproxy`, `$alaa-trust-gateway-auth` | Kubernetes path `unpublished` with the deploy toolkit; Compose/Swarm production artifacts `missing` (deploy RFC 0006) |
+| Gateway | `<repo>/charts/gateway`, `<repo>/scripts/gateway-start`, `<repo>/snapshots/README.md` | `gateway` `<repo>/AGENTS.md`, `<repo>/docs/route-set.md`, `<repo>/docs/error-code-registry.md`, `<repo>/docs/DOCKER_SHARED_RUNTIME.md` | `$alaa-haproxy`, `$alaa-trust-gateway-auth` | Kubernetes path `unpublished`, as the deploy toolkit's; Compose/Swarm production artifacts `missing` (deploy RFC 0006) |
 | Nexus | The consumer's `.env.example` variable | `deploy` `<repo>/docs/employer-open-items.md` | `$alaa-docker-production`, `$alaa-gitlab-ci-cd` | `live`; individual repositories missing from it are EO items |
 
 External platform services (GitLab, OpenShift, Arvan CaaS) are not entries: `$alaa-gitlab-ci-cd`,
@@ -73,7 +75,11 @@ provides.
 ## Runner shapes and the CI job image
 
 Read this before writing a job that needs a tool, a Docker daemon, or an entrypoint, and before stating what
-a Runner provides. Verified read-only on 2026-11-02; the owner named in each row or item wins. These shapes are owner configuration, not observed jobs: GitLab Runner use of the job image is unproven (no EO item records it yet), and the Kubernetes Runner install awaits EO-18.
+a Runner provides. Verified on 2026-11-02; the owner named in each row or item wins.
+
+The `deploy` shape is observed on one host: Runner `app-runner` on `gitlab.vk`, `concurrent` 2, `privileged = false`, with the row's socket and `allowed_images`, and every finished job it lists belongs to `vk/deploy`. Other hosts and any server Runner are not observable. The `ci` and Kubernetes shapes are defined in `deploy` and unobserved: no observed Runner config uses the job image directly, no open EO item tracks Runner use of it, and the Kubernetes Runner install awaits EO-18.
+
+Milestone 1 (owner statement, 2026-11-02; no repository document states this scope): only CD pipelines have run, service images come from manual release (`deploy` `<repo>/scripts/manual-release.sh`, `<repo>/docs/runbook/76-manual-build.fa.md`), and automating CI is not on the agenda. Older `gateway` commits (`56f01cd`, `0083f33`, 2026) left traces of a `local`-tagged Runner, so never state that CI has never run.
 
 | Shape | Executor and path | Default job image | Limits | Owner in `deploy` |
 |---|---|---|---|---|
@@ -85,11 +91,11 @@ Which Runner carries tag `local`, and its executor, is open: EO-36 in `deploy` `
 
 Job image, owner `ci-image` `<repo>/Dockerfile`:
 
-- **No daemon.** It has a docker CLI with buildx and `buildctl`, but no daemon reaches them on the `ci` or Kubernetes shape, so `docker build`, `run`, and `pull` fail at the socket. Only the `deploy` role mounts a socket, and its lock keeps every other project's job, `gateway` included, off that Runner.
+- **No daemon.** It has a docker CLI with buildx and `buildctl`, but no daemon reaches them on the `ci` or Kubernetes shape, so `docker build`, `run`, and `pull` fail at the socket. Only the `deploy` role mounts a socket, and its lock keeps every other project's job, `gateway` included, off that Runner; the observed one is also on `gitlab.vk`, a different GitLab instance from `gateway`'s origin `git.alaatv.com`.
 - **Absent tools:** haproxy, make, dockerd, buildkitd, buildah, podman, kaniko, oc. A `ci`-shape job needing haproxy, make, or oc sets a job-level `image:` that carries it; the `deploy` role's `allowed_images` refuses that. A daemon that needs privileges, such as dockerd or Docker-in-Docker, cannot run on the `ci` or Kubernetes shape, because both set `privileged = false`; no daemonless path is proven on them either. To build an image, read `/alaa-gitlab-ci-cd` `references/container-build-strategies.md`; it owns the path choice.
 - **Service image builds.** `service-ci-kit` `.alaa_contract_image_build` runs `docker buildx build` (`<repo>/ci/scripts/contract_image_build.sh`) and creates no builder, so it needs a reachable daemon, which the `ci` and Kubernetes shapes lack. `gateway` `build_image` (`<repo>/.gitlab-ci.yml`) takes tag `local`, so its path stays open with EO-36.
 - **BusyBox:** `diff`, `awk`, and `sed` are BusyBox, and BusyBox `diff` prints unified format. The user is non-root.
-- **Entrypoint.** `ENTRYPOINT` is `/bin/bash`. On the Docker executor, a job on this image with no image entrypoint override, which includes a job taking the `RUNNER_JOB_IMAGE` default, starts as `bash sh -c ...` and exits 126 at container start, because bash reads `sh` as a script path and refuses the binary. Set `image: {name: ..., entrypoint: [""]}` at job level. This is derived from Runner source and a reproduced command shape; no real job was run. The `deploy` shape's image has its own entrypoint, and `deploy` `<repo>/.gitlab-ci.yml` `.release` clears it; the outcome without that clear is unobserved. The Kubernetes executor ignores the image entrypoint unless `FF_KUBERNETES_HONOR_ENTRYPOINT` is set.
+- **Entrypoint.** `ENTRYPOINT` is `/bin/bash`. On the Docker executor, a job on this image with no image entrypoint override, which includes a job taking the `RUNNER_JOB_IMAGE` default on a Runner of any role, starts as `bash sh -c ...` and exits 126 at container start, because bash reads `sh` as a script path and refuses the binary. Set `image: {name: ..., entrypoint: [""]}` at job level. This is derived from Runner source and a reproduced command shape; no real job was run. The `deploy` shape's image has its own entrypoint, and `deploy` `<repo>/.gitlab-ci.yml` `.release` clears it, because that entrypoint with `sh -c` gives `unknown command: sh`, rc 2 (`docker run`, no real job). The Kubernetes executor ignores the image entrypoint unless `FF_KUBERNETES_HONOR_ENTRYPOINT` is set.
 - **A socket added later is not a drop-in fix.** Bind sources and published ports resolve on the daemon host, so jobs that mount job-local paths or curl `127.0.0.1` break, and the socket is root-equivalent on the host.
 
 Re-verify contents against the pinned image: `docker run --rm --entrypoint '' <image> sh -c 'command -v <tool>'`.
@@ -101,7 +107,7 @@ Re-verify contents against the pinned image: `docker run --rm --entrypoint '' <i
 | Service repository (`auth`, `content`, `comment-service`) | Application code; `deploy/service.yaml` (ServiceContract v1, class `laravel`), the only per-service source for routes, body caps, env keys, and database and broker defaults; runtime-kit inputs; a thin `.gitlab-ci.yml` | Chart, manifest, RBAC, cluster credential, release, migrate, or monitor job, gateway posture keys | Kubernetes through `deploy`; local Compose and Swarm |
 | `client` | Quasar SSR/PWA front end; its contract (class `edge`) with `consumes.gatewayUrl` and `consumes.apiPrefixes` | Chart, manifest, release job, trusted header | Image on Kubernetes; `quasar dev` locally |
 | `gateway` | HAProxy image, posture (public paths, rate limits, authz route groups, sanitize lists, JWT and TOTP) in `charts/gateway` keyed `<service>/<route>`, its contract (class `edge`), `gateway-start`, `snapshots/` | A releasable template, environment overlay, release job, backend routes or ports | Kubernetes (render at start); local shared Docker |
-| `deploy` | Schemas, class layers, both charts, release script, CD pipeline, the EO register; only writer of `RUNNER_JOB_IMAGE` | Secrets, any per-service route, body cap, or env key, gateway posture, a dev chart or values file, invented hosts, internet downloads, cluster-scoped RBAC | Kubernetes/OpenShift release only |
+| `deploy` | Schemas, class layers, both charts, release script, CD pipeline, the EO register; only writer of `RUNNER_JOB_IMAGE` | Secrets, any per-service route, body cap, or env key, gateway posture, a dev chart or values file, invented hosts, internet downloads, cluster-scoped RBAC | Single-host Compose through the CD pipeline; Kubernetes/OpenShift through the operator host and the unincluded Helm path |
 | `service-ci-kit` | Service CI: build, label, smoke, release, handoff | Any cluster, Helm, kubectl, kubeconfig, Secret, migration, or DB job; a public-registry fallback | CI only |
 | `service-runtime-kit` | Local Compose and Swarm generation for Laravel and PHP | GitLab CI logic, Kubernetes or OpenShift release | Local Compose; Swarm templates |
 | `ci-image` | The CI toolchain image and its pins | Runner installation, application build stacks, Secrets, tool pins duplicated elsewhere | Default job image of the `ci` and Kubernetes Runner shapes; base of deploy-tools. Deploy jobs run in `DEPLOY_TOOLS_IMAGE` |
@@ -134,15 +140,19 @@ releases, rolls back, or syncs a Secret, needs the user's explicit authorization
 | 9 | Create the Nexus image repository `<DOCKER_REGISTRY>/alaa/services/<svc>` and the protected GitLab variable `<SVC>_IMAGE_REPOSITORY`; record each unknown as a new deploy EO item | Employer platform | Nexus, GitLab, `deploy` |
 | 10 | Provision Secrets (flow B1 step 1) | Operator | `deploy` |
 | 11 | Once per clone, enable the LF/BOM hooks: `bash scripts/setup-git-hooks-bom.sh` | Each developer | The clone |
-| 12 | The first default-branch pipeline hands off; `release:apply` fails unless step 10 and the flow B1 prerequisites are ready. Flows B and C follow | Pipeline | Service repo, `deploy` |
+| 12 | On the unincluded Helm path (flow B): the first default-branch pipeline hands off; `release:apply` fails unless step 10 and the flow B1 prerequisites are ready. Flows B and C follow | Pipeline | Service repo, `deploy` |
 
 ### B. First deployment
 
+**Unincluded Helm path.** The Kubernetes flows here use `release:*` jobs that live only in `deploy`
+`<repo>/k8s.gitlab-ci.yml`, whose header says `NOT INCLUDED`, so no CD pipeline runs them. The live CD pipeline is
+single-host Compose: Prepare, manual Deploy, Record, Publish (`deploy` `<repo>/.gitlab-ci.yml`,
+`<repo>/docs/delivery-topology.md` "CD pipeline shape"). The EO-12 and EO-30 items record GitLab settings.
+
 Two cases differ: bootstrapping the whole fleet into an empty namespace with no gateway (B1), and adding one
-backend to a running fleet (B2). The deploy handoff pipeline releases one service per run with `SERVICE` and
+backend to a running fleet (B2). The Helm handoff pipeline would release one service per run with `SERVICE` and
 `IMAGE_DIGEST`; `release:apply` is manual, and the handoff digest becomes `<SVC>_IMAGE_DIGEST`
-(`<repo>/ci/release.sh` in `deploy`). That pipeline has not run on GitLab (EO-12, EO-30). The deploy runbook
-steps run from the approved operator or CD host with `<repo>/scripts/helm-release.sh`, where the operator supplies
+(`<repo>/ci/release.sh` in `deploy`). The deploy runbook steps run from the approved operator or CD host with `<repo>/scripts/helm-release.sh`, where the operator supplies
 `<SVC>_IMAGE_DIGEST` (the digest of the image imported into Nexus) in `--env-file` or the process environment.
 
 #### B1. Fleet bootstrap
@@ -181,16 +191,18 @@ Prerequisite: flow A steps 1 to 11 are done, and the gateway, client, and other 
 
 ### C. Update and rollback
 
+Step 1 is the `service-ci-kit` definition; Milestone 1 scope: Runner shapes above. Steps 2 to 7 are the unincluded Helm path (flow B). On the live CD pipeline, a merge into `main` or a Maintainer run on `main` with optional `SERVICE` and `IMAGE_DIGEST` starts it; no trigger runs from a service CI pipeline into CD (`deploy` `<repo>/docs/delivery-topology.md`).
+
 | # | Step | Owner | Affected |
 |---|---|---|---|
 | 1 | Service pipeline on the default branch: `make_tag_version`, `build` (validates the contract with `alaa-deploy`, builds with both labels, pushes), `smoke` (pulls by digest, checks the labels), `release`, `handoff_prepare`, `handoff` | Service and `service-ci-kit` | Service repo, Nexus |
 | 2 | Handoff sends only `SERVICE` and `IMAGE_DIGEST` through `trigger:inputs` to `ALAA_DEPLOY_PROJECT`; with no new release the child pipeline is a no-op | `service-ci-kit` | Service repo, `deploy` |
-| 3 | The deploy pipeline is created only for a pipeline source on the protected default branch with `DEPLOY_TOOLS_IMAGE` carrying `@sha256`; otherwise the upstream trigger fails | `deploy` | Service repo, `deploy` |
+| 3 | `deploy` `<repo>/.gitlab-ci.yml` `workflow:rules` admit only sources `push`, `web`, and `api` on the protected default branch, so this multi-project trigger creates no deploy pipeline. An includer of `<repo>/k8s.gitlab-ci.yml` must admit source `pipeline` first | `deploy` | Service repo, `deploy` |
 | 4 | Jobs `handoff:validate`, `release:dry-run`, `release:apply` (manual and blocking unless `RELEASE_APPLY_MODE=auto`), `release:monitor`, `release:gateway` | `deploy`; operator applies | The target service |
 | 5 | `release:gateway` runs `helm-release.sh gateway --check-sync` and re-releases the deployed gateway digest only on exit 3 (stale route set); a new gateway image needs flow B2 step 5 | `deploy` | `gateway` |
 | 6 | Apply phases: inputs, preflight, lint, render, secret-preflight, contract-preflight (prefix conflict, body cap, handler budget), helm-upgrade with the migrate hook and `--wait`, route-admission, helm-test, gateway-sync. A changed contract SHA prints `GATEWAY RE-RELEASE REQUIRED` | `deploy` | Target service, `gateway` |
 | 7 | Evidence stays in the `release-diagnostics/` artifact; the scheduled `release:watch` job reads with `WATCH_KUBECONFIG` and reports an unhealthy release or a stale route set | `deploy` | All releases |
-| 8 | Off the default branch, `gate:chart` runs the strict chart gate. It needs `GATE_TOOLS_IMAGE` with `@sha256`; without it, job `tools-image:missing` fails (EO-31) | `deploy` | `deploy` |
+| 8 | A CD pipeline runs no gate. Until CI pipelines exist, a maintainer runs the strict gate manually and locally (`<repo>/docs/delivery-topology.md`, `<repo>/docs/runbook/75-strict-gate.md`). Its image `GATE_TOOLS_IMAGE`: EO-31 | `deploy` | `deploy` |
 
 Rollback:
 
