@@ -53,15 +53,18 @@ OpenSSL 3.5.9, 2026-11-02; the Ala gateway's fuller case list is `gateway`
 
 - **Signal.** A frontend's `connections_total` rising without `sessions_total` shows handshakes that
   never became sessions, including those that log nothing.
-- **Silence.** With `option dontlognull`, silent and stalled handshakes log nothing.
+- **Silence.** With `option dontlognull`, a silent connection the client closes by FIN logs nothing,
+  and neither does a silent or stalled handshake that `timeout client-hs` closes. A silent connection
+  the client closes by RST still logs one `error-log-format` line, with `fc_err` 34 or 48, so a TCP
+  probe that resets reads as a handshake failure.
 - **`error-log-format`.** A real failure logs through it only when a stream-less error is emitted.
   Not every such line is a TLS failure: a malformed plain-HTTP request logs there with `fc_err` 0.
   A filter must read the error field, and a non-zero `fc_err` can also follow a completed handshake.
 - **Names.** `%ft` carries a `~` suffix on the SSL listener while the metric label keeps the plain
   frontend name, so a filter must match both.
 - **Counters.** `ssl_failed_handshake` appears only with `/metrics?extra-counters=on`. It rises when
-  the client closes a silent connection (FIN or RST, no log line, so a TCP probe raises it) and on a
-  non-TLS byte stream. It stays flat when `timeout client-hs` closes a silent or stalled handshake.
+  the client closes a silent connection, by FIN or RST, so a TCP probe raises it, and on a non-TLS
+  byte stream. It stays flat when `timeout client-hs` closes a silent or stalled handshake.
   `request_errors` stayed flat in all of these.
 
 ## SNI on the client side
