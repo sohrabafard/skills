@@ -54,7 +54,7 @@ TASK_SKILLS_RE = re.compile(r"\[skills:\s*([^\]]+)\]\s*$", re.I)
 TASK_LINE_RE = re.compile(r"^\s*(?:[-*]\s+\[[ xX-]\]|\d+[.)])\s+(.+)$", re.M)
 VAGUE_SKILLS_RE = re.compile(r"\b(?:relevant|appropriate|related|matching)\s+skills?\b", re.I)
 ISSUE_LINE_RE = re.compile(r"^\s*[-*]\s+Issue:\s*(.*?)\s*$", re.I | re.M)
-LOCAL_TASK_RE = re.compile(r"^\s*[-*]\s+\[([ xX-])\]\s+([A-Za-z][A-Za-z0-9_.-]*):\s+(.+?)\s+\[depends:\s*([^\]]*)\]\s+\[skills:\s*([^\]]+)\]\s*$", re.I)
+LOCAL_TASK_RE = re.compile(r"^\s*[-*]\s+\[([ xX-])\]\s+([A-Za-z][A-Za-z0-9_.-]*):\s+(.+?)\s+\[depends:\s*([^\]]*)\]\s+(?:\[migrated:\s*([^\]]+)\]\s+)?\[skills:\s*([^\]]+)\]\s*$", re.I)
 HIERARCHY_NODE_RE = re.compile(r"^([ \t]*)[-*][ \t]+([A-Za-z]+)[ \t]+issue:[ \t]*([^\r\n]*)$", re.I | re.M)
 
 
@@ -434,6 +434,12 @@ def executing_tasks(content: str, status: str) -> bool:
     )
 
 
+def portable_binding(binding: str) -> bool:
+    return bool(binding and binding != "not applicable" and not UNRESOLVED_RE.search(binding)
+                and binding.split("#", 1)[0].strip() and not re.search(r"[\r\n`\\]", binding)
+                and not re.match(r"(?:/|[a-zA-Z][a-zA-Z0-9+.-]*:)", binding))
+
+
 def validate_task_store(content: str, status: str) -> list[str]:
     stores, bindings = task_store_headers(content)
     if not stores and not bindings and not hierarchy_family(content):
@@ -444,13 +450,12 @@ def validate_task_store(content: str, status: str) -> list[str]:
     messages: list[str] = []
     if store not in {"local", "beads"}:
         return [error("plan.task-store", f"Unsupported task store: {store}.", "Select local or beads explicitly.")]
-    if store == "local" and binding != "not applicable":
-        messages.append(error("plan.task-binding", "Local task binding must be not applicable.", "Record the local pairing without a Beads binding."))
-    if store == "local" and ISSUE_LINE_RE.search(content):
-        messages.append(error("plan.local-issue-mapping", "Local family contains a Beads issue mapping.", "Use local task IDs and prerequisites throughout this family."))
-    if store == "beads" and (not binding or binding == "not applicable" or UNRESOLVED_RE.search(binding)
-                             or not binding.split("#", 1)[0].strip() or re.search(r"[\r\n`\\]", binding)
-                             or re.match(r"(?:/|[a-zA-Z][a-zA-Z0-9+.-]*:)", binding)):
+    has_issues = ISSUE_LINE_RE.search(content) is not None
+    if store == "local" and binding != "not applicable" and not portable_binding(binding):
+        messages.append(error("plan.task-binding", "Local task binding must be not applicable or a portable Beads binding.", "Record not applicable, or the adopted portable binding once Beads tasks are registered."))
+    if store == "local" and has_issues and not portable_binding(binding):
+        messages.append(error("plan.task-binding", "Local family with Beads issue mappings requires a portable Beads binding.", "Record the adopted binding before registering new tasks in Beads."))
+    if store == "beads" and not portable_binding(binding):
         messages.append(error("plan.task-binding", "Beads requires a portable project-relative binding owner reference.", "Name the adopted binding owner, optionally with an anchor."))
     if hierarchy_family(content):
         messages.extend(validate_hierarchy_contract(content, status))
@@ -458,6 +463,7 @@ def validate_task_store(content: str, status: str) -> list[str]:
         return messages
     unresolved_level = error if executing_tasks(content, status) else warning
     tasks: dict[str, tuple[bool, list[str]]] = {}
+    migrated: dict[str, str] = {}
     issues: set[str] = set()
     for title, phase in phase_blocks(content):
         local = list(TASK_LINE_RE.finditer(phase))
@@ -467,58 +473,70 @@ def validate_task_store(content: str, status: str) -> list[str]:
                 messages.append(error("plan.beads-local-tasks", f"{title} contains local checkbox or numbered work tasks.", "Keep issue mappings only; Beads owns task state."))
             if not mappings:
                 messages.append(error("plan.beads-mapping", f"{title} has no issue mapping.", "Map its executable work to issue IDs with skills."))
-            for mapping in mappings:
-                value = mapping.group(1)
-                skills = TASK_SKILLS_RE.search(value)
-                issue = clean_scalar(value[:skills.start()] if skills else value)
-                if not issue or re.search(r"\s|\[|\]", issue):
-                    messages.append(error("plan.beads-mapping", f"{title} has an invalid issue ID.", "Use one opaque nonempty issue ID and a skills suffix."))
-                elif UNRESOLVED_RE.search(issue):
-                    messages.append(unresolved_level("plan.beads-mapping", f"{title} has an unresolved issue mapping.", "Resolve the issue before execution."))
-                elif issue in issues:
-                    messages.append(error("plan.beads-mapping", f"Duplicate issue mapping: {issue}.", "Map each issue to one phase once."))
-                else:
-                    issues.add(issue)
-        else:
-            if not local:
-                messages.append(error("plan.local-task", f"{title} has no local work tasks.", "Add stable local IDs, dependencies and skills."))
+        elif not local and not mappings:
+            messages.append(error("plan.local-task", f"{title} has no local work tasks.", "Add stable local IDs, dependencies and skills, or map Beads issues."))
+        for mapping in mappings:
+            value = mapping.group(1)
+            skills = TASK_SKILLS_RE.search(value)
+            issue = clean_scalar(value[:skills.start()] if skills else value)
+            if not issue or re.search(r"\s|\[|\]", issue):
+                messages.append(error("plan.beads-mapping", f"{title} has an invalid issue ID.", "Use one opaque nonempty issue ID and a skills suffix."))
+            elif UNRESOLVED_RE.search(issue):
+                messages.append(unresolved_level("plan.beads-mapping", f"{title} has an unresolved issue mapping.", "Resolve the issue before execution."))
+            elif issue in issues:
+                messages.append(error("plan.beads-mapping", f"Duplicate issue mapping: {issue}.", "Map each issue to one phase once."))
+            else:
+                issues.add(issue)
+        if store == "local":
             for task in local:
                 parsed = LOCAL_TASK_RE.fullmatch(task.group(0))
                 if parsed is None:
-                    messages.append(error("plan.local-task", f"Malformed local task: {task.group(1)}.", "Use a checkbox, stable ID, outcome, depends field and skills suffix."))
+                    messages.append(error("plan.local-task", f"Malformed local task: {task.group(1)}.", "Use a checkbox, stable ID, outcome, depends field, optional migrated field and skills suffix."))
                     continue
-                done, identifier, outcome, dependencies, _ = parsed.groups()
+                done, identifier, outcome, dependencies, moved, _ = parsed.groups()
                 if UNRESOLVED_RE.search(identifier + outcome + dependencies):
                     task_level = error if done.lower() == "x" else unresolved_level
                     messages.append(task_level("plan.local-task", f"Unresolved local task: {identifier}.", "Resolve the task before execution."))
                 if identifier in tasks:
                     messages.append(error("plan.local-id", f"Duplicate local task ID: {identifier}.", "Keep each stable ID unique."))
                     continue
+                if moved:
+                    if done != "-" or clean_scalar(moved) in migrated.values():
+                        messages.append(error("plan.local-migrated", f"Task {identifier} has an invalid or repeated migrated marker.", "Mark a migrated task [-] with its own unique Beads issue ID."))
+                    migrated[identifier] = clean_scalar(moved)
                 deps = [] if dependencies.strip() == "none" else [clean_scalar(dep) for dep in dependencies.split(",")]
                 deps = [dependency for dependency in deps if not UNRESOLVED_RE.search(dependency)]
                 tasks[identifier] = (done.lower() == "x", deps)
-    if store == "beads":
+    for identifier, issue in migrated.items():
+        if issue not in issues:
+            messages.append(error("plan.local-migrated", f"Migrated task {identifier} names issue {issue} with no mapping in this plan.", "Add the issue mapping in the same plan, or restore the task as local."))
+    if store == "beads" or issues:
         messages.append(warning("plan.beads-offline", "Offline structure only; issue existence, workspace, scope and readiness are not verified.", "Verify the adopted binding and live issue state before tracking-dependent work."))
         for issue in ISSUE_LINE_RE.finditer(content):
             if not any(start <= issue.start() < end for _, start, end in phase_regions(content)):
                 messages.append(error("plan.skills-structure", "Issue mapping is outside a phase.", "Map each issue inside its explicit phase."))
+    if store == "beads":
         return messages
     # Index once and traverse each vertex/edge once: O(V+E), with no recursion depth limit.
-    incoming = dict.fromkeys(tasks, 0)
-    children: dict[str, list[str]] = {identifier: [] for identifier in tasks}
-    for identifier, (done, deps) in tasks.items():
+    live = {identifier: value for identifier, value in tasks.items() if identifier not in migrated}
+    incoming = dict.fromkeys(live, 0)
+    children: dict[str, list[str]] = {identifier: [] for identifier in live}
+    for identifier, (done, deps) in live.items():
         seen: set[str] = set()
         for dependency in deps:
             if dependency in seen:
                 messages.append(error("plan.local-dependency", f"Task {identifier} repeats prerequisite {dependency}.", "List each prerequisite once."))
                 continue
             seen.add(dependency)
-            if dependency not in tasks:
+            if dependency in migrated:
+                messages.append(error("plan.local-dependency", f"Task {identifier} depends on migrated task {dependency}.", "Migrate the dependent task too, or record the edge in Beads."))
+                continue
+            if dependency not in live:
                 messages.append(error("plan.local-dependency", f"Task {identifier} names missing prerequisite {dependency}.", "Name an existing local task ID."))
                 continue
             incoming[identifier] += 1
             children[dependency].append(identifier)
-            if done and not tasks[dependency][0]:
+            if done and not live[dependency][0]:
                 messages.append(error("plan.local-progress", f"Completed task {identifier} has incomplete prerequisite {dependency}.", "Reconcile actual progress before completion."))
     ready = deque(identifier for identifier, count in incoming.items() if count == 0)
     visited = 0
@@ -529,7 +547,7 @@ def validate_task_store(content: str, status: str) -> list[str]:
             incoming[child] -= 1
             if incoming[child] == 0:
                 ready.append(child)
-    if visited != len(tasks):
+    if visited != len(live):
         messages.append(error("plan.local-cycle", "Local task prerequisites contain a cycle.", "Remove the cyclic edge before execution."))
     return messages
 
@@ -915,8 +933,15 @@ def validate_plan(path: Path, profile: str) -> list[str]:
     complete = is_complete_status(status)
     messages: list[str] = []
     if kind == "execution":
-        if not hierarchy_family(content):
-            messages.append(error("plan.execution-hierarchy", "Explicit execution requires the Beads phase-task-subtask hierarchy.", "Restore the hierarchy; direct changes cadence, never task authority."))
+        stores, _ = task_store_headers(content)
+        local_store = len(stores) == 1 and clean_scalar(stores[0]) == "local"
+        reasons = header_values(content, "Task store reason")
+        if not hierarchy_family(content) and not local_store:
+            messages.append(error("plan.execution-hierarchy", "Explicit execution requires the Beads phase-task-subtask hierarchy unless it records Task store local with a Beads-unavailable reason.", "Restore the hierarchy; direct changes cadence, never task authority."))
+        if local_store and (len(reasons) != 1 or not recorded_value(reasons[0])):
+            messages.append(error("plan.local-reason", "Execution with Task store local requires one recorded Task store reason naming why Beads was unavailable.", "Record the observed bd or binding failure, or move the plan to Beads."))
+        if reasons and not local_store:
+            messages.append(error("plan.local-reason", "Task store reason is valid only with Task store local.", "Remove the reason or restore the local store."))
         designs = header_values(content, "Approved design")
         if designs == ["embedded"]:
             messages.extend(validate_embedded_design(content, embedded_body))

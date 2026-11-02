@@ -7,7 +7,7 @@
 - Profile: `{{profile}}`
 - Task store: `{{task_store}}`
 - Task binding: {{task_binding}}
-{{hierarchy_header}}- Review boundary: {{review_boundary}}
+{{store_reason_header}}{{hierarchy_header}}- Review boundary: {{review_boundary}}
 - Final phase: {{final_phase}}
 {{local_final_header}}- Commit authority: {{commit_authority}}
 - Status: planning
@@ -47,7 +47,7 @@ Knowledge held only in the current agent's head disappears on compaction. Fill a
 
 | Skill | Source | Load before | When | If unavailable |
 |---|---|---|---|---|
-| alaa-testing-strategy | NEEDS_FILL | before designing implementation or verification, including workflow scripts | always for implementation/verification | block dependent work |
+| alaa-testing-strategy | NEEDS_FILL | before designing implementation or verification | always for implementation/verification | block dependent work |
 | NEEDS_FILL | NEEDS_FILL | NEEDS_FILL | NEEDS_FILL | NEEDS_FILL |
 
 ## Ordered Work
@@ -79,7 +79,8 @@ Prompting-guide supplies capability/mechanics evidence; workflow stores decision
 - Reusable evidence and invalidation conditions: NEEDS_FILL
 - Dispatches assume zero shared context: copy the relevant handoff-package facts into the dispatch text rather than referring to this conversation.
 - Lanes report changed paths; this plan's owner records the validated snapshot and handles any explicitly authorized commit.
-- Before execution, verify the adopted Beads workspace, project, nodes, parent-child relations and blocking edges through the binding owner; initialization proves only offline syntax. Nested invocations inherit this engagement's review boundary and final phase.
+{{task_verification}}
+- Nested invocations inherit this engagement's review boundary and final phase.
 
 {{position_section}}
 {{approved_design_section}}

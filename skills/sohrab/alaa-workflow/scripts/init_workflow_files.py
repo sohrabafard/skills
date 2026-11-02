@@ -139,8 +139,9 @@ def parse_args() -> argparse.Namespace:
         ),
     )
     parser.add_argument("--with-prompts", action="store_true", help="Create the same-stem role prompt pack.")
-    parser.add_argument("--task-store", choices=("local", "beads"), default="local", help="Task authority; local is valid only for new direct single-phase work. Phased/delegated plans require explicit beads and binding. No live tracker access.")
+    parser.add_argument("--task-store", choices=("local", "beads"), default="local", help="Task authority. Execution plans use beads with --beads-binding; local requires --beads-unavailable-reason. Design plans use local. No live tracker access.")
     parser.add_argument("--beads-binding", help="Portable project-relative binding owner reference for Beads.")
+    parser.add_argument("--beads-unavailable-reason", help="Execution with --task-store local only: one line naming the observed reason Beads is unavailable (bd missing, bd where failed or mismatched, or no binding).")
     parser.add_argument("--review-boundary", choices=("phase", "final"), help="Declared engagement review boundary; defaults to phase at the root, inherited from a parent plan.")
     parser.add_argument("--slug", help="Optional explicit slug.")
     parser.add_argument("--plan-dir", default="auto", help="Plan directory, or auto.")
@@ -274,12 +275,18 @@ def task_store_values(args: argparse.Namespace, checkpoint: Path | None, profile
     delegated = args.mode == "delegated" or bool(args.parent_plan or args.lane)
     if args.state_only and delegated:
         raise Misuse("Delegated work requires a bound plan; --state-only cannot represent its hierarchy.")
-    hierarchy = not args.state_only
-    if hierarchy and args.task_store != "beads":
-        raise Misuse("New phased/delegated plans require --task-store beads and --beads-binding; continue existing local families in place.")
+    hierarchy = args.task_store == "beads"
     binding = args.beads_binding
-    if args.task_store == "local" and binding is not None:
-        raise Misuse("--beads-binding requires --task-store beads.")
+    reason = args.beads_unavailable_reason
+    if args.task_store == "local":
+        if binding is not None:
+            raise Misuse("--beads-binding requires --task-store beads.")
+        if reason is None or not reason.strip() or re.search(r"[\r\n]", reason) or re.search(
+                r"\{\{|\}\}|NEEDS_(?:FILL|CONFIRMATION|LIVE_VERIFICATION)|\[(?:todo|question|gap)\]", reason, re.I):
+            raise Misuse("Execution needs --task-store beads with --beads-binding, or --task-store local with a one-line --beads-unavailable-reason recording why Beads is unavailable.")
+        reason = reason.strip()
+    elif reason is not None:
+        raise Misuse("--beads-unavailable-reason requires --task-store local.")
     if args.task_store == "beads":
         if args.state_only:
             raise Misuse("--task-store beads cannot use --state-only; a bound plan is required.")
@@ -298,11 +305,7 @@ def task_store_values(args: argparse.Namespace, checkpoint: Path | None, profile
         "  - [ ] T3: Run the affected validation surface and repair failures. [depends: T2] [skills: inherit]\n"
         "  - [ ] T4: Reconcile documentation, status, blockers, and remaining work. [depends: T3] [skills: inherit]",
     )
-    beads_work = tuple(
-        f"  - Task issue: NEEDS_FILL_TASK_{number} [skills: inherit]" if hierarchy else
-        "  - Issue: NEEDS_FILL_ISSUE_1 [skills: inherit]\n  - Issue: NEEDS_FILL_ISSUE_2 [skills: inherit]"
-        for number in (1, 2)
-    )
+    beads_work = tuple(f"  - Task issue: NEEDS_FILL_TASK_{number} [skills: inherit]" for number in (1, 2))
     work = local_work if args.task_store == "local" else beads_work
     direct_cursor = "- Current task: none\n- Current subtask: none\n" if hierarchy else ""
     position = (f"## Execution Position\n\n- Position owner: {display_path(checkpoint)} (current phase/task/subtask, blockers, next action)."
@@ -320,6 +323,7 @@ def task_store_values(args: argparse.Namespace, checkpoint: Path | None, profile
     return {
         "task_store": args.task_store,
         "task_binding": binding or "not applicable",
+        "store_reason_header": f"- Task store reason: {reason}\n" if reason else "",
         "hierarchy_header": "- Task hierarchy: phase-task-subtask\n" if hierarchy else "",
         "review_boundary": args.review_boundary or "phase",
         "final_phase": f"Phase {phase_count}",
@@ -330,6 +334,8 @@ def task_store_values(args: argparse.Namespace, checkpoint: Path | None, profile
         "json_cursor_fields": '  "current_task": "none",\n  "current_subtask": "none",\n' if hierarchy else "",
         "task_delegation": ("- Dependency edges and ready sets: Local task prerequisites above own dependency edges; derive readiness before dispatch."
                             if args.task_store == "local" else "- Dependency edges and ready sets: Beads owns issue dependencies and readiness; the plan owns phase barriers and shared-resource conflicts."),
+        "task_verification": ("- Before execution, reread the Task store reason; when Beads is reachable again, register every new task in Beads under `alaa-workflow references/task-tracking.md`."
+                              if args.task_store == "local" else "- Before execution, verify the adopted Beads workspace, project, nodes, parent-child relations and blocking edges through the binding owner; initialization proves only offline syntax."),
         "position_section": position,
     }
 
@@ -340,7 +346,7 @@ def run(args: argparse.Namespace) -> int:
     embedded_flags = [args.design_source, *approval.values()]
     if args.plan_kind == "design":
         incompatible = (args.approved_design or any(value is not None for value in embedded_flags)
-                        or args.beads_binding or args.task_store != "local"
+                        or args.beads_binding or args.beads_unavailable_reason or args.task_store != "local"
                         or args.review_boundary or args.with_prompts or args.with_state or args.state_only
                         or args.no_continuation or args.lane or args.parent_plan or args.mode != "plan"
                         or (args.profile is not None and args.profile != "resumable"))

@@ -22,7 +22,7 @@ An **execution** plan exists only after an approved design and records its reada
 
 A **single plan** is an execution plan that embeds its approved design instead of linking it. Use it when the user approved the design in the current session, including native Plan Mode approval, and execution follows in that session; create no separate design plan then. A design that stays under discussion or awaits approval in a later session uses a separate design plan. The header records `Approved design: embedded` plus the four approval fields under the design approval rules above. `## Approved Design` stays the plan's last section: everything after its `<!-- approved-design:start -->` line is the approved text, copied byte-for-byte into the plan directory from the design source after its `<!-- design-body -->` line, or the whole source when it has none. Never translate, summarize or edit that text; a material change returns `Approval status` to pending, which blocks dependent execution.
 
-Before execution, populate ordered phases, task mappings, dependencies, ownership, exclusions, phase acceptance, validation, resume context and skill bindings through their owners. `references/task-tracking.md` owns mandatory execution task authority and hierarchy; `references/companion-routing.md` owns exact phase/task skill bindings. A small edit needing no plan remains outside artifact admission; choosing a small execution profile does not create a task-authority exception.
+Before execution, populate ordered phases, task mappings, dependencies, ownership, exclusions, phase acceptance, validation, resume context and skill bindings through their owners. `references/task-tracking.md` owns execution task authority (Beads-first) and hierarchy; `references/companion-routing.md` owns exact phase/task skill bindings. A small edit needing no plan remains outside artifact admission; choosing a small execution profile does not create a task-authority exception.
 
 ## Profiles
 
@@ -39,7 +39,7 @@ Use `resumable` for multi-phase work: event-driven checkpoints preserve position
 
 Apply admission before selecting a profile; no profile overrides its exceptions. An actionable execution-plan request uses `resumable` unless a real consumer requires a heavier profile.
 
-For execution hierarchy, apply `references/task-tracking.md` `## Phase-task-subtask hierarchy` regardless of profile.
+For execution task authority and hierarchy, apply `references/task-tracking.md` `## Select before tracking-dependent work` regardless of profile.
 
 ## Size and consolidate the plan
 

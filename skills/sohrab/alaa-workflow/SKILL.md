@@ -1,6 +1,6 @@
 ---
 name: alaa-workflow
-description: "Durable design and execution planning for long-running, multi-phase, resumable, delegated, handoff-sensitive, review, or prompt-pack work. Design plans discuss ideas and algorithms locally through explicit approval; execution plans follow an approved linked or embedded design with bound Beads tracking and exact phase/task skills. A plan request saves its admitted plan and checkpoint; plan-only authorizes no implementation. Respect native Plan Mode and explicit no-file, read-only, or chat-only limits; short advice, ordinary review, and small single-phase edits create no files unless requested."
+description: "Durable design and execution planning for long-running, multi-phase, resumable, delegated, handoff-sensitive, review, or prompt-pack work. Design plans discuss ideas and algorithms locally through explicit approval; execution plans follow an approved linked or embedded design with Beads-first task tracking and exact phase/task skills. A plan request saves its admitted plan and checkpoint; plan-only authorizes no implementation. Respect native Plan Mode and explicit no-file, read-only, or chat-only limits; short advice, ordinary review, and small single-phase edits create no files unless requested."
 ---
 
 # Alaa Workflow
@@ -13,14 +13,14 @@ Keep long work resumable without imposing orchestration on every task. Plans own
 2. If a plan already exists, read it before execution, resume, delegation, review, or handoff, and follow the resume protocol in `references/context-continuity.md`.
 3. When `/alaa-memory-os` says its trigger holds, invoke it before planning from prior context or publishing durable knowledge. Memory may contribute verified leads; it never owns this workflow's plan, checkpoint, evidence, or handoff.
 4. Before the first non-trivial repository discovery or code-evidence choice, invoke `/alaa-code-intelligence-routing` once and reuse its routed result instead of retrieving the same fact through a second surface.
-5. Pair with `/alaa-low-noise` and the narrowest domain skill needed for technical decisions. Before designing implementation or verification, load `/alaa-testing-strategy`, including for this workflow's own scripts.
-6. Before writing, resolve plan kind, approval and artifact/profile admission through `references/artifact-lifecycle.md`. Resolve execution task authority and evidence through `references/task-tracking.md`, and exact skill bindings through `references/companion-routing.md`.
+5. Pair with `/alaa-low-noise` and the narrowest domain skill needed for technical decisions. Before designing implementation or verification, load `/alaa-testing-strategy`.
+6. Before writing, resolve plan kind, approval and artifact/profile admission through `references/artifact-lifecycle.md`. Resolve Beads availability, execution task authority and evidence through `references/task-tracking.md`, and exact skill bindings through `references/companion-routing.md`.
 
 ## Select the profile
 
 Select kind, approval admission, profile and execution phase/lane planning through `references/artifact-lifecycle.md`.
 
-Initialize design with `scripts/init_workflow_files.py --task <title> --plan-kind design`. Initialize execution with `scripts/init_workflow_files.py --task <title> --plan-kind execution --approved-design <path> --task-store beads --beads-binding <portable-reference> [--profile <profile>] [--review-boundary phase|final] [--with-prompts]`. For a design approved in this session, replace `--approved-design <path>` with `--approved-design embedded --design-source <path> --approval-by <approver> --approval-on <YYYY-MM-DD> --approval-evidence <evidence>`. The kind owner decides allowed flags; `references/task-tracking.md` owns execution binding arguments. Exit `0` means files were created. Exit `1` means a collision and no writes; continue that family instead of forcing over it. Exit `2` means the invocation could not run; do not assume an artifact set exists.
+Initialize design with `scripts/init_workflow_files.py --task <title> --plan-kind design`. Initialize execution with `scripts/init_workflow_files.py --task <title> --plan-kind execution --approved-design <path> --task-store beads --beads-binding <portable-reference> [--profile <profile>] [--review-boundary phase|final] [--with-prompts]`. When `references/task-tracking.md` finds Beads unavailable, replace the two Beads flags with `--task-store local --beads-unavailable-reason <observed failure>`. For a design approved in this session, replace `--approved-design <path>` with `--approved-design embedded --design-source <path> --approval-by <approver> --approval-on <YYYY-MM-DD> --approval-evidence <evidence>`. The kind owner decides allowed flags; `references/task-tracking.md` owns execution binding arguments. Exit `0` means files were created. Exit `1` means a collision and no writes; continue that family instead of forcing over it. Exit `2` means the invocation could not run; do not assume an artifact set exists.
 
 ## Survive compaction and handoff
 
@@ -38,7 +38,7 @@ This section applies to execution engagements and issue-only implementation.
 - Record the engagement's review boundary and final phase; pass them into nested orchestration. `alaa-codex-orchestrator` and `alaa-cc-orchestrator` `references/verification-and-gates.md` own cadence scheduling.
 - Record phase test-collection, repair/retest and inherited review barriers in the plan through `references/artifact-lifecycle.md`.
   Route generic execution and the early-repair exception to /alaa-testing-strategy `references/100-test-execution.md`; the runtime orchestrators own phase/review scheduling and independent observers through the cadence owner above.
-- Fix defects and retest the failing path within the active retry budget; never weaken assertions, conceal failures through fixtures, suppress findings or lower review standards. Record an unresolved blocker and next safe action; continue independent safe work.
+- Fix defects and retest the failing path within the active retry budget; never weaken assertions, hard-code expected results, suppress findings or lower review standards. Record an unresolved blocker and next safe action; continue independent safe work.
 - On resume, follow the read order in `references/context-continuity.md` before taking any action.
 - Complete only when implementation, validation evidence, documentation, artifact status, and the final reusable-context curation outcome agree.
 - Report completion as four independent states — `IMPLEMENTED`, `MERGE_CANDIDATE`, `RELEASE_CANDIDATE`, `PUBLISHED` — each with its own verdict, never collapsed into a single one. This skill owns that lifecycle for execution runs, and `references/workspace-and-integration.md` owns what earns each state.
@@ -73,7 +73,7 @@ Review the requested surface directly. Lead with actionable findings and exact e
 
 ## Validate the workflow artifacts
 
-When a workflow artifact family is admitted, run `scripts/validate_workflow_files.py --plan <path>` before handoff and completion. It applies kind-specific offline checks and correlates explicit references or the selected stem while preserving unmarked history. `references/artifact-lifecycle.md` owns approval-proof limits; `references/task-tracking.md` owns live Beads-proof limits. Issue-only work creates no plan just to run this artifact validator; required behavior validation still runs, with results recorded in its issue through `references/task-tracking.md`.
+When a workflow artifact family is admitted, run `scripts/validate_workflow_files.py --plan <path>` before handoff and completion. It applies kind-specific offline checks and correlates explicit references or the selected stem while preserving unmarked history. `references/artifact-lifecycle.md` owns approval-proof limits; `references/task-tracking.md` owns live Beads-proof limits. Issue-only work creates no plan just to run this artifact validator; required behavior validation still runs, with results recorded in its issue through `references/task-tracking.md`, or in the final report when Beads is unavailable.
 
 For admitted families, exit `0` is clean; warnings alone do not fail it. Exit `1` is a blocking artifact error to repair before advancement, never report as a pass. Exit `2` means validation failed to run; a missing selected plan, uncorrelatable companion, or unreadable file is a failed gate, never evidence that artifacts are clean. No artifact validation runs for issue-only work; report that distinction without implying its required behavior validation passed.
 
@@ -89,7 +89,7 @@ This skill owns coordination and continuity, not architecture, security, data, r
 |---|---|
 | Begin a long run, hand off (including to another PC), resume, or find you cannot name your own current position | `references/context-continuity.md` |
 | Write the first workflow file, choose design versus execution or verify approval, weigh profiles, or attach to an existing family | `references/artifact-lifecycle.md` |
-| Resolve execution hierarchy, select or migrate a task store, decide where task information, acceptance or evidence lives, write issue fields or a close reason, link a follow-up or cross-project dependency, assign/resume/transfer an agent's Beads identity or issue ownership, resolve readiness, or encounter a Beads outage or uncertain update | `references/task-tracking.md` |
+| Resolve execution hierarchy, test Beads availability, select or migrate a task store, decide where task information, acceptance or evidence lives, write issue fields or a close reason, link a follow-up or cross-project dependency, assign/resume/transfer an agent's Beads identity or issue ownership, resolve readiness, or encounter a Beads outage or uncertain update | `references/task-tracking.md` |
 | Make the first write of a multi-phase or delegated run, record an evidence snapshot, exercise authorized Git integration, or state which completion states a finished run reached | `references/workspace-and-integration.md` |
 | Reach an execution phase or decision boundary with a curation signal, or prepare execution completion | `references/context-curation.md` |
 | Generate a prompt pack, or resolve a runtime, model, or effort value for one | `references/phase-prompts.md` |

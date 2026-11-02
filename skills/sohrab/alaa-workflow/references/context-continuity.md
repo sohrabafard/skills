@@ -112,7 +112,7 @@ This test is worth running mentally before any long unattended stretch, because 
 
 First resolve the artifact family and kind through `references/artifact-lifecycle.md`, then its task authority through `references/task-tracking.md`. Before acting, read every applicable owner below in order; skip only an absent/not-admitted artifact or JSON without a consumer.
 
-1. **The current bound issue**, when Beads is selected, for actual task state, notes, comments and prerequisites; fresh hook guidance is no substitute for this read.
+1. **The current bound issue**, when Beads is selected, for actual task state, notes, comments and prerequisites; fresh hook guidance is no substitute for this read. For a `local` family, retest Beads availability under `references/task-tracking.md` before the next new task.
 2. **The plan**, when admitted, for destination, scope, acceptance and validation; a design also requires its decisions and open questions, while execution reads ordered phases and any tasks owned by an existing local family.
 3. **The handoff package** inside the plan, for verified facts, assumptions, rejected approaches and traps before touching code. Issue-only work reads the issue's notes and comments instead.
 4. **The checkpoint**, when admitted, for position, last verified result, blockers and next action; direct work reads the plan cursor.

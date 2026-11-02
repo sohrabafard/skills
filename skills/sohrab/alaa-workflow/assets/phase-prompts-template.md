@@ -16,13 +16,13 @@ Before use, load the runtime-correct prompting guide and re-check unresolved or 
 
 Resolve the whole engagement, current phase/task/subtask, final phase and review boundary from the plan's canonical cursor. Nested invocations inherit that boundary; the reviewer below runs only when the active orchestrator schedules that boundary. Its local phase is not automatically the final candidate.
 
-For Beads-bound work, populate each dispatch's actor, binding reference, issue IDs and ownership action through `/alaa-workflow` `references/task-tracking.md` `## Agent identity and ownership` before use.
+For Beads-bound work, populate each dispatch's actor, binding reference, issue IDs, ownership action and `bd` flags through `/alaa-workflow` `references/task-tracking.md` `## Agent identity and ownership` and `## Beads capabilities in use` before use.
 
 ## Implementer
 
 **Outcome:** Execute the selected phase in `{{plan_path}}` and leave repository behavior, tests, documentation, and workflow status consistent.
 
-**Read first:** Load /alaa-testing-strategy before designing implementation or verification, including workflow scripts. Read repository instructions, the plan, and every source named by the selected phase. Load its Required skills and task overrides from Skill Bindings before their recorded decisions; obey each condition and absence action.
+**Read first:** Load /alaa-testing-strategy before designing implementation or verification. Read repository instructions, the plan, and every source named by the selected phase. Load its Required skills and task overrides from Skill Bindings before their recorded decisions; obey each condition and absence action.
 
 **Scope:** Change only the phase-owned surfaces. Preserve unrelated work. Delegate only independent, disjoint work or high-volume context isolation; the main agent owns integration.
 
