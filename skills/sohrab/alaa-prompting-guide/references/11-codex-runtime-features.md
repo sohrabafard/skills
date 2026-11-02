@@ -109,10 +109,10 @@ Discovery runs across these scopes, highest priority first:
 | Repo (parent) | `../.agents/skills` | documented |
 | Repo (root) | `$REPO_ROOT/.agents/skills` | documented |
 | User | `$HOME/.agents/skills` | documented |
-| User | `$HOME/.codex/skills` | **field-verified, undocumented** |
+| User | `$HOME/.codex/skills` | **undocumented; WSL discovery unverified** |
 | System | Bundled by OpenAI | documented |
 
-The `$HOME/.codex/skills` row is absent from the official page but its discovery has been field-verified on Windows. Express the path as `$HOME/.codex/skills`. Linux/WSL discovery has not been verified here, so check it in the target runtime before relying on it. Treat the official list as incomplete evidence, not as grounds to reject this path. It sits next to `~/.codex/agents/`, which is where agent TOMLs live — so a Codex user who keeps both under `~/.codex/` has one coherent tree, which is likely why this location is in use even though the docs point elsewhere.
+The `$HOME/.codex/skills` row is absent from the official page but earlier evidence for its discovery came from a retired Windows host. Discovery on WSL is unverified. Express the path as `$HOME/.codex/skills`, and check it in the target runtime before relying on it. Treat the official list as incomplete evidence, not as grounds to reject this path. It sits next to `~/.codex/agents/`, where agent TOMLs live, so a Codex user who keeps both under `~/.codex/` has one coherent tree.
 
 When generating install instructions, name `$HOME/.codex/skills` for personal skills unless the user has said otherwise, and `.agents/skills` for repository-scoped skills that travel with a project.
 

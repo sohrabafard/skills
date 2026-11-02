@@ -154,10 +154,8 @@ check_dependencies() {
             PYTHON_CMD=(python3)
         elif command -v python >/dev/null 2>&1; then
             PYTHON_CMD=(python)
-        elif command -v py >/dev/null 2>&1; then
-            PYTHON_CMD=(py -3)
         else
-            cannot_run "python3, python or 'py -3' is required to install mbake. Re-run with --no-venv or --skip-mbake."
+            cannot_run "python3 or python is required to install mbake. Re-run with --no-venv or --skip-mbake."
         fi
     fi
 }

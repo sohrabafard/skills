@@ -90,7 +90,7 @@ These sequences route to owners; they do not restate what an owner decides. Thre
 4. Use `alaa-permission-generator` when adding or changing catalog-owned coarse permissions or `config/permissions.php`.
 5. Apply `alaa-php-clean-code` as the default coding baseline.
 6. Pull in specialist skills only where the task actually enters their scope.
-7. Keep docs, tests, and operational notes aligned before treating the work as done: `/alaa-testing-strategy` (`$alaa-testing-strategy`) owns aligned for tests, `/alaa-services-contract` (`$alaa-services-contract`) for contract artifacts, `/alaa-observability-soc` (`$alaa-observability-soc`) for operational notes.
+7. Keep docs, tests, and operational notes aligned before treating the work as done: `/alaa-testing-strategy` (`$alaa-testing-strategy`) owns test alignment, `/alaa-services-contract` (`$alaa-services-contract`) for contract artifacts, `/alaa-observability-soc` (`$alaa-observability-soc`) for operational notes.
 
 ### Infra and delivery workflow
 
