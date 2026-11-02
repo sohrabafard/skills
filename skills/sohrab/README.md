@@ -11,7 +11,7 @@ The current pack mixes two patterns on purpose:
 
 ## Pack design rules
 
-- a Codex agent can load only a skill that ships `agents/openai.yaml`, and all 69 of the 69 skill folders here do, verified with `python scripts\check_skill_index.py`
+- a Codex agent can load only a skill that ships `agents/openai.yaml`, and every skill folder here does, verified with `python3 scripts/check_skill_index.py`
 - model, effort, and runtime-capability policy belongs to `/alaa-prompting-guide`; executable agent pins are checked against its structured policy
 - mature surfaces prefer one routing-first owner instead of many tiny near-duplicates
 - companion skills stay explicit where ownership boundaries still matter
@@ -19,7 +19,7 @@ The current pack mixes two patterns on purpose:
 
 ### Path notation in a citation
 
-A path written in a skill points either at a file that ships with that skill or at a file in the repository an agent is working on, and an unmarked path does not say which. Two markers do, and `python scripts\check_fleet_references.py` reads them:
+A path written in a skill points either at a file that ships with that skill or at a file in the repository an agent is working on, and an unmarked path does not say which. Two markers do, and `python3 scripts/check_fleet_references.py` reads them:
 
 - `$SKILL_DIR/<path>` — a file bundled inside the citing skill. The checker resolves it, and a missing file is a finding.
 - `<repo>/<path>` — a path in the target repository. The checker never resolves it, because this repository cannot know what is there.
@@ -101,7 +101,7 @@ These sequences route to owners; they do not restate what an owner decides. Thre
 
 ## Current skill map
 
-Every folder in this directory appears exactly once between the markers below, and every name between them is a folder. `python scripts\check_skill_index.py` asserts both directions and fails when either is false, which is what makes this sentence checkable rather than aspirational. `README.fa.md` carries the same names with a one-line purpose for each; its membership matches this map exactly, and its group boundaries do not — it splits doctrine and multi-agent routing into nine sections where this file uses eight.
+Every folder in this directory appears exactly once between the markers below, and every name between them is a folder. `python3 scripts/check_skill_index.py` asserts both directions and fails when either is false, which is what makes this sentence checkable rather than aspirational. `README.fa.md` carries the same names with a one-line purpose for each; its membership matches this map exactly, and its group boundaries do not — it splits doctrine and multi-agent routing into nine sections where this file uses eight.
 
 <!-- skill-map:start -->
 
@@ -130,7 +130,8 @@ Every folder in this directory appears exactly once between the markers below, a
 - `alaa-cc-orchestrator` — production-grade multi-agent coding orchestration for Claude Code: installs the pack's managed agent roster, plans first, sizes the pipeline to that plan, and routes work through scoped implementation, verification, review, and specialist gates.
 - `alaa-codex-orchestrator` — the same production-grade multi-agent orchestration model as `alaa-cc-orchestrator`, built for Codex: managed agent TOMLs, plan-first sizing, and scoped implementation, verification, and review gates.
 - `alaa-codex-runtime-ops` — Codex recovery inside WSL/Linux: sandbox failures, Bash and POSIX paths, filesystem/process permissions, Docker sockets, session state, and scoped exact-command escalation.
-- `alaa-memory-os` — a store-agnostic memory operating model: what is worth recording, in what note shape, and with what recall budget. Basic Memory and Hindsight each get one adapter reference and neither is the subject.
+- `alaa-memory-os` — a store-agnostic memory operating model: what is worth recording, in what note shape, and with what recall budget. Its two modes, local and Hindsight, each get one adapter reference and neither is the subject.
+- `alaa-legacy-path-map` — translates a legacy Windows drive path found in a project document, plan, handoff, or recalled Hindsight memory to its WSL location from an evidence-backed table, verifying the result exists and never writing the old path into a file or memory.
 - `alaa-extract-agent-lessons` — an intermediate and final curation gate that extracts evidence-backed decision interfaces, judgment rubrics, and durable knowledge cards, keeps active candidates in `alaa-workflow`, and publishes only authorized durable knowledge through `alaa-memory-os`.
 
 ### PHP / Laravel and service engineering
@@ -157,7 +158,7 @@ The 46 `golang-*` skills these four route into are upstream subtrees under the r
 
 - `alaa-data-layer` — Postgres-truth data-layer policy for the Ala fleet: which store owns a fact, tenant-scoped schema/index design, migrations that never lock a live table, query/pool tuning, and Redis run as a cache the request survives losing.
 - `alaa-mongodb-patterns` — MongoDB mechanism for the Ala fleet: document/collection shape, tenant-scoped compound indexes, TTL and retention, idempotent upserts and bulk writes, read/write concern, and primary-election read behaviour.
-- `alaa-partitioned-table-fk-audit` — audits a PostgreSQL repository for foreign keys that reference a partitioned table through an incomplete key (SQLSTATE 42830), and ships a tested detector plus a durable regression test.
+- `alaa-partitioned-table-fk-audit` — audits a PostgreSQL repository for foreign keys that reference a partitioned table through an incomplete key (SQLSTATE 42830), and ships a detector plus a durable regression test.
 - `alaa-crockford-base32-codecs` — a lowercase Crockford Base32 and UUIDv7 codec bundle with four byte-identical implementations (PHP, JavaScript, bash, HAProxy Lua) and a harness proving they still agree; not a source of secrets or key material.
 - `clickhouse-performance-schema-ops` — ClickHouse schema, ingest, query, and operations policy for the Ala fleet: `CREATE TABLE`/`ORDER BY`/`PARTITION BY` choices, merge-backlog and part-count control, and materialized view versus projection versus TTL versus partition-drop decisions.
 - `alaa-minio-object-storage` — object-storage platform policy for the Ala fleet's MinIO and S3-compatible buckets: bucket/key design, tenant scoping, lifecycle and multipart-abort rules, versioning, presigned URLs, and the failure classes of an unreachable store.
@@ -214,7 +215,6 @@ These names appeared in earlier versions of the map and have no folder here, re-
 - `dockerfile-*` — replaced by `alaa-docker-production`; `makefile-generator`, `makefile-validator` — replaced by `alaa-makefile`
 - `azure-pipelines-*`, `github-actions-*`, `jenkinsfile-*` — `alaa-gitlab-ci-cd` is the only CI surface this pack ships
 - `terraform-*`, `terragrunt-*` — infrastructure targets route through `caas-arvan-kuber` and `alaa-k8s-helm`
-- `alaa-basic-memory-os` — renamed to `alaa-memory-os`, because the model is store-agnostic and Basic Memory is one adapter
 - `promql-*`, `logql-generator`, `loki-config-generator`, `fluentbit-*` — `alaa-observability-soc` owns signal and gate decisions; `alaa-signoz-clickhouse-docs` and `vector-rust-observability-pipelines` own the query and pipeline surfaces
 
 ## Definition of done
@@ -225,7 +225,7 @@ Work in this pack is considered ready when:
 - detailed guidance is preserved in one-hop `references/` or `docs/` files
 - `agents/openai.yaml` exists and matches the current skill intent
 - stale donor skill names are removed from active routing docs
-- `python scripts\check_skill_index.py` reports no index finding and no `agents/openai.yaml` gap
+- `python3 scripts/check_skill_index.py` reports no index finding and no `agents/openai.yaml` gap
 - examples, checklists, and anti-patterns are preserved in simple English
 - system-level helpers are clearly separated from pack-local skills
 

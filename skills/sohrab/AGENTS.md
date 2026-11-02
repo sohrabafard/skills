@@ -37,9 +37,9 @@ A rule has exactly one owning file. When two skills state the same rule, one of 
 
 **Keep capability and task-selection ownership separate.** `/alaa-prompting-guide` owns supported pairs, runtime capability evidence and checked model-neutral projections. The runtime orchestrator owns the actual task model/effort and admission for every authority role; `/alaa-workflow` records it. Role identities, including model-named compatibility IDs, select no pair. Main-session configuration stays external.
 
-**Never delete a file.** The device mount forbids `unlink`, and history matters. Move a retired file into `_to_delete/<YYYYMMDD>-<reason>/` at the repository root and say what you moved.
+**Never delete a file.** History matters. Move a retired file into `_to_delete/<YYYYMMDD>-<reason>/` at the repository root and say what you moved.
 
-**Never hardcode a machine path or a version-sensitive number.** `D:\…` breaks on every other machine; a threshold copied from memory is stale the day it is written. Take paths as arguments, and fetch a current value from its primary source with the source and date recorded beside it.
+**Never hardcode a machine path or a version-sensitive number.** `D:\…` breaks on every other machine; a threshold copied from memory is stale the day it is written. Take paths as arguments, and fetch a current value from its primary source with the source and date recorded beside it. The single exception is `alaa-legacy-path-map`, which alone holds legacy Windows paths and the WSL locations they map to, because translating them is its whole purpose.
 
 **State every instruction exactly once.** Two deliberate exceptions: `alaa-project-constitution/assets/constitution-template.md`, which is self-contained because it travels to other repositories and must stand alone there; and the mirrored orchestrator pair recorded under Ownership above. Duplication between a skill and an artifact it emits is not duplication.
 

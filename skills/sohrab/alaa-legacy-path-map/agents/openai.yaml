@@ -1,0 +1,4 @@
+interface:
+  display_name: "Alaa Legacy Path Map"
+  short_description: "Translate legacy Windows paths to verified WSL paths"
+  default_prompt: "Use $alaa-legacy-path-map to translate a legacy Windows drive-letter path from a document or recalled memory to its verified WSL location."

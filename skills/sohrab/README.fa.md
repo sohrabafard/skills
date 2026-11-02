@@ -8,7 +8,7 @@
 
 ## قواعد طراحی این pack
 
-- یک agent در Codex فقط skill ای را می‌تواند بار کند که `agents/openai.yaml` داشته باشد، و هر ۶۹ پوشه skill از ۶۹ پوشه اینجا این فایل را دارند؛ این وضعیت با `python scripts\check_skill_index.py` بررسی شده است.
+- یک agent در Codex فقط skill ای را می‌تواند بار کند که `agents/openai.yaml` داشته باشد، و هر پوشه skill اینجا این فایل را دارد؛ این وضعیت با `python3 scripts/check_skill_index.py` بررسی می‌شود.
 - سیاست مدل، effort و توان runtime فقط در `alaa-prompting-guide` تعریف می‌شود؛ pin های اجرایی agent با سیاست ساخت‌یافتهٔ همان skill سنجیده می‌شوند.
 - سطح‌های بالغ یک مالک routing-first دارند، نه چند skill ریز و تقریبا تکراری.
 - skill های همراه جایی صریح می‌مانند که مرز مالکیت هنوز اهمیت دارد.
@@ -16,7 +16,7 @@
 
 ### نشانه‌گذاری مسیر در یک ارجاع
 
-مسیری که داخل یک skill نوشته می‌شود یا به فایلی اشاره دارد که با همان skill می‌آید، یا به فایلی در مخزنی که agent روی آن کار می‌کند، و مسیر بی‌نشانه نمی‌گوید کدام. دو نشانه می‌گویند، و `python scripts\check_fleet_references.py` آن‌ها را می‌خواند:
+مسیری که داخل یک skill نوشته می‌شود یا به فایلی اشاره دارد که با همان skill می‌آید، یا به فایلی در مخزنی که agent روی آن کار می‌کند، و مسیر بی‌نشانه نمی‌گوید کدام. دو نشانه می‌گویند، و `python3 scripts/check_fleet_references.py` آن‌ها را می‌خواند:
 
 - شکل `$SKILL_DIR/<path>` برای فایلی است که داخل همان skill بسته‌بندی شده. آن checker مسیر را resolve می‌کند و فایل غایب یک finding است.
 - شکل `<repo>/<path>` برای مسیری در مخزن هدف است. آن checker هرگز این مسیر را resolve نمی‌کند، چون این مخزن نمی‌داند آنجا چه هست.
@@ -63,7 +63,7 @@
 
 ## نقشه فعلی skill ها
 
-هر پوشه این دایرکتوری دقیقا یک بار در جدول‌های زیر می‌آید، و هر نامی که در آن جدول‌ها هست یک پوشه است. دستور `python scripts\check_skill_index.py` هر دو جهت را برای این فایل و برای `README.md` بررسی می‌کند و وقتی یکی از دو جهت نقض شود شکست می‌خورد. عضویت این فایل با `README.md` دقیقا یکی است؛ مرز دسته‌ها یکی نیست، چون اینجا نه دسته داریم و آنجا هشت دسته.
+هر پوشه این دایرکتوری دقیقا یک بار در جدول‌های زیر می‌آید، و هر نامی که در آن جدول‌ها هست یک پوشه است. دستور `python3 scripts/check_skill_index.py` هر دو جهت را برای این فایل و برای `README.md` بررسی می‌کند و وقتی یکی از دو جهت نقض شود شکست می‌خورد. عضویت این فایل با `README.md` دقیقا یکی است؛ مرز دسته‌ها یکی نیست، چون اینجا نه دسته داریم و آنجا هشت دسته.
 
 ## ۱. دکترین و استانداردهای مشترک
 
@@ -96,7 +96,8 @@
 | `alaa-cc-orchestrator` | هدایت چند-agent در Claude Code با ۲۸ نقش اجرایی و ۳۱ profile canonical، دروازه‌های تایید و بازبینی مستقل |
 | `alaa-codex-orchestrator` | هدایت چند-agent در Codex با ۲۷ نقش اجرایی و ۳۰ profile canonical؛ review استاندارد و deep یک قرارداد دارند |
 | `alaa-codex-runtime-ops` | بازیابی Codex داخل WSL/Linux: خطاهای sandbox، مسیر و Bash، مجوزهای فایل و پردازش، Docker socket و اجرای محدود بیرون از sandbox |
-| `alaa-memory-os` | مدل عملیاتی حافظه، مستقل از انبار: اینکه چه چیزی ارزش ثبت دارد، در چه شکل یادداشتی، و با چه بودجه بازخوانی و مسیر fail-open. ثبت drift وقتی دو منبع حقیقت اختلاف دارند. Basic Memory و Hindsight هر کدام یک reference آداپتور دارند و هیچ‌کدام موضوع این skill نیستند |
+| `alaa-memory-os` | مدل عملیاتی حافظه، مستقل از انبار: اینکه چه چیزی ارزش ثبت دارد، در چه شکل یادداشتی، و با چه بودجه بازخوانی و مسیر fail-open. ثبت drift وقتی دو منبع حقیقت اختلاف دارند. دو حالت آن، یعنی local و Hindsight، هر کدام یک reference آداپتور دارند و هیچ‌کدام موضوع این skill نیستند |
+| `alaa-legacy-path-map` | ترجمه مسیر قدیمی ویندوز (با حرف درایو) که در سند پروژه، plan، handoff یا حافظه Hindsight بازخوانی‌شده پیدا می‌شود به مسیر WSL، از روی جدول مبتنی بر شواهد؛ نتیجه پیش از استفاده بررسی می‌شود و مسیر قدیمی هرگز در فایل یا حافظه نوشته نمی‌شود |
 | `alaa-extract-agent-lessons` | دروازه میانی و پایانی برای استخراج رابط‌های تصمیم‌گیری، معیارهای قضاوت، و کارت‌های دانش ماندگارِ مبتنی بر شواهد؛ نگهداری نامزدهای فعال در `alaa-workflow` و انتشار فقط دانش ماندگارِ مجاز از مسیر `alaa-memory-os` |
 
 ## ۳. PHP و Laravel
@@ -129,7 +130,7 @@
 |---|---|
 | `alaa-data-layer` | سیاست لایه داده با Postgres به‌عنوان حقیقت: کدام انبار مالک یک واقعیت است، طراحی schema و ایندکس tenant-scoped، migration بدون قفل کردن جدول زنده، تنظیم query و pool، و Redis به‌عنوان cache ای که درخواست بدون آن هم زنده می‌ماند |
 | `alaa-mongodb-patterns` | مکانیزم MongoDB: شکل سند و collection، ایندکس ترکیبی tenant-scoped، TTL و نگهداشت، upsert و bulkWrite خودتوان، read و write concern، و اینکه یک خواننده در زمان انتخاب primary چه می‌گیرد |
-| `alaa-partitioned-table-fk-audit` | بازبینی کلید خارجی که با کلید ناقص به جدول partition شده اشاره می‌کند، یعنی SQLSTATE 42830. یک detector تست‌شده می‌فرستد که والدهای partition شده را از کد کشف می‌کند، شکل کلید واقعی هر والد را می‌خواند، و هر ارجاع ناقص را علامت می‌زند |
+| `alaa-partitioned-table-fk-audit` | بازبینی کلید خارجی که با کلید ناقص به جدول partition شده اشاره می‌کند، یعنی SQLSTATE 42830. یک detector می‌فرستد که والدهای partition شده را از کد کشف می‌کند، شکل کلید واقعی هر والد را می‌خواند، و هر ارجاع ناقص را علامت می‌زند |
 | `alaa-crockford-base32-codecs` | کدگذاری شناسه با Crockford Base32 و UUIDv7، با چهار پیاده‌سازی بایت-یکسان برای PHP و JavaScript و bash و Lua مربوط به HAProxy، به‌همراه harness ای که اثبات می‌کند هنوز هم‌خوان‌اند. برای تولید راز یا کلید رمزنگاری مناسب نیست |
 | `clickhouse-performance-schema-ops` | schema و ingest و query و عملیات ClickHouse: مخزن ingest-pipeline مالک DDL است و هر مصرف‌کننده kit از یک lane با `readonly=2` می‌خواند که DDL اجرا نمی‌کند. انتخاب بین materialized view و projection و TTL و mutation و drop partition، و رفتار سرویس وقتی ClickHouse در دسترس نیست |
 | `alaa-minio-object-storage` | سیاست ذخیره‌سازی شیء روی MinIO و S3: طراحی bucket و کلید شیء، دامنه tenant داخل کلید، lifecycle شامل قاعده abort برای multipart نیمه‌کاره، نسخه‌بندی و رمزنگاری و replication، تامین و چرخش اعتبارنامه، URL امضاشده، و کلاس‌های خطای انباری که در دسترس نیست یا نیمه‌نوشته است |
@@ -192,7 +193,6 @@
 - خانواده `dockerfile-*` جایش را به `alaa-docker-production` داد، و `makefile-generator` و `makefile-validator` جایشان را به `alaa-makefile` دادند
 - خانواده‌های `azure-pipelines-*` و `github-actions-*` و `jenkinsfile-*` حذف شدند، چون `alaa-gitlab-ci-cd` تنها سطح CI ای است که این pack می‌فرستد
 - خانواده‌های `terraform-*` و `terragrunt-*` حذف شدند، چون هدف‌های زیرساخت از `caas-arvan-kuber` و `alaa-k8s-helm` عبور می‌کنند
-- نام `alaa-basic-memory-os` به `alaa-memory-os` تغییر کرد، چون آن مدل مستقل از انبار است و Basic Memory فقط یکی از آداپتورهاست
 - خانواده `promql-*` و `logql-generator` و `loki-config-generator` و `fluentbit-*` حذف شدند، چون `alaa-observability-soc` مالک تصمیم سیگنال و gate است و `alaa-signoz-clickhouse-docs` و `vector-rust-observability-pipelines` مالک سطح کوئری و خط لوله‌اند
 
 ## تعریف انجام‌شده
@@ -203,7 +203,7 @@
 - راهنمای تفصیلی در فایل‌های یک-پرش `references/` یا `docs/` نگه داشته شده باشد
 - فایل `agents/openai.yaml` وجود داشته باشد و با نیت فعلی skill بخواند
 - نام skill های اهداکننده قدیمی از سندهای routing فعال حذف شده باشد
-- دستور `python scripts\check_skill_index.py` هیچ finding مربوط به نقشه و هیچ کمبود `agents/openai.yaml` گزارش نکند
+- دستور `python3 scripts/check_skill_index.py` هیچ finding مربوط به نقشه و هیچ کمبود `agents/openai.yaml` گزارش نکند
 - مثال و checklist و ضدالگو به انگلیسی ساده حفظ شده باشند
 - کمک‌کننده‌های سطح-سیستم از skill های pack-local به‌روشنی جدا باشند
 
