@@ -7,11 +7,11 @@ separate evidence. It proves test design, never runtime availability or model qu
 
 ## Historical comparison isolation
 
-The original corpus/policy under `assets/evals/history/20261009/` are historical-only. Here run `python scripts/check_agent_evals.py --history-manifest assets/evals/history/20261009/manifest.json` for hash integrity, provenance-field syntax and historical support. Verify source identity independently. It cannot combine with active `--corpus`, `--results` or `--self-test`, authorize ordinary allocation or reenable old Sol. Active redesigned comparisons remain separate unrun hypotheses.
+The original corpus/policy under `assets/evals/history/20261009/` are historical-only. Here run `python3 scripts/check_agent_evals.py --history-manifest assets/evals/history/20261009/manifest.json` for hash integrity, provenance-field syntax and historical support. Verify source identity independently. It cannot combine with active `--corpus` or `--results`, authorize ordinary allocation or reenable old Sol. Active redesigned comparisons remain separate unrun hypotheses.
 
 ## Execution
 
-1. Run `python scripts/check_agent_evals.py` from this skill directory. Nonzero means the
+1. Run `python3 scripts/check_agent_evals.py` from this skill directory. Nonzero means the
    corpus is invalid or unreadable; fix the reported cause before evaluation.
 2. Verify model and effort selection on the intended runtime and account. Stop the affected
    comparison if the runtime rejects a pair or cannot establish its effective configuration.
@@ -34,7 +34,7 @@ authorized execution path, and stop after its bounded failure/retry policy is ex
 
 ## Evidence record
 
-Optionally validate a result matrix with `python scripts/check_agent_evals.py --results <path>`.
+Optionally validate a result matrix with `python3 scripts/check_agent_evals.py --results <path>`.
 Its top-level fields are `schema_version: 1`, `complete` (boolean), and `runs`. Each run is
 keyed by `scenario`, `configuration` (`candidate` or `comparator`), and `repetition`;
 `requested` contains model and effort. All 32 keys must exist, with missing execution explicitly
@@ -75,7 +75,7 @@ The checker validates record completeness; the independent reviewer must verify 
 
 For task-selection tests use `assets/evals/allocation-cases.json` and separate reviewer-only `assets/evals/allocation-oracle.json`: R1-R15 decisions, not worker quality. Each case has two neutral variants and two repetitions. Give allocators only neutral inputs, never the oracle or another run's answer. Observe two fresh runs per authorized available allocator configuration with identical loaded contracts, authority and inputs; record unavailable configurations blocked/unassessed. This authorizes no worker dispatch, paid comparison, installation or configuration mutation.
 
-Here run `python scripts/check_allocation_evals.py` for corpus/oracle structure. Add `--self-test` after checker changes, `--results <path>` for records, and `--require-live` with results for complete nonsynthetic observations/independent grading. `--corpus <path>`/`--oracle <path>` select files. `--probe-input codex` or `--probe-input claude-code` prints neutral cases/response contract without oracle, inference or writes. Exit 0 clean, 1 findings, 2 unavailable proof; either nonzero blocks the affected claim. Follow authorized failure/retry limits; never alter controls/checks to pass.
+Here run `python3 scripts/check_allocation_evals.py` for corpus/oracle structure. Add `--results <path>` for records, and `--require-live` with results for complete nonsynthetic observations/independent grading. `--corpus <path>`/`--oracle <path>` select files. `--probe-input codex` or `--probe-input claude-code` prints neutral cases/response contract without oracle, inference or writes. Exit 0 clean, 1 findings, 2 unavailable proof; either nonzero blocks the affected claim. Follow authorized failure/retry limits; never alter controls/checks to pass.
 
 Results: `schema_version: 1`, `purpose: allocation-results`, boolean `synthetic`/`complete`, `corpus_sha256`, `oracle_sha256`, `configurations`, `runs`. Configurations: `id`, `runtime`, `allocator_requested`, `allocator_effective`, `allocator_observed`, `control_evidence`, `loaded_contracts` (repository-relative path/SHA-256). Separate actual allocator controls, simulated scenario controls and proposed worker controls.
 

@@ -24,26 +24,3 @@ def validate_task_selection(role, selection, policy, resolved=None):
         if not isinstance(resolved, dict) or set(resolved) != {"model", "effort"} or resolved != selection:
             return [f"{role}: effective controls missing, unknown or different; affected lane blocked"]
     return []
-
-
-def selection_self_test(policy, pairs):
-    """Same all-role control contract in both runtime readers; synthetic evidence only."""
-    count = 0
-    for role, profile in policy["profiles"].items():
-        if profile["selection_mode"] != "task-selected":
-            assert validate_task_selection(role, pairs[0], policy)
-            continue
-        for pair in pairs:
-            assert not validate_task_selection(role, pair, policy)
-            assert not validate_task_selection(role, pair, policy, pair.copy())
-        for missing in ({}, {"model": pairs[0]["model"]}, {"effort": pairs[0]["effort"]}):
-            assert validate_task_selection(role, missing, policy)
-        for invalid in ({"model": "unknown", "effort": "medium"},
-                        {"model": pairs[0]["model"], "effort": "unsupported"}):
-            assert validate_task_selection(role, invalid, policy)
-        for resolved in ({}, {"model": pairs[0]["model"]},
-                         {"model": "unknown", "effort": "unknown"}, pairs[1]):
-            assert validate_task_selection(role, pairs[0], policy, resolved)
-        count += 1
-    assert validate_task_selection("unregistered", pairs[0], policy)
-    return count

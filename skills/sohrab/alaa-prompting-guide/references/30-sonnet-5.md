@@ -1,6 +1,6 @@
 # Claude Sonnet 5 (historical)
 
-Retained for explicit historical comparison only. Current prompting and migration use
+Retained for historical reference only. Current prompting and migration use
 `references/31-sonnet-5-5.md`; the structured policy no longer assigns Sonnet 5 profiles.
 
 API model id `claude-sonnet-5`. The balanced tier: 1M-token context (default and maximum), 128k max output, $2/$10 per MTok in the 25 September 2026 model overview. Adaptive thinking, vision, and the `computer_20251124` computer-use tool. Anthropic calls it the most agentic Sonnet yet, with particular strength in sustained multi-step tool use, unprompted self-verification, and finishing tasks end to end rather than stalling halfway.
@@ -89,7 +89,7 @@ NEVER use generic AI-generated aesthetics like overused font families (Inter, Ro
 
 ## Interactive coding products
 
-Choose effort through the structured policy and an authorized comparison; enable autonomous runtime modes only within granted authority. Front-load a well-specified task description with intent and constraints in the first human turn. Minimize required user interactions: ambiguous prompts revealed progressively across many turns reduce token efficiency and sometimes performance.
+Choose effort through the structured policy; enable autonomous runtime modes only within granted authority. Front-load a well-specified task description with intent and constraints in the first human turn. Minimize required user interactions: ambiguous prompts revealed progressively across many turns reduce token efficiency and sometimes performance.
 
 ## Code review harnesses
 

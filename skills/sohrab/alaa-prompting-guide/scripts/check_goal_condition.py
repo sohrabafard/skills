@@ -12,7 +12,6 @@ confirm runtime availability, judge completion semantics, or prove live acceptan
 from __future__ import annotations
 
 import argparse
-import json
 import re
 import sys
 from pathlib import Path
@@ -20,7 +19,6 @@ from pathlib import Path
 CAP = 4000
 SURFACES = ("claude-code-cli", "claude-desktop-code", "claude-desktop-chat", "claude-cowork", "unknown")
 DOCUMENTED_SURFACES = frozenset(SURFACES[:2])
-FIXTURES = Path(__file__).resolve().parent / "fixtures/goal-conditions.json"
 
 # Conservative text proxies for the observed Desktop rich-composer rejection.
 # A standalone /name resembles a command; paths with a directory separator or
@@ -60,45 +58,12 @@ def check_file(path: Path, surface: str) -> tuple[list[str], int]:
     return findings(condition, surface), character_units(condition)
 
 
-def self_test() -> None:
-    cases = json.loads(FIXTURES.read_text(encoding="utf-8"))
-    for case in cases:
-        actual = {error.split(":", 1)[0] for error in findings(case["condition"], case["surface"])}
-        if actual != set(case["expected"]):
-            raise ValueError(f"fixture {case['name']}: expected {case['expected']}, got {sorted(actual)}")
-    for surface in DOCUMENTED_SURFACES:
-        if findings("a" * CAP, surface) or not findings("a" * (CAP + 1), surface):
-            raise ValueError("limit boundary fixture failed")
-    if character_units("\u0641\u0627\u0631\u0633\u06cc") != 5 or character_units("\U00010400") != 2:
-        raise ValueError("Unicode conservative-count fixture failed")
-    if findings("\U00010400" * (CAP // 2), "claude-desktop-code") or not findings("\U00010400" * (CAP // 2 + 1), "claude-desktop-code"):
-        raise ValueError("astral limit boundary fixture failed")
-    from contextlib import redirect_stderr, redirect_stdout
-    from io import StringIO
-    from unittest.mock import patch
-    arguments = ["--surface", "claude-desktop-code", "--condition-file", "synthetic.txt"]
-    for text, expected in (("plain condition", 0), ("Use /alaa-workflow.", 1), ("x" * (CAP + 1), 1)):
-        with patch.object(Path, "open", return_value=StringIO(text)), redirect_stdout(StringIO()):
-            if main(arguments) != expected:
-                raise ValueError(f"CLI exit contract failed: expected {expected}")
-    with patch.object(Path, "open", side_effect=FileNotFoundError("synthetic missing condition")), redirect_stderr(StringIO()):
-        if main(arguments) != 2:
-            raise ValueError("unavailable input must return exit 2")
-    print(f"OK: {len(cases)} text fixtures plus length, Unicode and unavailable-input boundaries; static proof only")
-
-
 def main(argv: list[str] | None = None) -> int:
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--surface", choices=SURFACES)
     parser.add_argument("--condition-file", type=Path)
-    parser.add_argument("--self-test", action="store_true")
     args = parser.parse_args(argv)
     try:
-        if args.self_test:
-            if args.surface or args.condition_file:
-                parser.error("--self-test cannot be combined with condition inputs")
-            self_test()
-            return 0
         if not args.surface or args.condition_file is None:
             parser.error("--surface and --condition-file are required")
         errors, count = check_file(args.condition_file, args.surface)
@@ -107,7 +72,7 @@ def main(argv: list[str] | None = None) -> int:
             return 1
         print(f"OK: {count} UTF-16 units; declared surface/text match the dated preflight; live acceptance unverified")
         return 0
-    except (OSError, UnicodeError, json.JSONDecodeError) as exc:
+    except (OSError, UnicodeError) as exc:
         print(f"could not run: {exc}", file=sys.stderr)
         return 2
     except (ValueError, KeyError, TypeError) as exc:

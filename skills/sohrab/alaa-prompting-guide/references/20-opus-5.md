@@ -1,6 +1,6 @@
 # Claude Opus 5: historical reference
 
-Read only for explicit historical comparison. Active routing uses `references/21-opus-5-5.md`
+Read only for historical reference. Active routing uses `references/21-opus-5-5.md`
 and `assets/claude-model-policy.json`. The original dated guidance below is preserved as history,
 including its old defaults and verification advice; it does not select current profiles or
 supersede current authority gates. Refresh each historical claim before relying on it.

@@ -12,9 +12,9 @@ The runtime orchestrator owns task allocation, admission, triggers and independe
 
 Verified 8 October 2026: exact ID `claude-haiku-5-5`; supported efforts `low`, `medium`, `high`, `xhigh`, `max`; default `medium`. Adaptive thinking is supported and manual token budgets are unsupported. The API permits disabled thinking through `high`; `xhigh` and `max` require adaptive. Claude Code prevents disabling thinking for this model and requires version 2.1.293 or later. API controls do not establish a Claude Code setting.
 
-Treat a selected task effort as an unrun workload hypothesis. Compare one factor at a time on representative tasks before claiming quality or savings. Inspect account/provider mapping, override precedence, caps and effective tools before activation through `references/41-claude-code-runtime-features.md`. Historical Haiku 4.5 has no effort parameter; its controls never govern this generation.
+Treat a selected task effort as an unrun workload hypothesis. Claim no quality or savings without task evidence. Inspect account/provider mapping, override precedence, caps and effective tools before activation through `references/41-claude-code-runtime-features.md`. Historical Haiku 4.5 has no effort parameter; its controls never govern this generation.
 
-Current prompting guidance uses low for short/simple work, medium for most work including agentic coding, and high for longer work, stricter instruction following or knowledge tasks. Medium may skip checks; retain declared completion/evidence and independent acceptance. Xhigh/max require measured benefit against Sonnet and can produce thinking without a visible reply. No supported level is an automatic role default; the orchestrator must justify the actual task choice.
+Current prompting guidance uses low for short/simple work, medium for most work including agentic coding, and high for longer work, stricter instruction following or knowledge tasks. Medium may skip checks; retain declared completion/evidence and independent acceptance. Xhigh/max need a stated benefit over Sonnet and can produce thinking without a visible reply. No supported level is an automatic role default; the orchestrator must justify the actual task choice.
 
 ## Sources and unrun limits
 
@@ -27,6 +27,6 @@ Current prompting guidance uses low for short/simple work, medium for most work 
 
 No live model calls, installation, account entitlement checks or local calibration ran. Static policy agreement proves source consistency only.
 
-Registered implementation admission is local task policy. Apply `/alaa-cc-orchestrator` routing-matrix predicates; no arbitrary file-count cap or trial ladder. Implementation authority replaces neither bounded support-role restrictions nor independent gates. Canonical policy owns capability support; comparison evidence belongs to task pairs.
+Registered implementation admission is local task policy. Apply `/alaa-cc-orchestrator` routing-matrix predicates; no arbitrary file-count cap or trial ladder. Implementation authority replaces neither bounded support-role restrictions nor independent gates. Canonical policy owns capability support.
 
-Launch and prompting guidance refreshed 9 October 2026 from the official 7 October launch and prompting page. API/harness controls retain their earlier snapshots; no installed activation or model comparison ran.
+Launch and prompting guidance refreshed 9 October 2026 from the official 7 October launch and prompting page. API/harness controls retain their earlier snapshots; no installed activation ran.

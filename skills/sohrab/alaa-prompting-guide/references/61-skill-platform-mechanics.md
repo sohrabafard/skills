@@ -11,7 +11,7 @@ my-skill/
 ├── SKILL.md          # required entrypoint: frontmatter + lean body
 ├── references/       # detail loaded on demand
 ├── scripts/          # executable code the agent runs rather than reimplements
-├── assets/           # templates, fixtures, static resources
+├── assets/           # templates, sample inputs, static resources
 └── agents/           # agent definitions shipped with the package
 ```
 
@@ -23,7 +23,7 @@ Do not guess a discovery path. Both runtimes publish theirs, and they do not mat
 
 **Claude Code** loads personal skills from `~/.claude/skills/<skill-name>/SKILL.md`, project skills from `.claude/skills/<skill-name>/SKILL.md`, plugin skills from `<plugin>/skills/<skill-name>/SKILL.md`, and enterprise skills from managed settings. On a name clash across levels, enterprise wins over personal and personal wins over project, and any of the three overrides a bundled skill of the same name. Project skills load from the directory the session started in and from every parent up to the repository root. A nested `.claude/skills/` below the starting directory does not load at startup: it loads the first time Claude reads or edits a file inside that subdirectory, and a nested skill whose name clashes with another is reachable under its directory-qualified name. Adding, editing, or removing a skill takes effect inside the running session; creating a top-level skills directory that did not exist at session start requires a restart.
 
-**Codex** scans `.agents/skills` in the current directory, then in the parent, then at `$REPO_ROOT`, then `$HOME/.agents/skills`, then `/etc/codex/skills`, then the skills bundled with Codex. It also discovers user skills under `$HOME/.codex/skills` — field-verified, including on Windows where the path is `Join-Path $HOME ".codex\skills"` — even though the official page omits it. That location is the practical default for personal Codex skills here, because it sits beside `~/.codex/agents/` and keeps the whole Codex setup in one tree; reserve `.agents/skills` for skills that must travel with a specific repository. Carry the general lesson: an official discovery list can be incomplete, so a path that demonstrably works is evidence, not an error to correct.
+**Codex** scans `.agents/skills` in the current directory, then in the parent, then at `$REPO_ROOT`, then `$HOME/.agents/skills`, then `/etc/codex/skills`, then the skills bundled with Codex. It also discovers user skills under `$HOME/.codex/skills` — field-verified on Windows — even though the official page omits it. That location is the practical default for personal Codex skills here, because it sits beside `~/.codex/agents/` and keeps the whole Codex setup in one tree; reserve `.agents/skills` for skills that must travel with a specific repository. Carry the general lesson: an official discovery list can be incomplete, so a path that demonstrably works is evidence, not an error to correct.
 
 ## Frontmatter key surfaces
 

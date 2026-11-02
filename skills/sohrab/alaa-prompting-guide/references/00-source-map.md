@@ -50,7 +50,7 @@ Claude goal, Desktop Code and slash-invocation sources refreshed 4 October 2026:
 verdicts, transcript-only evidence, permission/trust/hook boundaries and direct versus
 mid-message invocation. They do not establish Chat/Cowork goal support, Unicode counting
 semantics, a recent parser/cap change, or acceptance of an unprovided rejected prompt.
-Source consistency and static fixtures do not prove live Desktop acceptance.
+Source consistency and static checks do not prove live Desktop acceptance.
 
 The Desktop command-composer error quoted in `references/41-claude-code-runtime-features.md`
 is user-observed on 4 October 2026; no app version or official documentation of that exact
@@ -63,4 +63,4 @@ Sonnet 5.5 launch, overview, prompting, effort and Code selection sources were r
 
 Plan-first selection and runtime-control sources were reverified 8 October 2026: current Claude Sonnet/Opus prompting, model selection, model overview, Code model controls/subagents, Codex models/subagent configuration and current GPT model pages. Read canonical policy source entries and `references/11-codex-runtime-features.md` or `references/41-claude-code-runtime-features.md` for exact surfaces and precedence. These sources inform unrun local admission boundaries; they do not establish model equivalence or live activation.
 
-Task selection, GPT proportional-test guidance and Opus/Sonnet thinking exceptions refreshed 9 October 2026 through the official selection and prompting pages. `references/90-model-selection.md` separates explicit prose, rendered defaults and supplied screenshots. Other capability/runtime snapshots retain their own dates; neither unavailable selector cells nor unrun comparisons become negative evidence.
+Task selection, GPT proportional-test guidance and Opus/Sonnet thinking exceptions refreshed 9 October 2026 through the official selection and prompting pages. `references/90-model-selection.md` separates explicit prose, rendered defaults and supplied screenshots. Other capability/runtime snapshots retain their own dates; neither unavailable selector cells nor unrun calibration become negative evidence.

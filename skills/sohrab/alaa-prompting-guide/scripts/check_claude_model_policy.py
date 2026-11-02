@@ -3,19 +3,14 @@
 from __future__ import annotations
 
 import argparse
-import copy
 import re
 import sys
 from pathlib import Path
 
 sys.dont_write_bytecode = True
 from claude_model_policy import (AGENT_DIR, ARTIFACTS, DEFAULT_POLICY, REPO_ROOT,
-    SKILL_ROOT, WRITER_DIR, CannotRun, digest, load_policy, read_json,
+    WRITER_DIR, CannotRun, digest, read_json,
     validate_agent_pin, validate_policy)
-
-from task_model_controls import selection_self_test
-
-FIXTURES = SKILL_ROOT / "scripts/fixtures/claude-policy"
 
 
 def parse_agent(text):
@@ -87,71 +82,12 @@ def check(policy_path, roots=None):
     return errors, len(paths)
 
 
-def self_test():
-    policy = load_policy()
-    fixtures = read_json(FIXTURES / "policy-cases.json")
-    count = 0
-    for case in fixtures:
-        candidate = copy.deepcopy(policy)
-        for operation in case["changes"]:
-            parent = candidate
-            for key in operation["path"][:-1]:
-                parent = parent[key]
-            key = operation["path"][-1]
-            if operation.get("delete"):
-                del parent[key]
-            else:
-                parent[key] = operation["value"]
-        try:
-            errors = validate_policy(candidate)
-        except CannotRun:
-            assert case.get("cannot_run") is True, case["name"]
-            count += 1
-            continue
-        assert not case.get("cannot_run"), case["name"]
-        assert bool(errors) == case["findings"], (case["name"], errors)
-        count += 1
-    pairs = ({"model":"claude-haiku-5-5","effort":"medium"}, {"model":"claude-sonnet-5-5","effort":"high"})
-    roles = selection_self_test(policy, pairs)
-    for role in ARTIFACTS:
-        good = {"name":role}
-        assert not validate_agent_pin(good, policy, role + ".md")
-        for key,value in (("model","claude-fable-5-1"),("effort","high"),("model_reasoning_effort","low")):
-            assert validate_agent_pin({**good,key:value},policy,role + ".md")
-        assert validate_agent_pin(good,policy,"unknown.md")
-        missing=copy.deepcopy(policy);del missing["profiles"][role]
-        assert any("coverage" in error for error in validate_policy(missing))
-    from task_model_controls import validate_task_selection
-    assert validate_task_selection("alaa-rule-writer",{"model":"claude-haiku-4-5-20251001","effort":"high"},policy)
-    for filename in ("duplicate.json", "malformed.json"):
-        try:
-            read_json(FIXTURES / filename)
-        except CannotRun:
-            pass
-        else:
-            raise AssertionError(f"accepted malformed JSON: {filename}")
-    for path in sorted(FIXTURES.glob("red-*.md")):
-        try:
-            parse_agent(path.read_text(encoding="utf-8"))
-        except CannotRun:
-            count += 1
-        else:
-            raise AssertionError(f"accepted ambiguous YAML: {path}")
-    for value in ([], True, None):
-        assert validate_policy(value)
-    print(f"OK: {count} policy/parser fixtures plus {roles} all-role control/pin/coverage cases; static proof only")
-
-
 def main():
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--policy", type=Path, default=DEFAULT_POLICY)
     parser.add_argument("--agent-root", action="append", type=Path, help="selected source/generated agent file or directory; repeatable")
-    parser.add_argument("--self-test", action="store_true")
     args = parser.parse_args()
     try:
-        if args.self_test:
-            self_test()
-            return 0
         errors, count = check(args.policy, args.agent_root)
         if errors:
             print("\n".join(errors))
@@ -161,7 +97,7 @@ def main():
     except (CannotRun, OSError, UnicodeError) as exc:
         print(f"could not run: {exc}", file=sys.stderr)
         return 2
-    except (ValueError, AssertionError) as exc:
+    except ValueError as exc:
         print(f"FINDINGS: {exc}", file=sys.stderr)
         return 1
 

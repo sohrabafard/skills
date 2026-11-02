@@ -10,11 +10,11 @@ Use `references/11-codex-runtime-features.md` or `references/41-claude-code-runt
 
 Ordinary Codex selection excludes GPT-6 Sol, retaining its effort snapshot as history. GPT-6.1 Sol is the current Sol candidate. Use the newest verified supported eligible member of the selected family; suitable Luna stays eligible. If current Sol is unavailable, require an exact eligible realization or block the affected lane, never fall back to old Sol. Record explicit user legacy requests separately; they neither restore ordinary eligibility nor pass ordinary task-control validation.
 
-The active Claude set is Haiku 5.5, Sonnet 5.5, Opus 5.5 and Fable 5.1. Mythos is excluded from active selection and custom profiles. Historical models supply comparison evidence only; availability and loaded registry remain separately verified.
+The active Claude set is Haiku 5.5, Sonnet 5.5, Opus 5.5 and Fable 5.1. Mythos is excluded from active selection and custom profiles. Historical models supply reference evidence only; availability and loaded registry remain separately verified.
 
 ## Official task guidance and local policy
 
-Refreshed 9 October 2026. These source recommendations are neither executable local pins, host availability nor comparative-quality proof. The complete served selector asset was read as text, without execution; browser interaction was not run. The supplied screenshots match its cells. L = GPT-6 Luna, S = GPT-6.1 Sol, A = GPT-6 Astra.
+Refreshed 9 October 2026. These source recommendations are neither executable local pins, host availability nor quality proof. The complete served selector asset was read as text, without execution; browser interaction was not run. The supplied screenshots match its cells. L = GPT-6 Luna, S = GPT-6.1 Sol, A = GPT-6 Astra.
 
 | Category | Task | Lower latency/cost | Balanced | Higher quality |
 |---|---|---|---|---|
@@ -63,7 +63,7 @@ Sol-low feature work and Luna-high scoped bugs have official selector support. W
 | Demanding long-horizon work inadequate at Opus xhigh/max | Consider Fable | No selected Fable effort |
 | Bulk execution with difficult decisions | Cheaper workers plus frontier advisor | No selected pair |
 
-The guide recommends Opus as a most-workloads starting point. Qualify defaults by surface: Opus medium; Haiku medium; Sonnet Code/apps medium versus Platform/API high; Fable Code/API high versus Cowork/claude.ai medium. Preserve capability-first and efficiency-first paths. Separate Sonnet prompting guidance recommends medium for well-specified agentic coding and high for harder/longer work; source examples of higher-effort regressions rule out automatic maximization. Any local Fable admission belongs to the runtime orchestrator and remains distinct from vendor xhigh/max advice. No live comparison is implied.
+The guide recommends Opus as a most-workloads starting point. Qualify defaults by surface: Opus medium; Haiku medium; Sonnet Code/apps medium versus Platform/API high; Fable Code/API high versus Cowork/claude.ai medium. Preserve capability-first and efficiency-first paths. Separate Sonnet prompting guidance recommends medium for well-specified agentic coding and high for harder/longer work; source examples of higher-effort regressions rule out automatic maximization. Any local Fable admission belongs to the runtime orchestrator and remains distinct from vendor xhigh/max advice. No live run is implied.
 
 - [OpenAI model selection](https://developers.openai.com/api/docs/guides/model-selection) and its [served selector asset](https://developers.openai.com/_astro/ModelSelection.react.DJkmSLnH.js) (refresh the current page/asset before reuse)
 - [Claude model selection](https://platform.claude.com/docs/en/about-claude/models/choosing-a-model)

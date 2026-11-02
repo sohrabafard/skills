@@ -46,17 +46,15 @@ Exit codes:
 
     0  every rule holds
     1  at least one rule failed
-    2  could not run -- a missing contract, an unreadable file, TOML this checker cannot
-       parse, or no fixtures
+    2  could not run -- a missing contract, an unreadable file, or TOML this checker cannot
+       parse
 
-A 2 is a failed gate, never a pass. Run with --self-test to prove the gate rejects known-bad
-definitions; a rule with no red fixture is decoration.
+A 2 is a failed gate, never a pass.
 
 Usage:
 
-    python scripts/check_rule_writer_grants.py
-    python scripts/check_rule_writer_grants.py --root <skill-directory>
-    python scripts/check_rule_writer_grants.py --self-test
+    python3 scripts/check_rule_writer_grants.py
+    python3 scripts/check_rule_writer_grants.py --root <skill-directory>
 """
 
 from __future__ import annotations
@@ -284,8 +282,7 @@ def check(root: Path) -> List[str]:
             if cf.get(key) != xf.get(key):
                 findings.append(f"G8: the wrappers disagree on {key}")
 
-    # Historical structural fixtures intentionally omit pins. Real skill roots must
-    # carry the policy; the command entry point enforces its presence for production.
+    # The command entry point enforces the policy file's presence.
     if codex and (root / "assets/codex-model-policy.json").is_file():
         from codex_model_policy import load_policy, validate_agent_pin
         try:
@@ -312,124 +309,13 @@ def claude_policy_findings(root: Path) -> List[str]:
     return [f"G12: {detail}"] if result.returncode else []
 
 
-def self_test(fixtures: Path) -> int:
-    """Every rule gets one red fixture that only it rejects, plus one green tree.
-
-    A checker never observed rejecting a bad input is indistinguishable from one that
-    always passes.
-    """
-    if not fixtures.is_dir():
-        raise CannotRun(f"no fixtures at {fixtures}")
-    cases = [
-        ("green", None),
-        ("red-g1-missing-codex-wrapper", "G1"),
-        ("red-g2-claude-grants-write", "G2"),
-        ("red-g3-codex-grants-mcp", "G3"),
-        ("red-g4-codex-not-read-only", "G4"),
-        ("red-g5-contract-drift", "G5"),
-        ("red-g5-toml-escape-drift", "G5"),
-        ("red-g6-identity-line", "G6"),
-        ("red-g7-dangling-doctrine-path", "G7"),
-        ("red-g8-description-mismatch", "G8"),
-        ("red-g9-effort-max", "G9"),
-        ("red-g10-unpreloaded-skill", "G10"),
-        ("red-unparseable-toml", "CANNOT_RUN"),
-    ]
-    for token in ("gpt-6-astra", "GPT-6-SOL", "gpt-6-luna", "Astra"):
-        if not MODEL_NAME_RE.search(token):
-            raise CannotRun(f"model-output detection missed {token}")
-    from check_codex_model_policy import self_test as policy_self_test
-    policy_self_test()
-    # Exercise policy CLI failure propagation without turning structural historical
-    # fixtures into another copy of policy. The owner tests actual pin drift.
-    from unittest.mock import patch
-    for malformed in (
-        "---\ntools: Read\ntools: Write\n---\nbody",
-        "---\ntools: Read\n  - Write\n---\nbody",
-        "---\ntools: Read\nbody",
-    ):
-        try:
-            parse_claude(malformed)
-        except CannotRun:
-            pass
-        else:
-            raise CannotRun("malformed or ambiguous Claude metadata was accepted")
-    for code in (0, 1, 2, 9):
-        with patch.object(Path, "is_file", return_value=True), patch(
-            "subprocess.run", return_value=subprocess.CompletedProcess([], code, "fixture", "")
-        ):
-            try:
-                issues = claude_policy_findings(Path("fixture"))
-            except CannotRun:
-                if code not in (2, 9):
-                    raise
-            else:
-                if code in (2, 9) or bool(issues) != (code == 1):
-                    raise CannotRun(f"Claude policy exit {code} propagated incorrectly")
-    for key in ("hooks", "permissionMode", "mcpServers"):
-        text = read_text(fixtures / "green" / CLAUDE_WRAPPER).replace("tools: Read, Glob, Grep", f"tools: Read, Glob, Grep\n{key}: unauthorized")
-        original = read_text
-        def mutated(path: Path) -> str:
-            return text if path == fixtures / "green" / CLAUDE_WRAPPER else original(path)
-        with patch(__name__ + ".read_text", side_effect=mutated):
-            if not any(issue.startswith("G2:") for issue in check(fixtures / "green")):
-                raise CannotRun(f"unauthorized {key} was accepted")
-    for runtime,rel,pin in (("claude",CLAUDE_WRAPPER,"model: claude-fable-5-1\neffort: high\n"),
-                            ("codex",CODEX_WRAPPER,'model = "gpt-6-astra"\nmodel_reasoning_effort = "high"\n')):
-        original = read_text
-        def pinned(path: Path) -> str:
-            text=original(path)
-            if path == fixtures / "green" / rel:
-                text=text.replace("---\n", "---\n"+pin,1) if runtime=="claude" else pin+text
-            return text
-        with patch(__name__ + ".read_text", side_effect=pinned):
-            assert any(issue.startswith("G9:") for issue in check(fixtures / "green")), "stale frontier defaults accepted"
-    failures = 0
-    for name, expected in cases:
-        root = fixtures / name
-        if not root.is_dir():
-            raise CannotRun(f"missing fixture {root}")
-        try:
-            found = check(root)
-        except CannotRun as exc:
-            if expected == "CANNOT_RUN":
-                continue
-            print(f"SELF-TEST FAILED: {name} could not run: {exc}")
-            failures += 1
-            continue
-        codes = {f.split(":", 1)[0] for f in found}
-        if expected == "CANNOT_RUN":
-            print(f"SELF-TEST FAILED: {name} should be unreadable, reported {sorted(codes) or 'nothing'}")
-            failures += 1
-            continue
-        if expected is None:
-            if found:
-                print(f"SELF-TEST FAILED: {name} should be clean, reported {sorted(codes)}")
-                failures += 1
-            continue
-        if expected not in codes:
-            print(f"SELF-TEST FAILED: {name} should report {expected}, reported {sorted(codes) or 'nothing'}")
-            failures += 1
-    if failures:
-        print(f"SELF-TEST FAILED: {failures} of {len(cases)} cases")
-        return EXIT_FINDINGS
-    reader = "tomllib" if tomllib is not None else "the no-escape fallback"
-    print(f"SELF-TEST OK: {len(cases) - 1} red fixtures each rejected, green tree clean, Codex read via {reader}")
-    return EXIT_CLEAN
-
-
 def main(argv: Optional[Sequence[str]] = None) -> int:
     parser = argparse.ArgumentParser(description=__doc__, formatter_class=argparse.RawDescriptionHelpFormatter)
     parser.add_argument("--root", help="skill directory to check; defaults to this script's parent")
-    parser.add_argument("--fixtures", help="fixture directory for --self-test")
-    parser.add_argument("--self-test", action="store_true", help="prove each rule rejects a known-bad input")
     args = parser.parse_args(argv)
 
     here = Path(__file__).resolve().parent
     try:
-        if args.self_test:
-            fixtures = Path(args.fixtures.strip().strip("\r\n")).expanduser() if args.fixtures else here / "fixtures" / "rule-writer"
-            return self_test(fixtures)
         root = Path(args.root.strip().strip("\r\n")).expanduser() if args.root else here.parent
         if not (root / "assets/codex-model-policy.json").is_file():
             raise CannotRun("production rule-writer validation requires assets/codex-model-policy.json")

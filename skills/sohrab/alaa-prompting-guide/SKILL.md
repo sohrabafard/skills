@@ -10,7 +10,7 @@ Own instruction authoring, model/effort capability evidence and runtime control 
 ## When NOT to use
 
 - General coding/review/refactoring without instruction or agentic-workflow authoring.
-- Retired Claude generations or models outside scope; historical references support explicit comparisons only. Non-Codex GPT tuning is excluded; ChatGPT invocation sigils remain covered for generated prompts.
+- Retired Claude generations or models outside scope; historical references are for reference only. Non-Codex GPT tuning is excluded; ChatGPT invocation sigils remain covered for generated prompts.
 - Durable multi-phase plans/state/phase prompts: `/alaa-workflow` owns them.
 - Per-goal lanes, role prompts and review gates: the runtime orchestrator owns them. Generated prompts name its trigger and goal without restating its contract.
 
@@ -20,25 +20,17 @@ Before dispatching `alaa-rule-writer`, read `assets/rule-writer/dispatch.md`. It
 
 Distributing it is not this skill's job. Under Claude Code the definition ships inside the plugin and loads from the plugin-root `agents/` directory once the plugin is installed or enabled, and the plugin manifest version is the installed agent-pack version: never copy a wrapper into `~/.claude/agents`, never write an installation sentinel, and never run the grants checker as an install gate. Under Codex, `install-skills.md` at this repository's root owns the one command that places `assets/rule-writer/codex/alaa-rule-writer.toml` into `~/.codex/agents`.
 
-Managed wrappers omit model and effort; the orchestrator explicitly selects both controls for each task, including rule-writer. Validate effective controls separately from role authority. After changing `assets/rule-writer/`, run `python scripts/check_rule_writer_grants.py`; after checker changes also run `--self-test`.
+Managed wrappers omit model and effort; the orchestrator explicitly selects both controls for each task, including rule-writer. Validate effective controls separately from role authority. After changing `assets/rule-writer/`, run `python3 scripts/check_rule_writer_grants.py`.
 
 ## Codex policy validation
 
-`assets/codex-model-policy.json` owns supported-effort snapshots and model-neutral role/artifact registrations. It chooses no task pair; main controls stay externally configured. From this skill directory, after policy/pin changes run `python scripts/check_codex_model_policy.py --agent-root assets/rule-writer/codex`; repeat `--agent-root` for another pack. After corpus changes run `python scripts/check_agent_evals.py`. Add `--self-test` to each changed checker.
-
-## Allocation evidence validation
-
-For allocation evidence run `python scripts/check_allocation_evals.py` here; add `--results <path> --require-live` for complete nonsynthetic observations/independent grading and `--self-test` after checker changes. Exit 0 clean, 1 findings, 2 unavailable proof; either nonzero blocks the affected claim. The router selects `references/92-agent-evaluation.md` for inputs, flags, records and limits. Decisions prove no child dispatch or worker quality.
+`assets/codex-model-policy.json` owns supported-effort snapshots and model-neutral role/artifact registrations. It chooses no task pair; main controls stay externally configured. From this skill directory, after policy/pin changes run `python3 scripts/check_codex_model_policy.py --agent-root assets/rule-writer/codex`; repeat `--agent-root` for another pack.
 
 ## Claude policy validation
 
-`assets/claude-model-policy.json` owns Claude capabilities, model availability conditions and model-neutral role/artifact registrations. Task comparisons remain separate evidence, never role defaults. From this skill directory run
-`python scripts/check_claude_model_policy.py` after policy or projection changes; add `--self-test`
-after checker changes. Defaults cover both managed roots. Repeat `--agent-root <path>`
-for selected source/generated subsets, or use `--policy <path>` for an explicit policy.
-Run `python scripts/check_claude_agent_evals.py` for the separate Claude comparison corpus;
-add `--self-test` after changing its checker and `--results <path>` to validate evidence.
-After shared projection/control changes, run `python scripts/profile_projection.py --self-test`; both policy self-tests cover explicit task controls for every role. These gates require the root checker's bundled YAML parser. A verified aggregate can discharge an identical covered command; the orchestrator owns consolidation. Uncovered managed roots still require checks. Source agreement proves neither installed activation nor calibration.
+`assets/claude-model-policy.json` owns Claude capabilities, model availability conditions and model-neutral role/artifact registrations. It sets no role default. After a policy or projection change, run `python3 scripts/check_claude_model_policy.py` from this skill directory. The default covers both managed roots. Repeat `--agent-root <path>` for selected source or generated subsets. Use `--policy <path>` for an explicit policy.
+
+The gate needs the root checker's bundled YAML parser. A verified aggregate can discharge an identical covered command. The orchestrator owns consolidation. Uncovered managed roots still need checks. Source agreement proves neither installed activation nor calibration.
 
 All gates use `0` clean, `1` findings, `2` unavailable proof (including malformed/unreadable input). Either nonzero blocks the affected completion; repair the stated cause within the active retry budget or report blocked. Static checks prove neither live acceptance nor instruction compliance.
 
@@ -52,13 +44,13 @@ All gates use `0` clean, `1` findings, `2` unavailable proof (including malforme
 
 For a goal, follow `references/06-invocation-and-composition.md` for the compact condition and kickoff; `/alaa-workflow` owns plans and phase/task skill mappings.
 
-For a rendered Claude condition, run `python scripts/check_goal_condition.py --surface claude-desktop-code --condition-file <path>` here, substituting the observed surface. After checker changes also run `--self-test`.
+For a rendered Claude condition, run `python3 scripts/check_goal_condition.py --surface claude-desktop-code --condition-file <path>` here, substituting the observed surface.
 
 ## Principles that govern every artifact this skill produces
 
 **Complete contract.** Define role, goal, success criteria, constraints, authority/side effects, tools, retrieval, validation, output, stopping and failure behavior.
 
-**One instruction, one owner.** Duplication dilutes the contract. Compare reductions against the same acceptance criteria through `references/60-skill-authoring.md`.
+**One instruction, one owner.** Duplication dilutes the contract. Check each reduction against the same acceptance criteria through `references/60-skill-authoring.md`.
 
 **Model-specific delegation.** Over-delegation needs bounds; reticence needs authorization. Read `references/06-invocation-and-composition.md` before tuning either.
 
@@ -72,7 +64,7 @@ Before stating prices, limits, effort levels, feature/version gates, defaults, d
 
 ## Stop
 
-Finish when the usable artifact preserves its intended contract and required gates pass. For ambiguity, contradiction, unsafe or impossible work, state the blocker, ask the smallest resolving question and stop. Source work grants no installation, commit, publication, external mutation or paid-comparison authority.
+Finish when the usable artifact preserves its intended contract and required gates pass. For ambiguity, contradiction, unsafe or impossible work, state the blocker, ask the smallest resolving question and stop. Source work grants no installation, commit, publication or external mutation authority.
 
 ## Style
 

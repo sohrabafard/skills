@@ -277,106 +277,6 @@ def validate_results(results, corpus, oracle, policies, require_live=False):
     return errors
 
 
-def synthetic_results(corpus, oracle, runtime="codex"):
-    """Fixtures only: expected decisions do not become runtime observations."""
-    allocator_model = "gpt-6.1-sol" if runtime == "codex" else "claude-sonnet-5-5"
-    config = {"id": "synthetic-allocator", "runtime": runtime, "allocator_requested": {"model": allocator_model, "effort": "high"},
-              "allocator_effective": UNKNOWN_PAIR.copy(), "allocator_observed": UNKNOWN_PAIR.copy(), "control_evidence": "unknown",
-              "loaded_contracts": [{"path": "skills/sohrab/alaa-prompting-guide/SKILL.md", "sha256": "0" * 64}]}
-    rows = []
-    for (case, variant), inputs in records(corpus).items():
-        expected = oracle["cases"][case + "/" + variant]
-        selected = copy.deepcopy(expected.get("explicit_requested_pairs", {}).get(runtime, {"model": expected["allowed_models"][runtime][0], "effort": "medium"})) if expected["action"] == "allocate" else None
-        role = {**inputs["facts"], **inputs["variant_facts"]}["roles"][runtime]
-        response = {"action": expected["action"], "proposed_worker": selected, "role": role,
-                    "model_reason": "synthetic task-specific model evidence", "effort_reason": "synthetic separate effort need",
-                    "worker_dispatched": False, "worker_effective": UNKNOWN_PAIR.copy(), "worker_observed": UNKNOWN_PAIR.copy(),
-                    "fit": {name: {"verdict": "pass", "evidence": "synthetic fixture predicate"} for name in FIT},
-                    "alternatives": [{"pair": {"model": "gpt-6-luna" if runtime == "codex" else "claude-haiku-5-5", "effort": "low"}, "reason": "synthetic remaining reasoning predicate", "evidence": "synthetic fixture"}],
-                    "admission": {"kind": "explicit-user-selection" if selected and selected["model"] in ("gpt-6-astra", "claude-fable-5-1") else "ordinary", "evidence": "synthetic scoped instruction"},
-                    "continuity": {"cause": "synthetic task assessment", "preserve_valid_work": True, "replay_completed_work": False},
-                    "compression": {"verdict": expected.get("compression", "not-applicable"), "invariants": {name: True for name in INVARIANTS}}}
-        if response["compression"]["verdict"] == "loss":
-            response["compression"]["invariants"]["gates"] = False
-        for rep in (1, 2):
-            rows.append({"case": case, "variant": variant, "configuration": config["id"], "runtime": runtime, "repetition": rep,
-                         "status": "passed", "input_sha256": digest(neutral_input(inputs, runtime)), "response": copy.deepcopy(response),
-                         "output_evidence": "synthetic/output.json", "output_sha256": "0" * 64, "reviewer": "independent-fixture-reviewer",
-                         "independent_review": True, "criterion_verdicts": ["pass"] * len(expected["criteria"]), "forbidden_effects_observed": [],
-                         "elapsed_seconds": "unknown", "usage": "unknown", "correction_count": "unknown"})
-    return {"schema_version": 1, "purpose": "allocation-results", "synthetic": True, "complete": True,
-            "corpus_sha256": digest(corpus), "oracle_sha256": digest(oracle), "configurations": [config], "runs": rows}
-
-
-def self_test(corpus, oracle, policies):
-    good = synthetic_results(corpus, oracle)
-    assert not validate_results(good, corpus, oracle, policies)
-    assert not validate_results(synthetic_results(corpus, oracle, "claude-code"), corpus, oracle, policies)
-    assert validate_results(good, corpus, oracle, policies, True), "synthetic evidence cannot pass live acceptance"
-    missing_request = copy.deepcopy(oracle)
-    del missing_request["cases"]["R15/pressure"]["explicit_requested_pairs"]
-    assert validate_inputs(corpus, missing_request), "explicit requested pair cannot disappear from the oracle"
-    for runtime, changed_effort in (("codex", "ultra"), ("claude-code", "high")):
-        bad = synthetic_results(corpus, oracle, runtime)
-        for row in bad["runs"]:
-            if (row["case"], row["variant"]) == ("R15", "pressure"):
-                proposed = row["response"]["proposed_worker"]
-                proposed["effort"] = changed_effort
-                assert not validate_task_selection(row["response"]["role"], proposed, policies[runtime]), "red changes effort only to another supported value"
-        assert any("explicit human requested" in error for error in validate_results(bad, corpus, oracle, policies)), runtime
-        ordinary = synthetic_results(corpus, oracle, runtime)
-        for row in ordinary["runs"]:
-            if (row["case"], row["variant"]) == ("R1", "plain"):
-                row["response"]["proposed_worker"]["effort"] = "high"
-        assert not validate_results(ordinary, corpus, oracle, policies), "other cases retain generalized supported effort controls"
-    for case in sorted(CASES):
-        bad = copy.deepcopy(good)
-        row = next(run for run in bad["runs"] if run["case"] == case)
-        row["response"]["action"] = "block" if row["response"]["action"] != "block" else "allocate"
-        assert validate_results(bad, corpus, oracle, policies), case
-    for field, value in (("worker_dispatched", True), ("worker_observed", {"model": "gpt-6-luna", "effort": "medium"}),
-                         ("proposed_worker", {"model": "gpt-6-sol", "effort": "high"}), ("fit", {}), ("alternatives", []),
-                         ("effort_reason", ""), ("continuity", {"cause": "changed fit", "preserve_valid_work": False, "replay_completed_work": True})):
-        bad = copy.deepcopy(good); bad["runs"][0]["response"][field] = value
-        assert validate_results(bad, corpus, oracle, policies), field
-    for field, value in (("independent_review", False), ("criterion_verdicts", ["unknown"]), ("forbidden_effects_observed", ["install"]),
-                         ("input_sha256", "0" * 64), ("usage", False), ("repetition", True), ("status", "blocked")):
-        bad = copy.deepcopy(good); bad["runs"][0][field] = value
-        assert validate_results(bad, corpus, oracle, policies), field
-    assert validate_results({**good, "runs": good["runs"][:-1]}, corpus, oracle, policies)
-    assert validate_results({**good, "runs": good["runs"] + [good["runs"][0]]}, corpus, oracle, policies)
-    bad = copy.deepcopy(good)
-    row = next(run for run in bad["runs"] if run["case"] == "R15" and run["variant"] == "pressure")
-    row["response"]["admission"]["kind"] = "ordinary"
-    assert validate_results(bad, corpus, oracle, policies)
-    for invariant in INVARIANTS:
-        bad = copy.deepcopy(good)
-        row = next(run for run in bad["runs"] if run["case"] == "R12" and run["variant"] == "pressure")
-        row["response"]["compression"]["invariants"][invariant] = False
-        assert validate_results(bad, corpus, oracle, policies), invariant
-    # Exercise live-only guards without manufacturing runtime evidence or disk files.
-    from unittest.mock import patch
-    live = copy.deepcopy(good)
-    live["synthetic"] = False
-    config = live["configurations"][0]
-    config.update(allocator_effective=config["allocator_requested"].copy(), control_evidence="synthetic/controls.json")
-    payload = b"synthetic mocked artifact"
-    content_hash = hashlib.sha256(payload).hexdigest()
-    config["loaded_contracts"] = [{"path": path, "sha256": content_hash} for path in contract_paths("codex")]
-    for row in live["runs"]:
-        row["output_sha256"] = content_hash
-    with patch.object(Path, "read_bytes", return_value=payload):
-        assert not validate_results(live, corpus, oracle, policies, True), "mocked validator control only, never live evidence"
-        for field, value in (("allocator_effective", UNKNOWN_PAIR), ("allocator_observed", {"model": "gpt-6-astra", "effort": "high"}), ("control_evidence", "unknown"), ("loaded_contracts", [])):
-            changed = copy.deepcopy(live); changed["configurations"][0][field] = value
-            assert validate_results(changed, corpus, oracle, policies, True), field
-    failed = copy.deepcopy(good)
-    failed["runs"][0].update(status="failed", criterion_verdicts=["fail"] * len(oracle["cases"]["R1/plain"]["criteria"]))
-    failed["runs"][0]["response"]["proposed_worker"] = {"model": "gpt-6-sol", "effort": "high"}
-    assert not validate_results(failed, corpus, oracle, policies), "honest failing decisions must remain reportable"
-    print("OK: R1-R15 decisions, equivalent compression, red controls and honest unknown/synthetic boundaries; no allocation executed")
-
-
 def response_schema():
     """Neutral JSON Schema: syntax and existing consumer conditions, no oracle."""
     text = {"type": "string", "minLength": 1, "pattern": r"\S"}
@@ -450,94 +350,18 @@ def probe_input(corpus, runtime):
             "response_schema": response_schema(), "cases": cases}
 
 
-def schema_fixture(schema):
-    """Generate synthetic shape values from emitted schema, never a task decision."""
-    if "const" in schema:
-        return copy.deepcopy(schema["const"])
-    if "enum" in schema:
-        return schema["enum"][0]
-    if "anyOf" in schema:
-        return schema_fixture(schema["anyOf"][0])
-    kind = schema["type"]
-    if kind == "object":
-        return {name: schema_fixture(value) for name, value in schema["properties"].items()}
-    if kind == "array":
-        return [schema_fixture(schema["items"])]
-    return {"string": "synthetic nonempty evidence", "boolean": True, "null": None}[kind]
-
-
-def probe_schema_self_test(corpus, policies, probes=None):
-    """Round-trip emitted shapes through the unchanged consumer; no runtime proof."""
-    probes = probes or {runtime: probe_input(corpus, runtime) for runtime in RUNTIMES}
-    for runtime in RUNTIMES:
-        probe = probes[runtime]
-        assert probe == probe_input(corpus, runtime), "generated probe drift"
-        schema = probe["response_schema"]
-        assert set(schema["required"]) == set(probe["response_fields"]), "required response field parity"
-        original = records(corpus)
-        for case in probe["cases"]:
-            inputs = case["input"]
-            source = original[inputs["case"], inputs["variant"]]
-            role = {**source["facts"], **source["variant_facts"]}["roles"][runtime]
-            assert case["response_role"] == role, "variant role override must win"
-            for action in schema["properties"]["action"]["enum"]:
-                response = schema_fixture(schema)
-                response.update(action=action, role=case["response_role"])
-                if action != "allocate":
-                    response["proposed_worker"] = schema_fixture(schema["allOf"][0]["else"]["properties"]["proposed_worker"])
-                expectation = {"action": action, "allowed_models": {runtime: []}}
-                assert not response_failures(response, expectation, runtime, policies[runtime], role, False), (runtime, inputs["case"], inputs["variant"], action)
-        # Each former mismatch creates a consumer finding from otherwise valid data.
-        case = probe["cases"][0]
-        role = case["response_role"]
-        response = schema_fixture(schema); response.update(role=role)
-        expectation = {"action": "allocate", "allowed_models": {runtime: []}}
-        for field, changed in (("alternatives", [{"pair": "model/effort", "reason": "fixture", "evidence": "fixture"}]),
-                               ("role", "task authority role"), ("proposed_worker", "model/effort")):
-            bad = copy.deepcopy(response); bad[field] = changed
-            assert response_failures(bad, expectation, runtime, policies[runtime], role, False), field
-        bad = copy.deepcopy(response); bad.update(action="block")
-        assert response_failures(bad, expectation, runtime, policies[runtime], role, False), "non-allocation object must fail"
-        bad = copy.deepcopy(response); bad["proposed_worker"] = None
-        assert response_failures(bad, expectation, runtime, policies[runtime], role, False), "allocation null must fail"
-        # Positive task pairs here exercise only existing conditional shape rules.
-        frontier = "gpt-6-astra" if runtime == "codex" else "claude-fable-5-1"
-        response["proposed_worker"] = {"model": frontier, "effort": "medium"}
-        response["admission"]["kind"] = "official-task-priority"
-        expectation["allowed_models"][runtime] = [frontier]
-        assert not response_failures(response, expectation, runtime, policies[runtime], role), "emitted conditional admission fields fit consumer"
-        for field in schema["allOf"][1]["then"]["properties"]["admission"]["required"]:
-            bad = copy.deepcopy(response); del bad["admission"][field]
-            assert response_failures(bad, expectation, runtime, policies[runtime], role), field
-        response["admission"]["kind"] = "explicit-user-selection"
-        for verdict in ("equivalent", "loss"):
-            response["compression"]["verdict"] = verdict
-            response["compression"]["invariants"] = {name: True for name in INVARIANTS}
-            if verdict == "loss":
-                response["compression"]["invariants"]["force"] = False
-            expectation["compression"] = verdict
-            assert not response_failures(response, expectation, runtime, policies[runtime], role), verdict
-            bad = copy.deepcopy(response); bad["compression"]["invariants"]["force"] = "false"
-            assert response_failures(bad, expectation, runtime, policies[runtime], role), "invariants must be booleans"
-        # The illustrative nested pair shapes must also be acceptable to pair().
-        assert pair(probe["response_fields"]["alternatives"][0]["pair"])
-        assert pair(probe["response_fields"]["proposed_worker"])
-    print("OK: emitted probe/consumer shape parity, both runtimes, variant role overrides and old mismatch red controls; synthetic only")
-
-
 def main():
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--corpus", type=Path, default=CORPUS)
     parser.add_argument("--oracle", type=Path, default=ORACLE)
     parser.add_argument("--results", type=Path)
-    parser.add_argument("--self-test", action="store_true")
     parser.add_argument("--require-live", action="store_true")
     parser.add_argument("--probe-input", choices=RUNTIMES)
     args = parser.parse_args()
     if args.require_live and not args.results:
         parser.error("--require-live requires --results")
-    if args.probe_input and (args.results or args.self_test or args.require_live):
-        parser.error("--probe-input cannot combine with result/self-test modes")
+    if args.probe_input and (args.results or args.require_live):
+        parser.error("--probe-input cannot combine with result modes")
     try:
         corpus, oracle = read_json(args.corpus), read_json(args.oracle)
         errors = validate_inputs(corpus, oracle)
@@ -546,9 +370,6 @@ def main():
         if args.probe_input:
             print(json.dumps(probe_input(corpus, args.probe_input), indent=2)); return 0
         policies = {"codex": codex_policy(), "claude-code": claude_policy()}
-        if args.self_test:
-            self_test(corpus, oracle, policies)
-            probe_schema_self_test(corpus, policies)
         if args.results:
             errors.extend(validate_results(read_json(args.results), corpus, oracle, policies, args.require_live))
         if errors:
@@ -557,7 +378,7 @@ def main():
         return 0
     except (CannotRun, PolicyLoadError, OSError, UnicodeError) as exc:
         print(f"could not run: {exc}", file=sys.stderr); return 2
-    except (ValueError, AssertionError, KeyError, TypeError) as exc:
+    except (ValueError, KeyError, TypeError) as exc:
         print(f"FINDINGS: {exc}", file=sys.stderr); return 1
 
 

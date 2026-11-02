@@ -6,7 +6,7 @@ The corpus is test design, not model-quality evidence. The GPT corpus remains in
 
 ## Execution contract
 
-Before an authorized comparison, run `python scripts/check_claude_agent_evals.py` from this
+Before an authorized comparison, run `python3 scripts/check_claude_agent_evals.py` from this
 skill directory. Then verify target CLI, provider/account access, model mapping, overrides,
 effort caps and effective permissions using `references/41-claude-code-runtime-features.md`.
 Stop a comparison whose required pair cannot be established; do not silently downgrade.
@@ -23,7 +23,7 @@ The architecture case compares an explicitly selected Fable task pair with Opus 
 
 ## Result records
 
-Validate records with `python scripts/check_claude_agent_evals.py --results <path>`.
+Validate records with `python3 scripts/check_claude_agent_evals.py --results <path>`.
 Top-level fields: integer `schema_version: 1`, matching `policy_version`, boolean `complete`
 and `synthetic`, and `runs`. Represent all 32 scenario/configuration/repetition keys; retain
 missing work as `unrun`, blocked work as `blocked` with its reason. Each row records the
@@ -59,7 +59,5 @@ mismatch cannot pass or verify the requested pair. Unknown usage is never zero c
 
 Task-pair calibration requires complete nonsynthetic result evidence and two accepted candidate runs matching the explicit requested and observed pair for the scenario/role. Unknown identity cannot calibrate that pair. Calibration of one task never assigns a role-wide default. The checker validates records; an independent reviewer establishes whether linked evidence is truthful and applicable.
 
-Run `python scripts/check_claude_agent_evals.py --self-test` after checker changes. Fixtures
-exercise identity uncertainty, old/new precedence, force overrides and fallback disclosure
-without executing models. Exit 0 is clean, 1 findings, 2 unavailable proof; either nonzero
-blocks the affected gate. No fixture or source pass proves live runtime behavior.
+The checker executes no models. Exit 0 is clean, 1 findings, 2 unavailable proof; either nonzero
+blocks the affected gate. No source pass proves live runtime behavior.

@@ -92,8 +92,8 @@ Two rules hold whichever direction you write.
 Before removing verification language for current Opus, Sonnet or Fable, read
 `references/80-subagent-authoring.md`. It owns the distinction between redundant self-check
 reminders and focused tests or independent acceptance gates. The Fable 5 exception in
-`references/40-fable-5.md` is historical and does not transfer to Fable 5.1. Evaluate prompt
-changes on the target workload instead of assuming that less checking proves equal quality.
+`references/40-fable-5.md` is historical and does not transfer to Fable 5.1. Never assume that less checking
+proves equal quality.
 
 ## Pre-send checklist
 

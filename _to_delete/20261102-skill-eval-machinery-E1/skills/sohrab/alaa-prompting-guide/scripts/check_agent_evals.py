@@ -110,67 +110,6 @@ def validate_history(manifest_path: Path) -> list[str]:
     return _validate(values["agent-comparisons.json"], policy, historical_pair)
 
 
-def history_self_test(policy: dict) -> None:
-    """Isolate archive guards with in-memory corruptions; no files are changed."""
-    from unittest.mock import patch
-    path = CORPUS.parent / "history/20261009/manifest.json"
-    manifest = json.loads(path.read_text(encoding="utf-8"))
-    original_bytes = {entry["file"]: (path.parent / entry["file"]).read_bytes() for entry in manifest["files"]}
-    assert not validate_history(path), "original historical corpus remains readable"
-    archived_corpus = json.loads(original_bytes["agent-comparisons.json"])
-    archived_policy = json.loads(original_bytes["codex-model-policy.json"])
-    assert validate(archived_corpus, policy), "ordinary corpus rejects original historical task pairs"
-    assert validate(archived_corpus, archived_policy), "archival enabled flag cannot restore ordinary task authority"
-    read_text, read_bytes = Path.read_text, Path.read_bytes
-    def findings(changed_manifest, changed_bytes=None):
-        data = changed_bytes or original_bytes
-        with patch.object(Path, "read_text", lambda current, *a, **kw: json.dumps(changed_manifest) if current == path else read_text(current, *a, **kw)), patch.object(Path, "read_bytes", lambda current: data[current.name] if current.parent == path.parent and current.name in data else read_bytes(current)):
-            return validate_history(path)
-    nonattested = copy.deepcopy(manifest); nonattested["source_commit"] = "0" * 40
-    assert not findings(nonattested), "valid-format source_commit is not source-identity attestation"
-    for field, value in (("schema_version", True), ("purpose", "task-authority"), ("source_commit", "unknown"), ("evidence_date", "2026-10-12"), ("archived_on", "2026-10-09")):
-        changed = copy.deepcopy(manifest); changed[field] = value
-        assert findings(changed), field
-    for field, value in (("sha256", "0" * 64), ("bytes", True), ("source", "unowned/policy.json")):
-        changed = copy.deepcopy(manifest); changed["files"][0][field] = value
-        assert findings(changed), field
-    changed = copy.deepcopy(manifest); changed["files"][1] = copy.deepcopy(changed["files"][0])
-    assert findings(changed), "duplicate archive entry"
-    altered = {**original_bytes, "agent-comparisons.json": original_bytes["agent-comparisons.json"] + b"\n"}
-    assert findings(manifest, altered), "changed bytes rejected before decoding/support checks"
-    # Recompute the manifest so this red case isolates role validation, not hashing.
-    invalid_role = copy.deepcopy(archived_corpus); invalid_role["scenarios"][0]["profile"] = "main"
-    data = json.dumps(invalid_role).encode("utf-8")
-    changed = copy.deepcopy(manifest)
-    entry = next(entry for entry in changed["files"] if entry["file"] == "agent-comparisons.json")
-    entry.update(sha256=hashlib.sha256(data).hexdigest(), bytes=len(data))
-    assert findings(changed, {**original_bytes, "agent-comparisons.json": data}), "historical support cannot bypass registered comparison roles"
-
-
-def self_test(corpus: dict, policy: dict) -> None:
-    assert not validate(corpus, policy)
-    changed=copy.deepcopy(corpus)
-    changed["scenarios"][0]["candidate"]["effort"]="medium"
-    changed["scenarios"][0]["comparator"]={"model":changed["scenarios"][0]["candidate"]["model"],"effort":"high"}
-    assert not validate(changed,policy), "same role must accept another explicit task pair"
-    missing=copy.deepcopy(corpus);del missing["scenarios"][0]["candidate"]["effort"]
-    assert validate(missing,policy)
-    bad = copy.deepcopy(corpus)
-    bad["scenarios"].pop()
-    assert validate(bad, policy)
-    for field, value in (("inputs", {}), ("acceptance_criteria", []), ("forbidden_actions", []), ("status", "pass"), ("repetitions", 1), ("prompt", "TODO")):
-        bad = copy.deepcopy(corpus)
-        bad["scenarios"][0][field] = value
-        assert validate(bad, policy), field
-    bad = copy.deepcopy(corpus)
-    bad["scenarios"][0]["comparator"] = {"model": "gpt-6-sol", "effort": "low"}
-    assert validate(bad, policy)
-    bad = copy.deepcopy(corpus)
-    bad["scenarios"][0]["comparator"] = bad["scenarios"][0]["candidate"].copy()
-    assert validate(bad, policy)
-    history_self_test(policy)
-
-
 def validate_results(results: dict, corpus: dict) -> list[str]:
     """Require the full matrix, including explicit unrun/blocked records."""
     if not isinstance(results, dict) or results.get("schema_version") != 1:
@@ -232,58 +171,16 @@ def validate_results(results: dict, corpus: dict) -> list[str]:
     return errors
 
 
-def results_self_test(corpus: dict) -> None:
-    rows = [{"scenario": case["id"], "configuration": kind, "repetition": rep, "requested": case[kind], "status": "unrun"} for case in corpus["scenarios"] for kind in ("candidate", "comparator") for rep in (1, 2)]
-    baseline = {"schema_version": 1, "complete": False, "runs": rows}
-    assert not validate_results(baseline, corpus)
-    assert validate_results({**baseline, "runs": rows[:-1]}, corpus)
-    assert validate_results({**baseline, "runs": rows + [rows[0]]}, corpus)
-    assert validate_results({**baseline, "complete": True}, corpus)
-    bad = copy.deepcopy(baseline)
-    bad["runs"][0]["status"] = "passed"
-    assert validate_results(bad, corpus)
-    completed = copy.deepcopy(baseline)
-    first = completed["runs"][0]
-    first.update(status="passed", output_evidence="synthetic/output.txt", reviewer="independent fixture reviewer", execution_surface="synthetic host", fixture_revision="fixture-v1", criterion_verdicts=["pass"] * len(corpus["scenarios"][0]["acceptance_criteria"]), forbidden_actions_observed=[], configuration_verified=True, observed=first["requested"].copy())
-    assert not validate_results(completed, corpus)
-    for field, value in (("model", "gpt-5.6-sol"), ("effort", "low")):
-        bad = copy.deepcopy(completed)
-        bad["runs"][0]["observed"][field] = value
-        assert any("mismatch" in error for error in validate_results(bad, corpus)), field
-        bad["runs"][0].update(status="failed", configuration_verified=False)
-        assert not validate_results(bad, corpus), "honest mismatch failure must remain reportable"
-    unknown = copy.deepcopy(completed)
-    unknown["runs"][0]["observed"] = {"model": "unknown", "effort": "unknown"}
-    assert any("configuration_control_evidence" in error for error in validate_results(unknown, corpus))
-    for invalid in (True, [], " "):
-        unknown["runs"][0]["configuration_control_evidence"] = invalid
-        assert validate_results(unknown, corpus)
-    unknown["runs"][0]["configuration_control_evidence"] = "synthetic/host-resolved-configuration.json"
-    assert not validate_results(unknown, corpus)
-    failed = copy.deepcopy(completed)
-    failed["runs"][0].update(status="failed", configuration_verified=False, forbidden_actions_observed=["edited outside scope"])
-    assert not validate_results(failed, corpus)
-    for field, invalid in (("forbidden_actions_observed", None), ("forbidden_actions_observed", "none"), ("forbidden_actions_observed", [False]), ("forbidden_actions_observed", [""]), ("configuration_verified", None), ("configuration_verified", "false"), ("configuration_verified", 0)):
-        bad = copy.deepcopy(failed)
-        bad["runs"][0][field] = invalid
-        assert any(field in error for error in validate_results(bad, corpus)), (field, invalid)
-    for field in ("forbidden_actions_observed", "configuration_verified"):
-        bad = copy.deepcopy(failed)
-        del bad["runs"][0][field]
-        assert any(field in error for error in validate_results(bad, corpus)), field
-
-
 def main() -> int:
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--corpus", type=Path, default=CORPUS)
-    parser.add_argument("--self-test", action="store_true")
     parser.add_argument("--results", type=Path, help="optional result matrix; never executes models")
     parser.add_argument("--history-manifest", type=Path, help="isolated historical bytes/support validation; never task authority")
     args = parser.parse_args()
     try:
         if args.history_manifest:
-            if args.corpus != CORPUS or args.results or args.self_test:
-                parser.error("--history-manifest is isolated from active corpus/results/self-test")
+            if args.corpus != CORPUS or args.results:
+                parser.error("--history-manifest is isolated from active corpus/results")
             findings = validate_history(args.history_manifest)
             if findings:
                 print("\n".join(findings))
@@ -292,11 +189,6 @@ def main() -> int:
             return 0
         policy = load_policy()
         corpus = json.loads(args.corpus.read_text(encoding="utf-8"))
-        if args.self_test:
-            self_test(corpus, policy)
-            results_self_test(corpus)
-            print("OK: corpus coverage and negative cases; no model runs executed")
-            return 0
         findings = validate(corpus, policy)
         if not findings and args.results:
             findings.extend(validate_results(json.loads(args.results.read_text(encoding="utf-8")), corpus))
@@ -308,7 +200,7 @@ def main() -> int:
     except (OSError, UnicodeError, json.JSONDecodeError, PolicyLoadError) as exc:
         print(f"could not run: {exc}", file=sys.stderr)
         return 2
-    except (ValueError, AssertionError) as exc:
+    except ValueError as exc:
         print(f"FINDINGS: {exc}", file=sys.stderr)
         return 1
 

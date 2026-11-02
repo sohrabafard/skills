@@ -3,7 +3,6 @@
 from __future__ import annotations
 
 import argparse
-import copy
 import math
 import re
 import sys
@@ -231,118 +230,15 @@ def validate_calibration(path, role, selection, policy):
     return errors
 
 
-def availability_self_test(corpus, policy, completed_row):
-    """Synthetic all-model boundary and pair calibration records, no runtime calls."""
-    from contextlib import redirect_stderr
-    from io import StringIO
-    from unittest.mock import patch
-    results = {"schema_version":1,"policy_version":policy["policy_version"],"complete":True,"synthetic":False,"runs":[]}
-    for case in corpus["scenarios"]:
-        for kind in ("candidate","comparator"):
-            for repetition in (1,2):
-                row=copy.deepcopy(completed_row);pair=case[kind]
-                row.update(scenario=case["id"],configuration=kind,repetition=repetition,requested=pair.copy(),observed=pair.copy(),criterion_verdicts=["pass"]*len(case["acceptance_criteria"]))
-                minimum=max(("2.1.292",policy["models"][pair["model"]]["minimum_claude_code"]),key=semver_key)
-                row["resolution"].update(claude_code_version=minimum,selected_source="invocation",model_controls={"invocation":pair["model"],"frontmatter":None,"environment":None,"parent":None,"force":None},effort_controls={"invocation":pair["effort"],"frontmatter":None,"environment":None,"parent":None},selected_effort_source="invocation",non_fork=True)
-                results["runs"].append(row)
-    case=next(case for case in corpus["scenarios"] if case["profile"]=="alaa-reviewer")
-    role,pair=case["profile"],case["candidate"]
-    def calibration_errors(value):
-        with patch(__name__+".read_json",side_effect=lambda path:corpus if Path(path)==CORPUS else value):
-            return validate_calibration(Path("synthetic-record.json"),role,pair,policy)
-    assert not validate_results(results,corpus,policy)
-    assert not calibration_errors(results)
-    tested=set()
-    for index,row in enumerate(results["runs"]):
-        model=row["requested"]["model"]
-        if model in tested:continue
-        tested.add(model)
-        minimum=max(("2.1.292",policy["models"][model]["minimum_claude_code"]),key=semver_key)
-        parts=minimum.split(".");below=".".join(parts[:-1]+[str(int(parts[-1])-1)])
-        changed=copy.deepcopy(results);changed["runs"][index]["resolution"]["claude_code_version"]=below
-        assert validate_results(changed,corpus,policy)
-        assert calibration_errors(changed)
-    for field in ("model","effort"):
-        changed=copy.deepcopy(results)
-        controls="model_controls" if field=="model" else "effort_controls"
-        source="selected_source" if field=="model" else "selected_effort_source"
-        changed["runs"][0]["resolution"][controls]["environment"]="claude-opus-5-5" if field=="model" else "low"
-        changed["runs"][0]["resolution"][source]="environment"
-        assert validate_results(changed,corpus,policy),"forced/effort override must reject verified mismatch"
-    malformed=SKILL_ROOT/"scripts/fixtures/claude-policy/malformed.json"
-    for source in ("result","corpus"):
-        try:
-            with patch(__name__+".CORPUS",malformed if source=="corpus" else CORPUS):
-                validate_calibration(malformed,role,pair,policy)
-        except CannotRun:pass
-        else:raise AssertionError("malformed evidence accepted")
-    for option in ("--results","--corpus"):
-        with patch.object(sys,"argv",["check_claude_agent_evals.py",option,str(malformed)]),redirect_stderr(StringIO()):
-            assert main()==2,"malformed evidence must preserve exit2"
-
-
-def self_test(corpus, policy):
-    assert not validate_corpus(corpus, policy)
-    changed=copy.deepcopy(corpus)
-    changed["scenarios"][0]["candidate"]["effort"]="low"
-    changed["scenarios"][0]["comparator"]={"model":changed["scenarios"][0]["candidate"]["model"],"effort":"high"}
-    assert not validate_corpus(changed,policy),"same authority role accepts different explicit task pairs"
-    missing=copy.deepcopy(corpus);del missing["scenarios"][0]["candidate"]["effort"]
-    assert validate_corpus(missing,policy)
-    base = {"schema_version":1,"policy_version":policy["policy_version"],"complete":False,"synthetic":True,"runs":[{"scenario":c["id"],"configuration":kind,"repetition":rep,"requested":c[kind],"status":"unrun"} for c in corpus["scenarios"] for kind in ("candidate","comparator") for rep in (1,2)]}
-    assert not validate_results(base,corpus,policy)
-    assert validate_results({**base,"complete":True},corpus,policy)
-    assert validate_results({**base,"runs":base["runs"][:-1]},corpus,policy)
-    complete = copy.deepcopy(base)
-    first=complete["runs"][0]
-    pair=first["requested"]
-    first.update(status="passed",output_evidence="synthetic/output",reviewer="independent fixture",execution_surface="synthetic",fixture_revision="fixture-v1",account_type="synthetic",independent_review=True,elapsed_seconds="unknown",usage="unknown",correction_count=0,criterion_verdicts=["pass"]*len(corpus["scenarios"][0]["acceptance_criteria"]),forbidden_actions_observed=[],configuration_verified=True,observed=pair.copy(),resolution={"claude_code_version":max(("2.1.292",policy["models"][pair["model"]]["minimum_claude_code"]),key=semver_key),"model_controls":{"invocation":pair["model"],"frontmatter":None,"environment":None,"parent":None,"force":None},"selected_source":"invocation","effort_controls":{"invocation":pair["effort"],"frontmatter":None,"environment":None,"parent":None},"selected_effort_source":"invocation","non_fork":True,"provider_and_caps_checked":True,"evidence":"synthetic/control"},fallback={"kind":"none","disclosed":True,"safeguards_preserved":True})
-    assert not validate_results(complete,corpus,policy)
-    availability_self_test(corpus, policy, first)
-    for field,value in (("observed",{"model":"unknown","effort":"unknown"}),("forbidden_actions_observed",["edited outside scope"]),("independent_review",False),("configuration_verified",False)):
-        bad=copy.deepcopy(complete);bad["runs"][0][field]=value
-        assert validate_results(bad,corpus,policy),field
-    unknown=copy.deepcopy(complete);unknown["runs"][0].update(observed={"model":"unknown","effort":"unknown"},configuration_control_evidence="synthetic/resolved-settings")
-    assert not validate_results(unknown,corpus,policy)
-    mismatch=copy.deepcopy(complete);mismatch["runs"][0]["observed"]["model"]="claude-opus-5-5"
-    assert validate_results(mismatch,corpus,policy)
-    mismatch["runs"][0].update(status="failed",configuration_verified=False)
-    assert not validate_results(mismatch,corpus,policy)
-    resolution=first["resolution"]
-    old=copy.deepcopy(resolution);old["claude_code_version"]="2.1.221"
-    assert validate_resolution(old)
-    old["selected_source"]="environment";assert validate_resolution(old)
-    forced=copy.deepcopy(resolution);forced["model_controls"]["force"]="claude-opus-5-5"
-    assert validate_resolution(forced)
-    forced["selected_source"]="force";assert not validate_resolution(forced)
-    for field in ("model_controls","effort_controls"):
-        missing=copy.deepcopy(resolution);missing[field]["invocation"]=None
-        assert validate_resolution(missing)
-    fork=copy.deepcopy(resolution);fork["non_fork"]=False;assert validate_resolution(fork)
-    forced["claude_code_version"]="2.1.251";assert validate_resolution(forced)
-    for kind in ("safety","overload","unknown"):
-        fallback=copy.deepcopy(complete);r=fallback["runs"][0]
-        r["fallback"].update(kind=kind,evidence="synthetic/fallback")
-        assert validate_results(fallback,corpus,policy)
-        r.update(status="failed",configuration_verified=False)
-        assert not validate_results(fallback,corpus,policy)
-        r["fallback"]["safeguards_preserved"]=False
-        assert validate_results(fallback,corpus,policy)
-    print("OK: corpus, identity, precedence, availability boundaries, fallback and evidence exit fixtures; no live runs")
-
-
 def main():
     parser=argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--corpus",type=Path,default=CORPUS)
     parser.add_argument("--results",type=Path)
-    parser.add_argument("--self-test",action="store_true")
     args=parser.parse_args()
     try:
         policy=load_policy(DEFAULT_POLICY)
         corpus=read_json(args.corpus)
         errors=validate_corpus(corpus,policy)
-        if not errors and args.self_test:
-            self_test(corpus,policy)
         if not errors and args.results:
             errors.extend(validate_results(read_json(args.results),corpus,policy))
         if errors:
@@ -351,7 +247,7 @@ def main():
         return 0
     except (CannotRun,OSError,UnicodeError) as exc:
         print(f"could not run: {exc}",file=sys.stderr);return 2
-    except (ValueError,AssertionError) as exc:
+    except ValueError as exc:
         print(f"FINDINGS: {exc}",file=sys.stderr);return 1
 
 

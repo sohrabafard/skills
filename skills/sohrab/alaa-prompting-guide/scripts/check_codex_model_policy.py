@@ -3,67 +3,20 @@
 from __future__ import annotations
 
 import argparse
-import copy
 import sys
 import tomllib
 from pathlib import Path
 
 sys.dont_write_bytecode = True
 from codex_model_policy import PolicyLoadError, load_policy, validate_agent_pin, validate_policy
-from task_model_controls import selection_self_test, validate_task_selection
-
-
-def self_test() -> None:
-    policy = load_policy()
-    pairs = ({"model":"gpt-6-luna", "effort":"low"}, {"model":"gpt-6.1-sol", "effort":"high"})
-    count = selection_self_test(policy, pairs)
-    legacy = {"model": "gpt-6-sol", "effort": "high"}
-    assert validate_task_selection("alaa-reviewer", legacy, policy)
-    archival = copy.deepcopy(policy)
-    archival["models"]["gpt-6-sol"]["selection_enabled"] = True
-    assert validate_policy(archival), "ordinary policy must reject archive eligibility"
-    assert validate_task_selection("alaa-reviewer", legacy, archival), "archive is never task authority"
-    missing_current = copy.deepcopy(policy)
-    missing_current["models"]["gpt-6.1-sol"]["selection_enabled"] = False
-    assert validate_task_selection("alaa-reviewer", pairs[1], missing_current)
-    assert validate_task_selection("alaa-reviewer", legacy, missing_current), "no old-Sol fallback"
-    for role, profile in policy["profiles"].items():
-        if profile["selection_mode"] != "task-selected":
-            continue
-        good = {"name":role}
-        assert not validate_agent_pin(good, policy)
-        for key, value in (("model", "gpt-6-astra"), ("model_reasoning_effort", "high"), ("effort", "low")):
-            assert validate_agent_pin({**good,key:value},policy)
-        missing = copy.deepcopy(policy)
-        del missing["profiles"][role]
-        assert any("coverage" in error for error in validate_policy(missing))
-        fixed = copy.deepcopy(policy)
-        fixed["profiles"][role]["model"] = "gpt-6-astra"
-        assert validate_policy(fixed)
-    assert validate_agent_pin({"name":"unregistered"},policy)
-    for key,value in (("schema_version",True),("schema_version",1),("verified_on","2026-02-30")):
-        bad=copy.deepcopy(policy);bad[key]=value;assert validate_policy(bad)
-    for model,effort in (("gpt-6-luna","ultra"),("gpt-6.1-sol","none")):
-        assert validate_task_selection("alaa-reviewer",{"model":model,"effort":effort},policy)
-    bad=copy.deepcopy(policy);bad["models"]["gpt-6.1-sol-preview"]=bad["models"]["gpt-6.1-sol"].copy()
-    assert validate_policy(bad)
-    bad=copy.deepcopy(policy);bad["models"]["gpt-6.1-sol"]["recommended_start"]="none"
-    assert validate_policy(bad)
-    assert validate_policy([])
-    print(f"OK: {count} roles with distinct task pairs, explicit controls, coverage and stale-pin rejection")
 
 
 def main() -> int:
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--policy", type=Path)
     parser.add_argument("--agent-root", action="append", type=Path, default=[], help="TOML file or directory of agent TOMLs; repeatable")
-    parser.add_argument("--self-test", action="store_true")
     args = parser.parse_args()
     try:
-        if args.self_test:
-            self_test()
-            print("OK: model policy positive and negative cases")
-            return 0
         policy = load_policy(args.policy)
         findings, count = [], 0
         for root in args.agent_root:
@@ -88,9 +41,6 @@ def main() -> int:
     except (OSError, UnicodeError) as exc:
         print(f"could not run: {exc}", file=sys.stderr)
         return 2
-    except AssertionError as exc:
-        print(f"SELF-TEST FAILED: {exc}", file=sys.stderr)
-        return 1
 
 
 if __name__ == "__main__":

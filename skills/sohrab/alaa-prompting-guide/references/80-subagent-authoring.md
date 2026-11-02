@@ -113,7 +113,7 @@ Claude Code disables subagent nesting by default — a subagent cannot spawn sub
 | Redundancy mistaken for a gate | An agent spawned to double-check another agent | Delete it; keep only boundaries where a different agent judges a different agent's work |
 | Repeated verification without cause | Same check repeated despite no change or unresolved concern | Remove the repetition; retain focused tests and independent gates |
 | Role restated in the dispatch | Long dispatch, diluted lane facts | Dispatch carries outcome, scope, exclusions, criteria, commands, dependencies — nothing else |
-| Untested escalation | Model and effort changed without diagnosing failure | Repair missing context/tool/spec facts first; compare one factor at a time |
+| Untested escalation | Model and effort changed without diagnosing failure | Repair missing context/tool/spec facts first; change one factor at a time |
 | Invented runtime identity | Configured pins reported as observations | Separate requested and observed values; unknown stays unknown |
 | Wrong delegation polarity | Swarm on one runtime, single-threaded on the other | Cap where the default over-delegates; authorize where it under-delegates |
 

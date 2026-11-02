@@ -72,16 +72,14 @@ Choose router placement by actual always-loaded cost and selective routing needs
 
 **A soft target yields; a hard limit does not.** An author target, a recommended line count, or a default word budget yields when required behavior-affecting content does not fit: exceed it, say so, and compress the rest as normal — yielding is never permission to stop compressing. A limit that rejects or truncates the artifact, such as a packaging validator or a runtime byte budget, cannot yield: meet it by restructuring without semantic loss, and report blocked when no restructuring satisfies both. Restructuring moves content, so it is a separate change with its own reason and not a compress pass.
 
-## Lean prompts require measured behavior preservation
+## Lean prompts must preserve behavior
 
 Current OpenAI guidance favors small routers, precise triggers, conditional reads, and lean
 instructions. This supports removing duplicated instructions and irrelevant examples; it does
 not prove a fixed quality or cost gain for every task. Keep every load-bearing condition,
-authority boundary, required check, and caveat through the compression test above. Evaluate
-changed prompts on representative tasks before calling them better.
+authority boundary, required check, and caveat through the compression test above.
 
-When selecting GPT-6 guidance or evaluation criteria, read `references/12-gpt-6.md` and
-`references/92-agent-evaluation.md`. Historical percentages measured on earlier prompts are
+When selecting GPT-6 guidance, read `references/12-gpt-6.md`. Historical percentages measured on earlier prompts are
 not forecasts for this pack.
 
 ## The wording is the mechanism

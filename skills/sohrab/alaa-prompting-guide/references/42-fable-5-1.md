@@ -1,9 +1,9 @@
 # Claude Fable 5.1
 
 Use for current Fable prompting. `references/40-fable-5.md` preserves the
-older generation's guidance for historical comparison only. Read the structured Claude
+older generation's guidance for historical reference only. Read the structured Claude
 policy before selecting a profile; availability and a vendor ranking do not prove a
-workload-specific advantage. The runtime orchestrator chooses Fable only from actual task evidence; a difficult role title grants no automatic choice. Explicit comparisons may test those hypotheses after diagnosing context and tools; no source claim proves local superiority.
+workload-specific advantage. The runtime orchestrator chooses Fable only from actual task evidence; a difficult role title grants no automatic choice. No source claim proves local superiority.
 
 ## Prompting
 
@@ -13,8 +13,7 @@ carrying forward the older Fable-specific requirement for recurring verification
 Focused implementer checks and independent acceptance gates survive; their ownership is
 defined in `references/80-subagent-authoring.md`.
 
-Calibrate effort on the hardest representative tasks, not easy tasks that cannot expose a
-quality difference. At lower effort verify that required retrieval still occurs. Tune
+Set effort for the hardest representative tasks. At lower effort verify that required retrieval still occurs. Tune
 response length and progress reporting separately, and support long turns within the
 authorized runtime's resource limits. No measured pack speedup is claimed.
 
@@ -32,14 +31,14 @@ nudges and cache controls are API features; do not invent matching Claude Code k
 
 Read `references/41-claude-code-runtime-features.md` before selection: provider availability,
 credits, safeguards and fallback can change the effective serving model. Never bypass a
-safeguard or install a local fallback to manufacture a comparison result. Keep refusal,
-fallback and unknown serving identity visible in evaluation evidence.
+safeguard or install a local fallback. Keep refusal,
+fallback and unknown serving identity visible in reports.
 
 ## Sources and limits
 
 Verified 25 September 2026. Full system cards could not be retrieved; the release summaries
-do not establish full-card review or justify weakening existing gates. Local comparisons
-remain unrun.
+do not establish full-card review or justify weakening existing gates. Local calibration
+remains unrun.
 
 - [Fable prompting](https://platform.claude.com/docs/en/build-with-claude/prompt-engineering/prompting-claude-fable-5-1)
 - [Fable migration](https://platform.claude.com/docs/en/models/fable-5-1/migration-guide)

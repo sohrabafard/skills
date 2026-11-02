@@ -6,10 +6,10 @@ Source checks do not prove account access, runtime activation or workload qualit
 
 ## Prompting and effort
 
-Claude Code and Claude apps default to `medium`; Platform/API defaults to `high`. These surface defaults are not task choices. Begin comparisons at `medium` for well-specified agentic work and
+Claude Code and Claude apps default to `medium`; Platform/API defaults to `high`. These surface defaults are not task choices. Begin at `medium` for well-specified agentic work and
 `high` for harder or longer tasks. Effort levels were recalibrated: workload recommendations are
 unrun hypotheses, not inherited calibration. Use `references/50-effort-and-thinking.md`
-for controlled comparisons; raise effort only after excluding context, tool and specification gaps.
+for effort evidence. Raise effort only after excluding context, tool and specification gaps.
 
 The launch reports high-effort Sonnet approaching Opus on some work at similar cost; it proves no universal local equivalence. Medium and high remain distinct supported task settings. In two reported benchmark cases, max underperformed xhigh because extra reviewer subagents caused timeouts or out-of-scope edits. Treat this as a workload-specific caveat, not a universal effort ranking; higher effort can change tool behavior without improving acceptance.
 
@@ -79,4 +79,4 @@ identity remain unmeasured. Re-fetch the relevant source before reusing a versio
 
 Agentic effort and structured-JSON prompting scope refreshed 9 October 2026; API migration facts retain their 29 September snapshot. The selection guide assigns everyday coding to Sonnet without an effort; medium/high come from the separate prompting source.
 
-Launch defaults and benchmark caveats refreshed 9 October 2026 from the official 28 September launch and effort documentation. No local comparative calibration ran.
+Launch defaults and benchmark caveats refreshed 9 October 2026 from the official 28 September launch and effort documentation. No local calibration ran.

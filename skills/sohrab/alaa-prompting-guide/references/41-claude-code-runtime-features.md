@@ -37,7 +37,7 @@ change the serving model after selection. Preserve safeguards, disclose fallback
 identity, and exclude affected runs from claims about the requested pair. Never weaken a
 safeguard, silently substitute a model or introduce a local fallback to complete a gate.
 Fable noninteractive use may spend credits without prompting; obtain the applicable execution
-authority before a live comparison. No source checker grants installation, settings mutation
+authority before a live run. No source checker grants installation, settings mutation
 or paid execution authority.
 
 ## Historical harness mechanics
