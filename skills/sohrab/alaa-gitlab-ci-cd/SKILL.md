@@ -80,9 +80,9 @@ empty string and overwrites any predefined variable of that name. Open
 
 ## Runner rules
 
-Outside the Ala fleet the Kubernetes executor is the default. The Ala fleet runs
-Docker and Kubernetes executors, so read the target Runner's executor before
-writing a job; for each Ala Runner's executor, job image and tool limits, read
+Outside the Ala fleet the Kubernetes executor is the default. Read the target
+Runner's executor before writing a job; for each Ala Runner's executor, job image
+and tool limits, read
 `/alaa-services-contract` `references/16-infrastructure-services-and-delivery-artifacts.md`,
 section "Runner shapes and the CI job image". A shell runner is correct only where the
 host serves no other tenant, the runner is tagged so only the intended projects
