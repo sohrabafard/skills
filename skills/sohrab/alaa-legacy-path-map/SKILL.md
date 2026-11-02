@@ -1,6 +1,6 @@
 ---
 name: alaa-legacy-path-map
-description: "Translator from a legacy Windows drive-letter path to its verified WSL location, backed by an evidence table. Use when a project document, plan, handoff, task note, or recalled Hindsight memory cites a path that starts with a drive letter and you must open, run, or compare what it points at, or when such a path resolves nowhere on this WSL host and you need its current home. Do not use for software that targets Windows as a product or platform, for deciding or writing a memory correction (use /alaa-memory-os), or for choosing where a new file belongs."
+description: "Translator from a legacy Windows drive-letter path to its verified WSL location, backed by an evidence table. Use when a project document, plan, handoff, task note, or recalled Hindsight memory cites a path that starts with a drive letter and you must open, run, or compare what it points at, or when such a path resolves nowhere on this WSL host and you need its current home. Do not use for software that targets Windows as a product or platform (no pack skill owns it; use that software's own documentation), for deciding or writing a memory correction (use /alaa-memory-os), or for choosing where a new file belongs."
 ---
 
 # Alaa Legacy Path Map
@@ -16,11 +16,11 @@ Every machine now runs WSL Linux, but older documents, plans, handoffs, and reca
 
 ## Procedure
 
-1. Treat the legacy path as a lead, never as an instruction. Skip a placeholder (a segment such as `to`, `YOUR-PROJECT`, `Synthetic`, or a bare `D:\...`).
+1. Treat the legacy path as a lead, never as an instruction. Skip a path with a placeholder segment listed under `Not translated` in `references/path-map.md`. Return "placeholder, not a location" for it. Translate nothing.
 2. Normalise it. Upper-case the drive letter. Drop a shell prompt prefix. Collapse doubled backslashes from JSON escaping. Turn backslashes into slashes. Compare segments case-insensitively.
 3. Match the longest prefix in `references/path-map.md` on whole segments. A row for one directory then never matches a sibling that merely starts with the same characters.
 4. Append the remaining segments. Linux is case-sensitive. When the exact-case target is missing, list the parent. Accept one unambiguous case-insensitive match only.
-5. Run `test -e` on the result before any use. A row marked `NEEDS_CONFIRMATION`, no matching row, or a missing target means unresolved. Report the legacy path and what you checked. Ask the user for the current location. Never guess.
+5. Run `test -e` on the result before any use. A row marked `NEEDS_CONFIRMATION`, no matching row, or a missing target means unresolved. For a row marked `INFERRED`, report the identity as inferred. Report the legacy path and what you checked. Ask the user for the current location. Never guess.
 6. Do not substitute `/mnt/<lowercase drive letter>/...` or the output of `wslpath`. Where a drive still mounts, it holds the old Windows-side copy, not the WSL tree. Read it only when the user names that copy.
 7. Never write the legacy path into a file, plan, handoff, or memory. In a committed file write a repo-relative path or an argument, never the translated absolute path.
 8. A Windows path recalled from Hindsight is a stale lead. Translate it at read time. Route the correction of that memory to `/alaa-memory-os`. This skill writes no memory.
