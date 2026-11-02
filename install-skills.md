@@ -1,123 +1,37 @@
 # Install local skills
 
-From the repository root, use one source-root list and one destination list. Add any new
-vendor, local pack, or agent home to these arrays.
+The host is WSL Linux with Bash. From the repository root, one source-root list and one Bash
+installer link every skill into both agent homes. Add a new vendor or local pack to the list.
 
 > The source-root lines between the `# vendor-subtrees:codex-src-roots` markers below are generated
 > from `vendor/subtrees.json`. To change which directories the installer scans, read "Vendored
 > source roots" near the end of this file.
 
-```powershell
-# Run this from the repository root; every path below is resolved from it.
-$repoRoot = (Resolve-Path ".").Path
+## Source roots
 
+This block is data. `install-skills.wsl.sh` reads it and `scripts/vendor_subtrees.py` writes it, so
+its line form is fixed: `(Join-Path $repoRoot "<root>")` per entry, `#` for a comment.
+
+```text
 $srcRoots = @(
-    (Join-Path $repoRoot "skills\.curated")
-    (Join-Path $repoRoot "skills\sohrab")
+    (Join-Path $repoRoot "skills/.curated")
+    (Join-Path $repoRoot "skills/sohrab")
 # vendor-subtrees:codex-src-roots:start
-    (Join-Path $repoRoot "vendor\openfga-agent-skills\skills")
-    (Join-Path $repoRoot "vendor\cc-skills-golang\skills")
-    (Join-Path $repoRoot "vendor\knowledge-work-plugins\design\skills")
-    (Join-Path $repoRoot "vendor\knowledge-work-plugins\product-management\skills")
-    #(Join-Path $repoRoot "vendor\basic-memory\basic-memory")
-    (Join-Path $repoRoot "vendor")
-    (Join-Path $repoRoot "vendor\hindsight-skills\skills")
+    "vendor/openfga-agent-skills/skills"
+    "vendor/cc-skills-golang/skills"
+    "vendor/knowledge-work-plugins/design/skills"
+    "vendor/knowledge-work-plugins/product-management/skills"
+    "vendor"
+    "vendor/hindsight-skills/skills"
 # vendor-subtrees:codex-src-roots:end
 )
-
-$destinations = @(
-    [pscustomobject]@{ Name = "codex"; Path = (Join-Path $HOME ".codex\skills") }
-    [pscustomobject]@{ Name = "claude"; Path = (Join-Path $HOME ".claude\skills") }
-)
-
-function Resolve-LinkTargetPath {
-    param([Parameter(Mandatory)][string] $Path)
-
-    try {
-        return (Resolve-Path -LiteralPath $Path -ErrorAction Stop).Path
-    } catch {
-        return [System.IO.Path]::GetFullPath($Path)
-    }
-}
-
-function Write-LinkDebugStatus {
-    param(
-        [Parameter(Mandatory)][string] $Status,
-        [Parameter(Mandatory)][string] $DestinationName,
-        [Parameter(Mandatory)][string] $SkillName,
-        [Parameter(Mandatory)][string] $Source,
-        [Parameter(Mandatory)][string] $Destination
-    )
-
-    if ($Status -eq "LINK") {
-        Write-Host "$Status [$DestinationName] $SkillName" -ForegroundColor Yellow
-    } else {
-        Write-Host "$Status [$DestinationName] $SkillName"
-    }
-
-    Write-Host "  Source:      $Source"
-    Write-Host "  Destination: $Destination"
-}
-
-foreach ($destination in $destinations) {
-    New-Item -ItemType Directory -Force -Path $destination.Path | Out-Null
-}
-
-foreach ($srcRoot in $srcRoots) {
-    if (-not (Test-Path -LiteralPath $srcRoot -PathType Container)) {
-        Write-Warning "Source root missing, skipped: $srcRoot"
-        continue
-    }
-
-    Get-ChildItem -LiteralPath $srcRoot -Directory |
-        Where-Object {
-            $_.Name -notlike ".*" -and
-            (Test-Path -LiteralPath (Join-Path $_.FullName "SKILL.md") -PathType Leaf)
-        } |
-        ForEach-Object {
-            $skillName = $_.Name
-            $target = $_.FullName
-            $expectedTarget = Resolve-LinkTargetPath $target
-
-            foreach ($destination in $destinations) {
-                $linkPath = Join-Path $destination.Path $skillName
-                $prefix = "[$($destination.Name)] $skillName"
-
-                $item = Get-Item -LiteralPath $linkPath -Force -ErrorAction SilentlyContinue
-
-                if ($null -eq $item) {
-                    New-Item -ItemType SymbolicLink -Path $linkPath -Target $target | Out-Null
-                    Write-LinkDebugStatus -Status "LINK" -DestinationName $destination.Name -SkillName $skillName -Source $target -Destination $linkPath
-                    continue
-                }
-
-                if ($item.LinkType -ne "SymbolicLink") {
-                    Write-LinkDebugStatus -Status "EXIST" -DestinationName $destination.Name -SkillName $skillName -Source $target -Destination $linkPath
-                    Write-Warning "Skipped: $prefix exists but is not a symlink"
-                    continue
-                }
-
-                $rawTarget = @($item.Target)[0]
-                $actualTarget = Resolve-LinkTargetPath ([string]$rawTarget)
-                if ($actualTarget -eq $expectedTarget) {
-                    Write-LinkDebugStatus -Status "EXIST" -DestinationName $destination.Name -SkillName $skillName -Source $target -Destination $linkPath
-                    continue
-                }
-
-                Write-LinkDebugStatus -Status "EXIST" -DestinationName $destination.Name -SkillName $skillName -Source $target -Destination $linkPath
-                Write-Warning "Skipped: $prefix target does not match"
-                Write-Host "  Actual:      $rawTarget"
-            }
-        }
-}
 ```
+
 ## WSL installer
 
 Run the committed Bash installer from the Linux clone; it derives the repository root from its
-own location. The active `$srcRoots` array above is also its source list: comments are ignored,
-backslashes become Linux separators, and unrecognized expressions fail before any links are made.
-It never evaluates PowerShell or fetches dependencies. Changes to the generated vendor block
-therefore apply to both installers without maintaining a second list.
+own location. It reads the `$srcRoots` list above: comments are ignored, backslashes become Linux
+separators, and unrecognized expressions fail before any links are made. It fetches no dependencies.
 
 ```bash
 cd ~/project/skills
@@ -130,22 +44,21 @@ After reviewing the output:
 bash ~/project/skills/install-skills.wsl.sh
 ```
 
-Like the PowerShell procedure, it scans only immediate non-hidden directories with `SKILL.md`.
-It links into `~/.codex/skills` and `~/.claude/skills`. Missing roots, real destination directories
-and different symlinks are reported and skipped. Correct links remain unchanged. Duplicate skill
-names follow source-root order: an earlier link is kept and a later conflicting source is skipped.
-The final summary counts skipped conflicts; exit zero does not mean every skill was installed.
-Existing real Gortex directories are reported and skipped like other real destinations;
-this installer never moves or overwrites them. The setup guide verifies shared skill links.
+It scans only immediate non-hidden directories with `SKILL.md` and links them into `~/.codex/skills`
+and `~/.claude/skills`. Missing roots, real destination directories and different symlinks are
+reported and skipped. Correct links remain unchanged. Duplicate skill names follow source-root
+order: an earlier link is kept and a later conflicting source is skipped. The final summary counts
+skipped conflicts; exit zero does not mean every skill was installed. Existing real Gortex
+directories are reported and skipped like other real destinations; this installer never moves or
+overwrites them. The setup guide verifies shared skill links.
 
 ## Where a skill is installed, and how it is invoked
 
 This file is authoritative for install paths. Three facts follow, and no document in this repository
 may contradict them.
 
-**A personal skill installs under the user's home.** Both destinations above are user-level:
-`Join-Path $HOME ".codex\skills"` for Codex and `Join-Path $HOME ".claude\skills"` for Claude Code.
-On a POSIX shell those are `~/.codex/skills` and `~/.claude/skills`. A skill installed there follows
+**A personal skill installs under the user's home.** Both destinations are user-level:
+`~/.codex/skills` for Codex and `~/.claude/skills` for Claude Code. A skill installed there follows
 the user into every repository, which is what a general-purpose skill wants.
 
 **This installer uses `~/.codex/skills` for personal Codex skills** and keeps repository-local
@@ -157,7 +70,7 @@ The adapted Gortex task recipes live in `skills/gortex/`; `skills/sohrab/alaa-co
 remains their shared policy owner. `skills/gortex/provenance.json` records the supplied installer
 snapshot and adaptations. Do not refresh this pack by running Gortex's installer or profile
 switch against installed symlinks: those operations can write through the links into this repository.
-The WSL setup guide describes Git synchronization and shared-link verification.
+The setup guide describes Git synchronization and shared-link verification.
 
 **Invocation is `/name` in Claude Code and `$name` in Codex**, and both forms name the same skill.
 Whether a skill may be selected without being named is declared once per skill, in its
@@ -167,8 +80,8 @@ YAML, and the two will eventually disagree.
 
 ## Vendored source roots
 
-The `# vendor-subtrees:codex-src-roots` block inside the snippet above is generated by
-`python scripts\vendor_subtrees.py refresh-docs` from `vendor/subtrees.json`. The next refresh
+The `# vendor-subtrees:codex-src-roots` block above is generated by
+`python3 scripts/vendor_subtrees.py refresh-docs` from `vendor/subtrees.json`. The next refresh
 discards an edit made inside that span. To change which directories the installer scans, edit
 `vendor/subtrees.json` and run `refresh-docs`.
 
@@ -178,7 +91,7 @@ line per source root, skipping a root an earlier entry already emitted:
 - An entry with a `codex_src_roots` array supplies its roots verbatim. Declare that key when the
   pack does not keep its skills at `<prefix>/skills`, or when this repository installs some of a
   pack's skills and not others.
-- An entry without that key falls back to `<prefix>\skills`, emitted only when that directory
+- An entry without that key falls back to `<prefix>/skills`, emitted only when that directory
   exists on disk. `openfga-agent-skills` and `cc-skills-golang` are on that fallback.
 - An entry with an empty `codex_src_roots` array emits nothing, which records that the pack is
   vendored deliberately and installed deliberately. `claude-plugins-official` is that case: it
@@ -187,7 +100,7 @@ line per source root, skipping a root an earlier entry already emitted:
 A `codex_src_roots` value that is not a list of non-empty strings stops `refresh-docs` with a
 message naming the entry, and leaves both documents unchanged. A declared root that does not exist
 on disk is still emitted, and `refresh-docs` reports it on stderr, because the installer's own loop
-prints `Source root missing, skipped` for it -- dropping the line would hide the typo instead of
+prints `source root missing, skipped` for it -- dropping the line would hide the typo instead of
 showing it.
 
 **Why an array and not directory discovery.** `knowledge-work-plugins` ships 17 `<plugin>/skills`
@@ -199,33 +112,6 @@ reproduce the intended set.
 `SKILL.md` sits at the top of its own prefix, so the directory the installer has to scan is the
 parent, `vendor`. That root is declared on the `skill-temporal-developer` entry.
 
-**basic-memory installs from `vendor\basic-memory`.** The entry's `source_path: "skills"` flattens
-upstream's `skills/` directory straight into `vendor\basic-memory`, so its 14 vendored skills sit
-directly there. `vendor\basic-memory\basic-memory` is a nested duplicate holding 5 of the 14.
-Until 2026-07-31 the block named that nested directory, so the installer linked 5 of 14 and never
-installed `memory-ci-capture`, `memory-curate`, `memory-defrag`, `memory-ingest`,
-`memory-lifecycle`, `memory-literary-analysis`, `memory-reflect`, `memory-research` or
-`memory-tasks`.
-
-**One-time cleanup on a machine that installed before 2026-07-31.** Five links in `~\.codex\skills`
-and `~\.claude\skills` still point into the nested duplicate. The installer prints
-`Skipped: [codex] memory-capture target does not match` for each one and changes nothing, so the
-links have to be removed once. Run this from the repository root to see them:
-
-```powershell
-$stale = Join-Path (Resolve-Path ".").Path "vendor\basic-memory\basic-memory"
-foreach ($dest in @("$HOME\.codex\skills", "$HOME\.claude\skills")) {
-    Get-ChildItem -LiteralPath $dest -Force -ErrorAction SilentlyContinue |
-        Where-Object { $_.LinkType -eq "SymbolicLink" -and (@($_.Target)[0]) -like "$stale*" } |
-        ForEach-Object { Write-Host "stale: $($_.FullName) -> $(@($_.Target)[0])" }
-}
-```
-
-Replace the last line's `Write-Host` with `Remove-Item -LiteralPath $_.FullName -Force` to delete
-exactly the links that listing named, then run the install snippet at the top of this file again.
-The filter matches only a symlink whose target is inside the nested duplicate, so a link that
-already points at `vendor\basic-memory` is left in place.
-
 **Editing `vendor/subtrees.json` is allowed; editing anything else under `vendor/` is not.** The
 never-edit rule in `skills/sohrab/AGENTS.md` protects upstream content that a later
 `git subtree pull` overwrites. This file is not that. Every subtree prefix is `vendor/<name>`, so a
@@ -234,19 +120,15 @@ pull writes only inside a sibling directory and cannot reach `vendor/subtrees.js
 
 ## install subagents
 
-Run from the repository root. `$repoRoot` is resolved from the working directory for the same reason
-the snippet at the top of this file does it: an absolute path from one machine is wrong on every
-other one.
+Run from the repository root.
 
-```powershell
-$repoRoot = (Resolve-Path ".").Path
-
+```bash
 # Claude world — once, applies to every project
-New-Item -ItemType Directory -Force "$env:USERPROFILE\.claude\agents" | Out-Null
-Copy-Item (Join-Path $repoRoot "skills\sohrab\alaa-cc-orchestrator\agents\*.md") "$env:USERPROFILE\.claude\agents\"
+mkdir -p ~/.claude/agents
+cp skills/sohrab/alaa-cc-orchestrator/agents/*.md ~/.claude/agents/
 
 # Codex world — materialize the live MCP grants before installing role definitions
-& (Join-Path $repoRoot "skills\sohrab\alaa-codex-orchestrator\scripts\Install-AlaaCodexAgents.ps1")
+bash skills/sohrab/alaa-codex-orchestrator/scripts/install-agents.sh
 ```
 
 Claude source version 5.0.0 keeps `alaa-implementer-opus` and adds `alaa-implementer-fable` with separate admission. Inspect installed roles before a future explicitly authorized update; the wildcard copy above updates present source wrappers but does not prove activation or remove unrelated files. Do not retire Opus. Read `skills/sohrab/alaa-cc-orchestrator/references/model-effort-policy.md` and its routing owner before dispatch. This source update does not install or retire agents on your machine.
@@ -263,34 +145,34 @@ The two runtimes reach this agent by different routes, and only one of them is a
 **Claude Code: nothing to run.** The definition ships inside the plugin and Claude loads it from the
 plugin-root `agents/` directory once the plugin is installed or enabled, so rebuilding and
 reinstalling the plugin is the whole update path. Do not copy a wrapper into
-`$env:USERPROFILE\.claude\agents` and do not write an installation sentinel; a hand-placed copy
+`~/.claude/agents` and do not write an installation sentinel; a hand-placed copy
 would shadow the packaged one and then go stale silently.
 
 **Codex: one copy, since Codex has no plugin.** Run from the repository root:
 
-```powershell
-$repoRoot = (Resolve-Path ".").Path
-New-Item -ItemType Directory -Force "$env:USERPROFILE\.codex\agents" | Out-Null
-Copy-Item (Join-Path $repoRoot "skills\sohrab\alaa-prompting-guide\assets\rule-writer\codex\alaa-rule-writer.toml") "$env:USERPROFILE\.codex\agents\" -Force
+```bash
+mkdir -p ~/.codex/agents
+cp -f skills/sohrab/alaa-prompting-guide/assets/rule-writer/codex/alaa-rule-writer.toml ~/.codex/agents/
 ```
 
-`-Force` replaces a differing prior version and keeps no backup, matching both orchestrator packs.
-Run `python skills\sohrab\alaa-prompting-guide\scripts\check_rule_writer_grants.py` first; exit `0`
+`cp -f` replaces a differing prior version and keeps no backup, matching both orchestrator packs.
+Run `python3 skills/sohrab/alaa-prompting-guide/scripts/check_rule_writer_grants.py` first; exit `0`
 is the gate, and `1` or `2` both fail it.
 
+## install browser
 
-## install browser:
-New-Item -ItemType Directory -Force -Path "$env:USERPROFILE\.playwright-mcp-profile" | Out-Null
+```bash
+mkdir -p ~/.playwright-mcp-profile
 npm install playwright
 npx playwright install chromium
 npm install -g -D @axe-core/playwright
-npx @playwright/mcp@latest --port 8931 --browser chromium --user-data-dir "$env:USERPROFILE\.playwright-mcp-profile"
-
-codex config: substitute your own home directory for `USER_HOME` below. Codex reads this file as
-TOML and does not expand an environment variable inside it, so the path has to be absolute and
-cannot be written portably the way the PowerShell lines above are.
-
+npx @playwright/mcp@latest --port 8931 --browser chromium --user-data-dir ~/.playwright-mcp-profile
 ```
+
+Codex config: substitute your own home directory for `USER_HOME` below. Codex reads this file as
+TOML and does not expand an environment variable inside it, so the path has to be absolute.
+
+```toml
 [mcp_servers.playwright_visual]
 command = "npx"
 args = [
@@ -299,50 +181,31 @@ args = [
   "--browser",
   "chromium",
   "--user-data-dir",
-  "USER_HOME\\.playwright-mcp-profile"
+  "USER_HOME/.playwright-mcp-profile"
 ]
 startup_timeout_sec = 60
 tool_timeout_sec = 300
 enabled = true
 ```
 
-## install openfga vendoor
-first add vendor skill
+## install openfga vendor
+
+First add the vendor skill:
+
 ```bash
 git remote add openfga-upstream https://github.com/openfga/agent-skills.git
 git subtree add --prefix vendor/openfga-agent-skills openfga-upstream main --squash
 ```
-Then update later with:
+
+Update later with:
+
 ```bash
 git fetch openfga-upstream
 git subtree pull --prefix vendor/openfga-agent-skills openfga-upstream main --squash
+node vendor/openfga-agent-skills/scripts/build-agents-md.js
 ```
-Then hook it into your existing install pattern by linking the vendored skill folder into Codex:
-```bash
-$srcRoot = Join-Path (Resolve-Path ".").Path "vendor\openfga-agent-skills\skills"
-$dstRoot = "$HOME\.codex\skills"
 
-New-Item -ItemType Directory -Force -Path $dstRoot | Out-Null
-
-Get-ChildItem $srcRoot -Directory | ForEach-Object {
-    $linkPath = Join-Path $dstRoot $_.Name
-    if (-not (Test-Path $linkPath)) {
-        New-Item -ItemType SymbolicLink -Path $linkPath -Target $_.FullName | Out-Null
-        Write-Host "Linked: $($_.Name)"
-    } else {
-        Write-Host "Exists: $($_.Name)"
-    }
-}
-```
-after any `openfga-upstream` update and pull it please run:
-```bash
-git fetch openfga-upstream
-git subtree pull --prefix vendor/openfga-agent-skills openfga-upstream main --squash
-```
-then
-```bash
-node .\vendor\openfga-agent-skills\scripts\build-agents-md.js
-```
+The installer links its skills through the generated source-root list above.
 
 ## vendored skill packs
 
@@ -354,16 +217,11 @@ Current vendored upstreams:
 - [`vendor/cc-skills-golang`](vendor/cc-skills-golang/) from `https://github.com/samber/cc-skills-golang.git`
 - [`vendor/claude-plugins-official`](vendor/claude-plugins-official/) from `https://github.com/anthropics/claude-plugins-official.git`
 - [`vendor/knowledge-work-plugins`](vendor/knowledge-work-plugins/) from `https://github.com/anthropics/knowledge-work-plugins.git`
-- [`vendor/basic-memory`](vendor/basic-memory/) from `https://github.com/basicmachines-co/basic-memory.git`
 - [`vendor/skill-temporal-developer`](vendor/skill-temporal-developer/) from `https://github.com/temporalio/skill-temporal-developer.git`
 - [`vendor/hindsight-skills`](vendor/hindsight-skills/) from `https://github.com/vectorize-io/hindsight-skills.git`
 <!-- vendor-subtrees:install-list:end -->
 
-The source of truth for subtree definitions is:
-
-```powershell
-vendor/subtrees.json
-```
+The source of truth for subtree definitions is `vendor/subtrees.json`.
 
 Important behavior:
 - vendored files are committed into this repository like normal files
@@ -373,8 +231,8 @@ Important behavior:
 
 One-time setup per clone to make plain `git pull` also sync all configured subtrees:
 
-```powershell
-python scripts\vendor_subtrees.py install-hooks
+```bash
+python3 scripts/vendor_subtrees.py install-hooks
 ```
 
 That command:
@@ -385,30 +243,30 @@ After that, the repo-managed `post-merge` and `post-rewrite` hooks call the shar
 
 Manual subtree commands are still available:
 
-```powershell
-python scripts\vendor_subtrees.py list
-python scripts\vendor_subtrees.py ensure-remotes
-python scripts\vendor_subtrees.py sync
-python scripts\vendor_subtrees.py refresh-docs
+```bash
+python3 scripts/vendor_subtrees.py list
+python3 scripts/vendor_subtrees.py ensure-remotes
+python3 scripts/vendor_subtrees.py sync
+python3 scripts/vendor_subtrees.py refresh-docs
 ```
 
 Notes:
-- `python scripts\vendor_subtrees.py sync` fetches each syncable vendor remote and runs `git subtree pull --squash` for existing subtree-backed prefixes
+- `python3 scripts/vendor_subtrees.py sync` fetches each syncable vendor remote and runs `git subtree pull --squash` for existing subtree-backed prefixes
 - if a syncable configured prefix is missing locally, the script bootstraps it with `git subtree add --squash`
 - pinned or source-path snapshots are reported and skipped because they do not have subtree metadata to pull from
-- `python scripts\vendor_subtrees.py sync` requires a clean worktree; hook-driven sync skips automatically when the worktree is dirty
+- `python3 scripts/vendor_subtrees.py sync` requires a clean worktree; hook-driven sync skips automatically when the worktree is dirty
 - when `openfga-agent-skills` changes, the sync script also runs `node vendor/openfga-agent-skills/scripts/build-agents-md.js`
 
 To headlessly add a new vendor from only its Git URL:
 
-```powershell
-python scripts\vendor_subtrees.py add https://github.com/org/repo.git
+```bash
+python3 scripts/vendor_subtrees.py add https://github.com/org/repo.git
 ```
 
 Optional overrides are available when needed:
 
-```powershell
-python scripts\vendor_subtrees.py add https://github.com/org/repo.git --branch main --name repo --prefix vendor\repo --remote repo-upstream
+```bash
+python3 scripts/vendor_subtrees.py add https://github.com/org/repo.git --branch main --name repo --prefix vendor/repo --remote repo-upstream
 ```
 
 That command only vendors the repository, updates `vendor/subtrees.json`, and refreshes the docs. It does not auto-enable hooks and it does not auto-link the new vendored skills into Codex.
@@ -420,12 +278,12 @@ Recommended pattern as vendored packs grow:
 
 Selective vendored skill exposure is managed with:
 
-```powershell
-python scripts\vendor_skill_links.py vendors
-python scripts\vendor_skill_links.py list --vendor cc-skills-golang
-python scripts\vendor_skill_links.py link --vendor cc-skills-golang --skill golang-testing --skill golang-troubleshooting
-python scripts\vendor_skill_links.py link --vendor cc-skills-golang --skill-prefix golang-samber- --dry-run
-python scripts\vendor_skill_links.py unlink --vendor cc-skills-golang --all --dry-run
+```bash
+python3 scripts/vendor_skill_links.py vendors
+python3 scripts/vendor_skill_links.py list --vendor cc-skills-golang
+python3 scripts/vendor_skill_links.py link --vendor cc-skills-golang --skill golang-testing --skill golang-troubleshooting
+python3 scripts/vendor_skill_links.py link --vendor cc-skills-golang --skill-prefix golang-samber- --dry-run
+python3 scripts/vendor_skill_links.py unlink --vendor cc-skills-golang --all --dry-run
 ```
 
 Notes:
@@ -436,8 +294,8 @@ Notes:
 - the script refuses to overwrite conflicting existing destinations
 
 To link vendored skills, add the relevant vendored `skills/` directory to `$srcRoots`
-in the unified local install snippet above. The vendored source-root lines in that
-snippet are refreshed by `python scripts\vendor_subtrees.py refresh-docs`.
+in the source-root list above. The vendored source-root lines in that list are refreshed by
+`python3 scripts/vendor_subtrees.py refresh-docs`.
 
 ## Managed implementation and planning profiles
 

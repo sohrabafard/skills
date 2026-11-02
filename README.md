@@ -44,12 +44,11 @@ Current vendored upstreams:
 - [`vendor/cc-skills-golang`](vendor/cc-skills-golang/) from `https://github.com/samber/cc-skills-golang.git`
 - [`vendor/claude-plugins-official`](vendor/claude-plugins-official/) from `https://github.com/anthropics/claude-plugins-official.git`
 - [`vendor/knowledge-work-plugins`](vendor/knowledge-work-plugins/) from `https://github.com/anthropics/knowledge-work-plugins.git`
-- [`vendor/basic-memory`](vendor/basic-memory/) from `https://github.com/basicmachines-co/basic-memory.git`
 - [`vendor/skill-temporal-developer`](vendor/skill-temporal-developer/) from `https://github.com/temporalio/skill-temporal-developer.git`
 - [`vendor/hindsight-skills`](vendor/hindsight-skills/) from `https://github.com/vectorize-io/hindsight-skills.git`
 <!-- vendor-subtrees:readme-list:end -->
 
-That list is generated from the manifest by `python scripts\vendor_subtrees.py refresh-docs`; an edit
+That list is generated from the manifest by `python3 scripts/vendor_subtrees.py refresh-docs`; an edit
 between the markers is discarded by the next run. The commands that add a vendor, sync it, enable
 hook-driven sync, and expose selected vendored skills all live in
 [`install-skills.md`](install-skills.md), which also documents how the installer's source-root list

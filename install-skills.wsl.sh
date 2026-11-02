@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 # Install personal skill symlinks from the Linux clone; never replace existing entries.
-# Source roots are read as data from install-skills.md, not evaluated as PowerShell.
+# Source roots are read as data from install-skills.md and never evaluated.
 set -euo pipefail
 
 usage() {
@@ -54,7 +54,7 @@ source_document="$repo_root/install-skills.md"
 roots=()
 in_roots=false
 complete=false
-# shellcheck disable=SC2016 # Match the literal PowerShell variable, not a Bash variable.
+# shellcheck disable=SC2016 # Match the literal list token, not a Bash variable.
 root_pattern='^[[:space:]]*\(Join-Path \$repoRoot "([^"]+)"\)[[:space:]]*$'
 while IFS= read -r line || [[ -n $line ]]; do
   if ! "$in_roots"; then

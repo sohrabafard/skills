@@ -1,8 +1,8 @@
 # Repository instructions
 
 This repository is a skill pack for coding agents, not an application. It ships Agent Skills that
-Claude Code and Codex both load. `CLAUDE.md` beside this file is a one-line import of this file, so
-every shared rule is edited here and nowhere else.
+Claude Code and Codex both load. `CLAUDE.md` beside this file is a symlink to this file, so
+every shared rule is edited here and nowhere else. The host is WSL Linux with Bash and `python3`.
 
 <!-- BEGIN ALAA BEADS BINDING -->
 
@@ -14,16 +14,18 @@ Expected workspace: `/home/sohrab/project/alaa-task-hub/.beads`
 
 User, repository, and orchestrator constraints govern. This binding overrides conflicting upstream Beads skill or hook guidance and grants no additional authority.
 
+Beads is the task authority whenever `bd` is installed and `bd where` resolves the expected workspace. When it does not, run no Beads command, initialize no replacement database, and select the task store per `/alaa-workflow` `references/task-tracking.md` `## Select before tracking-dependent work`. Once Beads is reachable, register every new task there; a task lives in exactly one store.
+
 Under Codex, read each `/name` skill reference in this block as `$name`.
 
 ### Start and resume
 
 Before planning or executing tracked work, and after compaction or session restart:
 
-1. Read `.agents/skills/beads/SKILL.md` unless its full instructions remain in context; hook output is not a substitute. If missing, report it and stop Beads-dependent work.
-2. Before issuing other Beads commands, run `bd where` with the configured `BEADS_DIR` and verify the expected workspace. Recheck after workspace or connection changes. On failure or mismatch, stop Beads operations and report it; do not initialize another database or silently change the connection.
+1. Read `.agents/skills/beads/SKILL.md` unless its full instructions remain in context; hook output is not a substitute. If missing, report it. Beads is then unavailable; apply the store-selection rule above.
+2. Before issuing other Beads commands, run `bd where` with the configured `BEADS_DIR` and verify the expected workspace. Recheck after workspace or connection changes. On failure or mismatch, report it. Beads is then unavailable; apply the store-selection rule above. Never initialize another database or silently change the connection.
 3. Reuse current hook-injected `bd prime` context; run it manually only if missing or stale.
-4. Before Beads mutations, claims, ownership comparisons, resume or transfer, load `/alaa-workflow` `references/task-tracking.md` `## Agent identity and ownership`. It owns actor allocation, explicit mutation identity, guarded updates, transfer and closure coordination; its actor rules override actorless upstream examples. If unavailable, stop dependent work. Keep the assigned actor in the existing dispatch or admitted handoff.
+4. Before Beads mutations, claims, ownership comparisons, resume or transfer, load `/alaa-workflow` `references/task-tracking.md` `## Agent identity and ownership`. It owns actor allocation, explicit mutation identity, guarded updates, transfer and closure coordination; its actor rules override actorless upstream examples. If that file cannot be loaded, stop the dependent Beads mutation. Keep the assigned actor in the existing dispatch or admitted handoff.
 5. When resuming, read the active issue and linked plan/checkpoint/handoff. Check worktree state, scope, ownership, and blockers before continuing. A conversation summary or `bd prime` cannot replace task-state recovery. Resolve an ambiguous active task before implementation.
 
 Batch `bd` mutations in one script only when every command passes `--actor`, the script runs with `set -euo pipefail`, prints each command's result, and stops at the first failure; read back changed issues afterwards. Add no per-command environment overrides.
@@ -55,7 +57,7 @@ Semantics: `/alaa-workflow` `references/task-tracking.md` `## Beads capabilities
 
 ### Ownership and authority
 
-- Beads owns newly tracked issue state and dependencies; do not add parallel durable TODO lists. Existing plans/checkpoints retain authority until explicitly migrated; do not import or duplicate their checklists during setup.
+- Beads owns newly tracked issue state and dependencies; do not add parallel durable TODO lists. Existing plans/checkpoints keep their already-recorded local tasks; do not import or duplicate their checklists during setup.
 - `alaa-workflow` and repository rules own planning, validation, completion criteria, and handoff structure. Task evidence follows `/alaa-workflow` `references/task-tracking.md` `## Acceptance and evidence by level`.
 - Route durable knowledge through `/alaa-memory-os`. `bd remember` only for a short reminder shared across the whole hub, with source, scope, and maintainer; write it without separate approval. Never put task status, evidence, lessons, or new rules in it; leaving it empty is correct. Owner: `/alaa-memory-os` `## Beads hub reminders and issue notes`. Keep issue descriptions and dependency explanations with their issues.
 - Local commits on the current work branch are pre-authorized: commit each finished, validated topic as it lands (one Conventional Commit per topic or lane), and let worktree lanes branch from the latest commit. Push, tag, merge into another branch, history rewrite and remote sync (Git or Dolt) still need explicit user authorization; a profile, hook, or skill grants none. Report unauthorized pending actions instead of executing them.
@@ -106,28 +108,26 @@ verify current repository and upstream facts before reusing their conclusions.
 
 ## Commands
 
-Run from the repository root. Each was executed on 2026-08-13 and observed to work.
+Run from the repository root with `python3`. The first four commands ran in normal mode on 2026-11-02 and each exited `0`; `vendor_subtrees.py refresh-docs` was not part of that run.
 
-- `python scripts\validate_sohrab_skill_pack.py` — per-skill structure: frontmatter, description
+- `python3 scripts/validate_sohrab_skill_pack.py` — per-skill structure: frontmatter, description
   budget, the "When NOT to use" heading, `agents/openai.yaml` shape, and reference-path resolution.
-- `python scripts\check_skill_index.py` — both skill indexes in `skills/sohrab/` against the
+- `python3 scripts/check_skill_index.py` — both skill indexes in `skills/sohrab/` against the
   directory, in both directions, plus this file and `CLAUDE.md`.
-- `python scripts\check_fleet_references.py` — every cross-skill citation in the pack.
-- `python scripts\check_lifecycle_contract.py` — the four completion-lifecycle states: defined in
+- `python3 scripts/check_fleet_references.py` — every cross-skill citation in the pack.
+- `python3 scripts/check_lifecycle_contract.py` — the four completion-lifecycle states: defined in
   one owning file, named by both orchestrators' final reports, and restated nowhere else.
-- `python scripts\vendor_subtrees.py refresh-docs` — regenerates the marked blocks in the root
+- `python3 scripts/vendor_subtrees.py refresh-docs` — regenerates the marked blocks in the root
   `README.md` and in `install-skills.md` from `vendor/subtrees.json`.
 
-Add `--self-test` to run a checker against its own red fixtures. Every script here shares one
-exit-code contract — `0` clean, `1` findings, `2` could not run — and a `2` is a failed gate, never a
-pass.
+Every script here shares one exit-code contract — `0` clean, `1` findings, `2` could not run — and a
+`2` is a failed gate, never a pass.
 
 ## Rules
 
 - **Nothing is deleted.** Move a retired file to `_to_delete/<YYYYMMDD>-<reason>/` and confirm with
   `ls -la` that it arrived at its original size. `skills/sohrab/AGENTS.md` owns this rule; it is
-  named here because `_to_delete/` is a root-level directory and `rm` fails on the Windows mount
-  this repository is developed on.
+  named here because `_to_delete/` is a root-level directory.
 - **Keep capability evidence and runtime control mechanics in one owner:** `/alaa-prompting-guide`.
   It owns supported model/effort pairs and checked model-neutral role projections. Runtime
   orchestrators own actual task allocation/admission for every authority role; workflow records it.
@@ -144,9 +144,10 @@ pass.
   `alaa-repo-docs` owns when one is produced. A reply to the user may be Persian; a file is not.
 - **Require an authoritative source for a concrete claim,** and never read a missing result as a
   negative result. Use a named placeholder rather than an invented specific.
-- **Never write a path from one machine.** A `D:\...` path is wrong in a committed file; write it
-  relative to the repository root. The one exception is the `Expected workspace` line of the Beads
-  binding, which names the shared hub path.
+- **Never write a path from one machine.** A Windows drive path or an absolute home path is wrong in
+  a committed file; write it relative to the repository root. Two exceptions: the `Expected workspace`
+  line of the Beads binding, which names the shared hub path, and `alaa-legacy-path-map`, which owns
+  legacy Windows-to-WSL path translation.
 - **Ask before an action with an effect outside this working tree** — tag, push, merge into another
   branch, history rewrite, publish, deploy, force-push, or credential rotation. Local commits are
   pre-authorized under the Beads binding's commit rule.
