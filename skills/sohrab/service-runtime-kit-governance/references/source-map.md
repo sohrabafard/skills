@@ -17,10 +17,10 @@ Use this map when runtime-kit behavior, generated Docker runtime files, Compose/
    - RabbitMQ Docker image: https://hub.docker.com/_/rabbitmq
    - Redis Docker image: https://hub.docker.com/_/redis
    - Laravel deployment docs: https://laravel.com/docs/13.x/deployment
-4. Companion skills (invoke as `/name` in Claude Code, `$name` in Codex):
-   - `/alaa-docker-production` (`$alaa-docker-production`) for image and runtime hardening.
-   - `/alaa-laravel-job-rabbitmq` (`$alaa-laravel-job-rabbitmq`) for Laravel RabbitMQ worker behavior.
-   - `/alaa-data-layer` (`$alaa-data-layer`) for Postgres, PgBouncer, Redis, and data-layer runtime implications.
+4. Companion skills:
+   - `/alaa-docker-production` for image and runtime hardening.
+   - `/alaa-laravel-job-rabbitmq` for Laravel RabbitMQ worker behavior.
+   - `/alaa-data-layer` for Postgres, PgBouncer, Redis, and data-layer runtime implications.
 5. Community posts and StackOverflow answers:
    - Troubleshooting only. Verify any Compose, Swarm, network, volume, or health-check claim against official docs and generated output.
 

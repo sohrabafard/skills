@@ -27,7 +27,7 @@ Generation time and run time differ:
 
 ## Tuning Values This Skill Does Not Choose
 
-These knobs are configurable only here, but the values are doctrine owned elsewhere. Take the value from the owner; do not pick a number from local reasoning. Trigger prefix: `/name` in Claude Code, `$name` in Codex.
+These knobs are configurable only here, but the values are doctrine owned elsewhere. Take the value from the owner; do not pick a number from local reasoning.
 
 - `PGBOUNCER_POOL_MODE_DEFAULT`, `PGBOUNCER_DEFAULT_POOL_SIZE_DEFAULT`, `PGBOUNCER_MAX_CLIENT_CONN_DEFAULT`, `QUEUE_WORKER_TRIES_DEFAULT`, `QUEUE_WORKER_TIMEOUT_DEFAULT`, `DB_PROVISION_LOCK_TIMEOUT_SECONDS_DEFAULT` — `alaa-reliability-sla` for pool-sizing and retry doctrine; `alaa-services-contract` `references/22-failure-load-and-deprecation-contract.md` for Ala values.
 - any generated telemetry variable — `alaa-observability-soc`.
@@ -62,8 +62,7 @@ These are copied or refreshed by the shared render and bootstrap flow when missi
 | `.gitattributes` | contains the shared managed BOM/LF block |
 | `.githooks/pre-commit` | blocks staged BOM regressions |
 | `.githooks/README.md` | explains the local hook setup |
-| `scripts/setup-git-hooks-bom.sh` | configures BOM stripping and `core.hooksPath` on Unix-like shells |
-| `scripts/setup-git-hooks-bom.ps1` | configures the same for PowerShell usage |
+| `scripts/setup-git-hooks-bom.sh` | configures BOM stripping and `core.hooksPath` |
 | `scripts/validate_runtime.php` | shared runtime validation helper copied into each service |
 
 Treat these as copied shared support assets. If the behavior should change for all services, fix `service-runtime-kit`.

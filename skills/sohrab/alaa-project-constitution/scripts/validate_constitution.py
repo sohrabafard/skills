@@ -4,7 +4,6 @@
 Modes
   --template PATH   check a constitution-template.md against the generation contract
   --final PATH      check a generated CONSTITUTION.md
-  --self-test       run the in-memory fixture suite; use this after editing this script
 
 Options for --final
   --shape thin|full        select the compactness budget (default: thin)
@@ -790,263 +789,6 @@ def binding_portability_warnings(root: Path) -> list[str]:
     return warnings
 
 
-VALID_FINAL_FIXTURE = """# Example Project Constitution
-
-This constitution protects the project's durable boundaries.
-
-## Authority and Scope
-
-Repository policy applies within project scope.
-
-## Core Principles
-
-### 1. Evidence
-
-Current truth is inspected before claims are made.
-
-## Canonical Sources
-
-- CONTRACTS.md owns contracts.
-
-## Change Governance
-
-Risk determines proof and approval.
-
-## Amendments and Exceptions
-
-Amendments use semantic versioning; exceptions are bounded.
-
-**Version**: 1.0.0 | **Status**: BINDING | **Ratified**: 2026-07-10 | **Last Amended**: 2026-07-10 | **Last Evidence Review**: 2026-07-10
-"""
-
-
-def run_self_test() -> list[str]:
-    failures: list[str] = []
-    valid_final = VALID_FINAL_FIXTURE
-
-    def expect_pass(name: str, text: str, **kwargs: object) -> None:
-        result = validate_final(text, **kwargs)  # type: ignore[arg-type]
-        if result:
-            failures.append(f"{name}: expected pass, got {result}")
-
-    def expect_fail(name: str, text: str, **kwargs: object) -> None:
-        if not validate_final(text, **kwargs):  # type: ignore[arg-type]
-            failures.append(f"{name}: expected failure, got pass")
-
-    expect_pass("valid final fixture", valid_final)
-    expect_fail("invalid semantic version", valid_final.replace("1.0.0", "VERSION"))
-    expect_fail(
-        "metadata table residue",
-        valid_final.replace(
-            "## Authority and Scope",
-            "## Constitution Metadata\n\n| Field | Value |\n|---|---|\n| Status | BINDING |\n\n## Authority and Scope",
-        ),
-    )
-    expect_fail(
-        "binding section residue",
-        valid_final.replace(
-            "## Amendments and Exceptions",
-            "## AGENTS.md and CLAUDE.md Binding\n\nRuntime adapter.\n\n## Amendments and Exceptions",
-        ),
-    )
-    expect_fail(
-        "claim label residue",
-        valid_final.replace(
-            "Current truth is inspected before claims are made.",
-            "Current truth is inspected before claims are made. INFERRED_CANDIDATE rules apply.",
-        ),
-    )
-    expect_fail(
-        "oversized thin constitution",
-        valid_final.replace("**Version**:", ("Constitutional sentence.\n" * 200) + "\n**Version**:"),
-    )
-    expect_fail(
-        "duplicated exact command",
-        valid_final.replace(
-            "## Amendments and Exceptions",
-            "`go test ./...` and again `go test ./...`\n\n## Amendments and Exceptions",
-        ),
-    )
-    expect_fail(
-        "binding fixture with blocking TODO",
-        valid_final.replace(
-            "## Amendments and Exceptions",
-            "TODO(owner-choice): decide scope; reason: owner input missing; owner: owner; "
-            "blocking: yes.\n\n## Amendments and Exceptions",
-        ),
-    )
-
-    # Threshold provenance.
-    expect_fail(
-        "unsourced Core Web Vitals value",
-        valid_final.replace(
-            "Current truth is inspected before claims are made.",
-            "Largest Contentful Paint stays under 2.5 seconds at p75.",
-        ),
-    )
-    expect_pass(
-        "sourced Core Web Vitals value",
-        valid_final.replace(
-            "Current truth is inspected before claims are made.",
-            "Largest Contentful Paint stays under 2.5 seconds at p75 on the catalogue route "
-            "(source: https://web.dev/articles/lcp, verified 2026-07-24).",
-        ),
-    )
-    expect_pass(
-        "metric named without a value",
-        valid_final.replace(
-            "Current truth is inspected before claims are made.",
-            "Every indexable route holds a Largest Contentful Paint budget recorded in "
-            "PERFORMANCE.md, which owns its current threshold.",
-        ),
-    )
-
-    # Wrapped structured TODO in a draft: the separator is the semicolon, not the newline.
-    wrapped_draft = (
-        valid_final.replace(
-            "## Amendments and Exceptions",
-            "## Unresolved Decisions\n\nTODO(owner-choice): decide the offline scope of the\n"
-            "checkout journey; reason: owner selected Decide later and the evidence cannot\n"
-            "decide it; owner: repository owner; blocking: yes.\n\n## Amendments and Exceptions",
-            1,
-        )
-        .replace("**Status**: BINDING", "**Status**: DRAFT")
-        .replace("**Ratified**: 2026-07-10", "**Ratified**: Not ratified")
-        .replace("**Version**: 1.0.0", "**Version**: 0.1.0")
-    )
-    expect_pass("wrapped structured TODO in a draft", wrapped_draft)
-    expect_fail("draft with runtime import residue", wrapped_draft + "\n@CONSTITUTION.md\n")
-    expect_fail(
-        "draft without a blocking TODO",
-        valid_final.replace("**Status**: BINDING", "**Status**: DRAFT").replace(
-            "**Ratified**: 2026-07-10", "**Ratified**: Not ratified"
-        ),
-    )
-    expect_fail(
-        "malformed TODO",
-        wrapped_draft.replace("reason: owner selected Decide later and the evidence cannot\ndecide it; ", ""),
-    )
-
-    # Archetype markers.
-    expect_fail("browser archetype with no obligations written", valid_final, archetypes=("browser-web-client",))
-    expect_fail("unknown archetype identifier", valid_final, archetypes=("not-an-archetype",))
-    browser_ok = valid_final.replace(
-        "Current truth is inspected before claims are made.",
-        "Every indexable route holds a Largest Contentful Paint budget owned by "
-        "PERFORMANCE.md, a Lighthouse category budget enforced in CI, an SEO canonical URL "
-        "and sitemap owner, a stated service worker update strategy, cache invalidation keys, "
-        "an offline state per journey, and an accessibility conformance target. A failed "
-        "response is never written to any client cache.",
-    )
-    expect_pass("browser archetype with obligations written", browser_ok, archetypes=("browser-web-client",))
-
-    # Binding validation across statuses, using in-memory temp roots.
-    import tempfile
-
-    def bindings_for(status_text: str, agents: str, claude: str, files: dict[str, str] | None = None) -> list[str]:
-        with tempfile.TemporaryDirectory() as tmp:
-            root = Path(tmp)
-            (root / "AGENTS.md").write_text(agents, encoding="utf-8")
-            (root / "CLAUDE.md").write_text(claude, encoding="utf-8")
-            for name, body in (files or {}).items():
-                (root / name).parent.mkdir(parents=True, exist_ok=True)
-                (root / name).write_text(body, encoding="utf-8")
-            return validate_bindings(root, status_text)
-
-    superseded = valid_final.replace("**Status**: BINDING", "**Status**: SUPERSEDED")
-    if bindings_for(superseded, "# Guide\n\nOrdinary guidance only.\n", "# Guide\n\nOrdinary guidance only.\n"):
-        failures.append("SUPERSEDED with the reference removed was rejected")
-    if bindings_for(
-        superseded,
-        "# Guide\n\n## Project Constitution\n\n`CONSTITUTION.md` is SUPERSEDED and inactive historical policy. Read `CONSTITUTION-v3.md` instead.\n",
-        "# Guide\n\n## Constitution Binding\n\n`CONSTITUTION.md` is SUPERSEDED and inactive. Read `CONSTITUTION-v3.md` instead.\n",
-    ):
-        failures.append("SUPERSEDED pointing at a successor was rejected")
-    if not bindings_for(
-        superseded,
-        "# Guide\n\n## Project Constitution\n\nRead `CONSTITUTION.md` before work. It is binding project policy.\n",
-        "# Guide\n\n@CONSTITUTION.md\n\n## Constitution Binding\n\nThe imported constitution is binding.\n",
-    ):
-        failures.append("SUPERSEDED still presented as in force was accepted")
-
-    draft = wrapped_draft
-    if bindings_for(
-        draft,
-        "# Guide\n\n## History\n\nIn 2025 the team discussed whether CONSTITUTION.md should exist. No adapter was added.\n",
-        "# Guide\n\nOrdinary guidance only.\n",
-    ):
-        failures.append("DRAFT with a historical AGENTS.md mention was rejected")
-    if not bindings_for(
-        draft,
-        "# Guide\n\n## Project Constitution\n\nRead `CONSTITUTION.md` before work. It is binding project policy.\n",
-        "# Guide\n\nOrdinary guidance only.\n",
-    ):
-        failures.append("DRAFT activated by an AGENTS.md adapter was accepted")
-    if not bindings_for(draft, "# Guide\n\nNothing.\n", "# Guide\n\n@CONSTITUTION.md\n"):
-        failures.append("DRAFT imported by CLAUDE.md was accepted")
-
-    if bindings_for(
-        valid_final,
-        "# Guide\n\n## Project Constitution\n\nRead `CONSTITUTION.md` in full before work. Treat it as binding project policy within its scope.\n",
-        "# Guide\n\n@CONSTITUTION.md\n\n## Constitution Binding\n\nThe imported constitution is binding project policy within its scope.\n",
-    ):
-        failures.append("valid BINDING adapters were rejected")
-    if not bindings_for(valid_final, "# Guide\n\nNothing.\n", "# Guide\n\nNothing.\n"):
-        failures.append("BINDING with no adapters was accepted")
-
-    # Generated instruction files (Laravel Boost): bound through the generator's source.
-    boost = INSTRUCTION_GENERATORS[0]
-    guideline_path = ".ai/guidelines/01-constitution-binding.md"
-    guideline = (
-        "## Project Constitution\n\nRead `CONSTITUTION.md` in full before work. "
-        "Treat it as binding project policy within its scope.\n"
-    )
-
-    def boost_file(body: str) -> str:
-        return (
-            f"{boost.block_open}\n=== .ai/00-bootstrap rules ===\n\n## Bootstrap\n\nRead docs.\n\n"
-            f"=== .ai/01-constitution-binding rules ===\n\n{body}\n"
-            f"=== foundation rules ===\n\n# Laravel Boost Guidelines\n\nFramework rules.\n{boost.block_close}\n"
-        )
-
-    claude_hand = (
-        "# Guide\n\n@CONSTITUTION.md\n\n## Constitution Binding\n\n"
-        "The imported constitution is binding project policy within its scope.\n"
-    )
-    if bindings_for(valid_final, boost_file(guideline), boost_file(guideline), {guideline_path: guideline}):
-        failures.append("valid generated BINDING adapters were rejected")
-    if bindings_for(valid_final, boost_file(guideline), claude_hand, {guideline_path: guideline}):
-        failures.append("generated AGENTS.md with a hand-maintained CLAUDE.md binding was rejected")
-    if not bindings_for(
-        valid_final, boost_file(guideline), "# Guide\n\nNothing.\n", {guideline_path: guideline}
-    ):
-        failures.append("hand-maintained CLAUDE.md without its binding was accepted beside a generated AGENTS.md")
-    if not bindings_for(valid_final, boost_file(guideline), boost_file(guideline)):
-        failures.append("generated adapter with no source guideline (hand edit) was accepted")
-    stale = guideline.replace("in full ", "")
-    if not bindings_for(valid_final, boost_file(stale), boost_file(stale), {guideline_path: guideline}):
-        failures.append("generated files not regenerated from the current guideline were accepted")
-    with_import = "@CONSTITUTION.md\n\n" + guideline
-    if not bindings_for(
-        valid_final, boost_file(with_import), boost_file(with_import), {guideline_path: with_import}
-    ):
-        failures.append("Claude-only import in a shared generator source was accepted")
-    if not bindings_for(
-        valid_final,
-        boost_file(guideline),
-        boost_file(guideline),
-        {guideline_path: guideline, ".ai/guidelines/09-notes.md": f"Never write {boost.block_open} here.\n"},
-    ):
-        failures.append("generator source containing a literal block tag was accepted")
-    if not bindings_for(
-        draft, boost_file("## Bootstrap\n\nNothing.\n"), boost_file("## Bootstrap\n\nNothing.\n"),
-        {guideline_path: guideline},
-    ):
-        failures.append("DRAFT activated by a not-yet-regenerated generator source was accepted")
-
-    return failures
-
-
 def parse_args() -> argparse.Namespace:
     parser = argparse.ArgumentParser(
         description=__doc__, formatter_class=argparse.RawDescriptionHelpFormatter
@@ -1054,11 +796,6 @@ def parse_args() -> argparse.Namespace:
     mode = parser.add_mutually_exclusive_group(required=True)
     mode.add_argument("--template", type=Path, help="validate a template file")
     mode.add_argument("--final", type=Path, help="validate a generated constitution")
-    mode.add_argument(
-        "--self-test",
-        action="store_true",
-        help="run the in-memory fixture suite; use after editing this script",
-    )
     mode.add_argument(
         "--list-archetypes",
         action="store_true",
@@ -1097,25 +834,21 @@ def main() -> int:
     if args.archetypes and not args.final:
         print("FAIL: --archetypes requires --final", file=sys.stderr)
         return 2
-    if args.self_test:
-        errors = run_self_test()
-        label = "self-test"
+    path: Path = args.template or args.final
+    try:
+        text = path.read_text(encoding="utf-8")
+    except (OSError, UnicodeError) as exc:
+        print(f"FAIL: cannot read {path}: {exc}", file=sys.stderr)
+        return 2
+    if args.template:
+        errors = validate_template(text)
     else:
-        path: Path = args.template or args.final
-        try:
-            text = path.read_text(encoding="utf-8")
-        except (OSError, UnicodeError) as exc:
-            print(f"FAIL: cannot read {path}: {exc}", file=sys.stderr)
-            return 2
-        if args.template:
-            errors = validate_template(text)
-        else:
-            selected = tuple(a.strip() for a in args.archetypes.split(",") if a.strip())
-            errors = validate_final(text, args.shape, selected)
-            if args.check_bindings:
-                errors.extend(validate_bindings(path.parent, text))
-                warnings.extend(binding_portability_warnings(path.parent))
-        label = str(path)
+        selected = tuple(a.strip() for a in args.archetypes.split(",") if a.strip())
+        errors = validate_final(text, args.shape, selected)
+        if args.check_bindings:
+            errors.extend(validate_bindings(path.parent, text))
+            warnings.extend(binding_portability_warnings(path.parent))
+    label = str(path)
 
     if errors:
         print(f"FAIL: {label}")

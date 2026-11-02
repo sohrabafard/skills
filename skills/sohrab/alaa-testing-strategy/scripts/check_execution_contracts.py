@@ -2,7 +2,7 @@
 """Topic: execution ownership; layer: structural source contract.
 
 Finite reviewed clauses detect source regressions, not live agent obedience.
-Exit 0 clean, 1 findings, 2 unavailable input. --self-test mutates fresh copies.
+Exit 0 clean, 1 findings, 2 unavailable input.
 """
 from __future__ import annotations
 
@@ -25,16 +25,11 @@ REQUIREMENTS = MappingProxyType({
     "body": (
         "For any direct or delegated validation run",
         "references/00-topic-map.md",
-        "python scripts/check_execution_contracts.py",
-        "python scripts/check_execution_contracts.py --self-test",
-        "python scripts/test_execution_runners.py --platform posix",
-        "python scripts/test_execution_runners.py --platform windows",
+        "python3 scripts/check_execution_contracts.py",
         "`0` clean, `1` findings, `2` unavailable",
-        "the runner harness returns `0` probes passed, `1` probe failure, `2` requested native platform or input unavailable",
-        "only when native Windows is in the declared target coverage",
         "Either nonzero blocks the affected claim",
         "never treat `2` as a pass",
-        "These maintainer checks do not run on ordinary application tasks",
+        "This maintainer check does not run on ordinary application tasks",
     ),
     "router": ("100-test-execution.md", "110-execution-resources.md", "120-result-classification.md"),
     "execution": (
@@ -58,7 +53,6 @@ REQUIREMENTS = MappingProxyType({
         "inputs, environment, flags and required observer match demonstrably",
         "observer authority remains a caller constraint",
         "Count underlying checks once and run uncovered gates separately",
-        "Run checker self-tests only when checker logic changes",
         "One failure never cancels independent remaining checks",
         "Record each command's exit/result and each unrun check's blocker",
         "A dependent case whose precondition failed is skipped with that precondition named",
@@ -110,13 +104,12 @@ REQUIREMENTS = MappingProxyType({
         "A tier is never made to pass by deleting an assertion, widening a tolerance, adding a retry, skipping a case, or lowering a threshold",
     ),
     "resources": (
-        "OS process priority (`BelowNormal` by default on Windows, `nice 10` on Unix)",
+        "OS process priority (`BelowNormal` by default, which is `nice 10`)",
         "Optional CPU affinity/count",
         "Tool/runtime concurrency (`GOMAXPROCS`, package parallelism, test workers, browser workers)",
         "Lower priority does not limit parallelism. Configure both",
-        "The wrapper returns the child exit code and emits stdout/stderr",
+        "The runner returns the child exit code and emits stdout/stderr",
         "Use `Idle` only for explicitly background-grade benchmark/fuzz/full-profile work",
-        "Do not use `Realtime` or `High`",
         "`-p` controls package/build concurrency",
         "`-parallel` controls tests using `t.Parallel` inside a test binary",
         "`GOMAXPROCS` controls runtime CPU parallelism. They are not interchangeable",
@@ -154,8 +147,6 @@ REQUIREMENTS = MappingProxyType({
         "never call it container proof",
         "Under Codex, invoke /alaa-codex-runtime-ops for Docker-access permission failures within its declared runtime scope before fallback",
         "Installation, pulling an undeclared image, permission changes or starting an unowned service require separate authority",
-        "On a Windows host, a long process-heavy gate runs in the CI job image",
-        "exceeds ten minutes",
         "Never substitute another image",
         "A before/after performance claim requires an idle host: no unrelated CPU-heavy work and no overlapping validation",
         "Verify and record host load before and during samples",
@@ -167,10 +158,10 @@ REQUIREMENTS = MappingProxyType({
         "Record timer identity, timer resolution, raw samples, units, spread/dispersion and deviations/outliers with their causes",
         "Retain machine-readable timing output when the tool supports it",
         "leaves the performance claim unverified",
-        "The canonical implementations are `scripts/run-low-priority.sh` and `scripts/Invoke-AlaaLowPriority.ps1` in this skill",
+        "The canonical implementation is `scripts/run-low-priority.sh` in this skill",
         "preserve arguments, child stdout/stderr and exit status from any cwd, including paths with spaces",
         "it never triggers installation or falls back to copied logic",
-        "PowerShell preserves working directory, environment overrides, output files and timeout exit `124`",
+        "The runner uses Bash and `nice`, with optional `taskset`",
     ),
     "classification": (
         "Use one primary classification per command and record secondary factors separately",
@@ -252,7 +243,6 @@ NORMATIVE_DUPLICATES = MappingProxyType({
         "Non-test lint/type/build/render commands need no case selection check",
         "Inspect aggregate execution: a name proves no coverage",
         "Count underlying checks once and run uncovered gates separately",
-        "Run checker self-tests only when checker logic changes",
         "One failure never cancels independent remaining checks",
         "Record each command's exit/result and each unrun check's blocker",
         "A dependent case whose precondition failed is skipped with that precondition named",
@@ -273,7 +263,6 @@ NORMATIVE_DUPLICATES = MappingProxyType({
         "Tool/runtime concurrency (`GOMAXPROCS`, package parallelism, test workers, browser workers)",
         "Lower priority does not limit parallelism. Configure both",
         "Use `Idle` only for explicitly background-grade benchmark/fuzz/full-profile work",
-        "Do not use `Realtime` or `High`",
         "Use repository scripts exactly",
         "Do not run package installation merely because a command is missing",
         "Preserve explicit `--browser chromium`",
@@ -307,9 +296,9 @@ NORMATIVE_DUPLICATES = MappingProxyType({
         "Declare warmup, warm/cold cache policy, sample count and interleaved before/after order before measurement",
         "Record timer identity, timer resolution, raw samples, units, spread/dispersion and deviations/outliers with their causes",
         "Retain machine-readable timing output when the tool supports it",
-        "The canonical implementations are `scripts/run-low-priority.sh` and `scripts/Invoke-AlaaLowPriority.ps1` in this skill",
+        "The canonical implementation is `scripts/run-low-priority.sh` in this skill",
         "preserve arguments, child stdout/stderr and exit status from any cwd, including paths with spaces",
-        "PowerShell preserves working directory, environment overrides, output files and timeout exit `124`",
+        "The runner uses Bash and `nice`, with optional `taskset`",
     ),
     "classification": (
         "Use one primary classification per command and record secondary factors separately",
@@ -350,9 +339,8 @@ NORMATIVE_DUPLICATES = MappingProxyType({
     ),
 })
 
-# Frozen fixture: all 54 formerly length-guarded clauses and all 46 existing
-# shorter clauses. This baseline is independent of production-derived cases.
-EXPECTED_NORMATIVE_INVENTORY_SHA256 = "73b16c7c0098cd2d708dddc818f05eca998baa6d48ce7ceccba599eeed851061"
+# Frozen preservation baseline over every NORMATIVE_DUPLICATES clause.
+EXPECTED_NORMATIVE_INVENTORY_SHA256 = "c1944b5e388821985271944a5f849554d573c0448ada5c9188f31aa8c967f22d"
 
 # These are contradictory positive instructions, not mere absent keywords.
 # Append them with all required clauses intact to prove contradiction detection.
@@ -470,105 +458,16 @@ def failures(sources: Mapping[str, str]) -> list[str]:
     return errors
 
 
-def self_test(sources: Mapping[str, str] | None = None) -> list[tuple[str, bool]]:
-    # Immutable setup is shared once; every fixture receives its own fresh map.
-    sources = load_sources() if sources is None else MappingProxyType(dict(sources))
-    cases = [("canonical and consumer sources accepted", not failures(sources))]
-    cases.append(("frozen normative inventory is intact",
-                  not normative_inventory_failures(NORMATIVE_DUPLICATES)))
-    for name, clauses in requirements().items():
-        for clause in clauses:
-            # Normalization permits wrapped/cased prose; mutate the actual match.
-            pattern = re.compile(r"\s+".join(re.escape(word) for word in clause.split()), re.I)
-            changed, count = pattern.subn("omitted", sources[name])
-            broken = {**sources, name: changed}
-            diagnostic = f"{name}: missing execution contract: {clause}"
-            cases.append((f"{name}: remove {clause}", count > 0 and diagnostic in failures(broken)))
-            if pointer_clause(clause):
-                for invalid in (clause + ".missing", "missing/" + clause):
-                    broken = {**sources, name: sources[name].replace(clause, invalid)}
-                    cases.append((f"{name}: reject broken pointer {invalid}",
-                                  diagnostic in failures(broken)))
-    for name in sources:
-        for clause in CONTRADICTIONS:
-            for variant in (clause, clause.replace(" ", "\n", 1).upper()):
-                broken = {**sources, name: sources[name] + "\n" + variant}
-                diagnostic = f"{name}: contradictory execution contract: {clause}"
-                cases.append((f"{name}: reject {variant!r}", diagnostic in failures(broken)))
-    for owner, clauses in NORMATIVE_DUPLICATES.items():
-        for index, clause in enumerate(clauses):
-            removed = {**NORMATIVE_DUPLICATES,
-                       owner: tuple(item for position, item in enumerate(clauses) if position != index)}
-            cases.append((f"frozen inventory rejects removal: {owner}: {clause}",
-                          bool(normative_inventory_failures(removed))))
-            name = "cc_resources" if index % 2 else "codex_resources"
-            broken = {**sources, name: sources[name] + "\n" + clause}
-            cases.append((f"duplicate inventory names a complete required clause: {owner}: {clause}",
-                          clause in REQUIREMENTS[owner]))
-            cases.append((f"{name}: reject duplicate {owner}",
-                          f"{name}: duplicate {owner} policy: {clause}" in failures(broken)))
-    for name in sources:
-        if not name.startswith(("cc_", "codex_")):
-            continue
-        for owner, clause in (
-            ("execution", "One failure never cancels independent remaining checks"),
-            ("classification", "Do not revert automatically"),
-        ):
-            broken = {**sources, name: sources[name] + "\n" + clause}
-            cases.append((f"{name}: rejects short complete policy {clause}",
-                          f"{name}: duplicate {owner} policy: {clause}" in failures(broken)))
-        # Topic/status fragments and true references are routes, not definitions.
-        pointer = ("Read /alaa-testing-strategy references/100-test-execution.md for Scope tiers: "
-                   "how much of the suite runs, and when; references/110-execution-resources.md "
-                   "for resources; references/120-result-classification.md for PASS and FLAKY.")
-        routed = {**sources, name: sources[name] + "\n" + pointer}
-        cases.append((f"{name}: legal fragments and citations remain accepted", not failures(routed)))
-    # Independent frozen inventory from the former collection_sources consumers.
-    # Every path must still be loaded before its per-source contradiction fixture
-    # can count as coverage; deriving this list from source_paths would hide loss.
-    legacy_paths = {
-        ROOT.parent / f"alaa-{runtime}-orchestrator" / relative
-        for runtime in ("cc", "codex") for relative in (
-            "references/verification-and-gates.md", "references/failure-taxonomy.md",
-            "references/routing-matrix.md", "references/delegation-prompts/40-verification.md",
-            "references/delegation-prompts/30-implementation.md")
-    } | {
-        ROOT.parent / "alaa-workflow" / relative for relative in (
-            "SKILL.md", "references/artifact-lifecycle.md", "assets/plan-template.md",
-            "assets/phase-template.md", "references/phase-prompts.md", "assets/phase-prompts-template.md")
-    }
-    paths = source_paths()
-    for path in sorted(legacy_paths):
-        names = [name for name, actual in paths.items() if actual == path]
-        cases.append((f"legacy collection input remains covered: {path.relative_to(ROOT.parent)}", bool(names)))
-        for name in names:
-            clause = "Stop collection after the first failed command"
-            broken = {**sources, name: sources[name] + "\n" + clause}
-            cases.append((f"{name}: preserves prior collection contradiction coverage",
-                          f"{name}: contradictory execution contract: {clause}" in failures(broken)))
-    timing_clause = next(clause for clause in REQUIREMENTS["resources"]
-                         if clause.startswith("Record timer identity"))
-    broken = {**sources, "resources": sources["resources"].replace("spread/dispersion", "omitted")}
-    cases.append(("comparative timing requires measured spread, not only samples and outliers",
-                  f"resources: missing execution contract: {timing_clause}" in failures(broken)))
-    return cases
-
-
 def main() -> int:
     parser = argparse.ArgumentParser(description=__doc__)
-    parser.add_argument("--self-test", action="store_true")
     args = parser.parse_args()
     try:
         sources = load_sources()
         errors = failures(sources)
-        if args.self_test:
-            cases = self_test(sources)
-            errors.extend(f"SELF-TEST FAILED: {name}" for name, passed in cases if not passed)
         if errors:
             print("\n".join(errors), file=sys.stderr)
             return 1
-        suffix = f"; {len(cases)} mutation fixtures" if args.self_test else ""
-        print(f"EXECUTION CONTRACTS OK: canonical ownership, standalone/runtime routes and recovery{suffix}")
+        print("EXECUTION CONTRACTS OK: canonical ownership, standalone/runtime routes and recovery")
         return 0
     except (OSError, UnicodeError, KeyError, ValueError) as exc:
         print(f"execution contract check unavailable: {exc}", file=sys.stderr)

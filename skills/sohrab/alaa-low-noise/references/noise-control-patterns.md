@@ -10,7 +10,6 @@ These patterns control context input and printed output. Discovery and runtime s
 - Runtime notes: Claude Code and Codex
 - Diff and reporting patterns
 - Large-log capture patterns
-- PowerShell notes
 - Bash notes
 - When the user wants raw output
 
@@ -53,7 +52,7 @@ Discovery mostly uses the shell. Express bounds in each command:
 
 - Scope every search to real paths.
 - Keep `-C` context small.
-- Pipe through `head`/`tail` or `Select-Object` instead of emitting whole files.
+- Pipe through `head` or `tail` instead of emitting whole files.
 
 Route Codex-specific sandbox, refresh, locking, quoting, and command-length failures to `/alaa-codex-runtime-ops`. It has no Claude Code equivalent. Afterward, retry only essential failed work, serially and with bounded output.
 
@@ -78,26 +77,6 @@ When validation or diagnostics are long, keep the bulk out of both the transcrip
 4. Report the key outcome and the path.
 
 Keep durable artifacts only when they help the user inspect or resume. Remove throwaway artifacts before finishing when cleanup is safe.
-
-## PowerShell notes
-
-```powershell
-rg -n -C 3 "MyPattern" src tests
-Get-Content .\path\file.txt -TotalCount 120
-Get-Content .\path\file.txt | Select-Object -Last 80
-```
-
-```powershell
-New-Item -ItemType Directory -Force artifacts | Out-Null
-pnpm test *> artifacts\test.log
-Get-Content artifacts\test.log | Select-Object -Last 80
-```
-
-Notes:
-
-- `*>` redirects all PowerShell streams to one file.
-- Prefer `Select-Object -First` or `-Last` over dumping full content.
-- Use `git status --short` and `git diff --stat` before any detailed diff.
 
 ## Bash notes
 
@@ -127,6 +106,6 @@ Notes:
 
 ## Caveats
 
-- The `rg`, `git`, PowerShell, and Bash examples describe common cases, not portable guarantees. Before scripting them, verify flags and tool names against the installed shell and versions.
+- The `rg`, `git`, and Bash examples describe common cases, not portable guarantees. Before scripting them, verify flags and tool names against the installed shell and versions.
 - Claude Code guidance describes general file and search operations. Exact tool parameters change between releases.
 - `/alaa-codex-runtime-ops` is Codex-only. Do not look for a Claude Code counterpart.

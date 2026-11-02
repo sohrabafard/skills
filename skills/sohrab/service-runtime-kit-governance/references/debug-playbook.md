@@ -20,11 +20,10 @@ Do not treat a generated file as current until `bash scripts/runtime/render-runt
 
 - **App cannot reach Redis in containers.** Compare generated `REDIS_RUNTIME_*` values against the service `.env`; the host-side/container-side split is deliberate.
 - **Worker cannot authenticate to RabbitMQ.** Confirm which naming variant the service config expects, then verify the generated env block exports both.
-- **RabbitMQ vhost `/` wrong only from Windows Git Bash.** Read `windows-git-bash-compose.md` before touching `config/queue.php` or queue driver code.
 - **Worker crashes because the queue does not exist.** Confirm `QUEUE_CONNECTION`, the declared queue names, and that generated RabbitMQ bootstrap ran before the worker began polling.
 - **Render still reproduces a bug already fixed in the shared kit.** Suspect stale copied wrappers or a stale repo-local `.service-runtime-kit` cache; `runtime-contract-map.md` has the check.
 - **Service logs not visible in Docker.** `runtime-contract-map.md` owns the logging-visibility rule; apply it there rather than forcing a shared override.
-- **Octane logs or traces stay buffered in SigNoz.** Confirm the generated **app** env block carries the Octane request-recycling variable, and the generated **common** env block carries the OTEL scheduled-flush, flush-on-operation, and OTLP/BSP/BLRP export-timeout variables. A variable missing from the block that carries it is a shared `service-runtime-kit` fix, never a hand edit to generated Compose. This skill owns only which block carries which variable; `alaa-observability-soc` (`$alaa-observability-soc`) owns the telemetry contract and every value in it.
+- **Octane logs or traces stay buffered in SigNoz.** Confirm the generated **app** env block carries the Octane request-recycling variable, and the generated **common** env block carries the OTEL scheduled-flush, flush-on-operation, and OTLP/BSP/BLRP export-timeout variables. A variable missing from the block that carries it is a shared `service-runtime-kit` fix, never a hand edit to generated Compose. This skill owns only which block carries which variable; `/alaa-observability-soc` owns the telemetry contract and every value in it.
 - **A corrected `.env` still appears ignored.** Rerender, then check whether the generated file reads `.env` directly or a default from `runtime/service.runtime.env`.
 
 ## 5. Re-run the original failing path

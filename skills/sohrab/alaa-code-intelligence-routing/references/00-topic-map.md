@@ -10,7 +10,6 @@ Load only rows whose observable condition applies. This is the skill's sole refe
 | Choose a PHP/Laravel, Go, Python, Vue/Quasar path or any CodeGraph/provider operation | `references/40-stack-bindings.md` | Stack/capability fit and independent Boost failure domains |
 | Select a native command, distinguish CLI from LSP access, or choose a parser, semantic fallback or proof recipe | `references/45-native-tools.md` | Operation eligibility, workspace binding, bounded execution and command limits |
 | Adopt or diagnose authorized routing hooks | `references/50-hooks.md` | Hook ownership, profiles, deviations and rollback |
-| Evaluate routing, compare performance or reuse verification evidence | `references/60-evaluation.md` | Expected scenarios, observations and claim strength |
 | Advise on or author an authorized binding, Serena HTTP context/language configuration or initial prompt | `references/70-project-bindings.md` | Portable fragments, shared-project constraints and configuration ownership |
 | Use Serena's REPL interface or select its included/excluded APIs alongside CodeGraph | `references/75-serena-repl.md` | Interface discovery, API filtering, composition and candidate profile |
 | Grant code intelligence to a role or check read-only enforcement | `references/80-agent-scoping.md` | Narrow effective read/write/execute grants and contract reachability |

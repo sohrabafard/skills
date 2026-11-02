@@ -23,12 +23,12 @@ design or implement the detail.
 
 | Not owned here | Owner |
 |---|---|
-| Threat modelling, vulnerability findings, auth implementation review | `/alaa-security-review` — `$alaa-security-review` |
-| Telemetry schema, dashboards, alert design, SOC workflow | `/alaa-observability-soc` — `$alaa-observability-soc` |
-| API, event, and DTO contract shapes and their compatibility mechanics | `/alaa-services-contract` — `$alaa-services-contract` |
-| The design method that answers a constitutional obligation for one subsystem: bounding it, the seam, contract-before-code, single-writer data ownership, compared candidates, and the design record | `/alaa-system-design` — `$alaa-system-design` |
+| Threat modelling, vulnerability findings, auth implementation review | `/alaa-security-review` |
+| Telemetry schema, dashboards, alert design, SOC workflow | `/alaa-observability-soc` |
+| API, event, and DTO contract shapes and their compatibility mechanics | `/alaa-services-contract` |
+| The design method that answers a constitutional obligation for one subsystem: bounding it, the seam, contract-before-code, single-writer data ownership, compared candidates, and the design record | `/alaa-system-design` |
 | Language-level style, patterns, and refactoring | the per-language clean-code skills, named per stack |
-| Model, effort, prompting, and runtime capability questions | `/alaa-prompting-guide` — `$alaa-prompting-guide` |
+| Model, effort, prompting, and runtime capability questions | `/alaa-prompting-guide` |
 
 Name the owner in the constitution's canonical-source list and route the work; do not perform it
 here and do not restate its rules.
@@ -154,7 +154,7 @@ python3 <skill-directory>/scripts/validate_constitution.py --final <path-to-cons
 
 Pass every matched archetype to `--archetypes` so its obligations are checked mechanically;
 `--list-archetypes` prints the accepted identifiers. Use `--template <path>` to check a template
-instead, and `--self-test` to verify the validator against its bundled fixtures after editing it.
+instead.
 
 The validator gates structure, authoring residue, the footer, TODO shape, size budgets, threshold
 provenance, archetype obligation markers, and the bindings. Judgment it cannot reach — whether each

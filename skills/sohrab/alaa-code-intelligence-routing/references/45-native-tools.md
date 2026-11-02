@@ -1,6 +1,6 @@
 # Native evidence and proof
 
-This guide ships with the skill; it depends on no workstation inventory. Select the needed operation, inspect its repository recipe/configuration, and check only its executable: `Get-Command <tool>` in PowerShell or `command -v <tool>` in POSIX. Check version/dialect when the operation depends on it. Availability is not compatibility.
+This guide ships with the skill; it depends on no workstation inventory. Select the needed operation, inspect its repository recipe/configuration, and check only its executable with `command -v <tool>`. Check version/dialect when the operation depends on it. Availability is not compatibility.
 
 Do not install, upgrade or allow package-runner downloads as discovery. Use installed project tooling or report the required gate blocked. Inspect scripts before execution: names such as check or dry-run do not establish harmlessness. Bound scope/output and avoid secret payloads. Examples below are read/diagnostic starting points, not universal proof commands; substitute the actual scoped path and inspected project recipe.
 
@@ -21,7 +21,7 @@ Batch compatible diagnostics and scope queries to needed symbols/files. Rerun on
 | Known region | Native file read limited to needed lines | Does not prove call/reference coverage |
 | Supported syntax pattern | Installed ast-grep with language/path-bound pattern selected from its help | Syntax matches are not bindings/types or complete references; native text can supply partial evidence |
 
-In PowerShell a bounded region can use `Get-Content -LiteralPath <path> | Select-Object -Skip <offset> -First <count>`. In POSIX use `sed -n '<first>,<last>p' <path>`. Reuse adequate graph source instead of performing these reads again.
+Read a bounded region with `sed -n '<first>,<last>p' <path>`. Reuse adequate graph source instead of performing these reads again.
 
 ## Structured data and saved working state
 

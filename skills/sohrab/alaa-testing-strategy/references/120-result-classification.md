@@ -40,7 +40,7 @@ These are the failures most often misread as product defects, because the comman
 
 | Observation | Primary class | Discriminator |
 |---|---|---|
-| The command line was parsed by a shell other than the intended one — PowerShell quoting, `$VAR` versus `%VAR%`, backtick versus backslash escaping, a Git Bash path rewritten to a Windows path, a here-string that did not close | `ENVIRONMENT-BLOCKED` | The same command parses under the intended shell; the product was never reached |
+| The command line was parsed by a shell other than the intended one — quoting or word splitting that differs between `sh` and Bash, a variable expanded by the wrong shell, a here-document that did not close | `ENVIRONMENT-BLOCKED` | The same command parses under the intended shell; the product was never reached |
 | A container runtime is not running, an image is absent, a mount failed, or the daemon refused the socket | `ENVIRONMENT-BLOCKED` | The failure precedes the process under test starting |
 | A file, directory, port, or device was refused, locked, or held open by another process | `ENVIRONMENT-BLOCKED` | The message names an OS-level permission, lock, or address rather than an assertion |
 | A required executable, service, credential, browser, or platform capability is absent | `ENVIRONMENT-BLOCKED` | Absence, not misbehaviour |

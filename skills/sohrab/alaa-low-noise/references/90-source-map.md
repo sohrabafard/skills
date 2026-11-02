@@ -15,7 +15,6 @@ Read this file when context or output policy depends on current runtime behavior
    - Claude Code: https://code.claude.com/docs/
    - Codex: https://developers.openai.com/codex/
 5. Official documentation for the command surface in use:
-   - PowerShell: https://learn.microsoft.com/powershell/
    - Git: https://git-scm.com/docs
    - ripgrep: https://github.com/BurntSushi/ripgrep
 6. Official prompting and skill guidance when model behavior affects output policy:
@@ -29,7 +28,7 @@ Read this file when context or output policy depends on current runtime behavior
 
 Re-check current behavior when the task mentions:
 
-- The latest Claude Code or Codex release, or new tool, terminal, PowerShell, Bash, or Windows behavior.
+- The latest Claude Code or Codex release, or new tool, terminal, or Bash behavior.
 - Very large generated logs, new validation runners, or new output caps.
 - A model change affecting reasoning, verbosity, narration, tool eagerness, or delegation polarity. First read `references/model-output-profiles.md`. For a model newer than that file, re-verify it against vendor documentation.
 - Subagent fan-out that could flood the parent's context.

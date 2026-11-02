@@ -1,17 +1,16 @@
 ---
 name: service-runtime-kit-governance
-description: "Ownership and debug governance for `service-runtime-kit`-generated local Docker Compose and Swarm runtime in Laravel or PHP service repositories. Use when working in a repo that consumes `service-runtime-kit`, or when changing `runtime/*.env`, `runtime/hooks/**`, `scripts/runtime/**`, generated `docker-compose*.yml`, generated `docker/octane/**` or `docker/pgbouncer/**`, copied helpers such as `validate_runtime.php`, runtime-kit version pinning, bootstrap or auto-fetch behavior, or Windows Git Bash path conversion of slash-valued Compose env vars, and when deciding which layer owns a runtime fix or debug path. Do not use for application logic unrelated to runtime generation. Route Kubernetes, OpenShift, and Helm deployment to /caas-arvan-kuber; GitLab CI/CD pipelines owned by `service-ci-kit` to /alaa-gitlab-ci-cd; the shared-infra and deployment contract to /alaa-services-contract."
+description: "Ownership and debug governance for `service-runtime-kit`-generated local Docker Compose and Swarm runtime in Laravel or PHP service repositories. Use when working in a repo that consumes `service-runtime-kit`, or when changing `runtime/*.env`, `runtime/hooks/**`, `scripts/runtime/**`, generated `docker-compose*.yml`, generated `docker/octane/**` or `docker/pgbouncer/**`, copied helpers such as `validate_runtime.php`, runtime-kit version pinning, or bootstrap or auto-fetch behavior, and when deciding which layer owns a runtime fix or debug path. Do not use for application logic unrelated to runtime generation. Route Kubernetes, OpenShift, and Helm deployment to /caas-arvan-kuber; GitLab CI/CD pipelines owned by `service-ci-kit` to /alaa-gitlab-ci-cd; the shared-infra and deployment contract to /alaa-services-contract."
 ---
 
 # Service Runtime Kit Governance
 
-Load before changing any runtime-related file in a service repo driven by `service-runtime-kit`. Trigger prefix for skills named below: `/name` in Claude Code, `$name` in Codex.
+Load before changing any runtime-related file in a service repo driven by `service-runtime-kit`.
 
 - `references/change-routing.md` — where a change belongs; the regenerate command pair.
 - `references/runtime-contract-map.md` — which file or variable produces a behavior; which paths are generated; which knob owns a tuning value; how to check the pinned kit.
 - `references/debug-playbook.md` — a runtime path fails and the cause is not located.
 - `references/cross-runtime-shared-infra.md` — shared Postgres, Redis, RabbitMQ, or Adminer is touched, or a Go service on the `alaa-go-chi` kit is in scope.
-- `references/windows-git-bash-compose.md` — a slash-valued Compose env var looks corrupted on Windows.
 - `references/source-map.md` — before relying on latest, current, or security-sensitive behavior.
 
 ## Goal
