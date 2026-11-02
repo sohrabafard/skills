@@ -24,16 +24,17 @@ every listener that does not override it. Keep the TLS 1.2 cipher list
 (`ssl-default-bind-ciphers`) and the TLS 1.3 suite list (`ssl-default-bind-ciphersuites`)
 separate: they are different negotiation mechanisms. `haproxy -c` does not guard the split, so
 prove each list with an exact-line check on the rendered config. A list mixing wrong-list names
-passes with exit 0, and only a list of nothing but wrong-list names exits 1 (observed on 3.4.7
-with OpenSSL 3.5.9, 2026-11-02). The
+passes with exit 0. A list of only wrong-list names exits 1 in OpenSSL form, but a `ciphersuites`
+list of only TLS 1.2 names in IANA form exits 0 and then failed every TLS 1.2 and 1.3 handshake with
+alert 40, cause not established (observed on 3.4.7 with OpenSSL 3.5.9, 2026-11-02). The
 [configuration manual](https://docs.haproxy.org/3.4/configuration.html) says `ciphersuites` "might
 accept TLSv1.2 ciphersuites however this is an undocumented behavior and not recommended".
 
 Server preference is the default, in TLS 1.2 and 1.3. `prefer-client-ciphers` in
 `ssl-default-bind-options` hands the choice to the client, and is what the
 [TLSRef Intermediate profile](https://docs.tlsref.org/server-side-tls.html)'s "client chooses" maps
-to. TLS 1.3 honours it too: one client's suite order negotiated AES-128 by default and AES-256 with
-the option (same observation).
+to. TLS 1.3 honours it too: with a server list ordering AES-128 first, a client listing AES-256 first
+negotiated AES-128 by default and AES-256 with the option (same observation).
 
 `no-tls-tickets` stops stateless session tickets, not resumption. TLS 1.3 still issues tickets
 (observed two small ones, and `Reused` on reconnect), and TLS 1.2 session-ID resumption still works.
@@ -50,14 +51,18 @@ Absent log lines and flat counters do not prove handshakes are healthy. Observed
 OpenSSL 3.5.9, 2026-11-02; the Ala gateway's fuller case list is `gateway`
 `<repo>/docs/errors-events-observability/30-structured-logs.md`.
 
+- **Signal.** A frontend's `connections_total` rising without `sessions_total` shows handshakes that
+  never became sessions, including those that log nothing.
 - **Silence.** With `option dontlognull`, silent and stalled handshakes log nothing.
 - **`error-log-format`.** A real failure logs through it only when a stream-less error is emitted.
   Not every such line is a TLS failure: a malformed plain-HTTP request logs there with `fc_err` 0.
   A filter must read the error field, and a non-zero `fc_err` can also follow a completed handshake.
 - **Names.** `%ft` carries a `~` suffix on the SSL listener while the metric label keeps the plain
   frontend name, so a filter must match both.
-- **Counters.** `ssl_failed_handshake` appears only with `/metrics?extra-counters=on`. It moved on a
-  non-TLS byte stream. Neither it nor `request_errors` moves for a silent handshake.
+- **Counters.** `ssl_failed_handshake` appears only with `/metrics?extra-counters=on`. It rises when
+  the client closes a silent connection (FIN or RST, no log line, so a TCP probe raises it) and on a
+  non-TLS byte stream. It stays flat when `timeout client-hs` closes a silent or stalled handshake.
+  `request_errors` stayed flat in all of these.
 
 ## SNI on the client side
 
