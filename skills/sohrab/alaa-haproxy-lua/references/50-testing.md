@@ -14,4 +14,4 @@ When validating identifier generation, read [cross-process collisions, event ord
 
 When selecting a proof level or reporting results, read [native parsing, HTTP runtime evidence and limits](./50-testing/40-integration-and-proof-levels.md).
 
-When running the reproducible package gates, read [exact commands, runtime prerequisites, exit meanings and checker limits](./50-testing/50-target-gate.md).
+When running the reproducible package gates, read [exact commands, exit meanings and checker limits](./50-testing/50-target-gate.md).

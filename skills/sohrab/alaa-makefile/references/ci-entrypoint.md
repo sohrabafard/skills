@@ -82,6 +82,7 @@ deploy:
 ```
 
 ```console
+$ # Makefile above saved as oneshell-swallow.mk
 $ make -f oneshell-swallow.mk deploy ; echo "exit=$?"
 bash: line 1: cd: /nonexistent: No such file or directory
 still ran - failure was swallowed

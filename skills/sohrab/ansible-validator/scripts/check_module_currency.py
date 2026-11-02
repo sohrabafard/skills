@@ -129,7 +129,8 @@ def collect(target: Path):
     if target.is_file():
         return [target]
     out = []
-    skip = {".git", "venv", ".venv", "node_modules", "__pycache__", ".tox"}
+    # "fixtures" holds target-repository test data that may be stale on purpose.
+    skip = {".git", "venv", ".venv", "node_modules", "__pycache__", ".tox", "fixtures"}
     for pattern in ("*.md", "*.yml", "*.yaml"):
         for candidate in sorted(target.rglob(pattern)):
             if skip.intersection(candidate.parts):

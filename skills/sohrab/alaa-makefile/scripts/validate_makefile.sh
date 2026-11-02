@@ -197,17 +197,13 @@ setup_mbake() {
     "${PYTHON_CMD[@]}" -m venv "$VENV_DIR" >/dev/null 2>&1 || cannot_run "Failed to create the virtual environment at $VENV_DIR."
 
     local venv_python=""
-    for candidate in "$VENV_DIR/bin/python" "$VENV_DIR/Scripts/python.exe" "$VENV_DIR/Scripts/python"; do
-        if [ -x "$candidate" ]; then venv_python="$candidate"; break; fi
-    done
+    [ -x "$VENV_DIR/bin/python" ] && venv_python="$VENV_DIR/bin/python"
     [ -n "$venv_python" ] || cannot_run "Failed to locate Python inside the virtual environment."
 
     echo "Installing mbake..."
     "$venv_python" -m pip install --quiet mbake >/dev/null 2>&1 || cannot_run "Failed to install mbake. Re-run with --no-venv on an offline machine."
 
-    for candidate in "$VENV_DIR/bin/mbake" "$VENV_DIR/Scripts/mbake.exe" "$VENV_DIR/Scripts/mbake"; do
-        if [ -x "$candidate" ]; then MBAKE_BIN="$candidate"; break; fi
-    done
+    [ -x "$VENV_DIR/bin/mbake" ] && MBAKE_BIN="$VENV_DIR/bin/mbake"
     [ -n "$MBAKE_BIN" ] || cannot_run "Failed to locate mbake inside the virtual environment."
     say_ok "Environment ready"
 }
@@ -317,7 +313,7 @@ line_ending_check() {
     if LC_ALL=C grep -q $'\r' "$file"; then
         say_error "The file contains carriage returns (CRLF or CR line endings)."
         detail "GNU make passes the trailing CR to the shell, so a recipe fails with a message whose bytes look correct."
-        detail "Fix: run 'sed -i \$'s/\\r\$//' $file'."
+        detail "Fix: run 'sed -i \$'s/\\r\$//' $file' and add '*.mk text eol=lf' plus 'Makefile text eol=lf' to the target repository's .gitattributes."
     else
         say_ok "LF line endings throughout"
     fi

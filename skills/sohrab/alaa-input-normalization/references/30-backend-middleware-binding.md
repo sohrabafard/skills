@@ -73,8 +73,14 @@ final class NormalizeRequestInput extends TransformsRequest
 }
 ```
 
-Syntax checking alone does not prove traversal: exercise the middleware against a real Laravel
-installation before relying on it.
+Syntax checking alone does not prove traversal. Before you rely on the middleware, send these
+requests through it in a real Laravel installation and read the values the controller receives:
+
+- A JSON body with a nested object holding `contact.phone` and an array element
+  `contacts.0.phone`, each with Persian digits. Expect `typed` folding for both paths.
+- A form body and a query string with a Persian-digit value in an unlisted field. Expect `text` folding.
+- A multipart request with a file upload. Expect the upload unchanged.
+- Any request. Expect field keys, numbers, booleans and nulls unchanged.
 
 Register it globally, before validation, and before `TrimStrings` where that exists:
 

@@ -17,7 +17,7 @@ HAProxy converts the Lua value your handler returns into a sample. `doc/lua.txt`
 
 ## Measured rendering
 
-Historical observations on HAProxy 2.8.16/Lua 5.4.6 (26 July 2026), retained below. On 1 October 2026 the bundled harness rechecked nil/false/true rendering, failed-sample rejection and action failure on HAProxy 3.4.6/Lua 5.4.8; see SOURCES.md. The empty-header case remains a historical observation:
+Historical observations on HAProxy 2.8.16/Lua 5.4.6 (26 July 2026), retained below. On 1 October 2026 a runtime harness, since removed from this package, rechecked nil/false/true rendering, failed-sample rejection and action failure on HAProxy 3.4.6/Lua 5.4.8; see SOURCES.md. The empty-header case remains a historical observation:
 
 | Handler behaviour | `var(txn.x)` after it | `var(txn.x,DEFAULT)` | `set-header` result | ACL `var(txn.x) -m found` |
 |---|---|---|---|---|
@@ -39,7 +39,7 @@ opposite direction: HAProxy boolean samples read by Lua become booleans in `norm
 and integers 0/1 in `pre-3.1-bug`. Lua treats numeric zero as truthy. Select the mode
 explicitly before loading scripts and audit comparisons, native fetches and variable
 reads together. Do not convert everything to strings or blindly switch legacy code.
-The 3.4.6 runtime harness checks both modes. Nil still becomes false in both modes;
+The 1 October 2026 runtime check on 3.4.6 covered both modes. Nil still becomes false in both modes;
 it is not a failed sample. This setting is not a switch for nil handling.
 
 For scope and related decisions, return to the [parent reference](../30-failure-visibility.md).

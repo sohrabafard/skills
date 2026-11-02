@@ -37,6 +37,5 @@ For the bundled token validator, `string` suffices in production: `type`, `tonum
 needs `math`; that test dependency is not a production module dependency.
 Do not copy this list to gateway modules that read environment variables or dates.
 
-Run `python3 scripts/check_runtime.py --image <cached-image>` from this package.
-It tests `all`, `none`, a restricted list, the `os` dependency, rejected values and
-ordering with HAProxy's own parser. It never downloads an image.
+Test `all`, `none`, a restricted list, the `os` dependency, rejected values and
+ordering with HAProxy's own parser (`haproxy -c -f`) on the target build.

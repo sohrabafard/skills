@@ -43,7 +43,7 @@ explicit authorization.
    - `python3 scripts/check_haproxy_lua.py <module.lua>`
    - the module's unit test, run by the same Lua that `haproxy -vv` reported
    - `haproxy -c -f <config>`, which compiles every Lua file the configuration loads
-   - focused runtime success/failure probes; the bundled gate is `python3 scripts/check_runtime.py --image <cached-image>` (Docker, no pulls).
+   - focused runtime success/failure probes on a loopback HAProxy (proof level 4 in `references/50-testing/40-integration-and-proof-levels.md`)
 8. **Report at the proof level you actually reached**, using `/alaa-testing-strategy` `references/40-proof-strength.md`.
 
 ## Checker

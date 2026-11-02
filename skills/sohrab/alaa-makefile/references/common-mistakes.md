@@ -24,8 +24,8 @@ invocation whose exit status is its **last** command's status.
 
 **Smallest fix.** `.SHELLFLAGS := -eu -o pipefail -c`.
 
-**Reproduce.** The Makefile in `ci-entrypoint.md` section 2: `make -f oneshell-swallow.mk deploy ; echo "exit=$?"`
-prints the failure and `exit=0`.
+**Reproduce.** Save the Makefile block from `ci-entrypoint.md` section 2 as `oneshell-swallow.mk`. Then run
+`make -f oneshell-swallow.mk deploy ; echo "exit=$?"`. It prints the failure and `exit=0`.
 
 **Escalate.** `makefile-structure.md` for the preamble; `ci-entrypoint.md` for what a gate-fronting
 target must do.
@@ -93,7 +93,8 @@ plainly exists.
 **Cause.** The Makefile has CRLF line endings. Make passes the trailing carriage return to the shell as
 part of the last argument.
 
-**Smallest fix.** `sed -i $'s/\r$//' Makefile`. The validator reports any CR in the file.
+**Smallest fix.** `sed -i $'s/\r$//' Makefile`. Add `*.mk text eol=lf` and `Makefile text eol=lf` to the target
+repository's `.gitattributes`, so a checkout cannot bring CRLF back. The validator reports any CR in the file.
 
 ### B3. `*** unterminated variable reference` or a value that vanished
 
@@ -296,7 +297,7 @@ Ordered by cost, highest first.
 - [ ] `.DELETE_ON_ERROR:` present
 - [ ] Every non-file target declared in `.PHONY`
 - [ ] No credential-shaped assignment; every required value fails closed with `$(error …)`
-- [ ] LF line endings
+- [ ] LF line endings, and `.gitattributes` pinning them for `*.mk` and `Makefile`
 - [ ] Tabs, not spaces, for every recipe line
 - [ ] Directory prerequisites in the order-only form
 - [ ] `$(MAKE)`, never bare `make`

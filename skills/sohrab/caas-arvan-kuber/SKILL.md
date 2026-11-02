@@ -28,6 +28,8 @@ An absent API proves no version range: APIs can be disabled or discovery unavail
 
 `bash scripts/verify-cluster.sh NS [runner-serviceaccount]` collects this evidence without minting tokens or impersonating. With the optional ServiceAccount, the current context must already authenticate as that exact namespace/ServiceAccount principal. Unavailable or mismatched identity blocks with exit `2`. A denied or absent required capability returns `1`. Unavailable required proof returns `2`. Without that argument, the result covers only the caller.
 
+Use the Linux `kubectl` binary on WSL. The scripts do not strip carriage returns from `kubectl` output.
+
 ## Source precedence
 
 Live discovery outranks every local file, because a local file describes a snapshot and the cluster is the fact.

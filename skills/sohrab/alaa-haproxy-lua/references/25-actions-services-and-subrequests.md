@@ -56,7 +56,7 @@ A subrequest is a dependency on the request path. Six obligations, all observabl
 5. **Shape-check any value from the response before promoting it into something a client or a backend sees.** A decision code that becomes an error body must match an anchored character-class pattern with a maximum length before it leaves the handler. `references/80-security.md` states the general trust rule; whether the peer is inside or outside the trust boundary is owned by `/alaa-trust-gateway-auth`.
 6. **Decide the failure behaviour before writing the call, and make it explicit.** Fail closed for an authorization decision. The mechanism choice — timeout budget, whether to retry, whether to degrade — is shaped by `/alaa-reliability-sla` `references/10-deadlines-and-timeouts.md` and `references/20-retries.md`, and the Ala values themselves come from `/alaa-services-contract` `references/22-failure-load-and-deprecation-contract.md`. This skill states no timeout number.
 
-Use fixed destinations and validated request components; test malformed responses, refusal, delayed reads and early close against an isolated peer when a subrequest is introduced. The bundled sample/action probes do not prove subrequest behavior.
+Use fixed destinations and validated request components; test malformed responses, refusal, delayed reads and early close against an isolated peer when a subrequest is introduced. The 3.4.6 sample and action probes do not prove subrequest behavior.
 
 ## Cost, because these handlers run on every request
 

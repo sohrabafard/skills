@@ -95,6 +95,6 @@ Log **field and event names** are owned by `/alaa-services-contract`, and whethe
 - **Services/applets:** read and write through the appropriate HTTP/TCP applet,
   respect backpressure, cap response size, and test disconnects and partial output.
 
-These are routing obligations, not a claim that the bundled converter harness tests
+These are routing obligations, not a claim that the 3.4.6 runtime check covered
 filters, CLI, events or task scheduling. Their deployment-specific behavior needs a
 focused harness when used.
