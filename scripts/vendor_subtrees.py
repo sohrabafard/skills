@@ -261,7 +261,7 @@ def entry_codex_src_roots(entry: dict[str, object]) -> list[str]:
 
 
 def codex_src_roots_block(entries: list[dict[str, object]]) -> str:
-    """Render the source-root lines for install-skills.md, in manifest order, one quoted repo-relative path per line.
+    """Render the source-root lines for install-skills.md, in manifest order, one double-quoted repo-relative path per line.
 
     A root that an earlier entry already emitted is skipped, so two entries naming the same
     directory produce one line. A declared root that is missing on disk is still emitted and is
@@ -281,9 +281,9 @@ def codex_src_roots_block(entries: list[dict[str, object]]) -> str:
                     f"root {root}, which does not exist under {ROOT}",
                     file=sys.stderr,
                 )
-            lines.append(f'    "{root}"')
+            lines.append(f'"{root}"')
     if not lines:
-        return "    # No vendored skill roots detected."
+        return "# No vendored skill roots detected."
     return "\n".join(lines)
 
 

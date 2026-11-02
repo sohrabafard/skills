@@ -50,29 +50,29 @@ case "$repo_root" in /mnt/*) fail 'Run the copy in the Linux project clone, not 
 source_document="$repo_root/install-skills.md"
 [[ -f $source_document ]] || fail "Missing canonical source list: $source_document"
 
-# Parse only the documented literal Join-Path entries. Unknown syntax fails before linking.
+# Parse only the "## Source roots" text block. Each entry is one double-quoted relative path.
+# Any other non-comment line fails before linking.
 roots=()
-in_roots=false
+stage=seek # seek -> heading -> block
 complete=false
-# shellcheck disable=SC2016 # Match the literal list token, not a Bash variable.
-root_pattern='^[[:space:]]*\(Join-Path \$repoRoot "([^"]+)"\)[[:space:]]*$'
+root_pattern='^"([^"]+)"$'
 while IFS= read -r line || [[ -n $line ]]; do
-  if ! "$in_roots"; then
-    if [[ $line =~ ^[[:space:]]*\$srcRoots[[:space:]]*=[[:space:]]*@\([[:space:]]*$ ]]; then
-      in_roots=true
-    fi
-    continue
-  fi
-  if [[ $line =~ ^[[:space:]]*\)[[:space:]]*$ ]]; then
-    complete=true
-    break
-  fi
-  if [[ $line =~ ^[[:space:]]*(#.*)?$ ]]; then continue; fi
-  [[ $line =~ $root_pattern ]] || fail "Unsupported source-root expression: $line"
-  relative=${BASH_REMATCH[1]//\\//}
-  case "/$relative/" in */../* | */./*) fail 'Source roots must stay inside the clone.' ;; esac
-  [[ -n $relative && $relative != /* && $relative != *:* ]] || fail 'Expected a relative source root.'
-  roots+=("$repo_root/$relative")
+  case "$stage" in
+    seek) [[ $line == '## Source roots' ]] && stage=heading ;;
+    heading) [[ $line == '```text' ]] && stage=block ;;
+    block)
+      if [[ $line == '```' ]]; then
+        complete=true
+        break
+      fi
+      if [[ $line =~ ^(#.*)?$ ]]; then continue; fi
+      [[ $line =~ $root_pattern ]] || fail "Unsupported source-root line: $line"
+      relative=${BASH_REMATCH[1]}
+      case "/$relative/" in */../* | */./*) fail 'Source roots must stay inside the clone.' ;; esac
+      [[ $relative != /* && $relative != *:* && $relative != *\\* ]] || fail 'Expected a relative source root.'
+      roots+=("$repo_root/$relative")
+      ;;
+  esac
 done <"$source_document"
 if ! "$complete" || ((${#roots[@]} == 0)); then
   fail 'No complete source-root list found.'

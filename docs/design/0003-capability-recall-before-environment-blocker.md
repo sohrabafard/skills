@@ -105,3 +105,5 @@ source verification and scoped reviews passed. Release and publication were not 
 
 The source change is implemented and independently verified within the stated scope. No guarantee
 that Hindsight will retrieve the owner, or that a recalled image can run the gate, is made.
+
+Note: the checker `scripts/check_capability_recall.py` was retired with the removal of skill self-tests.

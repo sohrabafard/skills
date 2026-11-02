@@ -8,9 +8,9 @@ Three files answer almost every question about this repository:
 
 - [`skills/sohrab/README.md`](skills/sohrab/README.md) — the map of the first-party pack: every skill
   it ships, what each one owns, and when to load it.
-- [`install-skills.md`](install-skills.md) — authoritative for install paths. It carries the script
-  that links the packs in this repository into `~/.codex/skills` and `~/.claude/skills`, and the
-  source-root list that script walks.
+- [`install-skills.md`](install-skills.md) — authoritative for install paths. It holds the
+  source-root list and the install paths. `bash install-skills.wsl.sh` is the installer: it links the
+  packs in this repository into `~/.codex/skills` and `~/.claude/skills`.
 - [`AGENTS.md`](AGENTS.md) — the rules for changing anything here, and the checkers to run before you
   call a change done. Read it before your first edit.
 

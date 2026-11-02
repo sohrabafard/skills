@@ -9,29 +9,28 @@ installer link every skill into both agent homes. Add a new vendor or local pack
 
 ## Source roots
 
-This block is data. `install-skills.wsl.sh` reads it and `scripts/vendor_subtrees.py` writes it, so
-its line form is fixed: `(Join-Path $repoRoot "<root>")` per entry, `#` for a comment.
+This block is data. `install-skills.wsl.sh` reads it and `scripts/vendor_subtrees.py` writes it. Each
+entry is one line: a double-quoted repo-relative path with forward slashes and no indent. A line that
+starts with `#` is a comment. Any other line stops the installer before it makes a link.
 
 ```text
-$srcRoots = @(
-    (Join-Path $repoRoot "skills/.curated")
-    (Join-Path $repoRoot "skills/sohrab")
+"skills/.curated"
+"skills/sohrab"
 # vendor-subtrees:codex-src-roots:start
-    "vendor/openfga-agent-skills/skills"
-    "vendor/cc-skills-golang/skills"
-    "vendor/knowledge-work-plugins/design/skills"
-    "vendor/knowledge-work-plugins/product-management/skills"
-    "vendor"
-    "vendor/hindsight-skills/skills"
+"vendor/openfga-agent-skills/skills"
+"vendor/cc-skills-golang/skills"
+"vendor/knowledge-work-plugins/design/skills"
+"vendor/knowledge-work-plugins/product-management/skills"
+"vendor"
+"vendor/hindsight-skills/skills"
 # vendor-subtrees:codex-src-roots:end
-)
 ```
 
 ## WSL installer
 
-Run the committed Bash installer from the Linux clone; it derives the repository root from its
-own location. It reads the `$srcRoots` list above: comments are ignored, backslashes become Linux
-separators, and unrecognized expressions fail before any links are made. It fetches no dependencies.
+Run the committed Bash installer from the Linux clone. It derives the repository root from its own
+location. It reads the source-root block above. It ignores comments and fails on any unrecognized
+line before it makes a link. It fetches no dependencies.
 
 ```bash
 cd ~/project/skills
@@ -293,8 +292,8 @@ Notes:
 - `unlink` removes only matching symlinks that point at the expected vendored skill directories
 - the script refuses to overwrite conflicting existing destinations
 
-To link vendored skills, add the relevant vendored `skills/` directory to `$srcRoots`
-in the source-root list above. The vendored source-root lines in that list are refreshed by
+To link vendored skills, add the relevant vendored `skills/` directory to the source-root block
+above. The vendored source-root lines in that list are refreshed by
 `python3 scripts/vendor_subtrees.py refresh-docs`.
 
 ## Managed implementation and planning profiles
