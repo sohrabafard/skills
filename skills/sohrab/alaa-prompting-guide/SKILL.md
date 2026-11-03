@@ -18,7 +18,7 @@ Own instruction authoring, model/effort capability evidence and runtime control 
 
 Before dispatching `alaa-rule-writer`, read `assets/rule-writer/dispatch.md`. It rewrites an existing draft and returns replacement text. Authorship, decisions, research and edits stay with the caller.
 
-Distributing it is not this skill's job. Under Claude Code, the definition ships inside the plugin. It loads from the plugin-root `agents/` directory once the plugin is installed or enabled. The plugin manifest version is the installed agent-pack version. Never copy a wrapper into `~/.claude/agents`. Never write an installation sentinel. Never run the grants checker as an install gate. Under Codex, `install-skills.md` at this repository's root owns the one command that places `assets/rule-writer/codex/alaa-rule-writer.toml` into `~/.codex/agents`.
+For personal Claude Code installation and for installing `assets/rule-writer/codex/alaa-rule-writer.toml` into `~/.codex/agents`, follow the repository-root `install-skills.md`. Never write an installation sentinel or run the grants checker as an install gate.
 
 Managed wrappers omit model and effort. The orchestrator explicitly selects both controls for each task, including rule-writer. Validate effective controls separately from role authority. After changing `assets/rule-writer/`, run `python3 scripts/check_rule_writer_grants.py`.
 
