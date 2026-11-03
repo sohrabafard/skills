@@ -1,0 +1,107 @@
+{
+  "status": "PASS: all three dispatched commands passed on the final authorized attempt; earlier invocation failures retained as history.",
+  "agent": "alaa-verifier",
+  "model": {
+    "configured": "unknown (definition metadata unavailable to verifier)",
+    "requested": "Luna/medium balanced",
+    "observed": "unknown"
+  },
+  "repository": {
+    "cwd": ".",
+    "head": "fc705fe56a637cc031f9ac38e2bb06a99a052738",
+    "base": "1bff3b51458db30e6fbd81c70016109ea2ad5bd5",
+    "initial_status": "clean; captured before artifact creation",
+    "final_status": "only declared logs and this record untracked",
+    "changed_scope": [
+      "skills/sohrab/alaa-codex-orchestrator/references/routing-matrix.md",
+      "skills/sohrab/alaa-prompting-guide/assets/codex-model-policy.json",
+      "skills/sohrab/alaa-prompting-guide/references/00-source-map.md",
+      "skills/sohrab/alaa-prompting-guide/references/00-topic-map.md",
+      "skills/sohrab/alaa-prompting-guide/references/06-invocation-and-composition.md",
+      "skills/sohrab/alaa-prompting-guide/references/12-gpt-6.md",
+      "skills/sohrab/alaa-prompting-guide/references/60-skill-authoring.md",
+      "skills/sohrab/alaa-prompting-guide/references/90-model-selection.md",
+      "skills/sohrab/alaa-prompting-guide/scripts/codex_model_policy.py"
+    ]
+  },
+  "commands": [
+    {
+      "id": "1",
+      "command": "git diff --check 1bff3b51458db30e6fbd81c70016109ea2ad5bd5..fc705fe5",
+      "cwd": ".",
+      "resource_limits": "60s timeout; lightweight static; no affinity cap",
+      "duration_seconds": 2.5,
+      "exit": 0,
+      "classification": "PASS",
+      "tier": "focused static",
+      "proof_level": "static",
+      "cases": "n/a",
+      "logs": "logs/01-diff-check.stdout; logs/01-diff-check.stderr"
+    },
+    {
+      "id": "2",
+      "command": "python3 -B scripts/check_codex_model_policy.py --agent-root assets/rule-writer/codex",
+      "cwd": "skills/sohrab/alaa-prompting-guide",
+      "resource_limits": "60s timeout; lightweight static; no affinity cap",
+      "duration_seconds": 2.956,
+      "exit": 0,
+      "classification": "PASS",
+      "tier": "focused static",
+      "proof_level": "static",
+      "cases": "n/a",
+      "logs": "Successful direct tool output: OK: model policy and 1 model-neutral agents",
+      "evidence": "The initial process-creation failure and first retry redirection failure are preserved. A later explicit user authorization enabled a direct retry, which passed.",
+      "retry": {
+        "command": "python3 -B scripts/check_codex_model_policy.py --agent-root assets/rule-writer/codex",
+        "cwd": "skills/sohrab/alaa-prompting-guide",
+        "duration_seconds": 2.9,
+        "exit": 1,
+        "classification": "ENVIRONMENT-BLOCKED",
+        "evidence": "At the time, this was the sole authorized retry; shell redirection failed before Python started, so no checker result was produced."
+      },
+      "attempts": [
+        {
+          "kind": "initial",
+          "classification": "ENVIRONMENT-BLOCKED",
+          "evidence": "Process creation rejected for the relative cwd; Python did not start."
+        },
+        {
+          "kind": "first retry",
+          "classification": "ENVIRONMENT-BLOCKED",
+          "exit": 1,
+          "evidence": "Shell redirection path was invalid from the target cwd; Python did not start."
+        },
+        {
+          "kind": "authorized retry",
+          "command": "python3 -B scripts/check_codex_model_policy.py --agent-root assets/rule-writer/codex",
+          "cwd": "skills/sohrab/alaa-prompting-guide",
+          "duration_seconds": 2.956,
+          "exit": 0,
+          "classification": "PASS",
+          "output": "OK: model policy and 1 model-neutral agents"
+        }
+      ]
+    },
+    {
+      "id": "3",
+      "command": "python3 -c 'import ast; from pathlib import Path; ast.parse(Path(\"skills/sohrab/alaa-prompting-guide/scripts/codex_model_policy.py\").read_text(encoding=\"utf-8\"))'",
+      "cwd": ".",
+      "resource_limits": "60s timeout; lightweight static; no affinity cap",
+      "duration_seconds": 2.3,
+      "exit": 0,
+      "classification": "PASS",
+      "tier": "focused static",
+      "proof_level": "static",
+      "cases": "n/a",
+      "logs": "logs/03-ast-parse.stdout; logs/03-ast-parse.stderr",
+      "argv": [
+        "python3",
+        "-c",
+        "import ast; from pathlib import Path; ast.parse(Path(\"skills/sohrab/alaa-prompting-guide/scripts/codex_model_policy.py\").read_text(encoding=\"utf-8\"))"
+      ]
+    }
+  ],
+  "selection_comparison": "not applicable; no test selectors",
+  "scope_note": "Static evidence only; does not establish scenario behavior or runtime compliance.",
+  "contamination": "No unexpected tracked changes observed; verification record/logs are the only new untracked files."
+}

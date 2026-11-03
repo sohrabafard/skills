@@ -1,0 +1,19 @@
+{
+  "command": "git diff --check 1bff3b51458db30e6fbd81c70016109ea2ad5bd5..7ac6bb7f",
+  "cwd": ".",
+  "snapshot": {
+    "base": "1bff3b51458db30e6fbd81c70016109ea2ad5bd5",
+    "head": "7ac6bb7f709a4601b7fc2505ca139f8e634b5eea",
+    "status": "only previously declared verification artifacts are untracked"
+  },
+  "duration_seconds": 4.682,
+  "exit": 0,
+  "classification": "PASS",
+  "proof_level": "static",
+  "stdout": "",
+  "stderr": "",
+  "unchanged_evidence": {
+    "model_policy": "../focused.json commands[1]: python3 -B scripts/check_codex_model_policy.py --agent-root assets/rule-writer/codex; exit 0; PASS",
+    "ast_parse": "../focused.json commands[2]: python3 -c 'import ast; from pathlib import Path; ast.parse(Path(\"skills/sohrab/alaa-prompting-guide/scripts/codex_model_policy.py\").read_text(encoding=\"utf-8\"))'; exit 0; PASS"
+  }
+}
