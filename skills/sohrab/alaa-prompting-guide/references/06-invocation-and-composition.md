@@ -101,7 +101,7 @@ proves equal quality.
 
 ## Pre-send checklist
 
-1. The executing surface, registered skill name and recipient-readable source are resolved. Required activation is observed before the goal starts.
+1. Resolve the executing surface. Resolve the registered name and recipient-readable source for the skill or its already authorized equivalent. Observe required loading before the goal starts.
 2. The session has one role consistent with the invoked skill. Implementation instructions follow its role boundary.
 3. The kickoff and condition follow the surface-specific composition rules above.
 4. Delegation wording matches the target model's default bias — bounded selection criteria for current Opus and Fable, current authorization and bounded scopes for Codex, measured rather than assumed for Sonnet 5.5.
