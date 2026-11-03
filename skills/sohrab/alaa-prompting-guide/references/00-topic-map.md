@@ -19,7 +19,7 @@ Rows are conditions, not headings. If your situation is not listed, no reference
 | Consult historical Fable 5 behavior | `references/40-fable-5.md` | Older verification reminders are historical, not current instructions |
 | Tune current Haiku prompts or select bounded retrieval, verification or documentation | `references/36-haiku-5-5.md` | Explicit completion, retrieval and check instructions preserve bounded work |
 | Consult historical Haiku 4.5 behavior | `references/35-haiku-4-5.md` | Its missing effort support does not transfer to Haiku 5.5 |
-| Use Claude Code's `/loop`, subagents, workflows, plan mode or `/goal`, resolve a Desktop tab, or diagnose a rejected goal | `references/41-claude-code-runtime-features.md` | Surface availability, evaluator scope and the actual rejection decide what can run |
+| Use Claude Code's `/advisor`, `/loop`, subagents, workflows, plan mode or `/goal`, resolve a Desktop tab, or diagnose a rejected goal | `references/41-claude-code-runtime-features.md` | Surface support, advisor compatibility and evaluator scope decide what can run |
 | Set or change an effort level, or judge whether a lane needs a higher tier | `references/50-effort-and-thinking.md` | Model and effort are separate decisions, and an effort inherited from another generation is an untested assumption |
 | Decide whether what you are about to write is a prompt, an instruction file, a skill, or a subagent | `references/60-skill-authoring.md` | It holds the four-way test, and choosing wrong is the most common authoring defect |
 | Write, review, or repair a skill | `references/60-skill-authoring.md` | It owns the authoring procedure and how to split a subject into references |

@@ -1,6 +1,6 @@
 ---
 name: alaa-prompting-guide
-description: "Instruction authoring for GPT-6 in Codex and Claude Opus 5.5, Fable 5.1, Sonnet 5.5, or Haiku 5.5 in Claude Code. Use to write, review, repair, and compress prompts, skills, subagent definitions, and AGENTS.md/CLAUDE.md files, or for model and effort capability evidence, thinking calibration, skill invocation, compact goal conditions, rejected goal prompts, and runtime workflows. Resolve Desktop Code versus Chat or Cowork before writing Claude commands. Do not use as a general coding or refactor skill, and do not extrapolate it to models outside this scope."
+description: "Instruction authoring for GPT-6 in Codex and Claude Opus 5.5, Fable 5.1, Sonnet 5.5, or Haiku 5.5 in Claude Code. Use to write, review, repair, and compress prompts, skills, subagent definitions, and AGENTS.md/CLAUDE.md files, or for model and effort capability evidence, thinking calibration, skill invocation, goal composition or rejection, native Claude Advisor, and runtime workflows. Resolve Desktop Code versus Chat or Cowork before writing Claude commands. Do not use as a general coding or refactor skill, and do not extrapolate it to models outside this scope."
 ---
 
 # Alaa Prompting Guide
@@ -42,7 +42,7 @@ All gates use `0` clean, `1` findings, `2` unavailable proof (including malforme
 4. Draft, then compress every controlling artifact, including edits and dispatches, through `references/60-skill-authoring.md`. Ship the fewest words preserving behavior. Soft targets yield. Hard limits require equivalent restructuring or a blocked report. Conversational prose is exempt.
 5. Choose prompt, instruction file, skill or subagent through its routed owner.
 
-For a goal, follow `references/06-invocation-and-composition.md` for the compact condition and kickoff. `/alaa-workflow` owns plans and phase/task skill mappings.
+For a goal, follow `references/06-invocation-and-composition.md` for the kickoff and completion condition. `/alaa-workflow` owns plans and phase/task skill mappings.
 
 For a rendered Claude condition, run `python3 scripts/check_goal_condition.py --surface claude-desktop-code --condition-file <path>` here, substituting the observed surface.
 

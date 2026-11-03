@@ -40,6 +40,24 @@ Fable noninteractive use may spend credits without prompting; obtain the applica
 authority before a live run. No source checker grants installation, settings mutation
 or paid execution authority.
 
+## Native Advisor
+
+Use Claude Code's native Advisor for executor consultations. The orchestrator's read-only Advisor mode is a separate role. In a supported Code session, use `/advisor <model>`. At launch, `--advisor <model>` overrides the `advisorModel` setting. Use a supported `sonnet`, `opus` or `fable` alias or a full model ID. Resolve aliases and verify support on the actual Code version, provider, account, managed allowlist and entitlement before depending on Advisor. Inspection grants no configuration or paid execution authority.
+
+The Advisor API compatibility table gives these candidate executor → advisor pairs. Verify the exact resolved pair on the target Code surface.
+
+| Executor | Advisor candidate |
+|---|---|
+| Haiku 5.5 | Sonnet 5.5 |
+| Sonnet 5.5 | Opus 5.5 |
+| Opus 5.5 | Fable 5.1 |
+
+The executor decides when to consult and owns the resulting action. The advisor receives the model-request transcript, including system context, tool interactions and partial output, as quoted context. The advisor has no tools or context management of its own. Account for added latency and model usage. Advice grants no authority and cannot satisfy independent review.
+
+The checked Code sources establish no Advisor subagent frontmatter, subagent inheritance or per-advisor effort control. Keep Advisor out of generated role definitions and dispatch controls unless the target runtime documents and verifies those controls.
+
+Verified 3 November 2026 against [Advisor API mechanics and compatibility](https://platform.claude.com/docs/en/agents-and-tools/tool-use/advisor-tool), [Code CLI flags](https://code.claude.com/docs/en/cli-reference#cli-flags), [Code release notes](https://code.claude.com/docs/en/changelog#21260), [model configuration](https://code.claude.com/docs/en/model-config) and [subagents](https://code.claude.com/docs/en/sub-agents).
+
 ## Historical harness mechanics
 
 The remaining loop, workflow, scheduling and nesting details retain their original
@@ -185,8 +203,6 @@ Ultraplan is documented as a research preview with no stated minimum version; do
 - [Plan in the cloud with ultraplan](https://code.claude.com/docs/en/ultraplan)
 - [Keep Claude working toward a goal (`/goal`)](https://code.claude.com/docs/en/goal)
 - [Claude Code on desktop](https://code.claude.com/docs/en/desktop)
-- [Model configuration](https://code.claude.com/docs/en/model-config)
-
 - [Model configuration](https://code.claude.com/docs/en/model-config)
 
 ## Managed task-selected authority roles

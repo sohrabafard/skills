@@ -38,15 +38,13 @@ A session holds exactly one role. The most common orchestration failure is a pro
 
 ## Compose the kickoff and completion condition
 
-Resolve the executing surface before choosing syntax. For Claude Desktop, read `references/41-claude-code-runtime-features.md` to distinguish Code from Chat or Cowork and preflight command availability. Codex uses its own host goal tools and lifecycle, owned by `references/11-codex-runtime-features.md`.
+Resolve the executing surface and its goal support. Use a skill-led kickoff for orchestrated or long work. State outcome, scope, acceptance, constraints and any plan pointer. Load `/alaa-workflow` for exact phase/task skill mappings. Keep mappings in the plan and dispatches. Without a requested goal loop, send only the kickoff.
 
-**For orchestrated or long work, default to two messages when a harness goal is requested.** Invoke the registered skill with a short kickoff carrying outcome, scope, acceptance, task constraints and any plan pointer; the skill owns roles, lanes and gates. Load `/alaa-workflow` for exact phase/task skill mappings before execution; keep them in its plan and dispatches. Apply the Desktop command-argument rule to the kickoff too: plain companion names and paths, without secondary slash commands or rich formatting.
+**Claude Code.** Check Desktop tab and command support in `references/41-claude-code-runtime-features.md`. For orchestrated or long work, send the kickoff first. After skill activation and any required planning approval, send a separate `/goal` with only the completion condition. The command starts execution immediately. Apply the Desktop plain-text argument rule to both messages. Keep manuals, role rosters, lane instructions and model policy outside the condition. Use a single Claude goal only for self-contained work that needs neither skill activation nor long instructions.
 
-After skill loading and any planning approval, send `/goal` with only the completion condition. Apply the Desktop plain-text composer rule in `references/41-claude-code-runtime-features.md` before sending to its Code tab. A Claude goal starts execution immediately; it is not a passive planning gate. Keep the messages separate and omit skill manuals, role rosters, lane instructions and model policy from the condition. Without a requested harness loop, the kickoff suffices.
+**Codex.** Follow `references/11-codex-runtime-features.md` for the active host. Where verified, one leading `/goal` composer message can carry kickoff context and a distinct completion condition after required skill activation and approvals. A skill name inside the objective does not establish activation. If the kickoff must load skills or obtain planning approval, use a regular message. Include an explicit request to create the goal with the available tools after those prerequisites. If that route is unavailable, separate the kickoff from goal activation.
 
-**Use a single goal only for self-contained work** whose outcome, evidence and stop rules fit without required skill activation or long instructions. Implicit matching is model judgment; naming an orchestrator in `/goal` proves no loading. Put overflow context in the kickoff or an authorized workflow plan, preserving constraints.
-
-Aim for one to three short sentences, normally **600 characters** or fewer. This soft house authoring target yields to required evidence, authority and stopping content; it is no vendor limit. The Claude hard limit lives in `references/41-claude-code-runtime-features.md`. Count the rendered condition after substitutions, including spaces and newlines; a template count proves no filled result.
+Aim for one to three short sentences for the condition, normally at most 600 characters. This house target yields to required evidence, authority and stopping content. Count the rendered condition after substitutions, including spaces and newlines. Apply only the verified limit for the target surface and input path. Put extra context in the kickoff, an authorized workflow plan or the verified composer file route.
 
 For Claude, require transcript evidence: acceptance verdicts, commands and exit results, because the evaluator cannot inspect files or run checks. A plan pointer alone proves no acceptance. Preserve unrelated dirty-tree work; use scoped criteria instead of requiring a clean tree.
 
@@ -99,18 +97,18 @@ proves equal quality.
 
 1. The executing surface and registered skill name are resolved; required activation is observed before the goal starts.
 2. The session has one role, consistent with the invoked skill, and implementation verbs live in lane rules.
-3. Orchestrated or long work uses a skill-led kickoff followed by a compact condition when a harness loop is requested; a single goal is self-contained.
+3. The kickoff and condition follow the surface-specific composition rules above.
 4. Delegation wording matches the target model's default bias — bounded selection criteria for current Opus and Fable, current authorization and bounded scopes for Codex, measured rather than assumed for Sonnet 5.5.
 5. Exact phase/task skill mappings follow the workflow contract and reach dispatches; they are absent from the goal condition.
 6. In goal form, the completion condition is demonstrable from the transcript and carries an explicit turn or time clause.
 7. If the prompt will be pasted raw into a surface outside this plugin, the mention sigil matches that surface.
-8. The rendered condition was counted against the verified runtime limit; required content survived compression and neither activation nor live acceptance is inferred from a static pass.
+8. Count the rendered condition against any verified limit. Confirm required content survives compression. A static pass proves neither activation nor live acceptance.
 
 ## The failure shape to recognize
 
 Bad: a goal block opening "You are the senior implementer…", with "then use `/alaa-cc-orchestrator` to lead the lanes" buried mid-paragraph. The skill never loads and the session implements everything itself.
 
-Fix: invoke the registered orchestrator in the kickoff, route durable planning to `/alaa-workflow`, then send a compact goal separately when a loop is requested. Keep task instructions in the kickoff, plan and dispatches rather than lengthening the evaluator's condition. Diagnose a rejected command through the runtime preflight before changing the prompt or suggesting another surface.
+Fix: invoke the registered orchestrator in the kickoff, route durable planning to `/alaa-workflow`, then use the goal route for the executing surface when a loop is requested. Keep task instructions in the kickoff, plan and dispatches rather than lengthening the evaluator's condition. Diagnose a rejected command through the runtime preflight before changing the prompt or suggesting another surface.
 
 ## Freshness
 
@@ -129,5 +127,5 @@ Claude goal, Desktop Code and slash-invocation semantics refreshed 4 October 202
 - [Create custom subagents (Claude Code)](https://code.claude.com/docs/en/sub-agents)
 - [Orchestrate subagents at scale with dynamic workflows](https://code.claude.com/docs/en/workflows)
 - [Subagents (Codex)](https://developers.openai.com/codex/subagents)
-- [Follow a goal (Codex)](https://developers.openai.com/codex/use-cases/follow-goals)
+- [Follow a goal (Codex)](https://learn.chatgpt.com/use-cases/follow-goals)
 - [Duplicate skills in the Codex slash picker (openai/codex issue 22626)](https://github.com/openai/codex/issues/22626)

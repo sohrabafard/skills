@@ -61,7 +61,7 @@ Sol-low feature work and Luna-high scoped bugs have official selector support. W
 | Efficiency-first prototypes, latency or straightforward bulk | Start Haiku; move up for a demonstrated capability gap | No task-specific effort |
 | Capability-first complex reasoning, accuracy or advanced autonomous coding | Start Opus; optimize downward after adequate quality | Opus medium starting effort |
 | Demanding long-horizon work inadequate at Opus xhigh/max | Consider Fable | No selected Fable effort |
-| Bulk execution with difficult decisions | Cheaper workers plus frontier advisor | No selected pair |
+| Bulk execution with difficult decisions | Cheaper workers plus frontier advisor. For native Code candidates and preflight, read `references/41-claude-code-runtime-features.md`. | No default pair or effort |
 
 The guide recommends Opus as a most-workloads starting point. Qualify defaults by surface: Opus medium; Haiku medium; Sonnet Code/apps medium versus Platform/API high; Fable Code/API high versus Cowork/claude.ai medium. Preserve capability-first and efficiency-first paths. Separate Sonnet prompting guidance recommends medium for well-specified agentic coding and high for harder/longer work; source examples of higher-effort regressions rule out automatic maximization. Any local Fable admission belongs to the runtime orchestrator and remains distinct from vendor xhigh/max advice. No live run is implied.
 

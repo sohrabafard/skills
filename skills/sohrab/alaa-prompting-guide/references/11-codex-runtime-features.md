@@ -26,7 +26,15 @@ A Goal is durable, thread-scoped state that keeps a Codex thread working toward 
 
 A strong Goal defines seven things: **outcome** (what should be true when work concludes), **verification surface** (the test, benchmark, artifact, or log that proves it), **constraints** (what must not regress), **boundaries** (which files, tools, or resources are in play), **iteration policy** (how Codex picks the next action after each attempt), **blocked stop condition** (when to halt and what would unblock it), and **bounded budget** (an explicit turn or time cap so a stalled or non-converging goal cannot run unbounded).
 
-Codex documents no fixed cap on goal length, but a bloated objective dulls both the directive and the completion check.
+### CLI composer and objective storage
+
+Verified 3 November 2026 against installed `codex-cli 0.163.0` and its tagged source. The TUI accepts a leading `/goal` with a multiline objective in one composer message. The protocol caps the stored objective at **4,000 Rust characters** (`str::chars().count()`). Above that cap, the TUI writes the full objective to `goal-objective.md` and stores a short file reference. The CLI source does not establish Desktop composer behavior or the active goal tool's limits. Verify the target host and input path before depending on the file route.
+
+- [Multiline composer input](https://github.com/openai/codex/blob/rust-v0.163.0/codex-rs/tui/src/chatwidget/tests/goal_validation.rs#L78)
+- [Stored objective limit](https://github.com/openai/codex/blob/rust-v0.163.0/codex-rs/protocol/src/protocol.rs#L4207)
+- [TUI file route](https://github.com/openai/codex/blob/rust-v0.163.0/codex-rs/tui/src/goal_files.rs#L121)
+
+### Activation
 
 Use the goal tools or command exposed by the current host only when the user explicitly requests
 an objective loop. Do not infer goal activation from ordinary implementation work. Read that
@@ -145,13 +153,13 @@ Two operational cautions belong in any prompt that sets one up: on a Git reposit
 
 ## Caveats
 
-Goal and subagent guidance refreshed on 25 September 2026. Remaining historical sections were verified on 24 July 2026 and require live refresh before use. Historical defaults are not current dispatch authority: the `agents.max_threads` (6), `agents.max_depth` (1), and `agents.job_max_runtime_seconds` (1800) defaults; the 32 KiB / 65536-byte `project_doc_max_bytes` bounds; the 2%-or-8,000-character skill listing budget; and the `codex-cli` 0.128.0 requirement for goals are current published values and should be re-checked before being depended on.
+Goal lifecycle and subagent guidance refreshed on 25 September 2026. CLI composer evidence has its own date above. Remaining historical sections were verified on 24 July 2026 and require live refresh before use. Historical defaults are not current dispatch authority: the `agents.max_threads` (6), `agents.max_depth` (1), and `agents.job_max_runtime_seconds` (1800) defaults; the 32 KiB / 65536-byte `project_doc_max_bytes` bounds; the 2%-or-8,000-character skill listing budget; and the `codex-cli` 0.128.0 requirement for goals are current published values and should be re-checked before being depended on.
 
 Goals, `spawn_agents_on_csv`, and the agent-team-style batch flow are all marked experimental and may change. The `features.goals` key did not appear in the visible portion of the configuration reference, which is truncated on fetch; the two enabling paths cited above come from the Goals use-case page. `features.memories` exists and is off by default, but Codex's memory documentation redirects off the developer docs domain, so this pack makes no claim about how memories interact with `AGENTS.md` — treat that as unverified.
 
 ## Sources
 
-- [Follow a goal | Codex use cases](https://developers.openai.com/codex/use-cases/follow-goals)
+- [Follow a goal | Codex use cases](https://learn.chatgpt.com/use-cases/follow-goals)
 - [Using Goals in Codex (Cookbook)](https://developers.openai.com/cookbook/examples/codex/using_goals_in_codex)
 - [Subagents – Codex](https://developers.openai.com/codex/subagents)
 - [Agent Skills – Codex](https://learn.chatgpt.com/docs/build-skills)
