@@ -1,0 +1,33 @@
+# Troubleshooting checklist
+
+## Claude only sees a standalone skill, not LSP or hooks
+
+Ensure your canonical `alaa-phpantom` folder contains `.claude-plugin/plugin.json`, `.lsp.json`, `hooks/hooks.json`, `bin/phpantom_lsp` and root `SKILL.md`. Your existing symlink under `~/.claude/skills/alaa-phpantom` must point at that folder, not just `SKILL.md`. Restart or `/reload-plugins`; check `claude plugin list`, `/plugin` Installed and Errors, `/hooks`. The plugin is `alaa-phpantom@skills-dir` in a user skills directory. Policies can block skills-directory plugins; standalone skill may still load.
+
+## LSP does not start
+
+Run `bash scripts/doctor.sh /home/sohrab/project/auth` from the plugin folder. Check the existing binary with `/home/sohrab/.local/bin/phpantom_lsp --version`. Environment override `PHPANTOM_SERVER_PATH=/absolute/path/to/phpantom_lsp` is available. Plugin launcher does not install anything. Check `claude --debug` and `/plugin` Errors for conflicts with other PHP servers.
+
+## Incorrect classes, especially Carbon\\CarbonImmutable
+
+From the WSL project root:
+
+```bash
+cd /home/sohrab/project/auth
+php -r 'require "vendor/autoload.php"; var_dump(class_exists("Carbon\\CarbonImmutable"));'
+/home/sohrab/.local/bin/phpantom_lsp analyze app/ --project-root "$PWD" --code unknown_class --format json
+```
+
+If Composer resolves it but PHPantom doesn't, examine LSP workspace root, indexing, Composer metadata, and `vendor/`. For a **Windows-hosted editor** that opens Linux files through `\\wsl.localhost`, sending `file://wsl.localhost/...` to a Linux LSP server may cause URI/workspace path mismatches; that issue is separate from Claude Code running **inside** native WSL. No proxy is needed for the latter.
+
+## Duplicate or conflicting hooks
+
+Plugin hooks are registered on plugin load, independent of skill invocation. If you already put the old lint hook in per-project `.claude/settings.json` or `.claude/settings.local.json`, remove only that duplicate entry after confirming `/hooks` shows the new one; leave unrelated project hooks untouched. The global plugin hook matches `Write|Edit` only. Bash-based file modifications are outside its event scope. Set `ALAA_PHPANTOM_LINT=0` in the Claude process environment if you need to disable this specific syntax check temporarily.
+
+## Multi-agent in one worktree
+
+Coordinate bulk fixes and rename/move operations; re-preview if another agent may have changed overlapping files. A read-only syntax hook is safe to run for each agent, but applying multiple format/move operations concurrently is not automatically safe.
+
+Sources:
+- https://code.claude.com/docs/en/plugins/loading
+- https://github.com/PHPantom-dev/phpantom_claude

@@ -1,0 +1,18 @@
+{
+  "description": "Check syntax of PHP source files after Claude Write/Edit; never auto-fix or reformat.",
+  "hooks": {
+    "PostToolUse": [
+      {
+        "matcher": "Write|Edit",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "bash",
+            "args": ["${CLAUDE_PLUGIN_ROOT}/scripts/php-lint.sh"],
+            "timeout": 10
+          }
+        ]
+      }
+    ]
+  }
+}

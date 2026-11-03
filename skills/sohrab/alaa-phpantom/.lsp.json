@@ -1,0 +1,21 @@
+{
+  "phpantom": {
+    "command": "/home/sohrab/.local/bin/phpantom_lsp",
+    "args": [],
+    "transport": "stdio",
+    "extensionToLanguage": {
+      ".php": "php",
+      ".phtml": "php",
+      ".php3": "php",
+      ".php4": "php",
+      ".php5": "php",
+      ".php7": "php",
+      ".php8": "php",
+      ".phps": "php",
+      ".blade.php": "blade"
+    },
+    "startupTimeout": 120000,
+    "maxRestarts": 3,
+    "diagnostics": true
+  }
+}
