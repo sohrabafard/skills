@@ -1,0 +1,20 @@
+{
+  "name": "alaa-local",
+  "interface": {
+    "displayName": "Sohrab Engineering Plugins"
+  },
+  "plugins": [
+    {
+      "name": "alaa-phpantom",
+      "source": {
+        "source": "local",
+        "path": "./alaa-phpantom"
+      },
+      "policy": {
+        "installation": "AVAILABLE",
+        "authentication": "ON_INSTALL"
+      },
+      "category": "Developer Tools"
+    }
+  ]
+}

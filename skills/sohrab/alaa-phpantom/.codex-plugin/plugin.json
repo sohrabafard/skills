@@ -1,0 +1,18 @@
+
+{
+  "name": "alaa-phpantom",
+  "version": "1.1.0",
+  "description": "PHPantom PHP code intelligence, static analysis, automated fixes, formatting, and refactoring for Codex.",
+  "interface": {
+    "displayName": "Sohrab PHPantom",
+    "shortDescription": "Native PHP intelligence, diagnostics and refactoring",
+    "longDescription": "PHP language intelligence powered by PHPantom, with project analysis, automated fixes, formatting, and class/namespace refactoring.",
+    "developerName": "Sohrab Engineering",
+    "category": "Developer Tools",
+    "capabilities": ["Read", "Write"],
+    "brandColor": "#51219E",
+    "composerIcon": "./.claude-plugin/icon.png",
+    "logo": "./.claude-plugin/icon.png"
+  },
+  "hooks": "./hooks/codex-hooks.json"
+}
