@@ -28,17 +28,23 @@ Resolve the registered name rather than guessing it. In Claude Code the command 
 - A mid-message Claude Code slash **mention** grants permission without direct invocation. Use a leading command when deterministic activation is required.
 - One primary trigger per message. Skills that lanes must load are named inside the lane dispatch text as instructions ("load `<name>` and apply it"), never as competing triggers at the top level.
 
+## Compose from skill owners
+
+Route reusable doctrine to the narrowest applicable canonical skill. Before replacing prompt text with a skill call, resolve its registered name, target syntax, and source the recipient can read. Make each companion's load condition and decision explicit. If a required source is unavailable when needed, use an already authorized equivalent that preserves the obligation, or block dependent work.
+
+State the outcome, scope, inputs, constraints, authority, acceptance criteria, required evidence and stopping conditions in the prompt or named task record. Load `/alaa-workflow` when composing workflow prompts. Resolve exact bindings and pass them to children through `alaa-workflow references/companion-routing.md`. Carry the engagement's review cadence and cursor through the runtime orchestrator's gate contract.
+
 ## Role-consistency contract
 
 A session holds exactly one role. The most common orchestration failure is a prompt that names an orchestrator skill and then writes every imperative at the session as an implementer — the model obeys the dominant verbs, not the buried clause.
 
-- When the prompt routes execution through `/alaa-cc-orchestrator` or `/alaa-codex-orchestrator`, the session role is **orchestrator or lead**, stated in the first sentences: plan lanes, dispatch, enforce the review gate, reconcile, run integrated validation, perform authorized integration; commit only with explicit user permission. Add the explicit negative: "Do not write implementation code in this session."
-- Every implementation verb — implement, edit, fix, test-first, refactor, document — moves into **lane rules**, a block the orchestrator copies into dispatches, and never into the lead's own instructions.
-- Run a verb-ownership audit before sending: read each imperative and assign it to lead or lane. A lane verb aimed at the lead, or a lead verb aimed at a lane, is a defect.
+- State the **orchestrator or lead** role in the opening when invoking `/alaa-cc-orchestrator` or `/alaa-codex-orchestrator`. Assign planning, dispatch, reconciliation, review gates, integrated validation and authorized integration to the lead. Route local commits through `alaa-workflow references/workspace-and-integration.md` and the applicable standing or explicit authority.
+- Put implementation instructions in **lane rules** for the lead to copy into dispatches. Assign an edit to the lead only under the invoked orchestrator's mechanical-edit exception.
+- Audit each imperative before sending. Assign it to the lead or lane according to that role's authority.
 
 ## Compose the kickoff and completion condition
 
-Resolve the executing surface and its goal support. Use a skill-led kickoff for orchestrated or long work. State outcome, scope, acceptance, constraints and any plan pointer. Load `/alaa-workflow` for exact phase/task skill mappings. Keep mappings in the plan and dispatches. Without a requested goal loop, send only the kickoff.
+Resolve the executing surface and its goal support. Use a skill-led kickoff for orchestrated or long work. Name any plan in the kickoff. Without a requested goal loop, send only the kickoff.
 
 **Claude Code.** Check Desktop tab and command support in `references/41-claude-code-runtime-features.md`. For orchestrated or long work, send the kickoff first. After skill activation and any required planning approval, send a separate `/goal` with only the completion condition. The command starts execution immediately. Apply the Desktop plain-text argument rule to both messages. Keep manuals, role rosters, lane instructions and model policy outside the condition. Use a single Claude goal only for self-contained work that needs neither skill activation nor long instructions.
 
@@ -95,8 +101,8 @@ proves equal quality.
 
 ## Pre-send checklist
 
-1. The executing surface and registered skill name are resolved; required activation is observed before the goal starts.
-2. The session has one role, consistent with the invoked skill, and implementation verbs live in lane rules.
+1. The executing surface, registered skill name and recipient-readable source are resolved. Required activation is observed before the goal starts.
+2. The session has one role consistent with the invoked skill. Implementation instructions follow its role boundary.
 3. The kickoff and condition follow the surface-specific composition rules above.
 4. Delegation wording matches the target model's default bias — bounded selection criteria for current Opus and Fable, current authorization and bounded scopes for Codex, measured rather than assumed for Sonnet 5.5.
 5. Exact phase/task skill mappings follow the workflow contract and reach dispatches; they are absent from the goal condition.

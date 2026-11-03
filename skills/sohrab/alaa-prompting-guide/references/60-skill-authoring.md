@@ -76,6 +76,16 @@ Choose router placement by actual always-loaded cost and selective routing needs
 
 Write every controlling text in ASD-STE100-style English. Put one idea in each sentence. Keep a procedure sentence to 20 words or fewer. Use the active voice and the command form for an action. Use one term for one concept and never rotate synonyms. Remove filler and idioms. Keep technical names, paths, commands and numbers exact. The style never overrides the done-test above: a shorter text that changes agent behavior fails.
 
+## Evidence for instruction changes
+
+Extend the compression walkthrough to relevant ordinary, ambiguous and conflicting cases. Choose cases proportional to the changed decisions and the cost of a wrong outcome. Trace which owner the recipient selects and loads, what scope and authority it has, and when inherited review runs. Identify what evidence the recipient can report. Compare each decision with the intended contract and resolve discrepancies before shipping.
+
+Report static checks, source walkthroughs and observed agent runs separately. A static check establishes only the properties it checks. A walkthrough traces expected decisions from source. Claims about actual execution require observed runs on the target surface.
+
+### Optional comparative evaluation
+
+When a comparison is authorized, define a question and acceptance criteria before running it. Use representative tasks, including held-out cases. Match initial state, context, tools and authority across variants, except for the factor under comparison. Separate first-attempt success from success after repair. Record whole-task cost, elapsed time, interventions, failures and supporting evidence, including repairs. Disclose differences that limit attribution. Apply `alaa-testing-strategy references/110-execution-resources.md` for comparative timing. This protocol is optional and supplies no dispatch admission requirement.
+
 ## Lean prompts must preserve behavior
 
 Current OpenAI guidance favors small routers, precise triggers, conditional reads, and lean
