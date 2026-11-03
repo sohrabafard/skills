@@ -235,6 +235,10 @@ worker roles must match between `runtime/service.runtime.env` and the contract. 
 planned, not implemented, so the service owner keeps them equal by hand (deploy
 `<repo>/docs/service-contract.md`, "Overlap with service-runtime-kit inputs").
 
+## Retired services
+
+`entitlement-projector` is retired. The `relay` and `reflector` roles of `entitlement-api` own its work. Give it no delivery input, Sentry key, GitLab variable, contract, image, or per-service prompt. Remove any such entry you find.
+
 ## Responsibility matrix
 
 | Task | Responsible | Consulted | Affected |
