@@ -23,6 +23,7 @@ Review:
 - live-region usage for async state: loading, success, validation failure, and background updates;
 - colour contrast, and information that is conveyed by colour alone;
 - target size and pointer alternatives for hover-only or drag-only interactions;
+- Clipped text, controls or focus indicators at supported viewport sizes.
 - reduced-motion preference honoured by animation and transition code;
 - right-to-left layout correctness: mirrored directional icons, logical CSS properties instead of physical left/right, and mixed LTR/RTL text runs such as numbers, identifiers, and embedded Latin text.
 

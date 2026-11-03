@@ -22,6 +22,10 @@ Keep permissions separate: inspect effective sandbox/permission mode, parent ove
 
 Report configured and requested model/effort separately from observed identity; unknown observation remains unknown. Put verdict/outcome first, then metadata. The rule-writer replacement-only contract remains owned by /alaa-prompting-guide.
 
+## Native Advisor consultation
+
+After selecting the executor's task pair, consider native Advisor for a named unresolved decision that can benefit from consultation. Resolve missing facts and tool or context failures first. Read **Native Advisor** in `alaa-prompting-guide references/41-claude-code-runtime-features.md` for supported pair candidates, session checks and data sharing. Use it only on a verified, authorized surface. Record the reason and effective advisor control when used. The executor chooses when to consult and owns the result. Keep consultation optional. Preserve the executor pair, role authority and independent gates.
+
 ## Source generation and proof
 
 The existing projection engine renders implementation/planner contracts and neutralizes every other managed definition while preserving its authority/body. Wrapper metadata never owns model/effort. Run `python3 scripts/render_agents.py --write` after managed definition, contract or version changes; aggregate validation checks drift. Exit `0` is clean, `1` findings/drift, `2` unavailable; either nonzero blocks completion. Source checks prove neither installed activation, account access nor serving identity.

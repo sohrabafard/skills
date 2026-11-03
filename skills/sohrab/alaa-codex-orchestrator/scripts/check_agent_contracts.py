@@ -76,7 +76,7 @@ def orchestrator_failures(text: str) -> list[str]:
                      "Do not implement product changes",
                      "alaa-workflow references/artifact-lifecycle.md",
                      "Plan-only work grants no product execution, branch, or commit authority",
-                     "report its saved plan and checkpoint paths",
+                     "report the canonical plan address and recovery reference",
                      "Local commits follow the main instruction file's local-commit rule",
                      "do not wait for boundary review or request an already-granted permission again",
                      "Every external or destructive effect needs its own explicit authority",
@@ -332,6 +332,8 @@ CADENCE_REQUIREMENTS = ('Stages A-F name required orchestration outcomes and aut
  '`Review evidence`',
  'Pass that whole-engagement contract, plan reference and exact phase/task/subtask cursor into '
  'every nested invocation',
+ 'Read a native `beads:<root-id>` plan through the bound issue store',
+ 'Verify live registration, hierarchy, prerequisite edges, resolved skills and readiness',
  'Missing or inconsistent executing mappings block dependent dispatch',
  'Nested goals never reset the boundary or relabel intermediate output as final',
  'The implementer runs the smallest focused discriminating check',
@@ -351,10 +353,8 @@ CADENCE_REQUIREMENTS = ('Stages A-F name required orchestration outcomes and aut
  'worker roles return evidence and do not write the shared index or commit',
  "Pending worker review/commit handoffs never delay the parent's authorized checkpoint",
  'Push, merge into another branch, tag and history rewrite still require explicit permission',
- 'Stage C runs at each phase implementation end; Stage D and final E gates wait for the inherited '
- 'boundary',
- "The exhaustive tier belongs only to the whole engagement's final candidate after final "
- 'documentation when required',
+ 'Stage C collects focused phase evidence. Stage D waits for the inherited review boundary',
+ "Collect required affected and exhaustive checks in one whole-engagement gate stage',
  'Independent acceptance additionally requires an observer independent of the implementation with '
  'authority for that gate',
  'references/100-test-execution.md',
@@ -477,17 +477,17 @@ def cadence_sources() -> tuple[str, ...]:
 # Topic: runtime collection scheduling; layer: structural source contract.
 # Generic execution assertions and their mutations have one shared owner below.
 COLLECTION_REQUIREMENTS = (
-    "At each phase implementation end, `alaa-verifier` executes the canonical collection barrier",
-    "Review waits until required collection, batch repair and retests pass",
-    "The canonical minimal early-repair exception returns to collection without Review",
+    "`alaa-verifier` collects missing or invalidated evidence when the planned checks require its authority",
+    "Review waits until required pre-review collection, batch repair and retests pass",
+    "The canonical minimal early-repair exception returns to collection without review",
     "Assign the collected repair batch as one serialized implementation lane",
     "reconcile conflicting writers through `alaa-workflow references/workspace-and-integration.md` before continuing",
     "The analyst diagnoses and never fixes",
-    "Independent verification owns the canonical whole-list retest after batch repair",
+    "Independent verification owns required retests after batch repair",
     "implementer evidence never replaces independent acceptance",
     "Existing retry/stop budgets remain in force",
-    "final-only review defers acceptance, not phase test collection",
-    "Stage C runs at each phase implementation end; Stage D and final E gates wait for the inherited boundary",
+    "Collect only missing or invalidated focused checks and explicit earlier repository obligations",
+    "Plan one whole-engagement broad gate stage in Stage E, after final documentation",
 )
 COLLECTION_SEAMS = {
     "taxonomy": ("/alaa-testing-strategy", "references/120-result-classification.md"),
@@ -561,7 +561,7 @@ RUN_ECONOMY_REQUIREMENTS = {'gates': ('Draw the fewest lanes that keep write sco
            'failures through a host-supported continuation tool',
            'Dispatch fresh only when continuation is unavailable, context is invalid',
            'selects another profile or task pair',
-           'Independent verification owns the canonical whole-list retest after batch repair'),
+           'Independent verification owns required retests after batch repair'),
  'skill': ('mechanical-edit exception',
            'in files no active or pending lane owns',
            'or the lead made a mechanical edit, select `standard`'),

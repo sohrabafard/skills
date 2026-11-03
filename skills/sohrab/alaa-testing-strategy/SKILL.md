@@ -80,7 +80,7 @@ Before adding a discretionary test, review, specialist, proof tool or gate beyon
 9. Report a check that was not observed to run as not run. An unexecuted check has no result, and reporting one invents evidence.
 10. Make every test hermetic over its mutable state: it creates the data it asserts on, asserts only on that data, and leaves none behind. A failed reset or cleanup makes every later result over that state `CONTAMINATED`. Report it and stop the cases that depend on that state. A test that depends on another test's leftovers passes in one order and fails in another. The order is not part of anyone's contract. Create expensive resettable infrastructure once per suite, package, or worker, and share it. Expensive resettable infrastructure is an engine or container, a migrated schema, a booted application, a built artifact, or immutable fixture data. Isolate each test over it by transaction rollback, a unique namespace, or a reset of the data it touched. A test creates that infrastructure for itself only when creation is the behaviour under test. Per-test creation multiplies the suite's cost by its test count and buys no isolation that rollback or a namespace does not.
 11. No test synchronises on wall-clock sleeping. Inject time as a controllable clock. Wait on the condition the test is waiting for, with a bounded timeout. A sleeping test flakes on a loaded machine and charges its sleep on every run forever.
-12. Breadth is earned by a change in the tree, never by a change of phase, agent, or reviewer. Cite a result whose four validity conditions still hold. Do not re-run it, except in the post-batch-repair list rerun below. The exhaustive tier runs once, fresh, on the final candidate. Re-running a heavy suite against an unchanged tree buys no confidence and produces the worst evidence available, because a warm cache and a warm environment are hardest to tell apart from a real pass.
+12. Choose breadth from changed inputs, required proof and uncovered risk. A new phase, agent or reviewer earns no rerun. Apply the evidence validity and retest rules below.
 13. Make every test this change adds or changes selectable by its topic and by its layer, through the runner's native selector. The topic is the behaviour or surface the test defends. Record in the repository which command selects which topic. A test reachable only through the whole-suite command forces every change to pay for the whole suite, because the focused tier cannot select it.
 14. Produce one build, compile, render, or image per tree state and environment. Every lint, type, test, and smoke step of that pass consumes its output, cache, or image digest. Remove a step that rebuilds what an earlier step of the same pass produced, or a separate compile that the test step already performs, because such a step charges the build again for no new information.
 15. A case failing never stops an independent case from running. A case that depends on another case's outcome or state declares that dependency. When the precondition fails, the case is reported `SKIPPED` naming that precondition. Never run it against the broken state. A suite whose first failure hides the rest costs one repair cycle per hidden failure.
@@ -123,10 +123,10 @@ These scope definitions choose check breadth, not review timing. `alaa-codex-orc
 |---|---|---|---|
 | **Focused** | the smallest test/path/scenario distinguishing the subtask's changed behavior from its plausible failure, plus necessary touched-file lint/type/build | the implementing lane | subtask end under the declared cadence |
 | **Task acceptance** | bounded acceptance selectors combining that task's subtasks, with still-valid coverage cited | the task owner | task end under the declared cadence |
-| **Affected** | selectors of topics reachable from changed surfaces, including callers, shared fixtures and contract checks | the required boundary observer | at the declared review boundary |
+| **Affected** | selectors of topics reachable from changed surfaces, including callers, shared fixtures and contract checks | the required boundary observer | in the final gate stage by default, or earlier when repository policy requires |
 | **Exhaustive** | the whole suite and only the race, end-to-end and higher-level proofs the claims require | independent final authority | once on the whole engagement's final candidate, when required |
 
-A subtask's short check adds no expensive setup or full suite. Reuse already available reset-safe infrastructure when needed. No fixed duration or blanket container prohibition follows. Move broader coverage to task acceptance or the declared boundary and preserve any stricter repository gate. Labels never narrow an actual command's scope.
+A subtask's short check adds no expensive setup or full suite. Reuse already available reset-safe infrastructure when needed. No fixed duration or blanket container prohibition follows. Combine focused selectors at task acceptance. Plan required broad coverage for the whole engagement's final candidate. Preserve stricter repository gates. Labels never narrow an actual command's scope.
 
 **The exhaustive tier is not an early-warning system.** Run on an intermediate tree, it observes a combination that is about to change. Its result expires before it is read, while its cost is charged in full. The tree it was meant to judge still goes unobserved. Its whole value is that it runs on the tree that ships.
 
@@ -143,13 +143,9 @@ A recorded result remains citable evidence for a later claim while **all four** 
 
 While all four hold, cite the result with its original command and timestamp. Re-running it produces no new information, and its cost is real.
 
-When one of them changes, say which one, and re-run every result downstream of it. Three results are never reused, whatever the four conditions say:
+When one of them changes, say which one, and re-run every result downstream of it. A required exhaustive tier on the final candidate is always fresh. A failed, flaky, contaminated, timed-out or environment-blocked result cannot discharge a required check.
 
-- the exhaustive tier on the final candidate, which is always fresh;
-- any result classified `FLAKY`, `CONTAMINATED`, `TIMEOUT`, or environment-blocked, which carries no evidence in either direction;
-- any result in a collected check list after its batch repair.
-
-After that repair, the whole recorded list reruns on the frozen repaired snapshot, including checks it discharged by citation. A misjudged invalidation costs another repair cycle, and one rerun of an already chosen list costs less. A check outside the list runs only when the repair changes shared behaviour or proves a new reachable surface, which extends the list.
+After batch repair, apply `references/100-test-execution.md` to select retests. Reuse passing evidence only where its inputs, observer and freshness requirements still match.
 
 A required final aggregate may discharge covered narrower checks only when the covered inputs, environment, flags and required observer match demonstrably. Cite its coverage instead of dispatching those checks again. Markdown/templates may be checker inputs, so a documentation-only difference proves no equivalence. A phase transition, new agent or compaction alone invalidates nothing. Repair a defect and rerun its failing path. Never weaken assertions, suppress findings, lower standards or alter fixtures to conceal a failure. `references/80-evidence-and-reporting.md` distinguishes a repaired input from an unchanged flaky rerun.
 
@@ -206,7 +202,7 @@ Stop successfully when all of these hold:
 - every double that can drift is bound;
 - every named coverage obligation is met or recorded as a gap;
 - every reported claim carries an observed result at a stated level and tier;
-- the exhaustive tier has run once on the final candidate tree.
+- every required check has valid evidence, including a fresh exhaustive tier on the final candidate when required.
 
 Stop and report blocked when any one of these holds:
 

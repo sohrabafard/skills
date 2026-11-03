@@ -40,7 +40,7 @@ GOMAXPROCS=2 go test -race -p 1 -parallel 1 -count=1 ./...
 
 `-p` controls package/build concurrency. `-parallel` controls tests using `t.Parallel` inside a test binary. `GOMAXPROCS` controls runtime CPU parallelism. They are not interchangeable.
 
-Test-result caching is separate from build caching. Reuse test results only while the four validity conditions in `SKILL.md` hold. When a condition changes or a check requires fresh proof, bypass result reuse for its selected packages or topics, including affected-tier checks against external dependency state (Go: `-count=1`); retain the build cache. The exhaustive tier runs once, fresh, on the final candidate; `./...` is exhaustive-only, and `-count=1` may be used at any tier that needs a fresh result.
+Test-result caching is separate from build caching. Reuse test results only while the four validity conditions in `SKILL.md` hold. When a condition changes or a check requires fresh proof, bypass result reuse for its selected packages or topics, including affected-tier checks against external dependency state (Go: `-count=1`); retain the build cache. When required, the exhaustive tier runs once, fresh, on the final candidate; `./...` is exhaustive-only, and `-count=1` may be used at any tier that needs a fresh result.
 
 ## Node/Vue/Quasar
 
@@ -79,6 +79,8 @@ For a CI-image gate, use the image named by the repository's CI configuration or
 If Docker, the image, mount, copy, setup or required service blocks a container run, record `ENVIRONMENT-BLOCKED` and make one host fallback under the low-priority wrapper when repository policy and authority permit. Record why, the changed environment and any lost coverage; never call it container proof. Under Codex, invoke /alaa-codex-runtime-ops for Docker-access permission failures within its declared runtime scope before fallback. Installation, pulling an undeclared image, permission changes or starting an unowned service require separate authority.
 
 ## Comparative timing
+
+Measure performance only for a named question with a comparable baseline and a declared budget. Use the smallest workload that answers it. Schedule wider measurement only when that workload leaves required proof uncovered.
 
 A before/after performance claim requires an idle host: no unrelated CPU-heavy work and no overlapping validation. Verify and record host load before and during samples; discard or label contaminated samples rather than presenting them as improvement. Loaded or slower-host runs remain valid flake diagnosis under `50-flake.md`; they do not support a speed comparison.
 

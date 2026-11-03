@@ -96,7 +96,7 @@ Orchestrator mode preserves A–E. F requires requested integration and explicit
 |---|---|---|
 | A — Plan | workspace setup, evidence lanes, the chosen solution and its rejected alternatives, the written plan, the profile | the plan and profile are recorded and presented |
 | B — Implementation | disjoint lanes, focused subtask checks and bounded task acceptance, with tested diff evidence | every required lane is reconciled against its actual diff |
-| C — Verification | centralized phase test collection under its required observer; acceptance at the declared boundary | every command reached `PASS`, or the phase ended blocked with the failure classified and its owner named |
+| C — Verification | focused phase evidence and required pre-review checks under their assigned observers | every command reached `PASS`, or the phase ended blocked with the failure classified and its owner named |
 | D — Review and specialist gates | at the declared boundary, independent review and every triggered specialist | findings are resolved or explicitly accepted by the user |
 | E — Documentation and final validation | documentation and its grade, required final gates, the report; base integration only when requested and authorized | applicable documentation is validated; whole-engagement final gates wait for its final candidate |
 | F — Requested integration | reviewable integration details and explicit authority, then the local merge | authorized integration is complete, or its declined/blocked status is reported; not applicable to local-only work |
@@ -123,7 +123,7 @@ Close with one line from the existing plan, roster and evidence: dispatches and 
 
 ## 6. Advisor-mode output
 
-Provide grounded repository findings; a lane plan with dependencies and gates; one ready-to-run prompt per lane using the templates; a recommended agent, variant, and effort per lane; a verification plan and resource policy; and the risks, assumptions, and decisions that require the user. Apply section 1's artifact admission. When a plan is admitted, report its saved plan and checkpoint paths. Otherwise deliver the plan in the reply. Do not imply implementation occurred.
+Provide grounded repository findings; a lane plan with dependencies and gates; one ready-to-run prompt per lane using the templates; a recommended agent, variant, and effort per lane; a verification plan and resource policy; and the risks, assumptions, and decisions that require the user. Apply section 1's artifact admission. When a plan is admitted, report the canonical plan address and recovery reference. Otherwise deliver the plan in the reply. Do not imply implementation occurred.
 
 When generating a goal condition, read `alaa-prompting-guide references/06-invocation-and-composition.md`; it owns condition syntax and the skill-led kickoff.
 

@@ -5,7 +5,7 @@
     {
       "name": "alaa-accessibility-reviewer",
       "file": "agents/alaa-accessibility-reviewer.toml",
-      "sha256": "64b8df974712e4487f94661d550262038b46d5b8a2d1940cefac62ed211e0212"
+      "sha256": "55eb242f0503552b2286d06219ea0bf2f57dc0e629aba90ba6133f962671871c"
     },
     {
       "name": "alaa-adversarial-reviewer",

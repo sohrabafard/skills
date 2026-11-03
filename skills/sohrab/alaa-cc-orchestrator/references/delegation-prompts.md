@@ -14,7 +14,7 @@ Use the smallest applicable template. Replace placeholders with concrete reposit
 <acceptance_criteria><numbered: observable behavior -> proving command or selector -> expected result, or review-only: reason></acceptance_criteria>
 <constraints><safety, compatibility, resource, and user constraints></constraints>
 <authority>what the agent may and may not change or execute</authority>
-<cadence><whole-engagement plan, declared phase|final review boundary, final phase, current phase/task/subtask, pending review/commit and supplied task-owner acceptance authority></cadence>
+<cadence><canonical whole-engagement plan address (Beads root or Markdown path), declared phase|final review boundary, final phase, current phase/task/subtask, pending review/commit and supplied task-owner acceptance authority></cadence>
 <task_controls><role authority identity; explicit model AND effort after owner normalization; actual task scope/complexity; priority/reason; admission/evidence; verified invocation surface and effective controls; availability or affected-lane blocker></task_controls>
 <beads_identity><literal unique child actor; binding reference; issue IDs; ownership action claim|retain|authorized transfer|none, or not Beads-bound></beads_identity>
 <skills><exact names, sources, activation conditions, and absence actions from the plan's phase/task bindings></skills>

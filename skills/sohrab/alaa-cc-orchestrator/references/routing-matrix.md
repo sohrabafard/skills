@@ -5,7 +5,7 @@ Spawn only agents that materially reduce uncertainty or enforce a required autho
 ## Always or normally required
 
 - Non-trivial repository change: select an implementation profile through Implementation routing below before dispatch.
-- Centralized phase test collection and combined acceptance evidence at the declared review boundary: `alaa-verifier`; `verification-and-gates.md` owns their distinct cadence.
+- Required independent checks: `alaa-verifier`. `verification-and-gates.md` owns phase evidence, review and final gate cadence.
 - Ship-quality judgment at that boundary: `alaa-reviewer`.
 - Behavior, API, configuration, or operations changed: `alaa-documenter`, after review.
 

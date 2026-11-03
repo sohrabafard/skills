@@ -16,7 +16,7 @@
 <collection_barrier>Execute the canonical collection barrier through this independent verifier. Return its combined results for the lead's serialized repair assignment; verification-and-gates.md retains phase/review scheduling and observer authority.</collection_barrier>
 <review_boundary><inherited phase|final boundary, whole-engagement final candidate identity and source plan; no subtask/task independent acceptance></review_boundary>
 <tier><actual scoped tier selected through /alaa-testing-strategy; inherited final candidate and cadence from the plan></tier>
-<already_observed><eligible evidence citations or canonical whole-list post-repair retest; include the independent observer></already_observed>
+<already_observed><eligible evidence citations and required post-repair selectors; include the independent observer></already_observed>
 <rerun_policy>none | one identical rerun for flake detection</rerun_policy>
 <action_safety>Evidence only. Never fix or alter command semantics.</action_safety>
 ```
