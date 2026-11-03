@@ -1,8 +1,8 @@
 {
   "status": "PASS",
-  "repository": "/home/sohrab/project/skills",
+  "repository": ".",
   "base": "bcff5c47508c0c97c25fbc0fdb7fe732b24c90bf",
-  "source_scope": "HEAD c3799119 plus current tracked repair files; artifacts excluded from source selection",
+  "source_scope": "Frozen source was HEAD c3799119 plus nine current repair files; task artifacts excluded. Paths in this JSON are repository-relative.",
   "commands": [
     {
       "command": "git diff --check bcff5c47508c0c97c25fbc0fdb7fe732b24c90bf -- AGENTS.md skills/sohrab",
@@ -65,5 +65,6 @@
     "Focused independent pre-review observation only; not the final eight-command batch.",
     "Syntax parsing does not execute code or validate runtime behavior.",
     "Does not include untracked Python files."
-  ]
+  ],
+  "portable_path_note": "Repository root is represented as `.`; all source file paths remain repository-relative."
 }

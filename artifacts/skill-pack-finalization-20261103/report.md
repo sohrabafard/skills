@@ -20,9 +20,11 @@ The paired orchestrators now carry the declared review boundary and cadence thro
 
 Independent source review: **APPROVED** after one repair batch. Focused evidence is in [focused review](./verification/focused-review.json): scoped `git diff --check` passed and Python syntax parsing passed for all five tracked changed Python files. Seven independent in-memory delegated validator checks and scoped cadence/inventory probes passed, as reported by the parent integration lane.
 
-The final eight-command native validation batch remains pending at report creation: `verification/final-gates.json` (**not yet run; expected evidence path**). The focused checks do not replace that batch. No fixture suite or benchmark ran. Source checks establish no installation, runtime activation, production behavior, speed gain, or bug-free result.
+The final eight-command native validation batch passed once on candidate `15ef58643fd11a84c1d1527458aaeed769836b4e`: every exit was zero. HEAD and the tracked-content digest stayed unchanged throughout the batch. Exact commands, results and coverage are in [final gates](./verification/final-gates.json). No fixture suite or benchmark ran. Source checks establish no installation, runtime activation, production behavior, speed gain, or bug-free result.
 
 Source integration includes `ac193d02` (runtime), `8619e706` (cadence), `27edf0e2` (companions), `c3799119` (workflow), and `dd21a639` (review repairs). No remote action, installation, or publication is part of this record.
+
+The local lifecycle verdicts are `IMPLEMENTED: proven`, `MERGE_CANDIDATE: proven`, `RELEASE_CANDIDATE: not requested`, and `PUBLISHED: not requested`. Final lesson curation admitted no additional memory candidate: reusable decisions and capability evidence now live in their canonical source owners. No memory publication occurred. Beads root `alaa-ocdj` owns task completion and graph state.
 
 ## Source size
 

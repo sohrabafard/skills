@@ -1,0 +1,310 @@
+{
+  "overall_status": "PASS",
+  "agent": "/root/final_verifier",
+  "configured_model_effort": "gpt-6-luna / medium",
+  "requested_model_effort": "gpt-6-luna / medium",
+  "observed_model_effort": "unknown",
+  "candidate_commit": "15ef58643fd11a84c1d1527458aaeed769836b4e",
+  "source_scope": "Pinned candidate commit 15ef58643fd11a84c1d1527458aaeed769836b4e; the repository was clean before and after. Tracked source scope is summarized by the reproducible aggregate manifest recorded in both state captures; task artifacts are excluded.",
+  "commands_are_sequential": true,
+  "started_utc": "2026-11-03T00:50:40.294139+00:00",
+  "elapsed_seconds": 10.389729,
+  "initial_state": {
+    "head": "15ef58643fd11a84c1d1527458aaeed769836b4e",
+    "status_porcelain": "",
+    "tracked_file_count": 8251,
+    "tracked_content_digest": "b2dd9c80e353d102aa0e42c20a94db2119e85eac26562c2cf4af44a99b44e2e4",
+    "manifest": {
+      "basis": "tracked working-tree files at clean candidate commit 15ef58643fd11a84c1d1527458aaeed769836b4e",
+      "file_count": 8251,
+      "aggregate_sha256": "b2dd9c80e353d102aa0e42c20a94db2119e85eac26562c2cf4af44a99b44e2e4",
+      "algorithm": "Run `git ls-files -z` from repository root. For each non-empty NUL-delimited path `p` in emitted order, read the tracked working-tree file bytes and update an outer SHA-256 with `p + b'\\0' + SHA256(file_bytes).digest()`. The final outer digest is the aggregate. No untracked files are included. Clean status and unchanged HEAD establish equivalence to the pinned candidate commit."
+    }
+  },
+  "commands": [
+    {
+      "id": "root-validate-pack",
+      "command": "python3 -B scripts/validate_sohrab_skill_pack.py",
+      "cwd": ".",
+      "resource_limits": {
+        "timeout_seconds": 60,
+        "parallelism": 1,
+        "profile": "lightweight static validators",
+        "cpu_affinity": "not set"
+      },
+      "started_utc": "2026-11-03T00:50:33.244555+00:00",
+      "duration_seconds": 0.240906,
+      "exit_code": 0,
+      "timed_out": false,
+      "classification": "PASS",
+      "tier": "affected/final native source gates",
+      "proof_level": "static",
+      "cases": {
+        "selected": "n/a",
+        "passed": "n/a",
+        "failed": "n/a",
+        "skipped": "n/a",
+        "not_run": "n/a"
+      },
+      "stdout_path": "artifacts/skill-pack-finalization-20261103/verification/root-validate-pack.stdout.log",
+      "stderr_path": "artifacts/skill-pack-finalization-20261103/verification/root-validate-pack.stderr.log",
+      "stdout_sha256": "42aaa5fba95bbfc62b663338194c9e0f96eb4d5aace9b805a32e1b93e4befcd3",
+      "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "stdout_excerpt": "./skills/sohrab: 72 skills\nWarnings:\n- alaa-algorithms-data-structures: top-level body is 176 lines\n- alaa-bale-provider: top-level body is 136 lines\n- alaa-cc-orchestrator: top-level body is 168 lines\n- alaa-codex-orchestrator: top-level body is 169 lines\n- alaa-gitlab-ci-cd: top-level body is 155 \n...[excerpt truncated; exact output is in referenced log]...\nl body is 128 lines\n- alaa-sms-provider-magfa: top-level body is 200 lines\n- alaa-system-design: top-level body is 178 lines\n- alaa-testing-strategy: top-level body is 257 lines\n- alaa-trust-gateway-auth: top-level body is 122 lines\n- vector-rust-observability-pipelines: top-level body is 133 lines\n",
+      "stdout_excerpt_truncated": true,
+      "stderr_excerpt": "",
+      "stderr_excerpt_truncated": false
+    },
+    {
+      "id": "root-skill-index",
+      "command": "python3 -B scripts/check_skill_index.py",
+      "cwd": ".",
+      "resource_limits": {
+        "timeout_seconds": 60,
+        "parallelism": 1,
+        "profile": "lightweight static validators",
+        "cpu_affinity": "not set"
+      },
+      "started_utc": "2026-11-03T00:50:33.486162+00:00",
+      "duration_seconds": 0.10195,
+      "exit_code": 0,
+      "timed_out": false,
+      "classification": "PASS",
+      "tier": "affected/final native source gates",
+      "proof_level": "static",
+      "cases": {
+        "selected": "n/a",
+        "passed": "n/a",
+        "failed": "n/a",
+        "skipped": "n/a",
+        "not_run": "n/a"
+      },
+      "stdout_path": "artifacts/skill-pack-finalization-20261103/verification/root-skill-index.stdout.log",
+      "stderr_path": "artifacts/skill-pack-finalization-20261103/verification/root-skill-index.stderr.log",
+      "stdout_sha256": "cd8288bf0b569b68537802660825862f3004b102c7198c682ec555bb1d71a846",
+      "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "stdout_excerpt": "check_skill_index.py\n  README.md map located by: markers\n  README.md map entries: 72\n  README.fa.md table entries: 72\n  skill directories: 72\n\nFINDINGS: none\n",
+      "stdout_excerpt_truncated": false,
+      "stderr_excerpt": "",
+      "stderr_excerpt_truncated": false
+    },
+    {
+      "id": "root-fleet-references",
+      "command": "python3 -B scripts/check_fleet_references.py",
+      "cwd": ".",
+      "resource_limits": {
+        "timeout_seconds": 60,
+        "parallelism": 1,
+        "profile": "lightweight static validators",
+        "cpu_affinity": "not set"
+      },
+      "started_utc": "2026-11-03T00:50:33.588733+00:00",
+      "duration_seconds": 4.167521,
+      "exit_code": 0,
+      "timed_out": false,
+      "classification": "PASS",
+      "tier": "affected/final native source gates",
+      "proof_level": "static",
+      "cases": {
+        "selected": "n/a",
+        "passed": "n/a",
+        "failed": "n/a",
+        "skipped": "n/a",
+        "not_run": "n/a"
+      },
+      "stdout_path": "artifacts/skill-pack-finalization-20261103/verification/root-fleet-references.stdout.log",
+      "stderr_path": "artifacts/skill-pack-finalization-20261103/verification/root-fleet-references.stderr.log",
+      "stdout_sha256": "10bc8f2542f74277c360f2a6e50d3e72947e157a1cb3f6aac8eb94ba615d1cbb",
+      "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "stdout_excerpt": "check_fleet_references.py: 72 of 72 skills, 1145 Markdown files, 4415 citations\n\nFINDINGS: none\n\nINFO (313 unmarked target-repository paths across 28 skills; these never fail the run)\n    88  alaa-repo-docs\n    64  alaa-services-contract\n    31  alaa-go-chi-development\n    27  alaa-shaka-player\n    \n...[excerpt truncated; exact output is in referenced log]...\ngrade-all-packages\n     1  alaa-legacy-path-map\n     1  alaa-octane-performance\n     1  alaa-quasar-app-vite-v3\n     1  ansible-generator\n     1  caas-arvan-kuber\n  Rerun with --show-info for every site, or --format json for all of them.\n  Mark each one as <repo>/<path> to retire it from this list.\n",
+      "stdout_excerpt_truncated": true,
+      "stderr_excerpt": "",
+      "stderr_excerpt_truncated": false
+    },
+    {
+      "id": "root-lifecycle-contract",
+      "command": "python3 -B scripts/check_lifecycle_contract.py",
+      "cwd": ".",
+      "resource_limits": {
+        "timeout_seconds": 60,
+        "parallelism": 1,
+        "profile": "lightweight static validators",
+        "cpu_affinity": "not set"
+      },
+      "started_utc": "2026-11-03T00:50:37.756761+00:00",
+      "duration_seconds": 0.512387,
+      "exit_code": 0,
+      "timed_out": false,
+      "classification": "PASS",
+      "tier": "affected/final native source gates",
+      "proof_level": "static",
+      "cases": {
+        "selected": "n/a",
+        "passed": "n/a",
+        "failed": "n/a",
+        "skipped": "n/a",
+        "not_run": "n/a"
+      },
+      "stdout_path": "artifacts/skill-pack-finalization-20261103/verification/root-lifecycle-contract.stdout.log",
+      "stderr_path": "artifacts/skill-pack-finalization-20261103/verification/root-lifecycle-contract.stderr.log",
+      "stdout_sha256": "319aae72bc627cbacd0fe43709a6801ac3c498e2f4cd3b01b270817da1f4b464",
+      "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "stdout_excerpt": "check_lifecycle_contract.py\n  root: .\n  owner: alaa-workflow references/workspace-and-integration.md\n  states: IMPLEMENTED, MERGE_CANDIDATE, RELEASE_CANDIDATE, PUBLISHED\n  reporters: alaa-cc-orchestrator, alaa-codex-orchestrator\n\nFINDINGS: none\n",
+      "stdout_excerpt_truncated": false,
+      "stderr_excerpt": "",
+      "stderr_excerpt_truncated": false
+    },
+    {
+      "id": "codex-agent-contracts",
+      "command": "python3 -B skills/sohrab/alaa-codex-orchestrator/scripts/check_agent_contracts.py",
+      "cwd": ".",
+      "resource_limits": {
+        "timeout_seconds": 60,
+        "parallelism": 1,
+        "profile": "lightweight static validators",
+        "cpu_affinity": "not set"
+      },
+      "started_utc": "2026-11-03T00:50:38.269914+00:00",
+      "duration_seconds": 0.202898,
+      "exit_code": 0,
+      "timed_out": false,
+      "classification": "PASS",
+      "tier": "affected/final native source gates",
+      "proof_level": "static",
+      "cases": {
+        "selected": "n/a",
+        "passed": "n/a",
+        "failed": "n/a",
+        "skipped": "n/a",
+        "not_run": "n/a"
+      },
+      "stdout_path": "artifacts/skill-pack-finalization-20261103/verification/codex-agent-contracts.stdout.log",
+      "stderr_path": "artifacts/skill-pack-finalization-20261103/verification/codex-agent-contracts.stderr.log",
+      "stdout_sha256": "3df675fa4c81201c2388550e9374e9523448ab61d998d621a76670f3ebe8d457",
+      "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "stdout_excerpt": "CONTRACT CHECK OK: metadata, dispatch scope and independent verification authority\n",
+      "stdout_excerpt_truncated": false,
+      "stderr_excerpt": "",
+      "stderr_excerpt_truncated": false
+    },
+    {
+      "id": "codex-validate-pack",
+      "command": "python3 -B skills/sohrab/alaa-codex-orchestrator/scripts/validate_pack.py",
+      "cwd": ".",
+      "resource_limits": {
+        "timeout_seconds": 60,
+        "parallelism": 1,
+        "profile": "lightweight static validators",
+        "cpu_affinity": "not set"
+      },
+      "started_utc": "2026-11-03T00:50:38.473484+00:00",
+      "duration_seconds": 0.410894,
+      "exit_code": 0,
+      "timed_out": false,
+      "classification": "PASS",
+      "tier": "affected/final native source gates",
+      "proof_level": "static",
+      "cases": {
+        "selected": "n/a",
+        "passed": "n/a",
+        "failed": "n/a",
+        "skipped": "n/a",
+        "not_run": "n/a"
+      },
+      "stdout_path": "artifacts/skill-pack-finalization-20261103/verification/codex-validate-pack.stdout.log",
+      "stderr_path": "artifacts/skill-pack-finalization-20261103/verification/codex-validate-pack.stderr.log",
+      "stdout_sha256": "250993cae9fe2e597ccf015f23ab016b1ec501fb5a3a255dcae4566a9535699c",
+      "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "stdout_excerpt": "PACK VALID: 33 agents, skill version 5.5.0\n",
+      "stdout_excerpt_truncated": false,
+      "stderr_excerpt": "",
+      "stderr_excerpt_truncated": false
+    },
+    {
+      "id": "cc-agent-contracts",
+      "command": "python3 -B skills/sohrab/alaa-cc-orchestrator/scripts/check_agent_contracts.py",
+      "cwd": ".",
+      "resource_limits": {
+        "timeout_seconds": 60,
+        "parallelism": 1,
+        "profile": "lightweight static validators",
+        "cpu_affinity": "not set"
+      },
+      "started_utc": "2026-11-03T00:50:38.884990+00:00",
+      "duration_seconds": 0.236211,
+      "exit_code": 0,
+      "timed_out": false,
+      "classification": "PASS",
+      "tier": "affected/final native source gates",
+      "proof_level": "static",
+      "cases": {
+        "selected": "n/a",
+        "passed": "n/a",
+        "failed": "n/a",
+        "skipped": "n/a",
+        "not_run": "n/a"
+      },
+      "stdout_path": "artifacts/skill-pack-finalization-20261103/verification/cc-agent-contracts.stdout.log",
+      "stderr_path": "artifacts/skill-pack-finalization-20261103/verification/cc-agent-contracts.stderr.log",
+      "stdout_sha256": "3df675fa4c81201c2388550e9374e9523448ab61d998d621a76670f3ebe8d457",
+      "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "stdout_excerpt": "CONTRACT CHECK OK: metadata, dispatch scope and independent verification authority\n",
+      "stdout_excerpt_truncated": false,
+      "stderr_excerpt": "",
+      "stderr_excerpt_truncated": false
+    },
+    {
+      "id": "cc-validate-pack",
+      "command": "python3 -B skills/sohrab/alaa-cc-orchestrator/scripts/validate_pack.py",
+      "cwd": ".",
+      "resource_limits": {
+        "timeout_seconds": 60,
+        "parallelism": 1,
+        "profile": "lightweight static validators",
+        "cpu_affinity": "not set"
+      },
+      "started_utc": "2026-11-03T00:50:39.122014+00:00",
+      "duration_seconds": 0.443305,
+      "exit_code": 0,
+      "timed_out": false,
+      "classification": "PASS",
+      "tier": "affected/final native source gates",
+      "proof_level": "static",
+      "cases": {
+        "selected": "n/a",
+        "passed": "n/a",
+        "failed": "n/a",
+        "skipped": "n/a",
+        "not_run": "n/a"
+      },
+      "stdout_path": "artifacts/skill-pack-finalization-20261103/verification/cc-validate-pack.stdout.log",
+      "stderr_path": "artifacts/skill-pack-finalization-20261103/verification/cc-validate-pack.stderr.log",
+      "stdout_sha256": "6a90af833e88fb584ce049a1e2dd005e6f06c8ecf81159fa38cc30f5ec905ce9",
+      "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "stdout_excerpt": "PACK VALID: 29 agents, skill version 5.5.0\n",
+      "stdout_excerpt_truncated": false,
+      "stderr_excerpt": "",
+      "stderr_excerpt_truncated": false
+    }
+  ],
+  "final_state": {
+    "head": "15ef58643fd11a84c1d1527458aaeed769836b4e",
+    "status_porcelain": "",
+    "tracked_file_count": 8251,
+    "tracked_content_digest": "b2dd9c80e353d102aa0e42c20a94db2119e85eac26562c2cf4af44a99b44e2e4",
+    "manifest": {
+      "basis": "tracked working-tree files at clean candidate commit 15ef58643fd11a84c1d1527458aaeed769836b4e",
+      "file_count": 8251,
+      "aggregate_sha256": "b2dd9c80e353d102aa0e42c20a94db2119e85eac26562c2cf4af44a99b44e2e4",
+      "algorithm": "Run `git ls-files -z` from repository root. For each non-empty NUL-delimited path `p` in emitted order, read the tracked working-tree file bytes and update an outer SHA-256 with `p + b'\\0' + SHA256(file_bytes).digest()`. The final outer digest is the aggregate. No untracked files are included. Clean status and unchanged HEAD establish equivalence to the pinned candidate commit."
+    }
+  },
+  "contamination_findings": [],
+  "limitations": [
+    "All eight requested static native source gates were executed once.",
+    "No test selector was used; case counts are n/a.",
+    "Static proof does not establish runtime or production behavior.",
+    "No selection comparison or flake detection was requested or performed."
+  ],
+  "portable_path_note": "JSON repository-relative cwd is represented as `.`. Short command output excerpts normalize the repository root to `.`; referenced stdout/stderr log files are preserved byte-for-byte as originally captured."
+}
