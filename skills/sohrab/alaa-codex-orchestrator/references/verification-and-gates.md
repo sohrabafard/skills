@@ -4,11 +4,11 @@
 owns what each phase actually does and what each gate requires. Read it before dispatching Stage A,
 and again whenever a gate's requirement is in question.
 
-Stages A-F define outcomes and authority. Combine compatible actions in the workflow plan. Keep each required outcome, observer and ordering constraint.
+Stages A-F define outcomes and authority. They are distinct from workflow phases. Combine compatible actions in the workflow plan. Keep each required outcome, observer and ordering constraint.
 
 ## Review boundary and execution cadence
 
-This pair owns scheduling. /alaa-testing-strategy owns check necessity, breadth and proof. Before dispatch, read `alaa-workflow references/task-tracking.md` for plan resolution, task registration, phase evidence and closure.
+This pair owns scheduling. /alaa-testing-strategy owns check necessity, breadth and proof. Before dispatch, read `alaa-workflow references/task-tracking.md` for task-store selection, plan resolution, registration, phase evidence and closure.
 
 Resolve the canonical plan at its admitted address. Read a native `beads:<root-id>` plan through the bound issue store. Read a Markdown plan through its admitted file family. Verify live registration, hierarchy, prerequisite edges, resolved skills and readiness through the recorded store. A native plan requires its registered issue graph and evidence, with no Markdown prerequisite. Follow the workflow owner's outage and existing-family rules. Never initialize a replacement Beads database.
 
@@ -93,9 +93,9 @@ Always first, never skipped, at any profile. Everything after it inherits its de
 
 ## Stage C — Independent verification
 
-1. At phase implementation end, reconcile focused lane and task evidence against the phase's acceptance criteria. Collect only missing or invalidated focused checks and explicit earlier repository obligations. At the inherited review boundary, reconcile evidence for the whole review scope and obtain required independent pre-review checks. Schedule broad final coverage in Stage E.
+1. At phase implementation end, reconcile focused lane and task evidence against the phase's acceptance criteria. Collect only missing or invalidated focused checks and explicit earlier repository obligations. Before Stage D, require independent focused evidence for the complete declared review scope on the reconciled candidate. Cite eligible independent evidence. Collect missing, invalidated or required-fresh coverage through `alaa-verifier`. Schedule broad final coverage in Stage E.
 2. Apply /alaa-testing-strategy `references/100-test-execution.md` for scope, reuse, aggregate coverage, freshness and command validity. Require the correct observer before citing evidence.
-3. Dispatch `alaa-verifier` with the exact consolidated commands, cwd, timeout, artifact directory and resource policy derived through /alaa-testing-strategy `references/110-execution-resources.md`. Use only host-exposed dispatch/continuation mechanisms. Under Codex, route Docker socket permission failures through /alaa-codex-runtime-ops before the canonical host fallback.
+3. When independent checks remain to run, dispatch `alaa-verifier` with the exact consolidated commands, cwd, timeout, artifact directory and resource policy derived through /alaa-testing-strategy `references/110-execution-resources.md`. Use only host-exposed dispatch/continuation mechanisms. Under Codex, route Docker socket permission failures through /alaa-codex-runtime-ops before the canonical host fallback.
 4. Classify and route results through /alaa-testing-strategy `references/120-result-classification.md` for classification.
    Apply this orchestrator's Failure routing in `references/routing-matrix.md`. The verifier executes, the analyst diagnoses, and the owning lane repairs; neither a clear owner nor a cheap fix bypasses the canonical collection barrier.
 5. After batch repair, apply the canonical retest procedure before Stage D. Unresolved required pre-review results block review. Unresolved required results block acceptance.

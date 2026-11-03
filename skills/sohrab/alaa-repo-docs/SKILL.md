@@ -27,6 +27,8 @@ Route source annotations through the ownership table below.
 
 ## Default document set
 
+Apply the table to affected documents and required sync pairs for a bounded update. Apply it to the full repository for a whole-repository refresh. Create in-scope missing documents when their conditions hold.
+
 | Document | Create or refresh when |
 |---|---|
 | `README.md` | onboarding, setup, runtime, operational commands, troubleshooting entrypoints, or documentation links changed |

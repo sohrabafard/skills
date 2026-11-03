@@ -43,7 +43,7 @@ Pass every global flag that `/alaa-workflow` `references/task-tracking.md` `## B
 
 Semantics: `/alaa-workflow` `references/task-tracking.md` `## Beads capabilities in use`.
 
-- `--spec-id "<repo-name>:<repo-relative plan path>"` when a plan exists; `<repo-name>` is the project label suffix after `repo:`.
+- For a file-backed plan, set `--spec-id "<repo-name>:<repo-relative plan path>"`. Use the project label suffix after `repo:` as `<repo-name>`. For a native plan, record `beads:<root-id>` in the issue description.
 - Type `decision` for a decision other tasks cite; `spike` for a time-boxed investigation.
 - Create each follow-up with `--deps "discovered-from:<origin-id>"` (provenance only, not a blocker).
 - Ownership-sensitive mutations follow `/alaa-workflow` `references/task-tracking.md` `## Agent identity and ownership`; guard mechanics and exit 13 follow its `## Beads capabilities in use`.
@@ -52,7 +52,7 @@ Semantics: `/alaa-workflow` `references/task-tracking.md` `## Beads capabilities
 ### Continuity and handoff
 
 - At meaningful progress, blocker, decision, or validation changes, update issue state and persist what is needed to resume. Refresh it before handoff or planned compaction; do not wait for a compaction warning.
-- Issue `notes` hold position, blockers, and next step only. Learned knowledge goes to the `alaa-workflow` plan's handoff package, else issue comments (`/alaa-workflow` `references/context-continuity.md` `## Task resume and phase resume`). Record a device handoff per its `## Cross-PC handoff record`.
+- Issue `notes` hold position, blockers, and next step only. Place learned knowledge through `alaa-workflow references/context-continuity.md` `## Task resume and phase resume`. Record a device handoff per its `## Cross-PC handoff record`.
 - At session end, report issue IDs/status, changed files, validation results and unrun checks, blockers, next action, and pending commit/push/sync. Report synchronization complete only when verified.
 
 ### Ownership and authority
@@ -72,7 +72,7 @@ bd list --status=in_progress --label "<project-label>"
 bd ready --explain --label "<project-label>"
 bd blocked --label "<project-label>"
 bd --sandbox --actor "<actor>" create "<title>" --description "<goal, scope, output, plan link>" --acceptance "<criterion or exact plan reference>" --labels "<project-label>" --type <type>
-# add when a plan exists:  --spec-id "<repo-name>:<repo-relative plan path>"
+# for a file-backed plan:  --spec-id "<repo-name>:<repo-relative plan path>"
 # add for a follow-up:     --deps "discovered-from:<origin-id>"
 bd show <id>
 bd --sandbox --actor "<actor>" update <id> --claim

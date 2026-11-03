@@ -346,7 +346,7 @@ NORMATIVE_DUPLICATES = MappingProxyType({
 })
 
 # Frozen preservation baseline over every NORMATIVE_DUPLICATES clause.
-EXPECTED_NORMATIVE_INVENTORY_SHA256 = "f08d218a8dfd09fdf073ac68f72d08aa2efb6150552c18ca6175db020215da24"
+EXPECTED_NORMATIVE_INVENTORY_SHA256 = "49ae4bd283bb2b404ff552f06387bf9b254ed6743c6d6e3be99764b547a8001d"
 
 # These are contradictory positive instructions, not mere absent keywords.
 # Append them with all required clauses intact to prove contradiction detection.

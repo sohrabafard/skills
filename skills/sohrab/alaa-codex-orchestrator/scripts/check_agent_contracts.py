@@ -322,8 +322,8 @@ def task_allocation_failures(routing: str, controls: str) -> list[str]:
 
 # Cadence assertions are source contracts, not a simulation of agent obedience.
 # Workflow owns hierarchy validation; this consumer checks its scheduling seam.
-CADENCE_REQUIREMENTS = ('Stages A-F name required orchestration outcomes and authority, not workflow phases',
- '`alaa-workflow references/task-tracking.md` owns task-store selection',
+CADENCE_REQUIREMENTS = ('Stages A-F define outcomes and authority. They are distinct from workflow phases',
+ 'read `alaa-workflow references/task-tracking.md` for task-store selection',
  'never initialize a replacement Beads database',
  '`Review boundary: phase|final`',
  '`Final phase`',
@@ -354,7 +354,7 @@ CADENCE_REQUIREMENTS = ('Stages A-F name required orchestration outcomes and aut
  "Pending worker review/commit handoffs never delay the parent's authorized checkpoint",
  'Push, merge into another branch, tag and history rewrite still require explicit permission',
  'Stage C collects focused phase evidence. Stage D waits for the inherited review boundary',
- "Collect required affected and exhaustive checks in one whole-engagement gate stage',
+ 'Collect required affected and exhaustive checks in one whole-engagement gate stage',
  'Independent acceptance additionally requires an observer independent of the implementation with '
  'authority for that gate',
  'references/100-test-execution.md',
@@ -487,6 +487,10 @@ COLLECTION_REQUIREMENTS = (
     "implementer evidence never replaces independent acceptance",
     "Existing retry/stop budgets remain in force",
     "Collect only missing or invalidated focused checks and explicit earlier repository obligations",
+    "Before Stage D, require independent focused evidence for the complete declared review scope",
+    "Cite eligible independent evidence",
+    "Collect missing, invalidated or required-fresh coverage through `alaa-verifier`",
+    "When independent checks remain to run, dispatch `alaa-verifier`",
     "Plan one whole-engagement broad gate stage in Stage E, after final documentation",
 )
 COLLECTION_SEAMS = {

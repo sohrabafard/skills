@@ -621,12 +621,12 @@ def is_planning_status(status: str) -> bool:
     return not status or any(token in status for token in PLANNING_STATUSES)
 
 
-def section_block(content: str, heading: re.Pattern[str]) -> str | None:
+def section_block(content: str, heading: re.Pattern[str], *, max_heading_level: int = 3) -> str | None:
     match = heading.search(content)
     if not match:
         return None
     rest = content[match.end():]
-    end = re.search(r"^#{1,3}\s+", rest, re.M)
+    end = re.search(rf"^#{{1,{max_heading_level}}}\s+", rest, re.M)
     return rest[: end.start()] if end else rest
 
 
@@ -952,11 +952,11 @@ def validate_delegated_design(content: str, status: str) -> list[str]:
         "Approved design", "Approval status", "Approval by", "Approval on", "Approval evidence"
     )) or EMBEDDED_DESIGN_HEADING_RE.search(content):
         messages.append(error("plan.execution-authority", "Delegated authority and approved-design records cannot share this plan.", "Use the route that matches the actual authority."))
-    design = section_block(content, EXECUTION_DESIGN_HEADING_RE)
+    design = section_block(content, EXECUTION_DESIGN_HEADING_RE, max_heading_level=2)
     if len(EXECUTION_DESIGN_HEADING_RE.findall(content)) != 1 or not design or not design.strip():
         messages.append(error("plan.execution-design", "Delegated execution requires one nonempty ## Execution Design section.", "Record the settled design in that section."))
-    elif not is_planning_status(status) and UNRESOLVED_RE.search(design):
-        messages.append(error("plan.execution-design", "The execution design still contains unresolved markers.", "Resolve them before dependent execution."))
+    elif executing_tasks(content, status) and not recorded_value(clean_scalar(design)):
+        messages.append(error("plan.execution-design", "The execution design still contains an unresolved value or marker.", "Resolve it before dependent execution."))
     return messages
 
 
