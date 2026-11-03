@@ -56,7 +56,7 @@ def validate_policy(policy: dict) -> list[str]:
     if not isinstance(legacy, dict) or legacy.get("selection_enabled") is not False:
         errors.append("gpt-6-sol: historical support must remain selection-disabled")
     for model, spec in models.items():
-        if model not in {"gpt-6-astra", "gpt-6-sol", "gpt-6.1-sol", "gpt-6-luna"}:
+        if model not in {"gpt-6-astra", "gpt-6-sol", "gpt-6.1-sol", "gpt-6.1-terra", "gpt-6-luna"}:
             errors.append(f"{model}: unsupported exact model ID")
         if not isinstance(spec, dict):
             errors.append(f"{model}: model specification must be an object")

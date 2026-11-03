@@ -52,6 +52,12 @@ Explicit prose also recommends Luna low for precise/bounded work, Luna xhigh for
 
 Sol-low feature work and Luna-high scoped bugs have official selector support. Workload admission and exceptional selection belong to the runtime orchestrator; source guidance proves no local superiority or availability.
 
+The [Codex Terra guidance](https://learn.chatgpt.com/docs/model-selection#when-to-consider-gpt-61-terra),
+verified 3 November 2026, names concise writing from supplied material, computer use
+with a defined outcome, and scoped code fixes with explicit inputs, requirements and a check.
+These recommendations establish no measured local quality, cost or speed. Read
+`references/12-gpt-6.md` for Terra controls and the Codex routing matrix for admission.
+
 | Claude workload/path | Source recommendation | Effort evidence |
 |---|---|---|
 | Everyday coding, analysis, content, vision, agent tools | Sonnet | Unspecified in selection guide |

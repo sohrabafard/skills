@@ -64,3 +64,8 @@ Sonnet 5.5 launch, overview, prompting, effort and Code selection sources were r
 Plan-first selection and runtime-control sources were reverified 8 October 2026: current Claude Sonnet/Opus prompting, model selection, model overview, Code model controls/subagents, Codex models/subagent configuration and current GPT model pages. Read canonical policy source entries and `references/11-codex-runtime-features.md` or `references/41-claude-code-runtime-features.md` for exact surfaces and precedence. These sources inform unrun local admission boundaries; they do not establish model equivalence or live activation.
 
 Task selection, GPT proportional-test guidance and Opus/Sonnet thinking exceptions refreshed 9 October 2026 through the official selection and prompting pages. `references/90-model-selection.md` separates explicit prose, rendered defaults and supplied screenshots. Other capability/runtime snapshots retain their own dates; neither unavailable selector cells nor unrun calibration become negative evidence.
+
+Terra's Codex model list, workload guidance and API model page were verified 3 November 2026.
+Read `references/12-gpt-6.md` for surface and host evidence and
+`references/90-model-selection.md` for workload guidance. Those sources establish capability
+and candidate fit guidance. Local execution and comparative calibration remain unrun.

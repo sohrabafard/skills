@@ -65,6 +65,14 @@ This orchestrator owns actual task complexity, priority, model and effort decisi
 5. Record task, role/authority identity, scope/complexity, priority/reason, selected model AND effort, admission/evidence, runtime control surface, requested and effective configured controls, availability and unresolved limits in the existing workflow plan, or a compact dispatch when no durable plan is admitted. A bounded standalone delegation requires no full pipeline or new workflow artifacts solely for model selection. Preserve role tools, skills, verdicts and independent gates for every pair. Legacy model/effort-named IDs are compatibility identities; their names select neither control.
 6. Before EVERY dispatch, follow `model-effort-policy.md` to normalize any omitted field, validate the resulting pair and explicitly supply BOTH controls. Owner-normalized defaults are valid task selections; omissions alone do not block or degrade a lane. If the host cannot realize the selected pair, use only an exact verified available compatibility realization preserving authority; otherwise block that affected lane with evidence. No silent substitution, automatic installation or global configuration edit. Source changes do not reload installed or current-session roles. Unknown serving identity is a reporting limit, not evidence of a control mismatch or a reason for paid calibration.
 
+### Codex Terra eligibility
+
+Consider `gpt-6.1-terra` only for supplied-material writing, defined-outcome computer use,
+or scoped code fixes covered by the prompting guide's Terra workload guidance. Require
+every bounded-suitability predicate above and an exact verified host model/effort pair.
+Compare eligible pairs through the same allocation procedure. Apply existing tool and
+delegation authority at every effort, including `ultra`.
+
 ## Implementation routing
 
 Choose directly from the completed lane record; no mandatory sequence of attempts. These compatibility role contracts classify workload fit, never model or effort. Apply All-role task allocation separately; selecting a named compatibility role does not select a pair.
