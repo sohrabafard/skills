@@ -17,9 +17,9 @@ if command -v php >/dev/null 2>&1; then
 else
   echo 'php -l hook: unavailable (no PHP CLI on PATH; hook skips silently)'
 fi
-if /home/sohrab/.local/bin/phpantom_lsp --version; then
+if "$HOME/.local/bin/phpantom_lsp" --version; then
   echo 'PHPantom binary: available'
 else
-  echo 'PHPantom binary: unavailable (configure PHPANTOM_SERVER_PATH)' >&2
+  echo 'PHPantom binary: unavailable (expected at $HOME/.local/bin/phpantom_lsp)' >&2
   exit 1
 fi

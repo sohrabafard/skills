@@ -25,15 +25,13 @@ When this **plugin** is loaded, Claude gets:
 - Native `phpantom` LSP over stdio (hover/definition/references/diagnostics; read-only LSP tool)
 - Root `SKILL.md` as a plugin skill (`/alaa-phpantom:alaa-phpantom`), which is also the same canonical skill exposed by the existing symlink
 - Automatic `PostToolUse` -> `Write|Edit` -> `php -l` syntax hook in **every local project** where the plugin is enabled
-- CLI launcher on the Bash tool PATH: `phpantom_lsp analyze`, `fix`, `format`, `move`, `init`
+- CLI through the installed binary, not a plugin file: `phpantom_lsp analyze`, `fix`, `format`, `move`, `init`
 
 Codex gets the same root skill and can use the installed PHPantom CLI through normal shell commands. Claude-only files do not magically provide native LSP or hook support in Codex.
 
-## Binary resolution
+## Binary
 
-`bin/phpantom_lsp` resolves in this order: `PHPANTOM_SERVER_PATH` (if explicitly set), `$HOME/.local/bin/phpantom_lsp`, then a different binary on PATH. It `exec`s the binary and passes stdin/stdout unchanged. It is **not** an LSP client, JSON-RPC proxy, or MCP server, and does not install anything.
-
-Default expected path is `/home/sohrab/.local/bin/phpantom_lsp`.
+The LSP server and CLI run the installed executable directly: `/home/sohrab/.local/bin/phpantom_lsp` (`$HOME/.local/bin/phpantom_lsp`). The plugin bundles no launcher, LSP client, JSON-RPC proxy, or MCP server, and installs nothing.
 
 ## Quick check (WSL)
 
@@ -82,4 +80,4 @@ Set `ALAA_PHPANTOM_LINT=0` in the launching Claude environment to disable this p
 
 ## Scope
 
-This is a **local** skill/plugin pack. It has not been run against the user's actual WSL binary, installed Claude version or existing hooks. Offline tests validate the JSON structure, launcher and hook behavior only. Do not expect it to affect a Windows-hosted PhpStorm LSP4IJ process, which has separate UNC URI mapping concerns.
+This is a **local** skill/plugin pack. Offline tests validate the JSON structure and hook behavior only. Do not expect it to affect a Windows-hosted PhpStorm LSP4IJ process, which has separate UNC URI mapping concerns.

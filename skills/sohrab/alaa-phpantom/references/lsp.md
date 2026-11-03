@@ -1,7 +1,7 @@
 # Native Claude LSP — purpose and limits
 
 - Plugin root `.lsp.json` is loaded automatically **when the plugin itself is enabled**. It does not make a standalone skill into a server by itself.
-- `stdio` server command: `${CLAUDE_PLUGIN_ROOT}/bin/phpantom_lsp`; this is a transparent Bash `exec` launcher for an already-installed Rust executable. The launcher writes errors only to stderr and never encodes or parses JSON-RPC.
+- `stdio` server command: the already-installed Rust executable at `$HOME/.local/bin/phpantom_lsp`, started directly. `.lsp.json` holds its absolute path.
 - Supported extensions follow PHPantom's upstream Claude plugin: `.php`, `.phtml`, `.php3` etc. and `.blade.php`. Match to LSP language IDs `php` or `blade`.
 - Claude starts the server upon PHP file activity. The `LSP` tool is **read-only** and provides symbol lookup/navigation. LSP diagnostics are supplied after edits. Do not promise that a writable LSP Code Action endpoint is exposed as a Claude tool merely because PHPantom implements codeActionProvider.
 - Use `fix`, `format`, and `move` CLI commands for filesystem mutations. Never present a `php -l` syntax hook as replacing semantic diagnostics.

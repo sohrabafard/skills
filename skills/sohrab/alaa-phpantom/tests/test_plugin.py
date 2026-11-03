@@ -25,7 +25,10 @@ class PluginContract(unittest.TestCase):
         self.assertEqual(manifest["name"], "alaa-phpantom")
         self.assertEqual(lsp["phpantom"]["transport"], "stdio")
         self.assertEqual(lsp["phpantom"]["extensionToLanguage"][".blade.php"], "blade")
-        self.assertEqual(lsp["phpantom"]["command"], "${CLAUDE_PLUGIN_ROOT}/bin/phpantom_lsp")
+        command = Path(lsp["phpantom"]["command"])
+        self.assertTrue(command.is_absolute(), "LSP must start the installed binary directly")
+        self.assertEqual(command.name, "phpantom_lsp")
+        self.assertFalse((ROOT / "bin").exists(), "The plugin must not bundle a launcher")
         self.assertNotIn("mcpServers", manifest)
         self.assertTrue((ROOT / "SKILL.md").read_text().startswith("---\n"))
         self.assertFalse((ROOT / "skills").exists(), "Root SKILL.md should be the only plugin skill")
@@ -38,32 +41,7 @@ class PluginContract(unittest.TestCase):
         h = post[0]["hooks"][0]
         self.assertEqual(h["command"], "bash")
         self.assertEqual(h["args"], ["${CLAUDE_PLUGIN_ROOT}/scripts/php-lint.sh"])
-        self.assertTrue(os.access(ROOT / "bin/phpantom_lsp", os.X_OK))
-        self.assertTrue(os.access(ROOT / "scripts/php-lint.sh", os.X_OK))
-
-    def test_native_launcher_is_transparent(self):
-        with tempfile.TemporaryDirectory() as d:
-            exe = Path(d) / "mock-phpantom"
-            exe.write_text("#!/usr/bin/env bash\nif [[ ${1:-} == --version ]]; then echo '0.11.1'; else cat; fi\n")
-            exe.chmod(0o755)
-            env = {**os.environ, "PHPANTOM_SERVER_PATH": str(exe)}
-            proc = run([str(ROOT / "bin/phpantom_lsp"), "--version"], env=env)
-            self.assertEqual(proc.returncode, 0, proc.stderr)
-            self.assertEqual(proc.stdout.strip(), "0.11.1")
-            lsp_line = 'Content-Length: 2\r\n\r\n{}'
-            proc = subprocess.run([str(ROOT / "bin/phpantom_lsp")],
-                                  input=lsp_line.encode(), capture_output=True,
-                                  env=env, timeout=15, check=False)
-            self.assertEqual(proc.returncode, 0, proc.stderr.decode())
-            self.assertEqual(proc.stdout, lsp_line.encode())
-            self.assertEqual(proc.stderr, b"")
-
-    def test_launcher_prevents_self_reference(self):
-        env = {**os.environ, "PHPANTOM_SERVER_PATH": str(ROOT / "bin/phpantom_lsp")}
-        proc = run([str(ROOT / "bin/phpantom_lsp"), "--version"], env=env)
-        self.assertNotEqual(proc.returncode, 0)
-        self.assertIn("ERROR", proc.stderr)
-        self.assertEqual(proc.stdout, "")
+        self.assertTrue((ROOT / "scripts/php-lint.sh").is_file())
 
 
 @unittest.skipUnless(shutil.which("php"), "requires existing PHP CLI")

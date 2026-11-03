@@ -2,11 +2,11 @@
 
 ## Claude only sees a standalone skill, not LSP or hooks
 
-Ensure your canonical `alaa-phpantom` folder contains `.claude-plugin/plugin.json`, `.lsp.json`, `hooks/hooks.json`, `bin/phpantom_lsp` and root `SKILL.md`. Your existing symlink under `~/.claude/skills/alaa-phpantom` must point at that folder, not just `SKILL.md`. Restart or `/reload-plugins`; check `claude plugin list`, `/plugin` Installed and Errors, `/hooks`. The plugin is `alaa-phpantom@skills-dir` in a user skills directory. Policies can block skills-directory plugins; standalone skill may still load.
+Ensure your canonical `alaa-phpantom` folder contains `.claude-plugin/plugin.json`, `.lsp.json`, `hooks/hooks.json` and root `SKILL.md`. Your existing symlink under `~/.claude/skills/alaa-phpantom` must point at that folder, not just `SKILL.md`. Restart or `/reload-plugins`; check `claude plugin list`, `/plugin` Installed and Errors, `/hooks`. The plugin is `alaa-phpantom@skills-dir` in a user skills directory. Policies can block skills-directory plugins; standalone skill may still load.
 
 ## LSP does not start
 
-Run `bash scripts/doctor.sh /home/sohrab/project/auth` from the plugin folder. Check the existing binary with `/home/sohrab/.local/bin/phpantom_lsp --version`. Environment override `PHPANTOM_SERVER_PATH=/absolute/path/to/phpantom_lsp` is available. Plugin launcher does not install anything. Check `claude --debug` and `/plugin` Errors for conflicts with other PHP servers.
+Run `bash scripts/doctor.sh /home/sohrab/project/auth` from the plugin folder. Check the existing binary with `/home/sohrab/.local/bin/phpantom_lsp --version`. The plugin installs nothing. Check `claude --debug` and `/plugin` Errors for conflicts with other PHP servers.
 
 ## Incorrect classes, especially Carbon\\CarbonImmutable
 

@@ -1,6 +1,6 @@
 # PHPantom CLI quick reference (upstream docs, refreshed 2026-11-03)
 
-The same installed executable runs both the native LSP server (no arguments) and independent CLI operations (`analyze`, `fix`, `format`, `move`, `init`). For normal Codex/Claude CLI use, the plugin's `bin/phpantom_lsp` launcher resolves `$PHPANTOM_SERVER_PATH`, `$HOME/.local/bin/phpantom_lsp`, or a real system binary on PATH.
+The same installed executable, `$HOME/.local/bin/phpantom_lsp`, runs both the native LSP server (no arguments) and independent CLI operations (`analyze`, `fix`, `format`, `move`, `init`).
 
 ## Analyze (read only)
 
