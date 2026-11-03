@@ -24,7 +24,7 @@ Treat all four as the same problem. The design target is a task any competent ag
 
 Most workflow tooling records position and forgets knowledge. That is why a resumed task so often repeats a failed experiment: the agent knows where it is, but not what the last agent already ruled out.
 
-For admitted families, the three artifacts divide the work accordingly:
+For admitted Markdown families, the artifacts divide the work as follows:
 
 | Artifact | Owns | Answers |
 |---|---|---|
@@ -34,17 +34,19 @@ For admitted families, the three artifacts divide the work accordingly:
 
 The handoff package is a section inside the plan rather than a separate file, because knowledge is only useful next to the route it belongs to, and because a fourth file is a fourth thing to keep honest.
 
-Issue-only Beads work creates no plan, checkpoint, or six-field handoff package; its issue owns position, results and knowledge as `## Task resume and phase resume` states. Issue-only work that needs tracking while Beads is unavailable gets a local plan (`direct` profile) and follows the plan resume path. `references/task-tracking.md` `## Outage and uncertain writes` defines that need.
+For a Beads-native plan, root notes own aggregate position and the root description holds the six-field handoff. Issue-only work keeps its compact plan, position, results and knowledge in its issue, without a separate checkpoint or handoff package. See `references/task-tracking.md` for the fields and local fallback.
 
 ## Status and position
 
-The plan header owns overall workflow status. Checkpoint and JSON status snapshot that header; they make no independent status decision. Every admitted checkpoint contains its exact `Plan` reference, status, last verified result, blockers, next action, touched surfaces and update time. A checkpoint may also carry the optional `Pending Beads reconciliation` list defined in `references/task-tracking.md` `## Outage and uncertain writes`. The last verified result references its evidence owner. Keep a cross-PC handoff record when applicable. Checkpoint-bearing plans link to their checkpoint instead of copying position, blockers or next action.
+In Beads, use native issue status. Root notes name the exact current phase/task/subtask IDs (or `none`), last verified evidence address, blockers, next action, touched surfaces and pending review or commit. For concurrent lanes, the parent keeps the aggregate cursor and links to leaf notes for live lane position. A task or subtask cursor names its actual ancestry; clear finished cursors before advancing.
+
+In Markdown, the plan header owns overall status. Checkpoint and JSON project it. Every checkpoint names its exact `Plan`, status, last verified evidence address, blockers, next action, touched surfaces and update time. Checkpoint-bearing plans link to it instead of copying position. Outage reconciliation follows `references/task-tracking.md`.
 
 A design checkpoint uses `Current position` to name the current design question, decision or approval step. It has no phase/task/subtask cursor. Its in-plan handoff uses the six fields below for verified ideas, assumptions, rejected algorithms and continuation evidence. Design validation evidence belongs to that design plan; the checkpoint references it.
 
 For execution, checkpoint position adds current phase; a direct profile keeps its cursor in its sole plan. The execution plan contains outcome/scope, phase design and barriers, phase acceptance, integrated-review evidence, skill associations and the handoff package. Task results follow `references/task-tracking.md` `## Acceptance and evidence by level`.
 
-The JSON and issue-cursor rules below apply only to execution. JSON contains schema version, task identity, status, plan path, current phase/task/subtask cursor, next actions, blockers, last validation and update time, without phase definitions, history or task tables.
+The JSON and mapped issue-cursor rules below apply only to Markdown execution. JSON contains schema version, task identity, status, plan path, current phase/task/subtask cursor, next actions, blockers, last validation and update time.
 
 Optional schema-2 JSON is a compact consumer snapshot with no task table or graph. Derive its position fields from the checkpoint when present, otherwise the direct-plan cursor; never edit them independently. Copy `current_phase` exactly. Project each blocker/next-action scalar into one whole trimmed array entry, or an empty array for empty/none sentinels; trim outer whitespace/code wrapping and never split punctuation. Reconcile torn updates from canonical owners before execution or completion. For marked families, companion references must resolve to this exact plan, not merely share its basename.
 
@@ -74,15 +76,15 @@ Keep all six fields present in an admitted handoff package. Write a field when y
 
 For design, use the kind-aware resume protocol below; this section covers execution and issue-only work.
 
-Task resume reads the Beads issue: `notes` for position, including blockers, and next step, comments for events, `acceptance`, and its relations. Phase resume reads the plan, the checkpoint and the handoff package through the resume protocol below. A task inside an admitted plan resumes through both: the issue gives the task's state, the plan gives the phase it serves.
+Task resume reads the issue's notes, comments, acceptance and relations. Phase resume reads the native phase and root, or the Markdown plan and checkpoint, through the protocol below. The task supplies its state. The plan supplies phase and engagement context.
 
 Before resuming Beads mutations or transferring a task to another agent/device, apply `references/task-tracking.md` `## Agent identity and ownership` to recover identity and verify ownership.
 
-Task-specific learned knowledge, such as a ruled-out approach or a trap, goes to the plan's handoff package when a plan exists and to issue comments otherwise. Issue notes hold position, including blockers, and next step only.
+Task-specific learned knowledge goes to its comments for native or issue-only work, or to the Markdown plan handoff. The native root handoff links to task-specific findings when needed. Issue notes hold position only.
 
 ## Cross-PC handoff record
 
-A handoff to another PC records the responsible device, the sync state of Git source and, under the `beads` store, of Dolt task state, and whether the code and the evidence are available to the receiving device. A task handoff records these in issue notes; a phase handoff records them in the admitted checkpoint's position, or in the plan cursor under the direct profile. A recorded sync state grants no sync authority; `references/task-tracking.md` owns the authorization rule.
+A handoff to another PC records the responsible device, Git and applicable Dolt sync state, and whether the recipient can access the code and evidence. Record it in task or native root notes, or the Markdown checkpoint/direct cursor. A sync record grants no sync authority.
 
 ## When to write
 
@@ -91,7 +93,7 @@ Writing continuously is a tax; writing only at the end risks losing detail. Writ
 1. **Material task progress, or a phase completes or fails.** Update the selected task authority and affected canonical workflow fields, then derive admitted snapshots. This is the routine case and it is cheap.
 2. **A decision, blocker or scope change.** Update affected workflow owners/snapshots and, if a decision closed off an alternative, add it to *ruled out*.
 3. **A validation runs.** Record design evidence at the design plan; execution evidence uses its level owner in `references/task-tracking.md` `## Acceptance and evidence by level`. When a checkpoint is admitted, point its last verified result to that evidence. `references/workspace-and-integration.md` owns tested identity, write isolation, and reuse; without attributable inputs, a result cannot be cited on resume.
-4. **Something is learned that would be expensive to rediscover.** Add it immediately to the matching handoff field when a plan is admitted, or to issue comments otherwise, while details are exact.
+4. **Something is learned that would be expensive to rediscover.** Record it immediately at its owner under `## Task resume and phase resume`.
 5. **Before handing off, and before any long autonomous stretch.** Bring selected task/workflow owners and admitted snapshots current, then verify with the cold-start test.
 
 There is one more trigger worth naming because it is easy to miss: **when the conversation is getting long.** Do not wait for a compaction warning. If the work has run for many turns, or has just finished an expensive investigation, write the knowledge down while it is still verbatim. After compaction the same information is available only as a summary of a summary.
@@ -110,7 +112,11 @@ This test is worth running mentally before any long unattended stretch, because 
 
 ## The resume protocol
 
-First resolve the artifact family and kind through `references/artifact-lifecycle.md`, then its task authority through `references/task-tracking.md`. Before acting, read every applicable owner below in order; skip only an absent/not-admitted artifact or JSON without a consumer.
+Resolve the family and kind through `references/artifact-lifecycle.md`, then its task authority through `references/task-tracking.md`. Verify the binding before reading issue state.
+
+For a native plan, read the root by its `beads:<root-id>` address, its notes and handoff, then the selected phase and task/subtask with their comments, evidence and relations. Verify registration and ancestry. Reconcile pending outage records, ownership, readiness and phase barriers before dependent work. Read the exact resume sources and skill bindings before editing. Issue-only work reads its issue, linked evidence and applicable bindings.
+
+For Markdown, read applicable owners in this order:
 
 1. **The current bound issue**, when Beads is selected, for actual task state, notes, comments and prerequisites; fresh hook guidance is no substitute for this read. For a `local` family, retest Beads availability under `references/task-tracking.md` before the next new task.
 2. **The plan**, when admitted, for destination, scope, acceptance and validation; a design also requires its decisions and open questions, while execution reads ordered phases and any tasks owned by an existing local family.
@@ -143,7 +149,7 @@ Write dispatches assuming zero shared context: the outcome, the owned scope, the
 
 Require the child to return a compact structured result rather than a narrative, and record its evidence in the parent's artifacts. A finding that exists only inside a subagent's return has already been lost — the parent's context will compact too.
 
-A long-running lane, or one a host restart could kill, keeps a progress record at a path the dispatch names (inside the repository unless the plan says otherwise): items done, items remaining and last evidence reference, updated after each completed item. It is lane-local, not a second checkpoint. After interruption, reconcile that record, surviving files and attributable evidence before re-dispatch. Use `references/workspace-and-integration.md` to retain valid completed outcomes, invalidate affected or unsupported claims and hand off only remaining work. Interruption alone does not require repeating completed writes or checks.
+A long-running or restart-sensitive lane records done items, remaining items and last evidence address after each item. Name the owner in the dispatch: leaf notes for native work, or the admitted lane-local progress path for Markdown. After interruption, reconcile the record, files and attributable evidence through `references/workspace-and-integration.md`. Preserve valid completed work and dispatch only the remainder.
 
 Keep the parent responsible for synthesis. Children return findings and artifact paths; the parent decides what those mean and writes the outcome down.
 

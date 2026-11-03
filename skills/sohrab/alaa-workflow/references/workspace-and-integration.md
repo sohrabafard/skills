@@ -13,6 +13,8 @@
 
 Allow one active writer per file, generated output or shared runtime resource, not one writer per worktree. Record ownership and conflicts in the existing plan/dispatch and selected task authority. The runtime orchestrator allocates lanes and capacity; separate files permit concurrent writers only when their generated outputs and runtime resources are also disjoint. A task claim is no file or resource lock.
 
+Assign distinct ports, database or tenant test namespaces, queue names and temporary output directories when the repository supports that isolation. Verify each lane's effective configuration before parallel checks. Serialize users of any resource that cannot be isolated.
+
 Before replacing or resuming a stopped writer's overlapping scope:
 
 1. Verify the prior writer process and every descendant have stopped. A returned agent turn, interrupted session or closed terminal alone proves no process termination. Preserve process identity and observed liveness evidence; unknown descendant liveness is unresolved ownership.

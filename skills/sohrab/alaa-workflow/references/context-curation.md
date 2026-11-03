@@ -18,7 +18,7 @@ At a completed or failed phase, or a material decision boundary, invoke `/alaa-e
 
 A boundary that produced none of them waits for the final gate. Scanning every boundary spends context on nothing and trains the run to skip the scan that mattered.
 
-When a plan is admitted, park each admitted candidate in its matching handoff-package field; for issue-only work without a plan, use issue comments. `references/context-continuity.md` owns these locations and field semantics. Record judgments as confirmed facts about who chose what and why, never as universal facts: a preference recorded as law will be applied unchanged in another repository, where it may be wrong and its origin lost. Do not duplicate candidates between owners; link the canonical record.
+Park each admitted candidate at its knowledge owner through `references/context-continuity.md`. Record judgments as confirmed facts about who chose what and why. Link the record from other owners.
 
 Do not publish active plan, checkpoint, or validation state to memory. That is position, it is stale within the hour, and a memory store has no way to learn that it went stale.
 
@@ -29,7 +29,7 @@ Run the full-engagement gate before completion, once implementation, validation,
 1. Reconcile the intermediate candidates against the final evidence.
 2. Consume /alaa-extract-agent-lessons admission/routing and route authorized durable publication through
    /alaa-memory-os; memory owns storage authority and search-before-create, not this timing reference.
-3. Record the outcome — persisted, deferred, rejected, or no admitted candidates — once in the admitted plan's final-phase evidence, with a reference from its checkpoint when admitted, or in the issue's comments for issue-only work without a plan. Do not create artifacts outside admission or copy the outcome into another editable owner.
+3. Record the outcome (persisted, deferred, rejected, or no admitted candidates) once at the final phase's evidence owner, or in the issue's comments for issue-only work. Link it from admitted position records when needed.
 
 ## When the gate reopens the pipeline
 

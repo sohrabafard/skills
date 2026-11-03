@@ -1,6 +1,6 @@
 # Optional Prompt Generation
 
-Create a same-stem prompt pack only for an admitted execution family and an explicit reusable-prompt request. Resolve kind admission through `references/artifact-lifecycle.md` first.
+Create a reusable prompt pack only on explicit request for an admitted execution family. For Markdown, use the same stem. For Beads-native work, cite the root address and exact phase/task IDs in the requested deliverable. Create no companion plan for the pack.
 
 ## Freshness gate
 
@@ -26,7 +26,7 @@ Record the current runtime and both task-selected controls for every role only a
 
 When a phase runs through `/alaa-codex-orchestrator` (Codex) or `/alaa-cc-orchestrator` (Claude Code), these prompts feed that pack's role lanes; do not restate its dispatch machinery, review gate, roster, or role definitions. `/alaa-prompting-guide` owns capabilities, runtime precedence and checked model-neutral projections; the runtime orchestrator selects BOTH controls from the actual task. A prompt pack keeps only the three durable roles above; the orchestrator owns role triggers and chooses the runtime profile.
 
-Build such prompts under the invocation-and-composition rules of `/alaa-prompting-guide` (its `references/06-invocation-and-composition.md`): the orchestrator trigger opens the message with the exact installed name, the session role is the orchestrator with an explicit do-not-implement negative, implementation verbs live in lane rules, and any `/goal` text stays a compact bounded condition sent separately.
+Build prompts through `/alaa-prompting-guide` `references/06-invocation-and-composition.md`. Name the exact installed orchestrator, give it orchestration authority, and put implementation authority in the lane rules. The invocation owner decides goal composition for the selected surface.
 
 ## Compact prompt shape
 
@@ -57,4 +57,4 @@ Start from `assets/phase-prompts-template.md`. Keep each role prompt at or below
 
 ## Bootstrap metadata
 
-The initializer accepts optional `--implementer-runtime`, `--implementer-model`, `--reviewer-runtime`, `--reviewer-model`, `--verified-on`, and repeatable `--verification-source` values. Supply all runtime/model values together after source verification, with `--implementer-effort` and `--reviewer-effort` for complete selected controls. Model-only legacy invocations remain draft with unresolved effort; partial effort input is rejected. Source metadata never proves effective runtime controls; the active orchestrator must verify those before every dispatch. Without them, the generated pack remains an explicit draft. `--documenter-runtime` and `--documenter-model` are optional, must be supplied together, and require the implementer/reviewer metadata; omitting them marks the documenter role as not included. Included documenters also require `--documenter-effort` to resolve their selected controls.
+The Markdown initializer accepts optional `--implementer-runtime`, `--implementer-model`, `--reviewer-runtime`, `--reviewer-model`, `--verified-on`, and repeatable `--verification-source` values. Supply all runtime/model values together after source verification, with `--implementer-effort` and `--reviewer-effort` for complete selected controls. Model-only legacy invocations remain draft with unresolved effort; partial effort input is rejected. Source metadata never proves effective runtime controls; the active orchestrator must verify those before every dispatch. Without them, the generated pack remains an explicit draft. `--documenter-runtime` and `--documenter-model` are optional, must be supplied together, and require the implementer/reviewer metadata; omitting them marks the documenter role as not included. Included documenters also require `--documenter-effort` to resolve their selected controls.

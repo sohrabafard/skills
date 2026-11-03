@@ -122,12 +122,15 @@ def parse_args() -> argparse.Namespace:
         formatter_class=argparse.RawDescriptionHelpFormatter,
     )
     parser.add_argument("--task", required=True, help="Human task title used for naming and template fill.")
-    parser.add_argument("--plan-kind", required=True, choices=("design", "execution"), help="Design discussion or execution of an approved design.")
-    parser.add_argument("--approved-design", help=f"Readable approved design plan required for execution; never modified. '{EMBEDDED}' embeds an in-session approved design instead.")
+    parser.add_argument("--plan-kind", required=True, choices=("design", "execution"), help="Design discussion or authorized execution.")
+    parser.add_argument("--approved-design", help=f"Readable approved design plan, never modified. '{EMBEDDED}' embeds an in-session approved design.")
     parser.add_argument("--design-source", help=f"Embedded only: file whose design text is copied verbatim; with a {DESIGN_BODY_MARKER} line, only the text after it.")
     parser.add_argument("--approval-by", help="Embedded only: the approving party.")
     parser.add_argument("--approval-on", help="Embedded only: approval date in YYYY-MM-DD format.")
     parser.add_argument("--approval-evidence", help="Embedded only: evidence of the user's approval of this design and scope.")
+    parser.add_argument("--execution-source", help="Delegated execution only: reference to the authorizing implementation request.")
+    parser.add_argument("--execution-scope", help="Delegated execution only: scope authorized by the request.")
+    parser.add_argument("--decision-owner", help="Delegated execution only: owner of the delegated design decisions.")
     parser.add_argument(
         "--profile",
         choices=PROFILES,
@@ -341,21 +344,30 @@ def task_store_values(args: argparse.Namespace, checkpoint: Path | None, profile
 
 
 def run(args: argparse.Namespace) -> int:
+    from validate_workflow_files import DELEGATED_AUTHORITY_FIELDS, clean_scalar, recorded_value
+
     embedded = args.approved_design == EMBEDDED
     approval = {"Approval by": args.approval_by, "Approval on": args.approval_on, "Approval evidence": args.approval_evidence}
     embedded_flags = [args.design_source, *approval.values()]
+    authority = dict(zip(DELEGATED_AUTHORITY_FIELDS, (args.execution_source, args.execution_scope, args.decision_owner)))
+    delegated = any(value is not None for value in authority.values())
     if args.plan_kind == "design":
-        incompatible = (args.approved_design or any(value is not None for value in embedded_flags)
+        incompatible = (args.approved_design or delegated or any(value is not None for value in embedded_flags)
                         or args.beads_binding or args.beads_unavailable_reason or args.task_store != "local"
                         or args.review_boundary or args.with_prompts or args.with_state or args.state_only
                         or args.no_continuation or args.lane or args.parent_plan or args.mode != "plan"
                         or (args.profile is not None and args.profile != "resumable"))
         if incompatible:
             raise Misuse("Design requires resumable/local and rejects execution, hierarchy, prompt and state flags.")
-    elif not args.approved_design:
-        raise Misuse("Execution requires --approved-design naming a valid approved design plan.")
+    elif not (args.approved_design or delegated):
+        raise Misuse("Execution requires --approved-design or the delegated authority flags.")
     elif args.state_only:
         raise Misuse("--state-only cannot represent an execution plan and its Beads hierarchy; continue historical state in place.")
+    elif delegated and (args.approved_design is not None or any(value is not None for value in embedded_flags)):
+        raise Misuse("Delegated authority flags cannot be combined with --approved-design, --design-source or --approval-*.")
+    elif delegated and any(value is None or re.search(r"[\r\n]", value) or not recorded_value(clean_scalar(value))
+                           for value in authority.values()):
+        raise Misuse("Delegated execution requires resolved one-line --execution-source, --execution-scope and --decision-owner.")
     elif not embedded and any(value is not None for value in embedded_flags):
         raise Misuse(f"--design-source and --approval-* require --approved-design {EMBEDDED}.")
     elif embedded and any(value is None or not value.strip() or re.search(r"[\r\n]", value) for value in embedded_flags):
@@ -365,7 +377,7 @@ def run(args: argparse.Namespace) -> int:
     protected_design_paths: list[Path] = []
     if embedded:
         embedded_body = design_body(Path(args.design_source).expanduser())
-    elif args.plan_kind == "execution":
+    elif args.plan_kind == "execution" and not delegated:
         from validate_workflow_files import extract_reference, path_from_reference, read_text, require_approved_design
         approved_design = Path(args.approved_design).expanduser()
         try:
@@ -442,9 +454,14 @@ def run(args: argparse.Namespace) -> int:
         planned.append((plan_path, render("design-plan-template.md", values)))
         planned.append((checkpoint_path, render("design-checkpoint-template.md", values)))
     elif not args.state_only:
-        if embedded:
-            values["approved_design_display"] = EMBEDDED
-            values["embedded_approval_header"] = "- Approval status: approved\n" + "".join(
+        values["approved_design_section"] = ""
+        values["delegated_design_section"] = ""
+        if delegated:
+            values["execution_authority_header"] = "- Execution authority: delegated\n" + "".join(
+                f"- {label}: {value.strip()}\n" for label, value in authority.items())
+            values["delegated_design_section"] = "## Execution Design\n\nNEEDS_FILL\n\n"
+        elif embedded:
+            values["execution_authority_header"] = "- Approved design: embedded\n- Approval status: approved\n" + "".join(
                 f"- {label}: {value.strip()}\n" for label, value in approval.items())
             values["approved_design_section"] = render("approved-design-section-template.md", {})
         else:
@@ -452,9 +469,7 @@ def run(args: argparse.Namespace) -> int:
                 approved_design_link = Path(os.path.relpath(approved_design.resolve(), Path.cwd().resolve()))
             except ValueError as exc:
                 raise Misuse("Approved design cannot be represented by a portable relative path from this repository.") from exc
-            values["approved_design_display"] = display_path(approved_design_link)
-            values["embedded_approval_header"] = ""
-            values["approved_design_section"] = ""
+            values["execution_authority_header"] = f"- Approved design: {display_path(approved_design_link)}\n"
         plan_content = render("plan-template.md", values)
         if embedded:
             # Appended after rendering so template tokens inside the design are never substituted.

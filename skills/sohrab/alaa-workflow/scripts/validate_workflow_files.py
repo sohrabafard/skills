@@ -93,6 +93,8 @@ def plan_kind(content: str) -> str | None:
 
 EMBEDDED_DESIGN_HEADING_RE = re.compile(r"^##[ \t]+Approved Design[ \t]*\r?$", re.M)
 EMBEDDED_DESIGN_START_RE = re.compile(r"^<!-- approved-design:start -->[ \t]*(?:\r?\n|\Z)", re.M)
+DELEGATED_AUTHORITY_FIELDS = ("Execution source", "Execution scope", "Decision owner")
+EXECUTION_DESIGN_HEADING_RE = re.compile(r"^##[ \t]+Execution Design[ \t]*\r?$", re.M)
 
 
 def split_embedded_design(content: str) -> tuple[str, str | None]:
@@ -155,6 +157,7 @@ DESIGN_EXECUTION_FIELDS = (
 
 def design_execution_messages(content: str) -> list[str]:
     execution_field = any(field_value(content, label) is not None for label in DESIGN_EXECUTION_FIELDS)
+    execution_field |= any(header_values(content, label) for label in ("Execution authority", *DELEGATED_AUTHORITY_FIELDS))
     execution_heading = has(content, r"^#{2,6}\s+(?:Phase\b|Ordered Work\b|Task Allocation\b|Delegation\b|Execution Position\b)")
     if execution_field or execution_heading or has(content, r"^\s*[-*]\s+\[[ xX-]\]"):
         return [error("design.execution-fields", "Design contains execution hierarchy, cursor or gates.", "Keep design decisions/questions and a position checkpoint; create a separate approved-design execution plan.")]
@@ -937,15 +940,40 @@ def validate_embedded_design(content: str, body: str | None) -> list[str]:
     return messages
 
 
+def validate_delegated_design(content: str, status: str) -> list[str]:
+    messages: list[str] = []
+    if header_values(content, "Execution authority") != ["delegated"]:
+        messages.append(error("plan.execution-authority", "Expected exactly one Execution authority: delegated.", "Restore the delegated authority marker."))
+    for field in DELEGATED_AUTHORITY_FIELDS:
+        values = header_values(content, field)
+        if len(values) != 1 or not recorded_value(values[0]):
+            messages.append(error("plan.execution-authority", f"Expected one resolved {field} in the plan header.", "Record the actual authority source, scope and owner."))
+    if any(header_values(content, field) for field in (
+        "Approved design", "Approval status", "Approval by", "Approval on", "Approval evidence"
+    )) or EMBEDDED_DESIGN_HEADING_RE.search(content):
+        messages.append(error("plan.execution-authority", "Delegated authority and approved-design records cannot share this plan.", "Use the route that matches the actual authority."))
+    design = section_block(content, EXECUTION_DESIGN_HEADING_RE)
+    if len(EXECUTION_DESIGN_HEADING_RE.findall(content)) != 1 or not design or not design.strip():
+        messages.append(error("plan.execution-design", "Delegated execution requires one nonempty ## Execution Design section.", "Record the settled design in that section."))
+    elif not is_planning_status(status) and UNRESOLVED_RE.search(design):
+        messages.append(error("plan.execution-design", "The execution design still contains unresolved markers.", "Resolve them before dependent execution."))
+    return messages
+
+
 def validate_plan(path: Path, profile: str) -> list[str]:
     content = read_text(path)
     try:
         kind = plan_kind(content)
     except ValueError as exc:
         return [error("plan.kind", str(exc), "Restore exactly one supported header kind.")]
+    delegated = any(header_values(content, field) for field in ("Execution authority", *DELEGATED_AUTHORITY_FIELDS))
+    if delegated and kind != "execution":
+        return [error("plan.execution-authority", "Delegated authority requires Plan kind: execution.", "Declare the actual kind and authority.")]
     if kind == "design":
         return validate_design_plan(path)
-    content, embedded_body = split_embedded_design(content)
+    embedded_body = None
+    if not delegated:
+        content, embedded_body = split_embedded_design(content)
     status = effective_plan_status(content, path, profile)
     complete = is_complete_status(status)
     messages: list[str] = []
@@ -960,7 +988,9 @@ def validate_plan(path: Path, profile: str) -> list[str]:
         if reasons and not local_store:
             messages.append(error("plan.local-reason", "Task store reason is valid only with Task store local.", "Remove the reason or restore the local store."))
         designs = header_values(content, "Approved design")
-        if designs == ["embedded"]:
+        if delegated:
+            messages.extend(validate_delegated_design(content, status))
+        elif designs == ["embedded"]:
             messages.extend(validate_embedded_design(content, embedded_body))
         elif len(designs) != 1 or not recorded_value(designs[0]):
             messages.append(error("plan.approved-design", "Execution requires one approved-design link.", "Link the valid approved design without modifying it."))

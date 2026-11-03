@@ -6,8 +6,8 @@ This file owns task-store selection, the Beads-first policy, task authority, whe
 
 Resolve kind and admission through `references/artifact-lifecycle.md` first. Then test Beads availability. Beads is available only when all four hold: `bd` is installed (`command -v bd`), `bd where` succeeds, the workspace it reports matches the project binding, and `bd ping` succeeds. `bd where` only resolves the path. `bd ping` opens the store and runs a trivial query, so it detects a dead database. A CLI, installed skill, hook context or local `.beads` directory alone selects nothing. A reachable wrong hub is unavailable, not the configured store. A valid binding can point to an external hub without a repository-local database. The project binding alone decides whether a missing upstream Beads skill (`.agents/skills/beads/SKILL.md`) makes Beads unavailable; with no such rule, a missing skill changes nothing.
 
-- **Available:** Beads is the task authority. Register every new execution plan, every new task in any family, including an existing `local` family, and every issue-only task in Beads. A new execution plan follows `## Phase-task-subtask hierarchy`.
-- **Unavailable:** the plan records `Task store: local` with a `Task store reason` naming the observed failure, tracks its tasks in the plan, and continues. When Beads returns, retest availability before the next new task; new tasks then go to Beads under `## Migrating a local family`.
+- **Available:** Beads is the task authority for all new tasks, including issue-only work and tasks added to a local family. For a new eligible plan, follow `## Beads-native execution plan`; for an admitted Markdown plan, follow `## Phase-task-subtask hierarchy`.
+- **Unavailable:** an admitted durable plan records `Task store: local` and a `Task store reason` naming the observed failure. Bounded work without a durable trigger keeps its compact plan in the session. Retest before the next new task; migrate through `## Migrating a local family` when available.
 
 A design plan is always local. It takes no `Task store reason` and sits outside the availability test.
 
@@ -19,7 +19,7 @@ For Beads mechanics, load the installed upstream Beads skill separately and reus
 
 ## Division of labor
 
-The selected task store owns task registration, status, dependencies, ready and blocked state, discovered work, task continuation context, and the local evidence of new tasks. This skill owns whether a plan is needed and the process size, goal and phases, skill and lane choice, conflict prevention, evidence validity, phase acceptance, the four completion states, resume, handoff, and lesson selection. Only plans with `Task store: local` track tasks in Markdown; their recorded store owns that state.
+The selected store owns task registration, status, dependencies, readiness, discoveries, continuation and task evidence. Workflow owns planning, acceptance, continuity and completion rules. Only `Task store: local` tracks mutable task state in Markdown.
 
 ## Agent identity and ownership
 
@@ -44,17 +44,35 @@ Verified on 2026-11-02 against installed `bd` 1.3.1 (c1c4b642a) help for `update
 | Store | Task owner | Plan work entries |
 |---|---|---|
 | `local` (Beads unavailable at plan creation, or an existing local family) | Plan tasks own progress and prerequisite edges for tasks not yet in Beads | Stable ID, outcome, dependency list and skill mapping |
-| `beads` | Beads owns issue identity, status, priority, assignee, issue edges and native readiness | Unique issue ID mapped to one phase, with its skill mapping |
+| `beads` | Beads owns issue identity, status, priority, assignee, issue edges and native readiness | Native issue hierarchy, or unique phase mappings for Markdown consumers |
 
 For local families, write each task as `- [ ] T1: <outcome> [depends: none] [skills: inherit]`. Keep IDs unique and stable across the plan. Use comma-separated local IDs for prerequisites; `none` means no prerequisites. Every prerequisite must exist, the graph must be acyclic, and completed tasks' prerequisites must be completed. Tick only after observing the task's outcome and evidence, including work verified as already done. The plan's recorded claim coordinates ownership; it proves no exclusivity across agents or PCs.
 
-For flat Beads mappings, in an existing flat Beads family or a local family that gained Beads tasks, write `- Issue: <issue-id> [skills: inherit]`, using the actual opaque ID without assuming a prefix. New Beads execution families use `## Phase-task-subtask hierarchy`. Map each issue to one phase; a task override is its complete `[skills: name, name]` mapping. A Beads family keeps no local checkbox list or editable issue register; a local family keeps checkboxes only for tasks not yet migrated. Record issue closure in Beads, never by ticking a plan mirror. `references/companion-routing.md` owns inherited/override skill semantics for both stores.
+For existing flat Beads mappings or local families gaining Beads tasks, write `- Issue: <issue-id> [skills: inherit]` in one phase. A task override is its complete `[skills: name, name]` mapping. Record closure in Beads. A local family keeps checkboxes only for tasks not yet migrated. `references/companion-routing.md` owns skill inheritance.
 
 Workflow plan contents follow `references/context-continuity.md`; task acceptance and evidence follow `## Acceptance and evidence by level`.
 
+## Beads-native execution plan
+
+Use the root epic as the canonical plan, addressed as `beads:<root-id>` in dispatch, evidence and handoff. Use actual opaque IDs. Register ordered phase milestones under the root, then executable tasks and any subtasks under their actual parent. Each phase has at least one task. A task is a leaf or has at least two independent, separately claimable and verifiable subtasks with distinct acceptance. Containment never substitutes for prerequisite edges.
+
+| Issue and field | Canonical content |
+|---|---|
+| Root `description` | `Plan kind: execution`, `Plan format: beads-native-v1`, portable `Task binding`, outcome, scope/exclusions, constraints, `Registration: draft\|registered`, `Review boundary: phase\|final`, exact `Final phase` issue ID, `Commit authority`, shared skill bindings and owner/allocation record or exact node references |
+| Root `design`, `acceptance` | Settled design and execution authority under `references/artifact-lifecycle.md`, including source/scope/decision owner or actual approval and its evidence. Engagement acceptance in `acceptance` |
+| Root `notes`, handoff | Aggregate cursor, last verified evidence address, blockers and next action in notes. Six-field handoff in the root description under `references/context-continuity.md` |
+| Phase milestone | Phase number, outcome, barrier rationale, required skills, test collection and repair/retest plan in `description`. Phase criteria in `acceptance`. Integrated results and review verdict/evidence in attributable comments |
+| Task or subtask | Plan address and exact phase ID, outcome, owned scope/exclusions, skill binding or inheritance, ownership/resource conflicts and focused checks in `description`. Settled causal reasoning, invariants, relevant failures, recovery and decisions in `design`. Observable criteria in `acceptance`; results in comments and close reason |
+
+Use the review and commit semantics under `## Phase-task-subtask hierarchy`. A nested invocation uses the same root address and final phase ID, with its own assigned node and cursor. The parent holds root registration and aggregate position. Use native status, assignees, parent relations and prerequisites as task truth. Keep no mirrored graph, task table, Markdown checkpoint or second editable plan.
+
+Register the root as `draft` and verify its owner claim before creating children. Reuse exact matches after interruption. Read back every node's parent, label, criteria, skill bindings and edges with `bd show <id>` and `bd children <id>`. Check graph integrity through the capability table below. Query `bd ready --label <project-label> --parent <root-id> --limit 0` for leaves eligible for new claims. A descendant never blocks on an ancestor. Add edges to real prerequisites and confirm the affected leaves stay blocked until they land. Confirm independently executable leaves remain ready when their own prerequisites are satisfied.
+
+Mark `registered` through a guarded root update and read it back only after these checks pass. Missing nodes, uncertain writes, incorrect edge direction or missing bindings leave dependent work blocked. For a graph change, pause affected dispatch, mark registration draft, reconcile and read back before restoring it. The registration marker proves no authority, test result or resource independence; apply `## Ready tasks and workflow gates` before each dispatch. Reconcile the affected issues and root before handoff and completion, including pending review, commit and curation evidence.
+
 ## Phase-task-subtask hierarchy
 
-Every new execution family created while Beads is available declares `- Task hierarchy: phase-task-subtask` in the plan header, with `Task store: beads` and its portable `Task binding`; omitting the marker cannot exempt it. A family created while Beads is unavailable has no hierarchy marker: it records `Task store: local`, `Task binding: not applicable` and `Task store reason: <observed failure>`, and uses local checkbox tasks. Existing unmarked families keep their original contract. Tasks added later to a local family are flat `Issue:` entries; the family gains no phase hierarchy.
+This section owns Markdown mappings and review/commit semantics shared with native plans. A new Markdown execution family using Beads declares `- Task hierarchy: phase-task-subtask`, `Task store: beads` and its portable `Task binding`. A new local family records `Task store: local`, `Task binding: not applicable` and `Task store reason: <observed failure>`; use local checkbox tasks without the marker. Existing unmarked families keep their original contract. Tasks added later to a local family are flat `Issue:` entries.
 
 Register every phase, task and subtask, with acceptance and parent-child relations, in bound Beads before dependent execution. A phase or milestone contains one or more tasks and maps as `Phase N`. IDs are opaque and unique across the family. Preserve an optional enclosing engagement epic.
 
@@ -79,7 +97,7 @@ Containment does not establish ordering. Record genuine prerequisites as separat
 
 The plan header records `Review boundary: phase` or `final`, `Final phase: Phase N`, and `Commit authority`. New plans default to `local commits pre-authorized (main instruction file)`; verify the main instruction rule before acting. Use `explicit user grant: <source and scope>` for a separate grant or `not granted` when no grant applies. Offline syntax proves no authority; local-commit authority covers no push, merge into another branch, tag or history rewrite. Each phase records `Review status` and `Review evidence` separately from any commit checkpoint. Pending review is `REVIEW_PENDING`; completed review uses the verdict from `references/review-mode.md` with attributable evidence. `alaa-codex-orchestrator` and `alaa-cc-orchestrator` `references/verification-and-gates.md` own when review, independent verification and commits run; the plan passes this whole-engagement contract into nested invocations rather than resetting it.
 
-New nested plans retain the canonical engagement's `Review boundary` and `Final phase`, reached through `Parent plan`, and record their own last phase as `Local final phase`. Their cursor remains local. Nested final-only phases keep `REVIEW_PENDING`; the canonical engagement owns final acceptance. Resolve ancestry before writing; malformed, conflicting, cyclic, missing or over-limit ancestry blocks initialization. A parent without representable cadence requires explicit reconciliation; never infer legacy defaults or migrate its authority. Existing families remain readable under their recorded contract.
+New nested Markdown plans retain the canonical engagement's `Review boundary` and `Final phase`, reached through `Parent plan`, and record their own last phase as `Local final phase`. Their cursor remains local. Nested final-only phases keep `REVIEW_PENDING`; the canonical engagement owns final acceptance. Resolve ancestry before writing; malformed, conflicting, cyclic, missing or over-limit ancestry blocks initialization. A parent without representable cadence requires explicit reconciliation; never infer legacy defaults or migrate its authority.
 
 Completed required review boundaries need resolved `Validation commands` and observed `Evidence observed`; absent or unrun evidence cannot establish acceptance. When validation is inapplicable, record `Validation commands: none (specific reason)` and `Evidence observed: not applicable (specific reason)`. A bare sentinel supplies no justification.
 
@@ -101,9 +119,9 @@ That section owns the policy for the last row and its boundary with issue notes;
 
 Every criterion and result has one owner, chosen by level:
 
-- Phase acceptance and review status: the plan; its phase issue references that owner.
+- Phase acceptance and review status: the native phase issue, or the Markdown plan with a reference from its phase issue.
 - A task or subtask's acceptance and result: that node's issue; under `local`, the plan's task entry.
-- An integrated review across several tasks: the plan's phase-evidence section.
+- Integrated review across tasks: the native phase's evidence comment or the Markdown phase-evidence section.
 - Bulky output: an artifact, meaning a file under the task-artifact directory the repository's instructions name, subject to `references/artifact-lifecycle.md` admission. The evidence owner links to it and records the command, the result and the one line that mattered, per `references/context-continuity.md` `## What not to write`. When those instructions name no such directory, record that no artifact was admitted and keep only the command, the result and the one line that mattered in the evidence owner; never paste the bulky output.
 
 The plan links to task results and never copies them. Evidence is recorded once; every other site links to its owner, because a copy goes stale silently. Work without a plan keeps all of it in its issue. Plan-held task acceptance stays in the plan until its task migrates; the issue then points to it with an exact plan reference.
@@ -115,14 +133,14 @@ Under `beads`:
 | Field | Holds |
 |---|---|
 | `description` | Goal, scope, output, and a link to the plan and phase |
-| `spec_id` | The repository name, a colon, then the plan's repository-relative path, e.g. `skills:docs/_agent_plans/<stem>.md` |
+| `spec_id` | A real file spec, as repository name and repository-relative path, e.g. `skills:docs/_agent_plans/<stem>.md` |
 | `acceptance` | The task's criterion, or an exact reference into the plan |
 | `design` | A decision affecting the task, plus its reference link |
 | `notes` | Position, including blockers, and next step |
 | comments | Events, including interim validation runs, and learned knowledge and curation outcomes when no plan exists (`references/context-continuity.md`) |
 | close reason | A closed task's result (see `## Close reason`) |
 
-When a plan exists, put its path in `spec_id` in that form; a path inside `description` prose alone does not count. The repository prefix keeps the path unambiguous on a hub shared by several projects.
+For Markdown plans, set `spec_id` to the file reference. For native plans, use the plan address in the description and leave `spec_id` unset unless a real file spec applies. Use custom metadata only for a minimal marker or a named consumer; do not copy native fields into it.
 
 ## Close reason
 
@@ -143,11 +161,12 @@ Verified on 2026-11-02 against installed `bd` 1.3.1 (c1c4b642a): the `--help` of
 | Capability | Decision | Rule and reason |
 |---|---|---|
 | `bd create` with `--parent`, `--spec-id`, `--acceptance`, `--design`, `--labels`, `--deps`, `--validate`, `--dry-run` | Adopt | Register each phase, task and subtask with its parent, acceptance and plan link (`## Issue fields`). Preview with `--dry-run`; `--validate` checks the type's required sections. |
+| `bd create --skills`, `--context`, `--body-file`, `--design-file`; `bd update --body-file`, `--design-file` | Adopt | In [Beads v1.3.2](https://github.com/steveyegge/beads/blob/v1.3.2/cmd/bd/create.go#L114-L148), create's skills/context flags append description sections. Use them or write those sections in the body, once. For long content use the body/design file flags with `-` for stdin where supported. Replace the corresponding field on update with ownership guards. Recheck installed help and behavior after upgrade. |
 | `bd search` | Adopt | Search before creating; it includes closed issues by default. |
 | Types `decision`, `spike` | Adopt | `decision` records a decision other tasks cite; `spike` a time-boxed investigation whose output is knowledge. |
 | `bd create --graph`, `--file`, `bd batch`, `bd q` | Not adopted | Help prints no graph-file schema. `bd batch` creates with no parent, acceptance or guards. `bd q` sets parent, labels, priority and type, but no acceptance, spec-id or guards. |
 | `bd dep add`, `bd link` | Adopt | Record each prerequisite as a blocking edge (`## Record task prerequisites`). Create each follow-up `discovered-from` its origin (`--deps discovered-from:<origin-id>`); that edge records provenance and does not block. Per Beads v1.3.1 source (`internal/types/types.go` `AffectsReadyWork`, checked 2026-10-13), readiness counts only blocks, parent-child, conditional-blocks and waits-for edges. |
-| `bd dep cycles`, `bd graph check`, `bd swarm validate` | Adopt, read-only | Run after registering or changing edges and before dispatch. `bd swarm create` is not adopted. |
+| `bd dep cycles`, `bd graph check`, `bd swarm validate` | Adopt, read-only | Check after registering or changing edges before affected dispatch. Reuse unchanged graph evidence. `bd swarm create` is not adopted. |
 | `bd where`, `bd ping`, `bd prime` | Adopt, read-only | `bd where` and `bd ping` are the availability test (`## Select before tracking-dependent work`). `bd prime` prints workflow context; run it only when hook context is missing or stale. |
 | `bd ready`, `bd blocked`, `bd children`, `bd show --children --refs --long`, `bd graph --open`, `bd epic status`, `bd list`, `bd query`, `bd count`, `bd status` | Adopt, read-only | Filter by the project label. Run `bd ready --explain` when readiness is unexpected. `bd show --long` shows the lease. |
 | `bd ready --claim`, `bd close --claim-next`, `bd close --continue`, `bd epic close-eligible`, `bd orphans --fix` | Not adopted | Each claims or closes an issue the plan did not designate or acceptance evidence did not approve. Read-only `bd orphans` is adopted at handoff review. |
@@ -177,27 +196,27 @@ When one project needs another project's output, create a delivery task in the p
 
 ## Ready tasks and workflow gates
 
-Use the selected store's prerequisite graph for task readiness. A ready task still requires scope, authority, available deliverables/source, mapped skills, and file/environment independence before dispatch. Phase dependencies and acceptance barriers stay in the plan; native issue readiness does not satisfy them. Closing all issues proves none of the workflow lifecycle states defined in `references/workspace-and-integration.md`.
+Use the selected store's prerequisite graph for task readiness. A ready task still requires registered scope, authority, available deliverables/source, mapped skills, file/environment independence and satisfied phase barriers. Closing all issues proves none of the workflow lifecycle states in `references/workspace-and-integration.md`.
 
 A claim does not lock files, fixtures, generators, ports or test environments, and independently synced PC databases do not establish mutual exclusion. Designate task ownership and resolve shared-resource conflicts before parallel work. Before cross-PC transfer, verify that the designated owner can access the actual source and attributable evidence. Git source sync and Dolt task sync are separate actions with separate authorization; run a Dolt remote or sync command (`bd dolt push`, `bd dolt pull`, `bd dolt remote`, `bd sync`) only with the user's explicit authorization for that action. `## Beads capabilities in use` owns the `--sandbox` rule against auto-push. A synced issue does not make another PC's uncommitted code available. `references/context-continuity.md` owns the handoff record for a device transfer.
 
 ## Outage and uncertain writes
 
-Beads unreachable before a plan exists selects `local` under `## Select before tracking-dependent work`. Issue-only work needs tracking when it spans more than one session, delegates work or ends in a handoff. Admit such work through `references/artifact-lifecycle.md` as an execution plan with the `direct` profile and `Task store: local`. Other issue-only work proceeds untracked and reports its result. When Beads is available again, register an issue for untracked issue-only work only if the work is still open.
+Beads unreachable before plan admission selects `local` for durable work. Apply the Markdown profile rules in `references/artifact-lifecycle.md`. Bounded work without a durable trigger keeps its plan in the session and reports its result. When Beads returns, register previously untracked work only if it is still open.
 
-A `beads` family that loses Beads mid-run keeps its store. Preserve existing evidence, record the outage in the checkpoint, create no local copy of a Beads-owned task, never convert issues to checkboxes, and never claim a failed update as saved. Pause claims, dispatch and closure that need Beads state; continue independent authorized work on tasks already claimed and read back, and reconcile through Beads when it returns.
+A Beads-bound family that loses Beads mid-run keeps its store. Preserve evidence. Pause claims, dispatch and closure that need Beads state. Continue only independently authorized work on tasks already claimed and read back, subject to the named-task exception below. Reconcile through Beads when it returns.
 
-When `bd ping` fails, a failed heartbeat is an outage, not a lost claim. Continue only independent authorized work on a task already claimed and read back. Record the outage in the checkpoint. When Beads is available, re-read the issue. If another actor holds it or the lease expired, stop, report and wait for the user's instruction. Never re-claim or take over automatically.
+When `bd ping` fails, apply outage handling to a failed heartbeat. When Beads is available, re-read the issue. If another actor holds it or the lease expired, stop, report and wait for the user's instruction. Never re-claim or take over automatically.
 
-With no claimed task, a `beads` family waits for the hub. The user may instead name one task as unclaimed and choose to proceed on it. Record that statement in the checkpoint as unverified and create no local copy of the task. When Beads is available, read the issue back. If another actor holds it, stop and report the collision. If it is unassigned, claim it with `--claim` before more work.
+With no claimed task, wait for the hub unless the user names one unclaimed task and chooses to proceed on it. Record the statement as unverified. On recovery, read it back. If another actor holds it, stop and report the collision. If unassigned, claim it before more work.
 
-Park newly discovered work, evidence and notes in the optional checkpoint field `Pending Beads reconciliation` (the plan cursor under the `direct` profile), a dated list. Write them as plain list entries, never as tasks or checkboxes. When Beads is available, register each entry there, then clear the list. A list that is not cleared blocks closing the affected issues and setting the plan status to completed. A handoff during an open outage copies the list verbatim and names the outage as the blocker.
+Record the outage and a dated `Pending Beads reconciliation` list of evidence, notes and discoveries in the admitted Markdown checkpoint or direct cursor. For a native plan or issue-only work, use the session or an already authorized evidence-only artifact when available. Label unsaved items pending. Keep no offline task mirror. On recovery, register or record each pending entry at its Beads owner and read it back before clearing the list. Pending reconciliation blocks closure and completion. At outage handoff, transmit the list verbatim and name the blocker.
 
 After a mutation with an uncertain outcome, read actual task state through the bound owner before retrying. Reconcile whether the requested effect landed, then perform only the still-required authorized change. Do not retry blindly or report success without evidence. Resume and evidence reconciliation follow `references/context-continuity.md` and `references/workspace-and-integration.md`.
 
 ## Helper boundary and compatibility
 
-For a new execution family the initializer requires `--task-store beads` with `--beads-binding <portable-reference>`, or `--task-store local` with a one-line `--beads-unavailable-reason <observed failure>`. The reason becomes the `Task store reason` header: the validator requires it with local execution and rejects it with Beads. Kind admission belongs to `references/artifact-lifecycle.md`; profiles and aliases never replace task authority. `--review-boundary {phase,final}` defaults to phase at the root, inherits canonical parent cadence when nested, and rejects a conflicting explicit override. Resolve availability first; the helper never discovers a store from PATH, environment or directory existence. Local binding is `not applicable` until the family gains Beads tasks. Beads binding is required; Beads with deprecated standalone `--state-only` is invalid. Helpers invoke no Beads command, service or network operation.
+Markdown helpers receive the selected store and binding arguments from `references/artifact-lifecycle.md`; they never discover or contact Beads. The validator requires the reason for local execution and rejects it for Beads. Review defaults to phase at the root, inherits canonical parent cadence when nested, and rejects a conflicting override. Profiles and aliases never replace task authority.
 
 For execution and existing compatible families, either `Task store` or `Task binding` metadata header marks a family. Marked families require exactly one of each, a supported store and valid pairing under every profile, including legacy; both absent retains the old contract. Draft unresolved markers may warn; unresolved executing work fails even when the header says planning. Offline validation checks metadata, mappings, skills and snapshots; it proves no live issue, workspace, project scope or readiness.
 

@@ -1,11 +1,11 @@
 ---
 name: alaa-workflow
-description: "Durable design and execution planning for long-running, multi-phase, resumable, delegated, handoff-sensitive, review, or prompt-pack work. Design plans discuss ideas and algorithms locally through explicit approval; execution plans follow an approved linked or embedded design with Beads-first task tracking and exact phase/task skills. A plan request saves its admitted plan and checkpoint; plan-only authorizes no implementation. Respect native Plan Mode and explicit no-file, read-only, or chat-only limits; short advice, ordinary review, and small single-phase edits create no files unless requested."
+description: "Plan before implementation. Use a compact plan for bounded work and a complete durable plan for multi-phase, resumable, delegated, or handoff-sensitive work. Prefer Beads-native execution plans with exact phase/task skills; keep admitted Markdown families and file consumers. Plan-only authorizes planning only. Respect native Plan Mode and explicit no-file, read-only, or chat-only limits. Short advice and ordinary review need no execution plan."
 ---
 
 # Alaa Workflow
 
-Keep long work resumable without imposing orchestration on every task. Plans own design decisions and workflow gates. The selected task store owns execution task progress. Secondary artifacts exist only for a real consumer.
+Plan before every implementation. Make long work resumable without imposing orchestration on bounded work. Use one plan authority and one task store per task.
 
 ## Start
 
@@ -16,23 +16,13 @@ Keep long work resumable without imposing orchestration on every task. Plans own
 5. Pair with `/alaa-low-noise` and the narrowest domain skill needed for technical decisions. Before designing implementation or verification, load `/alaa-testing-strategy`.
 6. Before writing, resolve plan kind, approval and artifact/profile admission through `references/artifact-lifecycle.md`. Resolve Beads availability, execution task authority and evidence through `references/task-tracking.md`. Resolve exact skill bindings through `references/companion-routing.md`.
 
-## Select the profile
+## Select the planning route
 
-Select kind, approval admission, profile and execution phase/lane planning through `references/artifact-lifecycle.md`.
-
-Initialize design with `scripts/init_workflow_files.py --task <title> --plan-kind design`. Initialize execution with `scripts/init_workflow_files.py --task <title> --plan-kind execution --approved-design <path> --task-store beads --beads-binding <portable-reference> [--profile <profile>] [--review-boundary phase|final] [--with-prompts]`. When `references/task-tracking.md` finds Beads unavailable, replace the two Beads flags with `--task-store local --beads-unavailable-reason <observed failure>`. For a design approved in this session, replace `--approved-design <path>` with `--approved-design embedded --design-source <path> --approval-by <approver> --approval-on <YYYY-MM-DD> --approval-evidence <evidence>`. The kind owner decides allowed flags. `references/task-tracking.md` owns execution binding arguments.
-
-Exit codes of `scripts/init_workflow_files.py`:
-
-- Exit `0` means files were created.
-- Exit `1` means a collision and no writes. Continue that family instead of forcing over it.
-- Exit `2` means the invocation could not run. Do not assume an artifact set exists.
+Select kind, authority, medium and plan size through `references/artifact-lifecycle.md`. Use its initializer only for an admitted Markdown family. For a Beads-native plan, register and verify the issue graph through `references/task-tracking.md` before dependent execution.
 
 ## Survive compaction and handoff
 
-This is why the artifacts exist. `references/context-continuity.md` owns the rules: how the three artifacts divide the work, what the handoff package holds, when to write, the cold-start test, and the resume protocol.
-
-That reference owns artifact roles, event-driven updates and recovery when current position is uncertain. Follow its mode-aware resume protocol before acting after context loss.
+`references/context-continuity.md` owns position, handoff, event-driven updates and the cold-start test. Follow its resume protocol after context loss.
 
 ## Execute and resume
 
@@ -77,17 +67,9 @@ Before resolving any runtime name, model name, effort level, feature syntax, or 
 
 Review the requested surface directly. Lead with actionable findings and exact evidence. Create workflow artifacts only when explicitly requested or when a continuing fix loop needs them. `references/review-mode.md` owns the evidence order, the must-check areas, the verdict vocabulary a phase can hand across a lane boundary, and finding triage before any fix.
 
-## Validate the workflow artifacts
+## Validate the workflow record
 
-For an admitted workflow family, set `SKILL_DIR` to this installed skill directory's absolute path. From the target repository root, run `python3 "$SKILL_DIR/scripts/validate_workflow_files.py" --plan <path>` before handoff and completion. It applies kind-specific offline checks and correlates explicit references or the selected stem while preserving unmarked history. `references/artifact-lifecycle.md` owns approval-proof limits. `references/task-tracking.md` owns live Beads-proof limits. Issue-only work creates no plan just to run this artifact validator. Required behavior validation still runs, with results recorded in its issue through `references/task-tracking.md`, or in the final report when Beads is unavailable.
-
-For admitted families:
-
-- Exit `0` is clean. Warnings alone do not fail it.
-- Exit `1` is a blocking artifact error. Repair it before advancement. Never report it as a pass.
-- Exit `2` means validation failed to run. A missing selected plan, uncorrelatable companion, or unreadable file is a failed gate. It is never evidence that artifacts are clean.
-
-No artifact validation runs for issue-only work without an admitted plan. Report that distinction without implying its required behavior validation passed.
+For Beads-native work, verify the bound record through `references/task-tracking.md`. For Markdown, use the offline validator in `references/artifact-lifecycle.md`. An issue-only or session plan needs no workflow file to validate. Record required behavior evidence at its task owner.
 
 ## When NOT to use
 
@@ -100,7 +82,7 @@ This skill owns coordination and continuity, not architecture, security, data, r
 | You are about to | Read |
 |---|---|
 | Begin a long run, hand off (including to another PC), resume, or find you cannot name your own current position | `references/context-continuity.md` |
-| Write the first workflow file, choose design versus execution or verify approval, weigh profiles, or attach to an existing family | `references/artifact-lifecycle.md` |
+| Choose plan size, medium, design or execution authority, or continue an existing family | `references/artifact-lifecycle.md` |
 | Resolve execution hierarchy, test Beads availability, select or migrate a task store, decide where task information, acceptance or evidence lives, write issue fields or a close reason, link a follow-up or cross-project dependency, assign/resume/transfer an agent's Beads identity or issue ownership, resolve readiness, or encounter a Beads outage or uncertain update | `references/task-tracking.md` |
 | Make the first write of a multi-phase or delegated run, record an evidence snapshot, exercise authorized Git integration, or state which completion states a finished run reached | `references/workspace-and-integration.md` |
 | Reach an execution phase or decision boundary with a curation signal, or prepare execution completion | `references/context-curation.md` |

@@ -1,8 +1,7 @@
 # Workflow Plan - {{task}}
 
 - Plan kind: execution
-- Approved design: {{approved_design_display}}
-{{embedded_approval_header}}- Task ID: `{{task_id}}`
+{{execution_authority_header}}- Task ID: `{{task_id}}`
 - Mode: `{{mode}}`
 - Profile: `{{profile}}`
 - Task store: `{{task_store}}`
@@ -32,7 +31,7 @@
 - Out of scope: NEEDS_FILL
 - Constraints and assumptions: NEEDS_FILL
 
-## Handoff Package
+{{delegated_design_section}}## Handoff Package
 
 Knowledge held only in the current agent's head disappears on compaction. Fill a field when knowledge is learned, not on a schedule; leave unused fields empty. Field semantics are in the skill's `alaa-workflow references/context-continuity.md`, not in this repository.
 
