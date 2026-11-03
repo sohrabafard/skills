@@ -1,0 +1,12 @@
+{
+  "warning": "Advisory register; no filesystem locking is implemented. Only lead updates it.",
+  "active": [],
+  "entry_shape": {
+    "task_id": "",
+    "owner": "",
+    "paths": [],
+    "base_revision": "",
+    "status": "reserved",
+    "release_condition": "handoff accepted"
+  }
+}

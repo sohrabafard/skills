@@ -1,0 +1,69 @@
+{
+  "status": "PASS",
+  "repository": "/home/sohrab/project/skills",
+  "base": "bcff5c47508c0c97c25fbc0fdb7fe732b24c90bf",
+  "source_scope": "HEAD c3799119 plus current tracked repair files; artifacts excluded from source selection",
+  "commands": [
+    {
+      "command": "git diff --check bcff5c47508c0c97c25fbc0fdb7fe732b24c90bf -- AGENTS.md skills/sohrab",
+      "scope": "tracked diff from base, AGENTS.md and skills/sohrab only",
+      "exit": 0,
+      "stdout": "",
+      "stderr": "",
+      "duration_seconds": 0.023384
+    },
+    {
+      "command": "git diff --name-only bcff5c47508c0c97c25fbc0fdb7fe732b24c90bf -- '*.py'",
+      "exit": 0,
+      "stdout": "skills/sohrab/alaa-cc-orchestrator/scripts/check_agent_contracts.py\nskills/sohrab/alaa-codex-orchestrator/scripts/check_agent_contracts.py\nskills/sohrab/alaa-testing-strategy/scripts/check_execution_contracts.py\nskills/sohrab/alaa-workflow/scripts/init_workflow_files.py\nskills/sohrab/alaa-workflow/scripts/validate_workflow_files.py\n",
+      "stderr": "",
+      "selected_count": 5,
+      "files": [
+        {
+          "path": "skills/sohrab/alaa-cc-orchestrator/scripts/check_agent_contracts.py",
+          "sha256": "0f64a2969fd810f04c17dff1ced41b32f02298179ae67a8eadb10f6cd02dfa1a",
+          "bytes": 40939,
+          "result": "PASS"
+        },
+        {
+          "path": "skills/sohrab/alaa-codex-orchestrator/scripts/check_agent_contracts.py",
+          "sha256": "ceddeb7a9c317693b511d1415ca3aba350a3aca46c2578b3eebc99b5dbba6658",
+          "bytes": 40602,
+          "result": "PASS"
+        },
+        {
+          "path": "skills/sohrab/alaa-testing-strategy/scripts/check_execution_contracts.py",
+          "sha256": "e46b1bf9c95e6748ee12685b966621faea3d7f35c485ab2a1813bde81ba9170e",
+          "bytes": 33088,
+          "result": "PASS"
+        },
+        {
+          "path": "skills/sohrab/alaa-workflow/scripts/init_workflow_files.py",
+          "sha256": "6d30f75cbe863613c818da382be272629fcb9b3c629a8b60eefe30042af12b36",
+          "bytes": 30370,
+          "result": "PASS"
+        },
+        {
+          "path": "skills/sohrab/alaa-workflow/scripts/validate_workflow_files.py",
+          "sha256": "33970055fdfafda025c30923db655e5380804affdf1e9c0c36746ee6e75763b9",
+          "bytes": 89787,
+          "result": "PASS"
+        }
+      ]
+    },
+    {
+      "command": "python3 ast.parse each UTF-8 file selected by git diff --name-only <base> -- '*.py' (no imports)",
+      "scope": "all tracked Python paths changed from base in working tree",
+      "selected_count": 5,
+      "passed": 5,
+      "failed": 0,
+      "failures": []
+    }
+  ],
+  "elapsed_seconds": 0.065702,
+  "limitations": [
+    "Focused independent pre-review observation only; not the final eight-command batch.",
+    "Syntax parsing does not execute code or validate runtime behavior.",
+    "Does not include untracked Python files."
+  ]
+}

@@ -6,6 +6,7 @@ instructions. An archived result does not establish today's repository state or 
 
 | Date | Archive | Coverage |
 |---|---|---|
+| 2026-11-03 | [Skill-pack finalization](../artifacts/skill-pack-finalization-20261103/report.md) | Beads-native workflow plans with Markdown compatibility; selective delegated approvals; concrete resource-isolation and accessibility guidance; independent source review and focused checks; no installation, activation, or runtime proof |
 | 2026-10-26 | [Test execution ownership](../artifacts/test-execution-ownership/report.md) | Canonical testing execution/resource/classification ownership, mirrored runtime consumers and workflow writer recovery; independent source/POSIX proof and five proposal-only extraction options |
 | 2026-10-13 | [Capability recall and lesson economy](20261012-capability-recall/report.md) | Capability recall, memory/lesson ownership, nonwriting hook behavior, decision evaluation and independent source verification |
 | 2026-10-13 | [Dual task-store workflow](20261013-workflow-task-stores/report.md) | Local default and explicitly bound Beads authority, workflow continuity boundaries, compatibility, source review and verification limits |

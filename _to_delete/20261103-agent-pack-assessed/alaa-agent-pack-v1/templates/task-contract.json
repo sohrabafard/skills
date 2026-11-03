@@ -1,0 +1,23 @@
+{
+  "task_id": "REPLACE-ME",
+  "objective": "",
+  "risk_tier": "R2",
+  "role": "php",
+  "base_revision": "",
+  "working_diff_sha256": "",
+  "inputs": [],
+  "acceptance_criteria": [],
+  "non_goals": [],
+  "allowed_write_paths": [],
+  "read_paths": [],
+  "dependencies": [],
+  "resource_budget": {
+    "max_heavy_jobs": 1,
+    "max_targeted_recovery_attempts": 1
+  },
+  "required_checks": [],
+  "authorization_notes": "",
+  "handoff_to": "lead",
+  "status": "not_started",
+  "evidence": []
+}

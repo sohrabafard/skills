@@ -1,0 +1,30 @@
+{
+  "as_of": "2026-11-02",
+  "pricing_scope": "Standard API text tokens, uncached input; excludes long-context, cache writes, tool fees, regional and speed premiums. Not subscription quotas.",
+  "models": {
+    "sol": {
+      "id": "gpt-6.1-sol",
+      "label": "Sol",
+      "input_usd_million": 2,
+      "output_usd_million": 10
+    },
+    "astra": {
+      "id": "gpt-6-astra",
+      "label": "Astra",
+      "input_usd_million": 10,
+      "output_usd_million": 50
+    },
+    "terra": {
+      "id": "gpt-6.1-terra",
+      "label": "Terra",
+      "input_usd_million": 1,
+      "output_usd_million": 5
+    },
+    "luna": {
+      "id": "gpt-6-luna",
+      "label": "Luna",
+      "input_usd_million": 0.1,
+      "output_usd_million": 0.5
+    }
+  }
+}

@@ -1,0 +1,74 @@
+{
+  "base": "bcff5c47508c0c97c25fbc0fdb7fe732b24c90bf",
+  "source_head": "dd21a6392d28031c46eb94bee03aa66e6dc66c02",
+  "skills": [
+    {
+      "skill": "alaa-cc-orchestrator",
+      "entry_bytes_before": 18447,
+      "entry_bytes_after": 18573,
+      "tracked_bytes_before": 374216,
+      "tracked_bytes_after": 375155
+    },
+    {
+      "skill": "alaa-codex-orchestrator",
+      "entry_bytes_before": 19047,
+      "entry_bytes_after": 19047,
+      "tracked_bytes_before": 425922,
+      "tracked_bytes_after": 426093
+    },
+    {
+      "skill": "alaa-code-intelligence-routing",
+      "entry_bytes_before": 2940,
+      "entry_bytes_after": 2809,
+      "tracked_bytes_before": 64388,
+      "tracked_bytes_after": 64257
+    },
+    {
+      "skill": "alaa-extract-agent-lessons",
+      "entry_bytes_before": 6411,
+      "entry_bytes_after": 5983,
+      "tracked_bytes_before": 12768,
+      "tracked_bytes_after": 12340
+    },
+    {
+      "skill": "alaa-low-noise",
+      "entry_bytes_before": 7330,
+      "entry_bytes_after": 6653,
+      "tracked_bytes_before": 20375,
+      "tracked_bytes_after": 19408
+    },
+    {
+      "skill": "alaa-prompting-guide",
+      "entry_bytes_before": 6960,
+      "entry_bytes_after": 6969,
+      "tracked_bytes_before": 323962,
+      "tracked_bytes_after": 326549
+    },
+    {
+      "skill": "alaa-repo-docs",
+      "entry_bytes_before": 10327,
+      "entry_bytes_after": 9433,
+      "tracked_bytes_before": 130510,
+      "tracked_bytes_after": 129243
+    },
+    {
+      "skill": "alaa-workflow",
+      "entry_bytes_before": 11388,
+      "entry_bytes_after": 9000,
+      "tracked_bytes_before": 233859,
+      "tracked_bytes_after": 239672
+    },
+    {
+      "skill": "alaa-testing-strategy",
+      "entry_bytes_before": 32526,
+      "entry_bytes_after": 32012,
+      "tracked_bytes_before": 150495,
+      "tracked_bytes_after": 150942
+    }
+  ],
+  "entry_bytes_before": 115376,
+  "entry_bytes_after": 110479,
+  "tracked_bytes_before": 1736495,
+  "tracked_bytes_after": 1743659,
+  "scope": "Nine existing tracked skill trees; source size only, not runtime performance or token measurements."
+}

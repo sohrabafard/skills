@@ -1,0 +1,12 @@
+# Handoff
+- Task / role:
+- Outcome: completed | partial | blocked
+- Reviewed/changed revision and uncommitted diff SHA-256:
+- Changed paths (or none):
+- Acceptance criterion -> observed evidence:
+- Commands actually run, outcome and evidence location:
+- Checks not run and why:
+- Findings: location, trigger, impact, confidence, proposed fix:
+- Assumptions and unresolved questions:
+- Residual risks / rollout or recovery requirement:
+- Next owner and next exact action:
