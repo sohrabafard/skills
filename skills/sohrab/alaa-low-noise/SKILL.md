@@ -5,13 +5,9 @@ description: Context economy and output discipline for non-trivial agent work in
 
 # Alaa Low Noise
 
-## Introduction
-
-This skill keeps complex work inspectable while limiting context cost and output noise. **Context economy** controls what enters the context window. **Output discipline** controls what is printed for the user. Context economy matters more because long tool results cost context on every later turn. Neither control reduces task effort, evidence, validation, or reviewability.
-
-## Scope and ownership
-
-This companion skill owns context economy and output discipline only. Domain skills own implementation. `/alaa-workflow` owns durable planning and state; this skill gives no planning advice. Both runtimes share this contract. Runtime-dependent rules name their surface. The frontmatter owns activation boundaries, including exclusions.
+Bound context input and printed output while preserving task effort, evidence, validation and
+reviewability. Both runtimes share this contract unless a rule names its runtime. Domain skills own
+implementation. `/alaa-workflow` owns durable planning and state.
 
 ## Contract
 
@@ -23,7 +19,7 @@ Apply these rules to both parts:
 - Obey explicit requests for full logs, diffs, or file contents.
 - Follow repository conventions. When `/alaa-workflow` is active, use its artifact family, not a competing family.
 - Keep long-running work observable through bounded calls and concise updates required by the active host.
-- Batch independent reads or checks when safe. Keep dependent operations and mutations sequential.
+- Batch independent reads, searches and checks when safe and supported. Keep dependent operations and mutations sequential.
 - Do not infer a universal watchdog timeout. Do not narrate every command.
 
 Repository validation policy owns stricter invocation requirements.
@@ -34,14 +30,21 @@ Repository validation policy owns stricter invocation requirements.
 - Search or inventory before reading. Then read the bounded slice around the match. Read a whole file only when safe editing requires it.
 - Re-read only for a new reason. Examples include your own edit, a failed check, or a changed hypothesis. Reconfirming content already in context does not qualify.
 - Prefer a scoped search with a few context lines, a changed-file list, or a count over raw dumps. Examples of raw dumps include `cat`, a full tree, or an unbounded log.
-- Batch independent reads and searches into one turn where the runtime supports it. Prefer one well-chosen query to several exploratory queries.
+- Prefer one well-chosen query to several exploratory queries.
 - Capture bulky output in a file. Inspect only its failing or relevant slice. Keep the path.
 
 ### Part 2 — Output noise: what gets printed
 
-**The file is the medium; the message is the pointer.** Save working material to a file and report its path instead of printing it. This includes logs, diffs, inventories, command output, intermediate results, generated data, and state needed by later turns or other agents. Terminal output costs output tokens and context on later turns. It is not storage and is gone when the session ends.
+Save bulky working material such as logs, diffs, inventories and generated data to an authorized
+file. Report its path instead of printing it. Terminal output costs tokens and context on later
+turns and disappears when the session ends.
 
-**Deliver the answer; preserve admitted plans.** Put reviews, assessments, explanations, and other requested advice in the reply. Before choosing an execution plan's medium, read `alaa-workflow references/artifact-lifecycle.md` for admission and its exceptions. When admitted, save the plan/checkpoint. Report their paths with a concise outcome. Outside that admission, create no files for read-only or advisory requests unless explicitly requested. `/alaa-repo-docs` owns documents. Preserve required checklists, resume context, and phase/task skill bindings when shortening output.
+**Deliver the answer and preserve admitted plans.** Put reviews, assessments, explanations and advice in the reply.
+For execution-plan admission and exceptions, read `alaa-workflow references/artifact-lifecycle.md`.
+Persist the admitted plan and position in the workflow-selected medium. Report its canonical reference
+with a concise outcome. Report file paths for file artifacts. Outside admission, create files for
+read-only or advisory requests only when explicitly requested. `/alaa-repo-docs` owns documents.
+Preserve required checklists, resume context and phase/task skill bindings when shortening output.
 
 - Report only milestones, blockers, scope changes, validation outcomes, and useful artifact paths. Never duplicate status already surfaced by the harness.
 - Bound terminal output. Do not dump unbounded files, trees, manifests, or logs. Prefer purpose-built tools, changed-file lists, diff stats, and path-scoped diffs.

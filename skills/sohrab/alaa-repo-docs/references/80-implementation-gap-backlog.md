@@ -7,7 +7,12 @@ This file contains rules for producing a `remaining-task.md` in a target reposit
 backlog items of its own, and none are ever added here: the backlog lives in the repository the
 task is about.
 
-`remaining-task.md` is a documentation-gap report. It owns no task state. When the target repository is Beads-bound, register each item as an issue under `/alaa-workflow` `references/task-tracking.md`. When Beads is unavailable, park the item in the checkpoint's `Pending Beads reconciliation` list when a workflow checkpoint exists (`/alaa-workflow` `references/task-tracking.md` `## Outage and uncertain writes`); otherwise keep it in the report, marked unregistered, and register it at the next availability test or the next refresh of the report, whichever comes first (`/alaa-workflow` `references/task-tracking.md` `## Select before tracking-dependent work`). A parked item stays in the report until registered.
+`remaining-task.md` reports documentation gaps. Workflow owns task state.
+For a Beads-bound repository, register each gap under `/alaa-workflow` `references/task-tracking.md`.
+During an outage, keep the gap in the report and mark it unregistered until registration.
+For active workflow work, use the pending location in that reference's `## Outage and uncertain writes`.
+Reconcile at the next availability test or report refresh, whichever comes first, following
+`## Select before tracking-dependent work` in the same reference.
 
 ## When to create or refresh `remaining-task.md`
 
@@ -47,4 +52,5 @@ Use code, route definitions, tests, migrations, config, and current artifacts as
 
 ## Postman handoff
 
-When `/alaa-postman-collections` (`$alaa-postman-collections`) finds a documented-but-missing endpoint or example, it reports the gap and this skill owns the `remaining-task.md` backlog wording. That direction is reciprocal and already written on both sides; do not restate the Postman collection's own rules here.
+When `/alaa-postman-collections` reports a documented-but-missing endpoint or example, this skill owns
+the `remaining-task.md` wording. Keep collection rules with their owner.

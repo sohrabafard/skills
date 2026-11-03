@@ -5,12 +5,12 @@ description: "Evidence routing for CodeGraph, optional Serena, gopls, PHPantom, 
 
 # Alaa Code Intelligence Routing
 
-Route each named question to its best available evidence owner, consume the answer, and finish with native proof. This skill owns routing only.
+Select the evidence owner for each question. Native gates own proof.
 
 ## Decision procedure
 
 1. Name independently answerable questions and their intended worktree/environment.
-2. Before selecting an owner, handling its result or failure, choosing a grant, or advising on Serena contexts or REPL APIs, read `references/00-topic-map.md`. It selects the sole reference owning that decision.
+2. Read `references/00-topic-map.md` before selecting an owner, handling results or failures, choosing grants, or advising on Serena contexts or REPL APIs.
 3. Apply the routing contract: select one primary owner, reuse adequate evidence, and ask only the missing question.
 4. Treat editing, runtime observation and proof as distinct questions; execute applicable authorized native gates.
 

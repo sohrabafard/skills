@@ -1,7 +1,6 @@
 # Sync matrix, workflow, evidence, and failure classes
 
-This file owns the production workflow. `SKILL.md` carries a six-step orientation and points here;
-the ordered procedure exists only below, so the two cannot disagree.
+This file owns the production workflow.
 
 ## Provenance of this standard
 
@@ -21,7 +20,7 @@ task.
 | Routes, ports, middleware, or the service map | `<repo>/docs/BIG_PICTURE.md`, `<repo>/README.md`, `<repo>/docs/api-summary.md` when the repository exposes APIs, and the source mapping files |
 | Auth or header trust boundaries | `<repo>/docs/BIG_PICTURE.md`, `<repo>/README.md`, `<repo>/docs/api-summary.md` when caller usage changes, and middleware or config references |
 | Storage shape, tables, collections, cache rules, or request-state walkthroughs | `<repo>/docs/data-architecture.md`, `<repo>/docs/BIG_PICTURE.md`, `<repo>/README.md`, and linked schema or migration references |
-| API contracts, payload fields, enums, or caller-visible errors | `<repo>/docs/BIG_PICTURE.md`, `<repo>/README.md`, `<repo>/docs/api-summary.md`, `<repo>/docs/errors-events-observability.md`, and the Postman or contract artifacts through `/alaa-postman-collections` (`$alaa-postman-collections`) |
+| API contracts, payload fields, enums, or caller-visible errors | `<repo>/docs/BIG_PICTURE.md`, `<repo>/README.md`, `<repo>/docs/api-summary.md`, `<repo>/docs/errors-events-observability.md`, and the Postman or contract artifacts through `/alaa-postman-collections` |
 | Queues, events, schedulers, notifications, listeners, or outbox flows | `<repo>/docs/BIG_PICTURE.md`, `<repo>/docs/errors-events-observability.md`, `<repo>/docs/data-architecture.md` when storage handoff matters, and operations notes |
 | Logging, tracing, metrics, alerting, or SOC evidence | `<repo>/docs/errors-events-observability.md`, `<repo>/docs/BIG_PICTURE.md`, `<repo>/README.md`, and runtime or dashboard references |
 | Deployment or local-runtime assumptions | `<repo>/README.md`, `<repo>/docs/BIG_PICTURE.md`, `<repo>/docs/api-summary.md` when the example base host changes, and runbook, Helm, or Docker sources |
@@ -42,15 +41,21 @@ task.
 ## Workflow for producing richer documents
 
 1. Read the repository `AGENTS.md`.
-2. Read the current `README.md`, `docs/BIG_PICTURE.md`, `docs/api-summary.md`, `docs/data-architecture.md`, and `docs/errors-events-observability.md` where they exist, before planning any edit.
+2. Scope discovery before planning an edit. For a bounded update, read the affected canonical
+   documents, every pair required by the sync matrix, and dependencies needed to verify claims or
+   navigation. For a whole-repository refresh, inventory and read the existing default document set
+   or its canonical equivalents. Honor repository-required reads in either case.
 3. Identify the richest useful sections already present and mark them for preservation.
-4. Verify behavior from code, config, route definitions, validation rules, exception handlers, events, listeners, migrations, models, cache helpers, and source-of-truth documents before editing any claim.
-5. When the repository is large or the task spans several documents, split read-only discovery per `references/70-subagent-doc-workflows.md` and wait for every track before writing.
-6. Fill coverage gaps for all four audiences: maintainer, frontend developer, coding agent, and new service author.
-7. For an API repository, create or refresh `docs/api-summary.md` and prove the public API contract
-   set has no known drift per `references/30-api-summary-contract.md`.
-8. For a stateful repository, create or refresh `docs/data-architecture.md` per `references/50-data-architecture-contract.md`.
-9. For a repository with meaningful error, event, or observability surface, create or refresh `docs/errors-events-observability.md` per `references/60-errors-events-observability-contract.md`.
+4. Verify each changed claim against relevant source, config, tests or authoritative documents.
+5. When scoped discovery is large or spans several documents, split it into read-only tracks per
+   `references/70-subagent-doc-workflows.md`. Wait for every track before writing.
+6. Fill in-scope coverage gaps for maintainers, frontend developers, coding agents, and new service authors.
+7. When the API contract applies to the scoped update or whole-repository refresh, create or refresh
+   `docs/api-summary.md` and prove no known drift per `references/30-api-summary-contract.md`.
+8. When data architecture applies to the scoped update or whole-repository refresh, follow
+   `references/50-data-architecture-contract.md` to create or refresh its document.
+9. When errors, events, or observability apply to the scoped update or whole-repository refresh, follow
+   `references/60-errors-events-observability-contract.md` to create or refresh its document.
 10. Add or refresh diagrams, module maps, flowcharts, and state snapshots where the current documents are too thin.
 11. Apply the canonical-topic procedure in `references/10-language-and-links.md`: consolidate
     repeated detail into one owner, replace duplicates with summaries and links, and make every
@@ -114,7 +119,7 @@ Report every line. An item that did not apply is reported as intentionally not n
 | Two source-of-truth files disagree | Stale artifact, or genuinely divergent runtime modes | Prefer code, config, migrations, tests, and runtime artifacts over any document; if both are code, document both modes with their conditions | Neither is reachable from the repository — then state the uncertainty and its verification path instead of choosing |
 | Python is unavailable, or the checker exits `2` | The check did not run | Re-run with an explicit interpreter path once | After one retry: verify the touched links by opening each target, and report the document as unvalidated, never as validated |
 | A subagent fails or returns nothing | The track produced no evidence | Re-run that one track once with a narrower scope | After one retry: shrink the task to the tracks that returned, and report the missing track by name as uncovered |
-| An existing document contradicts current code | The document is stale, or the code regressed | Verify from code and correct the document | The contradiction concerns a security, auth, or trust claim you cannot verify — then do not publish the claim in either direction and route to `/alaa-security-review` (`$alaa-security-review`) |
+| An existing document contradicts current code | The document is stale, or the code regressed | Verify from code and correct the document | The contradiction concerns a security, auth, or trust claim you cannot verify — then do not publish the claim in either direction and route to `/alaa-security-review` |
 | A claim cannot be verified before the deadline | Evidence is missing, not absent | State the claim as unverified with its verification path | The claim is a security, auth, entitlement, or data-retention guarantee — publishing an unverified guarantee lets something wrong through, so it is a gate: cut the claim |
 
 ## Anti-patterns

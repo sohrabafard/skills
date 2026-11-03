@@ -5,14 +5,8 @@ description: "Repository-level documentation control for Ala-style projects: REA
 
 # Alaa Repo Docs
 
-## Purpose
-
-Produce repository-level documentation that stays aligned with implementation and operational reality. Keep the documents that describe one system consistent with each other.
-
-This skill owns repository Markdown. For source comments and docblocks, use the stack-specific routes in
-`## Ground this skill does not own`; Markdown ownership does not transfer source-annotation policy.
-
-Keep this file routing-first. Load only the reference whose condition holds.
+Keep repository Markdown aligned with implementation, operations, and related documents.
+Route source annotations through the ownership table below.
 
 ## When to use
 
@@ -30,17 +24,6 @@ Keep this file routing-first. Load only the reference whose condition holds.
 - a comment, docblock, or any annotation inside a source file
 - Postman collection, environment, or OpenAPI contract maintenance with no Markdown work
 - writing disconnected from repository truth
-
-## Quick start
-
-1. Read the repository `AGENTS.md`, then whichever documents from the set below already exist.
-2. Read `references/00-topic-map.md` and load only the rows whose condition holds.
-3. Verify behaviour from source before writing any claim: routes, validation, handlers, exception mapping, events, listeners, queue config, migrations, models, cache code, observability config, and tests.
-4. For a broad or multi-document refresh, split discovery using `references/70-subagent-doc-workflows.md` before editing anything.
-5. Assign each touched topic one canonical document. Then use `references/15-document-size-and-clustering.md` to classify every created or refreshed file, grade and cluster eligible narrative documents, and preserve exempt artifacts whole. Then follow the production workflow in `references/40-sync-workflow-and-evidence.md`.
-6. Repair documentation-hub navigation and repo-local links. Run
-   `python $SKILL_DIR/scripts/check_markdown_links.py <repo-root>`. Resolve every finding as
-   `references/10-language-and-links.md` directs.
 
 ## Default document set
 
@@ -110,7 +93,11 @@ Route by name rather than restating.
 
 ## Reference navigation
 
-Read `references/00-topic-map.md` first. It routes each condition to exactly one file, and no other file repeats that routing.
+Read the repository `AGENTS.md`, then use `references/00-topic-map.md` to load only applicable
+references. Follow the production workflow it routes to for discovery, writing and validation.
+For full link validation, run `python $SKILL_DIR/scripts/check_markdown_links.py <repo-root>`.
+Exit `0` is clean. Resolve exit `1` findings or exit `2` incomplete validation under
+`references/10-language-and-links.md`.
 
 ## Maintenance rules
 

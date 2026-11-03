@@ -5,9 +5,7 @@ description: "Reusable-context curation for substantial agent work and conversat
 
 # Alaa Extract Agent Lessons
 
-Curate the smallest reusable context that changes future work: what to choose as a decision interface, how to judge as a rubric, or non-obvious context as a knowledge card. Discard one-off chronology.
-
-Novelty or interest alone is insufficient. Without the candidate, a future agent must be likely to make a worse decision, misjudge acceptable work, miss consequential context, or repeat expensive discovery.
+Curate the smallest reusable context that changes future decisions, judgments, or reasoning.
 
 ## Scan contract
 
@@ -63,6 +61,8 @@ Report:
 - notes created, updated or deliberately unwritten
 - promotion or drift still needing an owner
 
-Stop successfully when every admitted candidate has one form, scoped authority, source pointer and destination, no prohibited content, and a reported disposition. An empty retained set meets this condition. A `pipeline reopen required` verdict is unresolved work, not completion. Return it when an authorized canonical repository change remains after evidence freeze.
+Stop successfully when every admitted candidate has one form, scoped authority, source pointer,
+destination, no prohibited content, and a reported disposition. An empty retained set qualifies.
+A `pipeline reopen required` verdict leaves the workflow open.
 
 Stop blocked only when a required source cannot be inspected, an authorized drift record cannot be written, or a mandatory owner rejects the handoff. Do not loop extraction or memory searches for reassurance. /alaa-memory-os owns bounded search-before-create.
