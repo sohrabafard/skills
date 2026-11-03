@@ -1,0 +1,7 @@
+interface:
+  display_name: "Alaa PHPantom"
+  short_description: "PHPantom PHP diagnostics, fixes, formatting, and moves"
+  default_prompt: "Use $alaa-phpantom to run scoped PHPantom analyze, fix, format, or move operations and to act on PHPantom diagnostics. Keep evidence-owner selection and completion gates with their owners."
+
+policy:
+  allow_implicit_invocation: true

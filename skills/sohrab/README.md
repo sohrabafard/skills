@@ -137,6 +137,7 @@ Every folder in this directory appears exactly once between the markers below, a
 ### PHP / Laravel and service engineering
 
 - `alaa-php-clean-code` — PHP 8.5 and Laravel 13 code craft for Octane-safe services: naming, SOLID, pattern and smell diagnosis, repository-first persistence, cache-decorator caching, size budgets, and refactor blast radius.
+- `alaa-phpantom` — PHPantom PHP and Blade diagnostics, type and symbol navigation, scoped automatic fixes, formatting, and class or namespace moves through the installed `phpantom_lsp` binary; also a Claude Code LSP plugin with a post-edit syntax hook.
 - `alaa-laravel-architecture` — the Laravel layer map and legal call graph for Ala services (Controller → Service → Repository → DB): where the cache seam, error envelope, and domain events are produced, and a gate for layer violations and public-id leaks.
 - `alaa-octane-performance` — Octane runtime safety and hot-path performance for Laravel services with long-lived workers: what must never survive between requests, the reset mechanism, worker lifecycle, and the leak regression test.
 - `alaa-laravel-job-rabbitmq` — Laravel queued jobs on RabbitMQ through `vladimir-yuldashev/laravel-queue-rabbitmq`: the `queue:work` versus `rabbitmq:consume` decision, ack/nack policy, delivery limits and the crash-loop hazard, and eight named failure classes.
@@ -232,33 +233,3 @@ Work in this pack is considered ready when:
 ## Practical note
 
 When a generic best practice conflicts with the Ala gateway trust model, Arvan platform rules, or the frontend artifact contract, document the reason for the deviation instead of hiding it.
-
-# Alaa PHPantom global skill (no plugin, no installs)
-
-Place the **`alaa-phpantom/`** subdirectory under
-`/home/sohrab/project/skills/skills/sohrab/alaa-phpantom/`.
-
-Your existing symlink automation then publishes that single skill to Claude and Codex. There is no need to create symlinks manually.
-
-The source skill does not activate hooks. For each opted-in repository, merge the sample JSON into the existing project configuration:
-
-- Claude: `<repo>/.claude/settings.local.json`
-- Codex: `<repo>/.codex/hooks.json` (then review `/hooks` and trust it)
-
-Samples are in `alaa-phpantom/examples/`; use **merge**, not overwrite. The shared hook script is `alaa-phpantom/scripts/php_lint_hook.py` and relies only on Python 3 and the existing `php` executable.
-
-**No native LSP tools** are introduced by this package. PHPantom `analyze/fix/format/move` are accessible through shell commands guided by the global Skill. Native LSP definition/hover requires an LSP client/plugin integration. Running the binary directly with no subcommand starts stdio LSP, not MCP.
-
-## Verify the installed binary
-
-```bash
-/home/sohrab/.local/bin/phpantom_lsp --version
-```
-
-## Test the hook manually (no edits)
-
-```bash
-cd /home/sohrab/project/auth
-printf '%s\n' '{"tool_name":"Write","cwd":"/home/sohrab/project/auth","tool_input":{"file_path":"/home/sohrab/project/auth/app/Data/Admin/AdminCatalogBulkResultData.php"}}' \
- | python3 /home/sohrab/project/skills/skills/sohrab/alaa-phpantom/scripts/php_lint_hook.py
-```

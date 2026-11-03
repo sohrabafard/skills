@@ -1,11 +1,17 @@
 ---
 name: alaa-phpantom
-description: PHPantom native PHP/Blade language intelligence and Composer/Laravel-aware diagnostics, type and symbol navigation, project analysis, automatic fixes, formatting, namespace/class moves, and safe refactoring. Use for PHP bugs, unknown_class/unknown_member, Hover/Definition/References, PHP completion, PHPantom analyze/fix/format/move, and validating PHP edits. Works as a Claude Code LSP plugin skill or a standalone Codex skill.
+description: PHPantom native PHP/Blade language intelligence and Composer/Laravel-aware diagnostics, type and symbol navigation, project analysis, automatic fixes, formatting, namespace/class moves, and safe refactoring. Use for PHP bugs, unknown_class/unknown_member, Hover/Definition/References, PHP completion, PHPantom analyze/fix/format/move, and validating PHP edits. Do not use to choose an evidence owner (/alaa-code-intelligence-routing), for PHP code craft (/alaa-php-clean-code), or to replace a repository's formatter, static-analysis, or test gate. Works as a Claude Code LSP plugin skill or a standalone Codex skill.
 ---
 
 # Alaa PHPantom — complete PHP language intelligence
 
 PHPantom is an installed **Rust language server**, not an MCP server. Claude Code's plugin automatically supplies the read-only native `LSP` tool and post-edit diagnostics; shell CLI operations perform project-wide checks and **intentional** source mutations. Codex can use this same skill and CLI, but its standard runtime does not gain a native LSP tool merely by loading `.lsp.json`.
+
+## When NOT to use
+
+- Selecting between CodeGraph, Serena, Laravel Boost, and PHPantom: use `/alaa-code-intelligence-routing`, which owns evidence selection.
+- Deciding PHP naming, structure, or a refactor's shape: use `/alaa-php-clean-code`.
+- Proving completion: run the repository's formatter, static-analysis, and test gates. `analyze` does not run PHPStan, and no PHPantom command replaces a required gate.
 
 ## Binary, workspace, and scope
 

@@ -105,6 +105,7 @@
 | Skill | برای چه کاری |
 |---|---|
 | `alaa-php-clean-code` | کد تمیز PHP 8.5 و Laravel 13 برای سرویس‌های امن زیر Octane: نام‌گذاری، SOLID، تشخیص الگو و بوی کد، persistence اول-repository، caching با الگوی decorator، بودجه اندازه، و شعاع انفجار refactor |
+| `alaa-phpantom` | تشخیص خطای PHP و Blade، پیمایش نوع و symbol، اصلاح خودکار محدود، قالب‌بندی، و جابه‌جایی class یا namespace با باینری نصب‌شده `phpantom_lsp`؛ همچنین افزونه LSP برای Claude Code با هوک بررسی syntax پس از ویرایش |
 | `alaa-laravel-architecture` | نقشه لایه‌ای Laravel برای سرویس‌های علاء (Controller تا Service تا Repository تا DB): کجا cache seam و error envelope و رویداد دامنه تولید می‌شود، و یک gate برای نقض لایه و نشت public-id |
 | `alaa-octane-performance` | ایمنی runtime و کارایی مسیر داغ زیر Octane با worker های طولانی‌عمر: چه چیزی هرگز نباید بین دو request باقی بماند، مکانیزم reset، چرخه عمر worker، و تست رگرسیون نشتی |
 | `alaa-laravel-job-rabbitmq` | job های صف‌شده Laravel روی RabbitMQ از طریق `vladimir-yuldashev/laravel-queue-rabbitmq`: تصمیم `queue:work` در برابر `rabbitmq:consume`، سیاست ack و nack، سقف تحویل و خطر crash-loop، و هشت کلاس خطای نام‌گذاری‌شده |
