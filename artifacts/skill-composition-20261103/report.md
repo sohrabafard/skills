@@ -25,6 +25,12 @@ Focused static evidence passed: diff whitespace check, model-policy/neutral-role
 
 ## Limits and unchanged documents
 
-No live activation, Terra run, fixture test, benchmark, comparative trial, or rollout was observed. Runtime compliance, comparative quality, and installation remain unverified. Final native repository gates and reusable-context curation are pending with their owners.
+All ten final native gates passed on the frozen source candidate `312f28c1379f0baa412b4c7d49870373d5b737cb`; the evidence records matching initial/final tree snapshots and command logs in [final gate results](verification/final-gates.json). These gates are static proof for the nine source files. This report-only evidence update is outside that source verdict and has its own documentation checks.
+
+The four lifecycle states are independent: **IMPLEMENTED: proven**; **MERGE_CANDIDATE: proven**; **RELEASE_CANDIDATE: not requested**; **PUBLISHED: not requested**. The canonical workflow plan is `beads:alaa-mehm`.
+
+Final curation admitted no candidates. Reusable knowledge already belongs in canonical skills; runtime recovery uses its existing owner. No memory was written or published. Hindsight recall was unavailable. No pipeline reopening was required.
+
+No live activation, Terra run, fixture test, benchmark, comparative trial, or rollout was observed. Runtime compliance, comparative quality, and installation remain unverified.
 
 No Python/Rust general-purpose skill or new composition preset was added: evidence did not establish a recurring gap, and existing exact bindings and neutral templates already cover the mechanism. Shared Claude behavior and role authority were preserved; Terra eligibility is Codex-specific.

@@ -1,0 +1,40 @@
+{
+  "observer": "documenter",
+  "requested_model_effort": "gpt-6-luna / medium",
+  "observed_identity": "unknown",
+  "scope": [
+    "artifacts/skill-composition-20261103/report.md",
+    "artifacts/skill-composition-20261103/review.md",
+    "outputs/README.md"
+  ],
+  "candidate_source_commit": "312f28c1379f0baa412b4c7d49870373d5b737cb",
+  "commands": [
+    {
+      "command": "git diff --check -- artifacts/skill-composition-20261103/report.md",
+      "cwd": ".",
+      "exit_code": 0,
+      "classification": "PASS"
+    },
+    {
+      "command": "python3 -B skills/sohrab/alaa-repo-docs/scripts/check_markdown_links.py . --files artifacts/skill-composition-20261103/report.md artifacts/skill-composition-20261103/review.md outputs/README.md --line-budget",
+      "cwd": ".",
+      "exit_code": 0,
+      "classification": "PASS"
+    }
+  ],
+  "grades": {
+    "report.md": {
+      "lines": 36,
+      "grade": "GREEN"
+    },
+    "review.md": {
+      "lines": 32,
+      "grade": "GREEN"
+    },
+    "outputs/README.md": {
+      "lines": 29,
+      "grade": "GREEN"
+    }
+  },
+  "proof": "Documentation links, line budgets and whitespace only; no source gate rerun or runtime claim."
+}
