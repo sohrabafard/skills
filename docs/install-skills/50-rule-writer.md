@@ -43,10 +43,13 @@ files, and directories. A fresh plugin install has no backup; move only
 
 Do not edit the target manually or with a plugin manager during `--apply`; the lock coordinates
 installer processes only. A customized manifest that requires external files may fail staged
-validation. After applying, start a fresh Claude session or run `/reload-plugins`, then confirm
-`alaa-rule-writer` appears in the plugin list. Run `/agents` and find
-`alaa-rule-writer:alaa-rule-writer` in the agent list. [Claude Code's plugin guide](https://code.claude.com/docs/en/plugins/create#make-a-plugin-load-in-every-session)
-documents session loading.
+validation. After applying, start a fresh Claude session or run `/reload-plugins`.
+In the WSL shell, run `claude plugin details alaa-rule-writer` and confirm
+`Agents (1) alaa-rule-writer` in its component inventory. `Skills (0)` is expected for this agent-only package.
+This checks discovery, not execution. To use it, ask Claude to delegate a drafted instruction to
+`alaa-rule-writer:alaa-rule-writer`. The `/agents` wizard is removed in current Claude Code;
+see [subagent usage](https://code.claude.com/docs/en/sub-agents#quickstart-create-your-first-subagent)
+and [plugin inspection](https://code.claude.com/docs/en/discover-plugins#see-what-an-installed-plugin-adds-to-your-sessions).
 
 **Codex: one copy, since Codex has no plugin.** Run from the repository root:
 
