@@ -80,8 +80,8 @@ YAML, and the two will eventually disagree.
 
 For agent or browser setup, use the guides below:
 
-- [Install agents](docs/install-skills/40-agent-installation.md) for Claude `~/.claude/agents` and Codex `~/.codex/agents` wrappers.
-- [Install the rule-writer agent](docs/install-skills/50-rule-writer.md) into `~/.claude/skills/alaa-rule-writer` for Claude or the user-level agent directory for Codex.
+- [Install agents](docs/install-skills/40-agent-installation.md) for personal Claude agents and Codex wrappers.
+- [Install the rule-writer agent](docs/install-skills/50-rule-writer.md) for the focused Claude migration and Codex agent file.
 - [Set up browser tools](docs/install-skills/60-browser-setup.md) for Playwright MCP setup.
 
 ## Vendored skill packs
