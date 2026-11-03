@@ -1,7 +1,11 @@
 {
   "name": "alaa-phpantom",
   "displayName": "Alaa PHPantom",
-  "version": "1.1.0",
+  "version": "1.1.1",
   "description": "Native PHPantom LSP integration, PHP code intelligence, Composer/Laravel diagnostics, project-wide analyze/fix/format/move workflows, and automatic post-edit PHP syntax validation for Claude Code; also a reusable standalone skill for Codex.",
-  "keywords": ["php", "laravel", "blade", "lsp", "composer", "diagnostics", "fix", "format", "refactoring"]
+  "keywords": ["php", "laravel", "blade", "lsp", "composer", "diagnostics", "fix", "format", "refactoring"],
+  "author": {
+    "name": "sohrab a fard"
+  },
+  "icon": "./.claude-plugin/icon.png"
 }
