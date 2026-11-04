@@ -219,6 +219,23 @@ A call is retried only when repeating it cannot produce a second effect. There i
   computation per cache key is in flight per instance, and later callers for the same key wait for it
   until the deadline rather than starting their own.
 
+### Freshness of educational read caches
+
+An educational display or diagnostic read model may show data up to 60 seconds after a
+source change, including a grant revocation or expiry, when its owner has classified every
+consumer and documented that freshness budget. Keep the gateway authorization rules above
+and the PostgreSQL project-version check for Entitlement API `effective-access`.
+
+For an approved read model, keep a positive, runtime-configurable TTL. Record invalidation
+durably in the source transaction, and deliver it to Redis after commit with retry. Scope it
+to the affected project or catalog. Fence fills started before invalidation so a late writer
+cannot make an old value current again. Prove the freshness budget even with relay lag,
+Redis recovery, and concurrent fills. Include scheduled expiry when it changes the result.
+
+Retention can exceed the freshness budget when the read path verifies a generation updated
+in the source transaction. Content course summaries may retain entries for up to one hour
+under that condition, with invalidation covering every write that affects the summary.
+
 ## Concurrency and load
 
 ### Bounded connection pool
