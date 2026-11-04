@@ -6,6 +6,7 @@ instructions. An archived result does not establish today's repository state or 
 
 | Date | Archive | Coverage |
 |---|---|---|
+| 2026-11-04 | [ClickHouse and Vector skill deliveries](../artifacts/skills-domain-upgrades-20261104/README.md) | Release deltas, aggregate DDL checker review, bounded runtime evidence and WA2 continuation |
 | 2026-11-03 | [Skill composition and model-routing review](../artifacts/skill-composition-20261103/report.md) | Reachable skill composition, proportional instruction evidence, optional comparison protocol, deferred language/preset proposals, bounded Codex Terra eligibility, independent review and static proof limits |
 | 2026-11-03 | [Skill-pack finalization](../artifacts/skill-pack-finalization-20261103/report.md) | Beads-native workflow plans with Markdown compatibility; selective delegated approvals; concrete resource-isolation and accessibility guidance; independent source review and focused checks; no installation, activation, or runtime proof |
 | 2026-10-26 | [Test execution ownership](../artifacts/test-execution-ownership/report.md) | Canonical testing execution/resource/classification ownership, mirrored runtime consumers and workflow writer recovery; independent source/POSIX proof and five proposal-only extraction options |
