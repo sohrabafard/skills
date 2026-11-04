@@ -15,6 +15,20 @@ Rules:
 - load `$alaa-docker-production` for Dockerfile hardening, runtime-user rules, Compose and Swarm delivery mechanics, and registry-plumbing details
 - do not duplicate Kubernetes implementation detail in this file when the concern is already owned by `$alaa-k8s-helm` or `$caas-arvan-kuber`
 
+## gRPC in the current development release
+
+- Run first-party Ala services without gRPC in every supported runtime mode. Disable outbound gRPC calls.
+  Start no gRPC-only listener and dispatch no requests to gRPC handlers on shared listeners. Verify these
+  conditions and normal service operation without gRPC.
+- Retain existing gRPC implementations for a future release. Keep their runtime activation deferred
+  until the user explicitly approves it. Follow `22-failure-load-and-deprecation-contract.md` if disabling
+  a surface affects an existing live consumer.
+- Off-the-shelf infrastructure tools such as HAProxy, Vector, and ClickHouse may communicate with
+  one another over gRPC. Keep WA's bundled Vector API enabled for HTTP health checks and its native
+  gRPC tooling. Existing network and access controls still apply. If a component falls outside this
+  allowance and cannot disable gRPC independently of required behavior, report the coupling and wait
+  for a separate user decision before changing that component.
+
 ## Deploy-time environment contract
 
 Rules:

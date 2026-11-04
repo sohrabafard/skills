@@ -113,11 +113,14 @@ Do not make a normal backend behave like the gateway, the request-time checker, 
 Verified 2026-10-10 from each repository's `docs/handoffs/mesh-145d79be-registry-inventory.md`, which cites
 every step at `file:line`. The write path was re-stated 2026-11-01 for the in-service `reflector` (D-AP-12, D-CT-6); the read path is unchanged. Names are registered in `23-queue-and-exchange-registry.md`.
 
+First-party gRPC paths in this flow are historical implementation evidence. Activation is deferred under
+the [current gRPC release policy](15-deployment-and-runtime-contract.md#grpc-in-the-current-development-release).
+
 Write path:
 
 | # | Owner | Input | Action | Output |
 |---|---|---|---|---|
-| 1 | `entitlement-api` api | admin grant or deny mutation (HTTP or gRPC) | commits the business revisions and, in the same transaction, rule heads, change sequence, intent manifest, and per-generation tasks; never publishes (`internal/projectionsource/doc.go:1-12`) | `projection_tasks` rows |
+| 1 | `entitlement-api` api | admin grant or deny mutation (HTTP, with gRPC deferred) | commits the business revisions and, in the same transaction, rule heads, change sequence, intent manifest, and per-generation tasks; never publishes (`internal/projectionsource/doc.go:1-12`) | `projection_tasks` rows |
 | 2 | `entitlement-api` projection-worker relay | due `projection_tasks` | publishes each task mandatory and confirmed, then claims it again after the fixed outcome timeout (`ENTITLEMENT_API_RELAY_OUTCOME_TIMEOUT`, audit reason `outcome_timeout`) or a lease expiry; there is no receipt and no backoff (D-CT-6) | `rule_projection.task.v1` on `projector.commands` |
 | 3 | `entitlement-api` `reflector` role | task | takes the per-rule engine claim under the head lock (transaction 1), calls OpenFGA with no transaction open, using the store and model of the `projection_generations` row (D-AP-12) | OpenFGA tuples |
 | 4 | `entitlement-api` `reflector` role | task outcome | records the outcome in `projection_task_outcomes` and releases the claim under the head lock (transaction 2), then acks the task; an exhausted attempt counter records `dead_lettered` (D-AP-12, D-AP-14) | outcome row |
@@ -133,8 +136,8 @@ Read path:
 | 3 | `authz-sidecar` | pinned store and model | runs a read-only `HIGHER_CONSISTENCY` OpenFGA Check, or `ListObjects` plus `BatchCheck` for a location context; never writes tuples (`internal/decision/engine.go:259-307`) | 204 allow or 403 deny with `X-Authz-Decision-Id`, `X-Authz-Decision-Code`, `X-Authz-Model-Id` |
 
 Side flows:
-- Expansion: `POST /api/v1/admin/expansions/object-access` queues a job; the `entitlement-api` expansion-worker consumes `notif.retrieve_users`, expands group principals through `notif.expand_users` (or gRPC to `auth`), and publishes `notif.recipient_chunks` when the job carries a notification id (`entitlement-api: internal/workers/expansion_worker.go:94-135`).
-- Content sync: the gRPC `ContentSyncService` calls `source.Apply`, so content changes enter write-path step 1 (`entitlement-api: internal/contentsync/service.go:214,318,349`).
+- Expansion: `POST /api/v1/admin/expansions/object-access` queues a job; the `entitlement-api` expansion-worker consumes `notif.retrieve_users`, expands group principals through `notif.expand_users` (the historical gRPC path to `auth` is deferred), and publishes `notif.recipient_chunks` when the job carries a notification id (`entitlement-api: internal/workers/expansion_worker.go:94-135`).
+- Deferred content sync: the historical gRPC `ContentSyncService` calls `source.Apply`, so content changes enter write-path step 1 (`entitlement-api: internal/contentsync/service.go:214,318,349`).
 - The legacy `grant.*` and `deny.*` relay to `entitlement.projector.work` and the `entitlement.reconciliation` trigger are removed (AP-6 closed, D-AP-10); `entitlement.events` remains `gap`.
 
 ## Frontend and gateway orientation

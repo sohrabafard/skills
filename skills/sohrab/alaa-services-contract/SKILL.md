@@ -14,16 +14,18 @@ judgment cannot be debugged. Exact detail lives in `references/`; this file rout
 
 - Enforce the contract exactly. Never restate an exact output as an optional recommendation, and never
   invent a local variant of a surface this skill already defines.
-- When a repository deviates, converge it. Reporting the blocker replaces converging in exactly three
-  cases and no others: (1) convergence would change a surface a live external consumer already depends on
+- When a repository deviates, converge it. Apart from the gRPC stop condition below, reporting the
+  blocker replaces converging only in these three cases: (1) convergence would change a surface a live external consumer already depends on
   and no deprecation window has been opened for it under `references/22-failure-load-and-deprecation-contract.md`;
   (2) the repo's own `AGENTS.md` or a repo-owned contract document states the opposite rule, so the owner
   must settle which wins; (3) convergence requires an edit in a second repository outside the current
   task's scope. In those three, stop at the boundary, state the conflicting rule and both file paths, and
-  change nothing else. In every other case, converge. A CI gap under the [Milestone 1 exception](references/15-deployment-and-runtime-contract.md#gitlab-cicd-baseline-contract) is not a deviation.
+  change nothing else. A CI gap under the [Milestone 1 exception](references/15-deployment-and-runtime-contract.md#gitlab-cicd-baseline-contract) is not a deviation.
 - When this skill replaces a header, field, event, code, route, or helper, remove the old implementation in
   the same change. Anything a consumer can observe goes through the deprecation procedure in
   `references/22-failure-load-and-deprecation-contract.md` first.
+- The [current gRPC release policy](references/15-deployment-and-runtime-contract.md#grpc-in-the-current-development-release)
+  governs when to stop convergence and when to retain a gRPC implementation. The deprecation procedure still applies.
 - While the provisional backend role freeze is active, authorize with catalog-owned permission bits from
   trusted `X-Access` plus the contract-defined OpenFGA decision. Add no role resolvers, role-derived
   policies, role-to-permission maps, or role-dependent behaviour; roles may be retained only as

@@ -29,6 +29,14 @@ evidence that any downstream runtime migrated. The numeric behavior
 recorded below remains historical observed drift; all non-Auth runtime migration status is unverified and
 pending. No other repository was re-audited for this amendment.
 
+**Amended 2026-11-04, gRPC policy and WA source evidence only.** Fleet adoption of the
+[gRPC release policy](15-deployment-and-runtime-contract.md#grpc-in-the-current-development-release)
+is pending verification. The user approved retaining WA's native Vector API under the infrastructure
+tool allowance. WA's Vector 0.61 configuration enables one API listener on port 8687 for HTTP health
+and gRPC tooling. Evidence: WA `<repo>/docker-compose.yml:4`, `<repo>/vector/wa-vector.yaml:10-12`,
+and `<repo>/charts/wa/files/wa-vector.yaml:10-12`. This decision concerns the protocol. Exposure of
+unauthenticated tap on that listener was not remediated or verified at runtime in this change.
+
 | Component | Surveyed commit |
 |---|---|
 | `auth` | `2d062c2d843b7c502409e19599cd9b0c6336150b` |
