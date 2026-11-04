@@ -14,6 +14,8 @@ cover at all: `notification` and `notif`. Findings from it are marked *second pa
 evidence; they resolve several rows the first survey left UNDETERMINED and overturn one of its readings. The
 second pass recorded no commit SHAs, so its findings are dated rather than pinned.
 
+**Amended 2026-11-04.** Rows for paused services are historical; see "Paused and retired services" in `05-scope-service-modes-and-auth-routing.md`.
+
 **This snapshot goes stale.** It was produced from a survey of seven repositories at the commits below and
 is accurate to nothing else. A conformance claim here that contradicts the repository in front of you means
 the repository moved and this file did not; the repository wins, and the change that moved it updates this

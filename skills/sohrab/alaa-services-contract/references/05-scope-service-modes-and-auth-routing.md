@@ -2,6 +2,14 @@
 
 Use this file when the task is about onboarding an agent to the Ala services contract before code changes start.
 
+## Paused and retired services
+
+Owner decision, 2026-11-04.
+
+- **Paused:** `vod`, the `entitlement-platform` repository, `notification`, `assessment-service`, `news`, `notif`, `ticket`. Do not develop, debug, review or plan work in them. Skip them in fleet surveys, conformance work and generated prompts, and list each only as "paused", never as clean or defective. Work on one only when the current user names it for that task.
+- **Retired:** `entitlement-projector`. The `reflector` role inside `entitlement-api` is the only OpenFGA tuple writer. Open no work there, except removing stale delivery entries as `16-infrastructure-services-and-delivery-artifacts.md` says.
+- **Still active:** `entitlement-api` and `authz-sidecar`, in their own repositories. The fleet group named `entitlement-platform` in `95-fleet-conformance.md` also covers them; the pause applies only to the repository of that name.
+
 ## Purpose and use
 
 Hard-code the Ala backend contract for consistent agent outputs and predictable operational visibility for developers, SOC operators and platform maintainers.
@@ -9,7 +17,7 @@ Hard-code the Ala backend contract for consistent agent outputs and predictable 
 Portability means filesystem independence across machines; this skill remains Ala-specific.
 
 Use it when:
-- creating or changing `auth`, `content`, `comment`, `ticket`, `gateway`, `entitlement-api`, `authz-openfga`, `authz-sidecar`, `vod`, `wa`, `notification`, `assessment`, or another Ala backend or platform service
+- creating or changing `auth`, `content`, `comment`, `ticket`, `gateway`, `entitlement-api`, `authz-openfga`, `authz-sidecar`, `vod`, `wa`, `notification`, `assessment`, or another Ala backend or platform service Paused services under "Paused and retired services" need the current user to name them.
 - explaining how a frontend-facing backend sits behind the gateway and inside the wider Ala platform
 - standardizing the shared `service-ci-kit` GitLab CI/CD baseline for new or refactored Ala services
 - standardizing `/api/health`
