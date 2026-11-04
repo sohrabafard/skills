@@ -47,6 +47,19 @@ unauthenticated tap on that listener was not remediated or verified at runtime i
 | `wa` | `691baf4473a78013087d4f5397fd2e9978b472ac` |
 | `alaa-go-chi` kit | `f166b57e579e0dedf4a2954944f98d42d9538fd6` |
 
+## Infrastructure delivery source snapshot — 2026-11-04
+
+Source review at deploy commit `63f6b721f3c610f06fe3a94732a15b8e09cc166b`, with a clean checkout. This records source capability, not publication, effective image adoption, running infrastructure or target acceptance. Recheck the named owners before reuse. The policy owner is [Infrastructure lifecycle and evidence contract](15-deployment-and-runtime-contract.md#infrastructure-lifecycle-and-evidence-contract).
+
+| Surface | Observed source and limit | Owner evidence in deploy |
+|---|---|---|
+| Shared development stack | Defines PostgreSQL, Redis, RabbitMQ and Adminer; no ClickHouse service in this file. This is a local bootstrap gap, not evidence ClickHouse is absent elsewhere. Image pins belong to the manifest, not this snapshot. | `<repo>/docker-compose-dev-only-infra.yaml`; `<repo>/docs/readme/20-local-infrastructure.md` |
+| Central Compose | Treats ClickHouse as external infrastructure. `clickhouse: {}` enables egress, infrastructure host mappings and CA integration; it creates no server and derives no connection env. | `<repo>/scripts/lib/central_compose_assembly.py`; `<repo>/docs/service-contract/25-clickhouse-delivery.md` |
+| ClickHouse schema delivery | Compose schedules the job before workloads; skip depends on a matching previous successful published digest and fresh history. Kubernetes has a separate operator Job and release-script evidence check using Job UID, image digest and contract SHA. These capabilities do not establish WA registration or a successful target run. | `<repo>/scripts/lib/central_compose_deploy.py`; `<repo>/docs/service-contract/25-clickhouse-delivery.md` |
+| Infrastructure certificates | Compose has manual collection, operator fingerprint verification and container CA injection for PostgreSQL, Redis, RabbitMQ and ClickHouse. Kubernetes parity for this CA workflow is proposed, not implemented. Host OS trust is not changed. | `<repo>/scripts/lib/central_infra_certs.py`; `<repo>/docs/delivery-topology/80-trust-and-versioning.md` |
+| Persistence and recovery | Development services use persistent volumes and healthchecks; Redis uses AOF and RabbitMQ a stable hostname. Ordinary `down` retains volumes; volume removal is destructive. Central Compose has process restart policies, not unhealthy-container autoheal. No ClickHouse backup/restore or recovery-objective proof was collected. Deploy-directory backups may contain secrets and need encryption or exclusion. | `<repo>/docs/readme/20-local-infrastructure.md`; `<repo>/docs/delivery-topology/40-runtime-and-migrations.md`; `<repo>/docs/runbook/74-central-compose/30-host-and-recovery.md` |
+| Target readiness | EO-59 still records unknown ClickHouse listeners, transport, DDL access and firewall inputs. This review made no live connection and settled no server topology, effective settings, protected-data or replay-coverage fact. | `<repo>/docs/employer-open-items.md`, EO-59 |
+
 ## Topology deployment adoption — 2026-10-24
 
 This amendment records local implementation and isolated real-broker validation under `alaa-ubec`, not a fleet re-survey, production deployment, or release proof.

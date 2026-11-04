@@ -72,6 +72,42 @@ Rules:
 - prefer one wrapper entrypoint such as `scripts/docker/up-local.sh <compose|swarm>` or `dev|compose|swarm|prod` aliases when a repo exposes both modes
 - keep mode names explicit in docs, scripts, and examples
 
+## Infrastructure lifecycle and evidence contract
+
+Apply fleet infrastructure policy to PostgreSQL, Redis, RabbitMQ, and ClickHouse. Preserve product-specific provisioning and recovery rules; similar lifecycles do not make commands or topology interchangeable.
+
+### Resolve three independent choices
+
+Record infrastructure source (`shared` or `external`), delivery path (local Docker, central Compose, Swarm, or Kubernetes/OpenShift), and dependency topology separately. None implies another. Local Docker covers local Compose and local Swarm; apply the Swarm verification below as an additional check. The sections below define canonical Docker names, ports, and reuse rules; they do not prove live endpoints. Environment values belong to the target operator. Read current owner configuration before asking the user for technical facts.
+
+| Path | Infrastructure boundary |
+|---|---|
+| Local Docker, shared | Use the canonical shared identity and its authorized bootstrap owner under the reuse-or-fail-fast rules below. A documented alias does not prove a server or bootstrap implementation exists. |
+| Local Docker, external | Connect to the explicit server. Provision service-owned objects only when enabled; do not create shared infrastructure. |
+| Central Compose | Treat database, broker, Redis, and cache servers as external inputs. A dependency declaration configures delivery integration; it neither creates a server nor supplies missing connection values. Do not use a service-local Compose file as the central deployment model. Follow the existing [Docker Compose VM scale unit](#docker-compose-vm-scale-unit) section. |
+| Kubernetes/OpenShift | Treat infrastructure and pre-existing Secrets as external to the application release, even when infrastructure is in-cluster. Follow the product-specific provisioning split below; an application release does not create a database server. |
+| Swarm | Verify the service and runtime owner's actual artifacts. Local Swarm support proves neither central delivery support nor production acceptance. |
+
+The infrastructure operator owns server version, listeners, topology, capacity, persistence, and recovery. The service owns its schema, migration, and data contract. Deploy owns job ordering and release evidence. Follow the provisioning and credential split below; service ownership does not imply automatic creation in every environment. Use a ClickHouse schema identity with the privileges required by its assigned operations. If the target contract permits operator-precreated users and grants, record that path and verify its result; do not infer access-management permission from runtime access or waive a consumer job gate. For Redis ACL provisioning, TLS and memory-policy ownership, read `29-redis-key-registry.md`.
+
+For WA ClickHouse, read the service's ratified engine RFC before selecting engines. Support both `single-node` and `replicated`; the environment declares the mode without a default or fallback, and discovery only cross-checks it. An environment change does not authorize conversion of populated tables. /clickhouse-performance-schema-ops owns engine, merge identity, pruning, and rebuild proof.
+
+### Delivery, transport, and recovery
+
+Use the outbound transport contract at the start of this file. Route caller identity and internal mTLS status to `25-end-to-end-flow-and-boundaries.md`; database transport and gateway ingress are separate boundaries.
+
+Before relying on CA injection or a schema job, verify current implementation and adoption for the selected delivery path. In central Compose, use deploy-owned `INFRA_EXTRA_HOSTS` and `INFRA_CA_BUNDLE` when needed. Accept collected certificates only after the operator verifies their fingerprints; never turn network retrieval into automatic trust. Follow deploy `<repo>/docs/delivery-topology/80-trust-and-versioning.md`. Compose support does not prove Kubernetes support.
+
+Complete required provisioning and schema jobs before dependent workloads. Follow deploy's current job and evidence contract; unknown success history does not permit skipping a required job. Job failure stops dependent delivery. Preserve the broker topology modes and verification contract in `23-queue-and-exchange-registry.md`. A schema job provisions objects, not infrastructure servers. Read deploy `<repo>/docs/service-contract/25-clickhouse-delivery.md` for ClickHouse job scheduling and evidence identity; a direct Helm upgrade does not establish the release script's schema evidence gate.
+
+Preserve existing data and accounts on repeat startup. Configuration changes do not prove credential rotation. Persistent volumes do not prove backups; application rollback does not reverse schema, seeds, or credentials. Read the target owner's recovery procedure before reset, rebuild, or cutover. A process restart policy does not prove restart on unhealthy status. Verify health, readiness, and recovery separately. Protect backups containing secret material under the secret contract below.
+
+### Resolve missing evidence at its owner
+
+Separate policy, source capability, local validation, and deployed observations. Inspect the current owner for version/image identity, endpoints, transport, grants, effective settings, protected data, and replay coverage. Missing target access blocks the corresponding live claim, not independent source work. Ask the user only about an unresolved requirement or authority, such as acceptable data loss or an ingestion pause, when the planned action needs it. Preserve data until resolved. Never infer an empty current database from the historical identity-migration exception.
+
+Keep dated implementation gaps and proof limits in `95-fleet-conformance.md`; they neither waive gates nor redefine this contract. Existing service-specific retention, acceptance, and release authority remain in force.
+
 ## PostgreSQL source modes
 
 Rules:
