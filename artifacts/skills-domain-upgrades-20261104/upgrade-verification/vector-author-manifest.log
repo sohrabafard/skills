@@ -1,0 +1,25 @@
+skills/sohrab/vector-rust-observability-pipelines/SKILL.md: OK
+skills/sohrab/vector-rust-observability-pipelines/agents/openai.yaml: OK
+skills/sohrab/vector-rust-observability-pipelines/assets/templates/common.vrl: OK
+skills/sohrab/vector-rust-observability-pipelines/assets/templates/vector-basic.yaml: OK
+skills/sohrab/vector-rust-observability-pipelines/assets/templates/vector-clickhouse.yaml: OK
+skills/sohrab/vector-rust-observability-pipelines/assets/templates/vector-tests.yaml: OK
+skills/sohrab/vector-rust-observability-pipelines/references/00-topic-map.md: OK
+skills/sohrab/vector-rust-observability-pipelines/references/10-topology-and-delivery-contract.md: OK
+skills/sohrab/vector-rust-observability-pipelines/references/20-vrl-transforms.md: OK
+skills/sohrab/vector-rust-observability-pipelines/references/30-buffers-acks-and-backpressure.md: OK
+skills/sohrab/vector-rust-observability-pipelines/references/35-pass-through-and-relay-paths.md: OK
+skills/sohrab/vector-rust-observability-pipelines/references/40-clickhouse-sink.md: OK
+skills/sohrab/vector-rust-observability-pipelines/references/50-validation-and-testing.md: OK
+skills/sohrab/vector-rust-observability-pipelines/references/60-internal-monitoring.md: OK
+skills/sohrab/vector-rust-observability-pipelines/references/65-troubleshooting.md: OK
+skills/sohrab/vector-rust-observability-pipelines/references/70-helm-chart-operations.md: OK
+skills/sohrab/vector-rust-observability-pipelines/references/75-ala-ingest-pipeline.md: OK
+skills/sohrab/vector-rust-observability-pipelines/references/80-version-and-upgrade-deltas.md: OK
+skills/sohrab/vector-rust-observability-pipelines/references/81-release-coverage.md: OK
+skills/sohrab/vector-rust-observability-pipelines/references/82-capability-surface.md: OK
+skills/sohrab/vector-rust-observability-pipelines/references/85-security-and-secrets.md: OK
+skills/sohrab/vector-rust-observability-pipelines/references/90-source-map.md: OK
+skills/sohrab/vector-rust-observability-pipelines/scripts/check-upstream-version.mjs: OK
+skills/sohrab/vector-rust-observability-pipelines/scripts/check-vector-configs.mjs: OK
+author manifest exit=0

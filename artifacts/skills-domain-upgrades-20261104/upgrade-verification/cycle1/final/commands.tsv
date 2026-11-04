@@ -1,0 +1,6 @@
+pack	<repo>	timeout 120s python3 -B scripts/validate_sohrab_skill_pack.py 	0	0
+index	<repo>	timeout 120s python3 -B scripts/check_skill_index.py 	0	0
+fleet	<repo>	timeout 120s python3 -B scripts/check_fleet_references.py 	4	0
+lifecycle	<repo>	timeout 120s python3 -B scripts/check_lifecycle_contract.py 	0	0
+agents	<repo>	timeout 120s python3 -B skills/sohrab/alaa-codex-orchestrator/scripts/check_agent_contracts.py 	0	0
+diff	<repo>	timeout 120s git diff --check 4f60ce6f 	0	0

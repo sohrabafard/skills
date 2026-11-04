@@ -1,0 +1,4 @@
+vector-bundled	<repo>/skills/sohrab/vector-rust-observability-pipelines	timeout 120s node scripts/check-vector-configs.mjs 	5	0
+vector-valid-only	<repo>/skills/sohrab/vector-rust-observability-pipelines	timeout 120s node scripts/check-vector-configs.mjs <repo>/artifacts/skills-domain-upgrades-20261104/upgrade-verification/cycle1/scratch/second/config.yaml 	2	0
+vector-same-basename	<repo>/skills/sohrab/vector-rust-observability-pipelines	timeout 120s node scripts/check-vector-configs.mjs <repo>/artifacts/skills-domain-upgrades-20261104/upgrade-verification/cycle1/scratch/first/config.yaml <repo>/artifacts/skills-domain-upgrades-20261104/upgrade-verification/cycle1/scratch/second/config.yaml 	1	1
+vector-missing-common	<repo>/artifacts/skills-domain-upgrades-20261104/upgrade-verification/cycle1/scratch/missing-common	timeout 120s node scripts/check-vector-configs.mjs 	0	2

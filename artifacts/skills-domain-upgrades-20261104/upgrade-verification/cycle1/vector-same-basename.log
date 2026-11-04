@@ -1,0 +1,6 @@
+Using vector 0.61.0 (x86_64-unknown-linux-musl 17e017e 2026-10-29 16:03:40.929269968)
+  FAIL  validate supplied configs  (vector exit 78)
+        Failed to load ["<repo>/artifacts/skills-domain-upgrades-20261104/upgrade-verification/cycle1/scratch/vector-check-Hs7kmk/grp-uQRRbR/config-KkS3R0/config.yaml", "<repo>/artifacts/skills-domain-upgrades-20261104/upgrade-verification/cycle1/scratch/vector-check-Hs7kmk/grp-uQRRbR/config-krBfNH/config.yaml"]
+        -----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+        x did not find expected node content at line 3 column 1, while parsing a flow node
+1 target(s) with findings.

@@ -1,0 +1,50 @@
+timeout 120s docker run --rm --pull never --network none --cpus 4 --memory 1g --label alaa.task=alaa-a95j --mount type=bind\,src=<repo>/artifacts/skills-domain-upgrades-20261104/upgrade-verification/cycle1/scratch\,dst=<repo>/artifacts/skills-domain-upgrades-20261104/upgrade-verification/cycle1/scratch --mount type=bind\,src=<repo>/skills/sohrab/vector-rust-observability-pipelines\,dst=<repo>/skills/sohrab/vector-rust-observability-pipelines\,readonly sha256:3bb7ed5152910ed51729e256937b1d8a4bf67ff624e9d565e8e5877bffd015c7 --version
+exit=0
+vector 0.61.0 (x86_64-unknown-linux-musl 17e017e 2026-10-29 16:03:40.929269968)
+timeout 120s docker run --rm --pull never --network none --cpus 4 --memory 1g --label alaa.task=alaa-a95j --mount type=bind\,src=<repo>/artifacts/skills-domain-upgrades-20261104/upgrade-verification/cycle1/scratch\,dst=<repo>/artifacts/skills-domain-upgrades-20261104/upgrade-verification/cycle1/scratch --mount type=bind\,src=<repo>/skills/sohrab/vector-rust-observability-pipelines\,dst=<repo>/skills/sohrab/vector-rust-observability-pipelines\,readonly sha256:3bb7ed5152910ed51729e256937b1d8a4bf67ff624e9d565e8e5877bffd015c7 validate --skip-healthchecks --deny-warnings <repo>/artifacts/skills-domain-upgrades-20261104/upgrade-verification/cycle1/scratch/vector-check-zPBmfa/grp-Isi79N/config-0Hj0mp/vector-basic.yaml <repo>/artifacts/skills-domain-upgrades-20261104/upgrade-verification/cycle1/scratch/vector-check-zPBmfa/grp-Isi79N/config-tcYnHY/vector-tests.yaml
+exit=0
+√ Loaded ["<repo>/artifacts/skills-domain-upgrades-20261104/upgrade-verification/cycle1/scratch/vector-check-zPBmfa/grp-Isi79N/config-0Hj0mp/vector-basic.yaml", "<repo>/artifacts/skills-domain-upgrades-20261104/upgrade-verification/cycle1/scratch/vector-check-zPBmfa/grp-Isi79N/config-tcYnHY/vector-tests.yaml"]
+√ Transforms configuration
+√ Sinks configuration
+√ Component configuration
+-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+                                                                                                                                                                                                                                                                                                                                                        Validated
+timeout 120s docker run --rm --pull never --network none --cpus 4 --memory 1g --label alaa.task=alaa-a95j --mount type=bind\,src=<repo>/artifacts/skills-domain-upgrades-20261104/upgrade-verification/cycle1/scratch\,dst=<repo>/artifacts/skills-domain-upgrades-20261104/upgrade-verification/cycle1/scratch --mount type=bind\,src=<repo>/skills/sohrab/vector-rust-observability-pipelines\,dst=<repo>/skills/sohrab/vector-rust-observability-pipelines\,readonly sha256:3bb7ed5152910ed51729e256937b1d8a4bf67ff624e9d565e8e5877bffd015c7 test <repo>/artifacts/skills-domain-upgrades-20261104/upgrade-verification/cycle1/scratch/vector-check-zPBmfa/grp-Isi79N/config-0Hj0mp/vector-basic.yaml <repo>/artifacts/skills-domain-upgrades-20261104/upgrade-verification/cycle1/scratch/vector-check-zPBmfa/grp-Isi79N/config-tcYnHY/vector-tests.yaml
+exit=0
+Running tests
+test happy path - level is downcased, service is preserved ... passed
+test missing service falls back to unknown ... passed
+test missing level falls back to info ... passed
+test non-string level is defaulted rather than aborting the transform ... passed
+test ingest timestamp is always added ... passed
+timeout 120s docker run --rm --pull never --network none --cpus 4 --memory 1g --label alaa.task=alaa-a95j --mount type=bind\,src=<repo>/artifacts/skills-domain-upgrades-20261104/upgrade-verification/cycle1/scratch\,dst=<repo>/artifacts/skills-domain-upgrades-20261104/upgrade-verification/cycle1/scratch --mount type=bind\,src=<repo>/skills/sohrab/vector-rust-observability-pipelines\,dst=<repo>/skills/sohrab/vector-rust-observability-pipelines\,readonly sha256:3bb7ed5152910ed51729e256937b1d8a4bf67ff624e9d565e8e5877bffd015c7 validate --skip-healthchecks --deny-warnings <repo>/artifacts/skills-domain-upgrades-20261104/upgrade-verification/cycle1/scratch/vector-check-zPBmfa/grp-hemroq/config-wwTzIb/vector-clickhouse.yaml
+exit=0
+√ Loaded ["<repo>/artifacts/skills-domain-upgrades-20261104/upgrade-verification/cycle1/scratch/vector-check-zPBmfa/grp-hemroq/config-wwTzIb/vector-clickhouse.yaml"]
+√ Transforms configuration
+√ Sinks configuration
+√ Component configuration
+------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+                                                                                                                                                                                 Validated
+timeout 120s docker run --rm --pull never --network none --cpus 4 --memory 1g --label alaa.task=alaa-a95j --mount type=bind\,src=<repo>/artifacts/skills-domain-upgrades-20261104/upgrade-verification/cycle1/scratch\,dst=<repo>/artifacts/skills-domain-upgrades-20261104/upgrade-verification/cycle1/scratch --mount type=bind\,src=<repo>/skills/sohrab/vector-rust-observability-pipelines\,dst=<repo>/skills/sohrab/vector-rust-observability-pipelines\,readonly sha256:3bb7ed5152910ed51729e256937b1d8a4bf67ff624e9d565e8e5877bffd015c7 vrl -i <repo>/artifacts/skills-domain-upgrades-20261104/upgrade-verification/cycle1/scratch/vector-check-zPBmfa/vrl-R0AfMi/event.json -p <repo>/skills/sohrab/vector-rust-observability-pipelines/assets/templates/common.vrl
+exit=0
+null
+2026-11-04T01:30:37.112517Z  INFO vector::app: Log level is enabled. level="info"
+timeout 120s docker run --rm --pull never --network none --cpus 4 --memory 1g --label alaa.task=alaa-a95j --mount type=bind\,src=<repo>/artifacts/skills-domain-upgrades-20261104/upgrade-verification/cycle1/scratch\,dst=<repo>/artifacts/skills-domain-upgrades-20261104/upgrade-verification/cycle1/scratch --mount type=bind\,src=<repo>/skills/sohrab/vector-rust-observability-pipelines\,dst=<repo>/skills/sohrab/vector-rust-observability-pipelines\,readonly sha256:3bb7ed5152910ed51729e256937b1d8a4bf67ff624e9d565e8e5877bffd015c7 --version
+exit=0
+vector 0.61.0 (x86_64-unknown-linux-musl 17e017e 2026-10-29 16:03:40.929269968)
+timeout 120s docker run --rm --pull never --network none --cpus 4 --memory 1g --label alaa.task=alaa-a95j --mount type=bind\,src=<repo>/artifacts/skills-domain-upgrades-20261104/upgrade-verification/cycle1/scratch\,dst=<repo>/artifacts/skills-domain-upgrades-20261104/upgrade-verification/cycle1/scratch --mount type=bind\,src=<repo>/skills/sohrab/vector-rust-observability-pipelines\,dst=<repo>/skills/sohrab/vector-rust-observability-pipelines\,readonly sha256:3bb7ed5152910ed51729e256937b1d8a4bf67ff624e9d565e8e5877bffd015c7 validate --skip-healthchecks --deny-warnings <repo>/artifacts/skills-domain-upgrades-20261104/upgrade-verification/cycle1/scratch/vector-check-EKFIyO/grp-TSjAs5/config-9ubPbD/config.yaml
+exit=0
+√ Loaded ["<repo>/artifacts/skills-domain-upgrades-20261104/upgrade-verification/cycle1/scratch/vector-check-EKFIyO/grp-TSjAs5/config-9ubPbD/config.yaml"]
+√ Transforms configuration
+√ Sinks configuration
+√ Component configuration
+-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+                                                                                                                                                                      Validated
+timeout 120s docker run --rm --pull never --network none --cpus 4 --memory 1g --label alaa.task=alaa-a95j --mount type=bind\,src=<repo>/artifacts/skills-domain-upgrades-20261104/upgrade-verification/cycle1/scratch\,dst=<repo>/artifacts/skills-domain-upgrades-20261104/upgrade-verification/cycle1/scratch --mount type=bind\,src=<repo>/skills/sohrab/vector-rust-observability-pipelines\,dst=<repo>/skills/sohrab/vector-rust-observability-pipelines\,readonly sha256:3bb7ed5152910ed51729e256937b1d8a4bf67ff624e9d565e8e5877bffd015c7 --version
+exit=0
+vector 0.61.0 (x86_64-unknown-linux-musl 17e017e 2026-10-29 16:03:40.929269968)
+timeout 120s docker run --rm --pull never --network none --cpus 4 --memory 1g --label alaa.task=alaa-a95j --mount type=bind\,src=<repo>/artifacts/skills-domain-upgrades-20261104/upgrade-verification/cycle1/scratch\,dst=<repo>/artifacts/skills-domain-upgrades-20261104/upgrade-verification/cycle1/scratch --mount type=bind\,src=<repo>/skills/sohrab/vector-rust-observability-pipelines\,dst=<repo>/skills/sohrab/vector-rust-observability-pipelines\,readonly sha256:3bb7ed5152910ed51729e256937b1d8a4bf67ff624e9d565e8e5877bffd015c7 validate --skip-healthchecks --deny-warnings <repo>/artifacts/skills-domain-upgrades-20261104/upgrade-verification/cycle1/scratch/vector-check-Hs7kmk/grp-uQRRbR/config-krBfNH/config.yaml <repo>/artifacts/skills-domain-upgrades-20261104/upgrade-verification/cycle1/scratch/vector-check-Hs7kmk/grp-uQRRbR/config-KkS3R0/config.yaml
+exit=78
+Failed to load ["<repo>/artifacts/skills-domain-upgrades-20261104/upgrade-verification/cycle1/scratch/vector-check-Hs7kmk/grp-uQRRbR/config-KkS3R0/config.yaml", "<repo>/artifacts/skills-domain-upgrades-20261104/upgrade-verification/cycle1/scratch/vector-check-Hs7kmk/grp-uQRRbR/config-krBfNH/config.yaml"]
+-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+x did not find expected node content at line 3 column 1, while parsing a flow node

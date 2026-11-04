@@ -1,0 +1,128 @@
+# Source map
+
+Read this before repeating any version-sensitive claim about Vector, VRL, a
+component option, or a default value.
+
+## Precedence
+
+1. **The binary you are deploying.** `vector --version`, `vector generate
+   '<source>//<sink>'` for the defaults it actually applies, and `vector validate`
+   against the real config. This outranks documentation, because documentation and
+   binary have been observed to disagree — the ClickHouse `compression` default is
+   a live example, recorded in `40-clickhouse-sink.md`.
+2. **Official Vector documentation** and the release notes for the exact version.
+3. **Community material** — Stack Overflow, GitHub issues, forum posts, blogs.
+   Troubleshooting and hypothesis only. A community claim never becomes a rule in
+   this skill without step 1 or step 2 behind it.
+
+## Re-derivation commands
+
+Prefer these over a link when the answer is a version or a default, because they
+produce a fresh answer rather than a possibly-stale page.
+
+```bash
+# Defaults the installed binary actually applies
+vector generate 'demo_logs//clickhouse'
+
+# Published stable Vector product and released Helm chart, independently selected.
+# Selection rules and dated evidence belong to 80-version-and-upgrade-deltas.md.
+node scripts/check-upstream-version.mjs
+
+# Release notes for one version, as machine-readable source
+curl -fsS https://raw.githubusercontent.com/vectordotdev/vector/v0.61.0/website/cue/reference/releases/0.61.0.cue
+
+# Buffering model, in full
+curl -fsS https://raw.githubusercontent.com/vectordotdev/vector/v0.61.0/website/content/en/docs/architecture/buffering-model.md
+
+# Helm chart version and every option's documented semantics
+curl -fsS https://raw.githubusercontent.com/vectordotdev/helm-charts/vector-0.61.0/charts/vector/Chart.yaml
+curl -fsS https://raw.githubusercontent.com/vectordotdev/helm-charts/vector-0.61.0/charts/vector/values.yaml
+```
+
+`node scripts/check-upstream-version.mjs` automates the version comparison and exits
+1 on drift, 2 if it could not reach upstream.
+
+## Primary documentation
+
+| Subject | URL |
+| --- | --- |
+| Docs home | https://vector.dev/docs/ |
+| Concepts | https://vector.dev/docs/introduction/concepts/ |
+| Buffering model | https://vector.dev/docs/architecture/buffering-model/ |
+| End-to-end acknowledgements | https://vector.dev/docs/architecture/end-to-end-acknowledgements/ |
+| Validating configuration | https://vector.dev/docs/administration/validating/ |
+| Unit tests | https://vector.dev/docs/reference/configuration/unit-tests/ |
+| Internal monitoring | https://vector.dev/docs/administration/monitoring/ |
+| VRL reference | https://vector.dev/docs/reference/vrl/ |
+| VRL functions | https://vector.dev/docs/reference/vrl/functions/ |
+| VRL error codes | https://vector.dev/docs/reference/vrl/errors/ |
+| ClickHouse sink | https://vector.dev/docs/reference/configuration/sinks/clickhouse/ |
+| CLI reference | https://vector.dev/docs/reference/cli/ |
+| Releases index | https://vector.dev/releases/ |
+| Helm install | https://vector.dev/docs/setup/installation/package-managers/helm/ |
+| Helm chart repository | https://github.com/vectordotdev/helm-charts |
+| Chart README | https://github.com/vectordotdev/helm-charts/blob/vector-0.61.0/charts/vector/README.md |
+| Security policy | https://github.com/vectordotdev/vector/security/policy |
+| Open disk-buffer bugs | https://github.com/vectordotdev/vector/issues?q=is%3Aissue+state%3Aopen+label%3A%22domain%3A+buffers%22+type%3ABug |
+
+## Fetch current sources when the task involves
+
+A Vector or chart version; a component option name or its default; VRL function
+behaviour or fallibility; acknowledgement support for a specific source; disk-buffer
+sizing or limits; internal metric names; Helm chart values; a deprecation; or
+anything security-sensitive. Those are exactly the claims that go stale without
+announcing it.
+
+## What was verified, when, and how
+
+**2026-11-04 — 0.61.0 refresh.** Use the version ledger and tagged release
+sources in `80-version-and-upgrade-deltas.md` and `81-release-coverage.md` for
+the 0.59.0, 0.60.0 and 0.61.0 migration. Exact-binary config checks used the
+cached Alpine build. Helm metadata describes the separately published
+distroless image. Historical evidence below retains its original scope.
+
+**2026-09-26 — compatibility refresh.** Read the complete tagged latest-release
+source, including bundled VRL notes, and its upgrade guide; cross-check product
+selection against the official release index and published GitHub tag. The dated
+version/support matrix is `80-version-and-upgrade-deltas.md`; every release item is
+mapped in `81-release-coverage.md`. The tagged buffering model still warns against
+production overflow and retains fatal flush I/O behavior. Tagged chart metadata
+replaces the earlier mutable-branch pairing. Runtime claims below remain historical.
+No installed Vector execution or consumer/deployment inventory was established.
+
+Official sources were readable through web retrieval. Local HTTPS retrieval and
+the one curl retry failed TLS initialization; that environment failure is not a
+source-content result. The Node upstream checker independently completed and
+matched both release pins and chart appVersion. Config checks could not launch
+Vector (`EPERM`); no runtime result is claimed. A successful
+version check does not establish executable validation or deployment behavior.
+
+Two passes with different provenance. Claims taken from documentation rather than
+observation say so where they are made, and a claim carrying no stated observation
+is a documentation claim.
+
+**2026-07-30 — the original pass.** Every factual claim then in this skill's
+references was checked against Vector `0.57.0`, with a locally installed binary for
+the runtime observations: exit codes, error messages, the disk-buffer minimum, and
+the interpolation and confinement behaviour.
+
+**2026-08-08 — the capability and pass-through pass.** Added
+`35-pass-through-and-relay-paths.md` and `82-capability-surface.md`, and revised
+`30-`, `40-`, `50-`, `60-`, `65-`, `75-`, `80-` and `85-`. **Mixed provenance, and
+the two kinds must not be conflated:**
+
+- *Observed on the binary* — image `timberio/vector:0.57.0-alpine`, digest
+  `sha256:19e3526faf4d4b1ed0c28a0d68d4cc3a1e13e437099986a5b7a768707907497c`, build
+  `0.57.0 (x86_64-unknown-linux-musl 8832452 2026-07-14 20:58:30)`: the `api.graphql`
+  rejection, `GET /health`, interpolation load behaviour with and without a
+  format-constrained value, the `route._unmatched` warning under `--deny-warnings`,
+  `expected_event_count`, `request.retry_strategy` nesting, `measure_cpu_usage`
+  scope, `vector vrl --quiet`, live internal metric names and histogram buckets, and
+  both relay runs.
+- *Read from release pages through a summarising fetch* — the whole of
+  `82-capability-surface.md` except where it says otherwise, and the version-tagged
+  additions in `40-`, `50-`, `60-` and `80-`. **Re-read the page before quoting any
+  of it verbatim:** that pass has already been caught altering wording inside what
+  looked like a quotation.
+
+Where the two disagree, the binary wins, per the precedence at the top of this file.

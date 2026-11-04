@@ -1,0 +1,3 @@
+ch-fleet	timeout 120s python3 -B scripts/check_fleet_references.py --skill clickhouse-performance-schema-ops 	0	0
+ch-ddl	timeout 120s python3 -B skills/sohrab/clickhouse-performance-schema-ops/scripts/review_clickhouse_ddl.py artifacts/skills-domain-upgrades-20261104/upgrade-verification/cycle1/rendered/merge_tree_template.sql artifacts/skills-domain-upgrades-20261104/upgrade-verification/cycle1/rendered/materialized_view_template.sql 	0	0
+ch-diff	timeout 120s git diff --check 044d04c1 e446fe18 -- skills/sohrab/clickhouse-performance-schema-ops artifacts/skills-domain-upgrades-20261104/alaa-te30 	0	0

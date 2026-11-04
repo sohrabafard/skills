@@ -1,0 +1,8 @@
+pack	.	timeout 120s python3 -B scripts/validate_sohrab_skill_pack.py 	0	0
+index	.	timeout 120s python3 -B scripts/check_skill_index.py 	0	0
+fleet	.	timeout 120s python3 -B scripts/check_fleet_references.py 	2	0
+lifecycle	.	timeout 120s python3 -B scripts/check_lifecycle_contract.py 	1	0
+agents	.	timeout 120s python3 -B skills/sohrab/alaa-codex-orchestrator/scripts/check_agent_contracts.py 	0	0
+diff	.	timeout 120s git diff --check 4f60ce6f HEAD 	0	0
+vector-fixtures	skills/sohrab/vector-rust-observability-pipelines	timeout 120s node scripts/check-vector-configs.mjs 	4	0
+vector-upstream	skills/sohrab/vector-rust-observability-pipelines	timeout 120s node scripts/check-upstream-version.mjs 	5	0

@@ -1,0 +1,11 @@
+ M artifacts/skills-domain-upgrades-20261104/alaa-a95j/README.md
+ M artifacts/skills-domain-upgrades-20261104/alaa-a95j/skill.sha256
+ M skills/sohrab/vector-rust-observability-pipelines/SKILL.md
+ M skills/sohrab/vector-rust-observability-pipelines/references/50-validation-and-testing.md
+ M skills/sohrab/vector-rust-observability-pipelines/references/70-helm-chart-operations.md
+ M skills/sohrab/vector-rust-observability-pipelines/references/75-ala-ingest-pipeline.md
+ M skills/sohrab/vector-rust-observability-pipelines/references/85-security-and-secrets.md
+ M skills/sohrab/vector-rust-observability-pipelines/scripts/check-vector-configs.mjs
+?? artifacts/skills-domain-upgrades-20261104/alaa-dgp8/
+?? artifacts/skills-domain-upgrades-20261104/upgrade-reviews.md
+?? artifacts/skills-domain-upgrades-20261104/upgrade-verification/

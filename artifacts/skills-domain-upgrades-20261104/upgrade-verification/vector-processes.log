@@ -1,0 +1,31 @@
+timeout 120s docker run --rm --pull never --network none --cpus 4 --memory 1g --label alaa.task=alaa-a95j --mount type=bind\,src=artifacts/skills-domain-upgrades-20261104/upgrade-verification/scratch\,dst=artifacts/skills-domain-upgrades-20261104/upgrade-verification/scratch --mount type=bind\,src=skills/sohrab/vector-rust-observability-pipelines\,dst=skills/sohrab/vector-rust-observability-pipelines\,readonly sha256:3bb7ed5152910ed51729e256937b1d8a4bf67ff624e9d565e8e5877bffd015c7 --version
+exit=0
+vector 0.61.0 (x86_64-unknown-linux-musl 17e017e 2026-10-29 16:03:40.929269968)
+timeout 120s docker run --rm --pull never --network none --cpus 4 --memory 1g --label alaa.task=alaa-a95j --mount type=bind\,src=artifacts/skills-domain-upgrades-20261104/upgrade-verification/scratch\,dst=artifacts/skills-domain-upgrades-20261104/upgrade-verification/scratch --mount type=bind\,src=skills/sohrab/vector-rust-observability-pipelines\,dst=skills/sohrab/vector-rust-observability-pipelines\,readonly sha256:3bb7ed5152910ed51729e256937b1d8a4bf67ff624e9d565e8e5877bffd015c7 validate --skip-healthchecks --deny-warnings artifacts/skills-domain-upgrades-20261104/upgrade-verification/scratch/vector-check-zDJztJ/grp-hzV63B/vector-basic.yaml artifacts/skills-domain-upgrades-20261104/upgrade-verification/scratch/vector-check-zDJztJ/grp-hzV63B/vector-tests.yaml
+exit=0
+√ Loaded ["artifacts/skills-domain-upgrades-20261104/upgrade-verification/scratch/vector-check-zDJztJ/grp-hzV63B/vector-basic.yaml", "artifacts/skills-domain-upgrades-20261104/upgrade-verification/scratch/vector-check-zDJztJ/grp-hzV63B/vector-tests.yaml"]
+√ Transforms configuration
+√ Sinks configuration
+√ Component configuration
+-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+                                                                                                                                                                                                                                                                                                              Validated
+timeout 120s docker run --rm --pull never --network none --cpus 4 --memory 1g --label alaa.task=alaa-a95j --mount type=bind\,src=artifacts/skills-domain-upgrades-20261104/upgrade-verification/scratch\,dst=artifacts/skills-domain-upgrades-20261104/upgrade-verification/scratch --mount type=bind\,src=skills/sohrab/vector-rust-observability-pipelines\,dst=skills/sohrab/vector-rust-observability-pipelines\,readonly sha256:3bb7ed5152910ed51729e256937b1d8a4bf67ff624e9d565e8e5877bffd015c7 test artifacts/skills-domain-upgrades-20261104/upgrade-verification/scratch/vector-check-zDJztJ/grp-hzV63B/vector-basic.yaml artifacts/skills-domain-upgrades-20261104/upgrade-verification/scratch/vector-check-zDJztJ/grp-hzV63B/vector-tests.yaml
+exit=0
+Running tests
+test happy path - level is downcased, service is preserved ... passed
+test missing service falls back to unknown ... passed
+test missing level falls back to info ... passed
+test non-string level is defaulted rather than aborting the transform ... passed
+test ingest timestamp is always added ... passed
+timeout 120s docker run --rm --pull never --network none --cpus 4 --memory 1g --label alaa.task=alaa-a95j --mount type=bind\,src=artifacts/skills-domain-upgrades-20261104/upgrade-verification/scratch\,dst=artifacts/skills-domain-upgrades-20261104/upgrade-verification/scratch --mount type=bind\,src=skills/sohrab/vector-rust-observability-pipelines\,dst=skills/sohrab/vector-rust-observability-pipelines\,readonly sha256:3bb7ed5152910ed51729e256937b1d8a4bf67ff624e9d565e8e5877bffd015c7 validate --skip-healthchecks --deny-warnings artifacts/skills-domain-upgrades-20261104/upgrade-verification/scratch/vector-check-zDJztJ/grp-wjEcje/vector-clickhouse.yaml
+exit=0
+√ Loaded ["artifacts/skills-domain-upgrades-20261104/upgrade-verification/scratch/vector-check-zDJztJ/grp-wjEcje/vector-clickhouse.yaml"]
+√ Transforms configuration
+√ Sinks configuration
+√ Component configuration
+---------------------------------------------------------------------------------------------------------------------------------------------------------------------
+                                                                                                                                                            Validated
+timeout 120s docker run --rm --pull never --network none --cpus 4 --memory 1g --label alaa.task=alaa-a95j --mount type=bind\,src=artifacts/skills-domain-upgrades-20261104/upgrade-verification/scratch\,dst=artifacts/skills-domain-upgrades-20261104/upgrade-verification/scratch --mount type=bind\,src=skills/sohrab/vector-rust-observability-pipelines\,dst=skills/sohrab/vector-rust-observability-pipelines\,readonly sha256:3bb7ed5152910ed51729e256937b1d8a4bf67ff624e9d565e8e5877bffd015c7 vrl -i artifacts/skills-domain-upgrades-20261104/upgrade-verification/scratch/vector-check-zDJztJ/vrl-HpwsJ3/event.json -p skills/sohrab/vector-rust-observability-pipelines/assets/templates/common.vrl
+exit=0
+null
+2026-11-04T01:22:16.607773Z  INFO vector::app: Log level is enabled. level="info"

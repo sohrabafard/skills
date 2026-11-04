@@ -1,0 +1,25 @@
+skills/sohrab: 73 skills
+Warnings:
+- alaa-algorithms-data-structures: top-level body is 176 lines
+- alaa-bale-provider: top-level body is 136 lines
+- alaa-cc-orchestrator: top-level body is 168 lines
+- alaa-codex-orchestrator: top-level body is 169 lines
+- alaa-gitlab-ci-cd: top-level body is 155 lines
+- alaa-golang-clean-code-principles: top-level body is 140 lines
+- alaa-laravel-job-rabbitmq: top-level body is 213 lines
+- alaa-laravel-public-api-contract-pack: top-level body is 181 lines
+- alaa-memory-os: top-level body is 210 lines
+- alaa-minio-object-storage: top-level body is 142 lines
+- alaa-octane-performance: top-level body is 155 lines
+- alaa-permission-generator: top-level body is 164 lines
+- alaa-php-clean-code: top-level body is 246 lines
+- alaa-project-constitution: top-level body is 223 lines
+- alaa-reliability-sla: top-level body is 148 lines
+- alaa-security-review: top-level body is 153 lines
+- alaa-services-contract: packaged description is 994 chars (967 on disk, +27 from call rewriting), within 30 of the 1024-char limit; keep it at or under 975 so one added clause cannot break the build
+- alaa-services-contract: top-level body is 128 lines
+- alaa-sms-provider-magfa: top-level body is 200 lines
+- alaa-system-design: top-level body is 178 lines
+- alaa-testing-strategy: top-level body is 257 lines
+- alaa-trust-gateway-auth: top-level body is 122 lines
+- vector-rust-observability-pipelines: top-level body is 134 lines
