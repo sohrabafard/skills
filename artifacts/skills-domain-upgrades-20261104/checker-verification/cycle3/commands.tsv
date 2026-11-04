@@ -1,0 +1,9 @@
+quoted-name	<repo>	timeout 120s python3 -B skills/sohrab/clickhouse-performance-schema-ops/scripts/review_clickhouse_ddl.py artifacts/skills-domain-upgrades-20261104/alaa-dgp8/blocked-quoted-name.sql 	0	2
+quoted-control	<repo>	timeout 120s python3 -B skills/sohrab/clickhouse-performance-schema-ops/scripts/review_clickhouse_ddl.py artifacts/skills-domain-upgrades-20261104/checker-verification/cycle3/quoted-control.sql 	0	0
+focused	<repo>	timeout 120s python3 -B -m unittest discover -s skills/sohrab/clickhouse-performance-schema-ops/scripts -p test_review_clickhouse_ddl.py -k cycle3 -v 	0	0
+unit	<repo>	timeout 120s python3 -B -m unittest discover -s skills/sohrab/clickhouse-performance-schema-ops/scripts -p test_review_clickhouse_ddl.py 	4	0
+blanket	<repo>	timeout 120s python3 -B -m unittest discover -s artifacts/skills-domain-upgrades-20261104/checker-verification/cycle3/mutants/blanket -p test_review_clickhouse_ddl.py -k aggregate_effective_index_implicit_and_long_explicit 	0	1
+dimension	<repo>	timeout 120s python3 -B -m unittest discover -s artifacts/skills-domain-upgrades-20261104/checker-verification/cycle3/mutants/dimension -p test_review_clickhouse_ddl.py -k aggregate_missing_dimension_with_qualifying_prefix 	0	1
+help	<repo>	timeout 120s python3 -B skills/sohrab/clickhouse-performance-schema-ops/scripts/review_clickhouse_ddl.py --help 	1	0
+diff	<repo>	timeout 120s git diff --check 0f8348f2 -- skills/sohrab/clickhouse-performance-schema-ops 	0	0
+wa	<wa>	timeout 120s python3 -B <repo>/skills/sohrab/clickhouse-performance-schema-ops/scripts/review_clickhouse_ddl.py clickhouse/ddl/001_init.sql clickhouse/ddl/002_agg.sql 	0	2

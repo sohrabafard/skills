@@ -1,0 +1,23 @@
+test_review_clickhouse_ddl (unittest.loader._FailedTest.test_review_clickhouse_ddl) ... ERROR
+
+======================================================================
+ERROR: test_review_clickhouse_ddl (unittest.loader._FailedTest.test_review_clickhouse_ddl)
+----------------------------------------------------------------------
+ImportError: Failed to import test module: test_review_clickhouse_ddl
+Traceback (most recent call last):
+  File "/usr/lib/python3.14/unittest/loader.py", line 426, in _find_test_path
+    module = self._get_module_from_name(name)
+  File "/usr/lib/python3.14/unittest/loader.py", line 367, in _get_module_from_name
+    __import__(name)
+    ~~~~~~~~~~^^^^^^
+  File "skills/sohrab/clickhouse-performance-schema-ops/scripts/test_review_clickhouse_ddl.py", line 226
+    for engine in ('"AggregatingMergeTree"', '`ReplicatedAggregatingMergeTree`('path','replica')'):
+                                                                                ^^^^
+SyntaxError: invalid syntax. Is this intended to be part of the string?
+
+
+----------------------------------------------------------------------
+Ran 1 test in 0.000s
+
+FAILED (errors=1)
+exit=1

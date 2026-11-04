@@ -1,0 +1,4 @@
+clickhouse/ddl/001_init.sql:280: CH011 unsupported statement in aggregate bundle
+clickhouse/ddl/001_init.sql:331: CH011 unsupported statement in aggregate bundle
+clickhouse/ddl/002_agg.sql:83: CH011 wa_agg.watch_time_daily: GROUP BY alias 'event_date' has unresolved source binding
+clickhouse/ddl/002_agg.sql:144: CH011 wa_agg.views_daily: GROUP BY alias 'event_date' has unresolved source binding

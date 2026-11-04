@@ -1,0 +1,16 @@
+test_aggregate_effective_index_implicit_and_long_explicit (test_review_clickhouse_ddl.ReviewClickHouseDDL.test_aggregate_effective_index_implicit_and_long_explicit) ... ok
+test_aggregate_effective_index_nonprefix_and_unjustified_short (test_review_clickhouse_ddl.ReviewClickHouseDDL.test_aggregate_effective_index_nonprefix_and_unjustified_short) ... ok
+test_aggregate_missing_dimension_with_qualifying_prefix (test_review_clickhouse_ddl.ReviewClickHouseDDL.test_aggregate_missing_dimension_with_qualifying_prefix) ... ok
+test_aggregate_proof_refusal_all_writers_and_structural_diagnostics (test_review_clickhouse_ddl.ReviewClickHouseDDL.test_aggregate_proof_refusal_all_writers_and_structural_diagnostics) ... ok
+test_aggregate_proof_refusal_missing_writer_direct_write_or_unknown_target (test_review_clickhouse_ddl.ReviewClickHouseDDL.test_aggregate_proof_refusal_missing_writer_direct_write_or_unknown_target) ... ok
+test_aggregate_proof_refusal_preserves_unambiguous_dimensions_of_same_writer (test_review_clickhouse_ddl.ReviewClickHouseDDL.test_aggregate_proof_refusal_preserves_unambiguous_dimensions_of_same_writer) ... ok
+test_aggregate_proof_refusal_wrapped_key_or_unresolved_group (test_review_clickhouse_ddl.ReviewClickHouseDDL.test_aggregate_proof_refusal_wrapped_key_or_unresolved_group) ... ok
+test_aggregate_proof_refusal_wrong_or_ambiguous_read (test_review_clickhouse_ddl.ReviewClickHouseDDL.test_aggregate_proof_refusal_wrong_or_ambiguous_read) ... ok
+test_aggregate_valid_prefix_plain_and_replicated (test_review_clickhouse_ddl.ReviewClickHouseDDL.test_aggregate_valid_prefix_plain_and_replicated) ... ok
+test_ddl_retained_guards (test_review_clickhouse_ddl.ReviewClickHouseDDL.test_ddl_retained_guards) ... ok
+
+----------------------------------------------------------------------
+Ran 10 tests in 1.728s
+
+OK
+exit=0

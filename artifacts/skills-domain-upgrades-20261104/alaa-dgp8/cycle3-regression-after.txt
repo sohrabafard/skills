@@ -1,0 +1,7 @@
+test_cycle3_only_real_create_table_head_can_supply_a_declaration (test_review_clickhouse_ddl.ReviewClickHouseDDL.test_cycle3_only_real_create_table_head_can_supply_a_declaration) ... ok
+
+----------------------------------------------------------------------
+Ran 1 test in 0.207s
+
+OK
+exit=0

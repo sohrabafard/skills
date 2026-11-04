@@ -1,0 +1,12 @@
+{
+  "source_head": "4f60ce6f4d43c976c9d3b69d0279643734e6d967",
+  "wa_checkpoint": "cfa54adac0bea630beaa0ff2789ba772d016b37c",
+  "invocation": "python3 -B <skills-checkout>/skills/sohrab/clickhouse-performance-schema-ops/scripts/review_clickhouse_ddl.py clickhouse/ddl/001_init.sql clickhouse/ddl/002_agg.sql",
+  "cwd": "<WA-checkpoint>",
+  "exit": 1,
+  "sha256": {
+    "clickhouse/ddl/001_init.sql": "f56e0743c17fc8fe1cf11dcfbc2516576b9eba9552fc5b60c3122a1a8a66fe6f",
+    "clickhouse/ddl/002_agg.sql": "a5b8c0887a3e5d72c904ab83e8b1c54680e084bf2c0cb79f1da437739f541c1e"
+  },
+  "checker_sha256": "8741b045e167ac0413a5aea3ea0c3b5d9c6ab56175c384416e60e19c681e3714"
+}

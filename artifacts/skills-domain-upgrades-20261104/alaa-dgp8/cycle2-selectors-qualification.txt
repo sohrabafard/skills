@@ -1,0 +1,40 @@
+test_cycle2_buffer_declaration_and_insert_are_unproved_writer_routes (test_review_clickhouse_ddl.ReviewClickHouseDDL.test_cycle2_buffer_declaration_and_insert_are_unproved_writer_routes) ... ok
+test_cycle2_parallel_with_cannot_hide_create_or_drop (test_review_clickhouse_ddl.ReviewClickHouseDDL.test_cycle2_parallel_with_cannot_hide_create_or_drop) ... ok
+test_cycle2_qualification_cannot_change_object_identity (test_review_clickhouse_ddl.ReviewClickHouseDDL.test_cycle2_qualification_cannot_change_object_identity) ... FAIL
+test_cycle2_quoted_aggregate_engine_cannot_hide_missing_writer (test_review_clickhouse_ddl.ReviewClickHouseDDL.test_cycle2_quoted_aggregate_engine_cannot_hide_missing_writer) ... ok
+test_cycle2_read_proof_refuses_unknown_or_implicit_aliases (test_review_clickhouse_ddl.ReviewClickHouseDDL.test_cycle2_read_proof_refuses_unknown_or_implicit_aliases) ... ok
+test_cycle2_unique_table_and_view_namespace_before_writer_proof (test_review_clickhouse_ddl.ReviewClickHouseDDL.test_cycle2_unique_table_and_view_namespace_before_writer_proof) ... ok
+
+======================================================================
+FAIL: test_cycle2_qualification_cannot_change_object_identity (test_review_clickhouse_ddl.ReviewClickHouseDDL.test_cycle2_qualification_cannot_change_object_identity)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "skills/sohrab/clickhouse-performance-schema-ops/scripts/test_review_clickhouse_ddl.py", line 306, in test_cycle2_qualification_cannot_change_object_identity
+    self.assert_audit(self.audit(SOURCE + misleading), 2, problems=(
+    ~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+        ("bundle.sql:5", "unsupported CREATE TABLE declaration"),))
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "skills/sohrab/clickhouse-performance-schema-ops/scripts/test_review_clickhouse_ddl.py", line 62, in assert_audit
+    self.assertCountEqual(actual, problems, output)
+    ~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: Element counts were not equal:
+First has 1, Second has 0:  ('bundle.sql:5', 'unsupported aggregate declaration or materialized view') :
+1 file(s), 1 table(s) checked, 0 finding(s)
+
+not checked by this tool, and still your responsibility:
+  - whether supplied writers and read queries cover production paths
+  - actual pruning, index memory and merge behavior on the target version
+  - whether a LowCardinality column really holds under ~10,000 distinct values
+  - whether the retention window times the partition granularity stays bounded
+  - whether the engine's deduplication model matches what readers assume
+  - whether the tenant predicate is present in every query against this table
+  - whether the deployed table still matches this file (compare system.columns)
+bundle.sql:5: CH011 unsupported CREATE TABLE declaration
+bundle.sql:5: CH011 unsupported aggregate declaration or materialized view
+
+
+----------------------------------------------------------------------
+Ran 6 tests in 1.180s
+
+FAILED (failures=1)
+exit=1

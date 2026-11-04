@@ -1,0 +1,6 @@
+ALTER TABLE wa_raw.events_raw /* WA_CLUSTER */
+    ADD COLUMN IF NOT EXISTS received_at DateTime64(3, 'UTC') DEFAULT now64(3) FIRST,
+    ADD COLUMN IF NOT EXISTS request_id String DEFAULT '' AFTER received_at,
+ALTER TABLE wa_raw.watch_segments_raw /* WA_CLUSTER */
+    ADD COLUMN IF NOT EXISTS received_at DateTime64(3, 'UTC') DEFAULT now64(3) FIRST,
+    ADD COLUMN IF NOT EXISTS request_id String DEFAULT '' AFTER received_at,

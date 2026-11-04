@@ -1,0 +1,43 @@
+test_cycle2_buffer_declaration_and_insert_are_unproved_writer_routes (test_review_clickhouse_ddl.ReviewClickHouseDDL.test_cycle2_buffer_declaration_and_insert_are_unproved_writer_routes) ... FAIL
+test_cycle2_parallel_with_cannot_hide_create_or_drop (test_review_clickhouse_ddl.ReviewClickHouseDDL.test_cycle2_parallel_with_cannot_hide_create_or_drop) ... ok
+test_cycle2_quoted_aggregate_engine_cannot_hide_missing_writer (test_review_clickhouse_ddl.ReviewClickHouseDDL.test_cycle2_quoted_aggregate_engine_cannot_hide_missing_writer) ... ok
+test_cycle2_read_proof_refuses_unknown_or_implicit_aliases (test_review_clickhouse_ddl.ReviewClickHouseDDL.test_cycle2_read_proof_refuses_unknown_or_implicit_aliases) ... ok
+test_cycle2_unique_table_and_view_namespace_before_writer_proof (test_review_clickhouse_ddl.ReviewClickHouseDDL.test_cycle2_unique_table_and_view_namespace_before_writer_proof) ... ok
+
+======================================================================
+FAIL: test_cycle2_buffer_declaration_and_insert_are_unproved_writer_routes (test_review_clickhouse_ddl.ReviewClickHouseDDL.test_cycle2_buffer_declaration_and_insert_are_unproved_writer_routes)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "skills/sohrab/clickhouse-performance-schema-ops/scripts/test_review_clickhouse_ddl.py", line 255, in test_cycle2_buffer_declaration_and_insert_are_unproved_writer_routes
+    self.assert_audit(self.audit(bundle + forwarder + write, (reader,), options=("--single-tenant",)),
+    ~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+                      2, problems=(declaration, ("bundle.sql:20",
+                      ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+                          "INSERT route to 'raw.forwarder' is not proved non-forwarding")))
+                          ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "skills/sohrab/clickhouse-performance-schema-ops/scripts/test_review_clickhouse_ddl.py", line 62, in assert_audit
+    self.assertCountEqual(actual, problems, output)
+    ~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: Element counts were not equal:
+First has 1, Second has 0:  ('bundle.sql:19', "INSERT route to 'raw.forwarder' is not proved non-forwarding")
+First has 0, Second has 1:  ('bundle.sql:20', "INSERT route to 'raw.forwarder' is not proved non-forwarding") : bundle.sql:5: sparse PRIMARY KEY predicate evidence for [agg.rollup] at read0.sql:1
+
+1 file(s), 3 table(s) checked, 0 finding(s)
+
+not checked by this tool, and still your responsibility:
+  - whether supplied writers and read queries cover production paths
+  - actual pruning, index memory and merge behavior on the target version
+  - whether a LowCardinality column really holds under ~10,000 distinct values
+  - whether the retention window times the partition granularity stays bounded
+  - whether the engine's deduplication model matches what readers assume
+  - whether the tenant predicate is present in every query against this table
+  - whether the deployed table still matches this file (compare system.columns)
+bundle.sql:15: CH011 raw.forwarder: engine is not admitted in an aggregate bundle
+bundle.sql:19: CH011 INSERT route to 'raw.forwarder' is not proved non-forwarding
+
+
+----------------------------------------------------------------------
+Ran 5 tests in 1.302s
+
+FAILED (failures=1)
+exit=1

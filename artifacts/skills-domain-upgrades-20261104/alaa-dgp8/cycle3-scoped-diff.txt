@@ -1,0 +1,3 @@
+warning: in the working copy of 'skills/sohrab/clickhouse-performance-schema-ops/scripts/review_clickhouse_ddl.py', LF will be replaced by CRLF the next time Git touches it
+warning: in the working copy of 'skills/sohrab/clickhouse-performance-schema-ops/scripts/test_review_clickhouse_ddl.py', LF will be replaced by CRLF the next time Git touches it
+exit=0

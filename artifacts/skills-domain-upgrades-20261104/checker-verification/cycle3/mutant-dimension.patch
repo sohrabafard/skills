@@ -1,0 +1,13 @@
+diff --git a/skills/sohrab/clickhouse-performance-schema-ops/scripts/review_clickhouse_ddl.py b/artifacts/skills-domain-upgrades-20261104/checker-verification/cycle3/mutants/dimension/review_clickhouse_ddl.py
+index 64a13c72..c3ca41f7 100644
+--- a/skills/sohrab/clickhouse-performance-schema-ops/scripts/review_clickhouse_ddl.py
++++ b/artifacts/skills-domain-upgrades-20261104/checker-verification/cycle3/mutants/dimension/review_clickhouse_ddl.py
+@@ -842,7 +842,7 @@ def check_aggregate(statement, table, writers, queries, tables, problems):
+             continue
+         for error in errors:
+             problems.append((writer, "{0}: {1}".format(table.name, error)))
+-        missing = dimensions.difference(order)
++        missing = set()
+         if missing:
+             findings.append(Finding(
+                 "CH010", writer.path, writer.line, table.name,

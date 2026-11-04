@@ -1,0 +1,7 @@
+skills/sohrab/clickhouse-performance-schema-ops/scripts/review_clickhouse_ddl.py: OK
+skills/sohrab/clickhouse-performance-schema-ops/scripts/test_review_clickhouse_ddl.py: OK
+skills/sohrab/clickhouse-performance-schema-ops/scripts/test_aggregate_merge_semantics.py: OK
+skills/sohrab/clickhouse-performance-schema-ops/references/20-table-design.md: OK
+skills/sohrab/clickhouse-performance-schema-ops/references/50-mvs-projections-and-ttl.md: OK
+skills/sohrab/clickhouse-performance-schema-ops/references/80-proof-and-validation.md: OK
+artifacts/skills-domain-upgrades-20261104/alaa-dgp8/probe-cancellation.py: OK

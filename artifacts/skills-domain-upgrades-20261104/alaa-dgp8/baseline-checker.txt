@@ -1,0 +1,68 @@
+clickhouse/ddl/001_init.sql:64: CH005 [wa_raw.events_raw] column 'user_id' is Nullable(String) with no recorded reason
+    -> Replace with LowCardinality(String) DEFAULT '' for a repeated dimension, or String DEFAULT '', or write a comment on that line starting 'nullable:' naming the query that must tell an absent value from an empty one. A Nullable column carries a separate UInt8 column processed on every access.
+clickhouse/ddl/001_init.sql:68: CH005 [wa_raw.events_raw] column 'session_locale' is Nullable(String) with no recorded reason
+    -> Replace with LowCardinality(String) DEFAULT '' for a repeated dimension, or String DEFAULT '', or write a comment on that line starting 'nullable:' naming the query that must tell an absent value from an empty one. A Nullable column carries a separate UInt8 column processed on every access.
+clickhouse/ddl/001_init.sql:72: CH005 [wa_raw.events_raw] column 'device_os' is Nullable(String) with no recorded reason
+    -> Replace with LowCardinality(String) DEFAULT '' for a repeated dimension, or String DEFAULT '', or write a comment on that line starting 'nullable:' naming the query that must tell an absent value from an empty one. A Nullable column carries a separate UInt8 column processed on every access.
+clickhouse/ddl/001_init.sql:73: CH005 [wa_raw.events_raw] column 'device_os_version' is Nullable(String) with no recorded reason
+    -> Replace with LowCardinality(String) DEFAULT '' for a repeated dimension, or String DEFAULT '', or write a comment on that line starting 'nullable:' naming the query that must tell an absent value from an empty one. A Nullable column carries a separate UInt8 column processed on every access.
+clickhouse/ddl/001_init.sql:74: CH005 [wa_raw.events_raw] column 'device_browser' is Nullable(String) with no recorded reason
+    -> Replace with LowCardinality(String) DEFAULT '' for a repeated dimension, or String DEFAULT '', or write a comment on that line starting 'nullable:' naming the query that must tell an absent value from an empty one. A Nullable column carries a separate UInt8 column processed on every access.
+clickhouse/ddl/001_init.sql:75: CH005 [wa_raw.events_raw] column 'device_browser_version' is Nullable(String) with no recorded reason
+    -> Replace with LowCardinality(String) DEFAULT '' for a repeated dimension, or String DEFAULT '', or write a comment on that line starting 'nullable:' naming the query that must tell an absent value from an empty one. A Nullable column carries a separate UInt8 column processed on every access.
+clickhouse/ddl/001_init.sql:81: CH005 [wa_raw.events_raw] column 'device_screen_w' is Nullable(UInt16) with no recorded reason
+    -> Replace with UInt16 DEFAULT 0, or write a comment on that line starting 'nullable:' naming the query that must tell an absent value from an empty one. A Nullable column carries a separate UInt8 column processed on every access.
+clickhouse/ddl/001_init.sql:82: CH005 [wa_raw.events_raw] column 'device_screen_h' is Nullable(UInt16) with no recorded reason
+    -> Replace with UInt16 DEFAULT 0, or write a comment on that line starting 'nullable:' naming the query that must tell an absent value from an empty one. A Nullable column carries a separate UInt8 column processed on every access.
+clickhouse/ddl/001_init.sql:83: CH005 [wa_raw.events_raw] column 'device_dpi' is Nullable(UInt16) with no recorded reason
+    -> Replace with UInt16 DEFAULT 0, or write a comment on that line starting 'nullable:' naming the query that must tell an absent value from an empty one. A Nullable column carries a separate UInt8 column processed on every access.
+clickhouse/ddl/001_init.sql:87: CH005 [wa_raw.events_raw] column 'network_effective_type' is Nullable(String) with no recorded reason
+    -> Replace with LowCardinality(String) DEFAULT '' for a repeated dimension, or String DEFAULT '', or write a comment on that line starting 'nullable:' naming the query that must tell an absent value from an empty one. A Nullable column carries a separate UInt8 column processed on every access.
+clickhouse/ddl/001_init.sql:88: CH005 [wa_raw.events_raw] column 'network_downlink_mbps' is Nullable(Float32) with no recorded reason
+    -> Replace with Float32 DEFAULT 0, or write a comment on that line starting 'nullable:' naming the query that must tell an absent value from an empty one. A Nullable column carries a separate UInt8 column processed on every access.
+clickhouse/ddl/001_init.sql:89: CH005 [wa_raw.events_raw] column 'network_rtt_ms' is Nullable(UInt32) with no recorded reason
+    -> Replace with UInt32 DEFAULT 0, or write a comment on that line starting 'nullable:' naming the query that must tell an absent value from an empty one. A Nullable column carries a separate UInt8 column processed on every access.
+clickhouse/ddl/001_init.sql:138: CH005 [wa_raw.events_raw] column 'delivery_mode' is Nullable(String) with no recorded reason
+    -> Replace with LowCardinality(String) DEFAULT '' for a repeated dimension, or String DEFAULT '', or write a comment on that line starting 'nullable:' naming the query that must tell an absent value from an empty one. A Nullable column carries a separate UInt8 column processed on every access.
+clickhouse/ddl/001_init.sql:139: CH005 [wa_raw.events_raw] column 'play_protocol' is Nullable(String) with no recorded reason
+    -> Replace with LowCardinality(String) DEFAULT '' for a repeated dimension, or String DEFAULT '', or write a comment on that line starting 'nullable:' naming the query that must tell an absent value from an empty one. A Nullable column carries a separate UInt8 column processed on every access.
+clickhouse/ddl/001_init.sql:144: CH005 [wa_raw.events_raw] column 'end_reason' is Nullable(String) with no recorded reason
+    -> Replace with LowCardinality(String) DEFAULT '' for a repeated dimension, or String DEFAULT '', or write a comment on that line starting 'nullable:' naming the query that must tell an absent value from an empty one. A Nullable column carries a separate UInt8 column processed on every access.
+clickhouse/ddl/001_init.sql:151: CH006 [wa_raw.events_raw] ORDER BY has 9 elements
+    -> Cut to five or fewer, or name for each element past the fifth a real query that filters on it and on every element before it. Official guidance is that 4-5 keys are typically sufficient.
+clickhouse/ddl/001_init.sql:151: CH007 [wa_raw.events_raw] identifier-like columns in the ORDER BY tail: content_id (position 4), set_id (position 5), course_id (position 6), play_id (position 7), event_id (position 9)
+    -> Each one prunes only for a query that already constrains every element to its left; otherwise it is write cost and index memory. Drop it, or serve the identifier-first access path with a projection or a rollup.
+clickhouse/ddl/001_init.sql:193: CH005 [wa_raw.watch_segments_raw] column 'user_id' is Nullable(String) with no recorded reason
+    -> Replace with LowCardinality(String) DEFAULT '' for a repeated dimension, or String DEFAULT '', or write a comment on that line starting 'nullable:' naming the query that must tell an absent value from an empty one. A Nullable column carries a separate UInt8 column processed on every access.
+clickhouse/ddl/001_init.sql:197: CH005 [wa_raw.watch_segments_raw] column 'session_locale' is Nullable(String) with no recorded reason
+    -> Replace with LowCardinality(String) DEFAULT '' for a repeated dimension, or String DEFAULT '', or write a comment on that line starting 'nullable:' naming the query that must tell an absent value from an empty one. A Nullable column carries a separate UInt8 column processed on every access.
+clickhouse/ddl/001_init.sql:236: CH005 [wa_raw.watch_segments_raw] column 'quality_variant_id' is Nullable(String) with no recorded reason
+    -> Replace with LowCardinality(String) DEFAULT '' for a repeated dimension, or String DEFAULT '', or write a comment on that line starting 'nullable:' naming the query that must tell an absent value from an empty one. A Nullable column carries a separate UInt8 column processed on every access.
+clickhouse/ddl/001_init.sql:245: CH006 [wa_raw.watch_segments_raw] ORDER BY has 9 elements
+    -> Cut to five or fewer, or name for each element past the fifth a real query that filters on it and on every element before it. Official guidance is that 4-5 keys are typically sufficient.
+clickhouse/ddl/001_init.sql:245: CH007 [wa_raw.watch_segments_raw] identifier-like columns in the ORDER BY tail: content_id (position 3), set_id (position 4), course_id (position 5), play_id (position 6), event_id (position 9)
+    -> Each one prunes only for a query that already constrains every element to its left; otherwise it is write cost and index memory. Drop it, or serve the identifier-first access path with a projection or a rollup.
+clickhouse/ddl/002_agg.sql:78: CH006 [wa_agg.watch_time_daily] ORDER BY has 11 elements
+    -> Cut to five or fewer, or name for each element past the fifth a real query that filters on it and on every element before it. Official guidance is that 4-5 keys are typically sufficient.
+clickhouse/ddl/002_agg.sql:78: CH007 [wa_agg.watch_time_daily] identifier-like columns in the ORDER BY tail: course_id (position 9), set_id (position 10), content_id (position 11)
+    -> Each one prunes only for a query that already constrains every element to its left; otherwise it is write cost and index memory. Drop it, or serve the identifier-first access path with a projection or a rollup.
+clickhouse/ddl/002_agg.sql:139: CH006 [wa_agg.views_daily] ORDER BY has 11 elements
+    -> Cut to five or fewer, or name for each element past the fifth a real query that filters on it and on every element before it. Official guidance is that 4-5 keys are typically sufficient.
+clickhouse/ddl/002_agg.sql:139: CH007 [wa_agg.views_daily] identifier-like columns in the ORDER BY tail: course_id (position 9), set_id (position 10), content_id (position 11)
+    -> Each one prunes only for a query that already constrains every element to its left; otherwise it is write cost and index memory. Drop it, or serve the identifier-first access path with a projection or a rollup.
+clickhouse/ddl/002_agg.sql:194: CH006 [wa_agg.events_hourly] ORDER BY has 8 elements
+    -> Cut to five or fewer, or name for each element past the fifth a real query that filters on it and on every element before it. Official guidance is that 4-5 keys are typically sufficient.
+clickhouse/ddl/002_agg.sql:265: CH006 [wa_agg.heatmap_10s] ORDER BY has 11 elements
+    -> Cut to five or fewer, or name for each element past the fifth a real query that filters on it and on every element before it. Official guidance is that 4-5 keys are typically sufficient.
+clickhouse/ddl/002_agg.sql:265: CH007 [wa_agg.heatmap_10s] identifier-like columns in the ORDER BY tail: content_id (position 8), set_id (position 9), course_id (position 10)
+    -> Each one prunes only for a query that already constrains every element to its left; otherwise it is write cost and index memory. Drop it, or serve the identifier-first access path with a projection or a rollup.
+
+2 file(s), 6 table(s) checked, 29 finding(s)
+
+not checked by this tool, and still your responsibility:
+  - whether the ORDER BY prefix matches the queries that will actually run
+  - whether a LowCardinality column really holds under ~10,000 distinct values
+  - whether the retention window times the partition granularity stays bounded
+  - whether the engine's deduplication model matches what readers assume
+  - whether the tenant predicate is present in every query against this table
+  - whether the deployed table still matches this file (compare system.columns)

@@ -1,0 +1,12 @@
+test_cycle2_buffer_declaration_and_insert_are_unproved_writer_routes (test_review_clickhouse_ddl.ReviewClickHouseDDL.test_cycle2_buffer_declaration_and_insert_are_unproved_writer_routes) ... ok
+test_cycle2_parallel_with_cannot_hide_create_or_drop (test_review_clickhouse_ddl.ReviewClickHouseDDL.test_cycle2_parallel_with_cannot_hide_create_or_drop) ... ok
+test_cycle2_qualification_cannot_change_object_identity (test_review_clickhouse_ddl.ReviewClickHouseDDL.test_cycle2_qualification_cannot_change_object_identity) ... ok
+test_cycle2_quoted_aggregate_engine_cannot_hide_missing_writer (test_review_clickhouse_ddl.ReviewClickHouseDDL.test_cycle2_quoted_aggregate_engine_cannot_hide_missing_writer) ... ok
+test_cycle2_read_proof_refuses_unknown_or_implicit_aliases (test_review_clickhouse_ddl.ReviewClickHouseDDL.test_cycle2_read_proof_refuses_unknown_or_implicit_aliases) ... ok
+test_cycle2_unique_table_and_view_namespace_before_writer_proof (test_review_clickhouse_ddl.ReviewClickHouseDDL.test_cycle2_unique_table_and_view_namespace_before_writer_proof) ... ok
+
+----------------------------------------------------------------------
+Ran 6 tests in 1.408s
+
+OK
+exit=0

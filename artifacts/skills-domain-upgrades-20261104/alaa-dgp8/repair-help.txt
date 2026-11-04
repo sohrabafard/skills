@@ -1,0 +1,57 @@
+usage: review_clickhouse_ddl.py [-h] [--read-query FILE]
+                                [--tenant-column NAME] [--single-tenant]
+                                [--version]
+                                [paths ...]
+
+Review a complete ClickHouse DDL and writer SQL bundle.
+
+positional arguments:
+  paths                 SQL files defining tables and all writers
+
+options:
+  -h, --help            show this help message and exit
+  --read-query FILE     actual target SELECT SQL for a short aggregate PRIMARY
+                        KEY (repeatable)
+  --tenant-column NAME  treat NAME as a tenant column (repeatable; adds to the
+                        built-in list)
+  --single-tenant       assert these tables hold one tenant's rows only, which
+                        clears CH002
+  --version             show program's version number and exit
+
+exit codes:
+  0  no finding. The DDL clears the mechanical rules; the unchecked list below
+     is still open and must be answered in the change request.
+  1  at least one finding. Fix every finding or record the justification the
+     finding names, then run this checker again; do not apply the DDL while any
+     finding stands.
+  2  invalid arguments, unreadable input, or unavailable/unsupported proof.
+     Resolve the reported gap and rerun. Structural findings still apply.
+
+checks:
+  CH001  a tenant column exists but does not lead ORDER BY
+  CH002  no tenant column found, and --single-tenant was not given
+  CH003  PARTITION BY has no bounded distinct count
+  CH004  PARTITION BY is finer than monthly
+  CH005  a Nullable column with no 'nullable:' comment naming the query that
+         needs the null
+  CH006  more than five elements in ORDER BY or the aggregate sparse index
+  CH007  identifier-like columns in the corresponding key tail
+  CH008  ORDER BY, PARTITION BY, or PRIMARY KEY names an undeclared column
+  CH009  PRIMARY KEY is not a prefix of ORDER BY
+  CH010  ORDER BY omits a stored GROUP BY dimension from an aggregate writer
+  CH011  required input or proof is invalid, unsupported or unavailable
+
+CH002 and CH005 are cleared by recording an assertion, not by deleting the
+check: CH002 by passing --single-tenant, CH005 by writing the reason on the
+column's line. Both leave the claim where a reviewer can read it.
+
+not checked by this tool, and still your responsibility:
+  - whether supplied writers and read queries cover production paths
+  - actual pruning, index memory and merge behavior on the target version
+  - whether a LowCardinality column really holds under ~10,000 distinct values
+  - whether the retention window times the partition granularity stays bounded
+  - whether the engine's deduplication model matches what readers assume
+  - whether the tenant predicate is present in every query against this table
+  - whether the deployed table still matches this file (compare system.columns)
+
+exit=0

@@ -1,0 +1,13 @@
+test_repair_bom_and_empty_ddl_cannot_drop_aggregate_target (test_review_clickhouse_ddl.ReviewClickHouseDDL.test_repair_bom_and_empty_ddl_cannot_drop_aggregate_target) ... ok
+test_repair_global_read_aliases_cannot_prove_predicates (test_review_clickhouse_ddl.ReviewClickHouseDDL.test_repair_global_read_aliases_cannot_prove_predicates) ... ok
+test_repair_mutation_of_writer_or_source_invalidates_bundle_proof (test_review_clickhouse_ddl.ReviewClickHouseDDL.test_repair_mutation_of_writer_or_source_invalidates_bundle_proof) ... ok
+test_repair_nested_comments_cannot_supply_phantom_writer (test_review_clickhouse_ddl.ReviewClickHouseDDL.test_repair_nested_comments_cannot_supply_phantom_writer) ... ok
+test_repair_slash_comment_cannot_hide_direct_write (test_review_clickhouse_ddl.ReviewClickHouseDDL.test_repair_slash_comment_cannot_hide_direct_write) ... ok
+test_repair_unadmitted_statements_cannot_hide_writers (test_review_clickhouse_ddl.ReviewClickHouseDDL.test_repair_unadmitted_statements_cannot_hide_writers) ... ok
+test_repair_unsupported_quoted_column_cannot_hide_nullable_proof_gap (test_review_clickhouse_ddl.ReviewClickHouseDDL.test_repair_unsupported_quoted_column_cannot_hide_nullable_proof_gap) ... ok
+
+----------------------------------------------------------------------
+Ran 7 tests in 4.386s
+
+OK
+exit=0

@@ -1,0 +1,205 @@
+[
+  {
+    "file": "clickhouse/ddl/001_init.sql",
+    "line": "64",
+    "code": "CH005",
+    "table": "wa_raw.events_raw",
+    "summary": "column 'user_id' is Nullable(String) with no recorded reason"
+  },
+  {
+    "file": "clickhouse/ddl/001_init.sql",
+    "line": "68",
+    "code": "CH005",
+    "table": "wa_raw.events_raw",
+    "summary": "column 'session_locale' is Nullable(String) with no recorded reason"
+  },
+  {
+    "file": "clickhouse/ddl/001_init.sql",
+    "line": "72",
+    "code": "CH005",
+    "table": "wa_raw.events_raw",
+    "summary": "column 'device_os' is Nullable(String) with no recorded reason"
+  },
+  {
+    "file": "clickhouse/ddl/001_init.sql",
+    "line": "73",
+    "code": "CH005",
+    "table": "wa_raw.events_raw",
+    "summary": "column 'device_os_version' is Nullable(String) with no recorded reason"
+  },
+  {
+    "file": "clickhouse/ddl/001_init.sql",
+    "line": "74",
+    "code": "CH005",
+    "table": "wa_raw.events_raw",
+    "summary": "column 'device_browser' is Nullable(String) with no recorded reason"
+  },
+  {
+    "file": "clickhouse/ddl/001_init.sql",
+    "line": "75",
+    "code": "CH005",
+    "table": "wa_raw.events_raw",
+    "summary": "column 'device_browser_version' is Nullable(String) with no recorded reason"
+  },
+  {
+    "file": "clickhouse/ddl/001_init.sql",
+    "line": "81",
+    "code": "CH005",
+    "table": "wa_raw.events_raw",
+    "summary": "column 'device_screen_w' is Nullable(UInt16) with no recorded reason"
+  },
+  {
+    "file": "clickhouse/ddl/001_init.sql",
+    "line": "82",
+    "code": "CH005",
+    "table": "wa_raw.events_raw",
+    "summary": "column 'device_screen_h' is Nullable(UInt16) with no recorded reason"
+  },
+  {
+    "file": "clickhouse/ddl/001_init.sql",
+    "line": "83",
+    "code": "CH005",
+    "table": "wa_raw.events_raw",
+    "summary": "column 'device_dpi' is Nullable(UInt16) with no recorded reason"
+  },
+  {
+    "file": "clickhouse/ddl/001_init.sql",
+    "line": "87",
+    "code": "CH005",
+    "table": "wa_raw.events_raw",
+    "summary": "column 'network_effective_type' is Nullable(String) with no recorded reason"
+  },
+  {
+    "file": "clickhouse/ddl/001_init.sql",
+    "line": "88",
+    "code": "CH005",
+    "table": "wa_raw.events_raw",
+    "summary": "column 'network_downlink_mbps' is Nullable(Float32) with no recorded reason"
+  },
+  {
+    "file": "clickhouse/ddl/001_init.sql",
+    "line": "89",
+    "code": "CH005",
+    "table": "wa_raw.events_raw",
+    "summary": "column 'network_rtt_ms' is Nullable(UInt32) with no recorded reason"
+  },
+  {
+    "file": "clickhouse/ddl/001_init.sql",
+    "line": "138",
+    "code": "CH005",
+    "table": "wa_raw.events_raw",
+    "summary": "column 'delivery_mode' is Nullable(String) with no recorded reason"
+  },
+  {
+    "file": "clickhouse/ddl/001_init.sql",
+    "line": "139",
+    "code": "CH005",
+    "table": "wa_raw.events_raw",
+    "summary": "column 'play_protocol' is Nullable(String) with no recorded reason"
+  },
+  {
+    "file": "clickhouse/ddl/001_init.sql",
+    "line": "144",
+    "code": "CH005",
+    "table": "wa_raw.events_raw",
+    "summary": "column 'end_reason' is Nullable(String) with no recorded reason"
+  },
+  {
+    "file": "clickhouse/ddl/001_init.sql",
+    "line": "151",
+    "code": "CH006",
+    "table": "wa_raw.events_raw",
+    "summary": "ORDER BY has 9 elements"
+  },
+  {
+    "file": "clickhouse/ddl/001_init.sql",
+    "line": "151",
+    "code": "CH007",
+    "table": "wa_raw.events_raw",
+    "summary": "identifier-like columns in the ORDER BY tail: content_id (position 4), set_id (position 5), course_id (position 6), play_id (position 7), event_id (position 9)"
+  },
+  {
+    "file": "clickhouse/ddl/001_init.sql",
+    "line": "193",
+    "code": "CH005",
+    "table": "wa_raw.watch_segments_raw",
+    "summary": "column 'user_id' is Nullable(String) with no recorded reason"
+  },
+  {
+    "file": "clickhouse/ddl/001_init.sql",
+    "line": "197",
+    "code": "CH005",
+    "table": "wa_raw.watch_segments_raw",
+    "summary": "column 'session_locale' is Nullable(String) with no recorded reason"
+  },
+  {
+    "file": "clickhouse/ddl/001_init.sql",
+    "line": "236",
+    "code": "CH005",
+    "table": "wa_raw.watch_segments_raw",
+    "summary": "column 'quality_variant_id' is Nullable(String) with no recorded reason"
+  },
+  {
+    "file": "clickhouse/ddl/001_init.sql",
+    "line": "245",
+    "code": "CH006",
+    "table": "wa_raw.watch_segments_raw",
+    "summary": "ORDER BY has 9 elements"
+  },
+  {
+    "file": "clickhouse/ddl/001_init.sql",
+    "line": "245",
+    "code": "CH007",
+    "table": "wa_raw.watch_segments_raw",
+    "summary": "identifier-like columns in the ORDER BY tail: content_id (position 3), set_id (position 4), course_id (position 5), play_id (position 6), event_id (position 9)"
+  },
+  {
+    "file": "clickhouse/ddl/002_agg.sql",
+    "line": "78",
+    "code": "CH006",
+    "table": "wa_agg.watch_time_daily",
+    "summary": "ORDER BY has 11 elements"
+  },
+  {
+    "file": "clickhouse/ddl/002_agg.sql",
+    "line": "78",
+    "code": "CH007",
+    "table": "wa_agg.watch_time_daily",
+    "summary": "identifier-like columns in the ORDER BY tail: course_id (position 9), set_id (position 10), content_id (position 11)"
+  },
+  {
+    "file": "clickhouse/ddl/002_agg.sql",
+    "line": "139",
+    "code": "CH006",
+    "table": "wa_agg.views_daily",
+    "summary": "ORDER BY has 11 elements"
+  },
+  {
+    "file": "clickhouse/ddl/002_agg.sql",
+    "line": "139",
+    "code": "CH007",
+    "table": "wa_agg.views_daily",
+    "summary": "identifier-like columns in the ORDER BY tail: course_id (position 9), set_id (position 10), content_id (position 11)"
+  },
+  {
+    "file": "clickhouse/ddl/002_agg.sql",
+    "line": "194",
+    "code": "CH006",
+    "table": "wa_agg.events_hourly",
+    "summary": "ORDER BY has 8 elements"
+  },
+  {
+    "file": "clickhouse/ddl/002_agg.sql",
+    "line": "265",
+    "code": "CH006",
+    "table": "wa_agg.heatmap_10s",
+    "summary": "ORDER BY has 11 elements"
+  },
+  {
+    "file": "clickhouse/ddl/002_agg.sql",
+    "line": "265",
+    "code": "CH007",
+    "table": "wa_agg.heatmap_10s",
+    "summary": "identifier-like columns in the ORDER BY tail: content_id (position 8), set_id (position 9), course_id (position 10)"
+  }
+]

@@ -1,0 +1,14 @@
+{
+  "base_commit": "0f8348f2",
+  "command": [
+    "python3",
+    "-B",
+    "skills/sohrab/clickhouse-performance-schema-ops/scripts/review_clickhouse_ddl.py",
+    "artifacts/skills-domain-upgrades-20261104/alaa-dgp8/blocked-quoted-name.sql"
+  ],
+  "exit": 2,
+  "expected_exit": 2,
+  "required_diagnostic": "CH011",
+  "checker_sha256": "ef7f671da31ef22df7fc6a0cc2c2b4b4371c2b3daa582292acebb648d1033229",
+  "fixture_sha256": "798c38b35880ba6297deea5b4222aa1d241222d31be49653418e1a527a7f50e4"
+}

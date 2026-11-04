@@ -1,0 +1,13 @@
+artifacts/skills-domain-upgrades-20261104/alaa-dgp8/blocked-quoted-name.sql:1: CH011 unsupported CREATE TABLE declaration
+artifacts/skills-domain-upgrades-20261104/alaa-dgp8/blocked-quoted-name.sql:1: CH011 no table declaration was checked
+
+1 file(s), 0 table(s) checked, 0 finding(s)
+
+not checked by this tool, and still your responsibility:
+  - whether supplied writers and read queries cover production paths
+  - actual pruning, index memory and merge behavior on the target version
+  - whether a LowCardinality column really holds under ~10,000 distinct values
+  - whether the retention window times the partition granularity stays bounded
+  - whether the engine's deduplication model matches what readers assume
+  - whether the tenant predicate is present in every query against this table
+  - whether the deployed table still matches this file (compare system.columns)

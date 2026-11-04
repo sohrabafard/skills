@@ -1,0 +1,22 @@
+diff --git a/skills/sohrab/clickhouse-performance-schema-ops/scripts/review_clickhouse_ddl.py b/artifacts/skills-domain-upgrades-20261104/checker-verification/cycle1/mutants/blanket/review_clickhouse_ddl.py
+index 6a19f5f7..2550f19f 100644
+--- a/skills/sohrab/clickhouse-performance-schema-ops/scripts/review_clickhouse_ddl.py
++++ b/artifacts/skills-domain-upgrades-20261104/checker-verification/cycle1/mutants/blanket/review_clickhouse_ddl.py
+@@ -481,7 +481,7 @@ def check_table(statement, original, table, tenant_columns, single_tenant):
+     index_offset = table.primary_offset if is_aggregate and table.primary_key else table.order_offset
+     label = "effective PRIMARY KEY" if is_aggregate else "ORDER BY"
+     index_names = [identifiers_in(expr) for expr in index_key] if is_aggregate else order_names
+-    if len(index_key) > 5:
++    if not is_aggregate and len(index_key) > 5:
+         findings.append(Finding(
+             "CH006", path, table_line(index_offset), table.name,
+             "{0} has {1} elements".format(label, len(index_key)),
+@@ -496,7 +496,7 @@ def check_table(statement, original, table, tenant_columns, single_tenant):
+         head = names[0] if names else ""
+         if head and IDENTIFIER_TAIL.search(head):
+             tail.append((position, head))
+-    if tail:
++    if not is_aggregate and tail:
+         listed = ", ".join("{0} (position {1})".format(n, p) for p, n in tail)
+         findings.append(Finding(
+             "CH007", path, table_line(index_offset), table.name,

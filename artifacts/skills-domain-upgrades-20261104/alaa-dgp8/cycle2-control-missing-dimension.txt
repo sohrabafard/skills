@@ -1,0 +1,31 @@
+F
+======================================================================
+FAIL: test_aggregate_missing_dimension_with_qualifying_prefix (test_review_clickhouse_ddl.ReviewClickHouseDDL.test_aggregate_missing_dimension_with_qualifying_prefix)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/tmp/alaa-dgp8-cycle2-controls.NAaclhte/missing-dimension/test_review_clickhouse_ddl.py", line 78, in test_aggregate_missing_dimension_with_qualifying_prefix
+    self.assert_audit(result, 1, (("CH010", "agg.rollup"),))
+    ~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/tmp/alaa-dgp8-cycle2-controls.NAaclhte/missing-dimension/test_review_clickhouse_ddl.py", line 58, in assert_audit
+    self.assertEqual(result.returncode, code, output)
+    ~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: 0 != 1 : bundle.sql:5: sparse PRIMARY KEY predicate evidence for [agg.rollup] at read0.sql:1
+
+1 file(s), 2 table(s) checked, 0 finding(s)
+
+not checked by this tool, and still your responsibility:
+  - whether supplied writers and read queries cover production paths
+  - actual pruning, index memory and merge behavior on the target version
+  - whether a LowCardinality column really holds under ~10,000 distinct values
+  - whether the retention window times the partition granularity stays bounded
+  - whether the engine's deduplication model matches what readers assume
+  - whether the tenant predicate is present in every query against this table
+  - whether the deployed table still matches this file (compare system.columns)
+
+
+----------------------------------------------------------------------
+Ran 1 test in 0.059s
+
+FAILED (failures=1)
+selector=aggregate_missing_dimension_with_qualifying_prefix
+exit=1

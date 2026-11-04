@@ -1,0 +1,13 @@
+local Docker socket: 'unix:///var/run/docker.sock'
+cached image ID: 'sha256:1ffa82edee000a42c09313bd9f1293d94c570aee74babc1b3ca9983a35fa597b'
+repo digests: ["clickhouse/clickhouse-server@sha256:1ffa82edee000a42c09313bd9f1293d94c570aee74babc1b3ca9983a35fa597b","registry.takhtenegar.ir:5010/clickhouse/clickhouse-server@sha256:1ffa82edee000a42c09313bd9f1293d94c570aee74babc1b3ca9983a35fa597b"]
+fixture container: alaa-dgp8-merge-ba482b340c3e4d97b4071f67afbce5f4
+runtime limits: ('none', 4000000000, 2147483648, 2147483648)
+published ports: {}
+host binds: None
+server version: '24.8.14.39'
+probe sent SIGTERM to fixture runner for alaa-dgp8-merge-ba482b340c3e4d97b4071f67afbce5f4
+fixture cleanup alaa-dgp8-merge-ba482b340c3e4d97b4071f67afbce5f4: ''
+fixture cancelled by SIGTERM
+cancelled runner exit=143
+probe independently observed no remaining alaa-dgp8-merge-ba482b340c3e4d97b4071f67afbce5f4 container

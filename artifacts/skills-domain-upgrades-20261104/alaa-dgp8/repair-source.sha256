@@ -1,0 +1,6 @@
+fe0a058d7ac772a65d8647c08595747535ab0692c6b1433764dc38b5f20cd7f6  skills/sohrab/clickhouse-performance-schema-ops/scripts/review_clickhouse_ddl.py
+2fa3738d1a712c3fe8f063271c653bb31ab6c49febbeddef9fbd33a7c1b6fc15  skills/sohrab/clickhouse-performance-schema-ops/scripts/test_review_clickhouse_ddl.py
+038de7629c405f786d8b887a3c04d2537db91dd8c6b457a19011cc402b54eb12  skills/sohrab/clickhouse-performance-schema-ops/scripts/test_aggregate_merge_semantics.py
+d7ddab47f8ab215754f788720ba319a1e418f083a984ef23f0f1e45f8a7903f1  skills/sohrab/clickhouse-performance-schema-ops/references/20-table-design.md
+c4fdd34af64cf106b3775663f76b21d6081a50df1e97dac3fb1271cabab958f8  skills/sohrab/clickhouse-performance-schema-ops/references/50-mvs-projections-and-ttl.md
+0fd90b633f119597e2b1f0fbb4d0d4daf85bed20371adce07f993afe0e317de3  skills/sohrab/clickhouse-performance-schema-ops/references/80-proof-and-validation.md
