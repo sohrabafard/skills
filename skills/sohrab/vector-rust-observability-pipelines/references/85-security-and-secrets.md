@@ -112,9 +112,9 @@ sinks:
       password: "SECRET[clickhouse.password]"
 ```
 
-Verified: this validates on 0.57.0, and the backend command is **not executed
-during `vector validate`** — so validation stays safe to run in CI, and a missing
-backend does not turn into an accidental credential fetch.
+On 0.57.0, validation did not execute the helper. From 0.59.0, strict validation
+can execute it even when health checks are skipped. Apply the backend isolation
+rules in `50-validation-and-testing.md` before running CI.
 
 The opt-in that condition 1 requires is
 `--dangerously-allow-env-var-interpolation` or

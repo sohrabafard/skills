@@ -29,14 +29,14 @@ vector generate 'demo_logs//clickhouse'
 node scripts/check-upstream-version.mjs
 
 # Release notes for one version, as machine-readable source
-curl -fsS https://raw.githubusercontent.com/vectordotdev/vector/v0.58.0/website/cue/reference/releases/0.58.0.cue
+curl -fsS https://raw.githubusercontent.com/vectordotdev/vector/v0.61.0/website/cue/reference/releases/0.61.0.cue
 
 # Buffering model, in full
-curl -fsS https://raw.githubusercontent.com/vectordotdev/vector/v0.58.0/website/content/en/docs/architecture/buffering-model.md
+curl -fsS https://raw.githubusercontent.com/vectordotdev/vector/v0.61.0/website/content/en/docs/architecture/buffering-model.md
 
 # Helm chart version and every option's documented semantics
-curl -fsS https://raw.githubusercontent.com/vectordotdev/helm-charts/vector-0.58.0/charts/vector/Chart.yaml
-curl -fsS https://raw.githubusercontent.com/vectordotdev/helm-charts/vector-0.58.0/charts/vector/values.yaml
+curl -fsS https://raw.githubusercontent.com/vectordotdev/helm-charts/vector-0.61.0/charts/vector/Chart.yaml
+curl -fsS https://raw.githubusercontent.com/vectordotdev/helm-charts/vector-0.61.0/charts/vector/values.yaml
 ```
 
 `node scripts/check-upstream-version.mjs` automates the version comparison and exits
@@ -61,7 +61,7 @@ curl -fsS https://raw.githubusercontent.com/vectordotdev/helm-charts/vector-0.58
 | Releases index | https://vector.dev/releases/ |
 | Helm install | https://vector.dev/docs/setup/installation/package-managers/helm/ |
 | Helm chart repository | https://github.com/vectordotdev/helm-charts |
-| Chart README | https://github.com/vectordotdev/helm-charts/blob/vector-0.58.0/charts/vector/README.md |
+| Chart README | https://github.com/vectordotdev/helm-charts/blob/vector-0.61.0/charts/vector/README.md |
 | Security policy | https://github.com/vectordotdev/vector/security/policy |
 | Open disk-buffer bugs | https://github.com/vectordotdev/vector/issues?q=is%3Aissue+state%3Aopen+label%3A%22domain%3A+buffers%22+type%3ABug |
 
@@ -74,6 +74,12 @@ anything security-sensitive. Those are exactly the claims that go stale without
 announcing it.
 
 ## What was verified, when, and how
+
+**2026-11-04 — 0.61.0 refresh.** Use the version ledger and tagged release
+sources in `80-version-and-upgrade-deltas.md` and `81-release-coverage.md` for
+the 0.59.0, 0.60.0 and 0.61.0 migration. Exact-binary config checks used the
+cached Alpine build. Helm metadata describes the separately published
+distroless image. Historical evidence below retains its original scope.
 
 **2026-09-26 — compatibility refresh.** Read the complete tagged latest-release
 source, including bundled VRL notes, and its upgrade guide; cross-check product

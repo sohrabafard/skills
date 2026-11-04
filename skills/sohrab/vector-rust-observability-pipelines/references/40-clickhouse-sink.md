@@ -4,6 +4,16 @@ Verified against Vector `0.57.0` on 2026-07-30. Re-derive every default in this 
 with `vector generate 'demo_logs//clickhouse'`, which prints what the installed
 binary applies rather than what the docs describe.
 
+## Upgrade checks on 0.61.0
+
+Keep the ClickHouse endpoint explicit and include its host. Strict validation
+now resolves the auth backend. Use `50-validation-and-testing.md` for isolated
+validation and test the target image's CA trust before cutover. Keep existing
+format, batching, request retry and acknowledgement decisions explicit. The
+0.59–0.61 release ledger does not establish a new ClickHouse delivery guarantee.
+Test inserts, transient retries and terminal loss with the consumer's actual
+schema, endpoint and credentials before rollout.
+
 ## The three-way boundary
 
 `clickhouse-performance-schema-ops` owns what a ClickHouse table must be — engine,

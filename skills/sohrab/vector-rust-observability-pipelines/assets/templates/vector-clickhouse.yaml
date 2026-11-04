@@ -1,7 +1,7 @@
 # Vector -> ClickHouse landing pipeline, with every delivery-relevant option set
 # explicitly. Defaults are stated in comments so a reviewer can see what was
 # chosen and what was merely inherited.
-# Validate with:  vector validate --skip-healthchecks --deny-warnings assets/templates/vector-clickhouse.yaml
+# Validate the bundled example with: node scripts/check-vector-configs.mjs
 # Keep component checks: the newer confinement fix under --no-environment does
 # not restore the other environment checks that flag skips.
 data_dir: /var/lib/vector
@@ -12,9 +12,9 @@ data_dir: /var/lib/vector
 # with that 22-character literal string. See references/85-security-and-secrets.md.
 secret:
   clickhouse:
-    type: exec
-    # Replace with the command your platform uses to emit the secret as JSON.
-    command: ["/usr/local/bin/fetch-clickhouse-secret"]
+    type: file
+    # Mount a protected JSON object with string keys user and password.
+    path: /run/secrets/vector-clickhouse.json
 
 sources:
   # `file` participates in end-to-end acknowledgements. `demo_logs` does not:

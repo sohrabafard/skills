@@ -1,5 +1,41 @@
 # Release coverage decision record
 
+## 0.59.0 through 0.61.0 refresh
+
+The [0.59.0](https://raw.githubusercontent.com/vectordotdev/vector/v0.59.0/website/cue/reference/releases/0.59.0.cue),
+[0.60.0](https://raw.githubusercontent.com/vectordotdev/vector/v0.60.0/website/cue/reference/releases/0.60.0.cue)
+and [0.61.0](https://raw.githubusercontent.com/vectordotdev/vector/v0.61.0/website/cue/reference/releases/0.61.0.cue)
+tagged notes cover this interval, including VRL 0.36.0, 0.37.0 and 0.38.0.
+Read the migration decisions in `80-version-and-upgrade-deltas.md` before applying
+these component-specific additions. These are released-source findings.
+
+| Release | Relevant delta and owning guidance |
+| --- | --- |
+| 0.59.0 | Secret resolution in strict validation, malformed endpoints, more sink checks without environment, ambiguous test outputs, zero-rate blackhole rejection, and generated optional enum schema fixes. Keep the strict gate in `50-validation-and-testing.md`. |
+| 0.59.0 | HTTP-prefix confinement fix and bearer auth on `http_server`, `heroku_logs` and `websocket_server`. Review TLS and credential sourcing in `85-security-and-secrets.md`. HTTP sources add `keepalive.tcp_keepalive`. OTLP source adds `max_concurrent_requests` and `request_timeout_secs`; test overload and producer behavior before setting them. |
+| 0.59.0 | Native decode/disk record rejection and old buffer reporter retirement. See `30-buffers-acks-and-backpressure.md` and `60-internal-monitoring.md`. File and Kubernetes unread-byte metrics supplement EOF evidence. |
+| 0.59.0 | Migrate deprecated counters to `memory_enrichment_table_failed_insertions_total`, `memory_enrichment_table_failed_reads_total`, `memory_enrichment_table_ttl_expirations_total`, `process_runtime_total` and `aggregate_failed_updates_total`. Also review Linux `memory_oom_kill_events_total` and Prometheus label exposition fixes. |
+| 0.59.0 | JetStream resumes closed pull streams with backoff. File fingerprinting retries too-short files. gRPC decompression and TCP ack/TLS failures give more context. GELF caps incomplete message bytes and adds a configurable message-count cap. Lua metrics with invalid tag values now discard instead of panicking. These do not establish an Ala delivery guarantee. |
+| 0.59.0 | Optional surfaces: Azure append blobs, Prometheus scrape headers, Loki custom healthcheck URI, event-time aggregation, Datadog span links/events and payload/truncation controls. Inspect tagged component docs before adoption. |
+| 0.60.0 | Disk file-ID wrap and stale reload selection fixes. Sample limits per-group state with `max_state_bytes` (128 MiB by default), evicting least recently used groups. Internal log discards, optional sample/throttle discard groups, and Prometheus remote-write counter typing affect observation. See `60-internal-monitoring.md`. |
+| 0.60.0 | Migrate OTLP source `use_otlp_decoding` to `decoding.codec: otlp` and check `decoding.signal_types`. Recheck native OTLP log event names and Kubernetes namespace annotations and label metadata. Source/sink task logs now report the underlying error. |
+| 0.60.0 | Recheck package migration if using Debian conffiles or Kafka GSSAPI in the official Linux GNU package. Avro adds Date and TimeMillis codec support. These do not change the examples here. |
+| 0.61.0 | Explicit relay schemes and proxy credentials/SNI. Unregistered services on `vector` and `opentelemetry` now return gRPC `UNIMPLEMENTED` without a component-error increment. Recheck top/tap connectivity and trust on the target build. |
+| 0.61.0 | Disk lifecycle and decoder oversize-error signals. MQTT graceful shutdown drains queued messages and pending QoS exchanges before disconnect when possible. Redis list shutdown gives an in-flight pop up to five seconds to finish and forward its result. GCP Pub/Sub reset reconnect and TLS/proxy changes are provider-specific. |
+| 0.61.0 | OpenSearch sink and Datadog Agent v3 metrics intake are optional. Recheck the trust chain after CA changes in distroless images, bundled Mozilla roots and the Databricks sink. |
+| VRL | Compile array-element checks and nanosecond conversion on the chosen version. Review HTTPS certificate verification, `range`, and other stdlib changes in `20-vrl-transforms.md` and the tagged notes. |
+
+No configuration changes are driven here by internal performance work, dev tools,
+playground UI, platform packaging outside the target, or unrelated component
+fixes. The shipped examples exercise the basic remap and ClickHouse config
+surfaces. Provider integration, real TLS, chart rendering and upgrades,
+buffer reload/drain, metric emission, backpressure, retry, and delivery require
+their own checks on the actual target. The release ledger establishes no change
+to the skill's default interpolation posture, health endpoint contract,
+acknowledgement boundary, retry bounds, or ClickHouse schema policy.
+
+## 0.58.0 historical coverage
+
 Verified 2026-09-26. The canonical version/support ledger is
 `80-version-and-upgrade-deltas.md`. This record covers the entire stable delta
 after the skill's baseline: one product release, including its bundled VRL

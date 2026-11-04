@@ -3,6 +3,20 @@
 Vector is a dependency of every incident review that reads a log, so it needs the
 same treatment as a service. Verified against `0.57.0` on 2026-07-30.
 
+## Upgrade telemetry after 0.58.0
+
+| Introduced | Signal | Interpretation |
+| --- | --- | --- |
+| 0.59.0 | `files_unwatched_bytes_unread_total`, `files_unwatched_with_unknown_bytes_total` | The first counts known unread bytes at unwatch. The second counts cases where the size could not be determined. Neither proves downstream loss. |
+| 0.59.0 | Memory enrichment insertion, read and TTL counters and host `process_runtime` | Migrate selectors to the `_total` names in `81-release-coverage.md`. The old series are deprecated. Stop counting both aliases. |
+| 0.60.0 | `component_discarded_events_total{intentional="false"}` for `internal_logs` | A lagging internal log receiver can discard records. Optional `group` labels on sample/throttle discard counters have cardinality cost. |
+| 0.61.0 | `topology_disk_buffer_lifecycle_events_total` with `event` | Inspect `removed`, `replacement_unreferenced` and `unreferenced` with the associated logs. A lifecycle event is not a count of lost records or proof of drain. |
+| 0.61.0 | `component_errors_total{error_code="decoder_frame_too_long"}` | Oversize drops for newline/character-delimited decoding with `oversized_action: drop` now emit an error. The discard behavior is unchanged. |
+
+0.59.0 stops a replaced buffer's reporter from publishing stale usage under the
+replacement's ID. Expiration still depends on exporter configuration. Verify
+exported series on the target deployment before switching alert selectors.
+
 ## Wire both self-observation sources
 
 ```yaml

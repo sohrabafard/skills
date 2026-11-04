@@ -15,7 +15,7 @@ node scripts/check-upstream-version.mjs
 Re-derive the option semantics:
 
 ```bash
-curl -fsS https://raw.githubusercontent.com/vectordotdev/helm-charts/vector-0.58.0/charts/vector/values.yaml
+curl -fsS https://raw.githubusercontent.com/vectordotdev/helm-charts/vector-0.61.0/charts/vector/values.yaml
 ```
 
 **The chart version and the Vector version are two different numbers.** Compare the

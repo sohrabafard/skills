@@ -41,13 +41,25 @@ Two preconditions for the real check, both environmental rather than defects:
 - The `data_dir` named in the config must exist and be writable, or validation
   reports `x data_dir "/var/lib/vector" does not exist`. `VECTOR_DATA_DIR` does
   **not** override the config value — verified.
-- `--skip-healthchecks` avoids reaching the network. Without it, validation tries
-  to contact every sink.
+- `--skip-healthchecks` skips sink health checks. Backend resolution can still
+  reach the network from 0.59.0.
 
 `scripts/check-vector-configs.mjs` handles both by copying each config to an OS
-temp directory with `data_dir` rewritten, so component checks run on any machine
-without needing `/var/lib/vector` to exist and without writing inside the
+temp directory with `data_dir` rewritten, so component checks run without needing `/var/lib/vector` to exist and without writing inside the
 repository.
+
+## Secret resolution from 0.59.0
+
+Strict validation resolves `SECRET[backend.key]` even with health checks skipped.
+An `exec` backend can run its configured command, and a remote backend can
+contact its provider. Run strict validation only on trusted configs with approved
+backend access, or stage an isolated copy with a synthetic backend. The shipped
+checker stages synthetic JSON for the bundled ClickHouse example only. Supplied
+configs keep their configured secret backends. `--no-environment` skips resolution
+unless paired with `--resolve-secrets`, which still leaves component checks disabled.
+
+From 0.59.0, `vector test` reports ambiguous output names as configuration errors.
+Fix the output reference before interpreting assertion results.
 
 ## `--deny-warnings` earns its place
 

@@ -1,0 +1,162 @@
+timeout 120s docker run --rm --pull never --network none --cpus 4 --memory 1g --label alaa.task=alaa-a95j --mount type=bind\,src=<scratch>/stage\,dst=<scratch>/stage --mount type=bind\,src=<repo>/skills/sohrab/vector-rust-observability-pipelines\,dst=<repo>/skills/sohrab/vector-rust-observability-pipelines\,readonly sha256:3bb7ed5152910ed51729e256937b1d8a4bf67ff624e9d565e8e5877bffd015c7 --version
+exit=0
+vector 0.61.0 (x86_64-unknown-linux-musl 17e017e 2026-10-29 16:03:40.929269968)
+timeout 120s docker run --rm --pull never --network none --cpus 4 --memory 1g --label alaa.task=alaa-a95j --mount type=bind\,src=<scratch>/stage\,dst=<scratch>/stage --mount type=bind\,src=<repo>/skills/sohrab/vector-rust-observability-pipelines\,dst=<repo>/skills/sohrab/vector-rust-observability-pipelines\,readonly sha256:3bb7ed5152910ed51729e256937b1d8a4bf67ff624e9d565e8e5877bffd015c7 validate --skip-healthchecks --deny-warnings <scratch>/stage/vector-check-eqJG9G/grp-MdBEie/vector-basic.yaml <scratch>/stage/vector-check-eqJG9G/grp-MdBEie/vector-tests.yaml
+exit=0
+√ Loaded ["<scratch>/stage/vector-check-eqJG9G/grp-MdBEie/vector-basic.yaml", "<scratch>/stage/vector-check-eqJG9G/grp-MdBEie/vector-tests.yaml"]
+√ Transforms configuration
+√ Sinks configuration
+√ Component configuration
+---------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+                                                                                                                                                                  Validated
+timeout 120s docker run --rm --pull never --network none --cpus 4 --memory 1g --label alaa.task=alaa-a95j --mount type=bind\,src=<scratch>/stage\,dst=<scratch>/stage --mount type=bind\,src=<repo>/skills/sohrab/vector-rust-observability-pipelines\,dst=<repo>/skills/sohrab/vector-rust-observability-pipelines\,readonly sha256:3bb7ed5152910ed51729e256937b1d8a4bf67ff624e9d565e8e5877bffd015c7 test <scratch>/stage/vector-check-eqJG9G/grp-MdBEie/vector-basic.yaml <scratch>/stage/vector-check-eqJG9G/grp-MdBEie/vector-tests.yaml
+exit=0
+Running tests
+test happy path - level is downcased, service is preserved ... passed
+test missing service falls back to unknown ... passed
+test missing level falls back to info ... passed
+test non-string level is defaulted rather than aborting the transform ... passed
+test ingest timestamp is always added ... passed
+timeout 120s docker run --rm --pull never --network none --cpus 4 --memory 1g --label alaa.task=alaa-a95j --mount type=bind\,src=<scratch>/stage\,dst=<scratch>/stage --mount type=bind\,src=<repo>/skills/sohrab/vector-rust-observability-pipelines\,dst=<repo>/skills/sohrab/vector-rust-observability-pipelines\,readonly sha256:3bb7ed5152910ed51729e256937b1d8a4bf67ff624e9d565e8e5877bffd015c7 validate --skip-healthchecks --deny-warnings <scratch>/stage/vector-check-eqJG9G/grp-Ee1pZT/vector-clickhouse.yaml
+exit=0
+√ Loaded ["<scratch>/stage/vector-check-eqJG9G/grp-Ee1pZT/vector-clickhouse.yaml"]
+√ Transforms configuration
+√ Sinks configuration
+√ Component configuration
+-----------------------------------------------------------------------------------------------
+                                                                                      Validated
+timeout 120s docker run --rm --pull never --network none --cpus 4 --memory 1g --label alaa.task=alaa-a95j --mount type=bind\,src=<scratch>/stage\,dst=<scratch>/stage --mount type=bind\,src=<repo>/skills/sohrab/vector-rust-observability-pipelines\,dst=<repo>/skills/sohrab/vector-rust-observability-pipelines\,readonly sha256:3bb7ed5152910ed51729e256937b1d8a4bf67ff624e9d565e8e5877bffd015c7 vrl -i <scratch>/stage/vector-check-eqJG9G/vrl-o1fGF8/event.json -p <repo>/skills/sohrab/vector-rust-observability-pipelines/assets/templates/common.vrl
+exit=0
+null
+2026-11-04T01:17:57.408180Z  INFO vector::app: Log level is enabled. level="info"
+timeout 120s docker run --rm --pull never --network none --cpus 4 --memory 1g --label alaa.task=alaa-a95j --mount type=bind\,src=<scratch>/stage\,dst=<scratch>/stage --mount type=bind\,src=<repo>/skills/sohrab/vector-rust-observability-pipelines\,dst=<repo>/skills/sohrab/vector-rust-observability-pipelines\,readonly sha256:3bb7ed5152910ed51729e256937b1d8a4bf67ff624e9d565e8e5877bffd015c7 validate --skip-healthchecks --deny-warnings <scratch>/stage/bad-vrl.yaml
+exit=78
+√ Loaded ["<scratch>/stage/bad-vrl.yaml"]
+
+Transform errors
+----------------
+x Transform "normalize":
+error[E651]: unnecessary error coalescing operation
+  ┌─ :6:19
+  │
+6 │ .level = downcase(string!(.level) ?? "info")
+  │                   ^^^^^^^^^^^^^^^ -- ------ this expression never resolves
+  │                   │               │
+  │                   │               remove this error coalescing operation
+  │                   this expression can't fail
+  │
+  = see language documentation at https://vrl.dev
+  = try your code in the VRL REPL, learn more at https://vrl.dev/examples
+
+
+√ Sinks configuration
+
+Component errors
+----------------
+x Transform "normalize":
+error[E651]: unnecessary error coalescing operation
+  ┌─ :6:19
+  │
+6 │ .level = downcase(string!(.level) ?? "info")
+  │                   ^^^^^^^^^^^^^^^ -- ------ this expression never resolves
+  │                   │               │
+  │                   │               remove this error coalescing operation
+  │                   this expression can't fail
+  │
+  = see language documentation at https://vrl.dev
+  = try your code in the VRL REPL, learn more at https://vrl.dev/examples
+
+
+timeout 120s docker run --rm --pull never --network none --cpus 4 --memory 1g --label alaa.task=alaa-a95j --mount type=bind\,src=<scratch>/stage\,dst=<scratch>/stage --mount type=bind\,src=<repo>/skills/sohrab/vector-rust-observability-pipelines\,dst=<repo>/skills/sohrab/vector-rust-observability-pipelines\,readonly sha256:3bb7ed5152910ed51729e256937b1d8a4bf67ff624e9d565e8e5877bffd015c7 test <scratch>/stage/basic.yaml <scratch>/stage/wrong-expected.yaml
+exit=78
+Running tests
+test happy path - level is downcased, service is preserved ... failed
+test missing service falls back to unknown ... passed
+test missing level falls back to info ... passed
+test non-string level is defaulted rather than aborting the transform ... passed
+test ingest timestamp is always added ... passed
+
+failures:
+
+test happy path - level is downcased, service is preserved:
+
+check[0] for transforms ["normalize"] failed conditions:
+
+  condition[0]: source execution failed:
+error[E000]: function call error for "assert_eq" at (0:32): assertion failed: "warn" == "impossible"
+  ┌─ :1:1
+  │
+1 │ assert_eq!(.level, "impossible")
+  │ ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ assertion failed: "warn" == "impossible"
+  │
+  = see language documentation at https://vrl.dev
+  = try your code in the VRL REPL, learn more at https://vrl.dev/examples
+
+
+output payloads from ["normalize"] (events encoded as JSON):
+  {"ingest_ts":"2026-11-04T01:18:37.934728295Z","level":"warn","message":"hello","service":"API","timestamp":"2026-11-04T01:18:37.925785550Z"}
+
+timeout 120s docker run --rm --pull never --network none --cpus 4 --memory 1g --label alaa.task=alaa-a95j --mount type=bind\,src=<scratch>/stage\,dst=<scratch>/stage --mount type=bind\,src=<repo>/skills/sohrab/vector-rust-observability-pipelines\,dst=<repo>/skills/sohrab/vector-rust-observability-pipelines\,readonly sha256:3bb7ed5152910ed51729e256937b1d8a4bf67ff624e9d565e8e5877bffd015c7 validate --skip-healthchecks --deny-warnings <scratch>/stage/missing-secret.yaml
+exit=78
+Failed to load ["<scratch>/stage/missing-secret.yaml"]
+-------------------------------------------------------------------
+x Error while retrieving secret from backend "clickhouse": No such file or directory (os error 2).
+
+timeout 120s docker run --rm --pull never --network none --cpus 4 --memory 1g --label alaa.task=alaa-a95j --mount type=bind\,src=<scratch>/stage\,dst=<scratch>/stage --mount type=bind\,src=<repo>/skills/sohrab/vector-rust-observability-pipelines\,dst=<repo>/skills/sohrab/vector-rust-observability-pipelines\,readonly sha256:3bb7ed5152910ed51729e256937b1d8a4bf67ff624e9d565e8e5877bffd015c7 validate --no-environment <scratch>/stage/missing-secret.yaml
+exit=0
+√ Loaded ["<scratch>/stage/missing-secret.yaml"]
+√ Transforms configuration
+√ Sinks configuration
+-------------------------------------------------------------
+                                                    Validated
+timeout 120s docker run --rm --pull never --network none --cpus 4 --memory 1g --label alaa.task=alaa-a95j --mount type=bind\,src=<scratch>/stage\,dst=<scratch>/stage --mount type=bind\,src=<repo>/skills/sohrab/vector-rust-observability-pipelines\,dst=<repo>/skills/sohrab/vector-rust-observability-pipelines\,readonly sha256:3bb7ed5152910ed51729e256937b1d8a4bf67ff624e9d565e8e5877bffd015c7 validate --skip-healthchecks --deny-warnings <scratch>/stage/relay.yaml
+exit=0
+√ Loaded ["<scratch>/stage/relay.yaml"]
+√ Transforms configuration
+√ Sinks configuration
+√ Component configuration
+----------------------------------------------------
+                                           Validated
+timeout 120s docker run --rm --pull never --network none --cpus 4 --memory 1g --label alaa.task=alaa-a95j --mount type=bind\,src=<scratch>/stage\,dst=<scratch>/stage --mount type=bind\,src=<repo>/skills/sohrab/vector-rust-observability-pipelines\,dst=<repo>/skills/sohrab/vector-rust-observability-pipelines\,readonly sha256:3bb7ed5152910ed51729e256937b1d8a4bf67ff624e9d565e8e5877bffd015c7 validate --skip-healthchecks --deny-warnings <scratch>/stage/old-compression.yaml
+exit=78
+Failed to load ["<scratch>/stage/old-compression.yaml"]
+--------------------------------------------------------------------
+x sinks.relay: invalid type: boolean `true`, expected string or map
+
+timeout 120s docker run --rm --pull never --network none --cpus 4 --memory 1g --label alaa.task=alaa-a95j --mount type=bind\,src=<scratch>/stage\,dst=<scratch>/stage --mount type=bind\,src=<repo>/skills/sohrab/vector-rust-observability-pipelines\,dst=<repo>/skills/sohrab/vector-rust-observability-pipelines\,readonly sha256:3bb7ed5152910ed51729e256937b1d8a4bf67ff624e9d565e8e5877bffd015c7 validate --skip-healthchecks --deny-warnings <scratch>/stage/bad-endpoint.yaml
+exit=78
+Failed to load ["<scratch>/stage/bad-endpoint.yaml"]
+-----------------------------------------------------------------
+x Failed to validate sink "relay": endpoint must be an absolute http(s) URL, for example `https://example.com`; got `ftp://127.0.0.1:6000/`
+
+timeout 120s docker run --rm --pull never --network none --cpus 4 --memory 1g --label alaa.task=alaa-a95j --mount type=bind\,src=<scratch>/stage\,dst=<scratch>/stage --mount type=bind\,src=<repo>/skills/sohrab/vector-rust-observability-pipelines\,dst=<repo>/skills/sohrab/vector-rust-observability-pipelines\,readonly sha256:3bb7ed5152910ed51729e256937b1d8a4bf67ff624e9d565e8e5877bffd015c7 --version
+exit=0
+vector 0.61.0 (x86_64-unknown-linux-musl 17e017e 2026-10-29 16:03:40.929269968)
+timeout 120s docker run --rm --pull never --network none --cpus 4 --memory 1g --label alaa.task=alaa-a95j --mount type=bind\,src=<scratch>/stage\,dst=<scratch>/stage --mount type=bind\,src=<repo>/skills/sohrab/vector-rust-observability-pipelines\,dst=<repo>/skills/sohrab/vector-rust-observability-pipelines\,readonly sha256:3bb7ed5152910ed51729e256937b1d8a4bf67ff624e9d565e8e5877bffd015c7 validate --skip-healthchecks --deny-warnings <scratch>/stage/vector-check-DyulA7/grp-J2DjIf/vector-basic.yaml <scratch>/stage/vector-check-DyulA7/grp-J2DjIf/vector-tests.yaml
+exit=0
+√ Loaded ["<scratch>/stage/vector-check-DyulA7/grp-J2DjIf/vector-basic.yaml", "<scratch>/stage/vector-check-DyulA7/grp-J2DjIf/vector-tests.yaml"]
+√ Transforms configuration
+√ Sinks configuration
+√ Component configuration
+---------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+                                                                                                                                                                  Validated
+timeout 120s docker run --rm --pull never --network none --cpus 4 --memory 1g --label alaa.task=alaa-a95j --mount type=bind\,src=<scratch>/stage\,dst=<scratch>/stage --mount type=bind\,src=<repo>/skills/sohrab/vector-rust-observability-pipelines\,dst=<repo>/skills/sohrab/vector-rust-observability-pipelines\,readonly sha256:3bb7ed5152910ed51729e256937b1d8a4bf67ff624e9d565e8e5877bffd015c7 test <scratch>/stage/vector-check-DyulA7/grp-J2DjIf/vector-basic.yaml <scratch>/stage/vector-check-DyulA7/grp-J2DjIf/vector-tests.yaml
+exit=0
+Running tests
+test happy path - level is downcased, service is preserved ... passed
+test missing service falls back to unknown ... passed
+test missing level falls back to info ... passed
+test non-string level is defaulted rather than aborting the transform ... passed
+test ingest timestamp is always added ... passed
+timeout 120s docker run --rm --pull never --network none --cpus 4 --memory 1g --label alaa.task=alaa-a95j --mount type=bind\,src=<scratch>/stage\,dst=<scratch>/stage --mount type=bind\,src=<repo>/skills/sohrab/vector-rust-observability-pipelines\,dst=<repo>/skills/sohrab/vector-rust-observability-pipelines\,readonly sha256:3bb7ed5152910ed51729e256937b1d8a4bf67ff624e9d565e8e5877bffd015c7 validate --skip-healthchecks --deny-warnings <scratch>/stage/vector-check-DyulA7/grp-EHIyNg/vector-clickhouse.yaml
+exit=0
+√ Loaded ["<scratch>/stage/vector-check-DyulA7/grp-EHIyNg/vector-clickhouse.yaml"]
+√ Transforms configuration
+√ Sinks configuration
+√ Component configuration
+-----------------------------------------------------------------------------------------------
+                                                                                      Validated
+timeout 120s docker run --rm --pull never --network none --cpus 4 --memory 1g --label alaa.task=alaa-a95j --mount type=bind\,src=<scratch>/stage\,dst=<scratch>/stage --mount type=bind\,src=<repo>/skills/sohrab/vector-rust-observability-pipelines\,dst=<repo>/skills/sohrab/vector-rust-observability-pipelines\,readonly sha256:3bb7ed5152910ed51729e256937b1d8a4bf67ff624e9d565e8e5877bffd015c7 vrl -i <scratch>/stage/vector-check-DyulA7/vrl-c3qvAI/event.json -p <repo>/skills/sohrab/vector-rust-observability-pipelines/assets/templates/common.vrl
+exit=0
+null
+2026-11-04T01:19:46.207439Z  INFO vector::app: Log level is enabled. level="info"

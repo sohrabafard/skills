@@ -1,0 +1,4 @@
+vector      pinned 0.61.0  current 0.61.0  (published stable product releases, numeric maximum)
+helm-chart  pinned 0.61.0  current 0.61.0  appVersion 0.61.0-distroless-libc
+All pins current.
+exit=0

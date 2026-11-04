@@ -9,6 +9,17 @@ Verified against Vector `0.57.0` on 2026-07-30. Re-derive with
 and `vector generate 'demo_logs//clickhouse'`, which prints the defaults the
 installed binary actually applies.
 
+## Disk-buffer changes after 0.58.0
+
+0.59.0 rejects malformed native protobuf records instead of panicking, including
+when reading a disk buffer. A record containing a NaN in event data or metadata
+can be discarded. 0.60.0 fixes a disk-buffer read bug after file-ID wrap.
+0.61.0 reports unreferenced disk buffers on startup and reload. When replacing or
+removing a sink, verify which instance owns and drains its buffer before
+reclaiming storage or rolling back. Use the lifecycle signals in
+`60-internal-monitoring.md`. None of these changes extends the acknowledgement
+boundary or proves loss-free replay under backpressure.
+
 ## The defaults you get by writing nothing
 
 An agent that writes no `buffer` block has still chosen a buffer. These are the

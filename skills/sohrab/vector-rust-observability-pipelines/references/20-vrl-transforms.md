@@ -2,6 +2,20 @@
 
 Verified against Vector `0.57.0` / VRL `0.34.0` on 2026-07-30.
 
+## VRL compatibility after 0.58.0
+
+- **0.36.0 / Vector 0.59.0.** Array element constraints can reject known wrong
+  element types at compile time. Remove unnecessary `!` from calls with proven
+  matching types. Recompile `join`, `contains_all`, `tally`, `encode_key_value`,
+  `encode_logfmt`, `ip_cidr_contains` and `parse_groks` uses.
+- **0.37.0 / Vector 0.60.0.** See the [VRL release](https://github.com/vectordotdev/vrl/releases/tag/v0.37.0)
+  for path-read optimizations and codec fixes. Recompile the actual programs.
+- **0.38.0 / Vector 0.61.0.** Handle errors from
+  `to_unix_timestamp(ts, unit: "nanoseconds")`; timestamps outside the signed
+  64-bit range can fail. Choose a fallback only when the downstream timestamp
+  contract defines it. Other units are unchanged. Test HTTPS `http_request`
+  with the target trust store and certificate chain.
+
 ## Fallibility is the whole subject
 
 Most VRL mistakes are one mistake: not knowing whether an expression can fail.

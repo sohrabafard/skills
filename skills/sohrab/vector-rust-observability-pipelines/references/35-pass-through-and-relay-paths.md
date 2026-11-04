@@ -10,6 +10,14 @@ image `timberio/vector:0.57.0-alpine`, digest
 `sha256:19e3526faf4d4b1ed0c28a0d68d4cc3a1e13e437099986a5b7a768707907497c`, build
 `0.57.0 (x86_64-unknown-linux-musl 8832452 2026-07-14 20:58:30)`, on 2026-08-08.
 
+## Relay transport from 0.61.0
+
+Use explicit `https://` for TLS and explicit `http://` only for an approved
+plaintext path. Set the scheme in `routing.endpoints` and any legacy `address`.
+A scheme-less destination now selects HTTPS even for a plaintext receiver.
+Validate the actual sender and receiver handshake before exercising sink outages.
+The dated relay tests below do not measure this migration.
+
 ## The mode, stated once
 
 A **pass-through** (relay) path is one whose source must return immediately and

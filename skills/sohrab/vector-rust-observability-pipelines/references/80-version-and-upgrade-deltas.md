@@ -4,8 +4,8 @@ Every pin below carries the command that re-derives it. A version written in a f
 goes stale silently; a re-derivation command beside it does not.
 
 ```
-PIN vector = 0.58.0
-PIN helm-chart = 0.58.0
+PIN vector = 0.61.0
+PIN helm-chart = 0.61.0
 ```
 
 `scripts/check-upstream-version.mjs` reads those two `PIN` lines from this file and
@@ -13,19 +13,16 @@ compares them to upstream, so this document and the checker cannot disagree.
 Run it with `node scripts/check-upstream-version.mjs`: exit 0 current, 1 drift,
 2 could not run.
 
-## Compatibility and evidence ledger (verified 2026-09-26)
+## Compatibility and evidence ledger (verified 2026-11-04)
 
 | Surface | Evidence and scope |
 | --- | --- |
-| Latest stable Vector product | `0.58.0`, released 2026-08-26; [release index](https://vector.dev/releases/), [published tag](https://github.com/vectordotdev/vector/releases/tag/v0.58.0), and [tag-matched full changelog](https://raw.githubusercontent.com/vectordotdev/vector/v0.58.0/website/cue/reference/releases/0.58.0.cue) agree |
-| Skill refresh baseline | `0.57.0`; the complete new stable-release interval is `(0.57.0, 0.58.0]`: one release, no intervening stable patch listed by the release index |
-| Bundled VRL | `0.35.0`, released 2026-08-20; the tagged Vector changelog links the [VRL release](https://github.com/vectordotdev/vrl/releases/tag/v0.35.0) |
-| Released Helm chart | `vector-0.58.0`, released 2026-08-26; its [Chart.yaml](https://raw.githubusercontent.com/vectordotdev/helm-charts/vector-0.58.0/charts/vector/Chart.yaml) declares appVersion `0.58.0-distroless-libc` and Kubernetes `>=1.28.0-0` |
-| Previous chart evidence correction | Released `vector-0.57.0` carries appVersion `0.57.0-distroless-libc`. The old pairing of chart `0.58.0` with that appVersion came from mutable `develop`; do not carry it forward as released evidence |
-| Documented compatibility paths | Retain the historical consumer `0.53.0` path and version-qualified migrations through `0.58.0`; existing `0.57.0` runtime observations remain dated evidence, not tests of this refresh |
-| Current local binary / consumer | No Vector executable found on PATH or bounded conventional install locations in this run. Current consumer image, chart override and runtime versions remain unknown; `75-ala-ingest-pipeline.md` is a historical snapshot, not current deployment inventory |
-| Support promise | No upstream LTS/support window established. This documented range is not an upstream maintenance promise or authorization to drop older consumers; inspect the actual target and apply only its version's options |
-| Runtime proof | No Vector process, container, deployment or provider accessed. Latest-release guidance is released documentation/source evidence; exact-binary validation remains required |
+| Latest stable product | [Vector 0.61.0](https://vector.dev/releases/0.61.0/), [published tag](https://github.com/vectordotdev/vector/releases/tag/v0.61.0) at 2026-10-29 16:51:24 UTC |
+| Refresh interval | `(0.58.0, 0.61.0]`: 0.59.0, 0.60.0 and 0.61.0. Apply the migration checks below in order. |
+| Bundled VRL | [0.38.0](https://github.com/vectordotdev/vrl/releases/tag/v0.38.0), 2026-10-28 |
+| Released chart | [vector-0.61.0](https://github.com/vectordotdev/helm-charts/releases/tag/vector-0.61.0), published 2026-10-29 17:12:11 UTC. [Chart.yaml](https://raw.githubusercontent.com/vectordotdev/helm-charts/vector-0.61.0/charts/vector/Chart.yaml) declares appVersion `0.61.0-distroless-libc` and Kubernetes `>=1.28.0-0`. Check source-specific support separately. |
+| Compatibility | Older consumer migration notes and dated 0.57.0 measurements still apply in their stated scope. No upstream LTS or support window established. |
+| Binary evidence | Cached 0.61.0 Alpine config and unit checks are separate from released-source guidance. Consumer version, deployed chart overrides, delivery, and production behavior require their own evidence. |
 
 The full item-by-item coverage, including VRL and justified omissions, lives in
 `81-release-coverage.md`. Read it when auditing refresh completeness. Read
@@ -56,7 +53,7 @@ Cargo tag probe nor mutable `master`/`develop` proves a stable release. On a fet
 failure, keep proof unavailable; do not guess downward through version numbers.
 
 ```bash
-curl -fsS https://raw.githubusercontent.com/vectordotdev/helm-charts/vector-0.58.0/charts/vector/Chart.yaml
+curl -fsS https://raw.githubusercontent.com/vectordotdev/helm-charts/vector-0.61.0/charts/vector/Chart.yaml
 ```
 
 The chart version and the Vector version are separate numbers and have drifted
@@ -68,12 +65,28 @@ one environment and not the other.
 ## Release line since the version this skill previously pinned
 
 `0.53.0` 2026-01-27 · `0.54.0` 2026-03-10 · `0.55.0` 2026-04-22 ·
-`0.56.0` 2026-06-03 · `0.57.0` 2026-07-14 · `0.58.0` 2026-08-26.
+`0.56.0` 2026-06-03 · `0.57.0` 2026-07-14 · `0.58.0` 2026-08-26 ·
+`0.59.0` 2026-10-06 · `0.60.0` 2026-10-19 · `0.61.0` 2026-10-29.
 
 This file records what **breaks** across that line. What the pin can **do** — new
 components, VRL, config keys, CLI flags, metrics, and the deprecations to stop
 recommending — is `82-capability-surface.md`. Read it before concluding Vector
 cannot do something.
+
+## Migration from 0.58.0
+
+| Release | Before moving this path |
+| --- | --- |
+| [0.59.0](https://vector.dev/highlights/2026-10-05-0-59-0-upgrade-guide/) | Nest Avro complex and logical type attributes inside the type object. Old complex schemas fail to load and shorthand logical types can silently become primitives. Require modern Datadog trace payloads. Check receiver support before adopting Datadog metrics series v3, or pin v2. For `kubernetes_logs` migrate off Kubernetes 1.31, regardless of the chart's install constraint. Replace source `http` with `http_server`, sink `greptimedb` with `greptimedb_metrics`, and boolean `vector` sink compression with `gzip` or `none` as appropriate. |
+| [0.60.0](https://vector.dev/highlights/2026-10-19-0-60-0-upgrade-guide/) | Replace Datadog metrics series v1 with v3 (default) or v2. Set `version: "1"` or `version: "2"` on InfluxDB log and metric sinks. Remove fields for the other version entirely, including fields set to null. |
+| [0.61.0](https://vector.dev/releases/0.61.0/#vector-sink-default-https) | Add an explicit scheme to both `address` and `routing.endpoints` on `vector` sinks. Scheme-less endpoints now select HTTPS. For an intentionally plaintext receiver use `http://`. For a TLS receiver validate its certificate chain and hostname on the target image. |
+
+From 0.59.0, strict validation resolves secret backends and can execute helper
+commands. Use `50-validation-and-testing.md` to stage validation safely.
+Recompile VRL on each step using `20-vrl-transforms.md`. Check buffer recovery,
+drain and rollback with the target version before changing a sink identity or
+reusing a data directory. Use `30-buffers-acks-and-backpressure.md` for delivery
+and `60-internal-monitoring.md` for loss signals.
 
 ## 0.58.0 migration decisions
 

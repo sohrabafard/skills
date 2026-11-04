@@ -41,6 +41,10 @@ Options:
                      warning is a silent-data-loss defect, not noise.
   --help, -h         Show this message.
 
+Only pass trusted configs. Vector 0.59+ resolves secret backends during
+strict validation, even with health checks skipped. The bundled ClickHouse
+example uses a staged synthetic secret file.
+
 Exit codes:
   0  clean    1  findings    2  could not run
 
@@ -68,7 +72,7 @@ function findVector() {
 // that has no such directory - and that failure is environmental, not a finding.
 // Copy each config to an OS temp directory (never inside the repository) with
 // data_dir rewritten, so the component checks actually run everywhere.
-function stageConfigs(files, tmpDir) {
+function stageConfigs({ files, fixtureSecret }, tmpDir) {
   const dataDir = path.join(tmpDir, 'data');
   fs.mkdirSync(dataDir, { recursive: true });
   return files.map((src) => {
@@ -78,6 +82,15 @@ function stageConfigs(files, tmpDir) {
     text = /^data_dir:/m.test(text)
       ? text.replace(/^data_dir:.*$/m, `data_dir: "${yamlPath}"`)
       : `data_dir: "${yamlPath}"\n${text}`;
+    if (fixtureSecret) {
+      const templatePath = '    path: /run/secrets/vector-clickhouse.json';
+      if (!text.split(/\r?\n/).includes(templatePath)) {
+        throw new Error('Bundled ClickHouse secret path changed; update the fixture binding');
+      }
+      const fixturePath = path.join(tmpDir, 'clickhouse-secret.json');
+      fs.writeFileSync(fixturePath, JSON.stringify({ user: 'fixture', password: 'fixture' }));
+      text = text.replace(templatePath, `    path: ${JSON.stringify(fixturePath)}`);
+    }
     fs.writeFileSync(dest, text);
     return dest;
   });
@@ -95,7 +108,7 @@ function runVector(bin, args) {
 
 function checkGroup(bin, group, tmpRoot, denyWarnings) {
   const tmpDir = fs.mkdtempSync(path.join(tmpRoot, 'grp-'));
-  const staged = stageConfigs(group.files, tmpDir);
+  const staged = stageConfigs(group, tmpDir);
   const results = [];
 
   const vArgs = ['validate', '--skip-healthchecks'];
@@ -129,7 +142,7 @@ function defaultGroups() {
     // vector-tests.yaml does not define `normalize`; it must be passed together
     // with vector-basic.yaml or it fails as an unknown component.
     { name: 'vector-basic + vector-tests', files: [t('vector-basic.yaml'), t('vector-tests.yaml')], unitTests: true },
-    { name: 'vector-clickhouse', files: [t('vector-clickhouse.yaml')], unitTests: false },
+    { name: 'vector-clickhouse', files: [t('vector-clickhouse.yaml')], unitTests: false, fixtureSecret: true },
   ];
 }
 

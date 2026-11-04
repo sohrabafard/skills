@@ -12,6 +12,9 @@ those pages, not evidence a capability does not exist.** The new-release section
 below extends this inventory; current version/support evidence is owned by
 `80-version-and-upgrade-deltas.md`, exhaustive delta mapping by `81-release-coverage.md`.
 
+For later capabilities and migration choices, read the 0.59.0–0.61.0 ledger in
+`81-release-coverage.md` before selecting a new component or setting.
+
 ## Additions available from 0.58.0
 
 Use only on a target binary that supports them. Existing templates retain their
@@ -27,7 +30,7 @@ older option paths; these additions do not upgrade a consumer automatically.
 | `metric_tag_values: auto` | Single tags remain strings, multiple values arrays; test consumers of both shapes. Lua still supports only `single`/`full` |
 | OTLP native metric encoding | Counter, Gauge, AggregatedHistogram and AggregatedSummary map to OTLP Sum, Gauge, Histogram and Summary. This is codec support, not proof every sink transports every metric type |
 | HTTP-source custom-auth VRL enrichment | Covers `http_server`, `heroku_logs`, `prometheus_pushgateway`, `prometheus_remote_write`; `%field` goes under `http_server.<field>` metadata in Vector namespace or event body in legacy namespace, without overwriting existing fields. Enrichment is not a substitute for gateway authorization |
-| Influx sink `version` | Explicit API selection added; absence retains inference for this release. Upstream plans a future requirement without naming its release; do not invent a removal version |
+| Influx sink `version` | Explicit API selection added; absence retains inference in 0.58.0. Required from 0.60.0 |
 | Azure Blob `tags` / `metadata` | Index tags and custom metadata; apply redaction before export, not just to the payload |
 | Datadog Agent LLMObs | `/api/v2/llmobs`, log events on `llmobs` when `multiple_outputs` is enabled; consuming this port is a new data/privacy path |
 | S3 source `request_payer: requester` | Optional Requester Pays support; availability is not authorization to incur charges |
