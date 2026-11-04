@@ -33,7 +33,7 @@ no way for the handler to tell it apart from a complete one. A dashboard fed by 
 smaller number and no incident.
 
 If a query is tripping `max_result_rows`, the query is wrong. Aggregate server-side, narrow the time
-window, or page by sort-key range (`/alaa-keyset-pagination`, `$alaa-keyset-pagination`).
+window, or page by sort-key range (`/alaa-keyset-pagination`).
 
 ## No hidden retries
 
@@ -50,7 +50,7 @@ error class:
 | `TOO_MANY_SIMULTANEOUS_QUERIES` or memory limit | no immediate retry; shed instead | retrying adds load to an overloaded server |
 
 Retry budgets, backoff shape, breakers, and load shedding are doctrine, not mechanics:
-`/alaa-reliability-sla` (`$alaa-reliability-sla`) `references/20-retries.md`,
+`/alaa-reliability-sla` `references/20-retries.md`,
 `references/30-breakers-and-bulkheads.md`, and `references/40-admission-and-shedding.md`.
 
 ## Readiness severity is a decision this skill makes decidable
@@ -89,25 +89,19 @@ reader cannot recover the test's answer from the constant.
 3. **Never fall back to a raw event table because the rollup is missing.** That converts an
    analytics outage into a cluster-wide load event.
 4. **Never fall back to Postgres for an analytics answer that Postgres does not hold.** Which store
-   owns which fact: `/alaa-data-layer` (`$alaa-data-layer`).
+   owns which fact: `/alaa-data-layer`.
 5. **Losing ClickHouse must not change owned state.** `chkit/doc.go:20-21`: "losing ClickHouse
    degrades analytics, never correctness of owned state." If a write path depends on an analytics
    read, that dependency is the defect.
 
 Degradation doctrine — what a partial response is allowed to look like, and how a client is told:
-`/alaa-reliability-sla` (`$alaa-reliability-sla`) `references/50-degradation.md`. Every platform
+`/alaa-reliability-sla` `references/50-degradation.md`. Every platform
 value this skill does not state — timeout numbers, error budgets, load ceilings:
-`/alaa-services-contract` (`$alaa-services-contract`)
+`/alaa-services-contract`
 `references/22-failure-load-and-deprecation-contract.md`.
 
 ## On the ingest side
 
-The write path fails differently, because the Vector topology stands between the producer and
-ClickHouse: acknowledged batches sit in a blocking disk buffer while the sink retries, so
-unavailability appears as a filling buffer and backpressure at the HTTP source, not as an error to
-the producer. Two obligations follow: the buffer's fill level must be visible in telemetry before an
-outage, not after, and the retry behaviour means duplicate rows are possible on recovery
-(`30-ingest-and-parts.md`). What to instrument and at what level: `/alaa-observability-soc`
-(`$alaa-observability-soc`) `references/20-instrumentation-gates.md`; buffer and acknowledgement
-semantics themselves: `/vector-rust-observability-pipelines`
-(`$vector-rust-observability-pipelines`).
+Use `30-ingest-and-parts.md` to trace how the producer sees delivery, backpressure and failures.
+Observe buffer fill before saturation, and prove duplicate handling on retry.
+Instrumentation belongs to `/alaa-observability-soc` `references/20-instrumentation-gates.md`.

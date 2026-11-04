@@ -28,7 +28,7 @@ The review covered the incompatible-change sections of 26.7, 26.8 LTS, 26.9 and 
 (12, 21, 17 and 37 entries in the fetched changelog, respectively), then the matching
 features and fixes for skill surfaces. Fetch the Markdown at
 https://clickhouse.com/docs/resources/changelogs/oss/2026.md and inspect each release's
-Backward Incompatible Change, New Feature, and applicable bug-fix sections. 26.1, 26.3 and
+Backward Incompatible Change, New Feature, and applicable bug-fix sections. 26.1, 26.2, 26.3 and
 26.6 supply earlier deduplication context. The review window starts at the release
 preceding the previous source snapshot. An actual upgrade starting on 24.8 needs its
 own full upgrade path from the deployed patch and configuration.
@@ -91,3 +91,19 @@ Prove MV grants and wrong-password denial, duplicate replay and partial-view rec
 mutation completion, the 26.7+ aggregate guard, and the 26.10 zero-sum FINAL transition.
 Run any older-engine case separately and record cleanup. The source upgrade does not
 serve as runtime acceptance for those behaviors.
+
+## Review repair cycle 1
+
+Repaired the independent findings against checkpoint `044d04c1`. The current source
+requires draining writers before live MV creation and holding the pause through backfill
+parity, or proving complementary live/history ranges for online work. Its parity includes
+the raw count state as well as unique count. Stored MV security and effective grants are
+checked on initial apply and reruns. Atomic population remains gated by effective settings,
+source snapshots and topology. The 26.7 hash bridge specifies both elapsed time and insert
+count. The release ledger separates 26.2 dedup defaults from 26.3 async inserts. The ingest
+guidance routes acknowledgement behavior to the Vector owner and requires peak-rate
+measurement rather than inferring capacity or source responses from batch configuration.
+
+The focused reference checker, scoped whitespace check and two-table rendered lexical DDL
+check described above were rerun on the repaired files and exited 0. These checks do not
+exercise MV cutover, grants, delivery, or the dedup bridge against a running server.

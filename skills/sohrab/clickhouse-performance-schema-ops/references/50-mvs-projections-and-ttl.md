@@ -51,17 +51,23 @@ it. Prove refresh progress and reconciliation after a failed refresh.
 
 - A materialized view fires on each inserted block, not on rows already present. Creating it changes
   nothing about history; the backfill is a separate, explicit operation.
-- Before live writes, set a backfill boundary or pause the writer. Backfill bounded partitions
-  and verify parity before moving on. Prove a concurrent insert near the boundary is included
-  once. The 26.8 atomic `POPULATE` path covers local inserts into snapshot-capable sources
-  for plain `CREATE MATERIALIZED VIEW`. Keep the explicit backfill for replicas, distributed
-  writers, or other paths outside that guarantee.
-- Declare the view's dedicated identity with `DEFINER = <user> SQL SECURITY DEFINER`. Grant
-  source SELECT and target INSERT to that identity. On versions that require it, grant the
-  migration identity `SET DEFINER` scoped to the chosen definer. Verify the writer can insert into the
-  source and the view updates the target with that grant split. Keep `SQL SECURITY NONE`
-  out of fleet templates. An omitted clause can retain an empty security type in current
-  stored definitions. Inspect `SHOW CREATE TABLE` and grants after any view alteration.
+- Pause and drain source writers before creating the live view. Keep them paused until
+  backfill and parity checks finish. For online backfill, prove a disjoint boundary before
+  creating the view. Apply complementary predicates to the live view and historical
+  backfill. Account for in-flight and late rows. Compare counts and exact unique-event
+  counts per rollup key on both sides of the boundary. Include an insert at the boundary
+  to catch double counting even when the unique count would hide it.
+- For atomic population in 26.8+, verify effective `materialized_views_populate_atomically=1`.
+  It applies to plain `CREATE MATERIALIZED VIEW … POPULATE` on snapshot-capable sources
+  and inserts through the same server. Use explicit backfill for Replicated databases,
+  remote inserts and `CREATE OR REPLACE`.
+- Declare the dedicated identity with `DEFINER = <user> SQL SECURITY DEFINER`. Grant it
+  source SELECT and target INSERT. Where required, grant the migration identity
+  `SET DEFINER` scoped to that user. After initial apply and every rerun, verify the
+  stored clauses with `SHOW CREATE TABLE` and verify effective grants. `IF NOT EXISTS`
+  can leave an older definition in place. Fail on drift and reconcile through an
+  approved migration. Prove the writer triggers the view and cannot write the target
+  directly. Keep `SQL SECURITY NONE` out of fleet templates.
 - On this pipeline a materialized view over the raw tables inherits their duplicate exposure from
   retried inserts (`30-ingest-and-parts.md`), so build the aggregation to be correct under
   duplicates — `uniqExact` over the event identifier rather than `count()` — or fix deduplication on

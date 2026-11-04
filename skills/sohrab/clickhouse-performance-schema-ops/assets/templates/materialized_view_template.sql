@@ -21,10 +21,13 @@ ENGINE = AggregatingMergeTree
 PARTITION BY toYYYYMM(bucket)
 ORDER BY (<tenant_column>, bucket, <dimension_column>);
 
--- 2) The view. It fires on each block inserted into the source from now on, and
---    sees nothing already present. History is a separate backfill, step 3.
---    Provision the definer with source SELECT and target INSERT first. Prove
---    the source writer can trigger the view with only its approved privileges.
+-- 2) Pause and drain the source writer before creating the live view. Keep it
+--    paused through backfill and parity. For online backfill, add and prove
+--    complementary live/history predicates before applying this template
+--    (references/50-mvs-projections-and-ttl.md).
+--    Provision the definer with source SELECT and target INSERT first. On first
+--    apply and every rerun, verify stored security clauses and effective grants.
+--    IF NOT EXISTS leaves an older view definition in place.
 CREATE MATERIALIZED VIEW IF NOT EXISTS <database>.mv_<rollup_table>
 TO <database>.<rollup_table>
 DEFINER = <view_definer_user> SQL SECURITY DEFINER
@@ -45,8 +48,8 @@ GROUP BY
     <tenant_column>,
     <dimension_column>;
 
--- 3) Pause the writer or establish a verified live/backfill boundary first.
---    Backfill one partition at a time and verify each before the next.
+-- 3) With the writer still paused, backfill bounded partitions. Before retrying
+--    an uncertain backfill, reconcile its target range to avoid counting it twice.
 -- INSERT INTO <database>.<rollup_table>
 -- SELECT
 --     toStartOfHour(event_time) AS bucket,
@@ -69,6 +72,7 @@ GROUP BY
 --   AND bucket >= {from:DateTime} AND bucket < {to:DateTime}
 -- GROUP BY bucket, <dimension_column>;
 
--- 5) Parity proof before this ships: compare the backfilled partition's
---    aggregates against the same aggregate computed from the source, then insert
---    one new batch and show it lands in both (references/80-proof-and-validation.md).
+-- 5) Verify countMerge(events) and uniqExactMerge(unique_events) against the
+--    source per rollup key. Resume writes after parity. Insert a fixture batch
+--    at the cut and verify each event reaches its rollup exactly once
+--    (references/80-proof-and-validation.md).

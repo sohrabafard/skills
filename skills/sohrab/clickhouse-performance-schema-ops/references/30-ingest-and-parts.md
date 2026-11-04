@@ -5,7 +5,7 @@
 Rows reach ClickHouse through a Vector topology, not through application code. The shape, read from
 `<repo>/vector/wa-vector.yaml` in `wa`, is:
 
-1. An `http_server` source, `POST` only on a single strict path, returning `202`, which lifts three
+1. An `http_server` source, `POST` only on a single strict path, configured with success status `202`, which lifts three
    trusted headers set by the gateway: `X-Project-Id`, `X-User-Id`, `X-Request-Id`.
 2. A `remap` that parses the envelope and **aborts** the whole batch when `X-Project-Id` or
    `X-Request-Id` is absent, when the body is not a JSON object, or when `envelope.events` is
@@ -25,16 +25,17 @@ Three consequences bind table design, and each is checkable in the config:
   either end. Adding a column to the transform without adding it to the DDL produces no failure and
   no data. Whenever one side changes, change both in the same effort and prove it with the
   round-trip check in `80-proof-and-validation.md`.
-- **A rejected batch leaves no row anywhere.** The abort paths drop the batch after the source has
-  already answered `202`, and no dead-letter sink is configured, so the only surviving record of a
-  rejected batch is Vector's internal log stream. Treat "rows are missing for a period" as a
-  question to answer from that log stream, not from ClickHouse.
-- **The client never sees a write failure.** With `acknowledgements: enabled: true` and a blocking
-  disk buffer, the `202` is the pipeline's promise to deliver, and sustained ClickHouse
-  unavailability surfaces as backpressure and a filling buffer, not as an error to the caller.
+- **Aborts on the main route produce no ClickHouse rows.** Check Vector internal logs and the
+  deployed dropped-event routing for the missing data. The success status alone cannot
+  distinguish a delivered row from a dropped event.
+- **Trace acknowledgement end to end.** On an ack-capable source with effective end-to-end
+  acknowledgements, response completion waits for path finalizers. A blocking buffer can
+  introduce backpressure. Prove the actual source response and database contents on success,
+  transform abort, and sink failure. For finalizer semantics, use
+  `vector-rust-observability-pipelines` `references/30-buffers-acks-and-backpressure.md`.
 
-Source, transform, buffer, and sink semantics themselves belong to
-`/vector-rust-observability-pipelines` (`$vector-rust-observability-pipelines`). The boundary: that
+Source, transform, buffer, and sink semantics belong to
+`/vector-rust-observability-pipelines`. The boundary: that
 skill owns what the pipeline writes and how it behaves; this skill owns what the table must be to
 receive it and what the write does to storage.
 
@@ -45,14 +46,12 @@ These are the officially published numbers; use them as the bar a proposed inges
 | Quantity | Official guidance | This pipeline |
 | --- | --- | --- |
 | rows per insert | "at least 1,000 rows, and ideally between 10,000–100,000 rows" | `batch.max_events: 5000` per sink |
-| insert queries per second | "around one insert query per second" | `batch.timeout_secs: 2` per sink, so at most one insert per two seconds per sink, two sinks |
+| insert queries per second | "around one insert query per second" | `batch.timeout_secs: 2` per sink, flush interval for a partial batch; size-triggered flushes can be faster |
 | bytes per insert | not prescribed | `batch.max_bytes: 10485760` |
 
-Both sinks sit inside the recommended envelope, and the ratio matters more than either number
-alone: a batch that flushes on the timeout rather than on `max_events` is a low-volume batch, and a
-low-volume pipeline that inserts once per two seconds writes about 43,000 parts per table per day
-before merges — well inside what background merging absorbs, but the number to recompute whenever
-the timeout is shortened.
+Measure peak inserts per second, rows per insert and parts per partition under load.
+The timeout describes partial-batch flushing. Full batches, retries and concurrent
+requests can produce a higher insert rate.
 
 When a proposed ingest path falls below 1,000 rows per insert, fix the ingest path before touching
 any table setting. The order of preference is fixed:
@@ -79,8 +78,9 @@ settings, the base and target engines, and the count and time windows for every 
 - A replicated engine normally has a deduplication window. For plain MergeTree, check
   `non_replicated_deduplication_window` and whether the selected insert mode uses that window on this version. A query-level
   deduplication default or a token cannot create a disabled table window.
-- ClickHouse 26.1 added async deduplication with dependent materialized views. In 26.3,
-  async inserts and consistent sync, async, and dependent-view deduplication became defaults.
+- ClickHouse 26.1 added async deduplication with dependent materialized views. In 26.2,
+  async and dependent-view deduplication joined synchronous deduplication as defaults.
+  In 26.3, async inserts themselves became the default.
   Check the writer's effective settings and the server profile instead of inheriting those
   defaults on 24.8. For the hash transition and legacy startup guard, see `90-source-map.md`.
 - Preserve the original row order and block boundaries across retries. If the writer can issue
@@ -107,6 +107,5 @@ File schema changes with the owner in `10-authority-and-change-path.md`.
 | query latency degrading only after write surges | reads are scanning many small unmerged parts | fix ingest shape; do not add indexes |
 | disk growing faster than row count | write amplification from mutations or from oversized merges | `60-operations-and-diagnostics.md` |
 
-Retry, timeout, and backoff doctrine for the producers themselves: `/alaa-reliability-sla`
-(`$alaa-reliability-sla`) `references/20-retries.md`. Idempotency-key design:
+Retry, timeout, and backoff doctrine for the producers themselves: `/alaa-reliability-sla` `references/20-retries.md`. Idempotency-key design:
 `references/60-idempotency.md` in that same skill.
