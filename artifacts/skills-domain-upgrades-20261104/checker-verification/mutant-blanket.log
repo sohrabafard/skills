@@ -1,0 +1,52 @@
+FF
+======================================================================
+FAIL: test_aggregate_effective_index_implicit_and_long_explicit (test_review_clickhouse_ddl.ReviewClickHouseDDL.test_aggregate_effective_index_implicit_and_long_explicit) (primary=None)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "<repo>/artifacts/skills-domain-upgrades-20261104/checker-verification/mutants/blanket/test_review_clickhouse_ddl.py", line 90, in test_aggregate_effective_index_implicit_and_long_explicit
+    self.assert_audit(result, 1, (("CH006", "agg.rollup"), ("CH007", "agg.rollup")))
+    ~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "<repo>/artifacts/skills-domain-upgrades-20261104/checker-verification/mutants/blanket/test_review_clickhouse_ddl.py", line 58, in assert_audit
+    self.assertEqual(result.returncode, code, output)
+    ~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: 0 != 1 :
+1 file(s), 2 table(s) checked, 0 finding(s)
+
+not checked by this tool, and still your responsibility:
+  - whether supplied writers and read queries cover production paths
+  - actual pruning, index memory and merge behavior on the target version
+  - whether a LowCardinality column really holds under ~10,000 distinct values
+  - whether the retention window times the partition granularity stays bounded
+  - whether the engine's deduplication model matches what readers assume
+  - whether the tenant predicate is present in every query against this table
+  - whether the deployed table still matches this file (compare system.columns)
+
+
+======================================================================
+FAIL: test_aggregate_effective_index_implicit_and_long_explicit (test_review_clickhouse_ddl.ReviewClickHouseDDL.test_aggregate_effective_index_implicit_and_long_explicit) (primary='tenant_id, day, object_id, object_type, region, zone')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "<repo>/artifacts/skills-domain-upgrades-20261104/checker-verification/mutants/blanket/test_review_clickhouse_ddl.py", line 90, in test_aggregate_effective_index_implicit_and_long_explicit
+    self.assert_audit(result, 1, (("CH006", "agg.rollup"), ("CH007", "agg.rollup")))
+    ~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "<repo>/artifacts/skills-domain-upgrades-20261104/checker-verification/mutants/blanket/test_review_clickhouse_ddl.py", line 58, in assert_audit
+    self.assertEqual(result.returncode, code, output)
+    ~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: 0 != 1 : bundle.sql:5: sparse PRIMARY KEY predicate evidence for [agg.rollup] at read0.sql:1
+
+1 file(s), 2 table(s) checked, 0 finding(s)
+
+not checked by this tool, and still your responsibility:
+  - whether supplied writers and read queries cover production paths
+  - actual pruning, index memory and merge behavior on the target version
+  - whether a LowCardinality column really holds under ~10,000 distinct values
+  - whether the retention window times the partition granularity stays bounded
+  - whether the engine's deduplication model matches what readers assume
+  - whether the tenant predicate is present in every query against this table
+  - whether the deployed table still matches this file (compare system.columns)
+
+
+----------------------------------------------------------------------
+Ran 1 test in 0.194s
+
+FAILED (failures=2)

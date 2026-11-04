@@ -1,0 +1,20 @@
+local Docker socket: 'unix:///var/run/docker.sock'
+cached image ID: 'sha256:1ffa82edee000a42c09313bd9f1293d94c570aee74babc1b3ca9983a35fa597b'
+repo digests: ["clickhouse/clickhouse-server@sha256:1ffa82edee000a42c09313bd9f1293d94c570aee74babc1b3ca9983a35fa597b","registry.takhtenegar.ir:5010/clickhouse/clickhouse-server@sha256:1ffa82edee000a42c09313bd9f1293d94c570aee74babc1b3ca9983a35fa597b"]
+runtime limits: ('none', 4000000000, 2147483648, 2147483648)
+published ports: {}
+host binds: None
+server version: '24.8.14.39'
+client version: 'ClickHouse client version 24.8.14.39 (official build).'
+good before: active parts: '2'
+good before: physical rows: '4'
+good before: grouped totals: 'A\t5\nB\t18'
+broken before: active parts: '2'
+broken before: physical rows: '4'
+broken before: grouped totals: 'A\t5\nB\t18'
+good after: active parts: '1'
+broken after: active parts: '1'
+good after: physical rows: '2'
+good after: grouped totals: 'A\t5\nB\t18'
+broken after: physical rows and total: '1\t23'
+fixture cleanup: ''

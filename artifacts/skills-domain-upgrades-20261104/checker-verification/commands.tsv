@@ -1,0 +1,5 @@
+unit	<repo>	timeout 120s python3 -B -m unittest discover -s skills/sohrab/clickhouse-performance-schema-ops/scripts -p test_review_clickhouse_ddl.py 	2	0
+help	<repo>	timeout 120s python3 -B skills/sohrab/clickhouse-performance-schema-ops/scripts/review_clickhouse_ddl.py --help 	0	0
+diff	<repo>	timeout 120s git diff --check 9433e292 -- skills/sohrab/clickhouse-performance-schema-ops 	0	0
+live	<repo>	timeout 180s python3 -B skills/sohrab/clickhouse-performance-schema-ops/scripts/test_aggregate_merge_semantics.py --image sha256:1ffa82edee000a42c09313bd9f1293d94c570aee74babc1b3ca9983a35fa597b 	9	0
+wa	<wa>	timeout 120s python3 -B <repo>/skills/sohrab/clickhouse-performance-schema-ops/scripts/review_clickhouse_ddl.py clickhouse/ddl/001_init.sql clickhouse/ddl/002_agg.sql 	0	2

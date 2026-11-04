@@ -64,3 +64,7 @@ The evidence log's trailing blank line was mechanically trimmed after the Vector
 checkpoint; the final diff gate includes that trim. No source behavior changed.
 Latest ClickHouse runtime, Vector live delivery, installed activation, and WA2
 acceptance remain outside these verdicts.
+
+Both pre-existing Codex skill links resolve to the canonical directories under
+`skills/sohrab/`. Source edits are therefore visible through those links. No installer
+or global-link update ran, and no agent-runtime activation behavior was tested.

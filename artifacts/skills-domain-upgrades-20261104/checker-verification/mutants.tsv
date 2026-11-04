@@ -1,0 +1,2 @@
+blanket	<repo>	timeout 120s python3 -B -m unittest discover -s artifacts/skills-domain-upgrades-20261104/checker-verification/mutants/blanket -p test_review_clickhouse_ddl.py -k aggregate_effective_index_implicit_and_long_explicit	1	1
+dimension	<repo>	timeout 120s python3 -B -m unittest discover -s artifacts/skills-domain-upgrades-20261104/checker-verification/mutants/dimension -p test_review_clickhouse_ddl.py -k aggregate_missing_dimension_with_qualifying_prefix	0	1
