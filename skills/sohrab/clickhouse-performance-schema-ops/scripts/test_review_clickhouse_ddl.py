@@ -314,6 +314,22 @@ class ReviewClickHouseDDL(unittest.TestCase):
             ("bundle.sql:5", "agg.rollup: no analyzable materialized view writer"),
         ))
 
+    def test_cycle3_only_real_create_table_head_can_supply_a_declaration(self):
+        poisoned = """CREATE TABLE "odd CREATE TABLE forged (tenant_id UInt32) ENGINE MergeTree ORDER BY tenant_id SETTINGS x"
+(tenant_id UInt32, object_type String, amount SimpleAggregateFunction(sum, UInt64))
+ENGINE = AggregatingMergeTree ORDER BY tenant_id;
+"""
+        problem = ("bundle.sql:1", "unsupported CREATE TABLE declaration")
+        self.assert_audit(self.audit(poisoned), 2, problems=(
+            problem, ("bundle.sql:1", "no table declaration was checked"),
+        ))
+        mixed = self.audit(poisoned + SOURCE)
+        self.assert_audit(mixed, 2, problems=(problem,))
+        self.assertIn("1 table(s) checked", mixed.stdout)
+
+        real = ddl().replace("agg.rollup", '"agg".`rollup`')
+        self.assert_audit(self.audit(SOURCE + "-- leading comment\n" + real + writer(), (READ,)), 0)
+
     def test_ddl_retained_guards(self):
         raw = """CREATE TABLE raw.bad (
   tenant_id UInt32, day Date, account_id UInt32, region UInt8, zone UInt8,

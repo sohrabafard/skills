@@ -266,8 +266,9 @@ class Table(object):
         return [c[0] for c in self.columns]
 
 
+# The statement slice starts at its first SQL token. Never match inside a quoted name.
 CREATE_TABLE = re.compile(
-    r"CREATE\s+(?:OR\s+REPLACE\s+)?(?:TEMPORARY\s+)?TABLE\s+"
+    r"\ACREATE\s+(?:OR\s+REPLACE\s+)?(?:TEMPORARY\s+)?TABLE\s+"
     rf"(?:IF\s+NOT\s+EXISTS\s+)?({NAME}(?:\s*\.\s*{NAME})?)(?=\s|\()",
     re.I,
 )
