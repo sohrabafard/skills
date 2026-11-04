@@ -47,13 +47,17 @@ rate is flat.
 Entry condition: a row in `system.mutations` with `is_done = 0` older than the time the owner
 expected, or a non-empty `latest_fail_reason`.
 
-1. Read `latest_fail_reason` first. A failing mutation retries forever and holds the queue.
-2. Establish the blast radius: how many parts the mutation must rewrite, and how large they are. A
-   mutation rewrites entire parts, so a one-column update on a 500 GB table is a 500 GB rewrite.
-3. Decide with the table's owner whether to let it finish or to kill it. `KILL MUTATION` is a
+1. Read `latest_fail_reason` first. A failed mutation can retry and block later work.
+2. Check `is_done` on each relevant replica. A replicated mutation with `parts_to_do = 0` can
+   still wait for an in-flight insert. Check `system.columns` before adding optional metadata
+   fields to diagnostics. The 26.8 line adds `finish_time`, where zero means unfinished or
+   unknown. Keep the compatibility query on the common columns.
+3. Estimate touched parts and columns from the command, layout, and replicas. Heavy mutations
+   rewrite affected data and can amplify IO even for a small logical update.
+4. Decide with the table's owner whether to let it finish or to kill it. `KILL MUTATION` is a
    shared-system action: name the mutation, name who approved it, and record what state the table is
    left in, because a killed mutation leaves the table partly mutated.
-4. Ask why a mutation existed. Recurring mutations mean the engine choice is wrong
+5. Ask why a mutation existed. Recurring mutations mean the engine choice is wrong
    (`20-table-design.md` section 6) or the deletion mechanism is wrong
    (`50-mvs-projections-and-ttl.md`).
 

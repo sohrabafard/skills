@@ -70,53 +70,32 @@ Never raise `parts_to_throw_insert` to make a "too many parts" error stop appear
 the merge subsystem reporting that it cannot keep up; raising the ceiling removes the report and
 keeps the cause.
 
-## Retries create duplicates on a non-replicated table
+## Prove retries at the source and every dependent view
 
-This is the sharpest edge in the current pipeline and it is a design fact, not a bug report.
+An insert can reach the server before a client timeout. A retry can then duplicate the source
+rows or leave its rollups out of sync. Check the target server's effective deduplication
+settings, the base and target engines, and the count and time windows for every affected table.
 
-- The sinks retry aggressively: `retry_attempts: 20`, `retry_max_duration_secs: 90`,
-  `timeout_secs: 30`. A request that timed out on the client but committed on the server will be
-  retried.
-- ClickHouse deduplicates identical insert blocks by `block_id`, a hash of the block's data, but
-  **"for `*ReplicatedMergeTree` engines, insert deduplication is enabled by default"** and it is not
-  enabled by default for non-replicated engines; `non_replicated_deduplication_window` is the
-  setting that turns it on.
-- Both tables here are plain `MergeTree` (`<repo>/clickhouse/ddl/001_init.sql:150` and `:249`), and
-  neither sets `non_replicated_deduplication_window`.
-- The requirement this collides with is ratified, not hypothetical: `<repo>/docs/DECISIONS.md`
-  section 29 states that counts and sums derived from `wa_raw` "must be exact" because watch time is
-  sold and teacher contracts are priced on it. An upper bound over-bills.
+- A replicated engine normally has a deduplication window. For plain MergeTree, check
+  `non_replicated_deduplication_window` and whether the selected insert mode uses that window on this version. A query-level
+  deduplication default or a token cannot create a disabled table window.
+- ClickHouse 26.1 added async deduplication with dependent materialized views. In 26.3,
+  async inserts and consistent sync, async, and dependent-view deduplication became defaults.
+  Check the writer's effective settings and the server profile instead of inheriting those
+  defaults on 24.8. For the hash transition and legacy startup guard, see `90-source-map.md`.
+- Preserve the original row order and block boundaries across retries. If the writer can issue
+  `insert_deduplication_token`, reuse the same token for the same logical insert and use a
+  different token for every new insert. Size the window for all intervening writes over the
+  retry horizon. An expired window or a retry with a changed block identity can duplicate rows.
+- Keep async acknowledgement after flush with `wait_for_async_insert=1`. Prove retry after a
+  lost acknowledgement and a partial dependent-view failure against the actual writer,
+  engines, and settings. Assert rows in the source and aggregates in each destination.
 
-So a retried insert against these tables inserts the rows again. Two properties follow that any
-consumer of this data must satisfy, and a rollup that violates them is wrong rather than merely
-imprecise:
-
-- Count-style metrics computed with `count()` over raw rows are upper bounds, not counts. Use
-  `uniqExact(event_id)` — the pipeline carries a per-event identifier for this purpose — wherever an
-  exact count is claimed.
-- A rollup materialized view over these tables inherits the duplication, because a materialized view
-  fires per inserted block and re-inserting the block fires it again.
-
-Three ways close it, and which are available depends on the topology rather than on preference:
-
-1. **`non_replicated_deduplication_window` on the table.** The only one of the three available on a
-   single node with no ClickHouse Keeper, which is this deployment today. It makes the server hash
-   each inserted block and reject a repeat of the last N blocks, which is exactly the
-   retry-after-success shape. Its bound is a count of recent blocks, not a span of time, so size it
-   above the number of blocks that can be in flight across every sink at once, and note that it
-   catches only a byte-identical replay — not two genuinely separate submissions of the same event.
-2. **An `insert_deduplication_token` per batch,** so deduplication does not depend on the block hash.
-   This needs the writer to mint and preserve a token across its own retries, which makes it a joint
-   change with the pipeline owner rather than a table-only one.
-3. **`ReplicatedMergeTree`,** the only variant where block deduplication is on by default. Blocked
-   until ClickHouse Keeper exists and the shared-ClickHouse owner decides, and it is an engine change
-   on populated tables rather than a settings flip (`10-authority-and-change-path.md`).
-
-None of the three retroactively corrects rollup rows a materialized view already wrote from a
-duplicated insert; that needs a bounded rebuild of the affected ranges, and it is not optional. Each
-is a change to the ingest-pipeline repository, so it is filed as a request, not applied from here
-(`10-authority-and-change-path.md`). Which skill owns which half of this decision:
-`15-fleet-clickhouse-boundary.md`.
+The WA snapshot described here uses plain MergeTree without an explicit non-replicated
+deduplication window. Preserve the duplicate risk until effective settings and replay proof
+establish otherwise. Count logical events by stable event ID where the measure is event count.
+Sums and already-written rollup rows require separate reconciliation or a bounded rebuild.
+File schema changes with the owner in `10-authority-and-change-path.md`.
 
 ## Part-pressure symptoms and what each one means
 

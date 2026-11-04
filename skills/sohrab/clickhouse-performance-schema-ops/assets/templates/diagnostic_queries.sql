@@ -4,6 +4,8 @@
 --
 -- Check first that the log tables are enabled on this server, so an empty result
 -- reads as "logging is off" rather than "nothing happened":
+SELECT version();
+
 SELECT name, engine FROM system.tables
 WHERE database = 'system'
   AND name IN ('query_log', 'query_thread_log', 'part_log', 'metric_log');
@@ -67,6 +69,8 @@ ORDER BY elapsed DESC;
 -- Playbook: a mutation is not finishing
 -- ---------------------------------------------------------------------------
 
+-- Keep this query portable. Check system.columns before selecting optional
+-- fields such as finish_time, added in 26.8.
 SELECT
     database, table, mutation_id, command, create_time,
     is_done, parts_to_do, latest_fail_reason, latest_fail_time
@@ -167,14 +171,19 @@ SELECT name, value, changed, description
 FROM system.settings
 WHERE name IN (
     'max_execution_time', 'max_result_rows', 'result_overflow_mode',
-    'timeout_overflow_mode', 'readonly', 'async_insert', 'wait_for_async_insert'
+    'timeout_overflow_mode', 'readonly', 'async_insert', 'wait_for_async_insert',
+    'insert_deduplicate', 'async_insert_deduplicate',
+    'deduplicate_insert', 'deduplicate_blocks_in_dependent_materialized_views'
 );
 
 SELECT name, value, description
 FROM system.merge_tree_settings
 WHERE name IN (
     'parts_to_delay_insert', 'parts_to_throw_insert', 'max_parts_in_total',
-    'non_replicated_deduplication_window'
+    'non_replicated_deduplication_window',
+    'replicated_deduplication_window', 'replicated_deduplication_window_seconds',
+    'replicated_deduplication_window_for_async_inserts',
+    'replicated_deduplication_window_seconds_for_async_inserts'
 );
 
 -- Grants actually held by the configured role. This is the artifact that settles

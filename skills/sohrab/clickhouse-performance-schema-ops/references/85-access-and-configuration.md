@@ -96,6 +96,22 @@ Threat classes, fail-closed doctrine, and when a change needs a security review 
 `/alaa-security-review` (`$alaa-security-review`), with tenant isolation specifically in
 `references/40-authorization-and-tenancy.md`.
 
+### Native schema client and access checks
+
+Use the operator-approved native address, TLS policy and migration identity. Give the
+client's `--user` and `--host` as nonsecret inputs. Supply the password through a
+process-scoped secret-backed `CLICKHOUSE_PASSWORD` with shell tracing disabled. Keep the
+password out of arguments, connection strings and logs. Validate required secrets before
+connecting. Omit `--ignore-error` from schema gates so failed SQL stops the run. Audit
+client configuration and arguments for a password that overrides the environment. Use a wrong-password failure and `SELECT currentUser()` with the supplied
+secret to prove the effective identity on the target client build.
+
+In 26.10, effective settings constraints can refuse login for a SQL-defined user and
+reject indirect changes through grants, roles or settings profiles. `compatibility` also
+leaves constrained settings unchanged when its proposed values are forbidden. Prove login
+and grants separately for the migration, writer and reader identities after a version change.
+See `90-source-map.md` for the native client and release sources.
+
 ## Go client choice
 
 The kit connects with `github.com/ClickHouse/clickhouse-go/v2` (`go.mod:6`, imported at

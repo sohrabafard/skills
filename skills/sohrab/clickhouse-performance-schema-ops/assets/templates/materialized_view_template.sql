@@ -23,8 +23,11 @@ ORDER BY (<tenant_column>, bucket, <dimension_column>);
 
 -- 2) The view. It fires on each block inserted into the source from now on, and
 --    sees nothing already present. History is a separate backfill, step 3.
+--    Provision the definer with source SELECT and target INSERT first. Prove
+--    the source writer can trigger the view with only its approved privileges.
 CREATE MATERIALIZED VIEW IF NOT EXISTS <database>.mv_<rollup_table>
 TO <database>.<rollup_table>
+DEFINER = <view_definer_user> SQL SECURITY DEFINER
 AS
 SELECT
     toStartOfHour(event_time) AS bucket,
@@ -42,9 +45,8 @@ GROUP BY
     <tenant_column>,
     <dimension_column>;
 
--- 3) Backfill one partition at a time, oldest first, verifying each before the
---    next. A single INSERT ... SELECT over a full raw table is the memory
---    failure everyone has already had.
+-- 3) Pause the writer or establish a verified live/backfill boundary first.
+--    Backfill one partition at a time and verify each before the next.
 -- INSERT INTO <database>.<rollup_table>
 -- SELECT
 --     toStartOfHour(event_time) AS bucket,

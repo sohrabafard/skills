@@ -44,8 +44,15 @@ Choose types before tuning anything else; a type mistake is paid on every read f
   it "leads to additional storage space used and almost always negatively affects performance".
 - Compress a large opaque column explicitly. The raw event JSON on this pipeline is
   `raw_payload String CODEC(ZSTD(3))` (`<repo>/clickhouse/ddl/001_init.sql:148`), the right shape:
-  one wide, rarely-filtered column carrying the provenance copy, compressed harder than the
-  defaults because it is read far less often than it is written.
+  one wide, rarely-filtered column carrying the provenance copy with an explicit codec.
+  Since 26.9, implicit MergeTree column compression is size-dependent at write time. It
+  can already be ZSTD(3) on large parts. Compare bytes and write CPU before changing an
+  explicit codec. Check the upgrade caveats for extracted tuple subcolumns in
+  `90-source-map.md` before changing the server version under existing keys or indexes.
+- Prove the input format's effective null handling before changing a column type. In 26.10,
+  `input_format_null_as_default=0` rejects JSON null for non-nullable numeric columns.
+  `ALTER ADD/MODIFY COLUMN` now honors `data_type_default_nullable`; state the intended
+  nullability and compare the resulting type on the target.
 - Derive, do not duplicate. `event_time` and `event_date` on this pipeline are `MATERIALIZED`
   expressions over `event_ts_ms` (`:124-125`), so the partition key and the sort key cannot disagree
   with the stored timestamp.
@@ -163,16 +170,20 @@ Deduplication that a table engine performs is eventual: it happens during backgr
 schedule nobody controls. If a reader needs exactly-once semantics at read time, that is `FINAL` and
 its cost, or a rollup that is idempotent under duplicates — not an assumption that merges have run.
 
-**When a writer retries, exactness is won or lost at the table, and the engine is what decides it.**
-ClickHouse's insert deduplication ignores a repeated identical block, and it is enabled by default
-only for the `Replicated*MergeTree` family. On a plain `MergeTree` a sink retry that follows an
-insert which actually landed writes those rows a second time, and no retry, backoff or timeout
-setting on the writer changes that. So a requirement that counts and sums be exact is a requirement
-on the engine and the table settings, and "make the pipeline retry more carefully" is not an answer
-to it. Which setting is available when `ReplicatedMergeTree` is blocked, and what a rollup inherits
-from a duplicated raw insert: `30-ingest-and-parts.md`. Which skill decides which half of this, and
-the fleet instance where the requirement and the engine currently disagree:
-`15-fleet-clickhouse-boundary.md`.
+Since 26.7, new `AggregatingMergeTree` DDL rejects ordinary columns outside the sorting
+key unless `allow_dimensions_outside_sorting_key=1` is set. Aggregate states use
+`AggregateFunction` or `SimpleAggregateFunction`. Keep the guard enabled for new designs.
+On 24.8, enforce the merge grain in review and prove it with rows that differ only in the
+candidate omitted dimension.
+
+In 26.10, query-time `FINAL` on `SummingMergeTree` keeps rows whose summed columns are all
+zero. Background merges and `OPTIMIZE TABLE … FINAL` still remove them. If the result contract
+excludes all-zero groups, filter after summing the declared measures, and test with the same
+keys before and after a merge.
+
+For insert retry exactness, use the version, engine, deduplication window, and dependent-view
+checks in `30-ingest-and-parts.md`. Background row merging and insert deduplication are
+separate mechanisms.
 
 `Replicated*` variants and what the single-node-to-cluster transition requires:
 `10-authority-and-change-path.md`.

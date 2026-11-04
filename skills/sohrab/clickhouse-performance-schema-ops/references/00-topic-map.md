@@ -15,4 +15,5 @@ costs context and buys nothing.
 | decide what a service returns while ClickHouse is unreachable or a query trips `max_execution_time` or `max_result_rows`, or pick a readiness severity for the ClickHouse check | `70-failure-and-degradation.md` |
 | ship a ClickHouse change and must state what proves it is correct | `80-proof-and-validation.md` |
 | set an endpoint, credential, timeout, pool bound, or per-query limit, or you cannot find the environment key for one | `85-access-and-configuration.md` |
+| choose a release, compare an older server with the current release, or plan an upgrade | `90-source-map.md` under "Release evidence" |
 | repeat a version-sensitive claim about ClickHouse behaviour, a setting, or a default value | `90-source-map.md` |

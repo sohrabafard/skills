@@ -32,8 +32,8 @@ CREATE TABLE IF NOT EXISTS <database>.<table>
     <identifier_column> String DEFAULT '',
     <count_column> UInt32 DEFAULT 0,
 
-    -- One wide provenance column, compressed harder than the defaults because
-    -- it is written far more often than it is read.
+    -- One wide provenance column with an explicit codec independent of the
+    -- version and part-size default.
     <payload_column> String CODEC(ZSTD(3))
 )
 ENGINE = MergeTree
@@ -52,5 +52,5 @@ SETTINGS index_granularity = 8192;
 --      retention window divided by the granularity stays under 1,000 partitions.
 --   3. Three-element sort key. Add a fourth or fifth only for a query that
 --      filters on it and on every element before it.
---   4. No TTL. Retention is a policy decision owned by the pipeline owner and
---      is currently open on this platform (references/50-mvs-projections-and-ttl.md).
+--   4. No TTL. Apply the owner's retention decision before changing this
+--      (references/50-mvs-projections-and-ttl.md).

@@ -54,7 +54,8 @@ whose sort key was the problem.
   reward precomputation; a broad join filtered late reads both sides in full.
 - **Use `FINAL` only where correctness requires it, and never as a habit.** `FINAL` at query time
   deduplicates for the read; `OPTIMIZE FINAL` rewrites the table and is a different, far more
-  expensive thing (`60-operations-and-diagnostics.md`). A query that uses `FINAL` also forfeits
+  expensive thing (`60-operations-and-diagnostics.md`). For the 26.10 change to all-zero
+  sums under `FINAL`, see `20-table-design.md` section 6. A query that uses `FINAL` also forfeits
   projections, which "don't work with `FINAL` queries".
 - **Cursor through large result sets by sort-key range, not by `OFFSET`.** Design and encoding of
   the cursor: `/alaa-keyset-pagination` (`$alaa-keyset-pagination`).

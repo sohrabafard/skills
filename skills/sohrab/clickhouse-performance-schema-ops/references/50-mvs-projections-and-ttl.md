@@ -40,13 +40,28 @@ Choose a projection when the base table's ordering is wrong for one access path 
 change it. Choose a materialized view when the shape of the answer differs from the shape of the
 row.
 
+For 26.8 and later, `ALTER TABLE … MODIFY PROJECTION` can change projection settings.
+Merges apply the settings lazily. Check materialized parts and optimizer selection before
+claiming convergence. For 26.9 and later, `REFRESH … APPEND INCREMENTAL` processes newly
+committed rows from one plain MergeTree source on a schedule. Check the required
+block-number and block-offset settings and the supported query shape before choosing
+it. Prove refresh progress and reconciliation after a failed refresh.
+
 ## Building a materialized view without a self-inflicted incident
 
 - A materialized view fires on each inserted block, not on rows already present. Creating it changes
   nothing about history; the backfill is a separate, explicit operation.
-- Backfill by partition, oldest first, and verify each partition's totals against the source before
-  starting the next. A single `INSERT … SELECT` over a full raw table is the memory failure everyone
-  has already had.
+- Before live writes, set a backfill boundary or pause the writer. Backfill bounded partitions
+  and verify parity before moving on. Prove a concurrent insert near the boundary is included
+  once. The 26.8 atomic `POPULATE` path covers local inserts into snapshot-capable sources
+  for plain `CREATE MATERIALIZED VIEW`. Keep the explicit backfill for replicas, distributed
+  writers, or other paths outside that guarantee.
+- Declare the view's dedicated identity with `DEFINER = <user> SQL SECURITY DEFINER`. Grant
+  source SELECT and target INSERT to that identity. On versions that require it, grant the
+  migration identity `SET DEFINER` scoped to the chosen definer. Verify the writer can insert into the
+  source and the view updates the target with that grant split. Keep `SQL SECURITY NONE`
+  out of fleet templates. An omitted clause can retain an empty security type in current
+  stored definitions. Inspect `SHOW CREATE TABLE` and grants after any view alteration.
 - On this pipeline a materialized view over the raw tables inherits their duplicate exposure from
   retried inserts (`30-ingest-and-parts.md`), so build the aggregation to be correct under
   duplicates — `uniqExact` over the event identifier rather than `count()` — or fix deduplication on
@@ -71,7 +86,10 @@ These are the mechanics such a policy will use:
 - A `TTL … TO DISK` or `TO VOLUME` expression tiers data instead of deleting it, and needs a storage
   policy defined on the server before the table can reference it.
 - A column-level TTL expires one column's values while keeping the row, which suits a wide
-  provenance column such as `raw_payload` far better than deleting whole events.
+  provenance column such as `raw_payload` far better than deleting whole events. In 26.10,
+  a TTL reset recomputes dependent `MATERIALIZED` columns during a merge or `MATERIALIZE TTL`.
+  Test the dependent expression with the expired column's default. An undefined result can
+  block the TTL merge.
 - Adding a TTL to a populated table triggers merges across the affected parts. Apply it during a
   window where that IO is acceptable, and state which window in the change request.
 
