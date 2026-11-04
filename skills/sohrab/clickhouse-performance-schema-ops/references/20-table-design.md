@@ -99,11 +99,10 @@ column is also constrained.
 sort key *is* the merge key, so two rows differing only in a `GROUP BY` column the key omits merge
 into one row and their measures are combined. A filter on that column then answers wrongly in both
 directions: rows that should match are gone, and the survivor carries measures belonging to values
-it does not name. The one exception is a column functionally determined by a column already in the
-key, and it is an exception only when the determination is **enforced in code on the write path** by
-an allowlist or a rejection that a test covers. A comment asserting the invariant is not
-enforcement, a naming convention is not enforcement, and a producer that copies the value from
-client input enforces nothing.
+it does not name. To claim a functional dependency, show that every write path enforces a single
+value for each retained key. Test conflicting writes across producers and rebuilds. Enum membership
+or unknown-value folding can still admit two valid values for the same key. The checker requires
+every independently grouped dimension in `ORDER BY` and grants no dependency exemption.
 
 ### Finding in the pipeline's rollups, reported and not fixed
 
@@ -114,10 +113,9 @@ client input enforces nothing.
 step on the write path enforces it: `<repo>/vector/wa-vector.yaml:283-287` copies `object_type` out
 of the client body with no allowlist and no rejection, so any non-empty string reaches the column.
 A `WHERE object_type = 'news'` read over these rollups can therefore return an arbitrary survivor of
-a merge across the discriminator, which is a wrong answer rather than an error. Either replacement
-closes it: an allowlist on the ingest path that folds an unknown value to the default and counts it,
-or `object_type` added to the three sort keys. Reported to the owning repository under
-`10-authority-and-change-path.md`; not fixed from here.
+a merge across the discriminator. Include `object_type` in all three merge keys. The owning
+repository must decide how to rebuild or replace already populated tables and verify per-type parity.
+See `10-authority-and-change-path.md` for ownership.
 
 ### Finding in the pipeline's DDL, reported and not fixed
 
@@ -133,10 +131,11 @@ path is the replacement; `50-mvs-projections-and-ttl.md` covers the choice. Repo
 
 ## 4. PRIMARY KEY
 
-Leave `PRIMARY KEY` implicit — equal to `ORDER BY` — unless the sparse index is measurably large,
-and then declare a prefix of `ORDER BY`. That keeps the full physical sort for compression while
-shrinking the in-memory index. `PRIMARY KEY` in ClickHouse never enforces uniqueness; if an answer
-depends on uniqueness, the mechanism is an engine choice in section 6, not the key.
+An implicit `PRIMARY KEY` indexes all of `ORDER BY`. If the sparse index is large, declare a leading
+prefix justified by the real read workload. For aggregating engines, keep the full merge identity in
+`ORDER BY` when shortening the index. Apply the key width and identifier-tail checks to the effective
+sparse index. Supply the target read SQL to the checker as specified in `80-proof-and-validation.md`.
+ClickHouse `PRIMARY KEY` does not enforce uniqueness.
 
 ## 5. PARTITION BY
 

@@ -1,26 +1,12 @@
 #!/usr/bin/env python3
-"""Review ClickHouse CREATE TABLE statements against this skill's stated rules.
-
-The checker is lexical. It strips SQL comments while preserving offsets, splits
-the file into statements, and parses the column list, ENGINE, PARTITION BY,
-ORDER BY, and PRIMARY KEY of every CREATE TABLE it finds. It never connects to a
-server and never executes anything.
-
-It checks the mechanical half of references/20-table-design.md: tenant-first
-ordering, partition-key cardinality, Nullable columns that a typed default would
-replace, sort keys that are longer than they can use, high-cardinality tails that
-cannot prune, references to undeclared columns, and a PRIMARY KEY that is not a
-prefix of ORDER BY. What it cannot check is printed at the end of every run, so a
-clean result is a floor and not a pass.
-"""
+"""Review ClickHouse DDL and aggregate writer/read evidence without executing SQL."""
 
 import argparse
 import os
 import re
 import sys
-import tempfile
 
-VERSION = "1.0.0"
+VERSION = "1.1.0"
 
 DEFAULT_TENANT_COLUMNS = (
     "project_id",
@@ -71,6 +57,92 @@ CLAUSE_KEYWORDS = (
 )
 
 
+NAME = r'(?:[A-Za-z_][A-Za-z_0-9]*|"[A-Za-z_][A-Za-z_0-9]*"|`[A-Za-z_][A-Za-z_0-9]*`)'
+SQL_TOKEN = re.compile(
+    r"""(?P<space>\s+)|(?P<line>--[^\n]*|\#[^\n]*)|(?P<block>/\*.*?\*/)|
+    (?P<string>'(?:\\.|''|[^'\\])*')|(?P<quoted>"(?:\\.|""|[^"\\])*"|`(?:\\.|``|[^`\\])*`)|
+    (?P<number>[0-9]+(?:\.[0-9]+)?)|[A-Za-z_][A-Za-z_0-9]*|<=|>=|!=|<>|==|
+    (?P<invalid>/\*|['"`]|\$)|[^\s]""",
+    re.S | re.X,
+)
+AGGREGATE_ENGINES = {"aggregatingmergetree", "replicatedaggregatingmergetree"}
+OPEN_GROUP = {"(": ")", "[": "]", "{": "}"}
+CLOSE_GROUP = set(OPEN_GROUP.values())
+
+
+class ProofError(ValueError):
+    pass
+
+
+def lex(sql):
+    for match in SQL_TOKEN.finditer(sql):
+        if match.lastgroup not in {"space", "line", "block"}:
+            yield match
+
+
+def top_level(tokens):
+    """Yield the positions outside groups, including each opening delimiter."""
+    stack = []
+    for index, token in enumerate(tokens):
+        if not stack:
+            yield index
+        if token in OPEN_GROUP:
+            stack.append(OPEN_GROUP[token])
+        elif token in CLOSE_GROUP:
+            if not stack or stack.pop() != token:
+                raise ProofError("unbalanced SQL delimiters")
+    if stack:
+        raise ProofError("unbalanced SQL delimiters")
+
+
+def split_tokens(tokens, separator):
+    start = 0
+    parts = []
+    for index in top_level(tokens):
+        if tokens[index].upper() == separator:
+            parts.append(tokens[start:index])
+            start = index + 1
+    return parts + [tokens[start:]]
+
+
+def token_name(token):
+    return token.strip('`"') if re.fullmatch(NAME, token) else None
+
+
+def qualified_name(tokens, index):
+    if index >= len(tokens) or not token_name(tokens[index]):
+        raise ProofError("expected a table name")
+    name = token_name(tokens[index])
+    index += 1
+    if index < len(tokens) and tokens[index] == ".":
+        if index + 1 >= len(tokens) or not token_name(tokens[index + 1]):
+            raise ProofError("expected a qualified table name")
+        name += "." + token_name(tokens[index + 1])
+        index += 2
+    return name, index
+
+
+def sql_statements(sql):
+    """Keep completed statements even if a later one cannot be analyzed."""
+    tokens = []
+    start = 0
+    for match in lex(sql):
+        token = match.group()
+        if match.lastgroup == "invalid":
+            yield start, match.start(), tokens, "unsupported or unterminated SQL token"
+            return
+        if token == ";":
+            if tokens:
+                yield start, match.start(), tokens, None
+            tokens = []
+        else:
+            if not tokens:
+                start = match.start()
+            tokens.append(token)
+    if tokens:
+        yield start, len(sql), tokens, None
+
+
 class Finding(object):
     def __init__(self, code, path, line, table, summary, obligation):
         self.code = code
@@ -92,48 +164,16 @@ class Finding(object):
 
 
 def scrub(sql):
-    """Replace comments and string-literal bodies with spaces, keeping offsets.
-
-    Offsets and line numbers in the returned text are valid positions in the
-    input text, so a match position can be reported against the original file.
-    """
+    """Blank SQL comments and string contents without moving source offsets."""
     out = list(sql)
-    i = 0
-    n = len(sql)
-
-    def blank(start, end):
-        for k in range(start, min(end, n)):
-            if out[k] != "\n":
-                out[k] = " "
-
-    while i < n:
-        ch = sql[i]
-        if ch == "-" and sql.startswith("--", i):
-            j = sql.find("\n", i)
-            j = n if j == -1 else j
-            blank(i, j)
-            i = j
+    for match in SQL_TOKEN.finditer(sql):
+        start, end = match.span()
+        if match.lastgroup == "string":
+            start += 1
+            end -= 1
+        elif match.lastgroup not in {"line", "block"}:
             continue
-        if ch == "/" and sql.startswith("/*", i):
-            j = sql.find("*/", i + 2)
-            j = n if j == -1 else j + 2
-            blank(i, j)
-            i = j
-            continue
-        if ch == "'":
-            j = i + 1
-            while j < n:
-                if sql[j] == "\\":
-                    j += 2
-                    continue
-                if sql[j] == "'":
-                    j += 1
-                    break
-                j += 1
-            blank(i + 1, j - 1)
-            i = j
-            continue
-        i += 1
+        out[start:end] = (ch if ch == "\n" else " " for ch in sql[start:end])
     return "".join(out)
 
 
@@ -156,22 +196,15 @@ def match_paren(text, open_index):
 
 def split_top_level(text):
     """Split on commas that are not inside parentheses."""
+    matches = list(lex(text))
+    tokens = [match.group() for match in matches]
+    start = 0
     parts = []
-    depth = 0
-    current = []
-    for ch in text:
-        if ch == "(":
-            depth += 1
-        elif ch == ")":
-            depth -= 1
-        if ch == "," and depth == 0:
-            parts.append("".join(current))
-            current = []
-            continue
-        current.append(ch)
-    if "".join(current).strip():
-        parts.append("".join(current))
-    return [p.strip() for p in parts if p.strip()]
+    for index in top_level(tokens):
+        if tokens[index] == ",":
+            parts.append(text[start:matches[index].start()].strip())
+            start = matches[index].end()
+    return parts + [text[start:].strip()]
 
 
 def identifiers_in(expression):
@@ -202,6 +235,9 @@ class Table(object):
         self.partition_offset = offset
         self.order_by = []         # list of expression strings
         self.order_offset = offset
+        self.ambiguous_key = False
+        self.inline_primary = False
+        self.nonstored_columns = set()
         self.primary_key = []
         self.primary_offset = offset
 
@@ -222,9 +258,11 @@ def parse_tables(scrubbed):
     for match in CREATE_TABLE.finditer(scrubbed):
         name = re.sub(r"[`\"\s]", "", match.group(1))
         table = Table(name, match.start())
-        open_index = scrubbed.find("(", match.end())
-        if open_index == -1:
+        body_start = re.match(rf"\s*(?:ON\s+CLUSTER\s+(?:{NAME}|' *')\s*)?\(",
+                              scrubbed[match.end():], re.I)
+        if not body_start:
             continue
+        open_index = match.end() + body_start.end() - 1
         close_index = match_paren(scrubbed, open_index)
         if close_index == -1:
             continue
@@ -235,14 +273,17 @@ def parse_tables(scrubbed):
             item_at = body.find(item, cursor)
             cursor = item_at + len(item) if item_at >= 0 else cursor
             head = item.strip()
+            if clause_positions([m.group() for m in lex(head)], [("PRIMARY", "KEY")]):
+                table.inline_primary = True
             if re.match(r"^(INDEX|PROJECTION|CONSTRAINT|PRIMARY\s+KEY)\b", head, re.I):
                 continue
             column = re.match(r"^[`\"]?([A-Za-z_][A-Za-z_0-9]*)[`\"]?\s+(.*)$", head, re.S)
             if not column:
                 continue
-            table.columns.append(
-                (column.group(1), column.group(2).strip(), base + max(item_at, 0))
-            )
+            column_name, type_text = column.groups()
+            table.columns.append((column_name, type_text.strip(), base + max(item_at, 0)))
+            if clause_positions([m.group() for m in lex(type_text)], [("ALIAS",), ("EPHEMERAL",)]):
+                table.nonstored_columns.add(column_name)
         tail_end = scrubbed.find(";", close_index)
         tail_end = len(scrubbed) if tail_end == -1 else tail_end
         tail = scrubbed[close_index:tail_end]
@@ -253,25 +294,22 @@ def parse_tables(scrubbed):
 
 def clause_text(tail, keyword):
     """Text of one trailing clause, and its offset within tail."""
-    match = re.search(r"\b" + keyword.replace(" ", r"\s+") + r"\b", tail, re.I)
-    if not match:
-        return None, -1
-    start = match.end()
-    end = len(tail)
-    for other in CLAUSE_KEYWORDS:
-        if other == keyword:
+    matches = list(lex(tail))
+    clauses = clause_positions([m.group() for m in matches],
+                               [tuple(name.split()) for name in CLAUSE_KEYWORDS])
+    for index, (at, label) in enumerate(clauses):
+        if " ".join(label) != keyword:
             continue
-        following = re.search(r"\b" + other.replace(" ", r"\s+") + r"\b", tail[start:], re.I)
-        if following:
-            end = min(end, start + following.start())
-    return tail[start:end].strip(), match.start()
+        end = matches[clauses[index + 1][0]].start() if index + 1 < len(clauses) else len(tail)
+        return tail[matches[at + len(label) - 1].end():end].strip(), matches[at].start()
+    return None, -1
 
 
 def tuple_elements(text):
     text = text.strip()
     if text.startswith("("):
         close = match_paren(text, 0)
-        if close != -1:
+        if close == len(text):
             return split_top_level(text[1:close - 1])
     return [text] if text else []
 
@@ -290,6 +328,13 @@ def parse_clauses(table, tail, tail_base):
         table.order_by = tuple_elements(order)
         table.order_offset = tail_base + at
     primary, at = clause_text(tail, "PRIMARY KEY")
+    key_clauses = clause_positions([m.group() for m in lex(tail)],
+                                   [("ORDER", "BY"), ("PRIMARY", "KEY")])
+    table.ambiguous_key = (
+        len(key_clauses) != len({label for _, label in key_clauses})
+        or primary == ""
+        or bool(clause_positions([m.group() for m in lex(tail)], [("AS",)]))
+    )
     if primary is not None:
         table.primary_key = tuple_elements(primary)
         table.primary_offset = tail_base + at
@@ -336,9 +381,17 @@ def replacement_for(inner):
     return "{0} DEFAULT <the empty value>".format(inner)
 
 
-def check_table(path, original, scrubbed, table, tenant_columns, single_tenant):
+def check_table(statement, original, table, tenant_columns, single_tenant):
+    path = statement.path
+
+    def table_line(offset):
+        return statement.line + line_of(original, offset) - 1
+
     findings = []
-    declared = set(name.lower() for name in table.column_names())
+    is_aggregate = aggregate_engine(table)
+    declared = set(table.column_names())
+    if not is_aggregate:
+        declared = {name.lower() for name in declared}
     order_names = [identifiers_in(e) for e in table.order_by]
     order_first = [names[0].lower() if names else "" for names in order_names]
 
@@ -347,13 +400,13 @@ def check_table(path, original, scrubbed, table, tenant_columns, single_tenant):
     if present:
         if not table.order_by:
             findings.append(Finding(
-                "CH001", path, line_of(original, table.offset), table.name,
+                "CH001", path, table_line(table.offset), table.name,
                 "table has tenant column '{0}' but no ORDER BY".format(present[0]),
                 "Give the table an ORDER BY whose first element is the tenant column, "
                 "or every tenant query reads every tenant's rows."))
         elif order_first[0] not in tenant_columns:
             findings.append(Finding(
-                "CH001", path, line_of(original, table.order_offset), table.name,
+                "CH001", path, table_line(table.order_offset), table.name,
                 "ORDER BY starts with '{0}', not the tenant column '{1}'".format(
                     table.order_by[0], present[0]),
                 "Move '{0}' to the first position in ORDER BY, because the sparse index "
@@ -361,7 +414,7 @@ def check_table(path, original, scrubbed, table, tenant_columns, single_tenant):
                 "today.".format(present[0])))
     elif not single_tenant:
         findings.append(Finding(
-            "CH002", path, line_of(original, table.offset), table.name,
+            "CH002", path, table_line(table.offset), table.name,
             "no tenant column found (looked for: {0})".format(", ".join(sorted(tenant_columns))),
             "Add the tenant column and put it first in ORDER BY. If this table really "
             "holds one tenant's rows only, re-run with --single-tenant so the assertion "
@@ -377,14 +430,14 @@ def check_table(path, original, scrubbed, table, tenant_columns, single_tenant):
             for f in functions
         ):
             findings.append(Finding(
-                "CH003", path, line_of(original, table.partition_offset), table.name,
+                "CH003", path, table_line(table.partition_offset), table.name,
                 "PARTITION BY {0} has no bounded distinct count".format(expression),
                 "Partition on a coarse time bucket such as toYYYYMM(<date column>) and let "
                 "ORDER BY do the pruning. Parts are never merged across partitions, so an "
                 "unbounded key accumulates unmergeable parts until inserts fail."))
         elif any(f in FINE_PARTITION_FUNCTIONS for f in functions):
             findings.append(Finding(
-                "CH004", path, line_of(original, table.partition_offset), table.name,
+                "CH004", path, table_line(table.partition_offset), table.name,
                 "PARTITION BY {0} is finer than monthly".format(expression),
                 "State the retention window and show that window divided by this "
                 "granularity stays under 1,000 partitions, or move to toYYYYMM."))
@@ -394,33 +447,39 @@ def check_table(path, original, scrubbed, table, tenant_columns, single_tenant):
         if is_nullable(type_text) and not justification_comment(original, offset):
             inner = nullable_inner(type_text)
             findings.append(Finding(
-                "CH005", path, line_of(original, offset), table.name,
+                "CH005", path, table_line(offset), table.name,
                 "column '{0}' is Nullable({1}) with no recorded reason".format(name, inner),
                 "Replace with {0}, or write a comment on that line starting 'nullable:' "
                 "naming the query that must tell an absent value from an empty one. A "
                 "Nullable column carries a separate UInt8 column processed on every "
                 "access.".format(replacement_for(inner))))
 
-    # CH006 -- sort key longer than it can use
-    if len(table.order_by) > 5:
+    # CH006/CH007 -- raw sort key or the aggregate's effective sparse index.
+    index_key = table.primary_key if is_aggregate and table.primary_key else table.order_by
+    index_offset = table.primary_offset if is_aggregate and table.primary_key else table.order_offset
+    label = "effective PRIMARY KEY" if is_aggregate else "ORDER BY"
+    index_names = [identifiers_in(expr) for expr in index_key] if is_aggregate else order_names
+    if len(index_key) > 5:
         findings.append(Finding(
-            "CH006", path, line_of(original, table.order_offset), table.name,
-            "ORDER BY has {0} elements".format(len(table.order_by)),
+            "CH006", path, table_line(index_offset), table.name,
+            "{0} has {1} elements".format(label, len(index_key)),
+            ("Keep the aggregate merge dimensions in ORDER BY. " if is_aggregate else "") +
             "Cut to five or fewer, or name for each element past the fifth a real query "
             "that filters on it and on every element before it. Official guidance is that "
             "4-5 keys are typically sufficient."))
 
     # CH007 -- high-cardinality tail
     tail = []
-    for position, names in enumerate(order_names[2:], start=3):
+    for position, names in enumerate(index_names[2:], start=3):
         head = names[0] if names else ""
         if head and IDENTIFIER_TAIL.search(head):
             tail.append((position, head))
     if tail:
         listed = ", ".join("{0} (position {1})".format(n, p) for p, n in tail)
         findings.append(Finding(
-            "CH007", path, line_of(original, table.order_offset), table.name,
-            "identifier-like columns in the ORDER BY tail: {0}".format(listed),
+            "CH007", path, table_line(index_offset), table.name,
+            "identifier-like columns in the {0} tail: {1}".format(label, listed),
+            ("Keep the aggregate merge dimensions in ORDER BY. " if is_aggregate else "") +
             "Each one prunes only for a query that already constrains every element to "
             "its left; otherwise it is write cost and index memory. Drop it, or serve "
             "the identifier-first access path with a projection or a rollup."))
@@ -433,12 +492,12 @@ def check_table(path, original, scrubbed, table, tenant_columns, single_tenant):
     ):
         for expression in expressions:
             for name in identifiers_in(expression):
-                if name.lower() in declared:
+                if (name if is_aggregate else name.lower()) in declared:
                     continue
                 if re.match(r"^\d", name) or name.lower() in ("tuple",):
                     continue
                 findings.append(Finding(
-                    "CH008", path, line_of(original, offset), table.name,
+                    "CH008", path, table_line(offset), table.name,
                     "{0} references '{1}', which the table does not declare".format(label, name),
                     "Declare the column or correct the name. ClickHouse rejects this at "
                     "CREATE time, so the DDL cannot be applied as written."))
@@ -447,9 +506,12 @@ def check_table(path, original, scrubbed, table, tenant_columns, single_tenant):
     if table.primary_key and table.order_by:
         normal_pk = [re.sub(r"\s+", "", e).lower() for e in table.primary_key]
         normal_ob = [re.sub(r"\s+", "", e).lower() for e in table.order_by]
+        if is_aggregate and None not in aggregate_key(table.primary_key + table.order_by):
+            normal_pk = aggregate_key(table.primary_key)
+            normal_ob = aggregate_key(table.order_by)
         if normal_ob[:len(normal_pk)] != normal_pk:
             findings.append(Finding(
-                "CH009", path, line_of(original, table.primary_offset), table.name,
+                "CH009", path, table_line(table.primary_offset), table.name,
                 "PRIMARY KEY is not a prefix of ORDER BY",
                 "Make PRIMARY KEY a leading prefix of ORDER BY, or drop it and let it "
                 "default to ORDER BY. ClickHouse rejects a non-prefix primary key."))
@@ -457,15 +519,243 @@ def check_table(path, original, scrubbed, table, tenant_columns, single_tenant):
     return findings
 
 
-def check_source(path, sql, tenant_columns, single_tenant):
-    scrubbed = scrub(sql)
+class Statement:
+    def __init__(self, path, sql, offset, tokens):
+        self.path = path
+        self.line = line_of(sql, offset)
+        self.tokens = tokens
+
+    def location(self):
+        return "{0}:{1}".format(self.path, self.line)
+
+
+def aggregate_engine(table):
+    engine = re.match(r"[A-Za-z_][A-Za-z_0-9]*", table.engine)
+    return engine is not None and engine.group().lower() in AGGREGATE_ENGINES
+
+
+def select_shape(tokens):
+    """Locate one top-level SELECT over a named source."""
+    upper = [token.upper() for token in tokens]
+    if upper[:1] != ["SELECT"] or upper.count("SELECT") != 1:
+        raise ProofError("expected a single SELECT without nested queries")
+    top = list(top_level(tokens))
+    if any(upper[i] in {"WITH", "UNION", "EXCEPT", "INTERSECT", "JOIN", "ARRAY",
+                        "SETTINGS", "INTO", "FORMAT"}
+           for i in top):
+        raise ProofError("unsupported SELECT clause")
+    sources = [i for i in top if upper[i] == "FROM"]
+    if len(sources) != 1:
+        raise ProofError("expected one FROM source")
+    source, end = qualified_name(tokens, sources[0] + 1)
+    projection = split_tokens(tokens[1:sources[0]], ",")
+    return projection, source, tokens[end:]
+
+
+def projections(items, allow_star=False):
+    outputs = {}
+    for item in items:
+        parts = split_tokens(item, "AS")
+        if len(parts) == 2 and parts[0] and len(parts[1]) == 1:
+            name = token_name(parts[1][0])
+        elif len(item) == 1:
+            if allow_star and item == ["*"]:
+                continue
+            name = token_name(item[0])
+        else:
+            name = None
+        if not name or name in outputs:
+            raise ProofError("unsupported or duplicate SELECT output name")
+        outputs[name] = parts[0]
+    return outputs
+
+
+def clause_positions(tokens, keywords):
+    upper = [token.upper() for token in tokens]
+    return [(i, keyword) for i in top_level(tokens) for keyword in keywords
+            if upper[i:i + len(keyword)] == list(keyword)]
+
+
+def writer_dimensions(tokens, table, sources):
+    items, source, tail = select_shape(tokens)
+    outputs = projections(items)
+    clauses = clause_positions(tail, [("WHERE",), ("GROUP", "BY"), ("HAVING",),
+                                      ("ORDER", "BY"), ("LIMIT",), ("SETTINGS",)])
+    # Admitted writers end at GROUP BY. Rollup/cube/totals/ordinals and other
+    # trailing syntax cannot be mistaken for a list of stored dimensions.
+    labels = [label for _, label in clauses]
+    if labels not in [[("GROUP", "BY")], [("WHERE",), ("GROUP", "BY")]] or clauses[0][0] != 0:
+        raise ProofError("expected optional WHERE followed by a final GROUP BY")
+    group_at = clauses[-1][0]
+    if group_at == 1:
+        raise ProofError("empty WHERE clause")
+    columns = set(table.column_names()) - table.nonstored_columns
+    source_columns = sources.get(source)
+    seen = set()
+    dimensions = set()
+    errors = []
+    for item in split_tokens(tail[group_at + 2:], ","):
+        name = token_name(item[0]) if len(item) == 1 else None
+        if not name or item[0].upper() in {"ALL", "ROLLUP", "CUBE", "TOTALS"} or name in seen:
+            errors.append("GROUP BY must list distinct bare column names or SELECT AS aliases")
+            continue
+        seen.add(name)
+        if name not in outputs or name not in columns:
+            errors.append("GROUP BY output '{0}' is unresolved in the target".format(name))
+            continue
+        expression = outputs[name]
+        if expression != [name] and not (
+            len(expression) == 1 and token_name(expression[0]) == name
+        ) and (source_columns is None or name in source_columns or any(
+            token_name(token) == name for other, value in outputs.items()
+            if other != name for token in value
+        )):
+            errors.append("GROUP BY alias '{0}' has unresolved source binding".format(name))
+            continue
+        dimensions.add(name)
+    return dimensions, errors
+
+
+def predicate_operand(tokens):
+    if len(tokens) == 1:
+        match = SQL_TOKEN.fullmatch(tokens[0])
+        return match is not None and match.lastgroup in {"string", "number"}
+    if len(tokens) == 2 and tokens[0] == "-":
+        return bool(re.fullmatch(r"[0-9]+(?:\.[0-9]+)?", tokens[1]))
+    # Native ClickHouse typed scalar query parameters, e.g. {tenant:String}.
+    return (len(tokens) == 5 and tokens[0] == "{" and tokens[2] == ":"
+            and tokens[4] == "}" and bool(token_name(tokens[1]))
+            and token_name(tokens[3]) == tokens[3] and tokens[3].upper() != "IDENTIFIER")
+
+
+def read_predicates(statement, tables):
+    items, target, tail = select_shape(statement.tokens)
+    if target not in tables:
+        raise ProofError("read target '{0}' is unresolved".format(target))
+    if tail[:1] and tail[0].upper() == "FINAL":
+        tail = tail[1:]
+    labels = [("PREWHERE",), ("WHERE",), ("GROUP", "BY"), ("HAVING",),
+              ("ORDER", "BY"), ("LIMIT",)]
+    clauses = clause_positions(tail, labels)
+    ranks = [labels.index(label) for _, label in clauses]
+    if (not clauses or clauses[0][0] != 0 or sorted(set(ranks)) != ranks
+            or not any(rank in (0, 1) for rank in ranks)):
+        raise ProofError("expected PREWHERE or WHERE on the named read target")
+
+    columns = tables[target]
+    for name, expression in projections(items, allow_star=True).items():
+        if name in columns and not (len(expression) == 1 and token_name(expression[0]) == name):
+            raise ProofError("read projection shadows target column '{0}'".format(name))
+
+    equality = set()
+    constrained = set()
+    for index, (at, label) in enumerate(clauses):
+        end = clauses[index + 1][0] if index + 1 < len(clauses) else len(tail)
+        body = tail[at + len(label):end]
+        if not body:
+            raise ProofError("empty read clause")
+        if label not in {("PREWHERE",), ("WHERE",)}:
+            continue
+        for term in split_tokens(body, "AND"):
+            name = token_name(term[0]) if term else None
+            if (name not in columns or len(term) < 3
+                    or term[1] not in {"=", "==", "<", "<=", ">", ">="}
+                    or not predicate_operand(term[2:])):
+                raise ProofError("expected AND-connected target column comparisons to literals or parameters")
+            constrained.add(name)
+            if term[1] in {"=", "=="}:
+                equality.add(name)
+    return target, equality, constrained
+
+
+MV_START = re.compile(r"^CREATE(?: OR REPLACE)? MATERIALIZED VIEW(?: IF NOT EXISTS)?\b")
+WRITE_START = re.compile(r"^(?:INSERT INTO(?: TABLE)?|ALTER TABLE|ATTACH TABLE|"
+                         r"REPLACE TABLE|CREATE OR REPLACE TABLE|UPDATE|DELETE FROM|"
+                         r"TRUNCATE TABLE|DROP TABLE(?: IF EXISTS)?)\b")
+
+
+def collect_writers(statements, aggregates, tables, problems):
+    writers = {name: [] for name in aggregates}
+    for statement in statements:
+        tokens = statement.tokens
+        # Only the head can identify a statement; quoted tokens cannot match
+        # these unquoted keywords. Limit joining to the longest supported head.
+        head = " ".join(token.upper() for token in tokens[:9])
+        mv = MV_START.match(head)
+        write = WRITE_START.match(head)
+        try:
+            if mv:
+                _, end = qualified_name(tokens, len(mv.group().split()))
+                clauses = clause_positions(tokens[end:], [("TO",), ("AS", "SELECT")])
+                if not clauses or clauses[0][1] != ("TO",):
+                    if any(token.lower() in AGGREGATE_ENGINES for token in tokens[end:]):
+                        raise ProofError("unsupported aggregate materialized view without TO target")
+                    continue
+                target, _ = qualified_name(tokens, end + clauses[0][0] + 1)
+                if target not in tables:
+                    raise ProofError("materialized view target '{0}' is unresolved".format(target))
+                if target in aggregates:
+                    selects = [end + at + 1 for at, label in clauses if label == ("AS", "SELECT")]
+                    if len(selects) != 1:
+                        raise ProofError("materialized view for '{0}' has no single AS SELECT".format(target))
+                    writers[target].append((statement, tokens[selects[0]:]))
+            elif write and aggregates:
+                target, _ = qualified_name(tokens, len(write.group().split()))
+                if target in aggregates or (
+                    "." not in target and any(name.endswith("." + target) for name in aggregates)
+                ):
+                    raise ProofError("unsupported direct write or alteration of '{0}'".format(target))
+            elif aggregates and (
+                tokens[0].upper() in {"USE", "SET", "RENAME", "EXCHANGE"}
+                or head.startswith("ATTACH MATERIALIZED VIEW ")
+            ):
+                raise ProofError("unsupported schema or session change in aggregate bundle")
+        except ProofError as exc:
+            problems.append((statement, str(exc)))
+    return writers
+
+
+def aggregate_key(expressions):
+    return [token_name(tokens[0]) if len(tokens) == 1 else None
+            for tokens in ([match.group() for match in lex(expr)] for expr in expressions)]
+
+
+def check_aggregate(statement, table, writers, queries, tables, problems):
     findings = []
-    tables = parse_tables(scrubbed)
-    for table in tables:
-        findings.extend(
-            check_table(path, sql, scrubbed, table, tenant_columns, single_tenant)
-        )
-    return tables, findings
+    order = aggregate_key(table.order_by)
+    primary = aggregate_key(table.primary_key)
+    if (not order or None in order or None in primary or table.inline_primary
+            or table.ambiguous_key or len(set(order)) != len(order)
+            or table.nonstored_columns.intersection(order + primary)):
+        problems.append((statement, "{0}: expected bare ORDER BY and PRIMARY KEY column lists"
+                         .format(table.name)))
+    if not writers:
+        problems.append((statement, "{0}: no analyzable materialized view writer".format(table.name)))
+    for writer, query in writers:
+        try:
+            dimensions, errors = writer_dimensions(query, table, tables)
+        except ProofError as exc:
+            problems.append((writer, "{0}: {1}".format(table.name, exc)))
+            continue
+        for error in errors:
+            problems.append((writer, "{0}: {1}".format(table.name, error)))
+        missing = dimensions.difference(order)
+        if missing:
+            findings.append(Finding(
+                "CH010", writer.path, writer.line, table.name,
+                "ORDER BY omits writer GROUP BY dimension(s): {0}".format(", ".join(sorted(missing))),
+                "Preserve every independent stored dimension in the merge key. A shorter sparse "
+                "PRIMARY KEY does not change merge identity."))
+    if primary and len(primary) < len(order) and primary == order[:len(primary)] and None not in primary:
+        for query, equal, constrained in queries:
+            if set(primary[:-1]) <= equal and primary[-1] in constrained:
+                print("{0}: sparse PRIMARY KEY predicate evidence for [{1}] at {2}".format(
+                    statement.location(), table.name, query.location()))
+                break
+        else:
+            problems.append((statement, "{0}: short PRIMARY KEY has no qualifying --read-query"
+                             .format(table.name)))
+    return findings
 
 
 # --------------------------------------------------------------------------
@@ -474,7 +764,8 @@ def check_source(path, sql, tenant_columns, single_tenant):
 
 CANNOT_CHECK = """\
 not checked by this tool, and still your responsibility:
-  - whether the ORDER BY prefix matches the queries that will actually run
+  - whether supplied writers and read queries cover production paths
+  - actual pruning, index memory and merge behavior on the target version
   - whether a LowCardinality column really holds under ~10,000 distinct values
   - whether the retention window times the partition granularity stays bounded
   - whether the engine's deduplication model matches what readers assume
@@ -489,8 +780,8 @@ exit codes:
   1  at least one finding. Fix every finding or record the justification the
      finding names, then run this checker again; do not apply the DDL while any
      finding stands.
-  2  a path could not be read, or the arguments were wrong. Correct the
-     invocation and rerun; no file was checked and no result should be quoted.
+  2  invalid arguments, unreadable input, or unavailable/unsupported proof.
+     Resolve the reported gap and rerun. Structural findings still apply.
 
 checks:
   CH001  a tenant column exists but does not lead ORDER BY
@@ -499,10 +790,12 @@ checks:
   CH004  PARTITION BY is finer than monthly
   CH005  a Nullable column with no 'nullable:' comment naming the query that
          needs the null
-  CH006  ORDER BY has more than five elements
-  CH007  identifier-like columns in the ORDER BY tail, which cannot prune
+  CH006  more than five elements in ORDER BY or the aggregate sparse index
+  CH007  identifier-like columns in the corresponding key tail
   CH008  ORDER BY, PARTITION BY, or PRIMARY KEY names an undeclared column
   CH009  PRIMARY KEY is not a prefix of ORDER BY
+  CH010  ORDER BY omits a stored GROUP BY dimension from an aggregate writer
+  CH011  required input or proof is invalid, unsupported or unavailable
 
 CH002 and CH005 are cleared by recording an assertion, not by deleting the
 check: CH002 by passing --single-tenant, CH005 by writing the reason on the
@@ -513,11 +806,15 @@ column's line. Both leave the claim where a reviewer can read it.
 def main(argv):
     parser = argparse.ArgumentParser(
         prog="review_clickhouse_ddl.py",
-        description="Review ClickHouse CREATE TABLE statements against this skill's rules.",
+        description="Review a complete ClickHouse DDL and writer SQL bundle.",
         epilog=EPILOG + "\n" + CANNOT_CHECK,
         formatter_class=argparse.RawDescriptionHelpFormatter,
     )
-    parser.add_argument("paths", nargs="*", help="SQL files containing CREATE TABLE statements")
+    parser.add_argument("paths", nargs="*", help="SQL files defining tables and all writers")
+    parser.add_argument(
+        "--read-query", action="append", default=[], metavar="FILE",
+        help="actual target SELECT SQL for a short aggregate PRIMARY KEY (repeatable)",
+    )
     parser.add_argument(
         "--tenant-column",
         action="append",
@@ -542,26 +839,79 @@ def main(argv):
     tenant_columns.update(name.lower() for name in args.tenant_column)
 
     all_findings = []
-    table_count = 0
-    for path in args.paths:
+    problems = []
+    tables = {}
+    table_entries = []
+    statements = []
+    read_statements = []
+    for paths, collection in ((args.paths, statements), (args.read_query, read_statements)):
+        for path in paths:
+            try:
+                with open(path, "r", encoding="utf-8") as handle:
+                    sql = handle.read()
+            except (OSError, UnicodeError) as exc:
+                problems.append((Statement(path, "", 0, []), str(exc)))
+                continue
+            has_statement = False
+            for start, end, tokens, error in sql_statements(sql):
+                has_statement = True
+                statement = Statement(path, sql, start, tokens)
+                if error:
+                    problems.append((statement, error))
+                    continue
+                collection.append(statement)
+                if collection is read_statements:
+                    continue
+                sql_part = sql[start:end]
+                cleaned = scrub(sql_part)
+                create_head = " ".join(token.upper() for token in tokens[:5])
+                if not re.match(r"^CREATE(?: OR REPLACE)?(?: TEMPORARY)? TABLE\b", create_head):
+                    continue
+                try:
+                    parsed = parse_tables(cleaned)
+                    if len(parsed) != 1:
+                        raise ProofError("unsupported CREATE TABLE declaration")
+                except ProofError as exc:
+                    problems.append((statement, str(exc)))
+                    continue
+                table = parsed[0]
+                table_entries.append((statement, table, sql_part))
+                if table.name in tables:
+                    problems.append((statement, "duplicate table declaration '{0}'".format(table.name)))
+                tables[table.name] = set(table.column_names())
+            if collection is read_statements and not has_statement:
+                problems.append((Statement(path, sql, 0, []), "no read query found"))
+
+    aggregates = {table.name for _, table, _ in table_entries if aggregate_engine(table)}
+    writers = collect_writers(statements, aggregates, tables, problems)
+    queries = {name: [] for name in aggregates}
+    for statement in read_statements:
         try:
-            with open(path, "r", encoding="utf-8", errors="replace") as handle:
-                sql = handle.read()
-        except OSError as exc:
-            sys.stderr.write("error: {0}\n".format(exc))
-            return 2
-        tables, findings = check_source(path, sql, tenant_columns, args.single_tenant)
-        table_count += len(tables)
-        all_findings.extend(findings)
+            target, equal, constrained = read_predicates(statement, tables)
+            if target in aggregates:
+                queries[target].append((statement, equal, constrained))
+        except ProofError as exc:
+            problems.append((statement, str(exc)))
+
+    for statement, table, sql_part in table_entries:
+        all_findings.extend(check_table(statement, sql_part, table, tenant_columns, args.single_tenant))
+        if aggregate_engine(table):
+            all_findings.extend(check_aggregate(statement, table, writers[table.name],
+                                                queries[table.name], tables, problems))
+
+    for statement, message in problems:
+        print("{0}: CH011 {1}".format(statement.location(), message), file=sys.stderr)
 
     for finding in all_findings:
         print(finding.render())
 
     print("")
     print("{0} file(s), {1} table(s) checked, {2} finding(s)".format(
-        len(args.paths), table_count, len(all_findings)))
+        len(args.paths), len(table_entries), len(all_findings)))
     print("")
     sys.stdout.write(CANNOT_CHECK)
+    if problems:
+        return 2
     return 1 if all_findings else 0
 
 

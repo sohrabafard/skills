@@ -2,15 +2,56 @@
 
 A ClickHouse change is not proved by a design argument. It is proved by an artifact somebody else
 can re-run. What makes an artifact a test rather than a demonstration, and how strong a given proof
-is: `/alaa-testing-strategy` (`$alaa-testing-strategy`) `references/40-proof-strength.md`. This file
+is: `/alaa-testing-strategy` `references/40-proof-strength.md`. This file
 says which proof each change class needs and what evidence to paste.
 
 ## Gate 0: the reviewer, on every `CREATE TABLE`
 
-Run `scripts/review_clickhouse_ddl.py` over the DDL and paste its output into the answer, including
-the run that produced no findings. Its exit codes and what each one obliges you to do are in its
-`--help`. It checks the mechanical rules from `20-table-design.md` and prints what it cannot check;
-a clean run is a floor, not a pass.
+Run the bundled checker from source with Python 3. Supply every target declaration and writer in
+one invocation. Independently check bundle completeness against grants, producers, backfills and
+operator rebuilds. Pass real target read SQL for each proposed shorter aggregate sparse key.
+
+```bash
+python3 -B "$SKILL_DIR/scripts/review_clickhouse_ddl.py" tables.sql writers.sql \
+  --read-query reader.sql --read-query another-reader.sql
+```
+
+Omit `--read-query` when there is no shorter explicit aggregate key to justify. The option is
+repeatable. Record each command, exit and finding. Exit 0 clears the admitted mechanical checks.
+Exit 1 requires resolution of the findings. Exit 2 requires resolution of invalid input or unavailable
+proof before acceptance. Findings printed with exit 2 still apply.
+
+### Aggregate proof admitted by the checker
+
+The checker compares merge identity and effective sparse index for `AggregatingMergeTree` and
+`ReplicatedAggregatingMergeTree`. It matches names case-sensitively, with optional identifier quoting.
+Supply semicolon-delimited SQL and consistent table qualification. It reads SQL without executing it.
+
+- Declare aggregate keys as bare columns, singly or as a parenthesized list. Use a trailing
+  `PRIMARY KEY` clause for an explicit prefix. Inline and computed keys require separate review.
+- Supply each writer as `CREATE MATERIALIZED VIEW … TO target AS SELECT … FROM source
+  [WHERE …] GROUP BY …`. Use bare grouping columns or explicit, unambiguous `SELECT … AS name`
+  aliases that resolve to stored target columns. Supply the source declaration for computed grouping
+  aliases. A source column with the same name makes the binding ambiguous. Nested queries, joins,
+  wildcards, grouping expressions, ordinals and recognized direct aggregate writes require separate proof.
+- Supply a read as one `SELECT` from the named target, with `WHERE` or `PREWHERE`. Each supported
+  predicate compares a bare target column to a string, number or typed scalar parameter. Join the
+  predicates with `AND`. Use equality for every index member before the last, and equality or a
+  one-sided range comparison for the last. One statement must qualify on its own. The checker
+  reports its file and line. Disjunctions, shadowing aliases, nested queries and joins cannot prove
+  the prefix.
+
+The checker cannot discover missing SQL, validate general ClickHouse syntax or establish effective
+permissions, deployment equivalence, pruning or merge behavior. It refuses unsupported proof
+instead of certifying the bundle. Do not recast a query into invented evidence for a production path.
+
+### Version scope
+
+The lexical rules are version-independent. The disposable merge fixture uses cached ClickHouse
+24.8.14.39 and synthetic rows. It compares grouped parity before merging and checks physical
+rows and active parts after `OPTIMIZE FINAL`. On 26.7 and later, the server adds a DDL guard for
+non-aggregate columns outside the sort key. Keep the guard enabled and verify behavior on the actual
+target version. See the [upstream guard change](https://github.com/ClickHouse/ClickHouse/pull/108087).
 
 ## Proof required, by change class
 
