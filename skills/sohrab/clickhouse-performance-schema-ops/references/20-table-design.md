@@ -74,25 +74,19 @@ owning repository chooses to make it, is `LowCardinality(String) DEFAULT ''` on 
 
 ## 3. ORDER BY
 
-The sort key decides what a query can skip. Build it in this order, and stop when the next column
-earns nothing:
+For raw tables, tune `ORDER BY` for pruning. For aggregate rollups, tune the effective
+`PRIMARY KEY` and keep the full merge identity in `ORDER BY`. An implicit `PRIMARY KEY`
+indexes the entire sort key. Choose index columns in this order:
 
 1. The tenant column, per section 1.
-2. The column that excludes the largest fraction of rows in the most common query. On event data
-   that is almost always the date or a coarse time bucket.
-3. The dimensions the common queries filter on, most-excluding first. Columns correlated with data
-   already in the key are worth more than uncorrelated ones because contiguous storage compresses
-   better.
-4. A tie-breaker only if rows must be uniquely ordered for a deduplicating engine.
+2. The column that excludes the most rows in the common query. For event data, this is often time.
+3. Other dimensions used in common filters. Correlated columns can also improve compression.
+4. A tie-breaker only when the raw table needs it for its merge or deduplication semantics.
 
-Keep the key to five columns or fewer. The official primary-key guidance states that "4-5 [keys are]
-typically sufficient". Beyond that, each extra column must be justified by a real query that filters
-on it **and** on every column before it, because the sparse index prunes on a prefix: a filter on
-the seventh column alone prunes nothing, and the column is then pure write cost and index memory.
-
-A high-cardinality column near the end of the key is the common failure. If a column's distinct
-count approaches the row count, it can only tie-break; it cannot prune unless every preceding
-column is also constrained.
+Use five index columns or fewer by default. Justify each additional index column with a real
+query that constrains it and every preceding index column. An identifier tail can only tie-break
+when the query leaves earlier columns unconstrained. Keep merge dimensions even when they do
+not earn sparse-index space.
 
 **Every dimension a rollup groups by belongs in that rollup's `ORDER BY`.** For
 `AggregatingMergeTree`, `SummingMergeTree`, `ReplacingMergeTree` and every other merging engine the
@@ -113,9 +107,10 @@ every independently grouped dimension in `ORDER BY` and grants no dependency exe
 step on the write path enforces it: `<repo>/vector/wa-vector.yaml:283-287` copies `object_type` out
 of the client body with no allowlist and no rejection, so any non-empty string reaches the column.
 A `WHERE object_type = 'news'` read over these rollups can therefore return an arbitrary survivor of
-a merge across the discriminator. Include `object_type` in all three merge keys. The owning
-repository must decide how to rebuild or replace already populated tables and verify per-type parity.
-See `10-authority-and-change-path.md` for ownership.
+a merge across the discriminator. Include `object_type` in all three merge keys. Metadata-only
+`MODIFY ORDER BY` cannot add that existing column to the sort key or change the primary key.
+The schema owner selects a rebuild or replacement and proves recovery under
+`80-proof-and-validation.md`. See the [ALTER ORDER BY contract](https://clickhouse.com/docs/reference/statements/alter/order-by).
 
 ### Finding in the pipeline's DDL, reported and not fixed
 
@@ -169,11 +164,13 @@ Deduplication that a table engine performs is eventual: it happens during backgr
 schedule nobody controls. If a reader needs exactly-once semantics at read time, that is `FINAL` and
 its cost, or a rollup that is idempotent under duplicates — not an assumption that merges have run.
 
-Since 26.7, new `AggregatingMergeTree` DDL rejects ordinary columns outside the sorting
-key unless `allow_dimensions_outside_sorting_key=1` is set. Aggregate states use
-`AggregateFunction` or `SimpleAggregateFunction`. Keep the guard enabled for new designs.
-On 24.8, enforce the merge grain in review and prove it with rows that differ only in the
-candidate omitted dimension.
+ClickHouse 26.7 adds a CREATE-time guard for off-key dimensions on qualifying
+`AggregatingMergeTree` schemas. Verify the effective `allow_dimensions_outside_sorting_key`
+setting on the target. A compatibility value of 26.6 or earlier can restore permissive
+behavior. Keep the guard enabled for new designs. Review the full merge grain even when the
+guard rejects some mistakes. On 24.8, prove it with rows differing only in the candidate
+omitted dimension. Upgrading cannot reconstruct dimensions already lost during merges.
+See the [guard implementation](https://github.com/ClickHouse/ClickHouse/pull/108087).
 
 In 26.10, query-time `FINAL` on `SummingMergeTree` keeps rows whose summed columns are all
 zero. Background merges and `OPTIMIZE TABLE … FINAL` still remove them. If the result contract

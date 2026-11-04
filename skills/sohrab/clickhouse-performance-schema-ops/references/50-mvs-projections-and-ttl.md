@@ -74,9 +74,8 @@ it. Prove refresh progress and reconciliation after a failed refresh.
   the base table first.
 - Every rollup that a request path will read must carry the tenant column in its own sort key, for
   the same reason the base table does.
-- The target table's sort key must also contain every dimension the view groups by, because that key
-  is the merge key: the rule, its one enforced-invariant exception, and the fleet instance that
-  violates it are in `20-table-design.md` section 3.
+- Preserve all independent grouping dimensions in the target merge key. For dimension proof,
+  checker limits and the effective engine guard, read `20-table-design.md` sections 3 and 6.
 
 ## TTL
 

@@ -104,7 +104,7 @@ class ReviewClickHouseDDL(unittest.TestCase):
             (READ.replace(" AND day", " OR day"),
              "expected AND-connected target column comparisons to literals or parameters"),
             (READ.replace("sum(amount) AS total", "'foo' AS tenant_id"),
-             "read projection shadows target column 'tenant_id'"),
+             "read alias can shadow target column 'tenant_id'"),
             (READ.replace(";", " UNION ALL SELECT * FROM agg.rollup;"),
              "expected a single SELECT without nested queries"),
         )
@@ -149,6 +149,78 @@ class ReviewClickHouseDDL(unittest.TestCase):
         bundle = SOURCE + ddl() + writer(group=ORDER.replace("object_type", "kind"))
         self.assert_audit(self.audit(bundle, (READ,)), 2, problems=(
             ("bundle.sql:11", "agg.rollup: GROUP BY output 'kind' is unresolved in the target"),))
+
+    def test_repair_nested_comments_cannot_supply_phantom_writer(self):
+        bundle = SOURCE + ddl() + "/* outer /* inner */; " + writer() + " */;"
+        self.assert_audit(self.audit(bundle, (READ,)), 2, problems=(
+            ("bundle.sql:5", "agg.rollup: no analyzable materialized view writer"),))
+        genuine = writer().replace("CREATE", "CREATE /* outer /* inner */ still outer */", 1)
+        self.assert_audit(self.audit(SOURCE + ddl() + genuine, (READ,)), 0)
+
+    def test_repair_slash_comment_cannot_hide_direct_write(self):
+        bundle = SOURCE + ddl() + writer() + "// backfill\nINSERT INTO agg.rollup VALUES (1);"
+        self.assert_audit(self.audit(bundle, (READ,)), 2, problems=(
+            ("bundle.sql:16", "unsupported direct write or alteration of 'agg.rollup'"),))
+
+    def test_repair_global_read_aliases_cannot_prove_predicates(self):
+        bundle = SOURCE + ddl() + writer()
+        aliases = (
+            READ.replace("sum(amount) AS total", "toString(1 AS tenant_id) AS marker"),
+            READ.replace(";", " ORDER BY (1 AS tenant_id);"),
+        )
+        for query in aliases:
+            with self.subTest(query=query):
+                self.assert_audit(self.audit(bundle, (query,)), 2, problems=(
+                    ("read0.sql:1", "read alias can shadow target column 'tenant_id'"),
+                    ("bundle.sql:5", "agg.rollup: short PRIMARY KEY has no qualifying --read-query"),
+                ))
+
+    def test_repair_mutation_of_writer_or_source_invalidates_bundle_proof(self):
+        bundle = SOURCE + ddl() + writer()
+        cases = (
+            (bundle + "ALTER TABLE agg.mv MODIFY QUERY SELECT 1;", 15),
+            (bundle + "DROP TABLE agg.mv;", 15),
+            (SOURCE + ddl() + "ALTER TABLE raw.events ADD COLUMN day Date;\n" + writer(), 11),
+        )
+        for changed, line in cases:
+            with self.subTest(changed=changed):
+                self.assert_audit(self.audit(changed, (READ,)), 2, problems=(
+                    (f"bundle.sql:{line}", "unsupported statement in aggregate bundle"),))
+
+    def test_repair_unadmitted_statements_cannot_hide_writers(self):
+        bundle = SOURCE + ddl() + writer()
+        alternative_mv = writer(name="mv2").replace(
+            "CREATE MATERIALIZED VIEW", "CREATE DEFINER = CURRENT_USER SQL SECURITY DEFINER MATERIALIZED VIEW")
+        cases = (
+            ("INSERT INTO TABLE FUNCTION remote('localhost','agg','rollup') VALUES (1);",
+             "unsupported table-function INSERT in aggregate bundle"),
+            ("WITH q AS (SELECT 1) INSERT INTO agg.rollup SELECT * FROM q;",
+             "unsupported statement in aggregate bundle"),
+            ("DETACH TABLE agg.rollup;", "unsupported statement in aggregate bundle"),
+            (alternative_mv, "unsupported statement in aggregate bundle"),
+        )
+        for suffix, issue in cases:
+            with self.subTest(suffix=suffix):
+                self.assert_audit(self.audit(bundle + suffix, (READ,)), 2,
+                                  problems=(("bundle.sql:15", issue),))
+        self.assert_audit(self.audit(bundle + "INSERT INTO raw.events VALUES (1);", (READ,)), 0)
+
+    def test_repair_bom_and_empty_ddl_cannot_drop_aggregate_target(self):
+        broken = ddl(order=ORDER.replace("object_type, ", ""))
+        self.assert_audit(self.audit("\ufeff" + broken + SOURCE + writer(), (READ,)),
+                          1, (("CH010", "agg.rollup"),))
+        self.assert_audit(self.audit("/* no table */"), 2, problems=(
+            ("bundle.sql:1", "no table declaration was checked"),))
+
+    def test_repair_unsupported_quoted_column_cannot_hide_nullable_proof_gap(self):
+        ddl_sql = """CREATE TABLE raw.bad (
+  tenant_id UInt32,
+  `opt-in` Nullable(UInt8),
+  another Nullable(UInt8)
+) ENGINE MergeTree ORDER BY tenant_id;
+"""
+        self.assert_audit(self.audit(ddl_sql), 2, (("CH005", "raw.bad"),), (
+            ("bundle.sql:3", "raw.bad: unsupported column declaration"),))
 
     def test_ddl_retained_guards(self):
         raw = """CREATE TABLE raw.bad (

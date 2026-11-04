@@ -25,7 +25,8 @@ proof before acceptance. Findings printed with exit 2 still apply.
 
 The checker compares merge identity and effective sparse index for `AggregatingMergeTree` and
 `ReplicatedAggregatingMergeTree`. It matches names case-sensitively, with optional identifier quoting.
-Supply semicolon-delimited SQL and consistent table qualification. It reads SQL without executing it.
+Supply semicolon-delimited UTF-8 SQL and consistent table qualification. Include at least one
+checkable table declaration. It reads SQL without executing it.
 
 - Declare aggregate keys as bare columns, singly or as a parenthesized list. Use a trailing
   `PRIMARY KEY` clause for an explicit prefix. Inline and computed keys require separate review.
@@ -33,13 +34,18 @@ Supply semicolon-delimited SQL and consistent table qualification. It reads SQL 
   [WHERE …] GROUP BY …`. Use bare grouping columns or explicit, unambiguous `SELECT … AS name`
   aliases that resolve to stored target columns. Supply the source declaration for computed grouping
   aliases. A source column with the same name makes the binding ambiguous. Nested queries, joins,
-  wildcards, grouping expressions, ordinals and recognized direct aggregate writes require separate proof.
+  wildcards, grouping expressions and ordinals require separate proof.
+- In an aggregate bundle, admit simple `CREATE DATABASE`, checked table declarations, supported
+  materialized-view declarations and direct inserts into declared nonaggregate tables. Schema or
+  session mutations, table functions, direct aggregate writes and other statement forms return
+  CH011. Review the actual SQL and its effects before accepting proof outside this subset.
 - Supply a read as one `SELECT` from the named target, with `WHERE` or `PREWHERE`. Each supported
-  predicate compares a bare target column to a string, number or typed scalar parameter. Join the
-  predicates with `AND`. Use equality for every index member before the last, and equality or a
+  predicate compares a bare target column to a string, number or `{name:Type}` parameter with a
+  bare type name such as `UInt32`. Compound types such as `DateTime64(3)` and `Identifier` are
+  outside the admitted grammar. Join the predicates with `AND`. Use equality for every index member before the last, and equality or a
   one-sided range comparison for the last. One statement must qualify on its own. The checker
-  reports its file and line. Disjunctions, shadowing aliases, nested queries and joins cannot prove
-  the prefix.
+  reports its file and line. An alias can shadow a target column anywhere in the SELECT.
+  Disjunctions, such aliases, nested queries and joins cannot prove the prefix.
 
 The checker cannot discover missing SQL, validate general ClickHouse syntax or establish effective
 permissions, deployment equivalence, pruning or merge behavior. It refuses unsupported proof
@@ -49,16 +55,15 @@ instead of certifying the bundle. Do not recast a query into invented evidence f
 
 The lexical rules are version-independent. The disposable merge fixture uses cached ClickHouse
 24.8.14.39 and synthetic rows. It compares grouped parity before merging and checks physical
-rows and active parts after `OPTIMIZE FINAL`. On 26.7 and later, the server adds a DDL guard for
-non-aggregate columns outside the sort key. Keep the guard enabled and verify behavior on the actual
-target version. See the [upstream guard change](https://github.com/ClickHouse/ClickHouse/pull/108087).
+rows and active parts after `OPTIMIZE FINAL`. For newer versions and effective compatibility
+settings, use the CREATE-time guard guidance in `20-table-design.md` section 6.
 
 ## Proof required, by change class
 
 | Change | Minimum proof | Evidence to paste |
 | --- | --- | --- |
 | adding or retyping a column on a table an ingest path writes | a row sent through the real ingest path arrives with the value populated, **and** a payload in the previous shape still inserts without error | the two `SELECT` results, before and after |
-| changing `ORDER BY`, `PARTITION BY`, or a sort-key column's type | this cannot be done in place: create the new table, copy one full partition, and show per-key aggregate parity against the source | row counts and a grouped aggregate from both tables, plus `read_rows` for the target query on each |
+| changing `ORDER BY`, `PARTITION BY`, or a sort-key column's type | this cannot be done in place: create the new table, backfill one full partition, and prove per-key parity. Use pre-aggregation inputs if the previous key lost dimensions | row counts and a grouped aggregate from both tables, plus `read_rows` for the target query on each |
 | a new materialized view or rollup | backfill exactly one partition, compare its aggregates to the same aggregate computed from the source, then insert one new batch and show it lands in both | the two aggregate results and the post-insert delta |
 | a query rewrite for performance | same result set, and lower `read_rows` and `read_bytes` for the same predicates and window | the two `system.query_log` rows |
 | an engine change to a deduplicating or collapsing engine | a fixture containing a known duplicate or a known cancelling pair, read both with and without `FINAL` | both result sets |
@@ -69,6 +74,16 @@ target version. See the [upstream guard change](https://github.com/ClickHouse/Cl
 (`chkit/client_integration_test.go`), and `docs/CONSUMERS.md:23` records `wa-api` as passing
 contract tests "local + disposable ClickHouse". A consumer-side query test has somewhere to run;
 absence of a harness is not a reason to skip the proof.
+
+## Recovering a rollup that lost dimensions
+
+Recompute the affected range from trustworthy pre-aggregation history or replay. Prove coverage
+before backfill and compare the recomputed measures by tenant, date, ID and discriminator. Compare
+against source-grain results, because the damaged rollup no longer contains the original groups.
+Missing history or a per-type discrepancy blocks cutover. Verify the live boundary with a writer
+pause and drain or a proved disjoint range. Preserve the old table and declare rollback limits
+before switching readers. Neither an engine upgrade nor switching back recreates lost history.
+Use `50-mvs-projections-and-ttl.md` for live/backfill cutover.
 
 ## Compare bytes read, not wall time
 

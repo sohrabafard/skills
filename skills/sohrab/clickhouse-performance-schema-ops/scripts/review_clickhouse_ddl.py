@@ -59,12 +59,13 @@ CLAUSE_KEYWORDS = (
 
 NAME = r'(?:[A-Za-z_][A-Za-z_0-9]*|"[A-Za-z_][A-Za-z_0-9]*"|`[A-Za-z_][A-Za-z_0-9]*`)'
 SQL_TOKEN = re.compile(
-    r"""(?P<space>\s+)|(?P<line>--[^\n]*|\#[^\n]*)|(?P<block>/\*.*?\*/)|
+    r"""(?P<space>\s+)|(?P<line>(?:--|//|\#)[^\n]*)|(?P<block>/\*)|
     (?P<string>'(?:\\.|''|[^'\\])*')|(?P<quoted>"(?:\\.|""|[^"\\])*"|`(?:\\.|``|[^`\\])*`)|
     (?P<number>[0-9]+(?:\.[0-9]+)?)|[A-Za-z_][A-Za-z_0-9]*|<=|>=|!=|<>|==|
-    (?P<invalid>/\*|['"`]|\$)|[^\s]""",
+    (?P<invalid>['"`$\ufeff])|[^\s]""",
     re.S | re.X,
 )
+BLOCK_DELIMITER = re.compile(r"/\*|\*/")
 AGGREGATE_ENGINES = {"aggregatingmergetree", "replicatedaggregatingmergetree"}
 OPEN_GROUP = {"(": ")", "[": "]", "{": "}"}
 CLOSE_GROUP = set(OPEN_GROUP.values())
@@ -74,9 +75,28 @@ class ProofError(ValueError):
     pass
 
 
+def scan_sql(sql):
+    """Yield token matches and end offsets, consuming complete nested comments."""
+    at = 0
+    while at < len(sql):
+        match = SQL_TOKEN.match(sql, at)
+        at = match.end()
+        if match.lastgroup == "block":
+            depth = 1
+            for delimiter in BLOCK_DELIMITER.finditer(sql, at):
+                depth += 1 if delimiter.group() == "/*" else -1
+                if not depth:
+                    at = delimiter.end()
+                    break
+            if depth:
+                yield match, None
+                return
+        yield match, at
+
+
 def lex(sql):
-    for match in SQL_TOKEN.finditer(sql):
-        if match.lastgroup not in {"space", "line", "block"}:
+    for match, end in scan_sql(sql):
+        if end is None or match.lastgroup not in {"space", "line", "block"}:
             yield match
 
 
@@ -128,8 +148,8 @@ def sql_statements(sql):
     start = 0
     for match in lex(sql):
         token = match.group()
-        if match.lastgroup == "invalid":
-            yield start, match.start(), tokens, "unsupported or unterminated SQL token"
+        if match.lastgroup in {"invalid", "block"}:
+            yield start if tokens else match.start(), match.start(), tokens, "unsupported or unterminated SQL token"
             return
         if token == ";":
             if tokens:
@@ -166,8 +186,8 @@ class Finding(object):
 def scrub(sql):
     """Blank SQL comments and string contents without moving source offsets."""
     out = list(sql)
-    for match in SQL_TOKEN.finditer(sql):
-        start, end = match.span()
+    for match, end in scan_sql(sql):
+        start = match.start()
         if match.lastgroup == "string":
             start += 1
             end -= 1
@@ -238,6 +258,7 @@ class Table(object):
         self.ambiguous_key = False
         self.inline_primary = False
         self.nonstored_columns = set()
+        self.unsupported_columns = []
         self.primary_key = []
         self.primary_offset = offset
 
@@ -277,16 +298,17 @@ def parse_tables(scrubbed):
                 table.inline_primary = True
             if re.match(r"^(INDEX|PROJECTION|CONSTRAINT|PRIMARY\s+KEY)\b", head, re.I):
                 continue
-            column = re.match(r"^[`\"]?([A-Za-z_][A-Za-z_0-9]*)[`\"]?\s+(.*)$", head, re.S)
-            if not column:
+            first = next(lex(head), None)
+            column_name = token_name(first.group()) if first else None
+            type_text = head[first.end():].strip() if first else ""
+            column_offset = base + max(item_at, 0)
+            if not column_name or not type_text:
+                table.unsupported_columns.append(column_offset)
                 continue
-            column_name, type_text = column.groups()
-            table.columns.append((column_name, type_text.strip(), base + max(item_at, 0)))
+            table.columns.append((column_name, type_text, column_offset))
             if clause_positions([m.group() for m in lex(type_text)], [("ALIAS",), ("EPHEMERAL",)]):
                 table.nonstored_columns.add(column_name)
-        tail_end = scrubbed.find(";", close_index)
-        tail_end = len(scrubbed) if tail_end == -1 else tail_end
-        tail = scrubbed[close_index:tail_end]
+        tail = scrubbed[close_index:]
         parse_clauses(table, tail, close_index)
         tables.append(table)
     return tables
@@ -570,6 +592,11 @@ def projections(items, allow_star=False):
     return outputs
 
 
+def alias_names(tokens):
+    return {token_name(name) for keyword, name in zip(tokens, tokens[1:])
+            if keyword.upper() == "AS"}
+
+
 def clause_positions(tokens, keywords):
     upper = [token.upper() for token in tokens]
     return [(i, keyword) for i in top_level(tokens) for keyword in keywords
@@ -579,6 +606,9 @@ def clause_positions(tokens, keywords):
 def writer_dimensions(tokens, table, sources):
     items, source, tail = select_shape(tokens)
     outputs = projections(items)
+    hidden_aliases = alias_names(tail)
+    for expression in outputs.values():
+        hidden_aliases.update(alias_names(expression))
     clauses = clause_positions(tail, [("WHERE",), ("GROUP", "BY"), ("HAVING",),
                                       ("ORDER", "BY"), ("LIMIT",), ("SETTINGS",)])
     # Admitted writers end at GROUP BY. Rollup/cube/totals/ordinals and other
@@ -604,11 +634,12 @@ def writer_dimensions(tokens, table, sources):
             errors.append("GROUP BY output '{0}' is unresolved in the target".format(name))
             continue
         expression = outputs[name]
-        if expression != [name] and not (
-            len(expression) == 1 and token_name(expression[0]) == name
-        ) and (source_columns is None or name in source_columns or any(
-            token_name(token) == name for other, value in outputs.items()
-            if other != name for token in value
+        same_column = len(expression) == 1 and token_name(expression[0]) == name
+        if name in hidden_aliases or (not same_column and (
+            source_columns is None or name in source_columns or any(
+                token_name(token) == name for other, value in outputs.items()
+                if other != name for token in value
+            )
         )):
             errors.append("GROUP BY alias '{0}' has unresolved source binding".format(name))
             continue
@@ -643,9 +674,10 @@ def read_predicates(statement, tables):
         raise ProofError("expected PREWHERE or WHERE on the named read target")
 
     columns = tables[target]
-    for name, expression in projections(items, allow_star=True).items():
-        if name in columns and not (len(expression) == 1 and token_name(expression[0]) == name):
-            raise ProofError("read projection shadows target column '{0}'".format(name))
+    projections(items, allow_star=True)
+    shadowed = alias_names(statement.tokens).intersection(columns)
+    if shadowed:
+        raise ProofError("read alias can shadow target column '{0}'".format(sorted(shadowed)[0]))
 
     equality = set()
     constrained = set()
@@ -669,27 +701,23 @@ def read_predicates(statement, tables):
 
 
 MV_START = re.compile(r"^CREATE(?: OR REPLACE)? MATERIALIZED VIEW(?: IF NOT EXISTS)?\b")
-WRITE_START = re.compile(r"^(?:INSERT INTO(?: TABLE)?|ALTER TABLE|ATTACH TABLE|"
-                         r"REPLACE TABLE|CREATE OR REPLACE TABLE|UPDATE|DELETE FROM|"
-                         r"TRUNCATE TABLE|DROP TABLE(?: IF EXISTS)?)\b")
+INSERT_START = re.compile(r"^INSERT INTO(?: TABLE)?\b")
 
 
-def collect_writers(statements, aggregates, tables, problems):
+def collect_writers(statements, declared, aggregates, tables, problems):
     writers = {name: [] for name in aggregates}
     for statement in statements:
         tokens = statement.tokens
-        # Only the head can identify a statement; quoted tokens cannot match
-        # these unquoted keywords. Limit joining to the longest supported head.
         head = " ".join(token.upper() for token in tokens[:9])
         mv = MV_START.match(head)
-        write = WRITE_START.match(head)
+        insert = INSERT_START.match(head)
         try:
             if mv:
                 _, end = qualified_name(tokens, len(mv.group().split()))
                 clauses = clause_positions(tokens[end:], [("TO",), ("AS", "SELECT")])
                 if not clauses or clauses[0][1] != ("TO",):
-                    if any(token.lower() in AGGREGATE_ENGINES for token in tokens[end:]):
-                        raise ProofError("unsupported aggregate materialized view without TO target")
+                    if aggregates or any(token.lower() in AGGREGATE_ENGINES for token in tokens[end:]):
+                        raise ProofError("unsupported materialized view without TO target")
                     continue
                 target, _ = qualified_name(tokens, end + clauses[0][0] + 1)
                 if target not in tables:
@@ -699,17 +727,26 @@ def collect_writers(statements, aggregates, tables, problems):
                     if len(selects) != 1:
                         raise ProofError("materialized view for '{0}' has no single AS SELECT".format(target))
                     writers[target].append((statement, tokens[selects[0]:]))
-            elif write and aggregates:
-                target, _ = qualified_name(tokens, len(write.group().split()))
-                if target in aggregates or (
-                    "." not in target and any(name.endswith("." + target) for name in aggregates)
-                ):
+            elif aggregates and insert:
+                index = len(insert.group().split())
+                if index < len(tokens) and tokens[index].upper() == "FUNCTION":
+                    raise ProofError("unsupported table-function INSERT in aggregate bundle")
+                target, _ = qualified_name(tokens, index)
+                if target in aggregates:
                     raise ProofError("unsupported direct write or alteration of '{0}'".format(target))
-            elif aggregates and (
-                tokens[0].upper() in {"USE", "SET", "RENAME", "EXCHANGE"}
-                or head.startswith("ATTACH MATERIALIZED VIEW ")
-            ):
-                raise ProofError("unsupported schema or session change in aggregate bundle")
+                if target not in tables:
+                    raise ProofError("INSERT target '{0}' is unresolved".format(target))
+            elif aggregates:
+                if head.startswith("CREATE DATABASE "):
+                    continue
+                if statement in declared and not head.startswith(("CREATE OR REPLACE ", "CREATE TEMPORARY ")):
+                    continue
+                raise ProofError("unsupported statement in aggregate bundle")
+            elif (statement not in declared and head.startswith("CREATE ")
+                  and (any(token.lower() in AGGREGATE_ENGINES for token in tokens)
+                       or any(first.upper() == "MATERIALIZED" and second.upper() == "VIEW"
+                              for first, second in zip(tokens, tokens[1:])))):
+                raise ProofError("unsupported aggregate declaration or materialized view")
         except ProofError as exc:
             problems.append((statement, str(exc)))
     return writers
@@ -847,7 +884,7 @@ def main(argv):
     for paths, collection in ((args.paths, statements), (args.read_query, read_statements)):
         for path in paths:
             try:
-                with open(path, "r", encoding="utf-8") as handle:
+                with open(path, "r", encoding="utf-8-sig") as handle:
                     sql = handle.read()
             except (OSError, UnicodeError) as exc:
                 problems.append((Statement(path, "", 0, []), str(exc)))
@@ -876,14 +913,20 @@ def main(argv):
                     continue
                 table = parsed[0]
                 table_entries.append((statement, table, sql_part))
+                for offset in table.unsupported_columns:
+                    problems.append((Statement(path, sql, start + offset, []),
+                                     "{0}: unsupported column declaration".format(table.name)))
                 if table.name in tables:
                     problems.append((statement, "duplicate table declaration '{0}'".format(table.name)))
                 tables[table.name] = set(table.column_names())
             if collection is read_statements and not has_statement:
                 problems.append((Statement(path, sql, 0, []), "no read query found"))
 
+    if not table_entries:
+        problems.append((Statement(args.paths[0], "", 0, []), "no table declaration was checked"))
     aggregates = {table.name for _, table, _ in table_entries if aggregate_engine(table)}
-    writers = collect_writers(statements, aggregates, tables, problems)
+    declared = {statement for statement, _, _ in table_entries}
+    writers = collect_writers(statements, declared, aggregates, tables, problems)
     queries = {name: [] for name in aggregates}
     for statement in read_statements:
         try:
