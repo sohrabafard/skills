@@ -61,3 +61,27 @@ was exercised. These candidates require the actual target and are separate from
 the shipped fixture's contract. The source upgrade does not establish installed
 skill activation or a consumer rollout. Independent review and root gates are
 owned by the parent.
+
+## Independent review repair cycle 1
+
+The original candidate could overwrite a supplied config with a later file
+of the same basename, and could skip the bundled common VRL check. Both
+defects reproduced as false-green exit 0 with the original checker on copies
+under the adapter scratch directory. The repaired checker keeps each input
+in a distinct temporary directory and checks the default VRL asset before
+launching Vector. The accepted user-supplied validation path still merges
+the staged inputs into one Vector invocation.
+
+| Command | Input and result on the repair |
+| --- | --- |
+| `timeout 120s node scripts/check-vector-configs.mjs` | Skill cwd. Exit 0. Two strict validations, five named transform cases, one common VRL invocation. |
+| `timeout 120s node scripts/check-vector-configs.mjs "$VECTOR_STAGE/second/config.yaml"` | Skill cwd. Exit 0. Control: valid basic config only. |
+| `timeout 120s node scripts/check-vector-configs.mjs "$VECTOR_STAGE/first/config.yaml" "$VECTOR_STAGE/second/config.yaml"` | Skill cwd. Exit 1, wrapping Vector 78 with the expected YAML parse diagnostic. The first file contains an unfinished flow node (`invalid: [`), the second is the bundled basic config. |
+| `timeout 120s node scripts/check-vector-configs.mjs` | Scratch copy of the skill with `assets/templates/common.vrl` moved outside its template path. Exit 2, missing-file diagnostic, no adapter invocation. |
+| `python3 -B scripts/check_fleet_references.py --skill vector-rust-observability-pipelines` | Repo root. Exit 0. One skill, 17 Markdown files, 60 citations. |
+
+Used the same cached image, disposable adapter containers and resource caps
+as above. Docker reported no remaining task-labeled containers. Evidence
+files prefixed `cycle1-` retain baseline and repaired outputs. The source
+manifest identifies the repaired candidate. Previous pin and direct CLI
+controls remain evidence for unchanged inputs.

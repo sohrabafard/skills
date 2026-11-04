@@ -75,7 +75,9 @@ deployment path — interpolation is a legitimate choice, provided all three hol
    config to a `secret:` backend.
 
 3. **A standing CI gate proves the opt-in is load-bearing, using the discriminating
-   pair.** One run is never sufficient. Require **both**, on every pipeline run:
+   pair.** Use a trusted config with approved access to any configured secret
+   backends. Strict validation can resolve those backends even with health checks
+   skipped. Require both runs on every pipeline run:
 
    | Run | Required result |
    | --- | --- |

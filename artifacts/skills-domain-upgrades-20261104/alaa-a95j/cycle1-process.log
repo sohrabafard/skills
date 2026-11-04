@@ -1,0 +1,38 @@
+timeout 120s docker run --rm --pull never --network none --cpus 4 --memory 1g --label alaa.task=alaa-a95j --mount type=bind\,src=<scratch>/stage\,dst=<scratch>/stage --mount type=bind\,src=<repo>/skills/sohrab/vector-rust-observability-pipelines\,dst=<repo>/skills/sohrab/vector-rust-observability-pipelines\,readonly sha256:3bb7ed5152910ed51729e256937b1d8a4bf67ff624e9d565e8e5877bffd015c7 --version
+exit=0
+vector 0.61.0 (x86_64-unknown-linux-musl 17e017e 2026-10-29 16:03:40.929269968)
+timeout 120s docker run --rm --pull never --network none --cpus 4 --memory 1g --label alaa.task=alaa-a95j --mount type=bind\,src=<scratch>/stage\,dst=<scratch>/stage --mount type=bind\,src=<repo>/skills/sohrab/vector-rust-observability-pipelines\,dst=<repo>/skills/sohrab/vector-rust-observability-pipelines\,readonly sha256:3bb7ed5152910ed51729e256937b1d8a4bf67ff624e9d565e8e5877bffd015c7 validate --skip-healthchecks --deny-warnings <scratch>/stage/vector-check-NPnrAF/grp-wTzrX8/config.yaml <scratch>/stage/vector-check-NPnrAF/grp-wTzrX8/config.yaml
+exit=0
+√ Loaded ["<scratch>/stage/vector-check-NPnrAF/grp-wTzrX8/config.yaml"]
+√ Transforms configuration
+√ Sinks configuration
+√ Component configuration
+---------------------------------------------------------------------------------------
+                                                                              Validated
+timeout 120s docker run --rm --pull never --network none --cpus 4 --memory 1g --label alaa.task=alaa-a95j --mount type=bind\,src=<scratch>/stage\,dst=<scratch>/stage --mount type=bind\,src=<repo>/skills/sohrab/vector-rust-observability-pipelines\,dst=<repo>/skills/sohrab/vector-rust-observability-pipelines\,readonly sha256:3bb7ed5152910ed51729e256937b1d8a4bf67ff624e9d565e8e5877bffd015c7 --version
+exit=0
+vector 0.61.0 (x86_64-unknown-linux-musl 17e017e 2026-10-29 16:03:40.929269968)
+timeout 120s docker run --rm --pull never --network none --cpus 4 --memory 1g --label alaa.task=alaa-a95j --mount type=bind\,src=<scratch>/stage\,dst=<scratch>/stage --mount type=bind\,src=<repo>/skills/sohrab/vector-rust-observability-pipelines\,dst=<repo>/skills/sohrab/vector-rust-observability-pipelines\,readonly sha256:3bb7ed5152910ed51729e256937b1d8a4bf67ff624e9d565e8e5877bffd015c7 validate --skip-healthchecks --deny-warnings <scratch>/stage/vector-check-XwzBwS/grp-su92yq/vector-basic.yaml <scratch>/stage/vector-check-XwzBwS/grp-su92yq/vector-tests.yaml
+exit=0
+√ Loaded ["<scratch>/stage/vector-check-XwzBwS/grp-su92yq/vector-basic.yaml", "<scratch>/stage/vector-check-XwzBwS/grp-su92yq/vector-tests.yaml"]
+√ Transforms configuration
+√ Sinks configuration
+√ Component configuration
+---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+                                                                                                                                                                        Validated
+timeout 120s docker run --rm --pull never --network none --cpus 4 --memory 1g --label alaa.task=alaa-a95j --mount type=bind\,src=<scratch>/stage\,dst=<scratch>/stage --mount type=bind\,src=<repo>/skills/sohrab/vector-rust-observability-pipelines\,dst=<repo>/skills/sohrab/vector-rust-observability-pipelines\,readonly sha256:3bb7ed5152910ed51729e256937b1d8a4bf67ff624e9d565e8e5877bffd015c7 test <scratch>/stage/vector-check-XwzBwS/grp-su92yq/vector-basic.yaml <scratch>/stage/vector-check-XwzBwS/grp-su92yq/vector-tests.yaml
+exit=0
+Running tests
+test happy path - level is downcased, service is preserved ... passed
+test missing service falls back to unknown ... passed
+test missing level falls back to info ... passed
+test non-string level is defaulted rather than aborting the transform ... passed
+test ingest timestamp is always added ... passed
+timeout 120s docker run --rm --pull never --network none --cpus 4 --memory 1g --label alaa.task=alaa-a95j --mount type=bind\,src=<scratch>/stage\,dst=<scratch>/stage --mount type=bind\,src=<repo>/skills/sohrab/vector-rust-observability-pipelines\,dst=<repo>/skills/sohrab/vector-rust-observability-pipelines\,readonly sha256:3bb7ed5152910ed51729e256937b1d8a4bf67ff624e9d565e8e5877bffd015c7 validate --skip-healthchecks --deny-warnings <scratch>/stage/vector-check-XwzBwS/grp-9gvOIR/vector-clickhouse.yaml
+exit=0
+√ Loaded ["<scratch>/stage/vector-check-XwzBwS/grp-9gvOIR/vector-clickhouse.yaml"]
+√ Transforms configuration
+√ Sinks configuration
+√ Component configuration
+--------------------------------------------------------------------------------------------------
+                                                                                         Validated

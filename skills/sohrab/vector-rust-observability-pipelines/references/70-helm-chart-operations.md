@@ -121,14 +121,12 @@ volume against the sum of every configured `max_size`, per
 ```bash
 helm lint .
 helm template . -f values.yaml > rendered.yaml
-# then extract the Vector config from the rendered ConfigMap and validate it:
-vector validate --skip-healthchecks --deny-warnings vector.yaml
 ```
 
-Validate the **rendered** config, not the values file. The values file is not a
-Vector config and `vector validate` cannot check it, so a Helm-level templating
-mistake is invisible until the rendered form is checked. Use the flag set from
-`50-validation-and-testing.md`, not `--no-environment`.
+Extract the Vector config from the rendered ConfigMap. Validate the extracted
+config only after verifying its trust and approving access to its secret
+backends. Use the strict gate in `50-validation-and-testing.md`. Helm values
+are input to the render and cannot be checked by Vector.
 
 Startup health gating (`--require-healthy`) and its trade-off are in
 `60-internal-monitoring.md`.

@@ -4,7 +4,10 @@ Verified against Vector `0.57.0` on 2026-07-30.
 
 ## The flag set that actually catches things
 
-Use this:
+Use strict validation only on trusted configs with approved access to their
+secret backends. For isolated validation, prepare a trusted copy with a
+synthetic backend. From 0.59.0, skipping health checks still allows backend
+resolution, including helper execution and provider requests.
 
 ```bash
 vector validate --skip-healthchecks --deny-warnings vector.yaml
@@ -36,7 +39,7 @@ the other environment/component checks skipped by `--no-environment`.
 machine where the config's `data_dir` does not exist and cannot be created. It is a
 weaker check, and calling it "validated" is the mistake.
 
-Two preconditions for the real check, both environmental rather than defects:
+Check the filesystem and network prerequisites before running validation:
 
 - The `data_dir` named in the config must exist and be writable, or validation
   reports `x data_dir "/var/lib/vector" does not exist`. `VECTOR_DATA_DIR` does
@@ -44,9 +47,9 @@ Two preconditions for the real check, both environmental rather than defects:
 - `--skip-healthchecks` skips sink health checks. Backend resolution can still
   reach the network from 0.59.0.
 
-`scripts/check-vector-configs.mjs` handles both by copying each config to an OS
-temp directory with `data_dir` rewritten, so component checks run without needing `/var/lib/vector` to exist and without writing inside the
-repository.
+`scripts/check-vector-configs.mjs` copies each config to a temporary directory and
+rewrites `data_dir` so component checks can run without `/var/lib/vector`. This
+filesystem staging leaves supplied secret backends active.
 
 ## Secret resolution from 0.59.0
 
@@ -188,11 +191,18 @@ argument list and a broken pipeline config were indistinguishable to any caller.
 
 ```bash
 node scripts/check-vector-configs.mjs              # every shipped template + unit tests
-node scripts/check-vector-configs.mjs my.yaml      # any config of your own
 node scripts/check-upstream-version.mjs            # version drift against upstream
 ```
 
-Both take `--help`.
+Pass a supplied file only after verifying its trust and approving access to its
+configured secret backends. The checker rewrites `data_dir` and retains those
+backends.
+
+```bash
+node scripts/check-vector-configs.mjs trusted-config.yaml
+```
+
+Both scripts take `--help`.
 
 ## Versioned regression coverage
 
@@ -214,7 +224,7 @@ excluding draft, prerelease, nightly and vdev tags and releases with missing pub
 flags, and selects the chart separately. It needs complete bounded release metadata and
 the released chart tag; failure returns 2, never a Cargo-tag guess.
 
-No target Vector binary was found in this refresh's bounded local discovery.
-Therefore existing VRL tests and released runtime behavior have no new execution
-proof here. Run the config checker on the actual supported binaries when available;
-never install a tool implicitly to replace a missing-proof report.
+The 0.61.0 refresh ran the bundled strict config checks, five transform cases
+and common VRL compilation on the cached Alpine binary. For a consumer, run
+the config checker on its actual target binary and test provider behavior
+separately. If the binary is unavailable, record the missing proof.

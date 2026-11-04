@@ -195,10 +195,11 @@ the reply was lost", so it must retry, and a retry after an unseen success write
 twice. No retry setting removes this; tuning only changes how often it happens.
 **Exactness is won or lost at the table, not at the sink.**
 
-ClickHouse's insert deduplication is enabled by default **only** for `Replicated*MergeTree`
-engines. A plain `MergeTree` accepts the identical block twice and keeps both copies. A
-pipeline whose delivery is at-least-once and whose table is a plain `MergeTree` therefore
-has no exactness anywhere in it, whatever the sink config says.
+In the recorded WA configuration, the raw tables are plain `MergeTree` and
+`non_replicated_deduplication_window` is unset. The configured tables can retain
+both copies of a replayed insert. Review the engine, deduplication window and
+insert identity together using `clickhouse-performance-schema-ops references/30-ingest-and-parts.md`
+when these settings change.
 
 The consequence the pipeline owner has to carry is one step further out: **a rollup built
 on a duplicating table inherits the duplicates.** A materialized view fires per insert, so
@@ -214,10 +215,8 @@ duplication-into-one-sink class there. What this skill owns is the pipeline's ob
 state the delivery guarantee in the path's delivery contract, and file the exactness
 requirement against the table owner rather than assuming a retry count makes it true.
 
-**In this pipeline.** Both raw tables are plain `MergeTree`, with `ReplicatedMergeTree`
-templates present but commented out, and no `non_replicated_deduplication_window` set. The
-ClickHouse deployment is a single 24.8 node with no Keeper, so the replicated engines are
-not reachable without infrastructure this repository neither owns nor can see. Both sinks
+The recorded ClickHouse deployment is a single 24.8 node with no Keeper. The
+`ReplicatedMergeTree` templates are commented out. Both sinks
 retry up to twenty times with a 90-second backoff ceiling at `concurrency: 4`, and `wa_agg`
 adds four rollups behind five materialized views reading from those raw tables — so the
 rollups sit downstream of the duplication.

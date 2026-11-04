@@ -1,0 +1,2 @@
+BLOCKED: bundled assets/templates/common.vrl is missing or is not a file.
+exit=2 expected=2

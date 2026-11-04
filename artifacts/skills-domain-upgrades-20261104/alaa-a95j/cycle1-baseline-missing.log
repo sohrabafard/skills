@@ -1,0 +1,6 @@
+Using vector 0.61.0 (x86_64-unknown-linux-musl 17e017e 2026-10-29 16:03:40.929269968)
+  OK    validate vector-basic + vector-tests
+  OK    test vector-basic + vector-tests
+  OK    validate vector-clickhouse
+All targets validated clean.
+exit=0

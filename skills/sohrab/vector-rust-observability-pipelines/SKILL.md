@@ -66,10 +66,10 @@ version-sensitive claim; do not recall it. Sources: `references/90-source-map.md
    and URI authority rejection. Never generalize an exception to a destination.
    Never enable the confinement opt-out to make an upgrade validate.
 
-8. **Validate with `vector validate --skip-healthchecks --deny-warnings`, not with
-   `--no-environment`.** `--no-environment` suppresses component checks. From 0.59.0,
-   strict validation resolves secret backends even with health checks skipped. Stage
-   synthetic secrets or validate trusted configs with approved backend access.
+8. **Use strict validation only with trusted configs and approved secret backends.**
+   Stage synthetic secrets in an isolated copy when live backend access is unavailable.
+   From 0.59.0, `vector validate --skip-healthchecks --deny-warnings` still resolves
+   secret backends. Keep component checks enabled. `--no-environment` disables them.
    The warning "acknowledgements are not supported
    by this source" means the durability you configured does not exist. An
    unconsumed `route` leg fails the gate rather than scrolling past.

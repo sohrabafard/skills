@@ -32,6 +32,11 @@ const VECTOR_CANDIDATES = ['vector'];
 function usage() {
   console.log(`check-vector-configs.mjs - validate the Vector configs this skill ships.
 
+Supply only trusted configs whose secret backends you are authorized to use.
+Vector 0.59+ resolves those backends even when health checks are skipped.
+Staging rewrites data_dir and leaves supplied backends active. Only the
+bundled ClickHouse example uses a staged synthetic secret file.
+
 Usage:
   node scripts/check-vector-configs.mjs [options] [config.yaml ...]
 
@@ -40,10 +45,6 @@ Options:
                      the "acknowledgements are not supported by this source"
                      warning is a silent-data-loss defect, not noise.
   --help, -h         Show this message.
-
-Only pass trusted configs. Vector 0.59+ resolves secret backends during
-strict validation, even with health checks skipped. The bundled ClickHouse
-example uses a staged synthetic secret file.
 
 Exit codes:
   0  clean    1  findings    2  could not run
@@ -76,7 +77,8 @@ function stageConfigs({ files, fixtureSecret }, tmpDir) {
   const dataDir = path.join(tmpDir, 'data');
   fs.mkdirSync(dataDir, { recursive: true });
   return files.map((src) => {
-    const dest = path.join(tmpDir, path.basename(src));
+    const configDir = fs.mkdtempSync(path.join(tmpDir, 'config-'));
+    const dest = path.join(configDir, path.basename(src));
     let text = fs.readFileSync(src, 'utf8');
     const yamlPath = dataDir;
     text = /^data_dir:/m.test(text)
@@ -166,6 +168,12 @@ function main() {
   const denyWarnings = !argv.includes('--allow-warnings');
   const extra = argv.filter((a) => !a.startsWith('-'));
 
+  const vrl = extra.length === 0 ? path.join(SKILL_ROOT, 'assets', 'templates', 'common.vrl') : null;
+  if (vrl && !fs.statSync(vrl, { throwIfNoEntry: false })?.isFile()) {
+    console.error('BLOCKED: bundled assets/templates/common.vrl is missing or is not a file.');
+    return EXIT_CANNOT_RUN;
+  }
+
   const found = findVector();
   if (!found.bin) {
     console.error(`BLOCKED: ${found.reason}.`);
@@ -186,13 +194,10 @@ function main() {
       if (outcome.blocked) { console.error(`BLOCKED: ${outcome.message}`); return EXIT_CANNOT_RUN; }
       all.push(...outcome.results);
     }
-    if (extra.length === 0) {
-      const vrl = path.join(SKILL_ROOT, 'assets', 'templates', 'common.vrl');
-      if (fs.existsSync(vrl)) {
-        const outcome = checkVrl(found.bin, vrl, tmpRoot);
-        if (outcome.blocked) { console.error(`BLOCKED: ${outcome.message}`); return EXIT_CANNOT_RUN; }
-        all.push(...outcome.results);
-      }
+    if (vrl) {
+      const outcome = checkVrl(found.bin, vrl, tmpRoot);
+      if (outcome.blocked) { console.error(`BLOCKED: ${outcome.message}`); return EXIT_CANNOT_RUN; }
+      all.push(...outcome.results);
     }
     const findings = report(all);
     if (findings > 0) { console.error(`${findings} target(s) with findings.`); return EXIT_FINDINGS; }

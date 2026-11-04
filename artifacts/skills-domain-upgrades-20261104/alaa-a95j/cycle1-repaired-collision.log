@@ -1,0 +1,7 @@
+Using vector 0.61.0 (x86_64-unknown-linux-musl 17e017e 2026-10-29 16:03:40.929269968)
+  FAIL  validate supplied configs  (vector exit 78)
+        Failed to load ["<scratch>/stage/vector-check-xZoeR3/grp-6TIStH/config-v1vpF3/config.yaml", "<scratch>/stage/vector-check-xZoeR3/grp-6TIStH/config-xzFeNB/config.yaml"]
+        -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+        x did not find expected node content at line 3 column 1, while parsing a flow node
+1 target(s) with findings.
+exit=1 expected=1
