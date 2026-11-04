@@ -39,11 +39,11 @@ GROUP BY {group};
 
 
 class ReviewClickHouseDDL(unittest.TestCase):
-    def audit(self, bundle, reads=(), extra_ddl=None):
+    def audit(self, bundle, reads=(), extra_ddl=None, options=()):
         with tempfile.TemporaryDirectory() as tmp:
             root = Path(tmp)
             (root / "bundle.sql").write_text(bundle, encoding="utf-8")
-            command = [sys.executable, "-B", str(CHECKER), "bundle.sql"]
+            command = [sys.executable, "-B", str(CHECKER), *options, "bundle.sql"]
             if extra_ddl is not None:
                 (root / "extra.sql").write_text(extra_ddl, encoding="utf-8")
                 command.append("extra.sql")
@@ -221,6 +221,98 @@ class ReviewClickHouseDDL(unittest.TestCase):
 """
         self.assert_audit(self.audit(ddl_sql), 2, (("CH005", "raw.bad"),), (
             ("bundle.sql:3", "raw.bad: unsupported column declaration"),))
+
+    def test_cycle2_quoted_aggregate_engine_cannot_hide_missing_writer(self):
+        for engine in ('"AggregatingMergeTree"', "`ReplicatedAggregatingMergeTree`('path','replica')"):
+            with self.subTest(engine=engine):
+                self.assert_audit(self.audit(ddl(order="tenant_id, day", primary=None, engine=engine)), 2,
+                                  problems=(("bundle.sql:1", "agg.rollup: no analyzable materialized view writer"),))
+                self.assert_audit(self.audit(SOURCE + ddl(engine=engine) + writer(), (READ,)), 0)
+        self.assert_audit(self.audit(ddl(order="tenant_id, day", primary=None,
+                                         engine="“AggregatingMergeTree”")), 2, problems=(
+            ("bundle.sql:1", "agg.rollup: unsupported or missing ENGINE declaration"),))
+
+    def test_cycle2_parallel_with_cannot_hide_create_or_drop(self):
+        bundle = SOURCE + ddl() + writer()
+        drop = "CREATE DATABASE scratch PARALLEL /* separator */ WITH DROP TABLE agg.mv;"
+        self.assert_audit(self.audit(bundle + drop, (READ,)), 2, problems=(
+            ("bundle.sql:15", "unsupported PARALLEL WITH compound statement"),))
+        raw = SOURCE.replace("raw.events", "raw.secondary").rstrip().removesuffix(";")
+        self.assert_audit(self.audit(SOURCE + raw + "\nPARALLEL WITH " + ddl()), 2, problems=(
+            ("bundle.sql:5", "unsupported PARALLEL WITH compound statement"),))
+        self.assert_audit(self.audit(bundle + "/* PARALLEL WITH DROP TABLE agg.mv */", (READ,)), 0)
+
+    def test_cycle2_buffer_declaration_and_insert_are_unproved_writer_routes(self):
+        bundle = (SOURCE + ddl() + writer()).replace("tenant_id", "project")
+        reader = READ.replace("tenant_id", "project")
+        forwarder = ddl(primary=None, engine="Buffer(agg, rollup, 1, 1, 10, 1, 100, 1, 1000)")
+        forwarder = forwarder.split("ORDER BY")[0].rstrip() + ";\n"
+        forwarder = forwarder.replace("agg.rollup", "raw.forwarder").replace("tenant_id", "project")
+        declaration = ("bundle.sql:15", "raw.forwarder: engine is not admitted in an aggregate bundle")
+        self.assert_audit(self.audit(bundle + forwarder, (reader,), options=("--single-tenant",)),
+                          2, problems=(declaration,))
+        write = "INSERT INTO raw.forwarder VALUES (1, '2024-08-01', 42, 'A', 1, 2, 3, 4);"
+        self.assert_audit(self.audit(bundle + forwarder + write, (reader,), options=("--single-tenant",)),
+                          2, problems=(declaration, ("bundle.sql:19",
+                              "INSERT route to 'raw.forwarder' is not proved non-forwarding")))
+
+    def test_cycle2_read_proof_refuses_unknown_or_implicit_aliases(self):
+        bundle = SOURCE + ddl() + writer()
+        gap = ("bundle.sql:5", "agg.rollup: short PRIMARY KEY has no qualifying --read-query")
+        cases = (
+            (READ.replace(";", " ORDER BY (1 AS “tenant_id”);"), "unsupported alias or AS binding"),
+            (READ.replace("sum(amount) AS total", "toString(1 AS “tenant_id”) AS marker"),
+             "unsupported alias or AS binding"),
+            (READ.replace(";", r" ORDER BY (1 AS `tenant\_id`);"), "unsupported alias or AS binding"),
+            (READ.replace("sum(amount) AS total", "1 tenant_id"),
+             "unsupported or duplicate SELECT output name"),
+            (READ.replace("sum(amount) AS total", "toString(1 tenant_id) AS marker"),
+             "unsupported read projection or implicit alias"),
+            (READ.replace(";", " ORDER BY (1 tenant_id);"),
+             "unsupported trailing read clause or implicit alias"),
+        )
+        for query, issue in cases:
+            with self.subTest(query=query):
+                self.assert_audit(self.audit(bundle, (query,)), 2, problems=(("read0.sql:1", issue), gap))
+        valid = READ.replace("AS total", 'AS "total"').replace("WHERE tenant_id", "WHERE `tenant_id`")
+        self.assert_audit(self.audit(bundle, (valid.replace(";", ' ORDER BY "day" DESC LIMIT 3;'),)), 0)
+
+    def test_cycle2_unique_table_and_view_namespace_before_writer_proof(self):
+        def if_missing(query):
+            return query.replace("CREATE MATERIALIZED VIEW", "CREATE MATERIALIZED VIEW IF NOT EXISTS")
+
+        source_and_targets = SOURCE + ddl() + ddl().replace("agg.rollup", "agg.second")
+        first = if_missing(writer())
+        second = if_missing(writer(target="agg.second", name="`mv`"))
+        readers = (READ, READ.replace("agg.rollup", "agg.second"))
+        duplicate = source_and_targets + first
+        self.assert_audit(self.audit(duplicate + second, readers), 2, problems=(
+            (f"bundle.sql:{duplicate.count(chr(10)) + 1}", "duplicate table or view declaration 'agg.mv'"),
+            ("bundle.sql:11", "agg.second: no analyzable materialized view writer"),
+        ))
+        self.assert_audit(self.audit(duplicate + second.replace("`mv`", '"Mv"'), readers), 0)
+
+        table = "CREATE TABLE agg.mv (tenant_id UInt32) ENGINE MergeTree ORDER BY tenant_id;\n"
+        mv_to_raw = "CREATE MATERIALIZED VIEW agg.mv TO raw.events AS SELECT * FROM raw.incoming;\n"
+        for collision in (table, mv_to_raw):
+            with self.subTest(collision=collision):
+                self.assert_audit(self.audit(SOURCE + ddl() + collision + first, (READ,)), 2, problems=(
+                    ("bundle.sql:12", "duplicate table or view declaration 'agg.mv'"),
+                    ("bundle.sql:5", "agg.rollup: no analyzable materialized view writer"),
+                ))
+
+    def test_cycle2_qualification_cannot_change_object_identity(self):
+        misleading = ddl(order="tenant_id, day", primary=None).replace("agg.rollup", '"agg.rollup"')
+        self.assert_audit(self.audit(SOURCE + misleading), 2, problems=(
+            ("bundle.sql:5", "unsupported CREATE TABLE declaration"),))
+        escaped = ddl(order="tenant_id, day", primary=None).replace("agg.rollup", r'`a\gg`.rollup')
+        self.assert_audit(self.audit(SOURCE + escaped), 2, problems=(
+            ("bundle.sql:5", "unsupported CREATE TABLE declaration"),))
+        shadowing = "CREATE TABLE mv (tenant_id UInt32) ENGINE MergeTree ORDER BY tenant_id;\n"
+        self.assert_audit(self.audit(SOURCE + ddl() + shadowing + writer(), (READ,)), 2, problems=(
+            ("bundle.sql:12", "ambiguous qualification of table or view 'agg.mv'"),
+            ("bundle.sql:5", "agg.rollup: no analyzable materialized view writer"),
+        ))
 
     def test_ddl_retained_guards(self):
         raw = """CREATE TABLE raw.bad (

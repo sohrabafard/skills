@@ -24,9 +24,13 @@ proof before acceptance. Findings printed with exit 2 still apply.
 ### Aggregate proof admitted by the checker
 
 The checker compares merge identity and effective sparse index for `AggregatingMergeTree` and
-`ReplicatedAggregatingMergeTree`. It matches names case-sensitively, with optional identifier quoting.
-Supply semicolon-delimited UTF-8 SQL and consistent table qualification. Include at least one
-checkable table declaration. It reads SQL without executing it.
+`ReplicatedAggregatingMergeTree`. Supply explicit engine names. The checker accepts bare ASCII
+identifiers or the same names in double quotes or backticks. Object names are case-sensitive.
+Use consistent table qualification and unique names across tables and materialized views,
+including declarations with `IF NOT EXISTS`. Reject a bare name that could bind a qualified
+declaration with the same basename. Dots may separate identifiers but may not occur inside one
+quoted identifier. Supply semicolon-delimited UTF-8 SQL and at least
+one checkable table declaration. It reads SQL without executing it.
 
 - Declare aggregate keys as bare columns, singly or as a parenthesized list. Use a trailing
   `PRIMARY KEY` clause for an explicit prefix. Inline and computed keys require separate review.
@@ -35,17 +39,21 @@ checkable table declaration. It reads SQL without executing it.
   aliases that resolve to stored target columns. Supply the source declaration for computed grouping
   aliases. A source column with the same name makes the binding ambiguous. Nested queries, joins,
   wildcards, grouping expressions and ordinals require separate proof.
-- In an aggregate bundle, admit simple `CREATE DATABASE`, checked table declarations, supported
-  materialized-view declarations and direct inserts into declared nonaggregate tables. Schema or
-  session mutations, table functions, direct aggregate writes and other statement forms return
+- In an aggregate bundle, admit simple `CREATE DATABASE`, the two checked aggregate engines,
+  local `MergeTree` tables, supported materialized views and direct inserts into declared local
+  `MergeTree` targets. Other declared engines may forward writes and need separate proof.
+  Schema or session mutations, `PARALLEL WITH`, table functions and direct aggregate writes return
   CH011. Review the actual SQL and its effects before accepting proof outside this subset.
 - Supply a read as one `SELECT` from the named target, with `WHERE` or `PREWHERE`. Each supported
   predicate compares a bare target column to a string, number or `{name:Type}` parameter with a
   bare type name such as `UInt32`. Compound types such as `DateTime64(3)` and `Identifier` are
   outside the admitted grammar. Join the predicates with `AND`. Use equality for every index member before the last, and equality or a
   one-sided range comparison for the last. One statement must qualify on its own. The checker
-  reports its file and line. An alias can shadow a target column anywhere in the SELECT.
-  Disjunctions, such aliases, nested queries and joins cannot prove the prefix.
+  reports its file and line. Use `*`, bare column names or explicit `AS` outputs over atoms or
+  a single function call over atoms. Atoms are bare names or the literals and parameters above.
+  Trailing GROUP BY and ORDER BY may name columns, with optional ASC or DESC in ORDER BY.
+  LIMIT may contain one non-negative integer. Implicit aliases, unrecognized identifier quoting
+  or escapes, target-column aliases anywhere, disjunctions, nested queries and joins refuse proof.
 
 The checker cannot discover missing SQL, validate general ClickHouse syntax or establish effective
 permissions, deployment equivalence, pruning or merge behavior. It refuses unsupported proof
@@ -63,7 +71,7 @@ settings, use the CREATE-time guard guidance in `20-table-design.md` section 6.
 | Change | Minimum proof | Evidence to paste |
 | --- | --- | --- |
 | adding or retyping a column on a table an ingest path writes | a row sent through the real ingest path arrives with the value populated, **and** a payload in the previous shape still inserts without error | the two `SELECT` results, before and after |
-| changing `ORDER BY`, `PARTITION BY`, or a sort-key column's type | this cannot be done in place: create the new table, backfill one full partition, and prove per-key parity. Use pre-aggregation inputs if the previous key lost dimensions | row counts and a grouped aggregate from both tables, plus `read_rows` for the target query on each |
+| changing `ORDER BY`, `PARTITION BY`, or a sort-key column's type | for changes requiring replacement, create the new table, backfill one full partition, and prove per-key parity. Use pre-aggregation inputs if the previous key lost dimensions. Metadata-only `MODIFY ORDER BY` supports a narrow new-column case and leaves the primary key unchanged. Verify the [official limits](https://clickhouse.com/docs/reference/statements/alter/order-by). | row counts and a grouped aggregate from both tables, plus `read_rows` for the target query on each |
 | a new materialized view or rollup | backfill exactly one partition, compare its aggregates to the same aggregate computed from the source, then insert one new batch and show it lands in both | the two aggregate results and the post-insert delta |
 | a query rewrite for performance | same result set, and lower `read_rows` and `read_bytes` for the same predicates and window | the two `system.query_log` rows |
 | an engine change to a deduplicating or collapsing engine | a fixture containing a known duplicate or a known cancelling pair, read both with and without `FINAL` | both result sets |

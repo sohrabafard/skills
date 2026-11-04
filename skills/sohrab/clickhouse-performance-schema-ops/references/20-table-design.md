@@ -84,7 +84,8 @@ indexes the entire sort key. Choose index columns in this order:
 4. A tie-breaker only when the raw table needs it for its merge or deduplication semantics.
 
 Use five index columns or fewer by default. Justify each additional index column with a real
-query that constrains it and every preceding index column. An identifier tail can only tie-break
+query that constrains it and every preceding index column. Use that workload evidence in design
+review. It does not clear CH006 or raise the checker's five-column limit. An identifier tail can only tie-break
 when the query leaves earlier columns unconstrained. Keep merge dimensions even when they do
 not earn sparse-index space.
 

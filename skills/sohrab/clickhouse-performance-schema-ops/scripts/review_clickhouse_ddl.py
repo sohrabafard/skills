@@ -249,7 +249,7 @@ class Table(object):
         self.name = name
         self.offset = offset
         self.columns = []          # list of (name, type_text, offset)
-        self.engine = ""
+        self.engine = None
         self.engine_offset = offset
         self.partition_by = ""
         self.partition_offset = offset
@@ -267,9 +267,8 @@ class Table(object):
 
 
 CREATE_TABLE = re.compile(
-    r"\bCREATE\s+(?:OR\s+REPLACE\s+)?(?:TEMPORARY\s+)?TABLE\s+"
-    r"(?:IF\s+NOT\s+EXISTS\s+)?([`\"]?[A-Za-z_][A-Za-z_0-9]*[`\"]?"
-    r"(?:\s*\.\s*[`\"]?[A-Za-z_][A-Za-z_0-9]*[`\"]?)?)",
+    r"CREATE\s+(?:OR\s+REPLACE\s+)?(?:TEMPORARY\s+)?TABLE\s+"
+    rf"(?:IF\s+NOT\s+EXISTS\s+)?({NAME}(?:\s*\.\s*{NAME})?)(?=\s|\()",
     re.I,
 )
 
@@ -336,10 +335,22 @@ def tuple_elements(text):
     return [text] if text else []
 
 
+def engine_name(clause):
+    tokens = [match.group() for match in lex(clause)]
+    if tokens[:1] == ["="]:
+        tokens = tokens[1:]
+    if not tokens:
+        return None
+    name = token_name(tokens[0])
+    if not name or (len(tokens) > 1 and (tokens[1] != "(" or list(top_level(tokens)) != [0, 1])):
+        return None
+    return name.lower()
+
+
 def parse_clauses(table, tail, tail_base):
     engine, at = clause_text(tail, "ENGINE")
     if engine is not None:
-        table.engine = engine.lstrip("=").strip()
+        table.engine = engine_name(engine)
         table.engine_offset = tail_base + at
     partition, at = clause_text(tail, "PARTITION BY")
     if partition is not None:
@@ -552,8 +563,7 @@ class Statement:
 
 
 def aggregate_engine(table):
-    engine = re.match(r"[A-Za-z_][A-Za-z_0-9]*", table.engine)
-    return engine is not None and engine.group().lower() in AGGREGATE_ENGINES
+    return table.engine in AGGREGATE_ENGINES
 
 
 def select_shape(tokens):
@@ -593,8 +603,15 @@ def projections(items, allow_star=False):
 
 
 def alias_names(tokens):
-    return {token_name(name) for keyword, name in zip(tokens, tokens[1:])
-            if keyword.upper() == "AS"}
+    aliases = set()
+    for index, keyword in enumerate(tokens):
+        if keyword.upper() != "AS":
+            continue
+        name = token_name(tokens[index + 1]) if index + 1 < len(tokens) else None
+        if name is None:
+            raise ProofError("unsupported alias or AS binding")
+        aliases.add(name)
+    return aliases
 
 
 def clause_positions(tokens, keywords):
@@ -659,6 +676,34 @@ def predicate_operand(tokens):
             and token_name(tokens[3]) == tokens[3] and tokens[3].upper() != "IDENTIFIER")
 
 
+def read_atom(tokens):
+    return (len(tokens) == 1 and token_name(tokens[0]) is not None) or predicate_operand(tokens)
+
+
+def read_projection(tokens):
+    """Admit atoms and one function call over atoms without hidden aliases."""
+    if read_atom(tokens):
+        return True
+    if (len(tokens) < 3 or not token_name(tokens[0]) or tokens[1] != "("
+            or list(top_level(tokens)) != [0, 1]):
+        return False
+    arguments = tokens[2:-1]
+    return not arguments or all(read_atom(arg) for arg in split_tokens(arguments, ","))
+
+
+def read_tail_clause(label, body):
+    if label == ("LIMIT",):
+        return len(body) == 1 and body[0].isascii() and body[0].isdecimal()
+    if label not in {("GROUP", "BY"), ("ORDER", "BY")}:
+        return False
+    for item in split_tokens(body, ","):
+        if label == ("ORDER", "BY") and len(item) == 2 and item[1].upper() in {"ASC", "DESC"}:
+            item = item[:1]
+        if len(item) != 1 or not token_name(item[0]):
+            return False
+    return True
+
+
 def read_predicates(statement, tables):
     items, target, tail = select_shape(statement.tokens)
     if target not in tables:
@@ -674,10 +719,12 @@ def read_predicates(statement, tables):
         raise ProofError("expected PREWHERE or WHERE on the named read target")
 
     columns = tables[target]
-    projections(items, allow_star=True)
+    outputs = projections(items, allow_star=True)
     shadowed = alias_names(statement.tokens).intersection(columns)
     if shadowed:
         raise ProofError("read alias can shadow target column '{0}'".format(sorted(shadowed)[0]))
+    if not all(read_projection(expression) for expression in outputs.values()):
+        raise ProofError("unsupported read projection or implicit alias")
 
     equality = set()
     constrained = set()
@@ -687,6 +734,8 @@ def read_predicates(statement, tables):
         if not body:
             raise ProofError("empty read clause")
         if label not in {("PREWHERE",), ("WHERE",)}:
+            if not read_tail_clause(label, body):
+                raise ProofError("unsupported trailing read clause or implicit alias")
             continue
         for term in split_tokens(body, "AND"):
             name = token_name(term[0]) if term else None
@@ -704,8 +753,21 @@ MV_START = re.compile(r"^CREATE(?: OR REPLACE)? MATERIALIZED VIEW(?: IF NOT EXIS
 INSERT_START = re.compile(r"^INSERT INTO(?: TABLE)?\b")
 
 
-def collect_writers(statements, declared, aggregates, tables, problems):
+def register_object(name, names, qualified_basenames):
+    if name in names:
+        raise ProofError("duplicate table or view declaration '{0}'".format(name))
+    _, qualified, basename = name.rpartition(".")
+    if (qualified and basename in names) or (not qualified and basename in qualified_basenames):
+        raise ProofError("ambiguous qualification of table or view '{0}'".format(name))
+    names.add(name)
+    if qualified:
+        qualified_basenames.add(basename)
+
+
+def collect_writers(statements, declared, aggregates, local_raw_tables, tables, problems):
     writers = {name: [] for name in aggregates}
+    object_names = set(tables)
+    qualified_basenames = {name.rpartition(".")[2] for name in tables if "." in name}
     for statement in statements:
         tokens = statement.tokens
         head = " ".join(token.upper() for token in tokens[:9])
@@ -713,7 +775,8 @@ def collect_writers(statements, declared, aggregates, tables, problems):
         insert = INSERT_START.match(head)
         try:
             if mv:
-                _, end = qualified_name(tokens, len(mv.group().split()))
+                name, end = qualified_name(tokens, len(mv.group().split()))
+                register_object(name, object_names, qualified_basenames)
                 clauses = clause_positions(tokens[end:], [("TO",), ("AS", "SELECT")])
                 if not clauses or clauses[0][1] != ("TO",):
                     if aggregates or any(token.lower() in AGGREGATE_ENGINES for token in tokens[end:]):
@@ -736,13 +799,15 @@ def collect_writers(statements, declared, aggregates, tables, problems):
                     raise ProofError("unsupported direct write or alteration of '{0}'".format(target))
                 if target not in tables:
                     raise ProofError("INSERT target '{0}' is unresolved".format(target))
+                if target not in local_raw_tables:
+                    raise ProofError("INSERT route to '{0}' is not proved non-forwarding".format(target))
             elif aggregates:
                 if head.startswith("CREATE DATABASE "):
                     continue
                 if statement in declared and not head.startswith(("CREATE OR REPLACE ", "CREATE TEMPORARY ")):
                     continue
                 raise ProofError("unsupported statement in aggregate bundle")
-            elif (statement not in declared and head.startswith("CREATE ")
+            elif (statement not in declared and head.startswith(("CREATE ", "REPLACE ", "ATTACH "))
                   and (any(token.lower() in AGGREGATE_ENGINES for token in tokens)
                        or any(first.upper() == "MATERIALIZED" and second.upper() == "VIEW"
                               for first, second in zip(tokens, tokens[1:])))):
@@ -878,6 +943,8 @@ def main(argv):
     all_findings = []
     problems = []
     tables = {}
+    object_names = set()
+    qualified_basenames = set()
     table_entries = []
     statements = []
     read_statements = []
@@ -896,13 +963,19 @@ def main(argv):
                 if error:
                     problems.append((statement, error))
                     continue
-                collection.append(statement)
+                upper = [token.upper() for token in tokens]
+                if any(first == "PARALLEL" and second == "WITH"
+                       for first, second in zip(upper, upper[1:])):
+                    problems.append((statement, "unsupported PARALLEL WITH compound statement"))
+                    continue
                 if collection is read_statements:
+                    collection.append(statement)
                     continue
                 sql_part = sql[start:end]
                 cleaned = scrub(sql_part)
                 create_head = " ".join(token.upper() for token in tokens[:5])
                 if not re.match(r"^CREATE(?: OR REPLACE)?(?: TEMPORARY)? TABLE\b", create_head):
+                    collection.append(statement)
                     continue
                 try:
                     parsed = parse_tables(cleaned)
@@ -911,13 +984,18 @@ def main(argv):
                 except ProofError as exc:
                     problems.append((statement, str(exc)))
                     continue
+                collection.append(statement)
                 table = parsed[0]
                 table_entries.append((statement, table, sql_part))
                 for offset in table.unsupported_columns:
                     problems.append((Statement(path, sql, start + offset, []),
                                      "{0}: unsupported column declaration".format(table.name)))
-                if table.name in tables:
-                    problems.append((statement, "duplicate table declaration '{0}'".format(table.name)))
+                if table.engine is None:
+                    problems.append((statement, "{0}: unsupported or missing ENGINE declaration".format(table.name)))
+                try:
+                    register_object(table.name, object_names, qualified_basenames)
+                except ProofError as exc:
+                    problems.append((statement, str(exc)))
                 tables[table.name] = set(table.column_names())
             if collection is read_statements and not has_statement:
                 problems.append((Statement(path, sql, 0, []), "no read query found"))
@@ -925,8 +1003,14 @@ def main(argv):
     if not table_entries:
         problems.append((Statement(args.paths[0], "", 0, []), "no table declaration was checked"))
     aggregates = {table.name for _, table, _ in table_entries if aggregate_engine(table)}
+    local_raw_tables = {table.name for _, table, _ in table_entries if table.engine == "mergetree"}
+    if aggregates:
+        for statement, table, _ in table_entries:
+            if table.engine and not aggregate_engine(table) and table.name not in local_raw_tables:
+                problems.append((statement, "{0}: engine is not admitted in an aggregate bundle"
+                                 .format(table.name)))
     declared = {statement for statement, _, _ in table_entries}
-    writers = collect_writers(statements, declared, aggregates, tables, problems)
+    writers = collect_writers(statements, declared, aggregates, local_raw_tables, tables, problems)
     queries = {name: [] for name in aggregates}
     for statement in read_statements:
         try:
