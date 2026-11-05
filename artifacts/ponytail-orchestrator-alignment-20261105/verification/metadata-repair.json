@@ -1,0 +1,51 @@
+{
+  "base": "284aeff4879c0975d0ce622ad5b08430efe52de8",
+  "scope": "Five packaging/index files; no runtime behavior added",
+  "observer": "parent after user requested no further review cycles",
+  "results": [
+    {
+      "command": [
+        "python3",
+        "-B",
+        "scripts/validate_sohrab_skill_pack.py"
+      ],
+      "cwd": ".",
+      "exit_code": 0,
+      "result": "PASS",
+      "log": "metadata-validate_sohrab_skill_pack.log"
+    },
+    {
+      "command": [
+        "python3",
+        "-B",
+        "scripts/check_skill_index.py"
+      ],
+      "cwd": ".",
+      "exit_code": 0,
+      "result": "PASS",
+      "log": "metadata-check_skill_index.log"
+    },
+    {
+      "command": [
+        "python3",
+        "-B",
+        "scripts/check_fleet_references.py"
+      ],
+      "cwd": ".",
+      "exit_code": 0,
+      "result": "PASS",
+      "log": "metadata-check_fleet_references.log"
+    },
+    {
+      "command": [
+        "python3",
+        "-B",
+        "scripts/check_lifecycle_contract.py"
+      ],
+      "cwd": ".",
+      "exit_code": 0,
+      "result": "PASS",
+      "log": "metadata-check_lifecycle_contract.log"
+    }
+  ]
+}

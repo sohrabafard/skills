@@ -37,7 +37,10 @@ No push, publication or remote synchronization was performed.
 
 The user subsequently authorized merging all local project branches into `main`
 with `--no-ff` and resolving conflicts according to the final decisions. Integration
-and final native gate results are recorded in the phase issue and final verification report.
+completed without conflicts in merge `284aeff4`; both working branches are contained in `main`.
+The [final collection](verification/final-gates.json) passed six checks and found two packaging/index gaps in the new skills.
+Required exclusion headings, Ponytail interface metadata and both index entries were completed.
+The [bounded metadata recheck](verification/metadata-repair.json) passed all four root gates; no further review cycle ran.
 
 Final curation admitted no additional memory: reusable behavior is maintained in the
 canonical sources. Hindsight recall was unavailable; current repository evidence was used.
