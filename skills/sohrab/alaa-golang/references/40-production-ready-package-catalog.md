@@ -64,17 +64,28 @@ thresholds belongs to `/alaa-reliability-sla`.
 
 ## PostgreSQL
 
-`github.com/jackc/pgx/v5` — **default** driver and pool, and what the kit's `pgkit` wraps.
+Two paths are supported: SQL-first with `pgx` and `goose`, or Ent ORM.
+Select from project instructions, the owner's decision, `go.mod`, and existing data access before choosing packages.
+The presence of `pgx` alone does not select SQL-first; Ent can also use that driver.
 
-`github.com/sqlc-dev/sqlc` — **default** when the service writes its own SQL and wants generated typed accessors.
+**Kit source and consumers:** use SQL-first through `pgkit` and goose SQL migrations.
+In the kit repository, `<repo>/docs/change-requests/2026-11-06-sql-first-pgx-goose-data-layer.md` owns this choice; verified 2026-11-06.
+It excludes ORMs and ORM-generated migration tooling until a newer explicit project-owner decision replaces it.
+Route a requested change through /alaa-go-chi-development; skill availability does not authorize adoption.
 
-`github.com/pressly/goose/v3` — **default** migration runner, and what the kit's migrate lane uses.
+**Outside the kit:** preserve the project's selected path. Load /alaa-ent-go-orm-db for existing Ent work or explicitly selected Ent adoption.
+Use /golang-database for SQL-first implementation. If the path is unresolved, obtain the owner's choice before adoption.
+An ordinary PostgreSQL query, index, or migration task does not select Ent or authorize switching paths.
 
-`atlas` — **conditional**, when schema drift detection and migration review are governance requirements rather than
-build steps. That choice belongs to `/alaa-data-layer`.
+For SQL-first:
 
-**Forbidden:** an ORM in a PostgreSQL service in this stack. **Rule:** use `pgx` with `sqlc`, or `pgx` with explicit
-repository code.
+- `github.com/jackc/pgx/v5` — driver and pool; the kit's `pgkit` wraps it.
+- `github.com/pressly/goose/v3` — migration runner; preserve the kit's migration lane when applicable.
+- `github.com/sqlc-dev/sqlc` — conditional typed accessors when the project selects SQL generation; explicit repository SQL needs none.
+
+For Ent, /alaa-ent-go-orm-db owns schemas, queries, generation, migrations, and driver integration.
+Use /alaa-data-layer for shared database policy on either path.
+Outside the kit, Atlas drift detection and migration review remain conditional on that owner's policy and project selection.
 
 ## Redis
 
@@ -207,7 +218,6 @@ steps. **Forbidden:** importing any of them from production code.
 
 | Instead of | Use |
 |---|---|
-| an ORM for PostgreSQL | `pgx` with `sqlc` or explicit repository code |
 | a third HTTP framework | the framework `30-http-api-framework-choice.md` selects |
 | a runtime DI container | constructors in the composition root |
 | a low-level data client chosen up front | the official higher-level client, until a profile says otherwise |

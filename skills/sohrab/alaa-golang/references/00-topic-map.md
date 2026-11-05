@@ -44,7 +44,7 @@ owns it — gives the test that decides whether this skill fills the gap itself.
 
 | You are about to… | Read / load |
 |---|---|
-| add a repository, a query, or a transaction boundary | `60-service-architecture-patterns.md`, then `/golang-database` |
+| choose SQL-first or Ent, adopt an ORM, or change a repository, query, transaction, or migration | `40-production-ready-package-catalog.md` section PostgreSQL selects the path and implementation owner; `60-service-architecture-patterns.md` owns repository boundaries |
 | read from or write to Redis | `61-redis-cache-layer.md` |
 | change a schema, a migration, a pooling lane, or tenant-scoped access | `/alaa-data-layer` |
 | choose or configure an S3 or MinIO client library | `/alaa-minio-object-storage` |

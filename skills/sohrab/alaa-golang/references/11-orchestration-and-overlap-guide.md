@@ -11,7 +11,7 @@ risks at the start of the task, not after something breaks.
 | The task is… | Primary | Also load |
 |---|---|---|
 | designing a new service or API | `/golang-design-patterns` | `/golang-project-layout`, `/golang-structs-interfaces`, `/golang-naming` |
-| implementing database-backed behaviour | `/golang-database` | `/golang-error-handling`, `/golang-security`, `/golang-testing` |
+| implementing database-backed behaviour | The implementation owner selected by `40-production-ready-package-catalog.md` section PostgreSQL | `/golang-error-handling`, `/golang-security`, `/golang-testing` |
 | adding a cache | `/golang-performance` | `/golang-concurrency`, `/golang-safety`, `/golang-testing` |
 | building gRPC | `/golang-grpc` | `/golang-testing`, `/golang-error-handling`, `/golang-observability` |
 | building GraphQL | `/golang-graphql` | `/golang-testing`, `/golang-error-handling`, `/golang-security` |
