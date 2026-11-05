@@ -152,19 +152,13 @@ def require_absent(destinations: list[str]) -> None:
         raise AssertionError(f"live installer destination exists: {destination}")
 
 
-def hostile_environment(
-    root: pathlib.Path, parent: dict[str, str]
-) -> tuple[dict[str, str], pathlib.Path]:
+def hostile_startup(root: pathlib.Path) -> tuple[dict[str, str], pathlib.Path]:
     marker = root / "unexpected-shell-startup"
     # Every hostile hook is benign even if it executes. It can only mark the fixture.
     mark = f'printf "%s\\n" hostile >> {shlex.quote(str(marker))}'
     startup = root / "bash-env"
     startup.write_text(mark + "\n", encoding="utf-8")
-    fake_bash = root / "bash"
-    fake_bash.write_text("#!/bin/sh\n" + mark + "\n", encoding="utf-8")
-    fake_bash.chmod(0o755)
-    hostile = dict(parent)
-    hostile.update(BASH_ENV=str(startup), PATH=str(root))
+    hostile = {"BASH_ENV": str(startup)}
     for name in ("mkdir", "ln"):
         hostile[f"BASH_FUNC_{name}%%"] = f"() {{ {mark}; }}"
     return hostile, marker
@@ -218,9 +212,12 @@ def main() -> None:
         )
 
         write_roots(fixture, "skills")
-        hostile, marker = hostile_environment(root, parent)
-        link_env = environment(hostile, wrappers, task_log)
+        hostile, marker = hostile_startup(root)
+        # Pass only benign fixture hooks to exercise Bash's startup defense.
+        link_env = {**plain_env, **hostile}
         stdout, stderr = run_pty(bash, fixture, link_env)
+        if marker.exists():
+            raise AssertionError("Bash executed a fixture startup hook or imported function")
         expected_calls = []
         for destination in destinations:
             expected_calls.extend((
@@ -233,8 +230,7 @@ def main() -> None:
             and "\x1b[1;34m[codex]" in stdout
             and "\x1b[1;35m[claude]" in stdout
             and not stderr
-            and calls == [os.fsencode(arg) for arg in expected_calls] + [b""]
-            and not marker.exists(),
+            and calls == [os.fsencode(arg) for arg in expected_calls] + [b""],
             "TTY LINK colors and exact intercepted arguments survive hostile shell startup inputs",
         )
         require_absent(destinations)
