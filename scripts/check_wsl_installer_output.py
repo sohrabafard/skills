@@ -44,6 +44,7 @@ def environment(wrappers: pathlib.Path, task_log: pathlib.Path) -> dict[str, str
     env = os.environ.copy()
     env["PATH"] = f"{wrappers}{os.pathsep}{env['PATH']}"
     env["TASK_LOG"] = str(task_log)
+    env["TERM"] = "xterm"
     env.pop("NO_COLOR", None)
     return env
 
@@ -122,7 +123,6 @@ def main() -> None:
         )
 
         link_env = environment(wrappers, task_log)
-        link_env["TERM"] = "xterm"
         linked_stdout, linked_stderr = run_pty(fixture, link_env)
         linked = linked_stdout + linked_stderr
         calls = task_log.read_text(encoding="utf-8").splitlines()
