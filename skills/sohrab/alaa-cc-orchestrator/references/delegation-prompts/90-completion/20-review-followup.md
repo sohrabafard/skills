@@ -2,10 +2,10 @@
 
 ## Fix-cycle dispatch
 
-Select the repair role through Failure routing in `routing-matrix.md`. For Ent-owned findings, use the Ent specialist dispatch contract from the common router in `implement` mode. Preserve the repair scope and focused retest limits below. If continuing a lane, apply the common envelope's Optional Ponytail binding route.
+Apply Gate economics in `verification-and-gates.md` to scope and serialize the repair batch. Select the role for this assignment through Failure routing in `routing-matrix.md`. For Ent-owned findings, use the Ent specialist dispatch contract from the common router in `implement` mode. Preserve the repair scope and focused retest limits below. If continuing a lane, apply the common envelope's Optional Ponytail binding route.
 
 ```xml
-<task>Resolve reviewer/specialist findings in original lane <n>.</task>
+<task>Resolve reviewer/specialist findings assigned to this repair scope.</task>
 <findings_verbatim><file:line, severity, failure, required fix></findings_verbatim>
 <role_selection><outcome/scope; settled and open decisions; failure/invariant reasoning; managed profile or admitted external role, selection reason and exceptional-admission evidence go once in `<task_controls>`></role_selection>
 <handoff><remaining work, surviving edits/checkpoint, evidence, and retired writer if reassigned; or none></handoff>

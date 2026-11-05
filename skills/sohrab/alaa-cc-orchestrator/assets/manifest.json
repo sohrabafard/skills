@@ -10,7 +10,7 @@
     {
       "name": "alaa-adversarial-reviewer",
       "file": "agents/alaa-adversarial-reviewer.md",
-      "sha256": "578a9b7c3766350a4284a1290e9e49f15280de069b31667ee4a04e967c448c9f"
+      "sha256": "32aed17ddc35641eebd87df9f432d975cfe883af9eeb7bbadd3a670490550807"
     },
     {
       "name": "alaa-api-contract-reviewer",

@@ -151,17 +151,17 @@ Trigger for CI/CD, Docker or container, package, lock, or version, configuration
 
 ### Adversarial reviewer — `alaa-adversarial-reviewer`
 
-Trigger only when the change is irreversible or has high blast radius — production data movement, auth or tenancy boundaries, a public contract break, deployment topology — or when `alaa-reviewer` and a specialist return conflicting verdicts that repository evidence does not settle.
+Trigger only when the change is irreversible or has high blast radius — production data movement, auth or tenancy boundaries, a public contract break, deployment topology — or when `alaa-reviewer` and a specialist return conflicting verdicts that repository evidence does not settle. Treat a substantive Ent review finding that contradicts correctness approval on the same candidate as a conflicting specialist judgment when repository evidence cannot settle it. A blocked or incomplete Ent status alone supplies no conflicting judgment.
 
 It runs after the reviewer and any specialist gates, against the same complete change, with a deliberately different lens: attack the design's assumptions, look for the failure the correctness review would not think to look for, and state the strongest reason not to ship. Its output is a report to the user, not another fix cycle. Routing its findings back into implementation restarts a loop that has no natural end, because a fresh adversarial pass always finds something.
 
-Never trigger it on a routine change. A second opinion on work that already passed its gates is cost without a decision attached.
+Skip this lens when neither trigger holds. A second opinion on work that already passed its gates is cost without a decision attached.
 
 ## Failure routing
 
 - Test failures, including clear single-owner failures: collect and route one combined batch through `verification-and-gates.md` Gate economics; never return each failure immediately to its original lane.
 - Ambiguous, cross-lane, flaky, timeout, environment, or contamination failure: `alaa-failure-analyst` first.
 - For every implementation fix, including security, migration, and architecture blockers, select the repair role for the remaining work through Ent specialist route for Ent-owned repairs or Implementation routing for other repairs. Preserve the finding verbatim.
-- Contract-compatibility blocker: route the fix through the owning implementer with the contract reviewer's finding verbatim.
+- Contract-compatibility blocker: send the contract reviewer's finding verbatim to the selected repair role.
 - Browser-only reproducible defect: browser QA provides evidence; the owning implementer fixes.
-- Test infrastructure defects retain explicit infrastructure scope inside the serialized batch fix assignment; the verifier never fixes. Environment actions require their existing authority.
+- Test infrastructure defects retain explicit infrastructure scope inside the serialized repair batch; the verifier never fixes. Environment actions require their existing authority.

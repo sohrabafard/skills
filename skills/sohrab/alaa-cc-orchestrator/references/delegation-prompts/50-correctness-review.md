@@ -26,9 +26,9 @@
 
 ```xml
 <task>Apply the adversarial lens to the complete change for: <goal>.</task>
-<trigger>The change is irreversible or has high blast radius — production data movement, auth or tenancy boundaries, a public contract break, deployment topology — or `alaa-reviewer` and a specialist returned conflicting verdicts that repository evidence does not settle.</trigger>
+<trigger><applicable adversarial trigger from routing-matrix.md and the evidence that meets it></trigger>
 <diff_scope><base/head or touched files></diff_scope>
-<prior_gates><reviewer and specialist verdicts and findings verbatim, including the unresolved conflict when that is the trigger></prior_gates>
+<prior_gates><verbatim correctness verdict and specialist reports, including the unresolved conflict when that is the trigger></prior_gates>
 <verification_evidence><integrated verifier results and what each command actually exercised></verification_evidence>
 <blast_radius><what is irreversible, who is affected, and the cost of undoing it></blast_radius>
 <stance>Fresh independent lens, read-only, no fixes. Do not re-run the correctness review or restate findings `alaa-reviewer` already raised.</stance>
