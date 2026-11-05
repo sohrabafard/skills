@@ -16,7 +16,9 @@
 
 When the current task invokes or retains active /alaa-ponytail, resolve its level and stop state from the skill before planning. Apply it within existing scope, authority, domain rules, required checks and review cadence.
 
-Map it only to work where the active mode applies. Pass the exact skill binding and resolved level in the dispatch only for child lanes explicitly assigned that mode. On resume or redispatch, recheck activation before using any recorded binding. A recorded binding alone cannot activate the mode.
+Map it only to work where the active mode applies. Pass the exact skill binding and resolved level in the dispatch only for child lanes explicitly assigned that mode. On resume, redispatch or continuation, recheck activation and level. A recorded binding alone cannot activate the mode.
+
+Before continuing a child, compare its prior Ponytail assignment with the current one. If its binding was removed, explicitly tell the child to stop applying the mode. For a new binding or changed level, send the exact current binding and level. The child applies the update before further work.
 
 ## Domain owners
 

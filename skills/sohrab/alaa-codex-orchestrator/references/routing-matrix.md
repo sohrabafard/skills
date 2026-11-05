@@ -172,7 +172,7 @@ Never trigger it on a routine change. A second opinion on work that already pass
 
 - Test failures, including clear single-owner failures: collect and route one combined batch through `verification-and-gates.md` Gate economics; never return each failure immediately to its original lane.
 - Ambiguous, cross-lane, flaky, timeout, environment, or contamination failure: `alaa-failure-analyst` first.
-- For every implementation fix, including security, migration, and architecture blockers, reapply Implementation routing above to the remaining work; preserve the finding verbatim.
+- For every implementation fix, including security, migration, and architecture blockers, select the repair role for the remaining work through Ent specialist route for Ent-owned repairs or Implementation routing for other repairs. Preserve the finding verbatim.
 - Contract-compatibility blocker: route the fix through the owning implementer with the contract reviewer's finding verbatim.
 - Browser-only reproducible defect: browser QA provides evidence; the owning implementer fixes.
 - Test infrastructure defects retain explicit infrastructure scope inside the serialized batch fix assignment; the verifier never fixes. Environment actions require their existing authority.

@@ -29,7 +29,7 @@ For Beads-bound dispatches, resolve `<beads_identity>` through `alaa-workflow re
 
 For the `<return>` shape, length bound and context rationale, read `alaa-low-noise references/workflow-integration.md` section `Delegated lanes`. Workflow owns persistence; `verification-and-gates.md` owns the inherited cadence carried in `<cadence>`.
 
-Before designing implementation or verification, include /alaa-testing-strategy in `<skills>` and load it; read its `references/100-test-execution.md` before planning or executing checks. Resolve `<skills>` through `alaa-workflow references/companion-routing.md`; copy the lane's resolved entries into the dispatch because a child cannot inherit the parent's context. For active Ponytail mode, apply that reference's Optional Ponytail binding.
+Before designing implementation or verification, include /alaa-testing-strategy in `<skills>` and load it; read its `references/100-test-execution.md` before planning or executing checks. Resolve `<skills>` through `alaa-workflow references/companion-routing.md`; copy the lane's resolved entries into the dispatch because a child cannot inherit the parent's context. Apply that reference's Optional Ponytail binding when a new or continued lane is or was assigned the mode.
 
 Every dispatch that can run long carries `<progress>` with the active host's reporting requirements. Do not infer a universal watchdog timeout or require narration between every command. Follow `SKILL.md` for interrupted-lane recovery.
 

@@ -50,7 +50,7 @@ Before designing implementation or verification, load /alaa-testing-strategy. Be
 
 Record the check list and evidence at the workflow-selected owner before dispatch. `alaa-verifier` collects missing or invalidated evidence when the planned checks require its authority. Review waits until required pre-review collection, batch repair and retests pass. The canonical minimal early-repair exception returns to collection without review.
 
-Assign the collected repair batch as one serialized implementation lane; reconcile conflicting writers through `alaa-workflow references/workspace-and-integration.md` before continuing. Continue the existing implementer whose valid assignment and context cover most failures through a host-supported continuation tool. Dispatch fresh only when continuation is unavailable, context is invalid, or `routing-matrix.md` selects another profile or task pair. The analyst diagnoses and never fixes. Independent verification owns required retests after batch repair; implementer evidence never replaces independent acceptance. Existing retry/stop budgets remain in force.
+Assign the collected repair batch as one serialized implementation lane; reconcile conflicting writers through `alaa-workflow references/workspace-and-integration.md` before continuing. Continue the existing implementer whose valid assignment and context cover most failures through a host-supported continuation tool. Dispatch fresh only when continuation is unavailable, context is invalid, or `routing-matrix.md` selects another managed profile, external role or task pair. The analyst diagnoses and never fixes. Independent verification owns required retests after batch repair; implementer evidence never replaces independent acceptance. Existing retry/stop budgets remain in force.
 
 Freeze the tested scope through `alaa-workflow references/workspace-and-integration.md` before verification. Evidence needs no commit; local checkpoints follow the commit protocol above and never discharge review.
 
@@ -109,6 +109,8 @@ Always first, never skipped, at any profile. Everything after it inherits its de
 5. Specialist blocker and major findings are gates equal to reviewer findings. Conflicting specialist opinions are reconciled by the lead using repository evidence; unresolved high-risk conflicts are surfaced to the user.
 6. Present every finding this phase leaves open — reported to the user rather than routed to a lane — as one decision set: each item with its severity per lens, the smallest fix that closes it, and what closing it costs. Ask once. Answered one at a time, each answer can move the tree again and invalidate affected final evidence, including any required exhaustive run.
 
+For required Ent review, interpret the native report under `alaa-ent-go-orm-db references/85-specialist-delegation.md`. `STATUS: COMPLETE` means the assessment finished. It grants no approval. A missing report, `STATUS: BLOCKED`, `STATUS: INCOMPLETE` or missing required evidence blocks acceptance even without findings. Triage findings at their reported severity and apply the specialist conflict route above.
+
 ## Stage E — Documentation and final validation
 
 1. Spawn `alaa-documenter` when its condition in `references/routing-matrix.md` holds. It is the final write lane, which is why every check below runs after it and not before.
@@ -138,7 +140,7 @@ When curation changes repository instructions, apply `alaa-workflow references/c
 
 - Findings are routed verbatim to the lane that owns the behavior.
 - Cross-cutting findings become a new serialized lane with an explicit scope.
-- Select the fix owner through Implementation routing in `references/routing-matrix.md`.
+- Select the fix owner through Failure routing in `references/routing-matrix.md`.
 - The reviewer/specialist never fixes its own finding.
 
 ## Maximum cycles
@@ -163,7 +165,7 @@ The orchestrator may report completion only when:
 - every acceptance criterion maps to evidence, each marked run, cited, or review-only with its review evidence; run or cited items carry their tier;
 - required final checks and proof levels passed on the final candidate, including a fresh exhaustive tier when required, with no unverified candidate changes afterward;
 - no mandatory command is failed, flaky, timed out, blocked, or contaminated;
-- reviewer and triggered specialist blockers/majors are resolved or explicitly accepted by the user;
+- required reviewer and specialist assessments are complete, and blockers/majors are resolved or explicitly accepted by the user;
 - final touched files match authorized scopes;
 - documentation ran or was explicitly skipped for a grounded reason;
 - the final reusable-context pass reported persisted, deferred, rejected, or no admitted candidates;

@@ -564,7 +564,7 @@ RUN_ECONOMY_REQUIREMENTS = {'gates': ('Draw the fewest lanes that keep write sco
            'Continue the existing implementer whose valid assignment and context cover most '
            'failures through a host-supported continuation tool',
            'Dispatch fresh only when continuation is unavailable, context is invalid',
-           'selects another profile or task pair',
+           'selects another managed profile, external role or task pair',
            'Independent verification owns required retests after batch repair'),
  'skill': ('mechanical-edit exception',
            'in files no active or pending lane owns',
@@ -572,8 +572,9 @@ RUN_ECONOMY_REQUIREMENTS = {'gates': ('Draw the fewest lanes that keep write sco
  'dispatch': ('proving command or selector -> expected result, or review-only: reason',
               'the child re-derives none of them'),
  'repair': ('as the continuation message rather than a new envelope',
-            'if Implementation routing changed the profile or task pair, dispatch fresh under Gate '
-            'economics instead'),
+            'apply the common envelope\'s Optional Ponytail binding route before continuing',
+            'If Failure routing selects another role, profile or task pair, dispatch fresh under Gate '
+            'economics'),
  'verifier_agent': ('cases selected/passed/failed/skipped/not run (n/a without a test selector)',
                     'the selected-case list or its report path',
                     'first causal error with file:line',
