@@ -577,7 +577,7 @@ RUN_ECONOMY_REQUIREMENTS = {'gates': ('Draw the fewest lanes that keep write sco
  'dispatch': ('proving command or selector -> expected result, or review-only: reason',
               'the child re-derives none of them'),
  'repair': ('as the continuation message rather than a new envelope',
-            'apply the common envelope\'s Optional Ponytail binding route before continuing',
+            'apply the common envelope\'s Mandatory Ponytail binding route before continuing',
             'If Failure routing selects another role, profile or task pair, dispatch fresh under Gate '
             'economics'),
  'verifier_agent': ('cases selected/passed/failed/skipped/not run (n/a without a test selector)',

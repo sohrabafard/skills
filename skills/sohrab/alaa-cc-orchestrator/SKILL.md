@@ -15,7 +15,7 @@ Before role inspection or planning, route a single bounded edit whose correctnes
 
 ## Plan and allocation
 
-Before planning with active Ponytail mode, apply Optional Ponytail binding in `alaa-workflow references/companion-routing.md`. Apply `references/routing-matrix.md` Planning profile selection and All-role task allocation before planning. Finalize and consolidate tasks and dependencies. Then allocate the batch once, record each managed profile or admitted external role and its selection reason in the plan, and dispatch. Planning effort never sets worker effort. Worker selection alone needs no planner dispatch.
+Before planning, apply Mandatory Ponytail binding in `alaa-workflow references/companion-routing.md`, including its user opt-out. Apply `references/routing-matrix.md` Planning profile selection and All-role task allocation before planning. Finalize and consolidate tasks and dependencies. Then allocate the batch once, record each managed profile or admitted external role and its selection reason in the plan, and dispatch. Planning effort never sets worker effort. Worker selection alone needs no planner dispatch.
 
 ## When NOT to use
 

@@ -13,7 +13,7 @@ Plan before every implementation. Make long work resumable without imposing orch
 2. If a plan already exists, read it before execution, resume, delegation, review, or handoff. Follow the resume protocol in `references/context-continuity.md`.
 3. When `/alaa-memory-os` says its trigger holds, invoke it before planning from prior context or publishing durable knowledge. Memory may contribute verified leads. It never owns this workflow's plan, checkpoint, evidence, or handoff.
 4. Before the first non-trivial repository discovery or code-evidence choice, invoke `/alaa-code-intelligence-routing` once. Reuse its routed result instead of retrieving the same fact through a second surface.
-5. Before planning with active Ponytail mode, apply Optional Ponytail binding in `references/companion-routing.md`. Pair with `/alaa-low-noise` and the narrowest domain skill needed for technical decisions. Before designing implementation or verification, load `/alaa-testing-strategy`.
+5. Before planning, apply Mandatory Ponytail binding in `references/companion-routing.md`, including its user opt-out. Pair with `/alaa-low-noise` and the narrowest domain skill needed for technical decisions. Before designing implementation or verification, load `/alaa-testing-strategy`.
 6. Before writing, resolve plan kind, approval and artifact/profile admission through `references/artifact-lifecycle.md`. Resolve Beads availability, execution task authority and evidence through `references/task-tracking.md`. Resolve exact skill bindings through `references/companion-routing.md`.
 
 ## Select the planning route
@@ -88,4 +88,4 @@ This skill owns coordination and continuity, not architecture, security, data, r
 | Reach an execution phase or decision boundary with a curation signal, or prepare execution completion | `references/context-curation.md` |
 | Generate a prompt pack, or resolve a runtime, model, or effort value for one | `references/phase-prompts.md` |
 | Review a diff, plan, or artifact instead of executing one | `references/review-mode.md` |
-| Bind active Ponytail mode, or take a companion-owned decision about architecture, security, data, testing depth, frontend, infrastructure, or documentation | `references/companion-routing.md` |
+| Resolve required Ponytail mode or a user opt-out, or take a companion-owned decision about architecture, security, data, testing depth, frontend, infrastructure, or documentation | `references/companion-routing.md` |

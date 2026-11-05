@@ -122,7 +122,7 @@ Every folder in this directory appears exactly once between the markers below, a
 - `alaa-keyset-pagination` — cursor/keyset pagination design: deterministic ordering, matching index, cursor integrity and context binding, limits, and the offset exception.
 - `alaa-input-normalization` — folding Persian, Arabic and every other non-ASCII decimal digit to ASCII at both input boundaries, under one contract with four implementations and a conformance harness.
 - `alaa-prompting-guide` — the sole owner of model, effort, and runtime-capability policy: writing, reviewing, repairing, and compressing prompts, skills, subagent definitions, and `AGENTS.md`/`CLAUDE.md` files. Its structured policy is the source for checked executable pins; it also owns the behavior-preserving compression contract and the `alaa-rule-writer` wording specialist.
-- `alaa-ponytail` — optional smallest-complete-change mode with lite, full and ultra levels; preserves project constraints and required proof.
+- `alaa-ponytail` — smallest-complete-change mode with lite, full and ultra levels; preserves project constraints and required proof.
 - `alaa-low-noise` — context economy and output discipline for non-trivial agent work in Claude Code and Codex: bounding what enters the context window and what gets printed during broad discovery, large diffs, long logs, or delegated subagent lanes.
 - `alaa-workflow` — plan-first coordination for multi-phase, resumable, delegated, or handoff-sensitive repository work: Beads-native plans when Beads is available, retained Markdown plans for existing consumers and unavailable-Beads fallback, and exact phase/task skill and resume routing.
 

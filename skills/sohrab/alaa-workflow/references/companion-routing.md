@@ -12,13 +12,13 @@
 - Which surface answers a phase's code question — a code graph, a semantic language server, a framework MCP, or plain read and search — and which of those a delegated lane may be granted: `/alaa-code-intelligence-routing`. Invoke it before the first non-trivial code-evidence choice and consume that result instead of retrieving the same fact twice. Record what a lane established as a confirmed fact in the handoff package, with the owner that established it, so the next phase consumes it instead of re-running the query.
 - Codex runtime and harness failures inside WSL/Linux: `/alaa-codex-runtime-ops`. Codex-only, with no Claude Code equivalent.
 
-## Optional Ponytail binding
+## Mandatory Ponytail binding
 
-When the current task invokes or retains active /alaa-ponytail, resolve its level and stop state from the skill before planning. Apply it within existing scope, authority, domain rules, required checks and review cadence.
+Use /alaa-ponytail for every workflow or orchestrator task unless the user explicitly opts out. Load it before planning; resolve its level from the skill and any user selection. Apply it within existing scope, authority, domain rules, required checks and review cadence.
 
-Map it only to work where the active mode applies. Pass the exact skill binding and resolved level in the dispatch only for child lanes explicitly assigned that mode. On resume, redispatch or continuation, recheck activation and level. A recorded binding alone cannot activate the mode.
+Bind every child lane explicitly, including external specialists; pass the exact skill binding and resolved level. When the user opts out, pass that exception and its scope instead. On resume, redispatch or continuation, recheck the user's opt-out and level. Preserve the opt-out within its stated scope until the user changes it; a recorded binding cannot override it.
 
-Before continuing a child, compare its prior Ponytail assignment with the current one. If its binding was removed, explicitly tell the child to stop applying the mode. For a new binding or changed level, send the exact current binding and level. The child applies the update before further work.
+Before continuing a child, compare its prior Ponytail assignment with the current one. If the user opted out, explicitly tell the child to stop applying the mode. For a new binding or changed level, send the exact current binding and level. The child applies the update before further work.
 
 ## Domain owners
 
