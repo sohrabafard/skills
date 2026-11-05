@@ -29,9 +29,10 @@ Do not require a subagent, prompt pack, checkpoint, or JSON state for an ordinar
 
 ## Finding triage
 
+Finish the whole review or verification pass before any fix. Record each finding when found in the selected task store under `references/task-tracking.md`, on the reviewed issue or as its own `discovered-from` issue when deferred, and continue. A read-only lane returns its findings and its parent records them. Only the early-repair obstruction in /alaa-testing-strategy `references/100-test-execution.md` permits an earlier fix.
+
 Collect every finding a review returns, from the reviewer and each specialist, into one list before routing any fix. Critical/blocker and high/major findings block; medium/minor and low/nit findings defer.
 
 - Adversarially verify each medium-or-higher finding before it enters the list: try to refute it from current code, tests and evidence; drop a refuted finding and record its refutation. A low finding enters without a separate verification agent.
-- Fix blocking findings and retest before the boundary accepts or integrates the change.
-- Record deferred findings in the selected task store under `references/task-tracking.md`. At the engagement's final boundary, fix the in-scope low-risk ones together in one consolidated fix pass, followed by one consolidated verification run; report the rest to the user as one decision set.
-- Never start a review round only to re-check low-finding fixes.
+- Fix the blocking findings together in one fix pass and retest before the boundary accepts or integrates the change. At the engagement's final boundary, that same pass and its one consolidated verification run also take the in-scope low-risk deferred findings; report the rest to the user as one decision set.
+- Confirm a fix pass with retests; never start a review round to re-check fixes. A blocking finding the retests show still open, or a new defect they expose, enters one more pass within the caller's cycle limit.
