@@ -1,0 +1,4 @@
+interface:
+  display_name: "Alaa Ponytail"
+  short_description: "Make the smallest complete change with required proof"
+  default_prompt: "Use $alaa-ponytail at the requested level to make the smallest complete change while preserving project constraints and required proof."

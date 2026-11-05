@@ -7,6 +7,10 @@ description: "Ent ORM and PostgreSQL engineering: install or adopt Ent, replace 
 
 Deliver Ent data access, PostgreSQL invariants, and query improvements with task-appropriate evidence.
 
+## When NOT to use
+
+For unrelated Go work, infrastructure operations, or other ORMs, use the relevant domain owner.
+
 ## Authority and execution
 
 Preserve data, behavior, tenant boundaries, public contracts, and unrelated changes unless explicitly requested otherwise.

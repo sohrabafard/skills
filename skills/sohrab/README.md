@@ -122,6 +122,7 @@ Every folder in this directory appears exactly once between the markers below, a
 - `alaa-keyset-pagination` — cursor/keyset pagination design: deterministic ordering, matching index, cursor integrity and context binding, limits, and the offset exception.
 - `alaa-input-normalization` — folding Persian, Arabic and every other non-ASCII decimal digit to ASCII at both input boundaries, under one contract with four implementations and a conformance harness.
 - `alaa-prompting-guide` — the sole owner of model, effort, and runtime-capability policy: writing, reviewing, repairing, and compressing prompts, skills, subagent definitions, and `AGENTS.md`/`CLAUDE.md` files. Its structured policy is the source for checked executable pins; it also owns the behavior-preserving compression contract and the `alaa-rule-writer` wording specialist.
+- `alaa-ponytail` — optional smallest-complete-change mode with lite, full and ultra levels; preserves project constraints and required proof.
 - `alaa-low-noise` — context economy and output discipline for non-trivial agent work in Claude Code and Codex: bounding what enters the context window and what gets printed during broad discovery, large diffs, long logs, or delegated subagent lanes.
 - `alaa-workflow` — plan-first coordination for multi-phase, resumable, delegated, or handoff-sensitive repository work: Beads-native plans when Beads is available, retained Markdown plans for existing consumers and unavailable-Beads fallback, and exact phase/task skill and resume routing.
 
@@ -157,6 +158,7 @@ The 46 `golang-*` skills these four route into are upstream subtrees under the r
 
 ### Data and storage
 
+- `alaa-ent-go-orm-db` — Ent ORM and PostgreSQL engineering, adoption, query and schema design, with an orchestrator-dispatched specialist.
 - `alaa-data-layer` — Postgres-truth data-layer policy for the Ala fleet: which store owns a fact, tenant-scoped schema/index design, migrations that never lock a live table, query/pool tuning, and Redis run as a cache the request survives losing.
 - `alaa-mongodb-patterns` — MongoDB mechanism for the Ala fleet: document/collection shape, tenant-scoped compound indexes, TTL and retention, idempotent upserts and bulk writes, read/write concern, and primary-election read behaviour.
 - `alaa-partitioned-table-fk-audit` — audits a PostgreSQL repository for foreign keys that reference a partitioned table through an incomplete key (SQLSTATE 42830), and ships a detector plus a durable regression test.

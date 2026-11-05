@@ -1,0 +1,175 @@
+{
+  "snapshot": "284aeff4879c0975d0ce622ad5b08430efe52de8",
+  "commands": [
+    {
+      "id": "validate-skill-pack",
+      "command": "python3 -B scripts/validate_sohrab_skill_pack.py",
+      "cwd": ".",
+      "portable_paths": "Repository-relative; root represented as .",
+      "started_at_utc": "2026-11-05T17:15:55+00:00",
+      "timeout_seconds": 120,
+      "duration_seconds": 0.128,
+      "exit_code": 1,
+      "classification": "PRODUCT-FAILURE",
+      "log": "artifacts/ponytail-orchestrator-alignment-20261105/verification/final-validate-skill-pack.log",
+      "tier": "final native gate collection",
+      "proof_level": "static proof",
+      "findings": [
+        {
+          "owner": "skills/sohrab/alaa-ent-go-orm-db/SKILL.md",
+          "finding": "missing a 'When not to use' or 'Do not use' section"
+        },
+        {
+          "owner": "skills/sohrab/alaa-ponytail/SKILL.md",
+          "finding": "missing a 'When not to use' or 'Do not use' section"
+        },
+        {
+          "owner": "skills/sohrab/alaa-ponytail/agents/openai.yaml",
+          "finding": "missing required Codex agent metadata"
+        }
+      ]
+    },
+    {
+      "id": "check-skill-index",
+      "command": "python3 -B scripts/check_skill_index.py",
+      "cwd": ".",
+      "portable_paths": "Repository-relative; root represented as .",
+      "started_at_utc": "2026-11-05T17:15:55+00:00",
+      "timeout_seconds": 120,
+      "duration_seconds": 0.057,
+      "exit_code": 1,
+      "classification": "PRODUCT-FAILURE",
+      "log": "artifacts/ponytail-orchestrator-alignment-20261105/verification/final-check-skill-index.log",
+      "tier": "final native gate collection",
+      "proof_level": "static proof",
+      "findings": [
+        {
+          "owner": "skills/sohrab/README.md",
+          "finding": "index omits alaa-ent-go-orm-db and alaa-ponytail"
+        },
+        {
+          "owner": "skills/sohrab/README.fa.md",
+          "finding": "index omits alaa-ent-go-orm-db and alaa-ponytail"
+        },
+        {
+          "owner": "skills/sohrab/alaa-ponytail/agents/openai.yaml",
+          "finding": "missing Codex metadata shape required by index baseline"
+        }
+      ]
+    },
+    {
+      "id": "check-fleet-references",
+      "command": "python3 -B scripts/check_fleet_references.py",
+      "cwd": ".",
+      "portable_paths": "Repository-relative; root represented as .",
+      "started_at_utc": "2026-11-05T17:15:55+00:00",
+      "timeout_seconds": 120,
+      "duration_seconds": 2.418,
+      "exit_code": 0,
+      "classification": "PASS",
+      "log": "artifacts/ponytail-orchestrator-alignment-20261105/verification/final-check-fleet-references.log",
+      "tier": "final native gate collection",
+      "proof_level": "static proof"
+    },
+    {
+      "id": "check-lifecycle-contract",
+      "command": "python3 -B scripts/check_lifecycle_contract.py",
+      "cwd": ".",
+      "portable_paths": "Repository-relative; root represented as .",
+      "started_at_utc": "2026-11-05T17:15:55+00:00",
+      "timeout_seconds": 120,
+      "duration_seconds": 0.326,
+      "exit_code": 0,
+      "classification": "PASS",
+      "log": "artifacts/ponytail-orchestrator-alignment-20261105/verification/final-check-lifecycle-contract.log",
+      "tier": "final native gate collection",
+      "proof_level": "static proof"
+    },
+    {
+      "id": "codex-validate-pack",
+      "command": "python3 -B skills/sohrab/alaa-codex-orchestrator/scripts/validate_pack.py",
+      "cwd": ".",
+      "portable_paths": "Repository-relative; root represented as .",
+      "started_at_utc": "2026-11-05T17:15:55+00:00",
+      "timeout_seconds": 120,
+      "duration_seconds": 0.228,
+      "exit_code": 0,
+      "classification": "PASS",
+      "log": "artifacts/ponytail-orchestrator-alignment-20261105/verification/final-codex-validate-pack.log",
+      "tier": "final native gate collection",
+      "proof_level": "static proof"
+    },
+    {
+      "id": "cc-validate-pack",
+      "command": "python3 -B skills/sohrab/alaa-cc-orchestrator/scripts/validate_pack.py",
+      "cwd": ".",
+      "portable_paths": "Repository-relative; root represented as .",
+      "started_at_utc": "2026-11-05T17:15:55+00:00",
+      "timeout_seconds": 120,
+      "duration_seconds": 0.287,
+      "exit_code": 0,
+      "classification": "PASS",
+      "log": "artifacts/ponytail-orchestrator-alignment-20261105/verification/final-cc-validate-pack.log",
+      "tier": "final native gate collection",
+      "proof_level": "static proof"
+    },
+    {
+      "id": "wsl-installer-harness",
+      "command": "python3 -B scripts/check_wsl_installer_output.py",
+      "cwd": ".",
+      "portable_paths": "Repository-relative; root represented as .",
+      "started_at_utc": "2026-11-05T17:15:55+00:00",
+      "timeout_seconds": 120,
+      "duration_seconds": 0.297,
+      "exit_code": 0,
+      "classification": "PASS",
+      "log": "artifacts/ponytail-orchestrator-alignment-20261105/verification/final-wsl-installer-harness.log",
+      "tier": "final native gate collection",
+      "proof_level": "static proof",
+      "expected_cases": 8,
+      "selected_cases": 8,
+      "executed_cases": 8,
+      "passed_cases": 8,
+      "failed_cases": 0,
+      "skipped_cases": 0,
+      "not_run_cases": 0,
+      "selected_case_list": [
+        "PASS redirected dry-run reports conflicts without ANSI or install commands",
+        "PASS stdout TTY colors WOULD-LINK and EXIST while redirected warnings stay plain",
+        "PASS stderr TTY colors conflict warnings while redirected statuses stay plain",
+        "PASS TTY LINK colors and exact intercepted arguments survive hostile shell startup inputs",
+        "PASS NO_COLOR disables ANSI on a TTY",
+        "PASS TERM=dumb disables ANSI on a TTY",
+        "PASS empty NO_COLOR follows documented non-empty disable semantics",
+        "PASS help documents NO_COLOR and invalid usage exits 2"
+      ]
+    },
+    {
+      "id": "diff-check",
+      "command": "git diff --check HEAD^1..HEAD",
+      "cwd": ".",
+      "portable_paths": "Repository-relative; root represented as .",
+      "started_at_utc": "2026-11-05T17:15:55+00:00",
+      "timeout_seconds": 120,
+      "duration_seconds": 0.021,
+      "exit_code": 0,
+      "classification": "PASS",
+      "log": "artifacts/ponytail-orchestrator-alignment-20261105/verification/final-diff-check.log",
+      "tier": "final native gate collection",
+      "proof_level": "static proof"
+    }
+  ],
+  "aggregate_coverage_note": "Codex/Claude render and grants are covered through their validate_pack gates and were not invoked separately.",
+  "summary": {
+    "passed_commands": 6,
+    "failed_commands": 2,
+    "unrun_commands": 0,
+    "harness_cases_selected": 8,
+    "harness_cases_passed": 8,
+    "harness_cases_failed": 0,
+    "harness_cases_skipped": 0,
+    "underlying_dispatched_checks": 15,
+    "classification": "final gate collection incomplete due two product findings; no retry authorized"
+  },
+  "finding_scope_note": "Both failures concern skill-pack/index requirements for the alaa-ent-go-orm-db and alaa-ponytail directories. They are not findings in the orchestrator contract, render/grant, installer, or lifecycle checks; the required metadata issue is specifically in the ponytail skill directory."
+}
