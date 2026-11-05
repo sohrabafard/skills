@@ -1,0 +1,4 @@
+interface:
+  display_name: "Alaa Ent Go ORM & PostgreSQL"
+  short_description: "Design Ent schemas, indexes, and lean PostgreSQL queries"
+  default_prompt: "Use $alaa-ent-go-orm-db to design or improve this Ent service, map every proposed index to its queries, and select only required columns."
