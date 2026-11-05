@@ -4,7 +4,7 @@ Spawn only agents that materially reduce uncertainty or enforce a required autho
 
 ## Always or normally required
 
-- Non-trivial repository change: select an implementation profile through Implementation routing below before dispatch.
+- Non-trivial repository change: select an implementation profile through Implementation routing below before dispatch, or use the Ent specialist route for Ent-owned work.
 - Required independent checks: `alaa-verifier`. `verification-and-gates.md` owns phase evidence, review and final gate cadence.
 - Ship-quality judgment at that boundary: `alaa-reviewer`.
 - Behavior, API, configuration, or operations changed: `alaa-documenter`, after review.
@@ -64,6 +64,10 @@ This orchestrator owns actual task complexity, priority, model and effort decisi
 4. For exceptional model selection on ANY role, require an exact canonical-owner-supported official-task/priority recommendation with remaining reasoning need and rejected cheaper/decomposed alternatives, applicable documented high-workhorse inadequacy after context/specification/tool correction and decomposition consideration, or explicit user selection. A repairable defect or imagined insufficiency is not model inadequacy. A model mention alone is no selection instruction.
 5. Record task, role/authority identity, scope/complexity, priority/reason, selected model AND effort, admission/evidence, runtime control surface, requested and effective configured controls, availability and unresolved limits in the existing workflow plan, or a compact dispatch when no durable plan is admitted. A bounded standalone delegation requires no full pipeline or new workflow artifacts solely for model selection. Preserve role tools, skills, verdicts and independent gates for every pair. Legacy model/effort-named IDs are compatibility identities; their names select neither control.
 6. Before EVERY dispatch, follow `model-effort-policy.md` to normalize any omitted field, validate the resulting pair and explicitly supply BOTH controls. Owner-normalized defaults are valid task selections; omissions alone do not block or degrade a lane. If the host cannot realize the selected pair, use only an exact verified available compatibility realization preserving authority; otherwise block that affected lane with evidence. No silent substitution, automatic installation or global configuration edit. Source changes do not reload installed or current-session roles. Unknown serving identity is a reporting limit, not evidence of a control mismatch or a reason for paid calibration.
+
+## Ent specialist route
+
+For Ent/PostgreSQL work owned by /alaa-ent-go-orm-db, select `alaa-ent-specialist` for the affected lane through the catalog's External companion admission. Resolve its lane mode through `alaa-ent-go-orm-db references/85-specialist-delegation.md`. A review lane is read-only and independent of the work it reviews. Preserve the inherited cadence and required correctness, verification and specialist gates.
 
 ## Implementation routing
 

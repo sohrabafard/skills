@@ -29,7 +29,7 @@ For Beads-bound dispatches, resolve `<beads_identity>` through `alaa-workflow re
 
 For the `<return>` shape, length bound and context rationale, read `alaa-low-noise references/workflow-integration.md` section `Delegated lanes`. Workflow owns persistence; `verification-and-gates.md` owns the inherited cadence carried in `<cadence>`.
 
-Before designing implementation or verification, include /alaa-testing-strategy in `<skills>` and load it; read its `references/100-test-execution.md` before planning or executing checks. Resolve `<skills>` through `alaa-workflow references/companion-routing.md`; copy the lane's resolved entries into the dispatch because a child cannot inherit the parent's context.
+Before designing implementation or verification, include /alaa-testing-strategy in `<skills>` and load it; read its `references/100-test-execution.md` before planning or executing checks. Resolve `<skills>` through `alaa-workflow references/companion-routing.md`; copy the lane's resolved entries into the dispatch because a child cannot inherit the parent's context. For active Ponytail mode, apply that reference's Optional Ponytail binding.
 
 Every dispatch that can run long carries `<progress>` with the active host's reporting requirements. Do not infer a universal watchdog timeout or require narration between every command. Follow `SKILL.md` for interrupted-lane recovery.
 
@@ -37,6 +37,7 @@ Every dispatch that can run long carries `<progress>` with the active host's rep
 
 Combine the common envelope with the smallest applicable complete template from the routed child.
 
+- When dispatching `alaa-ent-specialist`, use the mode-specific contract in `alaa-ent-go-orm-db references/85-specialist-delegation.md`.
 - When dispatching a planner variant, spec analyst, explorer, or researcher, read [Discovery and acceptance](./delegation-prompts/10-discovery.md) for acceptance, repository-mapping, or research template.
 - When dispatching a test strategist or architecture critic, read [Design and test strategy](./delegation-prompts/20-design.md) for matrix-design or architecture-review template.
 - When dispatching an implementation lane, read [Implementation](./delegation-prompts/30-implementation.md) for implementation lane or collected verification repair template.

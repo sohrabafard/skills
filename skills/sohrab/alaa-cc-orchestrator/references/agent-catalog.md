@@ -1,8 +1,8 @@
 # Agent Catalog
 
-The orchestrator leads the session; it is not a custom subagent. Installation requires explicit authorization. Role triggers and actual task model/effort allocation live in `routing-matrix.md`; /alaa-prompting-guide owns capabilities and runtime mechanics. All role definitions omit model and effort pins. Every role accepts explicit controls normalized through `model-effort-policy.md`, including its omission defaults. Legacy model/effort-named IDs retain workload and authority compatibility; their names select neither control.
+The orchestrator leads the session; it is not a custom subagent. Installation requires explicit authorization. Role triggers and actual task model/effort allocation live in `routing-matrix.md`; /alaa-prompting-guide owns capabilities and runtime mechanics. Managed role definitions omit model and effort pins. Apply explicit controls normalized through `model-effort-policy.md` to every role, including its omission defaults. Legacy model/effort-named IDs retain workload and authority compatibility; their names select neither control.
 
-The manifest lists the executable agents available in this source pack.
+The manifest lists the executable agents managed by this pack.
 
 ## Specification and evidence
 
@@ -57,9 +57,13 @@ The `Subject` column orients and decides nothing: it names what a gate is about 
 scanned, and it is deliberately shorter than the condition that fires the gate. `references/routing-matrix.md` owns every trigger, and a gate is fired from that file alone — a
 roster line read as a trigger under-fires, because the conditions it leaves out are still conditions.
 
+## External companion admission
+
+`alaa-ent-specialist` is an external catalog role owned by /alaa-ent-go-orm-db. For a triggered lane, verify the installed role, readable canonical sources and effective grants through `alaa-ent-go-orm-db references/90-surfaces.md`. Admit the role through this catalog and apply the delegated mode's authority. Validate both task controls against the canonical capability policy and actual host. Missing, stale or unreachable prerequisites block the affected lane. Pack manifests, installers and grant projections cover managed roles only.
+
 ## Code-intelligence scope
 
-Each agent file fixes which code-intelligence servers that role may reach, because a role that cannot
+Each managed agent file fixes which code-intelligence servers that role may reach, because a role that cannot
 ask a server's question gains nothing from holding it and pays for its tool descriptions in every
 dispatch. `/alaa-code-intelligence-routing` owns the grant classes and the named tool sets; `references/80-agent-scoping.md`
 inside that skill is the definition. This table is only the assignment.
@@ -107,7 +111,7 @@ nothing more: `mcp__hindsight__hindsight_search_knowledge_pages`,
 `mcp__hindsight__hindsight_read_knowledge_page`, `mcp__hindsight__hindsight_list_knowledge_pages`, and
 `mcp__hindsight__hindsight_reflect`. These are the roles whose question can be whether something already
 exists or who owns it, which `/alaa-memory-os` answers; reflect is in the set because knowledge-page
-search cannot reveal a topic that has no page. No role holds a retain, ingest, or capture tool — the implementation roles deny the
+search cannot reveal a topic that has no page. No managed role holds a retain, ingest, or capture tool — the implementation roles deny the
 whole server — because a memory write is the lead's decision under `/alaa-memory-os`. The set belongs to that skill's `hindsight`
 adapter: when its `ACTIVE_ADAPTER` changes, change this set and the grant checker together.
 
@@ -125,7 +129,7 @@ must name.
 The `Skill` tool covers everything a preload cannot know in advance. Which clean-code skill a lane
 needs depends on the repository's language and the surface the dispatch hands over, and the pack's
 rule is to name the one skill the lane needs rather than preload every candidate into every lane.
-Every general allowlisted role keeps `Skill` for that reason, and every implementation role inherits it.
+Every managed general allowlisted role keeps `Skill` for that reason, and every managed implementation role inherits it.
 
 Withholding `Skill` from the allowlists was tried and reverted. It narrows nothing on a role that
 already holds `Bash`, `Read`, `Write`, and `Edit`; it makes the dispatch's own `skills`

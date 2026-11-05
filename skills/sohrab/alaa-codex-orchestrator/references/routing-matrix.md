@@ -4,7 +4,7 @@ Spawn only agents that materially reduce uncertainty or enforce a required autho
 
 ## Always or normally required
 
-- Non-trivial repository change: select an implementation profile through Implementation routing below before dispatch.
+- Non-trivial repository change: select an implementation profile through Implementation routing below before dispatch, or use the Ent specialist route for Ent-owned work.
 - Required independent checks: `alaa-verifier`. `verification-and-gates.md` owns phase evidence, review and final gate cadence.
 - Ship-quality judgment at that boundary: `alaa-reviewer`.
 - Behavior, API, configuration, or operations changed: `alaa-documenter`, after review.
@@ -72,6 +72,10 @@ or scoped code fixes covered by the prompting guide's Terra workload guidance. R
 every bounded-suitability predicate above and an exact verified host model/effort pair.
 Compare eligible pairs through the same allocation procedure. Apply existing tool and
 delegation authority at every effort, including `ultra`.
+
+## Ent specialist route
+
+For Ent/PostgreSQL work owned by /alaa-ent-go-orm-db, select `alaa-ent-specialist` for the affected lane through the catalog's External companion admission. Resolve its lane mode through `alaa-ent-go-orm-db references/85-specialist-delegation.md`. A review lane is read-only and independent of the work it reviews. Preserve the inherited cadence and required correctness, verification and specialist gates.
 
 ## Implementation routing
 

@@ -88,4 +88,4 @@ This skill owns coordination and continuity, not architecture, security, data, r
 | Reach an execution phase or decision boundary with a curation signal, or prepare execution completion | `references/context-curation.md` |
 | Generate a prompt pack, or resolve a runtime, model, or effort value for one | `references/phase-prompts.md` |
 | Review a diff, plan, or artifact instead of executing one | `references/review-mode.md` |
-| Take a technical decision this skill does not own — architecture, security, data, testing depth, frontend, infrastructure, or documentation | `references/companion-routing.md` |
+| Bind active Ponytail mode, or take a companion-owned decision about architecture, security, data, testing depth, frontend, infrastructure, or documentation | `references/companion-routing.md` |

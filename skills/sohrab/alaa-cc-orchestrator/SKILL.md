@@ -15,7 +15,7 @@ Before role inspection or planning, route a single bounded edit whose correctnes
 
 ## Plan and allocation
 
-Apply `references/routing-matrix.md` Planning profile selection and All-role task allocation before planning. Finalize and consolidate tasks and dependencies. Then allocate the batch once, record each registered profile and reason in the plan, and dispatch. Planning effort never sets worker effort. Worker selection alone needs no planner dispatch.
+Apply `references/routing-matrix.md` Planning profile selection and All-role task allocation before planning. Finalize and consolidate tasks and dependencies. Then allocate the batch once, record each managed profile or admitted external role and its selection reason in the plan, and dispatch. Planning effort never sets worker effort. Worker selection alone needs no planner dispatch.
 
 ## When NOT to use
 
@@ -28,7 +28,7 @@ Apply `references/routing-matrix.md` Planning profile selection and All-role tas
 
 The separately available companion /alaa-testing-strategy is required for test design, test execution, and legacy runner forwarding. If it is unavailable, report the missing owner and block dependent work. Never auto-install it.
 
-Activation grants no installation or update authority. Inspect installed definitions, version and effective tools without writes. Compare required roles with shipped definitions. Report missing, stale or unavailable roles before dispatch. Never silently substitute a model or a generic role. Continue only independent work with available required roles. Report the rest as blocked.
+Activation grants no installation or update authority. Inspect installed definitions, version and effective tools without writes. Compare required managed roles with shipped definitions. For a required external companion, apply its admission in `references/agent-catalog.md`. Report missing, stale or unavailable roles before dispatch. Never silently substitute a model or a generic role. Continue only independent work with available required roles. Report the rest as blocked.
 
 Install or update only with explicit user authorization for the target paths. Validate model-neutral source roles, grants, and generated artifacts before the first target write. Run `python3 scripts/validate_pack.py` and `python3 scripts/check_agent_grants.py` before an authorized copy of the managed agent files. Do not change unrelated agents or settings.
 
