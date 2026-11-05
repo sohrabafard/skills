@@ -1,6 +1,6 @@
 ---
 name: alaa-services-contract
-description: "Normative shared-surface contract for Ala backend services and `@alaa/*` packages: response/error envelopes, health/readiness, trusted gateway headers, public IDs, event/code names, permission catalogs, broker/metric registries, deadlines, runtime and CI baseline, delivery-artifact ownership. Use when a change must look identical across the fleet, before creating a shared Ala image, chart, CI include, or generator, for Ala Runner, executor, job image, ci-image tools, CI Docker daemon, manual image release, or when touching @alaa/sdk, Page Kit, UI Kit, app-shell, widgets. Not for single-service feature work changing no shared surface. Route Docker, Kubernetes, HAProxy, Laravel, Go to /alaa-docker-production, /alaa-k8s-helm, /alaa-haproxy, /alaa-laravel-architecture, /alaa-golang; observability gates to /alaa-observability-soc; reliability doctrine to /alaa-reliability-sla; security verdicts to /alaa-security-review; UI design to /alaa-frontend-developer."
+description: "Normative contract for Ala backends and `@alaa/*`: response/error envelopes, health/readiness, trusted gateway headers, public IDs, event/code names, permission catalogs, broker/metric registries, deadlines, runtime/CI baseline, delivery-artifact ownership. Use when changes must match fleet-wide; before shared Ala image/chart/CI include/generator; for Ala Runner/executor/job image/ci-image tools/CI Docker daemon/manual image release; for `@alaa/sdk`, Page Kit, UI Kit, app-shell or widgets; or shared infrastructure source/provisioning/recovery. Not for single-service feature work with no shared-surface change. Route Docker/Kubernetes/HAProxy/Laravel/Go to /alaa-docker-production, /alaa-k8s-helm, /alaa-haproxy, /alaa-laravel-architecture, /alaa-golang; observability gates to /alaa-observability-soc; reliability doctrine to /alaa-reliability-sla; security verdicts to /alaa-security-review; UI design to /alaa-frontend-developer."
 ---
 
 # Alaa Services Contract
@@ -37,13 +37,15 @@ judgment cannot be debugged. Exact detail lives in `references/`; this file rout
 
 ## Quick start
 
-1. Read the repo-local `AGENTS.md`.
+1. Read the repo-local `AGENTS.md`. Before touching or surveying another service, read "Paused and retired services" in `references/05-scope-service-modes-and-auth-routing.md`.
 2. Read `references/00-topic-map.md` and pick the service mode.
 3. Select the repository role: frontend-facing backend behind the gateway, internal backend, auth-boundary
    service, or authz-runtime / control-plane service.
 4. Read the smallest reference file that owns the rule you need, not the largest one that mentions it.
    For service env declarations or deploy delivery, read
    [Deploy-time environment contract](references/15-deployment-and-runtime-contract.md#deploy-time-environment-contract).
+   For Infra source, bootstrap, provisioning, transport or recovery, follow Mode A++ in the topic map;
+   distinguish the shared policy from source support and deployed evidence.
 5. Load the companion skills that file names, before implementing outside this skill's ownership.
 6. Apply the change.
 7. Run the checklists in `references/40-apply-checklist-and-anti-patterns.md`.

@@ -10,7 +10,7 @@
     {
       "name": "alaa-adversarial-reviewer",
       "file": "agents/alaa-adversarial-reviewer.toml",
-      "sha256": "f12907aeb17a640f418f229080e16bcf6f1b83615207a66a3f667b92462aced4"
+      "sha256": "48eaac476f27e03c6976df1f42859010860c71640b26e5134d2bacb53853ee67"
     },
     {
       "name": "alaa-api-contract-reviewer",

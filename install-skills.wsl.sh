@@ -13,6 +13,7 @@ Options:
   -h, --help  Show this help.
 Environment:
   HOME        Personal homes: $HOME/.codex/skills and $HOME/.claude/skills.
+  NO_COLOR    Any non-empty value disables ANSI colors.
 Dependencies: Linux Bash 4+, readlink, dirname, mkdir, ln; no downloads or sudo.
 Exit codes: 0 completed (including reported skips), 1 setup/I/O error, 2 usage error.
 Examples:
@@ -42,6 +43,35 @@ fi
 fail() {
   printf 'ERROR: %s\n' "$*" >&2
   exit 1
+}
+
+use_color() {
+  local stream=$1
+  [[ -z ${NO_COLOR:-} && ${TERM:-} != dumb ]] || return 1
+  case "$stream" in
+    stdout) [[ -t 1 ]] ;;
+    stderr) [[ -t 2 ]] ;;
+    *) return 1 ;;
+  esac
+}
+
+print_status() {
+  local status=$1 runtime=$2 name=$3 color='' runtime_color=''
+  if use_color stdout; then
+    case "$status" in
+      LINK) color=$'\033[1;32m' ;;
+      WOULD-LINK) color=$'\033[1;36m' ;;
+      EXIST) color=$'\033[1;90m' ;;
+    esac
+    case "$runtime" in
+      codex) runtime_color=$'\033[1;34m' ;;
+      claude) runtime_color=$'\033[1;35m' ;;
+    esac
+    printf '%s%-10s\033[0m  %s[%s]\033[0m  %s\n' \
+      "$color" "$status" "$runtime_color" "$runtime" "$name"
+  else
+    printf '%-10s  [%s]  %s\n' "$status" "$runtime" "$name"
+  fi
 }
 [[ $(uname -s) == Linux ]] || fail 'Run this installer inside WSL/Linux.'
 : "${HOME:?HOME must be set}"
@@ -84,9 +114,14 @@ declare -A planned=()
 linked=0
 skipped=0
 conflicts=0
+printf 'Skill links\n============\n'
 for source_root in "${roots[@]}"; do
   if [[ ! -d $source_root ]]; then
-    printf 'WARN source root missing, skipped: %s\n' "$source_root" >&2
+    if use_color stderr; then
+      printf '\033[1;33mWARN\033[0m source root missing, skipped: %s\n' "$source_root" >&2
+    else
+      printf 'WARN source root missing, skipped: %s\n' "$source_root" >&2
+    fi
     continue
   fi
   for source in "$source_root"/*; do
@@ -118,15 +153,19 @@ for source_root in "${roots[@]}"; do
         fi
         linked=$((linked + 1))
       fi
-      printf '%s [%s] %s\n  Source:      %s\n  Destination: %s\n' \
-        "$status" "$runtime" "$name" "$source" "$destination"
+      print_status "$status" "$runtime" "$name"
+      printf '  Source:      %s\n  Destination: %s\n' "$source" "$destination"
       if [[ $status == EXIST ]]; then skipped=$((skipped + 1)); fi
       if [[ -n $reason ]]; then
         conflicts=$((conflicts + 1))
-        printf '  WARN skipped: %s\n' "$reason" >&2
+        if use_color stderr; then
+          printf '  \033[1;33mWARN\033[0m skipped: %s\n' "$reason" >&2
+        else
+          printf '  WARN skipped: %s\n' "$reason" >&2
+        fi
       fi
     done
   done
 done
-printf 'Summary: links=%s existing/skipped=%s conflicts=%s dry-run=%s\n' \
+printf '\nSummary\n=======\nLinks: %s  Existing/skipped: %s  Conflicts: %s  Dry run: %s\n' \
   "$linked" "$skipped" "$conflicts" "$dry_run"

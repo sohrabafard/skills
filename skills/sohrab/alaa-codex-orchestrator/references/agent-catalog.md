@@ -1,8 +1,8 @@
 # Agent Catalog
 
-The orchestrator leads the session; it is not a custom subagent. Installation requires explicit authorization. Role triggers and actual task model/effort allocation live in `routing-matrix.md`; /alaa-prompting-guide owns capabilities and runtime mechanics. All role definitions omit model and effort pins. Every role accepts explicit controls normalized through `model-effort-policy.md`, including its omission defaults. Legacy model/effort-named IDs retain workload and authority compatibility; their names select neither control.
+The orchestrator leads the session; it is not a custom subagent. Installation requires explicit authorization. Role triggers and actual task model/effort allocation live in `routing-matrix.md`; /alaa-prompting-guide owns capabilities and runtime mechanics. Managed role definitions omit model and effort pins. Apply explicit controls normalized through `model-effort-policy.md` to every role, including its omission defaults. Legacy model/effort-named IDs retain workload and authority compatibility; their names select neither control.
 
-The manifest lists the executable agents available in this source pack.
+The manifest lists the executable agents managed by this pack.
 
 ## Specification and evidence
 
@@ -61,9 +61,13 @@ The `Subject` column orients and decides nothing: it names what a gate is about 
 scanned, and it is deliberately shorter than the condition that fires the gate. `references/routing-matrix.md` owns every trigger, and a gate is fired from that file alone — a
 roster line read as a trigger under-fires, because the conditions it leaves out are still conditions.
 
+## External companion admission
+
+`alaa-ent-specialist` is an external catalog role owned by /alaa-ent-go-orm-db. For a triggered lane, verify the installed role, readable canonical sources and effective grants through `alaa-ent-go-orm-db references/90-surfaces.md`. Admit the role through this catalog and apply the delegated mode's authority. Validate both task controls against the canonical capability policy and actual host. Missing, stale or unreachable prerequisites block the affected lane. Pack manifests, installers and grant projections cover managed roles only.
+
 ## Code-intelligence scope
 
-Each installed agent receives the narrowest live server grant its question class earns. Servers not
+Each managed agent receives the narrowest live server grant its question class earns. Servers not
 assigned here, including servers unknown to this pack, are disabled in that role.
 
 | Agent | Structural and semantic | Framework context |
@@ -109,10 +113,10 @@ the resolved live grants. Plain copies are unsupported because they would inheri
 
 `alaa-researcher`, `alaa-explorer`, and `alaa-architecture-critic` receive the `hindsight` server
 restricted to `hindsight_search_knowledge_pages`, `hindsight_read_knowledge_page`,
-`hindsight_list_knowledge_pages`, and `hindsight_reflect`; every other role has it disabled, like any
+`hindsight_list_knowledge_pages`, and `hindsight_reflect`; every other managed role has it disabled, like any
 unassigned server. These are the roles whose question can be whether something already exists or who owns
 it, which `/alaa-memory-os` answers; reflect is in the set because knowledge-page search cannot reveal a
-topic that has no page. No role holds a retain, ingest, or capture tool, because a memory write is the main
+topic that has no page. No managed role holds a retain, ingest, or capture tool, because a memory write is the main
 thread's decision under `/alaa-memory-os`. The set belongs to that skill's `hindsight` adapter: when its
 `ACTIVE_ADAPTER` changes, change this set and the grant checker together.
 

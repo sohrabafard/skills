@@ -225,7 +225,7 @@ Rollback:
 | Step | Owner | Affected |
 |---|---|---|
 | Laravel backend: prepare `.env` beside the service (Secrets and DB credentials), `runtime/service.runtime.env`, `runtime/hooks/`; run `bash scripts/runtime/render-runtime.sh` (generates `docker-compose*.yml`, `docker/octane/`, `docker/pgbouncer/`, `<repo>/scripts/docker/up-local.sh`; never hand-edit them), then `bash scripts/runtime/validate-runtime.sh` and `bash scripts/docker/up-local.sh` | Service developer | Service repo, `service-runtime-kit` |
-| Shared infra is the Compose project `alaa-shared-infra` (`15-deployment-and-runtime-contract.md`); the first service to start creates it, so check `docker ps` first. `deploy` also ships `docker-compose-dev-only-infra.yaml` | Developer | Every local service |
+| For shared infrastructure, follow [the lifecycle and evidence contract](15-deployment-and-runtime-contract.md#infrastructure-lifecycle-and-evidence-contract) and its conditional bootstrap rules. Inspect the selected owner's actual manifest before claiming dependency coverage; the dated deploy inventory is in `95-fleet-conformance.md` | Developer | Every local service |
 | Gateway: run `<repo>/scripts/docker/up-local.sh` with `compose` or `swarm` in `gateway` (next section) | Gateway owner | `gateway` |
 | Client: `pnpm install`, then `quasar dev` | Client owner | `client` |
 | Contract check: `bash tests/contracts/run.sh --validate path/to/service.yaml` in `deploy` | Service developer | Service repo |

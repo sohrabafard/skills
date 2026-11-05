@@ -50,7 +50,7 @@ Before designing implementation or verification, load /alaa-testing-strategy. Be
 
 Record the check list and evidence at the workflow-selected owner before dispatch. `alaa-verifier` collects missing or invalidated evidence when the planned checks require its authority. Review waits until required pre-review collection, batch repair and retests pass. The canonical minimal early-repair exception returns to collection without review.
 
-Assign the collected repair batch as one serialized implementation lane; reconcile conflicting writers through `alaa-workflow references/workspace-and-integration.md` before continuing. Continue the existing implementer whose valid assignment and context cover most failures through a host-supported continuation tool. Dispatch fresh only when continuation is unavailable, context is invalid, or `routing-matrix.md` selects another profile or task pair. The analyst diagnoses and never fixes. Independent verification owns required retests after batch repair; implementer evidence never replaces independent acceptance. Existing retry/stop budgets remain in force.
+Keep one collected repair batch. Split it only where repair role authority differs, into the fewest compatible scoped assignments. Execute the assignments serially and reconcile conflicting writers through `alaa-workflow references/workspace-and-integration.md` before continuing. For each assignment, continue the existing implementer whose valid assignment and context cover most failures through a host-supported continuation tool. Dispatch fresh only when continuation is unavailable, context is invalid, or `routing-matrix.md` selects another managed profile, external role or task pair. The analyst diagnoses and never fixes. Independent verification owns required retests after the complete repair batch; implementer evidence never replaces independent acceptance. Existing retry/stop budgets remain in force.
 
 Freeze the tested scope through `alaa-workflow references/workspace-and-integration.md` before verification. Evidence needs no commit; local checkpoints follow the commit protocol above and never discharge review.
 
@@ -84,7 +84,7 @@ Always first, never skipped, at any profile. Everything after it inherits its de
 
 ## Stage B — Implementation
 
-1. Select the registered implementation profile through `references/routing-matrix.md` before assignment or reassignment, then dispatch one agent per ready lane. Carry selection evidence in the dispatch and roster.
+1. Select the managed implementation profile or admitted external role through `references/routing-matrix.md` before assignment or reassignment, then dispatch one agent per ready lane. Carry selection evidence in the dispatch and roster.
 2. Consume dependencies/readiness from the selected task authority and phase barriers, write ownership and shared-resource conflicts from the workflow plan. A lane is ready only after required dependency contracts are reconciled. Dispatch ready independent lanes together when observed host slots and declared resource ceilings permit; increase parallel writers when capacity and ready work justify it. Record an unavailable capacity observation and use the smallest supported batch until capacity is established; do not invent a ceiling or assume unlimited capacity.
 3. Never overlap writes to files, generated outputs, contracts, migrations or shared runtime state. Reconcile at declared integration barriers before dependent work starts. Reserve capacity for the next required gate only when it is ready; apply /alaa-testing-strategy `references/110-execution-resources.md` before scheduling CPU-heavy work.
 4. Each subtask lane runs its focused failure-mode topic selectors and necessary touched-file lint/type/build on the shared build cache. The explicitly assigned task owner runs bounded task-acceptance selectors at task end; neither may run boundary affected/exhaustive checks. It writes no test `/alaa-testing-strategy` finds unowed; that skill owns the tiers and the test-need decision. Choose the smallest discriminating checks for claimed behavior and changed exported-surface, contract, type or lint properties; return observed output, or mark the property not checked. Role definitions own dispatch-conflict handling; reconcile every excluded command and unrun check before accepting the lane.
@@ -104,10 +104,12 @@ Always first, never skipped, at any profile. Everything after it inherits its de
 
 1. Only at the inherited review boundary, spawn `alaa-reviewer` against the complete diff and lane plan after Stage C's collection, batch repair and required retests pass. Under the `lean` profile the lead performs this review itself against a diff it did not write; the authority boundary holds because the reviewer is not the author, and `SKILL.md` Execution profile decides when `lean` becomes `standard` and `alaa-reviewer` is dispatched.
 2. Trigger a specialist only when its own condition in `references/routing-matrix.md` holds. That file owns every trigger; this one names no condition and narrows none, because a shorter local copy of a trigger list does not read as a summary at dispatch time — it reads as the list, and the conditions it dropped become gates nobody ran. The triggers are identical at every profile.
-3. At that same boundary, spawn `alaa-adversarial-reviewer` only when its condition in `references/routing-matrix.md` holds. That condition has two arms and they are not interchangeable: the blast-radius arm is recorded in Stage A and selects the `hardened` profile, while the conflicting-verdict arm is discovered here and fires the reviewer inside whatever profile is already running. A new conflict triggers that lens without retroactively changing completed design work or resetting the inherited boundary. It is a second independent lens, not a second opinion on a routine change, and its findings are reported to the user rather than fed into another fix cycle.
+3. At that same boundary, spawn `alaa-adversarial-reviewer` only when its condition in `references/routing-matrix.md` holds. That condition has two arms and they are not interchangeable: the blast-radius arm is recorded in Stage A and selects the `hardened` profile, while the conflicting-judgment arm is discovered here and fires the reviewer inside whatever profile is already running. A new conflict triggers that lens without retroactively changing completed design work or resetting the inherited boundary. It is a second independent lens, not a second opinion on a routine change, and its findings are reported to the user rather than fed into another fix cycle.
 4. Reviewer verdict handling: `APPROVED` proceeds; `APPROVED-WITH-NITS` proceeds; `CHANGES-REQUESTED` routes blocker and major findings verbatim to the owning lane; minor findings and nits follow `alaa-workflow references/review-mode.md` `## Finding triage`.
 5. Specialist blocker and major findings are gates equal to reviewer findings. Conflicting specialist opinions are reconciled by the lead using repository evidence; unresolved high-risk conflicts are surfaced to the user.
 6. Present every finding this phase leaves open — reported to the user rather than routed to a lane — as one decision set: each item with its severity per lens, the smallest fix that closes it, and what closing it costs. Ask once. Answered one at a time, each answer can move the tree again and invalidate affected final evidence, including any required exhaustive run.
+
+For required Ent review, interpret the native report under `alaa-ent-go-orm-db references/85-specialist-delegation.md`. `STATUS: COMPLETE` means the assessment finished. It grants no approval. A missing report, `STATUS: BLOCKED`, `STATUS: INCOMPLETE` or missing required evidence blocks acceptance even without findings. Triage findings at their reported severity and apply the specialist conflict route above.
 
 ## Stage E — Documentation and final validation
 
@@ -137,8 +139,8 @@ When curation changes repository instructions, apply `alaa-workflow references/c
 ## Finding ownership
 
 - Findings are routed verbatim to the lane that owns the behavior.
-- Cross-cutting findings become a new serialized lane with an explicit scope.
-- Select the fix owner through Implementation routing in `references/routing-matrix.md`.
+- Give cross-cutting findings explicit repair scope under Gate economics.
+- Select the fix owner through Failure routing in `references/routing-matrix.md`.
 - The reviewer/specialist never fixes its own finding.
 
 ## Maximum cycles
@@ -163,7 +165,7 @@ The orchestrator may report completion only when:
 - every acceptance criterion maps to evidence, each marked run, cited, or review-only with its review evidence; run or cited items carry their tier;
 - required final checks and proof levels passed on the final candidate, including a fresh exhaustive tier when required, with no unverified candidate changes afterward;
 - no mandatory command is failed, flaky, timed out, blocked, or contaminated;
-- reviewer and triggered specialist blockers/majors are resolved or explicitly accepted by the user;
+- required reviewer and specialist assessments are complete, and blockers/majors are resolved or explicitly accepted by the user;
 - final touched files match authorized scopes;
 - documentation ran or was explicitly skipped for a grounded reason;
 - the final reusable-context pass reported persisted, deferred, rejected, or no admitted candidates;

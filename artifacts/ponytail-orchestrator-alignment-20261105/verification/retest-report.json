@@ -1,0 +1,58 @@
+{
+  "snapshot": "37d85d1965f1f4fac703fb98b1b8eb73c9c27aea",
+  "base": "84546d5193bd77c26bd85362640076232ecb3dc1",
+  "wrapper_attempt_before_checks": "Python wrapper syntax error; no dispatched command launched",
+  "commands": [
+    {
+      "id": "1",
+      "command": "python3 -B scripts/check_wsl_installer_output.py",
+      "cwd": ".",
+      "timeout_seconds": 90,
+      "duration_seconds": 0.332,
+      "exit_code": 0,
+      "classification": "PASS",
+      "tier": "task-acceptance pre-review collection",
+      "proof_level": "static proof",
+      "log": "./artifacts/ponytail-orchestrator-alignment-20261105/verification/retest-1.log",
+      "expected_cases": 6,
+      "selected_cases": 6,
+      "executed_cases": 6,
+      "passed_cases": 6,
+      "failed_cases": 0,
+      "skipped_cases": 0,
+      "not_run_cases": 0
+    },
+    {
+      "id": "2",
+      "command": "env NO_COLOR=1 TERM=dumb python3 -B scripts/check_wsl_installer_output.py",
+      "cwd": ".",
+      "timeout_seconds": 90,
+      "duration_seconds": 0.357,
+      "exit_code": 0,
+      "classification": "PASS",
+      "tier": "task-acceptance pre-review collection",
+      "proof_level": "static proof",
+      "log": "./artifacts/ponytail-orchestrator-alignment-20261105/verification/retest-2.log",
+      "expected_cases": 6,
+      "selected_cases": 6,
+      "executed_cases": 6,
+      "passed_cases": 6,
+      "failed_cases": 0,
+      "skipped_cases": 0,
+      "not_run_cases": 0
+    },
+    {
+      "id": "7",
+      "command": "git diff --check 84546d5193bd77c26bd85362640076232ecb3dc1..HEAD",
+      "cwd": ".",
+      "timeout_seconds": 90,
+      "duration_seconds": 0.009,
+      "exit_code": 0,
+      "classification": "PASS",
+      "tier": "task-acceptance pre-review collection",
+      "proof_level": "static proof",
+      "log": "./artifacts/ponytail-orchestrator-alignment-20261105/verification/retest-7.log"
+    }
+  ],
+  "portable_paths": "Repository-relative; absolute repository prefix normalized to .; raw logs preserved."
+}

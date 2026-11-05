@@ -105,7 +105,7 @@ Each of these blocks merge. Stop-the-line and P0 are the same set: an item here 
 
 22. A security control whose missing configuration produces a permissive default.
 23. A single-use credential, quota, or balance consumed by a read followed by a separate write that a concurrent request can interleave.
-24. Certificate or hostname verification disabled anywhere outside a test-only build.
+24. Certificate or hostname verification disabled outside a test-only build or the explicitly selected `tls-unverified` mode for an Ala outbound dependency under the [deployment and runtime contract](../alaa-services-contract/references/15-deployment-and-runtime-contract.md#ownership-split). Support for that mode passes this item. Reject an implicit downgrade or disabled verification in `tls-verified`.
 
 ## Severity scale for everything else
 

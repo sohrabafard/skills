@@ -33,7 +33,7 @@ Read on Deep Review, or when the change touches a security-relevant configuratio
 - Where a control's enablement is deliberately runtime-toggleable - a kill switch - toggling it requires an exact permission and emits a security event recording who, when, and why.
 - A configuration value that differs between environments differs only in its value, never in whether the control exists.
 
-Flag when: an environment read falls back to a permissive literal; a disable-flag defaults to `true`; a boolean parser treats an unparseable value as the safe-looking branch without saying so; a value is used before validation; a certificate- or hostname-verification switch exists outside a test-only build; a debug or introspection switch defaults to on; an example configuration file carries a working secret; two services that must agree on a value each read it from a different key.
+Flag when: an environment read falls back to a permissive literal; a disable-flag defaults to `true`; a boolean parser treats an unparseable value as the safe-looking branch without saying so; a value is used before validation; a certificate- or hostname-verification switch exists outside a test-only build and does not implement the explicit Ala transport mode allowed by stop-the-line item 24; a debug or introspection switch defaults to on; an example configuration file carries a working secret; two services that must agree on a value each read it from a different key.
 
 # Part 2 - Dependencies
 

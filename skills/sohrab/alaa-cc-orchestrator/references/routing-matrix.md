@@ -4,7 +4,7 @@ Spawn only agents that materially reduce uncertainty or enforce a required autho
 
 ## Always or normally required
 
-- Non-trivial repository change: select an implementation profile through Implementation routing below before dispatch.
+- Non-trivial repository change: select an implementation profile through Implementation routing below before dispatch, or use the Ent specialist route for Ent-owned work.
 - Required independent checks: `alaa-verifier`. `verification-and-gates.md` owns phase evidence, review and final gate cadence.
 - Ship-quality judgment at that boundary: `alaa-reviewer`.
 - Behavior, API, configuration, or operations changed: `alaa-documenter`, after review.
@@ -64,6 +64,10 @@ This orchestrator owns actual task complexity, priority, model and effort decisi
 4. For exceptional model selection on ANY role, require an exact canonical-owner-supported official-task/priority recommendation with remaining reasoning need and rejected cheaper/decomposed alternatives, applicable documented high-workhorse inadequacy after context/specification/tool correction and decomposition consideration, or explicit user selection. A repairable defect or imagined insufficiency is not model inadequacy. A model mention alone is no selection instruction.
 5. Record task, role/authority identity, scope/complexity, priority/reason, selected model AND effort, admission/evidence, runtime control surface, requested and effective configured controls, availability and unresolved limits in the existing workflow plan, or a compact dispatch when no durable plan is admitted. A bounded standalone delegation requires no full pipeline or new workflow artifacts solely for model selection. Preserve role tools, skills, verdicts and independent gates for every pair. Legacy model/effort-named IDs are compatibility identities; their names select neither control.
 6. Before EVERY dispatch, follow `model-effort-policy.md` to normalize any omitted field, validate the resulting pair and explicitly supply BOTH controls. Owner-normalized defaults are valid task selections; omissions alone do not block or degrade a lane. If the host cannot realize the selected pair, use only an exact verified available compatibility realization preserving authority; otherwise block that affected lane with evidence. No silent substitution, automatic installation or global configuration edit. Source changes do not reload installed or current-session roles. Unknown serving identity is a reporting limit, not evidence of a control mismatch or a reason for paid calibration.
+
+## Ent specialist route
+
+For Ent/PostgreSQL work owned by /alaa-ent-go-orm-db, select `alaa-ent-specialist` for the affected lane through the catalog's External companion admission. Resolve its lane mode through `alaa-ent-go-orm-db references/85-specialist-delegation.md`. A review lane is read-only and independent of the work it reviews. Preserve the inherited cadence and required correctness, verification and specialist gates.
 
 ## Implementation routing
 
@@ -147,17 +151,17 @@ Trigger for CI/CD, Docker or container, package, lock, or version, configuration
 
 ### Adversarial reviewer — `alaa-adversarial-reviewer`
 
-Trigger only when the change is irreversible or has high blast radius — production data movement, auth or tenancy boundaries, a public contract break, deployment topology — or when `alaa-reviewer` and a specialist return conflicting verdicts that repository evidence does not settle.
+Trigger only when the change is irreversible or has high blast radius — production data movement, auth or tenancy boundaries, a public contract break, deployment topology — or when `alaa-reviewer` and a specialist return conflicting verdicts that repository evidence does not settle. Treat a substantive Ent review finding that contradicts correctness approval on the same candidate as a conflicting specialist judgment when repository evidence cannot settle it. A blocked or incomplete Ent status alone supplies no conflicting judgment.
 
 It runs after the reviewer and any specialist gates, against the same complete change, with a deliberately different lens: attack the design's assumptions, look for the failure the correctness review would not think to look for, and state the strongest reason not to ship. Its output is a report to the user, not another fix cycle. Routing its findings back into implementation restarts a loop that has no natural end, because a fresh adversarial pass always finds something.
 
-Never trigger it on a routine change. A second opinion on work that already passed its gates is cost without a decision attached.
+Skip this lens when neither trigger holds. A second opinion on work that already passed its gates is cost without a decision attached.
 
 ## Failure routing
 
 - Test failures, including clear single-owner failures: collect and route one combined batch through `verification-and-gates.md` Gate economics; never return each failure immediately to its original lane.
 - Ambiguous, cross-lane, flaky, timeout, environment, or contamination failure: `alaa-failure-analyst` first.
-- For every implementation fix, including security, migration, and architecture blockers, reapply Implementation routing above to the remaining work; preserve the finding verbatim.
-- Contract-compatibility blocker: route the fix through the owning implementer with the contract reviewer's finding verbatim.
+- For every implementation fix, including security, migration, and architecture blockers, select the repair role for the remaining work through Ent specialist route for Ent-owned repairs or Implementation routing for other repairs. Preserve the finding verbatim.
+- Contract-compatibility blocker: send the contract reviewer's finding verbatim to the selected repair role.
 - Browser-only reproducible defect: browser QA provides evidence; the owning implementer fixes.
-- Test infrastructure defects retain explicit infrastructure scope inside the serialized batch fix assignment; the verifier never fixes. Environment actions require their existing authority.
+- Test infrastructure defects retain explicit infrastructure scope inside the serialized repair batch; the verifier never fixes. Environment actions require their existing authority.
