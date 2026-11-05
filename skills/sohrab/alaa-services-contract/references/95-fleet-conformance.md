@@ -62,6 +62,13 @@ Source review at deploy commit `63f6b721f3c610f06fe3a94732a15b8e09cc166b`, with 
 | Persistence and recovery | Development services use persistent volumes and healthchecks; Redis uses AOF and RabbitMQ a stable hostname. Ordinary `down` retains volumes; volume removal is destructive. Central Compose has process restart policies, not unhealthy-container autoheal. No ClickHouse backup/restore or recovery-objective proof was collected. Deploy-directory backups may contain secrets and need encryption or exclusion. | `<repo>/docs/readme/20-local-infrastructure.md`; `<repo>/docs/delivery-topology/40-runtime-and-migrations.md`; `<repo>/docs/runbook/74-central-compose/30-host-and-recovery.md` |
 | Target readiness | EO-59 still records unknown ClickHouse listeners, transport, DDL access and firewall inputs. This review made no live connection and settled no server topology, effective settings, protected-data or replay-coverage fact. | `<repo>/docs/employer-open-items.md`, EO-59 |
 
+## Pool acquisition policy amendment — 2026-11-05
+
+The user corrected the pooled connection acquisition ceiling; the correction is recorded in `alaa-xvei`.
+The current value is owned by [Bounded connection pool](22-failure-load-and-deprecation-contract.md#bounded-connection-pool).
+This amendment changes policy only. Consumer configuration and runtime enforcement were not changed or re-verified.
+Earlier acquisition observations below remain historical evidence, not proof of adoption.
+
 ## Topology deployment adoption — 2026-10-24
 
 This amendment records local implementation and isolated real-broker validation under `alaa-ubec`, not a fleet re-survey, production deployment, or release proof.

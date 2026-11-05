@@ -258,7 +258,8 @@ resource and one service's burst becomes every service's outage.
 - Across a whole service, `replicas * max_connections_per_container`, summed over every VM or host that runs
   it, must stay at or below `60%` of the target Postgres `max_connections`. When a scale-up would breach that ceiling, lower the per-container
   maximum in the same change instead of raising replicas alone.
-- A request waits at most `1000 ms` to acquire a pooled connection, then fails with `503`, code
+- A request waits at most `10000 ms` (10 seconds) to acquire a pooled connection, capped by its remaining
+  request deadline. On timeout it fails with `503`, code
   `DEPENDENCY_UNAVAILABLE`, and event `dependency.unavailable`. An unbounded acquire wait converts a slow
   database into an exhausted worker pool.
 - Worker and queue-consumer containers count against the same ceiling and get their own explicit pool
