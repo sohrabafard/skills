@@ -76,10 +76,10 @@ When applying this skill to a service, finish by checking:
 
 ### Failure behaviour and load
 - every outbound HTTP, database, cache, and broker client is constructed with an explicit timeout
-- the gateway sets `X-Request-Deadline-Ms` on every forwarded request from `GATEWAY_REQUEST_DEADLINE_MS`, default `180000`, and strips any client-supplied value
+- the gateway sets `X-Request-Deadline-Ms` on every forwarded request, strips any client-supplied value, and follows the env-controlled default and minimum in `22-failure-load-and-deprecation-contract.md`
 - no service defines an env variable that sets, overrides, or extends the edge deadline
 - each service reads `X-Request-Deadline-Ms` at ingress, clamps every outbound per-attempt timeout to the remainder, refuses with `503 DEPENDENCY_UNAVAILABLE` without calling anything when the remainder is non-positive, and forwards the decremented value on every internal hop
-- a service called without the header falls back to its own route default rather than running unbounded
+- backend product-route fallbacks are env-configurable and follow the defaults and override rules in `22-failure-load-and-deprecation-contract.md`; a missing header never permits unbounded work
 - `alaa_requests_deadline_exhausted_total` is exported by every service that implements the deadline
 - the retry budget is at most 3 total attempts, with exponential backoff and full jitter, never a fixed delay
 - no retry exists on the gateway authorization hop or on a readiness dependency probe

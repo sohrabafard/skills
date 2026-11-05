@@ -28,10 +28,11 @@ request wait; it defines no job expiry, broker TTL, or record retention and adds
 
 - The gateway sets the header `X-Request-Deadline-Ms` on **every** inbound request it forwards, product and
   operational alike. The value is a positive integer count of milliseconds remaining.
-- The value comes from the environment variable `GATEWAY_REQUEST_DEADLINE_MS`, whose default is `180000` —
-  180 seconds. It is lowered by changing the environment, in the gateway, with no code change and no service
-  change. The default is deliberately generous so that turning the mechanism on breaks nothing; the intended
-  path is to lower it from the environment once the counter named below shows real refusals.
+- `GATEWAY_REQUEST_DEADLINE_MS` controls the gateway's total HTTP budget. Its default and minimum are
+  `max(60000 ms, authorization-path minimum budget + longest routed backend HTTP budget)`.
+  Authorization runs before the product backend, so these budgets add rather than overlap.
+  The authorization path is Gateway -> authz-sidecar -> authz-openfga. Preserve larger explicit runtime
+  values; align any configured value below this minimum during adoption.
 - The gateway is the **only** component that originates this header. A service does not create one, a client
   cannot supply one, and the gateway strips any inbound `X-Request-Deadline-Ms` from a client before routing,
   exactly as it strips every other trusted header. A caller that could set its own deadline could set it to
@@ -62,12 +63,18 @@ A service receiving `X-Request-Deadline-Ms` does four things, in this order:
    to the current `remaining_ms`, alongside `X-Request-Id` and `traceparent`. Forwarding the value it
    received unchanged restarts the budget at every hop, which is the failure this rule exists to prevent.
 
-**A service called without the header applies its own default**, so a direct call, an internal test, a
-`curl` from a jump host, and a local development run all still work. The defaults are `5000 ms` for a public
-product route, `2000 ms` for a trusted internal route, and `5000 ms` for `/api/ready`. A route that needs a
-different budget declares it in the route definition; a service does not raise a budget by editing a global
-default. These defaults are the floor a service falls back to, not a second edge deadline: when the header is
-present it wins, even when it is smaller than the route default and even when it is larger.
+**Without a valid header, a backend uses its environment-configurable default total HTTP budget:**
+`30000 ms` for public and trusted-internal product routes. Reuse an appropriate existing env key; expose
+one when absent. Preserve explicit runtime overrides and deliberately align old configured defaults during
+adoption. `/api/ready` retains its `5000 ms` fallback; document route-specific budgets in the route definition.
+
+A valid incoming remaining budget takes precedence over the fallback, subject to an enabled handler ceiling.
+Never extend a shorter incoming deadline or restart it at another hop. A backend env key controls its own
+handler budget, never the gateway-owned edge deadline.
+
+Authority: owner-ratified decision `alaa-uk1m`, 2026-11-05, including its Gateway HTTP budget amendment.
+This replaces the earlier backend and gateway HTTP defaults. It does not change dependency, connect, query,
+or PgBouncer queue timeouts, and establishes no new database-acquisition guarantee.
 
 ### The observable
 
@@ -78,7 +85,7 @@ and is emitted by every service that implements this section.
 Read it as a two-sided signal, because a permanent zero means one of two very different things and the
 distinction is the reason the counter exists: either no service honours the deadline at all, in which case
 the mechanism is decorative and the chain is still unbounded, or the budget is so generous that nothing ever
-reaches it, in which case `GATEWAY_REQUEST_DEADLINE_MS` should come down. A rising count is the healthy
+reaches it, in which case `GATEWAY_REQUEST_DEADLINE_MS` should come down within its minimum above. A rising count is the healthy
 state to aim at: it means the budget is tight enough to bite and the fleet is shedding work it could not
 have finished.
 
