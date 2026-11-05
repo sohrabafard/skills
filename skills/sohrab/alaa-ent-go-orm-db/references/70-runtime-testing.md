@@ -1,97 +1,75 @@
 # Runtime integration and verification
 
-## Contents
+Own client/pool setup, instrumentation, and acceptance evidence. Choose checks for changed behavior; reuse equivalent repository gates.
 
-- [Client and connection ownership](#client-and-connection-ownership)
-- [Observability and resource bounds](#observability-and-resource-bounds)
-- [Checks by change](#checks-by-change)
-- [Evidence and acceptance](#evidence-and-acceptance)
+## Client and pool ownership
 
-## Client and connection ownership
+Reuse a long-lived Ent client and bounded pool per database configuration, never per request. Assign service-lifecycle shutdown ownership. Clean up failed setup without closing borrowed pools. Preserve the supported PostgreSQL driver.
 
-Reuse a long-lived Ent client and bounded pool per database configuration. Never open a pool per request.
-Assign shutdown ownership to the service lifecycle. Close resources created during failed setup, but never close a borrowed pool.
-Preserve the existing supported PostgreSQL driver.
-For new pgx integration, use `github.com/jackc/pgx/v5/stdlib` with Ent's SQL driver; verify the selected pgx version.
-The driver name `"pgx"` is distinct from Ent's dialect name `dialect.Postgres`.
-
-For an already configured, lifecycle-owned `*database/sql.DB` named `db`, the adapter is:
+For new pgx integration, verify selected `github.com/jackc/pgx/v5/stdlib`. Driver name `"pgx"` differs from `dialect.Postgres`. For a lifecycle-owned `*database/sql.DB`:
 
 ```go
 drv := entsql.OpenDB(dialect.Postgres, db)
 client := ent.NewClient(ent.Driver(drv))
 ```
 
-Imports: the application's generated `ent`, `entgo.io/ent/dialect`, and `entgo.io/ent/dialect/sql` aliased as `entsql`.
-Test connectivity with an authorized bounded `PingContext`; successful client construction does not prove access.
-Close the client once its users have stopped, according to the pool ownership contract.
+Here ent is the generated package; entsql aliases `entgo.io/ent/dialect/sql`. Import `entgo.io/ent/dialect`. Use authorized bounded PingContext; construction proves no access. `client.Close()` delegates to `driver.Close()` and closes the wrapped `*sql.DB`. A borrowed DB remains its lifecycle owner's responsibility. Close owned resources only after users stop.
 
-Budget `MaxOpenConns` across replicas, workers, deployment overlap, and operational reserve.
-Account separately for application connections and PgBouncer server pools.
-Set idle limits, idle lifetime, and maximum lifetime from observed load and infrastructure limits.
-Unlimited defaults are not a capacity plan. Do not invent universal connection counts.
-An active transaction occupies its connection until it ends.
+Budget MaxOpenConns across replicas, workers, deployment overlap, and reserve. Distinguish application/PgBouncer server pools. Derive idle limits/lifetimes from observed load/infrastructure. Invent no universal counts; unlimited defaults are not a plan. Transactions occupy connections until completion.
 
-Prepared-statement behavior depends on pgx, PgBouncer version, pooling mode, and `max_prepared_statements`.
-Do not prescribe simple protocol or disable caches by default.
-Inspect actual configuration and current maintainer compatibility guidance before changing protocol mode.
-Preserve established runtime, migration, and administrative role separation.
-Use bound parameters, verified TLS settings, and the configured secret provider. Never include a real DSN in an artifact.
+Before changing protocol/caching, inspect pgx/PgBouncer versions, pooling mode, max_prepared_statements, and current maintainer guidance. Do not default to simple protocol or disabled caches. Preserve application/migration/admin role separation, bound values, verified TLS, and the secret provider. Include no real DSN in artifacts.
 
-Sources: [Ent database/sql integration](https://entgo.io/docs/sql-integration/), [Go connection pools](https://go.dev/doc/database/manage-connections), [pgx](https://github.com/jackc/pgx), [PgBouncer configuration](https://www.pgbouncer.org/config.html).
+## Driver type mapping
 
-## Observability and resource bounds
+When types, bindings, driver modes, or pool construction change, trace values through the actual Ent/driver path.
+Record concrete Go types/packages, scalar/array bindings, PostgreSQL types, codecs, and execution mode. Include used named, pointer, and collection variants.
+Generated schema types and compilation do not prove encoding or decoding compatibility.
 
-Propagate request context into Ent terminal operations. Do not share mutable query or mutation builders across goroutines.
-Bound page sizes, eager-loaded edges, batch sizes, bulk writes, and worker concurrency.
-Derive deadlines and lock/statement timeouts from request budgets and existing reliability policy.
-Use the [transaction reference](60-transactions-security.md) for write retry rules.
+pgx `QueryExecModeExec` infers parameter types from Go values without server parameter descriptions. SQL casts cannot supply missing client encoding plans.
+Scalar `driver.Valuer` support does not establish array support. Inspect bindings: ordinary `IDIn` expands scalars; a custom array predicate binds a collection.
+Changing binding shape also changes parameter counts and can change plans; verify those costs before substituting it.
 
-Use registered project logs and metrics. Inspect latency distributions, affected rows, pool wait, errors, and query count when relevant.
-Ent debug logging can expose parameters. Redact sensitive values according to project policy.
-Prefer normalized fingerprints and safe parameter classes in performance reports.
-Treat tracing, database catalogs, and `pg_stat_statements` as optional authorized evidence sources, not mandatory installations.
-Increasing a connection limit does not diagnose a slow query or lock convoy.
+Check the pinned driver's codecs and Go-type mappings before registering anything. Register only missing mappings supported by the selected codec.
+Resolve unknown PostgreSQL codecs and their dependencies first. Initialize every new connection through its actual factory.
+Configure hooks before constructing pools; changing a configuration copy changes neither the factory nor existing connections.
+Use `pgxpool.Config.AfterConnect` for that pool or `stdlib.OptionAfterConnect` with `stdlib.OpenDB` configuration.
+`stdlib.OpenDBFromPool` uses the existing pool's initialization. A separate `sql.Open` pool inherits neither its connections nor hooks.
+
+Test affected generated/raw paths with actual parameter/scan types, execution mode, and applicable scalar, collection, empty, nil, and boundary values.
+Exercise multiple and replacement connections when initialization changes. Preserve the deployed protocol/proxy semantics.
+For regressions, demonstrate failure before the fix and success after under the same configuration; an easier type/mode is insufficient.
+Local codec tests isolate encoding; authorized disposable PostgreSQL integration verifies the full path. Report unavailable execution through the acceptance rules below.
+
+Checked against pgx v5.12.0 and Ent v0.14.6 on 2026-11-05; this does not require upgrading existing dependencies.
+For unfamiliar mappings or changed versions, consult [execution modes](https://pkg.go.dev/github.com/jackc/pgx/v5#QueryExecMode), [type mappings](https://pkg.go.dev/github.com/jackc/pgx/v5/pgtype#Map.RegisterDefaultPgType), and [connection hooks](https://pkg.go.dev/github.com/jackc/pgx/v5/stdlib#OptionAfterConnect).
+
+## Resources and observability
+
+Propagate context into terminal operations. Bound page/edge/batch sizes, bulk writes, and worker concurrency. For builder sharing/projections, read [queries](30-ent-queries.md); for deadlines/retries, read [transactions](60-transactions-security.md).
+
+Use project logs/metrics for relevant latency distributions, affected rows, query count, pool waits, and errors. Ent debug logs can expose parameters; redact per policy. Prefer fingerprints/safe parameter classes. Traces, catalogs, and pg_stat_statements are optional authorized evidence, not mandatory installations. Raising connection limits does not diagnose slow queries or lock convoys.
 
 ## Checks by change
 
-Choose checks for changed behavior. Reuse project commands implementing the same gate.
-
-| Change | Evidence required when the environment is available |
+| Change | Evidence when execution is available |
 | --- | --- |
-| Schema, generator, or feature flags | Generation succeeds; affected code builds; generated diff and migration SQL reviewed |
-| Types, nullability, constraints, or relationships | PostgreSQL cases for valid, invalid, boundary, and referential behavior |
-| Tenant access or policy | Relevant cross-tenant reads, mutations, associations, uniqueness, and raw-SQL bypass cases |
-| Projection or eager loading | Response contract unchanged; SQL columns/query count inspected; cursor/FK dependencies retained |
-| Index or predicate | Same query and representative parameters/data; plan evidence; write/storage tradeoff |
-| Migration or backfill | Fresh schema and representative upgrade; transaction/lock boundaries; recovery procedure |
-| Transactions or concurrency | Commit, rollback, cancellation, contention, duplicate requests, and retry semantics |
+| Schema/generator/flags | Generation/build succeeds; generated diff and migration SQL reviewed. |
+| Driver/type/mode/pool wiring | Actual Ent/raw types and bindings, relevant nil/empty/boundary values, and new/replacement connections under the intended protocol/proxy setup. |
+| Types/nullability/constraints/edges | PostgreSQL valid, invalid, boundary, and referential cases. |
+| Tenant policy | Relevant cross-tenant reads/writes/associations, uniqueness, and raw bypass cases. |
+| Projection/eager loading | Response contract, SQL columns/query count, cursor/FK dependencies. |
+| Index/predicate | Same query/representative binds and data; plans plus write/storage costs. |
+| Migration/backfill | Fresh schema/current-revision upgrade, lock/transaction boundaries, recovery. |
+| Transactions/concurrency | Commit/rollback, cancellation, contention, duplicate requests, retry semantics. |
 
-Run targeted Go tests first, then required repository gates. Typical commands are:
+Run targeted `go test ./path/to/changed/package/...`, applicable go vet, and required repository gates. Use `go test -race` for changed concurrency when platform/CGO prerequisites exist. Run govulncheck when policy or dependency risk requires it. Report unavailable tools/checks as skipped.
 
-```bash
-go test ./path/to/changed/package/...
-go vet ./path/to/changed/package/...
-```
+Use verified disposable PostgreSQL with target major/extensions, synthetic bounded fixtures, and cleanup ownership. Reachability proves no disposable status. SQLite smoke tests prove no PostgreSQL types, indexes, constraints, locks, or migrations.
 
-Use `go test -race` for changed concurrency when platform/CGO prerequisites are available.
-Run `govulncheck` when required by project policy or the dependency change's risk.
-Do not install absent test tools without authorization. Report skipped commands as skipped.
+## Acceptance and consultation
 
-Use the target PostgreSQL major version for dialect-sensitive tests.
-SQLite can test basic Ent behavior; it does not prove PostgreSQL types, indexes, constraints, locks, or migrations.
-Use a verified disposable database, synthetic fixtures, bounded sizes, and explicit cleanup ownership.
-Never repurpose a live database merely because it is reachable.
+For performance claims, record query, parameter classes, distribution, database version, plan, and measurement conditions. Separate planning/execution; record material cache, concurrency, volume, and instrumentation effects. Compare workload costs/latency distributions, not one favorable timing. Index selection proves no end-to-end improvement.
 
-Sources: [Ent testing](https://entgo.io/docs/testing/), [Go test command](https://pkg.go.dev/cmd/go#hdr-Test_packages), [Go race detector](https://go.dev/doc/articles/race_detector).
+Stop after applicable gates pass; repeat only for changes, failures, or unresolved evidence. Without execution, deliver reviewable code/plan and mark runtime acceptance incomplete. Never weaken a failed required gate.
 
-## Evidence and acceptance
-
-For a performance claim, record the query, parameter classes, data distribution, database version, plan, and measurement conditions.
-Separate planning and execution. Note cache state, concurrency, result volume, and instrumentation overhead when material.
-Compare workload costs and latency distributions, not one favorable timing.
-An index in a plan proves selection for that plan, not end-to-end speedup.
-
-Stop after applicable gates pass. Repeat checks only for changes, failures, or unresolved evidence affecting them.
-When execution is unavailable, deliver reviewable code or a plan and mark runtime acceptance incomplete.
-Never weaken a failed required gate to finish the task.
+Consult [Ent SQL integration](https://entgo.io/docs/sql-integration/) and [Go pools](https://go.dev/doc/database/manage-connections) for unfamiliar ownership/configuration. Check [pgx](https://github.com/jackc/pgx) and [PgBouncer](https://www.pgbouncer.org/config.html) before protocol changes. Use [Ent testing](https://entgo.io/docs/testing/) and [race-detector prerequisites](https://go.dev/doc/articles/race_detector) for unfamiliar test setups.

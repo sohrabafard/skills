@@ -1,62 +1,37 @@
-# Ent operations, queries, and projections
+# Ent queries and projections
 
-Contents: [API scope](#api-scope) · [Operations](#operations) · [Upsert](#upsert) · [Projection](#projection) · [Predicates](#predicates) · [Loading and pagination](#loading-and-pagination) · [Acceptance](#acceptance)
-
-Read for changed reads, mutations, projections, graph loading, predicates, aggregation, pagination or upserts. Keep work within the affected use case. The main skill owns authorization, freshness, retry limits and completion reporting.
-
-Reviewed 2026-11-05. Projection and eager-loading semantics were also checked against Ent v0.14.6 generated templates.
-
-## API scope
-
-Resolve generated packages from the actual module. Schema APIs belong to `entgo.io/ent`; clients, entities and error helpers belong to the generated project package. Avoid shadowing predicate imports with variables. Inspect generated methods before using them.
-
-Check existing feature flags: `sql/upsert` for upsert, `sql/modifier` for Modify, `sql/lock` for locks, `sql/execquery` for raw execution. Enable only required features. [API](https://entgo.io/docs/crud/) · [Flags](https://entgo.io/docs/feature-flags/)
+Use for CRUD, predicates, projections, graph loading, aggregation, pagination, or upserts. Resolve APIs from the actual module: schemas use `entgo.io/ent`; clients/entities/predicates/error helpers use generated packages. Avoid shadowing predicate imports. Consult [feature integration](80-advanced-ent.md) before adding feature-dependent APIs.
 
 ## Operations
 
-Use request contexts with cancellation/deadlines. Preserve errors; avoid panic-based X terminals in normal error-returning application paths.
+Use cancellable request contexts. Preserve errors; avoid panic-based X terminals in ordinary error-returning application paths.
 
-| Need | Operation | Contract |
-| --- | --- | --- |
-| Create | `Create().Set...().Save(ctx)` | Entity; use `Exec(ctx)` when unused |
-| Read by ID | `Get(ctx,id)` or scoped projected `Query().Where(...).Only(ctx)` | Get loads the whole entity and grants no authorization |
-| Exactly one | `Only(ctx)` | Distinguish absent and multiple rows |
-| First match | `Order(...).First(ctx)` | Order matters when selecting a particular row |
-| Rows | `Select(...).Limit(...).All(ctx)` or `Scan(ctx,&dto)` | Bound rows and columns |
-| Existence | `Exist(ctx)` | Avoid entity loading or full counting |
-| IDs/scalar | `IDs(ctx)` or `Select(field).Strings/Ints/...` | Match the generated schema type |
-| Update one | `UpdateOneID(id).Where(...).Set...().Save/Exec(ctx)` | An unmet condition can produce NotFound |
-| Update many | `Update().Where(...).Set...().Save(ctx)` | Check affected-row count when correctness requires it |
-| Delete one | `DeleteOneID(id).Where(...).Exec(ctx)` | Returns error |
-| Delete many | `Delete().Where(...).Exec(ctx)` | Returns (count,error); preserve scoped filters |
+| Need | Operation and boundary |
+| --- | --- |
+| Create | `Create().Set...().Save(ctx)`; `Exec(ctx)` when the entity is unused. |
+| Read by ID | `Get(ctx,id)` loads the entity; it supplies no tenant/owner predicate itself. Use scoped projection when fewer fields suffice. |
+| Exactly one / first | `Only(ctx)` distinguishes absent/multiple rows. Use deterministic `Order(...).First(ctx)` to select a particular row. |
+| Rows / existence / scalar | Bounded `Select(...).All(ctx)`/`Scan(ctx,&dto)`; use `Exist`, `IDs`, or scalar terminals matching generated types when sufficient. |
+| Update one / many | `UpdateOneID(id).Where(...).Set...().Save/Exec(ctx)` may return NotFound. `Update().Where(...).Save(ctx)` returns a count; check it when correctness depends on it. |
+| Delete one / many | `DeleteOneID(id).Where(...).Exec(ctx)` returns error; `Delete().Where(...).Exec(ctx)` returns count/error. Preserve scoped filters. |
 
-Use Get only when the complete entity is needed. Distinguish omitted input, NULL and zero. `SetNillableX(nil)` does not clear; use `ClearX` for an explicit optional-field NULL. Prefer atomic AddX or conditional updates over unsafe read-modify-write. Handle empty filters/ID lists deliberately; never discard a required filter.
+Distinguish omitted input, NULL, and zero. `SetNillableX(nil)` skips assignment; `ClearX` explicitly clears an optional field. Prefer atomic AddX/conditional updates to unsafe read-modify-write. Handle empty filters/ID lists without dropping required predicates.
 
-Edge setters accept existing entities/IDs, not Create builders. Persist related entities and associate them transactionally when atomicity is required. Inspect plural Clear/Add/Remove methods; do not assume SetPets or authority to attach arbitrary IDs.
+Edge setters accept persisted entities/IDs, not Create builders. Inspect plural Clear/Add/Remove methods; do not assume SetPets. Authorize association IDs; transact related creation/association when atomicity is required.
 
-Bound CreateBulk by parameters, payload and memory. Decide whole-operation atomicity versus partial completion; report committed batches on later failure. Do not parallelize dependent operations through one transaction.
+Bound CreateBulk by parameters, payload, and memory. Decide atomicity versus partial completion; report committed batches after failure. Do not parallelize dependent work through one transaction. Use generated error helpers and driver SQLSTATE/constraint metadata: IsConstraintError alone cannot identify duplicate email.
 
-Use generated error helpers. Distinguish PostgreSQL conflicts by driver SQLSTATE/constraint metadata; IsConstraintError alone does not identify duplicate email. [CRUD](https://entgo.io/docs/crud/) · [Error metadata](https://www.postgresql.org/docs/current/errcodes-appendix.html)
+## Minimum correct projection
 
-## Upsert
+For every changed read, list response, authorization, and application requirements. Select only required columns plus identity, association-mapping, and cursor keys. Filtering/joining alone does not require returning those columns. Justify extra expressions required by DISTINCT, ordering, grouping, or generated loaders.
 
-Confirm insert-or-conflict-update semantics, `sql/upsert`, the existing unique constraint/index and PostgreSQL conflict target. Preserve tenant business-key scope and matching partial-index predicates. Whitelist conflict-update fields; protect identity, immutable metadata and unrelated values.
+Use field constants and explicit Select. Prefer DTO Scan for flat outputs; preserve NULL semantics. Use scalar/ID/count terminals when sufficient. Entity All remains appropriate with explicit projection.
 
-Upsert runs create hooks, not ordinary update hooks. Enforce equivalent policy/invariants. Inspect the pinned implementation and SQL for Ignore/DoNothing: it can differ from genuine DO NOTHING. DO NOTHING can return no row; do not promise an existing ID. Never use no-op updates as authorization shortcuts. Resolve duplicate conflict keys within a bulk upsert.
+Unselected entity fields retain zero/nil values; defaults and Optional/Nillable do not restore loadedness. Never use omitted values for decisions or write them back as zero. Fetch missing required data explicitly.
 
-[Ent upsert](https://entgo.io/docs/crud/#upsert-one) · [PostgreSQL INSERT](https://www.postgresql.org/docs/current/sql-insert.html)
+Entity `Select(...).All` can add IDs and eager-loader FK columns. Inspect emitted SQL and association wiring. DTO/scalar Scan implies no added IDs; `Select(...).Scan` does not hydrate `With...` edges. Project eager children separately.
 
-## Projection
-
-For each changed read, list required response fields and application decisions first. Add only necessary identity, relation-mapping and cursor fields. Filtering/joining alone does not require returning its columns. Justify extra expressions required by DISTINCT/order/grouping or generated loaders; preserve result semantics.
-
-Use field constants and explicit Select. Prefer `Select(...).Scan` into response DTOs for flat outputs. Use dedicated ID/scalar/count terminals when applicable. `All(ctx)` collects rows; it remains appropriate with explicit entity projection.
-
-Unselected entity fields retain zero/nil values; database defaults do not refill them. Optional/Nillable affect schema/Go representation, not general loadedness. Preserve DTO NULL semantics. Never save omitted fields as zero or use them for decisions; fetch required missing data explicitly.
-
-Entity `Select(...).All` can add IDs and eager-loader FK columns. Inspect actual SQL and wiring. DTO/scalar `Scan` does not imply ID insertion, and `Select(...).Scan` does not hydrate `With...` associations. Include cursor/mapping keys where the actual path needs them.
-
-Illustration: Task has int64 id/tenant_id, string title, time.Time created_at and optional deleted_at. Symbols are generated locally; `sql` is `entgo.io/ent/dialect/sql`. Validate pageSize and obtain tenantID from trusted context first.
+Example: Task has int64 ID/tenant ID, title, created_at, and optional deleted_at. Validate pageSize and resolve trusted tenantID first. `sql` is `entgo.io/ent/dialect/sql`.
 
 ```go
 var rows []struct {
@@ -72,37 +47,30 @@ err := client.Task.Query().
     Scan(ctx, &rows)
 ```
 
-CreatedAt/ID support a cursor; body/private metadata are omitted. Project each eager child separately. Exclude secrets and large JSON/BLOB fields unless required. Sensitive controls generated printing/encoding, not selection or debug logs. Allowlist client-requested fields/sorts with server-owned mappings; never accept arbitrary SQL identifiers.
+CreatedAt/ID support the cursor. Exclude secrets and large JSON/BLOB values unless required. Sensitive affects generated printing/encoding, not SQL selection or debug logs. Map requested fields/sorts through server allowlists; never accept arbitrary SQL identifiers.
 
-[Field selection](https://entgo.io/docs/crud/#field-selection) · [Nillable](https://entgo.io/docs/schema-fields/#nillable) · [v0.14.6 query template](https://github.com/ent/ent/blob/v0.14.6/entc/gen/template/dialect/sql/query.tmpl)
+## Upsert and custom predicates
 
-## Predicates
+Verify `sql/upsert`, the unique constraint/index, and PostgreSQL conflict target, including tenant scope and partial predicates. Allowlist conflict-update fields; protect identity, immutable metadata, and unrelated values. Resolve duplicate conflict keys within a bulk upsert.
 
-Prefer typed predicates and deliberate And/Or/Not, HasEdgeWith and QueryEdge semantics. Use IsNil/NotNil for SQL NULL. Relation existence alone grants no authorization.
+Upserts run create hooks, not update hooks; preserve equivalent policy/invariants. Inspect pinned Ignore/DoNothing implementation and SQL: Ignore may differ from DO NOTHING. DO NOTHING can return no row; never promise an existing ID or use a no-op update to bypass authorization.
 
-Bind custom values. Use `func(*sql.Selector)`, qualified `s.C(field)` and SQL builders. Wrap sqljson predicates in `s.Where(...)` inside that callback. `sql.P` accepts builder functions. ExprP preserves literal SQL; it does not rebind `?` for PostgreSQL. Use dialect-aware Builder.Arg/Ident for composed expressions; keep syntax/identifiers trusted.
+Use typed predicates and deliberate And/Or/Not, HasEdgeWith, and QueryEdge semantics. Use IsNil/NotNil for NULL; relation existence grants no authorization. Bind custom values through dialect-aware builders; qualify selector columns with `s.C(field)`. Wrap sqljson predicates in `s.Where(...)` within `func(*sql.Selector)`. `sql.P` takes builder functions. ExprP preserves literal SQL and does not rebind PostgreSQL `?`; use Builder.Arg/Ident with trusted syntax/identifiers. Verify JSON operator/value shape: containment is not automatically "contains any". Reassess indexes after casts/functions. Route raw execution to [security](60-transactions-security.md).
 
-Modify requires `sql/modifier`. Route raw execution through the security reference. Verify JSON operators/value shape: containment is not automatically "contains any". Check index compatibility when adding casts/functions.
+## Loading, pagination, aggregation
 
-[Predicates](https://entgo.io/docs/predicates/) · [SQL builder](https://github.com/ent/ent/blob/v0.14.6/dialect/sql/builder.go)
+Replace per-row relation fetches with bounded eager/batch loading when needed. Eager loading adds association queries; it promises no single JOIN. Bound parents, child fan-out, and depth. Ordinary child Limit is not per-parent top-K; verify window/edge-limit logic with multiple parents. Use generated `Edges.XOrErr` to distinguish unloaded from empty.
 
-## Loading and pagination
-
-Replace per-row relation fetches with bounded eager loading or batch queries when needed. Eager loading issues additional association queries; it does not guarantee one JOIN. Bound parents, child fan-out and traversal depth. Ordinary child Limit is not per-parent top-K. Use verified window/edge-limit logic and test multiple parents. Use generated `Edges.XOrErr` to distinguish unloaded from empty.
-
-Use deterministic total ordering with a unique tie-breaker. Encode all sort keys; validate cursors against order, filters and tenant scope. For descending (created_at,id), seek:
+Use a deterministic total order with a unique tie-breaker. Encode every sort key; validate cursors against ordering, filters, and tenant scope. Descending `(created_at,id)` seeks:
 
 `created_at < cursorTime OR (created_at = cursorTime AND id < cursorID)`.
 
-Reverse comparisons for ascending order; define NULL/mixed-direction behavior. Select cursor keys, cap page size, fetch limit+1, handle empties, and cursor from the last retained row. Keyset avoids large OFFSET; it does not guarantee a snapshot under concurrent updates.
+Reverse comparisons for ascending order; define NULL/mixed-direction behavior. Select cursor keys, cap page size, fetch limit+1, and handle empties. Build cursors from the last retained row. Keyset avoids large OFFSET, but concurrent updates can change the view. Count/page can also differ; request Count/Exist only when semantics need them. Clone before branching; never share mutable builders concurrently.
 
-Use Count/Exist only when required by result semantics. Count/page can differ under concurrent writes. Clone builders before branching; never share one mutable builder concurrently.
+For aggregates, establish row grain and prevent join multiplication. Use GroupBy/Aggregate with explicit DTO aliases; filter rows before grouping and groups with HAVING. Handle NULL/range and inspect joins/window SQL.
 
-For aggregation, establish row grain and prevent join multiplication. Use GroupBy/Aggregate with explicit DTO aliases. Filter rows before grouping and groups with HAVING. Handle NULL aggregates and numeric range. Review SQL for custom joins/window functions.
+## Evidence and consultation
 
-[Eager loading](https://entgo.io/docs/eager-load/) · [Ordering](https://entgo.io/docs/paging/) · [Aggregation](https://entgo.io/docs/aggregate/)
+Check values, shape/order/limits, tenant scope, omitted/NULL/zero states, and relations. Inspect SQL columns/predicates, statement count, and cursor/FK keys. Cover relevant empty, multiple-row, and multi-parent cases. [Index design](40-index-design.md) owns plans; [runtime verification](70-runtime-testing.md) owns executed-test evidence.
 
-## Acceptance
-
-Check affected values, shape, order, limits, tenant scope, NULL/zero/omitted states and relations. Inspect emitted columns, predicates, statement count and relation/cursor keys. Include relevant empty, multiple-row and multi-parent cases. Route index/plan evidence to the index reference. Separate source/static inspection from compiled/database tests. State unavailable generation, compilation or PostgreSQL execution; claim no unobserved compatibility or performance result.
-
+Consult [CRUD](https://entgo.io/docs/crud/), [predicates](https://entgo.io/docs/predicates/), [eager loading](https://entgo.io/docs/eager-load/), [pagination](https://entgo.io/docs/paging/), or [aggregation](https://entgo.io/docs/aggregate/) for unfamiliar APIs. Projection/eager-loader details were checked against [v0.14.6 query templates](https://github.com/ent/ent/blob/v0.14.6/entc/gen/template/dialect/sql/query.tmpl) on 2026-11-05. Inspect selected-release templates when behavior differs; do not infer unsupported methods. Check PostgreSQL [INSERT](https://www.postgresql.org/docs/current/sql-insert.html) for unfamiliar conflict behavior.

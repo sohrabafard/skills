@@ -1,132 +1,84 @@
-# Design indexes from the queries they serve
+# Query-driven index decisions
 
-Read for index addition, change, removal, or evaluation. This file owns selection and plan evidence. Use [30-ent-queries.md](30-ent-queries.md) for queries/projections and [50-migrations.md](50-migrations.md) for rollout.
+Own index selection and plan evidence. [Queries](30-ent-queries.md) owns semantics; [migrations](50-migrations.md) owns deployment.
 
-## Contents
+## Workload and recommendation contract
 
-- [Capture the workload](#capture-the-workload)
-- [Map queries to candidate indexes](#map-queries-to-candidate-indexes)
-- [Represent an index in Ent](#represent-an-index-in-ent)
-- [Choose keys, predicates, and payload](#choose-keys-predicates-and-payload)
-- [Choose other access methods](#choose-other-access-methods)
-- [Measure and report](#measure-and-report)
+Inspect existing indexes/constraints and generated SQL. Record bind types/values, filters, joins, order/nulls, projection, LIMIT/paging, frequency, cardinality/selectivity, tenant skew, and read/write balance. Use code and representative requests when telemetry is unavailable; label assumptions unmeasured. Use authorized traces or pg_stat_statements without assuming installation/reconfiguration authority.
 
-## Capture the workload
+Map every recommended index to concrete SQL/code locations; identify its invariant when applicable. State definition, filter/join/order mechanism, unsupported relevant queries, overlap, write/storage cost, evidence, and deployment status. Label benefits hypothesized or measured. Sequential scans can suit small tables or large result fractions. Never promise instant lookups.
 
-Collect generated SQL, sanitized bind types, and representative values for relevant operations. Record filters, joins, ordering/nulls, projection, LIMIT/paging, frequency, cardinality, selectivity, tenant skew, and read/write balance. Inspect existing indexes and constraints first. Without telemetry, use code and representative requests; mark frequency/selectivity assumptions unmeasured.
-
-Use accessible `pg_stat_statements` or application traces. An index request does not automatically authorize extension installation or server reconfiguration. Sequential scans can suit small tables or large result fractions. Promise no “instant lookups”; state expected work reduction and required evidence.
-
-For each index, report its definition, query IDs/code locations, filter/join/order support, mechanism, write/storage cost, evidence, and deployment status. Label benefits hypothesized or measured. Identify unsupported relevant queries when this affects selection.
-
-Sources: [PostgreSQL plan interpretation](https://www.postgresql.org/docs/current/using-explain.html), [statement statistics](https://www.postgresql.org/docs/current/pgstatstatements.html).
-
-## Map queries to candidate indexes
-
-These candidates serve the shown workloads using [20-schema-design.md](20-schema-design.md). Do not add them indiscriminately.
+## Concrete candidates
 
 Q1, active content page:
 
 ```sql
-SELECT id, title, created_at
-FROM public.contents
+SELECT id, title, created_at FROM public.contents
 WHERE tenant_id = $1 AND status = $2 AND deleted_at IS NULL
-ORDER BY created_at DESC, id DESC
-LIMIT $3;
+ORDER BY created_at DESC, id DESC LIMIT $3;
 ```
 
-Q2, contents of one tenant's course:
+Q2, one tenant's course contents:
 
 ```sql
-SELECT c.id, c.title
-FROM public.contents AS c
+SELECT c.id, c.title FROM public.contents AS c
 JOIN public.courses AS p
   ON p.tenant_id = c.tenant_id AND p.id = c.course_id
 WHERE p.tenant_id = $1 AND p.id = $2
-ORDER BY c.id
-LIMIT $3;
+ORDER BY c.id LIMIT $3;
 ```
 
-| Index candidate | Query served | Mechanism and boundary |
-|---|---|---|
-| `(tenant_id, status, created_at DESC, id DESC) WHERE deleted_at IS NULL` | Q1 | Equality narrows the active range; key order can avoid sorting before LIMIT. Queries including deleted rows cannot rely on this partial index. |
-| `(tenant_id, course_id, id)` | Q2 | Leading join/filter keys locate one course's children; the ID suffix can supply ordering. The full index can also serve child-side FK maintenance. |
-| Existing parent `UNIQUE (tenant_id,id)` | Q2 | Supports parent lookup and the composite FK target. Do not add an identical ordinary index. |
+| Candidate | Query | Mechanism and boundary |
+| --- | --- | --- |
+| `(tenant_id,status,created_at DESC,id DESC) WHERE deleted_at IS NULL` | Q1 | Equality narrows active rows; key order can avoid sorting before LIMIT. Excludes deleted-row queries. |
+| `(tenant_id,course_id,id)` | Q2 | Leading join/filter keys locate children; ID supplies order. Full coverage can also serve child-side FK checks. |
+| Existing `UNIQUE (tenant_id,id)` on courses | Q2 | Parent lookup and composite-FK target; do not duplicate its index. |
 
-Plans may choose another path. Compare measured cost, existing prefixes, tenant sizes, and write load. Without ordered retrieval, consider the narrower child index. Justify retaining both overlapping indexes.
+Plans can choose other paths. Compare tenant sizes, write load, and existing prefixes. Without ordering, consider a narrower child index. Justify overlaps.
 
-## Represent an index in Ent
+## Ent representation
 
-Use `index.Fields(...)`, a stable `StorageKey`, and `Unique()` only for a required invariant. Ent appends edge-index columns after field columns. Expose an FK field when it must lead.
+Use `index.Fields` and stable StorageKey; add Unique only for an invariant. Edge-index columns follow fields; expose an FK field when it must lead. In Content.Indexes, with `index`/`entsql` from Ent's schema/index and dialect/entsql packages:
 
 ```go
-// Add to the existing schema package and Content schema.
-// Imports: entgo.io/ent, entgo.io/ent/schema/index,
-//          entgo.io/ent/dialect/entsql.
-func (Content) Indexes() []ent.Index {
-    return []ent.Index{
-        index.Fields("tenant_id", "status", "created_at", "id").
-            StorageKey("contents_active_page_idx").
-            Annotations(
-                entsql.DescColumns("created_at", "id"),
-                entsql.IndexWhere("deleted_at IS NULL"),
-            ),
-        index.Fields("tenant_id", "course_id", "id").
-            StorageKey("contents_course_id_idx"),
-    }
-}
+index.Fields("tenant_id", "status", "created_at", "id").
+    StorageKey("contents_active_page_idx").
+    Annotations(entsql.DescColumns("created_at", "id"),
+        entsql.IndexWhere("deleted_at IS NULL"))
 ```
 
-The first declaration targets this database shape:
+Inspect generated SQL against Q1. Annotations define shape, not concurrent rollout. Verify selected-release IncludeColumns, IndexType/IndexTypes, and OpClass/OpClassColumn APIs before use. No documented `index.Expr` exists in the verified baseline; use external-object migration ownership for expressions. Match PostgreSQL-normalized partial predicates to avoid repeated diffs.
 
-```sql
-CREATE INDEX contents_active_page_idx
-ON public.contents (tenant_id, status, created_at DESC, id DESC)
-WHERE deleted_at IS NULL;
-```
+## Keys, predicates, payload
 
-Inspect generated SQL. Index annotations define shape, not production rollout. Use [50-migrations.md](50-migrations.md) for concurrent builds.
+- Put useful B-tree equality keys before range/order keys. Leading equalities and the first inequality bound the scan; later predicates can reduce heap visits without narrowing that range. Skip-scan opportunities depend on server version, distinct counts, and selectivity; verify the plan.
+- Match direction, collation, and NULL order. Backward scans do not satisfy every mixed ASC/DESC order. Matching ORDER BY can reduce LIMIT work; preserve the query's unique cursor tie-breaker.
+- Require planning-time implication for partial predicates. `deleted_at IS NULL` can qualify; generic `status=$1` cannot imply `status='published'`. Custom plans can see values. Test actual prepared-plan behavior; parameterization is not universally incompatible.
+- INCLUDE is payload, not a search/sort key or uniqueness member. Consider `IncludeColumns("title")` for Q1 only when projection and measurements justify it. Index-only scans still need visibility-map coverage; changed pages need heap checks. Wide/frequently updated payload can cost more than it saves. GIN cannot provide index-only scans.
+- PostgreSQL creates no automatic child-side FK index. Evaluate leading child keys for joins and parent updates/deletes. Live-row partial indexes omit retained deleted references. Before removal, check constraints, rare operations, observation/reset windows, and coverage. Neither zero scans nor prefix overlap proves redundancy.
 
-Documented annotations include `entsql.IncludeColumns`, `IndexType`, `IndexTypes`, `OpClass`, and `OpClassColumn`. Verify pinned APIs for the required access method/opclass. Use the external-object migration path for expression parts; the documented API has no `index.Expr`. Match database-normalized partial predicates to avoid repeated diffs.
+## Other access methods
 
-Sources: [Ent indexes](https://entgo.io/docs/schema-indexes/), [Ent SQL annotation API](https://pkg.go.dev/entgo.io/ent/dialect/entsql).
+Tie each candidate to concrete generated predicates:
 
-## Choose keys, predicates, and payload
+| Query requirement | Candidate and decisive check |
+| --- | --- |
+| Equality/range/order | B-tree with matching operators, collation, direction, and NULL semantics. |
+| Normalized identifier | `(tenant_id,lower(email))`; generated expression/collation must match. EqualFold alone proves no match. |
+| JSON containment/key search | GIN with matching opclass: jsonb_path_ops lacks key-existence support; jsonb_ops supports it. |
+| Substring/similarity | pg_trgm GIN/GiST; verify extension/opclass/operator. No extractable trigrams can mean a full-index scan. |
+| Full text | GIN/GiST on matching tsvector/configuration; keep expression and normalization consistent. |
+| Large correlated append data | BRIN; verify correlation, lossy rechecks, summarization, and range size. It is not a point-lookup substitute. |
+| Ranges/spatial | Matching GiST/SP-GiST opclass, operator support, extension, and target version. |
 
-Align B-tree leading equality keys, then useful range/order keys. Leading equalities and the first non-equality key bound the scan. Later predicates can reduce heap visits without narrowing that range. Missing leading predicates do not make an index universally unusable. PostgreSQL 18 supports beneficial skip scans for suitable distinct counts/selectivity; verify version and plan before relying on them.
+Expression indexes require immutable expressions; never mislabel time-dependent functions. Preserve binding and identifier allowlists when changing predicates.
 
-Respect direction, collation, and null ordering. Backward scans do not make all-ascending multicolumn indexes satisfy every mixed ASC/DESC order. Matching ORDER BY can reduce LIMIT work. Preserve a deterministic unique pagination tiebreaker through [30-ent-queries.md](30-ent-queries.md).
+## Evidence and acceptance
 
-Require planning-time proof of partial predicates. Fixed `deleted_at IS NULL` can qualify; generic `status=$1` cannot imply `status='published'`. Custom plans can see bound values. Test actual driver/prepared-plan behavior and relevant values. Parameterized queries are not universally incompatible with partial indexes.
+Use estimated EXPLAIN when execution is unauthorized. EXPLAIN ANALYZE executes statements/function effects; rollback cannot neutralize every side effect. In an authorized bounded environment, capture `EXPLAIN (ANALYZE, BUFFERS, FORMAT JSON)` with actual binds, current statistics, and representative tenant/value distributions.
 
-INCLUDE supplies payload, not search/sort keys or uniqueness. Add `entsql.IncludeColumns("title")` to Q1 only when exact projection and measurements justify covering. Index-only scans also require suitable visibility-map state; recently changed pages need heap checks. Wide/frequently updated payload can outweigh benefits. GIN cannot provide index-only scans. Use [30-ent-queries.md](30-ent-queries.md) for projection changes.
+Compare estimates/actual rows, loops, filtered/scanned work, buffers, heap fetches, sorting/spills, and planning/execution time. Measure size/write impact. Resolve stale statistics/bad estimates before adding compensating indexes. A plan node proves no speedup. Projection evidence also needs application latency/allocations because EXPLAIN omits transfer/decoding.
 
-PostgreSQL creates no automatic child-side FK index. Evaluate leading child keys for joins and parent updates/deletes. A live-row partial index cannot cover FK checks involving deleted children that retain references. Preserve integrity when considering removal. Check observation/reset windows, constraints, rare operations, and coverage; zero scans or prefix overlap alone proves no redundancy.
+Return the query-to-index matrix, before/after evidence, and limits. Without execution, deliver unmeasured candidates and validation instructions. Stop when the selected workload meets its target with preserved semantics.
 
-Sources: [multicolumn](https://www.postgresql.org/docs/current/indexes-multicolumn.html), [ordering](https://www.postgresql.org/docs/current/indexes-ordering.html), [partial indexes](https://www.postgresql.org/docs/current/indexes-partial.html), [prepared plans](https://www.postgresql.org/docs/current/sql-prepare.html), [covering indexes](https://www.postgresql.org/docs/current/indexes-index-only-scans.html), [foreign keys](https://www.postgresql.org/docs/current/ddl-constraints.html#DDL-CONSTRAINTS-FK).
-
-## Choose other access methods
-
-| Need | Candidate | Check |
-|---|---|---|
-| Equality/range and sorted retrieval | B-tree | Operators, collation, direction and null semantics match. |
-| Case-normalized identifier | Expression index such as `(tenant_id, lower(email))` | Generated SQL must apply the same expression/collation. `EqualFold` does not prove that it does. |
-| JSONB containment or key search | GIN | Match the operator class. `jsonb_path_ops` does not support key existence; default `jsonb_ops` does. |
-| Substring or similarity search | `pg_trgm` GIN/GiST | Extension availability, opclass, query operator. Patterns with no extractable trigrams can cause full-index scans. |
-| Full-text search | GIN/GiST on a matching tsvector expression or stored representation | Text-search configuration and expression must match the query; keep normalization consistent. |
-| Large correlated append data | BRIN | Verify physical correlation, lossy rechecks, summarization, and range size. It is not a point-lookup substitute. |
-| Ranges/spatial relationships | Matching GiST/SP-GiST opclass | Verify operator support, extension prerequisites and target version. |
-
-Expression indexes require immutable expressions; do not mislabel time-dependent functions. Preserve value binding and allowlist dynamic identifiers when changing predicates.
-
-Sources: [access methods](https://www.postgresql.org/docs/current/indexes-types.html), [expressions](https://www.postgresql.org/docs/current/indexes-expressional.html), [JSONB indexes](https://www.postgresql.org/docs/current/datatype-json.html#JSON-INDEXING), [trigrams](https://www.postgresql.org/docs/current/pgtrgm.html), [BRIN](https://www.postgresql.org/docs/current/brin.html), [text search](https://www.postgresql.org/docs/current/textsearch-indexes.html).
-
-## Measure and report
-
-Use estimated EXPLAIN when execution is unauthorized. `EXPLAIN ANALYZE` executes statements and function side effects; rollback does not make every effect safe. Require an authorized environment and bounded execution for measurements. Capture representative `EXPLAIN (ANALYZE, BUFFERS, FORMAT JSON)` with actual binds, current statistics, and relevant tenant/value distributions.
-
-Compare estimated/actual rows, loops, scanned/filtered work, buffers, heap fetches, sorting/spills, and planning/execution time. Check index size and write impact. Resolve stale statistics/bad estimates before masking planner problems with indexes. A node name proves no improvement. For projections, measure application latency/allocations too; EXPLAIN excludes transfer and decoding.
-
-Return the query-to-index matrix, before/after evidence, and limits. Without execution, deliver candidate schema/migration and validation instructions labeled unmeasured. Stop when the selected workload meets its target with preserved behavior. Route index removal/live rollout through [50-migrations.md](50-migrations.md) and main-skill authorization.
-
-Sources: [EXPLAIN command](https://www.postgresql.org/docs/current/sql-explain.html), [planner statistics](https://www.postgresql.org/docs/current/planner-stats.html).
+Consult [Ent indexes](https://entgo.io/docs/schema-indexes/) and [annotation APIs](https://pkg.go.dev/entgo.io/ent/dialect/entsql) for unfamiliar representation. Use target-version PostgreSQL [multicolumn](https://www.postgresql.org/docs/current/indexes-multicolumn.html), [partial](https://www.postgresql.org/docs/current/indexes-partial.html), [index-only](https://www.postgresql.org/docs/current/indexes-index-only-scans.html), and [EXPLAIN](https://www.postgresql.org/docs/current/sql-explain.html) guidance when relying on planner behavior. [Source policy](00-sources.md) routes specialized opclasses/extensions and version mismatches.

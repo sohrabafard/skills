@@ -1,33 +1,68 @@
 # Consumer surfaces and prerequisites
 
-This is one portable Agent Skill with only `name` and `description` frontmatter.
-`agents/openai.yaml` supplies optional OpenAI interface metadata. It is neither a subagent definition nor a permission grant.
-No model, effort, host tool grant, MCP server, or private Alaa dependency is pinned.
+Read this for host import, registration, invocation, or discovery.
+Refresh the cited host documentation when versions or mechanisms differ.
+Portable `SKILL.md` uses only `name` and `description` frontmatter.
+`agents/openai.yaml` is OpenAI interface metadata, not an executable specialist or permission grant.
+Extracting these native templates installs nothing.
 
-## Surface-specific use
+## Locations and invocation
 
-| Surface | Consumer behavior |
-| --- | --- |
-| Codex CLI / IDE | Use a supported skill location under existing installation authorization. Invoke `$alaa-ent-go-orm-db` or select it in the picker. |
-| Claude Code, including Desktop Code | Use the installed registered command, normally `/alaa-ent-go-orm-db` for a personal/project skill. Plugin installation may add a namespace. |
-| ChatGPT with Skills support | Use the host's import/installation flow and picker or registered `@` mention. Support depends on the host. |
-| Claude chat / API with Skills support | Import through that surface's supported mechanism. Do not assume Claude Code commands, filesystem discovery, or shell access. |
-| Agent without Skills support | Read `SKILL.md` and triggered references explicitly. This is manual application, not automatic discovery. |
+Use these destinations only for explicitly authorized setup; preserve unrelated configuration and resolve name conflicts before writes.
+Templates are under `assets/specialist/`.
 
-Resolve the host before writing installation commands or invocation examples.
-Do not assume a local skill is installed in ChatGPT or Claude chat.
-Keep automatic discovery enabled unless the user changes that policy.
-Automatic selection does not authorize sensitive execution.
+| Host | Skill directory | Agent template → destination |
+| --- | --- | --- |
+| Local Codex | `.agents/skills/alaa-ent-go-orm-db/` or `~/.agents/skills/alaa-ent-go-orm-db/` | `codex/alaa-ent-specialist.toml` → `.codex/agents/alaa-ent-specialist.toml` or `~/.codex/agents/alaa-ent-specialist.toml` |
+| Claude Code | `.claude/skills/alaa-ent-go-orm-db/` or `~/.claude/skills/alaa-ent-go-orm-db/` | `claude/alaa-ent-specialist.md` → `.claude/agents/alaa-ent-specialist.md` or `~/.claude/agents/alaa-ent-specialist.md` |
 
-Sources verified 2026-11-05: [Agent Skills specification](https://agentskills.io/specification), [OpenAI skills](https://learn.chatgpt.com/docs/build-skills), [Claude Code skills](https://code.claude.com/docs/en/skills).
+Invoke the skill through the supported Codex picker or `$alaa-ent-go-orm-db`, or the observed Claude Code command, ordinarily `/alaa-ent-go-orm-db` for this layout.
+Keep automatic discovery enabled unless the user changes it.
+ChatGPT and Claude chat/API require their own supported skill import and invocation mechanisms; these local agent files do not establish hosted agent registration.
+Without Skills support, explicitly reading `SKILL.md` and triggered references permits manual application, not native-agent claims.
 
-## Execution prerequisites
+## Codex
 
-- Design/review needs readable schemas and query context; changed volatile facts require browsing.
-- Compilation/generation needs the supported installed Go toolchain, module dependencies, and project source.
-- Database checks need authorized PostgreSQL matching the target major version and representative synthetic fixtures.
-- Atlas operations need the installed edition's verified capabilities. Paid features are optional, never assumed.
-- The optional baseline helper needs Python 3.10 or newer; equivalent manual inspection is supported.
+Current standalone agent TOML requires `name`, `description`, and `developer_instructions`; no extra `[agents.<name>]` registration is needed for that mechanism.
+The configuration reference also documents `agents.<name>.config_file` role layers: verify the target schema before adapting to that mechanism; do not assume identical file formats.
+There is no documented Claude-style preload here; `skills.config` is not a preload.
+The wrapper explicitly reads canonical sources.
 
-The package installs no tools and provisions no database. It contains no DSNs, credentials, or production configuration.
-Format validation proves neither discovery nor invocation. Report only exercised surfaces.
+Custom agents inherit parent permissions, provider, and MCP servers.
+Agent-local `sandbox_mode` does not enforce a separate read-only sandbox.
+Inspect effective tools and use approved parent controls; prose cannot enforce an unavailable restriction.
+
+## Claude Code
+
+The Markdown adapter preloads `alaa-ent-go-orm-db` through `skills`, then verifies its readable canonical source.
+The scoped tool list supports local implementation, checks, and documentation retrieval and omits Agent.
+Model, effort, permission mode, memory, hooks, and MCP configuration remain unset; effective host permissions and user authority still apply.
+A missing or disabled preload may be skipped, so successful creation alone does not verify loading.
+
+The supplied preload targets personal/project installation.
+A plugin conversion must resolve actual scoped agent and skill IDs; skill commands use `/plugin-name:skill-name`.
+Verify the accepted preload identifier and effective load before changing it; do not guess namespaces or rely on colliding short aliases.
+This package supplies no plugin manifest.
+
+## Verify discovery
+
+Read the active host/version, role definition, effective tools, and canonical source without writes.
+Inspect the host's exposed role roster and loaded definition; use its skill picker for skill discovery.
+Claude Code `/agents` behavior varies by version and may show instructions rather than a role list.
+Dispatch to the exact observed `alaa-ent-specialist` identity or verified scoped ID with [85-specialist-delegation.md](85-specialist-delegation.md)'s lane facts.
+Verify the specialist loaded the expected canonical source and triggered references before dependent work.
+Missing roles, disabled skills, unreadable references, or stale definitions block that dispatch; report the gap without auto-installation, permission changes, or a disguised generic fallback.
+
+Existing Alaa orchestrators may additionally require role catalog, capability policy, and installer admission.
+Read their accessible current contracts when invoked; host discovery alone does not satisfy those gates, and this package changes none.
+
+## Prerequisites and evidence limits
+
+Readable schema/query context and current source access support design and review.
+Generation needs Go, modules, and project source; database checks need an authorized target matching the PostgreSQL major version and representative synthetic fixtures.
+Verify Atlas capabilities before use; paid features are optional.
+The optional baseline helper needs Python 3.10+; manual inspection remains supported.
+Delegation requires an exposed native role and required tools.
+Static parsing verifies structure only; claim discovery or invocation only after observing it on the target host.
+
+Host sources checked 2026-11-05: [OpenAI subagents](https://learn.chatgpt.com/docs/agent-configuration/subagents), [configuration](https://learn.chatgpt.com/docs/config-file/config-reference), [skills](https://learn.chatgpt.com/docs/build-skills), [Claude Code subagents](https://code.claude.com/docs/en/sub-agents), [skills](https://code.claude.com/docs/en/skills).

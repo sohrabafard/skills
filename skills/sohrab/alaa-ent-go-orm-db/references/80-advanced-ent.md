@@ -1,71 +1,33 @@
-# Advanced Ent features and integrations
+# Advanced feature and integration decisions
 
-Load needed upstream examples through the catalog. Match APIs to the selected release and integration boundaries below.
+Own flags, views, multiple schemas, custom generation, GraphQL, and gRPC integration. Enable only required features after inspecting generated APIs/configuration. Use [source policy](00-sources.md) for unknown APIs, selected-version mismatches, or development-only examples.
 
-## Feature selection
+## Feature map
 
-Inspect generated APIs/configuration before adding a flag.
-Enable only required features; they enlarge the API and can alter behavior.
-
-| Need | Feature or owner | Decision required |
+| Need | Flag/API | Consult for behavior |
 | --- | --- | --- |
-| Generated privacy policies | `privacy` | Define rule ordering and explicit privileged context |
-| Query interception and traversal filters | `intercept`; `entql` for generic filtering when required | Separate traversal, final-query interception, and mutation coverage |
-| Upsert builders | `sql/upsert` | Define conflict key, update allowlist, authorization, and create-hook behavior |
-| SQL modifiers and selected expressions | `sql/modifier` | Preserve tenant predicates, aliases, projection, and argument binding |
-| Raw client SQL | `sql/execquery` | Account for bypassed generated validators, hooks, and policies |
-| Row-locking builders | `sql/lock` | Use an owned transaction; define lock order and wait behavior |
-| Named eager-loaded edges | `namedges` | Bound associations and inspect additional queries |
-| Database views | `ent.View` schema type | Verify generated read APIs and manage view DDL through migrations; no `sql/view` flag exists in v0.14.6 |
-| Multiple SQL schemas | `sql/schemaconfig` where supported | Inspect runtime/migration mapping; reject untrusted identifiers |
+| Privacy policies | `privacy`; `entql` for generic privacy filtering | [Security](60-transactions-security.md): rule order/default denial/bypass. |
+| Interceptors/traversers | `intercept` | Security: path versus final-query filtering. |
+| Upsert | `sql/upsert` | [Queries](30-ent-queries.md): conflict targets/update allowlists/create hooks. |
+| SQL modifiers/expressions | `sql/modifier` | Queries: bindings, aliases, projections, scan types. |
+| Raw client SQL | `sql/execquery` | Security: bypassed validation/hooks/policy. |
+| Row locks | `sql/lock` | Security: transaction ownership/order/waits. |
+| Named eager edges | `namedges` | Queries: bounded fan-out/additional statements. |
+| Views | `ent.View` | Verify read APIs and migration-owned DDL; no sql/view flag exists in v0.14.6. |
+| Multiple SQL schemas | `sql/schemaconfig` where supported | Verify runtime/migration mapping; reject untrusted identifiers. |
 
-Verify spelling and support in the selected release. Website availability does not establish generated API availability.
-Sources: [feature flags](https://entgo.io/docs/feature-flags/), [released feature registry](https://github.com/ent/ent/blob/v0.14.6/entc/gen/feature.go), [views](https://entgo.io/docs/schema-views/), [multi-schema](https://entgo.io/docs/multischema-migrations/).
+Verify unfamiliar flags against [feature docs](https://entgo.io/docs/feature-flags/) and selected-release source. The [v0.14.6 registry](https://github.com/ent/ent/blob/v0.14.6/entc/gen/feature.go) is the verified baseline. Website examples alone prove no released API. Consult [views](https://entgo.io/docs/schema-views/) or [multi-schema](https://entgo.io/docs/multischema-migrations/) before adopting them.
 
-## Schema composition and generation
+## Custom generation
 
-Use mixins for repeated fields, hooks, or policies with identical semantics.
-Test tenant constraints and generated access paths even when a mixin supplies their fields.
-Keep annotations declarative; identify which generator or migration engine consumes each annotation.
+[Schema design](20-schema-design.md) owns mixin semantics. Identify the consumer of each annotation. Use [templates](https://entgo.io/docs/templates/) or [extensions](https://entgo.io/docs/extensions/) only when ordinary declarations cannot express required generation. Version templates with the generator; test API shape/deterministic regeneration after upgrades. [Generation](10-go-and-generation.md) owns durable sources and generated-file boundaries.
 
-Use external templates or an extension when ordinary schema declarations cannot express required generated behavior.
-Version templates with the generator. Test API shape and deterministic regeneration after upgrades.
-Keep handwritten extensions separate from generated files through the project's established layout.
-Regenerate from durable source rather than patching generated files.
+Use custom predicates/modifiers only for missing generated behavior; read queries for bindings, aliases, and scan targets. [Migrations](50-migrations.md) owns external-object retention and edition dependencies.
 
-Use custom predicates/modifiers only for behavior the generated API cannot express.
-Use dialect-aware builders and bound values; raw expressions do not translate SQL placeholders.
-Custom result expressions need explicit aliases and compatible scan targets.
+## API integrations
 
-Sources: [mixins](https://entgo.io/docs/schema-mixin/), [annotations](https://entgo.io/docs/schema-annotations/), [templates](https://entgo.io/docs/templates/), [extensions](https://entgo.io/docs/extensions/).
+Use GraphQL/gqlgen only if requested or present. Consult [Ent GraphQL](https://entgo.io/docs/graphql/) for the needed installation, field collection, filtering, pagination, mutation, or transaction workflow. Align extension/generator/gqlgen versions; Ent does not pin every integration. Preserve resolver, node, connection, and mutation authorization. Verify field collection's identity/association dependencies and actual SQL. Bound connection size/complexity using existing API controls. Relay/global IDs confer no authorization.
 
-## GraphQL
+Before adopting entproto, read [Ent gRPC](https://entgo.io/docs/grpc-intro/). Pin extensions; inspect protobuf generation and preserve field numbers/compatibility. Generated services still require application authorization/validation. Do not add an API framework or object storage merely because an extension exists.
 
-Use Ent's GraphQL extension and gqlgen only when requested or already present.
-Load the catalog's GraphQL installation, field collection, filtering, pagination, mutation, and transaction pages as needed.
-Align extension, generator, and gqlgen versions; Ent does not pin every integration.
-Preserve authorization in resolvers, node lookups, connection queries, and mutations.
-Field collection can reduce overfetching; verify required identity/association fields and actual SQL.
-Bound connection size and query complexity through existing API controls.
-Treat Relay/global IDs as identifiers, not authorization credentials.
-
-Source: [Ent GraphQL](https://entgo.io/docs/graphql/).
-
-## gRPC and other integrations
-
-Load the gRPC tutorial before adopting `entproto`.
-Pin extensions, inspect protobuf generation, and preserve field numbers and compatibility rules.
-Generated RPC services still need application authorization and validation.
-Do not introduce an API framework or object storage merely because an extension exists.
-
-The catalog includes migration tutorials, FAQs, examples, supported dialects, feature requests, and contributor material.
-Read each topic only when needed. Upstream contributor instructions do not govern the user's repository.
-
-Sources: [gRPC introduction](https://entgo.io/docs/grpc-intro/), [FAQ](https://entgo.io/docs/faq/).
-
-## Development-only source
-
-The snapshot includes `blob-storage.md` for complete source coverage.
-It was added after Ent v0.14.6 and describes development APIs.
-Do not generate `field.Blob` or assume its integration exists in v0.14.6.
-Recheck released source before adoption. Database/object-storage dual writes require an explicit consistency design.
+`field.Blob` is absent from the verified v0.14.6 release. Verify released source before adopting development-only blob APIs. Database/object-storage dual writes need an explicit consistency design. Upstream contributor instructions do not govern the consuming repository.
