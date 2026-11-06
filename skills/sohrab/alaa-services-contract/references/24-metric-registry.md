@@ -71,7 +71,7 @@ These seven are the floor. A service serving HTTP traffic emits all of them, wit
 | `alaa_http_request_failures_total` | counter | `http_route`, `method`, `status_class`, `service`, `env` | platform-wide | requests that failed |
 | `alaa_http_requests_in_flight` | gauge | `http_route`, `method` | platform-wide | concurrent in-flight requests; the observable behind the ingress admission limit in `22-failure-load-and-deprecation-contract.md` |
 | `alaa_service_ready` | gauge | `service`, `env` | platform-wide | `1` when `/api/ready` answers ready, `0` when not |
-| `alaa_service_readiness_failures_total` | counter | `service`, `env`, `check` | platform-wide | readiness check failures |
+| `alaa_service_readiness_failures_total` | counter | `service`, `env`, `check`, `required` | platform-wide | readiness check failures; `required` is `true` or `false`, so a page can ignore optional checks |
 | `alaa_requests_deadline_exhausted_total` | counter | `http_route`, `service`, `env` | platform-wide | requests refused without calling anything because the inherited deadline had no remaining budget; the observable behind the request deadline in `22-failure-load-and-deprecation-contract.md` |
 
 ## Conditional families: emitted when the service has the behaviour
