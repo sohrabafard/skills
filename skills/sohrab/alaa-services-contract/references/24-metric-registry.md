@@ -105,7 +105,7 @@ nothing rather than inventing a near-miss name.
 | `alaa_db_pool_in_use` | gauge | any service with a database | the observable behind the pool bound in `22-failure-load-and-deprecation-contract.md` |
 | `alaa_db_pool_idle` | gauge | any service with a database | idle pooled connections |
 | `alaa_db_pool_wait_seconds` | histogram | any service with a database | time spent waiting to acquire a pooled connection |
-| `alaa_db_session_guard_seconds` | gauge | any service on the `alaa-go-chi` kit with a database | the effective server-side session guard in seconds, as the server reports it on the connection sampled; `0` is PostgreSQL's own encoding for disabled |
+| `alaa_db_session_guard_seconds` | gauge | any Go service built on `alaa-go-chi` with a database | the effective server-side session guard in seconds, as the server reports it on the connection sampled; `0` is PostgreSQL's own encoding for disabled |
 | `alaa_db_session_guard_observed` | gauge | same | `1` when the guard was read successfully, `0` when the read failed, so a disabled guard is distinguishable from an unread one |
 
 Where the driver and database support them safely: `alaa_db_transactions_total`,
@@ -171,6 +171,7 @@ One family, because three spellings exist today and no panel can read all three.
 | `alaa_outbox_oldest_age_seconds` | gauge | any service with an outbox | age of the oldest unpublished row |
 | `alaa_outbox_published_total` | counter | any service with an outbox | rows successfully published |
 | `alaa_outbox_publish_failures_total` | counter | any service with an outbox | publish attempts that failed |
+| `alaa_outbox_quarantined_total` | counter | any Go service built on `alaa-go-chi` with a bounded outbox lane | rows that reached the terminal `quarantined` state, at the attempt limit or as undecodable at claim time; the only signal that moves up on a delivery loss, because quarantine lowers `alaa_outbox_depth` and `alaa_outbox_oldest_age_seconds` |
 
 ### Worker and runtime
 | Metric | Type | Owner | Measures |
@@ -183,12 +184,56 @@ One family, because three spellings exist today and no panel can read all three.
 | `alaa_job_lane_oldest_age_seconds` | gauge | same | age of the oldest waiting job per lane |
 | `alaa_job_dead_depth` | gauge | same | jobs in the terminal dead state |
 | `alaa_seed_runs_total` | counter | any service with a seed runner | seed executions by outcome |
-| `alaa_http_server_error_total` | counter | any Go service on the kit | server-level faults bridged from the HTTP server's own error log: TLS handshake failures, header-read timeouts, malformed `Content-Length` |
+| `alaa_http_server_error_total` | counter | any Go service built on `alaa-go-chi` | server-level faults bridged from the HTTP server's own error log: TLS handshake failures, header-read timeouts, malformed `Content-Length` |
 
 Go services also expose goroutine count, GC cycles, GC pause duration, and heap usage through the official
 Prometheus Go collectors rather than hand-rolled gauges; those keep their upstream names. Laravel and Octane
 services also expose Octane worker count, worker restart count, queue worker failure count, queue busy
 signals, and long job execution time under the `alaa_worker_*` names above.
+
+### Kit-emitted families (owned by the consuming service)
+
+A Go service built on `alaa-go-chi` publishes these under its own name, so the service that emits them owns
+them. Each family is emitted only by a service that uses the matching package; a service without that
+behaviour emits nothing under the name. `service` and `env` arrive as const labels. Every variable label
+below is a closed set chosen in code, never a request, tenant, user or operation identifier.
+
+| Metric | Type | Labels | Owner | Measures |
+|---|---|---|---|---|
+| `alaa_job_runner_state` | gauge | `lane`, `state` | any service with a job runner | `1` for the state a lane is in and `0` for every other state in the closed set |
+| `alaa_job_runner_transitions_total` | counter | `lane`, `state` | same | job-runner state changes per lane; shows a flap a gauge misses between two scrapes |
+| `alaa_mq_session_phase` | gauge | `role`, `phase` | any service with a broker session | `1` for the phase a broker role is in and `0` for every other phase in the closed set |
+| `alaa_mq_session_transitions_total` | counter | `role`, `phase` | same | broker-session phase changes per role; shows a flap a gauge misses between two scrapes |
+| `alaa_ctlops_operations_total` | counter | `operation_key`, `risk` | any service with ControlledOps | operations created |
+| `alaa_ctlops_transitions_total` | counter | `operation_key`, `from`, `to` | same | lifecycle status transitions |
+| `alaa_ctlops_admission_decisions_total` | counter | `operation_key`, `kind`, `decision` | same | execution admission decisions |
+| `alaa_ctlops_approvals_total` | counter | `operation_key`, `decision` | same | approval decisions |
+| `alaa_ctlops_hash_mismatches_total` | counter | `operation_key`, `stage` | same | canonical hash mismatches detected at approval or admission |
+| `alaa_ctlops_attempt_duration_seconds` | histogram | `operation_key`, `kind` | same | attempt duration |
+| `alaa_bulk_operations_total` | counter | `operation_key`, `status` | any service with bulk operations | attempts finalized, by terminal status |
+| `alaa_bulk_items_total` | counter | `operation_key`, `outcome` | same | items finalized, by item outcome |
+| `alaa_bulk_chunk_duration_seconds` | histogram | `operation_key`, `stage` | same | duration of one transaction-granularity commit unit |
+| `alaa_bulk_claim_contention_total` | counter | `operation_key` | same | execution triggers that could not claim because the work was already over |
+| `alaa_bulk_execution_waits_total` | counter | `operation_key` | same | execution triggers that waited because a live owner held the execution lease; expected behaviour, so never alert on it as contention |
+| `alaa_bulk_cancelled_total` | counter | `operation_key` | same | attempts stopped at a cooperative cancellation boundary |
+| `alaa_bulk_resumes_total` | counter | `operation_key` | same | attempts resumed after durable lease expiry |
+| `alaa_bulk_execution_lease_lost_total` | counter | `operation_key` | same | executions stopped after losing the durable execution lease |
+| `alaa_bulk_execution_lease_release_failures_total` | counter | `operation_key` | same | non-terminal exits whose lease release failed, leaving the lease live until expiry |
+| `alaa_redis_cache_reads_total` | counter | `result` | any service with a Redis cache | cache read outcomes |
+| `alaa_redis_operations_total` | counter | `operation`, `result` | any service with Redis | Redis transport operations |
+| `alaa_redis_operation_duration_seconds` | histogram | `operation`, `result` | same | Redis transport operation duration |
+| `alaa_redis_pool_hits_total` | counter | none | same | pool connection hits |
+| `alaa_redis_pool_misses_total` | counter | none | same | pool connection misses |
+| `alaa_redis_pool_timeouts_total` | counter | none | same | pool wait timeouts |
+| `alaa_redis_pool_waits_total` | counter | none | same | pool waits |
+| `alaa_redis_pool_wait_duration_seconds_total` | counter | none | same | cumulative pool wait time in seconds |
+| `alaa_redis_pool_unusable_total` | counter | none | same | unusable pool connection observations |
+| `alaa_redis_pool_stale_connections_total` | counter | none | same | stale connections removed |
+| `alaa_redis_pool_connections` | gauge | `state` | same | pool connections and pending requests by state |
+| `alaa_ch_queries_total` | counter | `operation`, `result` | any service with a ClickHouse read lane | read-lane transport calls |
+| `alaa_ch_query_duration_seconds` | histogram | `operation`, `result` | same | read-lane call duration, from dispatch through stream consumption |
+| `alaa_ch_pool_connections` | gauge | `state` (`open`, `idle`, `max_open`, `max_idle`) | same | connection pool state and configured bounds |
+| `alaa_filter_decisions_total` | counter | `set`, `outcome` | any service that decodes filters | filter decode decisions per set and outcome |
 
 ## Service-owned business families
 
@@ -321,14 +366,6 @@ reading a neighbour's code does not copy the wrong spelling.
 
 | Current name | Repository | Becomes |
 |---|---|---|
-| `http_requests_total`, `http_request_duration_seconds`, `http_requests_in_flight` | `alaa-go-chi` kit, `obskit/metricnames.go:4-6` | the `alaa_`-prefixed baseline names above |
-| `outbox_depth`, `outbox_oldest_age_seconds`, `outbox_publish_failures_total` | kit, `obskit/metricnames.go:7-9` | `alaa_outbox_depth`, `alaa_outbox_oldest_age_seconds`, `alaa_outbox_publish_failures_total` |
-| `job_lane_depth`, `job_lane_oldest_age_seconds`, `job_dead_depth` | kit, `obskit/metricnames.go:10-12` | the `alaa_job_*` names above |
-| `consumer_lag` | kit, `obskit/metricnames.go:13` | `alaa_queue_consumer_lag_seconds`, which also fixes the missing unit suffix |
-| `pg_pool_wait_seconds` | kit, `obskit/metricnames.go:14` | `alaa_db_pool_wait_seconds` |
-| `seed_runs_total` | kit, `obskit/metricnames.go:15` | `alaa_seed_runs_total` |
-| `service_readiness`, `service_readiness_transitions_total` | kit, `obskit/metricnames.go:16-17` | `alaa_service_ready`, `alaa_service_readiness_failures_total` |
-| `http_server_error_total` | kit, `obskit/metricnames.go:25` | `alaa_http_server_error_total` |
 | `entitlement_http_requests_total`, `entitlement_http_request_duration_seconds` | `entitlement-api` api, `internal/observability/metrics.go:93,100`; labels `route`, `method`, `status_class` | the `alaa_http_*` baseline names above, with `http_route`, `service`, `env` |
 | `entitlement_http_shed_total` | `entitlement-api` api, `internal/observability/metrics.go:101`; label `reason` (`overloaded`, `deadline_exceeded`) | owed rename; no conforming shed family is registered yet, so propose one before renaming |
 | `entitlement_grpc_requests_total`, `entitlement_grpc_request_duration_seconds` | `entitlement-api` api gRPC listener, `metrics.go:108,115` | `alaa_dependency_requests_total` and `alaa_dependency_request_duration_seconds` with a `dependency` label, or registered `alaa_grpc_*` rows if the gRPC surface needs its own family |

@@ -306,16 +306,13 @@ are the two that carry the information:
 
 - The **key** is the check name, and it is what makes a failure attributable. A consumer reads
   `checks.database.status` directly, with no scan and no index arithmetic. An array of check objects cannot
-  answer "is the database up" at all when the objects carry no name field — which is the `alaa-go-chi` kit's
-  current shape: `readykit/report.go:11-22` declares `Checks []CheckItem` and `CheckItem` has `Status`,
-  `Required`, `Code`, and `Message` and no name of any kind, so the array says something failed and cannot
-  say what.
+  answer "is the database up" at all when the objects carry no name field.
 - **`required`** is what separates a degraded optional dependency from a failed mandatory one. `redis` down
   with `required: false` is a service that still serves traffic more slowly; `database` down with
   `required: true` is a service that must leave rotation. Without the field both render as one red check,
-  and an orchestrator either restarts a healthy service or leaves a broken one in rotation. `comment` and
-  `content` already emit it inside a name-keyed object, which is the ratified shape; the kit's array is the
-  only evidenced departure from it.
+  and an orchestrator either restarts a healthy service or leaves a broken one in rotation. `comment`,
+  `content` and every Go service built on `alaa-go-chi` already emit it inside a name-keyed object, which is
+  the ratified shape.
 
 Observable that decides compliance: `jq -e '.checks | type == "object" and (to_entries | all(.value | has("status") and has("required") and has("code") and has("message")))'` succeeds on both a ready and a not-ready
 fixture committed in the repository.

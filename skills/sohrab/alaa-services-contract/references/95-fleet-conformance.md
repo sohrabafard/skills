@@ -114,8 +114,8 @@ surveyor to *search* for internal identifier exposure rather than assume there i
 | 6 | Exchange `<service>.events`, routing key is `message_type` verbatim | `23-queue-and-exchange-registry.md` | none | `auth`, `content`, `entitlement-platform`, `comment`; kit enforces no format |
 | 7 | A service that authorizes reads `X-Access` | `28-backend-permission-authorization-and-role-freeze.md` | `comment`, `content`, `entitlement-api`, kit | `auth` |
 | 8 | One request deadline, originated by the gateway from env and decremented per hop | `22-failure-load-and-deprecation-contract.md` | none | all seven; `gateway` owns the change that unblocks the rest |
-| 9 | Every application metric name begins `alaa_` | `24-metric-registry.md` | `auth`, `content`, `comment` (*second pass*) | kit; `entitlement-platform` (*second pass*); `gateway`, `wa` unproven |
-| 10 | Readiness `checks` is an object keyed by check name, each item carrying `required` | `10-core-service-contract.md` | `comment`, `content` (*second pass*, both fields evidenced) | kit |
+| 9 | Every application metric name begins `alaa_` | `24-metric-registry.md` | `auth`, `content`, `comment` (*second pass*) | Go services on `alaa-go-chi` (every kit-emitted name is `alaa_`-prefixed, `obskit/metricnames.go`, `ctlopskit/metrics.go`, `bulkkit/metrics.go`, `rediskit/metrics.go`, `chkit/metrics.go`, `filterkit/metrics.go`) | `entitlement-platform` (*second pass*); `gateway`, `wa` unproven |
+| 10 | Readiness `checks` is an object keyed by check name, each item carrying `required` | `10-core-service-contract.md` | `comment`, `content` (*second pass*, both fields evidenced), Go services on `alaa-go-chi` (`readykit` marshals `checks` as an object keyed by check name, each item `status`, `required`, `code`, `message`) | none evidenced |
 
 Two further findings, same status as the ten:
 
@@ -166,14 +166,14 @@ Corrections to note, because the evidence did not support the first reading:
   names and the sidecar registers eight `authz_sidecar_*` names, none of them prefixed. 2026-10-09: the
   nineteen projection-worker metrics of `entitlement-api` (`internal/observability/projection_metrics.go`)
   are renamed to `alaa_entitlement_projection_*` on an unmerged local branch and registered in
-  `24-metric-registry.md`; the fifteen `entitlement_*` names above stay non-conforming. The kit's bare names
-  are quoted and confirmed. `gateway` and `wa` metric names remain UNDETERMINED.
+  `24-metric-registry.md`; the fifteen `entitlement_*` names above stay non-conforming. Every name `alaa-go-chi` emits carries the
+  prefix. `gateway` and `wa` metric names remain UNDETERMINED.
 - #10: *second pass*: `comment` and `content` both emit an object keyed by check name **and** carry
   `required` inside each item — `comment/app/Support/Operations/OperationalStatusService.php:216-236` and
   `content/app/Support/Operations/OperationalStatusService.php:268-290` build every item as
   `{status, required, code, message}`. The ratified shape is therefore what the two Laravel services already
-  ship, and the kit is the only evidenced departure: `readykit/report.go:12-26` declares
-  `Checks []CheckItem` with no name field of any kind, so its array cannot say which check failed. `auth`
+  ship, and Go services on `alaa-go-chi` emit the same object: `readykit/report.go` marshals `checks` as an object keyed by
+  canonical check name with `status`, `required`, `code` and `message` per item. `auth`
   and `entitlement-api` list `checks` as a top-level key without evidencing its element type; both still
   need a one-line answer in the next pass.
 
@@ -481,56 +481,44 @@ by naming the component that renders each surface.
 The kit is not deployed, which makes it the highest-leverage repository in this list: every rule it gets
 right is inherited by every Go service built on it, and every rule it gets wrong is inherited the same way.
 
-1. **Prefix every metric name `alaa_`.** `http_requests_total`, `http_request_duration_seconds`,
-   `http_requests_in_flight`, `outbox_depth`, `outbox_oldest_age_seconds`, `outbox_publish_failures_total`,
-   `job_lane_depth`, `job_lane_oldest_age_seconds`, `job_dead_depth`, `consumer_lag`, `pg_pool_wait_seconds`,
-   `seed_runs_total`, `service_readiness`, `service_readiness_transitions_total`, and
-   `http_server_error_total` are all bare. Rule: `21-alaa-platform-observability-directive.md`. Evidence:
-   `obskit/metricnames.go:3-26`.
-2. **Make readiness `checks` an object keyed by check name.** The kit emits an array of
-   `{status,required,code,message}`; `comment` and `content` emit an object. Same field, two types, and no
-   consumer can parse both. *Second pass*: it is worse than a type mismatch — `CheckItem` has **no name
-   field at all** (`readykit/report.go:11-22`), so the array cannot say which check failed even to a
-   consumer willing to iterate it. Keep `required`, which the kit already has and which is what separates a
-   degraded optional dependency from a failed mandatory one. Rule: `10-core-service-contract.md`.
-3. **Always render `meta.next_cursor`, and add `meta.prev_cursor` beside it.** The Go field is a string
+1. **Always render `meta.next_cursor`, and add `meta.prev_cursor` beside it.** The Go field is a string
    with `omitempty`, so the last page omits the key while `CONTRACTS.md:72-73` documents `null`. The kit's
    own survey records this as its own drift; the contract resolves it in `CONTRACTS.md`'s favour. The
    amendment adds a second always-present key, `meta.prev_cursor`, `null` at the start of the collection, so
    the fix is one change to the envelope struct rather than two. Rule:
    `25-end-to-end-flow-and-boundaries.md`. Evidence: `httpkit/envelope.go:8-10`.
-4. **Give the consumer abstraction a required prefetch parameter.** `ConsumerChannel` exposes only
+2. **Give the consumer abstraction a required prefetch parameter.** `ConsumerChannel` exposes only
    `Consume(ctx, queue)`, so no service built on it can bound its consumer even when it wants to, while the
    kit's own `AGENTS.md:15` requires bounded consumers. Rule:
    `22-failure-load-and-deprecation-contract.md`. Evidence: `mqkit/consumer.go:29-31,58-66`.
-5. **Enforce the routing-key and exchange grammar in `mqkit/topology.go`.** The validator requires non-empty
+3. **Enforce the routing-key and exchange grammar in `mqkit/topology.go`.** The validator requires non-empty
    strings only, which is how four services reached four conventions. *Second pass*: `Topology`,
    `ExchangeDecl`, `QueueDecl`, and `DLQDecl` (`mqkit/topology.go:8-31`) already carry every field the
    grammar needs, so the change is validation logic, not new structure. Rule:
    `23-queue-and-exchange-registry.md`. Evidence: `mqkit/topology.go:73-127`.
-6. **Extend `mqkit/envelope.go` with the event fields.** It already carries the command vocabulary
+4. **Extend `mqkit/envelope.go` with the event fields.** It already carries the command vocabulary
    (`message_id`, `message_type`, `message_version`, `occurred_at`, `producer_service`, `correlation_id`,
    `causation_id`, `idempotency_key`, `traceparent`, `payload`); domain events add `project_id`,
    `aggregate_type`, `aggregate_id`, and optional `aggregate_version`. Rule:
    `20-operational-and-observability-contract.md`. Evidence: `mqkit/envelope.go:16-33`.
-7. **Resolve the `400`-versus-`422` validation status.** `CONTRACTS.md:10-21` documents `422` while
+5. **Resolve the `400`-versus-`422` validation status.** `CONTRACTS.md:10-21` documents `422` while
    `httpkit/bind.go` emits `400` and `errkit` permits both. One status per code, or the shared contract test
    proves nothing. Rule: `10-core-service-contract.md`. Evidence: `httpkit/bind.go:59-74`;
    `errkit/envelope.go:114-116`.
-8. **Add an ingress deadline helper** that reads `X-Request-Deadline-Ms`, exposes the remainder on the
+6. **Add an ingress deadline helper** that reads `X-Request-Deadline-Ms`, exposes the remainder on the
    request context, clamps outbound timeouts to it, and forwards the decremented value — so the rule ships
    once rather than per service. It must not add a kit env variable that sets or overrides the edge
    deadline: the kit's own decision register already settled that edge timeouts are gateway-owned and the
    kit's timeouts are the backend's handler budget
    (`docs/change-requests/2026-07-21-kit-bug-remediation-decision-register.md:102-104,955-960`), and the
    same principle governs the deadline. Rule: `22-failure-load-and-deprecation-contract.md`.
-9. **Extend `contracttest` with the registered name sets.** `contracttest.AssertMetricNamesStable`
+7. **Extend `contracttest` with the registered name sets.** `contracttest.AssertMetricNamesStable`
    (`contracttest/observability_contract.go:19-50`) already gathers from the live Prometheus registry and
    fails on an unexpected or missing family, which makes it the cheapest place in the fleet to enforce
    `24-metric-registry.md` for every Go service at once. The same package is where a queue-name assertion
    against `23-queue-and-exchange-registry.md` belongs. Rules: `24-metric-registry.md`,
    `23-queue-and-exchange-registry.md`.
-10. Already conforming and worth keeping: the error envelope and its pre-marshaled canonical `500`, the
+8. Already conforming and worth keeping: the `alaa_` prefix on every kit-emitted metric name, `readykit`'s `checks` object keyed by check name with `required` per item, the error envelope and its pre-marshaled canonical `500`, the
    UPPER_SNAKE code set with `FinalizeKnownCodes` registration, keyset-only pagination, the trusted-header
    parse with fail-closed defaults, receipt-based consumer idempotency, and the `contracttest` package —
    which is the right mechanism for enforcing everything in this file, and is currently the only one in the
