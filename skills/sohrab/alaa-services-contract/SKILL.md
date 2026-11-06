@@ -41,9 +41,12 @@ Each service owns `docs/PRODUCT_OVERVIEW.fa.md`, a Persian introduction for prod
 Describe its purpose, main concepts and entities with English names in parentheses, important relationships,
 and ownership boundaries. Use one or two concise paragraphs where appropriate. Ground the text in current
 service sources and update it when concepts change. It is descriptive; source truth and contracts remain authoritative.
-Append a conceptual Mermaid entity-relationship diagram immediately after the Persian overview paragraphs.
-Show the service's main domain entities, important relationships and cardinalities, and relevant user interaction
-and state entities. Include only facts supported by current service-owned sources. Omit the full physical schema.
+Use one additional concise paragraph for important supplementary capabilities and relationships that would
+complicate the diagram. Ground it in current service-owned sources.
+Append a simple conceptual Mermaid entity-relationship diagram immediately after the Persian overview paragraphs.
+Show only key domain entities and relationships needed to understand the service, with source-grounded cardinalities.
+Include user interaction and state when needed for understanding; describe other important capabilities in the
+supplementary paragraph instead. Include only facts supported by current service-owned sources. Omit the full physical schema.
 The diagram helps product and engineering liaisons assess requests and database design against the existing model.
 Use a plain `mermaid` fenced code block without custom configuration. End the document there, without explanatory
 prose or an examples table below the diagram.
