@@ -201,9 +201,9 @@ below is a closed set chosen in code, never a request, tenant, user or operation
 | Metric | Type | Labels | Owner | Measures |
 |---|---|---|---|---|
 | `alaa_job_runner_state` | gauge | `lane`, `state` | any service with a job runner | `1` for the state a lane is in and `0` for every other state in the closed set |
-| `alaa_job_runner_transitions_total` | counter | `lane`, `state` | same | job-runner state changes per lane; shows a flap a gauge misses between two scrapes |
+| `alaa_job_runner_transitions_total` | counter | `lane` | same | job-runner state changes per lane; shows a flap a gauge misses between two scrapes |
 | `alaa_mq_session_phase` | gauge | `role`, `phase` | any service with a broker session | `1` for the phase a broker role is in and `0` for every other phase in the closed set |
-| `alaa_mq_session_transitions_total` | counter | `role`, `phase` | same | broker-session phase changes per role; shows a flap a gauge misses between two scrapes |
+| `alaa_mq_session_transitions_total` | counter | `role` | same | broker-session phase changes per role; shows a flap a gauge misses between two scrapes |
 | `alaa_ctlops_operations_total` | counter | `operation_key`, `risk` | any service with ControlledOps | operations created |
 | `alaa_ctlops_transitions_total` | counter | `operation_key`, `from`, `to` | same | lifecycle status transitions |
 | `alaa_ctlops_admission_decisions_total` | counter | `operation_key`, `kind`, `decision` | same | execution admission decisions |
