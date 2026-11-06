@@ -34,20 +34,21 @@ route craft questions through "What this skill does not own".
 | You are about to name a kit package, CLI flag, env key, default, metric, or Make target | [12](references/12-kit-capability-map.md) capability map |
 | The repo you will write to requires the kit and lacks the behaviour asked for | [10](references/10-consumer-development.md) consumer development |
 | That repo has the behaviour and it fails, drifts from its generated output, or must move to a newer pin | [15](references/15-debug-upgrade-migrate.md) debug/upgrade/migrate |
-| You concluded a kit surface must change, or that code you were about to write belongs in the kit | [20](references/20-change-request-workflow.md) change requests |
+| You concluded a kit surface must change, or that code you were about to write belongs in the kit | [20](references/20-change-request-workflow.md) kit defects and change requests |
 | The repo you will write to **is** `alaa-go-chi` | [30](references/30-kit-owner-workflow.md) kit-owner workflow |
 | You were asked to find defects and no fix is authorized yet | [40](references/40-platform-audit.md) platform audit |
 | A service has no row in the kit's `docs/CONSUMERS.md`, or its row contradicts that service's `go.mod` | [50](references/50-consumer-registry.md) consumer registry |
 
 **When two rows are true at once**, open the one for the repository you will actually write to and act on it. Open
 a second only if its condition still holds afterwards. Consumer work that uncovers a kit defect hops to `20-` and
-stops there. Filing the request is the whole hop, never a continuation into `30-`.
+stops there. Filing the issue or request is the whole hop, never a continuation into `30-`.
 
 ## Governing laws
 
 1. **A consumer never changes the kit** — no edits, forks, or quiet re-implementation. Its own
-   `docs/CONSUMERS.md` row is the only kit-repo file it may edit (`50-`). Every kit need becomes one timestamped
-   file (`20-`). The only sanctioned interim code form is a marked `KIT-WRAP` (`10-`).
+   `docs/CONSUMERS.md` row is the only kit-repo file it may edit, and only when the request authorizes kit-repo
+   access (`50-`). A kit defect becomes one create-only Beads issue under the kit label; a proposed contract change
+   also gets one timestamped file (`20-`). The only sanctioned interim code form is a marked `KIT-WRAP` (`10-`).
 2. **Baseline-first for shared logic.** Transport, contracts, trust, lifecycle, operational mechanics,
    generators, and cross-service invariants are kit-owned. Domain policy stays in the service. The test that
    decides a specific case is in `10-`.

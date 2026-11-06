@@ -16,8 +16,10 @@ any row says.
 
 - The file is `docs/CONSUMERS.md` in the **alaa-go-chi repository**. If it is absent, the first registering agent
   creates it from `assets/templates/consumers-registry.md`.
-- This is the only kit-repo file a consumer agent may edit, and only its **own** row. Registration is explicitly
-  not a kit change: no `CONTRACTS.md` entry, no version bump, no owner review.
+- This is the only kit-repo file a consumer agent may edit, only its **own** row, and only when the request
+  explicitly authorizes access to the kit repository (rule 110); otherwise report the exact handoff, and a kit
+  defect goes through the issue in `20-`. Registration is explicitly not a kit change: no `CONTRACTS.md` entry, no
+  version bump, no owner review.
 - Never delete another service's row — mark it `retired`. Rows are current state; history lives in git.
 
 ## Row contract

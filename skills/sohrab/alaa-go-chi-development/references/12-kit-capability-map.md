@@ -1,7 +1,7 @@
 # Kit Capability Map
 
-Navigation, not a second contract. Every symbol, flag, default, and bound below was read from kit source on
-2026-07-26; re-verify against the live kit before you rely on one. Start from `CONTRACTS.md`, `docs/RUNBOOK.md`,
+Navigation, not a second contract. Names below were read from kit source; the kit owns every value, so
+re-verify against the live kit before you rely on one. Start from `CONTRACTS.md`, `docs/RUNBOOK.md`,
 `docs/INDEX.md`, `docs/scaffold-cli-reference.md`, `go.mod`, the `Makefile`, and the package source.
 
 Module identity is `git.alaatv.com/vk/alaa-go-chi`. For the current released state read `CHANGELOG.md`; this file
@@ -13,16 +13,19 @@ This file names locations and states no decision's content, so that a new decisi
 
 - `docs/change-requests/` holds every change request, baseline proposal, and scope decision, named
   `YYYY-MM-DD-<slug>.md`. **Read newest first**, and read the whole batch for the surface you are touching.
+- `CHANGELOG.md` `[Unreleased]` and the upgrade guide `docs/2026-07-21-kit-bug-remediation-upgrade-guide.md` carry
+  declared Major-class changes not yet tagged; read them before quoting any surface they name.
 - `docs/change-requests/2026-07-21-kit-bug-remediation-decision-register.md` is the aggregate register: ratified
   `Owner outcome` blocks D-01 through D-24, a `Consumer-tunable env surface` table of keys, defaults and clamps,
   and two owner-approved post-ratification review rounds dated 2026-07-23 that take precedence over the items
   they refine.
-- Requests filed after that register are a **separate, newer channel** and have not been merged into it. As of
-  2026-07-26 the newest batch is six requests dated 2026-07-25, every one `status: proposed`. Never treat a
-  proposed request as decided, and never treat this paragraph as the current inventory — list the directory.
+- Requests filed after that register are a **separate, newer channel** and have not been merged into it. Never
+  treat a `status: proposed` request as decided, and never treat this file as the current inventory — list the
+  directory.
 - **Ratified is not implemented.** Before stating that an env key, flag, or capability exists, find it in source.
-  A consumer-binding value reaches consumer repositories only through the generated
-  `docs/consumer-templates/{AGENTS.md,CLAUDE.md}`; landing it only at the kit root is governance drift.
+  A consumer-binding rule reaches consumer repositories only through the canonical instruction pack the scaffold
+  copies (root `AGENTS.md`, `CLAUDE.md`, `.rules/`) and its one rendered overlay, rule 080; `docs/consumer-templates/`
+  is retired.
 
 ## Routing — what the kit exposes versus who owns the doctrine
 
@@ -44,7 +47,7 @@ The kit owns the mechanism. The rules that mechanism must satisfy belong elsewhe
 | Shared local-runtime identity shared with the Laravel fleet | `scaffold/templates.go` output | `/service-runtime-kit-governance` (`$service-runtime-kit-governance`) |
 | Documentation craft for anything you write here | — | `/alaa-repo-docs` (`$alaa-repo-docs`) |
 
-## Packages — twenty-seven, and what each owns
+## Packages and what each owns
 
 Import these; never re-implement, re-prefix, or fork one. If a task looks like it needs one of these behaviours,
 the answer is an import.
@@ -96,14 +99,18 @@ prefer the reference and source over `--help` output.
 
 **`alaa-go-chi new service <name>`** — flags: `--parent-dir` (enforced as required at runtime, and `--help` does
 not annotate it), `--module-path`, `--kit-module`, `--kit-version`, `--kit-replace`, `--goprivate`, `--tier`
-(`direct|small|medium|large`, default `small`), `--no-git`, `--force`, `--without-postgres`, `--without-rabbitmq`.
+(`direct|small|medium|large`, default `small`), `--no-git`, `--force`, `--without-postgres`, `--without-rabbitmq`,
+`--repo-label` (the Beads label rendered into rule 080) and `--module-dir` (the Go module's path below the Git root,
+for a nested module). Omitting `--kit-version` selects the CLI binary's own release version when it is a canonical
+release build, else the catalog default; the choice is printed to stderr and an explicit flag wins.
 `--force` overwrites scaffold-owned files in a non-empty target and warns when the target is a git repository
 with history, pointing at `upgrade` instead. Normal generation pins a released kit and commits no local `replace`.
 
 **`alaa-go-chi upgrade --dir <repo>`** — three ownership classes: kit-owned files are rewritten in place;
 consumer seams are never overwritten and instead emit `<path>.kitnew` beside the file when the render differs;
 and a skip set — including `go.mod`, `go.sum`, and `internal/genops/` — is never written, so the kit pin is bumped
-by hand. Resolve every `.kitnew` before reporting an upgrade done.
+by hand. Resolve every `.kitnew` before reporting an upgrade done. `--repo-label` and `--module-dir` are derived
+when absent and printed in the summary.
 
 **`alaa-go-chi gen`** — regenerates Tier-2 output from `ops/ops.yaml`. It refuses to run when the generator's own
 kit version differs from the consumer's `go.mod` pin; that refusal is the diagnosis, not an obstacle. `--check`
@@ -130,6 +137,26 @@ configured cap, calls `DisallowUnknownFields`, and rejects a second JSON documen
 fails closed on a nil posture and refuses any route that reaches the mux without a declared family
 (`ErrUnlabeledRoute`).
 
+**User identity is UUIDv7.** `TrustCtx.UserID()` returns `idkit.ID`; `X-User-Id` on a Trusted route is the canonical
+lowercase hyphenated UUIDv7 or `401 AUTH_USER_INVALID`. No numeric accessor or fallback exists.
+
+**Validation errors render `error.meta.errors`**, an object mapping a field to an array of one message string;
+`error.meta.fields` is gone.
+
+**`/api/ready` carries the fleet readiness shape.** Top-level `code` is `SERVICE_READY` or `SERVICE_NOT_READY`,
+`failed_checks` lists failed required checks only, and each check carries its own `READINESS_<NAME>_*` code in the
+`checks` object. Readiness metrics are `alaa_service_ready` and `alaa_service_readiness_failures_total`.
+
+**Request deadline is kit-owned.** Every `httpkit.Router` route runs under `min(route budget, X-Request-Deadline-Ms)`;
+`HTTP_REQUEST_BUDGET_MS` is the local fallback and ceiling. Use `httpkit.RefuseIfDeadlineInsufficient` and
+`ClampTimeout` before an outbound call rather than a hand-made deadline.
+
+**RabbitMQ queue bounds are policies.** `mqkit.QueueDecl.Type` is required, `DeclareQueue` sends only
+`x-queue-type`, and dead-letter routing and `delivery-limit` are written by `<service> topology ensure|verify|export`.
+Keys: `RABBITMQ_TOPOLOGY_MODE`, `RABBITMQ_MANAGEMENT_URL`, `RABBITMQ_DELIVERY_LIMIT`. Exit codes: `65` policy drift or
+foreign policy, `69` management unreadable, `73` queue type or arguments mismatch, `74` policy unsettled; a deploy job
+matches these codes (`docs/mqkit.md` owns the table). A queue declared the old way fails until purged.
+
 **Shutdown is owned by `runkit`** in four ordered phases — `stop_intake`, `drain_workers`, `flush_buffers`,
 `close_pools` — each receiving a quarter of a total budget that is **hardcoded at 30s**.
 
@@ -149,35 +176,28 @@ backoff.** No circuit breaker exists anywhere in the kit.
 `lint-no-genrandomuuid`, `lint-text`, and a pooled-lane analyzer (`lint-analysis`) that forbids `LISTEN/NOTIFY`,
 `SET`, and `pg_advisory_lock` under transaction pooling.
 
-**`.env.example` defines 52 keys.** Treat it, `configkit/keys.go`, and `CONTRACTS.md` as one set that must agree;
-a key in one and not the others is a finding.
+**`.env.example`, `configkit/keys.go`, and `CONTRACTS.md` are one set that must agree;** a key in one and not
+the others is a finding.
 
-**Metric names are currently bare.** `obskit/metricnames.go` declares fifteen constants and not one carries an
-`alaa_` prefix. A prefix is proposed and not ratified — do not write one, and do not describe the current names
-as prefixed.
+**Metric names carry the `alaa_` namespace.** `obskit/metricnames.go` is the registry; the redis, ClickHouse,
+filter, `ctlopskit` (`alaa_ctlops_*`) and `bulkkit` (`alaa_bulk_*`) families were renamed, and the bare names are no
+longer registered. Never write a bare or re-prefixed name; `make lint-metricnames` rejects one. Dashboards and
+alerts move with the deploy: upgrade guide "Kit metric names under alaa_".
 
 ## Absent capabilities — say "absent", never "available"
 
-The kit has **no rate limiting, no circuit breaking, no backpressure, no load shedding, no in-flight admission
-cap, and no ingress request deadline.** `http_requests_in_flight` is an observability gauge, not admission
+The kit has **no rate limiting, no circuit breaking, no backpressure, no load shedding, and no in-flight admission
+cap.** Request deadlines exist (see above). `http_requests_in_flight` is an observability gauge, not admission
 control. The kit's own `AGENTS.md` names rate limits and circuit breakers among its design goals; that is
 aspiration, and restating it as capability is exactly the error this section exists to prevent. A service needing
 any of them files a baseline proposal — see `20-` — and routes the design to `/alaa-reliability-sla`
 (`$alaa-reliability-sla`).
 
-## Ratified but not implemented, as of 2026-07-26
+## Ratified but not implemented
 
-Verify each before quoting it; the point of the list is that ratification alone proves nothing.
-
-- The **per-route body-cap override** does not exist in code, and the ceiling is still 64 MiB rather than the
-  ratified 100 MiB.
-- `SHUTDOWN_TIMEOUT` and `SHUTDOWN_GRACE_HINT` are ratified and absent from both `configkit` and `.env.example`;
-  the shutdown budget is the hardcoded 30s above.
-- `PG_ROLLBACK_TIMEOUT`, `MQ_PREFETCH`, `MQ_WORKER_HEALTH_PORT`, and the ratified `JOB_*` and `OUTBOX_*`
-  additions (`JOB_EXECUTION_TIMEOUT`, `JOB_MAX_ATTEMPTS`, `JOB_BACKOFF_*`, `JOB_CIRCUIT_THRESHOLD`,
-  `JOB_RETRYABLE_SQLSTATES`, `OUTBOX_PUBLISH_TIMEOUT`, `OUTBOX_MAX_CONCURRENCY`, `OUTBOX_MAX_ATTEMPTS`,
-  `OUTBOX_BACKOFF_*`, `OUTBOX_METRICS_CADENCE`) are absent. What **does** exist today from those families is
-  `OUTBOX_BATCH`, `OUTBOX_TICK`, and `JOB_LANES`.
+A ratified key or capability can be absent from source. Check `configkit/keys.go`, `.env.example` and the package
+before quoting any decision-register item; the register's `Consumer-tunable env surface` table is intent, not
+inventory.
 
 ## Open contradictions to name, not to resolve
 
@@ -199,13 +219,12 @@ Verify each before quoting it; the point of the list is that ratification alone 
 
 ## Validation entry points — the one list
 
-Kit `Makefile` targets, verified 2026-07-26: `test`, `test-fast`, `test-race`, `build`, `vet`, `contracttest`,
-`api-contract`, `contracts-doc`, `governance-structure`, `gate-phase0`, `gate-phase1`, `gate-phase2` and their
-`-manifest` variants, `docs-consumer-gates`, `lint-analysis`, `lint-structtags`, `lint-metricnames`,
-`lint-no-genrandomuuid`, `lint-text`, `format-text`, `normalize-staged-text`, `tier2-drift`, `budget-guard`,
-`pool-budget-guard`, `promtool-check-alerts`, `dashboard-alert-import`, `postgres-truth-tier`,
-`redis-truth-tier`, `rabbitmq-truth-tier`, `seed-idempotency`, `migrate-updowup`, `chaos-harness`,
-`totp-contract`, `precommit`, `install-hooks`, `verify-hooks`, `bootstrap-news`, `bootstrap-consumers`. Add
+The kit `Makefile` `.PHONY` line is the target inventory; read it rather than a copy. Groups: `test`, `test-fast`,
+`test-race`, `build`, `vet`; `contracttest`, `api-contract`, `api-compat`, `contracts-doc`, `governance-structure`,
+`version-catalog-check`; `lint-*` and `format-text`; `tier2-drift`, `guide-goldens`, `scaffold-acceptance`;
+`postgres-truth-tier`, `redis-truth-tier`, `rabbitmq-truth-tier`, `seed-idempotency`, `chaos-harness`,
+`totp-contract`; `budget-guard`, `promtool-check-alerts`, `dashboard-alert-import`; the aggregates `gate-fast`,
+`gate-full`, `gate-full-containers` and `release-check`; and `precommit`, `install-hooks`, `verify-hooks`. Add
 `go test ./...`, `go test -race ./...`, `go vet ./...`, vulnerability analysis, and `git diff --check` in
 proportion to what the change touches. Which proof level each target reaches is in `05-`; no other file in this
 skill repeats this list.

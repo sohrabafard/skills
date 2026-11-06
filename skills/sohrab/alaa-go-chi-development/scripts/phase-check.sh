@@ -10,7 +10,8 @@ VERSION="1.0.0"
 
 # Tokens that look like a phase name but are not one. Extend only with a comment
 # saying why the token is not a phase.
-IGNORE_RE='NOT_ASSESSED_KIT_FIRST|NEEDS_CONFIRMATION|NOT_ASSESSED|DO_NOT_EDIT'
+# KIT_SOURCE and KIT_CONSUMER are repository modes named beside the phase.
+IGNORE_RE='NOT_ASSESSED_KIT_FIRST|NEEDS_CONFIRMATION|NOT_ASSESSED|DO_NOT_EDIT|KIT_SOURCE|KIT_CONSUMER'
 
 usage() {
   cat <<'HELPTEXT'
@@ -32,7 +33,7 @@ EXTRACTION RULES (deliberately explicit, so a reading can be reproduced by hand)
   Phase name: an ALL-CAPS underscore token inside backticks, on a line that also
   contains "phase", "scope", or "activat" (case-insensitive), excluding the
   documented non-phase tokens: NOT_ASSESSED_KIT_FIRST, NEEDS_CONFIRMATION,
-  NOT_ASSESSED, DO_NOT_EDIT.
+  NOT_ASSESSED, DO_NOT_EDIT, KIT_SOURCE, KIT_CONSUMER (repository modes).
   L3 contributes its own filename as its citation; a scope record does not need
   to cite itself.
 

@@ -16,7 +16,7 @@ you did.
 4. A temporary local `replace` is allowed for deliberate diagnosis and is never committed. Never copy kit code to
    unblock.
 5. Diagnose only, unless the request authorizes fixes. For an authorized fix, make the smallest complete change
-   and re-run the originally failing path. A kit defect found here becomes a change request (`20-`), never a
+   and re-run the originally failing path. A kit defect found here becomes a kit issue (`20-`), never a
    local patch.
 
 ## Generated and Tier-2 drift
@@ -30,13 +30,17 @@ you did.
 
 ## Upgrading the kit pin
 
-1. Read `CHANGELOG.md`, the decision records named in `12-`, the `CONTRACTS.md` delta, and any deprecations
-   between the old and new pins.
+1. Read `CHANGELOG.md` including `[Unreleased]`, the upgrade guide, the decision records named in `12-`, the
+   `CONTRACTS.md` delta, and any deprecations between the old and new pins. A Major-class entry lists adopter
+   steps; do them in the same change.
 2. Inventory the affected imports, env keys, error and metric names, generated artifacts, migration sources, and
    deploy jobs.
 3. Pin the immutable released version, regenerate everything generated with that version, and remove temporary
-   replaces. Resolve every `.kitnew` file `alaa-go-chi upgrade` emitted; an unresolved `.kitnew` is an unfinished
-   upgrade.
+   replaces. Run `alaa-go-chi upgrade` from a checkout of that kit version, with `--kit-version` only to override the
+   pin it reads. Resolve every `.kitnew` file it emitted; an unresolved `.kitnew` is an unfinished upgrade. When the
+   release changes RabbitMQ topology, the owner purges the queues once and redeploys, then runs
+   `<service> topology ensure` before the consume, dispatch and relay roles start; read the upgrade guide for the
+   exit codes the deploy job must match.
 4. Adapt call sites without local compatibility forks, and delete every `KIT-WRAP` whose underlying request
    shipped in this version — the wrap's full contract is in `10-`.
 5. A red `contracttest` after an upgrade means one of two things: the service relied on something outside the
