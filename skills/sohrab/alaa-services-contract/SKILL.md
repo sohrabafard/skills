@@ -37,6 +37,14 @@ judgment cannot be debugged. Exact detail lives in `references/`; this file rout
 
 ## Quick start
 
+Each service owns `docs/PRODUCT_OVERVIEW.fa.md`, a Persian introduction for product and engineering.
+Describe its purpose, main concepts and entities with English names in parentheses, important relationships,
+and ownership boundaries. Use one or two concise paragraphs where appropriate. Ground the text in current
+service sources and update it when concepts change. It is descriptive; source truth and contracts remain authoritative.
+If the file is missing and creation is within authorized scope, delegate it to a subagent: use
+`gpt-6.1-terra` at `high` effort in Codex or `opus` at `medium` effort in Claude Code. Respect higher-priority
+instructions and available runtime capabilities; report a blocker if the required delegation is unavailable.
+
 1. Read the repo-local `AGENTS.md`. Before touching or surveying another service, read "Paused and retired services" in `references/05-scope-service-modes-and-auth-routing.md`.
 2. Read `references/00-topic-map.md` and pick the service mode.
 3. Select the repository role: frontend-facing backend behind the gateway, internal backend, auth-boundary
