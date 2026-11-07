@@ -57,6 +57,13 @@
       "remote": "hindsight-skills-upstream",
       "url": "https://github.com/vectorize-io/hindsight-skills.git",
       "branch": "main"
+    },
+    {
+      "name": "skills",
+      "prefix": "vendor/skills",
+      "remote": "skills-upstream",
+      "url": "https://github.com/caldoai/skills.git",
+      "branch": "main"
     }
   ]
 }

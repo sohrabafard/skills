@@ -24,6 +24,7 @@ starts with `#` is a comment. Any other line stops the installer before it makes
 "vendor/knowledge-work-plugins/product-management/skills"
 "vendor"
 "vendor/hindsight-skills/skills"
+"vendor/skills/skills"
 # vendor-subtrees:codex-src-roots:end
 ```
 
@@ -96,4 +97,5 @@ Current vendored upstreams:
 - [`vendor/knowledge-work-plugins`](vendor/knowledge-work-plugins/) from `https://github.com/anthropics/knowledge-work-plugins.git`
 - [`vendor/skill-temporal-developer`](vendor/skill-temporal-developer/) from `https://github.com/temporalio/skill-temporal-developer.git`
 - [`vendor/hindsight-skills`](vendor/hindsight-skills/) from `https://github.com/vectorize-io/hindsight-skills.git`
+- [`vendor/skills`](vendor/skills/) from `https://github.com/caldoai/skills.git`
 <!-- vendor-subtrees:install-list:end -->
