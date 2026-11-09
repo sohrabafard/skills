@@ -92,6 +92,8 @@ route that admits tokenless requests takes a guest request's project id from the
 request body, or from a `project_id` query parameter when the request has no body,
 so an absent header there is the normal shape and not a deny;
 `references/10-verification-and-ingress.md` states that rule and what it rejects.
+The request-time checker's requirement for all six `X-Location-*` headers is owned by
+`/alaa-services-contract` `references/26-request-time-authorization-openfga/30-sidecar-and-openfga-check.md`.
 
 **Test.** For each required claim, issue a token without it and assert the
 gateway denies before any backend is contacted.

@@ -14,12 +14,60 @@ traceparent: 00-<trace>-<span>-01
 X-Authz-Endpoint-Category: watch_content
 X-Authz-Canonical-Object-Id: content:p_01hzy0f6m4p7n8q9r0s1t2v3wx__cnt_w5
 X-Access: <compact-permission-bitmap>
+X-Location-Ostan: 8
+X-Location-Shahrestan: 257
+X-Location-Bakhsh: 12
+X-Location-Shahr: 2576
+X-Location-Shobe: 12354
+X-Location-School: 9988
 ```
 
 For `comment_service_bundle` routes the gateway instead sends `X-Authz-Service-Key`,
 `X-Authz-Comment-Target-Ref`, `X-Authz-Comment-Lineage-Ref`, and
 `X-Authz-Comment-Story-Ref`, and the sidecar builds the object. These `X-Authz-*`
 headers are stripped from client input at the edge, so a client cannot forge them.
+
+### Location context
+
+The gateway forwards the six `X-Location-*` headers in the allowlist (`gateway: charts/gateway/values.yaml:309-314`).
+Auth emits all six `loc` fields and turns a null or non-positive level into `0`
+(`auth: app/Services/Auth/TokenService.php:688,726-753`). The gateway injects a header only for a positive
+value, so `0` arrives as an absent header (`gateway: charts/gateway/templates/configmap.yaml:1549-1554`).
+
+The sidecar classifies all six headers before any OpenFGA call
+(`authz-sidecar: internal/decision/location.go:82-137`; `internal/decision/engine.go:311-313`):
+
+- Absent: `AUTH_NAME_OR_LOCATION_HEADER_REQUIRED`. Absent wins over malformed.
+- Duplicate, empty, longer than 20 bytes, leading zero, or non-digit: `AUTH_NAME_OR_LOCATION_HEADER_INVALID`.
+- `0`: valid source-null. A positive value is a membership input.
+
+Consequence: a token with any zero level is refused on every sidecar-protected route, and the all-zero path
+below is unreachable through the gateway. The owner accepts this gap for now. Rules that do not depend on
+location for such users await a cross-service feature request.
+
+Leaf and derivation rule (`authz-sidecar: internal/decision/geography.go:143-224,307-378`):
+
+- Positive `shobe` and `school` values are leaves. Otherwise the leaf is the deepest positive of `ostan`,
+  `shahrestan`, `bakhsh`, `shahr`.
+- Each leaf rides only as the contextual tuple `<type>:<id>#member@user:<uuid>`. It is never stored.
+- Ancestors come from stored `child_*` edges. Each `shobe` or `school` leaf gets one `ListObjects` for `shahr`.
+  Each leaf other than `ostan` gets one for `ostan`. Each call must return exactly one object, else
+  `AUTHZ_LOCATION_TOPOLOGY_DEFECT`.
+- One `BatchCheck` carries a `member` item for each positive header ancestor above each leaf (false:
+  `AUTHZ_LOCATION_CONTRADICTORY`), a `country:ctry_1` `member` item per leaf (false:
+  `AUTHZ_LOCATION_TOPOLOGY_DEFECT`), and the final `can_*` item with the leaf tuples. Two leaves that derive
+  different `shahr` objects are contradictory.
+- All six `0`: one plain Check with no tuple and no derivation call
+  (`authz-sidecar: internal/decision/decision_cache.go:144-168`).
+- Membership flows upward only (`authz-openfga: platform/openfga/model.fga:39-77`). Rules on the leaf and its
+  ancestors apply; rules on its descendants do not.
+
+`40-decision-and-enforcement.md` owns the status of each code above.
+
+Pending redesign: `authz-openfga: docs/_agent_plans/20261031-033500_full-geography-topology-seed-below-ostan.md`.
+Items 1-3 await owner approval: a contextual tuple for every positive level and country, gap detection, no
+per-request contradiction items, and a new `AUTHZ_LOCATION_INCOMPLETE`. Items 4-5, the full stored seed below
+`ostan`, were approved on 2026-10-31. The sidecar still implements the leaf-only rule above.
 
 ### 4. authz-sidecar -> OpenFGA
 

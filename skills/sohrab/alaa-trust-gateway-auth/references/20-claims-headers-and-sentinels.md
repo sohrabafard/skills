@@ -109,13 +109,22 @@ claim set stays stable across users:
 - `0` means the source value was null for a location id.
 - The empty string means the source value was null for a name field.
 
-**Gateway rule.** The gateway forwards the sentinel the token carried and never
-invents a value that is not in the verified claims. If the claim is absent
-entirely, the gateway injects nothing; it does not substitute a sentinel.
+**Gateway rule.** The gateway never forwards a sentinel. It injects an
+`X-Location-*` header only for a positive `loc` value, and a name header only for
+a non-empty `fn` or `ln`, so a sentinel arrives as an absent header (gateway
+`<repo>/charts/gateway/templates/configmap.yaml:1549-1557`, verified 2026-11-09). It
+never invents a value that is not in the verified claims. An absent claim also
+produces no header; the gateway does not substitute a sentinel.
 
-**Service rule.** Convert both sentinels once, at ingress, into the shape the
-repository uses for absence. Raw sentinel handling spread across policies,
-controllers and repositories is how `0` ends up saved as a real school id.
+Consequence: `authz-sidecar` requires all six `X-Location-*` headers, so a token
+with any zero location level is refused on every sidecar-protected route.
+`/alaa-services-contract` `references/26-request-time-authorization-openfga/30-sidecar-and-openfga-check.md`
+owns that rule.
+
+**Service rule.** Convert absence, and either sentinel when it arrives by a path
+other than the gateway, once at ingress into the shape the repository uses for
+absence. Raw sentinel handling spread across policies, controllers and
+repositories is how `0` ends up saved as a real school id.
 
 ## What the gateway may and may not fabricate
 

@@ -136,8 +136,9 @@ denial.
 - `X-User-Fname` and `X-User-Lname` are optional trusted strings; every
   `X-Location-*` header is an optional trusted integer id.
 - Normalize the compact null sentinels — empty string for a name, `0` for a location
-  id — once at ingress, into the repository's own shape for absence. See
-  `references/20-claims-headers-and-sentinels.md`.
+  id — once at ingress, into the repository's own shape for absence. Behind the
+  gateway they arrive as absent headers; `references/20-claims-headers-and-sentinels.md`
+  owns the rule.
 - When a header is absent entirely, do not fabricate it. Normalize the absence
   consistently and document the chosen behaviour.
 - Do not derive a location display name from a compact id. The claim carries the id
