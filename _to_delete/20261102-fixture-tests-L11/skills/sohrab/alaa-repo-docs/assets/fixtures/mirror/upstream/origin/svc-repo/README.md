@@ -1,3 +1,0 @@
-# Svc
-
-## Renamed section

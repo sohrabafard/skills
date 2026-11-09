@@ -1,1 +1,0 @@
-[WARNING] config : synthetic deprecated keyword requires version-specific review.

@@ -1,2 +1,0 @@
-# Local
-Nothing cited here.

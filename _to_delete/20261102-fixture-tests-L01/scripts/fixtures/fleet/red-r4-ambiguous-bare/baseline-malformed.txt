@@ -1,2 +1,0 @@
-# Three fields where four are required. A baseline the checker cannot parse is "could not run".
-R4-AMBIGUOUS-BARE|citing-skill|references/72-offline-media-store.md

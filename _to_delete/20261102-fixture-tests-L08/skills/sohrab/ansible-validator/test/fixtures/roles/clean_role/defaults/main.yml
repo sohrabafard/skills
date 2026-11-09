@@ -1,3 +1,0 @@
----
-clean_role_package_name: nginx
-clean_role_config_dir: /etc/nginx

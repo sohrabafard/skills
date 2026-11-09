@@ -1,1 +1,0 @@
-{"case_id": "PY01", "model": "gpt-6.1-terra", "effort": "medium", "run": 1, "attempts": 1, "accepted": true, "first_attempt_accepted": true, "critical_failure": false, "cost_usd": null, "wall_seconds": 1, "human_minutes": 0, "language_or_domain": "python", "evidence": "SYNTHETIC_FORMAT_EXAMPLE_ONLY", "synthetic": true}
