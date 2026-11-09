@@ -64,6 +64,13 @@
       "remote": "skills-upstream",
       "url": "https://github.com/caldoai/skills.git",
       "branch": "main"
+    },
+    {
+      "name": "security-audit-skill",
+      "prefix": "vendor/security-audit-skill",
+      "remote": "security-audit-skill-upstream",
+      "url": "https://github.com/cloudflare/security-audit-skill.git",
+      "branch": "main"
     }
   ]
 }

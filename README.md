@@ -47,6 +47,7 @@ Current vendored upstreams:
 - [`vendor/skill-temporal-developer`](vendor/skill-temporal-developer/) from `https://github.com/temporalio/skill-temporal-developer.git`
 - [`vendor/hindsight-skills`](vendor/hindsight-skills/) from `https://github.com/vectorize-io/hindsight-skills.git`
 - [`vendor/skills`](vendor/skills/) from `https://github.com/caldoai/skills.git`
+- [`vendor/security-audit-skill`](vendor/security-audit-skill/) from `https://github.com/cloudflare/security-audit-skill.git`
 <!-- vendor-subtrees:readme-list:end -->
 
 That list is generated from the manifest by `python3 scripts/vendor_subtrees.py refresh-docs`; an edit
