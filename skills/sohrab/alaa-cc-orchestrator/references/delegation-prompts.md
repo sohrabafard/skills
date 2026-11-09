@@ -43,6 +43,7 @@ Combine the common envelope with the smallest applicable complete template from 
 - When dispatching an implementation lane, read [Implementation](./delegation-prompts/30-implementation.md) for implementation lane or collected verification repair template.
 - When dispatching a verifier or failure analyst, read [Verification and failure analysis](./delegation-prompts/40-verification.md) for evidence-run or failure-diagnosis template.
 - When dispatching a correctness, instruction, or adversarial reviewer, read [Correctness and instruction review](./delegation-prompts/50-correctness-review.md) for selected review template and its boundary.
+- When dispatching a boundary review or specialist after a prior review round, add `<refuted_findings>` per `alaa-workflow references/review-mode.md` `## Finding triage`; when dispatching a finding refuter, read [Correctness and instruction review](./delegation-prompts/50-correctness-review.md) for its template.
 - When dispatching an API contract reviewer, security reviewer, or migration guardian, read [Contract and security review](./delegation-prompts/60-contract-review.md) for compatibility, trust-boundary, or migration template.
 - When dispatching a dependency auditor or release guardian, read [Dependency and release review](./delegation-prompts/70-release-review.md) for supply-chain or release-readiness template.
 - When dispatching an accessibility reviewer or browser QA agent, read [Interface review](./delegation-prompts/80-interface-review.md) for accessibility or browser-scenario template.

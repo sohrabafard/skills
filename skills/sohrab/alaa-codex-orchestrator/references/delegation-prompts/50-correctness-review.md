@@ -8,7 +8,20 @@
 <diff_scope><base/head or touched files></diff_scope>
 <verification_evidence><integrated verifier results></verification_evidence>
 <stance>Fresh context, read-only, findings-first, no fixes.</stance>
+<refuted_findings><after a prior round: key, one-line claim and one-line reason per refuted item; else none. Do not re-raise a listed item unless code at its location changed since the recorded snapshot or you have new evidence. Mark a re-raise `RE-RAISED: <key>` with that evidence.></refuted_findings>
 <review_depth>standard | deep, with the routing trigger and selected profile. Use only one correctness reviewer for this scope.</review_depth>
+```
+
+## Finding refuter
+
+Dispatch a fresh instance of the lens-owning role under `alaa-workflow references/review-mode.md` `## Finding triage`; never the reporter or the implementer.
+
+```xml
+<task>Test each disputed <lens> finding below.</task>
+<items><per item: ID, claim, cited evidence, counter-evidence locations; no verdicts, severity votes or reporter identity></items>
+<diff_scope><reviewed snapshot or commit and touched files></diff_scope>
+<stance>You did not write this code or these findings. Try to refute each item from current code, tests and evidence. Read-only, no fixes.</stance>
+<output>Exactly one line per item ID: CONFIRMED | REFUTED | NEEDS-EVIDENCE, with evidence. NEEDS-EVIDENCE names the exact missing fact.</output>
 ```
 
 ## Instruction reviewer
