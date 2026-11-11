@@ -216,8 +216,8 @@ carries a private identifier and is a violation. A field named `id` that returns
 a field named `section_key`, `user_id`, `flagged_by`, or `resolved_by` that returns a table's integer key
 fails, whatever it is named.
 
-What an owner may do to an id after another service holds it, and the registry of published ids, are owned by
-`31-cross-service-identifier-stability.md`.
+What an owner may do to an id after another service holds it, the registry of published ids, and each id's form in
+a claim, a header and OpenFGA ("Identifier form per layer") are owned by `31-cross-service-identifier-stability.md`.
 
 ### Canonical user identity
 
