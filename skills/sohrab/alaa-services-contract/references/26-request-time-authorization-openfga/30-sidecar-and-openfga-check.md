@@ -7,12 +7,12 @@ sent. `HEAD` is used because the whole decision rides in the status and headers.
 ```http
 HEAD /internal/authz/check HTTP/1.1
 Host: authz-sidecar
-X-Project-Id: <project-uuidv7>
+X-Project-Id: 019d4d45-54de-72a7-a6c2-c3fb70d82af0
 X-User-Id: 0190f7d8-f840-7a85-9a89-e3f61052f840
 X-Request-Id: <uuid>
 traceparent: 00-<trace>-<span>-01
 X-Authz-Endpoint-Category: watch_content
-X-Authz-Canonical-Object-Id: content:p_01hzy0f6m4p7n8q9r0s1t2v3wx__cnt_w5
+X-Authz-Canonical-Object-Id: content:p_06emthamvssaf9p2rfxq1p1ay0__cnt_06emtsgw09xh1d0x3nfktfmffw
 X-Access: <compact-permission-bitmap>
 X-Location-Ostan: 8
 X-Location-Shahrestan: 257
@@ -24,7 +24,7 @@ X-Location-School: 9988
 
 For `comment_service_bundle` routes the gateway instead sends `X-Authz-Service-Key`,
 `X-Authz-Comment-Target-Ref`, `X-Authz-Comment-Lineage-Ref`, and
-`X-Authz-Comment-Story-Ref`, and the sidecar builds the object. These `X-Authz-*`
+`X-Authz-Comment-Story-Ref`, and the sidecar builds the object (step 2). These `X-Authz-*`
 headers are stripped from client input at the edge, so a client cannot forge them.
 
 ### Location context
@@ -89,7 +89,7 @@ Authorization: Bearer <preshared-key>   # only when OPENFGA_AUTHN_METHOD=preshar
   "tuple_key": {
     "user": "user:0190f7d8-f840-7a85-9a89-e3f61052f840",
     "relation": "can_view",
-    "object": "content:p_01hzy0f6m4p7n8q9r0s1t2v3wx__cnt_w5"
+    "object": "content:p_06emthamvssaf9p2rfxq1p1ay0__cnt_06emtsgw09xh1d0x3nfktfmffw"
   }
 }
 ```

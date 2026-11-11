@@ -22,22 +22,36 @@ There are two identity modes:
 - `canonical_from_param` (VOD, ticket): the gateway extracts the resource id from the
   path and builds the canonical object id itself.
 - `comment_service_bundle` (comment): the gateway forwards a typed target ref plus
-  service key, and the sidecar normalizes the object.
+  service key. It also builds a canonical id, but the sidecar ignores it whenever a
+  service key is present and rebuilds the object from the target ref
+  (`authz-sidecar: internal/decision/engine.go:406-428,482-510`).
 
 ### 2. Gateway builds the canonical object id (Lua)
 
-For `canonical_from_param`, the Lua helper `haproxy/lua/authz-sidecar.lua` builds the
-object id in the platform's fixed shape:
+`haproxy/lua/authz-sidecar.lua` builds the object id (`build_canonical_object`,
+`:742-757`) and sends it as `X-Authz-Canonical-Object-Id` (`:923-924`):
 
 ```
 <type>:p_<project_segment>__<tag>_<resource_segment>
 ```
 
-- `project_segment`: lowercase Crockford Base32 of the project UUIDv7 (26 chars,
-  reversible, never truncated).
-- `resource_segment`: lowercase Crockford Base32 of the service-native integer id.
-- `tag`: per-type short tag. `course`->`crs`, `set`->`set`, `content`->`cnt`,
-  `assessment`->`asm`, `ticket_category`->`tcat`, `product`->`prd`.
+- `project_segment`: Crockford Base32 of the trusted `X-Project-Id` UUIDv7 bytes
+  (`encode_uuid_v7`, `:282-297`).
+- `resource_segment`: for `course`, `set` and `content`, Crockford Base32 of the
+  content-service UUIDv7 `public_id` from the path (`:35-39,750-751`); for other
+  types, Crockford Base32 of the decimal integer id (`:329-355,753`).
+- `tag`: `RESOURCE_TAGS` (`:28-34`) — `course`->`crs`, `set`->`set`,
+  `content`->`cnt`, `ticket_category`->`tcat`, `product`->`prd`. The contract tag
+  list is `authz-openfga: platform/openfga/contracts/authorization-contract.yaml:417-429`.
 
-Content `901` -> `cnt_w5`, so the object is
-`content:p_01hzy0f6m4p7n8q9r0s1t2v3wx__cnt_w5`.
+`31-cross-service-identifier-stability.md` "Identifier form per layer" owns the
+segment encodings and every other layer's form; this file states none.
+
+Example: project `019d4d45-54de-72a7-a6c2-c3fb70d82af0`, content public id
+`019d4d66-1c02-7b10-b41d-1d5f3d3e8f7f`:
+`content:p_06emthamvssaf9p2rfxq1p1ay0__cnt_06emtsgw09xh1d0x3nfktfmffw`.
+
+The sidecar trusts no gateway-built project segment. It re-encodes `X-Project-Id` and
+refuses a mismatching canonical id with `400 AUTHZ_OBJECT_ID_INVALID`
+(`authz-sidecar: internal/decision/engine.go:302,431-437`;
+`internal/contracts/contracts.go:251-263`).
