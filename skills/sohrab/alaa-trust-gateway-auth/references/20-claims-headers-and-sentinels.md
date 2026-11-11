@@ -126,6 +126,23 @@ other than the gateway, once at ingress into the shape the repository uses for
 absence. Raw sentinel handling spread across policies, controllers and
 repositories is how `0` ends up saved as a real school id.
 
+## Identifier forms on the wire
+
+- `X-Location-*` carries a decimal integer. It is never an encoded value.
+- `X-User-Id` and `X-Project-Id` carry the canonical lowercase hyphenated UUIDv7 text
+  of `sub` and `pid`, unchanged.
+- Crockford Base32 appears only in OpenFGA object ids. `authz-sidecar` converts when
+  it builds the OpenFGA object. The gateway's claim-to-header projection and every
+  backend service that reads trusted headers never encode or decode Crockford.
+- `NEEDS_CONFIRMATION`: the gateway Lua also encodes the project and resource
+  segments when it builds `X-Authz-Canonical-Object-Id`
+  (`<gateway>/haproxy/lua/authz-sidecar.lua:742-757`, verified 2026-11-11). The
+  sidecar re-encodes `X-Project-Id` and refuses a mismatching segment. The owner
+  stated on 2026-11-11 that only the sidecar converts.
+- Each id's form in every layer, and every encoder, is owned by
+  `/alaa-services-contract` `references/31-cross-service-identifier-stability.md`
+  ("Identifier form per layer").
+
 ## What the gateway may and may not fabricate
 
 - The gateway injects a header only from a claim it verified in the token it just
