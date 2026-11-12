@@ -89,8 +89,12 @@ capture the next request needs.
 
 ## Mechanical gate
 
+This example uses the optional schema skip. Select the schema flags in
+`60-validation-and-output-contract.md`.
+
 ```shell
 python3 "$SKILL_DIR/scripts/validate_postman_artifacts.py" path/to/collection.json \
+  --skip-schema \
   --env path/to/environment.json \
   --require-tests \
   --require-correlation-assertion

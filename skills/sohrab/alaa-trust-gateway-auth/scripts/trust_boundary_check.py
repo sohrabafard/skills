@@ -4,8 +4,9 @@
 Four checks, each answering a question that prose cannot answer reliably:
 
   sanitize   Does every header the gateway injects also carry an unconditional
-             request-side delete in the same file and section, so no
-             client-supplied copy can survive to the backend?
+             request-side delete in the same file, in the injecting section or
+             in every frontend that routes to it, so no client-supplied copy
+             can survive to the backend?
   bitmap     Does a permission-bitmap decoder agree with the oracle on the
              least-significant-bit-first, unpadded-base64url contract?
   reads      Does this service read only trusted headers that are on the frozen
@@ -124,6 +125,8 @@ _END = re.compile(r"\{\{-?\s*end\s*-?\}\}")
 # `defaults:` in a values file from opening a section.
 _SECTION = re.compile(r"^\s*(frontend|backend|listen|defaults)\b(?!\s*:)\s*(\S*)")
 # The ACL tail of an http-request rule: everything from ` if ` or ` unless `.
+# A routing rule naming the backend a frontend or listen section reaches.
+_ROUTE = re.compile(r"^\s*(use_backend|default_backend)\s+(\S+)")
 _CONDITION = re.compile(r"\s(if|unless)\s+(\S.*)$")
 
 
@@ -232,6 +235,7 @@ def scan_sanitize(text: str, values: dict[str, object] | None = None) -> dict[st
     deleted_conditional: dict[str, list[tuple[str, str]]] = {}
     display: dict[str, str] = {}
     defaults_of: dict[str, str | None] = {}
+    routes: dict[str, set[str]] = {}
     scopes: list[dict[str, list[str]]] = []
     section = ""
     current_defaults: str | None = None
@@ -282,6 +286,14 @@ def scan_sanitize(text: str, values: dict[str, object] | None = None) -> dict[st
                 defaults_of[section] = (
                     f"defaults {explicit.group(1)}" if explicit else current_defaults
                 )
+        route = _ROUTE.match(line)
+        if route and section:
+            target = route.group(2)
+            # A templated or sample-fetch target cannot be resolved, so the
+            # section is treated as reaching every backend.
+            if "{{" in target or "%[" in target:
+                target = "*"
+            routes.setdefault(section, set()).add(target)
         if "-response" not in line:
             for token in _SET_HEADER.findall(line):
                 for key in keys_of(token):
@@ -305,28 +317,44 @@ def scan_sanitize(text: str, values: dict[str, object] | None = None) -> dict[st
         "deleted_conditional": deleted_conditional,
         "display": display,
         "defaults_of": defaults_of,
+        "routes": routes,
     }
 
 
-# A header the gateway injects for tracing rather than for trust. Injecting one
-# of these without deleting the inbound copy is a deliberate pass-through, not a
-# spoofing surface, because no service takes an authorization decision from it.
+# A header a service may read without it being on the frozen trusted-header
+# list, because no service takes an authorization decision from it. The `reads`
+# check skips these names.
 _TRACE_HEADERS = {"x-request-id", "x-request-ip", "traceparent", "tracestate", "baggage",
                   "x-forwarded-proto", "x-forwarded-for", "x-forwarded-host", "x-forwarded-port",
                   "x-forwarded-prefix", "x-real-ip"}
+
+# A header the gateway may inject without deleting the inbound copy: a deliberate
+# pass-through, not a spoofing surface. Only the tracing headers and
+# `X-Forwarded-Proto` stay exempt. The gateway deletes every client-sent
+# `X-Forwarded-For`, `X-Forwarded-Host`, `X-Forwarded-Port`,
+# `X-Forwarded-Prefix` and `X-Real-IP`, so an injected copy of any of them must
+# replace a deleted client copy (alaa-services-contract
+# references/30-trusted-ingress-and-laravel-contract.md).
+_SANITIZE_EXEMPT = _TRACE_HEADERS - {
+    "x-forwarded-for", "x-forwarded-host", "x-forwarded-port", "x-forwarded-prefix", "x-real-ip",
+}
 
 
 def _evaluate_sanitize(
     scans: list[tuple[str, dict[str, object]]],
     resolved_values: int = 0,
 ) -> tuple[list[str], list[str], list[str]]:
-    """Judge scan results. Protection is never borrowed across files or sections.
+    """Judge scan results. Protection is never borrowed across files.
 
     An injected header is protected only by an unconditional request-side delete
-    in the same file, in the same section or in a `defaults` section of that
-    file. A conditional delete, a delete in another section, or a delete in
-    another file each produce a finding that names what is missing, because none
-    of them proves the client-supplied value is removed on the injecting route.
+    in the same file: in the same section, in the `defaults` section that section
+    is associated with, or, for a backend, in every frontend or listen section
+    that reaches it through `use_backend` or `default_backend`. Frontend rules run
+    before backend rules, so such a delete always precedes the backend's set. A
+    backend that no section is seen to reach is not covered by a frontend delete.
+    A conditional delete, a delete in any other section, or a delete in another
+    file each produce a finding that names what is missing, because none of them
+    proves the client-supplied value is removed on the injecting route.
     """
     findings: list[str] = []
     notes: list[str] = []
@@ -349,7 +377,7 @@ def _evaluate_sanitize(
     for label, scan in scans:
         display = scan["display"]
         for key in sorted(scan["injected"]):
-            if key in _TRACE_HEADERS:
+            if key in _SANITIZE_EXEMPT:
                 continue
             if key.startswith("unresolved:"):
                 not_run.append(
@@ -361,7 +389,9 @@ def _evaluate_sanitize(
             del_sections = scan["deleted"].get(key, set())
             defaults_of = scan.get("defaults_of", {})
 
-            def covered(section: str) -> bool:
+            routes = scan.get("routes", {})
+
+            def covered_here(section: str) -> bool:
                 if section in del_sections:
                     return True
                 # A delete in a defaults section protects only the proxies
@@ -369,6 +399,47 @@ def _evaluate_sanitize(
                 # by nearest-preceding order), never every section in the file.
                 associated = defaults_of.get(section)
                 return associated is not None and associated in del_sections
+
+            def reachers(backend: str) -> list[str]:
+                name = backend.split(" ", 1)[1] if " " in backend else ""
+                # A templated backend name cannot be matched exactly, so any
+                # target sharing its literal prefix may reach it (any target
+                # at all when the name starts with the template).
+                templated = "{{" in name
+                prefix = name.split("{{", 1)[0]
+
+                def reaches(targets: set[str]) -> bool:
+                    if "*" in targets:
+                        return True
+                    if templated:
+                        return any(target.startswith(prefix) for target in targets)
+                    return name in targets
+
+                found = []
+                for source, targets in routes.items():
+                    if not source.startswith(("frontend ", "listen ")):
+                        continue
+                    # A default_backend in a defaults section also routes the
+                    # proxies associated with it.
+                    inherited = routes.get(defaults_of.get(source) or "", set())
+                    if reaches(targets | inherited):
+                        found.append(source)
+                for source, targets in routes.items():
+                    if not source.startswith("defaults ") or not reaches(targets):
+                        continue
+                    for proxy, associated in defaults_of.items():
+                        if associated == source and proxy.startswith(("frontend ", "listen ")):
+                            if proxy not in found:
+                                found.append(proxy)
+                return found
+
+            def covered(section: str) -> bool:
+                if covered_here(section):
+                    return True
+                if not section.startswith("backend "):
+                    return False
+                sources = reachers(section)
+                return bool(sources) and all(covered_here(s) for s in sources)
 
             uncovered = sorted(s for s in scan["injected"][key] if not covered(s))
             if not uncovered:
@@ -385,12 +456,22 @@ def _evaluate_sanitize(
                     f"Delete it unconditionally on the injecting route"
                 )
             elif del_sections:
+                missing = sorted({
+                    s for b in uncovered if b.startswith("backend ")
+                    for s in reachers(b) if not covered_here(s)
+                })
+                reach = (
+                    f"; reaching frontends without the delete: {', '.join(repr(s) for s in missing)}"
+                    if missing else ""
+                )
                 findings.append(
                     f"sanitize: {name} is injected in section "
                     f"{', '.join(repr(s) for s in uncovered)}{where} but deleted only in "
-                    f"{', '.join(sorted(repr(s) for s in del_sections))}; a delete in another "
-                    f"section does not run on the injecting route. Delete it in the same section "
-                    f"or in the defaults section that section is associated with"
+                    f"{', '.join(sorted(repr(s) for s in del_sections))}{reach}; a delete in another "
+                    f"section does not run on the injecting route unless every frontend that "
+                    f"reaches it holds the delete. Delete it in the same section, in the defaults "
+                    f"section that section is associated with, or in every frontend that routes "
+                    f"to it"
                 )
             elif other_files:
                 findings.append(

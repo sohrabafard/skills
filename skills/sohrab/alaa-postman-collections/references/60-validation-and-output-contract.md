@@ -1,6 +1,29 @@
 # Validation And Output Contract
 
-Read this file before closing any task that touched a Postman artifact.
+Read this file before validating a Postman artifact.
+
+## Offline artifact validation
+
+Validate local artifacts with the bundled scripts and already-installed tools. Use local
+Postman tools, Newman, or the Postman Collection SDK where applicable. Keep collection,
+environment, and credential data local. Do not use online validators, cloud workspaces,
+login, upload, or sync for validation. Use installed executables directly. Do not use
+package runners that can download or install tools.
+
+### Offline schema mode
+
+Use `--schema-url file:///absolute/path/to/collection-schema.json --require-schema` when
+an authentic local Postman v2.1 schema and installed `jsonschema` are available. Use a copy
+whose references resolve locally.
+
+Require this schema mode in CI and wherever the repository requires schema validation.
+If a required input is unavailable, report the schema gate blocked and continue the other
+local checks. For an ad hoc check where schema validation is optional, use `--skip-schema`
+when an input is unavailable and report the reason.
+
+Use the explicit flag even on a connected host. The script's default schema URL is remote.
+The canonical `info.schema` export marker remains unchanged. Record mechanical checks,
+official schema validation, and collection execution as separate results.
 
 ## Validation ladder
 
@@ -16,8 +39,8 @@ Validate from cheapest to strongest:
    penetration-test, SDK, or aggregate handoff
 6. run any repo-specific contract, OpenAPI, route-manifest, generated-client, or smoke
    check that materially reduces risk
-7. execute the collection with Newman when a runnable environment exists, per the section
-   below, or record that the tests have never been executed
+7. follow [Executing the collection](#executing-the-collection) and report the result for
+   this task
 8. static-check Insomnia portability, and record whether a real import was done
 9. when k6 is a target, convert the collection and inspect the generated URLs, auth,
    bodies, variables, checks, and dynamic correlation
@@ -83,15 +106,16 @@ some. `$SKILL_DIR` below is the directory holding this skill's `SKILL.md`.
 | `--require-schema` | official schema validation actually ran; a skip becomes exit `2` |
 | `--forbid-pinned-vendor-identifier` | no committed collection or environment value pins a vendor model, engine, deployment, or embedding identifier |
 
-Utility flags: `--skip-schema` on a host with no network access, `--schema-url` to point at
-another copy of the schema, `--max-findings N` to cap printed findings per section
-(default 200), and `--json` for a machine-readable report to attach as evidence.
+Use `--max-findings N` to cap findings per section (default 200). Use `--json` for a
+machine-readable report with `schema_skipped`.
 
-The full-strength invocation, for a collection that must stand alone as an implementation
-contract:
+Use these mechanical flags for a standalone implementation contract. This example uses
+the optional schema skip. For CI or a local schema, substitute the flags from
+[Offline schema mode](#offline-schema-mode).
 
 ```shell
 python3 "$SKILL_DIR/scripts/validate_postman_artifacts.py" path/to/collection.json \
+  --skip-schema \
   --env path/to/environment.json \
   --require-saved-responses \
   --require-success-example \
@@ -123,8 +147,7 @@ linear in file size as a defect in the script.
 Aggregates are the artifacts that get large — a live gateway aggregate of roughly 8 MB over 73
 requests is the size this skill was built for. Two costs grow there: undeclared-variable
 detection scans every string including prose and example bodies, so it tracks total bytes
-rather than request count, and schema validation fetches a separate document over the network,
-usually the slowest step and the one `--require-schema` makes non-optional in CI.
+rather than request count. Schema validation processes the local schema and collection.
 
 `alaa-algorithms-data-structures` (`/alaa-algorithms-data-structures`,
 `$alaa-algorithms-data-structures`) owns complexity budgets and structure choice. Read it
@@ -148,12 +171,9 @@ printed sections, not only the code.
 Never lower a threshold or drop a flag to make a run pass. When a threshold is genuinely
 wrong for the repository, say so in the task output and leave the decision to the owner.
 
-Schema validation is skipped, with a warning, when `jsonschema` is not installed or the
-schema URL cannot be fetched. **A skip is not a pass**, and without a flag the run still
-exits `0`, so an air-gapped CI runner would report success while the strongest structural
-check never ran. Pass `--require-schema` in any CI job: it turns a skip into exit `2`, which
-the harness records as could-not-run rather than clean. Locally, either pass it or report the
-skip as a validation gap; never describe the schema as validated when it was skipped.
+If `jsonschema` is unavailable or the schema cannot be read, the validator skips that
+check and prints a warning. With `--require-schema` the skip exits `2`. With
+`--skip-schema`, exit `0` covers the local mechanical checks only.
 
 ## `scripts/audit_collection_contract.py`
 
@@ -215,21 +235,17 @@ that proves the copies match.
 
 ## Choosing between the scripts
 
-They overlap deliberately and answer different questions. The validator answers "is this a
-correct, safe, portable, complete artifact", where a portability concern can be a warning
-you knowingly accept. The auditor answers "does this pass the gate", where everything
-blocks. A collection that passes only the validator is valid Postman; a collection that
-also passes the auditor is a usable contract.
+The validator checks local artifact rules and reports warnings. The auditor treats each
+finding as blocking. Use the contract parity and coverage checks to establish completeness.
 
 ## Executing the collection
 
-Every check above is static. A static check proves the artifact is well-formed; it cannot
-prove a single assertion in it would fail against a broken implementation, which is the
-property `43-response-tests.md` exists to produce. Execute the collection when a runnable
-environment exists:
+Execute the collection when a compatible Newman and a local test runtime or fixture are
+available. Check that requests, scripts, and their inputs target that environment before
+running them. For assertion design, follow `43-response-tests.md`.
 
 ```shell
-npx --yes newman@6.2.2 run path/to/collection.json \
+newman run path/to/collection.json \
   --environment path/to/environment.json \
   --reporters cli
 ```
@@ -238,19 +254,9 @@ Newman exits `0` when every request and assertion passed and non-zero when any a
 failed or any request errored. A non-zero exit is a finding to fix; a run that could not start
 — unreachable host, missing environment values — is a could-not-run to report, never a pass.
 
-- **Execution is reportable, not required.** A repository with no runnable environment must
-  still be able to use this skill. When the collection was not executed, say so in the output
-  contract below rather than leaving the tests' status unstated.
-- **Newman runs 2.1 and cannot run 3.0**; a 3.0 collection needs the Postman CLI.
-  `50-insomnia-compatibility-and-free-plan-rules.md` explains why this skill pins 2.1.
-
-Re-derive the pin before changing it:
-
-```shell
-curl -s https://registry.npmjs.org/newman | python3 -c "import json,sys; d=json.load(sys.stdin); l=d['dist-tags']['latest']; print(l, d['time'][l], d['versions'][l].get('engines'))"
-```
-
-Newman 6.2.2 was published 16 January 2026 and declares `node >=16`; verified 30 July 2026.
+If no compatible local runner or environment is available, report why execution was
+skipped. Record the installed runner version when execution runs.
+`50-insomnia-compatibility-and-free-plan-rules.md` owns the v2.1 compatibility decision.
 
 ## Other external checks
 
@@ -258,7 +264,7 @@ Newman 6.2.2 was published 16 January 2026 and declares `node >=16`; verified 30
 fact that no maintained command-line Postman-to-Insomnia converter exists and what to run
 instead.
 
-For k6, use the current supported Postman-to-k6 conversion path and review the generated
+For k6, use an installed Postman-to-k6 converter and review the generated
 JavaScript. Conversion success alone does not prove that Postman response scripts became
 correct k6 correlation logic; confirm dependent values, checks, auth, cookies, and request
 ordering explicitly.
@@ -293,8 +299,7 @@ When using this skill, output, in this order:
    parity check against it reported
 4. route-and-variant coverage evidence
 5. the exact validation commands run, their exit codes, and their counts
-6. whether the collection was executed with Newman, and its result; when it was not executed,
-   say so rather than leaving the tests' status unstated
+6. the local collection execution result and runner version, or why execution was skipped
 7. whether Insomnia portability was static-checked only or import-verified, and on which
    Insomnia version
 8. whether official schema validation ran or was skipped, and why

@@ -97,7 +97,7 @@ Exit codes:
 - `2`: the invocation was wrong.
 - `3`: a check could not run for want of input. Supply it; never report a pass for a check that did not run.
 
-`--help` carries the full
+`--help` and the script docstring carry the full
 contract. The canonical bitmap vectors and the cross-runtime harness belong to
 `/alaa-permission-generator`.
 

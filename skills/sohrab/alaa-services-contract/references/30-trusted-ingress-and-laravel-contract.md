@@ -49,6 +49,37 @@ This set is frozen, and the fleet already agrees on it. In the 2026-07-25 fleet 
 - The obligation to read `X-Access` in any service that authorizes, and the observable that decides it,
   are owned by `28-backend-permission-authorization-and-role-freeze.md`.
 
+## Client address, forwarded headers, and metrics routes
+
+Owner decision 2026-11-12, confirmed in gateway source at merge `823e53a` (gateway Beads `alaa-2nv79`). It binds the
+whole fleet.
+
+- A client IP address is a best guess, used only for logs and analytics, never for rate limiting or throttling
+  (rule owned by `22-failure-load-and-deprecation-contract.md`).
+- An unknown number of proxy layers (WAFs, possibly behind Cloudflare or ArvanCloud) may sit in front of the
+  gateway, and which layer sets the address in which header is unknown.
+- The gateway computes the guess. The operator sets the release input `GATEWAY_TRUSTED_PROXY_CIDRS`; empty or unset
+  trusts no proxy. The gateway refuses to start on an entry shorter than IPv4 `/8` or IPv6 `/16`. An IPv6 entry
+  that overlaps `::/80`, the IPv4-mapped space HAProxy matches against IPv4 addresses, needs `/104` or longer. The
+  gateway walks `X-Forwarded-For` from the right, skips trusted addresses, and takes the first
+  untrusted one, in at most 8 steps. With no trusted proxies, or an untrusted peer, the client is the peer. A
+  missing or unparseable `X-Forwarded-For` value stops the walk, and the last valid address reached is used, as
+  when nothing untrusted is found. It never rejects a request over this.
+- The gateway deletes client-sent `Remote-Addr`, `Https`, `Server-Port`, `X-Real-IP`, `Forwarded`,
+  `X-Forwarded-Host`, `X-Forwarded-Port`, `X-Forwarded-Prefix`, `X-Forwarded-For`, and the client-IP aliases
+  `True-Client-IP`, `CF-Connecting-IP`, `X-Client-IP`, and `X-Cluster-Client-IP` on every route. It sends
+  route backends exactly one single-value `X-Forwarded-For`; on the tus route (`routePolicies.tusd/tusd`,
+  `forwardedPrefix`) it then sets its own `X-Forwarded-Host` and `X-Forwarded-Prefix`, which only that upload
+  backend receives. It fixes `X-Forwarded-Proto` to `https`. Its access log carries `client_ip`, `peer_ip`, and
+  `client_ip_source` (`peer` or `forwarded`).
+- A backend uses its framework's trusted-proxy mechanism (Laravel `TrustProxies`, or the equivalent elsewhere).
+  It trusts only `X-Forwarded-For` and `X-Forwarded-Proto`, never `Host`, `Port`, `Prefix`, or `Forwarded`, and
+  only from the gateway's network CIDR, set per environment. Never trust all proxies (`*`, `0.0.0.0/0`, `::/0`).
+  Without that CIDR the backend reads the peer address, never a raw `X-Forwarded-For`.
+- The gateway answers `404` for `<prefix>/metrics` on a route whose prefix it strips. The owner decided this
+  layer is sufficient, so a service needs no separate metrics port. `21-alaa-platform-observability-directive.md`
+  still applies (no public exposure of metrics).
+
 ## How trusted ingress relates to request-time authorization
 
 - the gateway owns authentication and trusted header injection

@@ -86,8 +86,8 @@ without it.
    - a top-level bare assertion before the write, outside any `pm.test` callback, whose
      uncaught throw aborts the rest of the script
 
-   `validate_postman_artifacts.py --require-success-guarded-captures` checks structure, not
-   text: it reports the write an error response can also reach. When the write sits inside a
+   The mechanical gate below checks the guard's structure and reports writes an error
+   response can also reach. When the write sits inside a
    helper it cannot follow, it says so and asks you to move it into an explicit conditional in
    the same script — a guard the checker cannot see is one a reviewer cannot see either.
 2. **Parse the body defensively.** Wrap `pm.response.json()` in a `try`; a non-JSON
@@ -185,8 +185,12 @@ request exists.
 
 ## Mechanical gate
 
+This example uses the optional schema skip. Select the schema flags in
+`60-validation-and-output-contract.md`.
+
 ```shell
 python3 "$SKILL_DIR/scripts/validate_postman_artifacts.py" path/to/collection.json \
+  --skip-schema \
   --env path/to/environment.json \
   --require-success-guarded-captures \
   --require-token-capture

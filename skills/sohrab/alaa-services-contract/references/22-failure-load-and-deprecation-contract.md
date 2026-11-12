@@ -309,6 +309,13 @@ user-facing request waiting for capacity, and never discards work that has to su
 - Consumer-side prefetch and concurrency are bounded under `Bounded message consumers` above; their values,
   tuning, and DLQ mechanics belong to `/alaa-async-messaging`.
 
+### No rate limit keyed on client IP
+
+Owner decision 2026-11-12 (gateway Beads issue `alaa-2nv79`), fleet-wide. No component rate-limits or throttles by
+client IP: not the gateway, not any backend service. A client IP is a best guess and decides nothing about
+admission; `30-trusted-ingress-and-laravel-contract.md` owns how it is derived. The gateway keeps its
+rate-limit infrastructure in the chart, disabled, so a later policy change can enable it by a chart-values change.
+
 ## Deprecating a contract surface
 
 A contract surface is a route, a header name, an event name, a machine-readable code, a response or

@@ -82,6 +82,10 @@ Editing the generated file instead is worth naming precisely, because the edit a
 
 The `gateway` repository is the reference implementation. `scripts/postman/generate_gateway_collection.sh` merges eight service-local collections into one gateway-facing aggregate under `docs/postman/`, and `docs/postman/gateway-postman-maintenance.md` documents its registry, its per-constant change procedure, and its change matrix. Read those two files before changing an aggregate in any repository; they hold the operational detail this page deliberately does not restate.
 
-A generator that writes a value into an environment file owns that value, which makes it the place a pinned implementation constant hides. `30-variables-auth-and-environments.md` states the rule as the sixth environment-completeness condition, and `validate_postman_artifacts.py --forbid-pinned-vendor-identifier` is the gate; run it against every environment file a generator emits, not only against hand-written ones. When it fires, the fix is in the generator's inputs, per the generated-artifact rule in `10-scope-and-trigger-rules.md`, and never in the emitted JSON.
+A generator owns the values it writes to environment files. `30-variables-auth-and-environments.md`
+holds the rule for pinned implementation constants. Use the offline validator command in
+`60-validation-and-output-contract.md` with `--forbid-pinned-vendor-identifier` for every
+generated environment. Fix findings in the generator inputs under the generated-artifact
+rule in `10-scope-and-trigger-rules.md`.
 
 That generator stays in `gateway` and is not moved into this skill: its transformations are defined by gateway's route prefixes, public-route allowlist, trusted-header set, and per-service exceptions, so the logic and the data are not separable without inventing a configuration format richer than the one platform that would use it.
