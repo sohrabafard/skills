@@ -59,9 +59,9 @@ whole fleet.
 - An unknown number of proxy layers (WAFs, possibly behind Cloudflare or ArvanCloud) may sit in front of the
   gateway, and which layer sets the address in which header is unknown.
 - The gateway computes the guess. The operator sets the release input `GATEWAY_TRUSTED_PROXY_CIDRS`; empty or unset
-  trusts no proxy. The gateway refuses to start on an entry shorter than IPv4 `/8` or IPv6 `/16`, and on an IPv6
-  entry that overlaps `::/80` (the IPv4-mapped space, which HAProxy matches against IPv4 addresses) shorter than
-  `/104`. The gateway walks `X-Forwarded-For` from the right, skips trusted addresses, and takes the first
+  trusts no proxy. The gateway refuses to start on an entry shorter than IPv4 `/8` or IPv6 `/16`. An IPv6 entry
+  that overlaps `::/80`, the IPv4-mapped space HAProxy matches against IPv4 addresses, needs `/104` or longer. The
+  gateway walks `X-Forwarded-For` from the right, skips trusted addresses, and takes the first
   untrusted one, in at most 8 steps. With no trusted proxies, or an untrusted peer, the client is the peer. A
   missing or unparseable `X-Forwarded-For` value stops the walk, and the last valid address reached is used, as
   when nothing untrusted is found. It never rejects a request over this.

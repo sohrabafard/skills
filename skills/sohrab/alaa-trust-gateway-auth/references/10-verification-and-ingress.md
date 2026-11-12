@@ -73,8 +73,8 @@ The gateway currently treats these paths as public and skips token verification:
 
 - `/auth/api/v3/otp/request`, `/auth/api/v3/otp/verify`, `/auth/api/v3/token/refresh`,
   `/auth/api/v3/logout`
-- Exactly `/auth/api/v3/registration` and `/auth/api/v3/registration/policy`, exact match, any method (gateway
-  merge `823e53a`, `publicExactPathGroups.authRegistration`). A lookalike suffix needs a JWT.
+- `/auth/api/v3/registration` and `/auth/api/v3/registration/policy`, exact match, any method (gateway merge
+  `823e53a`, `publicExactPathGroups.authRegistration`). A lookalike suffix needs a JWT.
   `/auth/api/v3/registration/otp` is not public: auth dropped it, and it needs a JWT.
 - `/auth/api/ready`, `/auth/api/health`
 - `/vod/api/ready`, `/vod/api/health`
