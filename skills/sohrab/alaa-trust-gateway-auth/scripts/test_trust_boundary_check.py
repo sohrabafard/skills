@@ -73,6 +73,26 @@ class FrontendDeleteCoverage(unittest.TestCase):
         self.assertEqual(result.returncode, 1, result.stdout)
         self.assertIn("without the delete: 'frontend fe_dyn'", result.stdout)
 
+    def test_templated_backend_reached_by_a_frontend_without_the_delete_fails(self):
+        # Defends against: a templated backend name matching no literal target,
+        # so a non-deleting frontend routing into it is never examined.
+        templated = """backend be_{{ .name }}
+  http-request set-header X-Forwarded-For %[var(txn.client_ip)]
+"""
+        result = sanitize(DELETING_FRONTEND + PLAIN_FRONTEND + templated)
+        self.assertEqual(result.returncode, 1, result.stdout)
+        self.assertIn("without the delete: 'frontend fe_other'", result.stdout)
+
+    def test_forwarded_host_set_without_delete_fails(self):
+        # Defends against: X-Forwarded-Host staying exempt from sanitize although
+        # the gateway deletes it, so a forgeable client copy passes unreported.
+        host_set = """backend be_app
+  http-request set-header X-Forwarded-Host %[req.hdr(Host)]
+"""
+        result = sanitize(PLAIN_FRONTEND + host_set)
+        self.assertEqual(result.returncode, 1, result.stdout)
+        self.assertIn("x-forwarded-host is injected", result.stdout)
+
 
 class ForwardedForReads(unittest.TestCase):
     def test_source_read_of_forwarded_for_is_not_a_trusted_header_finding(self):

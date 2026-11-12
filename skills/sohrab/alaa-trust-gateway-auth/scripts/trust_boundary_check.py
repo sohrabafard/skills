@@ -329,11 +329,15 @@ _TRACE_HEADERS = {"x-request-id", "x-request-ip", "traceparent", "tracestate", "
                   "x-forwarded-prefix", "x-real-ip"}
 
 # A header the gateway may inject without deleting the inbound copy: a deliberate
-# pass-through, not a spoofing surface. `X-Forwarded-For` is excluded: the
-# gateway sends backends exactly one value, so an injected copy must replace a
-# deleted client copy (alaa-services-contract
+# pass-through, not a spoofing surface. Only the tracing headers and
+# `X-Forwarded-Proto` stay exempt. The gateway deletes every client-sent
+# `X-Forwarded-For`, `X-Forwarded-Host`, `X-Forwarded-Port`,
+# `X-Forwarded-Prefix` and `X-Real-IP`, so an injected copy of any of them must
+# replace a deleted client copy (alaa-services-contract
 # references/30-trusted-ingress-and-laravel-contract.md).
-_SANITIZE_EXEMPT = _TRACE_HEADERS - {"x-forwarded-for"}
+_SANITIZE_EXEMPT = _TRACE_HEADERS - {
+    "x-forwarded-for", "x-forwarded-host", "x-forwarded-port", "x-forwarded-prefix", "x-real-ip",
+}
 
 
 def _evaluate_sanitize(
@@ -398,6 +402,19 @@ def _evaluate_sanitize(
 
             def reachers(backend: str) -> list[str]:
                 name = backend.split(" ", 1)[1] if " " in backend else ""
+                # A templated backend name cannot be matched exactly, so any
+                # target sharing its literal prefix may reach it (any target
+                # at all when the name starts with the template).
+                templated = "{{" in name
+                prefix = name.split("{{", 1)[0]
+
+                def reaches(targets: set[str]) -> bool:
+                    if "*" in targets:
+                        return True
+                    if templated:
+                        return any(target.startswith(prefix) for target in targets)
+                    return name in targets
+
                 found = []
                 for source, targets in routes.items():
                     if not source.startswith(("frontend ", "listen ")):
@@ -405,10 +422,10 @@ def _evaluate_sanitize(
                     # A default_backend in a defaults section also routes the
                     # proxies associated with it.
                     inherited = routes.get(defaults_of.get(source) or "", set())
-                    if {name, "*"} & (targets | inherited):
+                    if reaches(targets | inherited):
                         found.append(source)
                 for source, targets in routes.items():
-                    if not source.startswith("defaults ") or not {name, "*"} & targets:
+                    if not source.startswith("defaults ") or not reaches(targets):
                         continue
                     for proxy, associated in defaults_of.items():
                         if associated == source and proxy.startswith(("frontend ", "listen ")):
