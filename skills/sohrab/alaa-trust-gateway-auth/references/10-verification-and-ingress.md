@@ -284,11 +284,9 @@ A forged project id lets one caller pull many projects' public feeds from one pl
 That is an abuse and cost question rather than a disclosure one, and it does not
 change the verdict above. It does decide the shape of any limit: **a quota keyed on
 a client-asserted project id is evaded by editing one query parameter, and it
-reports assurance it does not have.** Keying on the client address is no
-alternative: no component rate-limits by client IP, and the address is a best guess
-that decides nothing about admission. The rule is owned by
-`alaa-services-contract references/22-failure-load-and-deprecation-contract.md`. The
-gateway keeps its limiter infrastructure in the chart, disabled.
+reports assurance it does not have.** Keying on the client address is not the
+alternative: `alaa-services-contract references/22-failure-load-and-deprecation-contract.md`
+owns the no-IP-rate-limit rule.
 
 Whether such a route carries a limit at all belongs to `/alaa-reliability-sla`
 (`$alaa-reliability-sla`), and the Ala number it carries belongs to

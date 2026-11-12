@@ -161,10 +161,8 @@ repositories is how `0` ends up saved as a real school id.
   deployment values, so no service receives the raw bearer.
 - `X-Request-ID` is preserved when the client sent one and generated otherwise. It
   is correlation only and is neither an auth nor a tenant header.
-- The gateway fixes `X-Forwarded-Proto` to `https` and deletes client-sent forwarding and address headers,
-  sending backends one single-value `X-Forwarded-For`. The client address is a best guess for logs and
-  analytics, never a security input. The rule and header list are owned by
-  `alaa-services-contract references/30-trusted-ingress-and-laravel-contract.md`.
+- Client address and forwarding headers: `alaa-services-contract references/30-trusted-ingress-and-laravel-contract.md`
+  owns the rule. The client address is never a trust input.
 
 ## TOTP step-up headers
 
