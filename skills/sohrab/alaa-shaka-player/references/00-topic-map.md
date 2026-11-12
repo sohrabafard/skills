@@ -26,7 +26,7 @@ One file answers most tasks; two is normal. Loading ten means the task was never
 | cap or floor quality, write anything under `abr.*` or `restrictions.*`, disable ABR to pin a variant, or explain "why does HD take so long" | `24-adaptive-bitrate-and-restrictions.md` |
 | build a quality, audio or subtitle menu; call `selectVariantTrack`/`selectAudioTrack`/`selectTextTrack`; or find a language choice lost after the next `load()` | `26-tracks-audio-video-text.md` |
 | side-load a `.vtt` or `.srt`, style or reposition captions, set `subtitleDelay`, write a `TextDisplayer`, or see captions render but ignore your CSS | `28-subtitles-and-text-displayer.md` |
-| set `playbackRate`, add a speed menu, implement fast-forward or rewind buttons, call `trickPlay`, or clamp the playable window | `30-playback-speed-seek-trickplay.md` |
+| set `playbackRate`, add a speed menu, implement fast-forward or rewind buttons, call `trickPlay`, clamp the playable window, or call `addSkipRange`/`removeSkipRange`/`clearSkipRanges`/`getSkipRanges` (5.3) | `30-playback-speed-seek-trickplay.md` |
 | load a live manifest, draw a DVR scrubber, chase the live edge, tune latency, or see a live stream buffer after every chunk | `32-live-and-low-latency.md` |
 | ship anything that will run on a mobile or lossy network: retry budgets, buffering goals, stalls, gap jumping, `streaming.failureCallback`, offline/online transitions | `35-unstable-networks-and-resilience.md` |
 | change the playing asset, move to the next episode, build a playlist or a wall-clock schedule, or write `destroy()` then `new shaka.Player()` to change source | `37-switching-source.md` |
@@ -34,7 +34,7 @@ One file answers most tasks; two is normal. Loading ten means the task was never
 | put a signed, presigned or tokenised URL into a manifest, a share link, a component prop or a stored offline asset | `42-media-url-trust-and-presigned.md` |
 | write anything under `drm.*`, integrate Widevine, PlayReady or FairPlay, set robustness, or see a 6xxx error code | `45-drm.md` |
 | implement in-app download, call `shaka.offline.Storage`, pick tracks to store, show download progress, or store with a persistent licence | `50-offline-and-in-app-download.md` |
-| request a VAST or VMAP tag, integrate IMA or MediaTailor, insert an interstitial, render ad chrome, or handle an ad that never starts | `55-ads-vast-vmap-and-ima.md` |
+| request a VAST or VMAP tag, integrate IMA or MediaTailor, insert an interstitial, read SCTE-35 cues (`getAllScte35Events`, `scte35added`/`scte35enter`/`scte35exit`, 5.3), render ad chrome, or handle an ad that never starts | `55-ads-vast-vmap-and-ima.md` |
 | call `getStats()`, compute watch time, rebuffer ratio, startup time or a QoE figure, or decide what a playback event should carry | `60-analytics-and-getstats.md` |
 | use `shaka.ui.Overlay`, choose control-panel elements, register a custom button, theme with `--shaka-*`, or translate a UI string | `65-ui-library-skin-and-localisation.md` |
 | write a `catch` around `load()`, an `error` listener, a `failureCallback`, or map a numeric Shaka code to a user-facing message | `70-error-taxonomy-and-codes.md` |

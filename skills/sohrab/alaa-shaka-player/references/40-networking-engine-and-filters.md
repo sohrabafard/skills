@@ -165,12 +165,13 @@ storage.getNetworkingEngine().registerRequestFilter(async (type, request) => {
 
 ## Native HLS playlist and segment requests skip request filters
 
-When a stream depends on a request filter for credentials or URL rewriting and can play on an Apple browser, read this section.
+When a stream depends on a request filter for credentials or URL rewriting and can load through `src=` (the MSE-error fallback on an Apple browser, `streaming.preferNativeHls`, or a browser with no MediaSource), read this section.
 
 - Requests from native HLS playback (`LoadMode.SRC_EQUALS`, `src=`) are sent by the browser, not by the networking engine. `lib/player.js` at v5.3.4 sets `mediaElement.src = playbackUri`. Request filters do not run for playlist and segment requests. Licence and certificate requests still go through `NetworkingEngine` on this path (`initializeSrcEqualsDrmInner_` creates the `DrmEngine` with the player's networking engine, which sends `RequestType.LICENSE`), so licence filters keep running.
-- The `streaming.fallbackToNativeHlsOnMseError` retry loads that way. Apple browsers set the key to `true` (`lib/device/apple_browser.js`). Row and conditions: `15-configure-surface-and-safe-defaults.md`.
-- Basis: `verified` from the `shaka-player@5.3.4` tarball (`lib/player.js`), read 2026-11-12. The `inferred` part is the claim that no filter hook exists for browser-issued playlist and segment requests. No file in that tarball was found to add one.
-- Decision. Set `streaming.fallbackToNativeHlsOnMseError: false` explicitly. Otherwise do not ship a playlist or segment credential that only a filter adds on a stream that can fall back. Rule 7 lets a signed manifest URL or a token enter the player only through a request filter, so no filter-free credential path exists, and the explicit `false` is the decision.
+- The `streaming.fallbackToNativeHlsOnMseError` retry loads that way. Default, Apple override and override precedence: `15-configure-surface-and-safe-defaults.md`.
+- Basis: `verified` from the `shaka-player@5.3.4` tarball (`lib/player.js`, `lib/device/apple_browser.js`, `lib/util/player_configuration.js`, `lib/drm/drm_engine.js`), read 2026-11-12. The `inferred` part is the claim that no filter hook exists for browser-issued playlist and segment requests. No file in that tarball was found to add one.
+- Decision for the fallback. For a stream whose playlist or segment requests need a filter-added credential, set `streaming.fallbackToNativeHlsOnMseError: false` explicitly in `player.configure()` (precedence: `15-configure-surface-and-safe-defaults.md`). The load then fails with 4040 or 4041 instead of retrying. Handle that code through `70-error-taxonomy-and-codes.md`.
+- Decision for planned native playback. When such a stream must play through `src=` by configuration (`preferNativeHls`) or by necessity (no MediaSource), rule 7 cannot be met for its playlist and segment requests. Stop and report the stream as blocked until the credential owner (`/alaa-minio-object-storage` or `/alaa-arvan-object-storage`) supplies a design that needs no client filter.
 - Reason: `SKILL.md` non-negotiable rule 7 allows a credential to reach the player only through a request filter. The native path runs no filter for playlist and segment requests, so a filter-added credential is missing there.
 
 CORS: cross-origin manifest, segment and licence requests need the usual

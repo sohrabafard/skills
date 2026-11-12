@@ -22,7 +22,7 @@ Removed in v5.0 and split into two narrower switches:
 | Key | Default | Meaning |
 |---|---|---|
 | `streaming.useNativeHlsForFairPlay` | `true` through 5.2.x; **`false` from 5.3.0** (C9 in `05-provenance-and-freshness.md`). Setting rule: `15-configure-surface-and-safe-defaults.md`, "Keys added or changed in 5.3". | Desktop Safari has both MSE and native HLS. Keep `true` for FairPlay. Upstream warning: *"Where single-key DRM streams work fine, multi-keys streams is showing unexpected behaviours (stall, audio playing with video freezes, …). Use with care."* |
-| `streaming.preferNativeHls` | `false` | Prefer native HLS on **any** browser when possible. |
+| `streaming.preferNativeHls` | `false` | Prefer native HLS on **any** browser when possible. When a stream depends on a request filter, read `40-networking-engine-and-filters.md`, section "Native HLS playlist and segment requests skip request filters", before you set it. |
 | `streaming.preferNativeDash` | `false` | Prefer native DASH when possible. |
 
 Carrying `streaming.useNativeHlsOnSafari` forward from a v4 codebase is a **silent no-op**: Shaka's
