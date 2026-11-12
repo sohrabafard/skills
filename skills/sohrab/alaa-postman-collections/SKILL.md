@@ -64,8 +64,8 @@ files the current task touches.
 4. Follow the ordered workflow in `references/10-scope-and-trigger-rules.md`. It also
    holds the generated-artifact rule and the stop-and-ask conditions.
 5. Prefer a minimal update to an existing artifact over a rewrite.
-6. Validate before concluding. `references/60-validation-and-output-contract.md` holds both
-   scripts' flags, both exit-code tables, and what each failure obliges you to do.
+6. Before running any artifact check, read `references/60-validation-and-output-contract.md`
+   for the offline workflow, flags, and exit codes.
 
 ## Deliverables
 

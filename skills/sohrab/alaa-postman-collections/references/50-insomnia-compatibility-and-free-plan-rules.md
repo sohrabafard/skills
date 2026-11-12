@@ -80,9 +80,8 @@ Use this one, which is the Postman export marker and the v2.1 member of the list
 https://schema.getpostman.com/json/collection/v2.1.0/collection.json
 ```
 
-Do not put `https://schema.getpostman.com/collection/json/v2.1.0/draft-04/collection.json`
-in `info.schema`. It is the URL for validating a collection against the JSON Schema, and
-it is not in Insomnia's accepted list.
+Keep the export marker above in `info.schema`. For schema validation inputs, follow
+`60-validation-and-output-contract.md`.
 
 ## Why this skill pins v2.1 when v3.0.0 exists
 
@@ -205,7 +204,7 @@ SSO. A committed artifact works without every one of them.
 this file used to prescribe are deprecated: `insomnia-importers` and `insomnia-inso` were
 each last published 27 September 2022 and both now carry
 `Package no longer supported. Use at your own risk.` Do not put either in a validation
-ladder or a CI job. Re-check before trusting this paragraph:
+ladder or a CI job. To reassess the converter choice during skill maintenance:
 
 ```shell
 curl -s https://registry.npmjs.org/insomnia-importers | python3 -c "import json,sys; d=json.load(sys.stdin); l=d['dist-tags']['latest']; print(l, d['time'][l], d['versions'][l].get('deprecated'))"
@@ -214,13 +213,14 @@ curl -s https://registry.npmjs.org/insomnia-importers | python3 -c "import json,
 What replaces it is two checks, in this order:
 
 1. **The static check, automated and always available.** `validate_postman_artifacts.py`
-   compares `info.schema` against the exact export marker with no flag needed. That string
+   compares `info.schema` against the exact export marker. Run the offline command from
+   `60-validation-and-output-contract.md`. That string
    comparison is the whole of Insomnia's detection logic, so it fully proves the
    `No importers found for file` failure mode — the one the deprecated converter was run to
    catch.
-2. **A real import into Insomnia, by a person, when portability is contractual.** It is the
+2. **A real local import into Insomnia, by a person, when portability is contractual.** It is the
    only way to observe what the importer silently drops. Record the Insomnia version, because
    this file's table is version-pinned.
 
-When neither has been done, say in the task output that Insomnia portability is
-static-checked but not import-verified. Never describe it as verified.
+Report which checks ran. If only the static check ran, report portability as static-checked
+and import verification as pending.

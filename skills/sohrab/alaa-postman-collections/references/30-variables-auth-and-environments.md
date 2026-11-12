@@ -38,10 +38,9 @@ An environment is complete when all six hold. Each one is checkable.
    environment means the artifact silently keeps pinning it after the service moves on.
    The positive replacement: declare the value as an input of the generator that emits the
    environment, reference it here as a `{{variable}}` or leave it out of the committed file
-   entirely, and route which identifier to use to `/alaa-prompting-guide`
-   (`$alaa-prompting-guide`). This skill states no model, engine, or vendor name of its own.
-   `validate_postman_artifacts.py --forbid-pinned-vendor-identifier` is the gate;
-   `60-validation-and-output-contract.md` holds the flag table.
+   entirely, and route which identifier to use to `/alaa-prompting-guide`. This skill states
+   no model, engine, or vendor name of its own. Add `--forbid-pinned-vendor-identifier` to
+   the offline validator command in `60-validation-and-output-contract.md`.
 
 ## Per-developer versus shared
 

@@ -68,8 +68,12 @@ repository, say so in the task output and leave the decision to the repository o
 The heading names below are the machine form of the asset's structure. Keep the two in
 step: if the asset's headings change, this command changes in the same task.
 
+This example uses the optional schema skip. Select the schema flags in
+`60-validation-and-output-contract.md`.
+
 ```shell
 python3 "$SKILL_DIR/scripts/validate_postman_artifacts.py" path/to/collection.json \
+  --skip-schema \
   --env path/to/environment.json \
   --min-description-chars 400 \
   --require-doc-section Purpose \

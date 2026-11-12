@@ -24,7 +24,7 @@ Insomnia compatibility, or API source truth.
 Postman:
 
 - Collection Format v2.1 docs — https://schema.postman.com/json/collection/v2.1.0/docs/index.html
-- Collection v2.1 JSON Schema, for validation — https://schema.getpostman.com/collection/json/v2.1.0/draft-04/collection.json
+- Collection v2.1 JSON Schema provenance — https://schema.getpostman.com/collection/json/v2.1.0/draft-04/collection.json
 - Learning Center — https://learning.postman.com/docs/
 - sandbox API reference — https://learning.postman.com/docs/tests-and-scripts/write-scripts/postman-sandbox-api-reference/
 - variable scopes and methods — https://learning.postman.com/docs/tests-and-scripts/write-scripts/postman-sandbox-reference/pm-variables/
@@ -75,8 +75,8 @@ incomplete and behind. Read a **release tag**, not `master`: a claim read from `
 be tied to a version anyone can install, and this skill's compatibility table is
 version-pinned.
 
-Before trusting any pinned package version or free-plan number in this skill, re-run the
-re-derivation command that sits beside it. Every such claim in this skill carries one.
+Use package and plan sources when the task requires current tool or plan behavior.
+For artifact validation, follow `60-validation-and-output-contract.md`.
 
 ## Domain-bounded anti-pattern
 
