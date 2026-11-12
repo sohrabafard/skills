@@ -26,13 +26,13 @@ Use this file to choose the smallest reference file that owns the rule you need.
   - Use when a service calls an external messaging provider (an SMS gateway such as Magfa, a messenger such as Bale Safir) directly: the provider adapter port and registry, outcome, error-class and transport-signal vocabulary, sender lines (`SMS_*_SENDER_LINES`), the admission order, AIMD rate, transport, account and line breaker values with their worked examples, the operator pause, the provider Redis keys, or the provider contract test suite.
   - Read `33-outbound-messaging-provider-contract.md`; pair with `/alaa-reliability-sla` for the doctrine, `/alaa-sms-provider-magfa` or `/alaa-bale-provider` for vendor wire facts, and `29-redis-key-registry.md` for the key rows.
 - `Mode A+++ - Failure, load, and deprecation contract`
-  - Use when the task is about an outbound timeout, a retry budget, backoff and jitter, an idempotency key on an internal call, what a backend does when `auth` / OpenFGA / the notification broker is unreachable, a bounded database connection pool, a pool acquire timeout, the shed-versus-queue decision at ingress, a request deadline, or deprecating and removing any contract surface this skill defines.
+  - Use when the task is about an outbound timeout, a retry budget, backoff and jitter, an idempotency key on an internal call, what a backend does when `auth` / OpenFGA / the notification broker is unreachable, a bounded database connection pool, a pool acquire timeout, the shed-versus-queue decision at ingress, a rate limit or the client IP, a request deadline, or deprecating and removing any contract surface this skill defines.
   - Read `22-failure-load-and-deprecation-contract.md`; pair with `/alaa-reliability-sla` for the doctrine behind the values and `/alaa-data-layer` for pool mechanics inside a driver.
 - `Mode B - Laravel backend service`
   - Use when the task is about Laravel API response boundaries, Resources, middleware order, public `project_id` validation and resolution, or Laravel-specific route and command expectations.
   - Read `30-trusted-ingress-and-laravel-contract.md` after the core contract.
 - `Mode C - Laravel downstream trusted service`
-  - Use when the service sits behind the Ala gateway, consumes sanitized trusted headers, or needs to normalize `X-Project-Id`.
+  - Use when the service sits behind the Ala gateway, consumes sanitized trusted headers, needs to normalize `X-Project-Id`, or touches client IP, forwarded headers, or a `/metrics` route behind the gateway.
   - Read `30-trusted-ingress-and-laravel-contract.md` and pair with `/alaa-trust-gateway-auth`.
 - `Mode C+ - Permission catalog consumer`
   - Use when the task is about backend authorization, access levels, `X-User-Roles`, role-derived behavior, `config/permissions.php`, permission names, bitmap ids, generated service permission configs, the generated TypeScript `permission-catalog.ts`, `catalog/services.json` descriptors including `aggregate_consumers`, `X-Access` permission mapping, or catalog drift checks.

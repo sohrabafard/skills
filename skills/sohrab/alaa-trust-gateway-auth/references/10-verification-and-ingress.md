@@ -73,6 +73,9 @@ The gateway currently treats these paths as public and skips token verification:
 
 - `/auth/api/v3/otp/request`, `/auth/api/v3/otp/verify`, `/auth/api/v3/token/refresh`,
   `/auth/api/v3/logout`
+- Pending, owner-decided and not yet rendered by the gateway: the exact paths `/auth/api/v3/registration/otp`,
+  `/auth/api/v3/registration`, `/auth/api/v3/registration/policy`. Treat them as public only once the gateway
+  chart lists them.
 - `/auth/api/ready`, `/auth/api/health`
 - `/vod/api/ready`, `/vod/api/health`
 - `/comment/api/ready`, `/comment/api/health`
@@ -281,11 +284,11 @@ A forged project id lets one caller pull many projects' public feeds from one pl
 That is an abuse and cost question rather than a disclosure one, and it does not
 change the verdict above. It does decide the shape of any limit: **a quota keyed on
 a client-asserted project id is evaded by editing one query parameter, and it
-reports assurance it does not have.** The gateway's own limiter is keyed on the
-source address and matches on the path only, so the query parameter neither selects
-nor evades it. Re-derive with
-`rg -n "stick-table|track-sc0|is_rate_limited_path" charts/gateway/templates/configmap.yaml`
-in the gateway repository.
+reports assurance it does not have.** Keying on the client address is no
+alternative: no component rate-limits by client IP, and the address is a best guess
+that decides nothing about admission. The rule is owned by
+`alaa-services-contract references/22-failure-load-and-deprecation-contract.md`. The
+gateway keeps its limiter infrastructure in the chart, disabled.
 
 Whether such a route carries a limit at all belongs to `/alaa-reliability-sla`
 (`$alaa-reliability-sla`), and the Ala number it carries belongs to
