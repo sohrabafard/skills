@@ -110,7 +110,7 @@ Source reading only, against `22-failure-load-and-deprecation-contract.md`. No r
 | Component | Observation | Evidence |
 |---|---|---|
 | `auth` | Behind: the OTP-verify, refresh and OTP-request limiters key on the client IP. Migration is owned by auth (Beads `alaa-haz4.10.1.1` decision gate). | `29-redis-key-registry.md` rows `auth:sensitive-attempts:v1:auth:otp:verify:<ip>`, `auth:otp:request:<ip>`; `auth: app/Providers/AppServiceProvider.php:58`, `app/Http/Controllers/Api/Auth/AuthController.php:112-123,267-301` |
-| `gateway` | Implementation pending (gateway Beads `alaa-2nv79`). | owner decision |
+| `gateway` | Conforms: no IP-keyed rate limit; the `rateLimit` block stays in the chart, disabled. | gateway merge `823e53a` (Beads `alaa-2nv79`): `charts/gateway/values.yaml` `rateLimit.enabled: false`; no client-address stick table in `snapshots/*.haproxy.cfg` |
 | `content`, `comment-service` | Unverified: no source reading for IP-keyed limits. | none |
 
 ## How to refresh this file

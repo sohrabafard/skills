@@ -51,19 +51,23 @@ This set is frozen, and the fleet already agrees on it. In the 2026-07-25 fleet 
 
 ## Client address, forwarded headers, and metrics routes
 
-Owner decision 2026-11-12; gateway implementation pending (gateway Beads `alaa-2nv79`). It binds the whole fleet.
+Owner decision 2026-11-12, confirmed in gateway source at merge `823e53a` (gateway Beads `alaa-2nv79`). It binds the
+whole fleet.
 
 - A client IP address is a best guess, used only for logs and analytics, never for rate limiting or throttling
   (rule owned by `22-failure-load-and-deprecation-contract.md`).
 - An unknown number of proxy layers (WAFs, possibly behind Cloudflare or ArvanCloud) may sit in front of the
   gateway, and which layer sets the address in which header is unknown.
-- The gateway computes the guess. The operator sets the release input `GATEWAY_TRUSTED_PROXY_CIDRS`. The gateway
-  walks `X-Forwarded-For` from the right, skips trusted addresses, and takes the first untrusted one, in at most 8
-  steps. With no trusted proxies, or an untrusted peer, the client is the peer. A missing or unparseable
-  `X-Forwarded-For` value stops the walk, and the last valid address reached is used, as when nothing untrusted
-  is found. It never rejects a request over this.
+- The gateway computes the guess. The operator sets the release input `GATEWAY_TRUSTED_PROXY_CIDRS`; empty or unset
+  trusts no proxy. The gateway refuses to start on an entry shorter than IPv4 `/8` or IPv6 `/16`, and on an IPv6
+  entry that overlaps `::/80` (the IPv4-mapped space, which HAProxy matches against IPv4 addresses) shorter than
+  `/104`. The gateway walks `X-Forwarded-For` from the right, skips trusted addresses, and takes the first
+  untrusted one, in at most 8 steps. With no trusted proxies, or an untrusted peer, the client is the peer. A
+  missing or unparseable `X-Forwarded-For` value stops the walk, and the last valid address reached is used, as
+  when nothing untrusted is found. It never rejects a request over this.
 - The gateway deletes client-sent `Remote-Addr`, `Https`, `Server-Port`, `X-Real-IP`, `Forwarded`,
-  `X-Forwarded-Host`, `X-Forwarded-Port`, `X-Forwarded-Prefix`, and `X-Forwarded-For` on every route. It sends
+  `X-Forwarded-Host`, `X-Forwarded-Port`, `X-Forwarded-Prefix`, `X-Forwarded-For`, and the client-IP aliases
+  `True-Client-IP`, `CF-Connecting-IP`, `X-Client-IP`, and `X-Cluster-Client-IP` on every route. It sends
   route backends exactly one single-value `X-Forwarded-For`, and fixes `X-Forwarded-Proto` to `https`. Its access
   log carries `client_ip`, `peer_ip`, and `client_ip_source` (`peer` or `forwarded`).
 - A backend uses its framework's trusted-proxy mechanism (Laravel `TrustProxies`, or the equivalent elsewhere).
