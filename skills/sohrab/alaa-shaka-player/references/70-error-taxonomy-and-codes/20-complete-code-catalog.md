@@ -48,8 +48,11 @@ v5.0 note: `MEDIA_SOURCE_OPERATION_THREW` (3015) now includes media-element erro
 `DASH_MSE_ENCRYPTED_LEGACY_APPLE_MEDIA_KEYS_NOT_SUPPORTED` 4054 ·
 `CANNOT_ADD_EXTERNAL_CHAPTERS_TO_LIVE_STREAM` 4055 · `WEBTRANSPORT_NOT_AVAILABLE` 4056 ·
 `WEBTRANSPORT_INITIALIZATION_FAILED` 4057 · `MSF_VOD_CONTENT_NOT_SUPPORTED` 4058 ·
-`HLS_INVALID_KEY_IV_FOR_GCM` 4059 · `HLS_INVALID_GCM_SEGMENT` 4060 · `DASH_INVALID_JSON` 4061 ·
-`MSF_NO_CATALOG` 4062 · `DASH_UNSUPPORTED_ESSENTIAL_PROPERTY` 4063 · `MSF_CATALOG_TIMEOUT` 4064.
+`HLS_INVALID_KEY_IV_FOR_GCM` 4059 · `HLS_INVALID_GCM_SEGMENT` 4060 · ~~`DASH_INVALID_JSON` 4061~~ *(removed in 5.3.0)* ·
+~~`MSF_NO_CATALOG` 4062~~ *(removed in 5.3.0)* · `DASH_UNSUPPORTED_ESSENTIAL_PROPERTY` 4063 · `MSF_CATALOG_TIMEOUT` 4064 ·
+`MSF_CONNECTION_CLOSED` 4065 · `MSF_SUBSCRIBE_FAILED` 4066 · `MSF_UNSUPPORTED_COMPRESSION` 4067 ·
+`MSF_UNSUPPORTED_CATALOG_VERSION` 4068 · `MKV_INVALID_FILE` 4069 · `MKV_MISSING_INDEX` 4070 ·
+`MKV_NO_SUPPORTED_TRACKS` 4071 *(4065 to 4071 are absent at 5.2.13 and present at 5.3.4; see "Changes in 5.3" below)*.
 
 **`NO_WEB_CRYPTO_API` (4042)** is the code an insecure origin produces for encrypted content, and it
 is the practical "you are not on https" signal in a client.
@@ -75,3 +78,25 @@ category at 5.2.3 — streaming failures surface as NETWORK or MEDIA codes route
 > **5.2.2 fix worth knowing:** *"Fix duplicate error code 4058"* (#10372) — code 4058 was assigned
 > **twice** before 5.2.2. If your telemetry holds 4058 events from ≤5.2.1, they may be two different
 > errors, and any dashboard grouping on that code across the upgrade boundary is wrong.
+
+## Changes in 5.3 (read 2026-11-12)
+
+Do not reuse codes 4061 and 4062 for new meanings in your own tables. Shaka marks both `RETIRED` in
+`lib/util/error.js` at 5.3.4 (npm tarball `shaka-player@5.3.4`, local read).
+
+| Code | Name | Status | Source |
+|---|---|---|---|
+| 4061 | `DASH_INVALID_JSON` | Removed. The DASH JSON support left the experimental build ([#10705](https://github.com/shaka-project/shaka-player/issues/10705)). | [CHANGELOG at v5.3.4](https://github.com/shaka-project/shaka-player/blob/v5.3.4/CHANGELOG.md), 5.3.0 section |
+| 4062 | `MSF_NO_CATALOG` | Removed. The reason is not stated upstream. The `.d.ts` diff 5.2.13 to 5.3.4 shows the removal. | `lib/util/error.js` at tag v5.3.0 marks it `RETIRED` (read 2026-11-12) |
+| 4065 | `MSF_CONNECTION_CLOSED` | Added. MoQT session ended before load finished. `data[0]` is the reason. | `error.js` at 5.3.4 |
+| 4066 | `MSF_SUBSCRIBE_FAILED` | Added. Publisher refused a needed track. `data[0]` track name, `data[1]` reason. | `error.js` at 5.3.4 |
+| 4067 | `MSF_UNSUPPORTED_COMPRESSION` | Added. Payload compression is unsupported (GZIP needs `DecompressionStream`). `data[0]` is the compression value. | `error.js` at 5.3.4 |
+| 4068 | `MSF_UNSUPPORTED_CATALOG_VERSION` | Added. `data[0]` is the declared version. | `error.js` at 5.3.4 |
+| 4069 | `MKV_INVALID_FILE` | Added. Not a valid Matroska or WebM file. `data[0]` is the URI. | `error.js` at 5.3.4 |
+| 4070 | `MKV_MISSING_INDEX` | Added. No Cues element, so byte-range seeking is impossible. `data[0]` is the URI. | `error.js` at 5.3.4 |
+| 4071 | `MKV_NO_SUPPORTED_TRACKS` | Added. No playable track, for example DTS only. `data[0]` is the URI. | `error.js` at 5.3.4 |
+
+All seven are defined in `lib/util/error.js` at tag v5.3.0 (read 2026-11-12). MKV is experimental-build
+only (CHANGELOG 5.3.0, #10667). MSF appears experimental-only too: `moqt` and `matroska` strings occur in
+`dist/shaka-player.experimental.js` but not in `dist/shaka-player.ui.js` at 5.3.4 (local grep, not
+upstream). A standard UI-bundle consumer should not see 4065 to 4071 (inferred from the experimental-only scope).

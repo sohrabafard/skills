@@ -2,6 +2,9 @@
 
 All rows `verified` at v5.2.3, read 2026-07-28, from `ui/ui.js`, `ui/controls.js`, `ui/element.js`,
 `ui/localization.js`, `ui/externs/ui.js`, `ui/*.less` and `docs/tutorials/ui*.md`.
+Rows marked 5.3 were read 2026-11-12 from the `shaka-player@5.3.4` npm package (`ui/ui.js`,
+`ui/externs/ui.js`, `ui/*.js`, `dist/shaka-player.ui.d.ts`) and the CHANGELOG at tag v5.3.4
+(`https://raw.githubusercontent.com/shaka-project/shaka-player/v5.3.4/CHANGELOG.md`).
 
 Colour, type, spacing, motion and the design decisions of a skin belong to
 `/alaa-ui-ux-design-system` (`$alaa-ui-ux-design-system`). This file owns only the mechanisms that
@@ -62,8 +65,10 @@ Declarative DOM attributes: `data-shaka-player-container`, `data-shaka-player`,
 `shortcuts`, `menuOpenUntilUserClosesIt`, `allowTogglePresentationTime`,
 `showRemainingTimeInPresentationTime`, `enableVrDeviceMotion`, `enableVrWheelZoom`, `showUIAlways`,
 `showUIAlwaysOnAudioOnly`, `preferIntlDisplayNames`, `mediaSession`, `captionsStyles`,
-`captionsFontScaleFactors`, `documentPictureInPicture`, `showUIOnPaused`, `showMenusOnTheRight`,
+`captionsFontScaleFactors`, `documentPictureInPicture`, `showUIOnPaused`, `showMenusOnTheRight` (deprecated in 5.3),
 `customTrackLabel`, `showBufferingSpinner`.
+
+**5.3 changes to this list:** three keys added, one key deprecated and removed from the typedef. See "UI changes in 5.3" below.
 
 Named defaults: `playbackRates` `[1, 1.25, 1.5, 2, 3]` · `playbackRateSliderMin` `0.5` ·
 `playbackRateSliderMax` `3` · `fastForwardRates` `[2, 4, 8, 1]` · `rewindRates` `[-1, -2, -4, -8]` ·
@@ -91,6 +96,39 @@ Rule, verbatim: *"the `overflow_menu` button needs to be part of the `controlPan
 the overflow menu to be available to the user."*
 
 **Removed in v5.0:** `airplay` (use `remote`) and `addBigPlayButton` (use `bigButtons`).
+
+## UI changes in 5.3
+
+Read 2026-11-12. Source for every row: CHANGELOG at tag v5.3.4, section 5.3.0, plus the 5.3.4 package.
+The `controlPanelElements` default is unchanged from 5.2.13.
+
+| Key | Default at 5.3.4 | Rule | PR |
+|---|---|---|---|
+| `seekButtonDistance` | `10` | Seconds moved by the `seek_backward` and `seek_forward` buttons. A value of `0` or less **hides** the buttons. | #10662 |
+| `playbackRateSliderStep` | `0.05` | Step of the playback-rate slider and its +/- buttons. `playbackRateSliderMin` and `playbackRateSliderMax` set only the slider range. They add no preset button. | #10516 |
+| `captionsStyleElements` | the nine names below | Ordered list of rows in the subtitle style menu. | #10681, #10692, #10711 |
+
+`captionsStyleElements` default, in order: `captions-font-family`, `captions-font-color`,
+`captions-size`, `captions-background-color`, `captions-background-opacity`,
+`captions-character-edge-style`, `captions-font-opacity`, `captions-position`, `captions-style-reset`.
+
+New element names, from the `registerElement` calls in the 5.3.4 package:
+- `seek_backward` and `seek_forward`. Both register as control-panel elements and as `bigButtons`.
+  The class is `shaka.ui.SeekButton`.
+- `autoplay`. Control panel and overflow menu. The class is `shaka.ui.AutoPlayNextButton`.
+  It is a switch for `queue.autoPlayNext`.
+- `captions-settings` and `captions-style`. Control panel and overflow menu. The classes are
+  `CaptionsSettingsGroup` and `TextStyleGroup`. Both extend the new `shaka.ui.MenuGroup`
+  (nested menu groups, #10681).
+- `captions-style-reset`. Overflow menu only. The class is `shaka.ui.TextStyleResetButton`.
+
+The subtitle style menus change `textDisplayer.*` style keys. Those keys work only with
+`shaka.text.UITextDisplayer`. Before you expose the menus, read `28-subtitles-and-text-displayer.md`.
+
+**`showMenusOnTheRight` is deprecated** in 5.3.0 (#10708). Menus now open next to the button that
+opens them. Remove the key from new code.
+`80-version-migration-and-release-deltas/30-deprecations-and-v6.md` owns the TypeScript and runtime
+effects and the v6 removal. Read it when you handle a deprecation warning.
 
 ## Custom control elements
 
@@ -202,7 +240,6 @@ ui.configure({
   enableTooltips: true,
   keyboardSeekDistance: 10,
   keyboardLargeSeekDistance: 60,
-  showMenusOnTheRight: false,           // set true for an RTL layout
   trackLabelFormat: shaka.ui.Overlay.TrackLabelFormat.LABEL_OR_LANGUAGE,
   // JS-built gradients: CSS cannot reach these.
   seekBarColors: {

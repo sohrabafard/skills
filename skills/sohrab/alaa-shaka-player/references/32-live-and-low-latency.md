@@ -16,6 +16,10 @@ All rows `verified` at v5.2.3, read 2026-07-28, from `externs/shaka/player.js`
 | `player.getPlayheadTimeAsDate()` / `getPresentationStartTimeAsDate()` | Wall-clock mapping. |
 | `getStats().liveLatency` | *"The time between the capturing of a frame and the end user having it displayed on their screen. If nothing is loaded or the content is VOD, NaN."* |
 
+When a live stream carries SCTE-35 ad-break signals, read `55-ads-vast-vmap-and-ima.md`, section
+"SCTE-35 messages". It owns `getAllScte35Events()` and the `scte35added`, `scte35enter` and
+`scte35exit` events (new in 5.3.0).
+
 ## Latency configuration
 
 | Key | Default | Note |

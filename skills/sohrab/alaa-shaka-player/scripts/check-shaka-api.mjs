@@ -4,7 +4,9 @@
  * deprecated between the repository's installed version and the current release.
  *
  * Facts source: /alaa-shaka-player references/80-version-migration-and-release-deltas.md
- * and references/05-provenance-and-freshness.md. Anchor version v5.2.3, read 2026-07-28.
+ * and references/05-provenance-and-freshness.md. Removal rules up to v5.2.3 were read 2026-07-28;
+ * the v5.3 rules come from the shaka-player 5.2.13 and 5.3.4 npm tarballs, read 2026-11-12.
+ * Anchor version v5.3.4.
  *
  * Exit codes (documented, and distinct on purpose):
  *   0  clean          - the scan ran and found no removed or deprecated API in scope
@@ -18,10 +20,10 @@ import { readFile, readdir, stat } from "node:fs/promises";
 import { join, relative, resolve, extname } from "node:path";
 import process from "node:process";
 
-const ANCHOR_VERSION = "5.2.3";
-const ANCHOR_READ_DATE = "2026-07-28";
+const ANCHOR_VERSION = "5.3.4";
+const ANCHOR_READ_DATE = "2026-11-12";
 
-/** One rule. `removedIn` is the first version where the symbol no longer exists. */
+/** One rule. `removedIn` is the first version where the symbol no longer exists; optional `deprecatedIn` is the first version that deprecates it. */
 const RULES = [
   // --- REMOVED in v5.0. Calling these throws; optional-chaining them silently no-ops. ---
   { symbol: "selectAudioLanguage", kind: "removed", removedIn: "5.0.0",
@@ -84,7 +86,22 @@ const RULES = [
     .map(s => ({ symbol: s, kind: "deprecated", removedIn: "6.0.0",
                  replacement: "preferredVideo: [{...}]", ref: "26-tracks-audio-video-text.md" })),
   { symbol: "preferredVariantRole", kind: "removed", removedIn: "5.0.0",
-    replacement: "preferredAudio[].role", ref: "26-tracks-audio-video-text.md" }
+    replacement: "preferredAudio[].role", ref: "26-tracks-audio-video-text.md" },
+
+  // --- v5.3. Error names retired in lib/util/error.js (present at 5.2.13, `// RETIRED` at 5.3.4).
+  //     5.3.0 verified: lib/util/error.js at tag v5.3.0 marks both RETIRED (read 2026-11-12). ---
+  { symbol: "DASH_INVALID_JSON", kind: "removed", removedIn: "5.3.0", exact: true,
+    replacement: "no replacement code (DASH JSON manifests were removed)", ref: "70-error-taxonomy-and-codes/20-complete-code-catalog.md" },
+  { symbol: "MSF_NO_CATALOG", kind: "removed", removedIn: "5.3.0", exact: true,
+    replacement: "MSF_CATALOG_TIMEOUT and the new MSF_* codes", ref: "70-error-taxonomy-and-codes/20-complete-code-catalog.md" },
+
+  // --- DEPRECATED in v5.3, scheduled for removal in v6.0. configure() logs a warning and deletes the key,
+  //     so it has no effect; absent from the 5.3.4 typedefs. ---
+  { symbol: "showMenusOnTheRight", kind: "deprecated", deprecatedIn: "5.3.0", removedIn: "6.0.0",
+    replacement: "delete the ui key; it has no effect since 5.3.0", ref: "80-version-migration-and-release-deltas/30-deprecations-and-v6.md" },
+  ...["useFetchCatalog", "subscribeFilterType"]
+    .map(s => ({ symbol: s, kind: "deprecated", deprecatedIn: "5.3.0", removedIn: "6.0.0",
+                 replacement: "delete the manifest.msf key; configure() ignores it", ref: "80-version-migration-and-release-deltas/30-deprecations-and-v6.md" }))
 ];
 
 const SOURCE_EXT = new Set([".ts", ".tsx", ".js", ".jsx", ".mjs", ".cjs", ".vue"]);
@@ -186,6 +203,9 @@ function analyse(text, installed, target) {
     // or is scheduled to go by then.
     const inScope = !installed || !gone || cmp(target, gone) >= 0 || rule.kind === "deprecated";
     if (!inScope) continue;
+    // A deprecation that starts after the target version is not a finding for that target.
+    const since = rule.deprecatedIn ? parseVersion(rule.deprecatedIn) : null;
+    if (since && target && cmp(target, since) < 0) continue;
     for (const hit of scanText(text, rule)) found.push({ ...rule, ...hit });
   }
   return found;

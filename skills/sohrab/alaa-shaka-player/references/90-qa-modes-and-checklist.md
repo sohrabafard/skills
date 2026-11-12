@@ -81,8 +81,8 @@ snapshot is flushed on `unloading` and on `pagehide` · every wire name traced t
 growth across ten mounts · no network activity after unmount.
 
 **Visual** — loading, empty and error states · control contrast and hit targets · caption readability
-· overlay stacking and dismissal · keyboard and remote navigation · RTL layout with
-`showMenusOnTheRight`. Design acceptance is `/alaa-ui-ux-design-system`,
+· overlay stacking and dismissal · keyboard and remote navigation · RTL layout (`showMenusOnTheRight` has no
+effect since 5.3.0; see `80-version-migration-and-release-deltas/30-deprecations-and-v6.md`). Design acceptance is `/alaa-ui-ux-design-system`,
 `references/90-quality-gates-and-review.md`.
 
 ## What "verified" means for a player change

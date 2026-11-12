@@ -1,7 +1,7 @@
 # Playback speed, seeking and trick play
 
 All rows `verified` at v5.2.3, read 2026-07-28, from `lib/player.js` and
-`externs/shaka/player.js` unless stated.
+`externs/shaka/player.js` unless stated. The skip-range section was read 2026-11-12 at v5.3.4.
 
 ## Current position
 
@@ -55,6 +55,53 @@ UI keyboard/touch seek: `keyboardSeekDistance` (arrows, 5 s), `keyboardLargeSeek
 
 UI rate config: `playbackRates` (default `[1, 1.25, 1.5, 2, 3]`), `fastForwardRates` (`[2, 4, 8, 1]`),
 `rewindRates` (`[-1, -2, -4, -8]`), `playbackRateSliderMin` (`0.5`), `playbackRateSliderMax` (`3`).
+When you set a seek-button distance or a rate-slider step (new in 5.3), read
+`65-ui-library-skin-and-localisation.md`, section "UI changes in 5.3".
+
+## Skip ranges (new in 5.3.0)
+
+The rules below describe 5.3.4. #10753 (released in 5.3.2) changed the behaviour to match the JSDoc, so
+5.3.0 and 5.3.1 may behave differently. The skill does not cover those versions.
+
+Read 2026-11-12. Signatures come from `dist/shaka-player.ui.d.ts` in the `shaka-player@5.3.4` npm package.
+Behaviour comes from the JSDoc in `lib/player.js` of the same package. The release notes list the
+feature as "Runtime skip ranges + MediaTailor played-ad-break skipping" (#10338) and a follow-up fix,
+"Align skip range API behavior with its documentation" (#10753). Both are in the CHANGELOG at tag v5.3.4,
+`https://raw.githubusercontent.com/shaka-project/shaka-player/v5.3.4/CHANGELOG.md`.
+
+| Method | Signature at 5.3.4 |
+|---|---|
+| `player.addSkipRange(start, end)` | `(start: number, end: number): boolean` |
+| `player.removeSkipRange(start, end)` | `(start: number, end: number): void` |
+| `player.clearSkipRanges()` | `(): void` |
+| `player.getSkipRanges()` | `(): shaka.extern.BufferedRange[]`, a sorted list of disjoint `{start, end}` objects. It returns a copy. |
+
+Rules:
+- Support is **VOD, MediaSource, segments mode (DASH and HLS) only**. Live content, sequence mode and
+  `src=` playback are not supported. `addSkipRange` returns `false` for them and logs a warning.
+- `addSkipRange` returns `false` for an empty or reversed interval. After `load()` it also returns
+  `false` for unsupported content.
+- The range is half-open: `[start, end)`. Its segments are not fetched or buffered. Buffering continues
+  from `end`. Gap jumping moves the playhead across.
+- Both ends **must line up with segment boundaries** of the video stream (the audio stream for
+  audio-only content). If they do not, the player keeps the range in the list, never skips it,
+  and logs a warning. A `true` return does not prove the skip will happen.
+- A range that touches or overlaps an existing range merges with it.
+- A range that is already buffered is accepted. It takes effect only when that span is no longer buffered.
+- You may call `addSkipRange` before `load()`. The player queues the range and checks it again when
+  streaming starts. Use this to skip a preroll before it buffers. Before `load()`, the call checks
+  only the interval.
+- `removeSkipRange` subtracts an interval. Removing part of a range trims it. Removing the middle
+  splits it in two. It is not an exact-match delete.
+- A removed range behind the playhead is not fetched again until the user seeks back across it.
+- `clearSkipRanges` removes all ranges and fetches them again.
+- `unload()` clears the skip ranges (`lib/player.js`, package 5.3.4). Add the ranges again for each new
+  asset. Source reading (`lib/player.js`, 5.3.4, not runtime-tested): `load()` runs its internal
+  unload only when an asset is already loaded, and `unload()` clears all skip ranges. Ranges queued
+  before the first `load()` are re-applied when streaming starts. Ranges added while another asset is
+  loaded apply to that asset and are cleared by the next `load()`. To queue ranges for a new asset,
+  call `unload()` first or add them after `load()` resolves. Confirm with `getSkipRanges()` after
+  `load()` resolves.
 
 ## Timeline markers, chapters and deep links
 

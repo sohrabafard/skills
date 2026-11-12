@@ -30,7 +30,9 @@ Version-sensitive claims in this topic depend on [Shaka provenance and freshness
 |---|---|---|
 | Side-loaded subtitles never appear | 4033 (live), 2012 / 2013 (`src=`) | `addTextTrackAsync` requires `load()` to have resolved, forbids live, and in `src=` mode allows WebVTT only. `28-…` |
 | Subtitles load but are not shown | – | Selecting a text track makes it visible; `setTextTrackVisibility` was removed in v5.0. `26-…` |
-| `fontScaleFactor` / `positionArea` do nothing | – | They are **UITextDisplayer only**, and the default picks `NativeTextDisplayer` unless `setVideoContainer()` was called. Check `player.getTextDisplayer()`. `28-…` |
+| `fontScaleFactor` / `positionArea` (and, from 5.3.0, `fontFamily`, `fontColor`, `fontOpacity`, `backgroundColor`, `backgroundOpacity`, `characterEdgeStyle`) do nothing | – | They are **UITextDisplayer only**, and the default picks `NativeTextDisplayer` unless `setVideoContainer()` was called. Check `player.getTextDisplayer()`. `28-…` |
 | `--shaka-*` variables do not style captions | – | They cover **controls only**. Caption styling goes through `textDisplayer.*`, the UI caption buttons, or a custom displayer. `28-…` |
 | A broken subtitle track kills playback | category `TEXT` (2) | `streaming.ignoreTextStreamFailures: true`. `28-…` |
+| A side-loaded `data:` track holds 0 cues on the first `selectTextTrack`, and all cues after a reselect | – | Cause unproved (first mode switch on a fresh `<track>` appears to drop same-tick cues), `NativeTextDisplayer`, MediaSource mode. Warm each idle track node once. Local observation, not upstream. `28-…` |
+| Segmented HLS WebVTT stays at 0 cues when the user selects it after all video is buffered | – | `TextEngine` waits for a timestamp offset from a later video append. Prime with select-then-null right after `load()`. Local observation, not upstream. `28-…` |
 | Caption styling changes have no runtime effect | – | You shipped `controls.css`, which flattens the custom properties at build time. Ship `controls.modern.css`. `65-…` |

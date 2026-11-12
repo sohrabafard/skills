@@ -77,7 +77,7 @@ untested by us."*
 
 DASH supports all five key systems; HLS supports all five, with the note *"By default, FairPlay is
 handled using Apple's native HLS player, when on Safari. We do support FairPlay through MSE/EME,
-however. See the `streaming.useNativeHlsForFairPlay` configuration value."*
+however. See the `streaming.useNativeHlsForFairPlay` configuration value."* That key defaults to `true` through 5.2.x and `false` from 5.3.0 (C9 in `05-provenance-and-freshness.md`). Setting rule: `15-configure-surface-and-safe-defaults.md`, "Keys added or changed in 5.3".
 
 ## FairPlay specifics
 

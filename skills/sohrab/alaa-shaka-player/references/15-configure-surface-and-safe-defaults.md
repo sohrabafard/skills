@@ -39,6 +39,24 @@ Override those with **`player.configurationForLowLatency({...})`** and read them
 `player.getConfigurationForLowLatency()`. `player.configure()` will not hold, because the low-latency
 profile re-derives them.
 
+## Keys added or changed in 5.3
+
+Defaults: `lib/util/player_configuration.js` at tag v5.3.4. Docs: `externs/shaka/player.js` at the same tag.
+PR numbers: `https://github.com/shaka-project/shaka-player/blob/v5.3.4/CHANGELOG.md`. All `verified`, read 2026-11-12.
+5.3.0 reports no breaking change (CHANGELOG at v5.3.4). The 5.2.x text elsewhere in this file stays valid unless a row below says otherwise.
+
+| Key | 5.3.4 default | Rule |
+|---|---|---|
+| `streaming.useNativeHlsForFairPlay` | **`false`**. It was `true` in 5.2.13. | PR #10699 (5.3.0) changed it. The code takes effect only on the WebKit engine with `drm.servers['com.apple.fps']` or `['com.apple.fps.1_0']` set. Safari then prefers MSE over native HLS. Set the value explicitly. Never rely on the default. |
+| `streaming.fallbackToNativeHlsOnMseError` | `false`. Apple browsers set `true` (`lib/device/apple_browser.js`, `adjustConfig`). | PR #10699. On error 4040 or 4041 for an HLS load, when the browser can play native HLS (`canPlayType` is not empty), Shaka retries that one load with native HLS (`lib/player.js` at v5.3.4, `verified`). The retry does not change `preferNativeHls`. Browser-issued playlist and segment requests skip every networking filter; licence requests still pass through it. When a stream depends on a filter, read `40-networking-engine-and-filters.md`, section "Native HLS playlist and segment requests skip request filters", before you leave this key on. |
+| `abr.allowAudioFallback` | `true` | PR #10689. See `24-adaptive-bitrate-and-restrictions.md`. |
+| `drm.keepDrmEngineOnDetach` | `false` | PR #10530. `true` keeps MediaKeys and sessions across `detach()` and `unload()`. A later `attach()` and `load()` of the same asset reuses them. A different asset negotiates DRM as before. Read `45-drm.md` for session handling. |
+| `queue.autoPlayNext` | `true` | PR #10503. `true` keeps the old behaviour: advance at the end of an item and preload the next. `false` stops at the end of the item and preloads nothing. `repeatMode` is independent. |
+| `cmcd.includeInRequests` | `[]` | PR #10590. Tokens (externs at v5.3.4, `verified`, read 2026-11-12): `'segment'`, which also covers init segments, `'init'`, `'mpd'`, `'mpdpatch'`, `'xlink'`, `'mpdlink'`, `'steering'`, `'callback'`, or `'*'`. `[]` keeps the historical set: manifests, media and init segments, sidecar text, licence, key, certificate and timing requests. |
+| `cmcd.applyParametersFromManifest` | `true` | PR #10590. CMCD parameters that a DASH manifest signals can switch CMCD on for that presentation. They override `version`, `useHeaders`, `includeKeys`, `includeInRequests`, `contentId` and `sessionId`. Set `false` to ignore the signal. Header mode from a manifest causes CORS preflights. |
+
+**Conflict C9, `useNativeHlsForFairPlay`.** The externs doc at v5.3.4 says "Defaults to `true`". The code says `false`. Follow the code and see `05-provenance-and-freshness.md`. `22-streaming-formats-and-native-hls.md` states both values with their versions.
+
 ## Config-key namespaces and where each is documented here
 
 | Namespace | Governs | Reference |
@@ -51,6 +69,7 @@ profile re-derives them.
 | `ads.*` | interstitials, snapback, tracking, TV/console behaviour | `55-` |
 | `textDisplayer.*`, `accessibility.*` | caption rendering and forced subtitles | `28-` |
 | `networking.*` | `forceHTTP`, `forceHTTPS`, progress-event threshold, common access token | `40-` |
+| `cmcd.*`, `queue.*` | CMCD reporting; queue advance (rows above) | this file |
 | `mediaSource.*` | transmux worker, source elements, cue callback, extra features | `12-`, `28-` |
 | `preferredAudio`, `preferredText`, `preferredVideo` | durable language/role/codec preference | `26-` |
 | `playRangeStart`, `playRangeEnd`, `ignoreHardwareResolution` | top-level clamps | `30-`, `24-` |
@@ -135,6 +154,7 @@ export function buildPlayerConfig(input: Partial<PlayerTuning> = {}): Record<str
       bufferBehind: 30,
       // Branch on load mode at runtime, never on user-agent. See 22-streaming-formats...
       preferNativeHls: false,
+      // Explicit on purpose: the default changed from true to false in 5.3 (C9 above).
       useNativeHlsForFairPlay: true
     },
 

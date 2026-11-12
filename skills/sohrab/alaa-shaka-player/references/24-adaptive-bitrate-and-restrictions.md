@@ -2,7 +2,7 @@
 
 All rows `verified` at v5.2.3, read 2026-07-28, from `externs/shaka/player.js`
 (`AbrConfiguration`, `AdvancedAbrConfiguration`, `Restrictions`) cross-checked against
-`lib/util/player_configuration.js`.
+`lib/util/player_configuration.js`. Rows marked 5.3 are `verified` at tag v5.3.4, read 2026-11-12.
 
 ## Current position
 
@@ -30,6 +30,7 @@ levels with different semantics** and confusing them is the most common ABR bug.
 | `abr.cacheLoadThreshold` | `5` ms | Below this a response is treated as cached and excluded from estimation. |
 | `abr.minTimeToSwitch` | `0`, **`0.5` on Apple browsers** | First load only. |
 | `abr.droppedFrames` | `true` | Dropped-frame protection, added in 5.1.0. |
+| `abr.allowAudioFallback` | `true` (5.3; the key is absent in 5.2.x) | See "Audio fallback (5.3)" below. |
 | `abr.advanced.minTotalBytes` | `128e3` | |
 | `abr.advanced.minBytes` | `16e3` | |
 | `abr.advanced.fastHalfLife` | `2` s | |
@@ -39,6 +40,18 @@ levels with different semantics** and confusing them is the most common ABR bug.
 | `abr.advanced.droppedFramesBanDuration` | `30` s | |
 | `abrFactory` | `SimpleAbrManager` | |
 | `adaptationSetCriteriaFactory` | default criteria | |
+
+## Audio fallback (5.3)
+
+Sources: PR #10689 "Offer every audio track and fall back to fewer channels" (5.3.0), `https://github.com/shaka-project/shaka-player/blob/v5.3.4/CHANGELOG.md`; `externs/shaka/player.js` and `lib/player.js` at tag v5.3.4. `verified`, read 2026-11-12.
+
+- Trigger. The bandwidth cannot sustain any variant that carries the selected audio. Example: 5.1 or spatial audio that exists only with high video qualities.
+- Effect. ABR may use the same audio with fewer channels (5.1, then stereo, then mono). It returns to the selected audio when bandwidth allows.
+- Mechanism. `updateAbrManagerVariants_` appends `AdaptationSet.getAudioFallbacks(...)` variants to the list that it gives to `AbrManager.setVariants`. Only the `AbrManager` sees them. They are not a user choice.
+- With `abr.enabled` `false`, `chooseVariant_` first keeps the current video within the last adaptation set, which holds no fallback variants. If no variant there matches, it asks `AbrManager.chooseVariant()`, whose list does include fallbacks (`inferred` from code reading of `lib/player.js` at v5.3.4). Do not assume fallbacks never occur while ABR is disabled.
+- The step-down is an automatic switch. Count it as `adaptation`, not `variantchanged`, per "Events that report an adaptation".
+- Set `abr.allowAudioFallback` to `false` when the product must keep one channel layout during low bandwidth. ABR then chooses only among variants that carry the selected audio.
+- `selectAudioTrack()` is the user action. It can change video quality (`26-tracks-audio-video-text.md`).
 
 ## Soft versus hard restrictions
 

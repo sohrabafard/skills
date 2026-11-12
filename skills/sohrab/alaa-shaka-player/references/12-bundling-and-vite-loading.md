@@ -33,6 +33,26 @@ Five variants × four forms (release, `.debug`, `-es2021`, `-es2021.debug`), eac
 **Trap C8.** `"types"` resolves to the **non-UI** `.d.ts` even when you load the UI bundle. UI
 consumers reference `dist/shaka-player.ui.d.ts` explicitly or add an ambient declaration.
 
+## Bundle size and CSP, 5.2.13 to 5.3.4
+
+Measured on 2026-11-12 on the npm tarballs `shaka-player@5.2.13` and `@5.3.4` (local measurement,
+not upstream), with `wc -c` and `gzip -9 -c | wc -c` on `dist/shaka-player.ui.js`:
+
+| Version | Raw bytes | gzip -9 bytes |
+|---|---|---|
+| 5.2.13 | 1,071,767 | 341,939 |
+| 5.3.4 | 1,204,000 | 377,726 |
+| Change | +132,233 (+12.3%) | +35,787 (+10.5%) |
+
+- Re-check the app's size budget after the upgrade. A UI-bundle consumer pays this growth.
+- Source of the new bytes: not analysed. The 5.3 line adds UI subtitle menus (#10681, #10711, #10692; CHANGELOG at
+  [v5.3.4](https://github.com/shaka-project/shaka-player/blob/v5.3.4/CHANGELOG.md), read 2026-11-12)
+  and new `lib/text/ssa_text_parser.js` and `matroska_text_parser.js` (tarball file list, local read).
+- CSP: `grep -c 'new Function('` and `grep -c 'unsafe-eval'` on both UI bundles return `0`. This is a
+  grep result, not a CSP audit. The CHANGELOG has no CSP item. The worker rules above still apply.
+- `package.json` at 5.3.4 differs from 5.2.13 only in `version` (`diff` of `package.json` in the npm tarballs of `shaka-player@5.2.13` and `@5.3.4`, read 2026-11-12).
+  The no-ESM, no-`exports` facts above stay as written; they were not re-read at 5.3.4.
+
 ## Working snippet — a Vite-built Quasar app
 
 ```ts

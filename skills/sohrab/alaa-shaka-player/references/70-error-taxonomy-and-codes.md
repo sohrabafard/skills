@@ -1,7 +1,7 @@
 # The `shaka.util.Error` taxonomy and the complete code list
 
 All rows `verified` at v5.2.3, read 2026-07-28, from `lib/util/error.js` (1,287 lines) and
-`docs/tutorials/errors.md`. **155 codes exist at v5.2.3.**
+`docs/tutorials/errors.md`. **155 codes exist at v5.2.3.** 5.3.x changes the 4xxx list; see "Changes in 5.3" in the code catalog (read 2026-11-12).
 
 Retry shape, backoff, ceilings and degradation are doctrine owned by `/alaa-reliability-sla`. This file owns which Shaka mechanism handles which category and what each
 code means.

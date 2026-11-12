@@ -5,7 +5,8 @@
 two of them make a player fail on a mobile network unless you change them: `maxAttempts` is **2**, and
 on **VOD every streaming failure is fatal**.
 
-All rows `verified` at v5.2.3, read 2026-07-28.
+All rows `verified` at v5.2.3, read 2026-07-28. The section "Changes since 5.2.13 (5.2.14 to 5.3.4)"
+adds later facts. Config keys and defaults in this file were not re-diffed for 5.3.4.
 
 ## The whole surface, in one place
 
@@ -20,6 +21,32 @@ Shaka gives you **nine** independent resilience mechanisms. A player that uses o
 7. `streaming.failureCallback` — the app-level streaming policy.
 8. `drm.failureCallback` + `retryLicensing()` — the app-level DRM policy (**new surface**).
 9. A cancellable `retry` event on the NetworkingEngine, plus a built-in `window 'online'` handler.
+
+## Changes since 5.2.13 (5.2.14 to 5.3.4)
+
+Source for every row: `CHANGELOG.md` at tag
+[v5.3.4](https://github.com/shaka-project/shaka-player/blob/v5.3.4/CHANGELOG.md) and tag
+[v5.2.17](https://github.com/shaka-project/shaka-player/blob/v5.2.17/CHANGELOG.md), read 2026-11-12.
+The 5.3.x and 5.2.x lines both carry each fix. The first column gives the first release with it.
+
+| Change | First in | Effect on a consumer |
+|---|---|---|
+| "End a network outage with an error instead of switching variants forever" ([#10784](https://github.com/shaka-project/shaka-player/issues/10784)) | 5.2.15, 5.3.2 | The CRITICAL streaming error (for example `HTTP_ERROR` once every variant is disabled) no longer re-enables disabled variants, so playback stops instead of switching forever. `player.retryStreaming()` now re-enables them (commit 1ff7c8d; 5.3.4 tarball `lib/player.js` L8156-8163, local read). |
+| "Don't reuse failed segment prefetches on retry" ([#10902](https://github.com/shaka-project/shaka-player/issues/10902)) | 5.2.17, 5.3.4 | A retry fetches the segment again. Do not assume a retry reuses a prefetched failure. |
+| "Fall back to MediaSource reset when changeType fails" ([#10807](https://github.com/shaka-project/shaka-player/issues/10807)) | 5.2.16, 5.3.3 | A failed codec switch triggers a MediaSource reset. The CHANGELOG does not say which event reports it. Do not assume a fatal error. |
+| "Keep playback position after a MediaSource reset" ([#10806](https://github.com/shaka-project/shaka-player/issues/10806)) | 5.2.16, 5.3.3 | A reset no longer sends the playhead back. |
+
+What the consumer must handle now:
+
+1. Prove these fixes with the scenarios in
+   `80-version-migration-and-release-deltas/55-v53x-patches.md#consumer-proof-for-the-shared-fixes`.
+2. **Treat the outage error as fatal.** No new code was added. It is the existing CRITICAL NETWORK
+   error. Branch on `error.severity` and `error.code`. Call `player.retryStreaming()` from the retry
+   control, because it now restores disabled variants (commit 1ff7c8d, read 2026-11-12).
+3. **Keep the `online` rule and the default failure callback.** In the 5.3.4 tarball, the
+   `window 'online'` handler (`lib/player.js` L1162-1167) and `defaultStreamingFailureCallback_`
+   (L8339-8364) read the same as the 5.2.3 text quoted below (tarball read 2026-11-12, local read of
+   the package, not upstream prose). VOD failures still stay fatal by default.
 
 ## 1. Retry parameters — all three structures are identical
 

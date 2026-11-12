@@ -68,7 +68,7 @@ real browser playback and network shutdown require `90-qa-modes-and-checklist.md
 | SSR mode | Player code lives behind `onMounted` + dynamic `import()`. Nothing under `src/boot/` may import Shaka. |
 | PWA / service worker | The Shaka bundle and `controls.modern.css` are ordinary assets; segment and manifest requests must **not** be routed through a cache-first strategy — range requests and live playlist refreshes break under it. Strategy ownership is `/alaa-quasar-app-vite-v3`. |
 | Fullscreen | Request fullscreen on the stage container, not on the `<video>` element, or your overlays disappear. When using the Shaka UI, `controls.toggleFullScreen()` handles it. |
-| RTL layouts | UI config `showMenusOnTheRight` (added in 5.1.0) and the `--shaka-*` custom properties. Direction and typography are `/alaa-ui-ux-design-system`. |
+| RTL layouts | `--shaka-*` custom properties. `showMenusOnTheRight` was deprecated in 5.3.0 and has no effect (see `80-version-migration-and-release-deltas/30-deprecations-and-v6.md`). Direction and typography are `/alaa-ui-ux-design-system`. |
 
 **Best practice.** Keep exactly one module in the repository that imports `shaka-player`; everything
 else imports your wrapper. A grep for `from "shaka-player` that returns more than one hit outside

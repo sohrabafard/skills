@@ -31,6 +31,20 @@ community-supported and untested by us."*
 IE11 support ended after v3.1. iOS 12 / Safari 12 support was removed in v4.0. TiVo OS and Titan OS
 support arrived in 5.1.0.
 
+## Changes at 5.3.4 (read 2026-11-12)
+
+- The browser matrix is unchanged. The `README.md` browser table at
+  [v5.3.4](https://github.com/shaka-project/shaka-player/blob/v5.3.4/README.md) is unchanged from
+  5.2.13. The README diff only replaces MoQT draft-14/16 with draft-18/20/21/22, adds MSF feature
+  bullets, and adds a "HEVC software fallback" section (README diff of the npm tarballs, local read).
+  The CHANGELOG states no minimum-browser change.
+- That README section links the third-party plugin `@hevcjs/shaka-plugin`. A first-party-only
+  project must not adopt it. Policy and approval path belong to `/alaa-security-review` and the
+  project constitution, not to this file.
+- `streaming.useNativeHlsForFairPlay` default is `false` from 5.3.0 (PR #10699). Value and conflict C9
+  live in `15-configure-surface-and-safe-defaults.md`. The `true` row below was read at 5.2.3 and is
+  superseded from 5.3.x.
+
 ## iOS and iPadOS — the platform where everything differs
 
 Verbatim from `README.md` §"NOTES for iOS and iPadOS":
@@ -65,7 +79,7 @@ And from `docs/tutorials/faq.md`:
 | `preload()` returns `null` on Safari native HLS. | `verified` |
 | Side-loaded text: **WebVTT only**, and only via the `src=` path (2012 / 2013 otherwise). | `verified` |
 | `abr.minTimeToSwitch` defaults to **`0.5` s on Apple browsers** vs `0` elsewhere. | `verified` |
-| `streaming.useNativeHlsForFairPlay` defaults `true`; disabling it is explicitly risky for multi-key streams. | `verified` |
+| `streaming.useNativeHlsForFairPlay` defaults `true` (5.2.x; **`false` from 5.3.x**, see "Changes at 5.3.4"); disabling it is explicitly risky for multi-key streams. | `verified` at 5.2.3 |
 | `mediaSource.useSourceElements` default `true`; *"Disabling it will prevent using AirPlay on MSE."* | `verified` |
 | UI has `preferVideoFullScreenInVisionOS` for visionOS. | `verified` |
 | **5.2.2 fix:** *"Prevent `screen.orientation` methods from being garbage collected on Safari"*. **5.1.x/5.0.x line:** *"Performance: ContentWorkarounds optimization for Safari 26.4+"*. | `verified` |

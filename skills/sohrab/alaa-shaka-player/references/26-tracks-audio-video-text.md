@@ -1,6 +1,7 @@
 # Tracks: video, audio and text; language and role selection
 
-All rows `verified` at v5.2.3, read 2026-07-28. **Read the removals first — three names that are still
+All rows `verified` at v5.2.3, read 2026-07-28, unless marked 5.3 (`verified` at tag v5.3.4, read 2026-11-12).
+**Read the removals first — three names that are still
 widely written produce a `TypeError` at 5.2.3.**
 
 ## Removed in v5.0 — do not write these
@@ -27,16 +28,32 @@ one where audio selection never happens. `scripts/check-shaka-api.mjs` finds bot
 |---|---|
 | `getVariantTracks()` | → `Array<shaka.extern.Track>` |
 | `selectVariantTrack(track, clearBuffer = false, safeMargin = 0)` | |
-| `getAudioTracks()` | → `Array<shaka.extern.AudioTrack>` |
-| `selectAudioTrack(audioTrack, safeMargin = 0)` | *"Select an audio track compatible with the current video track. If the player has not loaded any content, this will be a no-op."* |
+| `getAudioTracks()` | → `Array<shaka.extern.AudioTrack>`. The contract changed in 5.3. See "Audio track contract (5.3)". |
+| `selectAudioTrack(audioTrack, safeMargin = 0)` | 5.2.3: *"Select an audio track compatible with the current video track. If the player has not loaded any content, this will be a no-op."* 5.3: it may change the video quality too. See "Audio track contract (5.3)". The no-op rule holds. |
 | `getVideoTracks()` | → `Array<shaka.extern.VideoTrack>` |
 | `selectVideoTrack(videoTrack, clearBuffer = false, safeMargin = 0)` | |
 | `getTextTracks()` | → `Array<shaka.extern.TextTrack>` |
 | `selectTextTrack(track)` | Selecting also makes visible. |
 | `getImageTracks()` / `getAllThumbnails(trackId)` / `getThumbnails(trackId, time)` | Thumbnails. |
 | `getChaptersTracks()` / `getChaptersAsync(language)` | Chapters. |
-| `addTextTrackAsync(uri, language, kind, mimeType?, codec?, label?, forced?)` | → `Promise<TextTrack>` |
-| `addThumbnailsTrack(uri, mimeType)` / `addChaptersTrack(uri, language, mimeType)` | |
+| `addTextTrackAsync(uri, language, kind, mimeType?, codec?, label?, forced?)` | → `Promise<TextTrack>`. 5.3.3 and 5.2.16 resolve a relative `uri` against the page. See "Sidecar track URI resolution (5.3.3, 5.2.16)". |
+| `addThumbnailsTrack(uri, mimeType)` / `addChaptersTrack(uri, language, mimeType)` | Same URI resolution from 5.3.3 and 5.2.16. See "Sidecar track URI resolution (5.3.3, 5.2.16)". |
+
+## Audio track contract (5.3)
+
+Sources: PR #10689 (5.3.0), `https://github.com/shaka-project/shaka-player/blob/v5.3.4/CHANGELOG.md`; `lib/player.js` at tag v5.3.4, `https://github.com/shaka-project/shaka-player/tree/v5.3.4/lib`. `verified`, read 2026-11-12.
+
+- `getAudioTracks()` returns the audio of the current video track in any of its qualities. It no longer returns only audio that pairs with the active quality. The wider list applies in `MEDIA_SOURCE` load mode. Example: 5.1 audio that exists only with high qualities now stays in the list while a low quality plays.
+- `selectAudioTrack()` may change the video quality. It does so when the chosen audio pairs only with other qualities. Do not assume the video quality stays fixed after the call. Re-read `getVariantTracks()` or listen for `variantchanged` (`24-adaptive-bitrate-and-restrictions.md`).
+- `getAudioTracks()` merges codec profiles of one codec (for example HE-AAC and AAC-LC) into one row. The merge key also holds `originalLanguage`, language, label, audio roles, channel count, spatial flag, accessibility purpose and the normalized codec.
+- `audiotrackschanged` fires when the audio or the video track set changes. It no longer fires when adaptation changes only the codec profile of the same audio. Superseded: in 5.2.x a codec-profile-only switch also fired it.
+- Menu key (`inferred` from the merge key above). Two rows can share `language`, `roles[0]` and `label` and differ in `channelsCount`, `spatialAudio`, codec, `originalLanguage`, `accessibilityPurpose` or later roles. The wider 5.3 list makes this more common (`channelsCount` was already in the 5.2.13 key). Build the row key from all merge-key fields, not only `channelsCount`. See the "Track shapes" rule below.
+
+## Sidecar track URI resolution (5.3.3, 5.2.16)
+
+Sources: PR #10786, `https://github.com/shaka-project/shaka-player/blob/v5.3.4/CHANGELOG.md` (5.3.3) and the v5.2.17 CHANGELOG (5.2.16); `lib/util/url.js` at tag v5.3.4. `verified`, read 2026-11-12.
+
+- `addTextTrackAsync`, `addThumbnailsTrack` and `addChaptersTrack` pass `uri` through `URL.toAbsolute` (5.3.3, also 5.2.16). A relative `uri` resolves against the page base. A URI with any scheme (`https:`, `data:`, `blob:`) stays unchanged.
 
 ## Track shapes
 

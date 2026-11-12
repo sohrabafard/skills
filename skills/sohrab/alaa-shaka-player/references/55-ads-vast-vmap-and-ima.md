@@ -1,6 +1,6 @@
 # Ads: VAST, VMAP, IMA, MediaTailor and interstitials
 
-All rows `verified` at v5.2.3, read 2026-07-28.
+All rows `verified` at v5.2.3, read 2026-07-28. Sections marked 5.3 were read 2026-11-12 at v5.3.4.
 
 ## Read this first — an upstream tutorial is stale and an agent will copy it
 
@@ -83,6 +83,50 @@ available. These are **Shaka's** event strings; the names your telemetry reports
 | **DASH interstitials** | Automatic (MPD alternate). Disable with `ads.disableDASHInterstitial`. | – |
 | **Custom interstitials** | `adManager.addCustomInterstitial({...})`. Also drivable from SCTE-35 via `timelineregionadded` with `schemeIdUri === 'urn:scte:scte35:2014:xml+bin'`. | – |
 | **Overlay interstitials** | Image, video (progressive or manifest), or website overlays. | – |
+
+## SCTE-35 messages (new in 5.3.0)
+
+Read 2026-11-12. Source: CHANGELOG at tag v5.3.4, "unify SCTE-35 handling across DASH, HLS and EMSG"
+(#10606), `https://raw.githubusercontent.com/shaka-project/shaka-player/v5.3.4/CHANGELOG.md`. Details
+come from `lib/player.js`, `lib/util/scte35.js`, `externs/shaka/scte35.js` and
+`dist/shaka-player.ui.d.ts` in the `shaka-player@5.3.4` npm package.
+
+Use this API to read ad-break signals without parsing manifests or `emsg` boxes yourself.
+Live content can carry these signals too. `32-live-and-low-latency.md` points here.
+
+| Name | Meaning |
+|---|---|
+| `player.getAllScte35Events()` | `(): shaka.extern.Scte35Event[]`. The messages kept on the presentation timeline. |
+| `scte35added` | Fires as soon as the player finds a message. `detail` is the `Scte35Event`. |
+| `scte35enter` | Fires when playback reaches a message. **A seek across a message does not fire it.** |
+| `scte35exit` | Fires when playback leaves a message. A message with no duration is entered and left in the same poll. |
+
+`shaka.extern.Scte35Event` fields: `schemeIdUri`, `startTime`, `endTime` (seconds; equals `startTime`
+when the transport gives no duration), `id` (the transport id, not the splice or segmentation id
+inside the payload), `source` (`'dash'`, `'hls'`, `'emsg'` or `'msf'`), `kind` (`'out'`, `'in'` or
+`'cmd'` for HLS; `''` otherwise), `data` (`Uint8Array` with the full `splice_info_section`, or `null`),
+`node` (the original XML, or `null`).
+
+Rules:
+- The player does not decode the payload. Decode the parts you need from `data` in your own code.
+- Treat `data` and `node` as untrusted input from the origin. Validate lengths before you read them.
+- Do not use `endTime` as an ad duration without checking `source` and `kind`. HLS `SCTE35-IN`
+  applies at the end of the range that carries it.
+- `timelineregionadded` still fires for DASH event-stream regions at 5.3.4 (`lib/dash/dash_parser.js`).
+  The SCTE-35 row in the insertion table keeps working. New code reads `scte35added` instead.
+- Not verified: how `scte35*` events interact with seeking back over a break on live content.
+
+## Other 5.3 changes in this area
+
+Read 2026-11-12, same CHANGELOG. Defaults come from `lib/util/player_configuration.js` in the 5.3.4 package.
+The semantics of the first two keys are not read.
+
+| Change | Default | PR |
+|---|---|---|
+| `ads.interstitialCooldown` added ("cooldown config for interstitial ad") | `0` | #10494 |
+| `ads.disableSVTA` added | `false` | #10725 |
+| `shaka.ads.SvtaAd` and `shaka.extern.AdTrackingInfo` removed. `AdInterstitial.uri` is `string \| null`. | n/a (typedef diff 5.2.13 to 5.3.4) | not mapped |
+| Runtime skip ranges, released together with "MediaTailor played-ad-break skipping". The MediaTailor part was not read. For the API, see `30-playback-speed-seek-trickplay.md`, "Skip ranges". | n/a | #10338 |
 
 `AdInterstitial` fields: `id`, `groupId`, `startTime`, `endTime`, `uri`, `mimeType`, `isSkippable`,
 `skipOffset`, `skipFor`, `canJump`, `resumeOffset`, `playoutLimit`, `once`, `pre`, `post`,

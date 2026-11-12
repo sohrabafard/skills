@@ -163,6 +163,16 @@ storage.getNetworkingEngine().registerRequestFilter(async (type, request) => {
 });
 ```
 
+## Native HLS playlist and segment requests skip request filters
+
+When a stream depends on a request filter for credentials or URL rewriting and can play on an Apple browser, read this section.
+
+- Requests from native HLS playback (`LoadMode.SRC_EQUALS`, `src=`) are sent by the browser, not by the networking engine. `lib/player.js` at v5.3.4 sets `mediaElement.src = playbackUri`. Request filters do not run for playlist and segment requests. Licence and certificate requests still go through `NetworkingEngine` on this path (`initializeSrcEqualsDrmInner_` creates the `DrmEngine` with the player's networking engine, which sends `RequestType.LICENSE`), so licence filters keep running.
+- The `streaming.fallbackToNativeHlsOnMseError` retry loads that way. Apple browsers set the key to `true` (`lib/device/apple_browser.js`). Row and conditions: `15-configure-surface-and-safe-defaults.md`.
+- Basis: `verified` from the `shaka-player@5.3.4` tarball (`lib/player.js`), read 2026-11-12. The `inferred` part is the claim that no filter hook exists for browser-issued playlist and segment requests. No file in that tarball was found to add one.
+- Decision. Set `streaming.fallbackToNativeHlsOnMseError: false` explicitly. Otherwise do not ship a playlist or segment credential that only a filter adds on a stream that can fall back. Rule 7 lets a signed manifest URL or a token enter the player only through a request filter, so no filter-free credential path exists, and the explicit `false` is the decision.
+- Reason: `SKILL.md` non-negotiable rule 7 allows a credential to reach the player only through a request filter. The native path runs no filter for playlist and segment requests, so a filter-added credential is missing there.
+
 CORS: cross-origin manifest, segment and licence requests need the usual
 `Access-Control-Allow-Origin`, and any custom header you add here must appear in
 `Access-Control-Allow-Headers` or the preflight fails before Shaka ever sees a response. Mixed content

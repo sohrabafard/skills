@@ -8,10 +8,11 @@ A Shaka claim written anywhere in this skill without a URL and a read date is no
 
 | Fact | Value | Source |
 |---|---|---|
-| Latest release observed | **v5.2.12**, 2026-09-25 | [Tagged release](https://github.com/shaka-project/shaka-player/releases/tag/v5.2.12), read 2026-09-29; deltas and required scenarios in `80-version-migration-and-release-deltas.md` |
-| API baseline | **v5.2.3**, 2026-07-27 | Tagged source below, read 2026-07-28; not a complete API revalidation at v5.2.12 |
+| Latest release observed | **v5.3.4**, 2026-11-06 | [Tagged release](https://github.com/shaka-project/shaka-player/releases/tag/v5.3.4), read 2026-11-12; deltas and required scenarios in `80-version-migration-and-release-deltas.md` |
+| Release delta read | v5.2.13 to v5.3.4 | `CHANGELOG.md` at tags `v5.3.4` and `v5.2.17`, and a diff of the published npm tarballs (`externs/`, `lib/`, `ui/`, `dist/*.d.ts`), read 2026-11-12. The `v5.3.0` CHANGELOG section compares against `v5.2.0`, not the latest 5.2 patch. `docs/tutorials/upgrade.md` is byte-identical at `v5.2.13` and `v5.3.4`. |
+| API baseline | **v5.2.3**, 2026-07-27 | Tagged source below, read 2026-07-28; the 5.3.4 tarball diff (row above) is a delta read, not a complete API revalidation |
 | `package.json` version at tag | `"5.2.3"` | `https://github.com/shaka-project/shaka-player/blob/v5.2.3/package.json` (read 2026-07-28) |
-| Maintained branches | v5.2 (latest), v5.1 (previous), v4.16 (LTS until 2027-01-31), v4.15 (Cast Application Framework) | `.../blob/v5.2.3/maintained-branches.md` (read 2026-07-28) |
+| Maintained branches | v5.3 (latest), v5.2 (previous), v4.16 (LTS until 2027-01-31), v4.15 (Cast Application Framework) | `.../blob/v5.3.4/maintained-branches.md` (read 2026-11-12) |
 | Versioning policy | Semantic versioning since v3.0; any same-major upgrade is backward compatible | `.../blob/v5.2.3/docs/tutorials/upgrade.md` (read 2026-07-28) |
 
 **Consequence for this skill's own history.** The `5.0.8 → 5.1.11` migration the previous edition of
@@ -76,7 +77,15 @@ workaround can leave *this* repository, not evidence that upstream changed.
 | `api.github.com/.../contents/docs/tutorials` | tutorial list via API | **HTTP 403, refused** |
 | `github.com/shaka-project/shaka-player/tree/main/docs/tutorials` | tutorial list via HTML | **ROBOTS_DISALLOWED, refused** |
 
-Three retrieval refusals are recorded rather than worked around. An agent that needs the tutorial file
+## Live reads, 2026-11-12
+
+| URL | Read for | Result |
+|---|---|---|
+| `github.com/shaka-project/shaka-player/releases/tag/v5.3.4` | version + date | v5.3.4, 2026-11-06 |
+| `registry.npmjs.org/-/package/shaka-player/dist-tags` | npm dist-tags | `latest: 5.3.4`; `tag-required-see-npm-bug-10625: 5.2.17` |
+| npm package `time` field | release dates | 5.2.13 2026-10-09 · 5.3.0 2026-10-16 · 5.3.1 2026-10-19 · 5.3.2 2026-10-23 · 5.3.3 2026-10-29 · 5.3.4 2026-11-06 |
+
+Three retrieval refusals from 2026-07-28 are recorded rather than worked around. An agent that needs the tutorial file
 list must clone the tag.
 
 ## Repository reads at tag `v5.2.3`
@@ -96,20 +105,21 @@ Base: `https://github.com/shaka-project/shaka-player/blob/v5.2.3/`
 
 | ID | Subject | A | B | What to do |
 |---|---|---|---|---|
-| **C1** | Current version | GitHub + jsDelivr: **5.2.3** | npm `dist-tags`: **5.2.2**; npm `/latest`: **5.1.11** | Pin an exact version. `npm i shaka-player@latest` may not give you 5.2.3. |
+| **C1** | Current version | 2026-07-28: GitHub + jsDelivr **5.2.3**. 2026-11-12: GitHub and npm `latest` agree on **5.3.4** | 2026-07-28: npm `dist-tags` **5.2.2**, npm `/latest` **5.1.11**. 2026-11-12: an extra dist-tag `tag-required-see-npm-bug-10625` points to **5.2.17** | Pin an exact version. The endpoints agreed on 2026-11-12, but they disagreed before, so re-read them before every pin change. |
 | **C2** | `adManager.initClientSide(...)` | `upgrade.md` §v5.0 removed it; `externs/shaka/ads.js` has no such method | `docs/tutorials/ad_monetization.md` §"Client Side Ads Insertion" **still shows the call** | The tutorial line is stale. **Do not copy it** — calling it throws. See `55-ads-vast-vmap-and-ima.md`. |
-| **C3** | Player constructor | `upgrade.md`: "constructor no longer takes `mediaElement`" | `lib/player.js` L726–736 still declares it and calls `attach()` after a deprecation warning | Deprecated but functional. Write the no-argument form anyway. |
+| **C3** | Player constructor | `upgrade.md`: "constructor no longer takes `mediaElement`" | `lib/player.js` L726–736 at v5.2.3 (L1197–1200 at v5.3.4, read 2026-11-12) still accepts it and calls `attach()` after a deprecation warning | Deprecated but functional. Write the no-argument form anyway. |
 | **C4** | `streaming.gapPadding` default | externs: "0.01 for Xbox and Legacy Edge, Tizen at 2" | `player_configuration.js`: `gapPadding: 0` | A normal desktop browser gets `0`. Set it explicitly if it matters. |
 | **C5** | `ManagedMediaSource` on iOS | `README.md`: supported since iOS 17.1 / iPadOS 17 | `faq.md`: "in a future version, we plan to support" | Unresolved. Branch on `player.getLoadMode()`, never on a version assumption. |
 | **C6** | `config.md` example dump | shows `defaultBandwidthEstimate: 500000`, `segmentPrefetchLimit: 0`, `retryParameters.timeout: 0` | code: `1e6`, `1`, `30000` | The tutorial dump is several versions stale. **Trust the externs and `player_configuration.js`.** |
 | **C7** | `abr.safeMarginSwitch` default | externs prose: "Defaults to `o`" | code: `0` | An `o`/`0` typo. The default is `0`. |
-| **C8** | Which build `types` describes | `package.json` `"types": "dist/shaka-player.compiled.d.ts"` (**non-UI**) | the package also ships `dist/shaka-player.ui.d.ts` | Default TypeScript resolution gives non-UI types even when you load the UI bundle. See `12-bundling-and-vite-loading.md`. |
+| **C8** | Which build `types` describes | `package.json` `"types": "dist/shaka-player.compiled.d.ts"` (**non-UI**; unchanged at v5.3.4, read 2026-11-12) | the package also ships `dist/shaka-player.ui.d.ts` | Default TypeScript resolution gives non-UI types even when you load the UI bundle. See `12-bundling-and-vite-loading.md`. |
+| **C9** | `streaming.useNativeHlsForFairPlay` default | `externs/shaka/player.js` at v5.3.4: "Defaults to `true`" | `lib/util/player_configuration.js` at v5.3.4: `useNativeHlsForFairPlay: false` (changed in 5.3.0), read 2026-11-12 | A player that does not set the key gets `false`, because `player_configuration.js` supplies the runtime default. The explicit-setting rule is in `15-configure-surface-and-safe-defaults.md`. |
 
 ## Open questions — carried forward
 
 Each is phrased so one pass with the right access could answer it. None may be silently closed.
 
-1. Which npm dist-tag is authoritative now? Re-query `registry.npmjs.org/-/package/shaka-player/dist-tags`.
+1. Which npm dist-tag is authoritative now? Re-query `registry.npmjs.org/-/package/shaka-player/dist-tags`. On 2026-11-12 `latest` matched GitHub (5.3.4). The meaning of the `tag-required-see-npm-bug-10625` tag (5.2.17) is not documented in the sources read.
 2. Is `initClientSide` in `ad_monetization.md` a documentation bug? Confirm against `lib/ads/`.
 3. How do you delete a single **incomplete** offline entry? `StoredContent.offlineUri` is `null` while
    `isIncomplete` is `true`, and `storage.remove()` takes a URI.
