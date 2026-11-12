@@ -68,15 +68,17 @@ whole fleet.
 - The gateway deletes client-sent `Remote-Addr`, `Https`, `Server-Port`, `X-Real-IP`, `Forwarded`,
   `X-Forwarded-Host`, `X-Forwarded-Port`, `X-Forwarded-Prefix`, `X-Forwarded-For`, and the client-IP aliases
   `True-Client-IP`, `CF-Connecting-IP`, `X-Client-IP`, and `X-Cluster-Client-IP` on every route. It sends
-  route backends exactly one single-value `X-Forwarded-For`, and fixes `X-Forwarded-Proto` to `https`. Its access
-  log carries `client_ip`, `peer_ip`, and `client_ip_source` (`peer` or `forwarded`).
+  route backends exactly one single-value `X-Forwarded-For`; on the tus route (`routePolicies.tusd/tusd`,
+  `forwardedPrefix`) it then sets its own `X-Forwarded-Host` and `X-Forwarded-Prefix`, which only that upload
+  backend receives. It fixes `X-Forwarded-Proto` to `https`. Its access log carries `client_ip`, `peer_ip`, and
+  `client_ip_source` (`peer` or `forwarded`).
 - A backend uses its framework's trusted-proxy mechanism (Laravel `TrustProxies`, or the equivalent elsewhere).
   It trusts only `X-Forwarded-For` and `X-Forwarded-Proto`, never `Host`, `Port`, `Prefix`, or `Forwarded`, and
   only from the gateway's network CIDR, set per environment. Never trust all proxies (`*`, `0.0.0.0/0`, `::/0`).
   Without that CIDR the backend reads the peer address, never a raw `X-Forwarded-For`.
 - The gateway answers `404` for `<prefix>/metrics` on a route whose prefix it strips. The owner decided this
   layer is sufficient, so a service needs no separate metrics port. `21-alaa-platform-observability-directive.md`
-  still applies (no public exposure of metrics); this decision only removes any need for a separate metrics port.
+  still applies (no public exposure of metrics).
 
 ## How trusted ingress relates to request-time authorization
 

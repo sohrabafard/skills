@@ -314,7 +314,7 @@ user-facing request waiting for capacity, and never discards work that has to su
 Owner decision 2026-11-12 (gateway Beads issue `alaa-2nv79`), fleet-wide. No component rate-limits or throttles by
 client IP: not the gateway, not any backend service. A client IP is a best guess and decides nothing about
 admission; `30-trusted-ingress-and-laravel-contract.md` owns how it is derived. The gateway keeps its
-rate-limit infrastructure in the chart, disabled, so a later policy change can enable it without a rebuild.
+rate-limit infrastructure in the chart, disabled, so a later policy change can enable it by a chart-values change.
 
 ## Deprecating a contract surface
 
