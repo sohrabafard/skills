@@ -57,6 +57,22 @@ class FrontendDeleteCoverage(unittest.TestCase):
         self.assertIn("x-forwarded-for is injected in section 'backend be_app'", result.stdout)
         self.assertIn("without the delete: 'frontend fe_other'", result.stdout)
 
+    def test_backend_no_frontend_reaches_is_not_covered(self):
+        # Defends against: an unreached backend counting as covered because the
+        # empty set of reaching frontends trivially all hold the delete.
+        unrouted = "frontend fe_http\n  http-request del-header X-Forwarded-For\n"
+        result = sanitize(unrouted + BACKEND_SET)
+        self.assertEqual(result.returncode, 1, result.stdout)
+        self.assertIn("x-forwarded-for is injected in section 'backend be_app'", result.stdout)
+
+    def test_dynamic_route_target_counts_as_reaching_every_backend(self):
+        # Defends against: a sample-fetch use_backend target being ignored, which
+        # would leave its non-deleting frontend out of the reaching set.
+        dynamic = "frontend fe_dyn\n  use_backend %[var(txn.route)]\n"
+        result = sanitize(DELETING_FRONTEND + dynamic + BACKEND_SET)
+        self.assertEqual(result.returncode, 1, result.stdout)
+        self.assertIn("without the delete: 'frontend fe_dyn'", result.stdout)
+
 
 class ForwardedForReads(unittest.TestCase):
     def test_source_read_of_forwarded_for_is_not_a_trusted_header_finding(self):
