@@ -50,6 +50,7 @@ Use this file to choose the smallest reference file that owns the rule you need.
   - Read `25-end-to-end-flow-and-boundaries.md`.
   - Before you retire, re-key, re-parent, merge, or bulk-import an entity whose id another service stores, receives in a claim, header, OpenFGA object, event, or public API, or before a new id leaves its owner, read `31-cross-service-identifier-stability.md`; it owns the published-id rules and registry. Read its "Identifier form per layer" table before you encode, decode or compare an id in a claim, a header or an OpenFGA object.
 - `Mode E+ - Request-time authorization with OpenFGA`
+  - When designing a viewer's own bookmark or favorite list, read `26-request-time-authorization-openfga.md`, section "Personal bookmark and favorite lists".
   - Use when the task is about how the per-resource decision is actually made: `authzRouteGroups`, the gateway -> `authz-sidecar`/`entitlement-spoa` `HEAD /internal/authz/check` hop, the OpenFGA `check` call and its `tuple_key`, endpoint-category to `can_*` mapping, canonical object id construction, `grant_*` vs `can_*`, the store/model/label pins, or adding or debugging a protected route.
   - Read `26-request-time-authorization-openfga.md`; pair with `/alaa-trust-gateway-auth`, `/alaa-haproxy`, and `/openfga`.
 - `Mode E++ - Notification cross-service contract`

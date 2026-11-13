@@ -19,6 +19,10 @@ When distinguishing gateway identity from a resource permission, read [Model and
 
 When tracing whether a grant reached the decision graph, read [Model and tuple flow](./26-request-time-authorization-openfga/10-model-and-tuple-flow.md) for event projection and read-only sidecar ownership.
 
+## Personal bookmark and favorite lists
+
+Authorize reads of personal bookmark and favorite lists by ownership. Scope the saved records to the authenticated viewer and project from trusted gateway context. Return saved entries with the list's documented display metadata, including entries whose targets the viewer can no longer open. Exclude per-target OpenFGA checks and entitlement filters from list reads. Keep protected target payloads and playback credentials on the target's authorized routes. When the viewer opens a target, apply that route's current authorization policy. The list rule grants no permission to create a bookmark or favorite.
+
 ## Read path, hop by hop (the contract)
 
 The worked example throughout is `GET /vod/api/v3/course/12/set/55/content/901` for
