@@ -250,6 +250,7 @@ platform dashboards.
 | `alaa_auth_token_refresh_failures_total` | counter | `auth` | failed refreshes | `MetricsRegistry.php:234` |
 | `alaa_auth_totp_step_up_total` | counter | `auth` | TOTP step-up challenges completed | `MetricsRegistry.php:235` |
 | `alaa_auth_totp_step_up_failures_total` | counter | `auth` | failed TOTP step-ups | `MetricsRegistry.php:236` |
+| `alaa_auth_messaging_campaign_deliveries_total` | counter | `auth` | campaign delivery rows reaching a final status, by `channel` (`sms`, `bale`) and `outcome` (`accepted`, `failed`, `skipped`, `cancelled`, `unknown`) | `app/Support/Observability/MetricsRegistry.php:309` |
 | `alaa_gateway_totp_proof_verifications_total` | counter | `gateway` | TOTP step-up proof verifications, by outcome | registered ahead of emission; labels and production path below |
 | `alaa_content_requests_total` | counter | `content` | content requests served | emitted in `content` |
 | `alaa_content_access_denied_total` | counter | `content` | content access denials | emitted in `content` |
