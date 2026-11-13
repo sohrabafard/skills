@@ -3,7 +3,8 @@
 Use this file when a service calls an external messaging provider (an SMS gateway such as Magfa, a messenger such
 as Bale Safir) directly: the adapter port, the outcome and failure classes, sender lines, admission order, the AIMD
 rate and breaker values with their worked examples, and the Redis keys. Today only `auth` does this; its canonical
-design is `docs/notification-latest-plan.md` in the `auth` repository.
+design is `docs/notification-latest-plan.md` in the `auth` repository. `auth` owns notification delivery for the fleet
+(owner decision 2026-11-13; `27-notification-service-contract.md`, "Current ownership").
 
 What this file does not own:
 - **Vendor wire facts** (endpoints, codes, idempotency mechanism, status model) - `/alaa-sms-provider-magfa`,
