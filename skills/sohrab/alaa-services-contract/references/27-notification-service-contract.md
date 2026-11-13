@@ -22,6 +22,18 @@ or RabbitMQ). This reference documents the *currently implemented* cross-service
 are an evaluated target, not finalized. Keep producer integrations on the implemented ingress and treat
 the rest as `reserved` until the notification architecture is settled.
 
+## Current ownership: `auth` is the notification service (owner decision 2026-11-13)
+
+Until the owner re-plans it, the `auth` service owns notification delivery for the fleet: `auth` = auth +
+profile + notif. It runs the SMS (Magfa, Mediana) and Bale (Safir) provider adapters, the OTP channel fan-out
+and fallback, and the admin messaging surface (`/api/v3/admin/sms/campaigns` and its successors, including a
+multi-channel back-office API). The `notification` and `notif` repositories stay paused
+(`05-scope-service-modes-and-auth-routing.md`); do not route new delivery work to them. A new channel, a
+back-office send API, or a producer integration is designed and built in `auth`, with its contract pack in
+`auth/docs/contracts/auth`. Splitting notification out of `auth` is a possible later re-plan, not current work;
+the Milestone 1 priority is completing the rest of the fleet. The `notification.commands` ingress below
+describes the paused repository and is `reserved` until then. Provider mechanics: `33-outbound-messaging-provider-contract.md`.
+
 Most Ala services are Laravel; `entitlement-api` is Go. This language-neutral,
 Laravel-first contract requires snake_case JSON everywhere: majority-runtime PHP
 `json_decode` is case-sensitive.
