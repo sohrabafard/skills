@@ -10,22 +10,23 @@ Paths are repository-relative; check the repository out wherever your machine ke
 it and resolve them from its root.
 
 1. `routes/api.php`
-2. `docs/ops/auth-session-contract.md`
-3. `docs/ops/auth-profile-v3-contract.md`
-4. `docs/ops/totp-step-up-mechanism.md`
-5. `docs/ops/postman/auth-service-v3.postman_collection.json`
-6. `README.md`
+2. `docs/contracts/auth/openapi.yaml` and the pack beside it (`endpoints/`, `errors/error-codes.json`, `rate-limits/`)
+3. `docs/ops/auth-session-contract.md`
+4. `docs/ops/auth-profile-v3-contract.md`
+5. `docs/ops/totp-step-up-mechanism.md`
+6. `docs/ops/postman/auth-service-v3.postman_collection.json`
+7. `README.md`
 
 When the documents and the route definitions disagree, `routes/api.php` wins,
 because it is the thing that runs.
 
 ## The client flow
 
-1. `POST /auth/api/v3/otp/request` with `{"mobile": "09120000000", "national_code": "1234567890"}`.
+1. `POST /auth/api/v3/otp/request` with `{"mobile": "09120000000", "national_code": "1234567890", "project_id": "<public project UUIDv7>"}`. `purpose` is optional and means `login`; see "The generic OTP component".
 2. The client receives the OTP out of band.
-3. `POST /auth/api/v3/otp/verify` with `{"mobile": "09120000000", "code": "11111"}`.
-4. A successful verify returns `message`, `profile` and `token`, where
-   `token.access_token` is the bearer JWT and `token.token_type` is `Bearer`.
+3. `POST /auth/api/v3/otp/verify` with `{"mobile": "09120000000", "code": "11111", "project_id": "<same project>"}`.
+4. A successful login verify returns `data.profile` and `data.token`, where
+   `data.token.access_token` is the bearer JWT and `data.token.token_type` is `Bearer`.
 5. The same response sets the refresh token in the HttpOnly `auth_refresh_token`
    cookie.
 6. The client calls gateway-protected routes with
@@ -53,6 +54,39 @@ Request details:
   either `refresh_token` in the body or the cookie.
 - Do not teach a client to depend on a retired `/auth/api/v2/*` route or a one-step
   `/login` path. The active contract is OTP request then OTP verify.
+
+## The generic OTP component
+
+Canonical home for the fleet's OTP mechanism. Source: auth `docs/contracts/auth/openapi.yaml`
+(`/otp/request`, `/otp/verify`, `/registration`) and `endpoints/registration.md`; the pack wins
+over this summary.
+
+- One request route and one verify route serve every OTP need. Both take an optional `purpose`:
+  allowlist `login` and `registration`, absent means `login`, anything else is
+  `422 VALIDATION_ERROR`.
+- Challenge keys are separated per purpose, so a code never verifies under another purpose.
+- Verify with `login` returns tokens and sets the refresh cookie. Verify with any other purpose
+  returns `data: {otp_proof_token, expires_in_seconds}` and no token, cookie, session,
+  membership or event. The proof is single-use, bound to mobile, project and purpose, and lives
+  `auth.tokens.otp_proof_ttl_seconds` (default 600). The endpoint that owns the purpose consumes
+  it once: `POST /auth/api/v3/registration` for `registration`; a missing, expired, spent or
+  mismatched proof is `422 OTP_PROOF_INVALID`.
+- A new OTP need adds a purpose case and the endpoint that consumes its proof, never a new OTP
+  route.
+- `project_id` is a guest claim (a canonical UUIDv7, no default project): missing is
+  `400 TENANT_CONTEXT_MISSING`; unknown or malformed is `422`.
+- Limits (`rate-limits/10-rate-limit-contract.md`):
+  - No limiter key holds the client IP (fleet policy 2026-11-12); never add one.
+  - Request and verify buckets are per mobile, project and purpose (default 5 per 300 s); the
+    request bucket counts only requests that really send an SMS.
+  - A per-mobile SMS cap spans every purpose and project (default 8 per 600 s).
+  - Five wrong guesses delete the challenge (`AUTH_OTP_CHALLENGE_MAX_FAILURES`).
+  - A `429` carries `Retry-After` equal to `error.meta.retry_after_seconds`.
+  - The limiter fails closed: `503 AUTH_LIMITER_UNAVAILABLE`, no code issued.
+- Enumeration parity: `/otp/request` answers one identical `200` for a known mobile, an unknown
+  one, a blocked account and a national-code mismatch. `/otp/verify` answers every refusal of the
+  code with `422 OTP_VERIFY_CODE_INVALID`; `OTP_VERIFY_CODE_EXPIRED` is no longer emitted. Never
+  branch on the cause.
 
 ## Protected route families
 
