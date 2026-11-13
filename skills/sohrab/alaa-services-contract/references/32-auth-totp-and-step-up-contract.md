@@ -17,6 +17,13 @@ the `auth` repository checkout; resolve them there and never hardcode an absolut
 
 If implementation and docs disagree, trust route/controller/middleware source first, report contract drift, and align docs plus API artifacts before closing the task.
 
+## Related: OTP purposes are not step-up purposes
+
+The SMS-OTP `purpose` on `/otp/request` and `/otp/verify` (allowlist `login`, `registration`) is a
+separate namespace from the TOTP step-up purposes below. Its contract lives in
+`/alaa-trust-gateway-auth` `references/60-auth-service-v3-contract.md` section "The generic OTP
+component".
+
 ## Feature flag and availability
 
 - TOTP management is feature-flagged by `AUTH_TOTP_ENABLED` through `auth.totp.enabled`.
