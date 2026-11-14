@@ -63,7 +63,7 @@ Before planning, separate missing facts from coupled design judgment. Retrieve o
 After workflow tasks, dependencies and consolidation decisions are finalized, allocate the ready plan once through All-role task allocation below.
 
 - Before dispatch, record each role with its explicit model AND effort. This covers evidence, planning, implementation, verification, review, specialist and documentation lanes.
-- Compare the ready tasks with each other, so that no task inherits the complexity of the whole goal.
+- Compare the ready tasks so that no task inherits the complexity of the whole goal.
 - Planning roles are separate. Choosing workers alone needs no planner dispatch.
 - Reopen allocation only for remaining work, at a material scope change or a fix follow-up. Reuse unchanged allocations and evidence.
 
@@ -77,7 +77,7 @@ This orchestrator owns the actual task complexity, priority, model and effort de
    1. Evaluate the cheapest eligible supported available model AND effort pair for EVERY role: evidence, planning, implementation, verification, review, specialists, documentation and rule-writer.
    2. A task has bounded suitability only when it has all of these: an explicit outcome, a finite named scope, grounded local contracts/known invariants, a known pattern or causal path, settled cross-boundary decisions, bounded local discretion and a discriminating check.
    3. Non-bug semantic work needs no reproduced failure. The mechanical and bug branches keep their own predicates below.
-   4. Select the least costly suitable available pair. Depart from it only for an explicit user choice or for recorded task evidence. Apply no quotas.
+   4. Select the least costly suitable available pair. Depart from it only when an explicit user choice or recorded task evidence justifies the departure. Apply no quotas.
    5. Justify model and effort separately. Base each on the remaining reasoning need, the priority, current official guidance and applicable prior evidence.
    6. For each cheaper pair you reject, record the actual failed fit predicate or stronger task-specific evidence, the decomposition you rejected, and the applicable exact source row and its date. Titles, volume, priority labels and whole-goal complexity are not failed predicates.
    7. Select directly. Use no mandatory trial ladder, synthetic experiment or replay. Supported capability is not calibrated local quality.

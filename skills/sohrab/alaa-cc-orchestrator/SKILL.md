@@ -81,7 +81,7 @@ Before designing implementation or verification, load /alaa-testing-strategy. Be
 
 Before Stage A evidence dispatch, apply `/alaa-memory-os` when its trigger holds: make one bounded recall, verify useful claims in repository truth, and keep active state in workflow. Route unresolved prior-session, ownership and shared-contract questions to `alaa-researcher`. `alaa-explorer` uses memory only when the repository cannot answer. Apply `/alaa-code-intelligence-routing` before code-evidence selection and reuse its result.
 
-Every dispatch carries `/alaa-low-noise`. A lane returns findings, verdicts, counts and permitted artifact paths, never transcripts, full diffs or logs. It persists reusable context before returning its path. Use bounded invocations and the progress reporting the host requires. Do not infer a universal watchdog timeout or a need for per-command narration. After an interruption, reconcile the transcript, the checkpoint and the surviving files before resuming writes.
+Every dispatch carries `/alaa-low-noise`. Every return carries findings, verdicts, counts and permitted artifact paths, never transcripts, full diffs or logs. Persist reusable context before returning its path. Use bounded invocations and the progress reporting the host requires. Do not infer a universal watchdog timeout or a need for per-command narration. After an interruption, reconcile the transcript, the checkpoint and the surviving files before resuming writes.
 
 `references/verification-and-gates.md` owns gate ordering and freezing before expensive dispatch.
 
@@ -143,7 +143,7 @@ Schedule these pack checks through `references/verification-and-gates.md` Gate e
 - After instruction-contract changes, run `python3 scripts/check_agent_contracts.py`. It checks source requirements, not live model behavior.
 - After changing agent instructions, a contract asset, pins, agents, or version, run `python3 scripts/render_agents.py --write`, then `python3 scripts/render_agents.py --check` and `python3 scripts/validate_pack.py`. Review the generated wrappers against `assets/implementation-contract.md` and `assets/planner-contract.md`.
 
-For each check, exit `0` is clean, `1` is findings or drift, and `2` means unavailable proof. Either nonzero exit blocks completion.
+For each command above, exit `0` is clean, `1` is findings or drift, and `2` means unavailable proof. Either nonzero exit blocks completion.
 
 ## 8. Safety and authority
 
@@ -177,7 +177,7 @@ Stop and report partial or blocked status when any of these occurs:
 
 ## 10. Failure discipline
 
-Reviewers only judge. Verifiers only execute evidence commands. Researchers only retrieve. Before product edits, load /alaa-testing-strategy `references/120-result-classification.md` for classification and repair eligibility. Report adversarial findings without another fix loop. In a dispatch, name only the lane's matching clean-code skill.
+Reviewers only judge. Verifiers only execute evidence commands. Researchers only retrieve. Before product edits, load /alaa-testing-strategy `references/120-result-classification.md` for classification and repair eligibility. Report adversarial findings without another fix loop. Name only the lane's matching clean-code skill.
 
 ## Direct references
 

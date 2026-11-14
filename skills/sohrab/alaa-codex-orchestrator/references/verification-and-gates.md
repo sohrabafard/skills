@@ -74,8 +74,8 @@ Record the check list and evidence at the workflow-selected owner before dispatc
 Keep one collected repair batch. Handle it in this order:
 
 1. Split it only where repair role authority differs, into the fewest compatible scoped assignments.
-2. Execute the assignments serially and reconcile conflicting writers through `alaa-workflow references/workspace-and-integration.md` before continuing.
-3. For each assignment, continue the existing implementer whose valid assignment and context cover most failures through a host-supported continuation tool. Dispatch fresh only when continuation is unavailable, context is invalid, or `routing-matrix.md` selects another managed profile, external role or task pair.
+2. For each assignment, continue the existing implementer whose valid assignment and context cover most failures through a host-supported continuation tool. Dispatch fresh only when continuation is unavailable, context is invalid, or `routing-matrix.md` selects another managed profile, external role or task pair.
+3. Execute the assignments serially and reconcile conflicting writers through `alaa-workflow references/workspace-and-integration.md` before continuing.
 4. Independent verification owns required retests after the complete repair batch; implementer evidence never replaces independent acceptance.
 
 The analyst diagnoses and never fixes. Existing retry/stop budgets remain in force.
@@ -93,7 +93,7 @@ Always first, never skipped, at any profile. Everything after it inherits its de
 1. Before the first write, apply `alaa-workflow references/workspace-and-integration.md`. Record the base and checkout identity, inspect unrelated changes, and resolve overlapping ownership. Use its current-checkout or isolation decision. Disjoint existing changes alone require neither refusal nor a new branch.
 2. Dispatch the specification, exploration, and research lanes whose conditions in `references/routing-matrix.md` hold, in parallel only when their questions are independent. Spending on `alaa-spec-analyst` here is the cheapest correctness lever in the pipeline and is wasted on a request that is already concrete.
 3. Reconcile observed facts and label unresolved assumptions. Resolve missing facts through retrieval or clarification. Then select the planning profile through `routing-matrix.md` before you make the plan. The lead ratifies an advisory planner draft.
-4. Run a capability inquiry before you approve new shared infrastructure: a new container image, toolchain, chart, CI include or template, generator, hook pack, or script reused across repositories or pipelines. An edit to an existing artifact is out of scope. The inquiry is required because this tree cannot establish what another owner already provides.
+4. Run a capability inquiry before you approve a new container image, toolchain, chart, CI include or template, generator, hook pack, or script reused across repositories or pipelines. An edit to an existing artifact is out of scope. The inquiry is required because this tree cannot establish what another owner already provides.
    1. Read any /alaa-services-contract infrastructure registry first, and reuse sufficient current evidence.
    2. Apply the /alaa-memory-os capability inquiry.
    3. Record the verified owner or alternative and its evidence in the workflow plan and the lane `<context>`. When the memory owner returns a scoped unavailable or unknown outcome, record that outcome instead. Empty recall never justifies `none` infrastructure.
@@ -142,7 +142,7 @@ For required Ent review, interpret the native report under `alaa-ent-go-orm-db r
 2. Documentation is graded, not merely written. `alaa-repo-docs references/15-document-size-and-clustering.md` owns the size ladder, its thresholds, the measuring command, and the one condition under which the largest grade may stand; `/alaa-repo-docs` applies it. This skill decides only that the grade is measured and reported, never what the ladder says — a local copy of it goes stale the moment that skill retunes a threshold.
 3. After documentation edits, run the documentation gate below. Documentation is the final write lane and must not bypass validation.
 4. Run the final validation in this order:
-   1. If integration is requested and explicitly authorized, bring the base branch into the work branch before final verification. Otherwise verify the current candidate, and mark integration as not requested or as awaiting authority.
+   1. If integration is requested and explicitly authorized, bring the base branch into the work branch before final verification. Otherwise keep the current candidate as the verification target, and mark integration as not requested or as awaiting authority.
    2. Freeze the final candidate. Record its content snapshot and any integrated base commit.
    3. Select required checks and proof from repository policy and /alaa-testing-strategy.
    4. Collect required affected and exhaustive checks in one whole-engagement gate stage. Run any required exhaustive tier once, fresh on the final candidate after documentation. Cite matching coverage and run only uncovered checks.
