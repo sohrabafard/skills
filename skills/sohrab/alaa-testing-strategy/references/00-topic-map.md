@@ -16,3 +16,15 @@ Read only the files whose stated condition the task meets. Loading the whole tre
 | Choose or run validation commands, check selector/aggregate coverage, reuse results, or collect failures before batch repair and retest | `100-test-execution.md` |
 | Run CPU-heavy checks, allocate test/dependency containers, use a low-priority runner, choose a CI-image host, or compare before/after timing | `110-execution-resources.md` |
 | Interpret a command outcome, an empty/mismatched selection, selected-but-unexecuted cases, collect-only success, timeout or host obstruction, or classify before repair | `120-result-classification.md` |
+
+## Owned by another skill
+
+- `/alaa-reliability-sla` owns fault injection doctrine, the failure modes worth injecting at a dependency boundary, the per-mechanism evidence table, load testing at saturation, production experiments, and the rule that an untested degraded path is a broken path (`references/80-verification.md`). This skill owns where those tests sit in the plan, at which layer, and at which proof level.
+- `/alaa-security-review` owns which controls must be security-tested and its own minimum negative tests for credentials and cryptography (`references/50-credentials-and-cryptography.md`). This skill generalises the method those tests are built on. It does not restate them. It names no security control.
+- `/alaa-services-contract` owns every envelope, code, header, field name, and value a contract test asserts against. Assert what that skill declares and report drift, rather than asserting the drift.
+- `/alaa-postman-collections` owns API-level request tests, their five minimum assertions, examples, and scripts. This skill owns the layer that work sits at and the rule that no request is exempt.
+- `/alaa-observability-soc` owns the failure-mode enumeration table and the signal, query, and alert each mode needs (`references/10-signal-model.md`). This skill consumes the same enumeration to derive tests. Neither skill maintains a second list.
+- `/alaa-controlled-ops` owns its own package and adopter release gates and its boundary-check script. This skill owns the proof-level vocabulary those gates report in.
+- The per-language skills and the vendored `/golang-testing` own framework idiom, assertion syntax, fixture and mock libraries, table-driven form, and runner flags. This skill owns the decision. It names no framework construct.
+- `/alaa-cc-orchestrator` and `/alaa-codex-orchestrator` own role authority, observer independence, allocation and phase/review scheduling. `/alaa-workflow` owns durable execution state, write ownership and resume. Generic execution, resources, runners and classification remain in this skill.
+- `/alaa-prompting-guide` owns model/effort capability evidence and runtime mechanics. The runtime orchestrator owns actual task allocation for every authority role. This skill names no model.
