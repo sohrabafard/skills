@@ -42,7 +42,7 @@ only when the first names it by path.
 | `examples/quota-manager.ts` | estimate, persistence request, and the configured budget thresholds |
 | `examples/alaa-client-storage.ts` | app-level facade, indexed account purge, quota-aware write |
 | `examples/outbox-pattern.ts` | claim, send, classify, and the configured retry surface |
-| `examples/outbox-reaper.ts` | recovery of rows orphaned in `inflight` by a reload |
+| `examples/outbox-reaper.ts` | recovery of rows orphaned in `sending` by a reload |
 | `examples/offline-asset-guard.ts` | detecting a partial or evicted offline media asset |
 | `examples/vitest-idb-pattern.test.ts` | unit lane: upgrade, blocked, quota, purge |
 | `examples/playwright-quota-smoke.spec.ts` | browser lane: a real induced `QuotaExceededError` |

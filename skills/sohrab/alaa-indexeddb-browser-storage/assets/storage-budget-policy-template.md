@@ -26,7 +26,8 @@ timeout semantics of any value here are `/alaa-reliability-sla` (`$alaa-reliabil
 | offline media metadata | `<e.g. 5 MB>` | follows the asset | with the asset | must be stated |
 | offline media assets | `<total bytes and asset count>` | user-initiated delete, or eviction | **no** — the user chose to download | must be stated |
 
-Validation rules the reviewer checks, and the checker enforces:
+Validation rules the reviewer checks. The checker enforces none of them; it rejects only unfilled
+placeholders:
 
 1. **Every cap is a number with a unit.** "Reasonable" is not a cap.
 2. **Every row has a cleanup rule.** A cap with no cleanup is a cap that is reached once and

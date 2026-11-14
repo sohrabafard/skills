@@ -28,9 +28,11 @@ makes a rollback survivable. A drop in the same release as the code change remov
   isolate it in its own migration or run it through a raw runner that does not wrap. A migration runner that wraps
   every migration in a transaction will fail this statement at execution, not at review.
 - `ADD CONSTRAINT … NOT VALID` followed by `VALIDATE CONSTRAINT` shortens how long the lock is held; it does
-  not lower the lock mode. Measured on PostgreSQL 16.13 this session, `ADD FOREIGN KEY` takes
-  `SHARE ROW EXCLUSIVE` on the referenced table with or without `NOT VALID` — what `NOT VALID` removes is the
-  referencing-table scan inside that window, not the mode. `VALIDATE CONSTRAINT` then runs under
+  not lower the lock mode. Measured on PostgreSQL 16.13 (measurement date not recorded),
+  `ADD FOREIGN KEY` takes `SHARE ROW EXCLUSIVE` on the referenced table with or without `NOT VALID` — what
+  `NOT VALID` removes is the referencing-table scan inside that window, not the mode.
+  https://www.postgresql.org/docs/16/sql-altertable.html (read 2026-11-14) states both lock levels named here; it
+  does not say whether `NOT VALID` changes the first. `VALIDATE CONSTRAINT` then runs under
   `SHARE UPDATE EXCLUSIVE` and does not block writes. Split the statement to shorten the hold, never in the
   belief that it takes a gentler lock, because a plan built on the gentler-lock belief will schedule the
   change into a window that cannot absorb it. A partitioned parent adds further constraints and a version

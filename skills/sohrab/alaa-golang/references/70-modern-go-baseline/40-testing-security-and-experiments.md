@@ -23,7 +23,9 @@ interfaces, and ships a new FIPS 140-3 module version.
 - Remove any custom `rand.Reader` passed into `crypto/rand.Prime`, `crypto/dsa.GenerateKey`,
   `crypto/ecdh.Curve.GenerateKey`, or `crypto/ed25519.GenerateKey` — it is now a no-op, so code that looks
   deterministic no longer is. Replace deterministic test usage with `testing/cryptotest.SetGlobalRandom`.
-- Replace `go tool`-era manual `Certificate.Leaf` population, which 1.27 makes unnecessary.
+- Remove manual `Certificate.Leaf` population after `tls.X509KeyPair` or `tls.LoadX509KeyPair`. Since Go 1.23
+  both functions populate `Leaf`, and Go 1.27 removes the `x509keypairleaf` `GODEBUG` setting permanently (verified
+  on 2026-11-14 against https://go.dev/doc/go1.23 and https://go.dev/doc/go1.27).
 
 **Rule:** everything else in this paragraph — which TLS minimum version a service sets, whether a legacy cipher or key
 exchange may be re-enabled, whether FIPS enforcement applies, which padding a service may use — is a posture decision

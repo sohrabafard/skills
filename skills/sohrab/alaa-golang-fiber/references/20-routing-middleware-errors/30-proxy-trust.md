@@ -2,12 +2,12 @@ Version-sensitive claims in this topic depend on [Fiber sources and freshness](.
 
 ## Proxy trust
 
-Two config fields, both defaulting to off
-(https://docs.gofiber.io/api/fiber, verified 2026-07-26):
+Three config fields, each defaulting to off or empty
+(https://docs.gofiber.io/api/fiber and the v3.5.0 tagged `app.go`, verified 2026-11-14):
 
 - `TrustProxy bool`, default `false`.
 - `TrustProxyConfig TrustProxyConfig`, default `{}`, with fields `Proxies` (trusted IPs and CIDR
-  ranges), `Loopback`, `Private` and `LinkLocal`.
+  ranges), `Loopback`, `Private`, `LinkLocal` and `UnixSocket`.
 - `ProxyHeader string`, default `""`, names the header the client IP is read from.
 
 With `TrustProxy` false, Fiber ignores forwarded headers. With it true, Fiber checks the request

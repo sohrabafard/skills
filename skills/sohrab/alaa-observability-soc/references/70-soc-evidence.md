@@ -3,9 +3,9 @@
 Load when the task designs a security-event catalog, forwards events to a customer SOC or SIEM, or collects evidence
 during an incident.
 
-Event names and machine-readable codes belong to `/alaa-services-contract` (`$alaa-services-contract` in Codex),
-`references/20-…`, in its event and code naming contract. This file owns which events must exist, what each entry must
-define, and what blocks an egress design.
+Event names and machine-readable codes belong to `/alaa-services-contract`
+`references/20-operational-and-observability-contract.md`, in its event and code naming contract.
+This file owns which events must exist, what each entry must define, and what blocks an egress design.
 
 ## The security-event catalog
 
