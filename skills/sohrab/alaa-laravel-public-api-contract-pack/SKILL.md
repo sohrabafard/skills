@@ -146,7 +146,7 @@ the example is wrong here: never document a client-set header as tenant or user 
 | document a route that is not a read, or answer whether a consumer may repeat a request | `references/20-write-semantics-and-idempotency.md` |
 | document a route returning a collection, or a request field accepting more than one value | `references/30-pagination-and-limits-for-consumers.md` |
 | create a pack, bump its version, write any pack file to disk, or validate one — this file holds the deliverables floor and the validation floor | `references/40-consumer-discovery-pinning-and-secret-hygiene.md` |
-| state a rule on ground this skill does not own | `references/50-ownership-boundary.md` |
+| state a rule, make a decision or edit code on ground this skill does not own | `references/50-ownership-boundary.md` |
 
 ## When NOT to use
 
@@ -162,7 +162,7 @@ the example is wrong here: never document a client-set header as tenant or user 
 
 Cross-skill calls follow the single `/name` convention in the [pack instructions](../AGENTS.md).
 Where this skill and an owner could state one rule, the owner states it and this skill points.
-On conflict the owner wins. Before you state a rule on ground this skill does not own, read
+On conflict the owner wins. Before you state a rule, make a decision or edit code on ground this skill does not own, read
 `references/50-ownership-boundary.md`; it names the owner for each concern.
 
 Owned here and stated nowhere else: the pack's file set and `contract.meta.json` shape; the

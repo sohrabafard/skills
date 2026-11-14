@@ -123,7 +123,7 @@ In Alaa Laravel code the Repository pattern is mandatory for application-layer p
 - Make event names, error codes, cache-key prefixes, queue names and metric names backed enums or class constants, never inline strings, because a typo in an inline string is a silent contract or observability hole. The canonical names come from `/alaa-services-contract`. This skill owns only the mechanism that carries them.
 - Never guess an external fact: a provider payload, another service's contract, or a header's meaning. Write `NEEDS_<PROVIDER>_CONFIRMATION` or `[gap]` at the site and report it instead of inventing a plausible value.
 
-When you use a language-level construct, read `references/php-modern-and-psr.md`. It owns the language-level rules: `readonly`, `DateTimeImmutable`, enums plus `match`, union and intersection types, the PHP 8.5 features, lazy objects, the PSR and PER baseline, and the language-level anti-patterns.
+When you use a PHP 8.4+ or 8.5 language feature, a PSR interface, or a type you are unsure of, read `references/php-modern-and-psr.md`. It owns the language-level rules: `readonly`, `DateTimeImmutable`, enums plus `match`, union and intersection types, the PHP 8.5 features, lazy objects, the PSR and PER baseline, and the language-level anti-patterns.
 
 ## Size and complexity budgets
 
@@ -179,7 +179,7 @@ Documentation is part of done when behaviour, contracts, setup, env vars, reques
 
 ## Validation before done
 
-Run the relevant checks. Use repo scripts and CI-pinned versions where they exist.
+Run the relevant checks. Prefer repo scripts and CI-pinned versions.
 
 - Style: `vendor/bin/pint --test` or the repo's formatter.
 - Static analysis: `vendor/bin/phpstan analyse` at the repo's configured level.

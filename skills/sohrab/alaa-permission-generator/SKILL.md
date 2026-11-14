@@ -134,7 +134,7 @@ Do not use this skill to decide whether a caller may act on a resource, or what 
 ## Ownership boundary
 
 This skill owns permission-key and bitmap-id allocation, the catalog descriptors, generation, drift interpretation, the
-apply boundary, and the consumer-side contract for reading the bitmap. Before you state a rule on any other ground,
+apply boundary, and the consumer-side contract for reading the bitmap. Before you state a rule, make a decision or edit code on any other ground,
 read `references/ownership-boundary.md`; it names the owner of everything else, and **the listed owner wins on conflict**. Two
 refinements apply: `/alaa-services-contract` wins on what a signal is *called*, and `/alaa-observability-soc` wins
 on whether it is *required*. Every timeout, retry, pool and shed value lives in

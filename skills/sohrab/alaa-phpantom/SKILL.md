@@ -26,9 +26,9 @@ PHPantom is an installed **Rust language server**, not an MCP server. In Claude 
 
 | Intent | Correct interface | Policy |
 |---|---|---|
-| Inspect definition, references, hover, type and navigation | Claude native `LSP` tool, when available | Read-only; use symbolic lookup instead of text guessing |
+| Inspect definition, references, hover, type and navigation | Claude native `LSP` tool, when available | Read-only; prefer symbolic lookup over text guessing |
 | See new diagnostics after edits | Native LSP diagnostics and the global `php -l` PostToolUse hook | Do not run whole-project analysis after every edit |
-| Diagnose a PHP, Composer or Laravel issue | `phpantom_lsp analyze` | Scope paths first; use JSON when a tool processes the output |
+| Diagnose a PHP, Composer or Laravel issue | `phpantom_lsp analyze` | Scope paths first; optionally JSON for processing |
 | Remove unused imports or apply automated source fixes | `phpantom_lsp fix` | `--dry-run` first, then apply only the rules and files the task needs |
 | Format PHP and Blade | `phpantom_lsp format` | `--check` first, then apply to selected files only |
 | Rename or move a class or namespace across references and PSR-4 | `phpantom_lsp move` | `--dry-run` first; check destination mappings and remaining warnings |

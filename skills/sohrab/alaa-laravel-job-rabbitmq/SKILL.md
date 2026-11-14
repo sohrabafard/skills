@@ -30,7 +30,7 @@ your own judgement of whether verification is needed.
 | assert a driver version, call `queue:monitor`, reason about `retry_after`, or trust a flag default, a config key or the publish path | `references/driver-facts.md` |
 | find a `repositories` VCS override for this package, or are about to add one | `references/fork-divergence.md` |
 | decide which source wins, or hit a freshness trigger | `references/source-map.md` |
-| state a rule about a number, a name, an observability level, messaging architecture, deployment, test design, security, code shape or worker hygiene | `references/ownership-boundary.md` |
+| state a rule, make a decision or edit code on ground this skill does not own: a number, a name, an observability level, messaging architecture, deployment, test design, security, code shape, complexity, the quality bar, a design pass, a generated wrapper or a plan file | `references/ownership-boundary.md` |
 
 ## Worker mode
 
@@ -183,8 +183,8 @@ infrastructure.
 
 # Ownership boundary
 
-This skill owns one thing: the behaviour of Laravel jobs on **this** RabbitMQ driver. Before you state a rule
-on any other ground, read `references/ownership-boundary.md`. It names the owner of numbers, names,
+This skill owns one thing: the behaviour of Laravel jobs on **this** RabbitMQ driver. Before you state a rule, make a decision
+or edit code on any other ground, read `references/ownership-boundary.md`. It names the owner of numbers, names,
 observability levels, messaging architecture, deployment, test design, security, code shape, complexity and
 worker hygiene. The named owner wins on conflict.
 
