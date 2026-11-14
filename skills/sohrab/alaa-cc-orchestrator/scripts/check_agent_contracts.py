@@ -337,7 +337,7 @@ def task_allocation_failures(routing: str, controls: str) -> list[str]:
 
 # Cadence assertions are source contracts, not a simulation of agent obedience.
 # Workflow owns hierarchy validation; this consumer checks its scheduling seam.
-CADENCE_REQUIREMENTS = ('Stages A-F give the order of work. The verification decision below sets which checks and reviews run inside them. They are distinct from workflow phases',
+CADENCE_REQUIREMENTS = ('Stages A-F give the order of work. The verification decision and the floors below set which checks and reviews run inside them. They are distinct from workflow phases',
  'read `alaa-workflow references/task-tracking.md` for task-store selection',
  'never initialize a replacement Beads database',
  '`Review boundary: phase|final`',
@@ -521,7 +521,7 @@ COLLECTION_SEAMS = {
     ),
     "verifier": ("<collection_barrier>", "Execute the canonical collection barrier through this independent verifier"),
     "repair": ("each scoped assignment in the serialized repair batch", "For an admitted early repair, scope only the recorded obstruction and return to collection without Review"),
-    "workflow": ("Record phase test-collection and repair/retest barriers, and the inherited review boundary",),
+    "workflow": ("Record phase test-collection, repair/retest and review barriers",),
     "planning": ("Record each phase's post-reconciliation test collection, combined repair/retest and declared review barriers", "Workflow records barriers without redefining them"),
     "plan_template": ("Phase collection, repair/retest and review barriers, owners and resume evidence",),
     "phase_template": ("Collection/repair/retest barrier and evidence owner",),

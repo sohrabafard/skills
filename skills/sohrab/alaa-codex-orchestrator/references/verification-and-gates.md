@@ -2,7 +2,7 @@
 
 Read this file before Stage A and whenever a gate's requirement is in question.
 
-Stages A-F give the order of work. The verification decision below sets which checks and reviews run inside them. They are distinct from workflow phases. Combine compatible actions in the workflow plan. Keep each required outcome, observer and ordering constraint.
+Stages A-F give the order of work. The verification decision and the floors below set which checks and reviews run inside them. They are distinct from workflow phases. Combine compatible actions in the workflow plan. Keep each required outcome, observer and ordering constraint.
 
 ## The verification decision
 
@@ -136,7 +136,7 @@ Always first, never skipped, because every lane inherits its decisions.
 7. Record known API-contract triggers and decide consumer impact, compatibility and deprecation before implementation.
 8. Use `alaa-test-strategist` before implementation, not after, whenever its condition in `references/routing-matrix.md` holds: a test matrix designed after the code exists is written against what was built rather than against what the change had to prove.
 9. Record the plan through /alaa-workflow or adopt the existing parent plan. Record ordered phases, acceptance, focused phase checks, the final gate and handoff knowledge. Use `alaa-workflow references/context-continuity.md` for canonical position and resume. Apply `alaa-workflow references/companion-routing.md` for executable phase/task skill bindings before implementation or write-lane dispatch. Workflow owns this machinery; the orchestrator consumes it without duplicating task state.
-10. Run Batch allocation from `references/routing-matrix.md`, record all lane choices in the workflow plan, and create no second allocation artifact. Present the plan and the decisions in one compact message, then continue without waiting. Wait only when an irreversible decision, destructive action, external side effect, or genuine product choice belongs to the user.
+10. Run Batch allocation from `references/routing-matrix.md`, record all lane choices in the workflow plan, and create no second allocation artifact. Present the plan and the verification decisions in one compact message, then continue without waiting. Wait only when an irreversible decision, destructive action, external side effect, or genuine product choice belongs to the user.
 
 ## Stage B — Implementation
 
