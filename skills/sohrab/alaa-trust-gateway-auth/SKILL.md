@@ -67,7 +67,7 @@ Each case carries its symptom, decision, response, log and test in
 | a service reachable without crossing the gateway, or an edge that is down | 1 — deny `AUTH_CONTEXT_MISSING` with the status policy in `references/50-deny-codes.md`; strip at the service edge *and* block the exposure |
 | a request-time checker that timed out, failed, or answered unparseably | 2 — the gateway denies under the decision and enforcement contract named in that case; a service-side fallback is a bypass |
 | a required claim or trusted header absent, including `rol`, on a protected route or a tenant-scoped route with no guest rule | 3 and 4 — deny; an absent role never means "no restrictions apply" |
-| a malformed `X-Access`, or a permission revoked after issuance | 5 and 6 — deny at ingress with `AUTH_ACCESS_BITMAP_INVALID`; revocation latency equals the remaining token lifetime and is not fixed inside a service |
+| a malformed `X-Access`, or a permission revoked after issuance | 5 and 6 — deny at ingress with `AUTH_ACCESS_BITMAP_INVALID`; revocation latency equals the remaining token lifetime and is not fixed inside a service; an absent or blank `X-Access` denies with `AUTH_ACCESS_HEADER_MISSING` |
 | a step-up proof absent, expired, or issued for another purpose | TOTP — deny `403 TOTP_STEP_UP_REQUIRED` with `meta.purpose`; absent and invalid are indistinguishable by design |
 
 ## Router

@@ -201,7 +201,7 @@ what is recognised, find nothing, and let the request continue until a later
 generic `unauthorized` fires. That produces a deny with the wrong code, a log line
 that does not say what actually happened, and an incident that cannot be
 diagnosed from the logs. The code in the response and the code in the deny log
-are identical, and both name the bitmap.
+are identical, and both name the failure.
 
 **A set bit whose id this service does not know grants nothing and is not an
 error.** The bitmap is issued against the whole platform catalog, so a service

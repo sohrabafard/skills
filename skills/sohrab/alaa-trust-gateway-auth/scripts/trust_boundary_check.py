@@ -93,9 +93,10 @@ def check_bitmap(values: list[str], max_permission_id: int) -> tuple[list[str], 
         try:
             ids = decode_bitmap(value, max_permission_id)
         except BitmapError as exc:
+            code = "AUTH_ACCESS_HEADER_MISSING" if value.strip() == "" else "AUTH_ACCESS_BITMAP_INVALID"
             findings.append(
                 f"bitmap: {value!r} is not a usable bitmap ({exc}); the trusted-context "
-                f"normalizer rejects it with AUTH_ACCESS_BITMAP_INVALID"
+                f"normalizer rejects it with {code}"
             )
             continue
         if not ids:
