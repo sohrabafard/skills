@@ -150,7 +150,7 @@ The test to apply sentence by sentence: **could a competent agent follow this ex
 | Body duplicates a reference | The same rule in two files, drifting apart | Assign one owner per rule; leave a one-line pointer where the rule used to be |
 | Instruction stated more than once | Long body, degraded compliance | State each rule once; measure fidelity and required coverage |
 | Skill tries to be a whole workflow | The body sprawls into phases, state files, resumable plans | Split it, and route the durable multi-phase part to a workflow skill by name in the description |
-| Missing stopping conditions | Runs past the goal, or loops on an unreachable bar | Define both success-stop and blocked-stop; cap fix cycles by number |
+| Missing stopping conditions | Runs past the goal, or loops on an unreachable bar | Define both success-stop and blocked-stop; require a new stated reason for each further fix or review round, and a change of approach when the same kind of defect returns |
 | No failure behavior | The agent troubleshoots mid-goal instead of reporting | State the retry budget and the fallback in one sentence |
 | Unbounded authority | A destructive or external action taken without asking | Enumerate what proceeds freely and what requires permission; scope installation authority to named files |
 | Invented frontmatter key | Ignored in silence, or a hard packaging error | Use only documented keys — the surface per runtime is in `references/61-skill-platform-mechanics.md` |

@@ -14,7 +14,7 @@
 - اجرای تست‌های سنگین با اولویت `BelowNormal` (معادل `nice`) در WSL
 - پشتیبانی از محدودیت CPU، timeout و artifact directory
 - حفظ اجباری آرگومان `--browser chromium`
-- review مستقل و حداکثر دو چرخه اصلاح
+- verification به تصمیم lead؛ gate مستقل روی floorها
 - اتصال skill های اکوسیستم Alaa به نقش‌های security و migration و observability و release و performance و browser QA
 - مسیردهی کارهای چندفازی durable به /alaa-workflow
 

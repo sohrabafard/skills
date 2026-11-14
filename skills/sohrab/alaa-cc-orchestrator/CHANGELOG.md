@@ -1,5 +1,10 @@
 # Changelog
 
+## 6.0.0 - 2026-11-14
+
+- Owner direction, 2026-11-14: "I expect the agent to decide and act like a senior developer." The lead makes one verification decision per task at plan time and needs a stated reason for an independent observer. `references/verification-and-gates.md` owns the decision, six floors with reasons, evidence, after-a-fix and who-fixes; `alaa-workflow references/review-mode.md` owns consequence-based triage.
+- Removed: "Model capability never waives an observer or mandatory gate"; "implementer evidence never replaces independent acceptance" (kept on floor surfaces); "The analyst diagnoses and never fixes"; "Your results never discharge independent acceptance"; the lead's mechanical-edit-only limit, "run heavy verification" and "permit self-approval"; the `lean`/`standard`/`hardened` profiles; the mandatory Stage C verifier and Stage D reviewer; Gate economics; Maximum cycles and its cycle-count stop.
+
 ## 5.9.1 - 2026-11-14
 
 - `alaa-workflow references/workspace-and-integration.md` `## Lane branches and commits`: the lead commits work that a lane returned uncommitted, by path, on the lane branch, and it does not switch the checkout's branch while a writer it does not control is active there; it records isolation instead.

@@ -23,8 +23,6 @@ def execution_contract_api():
 # Complete reviewed clauses, never isolated keyword scores. This is a finite
 # source regression gate; arbitrary semantic equivalence still needs review.
 EQUIVALENT_REQUIREMENTS = {
-    "Retain required retrieval, focused implementer checks and independent acceptance gates":
-        "Keep required source retrieval and focused implementer checks; independent acceptance gates remain mandatory",
     "Independent verification and review inspect the actual artifact":
         "Independent verification and review must inspect the changed artifact itself",
     "Plan-only work grants no product execution, branch, or commit authority":
@@ -148,26 +146,40 @@ IMPLEMENTER_REQUIREMENTS = (
     "Judge actual command scope, never its tier label",
     "Never run affected/exhaustive checks",
     "full suite, race detector, end-to-end suite, or another lane's checks",
-    "Independent gates own that breadth; duplicating it mixes authority and pays twice",
+    "The lead schedules that breadth at the boundary; running it here pays twice",
     "If dispatch conflicts, report the conflict and excluded commands",
     "run only known, separable focused commands",
     "Leave ambiguous or inseparable mixed commands unrun",
     "invent no substitutes or flags",
     "If none qualify, report validation not run and request focused commands from the parent",
-    "Your results never discharge independent acceptance",
+    "the parent may accept your focused evidence",
     "An explicitly assigned task owner may also run supplied bounded task-acceptance selectors at task end",
     "this grants no boundary affected/exhaustive authority",
     "whole-engagement cadence and exact phase/task/subtask cursor",
 )
-GATE_REQUIREMENTS = ('Before implementation or fix-cycle dispatch, classify actual command scope, never tier labels',
+GATE_REQUIREMENTS = ('Before implementation or fix dispatch, classify actual command scope, never tier labels',
+ 'An independent gate is always required, whatever the decision says, for a change to',
+ 'authentication, authorization or tenant isolation',
+ 'secrets or cryptography',
+ 'billing or money',
+ 'a destructive or irreversible data operation',
+ 'a breaking change to a public contract',
+ 'a production deployment or release',
+ 'any surface the user asks to have reviewed',
+ 'Implementer evidence does not replace the gate',
+ 'A boundary where no task chose an independent observer and no floor applies earns no review dispatch',
+ 'A fix that touches a floor surface returns to that floor',
  'send focused commands to subtask workers and explicitly bounded task-acceptance commands to the '
  'task owner',
  'reserve affected/exhaustive commands for boundary gates',
- 'Retain required retrieval, focused implementer checks and independent acceptance gates',
+ 'Stop adding checks when the next one could not change the decision',
+ 'There is no cycle count. A new round needs a new reason',
+ 'Triage every finding by its consequence under',
+ "The gate's blocking verdict binds the lead",
  'Role definitions own dispatch-conflict handling',
  'reconcile every excluded command and unrun check before accepting the lane',
- 'Independent acceptance additionally requires an observer independent of the implementation with '
- 'authority for that gate',
+ 'Where a floor or the decision requires independent acceptance, it requires an observer independent '
+ 'of the implementation with authority for that gate',
  "An implementer's broad PASS cannot discharge it",
  'cite eligible independent evidence instead of repeating it',
  'Run any required exhaustive tier once, fresh on the final candidate after documentation',
@@ -358,8 +370,8 @@ CADENCE_REQUIREMENTS = ('Stages A-F define outcomes and authority. They are dist
  'Push, tag, history rewrite and any merge other than the lane-branch merge still require explicit permission',
  'Stage C collects focused phase evidence. Stage D waits for the inherited review boundary',
  'Collect required affected and exhaustive checks in one whole-engagement gate stage',
- 'Independent acceptance additionally requires an observer independent of the implementation with '
- 'authority for that gate',
+ 'Where a floor or the decision requires independent acceptance, it requires an observer independent '
+ 'of the implementation with authority for that gate',
  'references/100-test-execution.md',
  'references/120-result-classification.md',
  'Never weaken review to obtain a pass.')
@@ -371,10 +383,10 @@ def cadence_failures(skill: str, gates: str, dispatch: str,
     errors = [f"missing scheduling contract: {clause}"
               for clause in CADENCE_REQUIREMENTS if not contract_present(clause, gates)]
     errors.extend(specialist_cadence_failures(design, contract, critic))
-    for clause in ("It implements only a mechanical local edit with known scope, no design decision, and a few tool calls",
+    for clause in ("It makes its own corrections only under Who fixes",
                    "Correct sparingly", "Calibrate length", "Keep dispatches lean",
                    "Do not restate the native role definition",
-                   "for gate economics and independent acceptance",
+                   "for the verification decision, the floors and who fixes",
                    "references/110-execution-resources.md"):
         if not contract_present(clause, skill):
             errors.append(f"missing mirrored body contract: {clause}")
@@ -488,14 +500,14 @@ COLLECTION_REQUIREMENTS = (
     "Split it only where repair role authority differs, into the fewest compatible scoped assignments",
     "Execute the assignments serially",
     "reconcile conflicting writers through `alaa-workflow references/workspace-and-integration.md` before continuing",
-    "The analyst diagnoses and never fixes",
-    "Independent verification owns required retests after the complete repair batch",
-    "implementer evidence never replaces independent acceptance",
+    "A diagnosis may carry the proposed fix",
+    "Whoever fixes proves the fix with the check that failed, or with the check that would have caught the defect",
+    "On a floor surface the author never approves its own work",
     "Existing retry/stop budgets remain in force",
     "Collect only missing or invalidated focused checks and explicit earlier repository obligations",
-    "Before Stage D, require independent focused evidence for the complete declared review scope",
+    "An independent observer needs a reason drawn from questions 1 and 2",
     "Cite eligible independent evidence",
-    "Collect missing, invalidated or required-fresh coverage through `alaa-verifier`",
+    "When the decision or a floor names an independent verifier, collect missing, invalidated or required-fresh coverage through `alaa-verifier`",
     "When independent checks remain to run, dispatch `alaa-verifier`",
     "Plan one whole-engagement broad gate stage in Stage E, after final documentation",
 )
@@ -571,16 +583,17 @@ RUN_ECONOMY_REQUIREMENTS = {'gates': ('Draw the fewest lanes that keep write sco
            'failures through a host-supported continuation tool',
            'Dispatch fresh only when continuation is unavailable, context is invalid',
            'selects another managed profile, external role or task pair',
-           'Independent verification owns required retests after the complete repair batch'),
- 'skill': ('mechanical-edit exception',
-           'in files no active or pending lane owns',
-           'or the lead made a mechanical edit, select `standard`'),
+           'Observed evidence counts by what it shows, not by who ran it',
+           'The lead may make a small, local, obvious correction itself',
+           'in files no active or pending lane owns'),
+ 'skill': ('It makes its own corrections only under Who fixes',
+           'Stages C and D run as the verification decision and the floors'),
  'dispatch': ('proving command or selector -> expected result, or review-only: reason',
               'the child re-derives none of them'),
  'repair': ('as the continuation message rather than a new envelope',
             'apply the common envelope\'s Mandatory Ponytail binding route before continuing',
-            'If Failure routing selects another role, profile or task pair, dispatch fresh under Gate '
-            'economics'),
+            'If Failure routing selects another role, profile or task pair, dispatch fresh under Who '
+            'fixes'),
  'verifier_agent': ('cases selected/passed/failed/skipped/not run (n/a without a test selector)',
                     'the selected-case list or its report path',
                     'first causal error with file:line',

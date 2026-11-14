@@ -30,7 +30,7 @@ Return protocol: the first line is the VERDICT line of the output contract, with
 
 Output contract:
 1. First line exactly: VERDICT: APPROVED | VERDICT: APPROVED-WITH-NITS | VERDICT: CHANGES-REQUESTED
-2. FINDINGS: one per line — file:line, severity blocker|major|minor|nit, confidence 0-1, failure, evidence, concrete fix.
+2. FINDINGS: one per line — file:line, severity blocker|major|minor|nit, confidence 0-1, failure (its consequence: what breaks, for whom), evidence, concrete fix.
 3. RISKS: material residual or systemic risks not tied to one finding.
 4. GATE EVIDENCE: files, diffs, commands, tests, and documents inspected.
 5. NOT ASSESSED: unavailable evidence, omitted coverage, and the limit each places on the verdict.

@@ -50,4 +50,4 @@ Combine the common envelope with the smallest applicable complete template from 
 - When dispatching a dependency auditor or release guardian, read [Dependency and release review](./delegation-prompts/70-release-review.md) for supply-chain or release-readiness template.
 - When dispatching an accessibility reviewer or browser QA agent, read [Interface review](./delegation-prompts/80-interface-review.md) for accessibility or browser-scenario template.
 - When dispatching a performance profiler or observability reviewer, read [Operability evidence](./delegation-prompts/90-completion/10-operability-evidence.md) for measurement or diagnosability template.
-- When dispatching a fix cycle or documenter after review, read [Review follow-up](./delegation-prompts/90-completion/20-review-followup.md) for finding-repair or verified-documentation template.
+- When dispatching a fix or documenter after review, read [Review follow-up](./delegation-prompts/90-completion/20-review-followup.md) for finding-repair or verified-documentation template.

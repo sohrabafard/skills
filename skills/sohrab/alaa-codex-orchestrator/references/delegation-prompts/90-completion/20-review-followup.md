@@ -1,8 +1,8 @@
 # Review follow-up templates
 
-## Fix-cycle dispatch
+## Fix dispatch
 
-Apply Gate economics in `verification-and-gates.md` to scope and serialize the repair batch. Select the role for this assignment through Failure routing in `routing-matrix.md`. For Ent-owned findings, use the Ent specialist dispatch contract from the common router in `implement` mode. Preserve the repair scope and focused retest limits below. If continuing a lane, apply the common envelope's Mandatory Ponytail binding route. Route a `disputed` result to the finding refuter under `alaa-workflow references/review-mode.md` `## Finding triage`, never to the main thread's judgment.
+Apply Who fixes in `verification-and-gates.md` to scope and serialize the repair batch. Select the role for this assignment through Failure routing in `routing-matrix.md`. For Ent-owned findings, use the Ent specialist dispatch contract from the common router in `implement` mode. Preserve the repair scope and focused retest limits below. If continuing a lane, apply the common envelope's Mandatory Ponytail binding route. Route a `disputed` result under `alaa-workflow references/review-mode.md` `## Finding triage`.
 
 ```xml
 <task>Resolve reviewer/specialist findings assigned to this repair scope.</task>
@@ -11,7 +11,7 @@ Apply Gate economics in `verification-and-gates.md` to scope and serialize the r
 <handoff><remaining work, surviving edits/checkpoint, evidence, and retired writer if reassigned; or none></handoff>
 <original_scope_and_acceptance>unchanged unless the orchestrator explicitly revises them</original_scope_and_acceptance>
 <verification tier="focused">
-  <commands><exact focused commands for each fixed finding; scoped lint/type/build></commands>
+  <commands><exact focused commands for each fixed finding: the check that failed, or the check that would have caught the defect; scoped lint/type/build></commands>
   <excluded>the full suite, race detector, end-to-end suite, and any other lane's checks</excluded>
 </verification>
 <task_acceptance><only for the explicitly assigned task owner: exact bounded task-acceptance selectors changed by these fixes, or not assigned></task_acceptance>
