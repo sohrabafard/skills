@@ -99,9 +99,14 @@ The app must not re-implement anything the SDK or gateway already owns. Default 
   `alaa-trust-gateway-auth references/10-verification-and-ingress.md`.
 - The WA ingest envelope is the one exception to "the app adds nothing"; `25-end-to-end-flow-and-boundaries.md`
   ("WA route family") owns it.
-- A public-path response that carries the dropped-bearer marker is not an error. The SDK keeps the response and
-  refreshes the session through its single-flight refresh. `30-trusted-ingress-and-laravel-contract.md`
-  ("Dropped-bearer response marker") owns the header and its shipping status.
+- The dropped-bearer marker on a public-path response starts one background session refresh in the SDK, and
+  nothing else. `30-trusted-ingress-and-laravel-contract.md` ("Dropped-bearer response marker") owns the header.
+  - The marker never changes how the response is classified: a `4xx` or `5xx` that carries it is still that error,
+    and a success that carries it is still a success. The SDK never fails, delays or resends the request for it.
+  - The SDK reacts only on a successful response to a request that carried a bearer.
+  - It refreshes at most once per token.
+  - It never reacts on a refresh or logout response, or on any request that opts out of unauthorized recovery,
+    because a refresh started from the refresh call loops.
 
 ## UI capability hints in app code
 

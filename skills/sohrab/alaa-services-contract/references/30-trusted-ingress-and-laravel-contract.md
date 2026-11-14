@@ -51,8 +51,7 @@ This set is frozen, and the fleet already agrees on it. In the 2026-07-25 fleet 
 
 ## Dropped-bearer response marker
 
-Owner ruling 2026-11-14. **Decided, not shipped:** on that date it existed only as uncommitted work in the
-gateway checkout (gateway Beads `alaa-q23xo`). Do not describe it as live.
+Owner ruling 2026-11-14. Read its shipping status in `95-fleet-conformance.md` before you describe it as live.
 
 - Header: the standard `WWW-Authenticate`. No custom header name carries this signal.
 - Values: `Bearer error="invalid_token", error_description="expired"` for an expired token, and
@@ -180,18 +179,10 @@ Public request rule:
   file owns only the Laravel resolution mechanics below.
 
 Trusted context rule:
-- `X-Project-Id` is injected by the gateway from the verified token `pid` claim, and from nothing else. That
-  holds whether or not the route required authentication: a token presented on a public route is still
-  verified. An invalid or expired one is dropped there, not rejected, and injects nothing (owner ruling
-  2026-11-14, owned by `alaa-trust-gateway-auth references/10-verification-and-ingress.md`).
-- On a request that carried no accepted token the gateway injects no `X-Project-Id` at all. An absent header is therefore
-  not evidence that the request was rejected or that the caller is untrusted; it is the normal shape of a
-  legitimate guest request on a route that admits one, and a service that assumes the header is always present
-  denies every guest. On that branch the project id arrives in the request body as `project_id`; the service
-  reads it only there, never on a request that carried the header, and rejects a body that carries none. The
-  body value is client-asserted and therefore forgeable, so it attributes an anonymous write and does nothing
-  else: it authorizes nothing, scopes no read, and grants no capability. The full rule, the rejection it
-  produces, and the constraint it places on such a route are owned by `/alaa-trust-gateway-auth` in `alaa-trust-gateway-auth references/10-verification-and-ingress.md`.
+- `X-Project-Id` is injected by the gateway from the `pid` claim of a bearer it accepted, and from nothing else.
+  When it is absent and when it is present on a public route, where a guest's project id then comes from, and
+  what a service may do with that value are owned by
+  `alaa-trust-gateway-auth references/10-verification-and-ingress.md`.
 - downstream services normalize trusted `X-Project-Id` once inside their trusted request context builder
 - direct backend-only tests may keep numeric compatibility only when the service explicitly documents that local testing mode
 - controllers, policies, Resources, repositories, jobs, and observers must not independently parse raw project identifiers

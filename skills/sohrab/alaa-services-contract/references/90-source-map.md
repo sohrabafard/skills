@@ -33,7 +33,8 @@ runtime survey or migration proof; verify each consumer in its own repository be
 `25-end-to-end-flow-and-boundaries.md`; the dropped-bearer marker is in
 `30-trusted-ingress-and-laravel-contract.md`; per-component status is in `95-fleet-conformance.md`. Sources read
 on that date: gateway local commits `4de96f3`, `0ffc1e5`, `df5ba2d`, `52f9edd`; wa local commits `7c21e51`,
-`8c64286`, `33722b0`. No deployed runtime was observed.
+`8c64286`, `33722b0`; client local commit `aacf4adc` for the SDK's reaction to the marker. No deployed runtime
+was observed.
 
 Re-check official docs and target repo truth when the task mentions:
 
