@@ -79,3 +79,19 @@ The protocol of pack version 5.9.1 was then used once on real work (Beads issue 
 The role was `alaa-implementer-infra`, requested opus/medium. One nit from the review could not be applied to the lane's commit without rewriting history, so the merge message carries it: a failed resolution of the script's own directory now stops the script at once.
 
 This is one run of one role with one lane. It shows that the protocol can be followed as written in Claude Code. It does not show two lanes sharing a checkout, a rejected lane, a fix on the same branch, or the Codex path.
+
+## Second run: two lanes in one checkout, and a fix before the merge
+
+A second real task (Beads issue `alaa-t2qxm`) exercised the parts the first run did not. Five version and link checkers sent a User-Agent that named the pack or called the client a skill tool; a request to an outside service must not carry the owner's project identity.
+
+- **Two lanes, one checkout, one branch.** Two `alaa-implementer` lanes (requested opus/medium) ran at the same time on `lane/generic-client-name` with files they did not share. Each saw the other's modified files in the working tree, left them alone, and committed only its own paths by path: `f77311e4` (one file) and `fe957a27` (two files). Neither met the index lock.
+- **Review, then a fix on the same branch.** `alaa-reviewer` returned APPROVED-WITH-NITS and found two more checkers of the same kind. The lead committed that fix on the same lane branch (`459a9ee2`, files no lane owned) before the merge.
+- **Merge.** The lead switched back while no lane was live and merged with `--no-ff` (`2ba9ef0f`), then deleted the branch. Every gate exits `0` on `main`.
+
+Still unobserved: a lane that hits the index lock, a rejected lane, a lane in a separate worktree, and the Codex path.
+
+One lane loaded no skill before its edit and said why (two literal swaps); the report item made that visible.
+
+## Scratch cleanup
+
+The two files of transcript excerpts and one intermediate file that held hand-back openings were removed from the session scratchpad after the evidence summary was archived. They were throwaway output of this engagement and can be rebuilt by rerunning the extractors, which remain with their aggregate counts.
