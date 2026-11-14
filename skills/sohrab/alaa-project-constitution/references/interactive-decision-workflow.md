@@ -1,6 +1,6 @@
 # Interactive Decisions and the Canonical Launcher
 
-Read this reference for every CREATE, UPDATE, or RATIFY operation. Repository evidence answers
+Read this reference for every CREATE or UPDATE operation. Repository evidence answers
 facts; matched archetypes prescribe obligations; the owner answers only the material decisions
 that neither of those can settle.
 
