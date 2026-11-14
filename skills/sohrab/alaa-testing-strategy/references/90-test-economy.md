@@ -18,7 +18,7 @@ The always-owed tests in `SKILL.md` — named security controls, reported-defect
 
 **The boundary that decides a hard case: could this project's code be wrong in a way the test catches?** If only the dependency could be wrong, the dependency's suite owns the test. If this project's choice, input, or wiring could be wrong, the test is owed and it asserts that choice.
 
-A test already in the suite that falls into a row above is reported as a finding with its reason, because it passes against every implementation this project can ship. It is deleted only after an independent reviewer accepts that finding, never by the lane whose change it is failing on, and never when it is an always-owed test.
+A test already in the suite that falls into a row above is reported as a finding with its reason, because it passes against every implementation this project can ship. It is deleted only after the lead, or the reviewer its verification decision names, accepts that finding, never by the lane whose change it is failing on, and never when it is an always-owed test.
 
 A failure alone never justifies deleting a test: a failing test is repaired, or classified under `50-flake.md`, whose quarantine deadline is the only failure-driven deletion. Every other deletion follows the independent-acceptance rule above and keeps the coverage obligations of `60-coverage.md`.
 
