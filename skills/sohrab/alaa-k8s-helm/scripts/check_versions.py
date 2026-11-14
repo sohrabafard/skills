@@ -38,7 +38,7 @@ SCRIPT_DIR = os.path.dirname(SCRIPT_PATH)
 SKILL_DIR = os.path.dirname(SCRIPT_DIR)
 DEFAULT_REFERENCE = os.path.join(SKILL_DIR, "references", "version-awareness.md")
 
-USER_AGENT = "alaa-k8s-helm-check-versions/1 (+skill freshness check)"
+USER_AGENT = "version-check/1"
 
 CHECKS = [
     {
