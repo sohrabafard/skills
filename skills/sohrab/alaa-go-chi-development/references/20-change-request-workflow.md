@@ -22,9 +22,8 @@ a consumer repository; check those cells in the matrix in [05-phase-and-source-t
 | A kit-owned surface has a bug, a limitation, a missing option, or behaviour you need changed | **Kit change request** | `assets/templates/kit-change-request.md` |
 | New behaviour that is platform-shaped, or that a second service would need unchanged | **Baseline proposal** | `assets/templates/baseline-proposal.md` |
 
-A defect with no contract change needs the issue alone, no file. Unsure? The surface already exists in the kit →
-change request. You would be creating something new → baseline
-proposal.
+A defect with no contract change needs the issue alone, no file. When you are unsure of the type, write a change
+request if the surface already exists in the kit, and a baseline proposal if you would create something new.
 
 ## Non-negotiable rules
 

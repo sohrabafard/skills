@@ -142,8 +142,8 @@ the receiver re-reads — and **`logout-purge` is acted on before any user-scope
 
 ## Concurrency rules
 
-One transaction for related writes across stores. An idempotency key on every outbox write, so a duplicate
-flush is harmless. A monotonic `updatedAt` or `serverRevision` on every record another context may write,
-so a lost update is at least detectable. Never a read-modify-write across a transaction boundary where
-correctness depends on it — hold the lock, do it in one transaction, or accept last-write-wins and say so
+Use one transaction for related writes across stores. Put an idempotency key on every outbox write, so a
+duplicate flush is harmless. Put a monotonic `updatedAt` or `serverRevision` on every record another context
+may write, so a lost update is at least detectable. Never do a read-modify-write across a transaction boundary
+where correctness depends on it — hold the lock, do it in one transaction, or accept last-write-wins and say so
 in the record's comment.

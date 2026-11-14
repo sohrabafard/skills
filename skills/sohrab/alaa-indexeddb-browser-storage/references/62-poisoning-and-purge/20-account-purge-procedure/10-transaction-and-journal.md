@@ -12,8 +12,8 @@ or timestamps. Preflight every required store and index before deleting. Registe
 completion and abort handlers before queueing requests. Queue the requests synchronously, attach each
 request's error handler as it is created, and then await transaction completion. Abort on synchronous
 or request failure; report success only after commit.
-The return count includes data rows only, never metadata. Missing schema/indexes fail the purge and
-retain the pending marker; upgrade through `../../40-schema-and-migrations.md` before retrying.
+The return count includes data rows only, never metadata. A missing required store or index fails the purge and
+retains the pending marker; upgrade through `../../40-schema-and-migrations.md` before retrying.
 
 **Or a journalled purge**, when the counts are large enough that one transaction would block the UI. Write
 the intent first, purge, then clear it:

@@ -94,7 +94,7 @@ owns the rule; this section names where it falls for a kit consumer.
 6. Commit authoritative state and any outbox, audit, receipt, or idempotency record that must agree with it in
    one transaction. Bound, cancel, and own every worker and goroutine, with defined retry, DLQ, terminal, replay,
    and shutdown semantics.
-7. Wire low-cardinality logs, metrics, traces, and required/degraded readiness. Never emit secrets, PII, or raw
+7. Wire low-cardinality logs, metrics, traces, and readiness with required and degraded checks. Never emit secrets, PII, or raw
    payloads.
 8. Keep route truth, OpenAPI, fixtures, Postman, extraction chains, docs, deploy roles, and CI synchronized via
    `make api-contract`. For local infrastructure, attach to the one canonical shared-infra instance through the
@@ -102,8 +102,8 @@ owns the rule; this section names where it falls for a kit consumer.
    RabbitMQ to the service compose, and never bypass the reuse-if-healthy gate. Go and Laravel services share one
    infra set by platform contract — the Laravel side is `/service-runtime-kit-governance`
    (`$service-runtime-kit-governance`).
-9. Validate targeted behaviour first, then the contract, API and generator gates, then full/race/static/vuln,
-   then real-infrastructure gates, then render and smoke, in proportion to risk. Each gate runs once per tree state
+9. Validate targeted behaviour first, then the contract, API and generator gates, then the full, race, static and
+   vulnerability gates, then real-infrastructure gates, then render and smoke, in proportion to risk. Each gate runs once per tree state
    and the `/alaa-golang` validation gate assigns its owner; a gate already included in a wider run of the same
    tree, such as `contracttest` inside `go test ./...`, is cited from that run only when its output shows the gate's
    package executed. Report each with an outcome word
@@ -112,8 +112,8 @@ owns the rule; this section names where it falls for a kit consumer.
 ## Datastore-free services
 
 A service with no Postgres and/or no RabbitMQ is first-class. Generate it with `--without-postgres` and/or
-`--without-rabbitmq`, compose `configkit.WithoutPostgres()` / `WithoutRabbitMQ()` only where the surface truly
-does not exist, and pass the matching `contracttest.DocSurfaces`. Never invent a placeholder DSN and never set a
+`--without-rabbitmq`, compose `configkit.WithoutPostgres()`, `WithoutRabbitMQ()`, or both only where the surface
+truly does not exist, and pass the matching `contracttest.DocSurfaces`. Never invent a placeholder DSN and never set a
 key belonging to a disabled lane.
 
 ## What a consumer session must never do

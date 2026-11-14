@@ -5,7 +5,7 @@ Location: <kit-repo>/docs/audits/YYYY-MM-DD-<scope>-audit.md
 Rules: references/40-platform-audit.md. Default posture: observe and file documents, do not fix unless fixes were
 explicitly authorized. Every finding maps to exactly one filed action.
 Fill `phase` and `phase_record` from the read described in references/05-phase-and-source-truth.md — copy what the
-read returned; do not type a phase name from memory. Sections 3 and the per-consumer rows exist only when the
+read returned; do not type a phase name from memory. Section 3 and the per-consumer rows exist only when the
 matching capability cell allowed the work; where it did not, keep the section and write what was not done and why.
 -->
 

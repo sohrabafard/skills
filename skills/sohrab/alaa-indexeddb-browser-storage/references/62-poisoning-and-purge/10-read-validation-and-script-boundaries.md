@@ -15,8 +15,8 @@ function parseLearningState(value: unknown): LearningStateRecord | null {
 }
 ```
 
-- **A `schema` field on every record, checked on every read.** An older-schema record is migrated
-  (`../40-schema-and-migrations.md`) or discarded. Never used as-is.
+- **Every record carries a `schema` field, and every read checks it.** An older-schema record is migrated
+  (`../40-schema-and-migrations.md`) or discarded. It is never used as-is.
 - **A record whose `accountKey` differs from the current session is not read.** It is deleted.
 - **A validation failure deletes the record and continues.** A poisoned record that survives to be read
   again is a permanent failure; a deleted one is transient.

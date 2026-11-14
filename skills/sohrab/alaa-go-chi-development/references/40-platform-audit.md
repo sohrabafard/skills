@@ -27,7 +27,7 @@ consumer inline when a handful of file reads cover it. In Codex, run the lanes s
 
 ## Dimensions
 
-1. **Correctness and data loss:** transactions, outbox/receipt/ack ordering, migration reversibility
+1. **Correctness and data loss:** transactions, the ordering of outbox writes, receipts and acks, migration reversibility
    (up-down-up), retries and terminal states, run-twice idempotency proof.
 2. **Security and privacy:** the trust boundary, authorization and TOTP, tenant isolation, secrets, PII in logs
    or labels, SSRF and provider or webhook exposure. Route verdicts to `/alaa-security-review`.
@@ -45,7 +45,7 @@ consumer inline when a handful of file reads cover it. In Codex, run the lanes s
 8. **Clean code**, citing P-numbers from `/alaa-golang-clean-code-principles`.
 
 **Per consumer**, when permitted: kit-surface re-implementation — hand-built envelopes, raw trusted-header reads,
-local readiness rendering, diverging outbox/job/receipt DDL, `gen_random_uuid()` defaults, scattered `os.Getenv`,
+local readiness rendering, diverging outbox, job or receipt DDL, `gen_random_uuid()` defaults, scattered `os.Getenv`,
 re-prefixed metric names; `KIT-WRAP` hygiene against the contract in `10-`, where wrapper-shaped code with no
 marker is a hidden fork and the highest severity; the registry row against the actual `go.mod` pin; whether
 `contracttest` is wired and honest; deprecated APIs still in use; and seam bugs such as ack-before-commit, an

@@ -39,8 +39,8 @@ the user believes they have it.** Four obligations, all the caller's:
    user intent and the strongest signal the engines that judge by engagement will see. Then call
    `navigator.storage.persisted()` and store the answer.
 2. **Branch the UI on that answer.** Granted: "Available offline on this device." Not granted: "Available
-   offline on this device. Your browser may remove it if the device runs low on space." Never the first
-   sentence alone for a best-effort store.
+   offline on this device. Your browser may remove it if the device runs low on space." Never show the
+   first sentence alone for a best-effort store.
 3. **Check free space against the asset size before starting**, using `navigator.storage.estimate()` and
    the offline-media cap in the budget file (`30-quota-model-and-budgets.md`). The estimate is approximate,
    so treat a margin below the asset size as insufficient rather than as a close call. A download that
@@ -123,8 +123,8 @@ This is what makes `41-multitab-versionchange-and-locks.md` load-bearing here.
 
 ## Budget
 
-Capped per device in the feature's budget file by total bytes and by asset count, checked before each
-download starts. The **metadata** records above are small and carry their own 5 MB cap
+The feature's budget file caps offline media per device by total bytes and by asset count, and the cap is
+checked before each download starts. The **metadata** records above are small and carry their own 5 MB cap
 (`30-quota-model-and-budgets.md`); the media itself is sized by the player skill's track selection, and
 this skill's contribution is the ceiling that selection must fit inside. Every value is named in
 `/alaa-services-contract` (`$alaa-services-contract`).

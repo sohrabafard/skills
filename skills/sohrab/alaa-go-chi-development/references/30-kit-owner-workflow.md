@@ -22,9 +22,9 @@ merge. Write "project owner" where a workflow needs an approver, and never inven
 1. **Preserve and archive.** The original `YYYY-MM-DD-<slug>.md` lands, or is copied verbatim, into
    `docs/change-requests/` under its own filename. The record is permanent; decisions append.
 2. **Reproduce the claim** against current kit code and tests. Never trust the document's description of kit
-   behaviour — requesters get it wrong, and a fix for a misread is a regression. Not reproducible →
-   `rejected: not reproducible`, with evidence. Misuse → `rejected: usage`, with a pointer to the correct API,
-   and treat that rejection as a documentation-gap signal.
+   behaviour — requesters get it wrong, and a fix for a misread is a regression. When the claim does
+   not reproduce, record `rejected: not reproducible`, with evidence. When the claim is a misuse, record
+   `rejected: usage`, with a pointer to the correct API, and treat that rejection as a documentation-gap signal.
 3. **Apply the phase gate.** The consumer survey in step 5 is `consumer-repo-read` and its output is
    `consumer-impact-claim`; look both up in the matrix in
    [05-phase-and-source-truth](05-phase-and-source-truth.md). When the survey is not available to you, every

@@ -39,8 +39,8 @@ MDN BCD read 2026-09-29 lists Chrome 122+, with Firefox and Safari `version_adde
 that is a dated compatibility observation, not a prediction about future versions or embedded runtimes.
 The former 70.28% figure was a caniuse snapshot on 2026-07-28, not this fleet's user share.
 
-1. **Never make a bucket a requirement.** Every feature works with the default bucket. A design that only
-   holds together only when eviction is per-bucket is not portable.
+1. **Never make a bucket a requirement.** Every feature works with the default bucket. A design that holds
+   together only when eviction is per-bucket is not portable.
 2. **Feature-detect and fall through.**
 
    ```ts
