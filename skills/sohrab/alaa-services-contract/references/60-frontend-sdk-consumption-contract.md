@@ -97,8 +97,8 @@ The app must not re-implement anything the SDK or gateway already owns. Default 
   client-asserted `project_id` on such a request is not read downstream, so do not add one to make a call succeed. What
   the receiving service does with either channel is owned by `/alaa-trust-gateway-auth` in
   `alaa-trust-gateway-auth references/10-verification-and-ingress.md`.
-- One exception: the WA ingest envelope carries its project field on every envelope, with a token or without one.
-  `25-end-to-end-flow-and-boundaries.md` ("WA route family") owns the field and the routes.
+- The WA ingest envelope is the one exception to "the app adds nothing"; `25-end-to-end-flow-and-boundaries.md`
+  ("WA route family") owns it.
 - A public-path response that carries the dropped-bearer marker is not an error. The SDK keeps the response and
   refreshes the session through its single-flight refresh. `30-trusted-ingress-and-laravel-contract.md`
   ("Dropped-bearer response marker") owns the header and its shipping status.
