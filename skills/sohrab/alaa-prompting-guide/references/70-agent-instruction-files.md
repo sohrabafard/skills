@@ -4,7 +4,7 @@ An instruction file is the standing context a coding agent carries into every ta
 
 ## What each file is and which runtime reads it
 
-**`CLAUDE.md`** is Claude Code's instruction file. Claude Code reads `CLAUDE.md` first, and reads `AGENTS.md` only under the condition stated below. It loads from four scopes, listed here in load order from broadest to most specific, so a project instruction appears in context after a user instruction:
+**`CLAUDE.md`** is Claude Code's instruction file. Claude Code reads `CLAUDE.md`; it reads `AGENTS.md` only under the conditions stated below. It loads from four scopes, listed here in load order from broadest to most specific, so a project instruction appears in context after a user instruction:
 
 | Scope | Location |
 |---|---|
@@ -116,7 +116,7 @@ Verified 24 July 2026; the Claude Code `AGENTS.md` fallback was verified 14 Nove
 
 - Claude Code's under-200-line target — guidance, not an enforced limit; `CLAUDE.md` files load in full regardless of length. The `MEMORY.md` 200-line / 25 KB cap governs auto memory only, not `CLAUDE.md`.
 - Codex `project_doc_max_bytes` — 32 KiB default; `project_doc_fallback_filenames` is not documented to include `CLAUDE.md` — confirm against the running version before relying on it.
-- Claude Code settings names (`claudeMd`, `claudeMdExcludes`) and the `.claude/rules/` mechanism — carry per-version notes; check against the running version.
+- Claude Code settings names (`claudeMd`, `claudeMdExcludes`, the project-instructions option `instructionFiles`) and the `.claude/rules/` mechanism — carry per-version notes; check against the running version.
 
 ## Sources
 

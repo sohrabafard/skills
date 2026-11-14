@@ -28,7 +28,7 @@ When you need to know what a policy file owns or decides, read `references/90-mo
 
 ## Claude policy validation
 
-After a change to `assets/claude-model-policy.json` or a projection, run `python3 scripts/check_claude_model_policy.py` from this skill directory. The default covers both managed roots. Repeat `--agent-root <path>` for a selected source or generated subset. Use `--policy <path>` for an explicit policy.
+`references/90-model-selection.md` also states what this policy file owns; it sets no role default. After a change to `assets/claude-model-policy.json` or a projection, run `python3 scripts/check_claude_model_policy.py` from this skill directory. The default covers both managed roots. Repeat `--agent-root <path>` for a selected source or generated subset. Use `--policy <path>` for an explicit policy.
 
 The gate needs the repository-root checker's bundled YAML parser. A verified aggregate can discharge an identical covered command, and the orchestrator owns that consolidation. Uncovered managed roots still need their checks. Source agreement proves neither installed activation nor calibration.
 

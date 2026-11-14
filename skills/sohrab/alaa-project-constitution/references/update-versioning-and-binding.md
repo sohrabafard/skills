@@ -135,10 +135,11 @@ Add or update one section and preserve every other instruction:
 
 Before planning, editing, reviewing, or changing runtime/deployment behavior, read
 `CONSTITUTION.md` in full. Treat it as binding project policy within its scope. Surface a
-conflict before proceeding when the constitution is missing or internally inconsistent, when
-it conflicts with applicable higher-precedence instructions, or when it states a repository
-fact that repository truth contradicts. A constitutional rule that the code does not
-implement yet is a gap, not a conflict: report the gap and continue the work. Do not silently
+conflict before proceeding when the constitution is missing, internally inconsistent, or its
+status line is anything other than BINDING, when it conflicts with applicable higher-precedence
+instructions, or when it states a repository fact that repository truth contradicts. A
+constitutional rule that existing code does not implement yet is a gap, not a conflict: report
+the gap, make your own change follow the rule, and continue the work. Do not silently
 weaken a constitutional gate; use its amendment or exception process.
 ```
 
@@ -159,11 +160,12 @@ blocks, then a short rule:
 ## Constitution Binding
 
 The imported constitution is binding project policy within its scope. Apply it before
-planning, coding, reviewing, or changing runtime/deployment behavior. Surface a conflict
-before proceeding when the constitution is missing or internally inconsistent, when it
-conflicts with applicable higher-precedence instructions, or when it states a repository fact
-that repository truth contradicts. A constitutional rule that the code does not implement yet
-is a gap, not a conflict: report the gap and continue the work. Use the constitution's
+planning, coding, reviewing, or changing runtime/deployment behavior. Surface a
+conflict before proceeding when the constitution is missing, internally inconsistent, or its
+status line is anything other than BINDING, when it conflicts with applicable higher-precedence
+instructions, or when it states a repository fact that repository truth contradicts. A
+constitutional rule that existing code does not implement yet is a gap, not a conflict: report
+the gap, make your own change follow the rule, and continue the work. Use the constitution's
 amendment or exception process instead of silently weakening it.
 ```
 

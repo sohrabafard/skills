@@ -25,7 +25,7 @@ operation authority.
 Exactly one adapter is active. Reason: two adapters write the same knowledge under different indexing, commit and
 concurrency assumptions, and their disagreement later leaves notes duplicated or missing.
 
-Before you change the selector, or edit an adapter or a neutral knowledge or drift rule, read
+Before you change the selector, or edit an adapter, a store-conditional policy, or a neutral knowledge or drift rule, read
 `references/skill-boundaries.md`. It owns the store-switch rules.
 
 Handle these two failures separately. Never switch adapters to work around either one:
@@ -107,7 +107,7 @@ Verify each useful lead in the current owning repository: the tool contents, the
 supported invocation, the environment fit and the limitations. Only then probe proportionately within existing
 authority. Distinguish four stages: image or registry discovery, contents verification, a compatible runtime
 start, and completion of the exact required gate. Each stage needs observed evidence. An earlier stage proves
-no later stage. When the lead is admitted, keep the capability, environment, constraints, owner or source, and
+no later stage. When the workflow has admitted durable state, keep the capability, environment, constraints, owner or source, and
 attempted evidence in the workflow-owned record, never as a second task state in memory.
 
 | Classification | Evidence and response |
@@ -120,7 +120,7 @@ attempted evidence in the workflow-owned record, never as a second task state in
 
 A no-host-install constraint alone does not forbid every container path. A container lead alone authorizes
 no pull and no run. Recall grants no effect, resets no repair or retry budget, and bypasses no native blocked
-threshold. When that budget is exhausted, preserve the evidence and stop the failed operation. A new owner lead
+threshold. When that budget or the native blocked threshold is exhausted, preserve the evidence and stop the failed operation. A new owner lead
 requires an explicit reassessment before dependent work resumes. Distinguish a documented gate blocker from an
 actual native status transition. Never infer a host status change from a classification written in prose.
 
@@ -136,7 +136,7 @@ dependent work and report the unwritten record.
 
 `references/drift-management.md` owns the registry shape, the lifecycle and the separation of powers. Keep
 the registry in version-controlled repository files outside recall, so store synthesis cannot erase a
-disagreement.
+disagreement. `/alaa-reliability-sla` owns fail-open and fail-closed doctrine.
 
 ## Write authority and outcomes
 

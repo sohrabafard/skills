@@ -413,8 +413,9 @@ CONSTITUTION SHAPE
   move its technical or operational detail to a canonical source in the Canonical Sources list,
   as a recorded structural decision, and keep each obligation as one sentence that names that
   source. Where the repository lacks an adequate constitutional corpus, select FULL_CHARTER with
-  its evidence instead. Never relabel an oversized charter as thin. Smaller is better while
-  authority and safeguards remain complete.
+  its evidence instead. When neither path is available within the allowed files, stop and record
+  the overflow as a blocking owner decision; never delete an obligation to fit. Never relabel an
+  oversized charter as thin. Smaller is better while authority and safeguards remain complete.
 
 MODULE DETECTION CHECKLIST
 Retention follows the matched archetypes, not the presence of existing code. Mark INCLUDE where a
