@@ -1,6 +1,6 @@
 # Contract Before Implementation
 
-`SKILL.md` owns contract-before-code ordering and routes review/commit cadence. This file says how to
+`SKILL.md` owns contract-before-code ordering and routes the review and commit cadence. This file says how to
 enumerate interfaces, what a data shape must fix, how to derive an
 error surface, and where the contract is committed. Read it during step 3.
 
@@ -14,7 +14,7 @@ restated envelope is a second envelope the moment the contract changes.
 Work from the journeys, not from the code you intend to write. A design that lists only synchronous routes
 has left its asynchronous surfaces to be discovered by the first consumer.
 
-Eight kinds, each enumerated or explicitly marked none:
+Enumerate each of these eight kinds, or mark it explicitly as none:
 
 1. synchronous routes this subsystem serves;
 2. synchronous calls this subsystem makes;

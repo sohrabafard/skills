@@ -6,13 +6,13 @@ deciding whether a specific failure may be retried.
 Each class is **symptom, diagnosis, smallest safe retry, escalation**. The classes are vendor-specific.
 Every general rule they depend on is owned elsewhere and routed, never restated:
 
-- Retry legality, the backoff curve, jitter, budgets and circuit breaking: `/alaa-reliability-sla`
-  (`$alaa-reliability-sla` in Codex), `references/20-retries.md`.
+- Retry legality, the backoff curve, jitter, budgets and circuit breaking: `/alaa-reliability-sla`,
+  `references/20-retries.md`.
 - Idempotency-key mechanics: the same skill, `references/60-idempotency.md`.
-- Ala timeout, budget and pool **values**: `/alaa-services-contract` (`$alaa-services-contract`),
+- Ala timeout, budget and pool **values**: `/alaa-services-contract`,
   `references/22-failure-load-and-deprecation-contract.md`.
 - Queue, worker, DLQ and redelivery behaviour when the send is dispatched from a broker consumer:
-  `/alaa-async-messaging` (`$alaa-async-messaging`).
+  `/alaa-async-messaging`.
 
 Safir documents the error codes in `10-wire-contract.md` and no HTTP status, authentication-failure code, or
 `Retry-After` header. The HTTP statuses and the retry hint named below are generic HTTP behaviour, not Safir
@@ -78,7 +78,7 @@ the sender, and raise the account limit with Bale. Retrying harder converts a th
 
 **Symptom.** Safir answers with a server-side failure.
 
-**Diagnosis.** Ambiguous in exactly the way class 2 is ambiguous. The request reached Safir; whether it was
+**Diagnosis.** This failure is ambiguous in exactly the way class 2 is ambiguous. The request reached Safir; whether it was
 acted on is unknown.
 
 **Smallest safe retry.** Retryable only with an unchanged `request_id`, under the caller's budget.

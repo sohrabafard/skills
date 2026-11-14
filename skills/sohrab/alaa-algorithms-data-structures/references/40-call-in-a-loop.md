@@ -35,25 +35,25 @@ Two detection methods beat reading:
 
 ## The resolutions, per medium
 
-**Database.** One query with a join or an `IN` list over the collected keys; or the framework's eager-loading
+**Database.** Use one query with a join or an `IN` list over the collected keys, or use the framework's eager-loading
 mechanism, which each per-language clean-code skill owns. Two constraints on the `IN` list: it is chunked to a
 stated maximum, because a very long list degrades planning and can exceed a parameter limit; and the query is
 covered by an index on the queried column, which is `/alaa-data-layer`'s decision.
 
-**HTTP fan-out.** A batch endpoint where the callee offers one. Where it does not, bounded concurrency with an
+**HTTP fan-out.** Use a batch endpoint where the callee offers one. Where it does not, use bounded concurrency with an
 explicit limit — never one request per element sequentially, and never unbounded parallelism, which converts your
 loop into a denial of service against a service that is probably yours. The concurrency limit, the per-attempt
 timeout, and the retry policy belong to `/alaa-reliability-sla`.
 
-**Cache.** A multi-key read or a pipeline, in one round trip. A cache lookup per element replaces a database N+1
+**Cache.** Use a multi-key read or a pipeline, in one round trip. A cache lookup per element replaces a database N+1
 with a cache N+1, which is faster per call and identical in shape — the round trips still grow with the collection.
 
-**Authorization.** A bulk check that returns the permitted subset in one evaluation, rather than one check per
+**Authorization.** Use a bulk check that returns the permitted subset in one evaluation, rather than one check per
 element. Where the authorization system offers no bulk operation, fetch the subject's relevant grants once and
 evaluate in memory, provided the evaluation semantics are exactly the system's. The authorization model itself is
 owned elsewhere; the shape of the call is owned here.
 
-**Files.** One read of the whole index, or a streaming pass, rather than an open per element.
+**Files.** Use one read of the whole index, or a streaming pass, rather than an open per element.
 
 ## Prefetch and index, in detail
 

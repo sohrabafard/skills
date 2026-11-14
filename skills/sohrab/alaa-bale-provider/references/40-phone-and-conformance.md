@@ -72,13 +72,13 @@ display separators**, because it is the last place before the wire that sees the
 
 ## The normalisation contract
 
-Applied in this order, for both channels:
+Apply these steps in this order, for both channels:
 
 1. Fold every code point of Unicode general category `Nd` to its ASCII digit, one to one. Do not
    enumerate digit families: an enumerated list is a defect class rather than a fix, and this step
    covered two families only until 2026-07-28. Category `No` is excluded, so superscript digits are not
    folded and an input carrying them is still rejected by step 5. The fold, its canonical implementations
-   and its corpus are owned by `/alaa-input-normalization` (`$alaa-input-normalization`); call that
+   and its corpus are owned by `/alaa-input-normalization`; call that
    implementation rather than writing a digit table.
 2. Remove every display separator, using the category rule stated in the next section.
 3. Reject an input that is empty once the separators are gone, because a value with no digits names no

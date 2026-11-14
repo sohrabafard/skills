@@ -6,7 +6,7 @@ All PostgreSQL behaviour below was verified against primary sources and measured
 
 Form: `ORDER BY <sort column> <dir>, <unique tie-breaker> <same dir>`.
 
-**The final component is unique under the route's filters.** `id` unless the route documents another proven-unique column. Reason is in `SKILL.md`; the mechanism is that the continuation predicate is strict, so ties at the page boundary are dropped rather than repeated.
+**The final component is unique under the route's filters.** Use `id` unless the route documents another proven-unique column. The reason is in `SKILL.md`; the mechanism is that the continuation predicate is strict, so ties at the page boundary are dropped rather than repeated.
 
 **Every component shares one direction.** `ORDER BY published_at DESC, id ASC` is forbidden on Ala list routes. Two independent reasons, both verified:
 
@@ -15,7 +15,7 @@ Form: `ORDER BY <sort column> <dir>, <unique tie-breaker> <same dir>`.
 
 ## The index
 
-One index per allowlisted sort mode. Column order: equality-filter columns first, then the ordering tuple in tuple order.
+Create one index for each allowlisted sort mode. Order its columns with the equality-filter columns first, then the ordering tuple in tuple order.
 
 ```sql
 CREATE INDEX contents_status_published_at_id_idx

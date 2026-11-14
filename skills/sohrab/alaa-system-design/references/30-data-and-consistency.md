@@ -10,7 +10,7 @@ decides how it is enforced.
 
 ## Build the ownership table
 
-One row per piece of data the design reads or writes, including data owned by another service:
+Write one row for each piece of data the design reads or writes, including data owned by another service:
 
 | Datum | Owning component | Who writes it | Who reads it | How readers read it |
 |---|---|---|---|---|

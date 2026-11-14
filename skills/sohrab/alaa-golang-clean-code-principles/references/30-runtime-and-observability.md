@@ -79,16 +79,16 @@ with its own name, and never adds a key to a kit-owned family. Service-domain ke
 nothing else. Read the current kit-owned key list from the kit's `CONTRACTS.md` and `configkit/keys.go`; adding
 a key to a kit family is a kit change request through `/alaa-go-chi-development`.
 
-**Proof.** Two checks. From the service root, `grep -rn --include='*.go' 'os\.Getenv' internal/ cmd/` must
-return only the `configkit` wiring site — every other hit is a P10 violation. And a boot test that clears one
-required key and asserts the process fails to start with that key named in the error, which proves the key is
-actually registered rather than silently defaulted.
+**Proof.** Run two checks. First, from the service root, `grep -rn --include='*.go' 'os\.Getenv' internal/ cmd/` must
+return only the `configkit` wiring site — every other hit is a P10 violation. Second, write a boot test that clears one
+required key and asserts the process fails to start with that key named in the error. That test proves the key
+is actually registered rather than silently defaulted.
 
 ## P11 — Observe What You Ship: Bounded Labels, Kit Names, One Correlation Thread
 
-Two things this principle owns, and only two: cardinality discipline and correlation, as applied to kit code.
+This principle owns two things, and only two: cardinality discipline and correlation, as applied to kit code.
 
-**Cardinality.** Labels stay bounded — route template, method, status class. Never `user_id`, `project_id`, a
+**Cardinality.** Labels stay bounded — route template, method, status class. Never use `user_id`, `project_id`, a
 raw path, or error text as a label; an unbounded label is a time-series-database outage on a delay timer.
 Identity belongs in logs and traces, never in a label.
 
