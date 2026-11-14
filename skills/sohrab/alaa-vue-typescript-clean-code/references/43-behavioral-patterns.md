@@ -77,12 +77,12 @@ business decision inside a transport interceptor; interceptors handle transport 
 
 Two chain contents are owned elsewhere and are cited rather than decided here: what a route guard is
 allowed to conclude about authorization is `72-frontend-security-binding.md` and
-`/alaa-trust-gateway-auth` (`$alaa-trust-gateway-auth`); what an interceptor attaches for tracing is
+`/alaa-trust-gateway-auth`; what an interceptor attaches for tracing is
 `74-observability-binding.md`.
 
 ## Pipeline
 
-Sequential transformation of one payload through ordered stages that all run: DTO normalization (parse,
+Use for sequential transformation of one payload through ordered stages that all run: DTO normalization (parse,
 camel-case, resolve fields, validate), form-submit preparation (trim, coerce, strip empty, attach
 metadata), upload preprocessing (read, resize, compress, fingerprint).
 
@@ -206,7 +206,7 @@ Do:
 - Keep each generator step pure, or make single-pass consumption explicit in the name.
 - Pair any potentially unbounded sequence with pagination or a bounded viewport — the iterator pattern in a
   UI ends at a bounded window. Which paging contract to use is
-  `/alaa-keyset-pagination` (`$alaa-keyset-pagination`); the window sizing is
+  `/alaa-keyset-pagination`; the window sizing is
   `76-load-and-concurrency-binding.md`.
 
 Do not materialise a huge array only to `.map().filter()` it for a viewport showing twenty rows, and do not

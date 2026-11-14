@@ -12,8 +12,8 @@ from the next reader.
 
 Use `useQuasar()` inside setup; register app-wide plugins through `quasar.config.*`.
 
-A boot file initializes app-level dependencies only: HTTP client setup, Pinia, router, and plugin
-registration, session restore, i18n. A feature workflow or page-specific logic in a boot file runs on every
+A boot file initializes app-level dependencies only: HTTP client setup; Pinia, router and plugin
+registration; session restore; and i18n. A feature workflow or page-specific logic in a boot file runs on every
 page load of the app, including the ones that do not need it, and is a review failure.
 
 ## SSR safety — the shape rule

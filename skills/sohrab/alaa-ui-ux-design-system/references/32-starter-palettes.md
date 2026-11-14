@@ -93,7 +93,7 @@ The Playful accent was additionally darkened from `oklch(0.769 0.165 70.1)` to `
 ## Using a palette
 
 1. Copy the whole table into the repo's token file. Do not take individual values; the ratios are properties of pairs.
-2. Rename `primary` and `accent` hues to the brand, keeping the `L` and `C` of the row you started from, then **re-run the checker**. Changing hue at constant lightness usually preserves the ratios; changing lightness never does.
+2. Change the `primary` and `accent` hues to the brand's hues, keeping the `L` and `C` of the row you started from, then **re-run the checker**. Changing hue at constant lightness usually preserves the ratios; changing lightness never does.
 3. Design the dark counterpart alongside, do not invert (`20-design-tokens-and-theming.md`).
 4. Record any contrast-driven adjustment next to the token, with the ratio.
 

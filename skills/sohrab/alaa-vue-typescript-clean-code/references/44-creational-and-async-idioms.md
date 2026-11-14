@@ -92,8 +92,8 @@ builder.
 
 ## Prototype
 
-Cloning configured objects instead of rebuilding them: preset form schemas, table configurations, draft
-templates.
+Use for cloning configured objects instead of rebuilding them: preset form schemas, table configurations,
+draft templates.
 
 Do:
 
@@ -139,5 +139,5 @@ Three rules, and each has a visible failure when broken:
 
 Where the `AbortController` lives, who owns cancellation, how in-flight requests are deduped, and how a
 failure is classified before any fallback are all `70-async-and-failure-binding.md`. Retry counts, backoff
-shape, and timeout values are `/alaa-reliability-sla` (`$alaa-reliability-sla`) and
-`/alaa-services-contract` (`$alaa-services-contract`); do not choose them here.
+shape, and timeout values are `/alaa-reliability-sla` and
+`/alaa-services-contract`; do not choose them here.

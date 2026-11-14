@@ -49,7 +49,7 @@ const emit = defineEmits<{
 Every emit is typed with a named tuple. Events are named as domain actions (`save`, `enroll`,
 `retryRequested`), not as DOM implementation details, except when the component is proxying a native input.
 The event *name* is a contract: adding one is additive, renaming one is a breaking change, and the fleet's
-event-name vocabulary belongs to `/alaa-services-contract` (`$alaa-services-contract`).
+event-name vocabulary belongs to `/alaa-services-contract`.
 
 ## Models
 
@@ -94,11 +94,11 @@ no error anywhere.
   names, and status codes live in one `as const` registry per family, or in a union derived from it. A typo
   against an inline string is a silent bug; a typo against a registry is a compile error. The *values* in
   those registries — which key, which param name, which code — are owned by
-  `/alaa-services-contract` (`$alaa-services-contract`); this file owns only the requirement that they sit
+  `/alaa-services-contract`; this file owns only the requirement that they sit
   in a typed registry.
-- Time: transport and store timestamps in the wire form at boundaries, convert and format only at the
-  display edge through a formatter module, and never mutate a `Date` in place. Which wire form, and which
-  timezone the product displays, are `/alaa-services-contract` (`$alaa-services-contract`) values.
+- Time: at boundaries, keep every timestamp you transport or store in the wire form. Convert and format a
+  timestamp only at the display edge, through a formatter module. Never mutate a `Date` in place. Which
+  wire form, and which timezone the product displays, are `/alaa-services-contract` values.
 
 ## Composables
 

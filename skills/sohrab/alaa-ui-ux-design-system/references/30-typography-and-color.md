@@ -6,7 +6,7 @@ Read this file when choosing fonts, building a type scale, constructing a palett
 
 - Base body 16px on every viewport including mobile — below 16px triggers iOS auto-zoom on focus. One scale, e.g. 12 / 14 / 16 / 18 / 24 / 32 / 48. `clamp()` for fluid display sizes only.
 - Line-height 1.5 to 1.75 for Latin body; 1.1 to 1.3 for large display text. Persian values are in `05-rtl-and-persian.md` section 6 and are higher.
-- Measure 45 to 75 characters. Never edge-to-edge paragraphs on wide screens.
+- Keep the measure (line length) at 45 to 75 characters. Never run paragraphs edge to edge on wide screens.
 - Weight hierarchy: headings 600 to 700, body 400, labels and buttons 500. Weight and size carry hierarchy; color never carries it alone.
 - `font-variant-numeric: tabular-nums` for prices, timers, counters and any column of numbers.
 - Respect the platform default letter-spacing; never tighten body tracking.

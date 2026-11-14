@@ -61,7 +61,7 @@ what a test must fail on, are `78-testing-binding.md`.
 
 ## Commands
 
-Read `package.json` and the lockfile first; use that manager's existing scripts. In Quasar repositories,
+Read `package.json` and the lockfile first, and use the existing scripts of the package manager they name. In Quasar repositories,
 `alaa-quasar-app-vite-v3 SKILL.md` Version rules owns manager selection. Below, `<pm>` means that manager;
 for a direct tool call use its installed-local execution form, never a downloading package runner.
 The authoring lane's focused set:
@@ -74,7 +74,7 @@ The authoring lane's focused set:
 <pm> run build
 ```
 
-`<pm> run test` without a filter, the whole suite, is the exhaustive tier: the authority `/alaa-testing-strategy`
+`<pm> run test` without a filter, the whole suite, is the exhaustive tier: the authority that `/alaa-testing-strategy`
 assigns runs it, and a session with no such authority runs it once, on the final tree. Skip the separate
 typecheck only when `<pm> run build` runs the same `vue-tsc` invocation over the same tsconfig projects, because
 the same check would otherwise run twice on one tree.

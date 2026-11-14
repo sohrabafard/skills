@@ -42,15 +42,15 @@ Read these in addition when the condition also holds.
 | The surface can fail, be empty, or be forbidden to this user | `15-designed-failure-states.md` |
 | The value being rendered came from a request body, an upload, a URL parameter, or another tenant | `25-untrusted-content-and-ui-authority.md` |
 | The task ends in shipped UI | `90-quality-gates-and-review.md` |
-| The change must be implemented in Vue, Quasar or Vite, or needs SSR safety | pair with `/alaa-frontend-developer` (`$alaa-frontend-developer`) |
-| The rule you want names a Quasar prop, plugin, directive or config key | it is not ours: `/alaa-quasar-app-vite-v3` (`$alaa-quasar-app-vite-v3`) |
+| The change must be implemented in Vue, Quasar or Vite, or needs SSR safety | pair with `/alaa-frontend-developer` |
+| The rule you want names a Quasar prop, plugin, directive or config key | it is not ours: `/alaa-quasar-app-vite-v3` |
 
 ## Deciding between two files that both look right
 
-- The rule survives swapping Quasar for another library, so it is here; the rule needs a Quasar symbol to be correct, so it belongs to `/alaa-quasar-app-vite-v3` (`$alaa-quasar-app-vite-v3`).
+- If the rule survives swapping Quasar for another library, it is here. If the rule needs a Quasar symbol to be correct, it belongs to `/alaa-quasar-app-vite-v3`.
 - The question is "what must be true" — that is `90-quality-gates-and-review.md`. The question is "how do I make it true" — that is the topic file. The question is "how do I show it is true" — that is `95-design-proofs.md`.
-- The question is about a value the server also knows (a permission bit, a date wire format, a metric name) — that value is not ours; cite `/alaa-services-contract` (`$alaa-services-contract`).
-- The question is about the *appearance* of a state — ours. About *when the system enters* that state — `/alaa-reliability-sla` (`$alaa-reliability-sla`).
+- The question is about a value the server also knows (a permission bit, a date wire format, a metric name) — that value is not ours; cite `/alaa-services-contract`.
+- The question is about the *appearance* of a state — ours. About *when the system enters* that state — `/alaa-reliability-sla`.
 
 ## Good first searches
 
