@@ -1,6 +1,6 @@
 # Agent Catalog
 
-The orchestrator leads the session; it is not a custom subagent. Installation requires explicit authorization. Role triggers and actual task model/effort allocation live in `routing-matrix.md`; /alaa-prompting-guide owns capabilities and runtime mechanics. Managed role definitions omit model and effort pins. Apply explicit controls normalized through `model-effort-policy.md` to every role, including its omission defaults. Legacy model/effort-named IDs retain workload and authority compatibility; their names select neither control.
+The orchestrator leads the session; it is not a custom subagent. Installation requires explicit authorization. Role triggers and the actual task allocation of model and effort live in `routing-matrix.md`. /alaa-prompting-guide owns capabilities and runtime mechanics. Managed role definitions omit model and effort pins. Apply to every role the explicit controls normalized through `model-effort-policy.md`, including its omission defaults. Legacy IDs named for a model or effort keep workload and authority compatibility; their names select neither control.
 
 The manifest lists the executable agents managed by this pack.
 
@@ -161,7 +161,7 @@ installed skill, because a stale preload removes a standard silently. And a role
 with no siblings, resolution is reported as skipped rather than passed.
 
 Schedule `python3 scripts/check_agent_grants.py` (or its identical aggregate-covered invocation under Gate economics) after any change to `agents/`. The checker compares every
-native and MCP grant and the implementation deny set with the authored roles. Unapproved metadata fields fail because hooks, server configuration, or permission overrides can add authority outside those roles: exit `0` is clean, exit `1`
+native and MCP grant and the implementation deny set with the authored roles. Unapproved metadata fields fail, because hooks, server configuration, or permission overrides can add authority outside those roles. Exit `0` is clean, exit `1`
 reports a grant mismatch, and exit `2` means the checker could not run. Both nonzero results fail the
 gate.
 The pack validator invokes this check automatically.

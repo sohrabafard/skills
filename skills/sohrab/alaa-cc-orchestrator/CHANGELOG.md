@@ -2,6 +2,7 @@
 
 ## 5.6.0 - 2026-11-14
 
+- Wording rewritten for clarity, with behaviour unchanged: `SKILL.md`, the routing matrix, the model-effort policy, the gate policy, the agent catalog, the implementation template and the implementation and planner contracts now state each rule as complete sentences or numbered steps. `SKILL.md` section 7 states the render, validation and contract checks and their exit codes once, and `references/model-effort-policy.md` points to it.
 - Every managed role returns a fixed first line: a gate writes `VERDICT: <token>`, every other role writes `STATUS: COMPLETE`, `STATUS: INCOMPLETE` or `STATUS: BLOCKED`. `references/agent-catalog.md` *Return header* owns the lead's routing. Architecture, security, migration, observability, release, browser QA and performance gates move from role-specific labels to the `VERDICT:` line; the performance gate gains the tokens `WITHIN-BUDGET`, `OVER-BUDGET` and `INCONCLUSIVE`.
 - Every role states its completion condition, returns `STATUS: BLOCKED` with the missing inputs instead of a partial judgment, and lists unassessed scope under `NOT ASSESSED`.
 - Task controls: a control the subagent cannot observe is recorded as unknown and the lane continues; only an observed missing, inherited-only, unsupported or contradicted control blocks the lane.

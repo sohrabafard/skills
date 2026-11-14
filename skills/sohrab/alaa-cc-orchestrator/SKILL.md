@@ -15,7 +15,11 @@ Before role inspection or planning, route a single bounded edit whose correctnes
 
 ## Plan and allocation
 
-Before planning, apply Mandatory Ponytail binding in `alaa-workflow references/companion-routing.md`, including its user opt-out. Apply `references/routing-matrix.md` Planning profile selection and All-role task allocation before planning. Finalize and consolidate tasks and dependencies. Then allocate the batch once, record each managed profile or admitted external role and its selection reason in the plan, and dispatch. Planning effort never sets worker effort. Worker selection alone needs no planner dispatch.
+1. Before planning, apply the Mandatory Ponytail binding in `alaa-workflow references/companion-routing.md`, including its user opt-out. Then apply Planning profile selection and All-role task allocation in `references/routing-matrix.md`.
+2. Plan, then finalize and consolidate tasks and dependencies.
+3. Allocate the batch once. Record each managed profile or admitted external role and its selection reason in the plan, then dispatch.
+
+Planning effort never sets worker effort. Worker selection alone needs no planner dispatch.
 
 ## When NOT to use
 
@@ -26,13 +30,12 @@ Before planning, apply Mandatory Ponytail binding in `alaa-workflow references/c
 
 ## 0. Inspect role availability
 
-The separately available companion /alaa-testing-strategy is required for test design, test execution, and legacy runner forwarding. If it is unavailable, report the missing owner and block dependent work. Never auto-install it.
-
-Activation grants no installation or update authority. Inspect installed definitions, version and effective tools without writes. Compare required managed roles with shipped definitions. For a required external companion, apply its admission in `references/agent-catalog.md`. Report missing, stale or unavailable roles before dispatch. Never silently substitute a model or a generic role. Continue only independent work with available required roles. Report the rest as blocked.
+1. The separate companion /alaa-testing-strategy is required for test design, test execution, and legacy runner forwarding. If it is unavailable, report the missing owner and block dependent work. Never auto-install it.
+2. Activation grants no installation or update authority. Inspect installed definitions, the version and effective tools without writes. Compare the required managed roles with the shipped definitions. For a required external companion, apply its admission in `references/agent-catalog.md`.
+3. Report missing, stale or unavailable roles before dispatch. Never silently substitute a model or a generic role. Continue only the independent work whose required roles are available, and report the rest as blocked.
+4. Before relying on isolation, inspect the effective sandbox, parent overrides and MCP grants. A read-only declaration proves no enforcement. Report unobservable permissions as unknown, and operate within role restrictions.
 
 Install or update only with explicit user authorization for the target paths. Validate model-neutral source roles, grants, and generated artifacts before the first target write. Run `python3 scripts/validate_pack.py` and `python3 scripts/check_agent_grants.py` before an authorized copy of the managed agent files. Do not change unrelated agents or settings.
-
-Inspect effective sandbox, parent overrides and MCP grants before relying on isolation. Read-only declarations prove no enforcement. Report unobservable permissions as unknown. Operate within role restrictions.
 
 ## 1. Operating modes
 
@@ -56,11 +59,11 @@ Use `references/routing-matrix.md` for the actual lead-session task selection an
 
 The lead owns goal normalization, scope control, repository-aware lanes, selection and dispatch authority, reconciliation, verification and review, specialist triggers, truthful reporting and stopping.
 
-The lead must not implement beyond that mechanical-edit exception, run heavy verification, silently take over failed lanes, permit self-approval, soften or omit review findings, claim unobserved checks or overlap writers. Save bulky output and report its path. Destructive, publication, deployment, force-push, data-deletion and external effects require explicit user permission.
+The lead must not implement beyond that mechanical-edit exception, run heavy verification, silently take over failed lanes, permit self-approval, soften or omit review findings, claim unobserved checks or overlap writers. Save bulky output and report its path.
 
 ### Dispatch discipline
 
-**One agent per lane.** No duplicate lane or summary-check agent. A lane starts no subagent of its own: the lead owns every dispatch and its task allocation. Independent verification and review inspect the actual artifact under separate authority. Dispatch independent lanes together. Keep inspection and Orchestrator mode's mechanical edit inline.
+**One agent per lane.** Dispatch no duplicate lane and no summary-check agent. A lane starts no subagent of its own: the lead owns every dispatch and its task allocation. Independent verification and review inspect the actual artifact under separate authority. Dispatch independent lanes together. Keep inspection and Orchestrator mode's mechanical edit inline.
 
 **Start a dependent lane as soon as the lanes it consumes finish.** Join lanes behind one barrier only when the next step consumes all of their outputs. A barrier over a lane whose output the next step never reads idles that step for the unrelated lane's whole runtime.
 
@@ -74,25 +77,25 @@ The lead must not implement beyond that mechanical-edit exception, run heavy ver
 
 ## 3. Intake and planning
 
-Before designing implementation or verification, load /alaa-testing-strategy. Before dispatch inspect guidance and affected paths. Settle outcome, acceptance, preserved behavior and irreversible actions. Draw disjoint lanes. `references/verification-and-gates.md` owns intake, lane fields and infrastructure reuse.
+Before designing implementation or verification, load /alaa-testing-strategy. Before dispatch, inspect guidance and affected paths. Settle outcome, acceptance, preserved behavior and irreversible actions. Draw disjoint lanes. `references/verification-and-gates.md` owns intake, lane fields and infrastructure reuse.
 
-Before Stage A evidence dispatch, apply triggered `/alaa-memory-os`: make one bounded recall, verify useful claims in repository truth, and keep active state in workflow. Route unresolved prior-session, ownership and shared-contract questions to `alaa-researcher`. `alaa-explorer` uses memory only when the repository cannot answer. Apply `/alaa-code-intelligence-routing` before code-evidence selection and reuse its result.
+Before Stage A evidence dispatch, apply `/alaa-memory-os` when its trigger holds: make one bounded recall, verify useful claims in repository truth, and keep active state in workflow. Route unresolved prior-session, ownership and shared-contract questions to `alaa-researcher`. `alaa-explorer` uses memory only when the repository cannot answer. Apply `/alaa-code-intelligence-routing` before code-evidence selection and reuse its result.
 
-Every dispatch carries `/alaa-low-noise`. Return findings, verdicts, counts and permitted artifact paths, never transcripts, full diffs or logs. Persist reusable context before returning its path. Use bounded invocations and host-required progress. Do not infer a universal watchdog timeout or per-command narration. After an interruption, reconcile transcript, checkpoint and surviving files before resuming writes.
+Every dispatch carries `/alaa-low-noise`. A lane returns findings, verdicts, counts and permitted artifact paths, never transcripts, full diffs or logs. It persists reusable context before returning its path. Use bounded invocations and the progress reporting the host requires. Do not infer a universal watchdog timeout or a need for per-command narration. After an interruption, reconcile the transcript, the checkpoint and the surviving files before resuming writes.
 
-The router below selects role, dispatch and gate owners. `references/verification-and-gates.md` owns gate ordering and freezing before expensive dispatch.
+`references/verification-and-gates.md` owns gate ordering and freezing before expensive dispatch.
 
 ## 4. Model and role routing
 
-For EVERY dispatch apply task model AND effort allocation and role triggers in `references/routing-matrix.md`; `references/agent-catalog.md` owns authority and output. `references/model-effort-policy.md` owns omission normalization before explicit dispatch and routes capability and control mechanics to /alaa-prompting-guide.
+For EVERY dispatch, apply the model AND effort allocation and the role triggers in `references/routing-matrix.md`. Before explicit dispatch, normalize omitted controls through `references/model-effort-policy.md`. `references/agent-catalog.md` owns role authority and output.
 
 Choose one correctness review profile for a scope. Both standard and deep review routes use the existing `alaa-reviewer`. Record the deep-review trigger without creating a duplicate review lane.
 
-Report missing models and roles as blocked or degraded, never silent fallback. Diagnose context, tool and specification failures before capacity. Dispatch only triggered catalog roles.
+Report a missing model or role as blocked or degraded; never fall back silently. Diagnose context, tool and specification failures before you attribute a shortfall to capacity. Dispatch only catalog roles whose trigger holds.
 
 ## 5. Orchestrator execution pipeline
 
-Orchestrator mode preserves A–E. F requires requested integration and explicit authority before effects. Advisor mode runs no execution stages. Section 1 routes planning artifacts. Stages are logical outcomes, not workflow phases or separate mandatory dispatches. Coalesce compatible actions and evidence in the workflow plan, preserving outcomes, independence and gate economics. Before Stage A dispatch read `references/verification-and-gates.md` for the inherited phase and final review boundary, cadence, triggers and requirements.
+Orchestrator mode keeps every Stage A–E outcome. Stage F needs requested integration, and explicit authority before its effects. Advisor mode runs no execution stage; section 1 routes its planning artifacts. Stages are logical outcomes, not workflow phases or separate mandatory dispatches. Coalesce compatible actions and evidence in the workflow plan while preserving outcomes, independence and gate economics. Before Stage A dispatch, read `references/verification-and-gates.md` for the inherited phase and final review boundary, cadence, triggers and requirements.
 
 | Stage | Owns | Ends when |
 |---|---|---|
@@ -105,7 +108,7 @@ Orchestrator mode preserves A–E. F requires requested integration and explicit
 
 ### Execution profile: size the pipeline to the plan
 
-**Every profile preserves A–E outcomes and required gates at the inherited review boundary.** F is conditional. Local-only completion needs no integration prompt. Record the profile from the finished plan. Escalate on a heavier condition. Do not de-escalate while qualifying evidence persists. `references/routing-matrix.md` owns implementation-role reassessment.
+**Every profile preserves A–E outcomes and required gates at the inherited review boundary.** Record the profile from the finished plan. Escalate to a heavier profile when its condition appears. Do not de-escalate while qualifying evidence persists. `references/routing-matrix.md` owns implementation-role reassessment.
 
 | Profile | Conditions — every one must hold | Shape |
 |---|---|---|
@@ -133,32 +136,48 @@ When generating a goal condition, read `alaa-prompting-guide references/06-invoc
 
 ## 7. Verification and resource rules
 
-Schedule these commands through `references/verification-and-gates.md` Gate economics. Proven aggregate coverage discharges only identical child invocations with the same scope and observer.
-
-Run `python3 scripts/check_agent_contracts.py` after instruction-contract changes. Exit `0` is clean, `1` is findings, and `2` is unavailable proof. Either nonzero exit blocks completion. The script checks source requirements, not live model behavior.
-
-After changing agent instructions, pins, agents, or version, run `python3 scripts/render_agents.py --write`, then `python3 scripts/render_agents.py --check` and `python3 scripts/validate_pack.py`. Exit `0` is clean, `1` is findings or drift, and `2` means unavailable proof. Either nonzero exit blocks completion. Review the generated wrappers against `assets/implementation-contract.md` and `assets/planner-contract.md`.
-
 Before planning or executing checks, load /alaa-testing-strategy. Read its `references/100-test-execution.md` for execution, `references/110-execution-resources.md` for resources and timing, or `references/120-result-classification.md` for result classification and diagnosis. The router below retains legacy loading paths.
+
+Schedule these pack checks through `references/verification-and-gates.md` Gate economics. Proven aggregate coverage discharges only identical child invocations with the same scope and observer.
+
+- After instruction-contract changes, run `python3 scripts/check_agent_contracts.py`. It checks source requirements, not live model behavior.
+- After changing agent instructions, a contract asset, pins, agents, or version, run `python3 scripts/render_agents.py --write`, then `python3 scripts/render_agents.py --check` and `python3 scripts/validate_pack.py`. Review the generated wrappers against `assets/implementation-contract.md` and `assets/planner-contract.md`.
+
+For each check, exit `0` is clean, `1` is findings or drift, and `2` means unavailable proof. Either nonzero exit blocks completion.
 
 ## 8. Safety and authority
 
 - Repository-local, reversible edits inside declared scopes may proceed in orchestrator mode.
 - Ask before destructive Git operations, force pushes, history rewrites, deployment, publishing, production access, data deletion, credential changes, shared-system configuration changes, or irreversible migrations.
 - Installation and updates require explicit user authorization for named target paths; activation grants none.
-- Agent files own code-intelligence grants. Dispatches do not. `references/agent-catalog.md` assigns CodeGraph/Serena read/both/neither. `/alaa-code-intelligence-routing` owns rationale. Change grants here, not `~/.claude/agents`, because reinstall restores pack grants.
+- Agent files own code-intelligence grants; dispatches do not. `references/agent-catalog.md` assigns each role its CodeGraph and Serena grants. `/alaa-code-intelligence-routing` owns the rationale. Change grants in this pack, not in `~/.claude/agents`, because a reinstall restores the pack grants.
 - Local commits follow the main instruction file's local-commit rule through `alaa-workflow references/workspace-and-integration.md`. Do not wait for boundary review or request an already-granted permission again. Every external or destructive effect needs its own explicit authority. Never add Co-Authored tags.
 - Never expose secrets in prompts, logs, artifacts, or reports.
 
 ## 9. Stop conditions
 
-Stop successfully only with evidenced acceptance, passing mandatory gates and final candidate scope and proof under repository policy and /alaa-testing-strategy, clean final diff scope, completed or explicitly skipped documentation, and the final reusable-context gate reporting disposition (persisted, deferred, rejected or absent). Report requested integration accurately as authorized, declined or blocked. Local-only completion needs no integration prompt.
+Stop successfully only when all of these hold:
 
-Stop and report partial or blocked status after the same lane or cause blocks twice, blockers or majors survive two fix cycles, or verification stays flaky, timed-out, contaminated or environment-blocked. Also stop for scope beyond the goal, user-owned irreversible or product decisions, or no safe path.
+- acceptance is evidenced;
+- mandatory gates pass, and the final candidate's scope and proof satisfy repository policy and /alaa-testing-strategy;
+- the final diff scope is clean;
+- documentation is completed or explicitly skipped;
+- the final reusable-context gate reports its disposition: persisted, deferred, rejected or absent.
+
+Report requested integration accurately as authorized, declined or blocked. Local-only completion needs no integration prompt.
+
+Stop and report partial or blocked status when any of these occurs:
+
+- the same lane or cause blocks twice;
+- blockers or majors survive two fix cycles;
+- verification stays flaky, timed out, contaminated or environment-blocked;
+- the work needs scope beyond the goal;
+- an irreversible or product decision belongs to the user;
+- no safe path remains.
 
 ## 10. Failure discipline
 
-Reviewers only judge. Verifiers only execute evidence commands. Researchers only retrieve. Before product edits, load /alaa-testing-strategy `references/120-result-classification.md` for classification and repair eligibility. Report adversarial findings without another fix loop. Name only the lane's matching clean-code skill.
+Reviewers only judge. Verifiers only execute evidence commands. Researchers only retrieve. Before product edits, load /alaa-testing-strategy `references/120-result-classification.md` for classification and repair eligibility. Report adversarial findings without another fix loop. In a dispatch, name only the lane's matching clean-code skill.
 
 ## Direct references
 
