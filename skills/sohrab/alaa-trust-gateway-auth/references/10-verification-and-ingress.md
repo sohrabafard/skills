@@ -113,7 +113,7 @@ gateway source at `0ffc1e5` and `df5ba2d` (`txn.jwt_accepted` in
 |---|---|
 | no bearer | forwards it; injects no trusted header; returns no error |
 | a bearer that passes every check a protected route applies | injects the trusted headers exactly as on a protected route |
-| a bearer that fails any check (expired, bad signature or algorithm, a TOTP proof sent as the bearer, bad `sub` or `rol`, a missing required claim) | drops the verdict; injects no trusted header; clears the token's claims from its log and from the request-time checker; forwards the request; returns no error |
+| a bearer that fails any check (expired, bad signature or algorithm, a TOTP proof sent as the bearer, bad `sub` or `rol`, a missing required claim) | drops it: injects no trusted header, processes no TOTP proof, clears the token's claims from its log and from the request-time checker, forwards the request, returns no error. A good signature on an expired token is a dropped token |
 
 **"No accepted bearer" is the one guest condition in this skill.** It covers a
 request with no bearer and a request whose bearer was dropped. Where this skill
@@ -123,10 +123,6 @@ its branch condition is "no trusted `X-Project-Id` arrived".
 **This weakens no protected route.** A path off the public list keeps every `401`
 in "Verification order on a protected route". Optional applies only to a path
 written into the public list.
-
-**A dropped bearer never becomes identity.** No rule may project a claim, attribute
-a log line, or process a TOTP proof from a token that `txn.jwt_accepted` did not
-admit. A good signature on an expired token is a dropped token.
 
 **The gateway deletes `Authorization` only on a protected route.** On a public path
 the header reaches the backend unchanged, accepted or not (gateway
@@ -145,8 +141,8 @@ describe it as live; read the gateway template before relying on it.
   presented bearer.
 - It sets none for a request with no bearer, none when it accepted the bearer, and
   none on a protected path, which answers `401` instead.
-- Only the gateway asserts it on those responses. A backend's own copy must not
-  reach the client there.
+- Only the gateway asserts it on a public route: it deletes a backend-sent copy on
+  every public-route response, marked or not.
 - The marker reports the token, never the request. The backend's status and body
   pass through unchanged, and a client must not treat the response as failed.
 
@@ -441,17 +437,16 @@ exception extends to another service.
   batch tenant. The field name and value form are owned by
   `alaa-services-contract references/25-end-to-end-flow-and-boundaries.md` ("WA
   route family").
-- **Exception 1, the field is always sent.** The client puts it on every envelope,
-  token or not, because a dropped bearer turns the batch into a guest batch after
-  the client has sent it.
+- **Exception 1, the client sends the field with a token too.** That contract file
+  owns the rule.
 - **Exception 2, a bad guest batch is discarded, not answered with `400`.** A guest
   batch whose project is absent or not in the canonical form is discarded and
   counted, and the response stays `202`, because Vector acknowledges intake before
   it validates. Do not expect `TENANT_CONTEXT_MISSING` here.
 - **Accepted risk, guests only.** Anyone who reaches the route can write guest rows
   under any project id. The owner accepted that for an anonymous analytics write.
-  The value authorizes nothing, and every WA read still requires the injected
-  `X-Project-Id`, so a forged write never becomes a read.
+  Every WA read still requires the injected `X-Project-Id`, so a forged write never
+  becomes a read.
 - **A guest batch carries no trusted actor and no trusted scope.** WA ingest takes
   the user id only from `X-User-Id`. `identity.user_logged_in` is a client
   assertion: it never creates, implies or substitutes a trusted user id. A row with

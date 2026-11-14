@@ -28,6 +28,11 @@ name such as `X-User-Mobile`, a purpose string.
 
 ## Canonical codes
 
+The gateway returns its token codes, `AUTH_MISSING_TOKEN` through
+`AUTH_MISSING_REQUIRED_CLAIM`, on a protected route only. On a public path a missing
+or failing bearer is not a deny; `references/10-verification-and-ingress.md` ("A
+public path takes an optional bearer") owns that case.
+
 | Code | HTTP | Applies when |
 |---|---|---|
 | `AUTH_MISSING_TOKEN` | 401 | a protected route carries no usable bearer token |
