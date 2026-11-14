@@ -97,7 +97,7 @@ Classify the task first:
 - **New feature slice:** design boundaries, state ownership, error and empty states, and tests before coding.
 - **Local refactor:** preserve public behaviour, keep the diff focused.
 - **Review:** rank findings by severity, one repair each.
-- **Repo-wide normalization:** staged plan, explicit approval first.
+- **Repo-wide normalization:** write a staged plan, and get explicit approval for it before the first edit.
 
 Before any refactor beyond a single local slice, inventory what the change can break. Preserve each item unless the task allows a break:
 

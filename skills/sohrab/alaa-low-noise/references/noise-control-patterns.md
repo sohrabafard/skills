@@ -28,13 +28,11 @@ Prefer:
 - `rg -n -C 3 "pattern" <paths>` when the surrounding lines decide the answer.
 - `rg -c "pattern" <paths>` or a file list when the question is "how widespread is this."
 - a changed-file list instead of a full folder dump.
-- one well-chosen query instead of several exploratory ones.
 
 Avoid by default:
 
 - full-file dumps to prove a file was inspected;
 - full directory trees, especially of generated output;
-- Re-reading without a new reason. Your own edit, a failed check, or a changed hypothesis qualifies. Confirming content already in context does not qualify.
 - Pulling a large result into context when a count, path, or slice answers the question. Large results are re-read on every later turn.
 
 ## Runtime notes: Claude Code and Codex
@@ -53,8 +51,6 @@ Discovery mostly uses the shell. Express bounds in each command:
 - Scope every search to real paths.
 - Keep `-C` context small.
 - Pipe through `head` or `tail` instead of emitting whole files.
-
-Route Codex-specific sandbox, refresh, locking, quoting, and command-length failures to `/alaa-codex-runtime-ops`. It has no Claude Code equivalent. Afterward, retry only essential failed work, serially and with bounded output.
 
 ## Diff and reporting patterns
 
@@ -75,8 +71,6 @@ When validation or diagnostics are long, keep the bulk out of both the transcrip
 2. Redirect the full command output there.
 3. Read back only the tail or the failing slice.
 4. Report the key outcome and the path.
-
-Keep durable artifacts only when they help the user inspect or resume. Remove throwaway artifacts before finishing when cleanup is safe.
 
 ## Bash notes
 
@@ -99,7 +93,6 @@ Notes:
 
 ## When the user wants raw output
 
-- Obey explicit requests for full logs, full diffs, or full file contents.
 - State whether the output is file-local or repository-wide.
 - Identify the most relevant section first.
 - Keep unrelated raw outputs separate.
@@ -108,4 +101,3 @@ Notes:
 
 - The `rg`, `git`, and Bash examples describe common cases, not portable guarantees. Before scripting them, verify flags and tool names against the installed shell and versions.
 - Claude Code guidance describes general file and search operations. Exact tool parameters change between releases.
-- `/alaa-codex-runtime-ops` is Codex-only. Do not look for a Claude Code counterpart.

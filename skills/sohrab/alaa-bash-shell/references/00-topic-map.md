@@ -25,7 +25,7 @@ Use this file first. Then load only the smallest reference file that answers the
 - **Tests, CI, or pre-commit**
   - Read `testing-and-ci.md`
 
-- **Reusable code patterns**
+- **Copying or adapting a reusable code pattern**
   - Read `patterns-and-examples.md`
 
 - **Version-sensitive flags or current official guidance**

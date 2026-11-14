@@ -19,19 +19,20 @@ fixes.
 
 **Consumer surfaces, when the capability cells allow:** iterate every accessible `docs/CONSUMERS.md` row; audit
 inaccessible consumers from their architecture documents and registry rows only, and say so per consumer. An
-audit that silently skipped a consumer is worse than no audit. In Claude Code, fan per-repository sweeps out to
-Explore or general-purpose subagents, one repository or one dimension per lane, under `/alaa-low-noise`
-(`$alaa-low-noise`) discipline; in Codex, run the lanes sequentially.
+audit that silently skipped a consumer is worse than no audit. In Claude Code, delegate a consumer's sweep only
+when the audit covers more than one accessible consumer and that sweep needs more than a handful of file reads.
+Then fan it out to Explore or general-purpose subagents, one repository or one dimension per lane, under
+`/alaa-low-noise` discipline. A lane costs a fresh context and a summary handoff that can drop a finding. Audit a
+consumer inline when a handful of file reads cover it. In Codex, run the lanes sequentially.
 
 ## Dimensions
 
 1. **Correctness and data loss:** transactions, outbox/receipt/ack ordering, migration reversibility
    (up-down-up), retries and terminal states, run-twice idempotency proof.
 2. **Security and privacy:** the trust boundary, authorization and TOTP, tenant isolation, secrets, PII in logs
-   or labels, SSRF and provider or webhook exposure. Route verdicts to `/alaa-security-review`
-   (`$alaa-security-review`).
+   or labels, SSRF and provider or webhook exposure. Route verdicts to `/alaa-security-review`.
 3. **Concurrency and reliability:** owned bounded workers, cancellation, shutdown ordering, retry storms, pool
-   budgets, deadlines. Doctrine is `/alaa-reliability-sla` (`$alaa-reliability-sla`).
+   budgets, deadlines. Doctrine is `/alaa-reliability-sla`.
 4. **Contracts and governance:** drift among code, docs, tests and generators; error, metric, env, API and
    migration vocabulary drift; capability-matrix violations; `contracttest` holes, meaning a `CONTRACTS.md` shape
    with no assertion; and decisions promised but unshipped.
@@ -41,8 +42,7 @@ Explore or general-purpose subagents, one repository or one dimension per lane, 
    cache pressure, and the honest gaps in load, HA, chaos and capacity proof.
 7. **Generated, deploy and CI truth:** regeneration-only changes, bidirectional API coverage, rendered manifests,
    real runner status.
-8. **Clean code**, citing P-numbers from `/alaa-golang-clean-code-principles`
-   (`$alaa-golang-clean-code-principles`).
+8. **Clean code**, citing P-numbers from `/alaa-golang-clean-code-principles`.
 
 **Per consumer**, when permitted: kit-surface re-implementation — hand-built envelopes, raw trusted-header reads,
 local readiness rendering, diverging outbox/job/receipt DDL, `gen_random_uuid()` defaults, scattered `os.Getenv`,
@@ -74,6 +74,5 @@ ready" are not provable from static review — name the proof level reached and 
    matrix where cross-consumer analysis was permitted, the validation and readiness boundary, and a follow-up
    ledger in which every finding maps to exactly one action — kit change request, baseline proposal, drift note,
    authorized fix, or a remediation prompt named
-   `YYYY-MM-DD-audit-fix-<consumer>-<slug>.md` beside the report and authored with `/alaa-prompting-guide`
-   (`$alaa-prompting-guide`).
+   `YYYY-MM-DD-audit-fix-<consumer>-<slug>.md` beside the report and authored with `/alaa-prompting-guide`.
 2. **Registry corrections** where the audit proved a row stale, within the capabilities you hold.

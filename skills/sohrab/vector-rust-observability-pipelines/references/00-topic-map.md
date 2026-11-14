@@ -44,6 +44,6 @@ Both honour `0` clean, `1` findings, `2` could not run, and both take `--help`.
 | How should this be tested, in general | `/alaa-testing-strategy` |
 | Is this trust boundary or credential path safe | `/alaa-security-review` |
 | Kubernetes and Helm platform mechanics | `/alaa-k8s-helm`, and `/caas-arvan-kuber` for Arvan CaaS |
-| How do I plan or run a multi-agent change | `/alaa-cc-orchestrator`, or `/alaa-codex-orchestrator` in Codex |
-| Which model, and how much thinking | `/alaa-prompting-guide` `references/50-effort-and-thinking.md` |
+| How do I plan or run a multi-agent change, or which model and effort does a task get | `/alaa-cc-orchestrator`, or `/alaa-codex-orchestrator` in Codex |
+| What can a model and an effort level do | `/alaa-prompting-guide` `references/50-effort-and-thinking.md` |
 | The ten-point quality bar | `/alaa-project-constitution` `references/quality-bar.md` |

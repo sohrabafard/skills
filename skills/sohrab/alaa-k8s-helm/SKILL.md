@@ -1,6 +1,6 @@
 ---
 name: alaa-k8s-helm
-description: Unified Kubernetes, Helm, OpenShift, and kubectl or oc skill for generating, refactoring, validating, explaining, upgrading, and debugging Helm charts, Kubernetes manifests, and OpenShift workloads. Use it when the task involves Helm 3 or 4, Kubernetes YAML, kubectl or oc commands, Routes, SCCs, CRDs, rollout safety, service exposure, storage, or networking, including on a managed namespace platform. Do not use it for Docker-only, Terraform-only, CI-only, or cloud work that does not materially depend on Kubernetes, OpenShift, or Helm. Do not use it for ArvanCloud CaaS platform facts, the Arvan namespace-only API surface, or Arvan alias-versus-canonical namespace RBAC identity, which caas-arvan-kuber owns.
+description: Unified Kubernetes, Helm, OpenShift, and kubectl or oc skill for generating, refactoring, validating, explaining, upgrading, and debugging Helm charts, Kubernetes manifests, and OpenShift workloads. Use it when the task involves Helm 3 or 4, Kubernetes YAML, kubectl or oc commands, Routes, SCCs, CRDs, rollout safety, service exposure, storage, or networking, including on a managed namespace platform. Do not use it for Docker-only work (use /alaa-docker-production), CI-only work (use /alaa-gitlab-ci-cd), Terraform-only work, or cloud work that does not materially depend on Kubernetes, OpenShift, or Helm. Do not use it for ArvanCloud CaaS platform facts, the Arvan namespace-only API surface, or Arvan alias-versus-canonical namespace RBAC identity, which caas-arvan-kuber owns.
 ---
 
 # Alaa K8s + Helm

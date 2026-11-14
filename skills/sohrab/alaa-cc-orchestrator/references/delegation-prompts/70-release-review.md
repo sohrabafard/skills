@@ -9,7 +9,7 @@
 <manifests><absolute manifest and lockfile paths, the project's own license, and its distribution model></manifests>
 <audit_tooling><the repository's existing audit, license, and lock-verification commands, or none available></audit_tooling>
 <action_safety>Read-only. Never upgrade, pin, add resolutions or overrides, regenerate a lockfile, edit a manifest, or install anything.</action_safety>
-<output>First line exactly VERDICT: CLEAR | VERDICT: CLEAR-WITH-CONDITIONS | VERDICT: BLOCK; then FINDINGS with package@version, severity, category, evidence, remediation; TRANSITIVE IMPACT; LOCKFILE INTEGRITY; UNVERIFIED CLAIMS; EVIDENCE INSPECTED.</output>
+<output>Use the role's native output contract, starting with its first-line VERDICT.</output>
 ```
 
 ## Release guardian

@@ -10,7 +10,7 @@ capability that kit would have to own, and the last section states the design te
 whether owning it is possible at the performance level Fiber is chosen for.
 
 Kit governance, the phase gate, and the change-request procedure are owned by
-`/alaa-go-chi-development` (`$alaa-go-chi-development`). Nothing here authorizes kit work.
+`/alaa-go-chi-development`. Nothing here authorizes kit work.
 Before relying on a register row or changing a cited Fiber default, re-verify current kit source and the
 consumer's resolved Fiber tag through `SOURCES.md`; this dated inventory is not live-runtime proof.
 
@@ -91,8 +91,7 @@ acceptance criteria rather than aspirations:
 - **`errkit`, `readykit` and the trust contract are shared at the contract level even where the
   implementation differs.** The envelope shape, the code registry semantics, the readiness severity
   model and the trust context's meaning are platform contracts owned by `/alaa-services-contract`
-  (`$alaa-services-contract`) and `/alaa-trust-gateway-auth` (`$alaa-trust-gateway-auth`). A Fiber
-  kit implements them; it does not redefine them.
+  and `/alaa-trust-gateway-auth`. A Fiber kit implements them; it does not redefine them.
 - **Every surface carries a benchmark against its chi equivalent.** The kit exists to buy
-  performance. A surface that does not measurably do so should adapt the chi implementation through
-  `adaptor` instead, and the register should record that it did.
+  performance. A surface that does not measurably do so adapts the chi implementation through
+  `adaptor` instead, and the register records that it did.

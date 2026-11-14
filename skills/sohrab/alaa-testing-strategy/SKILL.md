@@ -63,7 +63,7 @@ That second property and the rule against testing one behaviour at three layers 
 - **A changed file is not a reason for a test; a changed decision is.**
 - **Always owed, whatever the conditions above say:** every control `/alaa-security-review` names, every reported defect's regression test, and every boundary where untrusted input is parsed — obligations 1, 6 and 9 in `references/60-coverage.md` — plus the per-surface floor under *No shipped surface is exempt*. A check upstream never makes a mode unreachable across a trust boundary, because the downstream check is what runs when the upstream one is bypassed.
 
-`references/90-test-economy.md` lists the unowed kinds with what the consumer tests instead.
+When a candidate is not owed a test, read `references/90-test-economy.md` for what the consumer tests instead.
 
 Before adding a discretionary test, review, specialist, proof tool or gate beyond the declared cadence or repository requirements, state its concrete uncovered risk and why existing evidence is insufficient. Without that answer, do not add it. Required checks remain required. Record the answer in the plan's check list when admitted, otherwise in the existing evidence owner.
 
@@ -117,7 +117,7 @@ Six levels, named so a claim's strength can be stated in one word across every s
 
 A proof level says how strong one claim is. A **tier** says how much of the suite has earned the right to run at this moment. The two are independent. Conflating them produces a pipeline that runs the whole suite four times against a tree that changed once.
 
-These scope definitions choose check breadth, not review timing. `alaa-codex-orchestrator` and `alaa-cc-orchestrator` `references/verification-and-gates.md` own the declared phase/final cadence, review authority and scheduling. Pass the workflow's whole-engagement boundary into nested orchestration.
+These scope definitions choose check breadth, not review timing. `alaa-codex-orchestrator` and `alaa-cc-orchestrator` `references/verification-and-gates.md` own the declared phase/final cadence, review authority and scheduling. When you dispatch nested orchestration, pass it the workflow's whole-engagement boundary, so the nested run does not treat its own end as the final candidate.
 
 | Tier | What runs | Who runs it | When |
 |---|---|---|---|
@@ -217,44 +217,9 @@ Stop and report blocked when any one of these holds:
 - The question is framework idiom or assertion syntax: which matcher to call, how to name the file, which
   helper the runner already provides. The per-language skill owns that.
 - No test is being designed, reviewed or repaired, and no validation command, resource decision, timing comparison or result claim is involved.
-- The question is fault injection, a security control, an envelope or code, or a Postman request test. The
-  routing table below names each owner.
+- The question is fault injection, a security control, an envelope or code, or a Postman request test.
+  `references/00-topic-map.md` *Owned by another skill* names each owner.
 
 ## Reference routing
 
-Before reading any reference, read `references/00-topic-map.md`; it names the condition under which each reference is read.
-
-## What this skill does not own
-
-- `/alaa-reliability-sla` owns fault injection doctrine, the failure modes worth injecting at a dependency boundary, the per-mechanism evidence table, load testing at saturation, production experiments, and the rule that an untested degraded path is a broken path (`references/80-verification.md`). This skill owns where those tests sit in the plan, at which layer, and at which proof level.
-- `/alaa-security-review` owns which controls must be security-tested and its own minimum negative tests for credentials and cryptography (`references/50-credentials-and-cryptography.md`). This skill generalises the method those tests are built on. It does not restate them. It names no security control.
-- `/alaa-services-contract` owns every envelope, code, header, field name, and value a contract test asserts against. Assert what that skill declares and report drift, rather than asserting the drift.
-- `/alaa-postman-collections` owns API-level request tests, their five minimum assertions, examples, and scripts. This skill owns the layer that work sits at and the rule that no request is exempt.
-- `/alaa-observability-soc` owns the failure-mode enumeration table and the signal, query, and alert each mode needs (`references/10-signal-model.md`). This skill consumes the same enumeration to derive tests. Neither skill maintains a second list.
-- `/alaa-controlled-ops` owns its own package and adopter release gates and its boundary-check script. This skill owns the proof-level vocabulary those gates report in.
-- The per-language skills and the vendored `/golang-testing` own framework idiom, assertion syntax, fixture and mock libraries, table-driven form, and runner flags. This skill owns the decision. It names no framework construct.
-- `/alaa-cc-orchestrator` and `/alaa-codex-orchestrator` own role authority, observer independence, allocation and phase/review scheduling. `/alaa-workflow` owns durable execution state, write ownership and resume. Generic execution, resources, runners and classification remain in this skill.
-- `/alaa-prompting-guide` owns model/effort capability evidence and runtime mechanics. The runtime orchestrator owns actual task allocation for every authority role. This skill names no model.
-
-## Anti-patterns
-
-- asserting only the status or error code on a rejection path, which passes against an implementation that rejects after doing the work;
-- one assertion at the outermost layer standing in for a control implemented at three, which reports two missing layers as present;
-- the same behaviour tested at unit, integration, and end-to-end level, which buys one confidence and charges three maintenance obligations;
-- a mock asserting the sequence of calls where the outcome was observable, which fails on every behaviour-preserving refactor and trains the team to update tests without reading them;
-- a hand-written double of a dependency nobody owns, with no parity suite, which encodes a belief about the vendor rather than the vendor's behaviour;
-- reporting an in-memory or embedded-engine result as though the production engine had run, which is the specific way a query, migration, index, constraint, or isolation defect reaches production;
-- retrying a failing test until it passes, which converts an intermittent product defect into an invisible one;
-- quarantining a test with no owner and no deadline, which is deletion with extra steps and a lingering claim of coverage;
-- a coverage percentage cited as validation, when the number rises by executing code that asserts nothing;
-- writing the happy path first and stopping there, which produces a suite that proves only that the routes are routed;
-- a test that sleeps to wait for a condition, which is a flake on a loaded machine and a permanent tax on every run;
-- re-running the full suite, the race detector, or the acceptance set against a tree that has not changed since the last run, which charges the whole cost for no new information and produces the pass that is hardest to distinguish from a cached one;
-- an implementing lane running the exhaustive tier on its own work, which is both the wrong authority and the wrong moment;
-- repairing the product in response to a shell, container-runtime, permission, or stale-cache failure that was never classified;
-- deleting or weakening an assertion so a test can run in a constrained environment, instead of recording the level not reached and the blocker;
-- a consumer test re-proving framework, kit, package, or vendor behaviour, which passes against every implementation the consumer can ship;
-- a test for a failure that cannot reach this project's code under *Reachable failure*, which charges its cost forever and defends nothing;
-- an engine, container, migration, or application boot created per test, which multiplies the suite's cost by its test count;
-- a test reachable only through the whole-suite command, which makes every change pay for the whole suite;
-- a build, compile, type check, render, or image produced twice in one pass, which charges the build again for no new information.
+Before reading any reference, read `references/00-topic-map.md`; it names the condition under which each reference is read. Before you assert a contract value, design fault injection, test a security control or write a request test, read its *Owned by another skill* section. When you design, review or execute a test, a suite or a test plan, read `references/10-what-makes-a-test.md` *Anti-patterns*.

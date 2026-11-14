@@ -10,7 +10,7 @@
 <design_system><design tokens, focus-style resets, and motion conventions in force></design_system>
 <locales><shipped locales, and whether an RTL locale is among them></locales>
 <action_safety>Read-only. Never fix markup, styles, or components, and never pass a check that requires rendered evidence you were not given.</action_safety>
-<output>First line exactly VERDICT: ACCESSIBLE | VERDICT: ACCESSIBLE-WITH-GAPS | VERDICT: BLOCK; then FINDINGS with file:line, severity, the barrier, who it blocks, concrete fix; RTL AND LOCALE NOTES; NOT ASSESSED; EVIDENCE INSPECTED.</output>
+<output>Use the role's native output contract, starting with its first-line VERDICT.</output>
 ```
 
 ## Browser QA

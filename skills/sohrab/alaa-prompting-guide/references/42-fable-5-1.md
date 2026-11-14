@@ -1,7 +1,7 @@
 # Claude Fable 5.1
 
-Use for current Fable prompting. `references/40-fable-5.md` preserves the
-older generation's guidance for historical reference only. Read the structured Claude
+Historical reference only. `references/43-fable-5-2.md` owns current Fable prompting, and nothing here authorizes a current pin. `references/40-fable-5.md` preserves the
+older generation's guidance. Read the structured Claude
 policy before selecting a profile; availability and a vendor ranking do not prove a
 workload-specific advantage. The runtime orchestrator chooses Fable only from actual task evidence; a difficult role title grants no automatic choice. No source claim proves local superiority.
 

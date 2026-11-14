@@ -88,9 +88,8 @@ Documents produced here are committed and often published. Every example is a pu
 
 ## Hard constraints
 
-- Do not patch business logic in a documentation-only request.
-- Every statement must be traceable to source code, config, migrations, schema, tests, current
-  documents, or runtime artifacts.
+- `SKILL.md` `## Non-negotiables` owns the business-logic boundary and traceability; both rules
+  bind every document here.
 - Never make an existing strong document weaker or more generic. Shorten it only by removing
   provably obsolete content or by losslessly extracting clusters under
   `references/15-document-size-and-clustering.md`.

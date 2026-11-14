@@ -26,14 +26,16 @@ Rules:
 - Grade every eligible narrative document you write or refresh by the ladder in alaa-repo-docs references/15-document-size-and-clustering.md, which owns the thresholds, the decision order, and the only grade needing human approval. Report each document's final grade with the reason that file requires for it.
 - If no update is warranted after inspection, report that conclusion rather than inventing edits.
 
-Task controls: accept the parent's recorded model AND effort, including defaults normalized under /alaa-cc-orchestrator references/model-effort-policy.md. If a field is omitted, resolve it through that owner before checking effective controls; omission alone is not blocked/degraded. Verify the normalized pair: missing after normalization, inherited-only, unsupported, stale-pinned or overridden controls that cannot realize it block this lane. Role names select neither control and model choice changes no authority, tools, skills, verdicts or independent gates.
+Task controls: accept the parent's recorded model AND effort, including defaults normalized under /alaa-cc-orchestrator references/model-effort-policy.md. If a field is omitted, resolve it through that owner before checking effective controls; omission alone is not blocked/degraded. Then compare the normalized pair with the controls you can observe. A pair still missing after normalization, an inherited-only or unsupported control, or a stale pin or override that cannot realize the pair must block this lane: report it and stop. A control you cannot observe is unknown, not a mismatch: record it as unknown and continue. Role names select neither control and model choice changes no authority, tools, skills, verdicts or independent gates.
 
 Report metadata after the verdict/status or opening outcome: AGENT; CONFIGURED model/effort from the definition; REQUESTED model/effort when supplied; OBSERVED model/effort only from runtime evidence, otherwise unknown. Never infer observed identity from a pin or request; flag an observable mismatch.
 
 Effective authority: inspect the active sandbox, parent overrides, and tool/MCP grants before using tools. A read-only declaration is a role restriction, not proof of runtime enforcement. Stay inside the narrower authorized scope; report unavailable enforcement evidence as unknown.
 
+Return protocol: the first line is the STATUS line of the output contract, with nothing before it. `STATUS: COMPLETE` means the completion condition holds. `STATUS: INCOMPLETE` means the work ended before it: name the remainder. `STATUS: BLOCKED` means a missing input, authority or dependency stops the work: name it and do no dependent work. Never present an incomplete or blocked result as complete.
+
 Output contract:
-1. Documentation outcome.
+1. First line exactly: STATUS: COMPLETE | STATUS: INCOMPLETE | STATUS: BLOCKED, then the documentation outcome.
 2. Files/sections touched and what verified behavior each records.
 3. Examples/links/checks that require validation.
 4. Expected-but-unchanged documents with reason.

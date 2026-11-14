@@ -53,13 +53,26 @@ The manifest lists the executable agents managed by this pack.
 | `alaa-dependency-auditor` | read-only | Dependency added, upgraded, removed, replaced, or lockfile drift | `CLEAR`, `CLEAR-WITH-CONDITIONS`, `BLOCK` |
 | `alaa-accessibility-reviewer` | read-only | New or changed user-visible interface | `ACCESSIBLE`, `ACCESSIBLE-WITH-GAPS`, `BLOCK` |
 | `alaa-browser-qa` | workspace-write | User-visible web flow, frontend regression, navigation, form, visual behavior | `PASS`, `FAIL`, `BLOCKED`, `FLAKY` |
-| `alaa-performance-profiler` | workspace-write | Measurable latency, throughput, CPU, memory, or query regression | Verdict against declared baseline and budget |
+| `alaa-performance-profiler` | workspace-write | Measurable latency, throughput, CPU, memory, or query regression | `WITHIN-BUDGET`, `OVER-BUDGET`, `INCONCLUSIVE` against the declared baseline and budget |
 | `alaa-observability-reviewer` | read-only | New runtime failure paths, jobs, distributed calls, retries, degraded operation | `PASS`, `PASS-WITH-GAPS`, `BLOCK` |
 | `alaa-release-guardian` | read-only | CI/CD, container, config and env, dependencies, packaging, deploy and release | `READY`, `READY-WITH-CONDITIONS`, `NOT-READY` |
 
 The `Subject` column orients and decides nothing: it names what a gate is about so the roster can be
 scanned, and it is deliberately shorter than the condition that fires the gate. `references/routing-matrix.md` owns every trigger, and a gate is fired from that file alone — a
 roster line read as a trigger under-fires, because the conditions it leaves out are still conditions.
+
+## Return header
+
+Every managed role starts its report with one fixed line, and the lead routes on that line before it reads anything else.
+
+| First line | Written by | Lead action |
+|---|---|---|
+| `VERDICT: <token>` | A gate role that judged its scope; the tokens are in the tables above | Route by the token under `verification-and-gates.md` |
+| `STATUS: COMPLETE` | An evidence, planning, implementation, verification or documentation role whose completion condition holds | Consume the report; for the verifier, read the per-command classifications, because `COMPLETE` is not a pass |
+| `STATUS: INCOMPLETE` | The same roles, when work ended before the completion condition | Read the named remainder, then continue the same agent or reassign the remainder; never accept the lane |
+| `STATUS: BLOCKED` | Any role, when a required dispatch input, an authority or a dependency is missing, or the task controls block the lane | Supply the named input to the same agent, correct the controls, or reclassify the lane; a gate that returned it has judged nothing |
+
+A missing report, `STATUS: BLOCKED` or `STATUS: INCOMPLETE` blocks acceptance of that lane even without findings. Each gate report ends with `NOT ASSESSED`; a verdict covers only the inspected scope, so an entry there that touches the declared scope leaves that part ungated. The role templates under `delegation-prompts.md` name each role's required dispatch inputs. `alaa-browser-qa` also has `VERDICT: BLOCKED`, which reports an observed environment block, not a missing input. A verdict token that is neither a pass nor a fail (`INCONCLUSIVE`, `FLAKY`, `VERDICT: BLOCKED`) leaves its gate open: treat the gate as not passed, then resolve the named gap or report it to the user. A finding refuter gives no verdict: it writes a `STATUS:` line and then one line for each disputed item.
 
 ## External companion admission
 

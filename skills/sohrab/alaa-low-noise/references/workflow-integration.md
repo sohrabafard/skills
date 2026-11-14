@@ -42,5 +42,5 @@ Route runtime-specific delegation authorization and capability through `/alaa-pr
 
 ## Caveats
 
-- Delegation polarity differs by model family and generation. Before assuming a cap or authorization is the right correction, read `references/model-output-profiles.md`.
+- Delegation polarity differs by model family and generation. Before assuming a cap or authorization is the right correction, read `alaa-prompting-guide references/06-invocation-and-composition.md`; it owns the polarity rule.
 - The `artifacts/` and `reports/` paths are fallbacks only. Repository conventions and any active workflow artifact family take precedence.

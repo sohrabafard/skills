@@ -6,7 +6,7 @@ task in front of you. Do not read every file.
 | Open | When the task involves |
 |---|---|
 | `pipeline-authoring/10-pipeline-creation-and-paths.md` | pipeline creation rules or path selection |
-| `pipeline-authoring/20-authoring-defaults.md` | job authoring defaults |
+| `pipeline-authoring/20-authoring-defaults.md` | writing or changing a job or a pipeline: its stages, `workflow:rules`, `needs:`, shared `default:` setup, a job split, or a job script |
 | `pipeline-authoring/30-reuse-composition.md` | hidden jobs, includes, components or child pipelines |
 | `pipeline-authoring/30-environments-and-rollback.md` | deployment environment recording or deployment rollback |
 | `pipeline-authoring/40-child-pipelines-and-checklist.md` | child pipelines or multi-file layout |
@@ -28,10 +28,10 @@ task in front of you. Do not read every file.
 | `runner-shell-and-kubernetes.md` | runner architecture: executor choice, container-hosted manager bootstrap, persistent configuration, authentication-token source and TLS trust, `config.toml`, Helm `values.yaml` versus embedded TOML, RBAC and namespaces, restricted clusters, `concurrent`, distributed cache, `image_pull_secrets` and `helper_image` |
 | `container-build-strategies.md` | choosing a build path: rootless BuildKit, Docker-in-Docker, a shell runner against a host daemon, Podman or Buildah, and registry cache wiring |
 | `security-and-hardening.md` | runner isolation, credential handling, merge-request and fork exposure, pull policy, privileged mode, and credentials that outlive a job |
-| `validation-and-debugging/10-static-validation-and-checkers.md` | the validation ladder or bundled checker limits |
+| `validation-and-debugging/10-static-validation-and-checkers.md` | choosing the cheapest check that answers the question, or what a bundled checker can and cannot see |
 | `validation-and-debugging/40-gate-eligibility.md` | deciding which findings are errors, warnings, notes, or gate-eligible |
 | `validation-and-debugging/20-live-validation.md` | merged-configuration CI Lint or project-context validation |
-| `validation-and-debugging/30-failure-class-triage.md` | choosing the failure-class route |
+| `validation-and-debugging/30-failure-class-triage.md` | a CI failure whose class (configuration, runner or runtime) is not yet known |
 | `validation-and-debugging/30-configuration-and-rule-failures.md` | YAML/schema problems or missing/duplicated pipelines |
 | `validation-and-debugging/40-runner-and-runtime-failures.md` | runner placement, executor startup or job runtime failures |
 | `validation-and-debugging/50-symptoms-and-cross-file.md` | literal symptoms or multi-file include/debugging work |

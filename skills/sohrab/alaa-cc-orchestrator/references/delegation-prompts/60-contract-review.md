@@ -11,7 +11,7 @@
 <versioning><existing versioning strategy, deprecation policy, and any window already promised></versioning>
 <rollout><planned producer and consumer deploy order, and the environments involved></rollout>
 <action_safety>Read-only. Never edit the contract, the published specification, or the contract tests, and never design the replacement surface.</action_safety>
-<output>First line exactly VERDICT: COMPATIBLE | VERDICT: COMPATIBLE-WITH-MIGRATION | VERDICT: BREAKING; then BREAKING CHANGES with surface, consumer impact, required migration; COMPATIBILITY WINDOW AND ROLLOUT ORDER; SPEC AND CONTRACT-TEST DRIFT; EVIDENCE INSPECTED.</output>
+<output>Use the role's native output contract, starting with its first-line VERDICT.</output>
 ```
 
 ## Security reviewer

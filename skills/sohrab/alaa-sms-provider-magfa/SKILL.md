@@ -1,6 +1,6 @@
 ---
 name: alaa-sms-provider-magfa
-description: "Magfa HTTP v2 SMS API integration: authentication, request and response formats, uid/mid duplicate handling, delivery status and error codes. Use only when implementing, reviewing, debugging or testing communication with Magfa for SMS delivery. Do not use for general SMS/OTP flows, provider selection or other providers. Use /alaa-async-messaging for queues, outboxes and workers; /alaa-reliability-sla for retry policy; and the respective provider skill for Mediana or Bale."
+description: "Magfa HTTP v2 SMS API integration: authentication, request and response formats, uid/mid duplicate handling, delivery status and error codes. Use only when implementing, reviewing, debugging or testing communication with Magfa for SMS delivery. Do not use for general SMS/OTP flows, provider selection or other providers. Use /alaa-async-messaging for queues, outboxes and workers; /alaa-reliability-sla for retry policy; /alaa-sms-provider-mediana for Mediana; and /alaa-bale-provider for Bale."
 ---
 
 # Alaa SMS Provider — Magfa HTTP v2

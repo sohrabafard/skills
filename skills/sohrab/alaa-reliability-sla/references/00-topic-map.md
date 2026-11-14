@@ -23,7 +23,7 @@ Read before selecting mechanism detail or diagnosis. It routes only; every rule 
 | A request exceeded its target while every hop stayed inside its own timeout | No propagated deadline; the hops summed | `10-deadlines-and-timeouts.md` |
 | One dependency's incident made every route on the service fail | No per-dependency isolation; the shared pool drained | `30-breakers-and-bulkheads.md` |
 | A dependency's load rose during its own outage | Retry amplification, or an unbounded half-open probe | `20-retries.md`, `30-breakers-and-bulkheads.md` |
-| Latency grew without bound but almost nothing errored | Work was queued where it shedding was required | `40-admission-and-shedding.md` |
+| Latency grew without bound but almost nothing errored | Work was queued where shedding was required | `40-admission-and-shedding.md` |
 | The service was removed from rotation while it was merely busy | A shed or blocked readiness path | `40-admission-and-shedding.md` |
 | A duplicate record appeared under load and not in testing | Two concurrent requests carrying the same key | `60-idempotency.md` |
 | Clients cached a partial answer as if it were complete | An unmarked degraded response | `50-degradation.md` |
@@ -33,4 +33,4 @@ Read before selecting mechanism detail or diagnosis. It routes only; every rule 
 
 ## Where the values are
 
-No file in this skill states an Ala timeout, retry count, pool bound, acquire wait, shed threshold, response code, or event name. All of those are in `/alaa-services-contract` (`$alaa-services-contract` in Codex), `references/22-failure-load-and-deprecation-contract.md`. When a rule here needs a number, read that file for it.
+No file in this skill states an Ala timeout, retry count, pool bound, acquire wait, shed threshold, response code, or event name. All of those are in `/alaa-services-contract`, `references/22-failure-load-and-deprecation-contract.md`. When a rule here needs a number, read that file for it.

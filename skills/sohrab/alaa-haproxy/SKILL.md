@@ -79,11 +79,12 @@ and gate register.
 
 ## Completion and authority
 
-Edit only the requested configuration/package scope. Installation, publication,
-deployment and external mutation require explicit authority. Report target version,
-build, changed files, source/static/runtime proof and skipped or failed gates.
+Edit only within the requested configuration or package scope. Installation, publication,
+deployment and external mutation require explicit authority. Report the target version,
+the build, the changed files, the source, static and runtime proof, and the skipped or
+failed gates.
 Stop when the requested behavior and applicable gates agree. For a failed operation,
 allow one cause-specific repair and one materially different retry, as defined in
 `references/80-gate-register.md` "Failed-operation boundary". Then preserve
-the evidence and report the missing prerequisite. An unavailable binary/component
+the evidence and report the missing prerequisite. An unavailable binary or component
 leaves its gate unrun, never passed.

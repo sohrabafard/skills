@@ -1,6 +1,6 @@
 ---
 name: caas-arvan-kuber
-description: Arvan CaaS platform facts for Kubernetes and Helm workloads - the namespace-scoped API surface, alias-versus-canonical namespace RBAC identity, the requests-equal-limits admission parity, panel-managed domain, public IP and disk lifecycle, and the exposure annotations Arvan does not document. Use it only when a manifest, chart, or deployment decision would be different on Arvan than on a stock Kubernetes cluster at the same minor version. Do not use it for generic Kubernetes or Helm authoring, validation, or debugging, which alaa-k8s-helm owns, including when the target cluster happens to be Arvan. Do not use it to write GitLab Runner configuration or to decide pipeline gates. Do not invent undocumented Arvan behaviour when live discovery can answer the question.
+description: Arvan CaaS platform facts for Kubernetes and Helm workloads - the namespace-scoped API surface, alias-versus-canonical namespace RBAC identity, the requests-equal-limits admission parity, panel-managed domain, public IP and disk lifecycle, and the exposure annotations Arvan does not document. Use it only when a manifest, chart, or deployment decision would be different on Arvan than on a stock Kubernetes cluster at the same minor version. Do not use it for generic Kubernetes or Helm authoring, validation, or debugging, which alaa-k8s-helm owns, including when the target cluster happens to be Arvan. Do not use it to write GitLab Runner configuration, which alaa-gitlab-ci-cd owns, or to decide pipeline gates. Do not invent undocumented Arvan behaviour when live discovery can answer the question.
 ---
 
 # Arvan CaaS platform facts
@@ -80,7 +80,7 @@ This skill owns **no gate placement and no runner configuration**.
 | `references/arvan-task-templates.md` | you want a prompt scaffold for a Helm implementation, an RBAC triage, or an exposure choice |
 | `references/SOURCES.md` | current Arvan, Kubernetes, Helm, or GitLab behaviour matters, or a web search is about to run |
 
-Scripts: `verify-cluster.sh` (read-only capability and identity proof), `render-helm.sh` (new mode-0600 output, removed on exit; existing `--out` paths or unverifiable permissions block before Helm), `summarize-openapi.sh` (`--check` fails on matrix/spec drift). Each takes `--help` and exits `0` clean, `1` findings, `2` could not run. Assets: the two operator templates for production or stateful scope, and `assets/values.secret.yaml.example`.
+Scripts: `verify-cluster.sh` (read-only capability and identity proof), `render-helm.sh` (new mode-0600 output, removed on exit; existing `--out` paths or unverifiable permissions block before Helm), `summarize-openapi.sh` (`--check` fails when the matrix and the spec drift apart). Each takes `--help` and exits `0` clean, `1` findings, `2` could not run. Assets: the two operator templates for production or stateful scope, and `assets/values.secret.yaml.example`.
 
 ## Definition of done
 

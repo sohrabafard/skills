@@ -40,13 +40,15 @@ Load `references/00-topic-map.md` and read the one row that matches what you are
 
 ## Gate scripts
 
+Run these from this skill's directory, because `--root .` names the skill root.
+
 ```sh
 python3 scripts/validate_skill_pack.py --root .
 python3 scripts/check_references.py --root .
 python3 scripts/capability_contract_conformance.py --root .
 ```
 
-The Vitest examples require the consumer's installed `vitest` and `fake-indexeddb`. Do not install dependencies implicitly.
+The Vitest examples require the consumer's installed `vitest` and `fake-indexeddb`. Ask for approval before you install `vitest`, `fake-indexeddb` or any other dependency.
 
 - Exit **0**: no findings.
 - Exit **1**: findings, each with file and line. Resolve every one before you report completion.

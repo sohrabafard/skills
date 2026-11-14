@@ -21,8 +21,8 @@ adds or removes a skill, update this file's entry list and this audit line, and 
 ### golang-how-to (`/golang-how-to`)
 
 Load it when the task is broad enough that you cannot name the primary Go skill yourself. It selects a primary plus
-secondaries and carries the vendor catalogue. **Forbidden:** running its configure mode; see
-`11-orchestration-and-overlap-guide.md`.
+secondaries and carries the vendor catalogue. Do not run its configure mode;
+`11-orchestration-and-overlap-guide.md` owns that rule and names the alternative.
 
 ## Structure, architecture, and API shape
 

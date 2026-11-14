@@ -7,8 +7,8 @@ description: "Ownership and debug governance for `service-runtime-kit`-generated
 
 Load before changing any runtime-related file in a service repo driven by `service-runtime-kit`.
 
-- `references/change-routing.md` — where a change belongs; the regenerate command pair.
-- `references/runtime-contract-map.md` — which file or variable produces a behavior; which paths are generated; which knob owns a tuning value; how to check the pinned kit.
+- `references/change-routing.md` — you must decide where a change belongs, or you need the regenerate command pair.
+- `references/runtime-contract-map.md` — you must find which file or variable produces a behavior, which paths are generated, which knob owns a tuning value, or how to check the pinned kit.
 - `references/debug-playbook.md` — a runtime path fails and the cause is not located.
 - `references/cross-runtime-shared-infra.md` — shared Postgres, Redis, RabbitMQ, or Adminer is touched, or a Go service on the `alaa-go-chi` kit is in scope.
 - `references/source-map.md` — before relying on latest, current, or security-sensitive behavior.
@@ -88,7 +88,7 @@ The work is complete only when all of these hold:
 
 - The change is application logic — a controller, a job, a migration, a test — with no effect on generated runtime files, `runtime/*.env` values, hooks, or the kit pin.
 - The repository does not consume `service-runtime-kit` and no task proposes adopting it.
-- The target is a Kubernetes, OpenShift, or Helm deployment, or a CI pipeline, rather than local Compose or Swarm runtime. The ownership section below names each owner.
+- The target is a Kubernetes, OpenShift, or Helm deployment, or a CI pipeline, rather than local Compose or Swarm runtime. The description names each owner.
 
 ## What This Skill Does Not Own
 
@@ -96,7 +96,7 @@ The description names the deployment-side boundaries. Within local runtime, hand
 
 - image and container hardening: `alaa-docker-production`
 - Laravel queue-worker and RabbitMQ application behavior: `alaa-laravel-job-rabbitmq`
-- Postgres/PgBouncer/Redis data-layer design: `alaa-data-layer`
+- Postgres, PgBouncer and Redis data-layer design: `alaa-data-layer`
 - model or effort selection: `alaa-prompting-guide`
 
 ## Subagent Strategy

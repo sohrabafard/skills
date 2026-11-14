@@ -1,171 +1,171 @@
 {
   "pack": "alaa-codex-orchestrator",
-  "version": "5.5.0",
+  "version": "5.6.0",
   "managed_agents": [
     {
       "name": "alaa-accessibility-reviewer",
       "file": "agents/alaa-accessibility-reviewer.toml",
-      "sha256": "55eb242f0503552b2286d06219ea0bf2f57dc0e629aba90ba6133f962671871c"
+      "sha256": "2f74b7de33afd15d0d44d4aff3beda2f23d038557eeca3bed8f1c5ab7ddc2987"
     },
     {
       "name": "alaa-adversarial-reviewer",
       "file": "agents/alaa-adversarial-reviewer.toml",
-      "sha256": "48eaac476f27e03c6976df1f42859010860c71640b26e5134d2bacb53853ee67"
+      "sha256": "6a49f8418b822dde3db728baf58e3be144bed89d9b4c48056592be078f04e30b"
     },
     {
       "name": "alaa-api-contract-reviewer",
       "file": "agents/alaa-api-contract-reviewer.toml",
-      "sha256": "d4287c995285a77152e7569aa456446c763b61d6a70fb18cd3aabda55a78892b"
+      "sha256": "3503c3d3f0b6108ad28f73a82fbff1b9e927b6d8ab35f693256fdeb98507e638"
     },
     {
       "name": "alaa-architecture-critic",
       "file": "agents/alaa-architecture-critic.toml",
-      "sha256": "f148eb686ccd23165a1fd281f73b93f27a11ba02e95d305fbefb4ca0c163967e"
+      "sha256": "4418ae0817727e5d88a75836f83ffd66abb4f93ef9c57a7fa9f7dfdf3ab13bfc"
     },
     {
       "name": "alaa-browser-qa",
       "file": "agents/alaa-browser-qa.toml",
-      "sha256": "e6ff6a0d97e044f3f914a5aa4ca08ef5f514aad710fa3a19f773faad9a897675"
+      "sha256": "514d18c610c04b63e3462cae8d4469bd54eea35b32cad9d6a79ba82694a257b4"
     },
     {
       "name": "alaa-dependency-auditor",
       "file": "agents/alaa-dependency-auditor.toml",
-      "sha256": "fef7f6427ca1a61591a98a12c0894ed5143a44eec18981e47d0e4b43cc142b5a"
+      "sha256": "b8b173b344fbca317d8e237d3b0a2d9bec82fc18d0e9d378ee036e227af82b9c"
     },
     {
       "name": "alaa-documenter",
       "file": "agents/alaa-documenter.toml",
-      "sha256": "278bd82c5734b8bd900e4cabfe13186967ac5cd620c14adc8cdf73d5dc01f13c"
+      "sha256": "c87582b014fc9f08a219041d44009ed04597263a124e8a368438b89168f53f18"
     },
     {
       "name": "alaa-explorer",
       "file": "agents/alaa-explorer.toml",
-      "sha256": "75285f89003a054c70d0ff9a5531c05106f1ef0ac0cf50ba4cc0fb01d654a338"
+      "sha256": "1b8211dabcb3abff3a95706e37f7bafabb33af8aaa87f68571c50ef1136fe735"
     },
     {
       "name": "alaa-failure-analyst",
       "file": "agents/alaa-failure-analyst.toml",
-      "sha256": "b9957ef7c9be2a647ca535ba32e98ac4d5d42d7c55b8b78552b619f8c680b077"
+      "sha256": "b57f1b247f64d96d97ff70ecd8c05c2efad3f5643479c2dfd57642f9361f5d34"
     },
     {
       "name": "alaa-implementer-astra-medium",
       "file": "agents/alaa-implementer-astra-medium.toml",
-      "sha256": "03461c54a89b54027864b3a085cdf59faaa2c69e78c3d4c30743a2f52b1c4726"
+      "sha256": "9bc4e850896e88e24dedcd4fc4297ae2368793496859b332df4fd79566e33599"
     },
     {
       "name": "alaa-implementer-astra-xhigh",
       "file": "agents/alaa-implementer-astra-xhigh.toml",
-      "sha256": "8cf5e344c5632804519b76be7c45b36cdee67a98c0f9f941937b2242c85bf65a"
+      "sha256": "916ba6ab735a06db7ddd4609f3b66a7c06cbc5bf6710f5763352f95d0eeb77f0"
     },
     {
       "name": "alaa-implementer-astra",
       "file": "agents/alaa-implementer-astra.toml",
-      "sha256": "2bbf831ad9a3601b3f39799ff4476f9eb556ac1dd8df92d3ff3cf4b935224142"
+      "sha256": "92145abb850e4c9ee88f0a6ccfa0e81cf7cff49a19b5979f78aedc200345ccfe"
     },
     {
       "name": "alaa-implementer-high",
       "file": "agents/alaa-implementer-high.toml",
-      "sha256": "77046f38eaff4e6326c1a2a32227c5a79ab268d2134afaab2c9e83d4a1fef95e"
+      "sha256": "0461ae2f6cddbafd3d1b71a23f1c3a426109b3e4591941f7930bb8bd6bca0330"
     },
     {
       "name": "alaa-implementer-low",
       "file": "agents/alaa-implementer-low.toml",
-      "sha256": "c23a441d87a3fc90b3db695fe584c0e0d95f2222e885a278d2fa2495950fe019"
+      "sha256": "dabb5d8789a7df07f8dc60e7c818e6c5ee0146a6f759b01c57107968e9fd83b8"
     },
     {
       "name": "alaa-implementer-luna-high",
       "file": "agents/alaa-implementer-luna-high.toml",
-      "sha256": "62cc1f885096f559b3d8511ea6a83b7c0827145cb5c77771f2471680dccb9363"
+      "sha256": "1df94f0116cf04da314c9935642e3033912d43998789475ec537481bfd54d16b"
     },
     {
       "name": "alaa-implementer-luna-low",
       "file": "agents/alaa-implementer-luna-low.toml",
-      "sha256": "74de83dee63a1d99f8c1951393752ddfe5f7a684404a977c7e46038ef234bd28"
+      "sha256": "5a1964a8735100f2d8452a2a7c4114a415f716926e067982dce8bf94ffd9d071"
     },
     {
       "name": "alaa-implementer-luna",
       "file": "agents/alaa-implementer-luna.toml",
-      "sha256": "24f0d19a740e9ab4f79e672a3826323aa3a88e2fe47c3a16b0b39a45d66755a7"
+      "sha256": "81ce72978df513a1fc3394d7556f860cd8c260c560b45863f5712074905603ab"
     },
     {
       "name": "alaa-implementer-xhigh",
       "file": "agents/alaa-implementer-xhigh.toml",
-      "sha256": "e1d46f86e1cdb55fdf1549a81e32cc8ed5670e9d60c1af4d75c616a2df46fc43"
+      "sha256": "61da70118e6bac6521c209675f2ec601618f6fa3f2512dfe806d68bf5547a5dd"
     },
     {
       "name": "alaa-implementer",
       "file": "agents/alaa-implementer.toml",
-      "sha256": "29db89800532f448794249d4f648c2732ad50e3d3a196e1281ec130f7bf9e9e3"
+      "sha256": "39abc97a6196ce391fde362553fdbf56f654ca42bc67ad8b18bf9ddf066247f8"
     },
     {
       "name": "alaa-instruction-reviewer",
       "file": "agents/alaa-instruction-reviewer.toml",
-      "sha256": "c9ccb2f4dbd080c4a5cab7d27611006d450bbda2a5013b78f3bb540dc798682e"
+      "sha256": "d87f1439fb6ded6b4532609eb8a24612110f33995b6aa1c7c6b18e4cff6c77ef"
     },
     {
       "name": "alaa-migration-guardian",
       "file": "agents/alaa-migration-guardian.toml",
-      "sha256": "accd602d39a3e3102c30f63f4512111ace1a4f2b5410b12039efe2a19808a1c5"
+      "sha256": "c417a7c398ba66009e7960085a14a50ce694f23643ab6eae31d2e92475f699f1"
     },
     {
       "name": "alaa-observability-reviewer",
       "file": "agents/alaa-observability-reviewer.toml",
-      "sha256": "f1017ef81e533b13ad2a2ba81af8a0c4a8d832f32ff4bd61175da5111d0d3f70"
+      "sha256": "c73e21d04a0bfe8958cb129b7062b41050b031848cec6ea299b262758f1de5db"
     },
     {
       "name": "alaa-performance-profiler",
       "file": "agents/alaa-performance-profiler.toml",
-      "sha256": "5c5d205b41d36ae0e3dcae004b30f5c55b2ab668319f7282f9774c08b51b264a"
+      "sha256": "422d73a7b27e4dd590696dc2aeaee01dc73c15b481799cc1b22f2dfbebc78b5a"
     },
     {
       "name": "alaa-planner-high",
       "file": "agents/alaa-planner-high.toml",
-      "sha256": "968005b49b826bd33b4f3e62480c44ccc602b8ac7df5169e50bc6ff42faf48d0"
+      "sha256": "18f6b6f3501a735939cd508ce0ef9f74383ddf68019a1249fc50cbfef13c4923"
     },
     {
       "name": "alaa-planner",
       "file": "agents/alaa-planner.toml",
-      "sha256": "8c57858ca024ccf23ef15e90bde3920c1cd85504bea8c9a750fa8968f501fab1"
+      "sha256": "75bced73281291ab2a40577d2377a9cc70e90ce5c8c0b3c7ecb76961100e7e51"
     },
     {
       "name": "alaa-release-guardian",
       "file": "agents/alaa-release-guardian.toml",
-      "sha256": "c9c5a914bb35d65518cbc6b96d288b8d2daac2dbfacc401f889bcec2113c1349"
+      "sha256": "405def379313337bb1ed6e166b735d62080ced103a000de763aaf9ecae550d51"
     },
     {
       "name": "alaa-researcher",
       "file": "agents/alaa-researcher.toml",
-      "sha256": "845b0c06ad39dd4dad645c9a5731e994428a4e102d266edc3e8c7009dcf97fad"
+      "sha256": "6744ba9046346bdad31305d112aabf97a0b7e973640a58cfac5b4d8014381387"
     },
     {
       "name": "alaa-reviewer-deep",
       "file": "agents/alaa-reviewer-deep.toml",
-      "sha256": "ff5493afa999f9817355bdcdfeb59ff1cba8a5c1c32f1ec8da448e7dab340b7c"
+      "sha256": "bd2847a4f6808c69e1ef231522e5e039e09d80594483851abcff69ec4524fd1d"
     },
     {
       "name": "alaa-reviewer",
       "file": "agents/alaa-reviewer.toml",
-      "sha256": "169003528bf35727614c66b669ff5547f1f8aec3ce63e1656e457bf131dd4ef4"
+      "sha256": "0eb335c6678848b57b7f50b436d26d4aec6e5531181f086132a0b06a20d54f84"
     },
     {
       "name": "alaa-security-reviewer",
       "file": "agents/alaa-security-reviewer.toml",
-      "sha256": "cdef66c749e4ecb18097ad62ef374a6b6095a6d9fdd9c43e77e29117551c6f4f"
+      "sha256": "748177b1f6d187e93015ca67caf4d90f241dbe493b2c872ae243f2d7c5b8c5e4"
     },
     {
       "name": "alaa-spec-analyst",
       "file": "agents/alaa-spec-analyst.toml",
-      "sha256": "bf35b948828557f4ebc1a105ef063f97d8eccf5f7897499535891501df4e9310"
+      "sha256": "0489cbf1e80a074ce8b369d55cbbdcf3c6dc5dbb7c01e23cb708728861662beb"
     },
     {
       "name": "alaa-test-strategist",
       "file": "agents/alaa-test-strategist.toml",
-      "sha256": "7db25af8bdb61ef011fb87d753b0b55717c1b02e85a642f3a61dd20831758b25"
+      "sha256": "79da47f5dbfc334037ea41394e289aa633393950deb8308da12ad8f628abe93c"
     },
     {
       "name": "alaa-verifier",
       "file": "agents/alaa-verifier.toml",
-      "sha256": "29cd1d293f72ae2f4a1383423fdacdb3158df51d26feed15ed0704997c03651d"
+      "sha256": "7d7eac4e44c17853fe2648f57287cc463ef45445c026ae9f7a25e16edbf1ca49"
     }
   ]
 }

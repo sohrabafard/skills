@@ -47,3 +47,28 @@ Three survivor patterns are worth naming because they are common and each looks 
 ## The happy path's job
 
 One happy-path test per behaviour, written last. Its job is to prove that the failure tests fail for the reason claimed rather than because the arrangement never worked — a failure test passing against an arrangement that could not succeed under any implementation proves nothing. A suite of happy paths alone proves the routes are routed.
+
+## Anti-patterns
+
+Check a test, a suite and a test plan against each item.
+
+- asserting only the status or error code on a rejection path, which passes against an implementation that rejects after doing the work;
+- one assertion at the outermost layer standing in for a control implemented at three, which reports two missing layers as present;
+- the same behaviour tested at unit, integration, and end-to-end level, which buys one confidence and charges three maintenance obligations;
+- a mock asserting the sequence of calls where the outcome was observable, which fails on every behaviour-preserving refactor and trains the team to update tests without reading them;
+- a hand-written double of a dependency nobody owns, with no parity suite, which encodes a belief about the vendor rather than the vendor's behaviour;
+- reporting an in-memory or embedded-engine result as though the production engine had run, which is the specific way a query, migration, index, constraint, or isolation defect reaches production;
+- retrying a failing test until it passes, which converts an intermittent product defect into an invisible one;
+- quarantining a test with no owner and no deadline, which is deletion with extra steps and a lingering claim of coverage;
+- a coverage percentage cited as validation, when the number rises by executing code that asserts nothing;
+- writing the happy path first and stopping there, which produces a suite that proves only that the routes are routed;
+- a test that sleeps to wait for a condition, which is a flake on a loaded machine and a permanent tax on every run;
+- re-running the full suite, the race detector, or the acceptance set against a tree that has not changed since the last run, which charges the whole cost for no new information and produces the pass that is hardest to distinguish from a cached one;
+- an implementing lane running the exhaustive tier on its own work, which is both the wrong authority and the wrong moment;
+- repairing the product in response to a shell, container-runtime, permission, or stale-cache failure that was never classified;
+- deleting or weakening an assertion so a test can run in a constrained environment, instead of recording the level not reached and the blocker;
+- a consumer test re-proving framework, kit, package, or vendor behaviour, which passes against every implementation the consumer can ship;
+- a test for a failure that cannot reach this project's code under `SKILL.md` *Reachable failure*, which charges its cost forever and defends nothing;
+- an engine, container, migration, or application boot created per test, which multiplies the suite's cost by its test count;
+- a test reachable only through the whole-suite command, which makes every change pay for the whole suite;
+- a build, compile, type check, render, or image produced twice in one pass, which charges the build again for no new information.

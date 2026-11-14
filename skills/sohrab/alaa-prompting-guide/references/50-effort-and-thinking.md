@@ -48,6 +48,7 @@ Before raising effort, resolve prompt bloat and missing context. Vendor lean-pro
 - Carrying an effort level forward from a previous model generation without revalidating current guidance and honestly retaining unrun calibration status; task selection does not require an experiment.
 - Disabling thinking to control cost instead of lowering effort, then writing repair instructions for the resulting behavior.
 - Treating lower effort as a reliable verbosity or scope control instead of specifying the required output and boundaries.
+- Writing a prompt line that asks the model to think less instead of lowering the effort; `references/43-fable-5-2.md` holds the Fable 5.2 evidence.
 - Arbitrary model/effort escalation from a vague importance or sensitivity label; record consequence and priority through the runtime orchestrator allocation owner.
 - Pinning maximum effort by habit without measured quality benefit and a stated workload need.
 - Treating a supported effort as proof it is appropriate, or changing model and effort together in a comparison.
@@ -65,5 +66,5 @@ Thinking-disable constraints and the availability of manual thinking budgets are
 - [Effort parameter reference](https://platform.claude.com/docs/en/build-with-claude/effort)
 - [Prompting Claude Opus 5.5](https://platform.claude.com/docs/en/build-with-claude/prompt-engineering/prompting-claude-opus-5-5)
 - [Prompting Claude Sonnet 5.5](https://platform.claude.com/docs/en/build-with-claude/prompt-engineering/prompting-claude-sonnet-5-5)
-- [Prompting Claude Fable 5.1](https://platform.claude.com/docs/en/build-with-claude/prompt-engineering/prompting-claude-fable-5-1)
+- [Prompting Claude Fable 5.2](https://platform.claude.com/docs/en/build-with-claude/prompt-engineering/prompting-claude-fable-5-2)
 - [Using the latest model](https://developers.openai.com/api/docs/guides/latest-model)

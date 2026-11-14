@@ -77,7 +77,7 @@ Run `govulncheck ./...` in the authoring lane when `go.mod` or `go.sum` changed.
 The whole-suite run is an affected- and exhaustive-tier gate. /alaa-testing-strategy assigns it to an
 authority other than the authoring lane. When the session has no such authority, run it on the final tree
 before you report completion.
-Use the real-store tag when required.
+Add the repository's configured real-store build tag when a required test carries it.
 Combine tagged and untagged selections only when reference 63's build-constraint and test-configuration
 check proves normal behavior remains covered. Otherwise run both.
 Add `-race` to each required run when the change touches a goroutine, channel, mutex, cache,

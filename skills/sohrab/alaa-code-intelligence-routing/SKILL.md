@@ -27,7 +27,7 @@ Routing grants no additional authority. Do not change MCP, hooks, CodeGraph, Ser
 
 ## Output
 
-Report outcome, question, primary owner, established evidence, fallback gaps/owners/lost guarantees, worktree/environment identity, changed artifacts, observed native command/results and partial or blocked claims. Do not emit raw transcripts.
+Report outcome, question, primary owner, established evidence, each fallback's gap, owner and lost guarantee, worktree/environment identity, changed artifacts, observed native command/results and partial or blocked claims. Do not emit raw transcripts.
 
 ## Stop and failure
 

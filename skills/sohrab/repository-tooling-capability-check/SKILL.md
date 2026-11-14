@@ -1,6 +1,6 @@
 ---
 name: repository-tooling-capability-check
-description: Verify CodeGraph, Codex hook/approval scope, and Hindsight connectivity in a worktree with live evidence rather than configuration-only claims.
+description: "Live capability check for CodeGraph, Codex hook approval scope and Hindsight connectivity in one worktree, proven by current-session evidence rather than by configuration alone. Use when asked whether CodeGraph is active, whether a Codex hook needs approval, or whether Hindsight can connect now. Do not use it to configure, upgrade or remove those systems unless that work is explicitly requested, or to choose which code-intelligence tool answers a code question, which is /alaa-code-intelligence-routing."
 argument-hint: "[worktree path]"
 user-invocable: false
 allowed-tools: Read, Grep, Glob, Bash
@@ -46,7 +46,7 @@ Do not use it to configure, upgrade, or remove those systems unless that work is
 - A template or `features.hooks = true` is not an active project hook. Find the effective source and trust state.
 - A Git pre-commit hook is not a Codex approval hook. Report it separately.
 - `ACTIVE_ADAPTER: hindsight`, `.env`, or a reachable API is not a live memory connection. Require tool exposure and a successful operation or handshake.
-- On `mcp-server.js is not installed`, install dependencies. On HTTP 401, configure the token through approved secret handling. Then rerun the doctor. Never store or print the token.
+- On `mcp-server.js is not installed`, report the dependency install as the next action and ask for approval before you run it. On HTTP 401, configure the token through approved secret handling. Then rerun the doctor. Never store or print the token.
 
 ## Verification checklist
 

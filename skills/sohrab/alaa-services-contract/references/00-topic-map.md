@@ -45,7 +45,7 @@ Use this file to choose the smallest reference file that owns the rule you need.
   - Use when the task is about auth TOTP self-service enrollment, QR or authenticator-app setup, `AUTH_TOTP_ENABLED`, `require_totp:<purpose>`, signed step-up proof tokens, local proof caching, gateway `X-TOTP-Proof` verification, the four backend-only `X-TOTP-*` headers including the advisory `X-TOTP-PROOF-REJECTED` and its `TOTP_PROOF_*` value vocabulary, step-up errors, recovery codes, or SDK/frontend retry behavior.
   - Read `32-auth-totp-and-step-up-contract.md`; pair with `/alaa-trust-gateway-auth` for gateway boundaries and `/alaa-frontend-developer` for client/SDK flows.
 - `Mode E - Platform flow and boundaries view`
-- Use also when the task is about the canonical UUIDv7 `project_id` form or Auth user identity on an HTTP payload, target-user path, event, queue, SDK, gRPC, OpenFGA subject, log field, or shared-cache key; or about the dated first-release compatibility exception. Reference `25` owns identity shape, reference `22` owns the exception, and `/alaa-trust-gateway-auth` owns JWT/header mechanics.
+  - Use also when the task is about the canonical UUIDv7 `project_id` form or Auth user identity on an HTTP payload, target-user path, event, queue, SDK, gRPC, OpenFGA subject, log field, or shared-cache key; or about the dated first-release compatibility exception. Reference `25` owns identity shape, reference `22` owns the exception, and `/alaa-trust-gateway-auth` owns JWT/header mechanics.
   - Use when the task is about client -> gateway -> service flow, gateway route prefixes, the canonical gateway service-prefix map, `stripPathPrefix`, compact `rol` to trusted `X-User-Roles` projection, public prefixed routes versus service-local routes, frontend/client SDK URL composition, private versus public identifiers, keyset list pagination and the `cursor`/`limit`/`meta.next_cursor`/`meta.prev_cursor` contract, the admin-table offset exception, opaque cursor internals, service ownership, the role of `authz-sidecar` or `entitlement-spoa`, `entitlement-api`, `projector`, OpenFGA, `content` versus legacy `vod`, internal-hop discipline, or the platform-wide deferral of internal service-to-service mTLS.
   - Read `25-end-to-end-flow-and-boundaries.md`.
   - Before you retire, re-key, re-parent, merge, or bulk-import an entity whose id another service stores, receives in a claim, header, OpenFGA object, event, or public API, or before a new id leaves its owner, read `31-cross-service-identifier-stability.md`; it owns the published-id rules and registry. Read its "Identifier form per layer" table before you encode, decode or compare an id in a claim, a header or an OpenFGA object.
@@ -61,6 +61,8 @@ Use this file to choose the smallest reference file that owns the rule you need.
   - Read `60-frontend-sdk-consumption-contract.md` for SDK consumption and `65-frontend-page-kit-and-widgets-contract.md` for Page Kit/widgets; pair with `/alaa-frontend-developer`, `/alaa-mono-package`, and `/alaa-security-review`.
 
 ## Cross-cutting references
+
+Read a file below when the task needs an item its entry names, or when its entry states a condition that holds.
 
 - `26-request-time-authorization-openfga.md`
   - The request-time authorization contract: gateway route groups, the `authz-sidecar`/`entitlement-spoa` `HEAD /internal/authz/check` hop, the OpenFGA `check` request/response, endpoint-category to `can_*` mapping, store/model pinning, and add-a-route plus debug runbooks. Pairs with `25-end-to-end-flow-and-boundaries.md` (which owns the ownership view).
@@ -103,3 +105,60 @@ Use this file to choose the smallest reference file that owns the rule you need.
 - When observability design is in scope, treat `20` and `21` as a pair: `20` owns the exact stable surfaces, and `21` owns the OTLP configuration surface, the metric catalog, and the per-service reality table. Requirement levels, gates, Collector topology, and label budgets are not in either file; `/alaa-observability-soc` owns them.
 - When an outbound call, retry, pool, or admission decision is in scope, read `22` for the Ala values and `/alaa-reliability-sla` for the doctrine.
 - When you need to know whether a service already follows a rule, read `95-fleet-conformance.md` for the snapshot and the owning reference file for the rule. A conformance line never overrides a rule, and a repository that has moved since the snapshot overrides the snapshot.
+
+## Owned by another skill
+
+`SKILL.md` owns the conflict rule for these owners. Maintainers delete the weaker statement in this skill rather than keep it as a second opinion.
+
+- **`alaa-observability-soc`** owns every observability requirement level, gate, threshold, alert, Collector
+  topology and processor placement, metric label allow and deny list, resource-identity policy, exemplar
+  requirement level, and Sentry policy. This skill keeps every metric, log field, event, code, and `OTEL_*`
+  name together with its default value.
+- **`alaa-reliability-sla`** owns timeout, retry, circuit-breaker, backpressure, and error-budget doctrine —
+  why a value exists and how to choose it. This skill keeps the Ala values and the wire behaviour in
+  `references/22-failure-load-and-deprecation-contract.md`.
+- **`alaa-security-review`** owns security review checklists and verdicts, the general fail-closed doctrine,
+  and the general rule that allow-side authorization metadata is never an authorization input. This skill
+  keeps the exact header names, envelope shapes, and the fail-closed wire contract those rules act on.
+- **`service-runtime-kit-governance`** owns which generator variable expresses each runtime value and which
+  kit version ships it. This skill keeps the canonical shared-infra names, the host-port table, and the
+  reuse-or-fail-fast obligation.
+- **`alaa-laravel-architecture`** and **`alaa-php-clean-code`** own PHP and Composer package selection and
+  framework idiom. This skill keeps middleware order, class and helper names, and response boundaries.
+- **`alaa-docker-production`**, **`alaa-k8s-helm`**, **`alaa-haproxy`**, and **`alaa-gitlab-ci-cd`** own
+  the mechanics of containers, clusters and charts, proxies, and pipelines; **`caas-arvan-kuber`** owns Arvan
+  CaaS platform facts. This skill keeps the Ala fleet policy.
+- **`alaa-async-messaging`** and **`alaa-laravel-job-rabbitmq`** own broker prefetch, acknowledgement
+  mechanics, DLQ handling, and consumer tuning. This skill keeps the exchange, queues, routing keys, and
+  envelope.
+- **`alaa-data-layer`** owns pool mechanics inside a driver and persistence invariants. This skill keeps the
+  pool bounds and the acquire timeout.
+- **`/alaa-minio-object-storage`** owns the object store as a platform component: the
+  bucket, the tenant scope carried inside an object key, lifecycle and retention policy, storage-credential supply and
+  rotation, and presigned-URL issuance. Load it when shaping a bucket, writing a lifecycle or retention policy,
+  scoping an object key to a tenant, granting or rotating a storage credential, or issuing a presigned URL.
+- **`alaa-keyset-pagination`** owns the pagination design method: choosing the traversal mode, the sort
+  allowlist, the ordering tuple and its unique final component, the composite index, the row-value
+  continuation predicate, the signed cursor's payload and context binding, and the nullable, mutable, and
+  backward-traversal cases. This skill keeps the wire shape those decisions produce — `cursor`, `limit`,
+  `meta.next_cursor`, `meta.prev_cursor`, the forbidden `meta` keys, and the admin-table offset exception.
+- **`alaa-system-design`** owns *when* a contract shape is decided and by what procedure: the rule that the shape is
+  settled in a design record and committed before the code that satisfies it, where the boundary the contract sits on
+  runs, and which component owns each datum crossing it. This skill keeps the shape itself — the envelope, header,
+  event, code, and identifier a decided contract must use. Read it before adding a surface, not while adding one.
+- **`alaa-prompting-guide`** owns model/effort capability evidence and runtime mechanics; the runtime orchestrator owns actual task allocation for every authority role.
+
+## Maintenance rules
+
+- Keep `SKILL.md` routing-first; every exact contract detail lives in `references/`.
+- State each rule in exactly one file. When a rule appears twice, delete the weaker statement and leave a
+  one-line pointer to the owner.
+- Change a route, header, event, code, metric, permission, or queue name only through the deprecation
+  procedure in `references/22-failure-load-and-deprecation-contract.md`.
+- Never pin a tool, kit, or library version in this skill. Name the skill that owns the version instead, because a
+  version pin in a contract file goes stale silently and is then copied forward as authoritative.
+- When a change touches a contract owned jointly with a companion skill, update that skill in the same
+  effort and record the split in *Owned by another skill* above.
+- Record conformance in `references/95-fleet-conformance.md`, never in a rule file. When a change makes a
+  service conform, or a new rule leaves the fleet behind, update that snapshot in the same effort. It is
+  evidence, not contract: it states no rule and overrides none.

@@ -173,9 +173,9 @@ This skill owns the **method**: what must be decided, in what order, and what ma
 | Signal selection, instrumentation requirement levels, cardinality and sampling budgets, alerting, retention, SOC evidence | `/alaa-observability-soc` |
 | Schema, constraints, indexes, migrations, isolation semantics, pooling mechanics, projections, Redis behaviour | `/alaa-data-layer` |
 | Broker prefetch, acknowledgement, consumer concurrency, dead-letter mechanics | `/alaa-async-messaging` |
-| Dispatch, review/commit cadence, and the `alaa-architecture-critic` role and verdicts | `/alaa-cc-orchestrator` or `/alaa-codex-orchestrator` |
+| Dispatch, task model and effort allocation, review/commit cadence, and the `alaa-architecture-critic` role and verdicts | `/alaa-cc-orchestrator` or `/alaa-codex-orchestrator` |
 | Plan files, resumable state, and phase prompt packs for a design spanning sessions | `/alaa-workflow` |
 | What proves a design's behaviour: the layer a behaviour is tested at, whether a double is honest, the six proof levels, and what evidence a review accepts | `/alaa-testing-strategy` |
 | The complexity budget on a path this design creates, the real bound on a growing input dimension, structure choice from the access pattern, and the N+1 family | `/alaa-algorithms-data-structures` |
 | Language idiom, patterns, and refactoring inside a component | the per-language clean-code skills, named per stack |
-| Model selection, effort selection, prompting, and skill or agent authoring | `/alaa-prompting-guide` |
+| Model and effort capability evidence, prompting, and skill or agent authoring | `/alaa-prompting-guide` |

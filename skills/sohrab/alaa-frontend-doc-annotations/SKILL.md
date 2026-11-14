@@ -1,6 +1,6 @@
 ---
 name: alaa-frontend-doc-annotations
-description: "Use this skill for a documentation-only pass over frontend code: JSDoc and inline comments on Vue, Quasar and Vite files, in a diff whose build output is byte-identical before and after. Use it when writing or auditing a JSDoc block on an exported function, store action, composable or fetch wrapper; when adding an SSR, hydration, store, auth or security note; when a comment asserts an authorization, trusted-header or secret-location assumption and must carry a verification date; and when an existing comment may no longer be true of the code beneath it. Do not use it when the task changes behavior: a rule whose violation the compiler, type checker or test suite catches belongs to /alaa-vue-typescript-clean-code ($alaa-vue-typescript-clean-code)."
+description: "Documentation-only pass over frontend code: JSDoc and inline comments on Vue, Quasar and Vite files, in a diff whose build output is byte-identical before and after. Use it when writing or auditing a JSDoc block on an exported function, store action, composable or fetch wrapper; when adding an SSR, hydration, store, auth or security note; when a comment asserts an authorization, trusted-header or secret-location assumption and must carry a verification date; and when an existing comment may no longer be true of the code beneath it. Do not use it when the task changes behavior: a rule whose violation the compiler, type checker or test suite catches belongs to /alaa-vue-typescript-clean-code."
 ---
 
 # Frontend doc annotations
@@ -34,16 +34,16 @@ The section "Ground this skill does not own" names each owner.
 
 ## Router
 
-| Condition | File |
+| You are about to | File |
 |---|---|
-| Before the first edit; a comment contradicts its code | `references/10-annotation-boundaries.md` |
-| Writing a block; choosing a tag | `references/20-jsdoc-patterns.md` |
-| SSR flag, lifecycle hook, or store read or write | `references/30-ssr-hydration-and-store-notes.md` |
-| A comment names who is authorized, a gateway header, or a secret | `references/40-security-and-trust-annotations.md` |
-| Is a tag checked by a tool; lint config for this repo | `references/50-checkable-annotations.md` |
-| Judging a `verified:` date; the words current, latest, deprecated, unsupported | `references/60-staleness-and-verification.md` |
-| A docblock states an invariant; a repo rule forbids comments | `references/70-invariant-docblocks.md` |
-| What a comment may cite as its source | `references/00-source-map.md` |
+| make the first edit of the pass, or act on a comment that contradicts its code | `references/10-annotation-boundaries.md` |
+| write a block, or choose a tag | `references/20-jsdoc-patterns.md` |
+| write or audit a comment on an SSR flag, a lifecycle hook, or a store read or write | `references/30-ssr-hydration-and-store-notes.md` |
+| write or audit a comment that names who is authorized, a gateway header, or a secret | `references/40-security-and-trust-annotations.md` |
+| decide whether a tool checks a tag, or write this repo's lint config for annotations | `references/50-checkable-annotations.md` |
+| judge a `verified:` date, or write or audit a comment with the word current, latest, deprecated or unsupported | `references/60-staleness-and-verification.md` |
+| write or audit a docblock that states an invariant, or apply a repo rule that forbids comments | `references/70-invariant-docblocks.md` |
+| decide which source a comment may cite for a fact | `references/00-source-map.md` |
 
 ## Ground this skill does not own
 

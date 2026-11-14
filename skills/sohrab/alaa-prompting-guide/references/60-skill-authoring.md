@@ -74,7 +74,7 @@ Choose router placement by actual always-loaded cost and selective routing needs
 
 ## ASD-STE100 style
 
-Write every controlling text in ASD-STE100-style English. Put one idea in each sentence. Keep a procedure sentence to 20 words or fewer. Use the active voice and the command form for an action. Use one term for one concept and never rotate synonyms. Remove filler and idioms. Keep technical names, paths, commands and numbers exact. The style never overrides the done-test above: a shorter text that changes agent behavior fails.
+Write every controlling text in ASD-STE100-style English. Put one idea in each sentence. Write complete sentences with their articles and verbs. A slash-joined noun stack or a clause with no verb fails the test in *The wording is the mechanism* below, because the reader must guess how its terms relate. Aim for 20 words or fewer in a procedure sentence. Exceed that when a split would separate a rule from its condition, scope or reason. Use the active voice and the command form for an action. Use one term for one concept and never rotate synonyms. Remove filler and idioms. Keep technical names, paths, commands and numbers exact. The style never overrides the done-test above: a shorter text that changes agent behavior fails.
 
 ## Evidence for instruction changes
 
@@ -85,6 +85,26 @@ Report static checks, source walkthroughs and observed agent runs separately. A 
 ### Optional comparative evaluation
 
 When a comparison is authorized, define a question and acceptance criteria before running it. Use representative tasks, including held-out cases. Match initial state, context, tools and authority across variants, except for the factor under comparison. Separate first-attempt success from success after repair. Record whole-task cost, elapsed time, interventions, failures and supporting evidence, including repairs. Disclose differences that limit attribution. Apply `alaa-testing-strategy references/110-execution-resources.md` for comparative timing. This protocol is optional and supplies no dispatch admission requirement.
+
+## Carry-over review for a new model generation
+
+Run this review when a controlling text written for an earlier model will run on a newer one. This includes a prompt, a skill, an agent file, an instruction file, a memory and a note.
+
+A carry-over repair is a deliberate behavior change. The done-test above does not judge it. Judge it against the target model's reference and the declared intent of the text, and leave every other rule's behavior unchanged. Apply a check only when the target model's reference documents that behavior, and take the repair from that reference. For Fable 5.2 the reference is `references/43-fable-5-2.md`. Report a check the reference does not document as not applicable. A stale fact is the one check that applies to every model: replace it from the current source and date it.
+
+| Check | Hit |
+|---|---|
+| Stale fact | A model name, version gate, default, limit or runtime behavior that the current source contradicts |
+| Standing delegation | A line that tells the agent to delegate and states no cost, no criteria and no case for inline work |
+| Absolute approval rule | "never" on an action the agent must keep through approval; a "never" that states a true invariant is not a hit |
+| Thinking control in prose | A line that asks for less thinking, or asks the agent to write out its reasoning |
+| Token budget in the text | A token budget shown to the executing agent |
+| Hard style limit | A word or sentence cap with no exception |
+| Expired caution | A caution, note or stop condition whose stated reason no longer holds, or that states no scope or no reason |
+
+When a caution or stop condition states no reason, add its scope and reason, or ask its owner. Delete it only when its reason is stated and the evidence shows that the reason no longer holds.
+
+A model upgrade removes no required test, no independent gate, no stop condition and no authority limit. `references/80-subagent-authoring.md` owns that distinction.
 
 ## Lean prompts must preserve behavior
 
@@ -149,7 +169,7 @@ The test to apply sentence by sentence: **could a competent agent follow this ex
 
 ## Freshness
 
-Authoring structure was verified on 6 August 2026; GPT-6 guidance refreshed on 25 September 2026. No earlier generation's evaluation percentages are promised here. Every runtime value this procedure depends on — caps, budgets, frontmatter surfaces, discovery paths — is held and dated in `references/61-skill-platform-mechanics.md`.
+Authoring structure was verified on 6 August 2026; GPT-6 guidance refreshed on 25 September 2026. The carry-over review and the sentence-length default follow the Fable 5.2 prompting page fetched 14 November 2026. No earlier generation's evaluation percentages are promised here. Every runtime value this procedure depends on — caps, budgets, frontmatter surfaces, discovery paths — is held and dated in `references/61-skill-platform-mechanics.md`.
 
 ## Sources
 

@@ -4,7 +4,7 @@ Load only rows whose observable condition holds. This is the sole reference rout
 
 | Read this | When |
 |---|---|
-| `references/knowledge-shape.md` | Before creating or updating any note. Owns search-before-create, required fields, status and confidence values, observation vocabulary, Extraction and Design mode, and the single do-not-store list. |
+| `references/knowledge-shape.md` | Before creating or updating any note. Owns search-before-create, required fields, status and confidence values, observation vocabulary, Extraction and Design mode, caution shape, and the single do-not-store list. |
 | `references/drift-management.md` | Canonical sources disagree, or a memory-only mismatch must be classified as stale. |
 | `references/store-local.md` | `ACTIVE_ADAPTER: local` for vault mechanics. |
 | `references/store-hindsight.md` | `ACTIVE_ADAPTER: hindsight`; selected query/write mechanics only. |

@@ -1,6 +1,6 @@
 ---
 name: alaa-frontend-devops
-description: "Use this skill when the task involves CI or pipeline gates for a frontend repository, Dockerfile or Compose changes that affect frontend build or runtime delivery, the build artifact contract, public path or asset base, cache policy, build provenance, what may be compiled into a client bundle, or a frontend deploy failure or rollback. Do not use it when the task is frontend logic only and has no build or deploy impact, or when the task is package-boundary specific and belongs to alaa-mono-package."
+description: "Frontend delivery gate register: CI or pipeline gates for a frontend repository, Dockerfile or Compose changes that affect frontend build or runtime delivery, the build artifact contract, public path or asset base, cache policy, build provenance, what may be compiled into a client bundle, and frontend deploy failure or rollback. Use it when you add, change or review one of these, debug a failed frontend deploy, or roll one back. Do not use it when the task is frontend logic only and has no build or deploy impact (/alaa-frontend-developer), or when the task is package-boundary specific and belongs to /alaa-mono-package."
 ---
 
 # Alaa Frontend DevOps
@@ -37,7 +37,7 @@ Seam with the package graph: `/alaa-mono-package` owns everything that determine
 
 ## Before you finish
 
-A delivery change ships with its rollback unit, its rollback command, its precondition, and its irreversible part written down. "Be ready to describe what to revert" is not a rollback path. See `references/40-verification-and-rollback.md`.
+A delivery change ships with its rollback unit, its rollback command, its precondition, and its irreversible part written down. Before you close out a delivery change, read `references/40-verification-and-rollback.md`; it defines those four lines and the closeout report.
 
 ## Navigation
 

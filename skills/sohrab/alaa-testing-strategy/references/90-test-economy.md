@@ -53,7 +53,6 @@ Choose the widest scope at which the resource is reset-safe:
 
 ## Build once per tree state
 
-- **One build, compile, render, or image per tree state and environment.** Every lint, type, test, render, and smoke step of the pass consumes that output, the runner's build cache, or the image digest.
 - **A test step that compiles is the compile check.** A separate build step remains only when it builds something the test step does not — the shipped binary or image.
 - **Type-check once.** Exactly one type-check runs per tree state over each project configuration. A separate type-check step is dropped only when the build runs the same checker over the same configurations.
 - **Render once.** Rendered manifests, configuration, or templates are written once, and every check reads that output.

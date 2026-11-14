@@ -9,7 +9,7 @@ Ground every version-sensitive claim here. This file decides which source wins a
 3. Live official documentation:
    - GPT-6: `https://developers.openai.com/api/docs/guides/latest-model`, `https://developers.openai.com/api/docs/models`
    - Codex and ChatGPT skills, commands, and agent files: `https://learn.chatgpt.com/docs/build-skills`, `https://learn.chatgpt.com/docs/developer-commands`, and the Codex pages under `https://developers.openai.com/codex/` for `use-cases/follow-goals`, `subagents`, `guides/agents-md`, and `config-reference`
-   - Claude prompting: `https://platform.claude.com/docs/en/build-with-claude/prompt-engineering/claude-prompting-best-practices` plus the model-specific Opus 5.5, Fable 5.1, Haiku 5.5, and Sonnet 5.5 pages under that path
+   - Claude prompting: `https://platform.claude.com/docs/en/build-with-claude/prompt-engineering/claude-prompting-best-practices` plus the model-specific Opus 5.5, Fable 5.2, Haiku 5.5, and Sonnet 5.5 pages under that path
    - Claude facts and runtime: `https://platform.claude.com/docs/en/models/overview`, `https://platform.claude.com/docs/en/build-with-claude/effort`, and the `https://code.claude.com/docs/en/` pages `model-config`, `skills`, `sub-agents`, `workflows`, `scheduled-tasks`, `permission-modes`, `ultraplan`, `goal`, and `desktop`
 4. This skill's dated references and local policy; they do not override current official capability facts. Use `/openai-docs` for current OpenAI guidance. Use community sources only as corroboration after official sources fail to answer.
 
@@ -64,6 +64,8 @@ Sonnet 5.5 launch, overview, prompting, effort and Code selection sources were r
 Plan-first selection and runtime-control sources were reverified 8 October 2026: current Claude Sonnet/Opus prompting, model selection, model overview, Code model controls/subagents, Codex models/subagent configuration and current GPT model pages. Read canonical policy source entries and `references/11-codex-runtime-features.md` or `references/41-claude-code-runtime-features.md` for exact surfaces and precedence. These sources inform unrun local admission boundaries; they do not establish model equivalence or live activation.
 
 Task selection, GPT proportional-test guidance and Opus/Sonnet thinking exceptions refreshed 9 October 2026 through the official selection and prompting pages. `references/90-model-selection.md` separates explicit prose, rendered defaults and supplied screenshots. Other capability/runtime snapshots retain their own dates; neither unavailable selector cells nor unrun calibration become negative evidence.
+
+Fable 5.2 prompting, migration, models overview, effort, model selection, and the Claude Code model-config, sub-agents and advisor pages were fetched 14 November 2026. Read `references/43-fable-5-2.md` for the model facts and `references/41-claude-code-runtime-features.md` for the corrected nesting default, the alias-only invocation model and the advisor pairs. The model-config and sub-agents pages were read to their first 100,000 characters; later sections keep their earlier dates. The OpenAI latest-model and model-selection pages were fetched the same day and name no model newer than the 3 November record, so the Codex policy is unchanged. Local calibration remains unrun.
 
 Terra's Codex model list, workload guidance and API model page were verified 3 November 2026.
 Read `references/12-gpt-6.md` for surface and host evidence and

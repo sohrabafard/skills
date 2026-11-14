@@ -1,6 +1,6 @@
 ---
 name: alaa-memory-os
-description: "Use when Alaa work must record or recall durable cross-session knowledge, whichever memory store backs it: deciding what to remember and in what shape; architecture, ownership, contract, operations, lesson, project, handoff or research notes; whether information belongs in the memory store, a Beads hub reminder or Beads issue notes; drift between sources of truth; fail-open recall budgets; and capability recall before a local-tool miss becomes a validation blocker or a permitted environment repair has an unknown owner. One adapter is active at a time; the local file vault and Hindsight each get one adapter reference. Do not use for tiny deterministic edits, as a second task system, for active plans or handoff contents owned by alaa-workflow, for candidate admission owned by alaa-extract-agent-lessons, or for service dependency edges, which are always derived."
+description: "Durable cross-session memory policy for Alaa work, whichever memory store backs it. Use when work must record or recall durable cross-session knowledge: deciding what to remember and in what shape; architecture, ownership, contract, operations, lesson, project, handoff or research notes; whether information belongs in the memory store, a Beads hub reminder or Beads issue notes; drift between sources of truth; fail-open recall budgets; and capability recall before a local-tool miss becomes a validation blocker or a permitted environment repair has an unknown owner. One adapter is active at a time; the local file vault and Hindsight each get one adapter reference. Do not use for tiny deterministic edits, as a second task system, for active plans or handoff contents owned by alaa-workflow, for candidate admission owned by alaa-extract-agent-lessons, or for service dependency edges, which are always derived."
 ---
 
 # Alaa Memory OS
@@ -27,7 +27,7 @@ concurrency assumptions, and disagreement later leaves notes duplicated or missi
 For a supported store switch, change the selector. Do not rewrite the neutral knowledge/drift rules here,
 in `references/knowledge-shape.md` or in `references/drift-management.md`. Conditional selected-store policy,
 including Hindsight bank/admission policy, stays here and applies only to its store. Product commands stay
-in its adapter. Repair a store assumption in a neutral knowledge/drift rule, which is a policy leak. Do not fork
+in its adapter. A store assumption inside a neutral knowledge or drift rule is a policy leak: repair it there. Do not fork
 those rules.
 
 Handle these failures separately. Never switch adapters around either:
@@ -131,7 +131,8 @@ native status transitions. Never infer host status changes from prose classifica
 ## Drift and stale memory
 
 Current canonical repository evidence wins over memory. A memory-only contradiction is a stale note, not
-canonical-source drift. Correct it only with write authority. Otherwise defer the correction with a source
+canonical-source drift. A stored caution or prohibition whose stated reason no longer holds is also a stale
+note, and its correction may set its `status` to `archived` through the selected adapter. Correct it only with write authority. Otherwise defer the correction with a source
 pointer. When canonical sources disagree, record the mismatch without silently deciding it. Continue
 only on the safest verified behavior. Drift recording is a gate: if the required repository record cannot
 be written within authority, stop dependent work and report the unwritten record.

@@ -86,47 +86,9 @@ load on a concern no reference file keys on:
 ## What this skill does not own
 
 This skill owns **names, values, shapes, and wire behaviour**. It does not own the requirement levels,
-verdicts, or doctrine attached to them. Where a rule here and a rule in one of these skills disagree, the
-skill named below wins for its half. Maintainers delete the weaker statement here rather than keep it as a second
-opinion.
-
-- **`alaa-observability-soc`** owns every observability requirement level, gate, threshold, alert, Collector
-  topology and processor placement, metric label allow and deny list, resource-identity policy, exemplar
-  requirement level, and Sentry policy. This skill keeps every metric, log field, event, code, and `OTEL_*`
-  name together with its default value.
-- **`alaa-reliability-sla`** owns timeout, retry, circuit-breaker, backpressure, and error-budget doctrine —
-  why a value exists and how to choose it. This skill keeps the Ala values and the wire behaviour in
-  `references/22-failure-load-and-deprecation-contract.md`.
-- **`alaa-security-review`** owns security review checklists and verdicts, the general fail-closed doctrine,
-  and the general rule that allow-side authorization metadata is never an authorization input. This skill
-  keeps the exact header names, envelope shapes, and the fail-closed wire contract those rules act on.
-- **`service-runtime-kit-governance`** owns which generator variable expresses each runtime value and which
-  kit version ships it. This skill keeps the canonical shared-infra names, the host-port table, and the
-  reuse-or-fail-fast obligation.
-- **`alaa-laravel-architecture`** and **`alaa-php-clean-code`** own PHP and Composer package selection and
-  framework idiom. This skill keeps middleware order, class and helper names, and response boundaries.
-- **`alaa-docker-production`**, **`alaa-k8s-helm`**, **`alaa-haproxy`**, and **`alaa-gitlab-ci-cd`** own
-  the mechanics of containers, clusters and charts, proxies, and pipelines; **`caas-arvan-kuber`** owns Arvan
-  CaaS platform facts. This skill keeps the Ala fleet policy.
-- **`alaa-async-messaging`** and **`alaa-laravel-job-rabbitmq`** own broker prefetch, acknowledgement
-  mechanics, DLQ handling, and consumer tuning. This skill keeps the exchange, queues, routing keys, and
-  envelope.
-- **`alaa-data-layer`** owns pool mechanics inside a driver and persistence invariants. This skill keeps the
-  pool bounds and the acquire timeout.
-- **`/alaa-minio-object-storage`** owns the object store as a platform component: the
-  bucket, the tenant scope carried inside an object key, lifecycle and retention policy, storage-credential supply and
-  rotation, and presigned-URL issuance. Load it when shaping a bucket, writing a lifecycle or retention policy,
-  scoping an object key to a tenant, granting or rotating a storage credential, or issuing a presigned URL.
-- **`alaa-keyset-pagination`** owns the pagination design method: choosing the traversal mode, the sort
-  allowlist, the ordering tuple and its unique final component, the composite index, the row-value
-  continuation predicate, the signed cursor's payload and context binding, and the nullable, mutable, and
-  backward-traversal cases. This skill keeps the wire shape those decisions produce — `cursor`, `limit`,
-  `meta.next_cursor`, `meta.prev_cursor`, the forbidden `meta` keys, and the admin-table offset exception.
-- **`alaa-system-design`** owns *when* a contract shape is decided and by what procedure: the rule that the shape is
-  settled in a design record and committed before the code that satisfies it, where the boundary the contract sits on
-  runs, and which component owns each datum crossing it. This skill keeps the shape itself — the envelope, header,
-  event, code, and identifier a decided contract must use. Read it before adding a surface, not while adding one.
-- **`alaa-prompting-guide`** owns model/effort capability evidence and runtime mechanics; the runtime orchestrator owns actual task allocation for every authority role.
+verdicts, or doctrine attached to them. Where a rule here and a rule in the owning skill disagree, the
+owning skill wins for its half. Before you decide a requirement level, a gate, a doctrine or a mechanism, read
+*Owned by another skill* in `references/00-topic-map.md`. It names each owner and what this skill keeps.
 
 ## When not to use
 
@@ -138,15 +100,4 @@ opinion.
 
 ## Maintenance rules
 
-- Keep this file routing-first; every exact contract detail lives in `references/`.
-- State each rule in exactly one file. When a rule appears twice, delete the weaker statement and leave a
-  one-line pointer to the owner.
-- Change a route, header, event, code, metric, permission, or queue name only through the deprecation
-  procedure in `references/22-failure-load-and-deprecation-contract.md`.
-- Never pin a tool, kit, or library version here. Name the skill that owns the version instead, because a
-  version pin in a contract file goes stale silently and is then copied forward as authoritative.
-- When a change touches a contract owned jointly with a companion skill, update that skill in the same
-  effort and record the split in the ownership list above.
-- Record conformance in `references/95-fleet-conformance.md`, never in a rule file. When a change makes a
-  service conform, or a new rule leaves the fleet behind, update that snapshot in the same effort. It is
-  evidence, not contract: it states no rule and overrides none.
+Before you edit this skill, read *Maintenance rules* in `references/00-topic-map.md`.

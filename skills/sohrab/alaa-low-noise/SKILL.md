@@ -46,19 +46,19 @@ with a concise outcome. Report file paths for file artifacts. Outside admission,
 read-only or advisory requests only when explicitly requested. `/alaa-repo-docs` owns documents.
 Preserve required checklists, resume context and phase/task skill bindings when shortening output.
 
-- Report only milestones, blockers, scope changes, validation outcomes, and useful artifact paths. Never duplicate status already surfaced by the harness.
+- Where a person follows the run, write a one-line opening and a one-line update every few tool calls. An unattended lane needs neither. Beyond those lines, report only milestones, blockers, scope changes, validation outcomes, and useful artifact paths. Never duplicate status already surfaced by the harness.
 - Bound terminal output. Do not dump unbounded files, trees, manifests, or logs. Prefer purpose-built tools, changed-file lists, diff stats, and path-scoped diffs.
 - **Default progress budget: 12 lines of prose and excerpts up to 20 lines.** Apply this budget to progress reports, not requested deliverables or required findings. Preserve required content that exceeds the default. Put bulky working material in an authorized artifact.
-- Retain an artifact only when it helps the user inspect or resume. Summarize its outcome and name its path. Remove throwaway files when safe. Keep implementation in normal repository files, never in temp, shell-history, or off-repo state.
-- Finish with changed paths, reasons, validation results, and remaining risks or blockers. Do not paste a large diff instead.
+- Retain an artifact only when it helps the user inspect or resume. Summarize its outcome and name its path. Remove throwaway files before finishing when safe. Keep implementation in normal repository files, never in temp, shell-history, or off-repo state.
+- Finish with changed paths, reasons, validation results, and remaining risks or blockers. Write the final report so that a reader who saw no tool call understands it. Do not paste a large diff instead.
 - On sandbox, refresh, locking, quoting, or command-length failures, retry only the essential failed work. Retry serially with bounded output. Under Codex, first invoke `/alaa-codex-runtime-ops`. That recovery skill is Codex-only. It has no Claude Code equivalent.
 
 #### The three leaks
 
 These actions can feel like diligence. Use their replacements to avoid noise:
 
-1. **Narrating a plan before execution:** State a plan only when the user must decide something before it runs. Otherwise, run it and report the outcome; the next action shows the plan.
-2. **Pasting output to prove a command ran:** Report the result, the one line that mattered, and the path to the rest. The outcome is evidence; the transcript is not.
+1. **Narrating a plan before execution:** State a plan only when the user must decide something before it runs. Otherwise, run it and report the outcome; the next action shows the plan. The one-line opening of an attended run is not a narrated plan.
+2. **Pasting output to prove a command ran:** Report the command, the result, the one line that mattered, and the path to the rest. The outcome is evidence; the transcript is not.
 3. **Restating a file just written or edited:** Name its path and what changed. The file is the deliverable and can be opened.
 
 ## Model calibration
@@ -76,8 +76,7 @@ When output length or narration needs tuning, read `references/model-output-prof
 
 Read only when needed:
 
-- `references/model-output-profiles.md` when calibrating output length or narration, including routing a model-specific claim.
-- `references/noise-control-patterns.md` for search, read, diff, and log-capture patterns in both runtimes.
+- `references/noise-control-patterns.md` when you are about to choose a search, read, diff, or log-capture command in either runtime.
 - `references/workflow-integration.md` when `/alaa-workflow`, repo-local state, or delegated lanes are active.
 - `references/90-source-map.md` when behavior depends on current tool, shell, runtime, or model guidance.
 

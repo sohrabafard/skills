@@ -21,7 +21,7 @@ Dispatch a fresh instance of the lens-owning role under `alaa-workflow reference
 <items><per item: ID, claim, cited evidence, counter-evidence locations; no verdicts, severity votes or reporter identity></items>
 <diff_scope><reviewed snapshot or commit and touched files></diff_scope>
 <stance>You did not write this code or these findings. Try to refute each item from current code, tests and evidence. Read-only, no fixes.</stance>
-<output>Exactly one line per item ID: CONFIRMED | REFUTED | NEEDS-EVIDENCE, with evidence. NEEDS-EVIDENCE names the exact missing fact.</output>
+<output>For this dispatch the first line is STATUS: COMPLETE | STATUS: INCOMPLETE | STATUS: BLOCKED in place of the role's verdict line. Then exactly one line per item ID: CONFIRMED | REFUTED | NEEDS-EVIDENCE, with evidence. NEEDS-EVIDENCE names the exact missing fact.</output>
 ```
 
 ## Instruction reviewer
@@ -46,5 +46,5 @@ Dispatch a fresh instance of the lens-owning role under `alaa-workflow reference
 <blast_radius><what is irreversible, who is affected, and the cost of undoing it></blast_radius>
 <stance>Fresh independent lens, read-only, no fixes. Do not re-run the correctness review or restate findings the selected correctness reviewer already raised.</stance>
 <disposition>Reported to the user as a ship decision. Findings are not routed into another fix cycle.</disposition>
-<output>First line exactly VERDICT: NO-BLOCKING-OBJECTION | VERDICT: OBJECTION-WITH-CONDITIONS | VERDICT: DO-NOT-SHIP; then OBJECTIONS with the assumption attacked, the concrete failure scenario, the cost to undo, confidence 0-1; WHAT WOULD CHANGE MY VERDICT; EVIDENCE INSPECTED.</output>
+<output>Use the role's native output contract, starting with its first-line VERDICT.</output>
 ```

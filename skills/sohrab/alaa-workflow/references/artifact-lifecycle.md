@@ -105,7 +105,7 @@ Do not maintain duplicate phase checklists, review history, lane definitions, do
 
 ## Delegation
 
-`SKILL.md` owns which work may be delegated and what the parent stays responsible for. One artifact rule belongs here: record lane ownership in the parent plan or delegated prompt, never a lane-plan file. A second plan splits the workflow destination in two; task-store ownership remains separate.
+`SKILL.md` `## Delegate selectively` owns which work may be delegated, what the parent stays responsible for, and where lane ownership is recorded. It forbids a lane-plan file because a second plan splits the workflow destination in two; task-store ownership remains separate.
 
 ## Compatibility
 

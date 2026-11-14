@@ -97,8 +97,8 @@ how to launch one, quote the matching launcher verbatim from `assets/first-messa
 6. The final document is law: durable authority, principles, canonical ownership, change control,
    amendments, exceptions, and one status footer. Keep authoring telemetry, evidence ledgers, claim
    labels, module classifications, decision state, and binding mechanics out of it.
-7. Do not modify application code, dependencies, deployments, shared systems, or Git history.
-   Modify `AGENTS.md` and `CLAUDE.md`, or the generator source that produces them, only under
+7. Ask for explicit approval before you modify application code, dependencies, deployments,
+   shared systems, or Git history; `## Safety and authority` lists the other gated actions. Modify `AGENTS.md` and `CLAUDE.md`, or the generator source that produces them, only under
    authorised binding.
 
 ## Phase order

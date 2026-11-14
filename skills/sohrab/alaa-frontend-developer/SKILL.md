@@ -28,7 +28,7 @@ Do not use it for pure Quasar API lookup, pure visual design, browser-automation
    - a repo rule requires reproduction;
    - one static pass is complete and you can name the one observation source cannot produce: exact console warning text, a computed style value, or an HTTP status. State that observation first.
 6. **No service-worker strategy drift.** Do not add or widen a runtime-cache route matcher, change placeholder substitution, or alter registration and lifecycle orchestration unless that change is what was asked for.
-7. **No second envelope and no second error format.**
+7. **No second envelope and no second error format.** On every endpoint, use the envelope and error format that `/alaa-services-contract` defines.
 8. **A performance budget breach blocks merge.** It clears only by a recorded exception in the repo's budget config. The exception names the route, the new ceiling, and the approving maintainer.
 9. **Proof before "done".** Select the proof level for the change surface and run it. A repo with no runner for that level is a blocking finding, not a waiver.
 
