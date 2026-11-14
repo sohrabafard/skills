@@ -7,7 +7,7 @@ Two columns, always. Column A is what the **pinned line** serves — the Kuberne
 ## Capture stamp
 
 - **Spec capture date: unknown.** The vendored file `references/arvan-caas-openAPI-1.25.json` carries no capture date, and Arvan publishes no version. The document includes `autoscaling/v2beta2`, removed upstream in 1.26. This identifies an older API surface, not the current vendor server version.
-- **Matrix last reconciled against the spec: never, mechanically.** The generated block below was seeded on 2026-07-29 from the previous hand transcription. Run `bash scripts/summarize-openapi.sh --update` once to replace it with values read from the spec, then commit. `--check` reports any later divergence.
+- **Matrix last reconciled against the spec: 2026-11-14, mechanically.** The generated block below was seeded on 2026-07-29 from the previous hand transcription. On 2026-11-14, `bash scripts/summarize-openapi.sh --update` rewrote it from the spec; the only change added the `binding` and `exec` subresources to the `core/v1/pods` row. `--check` reports any later divergence.
 - **Vendor cross-check: 2026-07-29.** ArvanCloud's public documentation states no Kubernetes version and no API version on the Cloud Container pages or the developer API-usage page, so nothing in this file can be confirmed against a vendor statement. See `references/SOURCES.md`.
 
 ## Generated block
@@ -42,7 +42,7 @@ Everything between the markers is produced by `bash scripts/summarize-openapi.sh
 | `core/v1/events` | `[delete,get,post]` | `[delete,get,patch,put]` | `-` |
 | `core/v1/limitranges` | `[get]` | `[get]` | `-` |
 | `core/v1/persistentvolumeclaims` | `[delete,get,post]` | `[delete,get,patch,put]` | `status=[get,patch,put]` |
-| `core/v1/pods` | `[delete,get,post]` | `[delete,get,patch,put]` | `attach=[get,post]; ephemeralcontainers=[get,patch,put]; eviction=[post]; log=[get]; portforward=[get,post]; proxy=[delete,get,patch,post,put]; status=[get,patch,put]` |
+| `core/v1/pods` | `[delete,get,post]` | `[delete,get,patch,put]` | `attach=[get,post]; binding=[post]; ephemeralcontainers=[get,patch,put]; eviction=[post]; exec=[get,post]; log=[get]; portforward=[get,post]; proxy=[delete,get,patch,post,put]; status=[get,patch,put]` |
 | `core/v1/replicationcontrollers` | `[delete,get,post]` | `[delete,get,patch,put]` | `scale=[get,patch,put]; status=[get,patch,put]` |
 | `core/v1/resourcequotas` | `[get]` | `[get]` | `status=[get]` |
 | `core/v1/secrets` | `[delete,get,post]` | `[delete,get,patch,put]` | `-` |
