@@ -129,3 +129,15 @@ No fixture, self-test or comparison run was created. Static checks prove source 
 The final commit's repairs to the last review's findings were not re-reviewed. They restore earlier wording or narrow a claim, and every gate below ran after them.
 
 Final-candidate gates, all exit 0: the four root checkers; the three prompting-guide policy checkers (the Codex one over both agent roots); `render_agents.py --check`, `validate_pack.py`, `check_agent_grants.py` and `check_agent_contracts.py` in each orchestrator; `check_execution_contracts.py`; the constitution template validator; `sha256sum -c` for `alaa-memory-os`.
+
+## Lane and review records
+
+`lanes/` holds one condensed record for each edit lane and each review: the edits by rubric code, the items reported and not fixed with their file and line, and the validators each lane observed.
+
+## Curation
+
+No memory note was written. Three candidates were considered and rejected because the repository already records each one: dispatch templates that restate a role's output contract drift from the agent definition (now removed, and recorded in both changelogs); a merge activates the symlinked skills while installed agent copies wait for an authorized install (stated in `docs/install-skills/40-agent-installation.md` and under *Pending actions* above); and the carry-over review itself (owned by `alaa-prompting-guide`).
+
+## Installer check
+
+`python3 -m unittest scripts/test_install_claude_agents.py` ran 17 tests and passed on the final candidate. The installer dry-run on the pre-merge checkout reported every installed agent unchanged, so the installed copies match version 5.5.0.
