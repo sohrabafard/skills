@@ -62,6 +62,8 @@ A definition created in the repository does not prove that the current session h
 
 A subagent inherits the parent sandbox policy and runtime overrides. A `read-only` TOML value does not prove that every capability is read-only. Inspect the effective native permissions, the parent overrides and the MCP tool grants; the server-side effects of an MCP tool are outside native sandbox enforcement. Before you claim a read-only boundary, restrict or withhold mutation-capable tools. Do not change installed configuration without authority.
 
+In `workspace-write`, these paths stay read-only inside a writable root, recursively: `.git`, whether it is a directory or a pointer file, together with the Git directory a pointer file names; and the directories `.agents`, `.codex` and `.aws` when they exist. The page does not say how `git commit` is handled. Verified 14 November 2026 against [Sandbox and approvals](https://learn.chatgpt.com/docs/agent-approvals-security).
+
 Keep the requested profile, model and effort separate from the observed runtime identity. Use `unknown` for a value the host does not expose; a copied pin is not an observation. A report that carries a verdict puts the verdict first and the metadata after it. A replacement-only agent keeps its output contract, and the caller records its requested configuration externally.
 
 The sources below were verified on 25 September 2026. The policy JSON records a dated

@@ -1,6 +1,6 @@
 {
   "pack": "alaa-cc-orchestrator",
-  "version": "5.9.0",
+  "version": "5.9.1",
   "managed_agents": [
     {
       "name": "alaa-accessibility-reviewer",

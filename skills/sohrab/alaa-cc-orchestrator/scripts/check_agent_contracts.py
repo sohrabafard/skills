@@ -353,7 +353,7 @@ CADENCE_REQUIREMENTS = ('Stages A-F define outcomes and authority. They are dist
  'Reuse applicable standing authority without another approval',
  'Preserve an identified snapshot when authority or validation is missing',
  "Its `## Lane branches and commits` owns the lane branch, lane commits, the merge and the lead's own commits",
- 'The integration parent commits only work that no lane owns, as it lands',
+ 'The integration parent commits work that no lane owns, and work a lane returned uncommitted after its focused checks passed, as it lands',
  "Pending review never delays a lane's or the parent's authorized checkpoint",
  'Push, tag, history rewrite and any merge other than the lane-branch merge still require explicit permission',
  'Stage C collects focused phase evidence. Stage D waits for the inherited review boundary',

@@ -1,5 +1,10 @@
 # Changelog
 
+## 5.9.1 - 2026-11-14
+
+- `alaa-workflow references/workspace-and-integration.md` `## Lane branches and commits`: the lead commits work that a lane returned uncommitted, by path, on the lane branch, and it does not switch the checkout's branch while a writer it does not control is active there; it records isolation instead.
+- `references/routing-matrix.md`: a session started before a role was installed may not have it, because a running session received the new roles without a restart.
+
 ## 5.9.0 - 2026-11-14
 
 - Owner decision, 2026-11-14: implementation lanes and the documenter commit on a lane branch. The lead creates one lane branch per ready set in its own checkout; lanes whose owned files do not overlap share that checkout and branch, and a worktree stays the route for overlapping files or plan-required isolation. A dispatch grants commit authority by naming the lane branch in the new `<commit>` field; a lane then commits only its owned paths, by path, and never changes what the shared checkout points at. The lead merges an accepted lane branch with `git merge --no-ff` and deletes it: once after the final review under a final boundary, at each phase's review under a phase boundary. `alaa-workflow references/workspace-and-integration.md` `## Lane branches and commits` owns the rule; the implementation contract, the documenter, the gate policy, `SKILL.md` and the implementation, fix-cycle and documenter templates point to it. It replaces the rule that lanes never commit and the parent serializes every commit. Session evidence: 145 of 209 implementation lanes in one week ran `git commit`.

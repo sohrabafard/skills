@@ -30,7 +30,7 @@ Read these plan fields in the plan's canonical medium: `Review boundary: phase|f
 Local commits follow the main instruction file's local-commit rule through `alaa-workflow references/workspace-and-integration.md`. Its `## Lane branches and commits` owns the lane branch, lane commits, the merge and the lead's own commits:
 
 - Implementation and documentation lanes commit their owned paths on the lane branch their dispatch names, when their focused checks pass, at any phase, including before final review.
-- The integration parent commits only work that no lane owns, as it lands.
+- The integration parent commits work that no lane owns, and work a lane returned uncommitted after its focused checks passed, as it lands.
 - A commit is a checkpoint, not acceptance; record review status separately.
 - Reuse applicable standing authority without another approval.
 - Preserve an identified snapshot when authority or validation is missing.
