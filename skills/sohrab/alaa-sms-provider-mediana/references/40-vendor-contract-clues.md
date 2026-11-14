@@ -44,5 +44,5 @@ The sample is not a starting point to copy. Build the client from the field tabl
 - Parse the `data`/`meta` envelope on every response, including non-2xx, before deciding anything. A status code alone is wrong on an API that reports refusal inside a 200.
 - Use typed request and response structs rather than `map[string]interface{}` for `params`, so a field-name change fails at compile time instead of at the vendor.
 - Never print from library code. The sample's `fmt.Printf` on a body-close failure writes to whatever stdout the worker has, outside the service's log pipeline and its redaction.
-- Redact the `Authorization` header, recipients, OTP values, pattern variable values, and message text at the point they enter any error or log value, using the mask forms in `SKILL.md`.
+- Keep the `Authorization` header, recipients, OTP values, pattern variable values, and message text out of every error and log value at the point where they would enter it, under the exclusion rule in `SKILL.md`.
 - Cover request JSON encoding, form encoding for the multipart modes, query encoding, final URL construction, envelope parsing, and each of the four transport classes with table-driven tests.

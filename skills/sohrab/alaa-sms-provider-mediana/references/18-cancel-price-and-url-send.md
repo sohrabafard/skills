@@ -39,7 +39,7 @@ The success `data` carries `mci_price`, `other_price`, and `parts`.
 
 `GET /api/send/webservice`, credential in the query string, parameters `from`, `message`, `to`, and either `apikey` or a `username`/`password` pair.
 
-**Do not use this endpoint for authenticated production traffic. Use `POST /api/send` with the token in the `Authorization` header instead.** A GET query string is written verbatim into the web server's access log, every proxy log on the path, the browser or shell history of whoever ran it, and any error report that captures the request URL. None of those rotate the credential, and none of them are covered by the masking rules in `SKILL.md`, because masking applies to what your code emits and not to what an intermediary records.
+**Do not use this endpoint for authenticated production traffic. Use `POST /api/send` with the token in the `Authorization` header instead.** A GET query string is written verbatim into the web server's access log, every proxy log on the path, the browser or shell history of whoever ran it, and any error report that captures the request URL. None of those rotate the credential, and none of them are covered by the exclusion rule in `SKILL.md`, because that rule applies to what your code emits and not to what an intermediary records.
 
 Use it only when a legacy system outside this repository can call nothing else, and then: issue that system its own API key so revocation does not affect production sends, and record the exception and its owner in the change.
 

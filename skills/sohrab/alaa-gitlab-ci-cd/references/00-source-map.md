@@ -2,8 +2,9 @@
 
 Which official page is authoritative for which claim, when to re-check, and how
 to resolve a conflict. Version facts and the cadence that lets you compute a
-baseline live in `feature-version-notes.md`; this file is the provenance ledger
-behind them.
+baseline live in `feature-version-notes/10-compute-supported-baseline.md` and
+`feature-version-notes/20-feature-status-limits-and-deprecations.md`; this file is
+the provenance ledger behind them.
 
 ## Freshness triggers
 

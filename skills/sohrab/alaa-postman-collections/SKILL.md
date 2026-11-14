@@ -63,7 +63,8 @@ files the current task touches.
    `references/25-public-api-contract-and-sdk-readiness.md` when the repo owns a public API.
 4. Follow the ordered workflow in `references/10-scope-and-trigger-rules.md`. It also
    holds the generated-artifact rule and the stop-and-ask conditions.
-5. Prefer a minimal update to an existing artifact over a rewrite.
+5. Before you rewrite or replace an existing artifact, apply the hard constraints and the update-vs-create rule in
+   `references/10-scope-and-trigger-rules.md`.
 6. Before running any artifact check, read `references/60-validation-and-output-contract.md`
    for the offline workflow, flags, and exit codes.
 

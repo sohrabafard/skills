@@ -1,7 +1,7 @@
 # Runner: shell and Kubernetes executors
 
 Runner architecture and configuration. Failure triage lives in
-`validation-and-debugging.md`; image pinning syntax lives in
+`validation-and-debugging/30-failure-class-triage.md`; image pinning syntax lives in
 `cache-artifacts-and-pinning.md`.
 
 ## Table of contents
@@ -171,10 +171,9 @@ give the readers `policy: pull`.
 - **`allowed_pull_policies` and `pull_policy`.** `pull_policy` is the runner's
   own default; `allowed_pull_policies` is what a pipeline may request. A
   `pull_policy` outside the allowlist makes every job fail at pod creation —
-  `validate_runner_config.py` reports `kube-pull-policy-conflict`. Prefer
-  `always` on any runner more than one project can reach: with `if-not-present`, a
-  layer already cached on the node under a reused tag is served to the next
-  project.
+  `validate_runner_config.py` reports `kube-pull-policy-conflict`. Choose
+  between `always` and `if-not-present` by the rule in `security-and-hardening.md`
+  under "Pull policy and image trust".
 
 ## Distributed cache
 

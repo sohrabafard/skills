@@ -48,4 +48,4 @@ published component by commit SHA or by tag; a branch reference makes the
 component's content change under the consumer. Use typed inputs when the value
 should be validated before the pipeline is created, and variables when the value
 is runtime-only, secret, or environment-scoped — the full boundary is in
-`variables-and-inputs.md`.
+`variables-and-inputs/10-mechanism-and-expansion.md`.

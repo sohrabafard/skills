@@ -69,7 +69,7 @@ task.
 14. Preserve every existing document's language. Create or update a localized companion only when
     the user explicitly requested it, then validate that pair with
     `--localized-pair <base> <companion>`.
-15. Before finishing, walk the `## Coverage requirements` list in every contract reference that applied to this task and confirm each question is answered by the document that owns it. **An unanswered coverage question is a gap to close, and that is this skill's only done criterion.** "Richer or clearer than before" is not one, because no agent can fail it.
+15. Before finishing, walk each section whose heading ends in `coverage requirements`, in any capitalization, in every contract reference that applied to this task and confirm each question is answered by the document that owns it. **An unanswered coverage question is a gap to close, and that is this skill's only done criterion.** "Richer or clearer than before" is not one, because no agent can fail it.
 
 ## Output checklist for documentation updates
 

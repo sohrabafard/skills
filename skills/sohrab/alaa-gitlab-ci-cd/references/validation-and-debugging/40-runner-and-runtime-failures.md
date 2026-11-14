@@ -52,12 +52,13 @@ in a merge request pipeline.
 
 *Diagnose:* image contents and entrypoint; variable scope, masking and protection;
 file-variable paths; writable directories; network policy and DNS from the pod.
-For an empty variable, walk the six-question order in `variables-and-inputs.md`
-before changing anything.
+For an empty variable, walk the six-question order in
+`variables-and-inputs/80-variable-debugging-and-inventory.md` before changing
+anything.
 
 *Smallest retry:* re-run the one job. If it passes on the second run with no
 change, that is a flake and the bare-`retry:` rule in
-`job-graph-and-scheduling.md` explains why it must not be hidden by a retry.
+`job-graph-and-scheduling/50-retry-failure-classes.md` explains why it must not be hidden by a retry.
 
 *Escalate when:* the same script passes locally and fails on the runner with
 identical inputs — the difference is in the image or the runner, not the script.

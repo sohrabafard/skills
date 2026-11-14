@@ -14,7 +14,7 @@ syntax error is the tool's defect, not the file's.
 *Smallest retry:* fix the file and push; configuration changes take effect on a
 new pipeline, not on a re-run of an existing job.
 
-*Escalate when:* the merged configuration is valid and the file alone is not —
+*Escalate when:* the file alone is valid and the merged configuration is not —
 the problem is in an included file, which is class 2.
 
 ### 2. Pipeline creation or rule evaluation failure

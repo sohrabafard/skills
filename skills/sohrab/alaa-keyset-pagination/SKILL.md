@@ -38,7 +38,7 @@ Work in order. Each step names the observable that decides whether it is done. A
 **1. Choose the traversal mode.** Choose by consumer, not by preference.
 - A public or user-facing collection, feed, comment thread, notification list, activity log, watch history, or any collection growing with tenant data: use a keyset cursor. This is the default and needs no justification.
 - An export, backfill, reindex, or any traversal the service runs against itself: use chunked primary-key traversal. Never use a paginated public route. `chunk()` is forbidden: it pages by offset and drops rows when the callback mutates the rows it is walking.
-- An admin table that genuinely requires exact totals and page numbers: use offset, and only when every one of the five conditions in `references/10-route-mode-and-sort-allowlist.md` holds. "An operator asked for totals" is not one of them.
+- An admin table that genuinely requires exact totals and page numbers: use offset, and only when every one of the five conditions in `alaa-services-contract references/25-end-to-end-flow-and-boundaries.md`, `Admin-table offset exception`, holds. "An operator asked for totals" is not one of them.
 
 Observable: the route documentation names exactly one of these three modes, and the call site in the repository matches the mode named.
 

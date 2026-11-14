@@ -42,7 +42,7 @@ shipped Go consumer predates it and hand-writes its own, which is the duplicatio
 
 1. Use the generated constants in middleware and route registration. No permission name string literal and no numeric
    id appears anywhere else in the service.
-2. **Cap the encoded bitmap length at the trusted-context boundary, before decoding.** This is rule 3 of the decode-cost
+2. **Cap the encoded bitmap length at the trusted-context boundary, before decoding.** This is the fourth rule of the decode-cost
    section in `references/shared-consumer-contract.md`, and it is restated here because a Go implementer reading only
    this file would otherwise ship an uncapped decode, as the shipped Go consumer did. Call
    `DecodePermissionSetWithLimits` with the value from
