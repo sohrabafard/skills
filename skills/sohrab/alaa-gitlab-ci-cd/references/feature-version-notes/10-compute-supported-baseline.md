@@ -39,9 +39,10 @@ published helper image tag was `x86_64-v19.1.2`. Those three numbers are here as
 a dated observation, not as a baseline to design against.
 
 **2026-09-29 refresh:** GitLab 19.4 was released on 2026-09-17:
-https://docs.gitlab.com/releases/19/gitlab-19-4-released/. The July Runner/helper
+https://docs.gitlab.com/releases/19/gitlab-19-4-released/. The July Runner and helper
 observations above remain historical; this refresh does not validate newer helper
-image tags or change the consuming instance minimum. Match its actual version.
+image tags or change the consuming instance minimum. Match the consuming instance's actual
+version.
 
 ## Writing an answer when the target versions are unknown
 

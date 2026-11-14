@@ -42,7 +42,7 @@ Synthesize, in this order:
 1. explicit user context and owner decisions from the current request, including any supplied
    RFP, specification, or reference material;
 2. the complete prior constitution — preserved principles, TODOs, proposals, exceptions,
-   canonical-source pointers, and status/version evidence;
+   canonical-source pointers, and status and version evidence;
 3. repository identity, owned journeys, runtime surfaces, data flows, trust boundaries,
    deployment model, consumers, and operational expectations;
 4. the matched archetypes and their mandatory obligations.

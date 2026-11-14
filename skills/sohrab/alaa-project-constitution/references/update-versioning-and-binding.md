@@ -73,9 +73,9 @@ approval.
 - Use "ratified" or "approved" only where a named repository source records that decision.
 - A `BINDING` constitution requires a non-placeholder ratification-evidence path or an explicit
   recorded owner decision, in addition to status, date, and approving role.
-- A create/update request, permission to edit bindings, or current code enforcement is not
+- A create or update request, permission to edit bindings, or current code enforcement is not
   ratification. Preserve an existing evidenced `BINDING` status; otherwise require an explicit
-  approval decision or use `DRAFT`/`NEEDS_REVIEW`.
+  approval decision or use `DRAFT` or `NEEDS_REVIEW`.
 - `DRAFT` and `NEEDS_REVIEW` are always `NON_BINDING`; `SUPERSEDED` is `INACTIVE`.
 
 ## Filename correction

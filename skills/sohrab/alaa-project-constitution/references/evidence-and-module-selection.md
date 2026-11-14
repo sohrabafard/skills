@@ -1,6 +1,6 @@
 # Evidence and Module Selection
 
-Read this reference after the root template and before writing. Search narrowly, then read the
+Read this reference after the resolved template and before writing. Search narrowly, then read the
 smallest set of files that can establish ownership, current behaviour, and real validation
 commands.
 
@@ -100,7 +100,7 @@ owner scope. A dependency name or an unread environment variable does not prove 
 vendored package, an example directory, or a build-time-only tool is the common false positive.
 
 When `UPSTREAM_KIT_FRAMEWORK_CONTRACTS` applies, record the canonical upstream source, the
-consumer version pin, the inherited/local ownership split, the upgrade path, and the conformance
+consumer version pin, the split between inherited and locally owned surfaces, the upgrade path, and the conformance
 test. Never copy the upstream contract into a locally editable consumer file.
 
 ## Validation command discovery
@@ -119,7 +119,7 @@ For a `THIN_CHARTER`, list an exact command once at most, at its canonical owner
 change-class references instead of repeating command catalogs per module and again in a matrix.
 
 Require a repository-owned changed-path and change-class map naming mandatory gates and their
-applicability conditions, alongside the topic/layer selector map. Derive commands from the owners
+applicability conditions, alongside the selector map for each test topic and layer. Derive commands from the owners
 above; a missing map is a factual gap, never permission to invent commands or narrow existing gates.
 
 ## Evidence ledger minimum

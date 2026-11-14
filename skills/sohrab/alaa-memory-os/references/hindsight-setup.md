@@ -1,7 +1,7 @@
 # Hindsight setup and maintenance mechanics
 
-Read only when Hindsight is selected and authorized setup, configuration, bank/tag mapping, ingestion,
-import, doctor/deepen recovery or self-hosted operation is in scope. `SKILL.md` owns admission and authority;
+Read only when Hindsight is selected and authorized setup, configuration, bank or tag mapping, ingestion,
+import, doctor or deepen recovery or self-hosted operation is in scope. `SKILL.md` owns admission and authority;
 this reference preserves the existing product-specific mechanics, not a new installation permission.
 Source snapshot verified 2026-09-26; refresh current official sources before changing a pin or setup claim.
 
@@ -9,7 +9,7 @@ Source snapshot verified 2026-09-26; refresh current official sources before cha
 
 Verified 2026-09-26: the official `@vectorize-io/hindsight-coding-agents` package is `0.7.0`, and core Hindsight server is `0.10.1`. Re-check the official changelog, GitHub release, and npm registry before changing either exact pin; never infer a current version from this file alone.
 
-Coding Agents owns Claude Code and Codex hooks, MCP wiring, its staged runtime and companion skill, config merging/backups, install/update/uninstall, bank resolution, retain/recall/reflect tools, session write-back, optional git seeding, and optional conversation import. Its own `install`/`update`/`uninstall` commands are user-scope only: they write `~/.claude/settings.json`, register the MCP server with `claude mcp add --scope user`, and read config only from `HINDSIGHT_CONFIG` or `~/.hindsight/coding-agent.json` — there is no project-scope install path, no project config search, and no dotenv reader. Alaa service repositories never run those commands; each adopts Hindsight through the project-scoped launcher and hook wiring in "Installation and configuration" below, which calls the same official dist script directly. Do not add a second hook, spool, transcript parser, or MCP registration around it.
+Coding Agents owns Claude Code and Codex hooks, MCP wiring, its staged runtime and companion skill, config merging and backups, install, update and uninstall, bank resolution, retain, recall and reflect tools, session write-back, optional git seeding, and optional conversation import. Its own `install`/`update`/`uninstall` commands are user-scope only: they write `~/.claude/settings.json`, register the MCP server with `claude mcp add --scope user`, and read config only from `HINDSIGHT_CONFIG` or `~/.hindsight/coding-agent.json` — there is no project-scope install path, no project config search, and no dotenv reader. Alaa service repositories never run those commands; each adopts Hindsight through the project-scoped launcher and hook wiring in "Installation and configuration" below, which calls the same official dist script directly. Do not add a second hook, spool, transcript parser, or MCP registration around it.
 
 ## Installation and configuration
 
@@ -71,7 +71,7 @@ for it.
 
 `retainTags` and `retainMetadata` add fixed-shape service provenance to official session writes on the shared
 bank; they do not replace the opt-in boundary, and remembered service dependency edges remain prohibited
-because they are derived from live code/contracts. Every repository's `retainTags` carries its catalog tag
+because they are derived from live code and contracts. Every repository's `retainTags` carries its catalog tag
 (`service:<name>` or `area:<name>`, as the hindsight project's `service-catalog.json` assigns it) plus the
 official template `project:{gitProject}`, which resolves to the main worktree's directory name. A page about one
 repository is tagged with that repository's unique tag — `service:<name>` where the catalog gives the repository
@@ -103,5 +103,5 @@ Historical import is optional. Use the upstream `--import-conversations` path on
 
 ## Self-hosted security
 
-For self-hosted mode, require API authentication before any non-loopback bind. Keep the tracked default on loopback; use only a specific trusted-LAN address when explicitly selected, never `0.0.0.0`. Keep raw LLM traces disabled for normal operation. Tokens, transcripts, real sessions, and production/personal data are never used as sample data.
+For self-hosted mode, require API authentication before any non-loopback bind. Keep the tracked default on loopback; use only a specific trusted-LAN address when explicitly selected, never `0.0.0.0`. Keep raw LLM traces disabled for normal operation. Tokens, transcripts, real sessions, and production or personal data are never used as sample data.
 

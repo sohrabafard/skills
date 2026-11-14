@@ -10,7 +10,7 @@ Each entry names the command or URL that re-derives it. Check rather than trust.
 
 ## Compute the baseline, do not read it
 
-When a target GitLab or Runner version is unknown, derive the supported baseline and live-version facts before choosing version-dependent behavior. read [Compute the supported baseline](./feature-version-notes/10-compute-supported-baseline.md).
+When a target GitLab or Runner version is unknown, read [Compute the supported baseline](./feature-version-notes/10-compute-supported-baseline.md) and derive the supported baseline and live-version facts before choosing version-dependent behavior.
 
 ## Generally available, and therefore safe to use without a caveat
 
@@ -30,4 +30,4 @@ When replacing a deprecated GitLab keyword, API surface, or tool, read [feature 
 
 ## Writing an answer when the target versions are unknown
 
-When writing a design answer without known target versions, follow the baseline and qualification steps in read [Compute the supported baseline](./feature-version-notes/10-compute-supported-baseline.md).
+When writing a design answer without known target versions, follow the baseline and qualification steps in [Compute the supported baseline](./feature-version-notes/10-compute-supported-baseline.md).
