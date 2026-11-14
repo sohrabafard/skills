@@ -236,7 +236,7 @@ sink becomes a reportable error, and choose `when_full` from the rule below.
 The fleet has already decided, and this skill's job is to name the Vector option
 that expresses that decision — not to re-open it.
 
-`/alaa-observability-soc` owns the nonblocking telemetry forwarding or export
+`/alaa-observability-soc` owns the nonblocking telemetry forwarding and export
 requirement and the written-operator exception. `/alaa-security-review` owns the
 gate discriminator, including required privileged-action audit writes. Apply the
 chosen path contract with these Vector mechanisms:

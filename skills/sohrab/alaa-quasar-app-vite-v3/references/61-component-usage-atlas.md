@@ -6,7 +6,7 @@ You are choosing between two Quasar components, or a component is behaving unexp
 
 ### `QTable`
 
-Use it for interactive tables that need sorting, filtering, selection, pagination, sticky, or grid behavior; use `QMarkupTable` for static markup, or `QVirtualScroll` table mode when DOM or scroll cost is the problem. Set a stable primitive `row-key`; declare `columns` for sorting, slots, or visibility; treat server pagination as data flow, and take the cursor, limit, and error contract from `/alaa-keyset-pagination` (`$alaa-keyset-pagination`), `references/40-wire-contract-limits-and-errors.md`; consider grid mode on mobile.
+Use it for interactive tables that need sorting, filtering, selection, pagination, sticky, or grid behavior; use `QMarkupTable` for static markup, or `QVirtualScroll` table mode when DOM or scroll cost is the problem. Set a stable primitive `row-key`; declare `columns` for sorting, slots, or visibility; treat server pagination as data flow, and take the cursor, limit, and error contract from `/alaa-keyset-pagination`, `references/40-wire-contract-limits-and-errors.md`; consider grid mode on mobile.
 
 ```vue
 <!-- Do: stable key + explicit columns. Don't: object/index key; selection and updates break. -->
@@ -34,7 +34,7 @@ Search: `emit-value`, `map-options`, `use-input`, `behavior`, `clearable`, `mult
 
 ### `QImg`
 
-Use for responsive images, loading states, ratio, placeholders, fit, captions, and native lazy loading. For player-driven video — adaptive bitrate, subtitles, DRM, offline download — use `/alaa-shaka-player` (`$alaa-shaka-player`), `references/11-vue-quasar-binding.md`, not `QVideo`. QImg: use raw `img` when those ergonomics add nothing. `fit`/`position` map to object-fit/object-position; `srcset`/`sizes` remain native; placeholders help large media; when disabling native context menus, preserve slot pointer events. Load `63-image-delivery-and-placeholders.md` for deterministic delivery, shared placeholders, and SSR-safe candidates.
+Use for responsive images, loading states, ratio, placeholders, fit, captions, and native lazy loading. For player-driven video — adaptive bitrate, subtitles, DRM, offline download — use `/alaa-shaka-player`, `references/11-vue-quasar-binding.md`, not `QVideo`. QImg: use raw `img` when those ergonomics add nothing. `fit`/`position` map to object-fit/object-position; `srcset`/`sizes` remain native; placeholders help large media; when disabling native context menus, preserve slot pointer events. Load `63-image-delivery-and-placeholders.md` for deterministic delivery, shared placeholders, and SSR-safe candidates.
 
 Search: `ratio`, `placeholder-src`, `fit`, `position`, `srcset`, `sizes`, `loading="lazy"`, `context menu`.
 

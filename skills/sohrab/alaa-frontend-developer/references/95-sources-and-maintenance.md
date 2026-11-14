@@ -6,7 +6,7 @@ Read this before asserting that something is current, and when updating this ski
 
 This skill states no package versions. A version written into prose is stale the week after it is
 written, and this skill previously carried five copies of one snapshot. The source of truth is the live
-check, which belongs to `/alaa-quasar-app-vite-v3` (`$alaa-quasar-app-vite-v3`)
+check, which belongs to `/alaa-quasar-app-vite-v3`
 `scripts/check-upstream-versions.mjs` — the fleet's only copy. Run it from that skill's root before any
 version-sensitive change; it takes `--help`, honours `HTTPS_PROXY`, applies a request
 timeout, and isolates a failing package so one unreachable registry entry does not lose the rest.
@@ -43,13 +43,13 @@ Re-check them when a new browser Baseline year is published.
 
 When the repo has a `yarn.lock`, keep Yarn. Upstream support for another package manager is not a
 migration recommendation. A registry check is discovery, never a reason to change the package manager.
-Workspace and package-manager mode questions are `/alaa-mono-package` (`$alaa-mono-package`)
+Workspace and package-manager mode questions are `/alaa-mono-package`
 `references/15-package-manager-modes.md`.
 
 ## Model and effort
 
 Not decided here and not stated anywhere in this skill. Model selection, reasoning effort and prompt
-contract are `/alaa-prompting-guide` (`$alaa-prompting-guide`) `references/50-effort-and-thinking.md` and
+contract are `/alaa-prompting-guide` `references/50-effort-and-thinking.md` and
 `references/90-model-selection.md`. Authoritative OpenAI and Codex product facts are `/openai-docs`
 (`$openai-docs`).
 

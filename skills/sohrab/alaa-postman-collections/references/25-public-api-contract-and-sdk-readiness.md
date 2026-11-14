@@ -149,7 +149,7 @@ Make these rules explicit when applicable:
 - optimistic concurrency and preconditions
 - date/time, binary/upload, decimal, and lossless `int64` representation
 - backward compatibility, versioning, deprecation, and unknown-enum handling
-- correlation and request IDs, and the rules for safe logging and PII
+- the correlation ID, which is the request ID, and the rules for safe logging and PII
 
 Do not hide these semantics only in prose when the contract format can model them. Use prose extensions or companion pages only for rules the machine-readable format cannot express clearly.
 

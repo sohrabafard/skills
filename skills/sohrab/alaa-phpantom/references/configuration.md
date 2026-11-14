@@ -4,7 +4,7 @@ PHPantom chooses the Composer project root to resolve `composer.json`, `vendor` 
 
 Most repositories need no `.phpantom.toml`; avoid running `phpantom_lsp init` simply to set up this plugin. An existing `.phpantom.toml` is authoritative. Configuration groups described upstream include `[indexing]` (include/exclude and extensions), `[stubs]` (overrides), `[formatting]` (formatter selection), `[phpstan]`, `[laravel.schema]` and `[laravel.migrations]`.
 
-For Laravel, many symbols are inferred from Eloquent relations, scopes, casts, database schemas and migrations. If a class known to Composer is marked `unknown_class`, check the filesystem root, that `vendor/autoload.php` is valid, the Composer PSR-4 mapping and the indexing before you change source. Third-party stubs and generated helpers can be configured deliberately; do not add one until you confirm a real need.
+For Laravel, many symbols are inferred from Eloquent relations, scopes, casts, database schemas and migrations. If a class known to Composer is marked `unknown_class`, check the filesystem root, that `vendor/autoload.php` is valid, the Composer PSR-4 mapping and the indexing before you change source. Third-party stubs and generated helpers can be configured deliberately, but they should not be added until you confirm a real need.
 
 For formatting, PHPantom first honors explicit `.phpantom.toml` config, then project dependencies such as `laravel/pint` or PHP CS Fixer, then its built-in formatter. Existing project formatters may execute as subprocesses on format operations; do not treat a format operation as pure static analysis. Blade formatting is chosen separately and may use an installed Pint or blade-formatter, or the built-in reindentation.
 
