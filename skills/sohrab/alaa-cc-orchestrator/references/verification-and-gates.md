@@ -8,7 +8,7 @@ Stages A-F define outcomes and authority. They are distinct from workflow phases
 
 The lead owns the outcome and decides how much verification each change needs, as a senior developer does. This file prescribes no pipeline, because a fixed one spends the same hand-offs on a typo as on an authentication change.
 
-Decide once per task at plan time. Record the decision in one or two lines in the plan or compact dispatch, and revisit it only when the task changes materially. Answer:
+Decide once per task at plan time, record it in one or two lines in the plan or compact dispatch, and revisit it only when the task changes materially:
 
 1. What can be wrong that the author's own focused check would not show: effects in other modules, concurrency, contract consumers, a trust boundary, data?
 2. What does a miss cost, and can it be undone: blast radius, reversibility, exposure of production data, tenants, money or a public contract?
@@ -17,23 +17,23 @@ Decide once per task at plan time. Record the decision in one or two lines in th
 
 Then choose per task: accept the author's observed focused evidence, read the diff yourself, have `alaa-verifier` run named checks, or dispatch an independent reviewer or a specialist gate. An independent observer needs a reason drawn from questions 1 and 2: what it can see that the author cannot, or what the miss would cost. "The pipeline says so" is not a reason.
 
-`references/routing-matrix.md` owns every specialist trigger. On a floor surface the matching specialist is the required gate. Elsewhere a holding trigger answers question 1: dispatch that specialist unless the decision records why existing evidence already covers what it would see.
+`references/routing-matrix.md` owns every specialist trigger. On a floor surface the matching specialist is the required gate. Elsewhere a holding trigger informs question 1 and dispatches its specialist only with the reason the decision states.
 
 An owed affected or exhaustive check runs through `alaa-verifier`, or through the lead when its output is short enough to read in full.
 
-The decision sets whether and which verification a task gets; the declared review boundary sets when an independent review runs, over the complete candidate. A boundary where no task chose an independent observer and no floor applies earns no review dispatch.
+The decision sets whether and which verification a task gets; the declared review boundary sets when an independent review runs over the complete candidate. A boundary where no task chose an independent observer and no floor applies earns no review dispatch.
 
 ## Floors
 
 An independent gate is always required, whatever the decision says, for a change to:
 
-- authentication, authorization or tenant isolation: a miss lets one caller act as another user or tenant;
+- authentication, authorization or tenant isolation: a miss lets a caller act as another user or tenant;
 - secrets or cryptography: a miss exposes credentials or protected data;
 - billing or money: a miss moves the wrong amount;
 - a destructive or irreversible data operation, including a migration that drops or rewrites data: a miss cannot be undone;
 - a breaking change to a public contract: a miss breaks consumers this repository cannot see;
-- a production deployment or release: a miss reaches every user at once;
-- any surface the user asks to have reviewed: the user asked for a judgment other than the author's.
+- a production deployment or release: a miss reaches every user;
+- any surface the user asks to have reviewed: the user wants a judgment other than the author's.
 
 On a floor surface the author never approves its own work. The gate's blocking verdict binds the lead. Implementer evidence does not replace the gate. `alaa-reviewer` is the gate when the user asks for a review and no specialist fits.
 
@@ -41,7 +41,7 @@ On a floor surface the author never approves its own work. The gate's blocking v
 
 Observed evidence counts by what it shows, not by who ran it. Outside the floors, the lead may accept an implementer's observed focused check on the same snapshot, and records that it did. An independent re-run is for a floor surface, or for stale, unobserved or ambiguous evidence. Nothing unchanged is checked again.
 
-Before accepting or citing test evidence, apply /alaa-testing-strategy `references/100-test-execution.md` and `references/120-result-classification.md`. Independent acceptance additionally requires an observer independent of the implementation with authority for that gate. An implementer's broad PASS cannot discharge it. Record the observer with the canonical evidence identity; cite eligible independent evidence instead of repeating it.
+Before accepting or citing test evidence, apply /alaa-testing-strategy `references/100-test-execution.md` and `references/120-result-classification.md`. Where a floor or the decision requires independent acceptance, it requires an observer independent of the implementation with authority for that gate. An implementer's broad PASS cannot discharge it. Record the observer with the canonical evidence identity; cite eligible independent evidence instead of repeating it.
 
 ## Findings
 
@@ -95,7 +95,7 @@ Local commits follow the main instruction file's local-commit rule through `alaa
 - Under `Review boundary: final`, later ready sets continue on the same lane branch. The parent merges it once, after the final review accepts it. A fix after that merge follows `## Lane branches and commits` step 7.
 - Under `Review boundary: phase`, the parent merges the lane branch at each phase's review, after that review accepts it.
 - The documenter's lane branch is created after the last implementation merge. It merges after the Stage E documentation gate accepts it and before the Stage E final validation.
-- A review accepts a lane branch when the verification its tasks' decisions and the floors require has passed.
+- A boundary accepts a lane branch when the verification its tasks' decisions and the floors require has passed. Without an independent review there, the lead records its own verdict and the accepted evidence with its reason in `Review status` and `Review evidence`.
 - Push, tag, history rewrite and any merge other than the lane-branch merge still require explicit permission.
 
 Nested invocations return tested evidence, their lane commits and branch, pending review and merge work, and the next cursor. Stage C collects focused phase evidence. Stage D waits for the inherited review boundary. When required checks need whole-engagement breadth, plan one whole-engagement broad gate stage in Stage E, after final documentation. Phase transitions earn no broad pass. Earlier required repository gates follow the conflict rule above.
@@ -154,8 +154,8 @@ Always first, never skipped, because every lane inherits its decisions.
 
 ## Stage D — Review and specialist gates
 
-1. At the inherited review boundary, after Stage C's collection, batch repair and required retests pass, dispatch the independent review and specialist gates that the tasks' decisions and the floors require, against the complete diff and lane plan. A lead's own reading of the diff happens at the same point.
-2. Spawn `alaa-adversarial-reviewer` only when its condition in `references/routing-matrix.md` holds. Its conflicting-judgment arm, discovered here, fires without resetting the inherited boundary. Its findings go to the user, not into another repair round.
+1. At the inherited review boundary, after Stage C's collection, batch repair and required retests pass, dispatch the independent review and specialist gates that the tasks' decisions and the floors require, against the complete diff and lane plan. The lead's own diff reading happens at the same point.
+2. Spawn `alaa-adversarial-reviewer` only when its condition in `references/routing-matrix.md` holds. Its conflicting-judgment arm, discovered here, fires without resetting the inherited boundary.
 3. `APPROVED` and `APPROVED-WITH-NITS` proceed. Under `CHANGES-REQUESTED`, route each finding triaged for fixing verbatim to the hand Who fixes selects.
 4. Present every finding this phase leaves open for the user as one decision set: each item with its severity per lens, the smallest fix that closes it, and what closing it costs. Ask once, because each separate answer can move the tree and invalidate final evidence, including a required exhaustive run.
 
@@ -163,7 +163,7 @@ For required Ent review, interpret the native report under `alaa-ent-go-orm-db r
 
 ## Stage E — Documentation and final validation
 
-1. Spawn `alaa-documenter` when its condition in `references/routing-matrix.md` holds. It is the final write lane, which is why every check below runs after it and not before.
+1. Spawn `alaa-documenter` when its condition in `references/routing-matrix.md` holds. It is the final write lane, so every check below runs after it.
 2. `alaa-repo-docs references/15-document-size-and-clustering.md` owns the size ladder, its thresholds, the measuring command, and the one condition under which the largest grade may stand; `/alaa-repo-docs` applies it. This skill requires only that the grade is measured and reported; a local copy of the ladder would go stale.
 3. After documentation edits, run the documentation gate below.
 4. Run the final validation in this order:
@@ -185,7 +185,7 @@ Integrate under `alaa-workflow references/workspace-and-integration.md`. If the 
 
 ## Documentation gate
 
-Because the documenter writes after code review, documentation changes require at least:
+Documentation changes, written after code review, require at least:
 
 - final diff scope check;
 - repository docs formatter/linter when available;
@@ -201,7 +201,7 @@ The orchestrator may report completion only when:
 - every acceptance criterion maps to evidence, each marked run, cited, or review-only with its review evidence; run or cited items carry their tier;
 - required final checks and proof levels passed on the final candidate, including a fresh exhaustive tier when required, with no unverified candidate changes afterward;
 - no mandatory command is failed, flaky, timed out, blocked, or contaminated;
-- the verification that each task's decision and the floors require is complete; every finding has a recorded disposition, and each blocking floor-gate finding is resolved or explicitly accepted by the user;
+- the verification that each task's decision and the floors require is complete; every finding has a recorded disposition, each finding triaged for fixing is fixed and proven, and each blocking floor-gate finding is resolved or explicitly accepted by the user;
 - final touched files match authorized scopes;
 - documentation ran or was explicitly skipped for a grounded reason;
 - the final reusable-context pass reported persisted, deferred, rejected, or no admitted candidates;

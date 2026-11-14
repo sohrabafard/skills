@@ -50,57 +50,57 @@
     {
       "name": "alaa-implementer-fable",
       "file": "agents/alaa-implementer-fable.md",
-      "sha256": "c619d8cd61f06cfd4a6068370be44c20c00770e1cc45a5fca2449fc3f1fddda6"
+      "sha256": "1a21e77324b2a5d94b0ce34bc025d828e2f608541d1490a66e342b76aa0efcfc"
     },
     {
       "name": "alaa-implementer-frontend",
       "file": "agents/alaa-implementer-frontend.md",
-      "sha256": "8b46c02bc704d8ec6140f10535e63a453a165467a11eacb84042051ac3099137"
+      "sha256": "f1e181c857c6f851a37ce71e2b00bee94b14f0232a289d042d3963b38999e7e3"
     },
     {
       "name": "alaa-implementer-go",
       "file": "agents/alaa-implementer-go.md",
-      "sha256": "1800da1ba58353086471161fb7ccd1f0556b897c42c146e28da38b7385325091"
+      "sha256": "9dbf843fc3d4b0a620370957d4c981eb5a5a5ad97c3eb4a7d69139200c09aaa0"
     },
     {
       "name": "alaa-implementer-haiku-high",
       "file": "agents/alaa-implementer-haiku-high.md",
-      "sha256": "5decf92c04539f73583154006d4b750e81e85e64dd6217f632b4571695c36a8a"
+      "sha256": "89f15d9333b16f762da036a66d76d98aa474e075dcb4ba00940524da353b32d8"
     },
     {
       "name": "alaa-implementer-haiku",
       "file": "agents/alaa-implementer-haiku.md",
-      "sha256": "feba5a392bb50de1489514d25c8f0de14505c69f0635e5eebf55d56c64c1afa9"
+      "sha256": "b366eb2cd3e7d67aebf18aa4f602aafbba2bfab2bbb2818e62dd2b1b48945304"
     },
     {
       "name": "alaa-implementer-infra",
       "file": "agents/alaa-implementer-infra.md",
-      "sha256": "ba7facb4c96a4aeee27f9fad415a313a8e997bb5821a56cfa16b11a9e4afed4e"
+      "sha256": "ece4a2a1d8b9aafdc47c1228e3ec5a0910375e7676303e0dffc93f7dd11649a4"
     },
     {
       "name": "alaa-implementer-laravel",
       "file": "agents/alaa-implementer-laravel.md",
-      "sha256": "f353ff8310f8b59b7b969015fde83f7813d0e464a1509f9ac80fb7e261e676d9"
+      "sha256": "6313f8f68a348a62f55a3d9310c0e7d01ce4a1470860d84a056ecf6dad6bf6c0"
     },
     {
       "name": "alaa-implementer-opus-high",
       "file": "agents/alaa-implementer-opus-high.md",
-      "sha256": "b932f3cfe3e1d43c9535df62578ee18809bb474b4077973e8633f2301ac0d8dc"
+      "sha256": "8b7d56acf491750a54cbce86ea87aea3c177b2cb3e399d700cb6e5a696b3eabc"
     },
     {
       "name": "alaa-implementer-opus",
       "file": "agents/alaa-implementer-opus.md",
-      "sha256": "fbfef62b261d24203bb3a206ab506994825deea51a38f05724f5604493502a8d"
+      "sha256": "9bc34b90a2b37279f634ecacb683c9de06694db6a23e43e464c600e974b35875"
     },
     {
       "name": "alaa-implementer-sonnet-high",
       "file": "agents/alaa-implementer-sonnet-high.md",
-      "sha256": "515697275b5047b8faa62f98d541116578b74ccb17eba3b3deb79bbf25ec94bf"
+      "sha256": "4147a9040b66f8d3304267ad6738ad02c9838270f4a0658746f9e0b9e17bc106"
     },
     {
       "name": "alaa-implementer",
       "file": "agents/alaa-implementer.md",
-      "sha256": "0fb1d6b4786b2bcff5543344237c46f150b808b527521104aa5f9b4c0a6c28a7"
+      "sha256": "b9f1bc378388c04134e6540ed05a730430658397ee915c4882120e23923d9de5"
     },
     {
       "name": "alaa-instruction-reviewer",
@@ -125,12 +125,12 @@
     {
       "name": "alaa-planner-high",
       "file": "agents/alaa-planner-high.md",
-      "sha256": "dc9d5f23160b35cafdc4041944bd7acc8f3eb36532d586b1e08b343a91bab435"
+      "sha256": "09a32dbd101bae64a73136972f19f16b2cf266d26ed583168986987099924f2c"
     },
     {
       "name": "alaa-planner",
       "file": "agents/alaa-planner.md",
-      "sha256": "5bec5d49b128aeabdaba4028ce270d28aa3f6176cbdc8955bf0dbeff8c6f8d72"
+      "sha256": "5a1b75b81d2d2e8166c7178afada780d56006755ca31a488c24dda4996632edb"
     },
     {
       "name": "alaa-release-guardian",

@@ -5,8 +5,8 @@ Spawn only agents that materially reduce uncertainty or enforce a required autho
 ## Always or normally required
 
 - Non-trivial repository change: before dispatch, select an implementation profile through Implementation routing below, or use the Ent specialist route for Ent-owned work.
-- Required independent checks: `alaa-verifier`. `verification-and-gates.md` decides what is required and owns the cadence of phase evidence, review and final gates.
-- Required ship-quality judgment: `alaa-reviewer`.
+- Independent checks a decision or floor requires: `alaa-verifier`. `verification-and-gates.md` owns both and the cadence of phase evidence, review and final gates.
+- Independent ship-quality judgment a decision or floor requires: `alaa-reviewer`.
 - Behavior, API, configuration, or operations changed: `alaa-documenter`, after review.
 
 ## Specification and evidence agents

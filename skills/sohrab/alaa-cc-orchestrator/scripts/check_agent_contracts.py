@@ -152,7 +152,7 @@ IMPLEMENTER_REQUIREMENTS = (
     "Leave ambiguous or inseparable mixed commands unrun",
     "invent no substitutes or flags",
     "If none qualify, report validation not run and request focused commands from the parent",
-    "The parent may accept your focused evidence outside the floors",
+    "the parent may accept your focused evidence",
     "An explicitly assigned task owner may also run supplied bounded task-acceptance selectors at task end",
     "this grants no boundary affected/exhaustive authority",
     "whole-engagement cadence and exact phase/task/subtask cursor",
@@ -167,8 +167,8 @@ GATE_REQUIREMENTS = ('Before implementation or fix-cycle dispatch, classify actu
  "The gate's blocking verdict binds the lead",
  'Role definitions own dispatch-conflict handling',
  'reconcile every excluded command and unrun check before accepting the lane',
- 'Independent acceptance additionally requires an observer independent of the implementation with '
- 'authority for that gate',
+ 'Where a floor or the decision requires independent acceptance, it requires an observer independent '
+ 'of the implementation with authority for that gate',
  "An implementer's broad PASS cannot discharge it",
  'cite eligible independent evidence instead of repeating it',
  'Run any required exhaustive tier once, fresh on the final candidate after documentation',
@@ -359,8 +359,8 @@ CADENCE_REQUIREMENTS = ('Stages A-F define outcomes and authority. They are dist
  'Push, tag, history rewrite and any merge other than the lane-branch merge still require explicit permission',
  'Stage C collects focused phase evidence. Stage D waits for the inherited review boundary',
  'Collect required affected and exhaustive checks in one whole-engagement gate stage',
- 'Independent acceptance additionally requires an observer independent of the implementation with '
- 'authority for that gate',
+ 'Where a floor or the decision requires independent acceptance, it requires an observer independent '
+ 'of the implementation with authority for that gate',
  'references/100-test-execution.md',
  'references/120-result-classification.md',
  'Never weaken review to obtain a pass.')
@@ -372,7 +372,7 @@ def cadence_failures(skill: str, gates: str, dispatch: str,
     errors = [f"missing scheduling contract: {clause}"
               for clause in CADENCE_REQUIREMENTS if not contract_present(clause, gates)]
     errors.extend(specialist_cadence_failures(design, contract, critic))
-    for clause in ("It may make a small, local, obvious correction itself",
+    for clause in ("It makes its own corrections only under Who fixes",
                    "Correct sparingly", "Calibrate length", "Keep dispatches lean",
                    "Do not restate the native role definition",
                    "for the verification decision, the floors and who fixes",
@@ -572,9 +572,10 @@ RUN_ECONOMY_REQUIREMENTS = {'gates': ('Draw the fewest lanes that keep write sco
            'failures through a host-supported continuation tool',
            'Dispatch fresh only when continuation is unavailable, context is invalid',
            'selects another managed profile, external role or task pair',
-           'Observed evidence counts by what it shows, not by who ran it'),
- 'skill': ('small, local, obvious correction',
-           'in files no active or pending lane owns',
+           'Observed evidence counts by what it shows, not by who ran it',
+           'The lead may make a small, local, obvious correction itself',
+           'in files no active or pending lane owns'),
+ 'skill': ('It makes its own corrections only under Who fixes',
            'Stages C and D run as the verification decision and the floors'),
  'dispatch': ('proving command or selector -> expected result, or review-only: reason',
               'the child re-derives none of them'),

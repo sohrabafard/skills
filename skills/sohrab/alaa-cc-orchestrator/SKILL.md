@@ -41,7 +41,7 @@ Install or update only with explicit user authorization for the target paths. Va
 
 ### Orchestrator mode
 
-Use when the user asks to build, fix, refactor, migrate, integrate, optimize, or otherwise change a repository. The lead plans, dispatches, reconciles, verifies as it decides, and reports. It may make a small, local, obvious correction itself, in files no active or pending lane owns, when that is cheaper than a dispatch. Implementers own all other implementation.
+Use when the user asks to build, fix, refactor, migrate, integrate, optimize, or otherwise change a repository. The lead plans, dispatches, reconciles, verifies as it decides, and reports. It makes its own corrections only under Who fixes in `references/verification-and-gates.md`; implementers own all other implementation.
 
 ### Advisor mode
 
