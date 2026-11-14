@@ -34,7 +34,7 @@ Use this file to choose the smallest reference file that owns the rule you need.
 - `Mode C - Laravel downstream trusted service`
   - Use when the service sits behind the Ala gateway, consumes sanitized trusted headers, needs to normalize `X-Project-Id`, or touches client IP, forwarded headers, or a `/metrics` route behind the gateway.
   - Read `30-trusted-ingress-and-laravel-contract.md` and pair with `/alaa-trust-gateway-auth`.
-  - Read its "Dropped-bearer response marker" section before a client reads `WWW-Authenticate` on a public-path response or the gateway sets or exposes it. A backend never sets it on a public route.
+  - Read its "Dropped-bearer response marker" section before a client reads `WWW-Authenticate` on a public-path response or the gateway sets or exposes it. Before you decide who may set it on a public route, or what happens to a backend copy, read `alaa-trust-gateway-auth references/10-verification-and-ingress.md` ("The dropped-bearer marker").
 - `Mode C+ - Permission catalog consumer`
   - Use when the task is about backend authorization, access levels, `X-User-Roles`, role-derived behavior, `config/permissions.php`, permission names, bitmap ids, generated service permission configs, the generated TypeScript `permission-catalog.ts`, `catalog/services.json` descriptors including `aggregate_consumers`, `X-Access` permission mapping, or catalog drift checks.
   - Read `28-backend-permission-authorization-and-role-freeze.md` for the current backend decision rule and `35-permission-catalog-and-service-configs.md` for catalog consumption; pair with `/alaa-trust-gateway-auth` and `/alaa-permission-generator`.

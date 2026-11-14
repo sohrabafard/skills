@@ -241,7 +241,7 @@ only the last matching one. Read the value as *a* reason, never as the complete 
 | Header value | Gateway `totp_proof_status` | Meaning |
 |---|---|---|
 | `TOTP_PROOF_PRESENT_UNVERIFIED` | `present_unverified` | the verification rules did not reach a conclusion for a proof on an authenticated request. A gateway defect state, not a client one; a non-zero rate is an incident |
-| `TOTP_PROOF_UNAUTHENTICATED_ROUTE` | `unauthenticated_route` | the proof arrived on a request that carried no accepted bearer — none, or one that failed a check, on a public path or a protected one. A proof beside an accepted bearer is processed on a public path too (owner ruling 2026-11-14). A statement about the request, not the route |
+| `TOTP_PROOF_UNAUTHENTICATED_ROUTE` | `unauthenticated_route` | the proof arrived on a request that carried no accepted bearer — none, or one that failed a check — on a public path or a protected one. For what counts as an accepted bearer, read `alaa-trust-gateway-auth references/10-verification-and-ingress.md` ("A public path takes an optional bearer", owner ruling 2026-11-14); for when the gateway processes a proof beside one, read `alaa-trust-gateway-auth references/30-fail-closed-cases.md` ("TOTP step-up"). A statement about the request, not the route |
 | `TOTP_PROOF_DISALLOWED_ALG` | `disallowed_alg` | the proof's `alg` is not on the allow-list, checked before the signature so a presenter cannot choose the algorithm |
 | `TOTP_PROOF_INVALID_SIGNATURE` | `invalid_signature` | signature verification failed. The value a signing-key rotation produces fleet-wide and at once |
 | `TOTP_PROOF_BAD_TYPE` | `bad_type` | `typ` is not the expected proof type |

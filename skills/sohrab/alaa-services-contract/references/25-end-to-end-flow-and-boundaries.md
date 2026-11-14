@@ -7,7 +7,7 @@ Use this file when the task is about how the Ala platform fits together end-to-e
 The Ala platform is organized in layers with clear ownership:
 - client applications send public traffic to the gateway
 - the gateway is the external trust boundary
-- the gateway verifies access tokens, required on a protected route and optional on a public one, removes untrusted internal headers, injects trusted identity and project context, and forwards requests to the right backend
+- the gateway verifies access tokens, removes untrusted internal headers, injects trusted identity and project context, and forwards requests to the right backend. Before you decide whether a route requires a bearer, or what a public path does with a present, absent or failing one, read `alaa-trust-gateway-auth references/10-verification-and-ingress.md` ("Verification order on a protected route", "A public path takes an optional bearer").
 - when a route family needs fine-grained request-time authorization, the gateway calls `authz-sidecar` or `entitlement-spoa`
 - backend services own their business domains and internal logic
 - `entitlement-api` keeps business truth; the `reflector` role inside `entitlement-api` writes derived tuples (`entitlement-projector` is retired); `authz-sidecar` checks OpenFGA under the `authz-openfga` model contract; the steps are under "Authorization mesh flow" below
@@ -160,7 +160,7 @@ Route-shape reminder:
   - `wa` -> `/wa`
   - `entitlement` -> `/entitlement`
 - WA route family (owner ruling 2026-11-14; gateway source at `4de96f3`, wa decision 35). All of WA sits under the one public prefix `/wa`. There is no `/wa-reports` prefix; a document or client that names one is drift to remove.
-  - `POST /wa/ingest/v1/events`: public, exact path, optional bearer, guests counted; goes to Vector, prefix not stripped. Read the wa-side status in `95-fleet-conformance.md` before you rely on the path.
+  - `POST /wa/ingest/v1/events`: public, exact path; goes to Vector, prefix not stripped. Read the wa-side status in `95-fleet-conformance.md` before you rely on the path. Before you decide what this path does with a present, absent or failing bearer, or with a guest batch, read `alaa-trust-gateway-auth references/10-verification-and-ingress.md` ("A public path takes an optional bearer", "WA ingest").
   - `GET /wa/api/v1/*`: bearer required, `401` without; goes to `wa-api`, service-local `/api/v1/*`.
   - `GET /wa/api/ready`: public, exact path; the gateway aliases it to Vector's health route.
   - Ingest envelope project: `identity.project_id`, a lowercase canonical UUIDv7. The client sends it on every envelope, with a token or without one, because a dropped bearer turns the batch into a guest batch after the client sent it. The client never sends `X-Project-Id`. When WA reads it and how it treats a bad value are owned by `alaa-trust-gateway-auth references/10-verification-and-ingress.md` ("WA ingest").
