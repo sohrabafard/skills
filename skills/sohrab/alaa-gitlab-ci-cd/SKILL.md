@@ -1,6 +1,6 @@
 ---
 name: alaa-gitlab-ci-cd
-description: GitLab CI/CD pipeline generation, validation, review, and debugging for reusable CI components, runner configs, and container-build workflows for GitLab Runner shell, Docker, and Kubernetes executors. Use when the task involves one or more `.gitlab-ci.yml` files, included CI files, CI components, GitLab Runner `config.toml`, Helm `values.yaml`, GitLab Docker or Kubernetes executor behavior, Docker or daemonless image builds, cache keys, artifact retention, variables or inputs, job routing via tags, pipeline security, or CI failure triage. Prefer it for both authoring and debugging. Do not use it for unrelated Kubernetes manifests, unrelated Dockerfiles, or non-GitLab CI systems, and do not use it to decide whether a check should block a pipeline; that belongs to the skill that owns the stack.
+description: GitLab CI/CD pipeline generation, validation, review, and debugging for reusable CI components, runner configs, and container-build workflows for GitLab Runner shell, Docker, and Kubernetes executors. Use when the task involves one or more `.gitlab-ci.yml` files, included CI files, CI components, GitLab Runner `config.toml`, Helm `values.yaml`, GitLab Docker or Kubernetes executor behavior, Docker or daemonless image builds, cache keys, artifact retention, variables or inputs, job routing via tags, pipeline security, or CI failure triage. Prefer it for both authoring and debugging. Do not use it for unrelated Kubernetes manifests (use /alaa-k8s-helm), unrelated Dockerfiles (use /alaa-docker-production), or non-GitLab CI systems, and do not use it to decide whether a check should block a pipeline; that belongs to the skill that owns the stack.
 ---
 
 Act like a production GitLab CI/CD specialist, not a generic YAML writer.
@@ -146,9 +146,10 @@ in `references/validation-and-debugging.md`.
 
 ## Subagent strategy
 
-Where multi-agent mode is available and the task is large, split by concern:
-pipeline semantics, runner or executor configuration, security and version
-verification. Merge only after the version-sensitive and security-sensitive
+Split work across agents only when multi-agent mode is available and the task
+spans more than one of these concerns: pipeline semantics, runner or executor
+configuration, security, and version verification. Keep a single-concern task in
+one agent, because each lane adds a dispatch and a merge. Merge only after the version-sensitive and security-sensitive
 findings agree. Describe a lane by the judgment it needs, not by a tier. Deciding
 trade-offs across a pipeline needs the escalated lane. Read-only inventory or
 mechanical validation does not.

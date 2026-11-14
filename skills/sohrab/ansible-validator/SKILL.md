@@ -1,6 +1,6 @@
 ---
 name: ansible-validator
-description: Validate, lint, security-audit and dry-run existing Ansible playbooks, roles, collections and inventories with ansible-lint, yamllint, check mode, Checkov and Molecule, reporting a verdict with per-finding remediation citations. Use when every file you need already exists and your job is to produce a verdict about it. Do not use when a file that does not yet exist has to exist when you are done (use /ansible-generator), for Terraform, Helm, Dockerfile or CI-config validation unless Ansible is the main artifact, or for plain YAML edits with no Ansible semantics.
+description: Validate, lint, security-audit and dry-run existing Ansible playbooks, roles, collections and inventories with ansible-lint, yamllint, check mode, Checkov and Molecule, reporting a verdict with per-finding remediation citations. Use when every file you need already exists and your job is to produce a verdict about it. Do not use when a file that does not yet exist has to exist when you are done (use /ansible-generator), for Terraform, Helm (/alaa-k8s-helm), Dockerfile (/alaa-docker-production) or CI-config (/alaa-gitlab-ci-cd) validation unless Ansible is the main artifact, or for plain YAML edits with no Ansible semantics.
 ---
 
 # Ansible Validator

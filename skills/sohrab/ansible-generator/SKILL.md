@@ -1,6 +1,6 @@
 ---
 name: ansible-generator
-description: Production-ready Ansible generation for playbooks, roles, task files, inventories and project scaffolding with FQCN-correct modules, idempotent tasks, declared role interfaces and explicit file modes, followed by validator handoff. Use when a file that does not yet exist has to exist when you are done. Do not use when every file you need already exists and your job is to produce a verdict about it (use /ansible-validator), for Terraform, Helm, Dockerfile or CI authoring unless Ansible is the main artifact, or for one-off shell automation that should stay a script.
+description: Production-ready Ansible generation for playbooks, roles, task files, inventories and project scaffolding with FQCN-correct modules, idempotent tasks, declared role interfaces and explicit file modes, followed by validator handoff. Use when a file that does not yet exist has to exist when you are done. Do not use when every file you need already exists and your job is to produce a verdict about it (use /ansible-validator), for Terraform, Helm (/alaa-k8s-helm), Dockerfile (/alaa-docker-production) or CI (/alaa-gitlab-ci-cd) authoring unless Ansible is the main artifact, or for one-off shell automation that should stay a script.
 ---
 
 # Ansible Generator
@@ -71,7 +71,8 @@ in full. One-line form:
   Let that skill pick the number.
 - **Model and effort settings** are `/alaa-prompting-guide`'s, at
   `alaa-prompting-guide references/50-effort-and-thinking.md`. No emitted
-  artifact carries a model key.
+  artifact carries a model key, because a model name in an artifact goes stale
+  silently.
 
 ## Reference map
 

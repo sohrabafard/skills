@@ -1,6 +1,6 @@
 ---
 name: alaa-makefile
-description: Generate, validate, refactor, modernize, and debug GNU Make and .mk build files for local automation, CI entrypoints, packaging, install targets, and developer workflows. Use when the task involves `Makefile`, `makefile`, `*.mk`, phony targets, variable design, recursive make, shell-safety in recipes, mbake/checkmake/unmake validation, portability concerns, or converting ad-hoc commands into a maintainable Make-based workflow. Do not use it for unrelated shell scripts or CI YAML unless Makefile behavior is the real decision surface.
+description: Generate, validate, refactor, modernize, and debug GNU Make and .mk build files for local automation, CI entrypoints, packaging, install targets, and developer workflows. Use when the task involves `Makefile`, `makefile`, `*.mk`, phony targets, variable design, recursive make, shell-safety in recipes, mbake/checkmake/unmake validation, portability concerns, or converting ad-hoc commands into a maintainable Make-based workflow. Do not use it for unrelated shell scripts (use /alaa-bash-shell) or CI YAML (use /alaa-gitlab-ci-cd) unless Makefile behavior is the real decision surface.
 ---
 
 # Alaa Makefile
@@ -11,7 +11,7 @@ A Make target is a **local invocation of a command whose definition is owned els
 
 1. A target that fronts a CI gate runs the command the runner runs, with the same arguments. It adds no flag the runner does not pass. It re-implements no part of the gate inline.
 2. The target passes when the gate passes and fails when the gate fails. Use no `-` prefix and no `|| true`. Make signals a failed recipe with its own exit status 2, not the recipe's status. This is pass-or-fail parity, not numeric parity. A caller that needs the gate's own number invokes the script directly, not through Make.
-3. This skill writes no provider YAML, no Dockerfile and no Compose file, and emits no model name and no effort key.
+3. This skill writes no provider YAML, no Dockerfile and no Compose file, and emits no model name and no effort key, because a model name in an artifact goes stale silently.
 
 Owners across that boundary:
 - `/alaa-gitlab-ci-cd` owns how a gate is expressed on a runner. When a target and the runner job disagree about a command, the runner job is correct and the target changes.

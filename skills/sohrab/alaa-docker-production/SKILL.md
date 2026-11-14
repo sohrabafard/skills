@@ -47,6 +47,7 @@ with no default, whatever tracked default the generator carries.
      including `:-0` and bare `:-`. An empty password and a cap of zero both mean "no control".
    - Compose interpolation reads the shell and `--env-file` only, never a service's `env_file:` key.
 
+   Before you write `${VAR:...}` anywhere, or change a generator that emits it, read
    `references/25-fail-closed-interpolation.md`.
 2. **Harden the final image and the runtime separately.** The final image has a non-root `USER`
    and no package manager, compiler or dev dependency (`references/10-dockerfile-authorship.md`).
@@ -62,4 +63,4 @@ with no default, whatever tracked default the generator carries.
 `references/00-topic-map.md` routes every task and symptom here to one file. Open it when unsure
 which file you need. Model and effort decisions belong to `/alaa-prompting-guide`,
 `alaa-prompting-guide references/50-effort-and-thinking.md`. Never write a model name or an effort key into anything
-this skill emits.
+this skill emits, because a model name in an artifact goes stale silently.

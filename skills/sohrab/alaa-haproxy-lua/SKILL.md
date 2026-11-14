@@ -43,7 +43,7 @@ explicit authorization.
    - `python3 scripts/check_haproxy_lua.py <module.lua>`
    - the module's unit test, run by the same Lua that `haproxy -vv` reported
    - `haproxy -c -f <config>`, which compiles every Lua file the configuration loads
-   - focused runtime success/failure probes on a loopback HAProxy (proof level 4 in `references/50-testing/40-integration-and-proof-levels.md`)
+   - focused runtime probes of the success and failure paths on a loopback HAProxy (proof level 4 in `references/50-testing/40-integration-and-proof-levels.md`)
 8. **Report at the proof level you actually reached**, using `/alaa-testing-strategy` `references/40-proof-strength.md`.
 
 ## Checker
@@ -78,4 +78,4 @@ Read `references/00-topic-map.md` and load only the file whose triggering condit
 
 For one failed operation, make at most one cause-specific repair and one materially different retry under `/alaa-haproxy` `references/80-gate-register.md` "Failed-operation boundary". Then report the blocker and preserved evidence; unavailable gates are not passes.
 
-Report changed contracts/files, sources, exact static/unit/parser/runtime results and unrun deployment gates.
+Report the changed contracts and files, the sources, the exact static, unit, parser and runtime results, and the unrun deployment gates.
