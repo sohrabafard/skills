@@ -1,0 +1,10 @@
+# Independent instruction review: VERDICT: CHANGES-REQUESTED, then APPROVED-WITH-NITS on the confirmation pass
+Reviewer: alaa-instruction-reviewer, read-only, requested opus/high, self-reported claude-opus-5-5, effort unknown. It read the specification, the instruction diff, both routing matrices in full, both model-effort policies, the catalogs, and the frontmatter of every skill a binding names.
+First pass: 4 major, 7 minor, 2 nits. All were repaired with the reviewer's text.
+- major: the missing-role fallback conflicted with the lane's own registered-profile check and with the model-effort policy. Now the generic role is recorded as the registered profile before dispatch, and the pair rules still block an unrealizable pair.
+- major: three statements disagreed on whether a stack-bound lane may own another stack's files. Now one rule: one family, apart from incidental files the lane record lists by path; any other foreign file returns to the parent.
+- major: no precedence between a stack-bound role and the generic workhorse identities. Now stated per runtime, with the exceptional pair running on the stack-bound role.
+- major: the Go binding sent a data change to the data-layer skill before it reached the Ent hand-back. Now the Ent ownership check comes first, with an observable test.
+- minor: unconditional Octane and Quasar application against those skills' own negatives; seven binding triggers broader than the target skill's description; the contract's infrastructure line omitted the service-runtime-kit owner; contract-artifact skills loaded with no stated action; "as before" pointed at no field; Codex descriptions named the wrong branches; the scope field could give two lanes one test file.
+- nits: a fact with no instruction; catalog rows without the admission clause.
+Confirmation pass: all 13 repairs confirmed in both runtimes. Two minor wording fixes to parent additions (the absence action of a named skill; an unlisted infrastructure surface) and two nits (the frontend description and catalog cell; one Codex sentence) were applied afterwards. The gates passed again after those last edits; the reviewer did not re-read them.
