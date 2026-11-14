@@ -19,8 +19,8 @@
 # does not carry. Add the case first, then fix the implementations.
 set -euo pipefail
 
-readonly SCRIPT_NAME="$(basename "${BASH_SOURCE[0]}")"
-readonly SKILL_ROOT="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
+SKILL_ROOT="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
+readonly SKILL_ROOT
 readonly ASSET_DIR="${SKILL_ROOT}/assets/input-normalization"
 readonly CORPUS="${SKILL_ROOT}/scripts/normalization-corpus.json"
 
@@ -303,6 +303,7 @@ discover_runtimes() {
         TS_SKIP="node not installed"
     fi
 
+    # shellcheck disable=SC2016 # The php -r probe is PHP source: $autoload is a PHP variable.
     if command -v php >/dev/null 2>&1; then
         if ! php -r 'exit(PHP_VERSION_ID >= 80200 ? 0 : 1);' >/dev/null 2>&1; then
             PHP_SKIP="php older than 8.2"
