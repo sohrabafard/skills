@@ -1,15 +1,15 @@
 # Skill Boundaries
 
-The previous version of this file named four owners and was written before several rounds of fleet rewrites,
-so two of its four claims had gone stale. Every claim below states what it depends on, so the next reader can
-tell which ones need re-checking.
+This file states what this skill owns, which owner decides each neighbouring question, and the
+rules for switching the selected store.
 
 ## What this skill owns
 
-Cross-engagement durability: what is worth remembering, in what shape, with what confidence, what is derived
-instead of remembered, and the drift protocol. Nothing else in the fleet owns this. `/alaa-workflow` owns continuity *within* one engagement — the plan, the checkpoint, and the handoff
-package — and all three are scoped to that engagement. Knowledge that must survive after the engagement ends
-is this skill's.
+Cross-engagement durability: what is worth remembering, in what shape, with what confidence, what
+is derived instead of remembered, and the drift protocol. Nothing else in the fleet owns this.
+`/alaa-workflow` owns continuity *within* one engagement: the plan, the checkpoint, and the handoff
+package, all three scoped to that engagement. Knowledge that must survive after the engagement ends
+belongs to this skill.
 
 ## What it does not own, and who does
 
@@ -31,34 +31,18 @@ is this skill's.
 | Model and effort choice | `/alaa-prompting-guide` |
 | Deriving the service call graph from telemetry | `alaa-signoz-clickhouse-docs` `references/50-service-topology.md` |
 
-## Three corrections to the previous version
-
-**`alaa-low-noise` has two levers, not one.** The retired text described it as owning "bounded terminal and
-output discipline, avoiding raw dumps and noisy logs" — the output lever only. It also owns **context
-economy**, which governs what enters the context window at all, and that is the more valuable of the two. This
-matters directly here: a memory skill that injects recalled text is spending context economy, so the lever the
-old boundary statement did not know about is precisely the one this skill consumes. Every recall is a
-context-economy decision, and the recall budget in `SKILL.md` exists partly for that reason and not only for
-latency.
-
-**"Concise handoff pointers" was a trespass, and the counterpart says so in its own words.** The retired
-`compact-and-handoff.md` conceded that `/alaa-workflow` is authoritative for active
-execution and then defined a six-field handoff package anyway. `alaa-workflow`
-`references/artifact-lifecycle.md` says of exactly that material: "Do not restate them here." That prohibition
-is addressed to a sibling file inside `alaa-workflow`; it binds harder across a skill boundary. The two
-six-field lists did not even agree, and `alaa-workflow`'s decomposition is the better one.
-
-What survives is one sentence: **the memory store holds a pointer to the plan and its handoff package, and
-`/alaa-workflow` owns what the handoff contains.** That file is retired; this sentence
-replaces all of it.
-
-**The curation owner was missing from the table entirely.** `/alaa-extract-agent-lessons` routes into this skill for publication and says so in its own step 4, but
-nothing here pointed back, so a task could reach publication having never run admission. That is the
-shape of omission this file warns about: the rule was already enforced negatively by the do-not-store
-list, and the missing half was who produces the storable form.
+Every recall is a context-economy decision, and `/alaa-low-noise` owns context economy. The recall
+budget in `SKILL.md` exists for that reason as well as for latency.
 
 ## Selected product mechanics
 
-Read only the `ACTIVE_ADAPTER` adapter for product packs, note/schema syntax and search commands.
-Hindsight's upstream routing is reachable only from `references/store-hindsight.md`. An inactive adapter is an
-archive, not an additional recall or write surface.
+Read only the `ACTIVE_ADAPTER` adapter for product packs, note or schema syntax, and search
+commands. Hindsight's upstream routing is reachable only from `references/store-hindsight.md`. An
+inactive adapter is an archive, not an additional recall or write surface.
+
+To switch to another supported store, change the selector. Do not rewrite the neutral knowledge
+and drift rules in `SKILL.md`, `references/knowledge-shape.md` or `references/drift-management.md`.
+Conditional policy for a selected store, including the Hindsight bank and admission policy, stays
+in `SKILL.md` and applies only to that store. Product commands stay in the store's adapter. A store
+assumption inside a neutral knowledge or drift rule is a policy leak: repair it in that rule. Do
+not fork those rules.

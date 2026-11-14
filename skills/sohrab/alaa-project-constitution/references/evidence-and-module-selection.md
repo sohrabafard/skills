@@ -57,9 +57,11 @@ Record two independent dimensions for every governing source:
 - authority status the source itself proves — `active`, `approved`, `ratified`, `pending`,
   `unknown`, or another evidence-backed project term.
 
-Never infer ratification from canonical ownership, file naming, code enforcement, or age. Detect
-two sources claiming canonical ownership of the same detail as drift and resolve it before
-ratification.
+"Canonical" means that a source owns a topic. It never means that a human ratified the source.
+A source can be canonical and active while its approver roster or its formal ratification is
+still pending. Never infer ratification from canonical ownership, file naming, code enforcement,
+or age. When two sources claim canonical ownership of the same detail, record the overlap as
+drift and resolve it before ratification.
 
 ## Module retention follows the archetype
 

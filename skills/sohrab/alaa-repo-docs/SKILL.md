@@ -46,7 +46,6 @@ If the repository already has a stronger equivalent document under another name,
 - For a new document, use the language the user explicitly requested; otherwise match the established language of the nearest equivalent document or documentation hub.
 - Create a translated or localized companion only when the user explicitly requests that companion. The presence of `.fa.md`, `-fa.md`, or `docs/fa/` files is not permission to create or update another Persian document.
 - When the user asks for a Persian companion and no stronger repository convention applies, name it with `.fa.md`, such as `README.fa.md`.
-- Never translate an identifier in any output language.
 - Read `references/10-language-and-links.md` before writing. It owns language selection, explicit localized companions, canonical topic ownership, de-duplication, and links.
 
 ## Non-negotiables
@@ -72,13 +71,13 @@ Route by name rather than restating.
 | The complexity bound behind a documented list, export, or fan-out flow | `/alaa-algorithms-data-structures` |
 | Whether an unverifiable security or auth claim is safe to publish | `/alaa-security-review` |
 | The ten-criterion quality bar this documentation is measured against | `alaa-project-constitution references/quality-bar.md` |
-| Model/effort capabilities and runtime mechanics; actual task allocation | `/alaa-prompting-guide` `references/50-effort-and-thinking.md` for capabilities/mechanics; the active runtime orchestrator for task allocation |
+| Model and effort capabilities, runtime mechanics, and actual task allocation | `/alaa-prompting-guide` `references/50-effort-and-thinking.md` for capabilities and mechanics; the active runtime orchestrator for task allocation |
 | Context economy and the subagent fan-out budget | `/alaa-low-noise` |
 | Postman collections, request documentation blocks, and the OpenAPI contract | `/alaa-postman-collections` |
 | Trusted headers, gateway identity propagation, downstream auth semantics | `/alaa-trust-gateway-auth` |
 | Vue, Quasar and Vite source comments, docblocks and annotations | `/alaa-frontend-doc-annotations` |
 | PHP source comments and docblocks | `/alaa-php-clean-code` `references/documentation-and-artifacts.md` |
-| Other source annotations | The repository's current language/stack owner; verify its scope before routing and report an unresolved owner rather than infer absence |
+| Other source annotations | The repository's current language or stack owner; verify its scope before routing, and report an unresolved owner rather than infer absence |
 | Backend structure and terminology the documents describe | `/alaa-php-clean-code`, `/alaa-laravel-architecture` |
 | Frontend integration behaviour the documents describe | `/alaa-frontend-developer` |
 | Ala service conventions and `/api/*` response behaviour | `/alaa-services-contract` |
@@ -97,12 +96,12 @@ Route by name rather than restating.
 
 Read the repository `AGENTS.md`, then use `references/00-topic-map.md` to load only applicable
 references. Follow the production workflow it routes to for discovery, writing and validation.
-For full link validation, run `python $SKILL_DIR/scripts/check_markdown_links.py <repo-root>`.
+For full link validation, run `python3 $SKILL_DIR/scripts/check_markdown_links.py <repo-root>`.
 Exit `0` is clean. Resolve exit `1` findings or exit `2` incomplete validation under
 `references/10-language-and-links.md`.
 
 ## Maintenance rules
 
 - Keep this file routing-first. New detail goes into the reference that owns the topic, never into a second copy of it here.
-- Every rule lives in exactly one file. Do not create a combined guide. The previous one, `full-guide.md`, reproduced 96% of the references verbatim, then drifted from them, and was retired in this batch.
+- Every rule lives in exactly one file. Do not create a combined guide. Reason: the retired combined guide, `full-guide.md`, reproduced 96% of the references verbatim and then drifted from them.
 - Re-check the ownership table when a boundary moves.

@@ -40,7 +40,7 @@ reordering, shortening, or extending the base document.
 - Keep link targets identical when the pair shares a directory; recalculate relative targets when
   an explicitly required repository convention places the companion elsewhere.
 - Run
-  `python $SKILL_DIR/scripts/check_markdown_links.py <repo-root> --files <base> <companion>
+  `python3 $SKILL_DIR/scripts/check_markdown_links.py <repo-root> --files <base> <companion>
   --localized-pair <base> <companion>`. Repeat `--localized-pair` for each additional companion
   explicitly in scope. Pair paths are explicit, so any language suffix or repository-owned layout
   is supported and unrelated companions are not checked.
@@ -199,8 +199,8 @@ reviewing a paired document does and does not oblige.
 
 - Resolve every repo-local Markdown link before finishing, including same-file and cross-file
   heading anchors.
-- Run `python $SKILL_DIR/scripts/check_markdown_links.py <repo-root>`, or
-  `python $SKILL_DIR/scripts/check_markdown_links.py <repo-root> --files <paths>` for a narrow
+- Run `python3 $SKILL_DIR/scripts/check_markdown_links.py <repo-root>`, or
+  `python3 $SKILL_DIR/scripts/check_markdown_links.py <repo-root> --files <paths>` for a narrow
   pass. Exit `0` is clean, `1` is findings, and `2` is a failed, incomplete gate. For a declared
   unavailable origin, see Mirrored directories: affected links remain unvalidated and printed local
   findings remain real.

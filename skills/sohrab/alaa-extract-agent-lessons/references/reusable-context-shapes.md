@@ -12,8 +12,8 @@ Every retained candidate carries:
 - **Reusable content:** rule, rubric, or knowledge in its shortest lossless form.
 - **Value case:** worse decision, misjudgment, hidden constraint, or repeated discovery cost expected without it.
 - **Provenance:** exact source pointer and what it established.
-- **Authority:** verified fact, explicit user/team judgment, inferred advisory pattern, or proposal.
-- **Confidence and unknowns:** established and unverified matters.
+- **Authority:** verified fact, explicit user or team judgment, inferred advisory pattern, or proposal.
+- **Confidence and unknowns:** what is established and what is still unverified.
 - **Owner and destination:** active workflow handoff, canonical repository surface, durable memory, or promotion
   candidate.
 - **Freshness or invalidation:** change, date-sensitive condition, or contradiction requiring re-checking.
@@ -44,7 +44,7 @@ judges quality:
 - **Priorities:** what good work optimizes first, ordered when order matters.
 - **Tradeoffs:** what may be sacrificed and what must not.
 - **Boundaries and exceptions:** where the judgment does not apply or another owner wins.
-- **Calibration anchors:** accepted/rejected cases and reasons, only for distinctions not already clear.
+- **Calibration anchors:** accepted or rejected cases and their reasons, only for distinctions not already clear.
 - **Evaluation:** how a future agent demonstrates alignment without treating taste as objective fact.
 
 Preserve deciding rationale. "The user liked this" is history; "the user chose the denser layout because
@@ -63,7 +63,7 @@ Use when non-obvious context changes reasoning without directly selecting an act
 - **Consequence:** what a future agent must account for after recall.
 - **Invalidation:** change making the card stale or wrong.
 
-If current repository code/docs answer the fact cheaply, store a pointer or update the owner; create no
+If current repository code or docs answer the fact cheaply, store a pointer or update the owner; create no
 second source of truth.
 
 ## Semantic compression test
@@ -73,8 +73,8 @@ answer: where does it apply, what distinction changes, why does it matter, and h
 Rewrite or reject candidates depending on pronouns, chronology, or unstated conversation context.
 
 Compression preserves the future decision. Remove narration, repeated examples and incidental commands;
-retain the scoped claim/rubric, deciding rationale, acceptable/unacceptable behavior distinction and
-invalidation condition. If removal would not predictably worsen choice, evaluation, reasoning or discovery
+retain the scoped claim or rubric, the deciding rationale, the distinction between acceptable and
+unacceptable behavior, and the invalidation condition. If removal would not predictably worsen choice, evaluation, reasoning or discovery
 cost, it is not valuable context.
 
 ## Classification test
@@ -87,7 +87,7 @@ Ask in order:
 4. Otherwise reject it as incident history, status, or generic advice.
 
 Split only when two forms have independent reuse. Otherwise choose the form carrying the main value and
-include supporting fact/rationale inside it.
+include the supporting fact or rationale inside it.
 
 ## Compression rules
 
@@ -98,7 +98,7 @@ include supporting fact/rationale inside it.
 - Keep identifiers only when they are stable contracts or necessary source pointers.
 - Keep examples only for real boundaries or measured gaps; decorative examples constrain future exploration
   without adding reusable knowledge.
-- Never generalize one person's explicit judgment into team/fleet policy without evidence and authority.
+- Never generalize one person's explicit judgment into team or fleet policy without evidence and authority.
 
 ## Design basis
 

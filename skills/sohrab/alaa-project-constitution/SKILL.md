@@ -53,8 +53,9 @@ here. Do not restate its rules.
   unchanged; or write the bundled asset beside it as `constitution-template.updated.md` for the
   owner to merge. Act only on the answer.
 
-Infer the mode from the request and the repository. Where the requested action is ambiguous but
-safe and reversible, prefer `CREATE`/`UPDATE`; use `AUDIT` only for review-or-report-only requests.
+Infer the mode from the request and the repository. When the requested action is ambiguous but
+safe and reversible, prefer `CREATE` or `UPDATE`. Use `AUDIT` only when the request asks for a
+review or a report and nothing else.
 
 ## Template resolution and the launcher prompt
 
@@ -98,7 +99,7 @@ how to launch one, quote the matching launcher verbatim from `assets/first-messa
    amendments, exceptions, and one status footer. Keep authoring telemetry, evidence ledgers, claim
    labels, module classifications, decision state, and binding mechanics out of it.
 7. Ask for explicit approval before you modify application code, dependencies, deployments,
-   shared systems, or Git history; `## Safety and authority` lists the other gated actions. Modify `AGENTS.md` and `CLAUDE.md`, or the generator source that produces them, only under
+   shared systems, or Git history; `## Safety and authority` lists further gated actions. Modify `AGENTS.md` and `CLAUDE.md`, or the generator source that produces them, only under
    authorised binding.
 
 ## Phase order
@@ -108,9 +109,8 @@ how to launch one, quote the matching launcher verbatim from `assets/first-messa
    constitution, then the complete resolved template. Record user-provided scope, owner decisions,
    desired status, paths, and allowed files. An ordinary generation request is not approval or
    ratification. In `UPDATE`, build the prior-decision map first.
-2. **Evidence ledger.** Inventory, then read the smallest high-signal set that establishes
-   ownership, current behaviour, and real validation commands. Read
-   `references/evidence-and-module-selection.md`.
+2. **Evidence ledger.** Read `references/evidence-and-module-selection.md`, then build the
+   evidence ledger it defines.
 3. **Archetype match — mandatory, before module classification.** Read
    `references/project-archetypes.md`. Match every archetype the signals support. Read only the
    matched sections. Carry each of their mandatory obligations forward as an
@@ -219,7 +219,7 @@ Lead with the outcome. Then include:
 - non-constitutional follow-ups intentionally excluded;
 - questions asked with the selected answers and owner decision state;
 - the `FINAL_BOUND` or `DRAFT_UNBOUND` outcome and its evidence;
-- `AGENTS.md`/`CLAUDE.md` binding status;
+- the binding status of `AGENTS.md` and of `CLAUDE.md`;
 - files changed and validation performed;
 - for a draft, the unresolved IDs plus the paste-ready prompt that finalizes and binds it.
 
