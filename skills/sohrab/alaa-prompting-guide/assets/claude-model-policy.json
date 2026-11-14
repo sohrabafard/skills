@@ -165,7 +165,7 @@
         "fable-5-2-launch"
       ],
       "minimum_claude_code": "2.1.321",
-      "notes": "default_effort denotes the Claude Code default, medium; the Claude API default is high. Most capability gain is present at high; xhigh and max need a measured gain. Prompt lines that ask for less thinking do not stop thinking at medium and above. A Fable 5.2 executor accepts only a Fable 5.2 or Mythos 5.2 advisor. All values are surface snapshots, not observed installed controls. Mythos is excluded from active selection and custom profiles.",
+      "notes": "default_effort denotes the Claude Code default, medium; the Claude API default is high. All values are surface snapshots, not observed installed controls. references/43-fable-5-2.md owns the behaviour evidence and references/41-claude-code-runtime-features.md the advisor pairs. Mythos is excluded from active selection and custom profiles.",
       "selection_enabled": true
     },
     "claude-fable-5-1": {

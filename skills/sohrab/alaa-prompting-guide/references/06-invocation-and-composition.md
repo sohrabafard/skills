@@ -118,7 +118,7 @@ Fix: invoke the registered orchestrator in the kickoff, route durable planning t
 
 ## Freshness
 
-Claude goal, Desktop Code and slash-invocation semantics refreshed 4 October 2026. The Desktop composer rejection is user-observed evidence in the runtime reference; its release boundary and the exact rejected payload remain unknown. Other invocation mechanics retain their 6 August 2026 verification. Claude delegation guidance was refreshed 25 September 2026, Sonnet 5.5 on 29 September and Fable 5.2 on 14 November; its general polarity remains unmeasured. Re-fetch before relying on a cap, surface or bias. The Codex slash picker is observed in a bug report; `/skills` is documented.
+Claude goal, Desktop Code and slash-invocation semantics refreshed 4 October 2026. The Desktop composer rejection is user-observed evidence in the runtime reference; its release boundary and the exact rejected payload remain unknown. Other invocation mechanics retain their 6 August 2026 verification. Claude delegation guidance was refreshed 25 September 2026, Sonnet 5.5 on 29 September and Fable 5.2 on 14 November; Sonnet 5.5's general polarity remains unmeasured. Re-fetch before relying on a cap, surface or bias. The Codex slash picker is observed in a bug report; `/skills` is documented.
 
 ## Sources
 

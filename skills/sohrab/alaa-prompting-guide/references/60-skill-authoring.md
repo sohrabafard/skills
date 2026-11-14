@@ -74,7 +74,7 @@ Choose router placement by actual always-loaded cost and selective routing needs
 
 ## ASD-STE100 style
 
-Write every controlling text in ASD-STE100-style English. Put one idea in each sentence. Write complete sentences with their articles and verbs. A slash-joined noun stack or a clause with no verb fails the wording test below, because the reader must guess how its terms relate. Aim for 20 words or fewer in a procedure sentence. Exceed that when a split would separate a rule from its condition, scope or reason. Use the active voice and the command form for an action. Use one term for one concept and never rotate synonyms. Remove filler and idioms. Keep technical names, paths, commands and numbers exact. The style never overrides the done-test above: a shorter text that changes agent behavior fails.
+Write every controlling text in ASD-STE100-style English. Put one idea in each sentence. Write complete sentences with their articles and verbs. A slash-joined noun stack or a clause with no verb fails the test in *The wording is the mechanism* below, because the reader must guess how its terms relate. Aim for 20 words or fewer in a procedure sentence. Exceed that when a split would separate a rule from its condition, scope or reason. Use the active voice and the command form for an action. Use one term for one concept and never rotate synonyms. Remove filler and idioms. Keep technical names, paths, commands and numbers exact. The style never overrides the done-test above: a shorter text that changes agent behavior fails.
 
 ## Evidence for instruction changes
 
@@ -88,19 +88,23 @@ When a comparison is authorized, define a question and acceptance criteria befor
 
 ## Carry-over review for a new model generation
 
-Run this review when a controlling text written for an earlier model will run on a newer one. This includes a prompt, a skill, an agent file, an instruction file, a memory and a note. The target model's reference owns the evidence for each check; for Fable 5.2 that is `references/43-fable-5-2.md`. Change a text only on a hit, and hold each change to the done-test.
+Run this review when a controlling text written for an earlier model will run on a newer one. This includes a prompt, a skill, an agent file, an instruction file, a memory and a note.
 
-| Check | Hit | Repair |
-|---|---|---|
-| Stale fact | A model name, version gate, default, limit or runtime behavior that the current source contradicts | Replace it from the source and date it |
-| Standing delegation | A line that tells the agent to delegate and states no cost, no criteria and no case for inline work | State when delegation is worth its cost and when work stays inline; send review to the declared gate |
-| Absolute approval rule | "never" on an action the agent must keep through approval | Write "ask for approval before" and name the exact action; keep "never" for a true invariant and attach its reason |
-| Thinking control in prose | A line that asks for less thinking, or asks the agent to write out its reasoning | Remove it; set effort instead; ask for conclusions and evidence |
-| Token budget in the text | A token budget shown to the executing agent | Remove it; keep the output-length and scope rules |
-| Hard style limit | A word or sentence cap with no exception | State it as a default and name the exception |
-| Expired caution | A caution, note or stop condition with no scope or reason, or whose reason no longer holds | Delete it, or add its scope and reason; narrow "stop at the first error" to the failures that need a person |
+A carry-over repair is a deliberate behavior change. The done-test above does not judge it. Judge it against the target model's reference and the declared intent of the text, and leave every other rule's behavior unchanged. Apply a check only when the target model's reference documents that behavior, and take the repair from that reference. For Fable 5.2 the reference is `references/43-fable-5-2.md`. Report a check the reference does not document as not applicable. A stale fact is the one check that applies to every model.
 
-A model upgrade removes no required test, no independent gate and no authority limit. `references/80-subagent-authoring.md` owns that distinction.
+| Check | Hit |
+|---|---|
+| Stale fact | A model name, version gate, default, limit or runtime behavior that the current source contradicts |
+| Standing delegation | A line that tells the agent to delegate and states no cost, no criteria and no case for inline work |
+| Absolute approval rule | "never" on an action the agent must keep through approval; a "never" that states a true invariant is not a hit |
+| Thinking control in prose | A line that asks for less thinking, or asks the agent to write out its reasoning |
+| Token budget in the text | A token budget shown to the executing agent |
+| Hard style limit | A word or sentence cap with no exception |
+| Expired caution | A caution, note or stop condition whose stated reason no longer holds, or that states no scope or no reason |
+
+When a caution or stop condition states no reason, add its scope and reason, or ask its owner. Delete it only when its reason is stated and the evidence shows that the reason no longer holds.
+
+A model upgrade removes no required test, no independent gate, no stop condition and no authority limit. `references/80-subagent-authoring.md` owns that distinction.
 
 ## Lean prompts must preserve behavior
 

@@ -55,7 +55,7 @@ Apply a rule below only when the target harness shows the behaviour, or when the
 
 - **Preserved thinking.** A change to `system`, `tools` or an earlier message, followed by a request that returns thinking blocks, fails the prefix check with a 400 error. Keep history append-only and put new instructions in the newest turn. Claude Code, the Agent SDK and Managed Agents manage history themselves. These are API facts; do not invent matching Claude Code keys.
 - **Model switches.** Fable 5.1 and Opus 5.5 cannot read Fable 5.2 thinking blocks. After a router switch or a safeguard fallback away from Fable 5.2, the next turns run without that reasoning.
-- **Advisor.** A Fable 5.2 executor accepts only Fable 5.2 or Mythos 5.2 as its advisor. `references/41-claude-code-runtime-features.md` owns the pair table.
+- **Advisor.** `references/41-claude-code-runtime-features.md` owns the advisor pair table, including the Fable 5.2 row.
 - **Computer use.** `computer_20251124` returns a 400 error except on Amazon Bedrock. Use `computer_toolset_20260801`.
 - **Safeguards.** Refusal categories are `cyber`, `bio`, `frontier_llm`, `reasoning_extraction` and `general_harms`. Read `references/41-claude-code-runtime-features.md` before selection, because fallback can change the serving model. Never bypass a safeguard or install a local fallback. Keep refusal, fallback and unknown serving identity visible in reports.
 

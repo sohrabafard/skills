@@ -24,7 +24,7 @@ Allowlists may substitute a different model. Requested selection is not observed
 
 Verified 14 November 2026 against sub-agents and the active Agent tool schema: the per-invocation `model` parameter accepts a family alias only (`sonnet`, `opus`, `haiku`, `fable`). It accepts no full ID and no `inherit`. To realize a selected full ID at dispatch, pass its family alias and verify that the alias resolves to that ID on the target provider. When it does not, the definition's `model` field is the only pin, and a managed model-neutral role blocks that lane. A nested subagent with no model runs on its parent subagent's model, not on the main conversation's model.
 
-Verified 9 October 2026: since 2.1.292, non-fork invocation effort overrides frontmatter/session effort and persists on resume. With no effort field or parameter, a subagent on the main model uses the session level; on a different model that level does not apply. `CLAUDE_CODE_EFFORT_LEVEL` supersedes invocation and frontmatter; model support and effective caps can step down unsupported levels. Managed roles omit model and effort, so dispatch must explicitly provide BOTH controls on that verified surface. Inspect force/environment/hook/provider resolution; omitted pins alone prove neither pair. Older/forked/unsupported surfaces require an available exact verified realization or a blocked affected lane, never inheritance as selection. Main-session configuration stays external.
+Verified 9 October 2026: since 2.1.292, non-fork invocation effort overrides frontmatter/session effort and persists on resume. Verified 14 November 2026: with no effort field or parameter, a subagent on the main model uses the session level; on a different model that level does not apply. `CLAUDE_CODE_EFFORT_LEVEL` supersedes invocation and frontmatter; model support and effective caps can step down unsupported levels. Managed roles omit model and effort, so dispatch must explicitly provide BOTH controls on that verified surface. Inspect force/environment/hook/provider resolution; omitted pins alone prove neither pair. Older/forked/unsupported surfaces require an available exact verified realization or a blocked affected lane, never inheritance as selection. Main-session configuration stays external.
 
 Record requested profile/model/effort and resolved controls separately from observed serving
 model/effort. Use unknown where the host exposes no observation. Session/subagent status and
@@ -44,16 +44,16 @@ or paid execution authority.
 
 ## Native Advisor
 
-Use Claude Code's native Advisor for executor consultations. The orchestrator's read-only Advisor mode is a separate role. In a supported Code session, use `/advisor <model>`. At launch, `--advisor <model>` overrides the `advisorModel` setting. Use a supported `sonnet`, `opus` or `fable` alias or a full model ID. The advisor is experimental and needs the Anthropic API or Claude Platform on AWS. Resolve aliases and verify support on the actual Code version, provider, account, managed allowlist and entitlement before depending on Advisor. Inspection grants no configuration or paid execution authority.
+Use Claude Code's native Advisor for executor consultations. The orchestrator's read-only Advisor mode is a separate role. In a supported Code session, use `/advisor <model>`. At launch, `--advisor <model>` overrides the `advisorModel` setting. Use a supported `sonnet`, `opus` or `fable` alias or a full model ID. Verified 14 November 2026: the advisor is experimental and needs the Anthropic API or Claude Platform on AWS. Resolve aliases and verify support on the actual Code version, provider, account, managed allowlist and entitlement before depending on Advisor. Inspection grants no configuration or paid execution authority.
 
-An advisor must rank at or above the main model. The Code advisor table accepts these pairs for the active set. Verify the exact resolved pair on the target Code surface.
+Claude Code ranks models for the advisor role and accepts only the pairs in its advisor table. These are its rows for the active set. Verify the exact resolved pair on the target Code surface.
 
 | Main model | Accepted advisors |
 |---|---|
 | Haiku 5.5 | Fable, Opus 4.7 or later, Sonnet 5 or later, Haiku 5.5 |
 | Sonnet 5.5 | Fable, Opus 5 or later, Sonnet 5.5 |
 | Opus 5.5 | Fable, Opus 5 or later |
-| Fable 5.2 | Fable 5.2 only |
+| Fable 5.2 | Fable 5.2 only; the API also accepts Mythos 5.2, which stays excluded from selection |
 
 Claude Code attaches no lower-ranked advisor: an Opus or Sonnet advisor on a Fable 5.2 main model runs no consultation and raises no error.
 
@@ -65,8 +65,8 @@ Pair table and subagent inheritance verified 14 November 2026 against [Code advi
 
 ## Historical harness mechanics
 
-The remaining loop, workflow, scheduling and nesting details retain their original
-24 July 2026 verification. The goal section has its own refresh date below. Historical
+The remaining loop, workflow and scheduling details retain their original
+24 July 2026 verification; the nesting default and depth were verified 14 November 2026. The goal section has its own refresh date below. Historical
 details are lookup leads, not current capability promises; re-fetch the named feature's
 official page before use. Unverified limits receive no new date.
 

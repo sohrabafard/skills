@@ -66,7 +66,7 @@ These recommendations establish no measured local quality, cost or speed. Read
 | Real-time, bulk, cost-sensitive processing/subagents | Haiku | Unspecified in model matrix |
 | Efficiency-first prototypes, latency or straightforward bulk | Start Haiku; move up for a demonstrated capability gap | No task-specific effort |
 | Capability-first complex reasoning, accuracy or advanced autonomous coding | Start Opus; optimize downward after adequate quality | Opus medium starting effort |
-| Demanding reasoning or long-horizon work that falls short at Opus xhigh/max | Move to Fable 5.2 | Start at high; most gain is present there |
+| Demanding reasoning or long-horizon work that falls short on Opus at `xhigh` or `max` | Move to Fable 5.2 (selection guide, 14 November 2026) | No selected Fable effort; `references/43-fable-5-2.md` holds the vendor starting point |
 | Bulk execution with difficult decisions | Cheaper executor plus frontier advisor, or a frontier orchestrator that delegates bulk work to lower-cost workers. For native Code candidates and preflight, read `references/41-claude-code-runtime-features.md`. | No default pair or effort |
 
 The guide recommends Opus as a most-workloads starting point. Qualify defaults by surface: Opus medium; Haiku medium; Sonnet Code/apps medium versus Platform/API high; Fable 5.2 Claude Code medium versus Claude API high. Preserve capability-first and efficiency-first paths. Separate Sonnet prompting guidance recommends medium for well-specified agentic coding and high for harder/longer work; source examples of higher-effort regressions rule out automatic maximization. Any local Fable admission belongs to the runtime orchestrator and remains distinct from vendor xhigh/max advice. No live run is implied.
