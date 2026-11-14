@@ -46,7 +46,7 @@ On `main` after the 5.9.0 commit, each exited `0`: the four root checkers, the i
 - **The Kubernetes authoring floor** of 1.34 covers an end-of-life minor; its owner decides.
 - **Domain and policy questions** from the report's list that no file or history settles: the keyset-pagination measurement figures; the throttle-hint wait across three provider skills; "below the floor" in the Laravel upgrade triage; the RATIFY word in the constitution workflow (history shows it was never a mode); the PHPantom absolute path that a test asserts; the GitLab parent guides that act as second routers; the IndexedDB threshold policies; the Arvan object-storage default prompt; object keys as secrets in the MinIO skill; a HAProxy source row whose content a past commit removed.
 - **`alaa-trust-gateway-auth`**: three reported items, skipped while another session edits that skill.
-- **Lua.** No Lua runtime is installed on this host, so the Lua implementation in `alaa-crockford-base32-codecs` stays unproven. Installing one needs the owner's approval.
+- **Lua.** Closed later the same day; see the last section of this file.
 - **Behaviour under the new commit protocol** was observed once, in the last section of this file; shared-checkout concurrency, a rejected lane and the Codex path remain unobserved. The laravel, frontend and go roles have not run: this repository holds no real task for them, and an invented one would be the evaluation the pack owner excludes.
 
 No push. No tag.
@@ -95,3 +95,13 @@ One lane loaded no skill before its edit and said why (two literal swaps); the r
 ## Scratch cleanup
 
 The two files of transcript excerpts and one intermediate file that held hand-back openings were removed from the session scratchpad after the evidence summary was archived. They were throwaway output of this engagement and can be rebuilt by rerunning the extractors, which remain with their aggregate counts.
+
+## Owner answers of the same day, and what they closed
+
+The pack owner answered three questions.
+
+- **Lua.** The owner installed Lua 5.4.8 on the host. The Crockford codec conformance harness then compared four of four runtimes (PHP 8.5.4, Node 26.12.1, the shell implementation and Lua 5.4.8) over 109 cases with no disagreement and exited `0`. The Lua implementation is proven on this host; the item under "Still open" above is closed.
+- **Three low-risk domain repairs** (Beads issue `alaa-2xe14`), run under the lane-branch protocol: the constitution workflow reference names only modes that exist; the HAProxy source row says that a past commit removed the content it described (the file has no historical table, so the row stays and its cell carries the note); every site that quotes the keyset-pagination buffer measurements carries "not re-measured as of 2026-11-14", with no number changed. The lane returned `STATUS: INCOMPLETE` because one site sat outside its scope; the lead labelled it on the same branch. The instruction review returned APPROVED-WITH-NITS and its nit landed before the merge (`a19f3776`).
+- **Push.** The owner authorized pushing `main` to `origin`.
+
+The other domain and policy questions stay with the owner: the throttle-hint wait across three provider skills, the IndexedDB threshold policies, the Kubernetes authoring floor, "below the floor" in the Laravel upgrade triage, the PHPantom absolute path, the GitLab parent guides, the Arvan object-storage default prompt, object keys as secrets in the MinIO skill, and three items in `alaa-trust-gateway-auth`.
