@@ -74,8 +74,9 @@ how the response is built — belong to `/alaa-laravel-architecture` and `/alaa-
 - An extra tenant-shaped identifier accepted for lookup, reporting or local routing
   is an untrusted selector until it has been matched against the trusted context.
 - Never let a request-body identity field override or replace trusted tenant context,
-  including in anonymous and analytics flows, except the WA guest-ingest rule in
-  `references/10-verification-and-ingress.md`.
+  including in anonymous and analytics flows. The WA guest-ingest rule in
+  `references/10-verification-and-ingress.md` applies only when no trusted
+  `X-Project-Id` arrived, so it is no exception to this rule.
 - Validate the public boundary value as UUIDv7. Derive any internal numeric key from
   it inside the service and keep that key service-local.
 
@@ -104,9 +105,11 @@ the pipeline afterwards.
 
 `202` means the request was received and queued. It does not mean auth and tenant
 validation succeeded. A later transform that finds `X-Project-Id` missing or
-malformed drops the data, except under the WA guest-ingest rule in
-`references/10-verification-and-ingress.md`: the transport was accepted and the
-business result is a denial.
+malformed drops the data: the transport was accepted and the business result is a
+denial. On WA ingest a batch with no `X-Project-Id` takes its tenant from the
+envelope under the WA guest-ingest rule in
+`references/10-verification-and-ingress.md`. A present but malformed
+`X-Project-Id` never falls back to the envelope.
 
 - When required trusted context is missing after accept, log the canonical code —
   `AUTH_CONTEXT_MISSING`, `TENANT_CONTEXT_MISSING`, `TENANT_CONTEXT_MISMATCH` — and
