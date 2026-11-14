@@ -1,6 +1,6 @@
 ---
 name: alaa-mono-package
-description: "Use this skill when the task involves changes under `packages/*`, a package's `exports` map or public entrypoints, internal dependency specifiers, peer dependencies or a duplicated runtime, package CSS and asset emission, workspace build order, clean-island package lanes, package-local `AGENTS.md` instructions, or changes to how the root app consumes an internal package. Do not use it when the task is generic CI or deployment work with no package-boundary impact, or when the question is where a built artifact lands and how it is served, which belongs to alaa-frontend-devops."
+description: "Workspace package contracts for a frontend monorepo: what an internal package declares, emits, and adds to the application's bundling graph. Use it when the task involves changes under `packages/*`, a package's `exports` map or public entrypoints, internal dependency specifiers, peer dependencies or a duplicated runtime, package CSS and asset emission, workspace build order, clean-island package lanes, package-local `AGENTS.md` instructions, or changes to how the root app consumes an internal package. Do not use it when the task is generic CI or deployment work with no package-boundary impact, or when the question is where a built artifact lands and how it is served, which belongs to alaa-frontend-devops."
 ---
 
 # Alaa Mono Package
@@ -15,9 +15,9 @@ Stop and route when the task has **no package-boundary impact** — generic CI, 
 
 `alaa-mono-package` owns everything that determines what enters the bundling graph: a package's declared exports, its peer contract, its specifiers, and whether its CSS and assets are reachable from an entry.
 
-`/alaa-frontend-devops` (`$alaa-frontend-devops`) owns everything that happens to that graph's output after `build` exits: where it lands, how it is served, how it is traced to a commit, and how it is rolled back.
+`/alaa-frontend-devops` owns everything that happens to that graph's output after `build` exits: where it lands, how it is served, how it is traced to a commit, and how it is rolled back.
 
-Exactly one rule straddles that seam: package assets in the final client asset output. This skill owns whether the asset is reachable from an entry (`references/30-assets-css-and-ssr-client-assets.md`); `/alaa-frontend-devops` (`$alaa-frontend-devops`) owns whether the output landed where the deployment serves it (`alaa-frontend-devops` `references/10-build-contract-and-artifacts.md`). Neither restates the other.
+Exactly one rule straddles that seam: package assets in the final client asset output. This skill owns whether the asset is reachable from an entry (`references/30-assets-css-and-ssr-client-assets.md`); `/alaa-frontend-devops` owns whether the output landed where the deployment serves it (`alaa-frontend-devops` `references/10-build-contract-and-artifacts.md`). Neither restates the other.
 
 Every other owner this skill depends on is listed with its file path in `references/90-companion-boundary.md`. This skill states no version value of its own; it routes every range to its owner.
 
@@ -43,4 +43,4 @@ Apply this when the user says "clean island", "only this package", "do not chang
 
 The router is `references/00-topic-map.md`. It routes by what you are about to do and by the symptom you see. Open it, match one row, and read that one file.
 
-Model selection and reasoning effort: `/alaa-prompting-guide` (`$alaa-prompting-guide`), `references/50-effort-and-thinking.md`.
+When you choose a model or a reasoning effort, read `/alaa-prompting-guide` `references/50-effort-and-thinking.md`.

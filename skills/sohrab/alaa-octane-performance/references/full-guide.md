@@ -8,12 +8,12 @@ reset mechanisms) are in `SKILL.md` and are not repeated here.
 An SDK that keeps its own per-request scope — an error reporter, a tracer — is reset by mechanism 3
 in `SKILL.md` (a `RequestTerminated` listener), because the container cannot flush state the SDK
 holds internally. Whether that reset is required, and at what level, is owned by
-`/alaa-observability-soc` (`$alaa-observability-soc`) `references/60-sentry-and-profiling.md`.
+`/alaa-observability-soc` `references/60-sentry-and-profiling.md`.
 
 ## Request-scoped tenant context
 
 Tenant identity is derived, never read from a client-supplied field; derivation is owned by
-`/alaa-trust-gateway-auth` (`$alaa-trust-gateway-auth`). This section governs only how the derived
+`/alaa-trust-gateway-auth`. This section governs only how the derived
 value is held.
 
 - The current-tenant holder is a `scoped` binding — never a `singleton`, `static`, or provider
@@ -26,7 +26,7 @@ value is held.
 - Every cache, memoization, lock, rate-limit and `Octane::table()` key holding tenant-specific data
   includes the trusted tenant identifier. This is the only place in this skill stating that rule;
   key *shape* is owned by `alaa-data-layer references/50-redis-laravel-octane.md`
-  (`/alaa-data-layer`, `$alaa-data-layer`).
+  (`/alaa-data-layer`).
 - Postgres RLS session variables set by middleware are request state living on a **connection** that
   outlives the request. If the repo uses RLS, reset the variable in a `RequestTerminated` listener
   on every connection the request touched, not only the default one; otherwise the next request on
@@ -117,8 +117,7 @@ at which it stopped reproducing.
   not pay a fresh TCP and AUTH handshake per recycle.
 - Configure client resilience in `config/database.php`: `max_retries` with `backoff_algorithm`
   (`decorrelated_jitter`), explicit `timeout` and `read_timeout`, so a worker holding a dead
-  connection recovers on the next call rather than hanging. Doctrine: `/alaa-reliability-sla`
-  (`$alaa-reliability-sla`); every value: `alaa-services-contract
+  connection recovers on the next call rather than hanging. Doctrine: `/alaa-reliability-sla`; every value: `alaa-services-contract
   references/22-failure-load-and-deprecation-contract.md`.
 
 **Connection-count ceiling.** `workers × connections per worker` — cache, session, queue and lock
@@ -131,7 +130,7 @@ here before a worker count is raised.
 **Redis unreachable.** A worker must boot and serve with Redis down, so **providers must not read
 cache, sessions or `Redis::` in `register()` or `boot()`** — under a worker that turns a Redis
 outage into a crash-loop before one request is served. Provider discipline:
-`/alaa-laravel-architecture` (`$alaa-laravel-architecture`). Failover store, decorator fallback and
+`/alaa-laravel-architecture`. Failover store, decorator fallback and
 the fail-open versus fail-closed decision per call site: `alaa-data-layer
 references/50-redis-laravel-octane.md`. Acceptance check, run in the target environment: stop
 Redis, run `octane:start`, confirm workers boot and requests degrade instead of 500-looping.
@@ -140,8 +139,7 @@ Redis, run `octane:start`, confirm workers boot and requests degrade instead of 
 
 Boot cost is amortised across requests. **Per-request cost is not.** "The worker is warm" is never a
 reason to skip eager loading, widen a query, or accept an extra round trip. Complexity budgets,
-structure choice and the whole N+1 family: `/alaa-algorithms-data-structures`
-(`$alaa-algorithms-data-structures`). Specific to a long-lived worker:
+structure choice and the whole N+1 family: `/alaa-algorithms-data-structures`. Specific to a long-lived worker:
 
 - Anything allocated and left reachable from a long-lived object is held for the worker's life, so a
   one-off allocation becomes a permanent floor in worker RSS.
@@ -166,8 +164,7 @@ structure choice and the whole N+1 family: `/alaa-algorithms-data-structures`
 ## Async offload
 
 Offload slow or IO-heavy work rather than blocking a request worker, because the worker is the
-concurrency unit. Idempotency, retries, DLQ and outbox mechanics: `/alaa-async-messaging`
-(`$alaa-async-messaging`), and `/alaa-laravel-job-rabbitmq` (`$alaa-laravel-job-rabbitmq`) for
+concurrency unit. Idempotency, retries, DLQ and outbox mechanics: `/alaa-async-messaging`, and `/alaa-laravel-job-rabbitmq` for
 RabbitMQ consumers. Octane-specific rule: a job serialized from inside a request must not carry a
 request-scoped object — pass scalar identifiers and re-resolve in `handle()`, for the same reason
 `concurrently()` closures must.
@@ -187,8 +184,8 @@ satisfy this.
 
 ## Output contract
 
-Plan files and phasing: `/alaa-workflow` (`$alaa-workflow`). Proof strength for risky operations:
-`/alaa-controlled-ops` (`$alaa-controlled-ops`). This skill adds three required statements to any
+Plan files and phasing: `/alaa-workflow`. Proof strength for risky operations:
+`/alaa-controlled-ops`. This skill adds three required statements to any
 report: which of the three reset mechanisms each new or changed binding uses, the observable that
 selected any tuning value, and the exact commands run in the target environment. Never claim a suite
-green without having executed it there. Never auto-commit.
+green without having executed it there. Commit only when the active instructions authorize it.

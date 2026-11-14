@@ -79,11 +79,13 @@ PHPantom is an installed **Rust language server**, not an MCP server. Claude Cod
 - The PostToolUse syntax hook is **read-only**. It only processes Claude `Write`/`Edit` events on `.php` (not `.blade.php`), without `jq` or installs. It does not catch arbitrary `Bash`-based writes. The hook is registered automatically as part of the loaded Claude plugin, irrespective of whether this skill was invoked.
 - Respect read-only, Plan, and user approval constraints. If instructed to implement, execute the approved scoped change after preview rather than asking for blanket approval repeatedly. Never auto-fix or auto-format from a hook.
 
-## References (read the relevant one rather than loading all)
+## References — read only the one whose condition you are in
 
-- `references/cli.md` — exact command flags and exit-code semantics for analyze, fix, format, move, init.
-- `references/lsp.md` — Claude native LSP behavior, lifecycle, diagnostics and boundaries.
-- `references/configuration.md` — Composer root and PHPantom `.phpantom.toml`, Laravel/Blade and stubs.
-- `references/troubleshooting.md` — unknown classes, binary missing, WSL/UNC URI, debugging and conflicts.
+| You are about to | Read |
+|---|---|
+| pass a flag to `analyze`, `fix`, `format`, `move` or `init`, or interpret its exit code | `references/cli.md` |
+| rely on the native `LSP` tool, its lifecycle or its post-edit diagnostics | `references/lsp.md` |
+| choose the Composer root, edit `.phpantom.toml`, or configure Laravel, Blade or stubs | `references/configuration.md` |
+| diagnose an unknown class, a missing binary, a WSL or UNC URI mismatch, or a server or hook conflict | `references/troubleshooting.md` |
 
-Always prefer the installed version's `phpantom_lsp <subcommand> --help` if a CLI flag differs from this documentation.
+When a CLI flag differs from this documentation, follow the installed version's `phpantom_lsp <subcommand> --help`.

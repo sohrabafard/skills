@@ -83,11 +83,11 @@ Inside those boundaries this skill still contributes:
 - the local checks run before claiming done
 - docblock and artifact expectations
 
-**Never edit anything under `vendor/`.** Those are upstream subtrees. Wrap them from the owning skill.
+**Never edit anything under `vendor/`.** Those are upstream subtrees, and a local edit is either overwritten or collides. Wrap them from the owning skill.
 
 ## Task modes
 
-Mandatory. If the user names none, infer the narrowest one that satisfies the request. Never silently escalate from a scoped mode to a whole-project mode.
+Selecting a task mode is mandatory. If the user names none, infer the narrowest one that satisfies the request. Never silently escalate from a scoped mode to a whole-project mode.
 
 | The request is | Mode |
 |---|---|
@@ -151,7 +151,7 @@ In Alaa Laravel code the Repository pattern is mandatory for application-layer p
 
 - `declare(strict_types=1);` in every new PHP file, unless every existing file in the same directory omits it. Type every parameter, return value, and property unless a framework contract forbids it.
 - No service location: `app()`, `resolve()`, or an injected container inside business logic hides the dependency graph. Inject the collaborator through the constructor instead.
-- Side effects at the edges, core logic deterministic. A method that writes, queues, or calls out says so in its name and its signature.
+- Keep side effects at the edges and core logic deterministic. A method that writes, queues, or calls out says so in its name and its signature.
 - Catch an exception only at a boundary that can translate it. Never bury a failure behind `null`, `false`, or a silent log.
 - Public parameter names stay stable wherever a caller may use named arguments.
 - **Merge and partial-update logic decides by key presence, never by truthiness.** `$data['count'] ?? $existing` silently discards a legitimate `0`, `false`, or `''`. Where absence and empty are different facts, use `array_key_exists()`, `$request->has()`, or an explicit `!== null`.
@@ -163,7 +163,7 @@ In Alaa Laravel code the Repository pattern is mandatory for application-layer p
 
 ## Size and complexity budgets
 
-Gates, not advice. A repo-local rule with stricter numbers wins.
+These budgets are gates, not advice. A repo-local rule with stricter numbers wins.
 
 - A class — controller, service, repository, job, listener, action, support class: **≤ 400 lines**.
 - A single method: **≤ 60 lines**. A controller action stays orchestration-only regardless of length.
@@ -207,11 +207,11 @@ Clean code is not acceptable if it leaks request state across a long-lived worke
 
 ## Performance baseline
 
-Measure before micro-optimizing. Avoid repeated encode/decode churn, broad object graphs, unnecessary temporary arrays, and reflection- or magic-heavy abstractions in hot code. Use small immutable objects for stable data. Query shape and indexing: `/alaa-data-layer`. Hot-path and worker behaviour: `/alaa-octane-performance`. The complexity bound itself: `/alaa-algorithms-data-structures`.
+Measure before micro-optimizing. Avoid repeated encode/decode churn, broad object graphs, unnecessary temporary arrays, and reflection- or magic-heavy abstractions in hot code. Use small immutable objects for stable data. `/alaa-data-layer` owns query shape and indexing. `/alaa-octane-performance` owns hot-path and worker behaviour. `/alaa-algorithms-data-structures` owns the complexity bound itself.
 
 ## Documentation baseline
 
-Documentation is part of done when behaviour, contracts, setup, env vars, request or response shapes, flows, or examples change. `references/documentation-and-artifacts.md` owns PHP docblocks, README/docs and flow alignment, and routes Postman collection/environment generation to `/alaa-postman-collections`; repo-wide docs workflow belongs to `/alaa-repo-docs`, with simple, fluent English output unless the user asks otherwise.
+Documentation is part of done when behaviour, contracts, setup, env vars, request or response shapes, flows, or examples change. `references/documentation-and-artifacts.md` owns PHP docblocks, README and docs alignment, and flow alignment. It routes Postman collection and environment generation to `/alaa-postman-collections`. The repo-wide docs workflow belongs to `/alaa-repo-docs`, with simple, fluent English output unless the user asks otherwise.
 
 ## Validation before done
 
@@ -221,7 +221,7 @@ Run the relevant checks. Prefer repo scripts and CI-pinned versions.
 - Static analysis: `vendor/bin/phpstan analyse` at the repo's configured level.
 - Then the targeted test selector for the changed behaviour: `--filter`, or the topic's `--group`.
 
-The affected suite is the affected tier. The authority `/alaa-testing-strategy` assigns runs it. A session with no such authority runs it once, on the final tree.
+The affected suite is the affected tier. The authority that `/alaa-testing-strategy` assigns runs it. A session with no such authority runs it once, on the final tree.
 
 **Report only what you observed run.** If a check could not run, state the exact blocked command and the reason. A check not observed to run has no result. Pipeline-level gating belongs to `/alaa-cicd-laravel-postgres`.
 

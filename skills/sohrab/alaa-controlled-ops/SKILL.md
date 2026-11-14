@@ -50,6 +50,6 @@ In addition to the description's negatives, do not use this skill for:
 
 - `10-source-priority-and-boundaries.md` — before any ownership or contract claim.
 - `20-package-service-adoption.md` — releasing the package, or moving an adopter onto a tag.
-- `30-lifecycle-idempotency-validation.md` — canonical hashing, reviewed-hash comparison, replay versus conflict.
+- `30-lifecycle-idempotency-validation.md` — before you compute a canonical hash, compare a reviewed hash, or classify replay versus conflict.
 - `40-validation-and-release-gates.md` — before closing package or adopter work.
-- `90-source-map.md` — source freshness, and the skills owning surfaces this one does not.
+- `90-source-map.md` — before you rely on a source that may be stale, or route a surface this skill does not own.

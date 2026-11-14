@@ -30,10 +30,8 @@ file is copied to and what may be changed on the way in; the files themselves ar
 | PHP | `assets/permission-bitmap/PermissionBitmap.php` and `assets/permission-bitmap/PermissionBitmapException.php` |
 | TypeScript | `assets/permission-bitmap/permission-bitmap.ts` |
 
-Fix a defect in one of these here first, then re-propagate it, because a fix applied only where the bug surfaced
-leaves every other service running the bug. Run `scripts/bitmap-conformance.sh` before the change ships and record
-its output: it drives every implementation whose toolchain is present over `scripts/permission-bitmap-corpus.json`
-and prints `skipped: <runtime> not installed` for the rest. **A skipped runtime is unproved, not passing.**
+Before you fix or change one of these files, read `SKILL.md`, "One decoder, not one per service". It owns the
+propagation rule and the conformance-run rule.
 
 ## Reading order for a new permission
 
