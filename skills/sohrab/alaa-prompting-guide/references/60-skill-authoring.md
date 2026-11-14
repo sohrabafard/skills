@@ -74,7 +74,7 @@ Choose router placement by actual always-loaded cost and selective routing needs
 
 ## ASD-STE100 style
 
-Write every controlling text in ASD-STE100-style English. Put one idea in each sentence. Keep a procedure sentence to 20 words or fewer. Use the active voice and the command form for an action. Use one term for one concept and never rotate synonyms. Remove filler and idioms. Keep technical names, paths, commands and numbers exact. The style never overrides the done-test above: a shorter text that changes agent behavior fails.
+Write every controlling text in ASD-STE100-style English. Put one idea in each sentence. Write complete sentences with their articles and verbs. A slash-joined noun stack or a clause with no verb fails the wording test below, because the reader must guess how its terms relate. Aim for 20 words or fewer in a procedure sentence. Exceed that when a split would separate a rule from its condition, scope or reason. Use the active voice and the command form for an action. Use one term for one concept and never rotate synonyms. Remove filler and idioms. Keep technical names, paths, commands and numbers exact. The style never overrides the done-test above: a shorter text that changes agent behavior fails.
 
 ## Evidence for instruction changes
 
@@ -85,6 +85,22 @@ Report static checks, source walkthroughs and observed agent runs separately. A 
 ### Optional comparative evaluation
 
 When a comparison is authorized, define a question and acceptance criteria before running it. Use representative tasks, including held-out cases. Match initial state, context, tools and authority across variants, except for the factor under comparison. Separate first-attempt success from success after repair. Record whole-task cost, elapsed time, interventions, failures and supporting evidence, including repairs. Disclose differences that limit attribution. Apply `alaa-testing-strategy references/110-execution-resources.md` for comparative timing. This protocol is optional and supplies no dispatch admission requirement.
+
+## Carry-over review for a new model generation
+
+Run this review when a controlling text written for an earlier model will run on a newer one. This includes a prompt, a skill, an agent file, an instruction file, a memory and a note. The target model's reference owns the evidence for each check; for Fable 5.2 that is `references/43-fable-5-2.md`. Change a text only on a hit, and hold each change to the done-test.
+
+| Check | Hit | Repair |
+|---|---|---|
+| Stale fact | A model name, version gate, default, limit or runtime behavior that the current source contradicts | Replace it from the source and date it |
+| Standing delegation | A line that tells the agent to delegate and states no cost, no criteria and no case for inline work | State when delegation is worth its cost and when work stays inline; send review to the declared gate |
+| Absolute approval rule | "never" on an action the agent must keep through approval | Write "ask for approval before" and name the exact action; keep "never" for a true invariant and attach its reason |
+| Thinking control in prose | A line that asks for less thinking, or asks the agent to write out its reasoning | Remove it; set effort instead; ask for conclusions and evidence |
+| Token budget in the text | A token budget shown to the executing agent | Remove it; keep the output-length and scope rules |
+| Hard style limit | A word or sentence cap with no exception | State it as a default and name the exception |
+| Expired caution | A caution, note or stop condition with no scope or reason, or whose reason no longer holds | Delete it, or add its scope and reason; narrow "stop at the first error" to the failures that need a person |
+
+A model upgrade removes no required test, no independent gate and no authority limit. `references/80-subagent-authoring.md` owns that distinction.
 
 ## Lean prompts must preserve behavior
 
@@ -149,7 +165,7 @@ The test to apply sentence by sentence: **could a competent agent follow this ex
 
 ## Freshness
 
-Authoring structure was verified on 6 August 2026; GPT-6 guidance refreshed on 25 September 2026. No earlier generation's evaluation percentages are promised here. Every runtime value this procedure depends on — caps, budgets, frontmatter surfaces, discovery paths — is held and dated in `references/61-skill-platform-mechanics.md`.
+Authoring structure was verified on 6 August 2026; GPT-6 guidance refreshed on 25 September 2026. The carry-over review and the sentence-length default follow the Fable 5.2 prompting page fetched 14 November 2026. No earlier generation's evaluation percentages are promised here. Every runtime value this procedure depends on — caps, budgets, frontmatter surfaces, discovery paths — is held and dated in `references/61-skill-platform-mechanics.md`.
 
 ## Sources
 

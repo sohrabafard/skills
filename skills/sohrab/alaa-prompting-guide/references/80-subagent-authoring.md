@@ -19,7 +19,7 @@ The third condition is the one that cannot be satisfied any other way, and it is
 
 Project agents live in `.claude/agents/`, user agents in `~/.claude/agents/`; both directories are scanned recursively, and identity comes only from the `name` field, not the path. Project directories are discovered by walking up from the working directory, and when more than one nested directory defines the same `name`, the definition closest to the working directory wins. Managed definitions deployed by administrators take precedence over project and user definitions with the same name. Both directories are watched, so an edit takes effect on the next delegation without a restart.
 
-Only `name` and `description` are required. The documented optional fields are `tools`, `disallowedTools`, `model`, `permissionMode`, `maxTurns`, `skills`, `mcpServers`, `hooks`, `memory`, `background`, `effort`, `isolation`, `color`, and `initialPrompt`. The markdown body below the frontmatter becomes the subagent's system prompt — and only that: a subagent receives its own system prompt plus basic environment details, not the full Claude Code system prompt and not the parent's conversation history.
+Only `name` and `description` are required. The documented optional fields are `tools`, `disallowedTools`, `model`, `permissionMode`, `maxTurns`, `autoCompactWindow`, `skills`, `mcpServers`, `hooks`, `memory`, `background`, `omitClaudeMd`, `effort`, `isolation`, `color`, `initialPrompt`, and `experimental` (field list verified 14 November 2026; several are version-gated). An unrecognized field is ignored without an error. The markdown body below the frontmatter becomes the subagent's system prompt — and only that: a subagent receives its own system prompt plus basic environment details, not the full Claude Code system prompt and not the parent's conversation history.
 
 `alaa-reviewer` is the worked example. Its model-neutral metadata are checked against `assets/claude-model-policy.json`; it declares `tools: Read, Glob, Grep, Bash` and a `skills:` list preloading the clean-code and security references the reviewer must apply. Note what is absent: `Write` and `Edit`. The description states the role and closes with the boundary in three words — "Never edits or fixes." Native tools, Bash command permissions, and MCP grants must all preserve that boundary; omitting Write and Edit alone is insufficient.
 
@@ -98,7 +98,7 @@ Two dispatch rules follow from the same place. Name the *one* skill the lane nee
 
 When calibrating how readily a lane should delegate to subagents on a given target model, read `references/06-invocation-and-composition.md`, which owns the polarity rule and the per-model bias table.
 
-Claude Code disables subagent nesting by default — a subagent cannot spawn subagents unless nesting is enabled — so fan-out depth is a runtime property, not only a prompting one.
+Claude Code enables subagent nesting by default, up to three layers below the main conversation (verified 14 November 2026). A definition that omits `tools` inherits `Agent`. A role that must not fan out omits `Agent` from `tools` or lists it in `disallowedTools`; `references/41-claude-code-runtime-features.md` owns the caps.
 
 ## Defects and fixes
 
@@ -132,7 +132,7 @@ Claude Code disables subagent nesting by default — a subagent cannot spawn sub
 
 ## Caveats
 
-Codex pin precedence and shared authority/identity guidance refreshed 25 September 2026. Current Claude selection precedence is owned by `references/41-claude-code-runtime-features.md`. Remaining runtime facts retain their 24 July 2026 verification and must be refreshed before use:
+Codex pin precedence and shared authority/identity guidance refreshed 25 September 2026. Claude nesting default and frontmatter field list refreshed 14 November 2026. Current Claude selection precedence is owned by `references/41-claude-code-runtime-features.md`. Remaining runtime facts retain their 24 July 2026 verification and must be refreshed before use:
 
 - Claude Code subagent frontmatter fields — several are gated on specific minor versions, including background-by-default and extended-thinking inheritance; check against the running version.
 - Codex agent TOML `sandbox_mode` — values beyond `"read-only"` and `"workspace-write"`, and whether adding an agent file requires a restart, are unverified.

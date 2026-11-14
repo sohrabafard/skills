@@ -1,6 +1,6 @@
 ---
 name: alaa-prompting-guide
-description: "Instruction authoring for GPT-6 in Codex and Claude Opus 5.5, Fable 5.1, Sonnet 5.5, or Haiku 5.5 in Claude Code. Use to write, review, repair, and compress prompts, skills, subagent definitions, and AGENTS.md/CLAUDE.md files, or for model and effort capability evidence, thinking calibration, skill invocation, goal composition or rejection, native Claude Advisor, and runtime workflows. Resolve Desktop Code versus Chat or Cowork before writing Claude commands. Do not use as a general coding or refactor skill, and do not extrapolate it to models outside this scope."
+description: "Instruction authoring for GPT-6 in Codex and Claude Opus 5.5, Fable 5.2, Sonnet 5.5, or Haiku 5.5 in Claude Code. Use to write, review, repair, and compress prompts, skills, subagent definitions, and AGENTS.md/CLAUDE.md files, or for model and effort capability evidence, thinking calibration, skill invocation, goal composition or rejection, native Claude Advisor, and runtime workflows. Resolve Desktop Code versus Chat or Cowork before writing Claude commands. Do not use as a general coding or refactor skill, and do not extrapolate it to models outside this scope."
 ---
 
 # Alaa Prompting Guide

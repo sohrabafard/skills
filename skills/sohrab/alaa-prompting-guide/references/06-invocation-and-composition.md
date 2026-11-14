@@ -79,7 +79,7 @@ This section owns the rule; other references point here rather than restating it
 **Match the polarity of your delegation language to the target model's default bias.** There is no single correct direction. A prompt that authorizes fan-out on a model that already over-delegates multiplies cost for nothing; a prompt that only restricts fan-out on a model that never delegates unprompted produces a single-threaded session that quietly does everything itself. Polarity defects are silent — nothing errors, and the verb-ownership audit will not catch them — so check polarity separately against the target model.
 
 - **Claude Opus 5.5 — bound delegation.** Current guidance says Opus delegates readily and small-task delegation multiplies cost/time. State observable delegation criteria or a justified task cap: independent parallel tracks must warrant isolation, and work finishable in a handful of tool calls stays inline. Do not impose a universal one-agent preference; the invoked orchestrator owns lane scheduling and observed capacity.
-- **Claude Fable 5.1 — constrain the work shape.** Current Fable dispatches parallel subagents readily, and the guidance is to use subagents frequently while giving explicit criteria for when delegation is appropriate, preferring asynchronous orchestrator-to-subagent communication over blocking on each return. Add selection criteria and non-blocking dispatch, not encouragement.
+- **Claude Fable 5.2 — state the cost and the criteria.** Delegation depends on the harness. Fable 5.2 rarely delegates through a minimal subagent tool and delegates readily where prompts invite it. At `xhigh` and `max` it can start subagents to review its own work. Remove a standing delegate line the task no longer needs. State what a subagent costs, when delegation is worth it, when it is not, and how to brief one. Send review to the declared independent gate, never to a self-review subagent. Check which model each subagent uses by default. The Fable 5.1 guidance to delegate frequently is historical.
 - **Claude Haiku 5.5 — bound delegated work explicitly.** Give one concrete task, named retrieval sources, required checks and completion/failure conditions. General fan-out polarity remains unmeasured; never infer lead suitability from subagent performance. Read `references/36-haiku-5-5.md` before tuning.
 - **Claude Sonnet 5.5 — general polarity remains unmeasured.** Current guidance describes extra reviewer delegation at higher efforts, not a universal delegation bias. Give explicit independent scopes and stopping conditions; measure fan-out in the target harness before adding broader encouragement or suppression.
 - **Codex — explicit authorization and bounded lanes.** Use the current host's delegation
@@ -96,7 +96,7 @@ Two rules hold whichever direction you write.
 Before removing verification language for current Opus, Sonnet or Fable, read
 `references/80-subagent-authoring.md`. It owns the distinction between redundant self-check
 reminders and focused tests or independent acceptance gates. The Fable 5 exception in
-`references/40-fable-5.md` is historical and does not transfer to Fable 5.1. Never assume that less checking
+`references/40-fable-5.md` is historical and does not transfer to Fable 5.2. Never assume that less checking
 proves equal quality.
 
 ## Pre-send checklist
@@ -118,7 +118,7 @@ Fix: invoke the registered orchestrator in the kickoff, route durable planning t
 
 ## Freshness
 
-Claude goal, Desktop Code and slash-invocation semantics refreshed 4 October 2026. The Desktop composer rejection is user-observed evidence in the runtime reference; its release boundary and the exact rejected payload remain unknown. Other invocation mechanics retain their 6 August 2026 verification. Claude delegation guidance was refreshed 25 September 2026 and Sonnet 5.5 on 29 September; its general polarity remains unmeasured. Re-fetch before relying on a cap, surface or bias. The Codex slash picker is observed in a bug report; `/skills` is documented.
+Claude goal, Desktop Code and slash-invocation semantics refreshed 4 October 2026. The Desktop composer rejection is user-observed evidence in the runtime reference; its release boundary and the exact rejected payload remain unknown. Other invocation mechanics retain their 6 August 2026 verification. Claude delegation guidance was refreshed 25 September 2026, Sonnet 5.5 on 29 September and Fable 5.2 on 14 November; its general polarity remains unmeasured. Re-fetch before relying on a cap, surface or bias. The Codex slash picker is observed in a bug report; `/skills` is documented.
 
 ## Sources
 
@@ -128,7 +128,7 @@ Claude goal, Desktop Code and slash-invocation semantics refreshed 4 October 202
 - [Keep Claude working toward a goal (Claude Code)](https://code.claude.com/docs/en/goal)
 - [Claude Code on desktop](https://code.claude.com/docs/en/desktop)
 - [Prompting Claude Opus 5.5](https://platform.claude.com/docs/en/build-with-claude/prompt-engineering/prompting-claude-opus-5-5)
-- [Prompting Claude Fable 5.1](https://platform.claude.com/docs/en/build-with-claude/prompt-engineering/prompting-claude-fable-5-1)
+- [Prompting Claude Fable 5.2](https://platform.claude.com/docs/en/build-with-claude/prompt-engineering/prompting-claude-fable-5-2)
 - [Prompting Claude Sonnet 5.5](https://platform.claude.com/docs/en/build-with-claude/prompt-engineering/prompting-claude-sonnet-5-5)
 - [Create custom subagents (Claude Code)](https://code.claude.com/docs/en/sub-agents)
 - [Orchestrate subagents at scale with dynamic workflows](https://code.claude.com/docs/en/workflows)

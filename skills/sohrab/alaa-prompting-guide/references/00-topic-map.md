@@ -15,7 +15,9 @@ Rows are conditions, not headings. If your situation is not listed, no reference
 | Consult historical Opus 5 behavior | `references/20-opus-5.md` | Retained evidence does not authorize current pins |
 | Tune current Sonnet prompting or migrate Sonnet API controls | `references/31-sonnet-5-5.md` | Recalibrated effort, thinking modes and tool contracts differ from Sonnet 5 |
 | Consult historical Sonnet 5 behavior | `references/30-sonnet-5.md` | Retained evidence does not authorize current pins |
-| Tune current Fable prompting | `references/42-fable-5-1.md` | Its verification and API guidance differ from older Fable |
+| Tune current Fable prompting | `references/43-fable-5-2.md` | Its early-stop, approval, ownership, delegation and style behaviors differ from Fable 5.1 and Opus 5.5 |
+| Carry a prompt, skill, agent file, instruction file, memory or note written for an earlier model to a newer one | `references/60-skill-authoring.md` | It owns the carry-over review; the target model's reference owns the evidence for each check |
+| Consult historical Fable 5.1 behavior | `references/42-fable-5-1.md` | Retained evidence does not authorize current pins |
 | Consult historical Fable 5 behavior | `references/40-fable-5.md` | Older verification reminders are historical, not current instructions |
 | Tune current Haiku prompts or select bounded retrieval, verification or documentation | `references/36-haiku-5-5.md` | Explicit completion, retrieval and check instructions preserve bounded work |
 | Consult historical Haiku 4.5 behavior | `references/35-haiku-4-5.md` | Its missing effort support does not transfer to Haiku 5.5 |

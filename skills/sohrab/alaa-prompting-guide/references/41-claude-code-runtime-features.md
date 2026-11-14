@@ -9,7 +9,7 @@ runtime documentation against the actual CLI version before depending on a featu
 Verified 25 September 2026 against model-config and sub-agents. Full API IDs pin versions;
 family aliases roll and can resolve differently by provider, parent model or gateway.
 Provider deployment mappings are separate runtime evidence, not aliases accepted by the policy.
-The policy records sourced model minimum versions. Haiku 5.5 requires Claude Code 2.1.293; unlike its API disabled-thinking exception, Code prevents switching thinking off for it (verified 8 October 2026 against model-config). A newer installed CLI alone proves neither account entitlement nor activation.
+The policy records sourced model minimum versions. Fable 5.2 requires Claude Code 2.1.321, and the `fable` alias resolves to Fable 5.2 except in Claude apps gateway sessions (verified 14 November 2026 against model-config). Claude Code's default effort is medium for Fable 5.2, Opus 5.5, Sonnet 5.5 and Haiku 5.5; the Claude API default for Fable 5.2 is high. Haiku 5.5 requires Claude Code 2.1.293; unlike its API disabled-thinking exception, Code prevents switching thinking off for it (verified 8 October 2026 against model-config). A newer installed CLI alone proves neither account entitlement nor activation.
 
 For session selection, inspect explicit /model choice, startup --model, ANTHROPIC_MODEL,
 settings and ANTHROPIC_DEFAULT_MODEL, plus managed allowlists and host overrides. /model can
@@ -22,7 +22,9 @@ model environment target, or the parent when no target is set. Forks and skills 
 model: inherit retain documented exceptions; inspect them before claiming a pin won. Resolve inherit and family aliases on the target provider.
 Allowlists may substitute a different model. Requested selection is not observed identity.
 
-Verified 9 October 2026: since 2.1.292, non-fork invocation effort overrides frontmatter/session effort and persists on resume. `CLAUDE_CODE_EFFORT_LEVEL` supersedes invocation and frontmatter; model support and effective caps can step down unsupported levels. Managed roles omit model and effort, so dispatch must explicitly provide BOTH controls on that verified surface. Inspect force/environment/hook/provider resolution; omitted pins alone prove neither pair. Older/forked/unsupported surfaces require an available exact verified realization or a blocked affected lane, never inheritance as selection. Main-session configuration stays external.
+Verified 14 November 2026 against sub-agents and the active Agent tool schema: the per-invocation `model` parameter accepts a family alias only (`sonnet`, `opus`, `haiku`, `fable`). It accepts no full ID and no `inherit`. To realize a selected full ID at dispatch, pass its family alias and verify that the alias resolves to that ID on the target provider. When it does not, the definition's `model` field is the only pin, and a managed model-neutral role blocks that lane. A nested subagent with no model runs on its parent subagent's model, not on the main conversation's model.
+
+Verified 9 October 2026: since 2.1.292, non-fork invocation effort overrides frontmatter/session effort and persists on resume. With no effort field or parameter, a subagent on the main model uses the session level; on a different model that level does not apply. `CLAUDE_CODE_EFFORT_LEVEL` supersedes invocation and frontmatter; model support and effective caps can step down unsupported levels. Managed roles omit model and effort, so dispatch must explicitly provide BOTH controls on that verified surface. Inspect force/environment/hook/provider resolution; omitted pins alone prove neither pair. Older/forked/unsupported surfaces require an available exact verified realization or a blocked affected lane, never inheritance as selection. Main-session configuration stays external.
 
 Record requested profile/model/effort and resolved controls separately from observed serving
 model/effort. Use unknown where the host exposes no observation. Session/subagent status and
@@ -42,21 +44,24 @@ or paid execution authority.
 
 ## Native Advisor
 
-Use Claude Code's native Advisor for executor consultations. The orchestrator's read-only Advisor mode is a separate role. In a supported Code session, use `/advisor <model>`. At launch, `--advisor <model>` overrides the `advisorModel` setting. Use a supported `sonnet`, `opus` or `fable` alias or a full model ID. Resolve aliases and verify support on the actual Code version, provider, account, managed allowlist and entitlement before depending on Advisor. Inspection grants no configuration or paid execution authority.
+Use Claude Code's native Advisor for executor consultations. The orchestrator's read-only Advisor mode is a separate role. In a supported Code session, use `/advisor <model>`. At launch, `--advisor <model>` overrides the `advisorModel` setting. Use a supported `sonnet`, `opus` or `fable` alias or a full model ID. The advisor is experimental and needs the Anthropic API or Claude Platform on AWS. Resolve aliases and verify support on the actual Code version, provider, account, managed allowlist and entitlement before depending on Advisor. Inspection grants no configuration or paid execution authority.
 
-The Advisor API compatibility table gives these candidate executor → advisor pairs. Verify the exact resolved pair on the target Code surface.
+An advisor must rank at or above the main model. The Code advisor table accepts these pairs for the active set. Verify the exact resolved pair on the target Code surface.
 
-| Executor | Advisor candidate |
+| Main model | Accepted advisors |
 |---|---|
-| Haiku 5.5 | Sonnet 5.5 |
-| Sonnet 5.5 | Opus 5.5 |
-| Opus 5.5 | Fable 5.1 |
+| Haiku 5.5 | Fable, Opus 4.7 or later, Sonnet 5 or later, Haiku 5.5 |
+| Sonnet 5.5 | Fable, Opus 5 or later, Sonnet 5.5 |
+| Opus 5.5 | Fable, Opus 5 or later |
+| Fable 5.2 | Fable 5.2 only |
+
+Claude Code attaches no lower-ranked advisor: an Opus or Sonnet advisor on a Fable 5.2 main model runs no consultation and raises no error.
 
 The executor decides when to consult and owns the resulting action. The advisor receives the model-request transcript, including system context, tool interactions and partial output, as quoted context. The advisor has no tools or context management of its own. Account for added latency and model usage. Advice grants no authority and cannot satisfy independent review.
 
-The checked Code sources establish no Advisor subagent frontmatter, subagent inheritance or per-advisor effort control. Keep Advisor out of generated role definitions and dispatch controls unless the target runtime documents and verifies those controls.
+Subagents inherit the configured advisor and apply the same pairing check against their own model. The checked Code sources establish no Advisor subagent frontmatter and no per-advisor effort control. Keep Advisor out of generated role definitions and dispatch controls unless the target runtime documents and verifies those controls.
 
-Verified 3 November 2026 against [Advisor API mechanics and compatibility](https://platform.claude.com/docs/en/agents-and-tools/tool-use/advisor-tool), [Code CLI flags](https://code.claude.com/docs/en/cli-reference#cli-flags), [Code release notes](https://code.claude.com/docs/en/changelog#21260), [model configuration](https://code.claude.com/docs/en/model-config) and [subagents](https://code.claude.com/docs/en/sub-agents).
+Pair table and subagent inheritance verified 14 November 2026 against [Code advisor](https://code.claude.com/docs/en/advisor). Other mechanics verified 3 November 2026 against [Advisor API mechanics and compatibility](https://platform.claude.com/docs/en/agents-and-tools/tool-use/advisor-tool), [Code CLI flags](https://code.claude.com/docs/en/cli-reference#cli-flags), [Code release notes](https://code.claude.com/docs/en/changelog#21260), [model configuration](https://code.claude.com/docs/en/model-config) and [subagents](https://code.claude.com/docs/en/sub-agents).
 
 ## Historical harness mechanics
 
@@ -97,11 +102,11 @@ Three separate caps govern subagent use, each with its own environment variable:
 
 | Cap | Default | Variable |
 |---|---|---|
-| Nesting depth | Off — a subagent cannot spawn subagents | `CLAUDE_CODE_MAX_SUBAGENT_SPAWN_DEPTH` |
+| Nesting depth | On — up to three layers below the main conversation | `CLAUDE_CODE_MAX_SUBAGENT_SPAWN_DEPTH`; `1` disables nesting |
 | Concurrent subagents | 20 running at once | `CLAUDE_CODE_MAX_CONCURRENT_SUBAGENTS` |
 | Total spawned per session | 200 | `CLAUDE_CODE_MAX_SUBAGENTS_PER_SESSION` |
 
-Nesting being off by default is the item most likely to break a carried-forward orchestration prompt: while nesting is off, the `Agent` tool is withheld from every subagent except a fork, so a lane instructed to delegate will quietly do the work itself and return one summary. If your lane design depends on a second layer, set the depth variable explicitly and say so in the prompt. Sessions with ultracode active are exempt from the concurrency cap.
+Verified 14 November 2026 against sub-agents: nesting is on by default. Earlier documentation stated that it was off, so a carried-forward orchestration prompt that relied on that now permits a second layer. A subagent whose definition omits `tools` inherits `Agent` and can spawn subagents of its own. To stop a role from spawning, omit `Agent` from its `tools` or list it in `disallowedTools`; an `Agent(type, type)` allowlist is ignored in a subagent definition. At the depth limit the `Agent` tool is withheld from subagents, and a fork keeps the tool but gets an error. Sessions with ultracode active are exempt from the concurrency cap.
 
 Subagents run in the background by default; Claude runs one in the foreground when it needs the result before continuing. Background subagents surface permission prompts in your main session, naming the asking subagent, and their results reach Claude as a completion notification in a later turn. `/subtask` starts a fork — a subagent that inherits the full conversation instead of starting fresh — which is the right shape for trying several approaches from the same starting point. `/fork` now copies the whole session into a separate background session instead.
 

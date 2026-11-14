@@ -1,32 +1,32 @@
 {
   "schema_version": 2,
-  "policy_version": "3.0.0",
+  "policy_version": "3.1.0",
   "surface": "claude-code",
-  "verified_on": "2026-10-09",
+  "verified_on": "2026-11-14",
   "sources": [
     {
       "id": "models",
       "url": "https://platform.claude.com/docs/en/models/overview",
-      "verified_on": "2026-10-08",
-      "scope": "Exact API IDs, default effort and thinking mode"
+      "verified_on": "2026-11-14",
+      "scope": "Exact API IDs, API default effort and thinking mode; Fable 5.2 is claude-fable-5-2 with API default high"
     },
     {
       "id": "effort",
       "url": "https://platform.claude.com/docs/en/build-with-claude/effort",
-      "verified_on": "2026-10-09",
+      "verified_on": "2026-11-14",
       "scope": "Supported low/medium/high/xhigh/max and surface-qualified defaults; API defaults do not establish Claude Code/app defaults."
     },
     {
       "id": "model-config",
       "url": "https://code.claude.com/docs/en/model-config",
-      "verified_on": "2026-10-08",
-      "scope": "Provider mapping, version gates, overrides and fallback"
+      "verified_on": "2026-11-14",
+      "scope": "Provider mapping, version gates, overrides and fallback; Claude Code default effort medium for Fable 5.2, Opus 5.5, Sonnet 5.5 and Haiku 5.5; Fable 5.2 requires 2.1.321; the fable alias resolves to Fable 5.2 outside Claude apps gateway sessions"
     },
     {
       "id": "subagents",
       "url": "https://code.claude.com/docs/en/sub-agents",
-      "verified_on": "2026-10-08",
-      "scope": "Full-ID metadata and version-dependent precedence"
+      "verified_on": "2026-11-14",
+      "scope": "Full-ID definition metadata, alias-only per-invocation model, invocation effort since 2.1.292, and nesting on by default up to three layers"
     },
     {
       "id": "opus-prompt",
@@ -44,7 +44,7 @@
       "id": "fable-prompt",
       "url": "https://platform.claude.com/docs/en/build-with-claude/prompt-engineering/prompting-claude-fable-5-1",
       "verified_on": "2026-09-25",
-      "scope": "Long-horizon candidate and evaluation caveats"
+      "scope": "Historical Fable 5.1 prompting; superseded by fable-5-2-prompt"
     },
     {
       "id": "sonnet-model",
@@ -85,8 +85,8 @@
     {
       "id": "model-selection",
       "url": "https://platform.claude.com/docs/en/about-claude/models/choosing-a-model",
-      "verified_on": "2026-10-09",
-      "scope": "Efficiency-first Sonnet for everyday coding, analysis and tools; Opus for complex autonomous coding and broad refactors. Capability-first starting on Opus and highest-capability Fable guidance are vendor alternatives, not measured local profile equivalence. This page does not assign Sonnet effort."
+      "verified_on": "2026-11-14",
+      "scope": "Most workloads start on Opus 5.5; Fable 5.2 for the highest capability, long agent sessions and work that falls short on Opus 5.5 at xhigh or max; Sonnet 5.5 for everyday coding; Haiku 5.5 for latency, volume and subagent tasks. Vendor guidance, not measured local profile equivalence."
     },
     {
       "id": "opus-launch",
@@ -98,13 +98,31 @@
       "id": "fable-launch",
       "url": "https://www.anthropic.com/claude-fable-and-mythos-5-1",
       "verified_on": "2026-10-09",
-      "scope": "September 2026 joint launch, day unspecified: Fable Code/API high versus Cowork/claude.ai medium; low retrieval and xhigh/max duplicate-drafting caveats. Mythos excluded from active selection."
+      "scope": "Historical September 2026 Fable 5.1 launch; superseded by fable-5-2-launch. Mythos excluded from active selection."
     },
     {
       "id": "task-controls",
       "url": "https://code.claude.com/docs/en/sub-agents",
-      "verified_on": "2026-10-09",
-      "scope": "Non-fork invocation effort since 2.1.292; invocation model and effort subject to force/environment/provider overrides. Omitted pins do not prove effective selection."
+      "verified_on": "2026-11-14",
+      "scope": "Non-fork invocation effort since 2.1.292; the per-invocation model accepts family aliases only; both are subject to force/environment/provider overrides. Omitted pins do not prove effective selection."
+    },
+    {
+      "id": "fable-5-2-prompt",
+      "url": "https://platform.claude.com/docs/en/build-with-claude/prompt-engineering/prompting-claude-fable-5-2",
+      "verified_on": "2026-11-14",
+      "scope": "Effort calibration, early stopping, approvals, code ownership, progress updates, subagent expectations, accumulated caution, carried-over prompts and harnesses, final reports and refusals"
+    },
+    {
+      "id": "fable-5-2-migration",
+      "url": "https://platform.claude.com/docs/en/models/fable-5-2/migration-guide",
+      "verified_on": "2026-11-14",
+      "scope": "Model ID, prefix-check and thinking-block breaking changes, advisor pairing, 30-day retention requirement and behaviour changes from Fable 5.1 and Opus 5.5"
+    },
+    {
+      "id": "fable-5-2-launch",
+      "url": "https://www.anthropic.com/claude-fable-and-mythos-5-2",
+      "verified_on": "2026-11-14",
+      "scope": "Official launch: pricing, effort levels, advisor and orchestrator roles; Fable 5.2 and Mythos 5.2 share one model. Vendor capability claims are not local calibration. Mythos excluded from active selection."
     }
   ],
   "models": {
@@ -128,6 +146,28 @@
       "notes": "default_effort is the current medium starting setting, not the max/xhigh settings used in headline launch benchmarks. Benchmark settings do not override task-selected controls.",
       "selection_enabled": true
     },
+    "claude-fable-5-2": {
+      "supported_efforts": [
+        "low",
+        "medium",
+        "high",
+        "xhigh",
+        "max"
+      ],
+      "default_effort": "medium",
+      "thinking_mode": "adaptive-always-on",
+      "source_ids": [
+        "models",
+        "effort",
+        "model-config",
+        "fable-5-2-prompt",
+        "fable-5-2-migration",
+        "fable-5-2-launch"
+      ],
+      "minimum_claude_code": "2.1.321",
+      "notes": "default_effort denotes the Claude Code default, medium; the Claude API default is high. Most capability gain is present at high; xhigh and max need a measured gain. Prompt lines that ask for less thinking do not stop thinking at medium and above. A Fable 5.2 executor accepts only a Fable 5.2 or Mythos 5.2 advisor. All values are surface snapshots, not observed installed controls. Mythos is excluded from active selection and custom profiles.",
+      "selection_enabled": true
+    },
     "claude-fable-5-1": {
       "supported_efforts": [
         "low",
@@ -145,8 +185,8 @@
         "fable-launch"
       ],
       "minimum_claude_code": "2.1.257",
-      "notes": "default_effort denotes Claude Code and Platform/API high. Cowork and claude.ai default to medium. All values are surface snapshots, not observed installed controls. Mythos is excluded from active selection and custom profiles.",
-      "selection_enabled": true
+      "notes": "Historical capability entry; Fable 5.2 is the active Fable member. default_effort denoted Claude Code and Platform/API high for this generation. Mythos is excluded from active selection and custom profiles.",
+      "selection_enabled": false
     },
     "claude-sonnet-5-5": {
       "supported_efforts": [
