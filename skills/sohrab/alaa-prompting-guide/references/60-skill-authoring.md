@@ -90,7 +90,7 @@ When a comparison is authorized, define a question and acceptance criteria befor
 
 Run this review when a controlling text written for an earlier model will run on a newer one. This includes a prompt, a skill, an agent file, an instruction file, a memory and a note.
 
-A carry-over repair is a deliberate behavior change. The done-test above does not judge it. Judge it against the target model's reference and the declared intent of the text, and leave every other rule's behavior unchanged. Apply a check only when the target model's reference documents that behavior, and take the repair from that reference. For Fable 5.2 the reference is `references/43-fable-5-2.md`. Report a check the reference does not document as not applicable. A stale fact is the one check that applies to every model.
+A carry-over repair is a deliberate behavior change. The done-test above does not judge it. Judge it against the target model's reference and the declared intent of the text, and leave every other rule's behavior unchanged. Apply a check only when the target model's reference documents that behavior, and take the repair from that reference. For Fable 5.2 the reference is `references/43-fable-5-2.md`. Report a check the reference does not document as not applicable. A stale fact is the one check that applies to every model: replace it from the current source and date it.
 
 | Check | Hit |
 |---|---|

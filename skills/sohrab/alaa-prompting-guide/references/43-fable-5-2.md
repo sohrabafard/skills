@@ -47,7 +47,7 @@ Apply a rule below only when the target harness shows the behaviour, or when the
 
 **Style limits.** The model follows writing-style rules closely. A hard limit such as "20 words or fewer in every sentence" makes its prose choppy. State a style rule as a default and name its exception.
 
-**Token budget in the prompt.** A budget shown in prompt text changes how much the model spends. In vendor tests a large budget raised cost with equal results. Show no token budget in a prompt or a dispatch. The API task-budget feature is a separate control.
+**Token budget in the prompt.** A budget shown in prompt text changes how much the model spends. In vendor tests a large budget raised cost with equal results. Show no token budget in a prompt or a dispatch, and keep the output-length and scope rules. The API task-budget feature is a separate control.
 
 **Reasoning in the reply.** A request to reproduce internal reasoning in the response can be refused with category `reasoning_extraction`. Ask for conclusions, evidence and decisions. Never ask for the reasoning transcript.
 

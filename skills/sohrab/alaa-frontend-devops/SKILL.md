@@ -1,6 +1,6 @@
 ---
 name: alaa-frontend-devops
-description: "Frontend delivery gate register: CI or pipeline gates for a frontend repository, Dockerfile or Compose changes that affect frontend build or runtime delivery, the build artifact contract, public path or asset base, cache policy, build provenance, what may be compiled into a client bundle, and frontend deploy failure or rollback. Use it when you add or change one of these, debug a failed frontend deploy, or roll one back. Do not use it when the task is frontend logic only and has no build or deploy impact (/alaa-frontend-developer), or when the task is package-boundary specific and belongs to /alaa-mono-package."
+description: "Frontend delivery gate register: CI or pipeline gates for a frontend repository, Dockerfile or Compose changes that affect frontend build or runtime delivery, the build artifact contract, public path or asset base, cache policy, build provenance, what may be compiled into a client bundle, and frontend deploy failure or rollback. Use it when you add, change or review one of these, debug a failed frontend deploy, or roll one back. Do not use it when the task is frontend logic only and has no build or deploy impact (/alaa-frontend-developer), or when the task is package-boundary specific and belongs to /alaa-mono-package."
 ---
 
 # Alaa Frontend DevOps

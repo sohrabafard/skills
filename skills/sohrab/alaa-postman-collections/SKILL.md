@@ -62,8 +62,9 @@ files the current task touches.
 3. Read `references/00-topic-map.md` to pick the smallest set of reference files, and read
    `references/25-public-api-contract-and-sdk-readiness.md` when the repo owns a public API.
 4. Follow the ordered workflow in `references/10-scope-and-trigger-rules.md`. It also
-   holds the generated-artifact rule, the update-versus-rewrite rule and the stop-and-ask conditions.
-5. Before running any artifact check, read `references/60-validation-and-output-contract.md`
+   holds the generated-artifact rule and the stop-and-ask conditions.
+5. Prefer a minimal update to an existing artifact over a rewrite.
+6. Before running any artifact check, read `references/60-validation-and-output-contract.md`
    for the offline workflow, flags, and exit codes.
 
 ## Deliverables

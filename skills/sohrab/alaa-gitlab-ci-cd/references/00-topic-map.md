@@ -6,7 +6,7 @@ task in front of you. Do not read every file.
 | Open | When the task involves |
 |---|---|
 | `pipeline-authoring/10-pipeline-creation-and-paths.md` | pipeline creation rules or path selection |
-| `pipeline-authoring/20-authoring-defaults.md` | laying out a new pipeline's stages, shared `default:` setup, or a job split |
+| `pipeline-authoring/20-authoring-defaults.md` | writing or changing a job or a pipeline: its stages, `workflow:rules`, `needs:`, shared `default:` setup, a job split, or a job script |
 | `pipeline-authoring/30-reuse-composition.md` | hidden jobs, includes, components or child pipelines |
 | `pipeline-authoring/30-environments-and-rollback.md` | deployment environment recording or deployment rollback |
 | `pipeline-authoring/40-child-pipelines-and-checklist.md` | child pipelines or multi-file layout |

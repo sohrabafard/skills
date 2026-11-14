@@ -43,4 +43,4 @@ Apply this when the user says "clean island", "only this package", "do not chang
 
 The router is `references/00-topic-map.md`. It routes by what you are about to do and by the symptom you see. Open it, match one row, and read that one file.
 
-When you choose a model or a reasoning effort, read `/alaa-prompting-guide` `references/50-effort-and-thinking.md`.
+For model and effort capability evidence, read `/alaa-prompting-guide` `references/50-effort-and-thinking.md`; the runtime orchestrator owns task allocation.

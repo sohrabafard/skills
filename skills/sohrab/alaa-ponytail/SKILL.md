@@ -6,8 +6,8 @@ description: >
   choices, or requests for "ponytail", "alaa-ponytail", "be lazy", YAGNI,
   the simplest solution, or less over-engineering and bloat. Levels: lite,
   full (default), ultra. Do not use it to replace repository architecture
-  rules, /alaa-code-intelligence-routing, /alaa-security-review or
-  /alaa-testing-strategy. Instruction-only:
+  rules, /alaa-code-intelligence-routing, or security and testing rules
+  such as /alaa-security-review and /alaa-testing-strategy. Instruction-only:
   no hooks or implicit subagent propagation.
 license: MIT
 ---

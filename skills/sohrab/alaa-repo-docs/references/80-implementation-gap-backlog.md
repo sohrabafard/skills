@@ -38,7 +38,7 @@ Use code, route definitions, tests, migrations, config, and current artifacts as
 
 - group by service, module, or feature area,
 - number each task,
-- state the missing behavior in plain words,
+- state the missing behavior in plain English,
 - cite the promise and the current implementation evidence for each item,
 - state whether the gap affects documentation only, Postman examples, the public API, storage, jobs, events, or operations,
 - separate future proposals from the work required to make existing documents truthful.

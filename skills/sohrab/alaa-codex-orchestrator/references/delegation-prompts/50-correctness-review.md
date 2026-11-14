@@ -21,7 +21,7 @@ Dispatch a fresh instance of the lens-owning role under `alaa-workflow reference
 <items><per item: ID, claim, cited evidence, counter-evidence locations; no verdicts, severity votes or reporter identity></items>
 <diff_scope><reviewed snapshot or commit and touched files></diff_scope>
 <stance>You did not write this code or these findings. Try to refute each item from current code, tests and evidence. Read-only, no fixes.</stance>
-<output>Exactly one line per item ID: CONFIRMED | REFUTED | NEEDS-EVIDENCE, with evidence. NEEDS-EVIDENCE names the exact missing fact.</output>
+<output>For this dispatch the first line is STATUS: COMPLETE | STATUS: INCOMPLETE | STATUS: BLOCKED in place of the role's verdict line. Then exactly one line per item ID: CONFIRMED | REFUTED | NEEDS-EVIDENCE, with evidence. NEEDS-EVIDENCE names the exact missing fact.</output>
 ```
 
 ## Instruction reviewer
