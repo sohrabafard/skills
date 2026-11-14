@@ -12,6 +12,7 @@ One file answers most tasks; two is normal. Loading ten means the task was never
 | You are about to | Read |
 |---|---|
 | write a version number, a "latest" claim, a release date, or cite an upstream URL for a Shaka behaviour | `05-provenance-and-freshness.md` |
+| choose a model or reasoning effort for a lane, or edit this skill's frontmatter or `agents/openai.yaml` | `05-provenance-and-freshness.md` |
 | decide which files the player work splits into, or hand a player lane to a parallel agent | `10-architecture-and-module-seams.md` |
 | write `import ... from "shaka-player..."`, touch `quasar.config.*` or `vite.config.*` for the player, see `shaka is not defined`, or wire the transmux worker | `12-bundling-and-vite-loading.md` |
 | put the player instance in a `ref()`, `reactive()` or Pinia store; write `onMounted`/`onBeforeUnmount` around a player; or see a Proxy-shaped failure at load time | `11-vue-quasar-binding.md` |
@@ -60,10 +61,4 @@ One file answers most tasks; two is normal. Loading ten means the task was never
 
 ## What is not in this skill
 
-Retry and degradation doctrine (`/alaa-reliability-sla`, `$alaa-reliability-sla`); event, field and metric
-names (`/alaa-services-contract`, `$alaa-services-contract`); IndexedDB quota, eviction and persistence
-(`/alaa-indexeddb-browser-storage`, `$alaa-indexeddb-browser-storage`); Vue and Pinia shape
-(`/alaa-vue-typescript-clean-code`, `$alaa-vue-typescript-clean-code`); skin art direction
-(`/alaa-ui-ux-design-system`, `$alaa-ui-ux-design-system`); test design (`/alaa-testing-strategy`,
-`$alaa-testing-strategy`); lane spawning (`/alaa-cc-orchestrator`, `$alaa-cc-orchestrator` and
-`/alaa-codex-orchestrator`, `$alaa-codex-orchestrator`).
+The owner table in `SKILL.md` "Ownership and boundary" names the skill that owns each excluded topic. Cite that owner; never restate its rule here.

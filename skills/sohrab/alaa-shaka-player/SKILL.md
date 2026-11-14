@@ -11,11 +11,7 @@ Shaka is the playback engine. Vue and Quasar are the product shell. Ads, analyti
 
 ## Router
 
-`references/00-topic-map.md` is the only router in this skill. Read it first. Load the one or two rows that match the task.
-
-## Portability and model routing
-
-This skill names no model and no reasoning effort. Take both from `/alaa-prompting-guide`, `references/50-effort-and-thinking.md`, at the time you run the lane. Frontmatter is `name` and `description` only. `agents/openai.yaml` is Codex-only UI metadata. Output discipline follows `/alaa-low-noise`.
+`references/00-topic-map.md` is the only router in this skill. Read it first. Load the one or two rows that match the task. Output discipline follows `/alaa-low-noise`.
 
 ## When NOT to use
 
@@ -37,8 +33,8 @@ The media is a single progressive MP4 with no manifest, no DRM, no track selecti
 This skill owns:
 - the `player.configure()` surface and its safe defaults for this stack;
 - the `shaka.util.Error` taxonomy and which Shaka mechanism handles each category;
-- player lifecycle inside a Vue/Quasar SPA;
-- DASH/HLS/DRM behaviour per browser and platform;
+- player lifecycle inside a Vue and Quasar SPA;
+- DASH, HLS and DRM behaviour for each browser and platform;
 - the Shaka side of offline download;
 - version migration across Shaka releases.
 
@@ -66,8 +62,8 @@ Everything below is cited, never restated.
 ## Implementation order
 
 1. Read `references/00-topic-map.md`.
-2. When you upgrade Shaka or change a version-sensitive API, confirm the installed version and read `references/80-version-migration-and-release-deltas.md` for the selected target and intervening releases. When a change touches an API surface that `scripts/check-shaka-api.mjs` recognizes, run it against the repository. Its rules cover configure and error handling, tracks, ads, offline, native HLS, gaps, UI and preferences. Its rules cover removals up to v5.2.3 and the v5.3 retired error names and deprecated keys, anchored at v5.3.4. A clean run is not proof of every newer API.
-3. Write or repair the core wrapper: import, polyfill, support check, attach, `configure()`, filters, error classification, teardown (`references/20-core-lifecycle.md`, `references/15-configure-surface-and-safe-defaults.md`).
+2. When you upgrade Shaka or change a version-sensitive API, confirm the installed version. Then read `references/80-version-migration-and-release-deltas.md` for the selected target and every intervening release. When a change touches an API surface that `scripts/check-shaka-api.mjs` recognizes, run it against the repository. Its rules cover configure and error handling, tracks, ads, offline, native HLS, gaps, UI and preferences. They also cover removals up to v5.2.3, and the v5.3 retired error names and deprecated keys, anchored at v5.3.4. A clean run is not proof of every newer API.
+3. Write or repair the core wrapper: import, polyfill, support check, attach, `configure()`, filters, error classification and teardown. Read `references/20-core-lifecycle.md` and `references/15-configure-surface-and-safe-defaults.md` for it.
 4. Add the capability the task asked for, one reference file at a time.
 5. Add the resilience policy (`references/35-unstable-networks-and-resilience.md`). It is not optional on a mobile network.
 6. Choose the lightest proof mode that `references/90-qa-modes-and-checklist.md` selects for the changed behavior. Exercise the scenarios that behavior can break. Report the applicable deliverables below.

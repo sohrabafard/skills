@@ -1,8 +1,8 @@
 # Topic Map
 
 Load the one file whose condition matches the task in front of you. Every row states a situation you can observe,
-not a subject heading. The out-of-skill routing table lives in `SKILL.md` under "Not owned here"; this file routes
-only inside the skill, so the two cannot drift.
+not a subject heading. The first table routes inside this skill. The table under "Not owned here" routes work that
+another skill owns.
 
 | You are about to | Read |
 |---|---|
@@ -37,3 +37,21 @@ because nothing fails while they are absent.
 `references/75-mc-command-line-client.md` for how each step is expressed and which commands must not appear in a
 script at all. Read the second before running anything, not after: the destructive commands and the rule keeping a
 credential out of `argv` are both there, and neither is recoverable once broken.
+
+## Not owned here
+
+| You are about to | Use |
+|---|---|
+| choose between Postgres and Redis, design a table or index, or tune a query, pool or cache | `/alaa-data-layer` |
+| shape a retry, backoff, timeout, breaker, idempotency key or degradation policy | `/alaa-reliability-sla` |
+| name a metric, log field, event, error code or header, or use an Ala platform value such as a timeout or retry budget | `/alaa-services-contract` `references/22-failure-load-and-deprecation-contract.md` |
+| decide whether telemetry is required, or which gate it must pass | `/alaa-observability-soc` |
+| trigger a security review, classify a threat, or apply fail-closed doctrine | `/alaa-security-review` |
+| write a Dockerfile, Compose file or Swarm stack, or harden an image | `/alaa-docker-production` |
+| write a Kubernetes manifest or a Helm chart | `/alaa-k8s-helm`, Arvan specifics in `/caas-arvan-kuber` |
+| change an HAProxy directive in front of the store | `/alaa-haproxy` |
+| decide which layer a behaviour is tested at, or what proof a claim reached | `/alaa-testing-strategy` `references/40-proof-strength.md` |
+| size a tus part, build an upload-session key, or retain an unfinished upload | `/tusd-upload-platform` |
+| check work against the ten-point quality bar | `/alaa-project-constitution` `references/quality-bar.md` |
+| point a bucket or client at an ArvanCloud endpoint, choose an Arvan region, or check whether an S3 operation works on ArvanCloud | `/alaa-arvan-object-storage` |
+| choose a model or an effort level | `/alaa-prompting-guide` |

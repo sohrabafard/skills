@@ -15,7 +15,7 @@ Use inside real child content of `QMenu`, `QDialog`, or `QPopupProxy` to close t
 <q-btn label="Save and close all" color="primary" v-close-popup="2" />
 ```
 
-✅ Do — use it in a real popup child. ❌ Don't — use it across sibling dialogs; toggle their `v-model`s.
+Do: use it in a real popup child. Do not: use it across sibling dialogs; toggle their `v-model`s.
 
 Search: `close popup levels`, `v-close-popup 2`, `dialog menu chain`, `QPopupProxy separates chains`.
 
@@ -42,7 +42,7 @@ Use on genuinely interactive surfaces; prefer Quasar buttons/items, which alread
 <div v-ripple role="button" tabindex="0" class="cursor-pointer q-pa-sm rounded-borders">Open details</div>
 ```
 
-✅ Do — add `role`, `tabindex`, and a keyboard handler to a custom surface (or use `QBtn`/`QItem`). ❌ Don't — imply interaction with ripple where none exists.
+Do: add `role`, `tabindex`, and a keyboard handler to a custom surface (or use `QBtn`/`QItem`). Do not: imply interaction with ripple where none exists.
 
 Search: `v-ripple`, `keyboard fallback`, `focus visible`, `reduced motion`.
 

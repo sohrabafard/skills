@@ -80,7 +80,7 @@ describe('normalizeCourseTitle', () => {
 })
 ```
 
-❌ Don't — `it('works', () => expect(true).toBe(true))`.
+Do not: `it('works', () => expect(true).toBe(true))`.
 
 A component test mounts what the component needs, preferably through the repository's own helper:
 
@@ -95,7 +95,7 @@ const wrapper = mount(CourseCard, {
 })
 ```
 
-❌ Don't — `mount(CourseCard)` and silently miss every plugin behaviour.
+Do not: `mount(CourseCard)` and silently miss every plugin behaviour.
 
 Input normalization is tested against the shared corpus owned by `/alaa-input-normalization`, `references/50-corpus-and-harness.md`, not against ad-hoc cases written in a component test.
 
@@ -156,6 +156,6 @@ Validation run:
 - SSR render regression: not run; no SSR mode
 ```
 
-❌ Don't — report "everything should work". The evidence and reporting contract is `/alaa-testing-strategy`, `references/80-evidence-and-reporting.md`.
+Do not: report "everything should work". The evidence and reporting contract is `/alaa-testing-strategy`, `references/80-evidence-and-reporting.md`.
 
 Search: `vitest`, `cypress`, `@quasar/testing-unit-vitest`, `vue-tsc --noEmit`, `mount with Quasar plugin`, `createTestingPinia`, `SSR render regression`, `hydration mismatch assertion`, `service worker update regression`, `offline assertion`, `gate`, `predicate`.

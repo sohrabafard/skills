@@ -22,8 +22,8 @@ here; cite the file and line you are overriding.
 - Do not store per-request mutable state in a module-level singleton.
 - Do not perform a drive-by refactor, and do not change root package-manager scripts unless the
   maintainer asked.
-- Do not change service-worker caching strategy, public asset paths, or build output contracts as a side
-  effect of another change.
+- Do not change public asset paths or build output contracts as a side effect of another change.
+  `SKILL.md` gate 6 owns the service-worker strategy rule.
 
 ## Always optimize for
 

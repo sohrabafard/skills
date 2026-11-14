@@ -6,16 +6,16 @@ General agent-authoring doctrine — how to write a skill, how to write an instr
 
 ## 1. The example convention, with Quasar examples
 
-A high-value rule is written as a short reasoned contrast pair. Every ❌ needs a concrete ✅; a bare prohibition does not steer action.
+A high-value rule is written as a short reasoned contrast pair. Every Do not line needs a concrete Do line; a bare prohibition does not steer action.
 
 ```text
-✅ Do — <correct action and the reason>
-❌ Don't — <realistic wrong action and the failure it produces>
+Do: <correct action and the reason>
+Do not: <realistic wrong action and the failure it produces>
 ```
 
 ```text
-❌ Don't — `import { defineBoot } from '#q-app/wrappers'` in v3; that path is v2 and the build fails at config load.
-✅ Do — after confirming app-vite v3, `import { defineBoot } from '#q-app'`.
+Do not: `import { defineBoot } from '#q-app/wrappers'` in v3; that path is v2 and the build fails at config load.
+Do: after confirming app-vite v3, `import { defineBoot } from '#q-app'`.
 ```
 
 The Quasar-specific reason this convention earns its space: the two app-vite lines are shape-compatible enough that a wrong-line import reads as correct. A prohibition alone leaves the reader without the right shape, and the failure it produces is usually reported as a Vite error, not a Quasar one.

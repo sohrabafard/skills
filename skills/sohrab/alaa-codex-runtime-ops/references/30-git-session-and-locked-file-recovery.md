@@ -47,6 +47,6 @@ If the user reports missing Codex app chats, `config.toml`, global `AGENTS.md`, 
 
 - Inspect only the relevant sessions, config, instruction or global-state paths under the verified active state root, read-only. Confirm the runtime's layout before treating a missing file as evidence.
 - Check the active Linux user, worktree, configured state root and any desktop-provided state location. Do not assume WSL and desktop state are identical, search unrelated profiles, or copy state between them.
-- For `.codex-global-state.json`, parse only the required top-level fields such as active workspace roots, saved workspace roots, pinned thread ids, and thread workspace hints. Do not print `prompt-history`, queued follow-up text, secret maps, env-like values, or full thread maps.
+- For `.codex-global-state.json`, parse only the required top-level fields, such as active workspace roots, saved workspace roots, pinned thread ids, and thread workspace hints. `SKILL.md` "Hard rules" owns what you must never print from Codex state, including `prompt-history`.
 - Report what exists, what is absent, and which evidence source was used.
 - Do not restore, overwrite, delete, or move Codex state/config files without explicit user approval.

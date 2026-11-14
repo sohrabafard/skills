@@ -36,13 +36,13 @@ object key, no storage credential and no storage policy.
 3. **Every object key takes its tenant scope from the trusted request context, never from client input.** The
    store applies no tenant filter of its own, so a key assembled from a client-supplied value is a cross-tenant
    read returning a well-formed success. Build the key server-side from the project the gateway asserted.
-4. **Credentials reach the process from configuration, never from a committed file, and appear in no log line,
-   exception message, URL, metric label, span attribute, report or command line.** A credential in git history or
+4. **Credentials reach the process from configuration, never from a committed file.** A credential appears in no
+   log line, exception message, URL, metric label, span attribute, report or command line. A credential in git history or
    in a log outlives whatever carried it, so the only remedy left is rotation. A credential on a command line is
    the same defect by a quieter route. The shell expands it before the program starts, so it sits in that
    process's `argv`. The process list exposes it there, and the shell's history file records it. Pass it in the
    environment instead, or in a file whose mode restricts it.
-5. **Credentials are rotatable without a code change**, so the process re-reads them from their source on restart
+5. **Credentials are rotatable without a code change.** The process re-reads them from their source on restart
    or refreshes them from a credential provider. A credential captured once at client construction turns a leak
    into a redeploy decision taken under incident pressure.
 6. **Transport is TLS on every path whose endpoint host is not a loopback address.** A SigV4 `Authorization`
@@ -61,34 +61,28 @@ object key, no storage credential and no storage policy.
 8. **The object store is never the source of truth for a fact a database also holds.** A listing is not a
    transaction and a `HEAD` is not a lock, so a service reading existence from the store races its own writes and
    cannot roll back.
-9. **Read every storage value that is a guess, a provider limit, or a thing that can differ between MinIO and
-   ArvanCloud or between a test stack and production from a named `STORAGE_*` environment variable, give it a
-   default this skill states, and validate it before the storage client is constructed.** A number compiled into
+9. **Read each storage value from a named `STORAGE_*` environment variable when the value is a guess, a provider
+   limit, or a value that can differ between MinIO and ArvanCloud or between a test stack and production.** Give
+   the variable a default that this skill states. Validate it before the storage client is constructed. A number compiled into
    code costs a code change, a review, a build and a deploy on the day the provider turns out to want a different
    one, and that day arrives under incident pressure. `STORAGE_PROVIDER_PROFILE` selects the bundle of defaults a
    provider needs. Every variable still overrides its profile default from its own environment value. No
    service branches on the profile name, because a branch turns adopting a fourth provider into a code change in
-   every service. `references/05-environment-contract.md` owns the names, the
-   defaults, the profile table, the evidence behind each default and the validation, and `/alaa-arvan-object-storage` `references/15-environment-contract-deltas.md` states only where ArvanCloud's
-   default differs.
+   every service. When you name, default or validate a storage variable, read
+   `references/05-environment-contract.md`: it owns the names, the defaults, the profile table, the evidence
+   behind each default and the validation. `/alaa-arvan-object-storage` `references/15-environment-contract-deltas.md` states only where ArvanCloud's default differs.
 
-## What the fleet does today
+## Evidence from the fleet's consumer
 
-The fleet's only object-storage consumer violates constraints 2, 3, 4, 5 and 6, and leaves 7 unproven because it
-sets no bucket policy and issues no presigned URL `[source: Ala tusd repository, read: 2026-07-27]`.
-Its Compose and Swarm files put the application on the store's root credentials. Those files describe the
-local development and test stack rather than production. So that is a constraint 1 finding against the test stack
-and an open question against production. `references/80-topology.md` states the boundary and
-`references/30-identity-credentials-and-access.md` carries the question. It meets the logging half of constraint 4: its runtime config plan and its forbidden-log-field list
-already redact the credential, the object key and the presigned URL. It breaks the command-line half, passing
-the access key and the secret key positionally to `mc alias set` in both Compose files and three smoke scripts.
-Every reference carries the evidence for its own topic with the file it came from. Those are observations of one
-consumer, never platform policy, and never a precedent for a new bucket.
+Every reference carries evidence from the fleet's only object-storage consumer, the Ala tusd repository, with the
+file it came from. Treat that evidence as observations of one consumer. It is never platform policy and never a
+precedent for a new bucket. When you assess that consumer against the constraints above, read
+`references/80-topology.md` "The fleet's consumer against the constraints".
 
 ## Routing
 
 Read `references/00-topic-map.md` and load only the file whose triggering condition matches the task in front of
-you. Do not read the others.
+you. Do not read the others. When the task is work another skill owns, the same file names that skill.
 
 ## When the store fails
 
@@ -102,12 +96,13 @@ you. Do not read the others.
    unconfirmed response, because that orphans bytes no query will find again. Where a lifecycle rule owns the
    removal, record that and stop retrying.
 
-Retry counts, backoff shape, breaker thresholds and degradation policy are `/alaa-reliability-sla`. This section states only what a failure is allowed to mean.
+`/alaa-reliability-sla` owns retry counts, backoff shape, breaker thresholds and degradation policy. This section states only what a failure is allowed to mean.
 
 ## Checker and output
 
-`python3 scripts/check_object_storage_posture.py --root <repo>`, with `--help` for the check list. It reads files lexically and contacts no object store, so a clean run proves what the
-repository declares and not how the running bucket is configured.
+Run `python3 scripts/check_object_storage_posture.py --root <repo>`. Run it with `--help` for the check list. It
+reads files lexically and contacts no object store, so a clean run proves what the repository declares and not
+how the running bucket is configured.
 
 - exit `0`: no finding. Continue to the service's own tests.
 - exit `1`: findings printed with file and line. Fix each one, or record it as an accepted defect with an owner and
@@ -125,21 +120,3 @@ Report each of these, marked implemented, declared-but-absent, or not-applicable
 
 Give the checker's exit code. Cite every upstream API claim with its read date. State an unverified claim as
 unverified.
-
-## Not owned here
-
-| You are about to | Use |
-|---|---|
-| choose between Postgres and Redis, design a table or index, or tune a query, pool or cache | `/alaa-data-layer` |
-| shape a retry, backoff, timeout, breaker, idempotency key or degradation policy | `/alaa-reliability-sla` |
-| name a metric, log field, event, error code or header, or use an Ala platform value such as a timeout or retry budget | `/alaa-services-contract` `references/22-failure-load-and-deprecation-contract.md` |
-| decide whether telemetry is required, or which gate it must pass | `/alaa-observability-soc` |
-| trigger a security review, classify a threat, or apply fail-closed doctrine | `/alaa-security-review` |
-| write a Dockerfile, Compose file or Swarm stack, or harden an image | `/alaa-docker-production` |
-| write a Kubernetes manifest or a Helm chart | `/alaa-k8s-helm`, Arvan specifics in `/caas-arvan-kuber` |
-| change an HAProxy directive in front of the store | `/alaa-haproxy` |
-| decide which layer a behaviour is tested at, or what proof a claim reached | `/alaa-testing-strategy` `references/40-proof-strength.md` |
-| size a tus part, build an upload-session key, or retain an unfinished upload | `/tusd-upload-platform` |
-| check work against the ten-point quality bar | `/alaa-project-constitution` `references/quality-bar.md` |
-| point a bucket or client at an ArvanCloud endpoint, choose an Arvan region, or check whether an S3 operation works on ArvanCloud | `/alaa-arvan-object-storage` |
-| choose a model or an effort level | `/alaa-prompting-guide` |

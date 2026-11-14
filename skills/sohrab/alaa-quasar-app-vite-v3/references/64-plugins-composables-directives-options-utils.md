@@ -10,8 +10,8 @@ You are using a Quasar plugin, composable, directive, global option, or util and
 | Global options | animations, app icons, internationalization, global node, icon libraries, platform detection, icon sets, language packs, RTL, `Screen`, `SEO`, transitions, `$q` | Always load `21-cli-vite-and-config.md`; also `31` for `SEO`/`Screen`/platform and `66` for `Screen`, SEO/meta, icons/languages, `$q`. |
 | Utils | color, date, DOM, event bus, formatter, morph, scrolling, type checking, other helpers | Date/DOM/scrolling can break SSR render paths; locale/timezone/environment can drift formatter/color output. Load `66` for tree-shaking, imports, DOM timing, or deterministic dates. |
 
-✅ Do — call composables at `setup()` / `<script setup>` top level so they bind to the component instance.
+Do: call composables at `setup()` / `<script setup>` top level so they bind to the component instance.
 
-❌ Don't — call them in `onMounted`, event handlers, `setTimeout`, or async callbacks; binding and SSR parity may break.
+Do not: call them in `onMounted`, event handlers, `setTimeout`, or async callbacks; binding and SSR parity may break.
 
 `Ripple`, touch directives, and visibility/platform plugins can also be reduced-motion/a11y work. Quasar-specific directive/plugin/composable/option/util shapes are easy to misremember; load the relevant atlas whenever exact behavior matters.

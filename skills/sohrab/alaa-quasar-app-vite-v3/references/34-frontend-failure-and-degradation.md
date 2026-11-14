@@ -66,6 +66,6 @@ Rules:
 | Users on the old build for days | `sw.js` served with a long HTTP cache lifetime | serve `sw.js` with `Cache-Control: no-cache`, register with `updateViaCache: 'none'` | the CDN overrides the origin header — that is a deploy configuration issue for `/alaa-frontend-devops` |
 | Mutation lost after a reconnect | queued request replayed without an idempotency key, or the token expired before replay | inspect the Background Sync queue in DevTools Background Services | duplicates reached the server — the contract is `/alaa-reliability-sla`, `references/60-idempotency.md` |
 
-✅ Do — give every request a deadline, classify every SSR throw, and render an explicit failure state. ❌ Don't — return `200` with an empty shell when the server render failed; monitoring then reports the outage as healthy traffic.
+Do: give every request a deadline, classify every SSR throw, and render an explicit failure state. Do not: return `200` with an empty shell when the server render failed; monitoring then reports the outage as healthy traffic.
 
 Search: `SSR 500`, `dist/ssr/index.js`, `serve.devError`, `Retry-After`, `503`, `502`, `AbortSignal.timeout`, `offline fallback`, `setCatchHandler`, `degradation matrix`, `kill switch`, `navigator.onLine`, `stale chunk 404`.

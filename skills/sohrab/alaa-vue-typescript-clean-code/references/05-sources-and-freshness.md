@@ -57,13 +57,17 @@ absent.
 - TypeScript handbook: `https://www.typescriptlang.org/docs/`
 
 Quasar CLI, `quasar.config` semantics, and app-vite line detection are not refreshed from here.
-`/alaa-quasar-app-vite-v3` (`$alaa-quasar-app-vite-v3`) owns those facts and their freshness.
+`/alaa-quasar-app-vite-v3` owns those facts and their freshness.
 
 ## Cross-agent packaging
 
 This skill is one portable folder: `SKILL.md` frontmatter plus Markdown references. Claude Code and Codex
 read the same `SKILL.md`; `agents/openai.yaml` carries Codex-only display metadata and nothing behavioural.
 Keep every agent-neutral rule in `SKILL.md` and `references/`.
+
+This skill names no model. A model name written into a skill goes stale silently and is copied forward because
+it looks authoritative. Take every model and reasoning-effort choice from `/alaa-prompting-guide` `references/50-effort-and-thinking.md`.
+Keep frontmatter to `name` and `description`. `agents/openai.yaml` is Codex-only UI metadata.
 
 - Agent Skills specification: `https://agentskills.io/specification`
 - Codex skills: `https://developers.openai.com/codex/skills`

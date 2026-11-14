@@ -7,11 +7,7 @@ description: "Mandatory Vue 3, Quasar, Vite and TypeScript clean-code contract f
 
 ## Purpose
 
-Make Vue 3 + Quasar + Vite + TypeScript code production-grade: correct, typed, testable, and consistent with the official Vue style guide. This is an enforced contract, not advice. Repair violations inside the task scope. Report what cannot be repaired safely as a blocker naming file and symbol.
-
-## Portability and model routing
-
-This skill uses the core Agent Skills format, so Claude Code and Codex both load it. It names no model. A model name written into a skill goes stale silently and is copied forward because it looks authoritative. Take every model and reasoning-effort choice from `/alaa-prompting-guide`, `references/50-effort-and-thinking.md`. Keep frontmatter to `name` and `description`. `agents/openai.yaml` is Codex-only UI metadata. Output discipline follows `/alaa-low-noise`. This skill defines no response format.
+Make Vue 3, Quasar, Vite and TypeScript code production-grade: correct, typed, testable, and consistent with the official Vue style guide. This is an enforced contract, not advice. When the task permits edits, repair violations inside the task scope. Report what cannot be repaired safely as a blocker naming the file and the symbol. This skill defines no response format; output discipline follows `/alaa-low-noise`.
 
 ## When to use
 
@@ -20,7 +16,7 @@ Use this skill before you write, review, or refactor `.vue`, `.ts`, `quasar.conf
 ## When NOT to use
 
 - Backend, database, infrastructure, CI/CD, or deployment work that changes no frontend contract, state, route, component, or type.
-- Documentation, product planning, UI copy, or design-only tasks that change no Vue/TypeScript code.
+- Documentation, product planning, UI copy, or design-only tasks that change no Vue or TypeScript code.
 - A pure API lookup with no code being written. Use `/alaa-quasar-app-vite-v3`.
 
 ## Where the rules live
@@ -72,16 +68,16 @@ This skill owns the **Vue-shaped expression** of a rule: where the code lives, w
 
 Repo-local rules may set stricter numbers. Stricter wins.
 
-- A composable, store, service, or util `.ts`/`.js` file: **at most 400 lines**.
+- A composable, store, service, or util `.ts` or `.js` file: **at most 400 lines**.
 - An SFC: **at most 300 lines** of template plus script.
 - A single function: **at most 60 lines**.
 - One exported primary unit per file. Its own types and private helpers ride along. Unrelated exports do not.
 - A `useX` returns one responsibility. A composable returning filters and transport verbs and drafts and lifecycle sync is at least three composables plus a thin orchestrator.
 
-When a file crosses a budget, split it before declaring the work done, along these seams:
+When the task permits edits and a file crosses a budget, split the file before declaring the work done, along these seams:
 
 - pure policy, classification, and formatting into modules with no Vue imports;
-- view/filter/selection state into one `useX`;
+- view, filter and selection state into one `useX`;
 - draft and dialog state into one `useX`;
 - transport verbs into one `useX` receiving those narrow surfaces;
 - one thin orchestrator composing them.
@@ -119,4 +115,4 @@ Before the final response, run the project's typecheck and lint scripts as named
 
 Ask one narrow question and stop only when the missing information would change one of these: a public API, the architecture, data ownership, a side effect, a destructive operation, or what counts as validated.
 
-If the requested change conflicts with these rules, implement the safest compliant version and name the conflict. If compliance needs a refactor outside scope, record it as a blocker with file-level evidence rather than doing it silently.
+When the task permits edits and the requested change conflicts with these rules, implement the safest compliant version and name the conflict. If compliance needs a refactor outside scope, record it as a blocker with file-level evidence rather than doing it silently.

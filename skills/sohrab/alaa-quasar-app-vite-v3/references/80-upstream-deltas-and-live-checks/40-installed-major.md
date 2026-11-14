@@ -19,7 +19,7 @@ Read `package.json` and the lockfile before giving config, boot, env, alias, SSR
 
 The exact `sourceFiles.pwaServiceWorker` default is owned by `references/32-pwa-injectmanifest-guard.md`; read it there rather than restating it.
 
-✅ Do — report the detected line and use only its shapes. ❌ Don't — mix `#q-app/wrappers` and `#q-app`; each breaks the other line.
+Do: report the detected line and use only its shapes. Do not: mix `#q-app/wrappers` and `#q-app`; each breaks the other line.
 
 ```ts
 import { defineBoot } from '#q-app/wrappers' // breaks v3
