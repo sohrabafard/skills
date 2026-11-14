@@ -36,8 +36,12 @@ On `main` at the merge commit `b937a229`, each exited `0`: the four root checker
 
 ## Limits
 
-- No task has run under the new doctrine yet. Whether agents now verify in proportion is unobserved.
-- `references/verification-and-gates.md` still describes Stages A to F as the order of work; it lost its absolutes but not its length.
+- One task has run under the new doctrine (see below). Whether agents verify in proportion across many tasks is unobserved.
 - One sentence outside the edited scope keeps the old rule: `alaa-go-chi-development references/10-consumer-development.md` deletes a test "only once an independent reviewer accepts that finding".
-- `alaa-workflow` validators and phase templates still use the phrase "inherited review"; they were not assessed.
 - Not pushed.
+
+## First task under the new doctrine, same day
+
+Beads issue `alaa-xqbiz`. The two limits first recorded here were closed as real work under the doctrine itself. The lead recorded its verification decision before dispatch: the blind spot was the silent loss of a rule that lived only in stage text; a miss would change orchestrator behaviour but is reversible and touches no floor surface; the evidence was the deterministic checkers on the same snapshot; the cheapest disproving check was a table mapping each removed sentence to where its rule still lives, plus the gates. So the lead accepted the lane's observed evidence, read the diff and dispatched no independent reviewer.
+
+Result: both `references/verification-and-gates.md` files are about 2.4 KB shorter and their Stages A to F state only the order of work; the sections from the verification decision to "Before any dispatch" are byte-identical to before. In `alaa-workflow`, a boundary review now runs "when the runtime orchestrator's verification decision or a floor calls for one". Three checker literals moved with their text; no floor or decision literal changed. One lane, three lane commits, one merge, every gate at exit `0`, no repair round.
