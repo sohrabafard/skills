@@ -20,8 +20,8 @@ boundary is a small interface; every identity, error, and side effect is explici
 - Writing or modifying any Go code in a service built on `alaa-go-chi`.
 - Reviewing or refactoring Go code for kit conformance, trust-boundary hygiene, or contract discipline.
 - Designing a new handler, use case, repository, worker, consumer, or seeder in an Ala Go service.
-- Deciding where logic belongs: kit vs service, domain vs infrastructure, port vs adapter.
-- Pre-commit / pre-PR self-review — run the completion checklist below.
+- Deciding where logic belongs: kit or service, domain or infrastructure, port or adapter.
+- Self-review before a commit or a PR: run the completion checklist below.
 
 **Before consumer work**, resolve the phase through `/alaa-go-chi-development`. Run its
 `../alaa-go-chi-development/scripts/phase-check.sh <kit-repo-root>`. Apply
@@ -58,7 +58,7 @@ Then match the task to the smallest set of files. When two rows match, read both
 | Call another service, consume its events, or hit an unknown external fact | `references/40-testing-and-contracts.md` (P13); pair with `/alaa-services-contract` |
 | Build a whole feature end to end, or review a whole package | `references/10-kit-and-trust-boundary.md`, `references/20-domain-data-and-consistency.md`, `references/30-runtime-and-observability.md`, then `references/40-testing-and-contracts.md` |
 | Choose, name, or review a design pattern | `references/60-design-patterns-kit-era.md` |
-| Ask which skill owns a Go topic, or a cost/complexity question | `references/50-skill-boundaries.md` |
+| Ask which skill owns a Go topic, or a cost or complexity question | `references/50-skill-boundaries.md` |
 | Rely on a kit fact stated here — identity types, pooling lanes, metric names, provider idempotency, the scope phase | `references/90-source-map.md` |
 
 If you are about to write a shape the kit might own, read P1 before writing it. Such shapes include an envelope,
@@ -87,36 +87,14 @@ Each row is the rule at full strength. Each principle's reference file adds the 
 
 ## Companion routing
 
-- `/alaa-golang` — the mandatory router for every Go depth topic; see
-  `references/50-skill-boundaries.md` for the exact division.
-- `/alaa-go-chi-development` — the active scope phase, the kit capability and
-  surface inventory that P1 is checked against, and the change-request channel P1 sends a misfitting shape to.
-- `/alaa-services-contract` — exact platform contracts, and the *names* of metrics,
-  events, error codes, queues, and headers.
-- `/alaa-trust-gateway-auth` — trusted-header semantics, permission bitmap, gateway
-  boundary.
-- `/alaa-observability-soc` — the signal model, requirement levels, the
-  definition-of-done gate for a shipped feature, SOC evidence, alert and runbook quality.
-- `/alaa-reliability-sla` — retry shape, backoff policy, timeout budgets, degradation,
-  and the ambiguous-timeout rule.
-- `/alaa-testing-strategy` — test layer choice, test doubles, flake control, coverage
-  policy.
-- `/alaa-system-design` — capacity, topology, and consistency decisions above one service.
-- `/alaa-project-constitution` — `references/quality-bar.md` is the platform
-  quality bar. This skill restates no bar of its own; read that file when asked how good is good enough.
-- `/alaa-async-messaging` — broker architecture beyond `mqkit`'s surface.
-- `/alaa-security-review` — mandatory when authn, authz, tenant isolation, or a trust
-  boundary changes.
-- Model choice, reasoning effort, and runtime capability (whether subagents, plan mode, or background jobs
-  exist) are owned by `/alaa-prompting-guide` `references/50-effort-and-thinking.md`.
-  This skill names no model and assumes no runtime feature.
+`/alaa-golang` is the mandatory router for every Go depth topic. `/alaa-security-review` is mandatory when authn, authz, tenant isolation, or a trust boundary changes. When a task needs another owner (the kit scope phase and change requests, contract names, trusted headers, observability, reliability, testing, design above one service, the quality bar, messaging, or a model and runtime question), read *Companion routing* in `references/50-skill-boundaries.md`; it names each owner and what it decides.
 
 ## Completion checks (the pre-commit checklist)
 
 Run this before every commit and PR in an Ala Go service. It is the only checklist here.
 
 - [ ] Nothing kit-owned re-implemented locally (P1); route postures declared (P2).
-- [ ] No raw trusted headers past the edge; identity types UUIDv7-project / int64-user (P3).
+- [ ] No raw trusted headers past the edge; project id is a UUIDv7 string and user id a positive int64 (P3).
 - [ ] Errors are typed values mapped once at the boundary (P4).
 - [ ] Imports flow inward only; side effects behind ports (P5).
 - [ ] Atomic truths share one transaction; facts leave via the outbox (P6).
@@ -130,14 +108,4 @@ Run this before every commit and PR in an Ala Go service. It is the only checkli
 
 ## Maintenance rules
 
-- Keep this file routing-first: the router, the principle table, the checklist, and the companion list. Every
-  principle's detail, example, and proof lives in `references/`.
-- State each principle at one strength in one place. If a sentence here and a sentence in a reference file say
-  the same rule with different force, delete one. An agent follows the weaker.
-- Name no model, no effort setting, and no runtime capability in this skill; route those to
-  `/alaa-prompting-guide`.
-- When a proof named in a reference file changes name, moves, or starts to exist, update that proof line in the
-  same effort. A proof line that names a check which does not run is worse than an admitted gap.
-- When the kit changes a contract this skill cites — envelope, env keys, metric names, pooling lanes, readiness
-  severities, seeder contract — update the affected reference file and `references/90-source-map.md` together.
-- Keep P-numbering stable; new principles append, never renumber.
+Before you edit this skill, read *Maintenance rules* in `references/90-source-map.md`.

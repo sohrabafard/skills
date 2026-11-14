@@ -6,7 +6,7 @@ Rows are conditions, not headings. If your situation is not listed, no reference
 
 | You are about to | Read | Because |
 |---|---|---|
-| Activate a skill in a generated prompt, choose a kickoff and compact goal condition, or prepare phase/task skill routing | `references/06-invocation-and-composition.md` | Direct invocation, role ownership and reachable completion decide the message shape |
+| Activate a skill in a generated prompt, choose a kickoff and compact goal condition, or prepare phase and task skill routing | `references/06-invocation-and-composition.md` | Direct invocation, role ownership and reachable completion decide the message shape |
 | Write delegation language and need to know whether to cap fan-out or authorize it | `references/06-invocation-and-composition.md` | It owns delegation polarity, and the wrong direction fails silently on either family |
 | Tune GPT prompts or choose active Codex profiles | `references/12-gpt-6.md` | Separates model capability, runtime availability, and local policy |
 | Consult a recorded legacy exception or historical GPT behavior | `references/10-gpt-5-6.md` | Legacy guidance is not the active routing default |

@@ -22,10 +22,8 @@ Owners across that boundary:
 ## Start fast
 
 1. **Dialect.** Use GNU Make by default. Write POSIX-only Make when the file must run under BSD make or an `alpine` default shell. Record that in a first-line comment.
-2. **Role.** CI entrypoint, build entrypoint, packaging workflow, or developer convenience layer. The role fixes which reference the topic map sends you to.
+2. **Role.** Pick one: CI entrypoint, build entrypoint, packaging workflow, or developer convenience layer. The role fixes which reference the topic map sends you to.
 3. **Recipe shell.** Set `SHELL := bash` whenever a recipe uses `source`, `[[`, an array, `declare`, `pipefail` or process substitution. Otherwise recipes run under `/bin/sh`. That is `dash` on Debian and `ash` on Alpine, where those constructs fail.
-
-Do not use this skill for shell scripts, CI YAML or package-manager scripts unless Make behaviour is the decision surface. Do not use it to replace a working repo-native task runner.
 
 ## Core authoring rules
 
@@ -44,7 +42,7 @@ A review that leaves any of these open does not pass. Each has a checker in `val
 - `.ONESHELL:` without `-e` in `.SHELLFLAGS`, which makes a recipe exit 0 after an earlier command failed.
 - `-` prefix or `|| true` on a recipe line invoking a gate, an image build, a Compose command or `$(MAKE)`.
 - Bash-only constructs in a recipe when `SHELL` is not set to bash.
-- Spaces where a recipe needs a tab; CRLF anywhere in the file.
+- Spaces where a recipe needs a tab, or CRLF in the file.
 - A credential-shaped assignment. Read it from the environment and fail closed: `API_TOKEN ?= $(error API_TOKEN is not set)`.
 - A recipe re-implementing a command owned by `service-ci-kit` or `service-runtime-kit`.
 
@@ -57,11 +55,13 @@ A review that leaves any of these open does not pass. Each has a checker in `val
 
 ## Routing, and when not to use this skill
 
-Each owner decides its matter. This skill states only how the invocation is shaped.
+Do not use this skill for shell scripts, CI YAML or package-manager scripts unless Make behaviour is the decision surface. Do not use it to replace a working repo-native task runner.
+
+Each owner below decides its matter; this skill shapes only the invocation.
 
 - `/alaa-bash-shell` — shell logic once a recipe becomes a script.
 - `/alaa-k8s-helm` — chart and release when a target runs `helm` or `kubectl`.
-- `/caas-arvan-kuber` — manifest and API versions when a target deploys to Arvan CaaS, whose Kubernetes version is pinned.
+- `/caas-arvan-kuber` — manifest and API versions, and the platform's Kubernetes version, when a target deploys to Arvan CaaS.
 - `/alaa-reliability-sla` — whether a target may retry, how long it may wait and what degradation is acceptable. This skill adds no retry and no timeout of its own.
 - `/alaa-observability-soc` — what a failing target emits and what gates on it.
 - `/alaa-services-contract` — every shared name a target prints or passes: log fields, metric names, `OTEL_*` values, host ports.

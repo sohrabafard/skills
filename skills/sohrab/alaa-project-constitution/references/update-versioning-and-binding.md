@@ -67,7 +67,9 @@ approval.
 
 ## Authority and status truth
 
-- Canonical ownership identifies topic ownership; it never proves approval or ratification.
+- Before you call any source approved or ratified, apply
+  `references/evidence-and-module-selection.md` `## Canonical is not ratified`. It owns the rule
+  that separates topic ownership from approval and ratification.
 - Use "ratified" or "approved" only where a named repository source records that decision.
 - A `BINDING` constitution requires a non-placeholder ratification-evidence path or an explicit
   recorded owner decision, in addition to status, date, and approving role.
@@ -132,9 +134,12 @@ Add or update one section and preserve every other instruction:
 ## Project Constitution
 
 Before planning, editing, reviewing, or changing runtime/deployment behavior, read
-`CONSTITUTION.md` in full. Treat it as binding project policy within its scope. If it is
-missing, stale, internally inconsistent, or conflicts with applicable higher-precedence
-instructions or repository truth, surface the conflict before proceeding. Do not silently
+`CONSTITUTION.md` in full. Treat it as binding project policy within its scope. Surface a
+conflict before proceeding when the constitution is missing, internally inconsistent, or its
+status line is anything other than BINDING, when it conflicts with applicable higher-precedence
+instructions, or when it states a repository fact that repository truth contradicts. A
+constitutional rule that existing code does not implement yet is a gap, not a conflict: report
+the gap, make your own change follow the rule, and continue the work. Do not silently
 weaken a constitutional gate; use its amendment or exception process.
 ```
 
@@ -155,8 +160,13 @@ blocks, then a short rule:
 ## Constitution Binding
 
 The imported constitution is binding project policy within its scope. Apply it before
-planning, coding, reviewing, or changing runtime/deployment behavior. Surface conflicts and
-use the constitution's amendment or exception process instead of silently weakening it.
+planning, coding, reviewing, or changing runtime/deployment behavior. Surface a
+conflict before proceeding when the constitution is missing, internally inconsistent, or its
+status line is anything other than BINDING, when it conflicts with applicable higher-precedence
+instructions, or when it states a repository fact that repository truth contradicts. A
+constitutional rule that existing code does not implement yet is a gap, not a conflict: report
+the gap, make your own change follow the rule, and continue the work. Use the constitution's
+amendment or exception process instead of silently weakening it.
 ```
 
 If `CLAUDE.md` already imports `AGENTS.md`, keep that import and add the constitution import or an

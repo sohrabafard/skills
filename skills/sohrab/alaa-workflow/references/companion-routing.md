@@ -4,7 +4,7 @@
 
 ## Core companions
 
-- Prompt design, supported model/effort capabilities and source guidance, runtime feature syntax, and freshness: `/alaa-prompting-guide`. It owns capability and trigger-syntax evidence; actual task allocation belongs to the runtime orchestrator; add `/openai-docs` for current OpenAI guidance.
+- Prompt design, supported model and effort capabilities and source guidance, runtime feature syntax, and freshness: `/alaa-prompting-guide`. It owns capability and trigger-syntax evidence. Actual task allocation belongs to the runtime orchestrator. Add `/openai-docs` for current OpenAI guidance.
 - Actual task model AND effort allocation for every role and per-goal orchestration: `/alaa-codex-orchestrator` in Codex, `/alaa-cc-orchestrator` in Claude Code — a bounded goal or single phase across parallel role lanes. The workflow plan owns phase gates and records the orchestrator's final report as phase evidence.
 - Context economy and output discipline: `/alaa-low-noise`. It owns both what enters the context window and what gets printed. This skill owns what gets written down durably; the two are complementary and neither substitutes for the other.
 - Prior-context recall when `/alaa-memory-os`'s trigger holds, and durable publication after curation: `/alaa-memory-os`. Recall supplies leads that must be verified against repository truth; this workflow still owns active plans, checkpoints, evidence, and handoffs.
@@ -14,9 +14,9 @@
 
 ## Mandatory Ponytail binding
 
-Use /alaa-ponytail for every workflow or orchestrator task unless the user explicitly opts out. Load it before planning; resolve its level from the skill and any user selection. Apply it within existing scope, authority, domain rules, required checks and review cadence.
+Use /alaa-ponytail for every workflow or orchestrator task unless the user explicitly opts out. Load it before planning. Resolve its level from the skill and from any user selection. Apply it within the existing scope, authority, domain rules, required checks and review cadence.
 
-Bind every child lane explicitly, including external specialists; pass the exact skill binding and resolved level. When the user opts out, pass that exception and its scope instead. On resume, redispatch or continuation, recheck the user's opt-out and level. Preserve the opt-out within its stated scope until the user changes it; a recorded binding cannot override it.
+Bind every child lane explicitly, including external specialists. Pass the exact skill binding and the resolved level. When the user opts out, pass that exception and its scope instead. On resume, redispatch or continuation, recheck the user's opt-out and level. Preserve the opt-out within its stated scope until the user changes it; a recorded binding cannot override it.
 
 Before continuing a child, compare its prior Ponytail assignment with the current one. If the user opted out, explicitly tell the child to stop applying the mode. For a new binding or changed level, send the exact current binding and level. The child applies the update before further work.
 
@@ -29,7 +29,7 @@ Before continuing a child, compare its prior Ponytail assignment with the curren
 - Queues and jobs: `alaa-async-messaging` or `alaa-laravel-job-rabbitmq`.
 - Data: `alaa-data-layer`.
 - Subsystem design before a phase implements it: `alaa-system-design`. Route a phase there first when the phase changes an interface another component calls, moves which component writes a piece of data, alters a consistency, ordering or caching property, adds or removes a dependency between components, or creates a new deployable unit. It produces the design record the later phases implement.
-- Before designing implementation or verification, load `/alaa-testing-strategy`. It owns test necessity, layers, doubles, selectors and proof. Before planning or running checks read its `references/100-test-execution.md`; before resources or timing, its `references/110-execution-resources.md`; before result classification or diagnosis, its `references/120-result-classification.md`. Record only the level and tier reached at the evidence owner.
+- Before designing implementation or verification, load `/alaa-testing-strategy`. It owns test necessity, layers, doubles, selectors and proof. Before you plan or run checks, read its `references/100-test-execution.md`. Before you decide resources or timing, read its `references/110-execution-resources.md`. Before you classify a result or diagnose a failure, read its `references/120-result-classification.md`. Record only the level and tier reached at the evidence owner.
 - Security: `alaa-security-review`.
 - Observability: `alaa-observability-soc`.
 - Containers, Kubernetes, and CI/CD: the matching Docker, Kubernetes, or pipeline skill.
@@ -41,7 +41,7 @@ Repository truth and closer instructions override generic skill guidance. Do not
 
 Map skills before any implementation. A compact plan records its exact bindings in its issue or session. Design may record decision owners without an execution hierarchy.
 
-Before execution or handoff, inventory skills from the active catalog and accessible source. Use `Skill | Source | Load before | When | If unavailable` in `## Skill Bindings`. Record the exact catalog/frontmatter name, readable `SKILL.md` path, decision or load point, observable condition (`always` when unconditional), and absence action. Resolve relative paths from the target repository root or Markdown plan directory. Consumer plans may use portable home-relative installed paths or a readable absolute POSIX path. Expand home and verify source/frontmatter. Keep repository-owned paths portable.
+Before execution or handoff, inventory skills from the active catalog and accessible source. Use `Skill | Source | Load before | When | If unavailable` in `## Skill Bindings`. Record the exact name from the catalog or frontmatter, the readable `SKILL.md` path, the decision or load point, the observable condition (`always` when unconditional), and the absence action. Resolve relative paths from the target repository root or Markdown plan directory. Consumer plans may use portable home-relative installed paths or a readable absolute POSIX path. Expand the home directory, and verify the source and its frontmatter. Keep repository-owned paths portable.
 
 In a native plan, put shared rows in the root description and node-specific rows at their node. Each phase records its exact `Required skills`. Each task or subtask records `Required skills: inherit` from its immediate parent or a complete override list. Resolve each selected name to its applicable binding row; the closest row wins. For Markdown, keep the phase list and `[skills: inherit]` or complete override on each task mapping. If no skill applies, record `none (reason)`. Store names and binding details without copying manuals.
 

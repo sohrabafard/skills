@@ -8,7 +8,7 @@
 
 ## 9. Package managers
 
-A repo's package manager is a contract: a Yarn workspace or `yarn.lock` means Yarn. Registry queries discover versions, not manager policy; upstream support for Bun or pnpm never justifies switching during a Quasar task. pnpm v11 with app-vite v3 needs the `allowBuilds` entries in §4.
+Registry queries discover versions, not manager policy. `SKILL.md` "Version rules" owns the package-manager rule. pnpm v11 with app-vite v3 needs the `allowBuilds` entries in §4.
 
 Docs: `vite.dev/llms.txt` and `vite.dev/llms-full.txt`; stable `vite.dev`, not the ahead-of-release `main.vite.dev`; Quasar docs for API plus releases and npm for freshness; the upgrade guide at `quasar.dev/quasar-cli-vite/upgrade-guide/`.
 

@@ -48,6 +48,6 @@ The decoded permission set drives what the UI *offers*. It never decides what th
 - Retry the original request through the same SDK call that failed, so headers, deadlines, and correlation identifiers are identical; re-issuing it by hand loses them.
 - The challenge dialog moves focus in and restores it out (`references/70-guardrails-a11y-performance-monorepo.md`), and its failure states follow `references/34-frontend-failure-and-degradation.md` §2.
 
-✅ Do — issue the request, render the backend's denial, parse the body timestamp as ISO 8601, and treat the bitmap as presentation. ❌ Don't — build a client-side step-up state machine, read the backend-only header, or gate an action on the bitmap alone.
+Do: issue the request, render the backend's denial, parse the body timestamp as ISO 8601, and treat the bitmap as presentation. Do not: build a client-side step-up state machine, read the backend-only header, or gate an action on the bitmap alone.
 
 Search: `TOTP_STEP_UP_REQUIRED`, `TOTP_REQUIRED`, `TOTP_RATE_LIMITED`, `step-up`, `proof_token`, `verified_until`, `X-TOTP-VERIFIED-UNTIL`, `X-TOTP-Proof`, `permission bitmap`, `UI hint`, `challenge and retry`, `fail closed`.

@@ -9,8 +9,7 @@ A goroutine exists only inside a worker construct that owns its lifecycle: a bou
 cancellation, a drain wired into `runkit`'s ordered shutdown, and a name in metrics. `go func()` fired from a
 handler is a leak, an un-drained buffer, and an invisible failure mode — its panic vanishes, its work dies with
 the pod, and no dashboard knows it existed. (Concurrency depth — channels, `errgroup`, race discipline:
-`/golang-concurrency` (`$golang-concurrency`), `/golang-context` (`$golang-context`), `/golang-safety`
-(`$golang-safety`) through the `/alaa-golang` (`$alaa-golang`) router.)
+`/golang-concurrency`, `/golang-context`, `/golang-safety` through the `/alaa-golang` router.)
 
 ```go
 // WRONG — orphan goroutine: no cancellation, no drain, panics vanish
@@ -78,7 +77,7 @@ obs.Log(ctx, obskit.EventAuthzDenied, codes.NewsTOTPRequired, ...)
 `HTTP_*`, `OBSKIT_*` families among them — are kit property. A service never renames one, never prefixes one
 with its own name, and never adds a key to a kit-owned family. Service-domain keys are `<SERVICE>_*` and
 nothing else. Read the current kit-owned key list from the kit's `CONTRACTS.md` and `configkit/keys.go`; adding
-a key to a kit family is a kit change request through `/alaa-go-chi-development` (`$alaa-go-chi-development`).
+a key to a kit family is a kit change request through `/alaa-go-chi-development`.
 
 **Proof.** Two checks. From the service root, `grep -rn --include='*.go' 'os\.Getenv' internal/ cmd/` must
 return only the `configkit` wiring site — every other hit is a P10 violation. And a boot test that clears one
@@ -107,16 +106,15 @@ receives panics and programming faults only — never an expected domain error.
 
 **A service never re-exports a kit-owned metric under a service-prefixed name.** The kit-owned name is the name;
 the `service` label distinguishes emitters. One renamed metric kills the single shared dashboard the kit exists
-to enable. Read the current names from `obskit.KitMetricNames()` and `/alaa-services-contract`
-(`$alaa-services-contract`) — never from memory, and never from an example. A change request dated 2026-07-25
+to enable. Read the current names from `obskit.KitMetricNames()` and `/alaa-services-contract` — never from memory, and never from an example. A change request dated 2026-07-25
 proposes prefixing every kit-owned metric name; as of 2026-07-26 it is proposed, not ratified, not implemented.
 Before relying on that proposal status or changing an emitted name, re-read the decision record and kit source;
 the dated observation grants no current naming authority.
 
 The rest of observability is owned elsewhere and is not restated here. Which signals a feature is *required* to
 emit, the severity rubric, and the definition-of-done gate a shipped feature must pass belong to
-`/alaa-observability-soc` (`$alaa-observability-soc`). The *names*
-of metrics, events, and error codes belong to `/alaa-services-contract` (`$alaa-services-contract`). Load them;
+`/alaa-observability-soc`. The *names*
+of metrics, events, and error codes belong to `/alaa-services-contract`. Load them;
 do not derive a name or a requirement level here.
 
 **Proof.** The kit's `metricname` analyzer flags a raw or re-prefixed kit-owned metric name in Go source; run

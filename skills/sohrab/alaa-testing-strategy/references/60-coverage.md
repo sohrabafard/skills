@@ -35,6 +35,8 @@ A percentage that already exists in the pipeline is not evidence of anything and
 9. **Every boundary where untrusted input is parsed, decoded, or deserialised**, with at least one malformed and one hostile input asserted to be refused.
 10. **Every published request in a shipped API artifact**, asserted at the request layer. `/alaa-postman-collections` owns those assertions.
 
+The incident behind obligation 10 and the per-surface floor in `SKILL.md` *No shipped surface is exempt*: a validator run over this platform's own API collection found 73 requests with no test at all, including the entire Auth folder. The requests that issue tokens asserted nothing. That is the failure this skill exists to prevent.
+
 The obligations are the review's checklist and the report's `Coverage obligations` field. Each is met or unmet; there is no partial credit, because a partially covered control is an uncovered control on the path nobody tested.
 
 ## The one legitimate use of the coverage tool

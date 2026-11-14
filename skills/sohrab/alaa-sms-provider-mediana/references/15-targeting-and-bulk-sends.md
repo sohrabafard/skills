@@ -8,7 +8,7 @@ Read this when the audience is a segment rather than a list of numbers you alrea
 
 Building a payload, a fixture, or a unit test against these shapes is allowed without approval. Sending one is not. `scripts/validate_mediana_payload.py` warns on every mode on this page for exactly this reason.
 
-No Alaa command family carries any of these modes today (`alaa-services-contract references/27-notification-service-contract.md:88-90`), so a first use also needs a new command family before it needs a payload.
+No Alaa command family carries any of these modes today (`alaa-services-contract references/27-notification-service-contract.md` “Command families (payload shapes)”), so a first use also needs a new command family before it needs a payload.
 
 ## Provenance
 

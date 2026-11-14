@@ -2,8 +2,8 @@
 
 This file is a **decision map**, not a catalog: which pattern a symptom indicates, which kit surface or
 principle already owns that pattern's job, and which look-alike it is not. It ships no implementation mechanic
-— every idiom, code shape, and internal belongs to `/golang-design-patterns` (`$golang-design-patterns`) and its
-neighbours through the `/alaa-golang` (`$alaa-golang`) router. In Go most patterns dissolve into interfaces,
+— every idiom, code shape, and internal belongs to `/golang-design-patterns` and its
+neighbours through the `/alaa-golang` router. In Go most patterns dissolve into interfaces,
 functions, and composition; the platform question is never "how do I implement X" but "which kit or principle
 already owns X's job".
 
@@ -107,9 +107,8 @@ different pattern, or none.
 ## Code smells → where the repair lives
 
 Smell vocabulary — bloaters, OO abusers, change preventers, dispensables, couplers — is useful for naming a
-review finding. The repair routing: bloaters and line-level clarity → `/golang-code-style`
-(`$golang-code-style`) through the router; couplers (feature envy, reach-ins, message chains) → P5 and P13,
+review finding. The repair routing: bloaters and line-level clarity → `/golang-code-style` through the router; couplers (feature envy, reach-ins, message chains) → P5 and P13,
 meaning ports and contracts; change preventers (shotgun surgery across codes, events, metrics) → P10 vocabulary
 constants; dispensables (dead code, a speculative interface with one implementation and no seam) → delete it.
 The Rule of Three applies to service-local helpers; anything a second service needs is kit intake (P1), not a
-third copy — file it through `/alaa-go-chi-development` (`$alaa-go-chi-development`).
+third copy — file it through `/alaa-go-chi-development`.

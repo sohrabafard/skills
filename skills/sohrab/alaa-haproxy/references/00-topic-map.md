@@ -87,3 +87,13 @@ Helm value patterns: `examples/helm/values-example.yaml` and `values-production-
 | TLS to virtual-hosted origins | `16-server-tls-sni-auto-3.3.cfg` |
 | moving TLS work into the kernel | `17-ktls-3.3.cfg` |
 | reusable application checks and per-request connection/queue budgets | `21-request-budgets-healthcheck-3.4.cfg` |
+
+## Maintaining this skill
+
+- Keep `SKILL.md` routing-first. Every rule lives in exactly one reference. A rule written twice is
+  a defect.
+- Every version-sensitive value in this skill is listed in `SOURCES.md` beside the one command or
+  URL that re-derives it. Update both together, or neither.
+- Add an example only when it represents a production pattern no existing example covers. Give
+  it the same header every other example has: charter, minimum branch, preconditions, variables,
+  failure mode. `scripts/check_examples.py` enforces that header.

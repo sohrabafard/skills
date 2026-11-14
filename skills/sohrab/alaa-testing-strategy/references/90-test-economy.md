@@ -36,6 +36,8 @@ Repair, in the same change, only the existing tests of topics the change touches
 
 ## Setup once
 
+Expensive resettable infrastructure is an engine or container, a migrated schema, a booted application, a built artifact, or immutable fixture data. Non-negotiable 10 in `SKILL.md` requires it to be created once and shared. Per-test creation multiplies the suite's cost by its test count and buys no isolation that rollback or a namespace does not.
+
 Choose the widest scope at which the resource is reset-safe:
 
 | Scope | Holds |
@@ -66,7 +68,7 @@ Choose the widest scope at which the resource is reset-safe:
 Each is observable in a diff or a pipeline definition:
 
 1. Every new test names a failure that can reach this project's code under *Reachable failure*, or it is an always-owed test; otherwise it is a finding.
-2. No consumer test re-proves dependency-owned framework, kit/package, vendor, or generated behaviour; test the consumer’s configuration and wiring, and retain tests of behaviour owned by a kit/package under development.
+2. No consumer test re-proves behaviour that a framework, a kit or package, a vendor library, or a generator owns. Test the consumer's configuration and wiring. Retain the tests of behaviour owned by a kit or package that is itself under development.
 3. Every new test is reachable through a topic selector narrower than the whole suite.
 4. No new setup creates an engine, container, schema, migration, or application boot per test without a recorded reason.
 5. No step of the pass rebuilds, re-renders, re-type-checks, or re-runs what another step of the same pass already produced.

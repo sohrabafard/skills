@@ -99,7 +99,7 @@ Report every line. An item that did not apply is reported as intentionally not n
 - Check source code, migrations, schema, or config for each changed assertion.
 - Verify that each document listed in the sync matrix for this change still matches current code for the topic it owns, and that `README.md` and `docs/BIG_PICTURE.md` have matching coverage on shared topics.
 - Resolve each repo-local Markdown link against the repository tree. Run
-  `python $SKILL_DIR/scripts/check_markdown_links.py <repo-root>` and treat exit `2` as "not
+  `python3 $SKILL_DIR/scripts/check_markdown_links.py <repo-root>` and treat exit `2` as "not
   checked", never as "clean".
 - Run the line-budget command from `references/15-document-size-and-clustering.md` for every
   eligible narrative document and child; never pass exempt artifacts to that gate.

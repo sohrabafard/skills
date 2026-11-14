@@ -7,17 +7,17 @@
 1. **Record the base and checkout.** Capture the current branch, HEAD SHA, and worktree path. If integration is requested, also capture the target branch and its base SHA. A resumed agent needs those identities to determine what changed.
 2. **Map existing changes.** Treat unowned modified and untracked paths as user or other-lane work. Preserve them and continue on disjoint paths. Resolve overlapping ownership before editing the same file; never stash, stage, overwrite, or commit another owner's change.
 3. **Keep the checkout.** Continue in the same checkout and preserve its diff. Disjoint-file writers may share it. Do not create a branch or worktree automatically; use a different checkout only when the user or an already authorized explicit plan requires it. Reconcile overlapping ownership before writes through the protocol below.
-4. **Honor explicitly authorized isolation.** If a lane worktree is explicitly required, create it from the recorded HEAD SHA, pass its path to the lane and verify `git merge-base --is-ancestor <base-sha> HEAD` before editing. A remote default branch or runtime isolation option is no substitute for the recorded base; a mismatch blocks that lane. Branch/worktree authority grants no commit or merge authority.
+4. **Honor explicitly authorized isolation.** If a lane worktree is explicitly required, create it from the recorded HEAD SHA, pass its path to the lane and verify `git merge-base --is-ancestor <base-sha> HEAD` before editing. A remote default branch or runtime isolation option is no substitute for the recorded base; a mismatch blocks that lane. Authority to create a branch or worktree grants no commit or merge authority.
 
 ## Shared-file ownership and stopped-writer recovery
 
-Allow one active writer per file, generated output or shared runtime resource, not one writer per worktree. Record ownership and conflicts in the existing plan/dispatch and selected task authority. The runtime orchestrator allocates lanes and capacity; separate files permit concurrent writers only when their generated outputs and runtime resources are also disjoint. A task claim is no file or resource lock.
+Allow one active writer per file, generated output or shared runtime resource, not one writer per worktree. Record ownership and conflicts in the existing plan or dispatch and in the selected task authority. The runtime orchestrator allocates lanes and capacity. Separate files permit concurrent writers only when their generated outputs and runtime resources are also disjoint. A task claim is no file or resource lock.
 
 Assign distinct ports, database or tenant test namespaces, queue names and temporary output directories when the repository supports that isolation. Verify each lane's effective configuration before parallel checks. Serialize users of any resource that cannot be isolated.
 
 Before replacing or resuming a stopped writer's overlapping scope:
 
-1. Verify the prior writer process and every descendant have stopped. A returned agent turn, interrupted session or closed terminal alone proves no process termination. Preserve process identity and observed liveness evidence; unknown descendant liveness is unresolved ownership.
+1. Verify the prior writer process and every descendant have stopped. A returned agent turn, interrupted session or closed terminal alone proves no process termination. Preserve the process identity and the observed liveness evidence; unknown descendant liveness is unresolved ownership.
 2. Observe the scoped files and generated/shared resources are stable after those processes stop. Preserve surviving edits and compare them with the existing progress journal, bound issue and checkpoint; reconcile completed work, remaining scope, ownership and attributable evidence. Create no journal or locking system for this check.
 3. Apply `references/task-tracking.md` `## Agent identity and ownership` for any authorized issue transfer and readback. Only then assign the remaining overlapping writes to the replacement. Preserve valid completed work; do not replay it or reset the diff.
 
@@ -25,7 +25,7 @@ If liveness, stability or ownership remains ambiguous, block only overlapping wr
 
 ## Record the tested state
 
-Tested-state, integration-evidence and completion-lifecycle rules cover execution and issue-only implementation. Design records sources and observed validation in its plan without execution phases, snapshots or implementation verdicts. Authority limits apply to every kind.
+The rules for tested state, integration evidence and the completion lifecycle cover execution and issue-only implementation. Design records sources and observed validation in its plan without execution phases, snapshots or implementation verdicts. Authority limits apply to every kind.
 
 Before a gate, hold writes to its tested scope. Record the command, result, HEAD SHA, scoped paths, and a SHA-256 digest of a deterministic manifest of those paths and their file contents, including untracked files. Record the manifest method and observation time so a resumed agent can compare the same inputs. A commit SHA may replace the content digest only when the commit contains every tested change. A Git ref alone does not identify uncommitted contents.
 

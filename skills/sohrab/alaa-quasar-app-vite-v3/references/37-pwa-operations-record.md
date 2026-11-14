@@ -72,6 +72,6 @@ Last verified: <ISO date> by <name>, on <browsers>
 |---|---|
 ```
 
-✅ Do — update the record and its verification date in the change that alters caching, update, or offline behaviour. ❌ Don't — ship a service-worker change whose cache names and update prompt exist only in the source; the operator answering the support ticket does not read the source.
+Do: update the record and its verification date in the change that alters caching, update, or offline behaviour. Do not: ship a service-worker change whose cache names and update prompt exist only in the source; the operator answering the support ticket does not read the source.
 
 Search: `operations record`, `runbook`, `cacheName`, `precache scope`, `update UX`, `offline matrix`, `kill switch`, `rollback boundary`, `asset retention`, `verification date`.

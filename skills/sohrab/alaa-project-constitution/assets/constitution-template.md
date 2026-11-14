@@ -374,9 +374,9 @@ precedence, when it is loaded, or which document owns it, and each of those alte
 no word lost. Delegating detail to a canonical source is a deliberate structural decision recorded
 as such, never a step of the compression pass.
 
-The 12 KiB and 160-line thin-charter figures are targets, not limits. When required
-behaviour-affecting content does not fit, exceed the target, say so, and compress the rest as
-normal.
+The thin-charter size figures in CONSTITUTION SHAPE are limits, not targets. Compression never
+meets them by deleting an obligation; CONSTITUTION SHAPE states what to do when required content
+does not fit.
 
 AUTHORITY AND STATUS
 - Higher-precedence instructions remain controlling.
@@ -408,8 +408,14 @@ CONSTITUTION SHAPE
   delegating detail, never from dropping an obligation.
 - Conditional modules shape the principles; they never become a module inventory in the final
   document.
-- A thin charter normally remains below 12 KiB and 160 physical lines. Smaller is better while
-  authority and safeguards remain complete.
+- A thin charter is at most 12 KiB and 160 physical lines. These are limits: the authoring
+  skill's validator rejects a thin charter above either one. When required content does not fit,
+  move its technical or operational detail to a canonical source in the Canonical Sources list,
+  as a recorded structural decision, and keep each obligation as one sentence that names that
+  source. Where the repository lacks an adequate constitutional corpus, select FULL_CHARTER with
+  its evidence instead. When neither path is available within the allowed files, stop and record
+  the overflow as a blocking owner decision; never delete an obligation to fit. Never relabel an
+  oversized charter as thin. Smaller is better while authority and safeguards remain complete.
 
 MODULE DETECTION CHECKLIST
 Retention follows the matched archetypes, not the presence of existing code. Mark INCLUDE where a

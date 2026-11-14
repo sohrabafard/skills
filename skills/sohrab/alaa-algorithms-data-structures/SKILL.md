@@ -65,7 +65,7 @@ Record the rejected alternative and the condition that would revive it. A choice
 
 The N+1 query is one instance of a family. The same defect appears in database access, HTTP fan-out, cache lookups, permission checks, and file reads. It is the most common real complexity defect in this estate.
 
-**Detection rule: a call that leaves the process (a query, an HTTP request, a cache round trip, an authorization check, a file read) inside a loop whose iteration count is not a constant written in the code. The rule is about the call's effect, not its syntax. A lazy relation accessor, a property getter, a decorator, and a middleware all issue the call with no call site that looks like one.**
+**Detection rule: flag every call that leaves the process (a query, an HTTP request, a cache round trip, an authorization check, a file read) inside a loop whose iteration count is not a constant written in the code. The rule is about the call's effect, not its syntax. A lazy relation accessor, a property getter, a decorator, and a middleware all issue the call with no call site that looks like one.**
 
 Try these resolutions in this order:
 
@@ -145,35 +145,8 @@ Stop and report blocked when any of these holds:
 - The work is a one-off script over a known fixed input that will not be run again against a larger one.
 - The change alters no loop, no query, no fan-out, no batch, no export, and no retained collection.
 - The question is which index serves a query, what a timeout or pool value should be, or how a subsystem
-  is shaped. The routing table below names each owner.
+  is shaped. `references/90-ownership-boundaries.md` names each owner.
 
 ## What this skill does not own
 
-This skill decides inside whatever the skills below define. It states none of their values. The four `golang-*` packs are vendored upstream. Route to them for mechanics. Never restate or edit them.
-
-| Owner | What it owns |
-|---|---|
-| `/golang-data-structures` | Go slice, map, container internals; capacity growth; preallocation; copy semantics |
-| `/golang-performance` | Go optimisation patterns once a bottleneck is identified |
-| `/golang-benchmark` | Go benchmark, `pprof`, `benchstat` mechanics |
-| `/golang-concurrency` | Goroutine, channel, synchronisation mechanics |
-| `/alaa-php-clean-code`, `/alaa-golang-clean-code-principles`, `/alaa-vue-typescript-clean-code` | Language idiom, design patterns, and each framework's own N+1 fix |
-| `/alaa-data-layer` | Query shape, index design, keyset pagination, driver and pool mechanics, cache semantics |
-| `/alaa-observability-soc` | Telemetry's quantitative budgets: cardinality ceilings, histogram boundaries, sampling rates |
-| `/alaa-services-contract` | Every Ala platform value: deadlines, timeouts, pool maxima, in-flight limits |
-| `/alaa-reliability-sla` | Retry, breaker, shedding, degradation, and idempotency doctrine |
-| `/alaa-system-design` | Subsystem design: boundaries, dependency table, assumed peak, growth horizon |
-| `/alaa-testing-strategy` | Whether a benchmark is evidence, and at which proof level a claim may be reported |
-| `/alaa-security-review` | Which cryptographic primitive belongs on which path |
-| `/alaa-controlled-ops` | That package's canonical digest specification |
-| `/alaa-project-constitution` | The quality bar whose obligation 7 this skill discharges |
-| `/alaa-prompting-guide` | Model and effort capability evidence; the runtime orchestrator owns task allocation. Never name a model here |
-
-## Anti-patterns
-
-- "it is fast", or any bound with no dimension, offered as a budget;
-- a bound taken from the median tenant or the demo dataset instead of the largest the system permits;
-- replacing a list with a map, or a loop with a clever traversal, on a path whose every dimension has a small maximum enforced in code;
-- a batch introduced to fix an N+1 with no cap of its own, turning many bounded calls into one unbounded query;
-- a knob added because the correct value was never decided, with no default, no validated range, and no statement of what moving it changes;
-- restating a timeout, pool size, page cap, or cardinality ceiling a contract skill owns, creating a second copy that drifts.
+This skill decides inside whatever its owning skills define. It states none of their values. The four `golang-*` packs are vendored upstream. Route to them for mechanics. Never restate or edit them. When a question is Go mechanics, language idiom, query or index shape, telemetry budgets, a platform value, reliability doctrine, subsystem design, benchmark evidence, a cryptographic primitive, a digest specification, the quality bar or a model choice, read `references/90-ownership-boundaries.md`; it names the owner of each.

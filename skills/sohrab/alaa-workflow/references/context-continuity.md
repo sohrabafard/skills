@@ -14,7 +14,7 @@ Long work loses context in four ways, and only one of them is dramatic enough th
 
 **A subagent boundary.** Every dispatch is a one-way context wall. The child sees only its dispatch text; the parent sees only the child's return. Anything the parent knew and did not write down never reaches the child.
 
-Treat all four as the same problem. The design target is a task any competent agent can resume from canonical task/workflow owners and available source/evidence, without conversation history. The cold-start test below checks this recovery goal.
+Treat all four as the same problem. The design target is a task any competent agent can resume from the canonical task and workflow owners and the available source and evidence, without conversation history. The cold-start test below checks this recovery goal.
 
 ## Two different things get lost, and they need different homes
 
@@ -38,21 +38,21 @@ For a Beads-native plan, root notes own aggregate position and the root descript
 
 ## Status and position
 
-In Beads, use native issue status. Root notes name the exact current phase/task/subtask IDs (or `none`), last verified evidence address, blockers, next action, touched surfaces and pending review or commit. For concurrent lanes, the parent keeps the aggregate cursor and links to leaf notes for live lane position. A task or subtask cursor names its actual ancestry; clear finished cursors before advancing.
+In Beads, use the native issue status. The root notes name the exact IDs of the current phase, task and subtask (or `none`), the last verified evidence address, blockers, the next action, touched surfaces, and any pending review or commit. For concurrent lanes, the parent keeps the aggregate cursor and links to the leaf notes for each lane's live position. A task or subtask cursor names its actual ancestry. Clear finished cursors before you advance.
 
-In Markdown, the plan header owns overall status. Checkpoint and JSON project it. Every checkpoint names its exact `Plan`, status, last verified evidence address, blockers, next action, touched surfaces and update time. Checkpoint-bearing plans link to it instead of copying position. Outage reconciliation follows `references/task-tracking.md`.
+In Markdown, the plan header owns the overall status. The checkpoint and the JSON state project it. Every checkpoint names its exact `Plan`, status, last verified evidence address, blockers, next action, touched surfaces and update time. A plan that has a checkpoint links to it instead of copying the position. Outage reconciliation follows `references/task-tracking.md`.
 
-A design checkpoint uses `Current position` to name the current design question, decision or approval step. It has no phase/task/subtask cursor. Its in-plan handoff uses the six fields below for verified ideas, assumptions, rejected algorithms and continuation evidence. Design validation evidence belongs to that design plan; the checkpoint references it.
+A design checkpoint uses `Current position` to name the current design question, decision or approval step. It has no phase, task or subtask cursor. Its in-plan handoff uses the six fields below for verified ideas, assumptions, rejected algorithms and continuation evidence. Design validation evidence belongs to that design plan; the checkpoint references it.
 
-For execution, checkpoint position adds current phase; a direct profile keeps its cursor in its sole plan. The execution plan contains outcome/scope, phase design and barriers, phase acceptance, integrated-review evidence, skill associations and the handoff package. Task results follow `references/task-tracking.md` `## Acceptance and evidence by level`.
+For execution, the checkpoint position also names the current phase. A direct profile keeps its cursor in its only plan file. The execution plan contains the outcome and scope, the phase design and barriers, phase acceptance, integrated-review evidence, skill associations and the handoff package. Task results follow `references/task-tracking.md` `## Acceptance and evidence by level`.
 
-The JSON and mapped issue-cursor rules below apply only to Markdown execution. JSON contains schema version, task identity, status, plan path, current phase/task/subtask cursor, next actions, blockers, last validation and update time.
+The JSON and mapped issue-cursor rules below apply only to Markdown execution. The JSON state contains the schema version, task identity, status, plan path, the current phase, task and subtask cursor, next actions, blockers, last validation and update time.
 
-Optional schema-2 JSON is a compact consumer snapshot with no task table or graph. Derive its position fields from the checkpoint when present, otherwise the direct-plan cursor; never edit them independently. Copy `current_phase` exactly. Project each blocker/next-action scalar into one whole trimmed array entry, or an empty array for empty/none sentinels; trim outer whitespace/code wrapping and never split punctuation. Reconcile torn updates from canonical owners before execution or completion. For marked families, companion references must resolve to this exact plan, not merely share its basename.
+Optional schema-2 JSON is a compact consumer snapshot with no task table and no graph. Derive its position fields from the checkpoint when one exists, and otherwise from the direct-plan cursor. Never edit those fields independently. Copy `current_phase` exactly. Project each blocker scalar and each next-action scalar into one whole, trimmed array entry. Project an empty array when the scalar is empty or a none sentinel. Trim outer whitespace and outer code wrapping, and never split the scalar at punctuation. Before execution or completion, reconcile torn updates from the canonical owners. For marked families, companion references must resolve to this exact plan; sharing its basename is not enough.
 
 Task state belongs to the authority selected through `references/task-tracking.md`; neither a checkpoint nor JSON becomes an offline issue register.
 
-For a `phase-task-subtask` family the cursor also records `Current task` and `Current subtask` as exact mapped issue IDs, or `none` before selection/after completion. Executing a task leaf selects its task ID and leaves `Current subtask: none`. A selected subtask requires its actual task and phase; a selected task requires its actual phase. Clear finished cursors before moving phases. Schema-3 JSON adds `current_task` and `current_subtask` and derives them exactly from the checkpoint (or direct cursor); schema-2 snapshots remain valid for existing families. Keep the inherited review boundary, pending review/commit and next safe leaf recoverable through the plan and cursor, without copying issue state.
+For a `phase-task-subtask` family the cursor also records `Current task` and `Current subtask` as exact mapped issue IDs, or `none` before selection and after completion. Executing a task leaf selects its task ID and leaves `Current subtask: none`. A selected subtask requires its actual task and phase; a selected task requires its actual phase. Clear finished cursors before moving phases. Schema-3 JSON adds `current_task` and `current_subtask` and derives them exactly from the checkpoint (or direct cursor); schema-2 snapshots remain valid for existing families. Keep the inherited review boundary, any pending review or commit, and the next safe leaf recoverable through the plan and cursor, without copying issue state.
 
 ## The handoff package
 
@@ -78,35 +78,35 @@ For design, use the kind-aware resume protocol below; this section covers execut
 
 Task resume reads the issue's notes, comments, acceptance and relations. Phase resume reads the native phase and root, or the Markdown plan and checkpoint, through the protocol below. The task supplies its state. The plan supplies phase and engagement context.
 
-Before resuming Beads mutations or transferring a task to another agent/device, apply `references/task-tracking.md` `## Agent identity and ownership` to recover identity and verify ownership.
+Before resuming Beads mutations or transferring a task to another agent or device, apply `references/task-tracking.md` `## Agent identity and ownership` to recover identity and verify ownership.
 
 Task-specific learned knowledge goes to its comments for native or issue-only work, or to the Markdown plan handoff. The native root handoff links to task-specific findings when needed. Issue notes hold position only.
 
 ## Cross-PC handoff record
 
-A handoff to another PC records the responsible device, Git and applicable Dolt sync state, and whether the recipient can access the code and evidence. Record it in task or native root notes, or the Markdown checkpoint/direct cursor. A sync record grants no sync authority.
+A handoff to another PC records the responsible device, Git and applicable Dolt sync state, and whether the recipient can access the code and evidence. Record it in the task notes or the native root notes, or in the Markdown checkpoint or direct cursor. A sync record grants no sync authority.
 
 ## When to write
 
-Writing continuously is a tax; writing only at the end risks losing detail. Write only at these moments, including the additional long-conversation trigger below:
+Write only at these moments, including the additional long-conversation trigger below. Writing continuously is a tax, and writing only at the end risks losing detail.
 
-1. **Material task progress, or a phase completes or fails.** Update the selected task authority and affected canonical workflow fields, then derive admitted snapshots. This is the routine case and it is cheap.
-2. **A decision, blocker or scope change.** Update affected workflow owners/snapshots and, if a decision closed off an alternative, add it to *ruled out*.
-3. **A validation runs.** Record design evidence at the design plan; execution evidence uses its level owner in `references/task-tracking.md` `## Acceptance and evidence by level`. When a checkpoint is admitted, point its last verified result to that evidence. `references/workspace-and-integration.md` owns tested identity, write isolation, and reuse; without attributable inputs, a result cannot be cited on resume.
+1. **Material task progress, or a phase completes or fails.** Update the selected task authority and the affected canonical workflow fields, then derive the admitted snapshots. This is the routine case and it is cheap.
+2. **A decision, blocker or scope change.** Update the affected workflow owners and snapshots. If a decision closed off an alternative, add that alternative to *ruled out*.
+3. **A validation runs.** Record design evidence at the design plan. Record execution evidence at its level owner in `references/task-tracking.md` `## Acceptance and evidence by level`. When a checkpoint is admitted, point its last verified result to that evidence. `references/workspace-and-integration.md` owns tested identity, write isolation, and reuse; without attributable inputs, a result cannot be cited on resume.
 4. **Something is learned that would be expensive to rediscover.** Record it immediately at its owner under `## Task resume and phase resume`.
-5. **Before handing off, and before any long autonomous stretch.** Bring selected task/workflow owners and admitted snapshots current, then verify with the cold-start test.
+5. **Before handing off, and before any long autonomous stretch.** Bring the selected task and workflow owners and the admitted snapshots current, then verify them with the cold-start test.
 
-There is one more trigger worth naming because it is easy to miss: **when the conversation is getting long.** Do not wait for a compaction warning. If the work has run for many turns, or has just finished an expensive investigation, write the knowledge down while it is still verbatim. After compaction the same information is available only as a summary of a summary.
+One more trigger is easy to miss: **when the conversation is getting long.** Do not wait for a compaction warning. If the work has run for many turns, or has just finished an expensive investigation, write the knowledge down while it is still verbatim. After compaction the same information is available only as a summary of a summary.
 
 ## The cold-start test
 
-Before handoff, and periodically during long work, apply one question to the canonical tasks, workflow artifacts and their linked source/evidence:
+Before handoff, and periodically during long work, apply one question to the canonical tasks, workflow artifacts and their linked source and evidence:
 
 > Could a competent agent with no conversation history read these owners and take the next action correctly, without re-deriving expensive knowledge or repeating ruled-out work?
 
 If the answer is no, repair its canonical home: stale position in the cursor, unclear task readiness in the selected task store, coarse phase design in the plan, rejected approaches in *ruled out*, and unverified beliefs in *open assumptions* rather than *confirmed facts*.
 
-The next action names owned scope, satisfied prerequisites, unresolved decision or blocker, exact command or edit target, and expected result. The plan identifies reusable evidence, invalidation conditions and interrupted lane progress paths. Repair gaps in existing fields; add no resume artifact or fresh agent solely for this test.
+The next action names its owned scope, its satisfied prerequisites, any unresolved decision or blocker, the exact command or edit target, and the expected result. The plan identifies reusable evidence, invalidation conditions and the progress paths of interrupted lanes. Repair gaps in existing fields; add no resume artifact or fresh agent solely for this test.
 
 This test is worth running mentally before any long unattended stretch, because that is exactly when nobody is watching to catch the gap.
 
@@ -114,7 +114,7 @@ This test is worth running mentally before any long unattended stretch, because 
 
 Resolve the family and kind through `references/artifact-lifecycle.md`, then its task authority through `references/task-tracking.md`. Verify the binding before reading issue state.
 
-For a native plan, read the root by its `beads:<root-id>` address, its notes and handoff, then the selected phase and task/subtask with their comments, evidence and relations. Verify registration and ancestry. Reconcile pending outage records, ownership, readiness and phase barriers before dependent work. Read the exact resume sources and skill bindings before editing. Issue-only work reads its issue, linked evidence and applicable bindings.
+For a native plan, read the root by its `beads:<root-id>` address, its notes and handoff, then the selected phase, task and subtask with their comments, evidence and relations. Verify registration and ancestry. Reconcile pending outage records, ownership, readiness and phase barriers before dependent work. Read the exact resume sources and skill bindings before editing. Issue-only work reads its issue, linked evidence and applicable bindings.
 
 For Markdown, read applicable owners in this order:
 
@@ -125,19 +125,19 @@ For Markdown, read applicable owners in this order:
 5. **The files named in "read first on resume."**
 6. **JSON state**, only for a consumer that needs it; reconcile it with canonical owners rather than trusting it independently.
 
-Before overlapping writes after interruption or replacement, apply `references/workspace-and-integration.md` `## Shared-file ownership and stopped-writer recovery`; compaction preserves living ownership. Then verify position against reality: check `git status`, the diff, source/deliverable availability and attributable evidence against the cursor's touched surfaces. Reconcile stale task/phase/status snapshots before acting and record what was stale. `references/workspace-and-integration.md` owns evidence reuse: unchanged attributable proof survives a new session or PC, while affected proof does not. A remembered result or another PC's inaccessible source is insufficient.
+Before overlapping writes after interruption or replacement, apply `references/workspace-and-integration.md` `## Shared-file ownership and stopped-writer recovery`; compaction preserves living ownership. Then verify position against reality: check `git status`, the diff, the availability of sources and deliverables, and the attributable evidence against the cursor's touched surfaces. Reconcile stale task, phase and status snapshots before acting, and record what was stale. `references/workspace-and-integration.md` owns evidence reuse: unchanged attributable proof survives a new session or PC, while affected proof does not. A remembered result or another PC's inaccessible source is insufficient.
 
 Before the next execution task, resolve and load its phase bindings and task overrides through `references/companion-routing.md`. Recheck mapped availability when the runtime or installed catalog changed; historical mappings do not prove current availability.
 
-On execution resume, add explicit phase/task skill bindings to older active execution plans before continuing. Completed archives remain readable; reactivation requires those bindings before the next task. This does not migrate task-store authority, which `references/task-tracking.md` owns.
+On execution resume, add explicit phase and task skill bindings to older active execution plans before continuing. Completed archives remain readable; reactivation requires those bindings before the next task. This does not migrate task-store authority, which `references/task-tracking.md` owns.
 
 ## After compaction, specifically
 
 Compaction is the one case where the agent continues in the same conversation and may not realise anything was lost. Two rules.
 
-**Repeat the resume protocol.** Read every applicable task/workflow owner above. Do not continue from what a summary says they contained: it keeps the shape and drops the specifics.
+**Repeat the resume protocol.** Read every applicable task and workflow owner above. Do not continue from what a summary says they contained: it keeps the shape and drops the specifics.
 
-**Trust reconciled canonical owners over recollection.** After compaction, verify snapshots against actual state through the resume protocol. Record a discrepancy in the admitted cursor or issue notes; do not trust a remembered detail over reconciled task/workflow evidence.
+**Trust reconciled canonical owners over recollection.** After compaction, verify snapshots against actual state through the resume protocol. Record a discrepancy in the admitted cursor or issue notes; do not trust a remembered detail over reconciled task and workflow evidence.
 
 Do not surface raw context-budget numbers to the model as a way of managing this; that tends to produce premature stopping rather than better prioritisation. Where a model needs reassurance to keep going on a long run, state it plainly instead — that ample context remains, and that it should not stop, summarise, or suggest a new session on account of context limits.
 

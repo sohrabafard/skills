@@ -32,15 +32,14 @@ func (h *Handler) Create(w http.ResponseWriter, r *http.Request) {
 
 **Proof.** Check the shape against the kit-owned surface inventory before you write it. That inventory is the
 kit repository's `CONTRACTS.md` (every code-enforced shape), `docs/INDEX.md` (every documented package), and the
-capability map in `/alaa-go-chi-development` (`$alaa-go-chi-development`) `references/12-kit-capability-map.md`.
+capability map in `/alaa-go-chi-development` `references/12-kit-capability-map.md`.
 Name the kit package that would own your shape; if you can name one, you are re-implementing. Three narrow
 automated gates exist — `make lint-structtags`, `make lint-metricnames`, `make contracttest` — and each catches
 one specific re-implementation. **There is no general "did you re-implement a kit surface" analyzer**; this
 check is a human reading the inventory, and a review that skips it has not tested P1.
 
 **When the kit's shape does not fit**, the answer is never a local fork. File one timestamped change request in
-the kit repository's `docs/change-requests/YYYY-MM-DD-<slug>.md` through `/alaa-go-chi-development`
-(`$alaa-go-chi-development`) — that skill owns the channel and the template. The only sanctioned interim form is
+the kit repository's `docs/change-requests/YYYY-MM-DD-<slug>.md` through `/alaa-go-chi-development` — that skill owns the channel and the template. The only sanctioned interim form is
 a thin wrapper marked `KIT-WRAP` with the request already filed and a maximum lifetime of two kit releases.
 Review question for every diff: *does anything in this change re-state a shape the kit already owns?*
 
@@ -116,4 +115,4 @@ enforces the grep — wire it into the service's CI lint job yourself, or it run
 Why this is a principle and not a preference: every place that re-parses a trusted header is a place where a
 type change, a header rename, or a spoofing-defense update must be found and fixed — and the one place nobody
 finds is the vulnerability. Header semantics themselves (which claim feeds which header, bitmap packing) are
-owned by `/alaa-trust-gateway-auth` (`$alaa-trust-gateway-auth`); read it rather than encoding assumptions.
+owned by `/alaa-trust-gateway-auth`; read it rather than encoding assumptions.

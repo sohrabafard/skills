@@ -2,7 +2,7 @@
 
 Read when a dependency may be optional, when a cache is used to survive an outage, or when a response can be partial. `SKILL.md` holds the binding rules: every dependency is declared required or optional before it fails and an undeclared one behaves as required, a degraded response says so in a machine-readable field, and an untested degraded path is not a degraded path. This file is the classification test, the response shapes, and the cache rules.
 
-Degradation is availability work and applies only to contributors. A dependency that decides whether a caller may act is a gate and has no degraded mode — see the discrimination rule in `SKILL.md` and `/alaa-security-review` (`$alaa-security-review` in Codex).
+Degradation is availability work and applies only to contributors. A dependency that decides whether a caller may act is a gate and has no degraded mode — see the discrimination rule in `SKILL.md` and `/alaa-security-review`.
 
 ## Classifying a dependency before it fails
 
@@ -42,7 +42,7 @@ Three obligations that follow:
 
 - **Do not cache a degraded response** as if it were complete, and do not let an intermediary cache it. A degraded response's cacheability is decided by the marker's presence, not by the status code.
 - **Propagate degradation up the chain.** A service whose optional dependency degraded returns its own marker; a service whose upstream returned a marker either resolves the gap itself or forwards the fact. Degradation that stops being reported at the first hop makes the top-level response a lie by omission.
-- **Emit the signal.** A degraded response is an event, distinct from a failure and from a success, and its rate is the only way to know the degraded path is running at all. `/alaa-observability-soc` (`$alaa-observability-soc`) owns the signal's requirement level; `/alaa-services-contract` (`$alaa-services-contract`) owns the field and event names.
+- **Emit the signal.** A degraded response is an event, distinct from a failure and from a success, and its rate is the only way to know the degraded path is running at all. `/alaa-observability-soc` owns the signal's requirement level; `/alaa-services-contract` owns the field and event names.
 
 The status code stays a success code when a degraded response is genuinely useful, because a caller that treats it as a failure will retry and multiply the load during the incident. The marker, not the status, carries the degradation.
 
@@ -62,9 +62,9 @@ The asymmetry is not a preference. On a cache failure, a correct answer is still
 
 The rules that follow:
 
-- **On a cache outage**, serve from the origin, bounded by the request deadline, and bound the origin's exposure: at most one origin computation per key in flight per instance, with later callers for that key waiting on the in-flight one until the deadline rather than starting their own. Without that, N concurrent callers plus one cold cache equals N origin calls, and the origin becomes the second outage. This platform's form of the rule is in `/alaa-services-contract` (`$alaa-services-contract`) `references/22-failure-load-and-deprecation-contract.md`.
+- **On a cache outage**, serve from the origin, bounded by the request deadline, and bound the origin's exposure: at most one origin computation per key in flight per instance, with later callers for that key waiting on the in-flight one until the deadline rather than starting their own. Without that, N concurrent callers plus one cold cache equals N origin calls, and the origin becomes the second outage. This platform's form of the rule is in `/alaa-services-contract` `references/22-failure-load-and-deprecation-contract.md`.
 - **On an origin outage**, serving stale is permitted only where all four hold: the route documents it, there is a **maximum stale age** past which the value is not served at all, the response is **marked** with the substitution and the value's age, and a caller that cannot accept staleness has a way to demand a fresh value or a failure. Missing any one of the four, the request fails instead. Unbounded stale service is not degradation; it is silent incorrectness with a cache in front of it.
-- **Never stale-serve a decision about whether a caller may act, or an entitlement, quota, or balance whose whole purpose is to be current.** For the authorization case this is the gate rule, owned by `/alaa-security-review` (`$alaa-security-review`). For a quota or balance it is the same shape for a different reason: a stale value cannot represent the consumption that has happened since, so serving it authorises spending that has already occurred.
+- **Never stale-serve a decision about whether a caller may act, or an entitlement, quota, or balance whose whole purpose is to be current.** For the authorization case this is the gate rule, owned by `/alaa-security-review`. For a quota or balance it is the same shape for a different reason: a stale value cannot represent the consumption that has happened since, so serving it authorises spending that has already occurred.
 - **A cache is a dependency and takes the same bounds** as any other: an explicit timeout tighter than the origin it fronts, and its own failure classification. A cache client with no timeout converts a cache incident into a total outage, which is the most common single defect in this whole area.
 - **Warm the cache deliberately after an outage**, at a bounded rate. A cold cache plus full traffic is an origin overload even when nothing else is wrong, and the single-flight rule above bounds it per key but not in aggregate.
 

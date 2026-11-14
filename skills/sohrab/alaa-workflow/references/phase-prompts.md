@@ -1,6 +1,6 @@
 # Optional Prompt Generation
 
-Create a reusable prompt pack only on explicit request for an admitted execution family. For Markdown, use the same stem. For Beads-native work, cite the root address and exact phase/task IDs in the requested deliverable. Create no companion plan for the pack.
+Create a reusable prompt pack only on explicit request for an admitted execution family. For Markdown, use the same stem. For Beads-native work, cite the root address and the exact phase and task IDs in the requested deliverable. Create no companion plan for the pack.
 
 ## Freshness gate
 
@@ -8,7 +8,7 @@ Before resolving any runtime, model, agent feature, or skill-trigger syntax:
 
 1. Load `/alaa-prompting-guide`.
 2. Verify the current official OpenAI and Anthropic documentation relevant to the selected runtimes.
-3. Record the resolved implementer runtime/model, reviewer runtime/model, effort levels, source URLs, and verification date in the generated pack.
+3. Record the resolved implementer runtime and model, the reviewer runtime and model, the effort levels, source URLs, and verification date in the generated pack.
 4. Leave a visible `NEEDS_LIVE_VERIFICATION` marker when live verification cannot be completed. Never guess.
 
 **Resolved values belong in the generated prompt pack with their verification date, and never in stable skill text.** This is the rule that keeps this skill from decaying. A model name or effort level written into a reference file is wrong the next time either vendor ships, and it will be copied forward long after it stopped being true — into packs where nobody re-checked it, because it looked authoritative. Stable workflow files name the decision and point at its owner; only the dated pack carries the answer. Actual task model AND effort choices come from the active runtime orchestrator, never from role identity, memory or an older prompt pack.
@@ -41,9 +41,9 @@ Each role prompt contains:
 
 Within read-first, require /alaa-testing-strategy before designing implementation or verification.
 
-Within read-first, give the selected phase/task's exact skill names and sources with load points, conditions, and absence actions, or an exact reference to its populated Skill Bindings and task overrides. Resolve these from the plan rather than writing "use relevant skills". Keep this within the six fields; `references/companion-routing.md` owns the mapping contract.
+Within read-first, give the exact skill names of the selected phase or task, with their sources, load points, conditions, and absence actions, or an exact reference to its populated Skill Bindings and task overrides. Resolve these from the plan rather than writing "use relevant skills". Keep this within the six fields; `references/companion-routing.md` owns the mapping contract.
 
-Every generated dispatch identifies the whole engagement, current phase/task/subtask, final phase and declared review boundary from the plan. The reviewer prompt applies only at that boundary; a nested invocation inherits it. Carry the plan's phase collection and repair/retest barriers and their evidence owner. Route scheduling to `alaa-codex-orchestrator` or `alaa-cc-orchestrator` `references/verification-and-gates.md`, never infer a new final candidate from the prompt's local phase.
+Every generated dispatch identifies the whole engagement, the current phase, task and subtask, the final phase and the declared review boundary from the plan. The reviewer prompt applies only at that boundary; a nested invocation inherits it. Carry the plan's phase collection and repair/retest barriers and their evidence owner. Route scheduling to `alaa-codex-orchestrator` or `alaa-cc-orchestrator` `references/verification-and-gates.md`. Never infer a new final candidate from the prompt's local phase.
 
 For Beads-bound dispatches, resolve actor, binding, issue IDs, ownership action and the `bd` flags a lane without write or sync authority passes through `references/task-tracking.md` `## Agent identity and ownership` and `## Beads capabilities in use` before use.
 
@@ -57,4 +57,4 @@ Start from `assets/phase-prompts-template.md`. Keep each role prompt at or below
 
 ## Bootstrap metadata
 
-The Markdown initializer accepts optional `--implementer-runtime`, `--implementer-model`, `--reviewer-runtime`, `--reviewer-model`, `--verified-on`, and repeatable `--verification-source` values. Supply all runtime/model values together after source verification, with `--implementer-effort` and `--reviewer-effort` for complete selected controls. Model-only legacy invocations remain draft with unresolved effort; partial effort input is rejected. Source metadata never proves effective runtime controls; the active orchestrator must verify those before every dispatch. Without them, the generated pack remains an explicit draft. `--documenter-runtime` and `--documenter-model` are optional, must be supplied together, and require the implementer/reviewer metadata; omitting them marks the documenter role as not included. Included documenters also require `--documenter-effort` to resolve their selected controls.
+The Markdown initializer accepts optional `--implementer-runtime`, `--implementer-model`, `--reviewer-runtime`, `--reviewer-model`, `--verified-on`, and repeatable `--verification-source` values. Supply all runtime and model values together after source verification, with `--implementer-effort` and `--reviewer-effort` for complete selected controls. Model-only legacy invocations remain draft with unresolved effort; partial effort input is rejected. Source metadata never proves effective runtime controls; the active orchestrator must verify those before every dispatch. Without them, the generated pack remains an explicit draft. `--documenter-runtime` and `--documenter-model` are optional, must be supplied together, and require the implementer and reviewer metadata; omitting them marks the documenter role as not included. Included documenters also require `--documenter-effort` to resolve their selected controls.

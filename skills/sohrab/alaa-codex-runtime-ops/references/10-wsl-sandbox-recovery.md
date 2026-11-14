@@ -3,8 +3,8 @@
 ## Classify before retrying
 
 - **Symptom.** The harness cannot start its Linux sandbox, or a command reports `Operation not permitted`, `Permission denied`, `Read-only file system`, a denied socket connection or blocked network access.
-- **Diagnosis.** Record whether the command started and the intended check ran. A sandbox setup/launch error identifies the harness; `EPERM`, `EACCES`, `EROFS`, DNS failure or a timeout alone does not prove sandbox causation. Check the named path/operation against effective permissions and bounded Linux evidence.
-- **Retry.** For a failed read batch, retry only the failed essential read/search, serially with bounded output, if a smaller request addresses the cause. When the sandbox itself is the evidenced blocker, use the escalation procedure below instead. These are alternatives within the existing retry budget.
+- **Diagnosis.** Record whether the command started and the intended check ran. A sandbox setup or launch error identifies the harness. `EPERM`, `EACCES`, `EROFS`, a DNS failure or a timeout alone does not prove that the sandbox caused the failure. Check the named path or operation against effective permissions and bounded Linux evidence.
+- **Retry.** For a failed read batch, retry only the failed essential read or search, serially and with bounded output, when a smaller request addresses the cause. When the sandbox itself is the evidenced blocker, use the escalation procedure below instead. These are alternatives within the existing retry budget.
 - **Fallback.** Reuse successful evidence and mark uncovered work unverified. A harness failure establishes no repository drift or missing file.
 
 ## Exact-command escalation
@@ -16,7 +16,7 @@
 5. If escalation is unavailable, forbidden or denied, do not run the command through another shell, service or tool to evade the restriction. Continue a safe authorized alternative when available. If automatic review remains the blocker, name the rejected action and stated reason; request any needed user decision through the supported flow.
 6. Keep both outcomes: a successful retry proves only that command's checks and does not erase the sandbox failure. If the retry fails, preserve its output, diagnose without another execution attempt, and report the next safe action.
 
-Do not change sandbox/approval configuration, disable protections, start a nested unsandboxed Codex session, or add `sudo` as a recovery shortcut. Escalation neither grants Linux root privileges nor repairs ownership, missing tools, stopped services or application defects.
+Do not change sandbox or approval configuration, disable protections, start a nested unsandboxed Codex session, or add `sudo` as a recovery shortcut. Escalation neither grants Linux root privileges nor repairs ownership, missing tools, stopped services or application defects.
 
 ## Network, registry and documentation access
 

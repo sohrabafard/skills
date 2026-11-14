@@ -52,6 +52,20 @@ The fleet's only object-storage consumer runs its **test-stack** MinIO **per ser
 Swarm stack is identical at `replicas: 1` with no distributed-mode erasure set
 `[source: Ala tusd repository, docker-compose.yml and docker-compose.swarm.yml, read: 2026-07-27]`.
 
+## The fleet's consumer against the constraints
+
+The constraint numbers below are the numbered constraints in `SKILL.md`.
+
+The fleet's only object-storage consumer violates constraints 2, 3, 4, 5 and 6, and leaves 7 unproven because it
+sets no bucket policy and issues no presigned URL `[source: Ala tusd repository, read: 2026-07-27]`.
+Its Compose and Swarm files put the application on the store's root credentials. Those files describe the
+local development and test stack rather than production. So that is a constraint 1 finding against the test stack
+and an open question against production. This file states the boundary, and
+`references/30-identity-credentials-and-access.md` carries the question. It meets the logging half of constraint 4: its runtime config plan and its forbidden-log-field list
+already redact the credential, the object key and the presigned URL. It breaks the command-line half, passing
+the access key and the secret key positionally to `mc alias set` in both Compose files and three smoke scripts.
+These are observations of one consumer, never platform policy, and never a precedent for a new bucket.
+
 ## Exposure
 
 **Publish the store's API port only on the interface an operator actually needs, and do not publish the console port

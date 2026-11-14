@@ -1,52 +1,56 @@
 # Store Adapter: Hindsight
 
-This adapter owns Hindsight query/write mechanics. `SKILL.md` owns recall admission, capability
-classification, deadlines, authorization, shared-bank/project policy and drift; policy references own
-knowledge shape. Use only the selected repository bank and service scope resolved from current approved
-configuration. Activation authorizes no new bank, broader scope or setup change.
+This adapter owns the Hindsight query and write mechanics. `SKILL.md` owns recall admission, capability
+classification, deadlines, authorization, the shared-bank and project policy, and drift. The policy
+references own the knowledge shape. Use only the repository bank and service scope that the current
+approved configuration resolves. Activation authorizes no new bank, no broader scope and no setup change.
 
-For setup, configuration, ingestion, import, doctor/deepen recovery or self-hosted operation, read
-`references/hindsight-setup.md`; routine recall and curated writes do not need its dated setup details.
+For setup, configuration, ingestion, import, doctor or deepen recovery, or self-hosted operation, read
+`references/hindsight-setup.md`. Routine recall and curated writes do not need its dated setup details.
 
 ## Upstream skill routing
 
-After body admission, invoke at most one upstream mechanics owner:
+After the body admits the task, invoke at most one upstream mechanics owner:
 
-- /hindsight-docs for current architecture, API, SDK, deployment, configuration, debugging or best practices;
-  read only the question's references. It selects no Alaa retained content.
-- /hindsight-architect for a requested application integration design/review; it produces a plan, not code.
-  Route accepted execution to /alaa-workflow and verify repository/security assumptions.
-- /hindsight-upgrade only for an explicit installed-copy update request with authority for its effects.
-  Never edit `vendor/hindsight-skills`; the repository vendor workflow owns that subtree.
+- /hindsight-docs for current architecture, API, SDK, deployment, configuration, debugging or best
+  practices. Read only the references that answer the question. It selects no Alaa retained content.
+- /hindsight-architect for a requested design or review of an application integration. It produces a plan,
+  not code. Route accepted execution to /alaa-workflow, and verify the repository and security assumptions.
+- /hindsight-upgrade only for an explicit request to update the installed copy, with authority for its
+  effects. Never edit `vendor/hindsight-skills`; the repository vendor workflow owns that subtree.
 
-Report an unavailable upstream owner's mechanics gap. The body's fail-open recall and fail-closed
-write/drift rules decide what continues; absence authorizes no installation or fallback adapter.
+When an upstream owner is unavailable, report the gap in mechanics. The body's fail-open recall rule and its
+fail-closed write and drift rules decide what continues. The absence authorizes no installation and no
+fallback adapter.
 
 ## Query mechanics
 
-Use official MCP tools exposed by the selected harness. Ordinary recall uses bounded recall/reflect for
-the current repository scope. Existence/ownership inquiry uses `hindsight_reflect` over raw memories with
-the `SKILL.md` capability/environment/constraint packet; page listing/search cannot replace it because it
-reaches only topics with pages. Pass the same deadline to any one focused owner-lead follow-up. Tool
-discovery, page hits and reflection results are leads, not current source or exact-gate proof.
+Use the official MCP tools that the selected harness exposes. Ordinary recall uses bounded recall or reflect
+for the current repository scope. An existence or ownership inquiry uses `hindsight_reflect` over raw
+memories, with the capability, environment and constraint packet that `SKILL.md` defines. Page listing and
+page search cannot replace it, because they reach only topics that have pages. Pass the same deadline to the
+one focused follow-up on an owner lead, when you make it. Tool discovery, page hits and reflection results
+are leads. They are neither current source nor proof of an exact gate.
 
 ## Curated write mechanics
 
-Use official retain/document-ingest tools only after body authorization and knowledge-shape admission.
-Success requires Hindsight terminal completion; an accepted or queued request is not completion. An unknown
-outcome does not confirm persistence; reconcile it through supported official mechanics before repeating
-a possibly completed write. Report the exact terminal or unknown outcome; preserve unwritten admitted
-content through workflow. Never substitute session retention or conversation import for a curated write.
+Use the official retain or document-ingest tools only after the body authorizes the write and the knowledge
+shape admits the content. Success requires Hindsight terminal completion; an accepted or queued request is
+not completion. An unknown outcome does not confirm persistence. Reconcile it through supported official
+mechanics before you repeat a write that may have completed. Report the exact terminal or unknown outcome,
+and preserve unwritten admitted content through the workflow. Never substitute session retention or
+conversation import for a curated write.
 
-Include `references/knowledge-shape.md` semantic metadata and labeled observations in the curated content
-passed to the supported official write operation. Explicitly preserve source paths, verification/curation
-date, status and confidence; server extraction alone does not verify these fields. Map topics to records in the approved
-bank/service scope, not vault paths or permalinks. Use IDs, tags and metadata only through the exposed
-schema; never assume arbitrary metadata is filterable. If the surface cannot preserve or verify required
-content, report the write unavailable; invent no fields and switch no adapter.
+Include the semantic metadata and labelled observations from `references/knowledge-shape.md` in the curated
+content you pass to the supported official write operation. Explicitly preserve the source paths, the
+verification or curation date, the status and the confidence; server extraction alone does not verify these
+fields. Map topics to records in the approved bank and service scope, not to vault paths or permalinks. Use
+IDs, tags and metadata only through the exposed schema, and never assume that arbitrary metadata is
+filterable. If the surface cannot preserve or verify required content, report the write as unavailable.
+Invent no fields and switch no adapter.
 
-When source language or extraction quality is in question, read `references/knowledge-shape.md`. Verify
-current API/worker and bank/strategy settings against source-linked facts before claiming language
-compliance; candidate language policy does not configure server extraction. Reflect answers in the
-question's language. Assess page prose quality separately from fact accuracy; mixed-source pages need not
-use one language throughout.
+When source language or extraction quality is in question, read `references/knowledge-shape.md`. Before you
+claim language compliance, verify the current API, worker, bank and strategy settings against source-linked
+facts; the candidate language policy does not configure server extraction. Reflect answers in the language
+of the question. Assess the prose quality of a page separately from its fact accuracy; a page built from
+mixed sources need not use one language throughout.

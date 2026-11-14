@@ -58,7 +58,7 @@ from intuition counts as not met, because intuition is exactly the input that ma
 | Different data owner | The write list from the seam procedure, showing state no existing service writes | "It is a different domain", or a different noun in the name |
 | Different failure domain | A named journey with a stated requirement to keep completing while the other side is down | "Isolation is good", or a general preference for smaller blast radius |
 | Different scaling axis | Two load drivers that move independently, with the observed or projected ratio stated | "It might get big one day" with no driver named |
-| Different trust or compliance boundary | A named datum, credential, or regulated class the host service may not hold, with the rule that forbids it — ask `/alaa-security-review` (`$alaa-security-review`) whether it is forbidden rather than assuming | "It handles sensitive data", where the host service already handles data of the same class |
+| Different trust or compliance boundary | A named datum, credential, or regulated class the host service may not hold, with the rule that forbids it — ask `/alaa-security-review` whether it is forbidden rather than assuming | "It handles sensitive data", where the host service already handles data of the same class |
 | Different runtime or lifecycle | A named runtime, library, or release cadence the host cannot adopt without changing its own | A preference for a language or framework the team enjoys |
 
 ## Boundaries that look real and are not
@@ -79,8 +79,7 @@ from intuition counts as not met, because intuition is exactly the input that ma
 The reverse decision uses the same evidence. Merge when all of these hold: they are always deployed
 together; every change to one has required a change to the other over the last several changes; no journey
 survives one being down without the other; and they write the same data. Merging removes a contract a
-consumer can observe, so it runs through the deprecation procedure in `/alaa-services-contract`
-(`$alaa-services-contract`) `references/22-failure-load-and-deprecation-contract.md` — a merge is a
+consumer can observe, so it runs through the deprecation procedure in `/alaa-services-contract` `references/22-failure-load-and-deprecation-contract.md` — a merge is a
 contract change, not a refactor, and treating it as a refactor is how a consumer discovers it in
 production.
 

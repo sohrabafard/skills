@@ -5,67 +5,67 @@ description: "Instruction authoring for GPT-6 in Codex and Claude Opus 5.5, Fabl
 
 # Alaa Prompting Guide
 
-Own instruction authoring, model/effort capability evidence and runtime control mechanics for the stated models and runtimes. The runtime orchestrator owns task allocation and admission for every authority role. Apply before writing, choosing, reviewing or repairing prompts, skills, subagent definitions, `AGENTS.md`/`CLAUDE.md` or pins. Read current owners: behavior can invert between generations.
+Own instruction authoring, model and effort capability evidence, and runtime control mechanics for the stated models and runtimes. The runtime orchestrator owns task allocation and admission for every authority role. Apply it before writing, choosing, reviewing or repairing prompts, skills, subagent definitions, `AGENTS.md` or `CLAUDE.md` files, or pins. Read the current owners, because behavior can invert between generations.
 
 ## When NOT to use
 
-- General coding/review/refactoring without instruction or agentic-workflow authoring.
-- Retired Claude generations or models outside scope; historical references are for reference only. Non-Codex GPT tuning is excluded; ChatGPT invocation sigils remain covered for generated prompts.
-- Durable multi-phase plans/state/phase prompts: `/alaa-workflow` owns them.
-- Per-goal lanes, role prompts and review gates: the runtime orchestrator owns them. Generated prompts name its trigger and goal without restating its contract.
+- General coding, review or refactoring without instruction or agentic-workflow authoring.
+- Retired Claude generations or models outside scope; the historical references are for reference only. GPT tuning outside Codex is excluded, but ChatGPT invocation sigils remain covered for generated prompts.
+- Durable multi-phase plans, state and phase prompts: `/alaa-workflow` owns them.
+- Per-goal lanes, role prompts and review gates: the runtime orchestrator owns them. A generated prompt names its trigger and goal without restating its contract.
 
 ## The rule-writer specialist
 
-Before dispatching `alaa-rule-writer`, read `assets/rule-writer/dispatch.md`. It rewrites an existing draft and returns replacement text. Authorship, decisions, research and edits stay with the caller.
+Before dispatching `alaa-rule-writer`, read `assets/rule-writer/dispatch.md`, which also owns its task controls. The specialist rewrites an existing draft and returns replacement text. Authorship, decisions, research and edits stay with the caller.
 
-For personal Claude Code installation and for installing `assets/rule-writer/codex/alaa-rule-writer.toml` into `~/.codex/agents`, follow the repository-root `install-skills.md`. Never write an installation sentinel or run the grants checker as an install gate.
+For personal Claude Code installation, and for installing `assets/rule-writer/codex/alaa-rule-writer.toml` into `~/.codex/agents`, follow the repository-root `install-skills.md`. Never write an installation sentinel, and never run the grants checker as an install gate.
 
-Managed wrappers omit model and effort. The orchestrator explicitly selects both controls for each task, including rule-writer. Validate effective controls separately from role authority. After changing `assets/rule-writer/`, run `python3 scripts/check_rule_writer_grants.py`.
+After changing `assets/rule-writer/`, run `python3 scripts/check_rule_writer_grants.py`.
 
 ## Codex policy validation
 
-`assets/codex-model-policy.json` owns supported-effort snapshots and model-neutral role/artifact registrations. It chooses no task pair. Main controls stay externally configured. After policy/pin changes, run `python3 scripts/check_codex_model_policy.py --agent-root assets/rule-writer/codex` from this skill directory. Repeat `--agent-root` for another pack.
+When you need to know what a policy file owns or decides, read `references/90-model-selection.md`. Main-session controls stay externally configured. After a change to `assets/codex-model-policy.json` or a pin, run `python3 scripts/check_codex_model_policy.py --agent-root assets/rule-writer/codex` from this skill directory. Repeat `--agent-root` for another pack.
 
 ## Claude policy validation
 
-`assets/claude-model-policy.json` owns Claude capabilities, model availability conditions and model-neutral role/artifact registrations. It sets no role default. After a policy or projection change, run `python3 scripts/check_claude_model_policy.py` from this skill directory. The default covers both managed roots. Repeat `--agent-root <path>` for selected source or generated subsets. Use `--policy <path>` for an explicit policy.
+`references/90-model-selection.md` also states what this policy file owns; it sets no role default. After a change to `assets/claude-model-policy.json` or a projection, run `python3 scripts/check_claude_model_policy.py` from this skill directory. The default covers both managed roots. Repeat `--agent-root <path>` for a selected source or generated subset. Use `--policy <path>` for an explicit policy.
 
-The gate needs the root checker's bundled YAML parser. A verified aggregate can discharge an identical covered command. The orchestrator owns consolidation. Uncovered managed roots still need checks. Source agreement proves neither installed activation nor calibration.
+The gate needs the repository-root checker's bundled YAML parser. A verified aggregate can discharge an identical covered command, and the orchestrator owns that consolidation. Uncovered managed roots still need their checks. Source agreement proves neither installed activation nor calibration.
 
-All gates use `0` clean, `1` findings, `2` unavailable proof (including malformed/unreadable input). Either nonzero blocks the affected completion. Repair the stated cause within the active retry budget, or report blocked. Static checks prove neither live acceptance nor instruction compliance.
+All gates exit `0` when clean, `1` on findings and `2` on unavailable proof, including malformed or unreadable input. Either nonzero code blocks the affected completion. Repair the stated cause within the active retry budget, or report blocked. Static checks prove neither live acceptance nor instruction compliance.
 
 ## Decision procedure
 
-1. Identify runtime, surface and model. Ask only for missing facts that change the artifact. A Desktop app name proves no tab's command support.
-2. Read `references/00-topic-map.md` before answering; load only references whose conditions hold.
-3. Resolve version-sensitive facts from sources, never recall.
-4. Draft, then compress every controlling artifact, including edits and dispatches, through `references/60-skill-authoring.md`. Ship the fewest words preserving behavior. Soft targets yield. Hard limits require equivalent restructuring or a blocked report. Conversational prose is exempt.
-5. Choose prompt, instruction file, skill or subagent through its routed owner.
+1. Identify the runtime, surface and model. Ask only for missing facts that change the artifact. A Desktop app name proves no tab's command support.
+2. Read `references/00-topic-map.md` before answering, and load only the references whose conditions hold.
+3. Resolve version-sensitive facts from sources, never from recall.
+4. Draft, then compress, every controlling artifact through `references/60-skill-authoring.md`, including edits and dispatches. Ship the fewest words that preserve behavior. Soft targets yield. Hard limits require equivalent restructuring or a blocked report. Conversational prose is exempt.
+5. Choose between a prompt, an instruction file, a skill and a subagent through its routed owner.
 
-For a goal, follow `references/06-invocation-and-composition.md` for the kickoff and completion condition. `/alaa-workflow` owns plans and phase/task skill mappings.
+For a goal, follow `references/06-invocation-and-composition.md` for the kickoff and the completion condition. `/alaa-workflow` owns plans and the mappings of phases and tasks to skills.
 
-For a rendered Claude condition, run `python3 scripts/check_goal_condition.py --surface claude-desktop-code --condition-file <path>` here, substituting the observed surface.
+For a rendered Claude condition, run `python3 scripts/check_goal_condition.py --surface claude-desktop-code --condition-file <path>` from this skill directory, substituting the observed surface.
 
 ## Principles that govern every artifact this skill produces
 
-**Complete contract.** Define role, goal, success criteria, constraints, authority/side effects, tools, retrieval, validation, output, stopping and failure behavior.
+**Complete contract.** Define the role, goal, success criteria, constraints, authority and side effects, tools, retrieval, validation, output, stopping and failure behavior.
 
 **One instruction, one owner.** Duplication dilutes the contract. Check each reduction against the same acceptance criteria through `references/60-skill-authoring.md`.
 
-**Model-specific delegation.** Over-delegation needs bounds. Reticence needs authorization. Read `references/06-invocation-and-composition.md` before tuning either.
+**Model-specific delegation.** Over-delegation needs bounds. Reticence needs authorization. Read `references/06-invocation-and-composition.md` before you tune either.
 
-**Proportional verification.** Preserve focused checks and independent acceptance. Remove repetition only without changed inputs, failures or unresolved concerns. A model upgrade proves no correctness. `references/80-subagent-authoring.md` owns the authority test.
+**Proportional verification.** Preserve focused checks and independent acceptance. Remove a repeated check only when no input changed, nothing failed and no concern is unresolved. A model upgrade proves no correctness. `references/80-subagent-authoring.md` owns the authority test.
 
 **Missing evidence stays unknown.** Say what the source omits, use a named placeholder and preserve caveats.
 
 ## Freshness
 
-Before stating prices, limits, effort levels, feature/version gates, defaults, discovery paths or current recommendations, refresh official sources through `references/00-source-map.md`. Generated prompts for volatile topics must require executing-agent freshness checks.
+Before you state a price, limit, effort level, feature or version gate, default, discovery path or current recommendation, refresh the official sources through `references/00-source-map.md`. A generated prompt on a volatile topic must require the executing agent to check freshness.
 
 ## Stop
 
-Finish when the usable artifact preserves its intended contract and required gates pass. For ambiguity, contradiction, unsafe or impossible work, state the blocker, ask the smallest resolving question and stop. Source work grants no installation, commit, publication or external mutation authority.
+Finish when the usable artifact preserves its intended contract and the required gates pass. When the work is ambiguous, contradictory, unsafe or impossible, state the blocker, ask the smallest resolving question and stop. Source work grants no installation, commit, publication or external mutation authority.
 
 ## Style
 
-Use precise, direct technical English unless requested otherwise. No emoji, marketing, storytelling, filler, hidden assumptions or chain-of-thought disclosure. For work outside this role, provide a prompt/skill or obtain explicit confirmation. Deliver a usable artifact unless the user changes the role.
+Use precise, direct technical English unless requested otherwise. Write no emoji, marketing, storytelling, filler or hidden assumptions, and disclose no chain of thought. For work outside this role, provide a prompt or a skill, or obtain explicit confirmation. Deliver a usable artifact unless the user changes the role.

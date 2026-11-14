@@ -1,24 +1,16 @@
 # Codex Runtime Features
 
-These are Codex app/CLI features, not raw model behavior. Read only the feature section needed; model/API guidance lives in `references/12-gpt-6.md`.
+These are features of the Codex app and CLI, not raw model behavior. Read only the feature section you need. Model and API guidance lives in `references/12-gpt-6.md`.
 
 ## Rejected tool input or patch context
 
-Before repairing a rejected call, read the active host's tool schema: JavaScript orchestration,
-shell-command arguments, structured objects and patch text are different input contracts.
-Keep each language in its declared input; API examples do not establish the host's schema.
+Before you repair a rejected call, read the active host's tool schema. JavaScript orchestration, shell-command arguments, structured objects and patch text are different input contracts. Keep each language in its declared input. An API example does not establish the host's schema.
 
-For a patch-context mismatch, inspect the current target region and scoped diff, including other
-owners' edits, then rebuild the smallest patch matching that state. For duplicate-operation
-errors, combine or split operations only as the active patch contract permits. If mutation may
-have occurred, reconcile actual state before retrying; never blindly replay an uncertain write.
+For a patch-context mismatch, inspect the current target region and the scoped diff, including other owners' edits. Then rebuild the smallest patch that matches that state. For a duplicate-operation error, combine or split operations only as the active patch contract permits. If a mutation may have occurred, reconcile the actual state before you retry. Never blindly replay an uncertain write.
 
-Schema/context mistakes belong here; process, shell, path or sandbox failures route to
-`/alaa-codex-runtime-ops`. Neither diagnosis authorizes settings changes or broader writes.
-Use the active repair/retry budget; report the exact blocker and stop the dependent operation
-when the required contract or safe resulting state remains unknown. This procedure is grounded
-in active host schemas inspected 18 October 2026; recheck the executing host rather than copying
-a remembered tool signature.
+This section owns schema and context mistakes. Route process, shell, path or sandbox failures to
+`/alaa-codex-runtime-ops`. Neither diagnosis authorizes a settings change or broader writes.
+Use the active repair and retry budget. When the required contract or the safe resulting state remains unknown, report the exact blocker and stop the dependent operation. This procedure is grounded in active host schemas inspected 18 October 2026. Recheck the executing host rather than copying a remembered tool signature.
 
 ## `/goal` — persistent objective mode
 
@@ -56,29 +48,19 @@ Build worked examples from `references/12-gpt-6.md` plus the template above: one
 
 ## Subagents — explicit delegation and parallel spawning
 
-Delegate only within authorization granted by the user or an applicable instruction. The host's
-current collaboration tools define roles, nesting, concurrency, inheritance, and waiting; do not
-copy defaults or tool names from another Codex surface. Prompts may authorize concrete independent
-lanes, but cannot enable unavailable runtime features.
+Delegate only within authorization granted by the user or an applicable instruction. The host's current collaboration tools define roles, nesting, concurrency, inheritance and waiting. Do not copy defaults or tool names from another Codex surface. A prompt may authorize concrete independent lanes, but it cannot enable an unavailable runtime feature.
 
 Custom agents are standalone TOML files in the active Codex home `agents/` directory or the
 project's `.codex/agents/`. Required fields are `name`, `description`, and
 `developer_instructions`. The official subagent page documents optional model and effort pins,
 sandbox, MCP, and skill configuration; use only keys supported by the target host.
 
-**Custom TOML model and effort pins win over spawn arguments.** Verified 9 October 2026: when both pins are omitted, explicit spawn controls precede global agent defaults and parent settings. Managed authority roles omit both pins. Supply BOTH task controls on a verified compatible spawn surface; inherited values are not a task decision. Full-history forks can forbid overrides in the active host. A stale loaded pin cannot be changed by prose or a disk edit; use an available exact verified realization or block the affected lane.
-A definition created in the repository does not prove the current session has loaded it.
+**Custom TOML model and effort pins win over spawn arguments.** Verified 9 October 2026: when both pins are omitted, explicit spawn controls precede global agent defaults and parent settings. Managed authority roles omit both pins. Supply BOTH task controls on a verified compatible spawn surface. An inherited value is not a task decision. In the active host, a full-history fork can forbid overrides. Neither prose nor a disk edit can change a stale loaded pin; use an available exact verified realization or block the affected lane.
+A definition created in the repository does not prove that the current session has loaded it.
 
-A subagent inherits parent sandbox policy and runtime overrides. A `read-only` TOML value is not
-proof that every capability is read-only: inspect effective native permissions, parent overrides,
-and MCP tool grants, whose server-side effects are outside native sandbox enforcement. Restrict
-or withhold mutation-capable tools before claiming a read-only boundary. Do not change installed
-configuration without authority.
+A subagent inherits the parent sandbox policy and runtime overrides. A `read-only` TOML value does not prove that every capability is read-only. Inspect the effective native permissions, the parent overrides and the MCP tool grants; the server-side effects of an MCP tool are outside native sandbox enforcement. Before you claim a read-only boundary, restrict or withhold mutation-capable tools. Do not change installed configuration without authority.
 
-Keep requested profile/model/effort separate from observed runtime identity. Use `unknown` for
-values the host does not expose; copied pins are not observations. Verdict-bearing reports put
-the verdict first and metadata afterward. Replacement-only agents keep their output contract;
-the caller records their requested configuration externally.
+Keep the requested profile, model and effort separate from the observed runtime identity. Use `unknown` for a value the host does not expose; a copied pin is not an observation. A report that carries a verdict puts the verdict first and the metadata after it. A replacement-only agent keeps its output contract, and the caller records its requested configuration externally.
 
 The sources below were verified on 25 September 2026. The policy JSON records a dated
 supported-effort snapshot; verify availability again on the actual dispatch host.
@@ -107,7 +89,7 @@ No manual invocation is needed. Codex does **not** update these files on its own
 
 ## Agent Skills
 
-Skills package instructions, references, scripts, and assets into a directory so Codex can follow a workflow reliably — this skill is one. Structure: required `SKILL.md` (frontmatter with `name` and `description`, plus the body), optional `scripts/`, `references/`, `assets/`, and `agents/openai.yaml`.
+Skills package instructions, references, scripts, and assets into a directory so Codex can follow a workflow reliably — this skill is one. A skill requires `SKILL.md` (frontmatter with `name` and `description`, plus the body). `scripts/`, `references/`, `assets/`, and `agents/openai.yaml` are optional.
 
 Discovery runs across these scopes, highest priority first:
 
@@ -124,7 +106,7 @@ The `$HOME/.codex/skills` row is absent from the official page but earlier evide
 
 When generating install instructions, name `$HOME/.codex/skills` for personal skills unless the user has said otherwise, and `.agents/skills` for repository-scoped skills that travel with a project.
 
-For context efficiency Codex first loads only each skill's name and description. That listing is capped at 2% of the model's context window, or 8,000 characters when the context window is unknown; the full `SKILL.md` loads only once a skill is selected, regardless of that budget. Three invocation paths: `/skills` or a `$name` mention in the CLI and IDE, direct selection in the app, and implicit matching of the prompt against the skill's `description`. That last path is why a skill's `description` must state a clear, assertive trigger scope. `agents/openai.yaml` carries presentation metadata and `allow_implicit_invocation` (default `true`) for skills that should never fire on their own.
+For context efficiency Codex first loads only each skill's name and description. That listing is capped at 2% of the model's context window, or 8,000 characters when the context window is unknown; the full `SKILL.md` loads only once a skill is selected, regardless of that budget. A skill has three invocation paths: `/skills` or a `$name` mention in the CLI and IDE, direct selection in the app, and implicit matching of the prompt against the skill's `description`. That last path is why a skill's `description` must state a clear, assertive trigger scope. `agents/openai.yaml` carries presentation metadata and `allow_implicit_invocation` (default `true`) for skills that should never fire on their own.
 
 Codex documents no skill frontmatter keys beyond `name` and `description`. Treat Claude-side keys as inert here. See `references/60-skill-authoring.md`.
 
@@ -147,7 +129,7 @@ A `/plan` gate followed by a `/goal` is the Codex analogue of the plan-then-auto
 
 ## Automations — scheduled recurring tasks
 
-Codex can schedule recurring background tasks that add findings to the inbox, or archive themselves when there is nothing to report. Three shapes: standalone automations that start fresh runs on a schedule and report into Triage; project automations, which require the app to be running and the selected project to be available on disk; and thread automations, heartbeat-style recurring wake-ups attached to the current thread. Scheduling accepts predefined daily and weekly slots, custom cron syntax, and minute-based intervals for active follow-up loops.
+Codex can schedule recurring background tasks that add findings to the inbox, or archive themselves when there is nothing to report. Automations take three shapes: standalone automations that start fresh runs on a schedule and report into Triage; project automations, which require the app to be running and the selected project to be available on disk; and thread automations, heartbeat-style recurring wake-ups attached to the current thread. Scheduling accepts predefined daily and weekly slots, custom cron syntax, and minute-based intervals for active follow-up loops.
 
 Two operational cautions belong in any prompt that sets one up: on a Git repository an automation runs either in the local project or on a dedicated background worktree, and frequent schedules accumulate worktrees over time; and in read-only sandbox mode, tool calls fail when they need to modify files, use the network, or work with apps.
 
@@ -170,4 +152,4 @@ Goals, `spawn_agents_on_csv`, and the agent-team-style batch flow are all marked
 
 ## Managed task-selected authority roles
 
-The orchestrator renders model-neutral definitions preserving role authority, grants and contracts. `scripts/render_agents.py --check` checks projection consistency, not serving identity. The canonical capability policy registers roles and supports explicit task controls; existing model/effort-named IDs are compatibility labels only. The orchestrator selects every actual task pair and verifies loaded definitions, controls and effective permissions. Main configuration remains external; a planner draft stays advisory and the parent owns the durable plan. No source check proves installation, loaded registration or model obedience.
+The orchestrator renders model-neutral definitions that preserve role authority, grants and contracts. Its `scripts/render_agents.py --check` checks projection consistency, not serving identity. The canonical capability policy registers the roles and supports explicit task controls. An existing ID that names a model or an effort is a compatibility label only. The orchestrator selects every actual task pair, and it verifies the loaded definitions, the controls and the effective permissions. Main-session configuration remains external. A planner draft stays advisory, and the parent owns the durable plan. No source check proves installation, loaded registration or model obedience.

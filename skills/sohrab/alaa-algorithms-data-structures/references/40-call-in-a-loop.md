@@ -28,22 +28,22 @@ Two detection methods beat reading:
 - **Count, do not inspect.** Assert the number of queries, outbound requests, or cache operations for a request over
   a fixture with more than one element, then over a fixture with more elements. A count that grows with the fixture
   is the defect, and this assertion is also the regression test that keeps it fixed. Whether such an assertion
-  counts as evidence, and at which proof level, belongs to `/alaa-testing-strategy` (`$alaa-testing-strategy`).
+  counts as evidence, and at which proof level, belongs to `/alaa-testing-strategy`.
 - **Read the trace, not the code.** One request's trace shows the repeated span directly, and it finds the calls
   hidden behind three layers of abstraction that reading never finds. Trace and span design belongs to
-  `/alaa-observability-soc` (`$alaa-observability-soc`).
+  `/alaa-observability-soc`.
 
 ## The resolutions, per medium
 
 **Database.** One query with a join or an `IN` list over the collected keys; or the framework's eager-loading
 mechanism, which each per-language clean-code skill owns. Two constraints on the `IN` list: it is chunked to a
 stated maximum, because a very long list degrades planning and can exceed a parameter limit; and the query is
-covered by an index on the queried column, which is `/alaa-data-layer` (`$alaa-data-layer`)'s decision.
+covered by an index on the queried column, which is `/alaa-data-layer`'s decision.
 
 **HTTP fan-out.** A batch endpoint where the callee offers one. Where it does not, bounded concurrency with an
 explicit limit — never one request per element sequentially, and never unbounded parallelism, which converts your
 loop into a denial of service against a service that is probably yours. The concurrency limit, the per-attempt
-timeout, and the retry policy belong to `/alaa-reliability-sla` (`$alaa-reliability-sla`).
+timeout, and the retry policy belong to `/alaa-reliability-sla`.
 
 **Cache.** A multi-key read or a pipeline, in one round trip. A cache lookup per element replaces a database N+1
 with a cache N+1, which is faster per call and identical in shape — the round trips still grow with the collection.
@@ -81,10 +81,10 @@ until all four are written down:
    the caller learns which elements succeeded. A batch API returning one status for many elements hides partial
    success unless it reports per element.
 3. **Whether the batch is retryable as a whole**, which requires that re-applying the successful elements is safe.
-   Idempotency is `/alaa-reliability-sla` (`$alaa-reliability-sla`)'s and the fingerprint that identifies a repeat
+   Idempotency is `/alaa-reliability-sla`'s and the fingerprint that identifies a repeat
    is normalised per `30-choosing-a-structure.md`.
 4. **Its timeout**, which is not the per-element timeout multiplied by the batch size — that product usually exceeds
-   the request deadline, and the deadline is owned by `/alaa-services-contract` (`$alaa-services-contract`).
+   the request deadline, and the deadline is owned by `/alaa-services-contract`.
 
 ## Anti-patterns
 
@@ -97,4 +97,5 @@ until all four are written down:
 - eager loading applied everywhere by default, which loads relations no path uses and moves the cost from many small
   queries into one large one;
 - declaring the defect fixed with no query-count or call-count assertion, so the next refactor reintroduces it
-  invisibly.
+  invisibly;
+- a batch introduced to fix an N+1 with no cap of its own, turning many bounded calls into one unbounded query.

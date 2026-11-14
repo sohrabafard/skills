@@ -7,7 +7,7 @@ This skill exists to make Ala services converge on one contract.
 Rules:
 - Treat the contract as exact unless a blocking incompatibility is reported.
 - Do not let agents choose alternative `/api/ready` shapes, alternate headers, different event names, or repo-local metric families just because they also look reasonable.
-- Prefer convergence to the Ala contract over local stylistic preference.
+- Converge to the Ala contract. A local stylistic preference never overrides it.
 - If a service still carries a replaced contract surface such as `X-Correlation-Id`, migrate it fully and delete the stale implementation in the same effort.
 
 ## Ala service map

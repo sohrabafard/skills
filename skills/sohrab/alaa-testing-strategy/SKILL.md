@@ -20,7 +20,7 @@ This skill applies to:
 
 Test-design obligations do not apply to a change that alters no behaviour and no test: a comment, formatting pass, rename with no call-site semantics or docs-only edit. Execution and reporting policy still applies when that change runs validation.
 
-**No shipped surface is exempt.** Every route, queue consumer, job, scheduled task, and published request this project ships carries at least one test meeting the core rule below. Decide under *Whether a test is owed* which behaviour behind it is owed a test. The surface that issues credentials is the least exempt of all. A validator run over this platform's own API collection found 73 requests with no test at all, including the entire Auth folder. The requests that issue tokens asserted nothing. That is the failure this skill exists to prevent. A credential surface is the one place where silent breakage grants access rather than removing it.
+**No shipped surface is exempt.** Every route, queue consumer, job, scheduled task, and published request this project ships carries at least one test meeting the core rule below. Decide under *Whether a test is owed* which behaviour behind it is owed a test. The surface that issues credentials is the least exempt of all, because a credential surface is the one place where silent breakage grants access rather than removing it.
 
 **A repository's own validation-policy file outranks this skill inside that repository.** Where a repository states which checks gate a change, at which moment, and what may be cited instead of re-run, that file decides. This skill supplies only what it leaves open. What follows is the fleet default for a repository that has not written its own.
 
@@ -65,7 +65,7 @@ That second property and the rule against testing one behaviour at three layers 
 
 When a candidate is not owed a test, read `references/90-test-economy.md` for what the consumer tests instead.
 
-Before adding a discretionary test, review, specialist, proof tool or gate beyond the declared cadence or repository requirements, state its concrete uncovered risk and why existing evidence is insufficient. Without that answer, do not add it. Required checks remain required. Record the answer in the plan's check list when admitted, otherwise in the existing evidence owner.
+Before adding a discretionary test, review, specialist, proof tool or gate beyond the declared cadence or repository requirements, state its concrete uncovered risk and why existing evidence is insufficient. Without that answer, do not add it. Required checks remain required. Record the answer in the plan's check list when a plan is admitted, and otherwise in the existing evidence owner.
 
 ## Non-negotiables
 
@@ -78,9 +78,9 @@ Before adding a discretionary test, review, specialist, proof tool or gate beyon
 7. Name coverage obligations. Never express them as a percentage target. A percentage is satisfied by executing code without asserting anything.
 8. Derive the test list from the enumerated failure modes of the change that pass *Whether a test is owed*. Add the happy path last, as a control proving the failure tests fail for the reason claimed. Never start with it.
 9. Report a check that was not observed to run as not run. An unexecuted check has no result, and reporting one invents evidence.
-10. Make every test hermetic over its mutable state: it creates the data it asserts on, asserts only on that data, and leaves none behind. A failed reset or cleanup makes every later result over that state `CONTAMINATED`. Report it and stop the cases that depend on that state. A test that depends on another test's leftovers passes in one order and fails in another. The order is not part of anyone's contract. Create expensive resettable infrastructure once per suite, package, or worker, and share it. Expensive resettable infrastructure is an engine or container, a migrated schema, a booted application, a built artifact, or immutable fixture data. Isolate each test over it by transaction rollback, a unique namespace, or a reset of the data it touched. A test creates that infrastructure for itself only when creation is the behaviour under test. Per-test creation multiplies the suite's cost by its test count and buys no isolation that rollback or a namespace does not.
+10. Make every test hermetic over its mutable state: it creates the data it asserts on, asserts only on that data, and leaves none behind. A failed reset or cleanup makes every later result over that state `CONTAMINATED`. Report it and stop the cases that depend on that state. A test that depends on another test's leftovers passes in one order and fails in another. The order is not part of anyone's contract. Create expensive resettable infrastructure once per suite, package, or worker, and share it. A test creates that infrastructure for itself only when creation is the behaviour under test. Before you create or share test infrastructure, or write or review a test that runs over shared infrastructure, read `references/90-test-economy.md` *Setup once*. It defines that infrastructure, its scopes and the isolation of each test over it.
 11. No test synchronises on wall-clock sleeping. Inject time as a controllable clock. Wait on the condition the test is waiting for, with a bounded timeout. A sleeping test flakes on a loaded machine and charges its sleep on every run forever.
-12. Choose breadth from changed inputs, required proof and uncovered risk. A new phase, agent or reviewer earns no rerun. Apply the evidence validity and retest rules below.
+12. Choose check breadth from the changed inputs, the required proof and the uncovered risk. A new phase, agent or reviewer earns no rerun. Apply the evidence validity and retest rules below.
 13. Make every test this change adds or changes selectable by its topic and by its layer, through the runner's native selector. The topic is the behaviour or surface the test defends. Record in the repository which command selects which topic. A test reachable only through the whole-suite command forces every change to pay for the whole suite, because the focused tier cannot select it.
 14. Produce one build, compile, render, or image per tree state and environment. Every lint, type, test, and smoke step of that pass consumes its output, cache, or image digest. Remove a step that rebuilds what an earlier step of the same pass produced, or a separate compile that the test step already performs, because such a step charges the build again for no new information.
 15. A case failing never stops an independent case from running. A case that depends on another case's outcome or state declares that dependency. When the precondition fails, the case is reported `SKIPPED` naming that precondition. Never run it against the broken state. A suite whose first failure hides the rest costs one repair cycle per hidden failure.
@@ -102,22 +102,13 @@ Walk this in order. Each step names the reference that owns its detail.
 
 ## Proof levels
 
-Six levels, named so a claim's strength can be stated in one word across every service and language in the fleet. The ordering is by what a level can rule out. A level never substitutes for a higher one.
-
-1. **Static proof** — inspection only: the code, the configuration, the types, a linter, a schema validation. Proves an artifact says something. Proves nothing about behaviour.
-2. **Unit or in-memory proof** — the behaviour executed in process against in-memory or embedded substitutes: an embedded database standing in for the production engine, an in-memory broker, a controllable clock. Proves the logic. Proves nothing that the substituted engine decides.
-3. **Parity proof** — one suite run against the double and against the real implementation, with identical results required. Proves the double is honest, and proves nothing else.
-4. **Local smoke proof** — the built artifact started in its real container or process form and exercised from outside itself over its real interface. Proves it boots, wires, and answers.
-5. **In-runtime service proof** — the service running inside the composed local runtime with its declared dependencies present, exercised through its real transport. Proves the behaviour in the shape it is deployed in.
-6. **Live-dependency proof** — the behaviour exercised against the real production-grade dependency engine, with real drivers, transactions, ordering, and delivery. Proves what only that engine decides.
-
-`references/40-proof-strength.md` owns the mapping from a claim to the minimum level that supports it, and the rule for a level that cannot be reached in this environment.
+Six levels, ordered by what each can rule out: 1 static, 2 unit or in-memory, 3 parity, 4 local smoke, 5 in-runtime service, 6 live-dependency. A level never substitutes for a higher one. Before you assign, report or review a proof level, read `references/40-proof-strength.md`. It defines each level, maps a claim to the minimum level that supports it, and states what to do when that level cannot be reached in this environment.
 
 ## Scope tiers: how much of the suite runs, and when
 
 A proof level says how strong one claim is. A **tier** says how much of the suite has earned the right to run at this moment. The two are independent. Conflating them produces a pipeline that runs the whole suite four times against a tree that changed once.
 
-These scope definitions choose check breadth, not review timing. `alaa-codex-orchestrator` and `alaa-cc-orchestrator` `references/verification-and-gates.md` own the declared phase/final cadence, review authority and scheduling. When you dispatch nested orchestration, pass it the workflow's whole-engagement boundary, so the nested run does not treat its own end as the final candidate.
+These scope definitions choose check breadth, not review timing. `alaa-codex-orchestrator` and `alaa-cc-orchestrator` `references/verification-and-gates.md` own the declared phase or final review cadence, the review authority and the scheduling. When you dispatch nested orchestration, pass it the workflow's whole-engagement boundary, so the nested run does not treat its own end as the final candidate.
 
 | Tier | What runs | Who runs it | When |
 |---|---|---|---|
@@ -126,7 +117,7 @@ These scope definitions choose check breadth, not review timing. `alaa-codex-orc
 | **Affected** | selectors of topics reachable from changed surfaces, including callers, shared fixtures and contract checks | the required boundary observer | in the final gate stage by default, or earlier when repository policy requires |
 | **Exhaustive** | the whole suite and only the race, end-to-end and higher-level proofs the claims require | independent final authority | once on the whole engagement's final candidate, when required |
 
-A subtask's short check adds no expensive setup or full suite. Reuse already available reset-safe infrastructure when needed. No fixed duration or blanket container prohibition follows. Combine focused selectors at task acceptance. Plan required broad coverage for the whole engagement's final candidate. Preserve stricter repository gates. Labels never narrow an actual command's scope.
+A subtask's short check adds no expensive setup and runs no full suite. When it needs infrastructure, it reuses reset-safe infrastructure that is already available. This rule sets no fixed duration and no blanket ban on containers. At task acceptance, combine the focused selectors. Plan required broad coverage for the whole engagement's final candidate. Keep every stricter repository gate. Labels never narrow an actual command's scope.
 
 **The exhaustive tier is not an early-warning system.** Run on an intermediate tree, it observes a combination that is about to change. Its result expires before it is read, while its cost is charged in full. The tree it was meant to judge still goes unobserved. Its whole value is that it runs on the tree that ships.
 
@@ -164,7 +155,7 @@ A tier is never made to pass by deleting an assertion, widening a tolerance, add
 
 ## Executing checks
 
-For any direct or delegated validation run, use the execution routes in `references/00-topic-map.md` before choosing commands, resources or result status. Runtime orchestration is optional. Role allocation, observer independence and phase/review scheduling remain with the caller's runtime orchestrator.
+For any direct or delegated validation run, use the execution routes in `references/00-topic-map.md` before choosing commands, resources or result status. Runtime orchestration is optional. Role allocation, observer independence and the scheduling of phases and reviews remain with the caller's runtime orchestrator.
 
 When changing this skill's execution policy or consumer routes, run `python3 scripts/check_execution_contracts.py` from this skill directory. It returns `0` clean, `1` findings, `2` unavailable input. Either nonzero blocks the affected claim. Preserve evidence. Repair within the caller's existing budget, or report blocked. Never treat `2` as a pass. This maintainer check does not run on ordinary application tasks. Source checks prove no live-agent compliance.
 
@@ -186,7 +177,7 @@ Shared setup: per expensive resource, scope (run | package | worker) and per-tes
 Build reuse: per build, compile, render, or image -> the steps that consumed it
 Evidence: per claim -> command run, working directory, proof level reached, observed outcome, artifact path
 Tier: focused | task acceptance | affected | exhaustive -> run now, or cited from an earlier run with the four validity conditions named as still holding
-Execution: check-list snapshot, expected/selected/executed cases, machine-readable reports, resources and collection/repair/retest state
+Execution: check-list snapshot, expected, selected and executed cases, machine-readable reports, resources, and the collection, repair and retest state
 Status: per command -> classification under references/120-result-classification.md; timing claims -> samples and limits under references/110-execution-resources.md
 Flake: any intermittent result -> classified product defect | broken test -> action taken and owner
 Gaps: claims with no test, levels not reached and the blocker, quarantined tests and their deadlines

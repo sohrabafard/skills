@@ -34,7 +34,7 @@ export default defineConfig(() => ({
 - `index.html`: `<%= importMetaEnv.MY_VAR %>` or `%MY_VAR%`.
 - `.env` and `.env.local` load by default; mode and dev/prod suffixes exist. Verify the full default list live on quasar.dev.
 
-✅ `clientPrefix` is a security boundary: a secret gets no client prefix. ❌ Never port a v2 `build.env: { API_KEY: ... }` directly; in v3 `build.env` configures dotenv, it does not inject values.
+Do: `clientPrefix` is a security boundary: a secret gets no client prefix. Do not: port a v2 `build.env: { API_KEY: ... }` directly; in v3 `build.env` configures dotenv, it does not inject values.
 
 - **`build.define` auto-`JSON.stringify`s non-strings; wrap only a genuine string literal.** `define: { __BUILD_ID__: JSON.stringify(String(Date.now())) }` double-stringifies and emits a quoted string. The worked pair is `references/22-cli-cookbook-and-examples.md`.
 - **`build.defineEnv` always stringifies and always prefixes `import.meta.env.`.** It is the v3 replacement for v2 `build.env` value injection, not for `build.rawDefine`.
@@ -54,7 +54,7 @@ export default defineConfig(() => ({
 - `quasar.config` supports only `.js` and `.ts`.
 - App Extensions require `api.compatibleWith('@quasar/app-vite', '^3.0.0')`, and run as `quasar run <ext-id> <cmd>`.
 - pnpm v11 `allowBuilds` must include `rolldown` and its siblings; an empty per-mode `pnpm-workspace.yaml` forces local installs.
-- Follow the lockfile's package manager; never switch during Quasar work.
+- Follow the package-manager rule in `SKILL.md` "Version rules".
 
 ## Quasar UI feature notes
 

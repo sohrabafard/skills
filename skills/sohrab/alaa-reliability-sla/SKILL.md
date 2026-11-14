@@ -60,12 +60,12 @@ can permit a breach that remains invisible, while a wrongly gated contributor vi
 
 Walk this in order. Each step names the reference that owns its detail.
 
-1. **Classify.** Gate or contributor; if contributor, required or optional. Record it where the code reads it. (`50-degradation.md`)
+1. **Classify.** Classify the dependency as a gate or a contributor, and a contributor as required or optional. Record it where the code reads it. (`50-degradation.md`)
 2. **Bound.** Identify request-bound or durably accepted work and select its execution context; set connect, read, and total as three distinct limits; take a slot from a per-dependency concurrency cap sized strictly below the shared pool. (`references/10-deadlines-and-timeouts.md`, `30-breakers-and-bulkheads.md`)
 3. **Decide retry legality** before writing any retry: is the effect repeatable, is the outcome class retryable, does the applicable execution budget cover another attempt, and is this the one retrying layer? For accepted work, check its owner-defined validity and cancellation too. Any "no" means no retry at this layer. (`20-retries.md`, `60-idempotency.md`)
-4. **Decide the breaker.** The trip condition as a rate over a minimum volume, the open duration, the bounded half-open probe, and what a request receives while the breaker is open. (`30-breakers-and-bulkheads.md`)
+4. **Decide the breaker.** Decide the trip condition as a rate over a minimum volume, the open duration, the bounded half-open probe, and what a request receives while the breaker is open. (`30-breakers-and-bulkheads.md`)
 5. **Decide the failure response.** A gate refuses. A required contributor fails the request promptly rather than spending the whole deadline. An optional contributor degrades, marks the response, and emits the signal. (`50-degradation.md`)
-6. **Decide admission.** The in-flight limit, the shed order, and what is never shed. (`40-admission-and-shedding.md`)
+6. **Decide admission.** Decide the in-flight limit, the shed order, and what is never shed. (`40-admission-and-shedding.md`)
 7. **Take the values from the platform contract**, never from judgment at the keyboard. Where the contract has no value for this workload, derive it by the method below and record the derivation beside the value.
 8. **Write the evidence.** One test per mechanism decided above. (`80-verification.md`)
 
@@ -91,7 +91,7 @@ Decision: pass | pass-with-actions | blocked
 Scope: routes, dependencies, and load paths examined
 Classification: each dependency -> gate | required contributor | optional contributor, and where it is declared
 Bounds: request or attempt deadline source, per-hop timeouts, pools and caps, and the contract value each came from
-Durable work: persisted ownership boundary, validity/cancellation/disposition owner, retention, and unknown-acceptance reconciliation
+Durable work: persisted ownership boundary, the validity, cancellation and disposition owner, retention, and unknown-acceptance reconciliation
 Failure behaviour: per dependency -> what the request returns, and what the caller sees
 Retries: which layer retries, the outcome classes, the backoff shape, the budget
 Breakers and shedding: trip and reset conditions, in-flight limit, shed order, never-shed list
@@ -119,7 +119,7 @@ Stop and report blocked when any of these holds:
   states no Ala value; it states why a mechanism exists and how to choose its shape.
 - The path makes no outbound call, holds no pool, and has no defined behaviour when a dependency fails.
 - The question is whether an actor is permitted to act at all, or a control that must fail closed for
-  security rather than availability reasons. The routing table below names each owner.
+  security rather than availability reasons. *Owned by another skill* in `references/00-topic-map.md` names each owner.
 
 ## Reference routing
 
@@ -128,24 +128,4 @@ the references whose conditions apply. Loading the whole tree means the task was
 
 ## What this skill does not own
 
-- `/alaa-services-contract` owns every Ala value and the wire behaviour that carries it: the per-hop timeout table, the retry budget, the pool bounds and acquire wait, the shed threshold, the response codes and event names, and the deprecation procedure for any of them — `references/22-failure-load-and-deprecation-contract.md`. Point at it for the number; never copy one here.
-- `/alaa-security-review` owns every control that decides whether a caller may act, the full definition of "cannot reach a decision", and the fail-closed doctrine. This skill owns fail-open and degradation for availability, split by the discrimination rule above.
-- `/alaa-observability-soc` owns the telemetry plane's own reliability, the signals that prove these mechanisms fired, and burn-rate alerting arithmetic including the multi-window table — `references/40-alerting-slo-retention.md`. This skill owns the behaviour; that skill owns the signal and the alert.
-- `/alaa-async-messaging` and `/alaa-laravel-job-rabbitmq` own broker prefetch, acknowledgement, consumer concurrency, and dead-letter mechanics. This skill owns the request-side idempotency contract and the shed-versus-queue decision that sends work to a broker at all.
-- `/alaa-data-layer` owns pool mechanics inside a driver, transaction and isolation semantics, and the index that a uniqueness constraint compiles to. This skill owns why the constraint must exist and where it must live.
-- `/alaa-controlled-ops` owns the bulk-operation approval lifecycle and its dry-run hashes. This skill owns the general replay-versus-conflict contract that lifecycle instantiates.
-- The per-language skills own idiom — which library, which construct, which annotation. This skill owns the decision the idiom expresses.
-- `/alaa-prompting-guide` owns model/effort capability evidence and runtime mechanics; the runtime orchestrator owns actual task allocation for every authority role. This skill names no model.
-
-## Anti-patterns
-
-- setting a per-call timeout with no request deadline above it, so a chain of compliant hops still misses the target;
-- a timeout longer than the caller's remaining budget, which spends the callee's capacity on a result nobody will read;
-- retrying at three layers and calling it defence in depth, when it is a load multiplier of the product of the counts;
-- a rate limit installed to protect a resource, which it does not bound, instead of a concurrency limit, which does;
-- one global circuit breaker, which turns one broken endpoint into a total outage;
-- an unbounded half-open probe, which knocks the recovering dependency down at the instant it becomes reachable;
-- a stale cached value served for an authoritative-source outage with no maximum age and no marker;
-- checking whether an idempotency key exists and then writing, which two concurrent requests both pass;
-- returning a fresh identifier for a replayed key, which has created a second resource under a key the caller believes is unique;
-- an error budget with no consequence, which is a dashboard, or a budget never consumed, which is unpurchased velocity and a mis-set SLO.
+When a question is an Ala value, a control that decides whether a caller may act, a signal or alert, broker or driver mechanics, a bulk-operation approval, language idiom or a model choice, read *Owned by another skill* in `references/00-topic-map.md`; it names each owner and what this skill keeps. When you write or review a timeout, retry, breaker, rate or concurrency limit, stale-cache fallback, idempotency store or error budget, read *Anti-patterns* in the same file.

@@ -25,8 +25,8 @@ Pass only facts relevant to the lane:
 - Outcome and mode: inspect, design, review, implement, or diagnose.
 - Exact readable `skill_source` for `alaa-ent-go-orm-db/SKILL.md`, with accessible sibling resources.
 - Checkout, baseline, owned paths, exclusions, and concurrent dependencies.
-- Source files, query behavior, invariants, and known Go/Ent/PostgreSQL versions.
-- Authorized effects and identified database target, distinguishing disposable fixtures from persistent data.
+- Source files, query behavior, invariants, and the known Go, Ent and PostgreSQL versions.
+- Authorized effects and the identified database target. Distinguish disposable fixtures from persistent data.
 - Acceptance criteria and established check commands with working directories and timeouts.
 - Missing evidence, constraints, and any lead review gate.
 
@@ -48,8 +48,8 @@ Start the final report with exactly one line:
 
 Report only applicable items:
 
-1. Outcome, changed or inspected paths, and canonical skill/references actually loaded.
-2. Required query/index and projection decisions, evidence, and assumptions.
+1. Outcome, changed or inspected paths, and the canonical skill and references actually loaded.
+2. Required query, index and projection decisions, with their evidence and assumptions.
 3. Findings: location, severity (`blocker`, `major`, `minor`, `nit`), confidence (0–1), effect, and remedy.
 4. Checks run: command, working directory, result, and evidence location; distinguish static reasoning from measured behavior.
 5. Unassessed scope, unrun checks, residual risks, and actions awaiting the lead or user.

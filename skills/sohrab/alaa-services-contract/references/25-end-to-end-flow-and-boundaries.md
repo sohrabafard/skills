@@ -167,7 +167,7 @@ Route-shape reminder:
 - service-local routes may differ after gateway prefix stripping
 - when `stripPathPrefix: true`, the gateway routes on the public prefixed path, strips only the configured gateway prefix, and forwards the remaining backend-visible service-local path
 - do not collapse or de-duplicate repeated path segments at runtime; if a duplicate segment appears, decide whether it is intentional public-vs-child route composition or a bad config, then fix the config seam rather than rewriting paths ad hoc
-- for client SDK and frontend package work, do not change child SDK source or backend routes to add a gateway prefix; prefer public config such as core `baseUrls`, child `servicePrefix`/`apiPrefix`, or service-specific path options
+- for client SDK and frontend package work, do not change child SDK source or backend routes to add a gateway prefix; apply the prefix through public config instead, such as core `baseUrls`, child `servicePrefix` or `apiPrefix`, or a service-specific path option
 - if a child path is fixed, as with WA ingest, apply the gateway prefix through the service base URL
 - for aggregate SDKs such as `@alaa/sdk`, default `createAlaaSdk(config)`-style factories to the canonical prefix map, but never rewrite service roots supplied through an injected core; the core owner must provide gateway-compatible roots
 - for the current frontend SDK set, auth is special: preserve the auth child route prefix that already includes its service route family and point the auth core base at the gateway root; apply content, comment, tusd, and WA gateway prefixes through shared core `baseUrls`
@@ -442,7 +442,7 @@ Rules:
 - keep operational routes separate from product-facing routes
 - do not proxy another service's `/api/ready` unless that dependency is an explicit approved rollout requirement
 - if a service depends on shared infrastructure such as Redis or RabbitMQ, check that infrastructure directly instead of proxying another app's status
-- if a frontend or service needs domain behavior from another service, prefer that service's public API or events over direct table coupling
+- if a frontend or service needs domain behavior from another service, use that service's public API or events; never couple directly to its tables (the schema rule in `15-deployment-and-runtime-contract.md` forbids it)
 - downstream services may consume compact trusted name and location headers, but they must not fabricate display-name fields from compact ids unless another explicit source-of-truth contract owns that lookup
 - backend services may keep local user projections or immutable request snapshots, but `auth` remains the source of truth for the latest identity state
 

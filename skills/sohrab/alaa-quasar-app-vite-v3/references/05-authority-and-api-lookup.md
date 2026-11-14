@@ -4,11 +4,11 @@ You are about to assert an exact prop, event, slot, method, directive value, or 
 
 | Question | Authority | Fallback |
 |---|---|---|
-| Current app behavior | Live code/config/lockfile/tests/runtime | Maintained repo docs |
+| Current app behavior, constraints, conventions and installed line | Live code/config/lockfile/tests/runtime | Maintained repo docs |
 | Local props/events/slots/methods/options | Installed `@quasar/app-vite` project-local `quasar describe` | Installed types/API JSON, then version-matched official docs |
 | Composables/utils and TS shapes | Installed `quasar` exports/types | Version-matched official docs |
-| Current upstream/latest release | Official Quasar docs/releases/npm | Mark unverified; never substitute model memory |
-| Approach/guardrails | This workflow and routed references | Explicitly scoped repo instructions override |
+| Current upstream concepts, releases and upgrades | Official Quasar docs/releases/npm | Mark unverified; never substitute model memory |
+| Approach, guardrails and migration | This workflow and routed references | Explicitly scoped repo instructions override |
 
 On disagreement, report drift and use the authority for that question; never silently replace project truth with a newer docs example.
 
@@ -16,7 +16,7 @@ On disagreement, report drift and use the authority for that question; never sil
 
 1. Find app root; read lockfile and `package.json`.
 2. Confirm installed `@quasar/app-vite` and `quasar`; a declared range is not installed-version proof.
-3. For components, directives, and plugins, run `node <skill-dir>/scripts/query-installed-quasar-api.mjs` with minimal filters. It takes `--help`; exit code 2 means the bridge could not run, which is never a clean result.
+3. For components, directives, and plugins, run `node $SKILL_DIR/scripts/query-installed-quasar-api.mjs` with minimal filters. It takes `--help`; exit code 2 means the bridge could not run, which is never a clean result.
 4. `-f` narrows; it never proves completeness. Query concepts separately or retry unfiltered—nested plugin config/method-option objects may not appear under `-p`.
 5. For composables/utils, inspect installed exports/types plus version-matched docs; `quasar describe` does not cover them.
 6. Use atlases for intent, alternatives, gotchas, a11y, performance, and vocabulary.
@@ -24,9 +24,9 @@ On disagreement, report drift and use the authority for that question; never sil
 8. If lookup cannot run, explain why and mark exact syntax unverified.
 
 ```bash
-node <skill-dir>/scripts/query-installed-quasar-api.mjs QTable -p -s -e -m
-node <skill-dir>/scripts/query-installed-quasar-api.mjs --project <repo-root> QSelect -p -f map
-node <skill-dir>/scripts/query-installed-quasar-api.mjs --project <repo-root> list storage
+node $SKILL_DIR/scripts/query-installed-quasar-api.mjs QTable -p -s -e -m
+node $SKILL_DIR/scripts/query-installed-quasar-api.mjs --project <repo-root> QSelect -p -f map
+node $SKILL_DIR/scripts/query-installed-quasar-api.mjs --project <repo-root> list storage
 ```
 
 The bridge walks upward from the project path to an app declaring `@quasar/app-vite`, resolves its installed local CLI without downloads or package-manager switching, prints installed app-vite/Quasar versions, delegates to color-disabled `quasar describe`, and exits with its status.
@@ -50,9 +50,9 @@ First verify the executable exists. Never use `npm exec`/`npx`, install another 
 - Docs newer than repo: preserve mismatch; do not copy newer shapes into older code.
 - App Extension API: prefer local `quasar describe`; core static JSON may omit extension contributions.
 
-✅ Query `QTable -p -s -e -m` locally before asserting exact prop/slot/event/method names; ❌ never treat `61-component-usage-atlas.md`, `65-directive-usage-atlas.md`, or `66-api-usage-atlas.md` as exhaustive API specs.
+Do: Query `QTable -p -s -e -m` locally before asserting exact prop/slot/event/method names; Do not: treat `61-component-usage-atlas.md`, `65-directive-usage-atlas.md`, or `66-api-usage-atlas.md` as exhaustive API specs.
 
-✅ Retry `Notify` without `-p` for nested options such as `timeout`; ❌ never infer absence from a narrow section filter.
+Do: Retry `Notify` without `-p` for nested options such as `timeout`; Do not: infer absence from a narrow section filter.
 
 ## MCP posture and search
 

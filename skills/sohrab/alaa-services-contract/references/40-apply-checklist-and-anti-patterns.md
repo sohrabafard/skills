@@ -20,7 +20,7 @@
 16. Add or align exact response envelopes, exact headers, exact event names, exact code naming, and exact metric names where the contract owns them.
 17. Update docs, Postman, and runbooks in the same patch when public or operational behavior changes.
 18. Run focused tests for every changed contract surface. A test that would still pass against a plausible broken
-    implementation of that surface does not count as one; `/alaa-testing-strategy` (`$alaa-testing-strategy`) owns how
+    implementation of that surface does not count as one; `/alaa-testing-strategy` owns how
     a test is judged to be a test and at which proof level its result may be reported, and this item owns only that
     the run happened for every surface the change touched.
 19. When the change removes or renames a contract surface, run the deprecation procedure in `22-failure-load-and-deprecation-contract.md` instead of deleting the surface directly.

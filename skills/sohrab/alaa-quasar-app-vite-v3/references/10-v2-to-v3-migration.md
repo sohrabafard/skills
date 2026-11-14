@@ -13,12 +13,12 @@ Also load `references/22-cli-cookbook-and-examples.md` (exact target shapes), `r
 - Capacitor repositories replace `capacitor.config.json` with `capacitor.config.ts`/`.js` using `defineCapacitorConfig` from `'@quasar/app-vite/capacitor'` **before** the upgrade, not during it.
 - `@quasar/extras` v2 is ESM-only and drops FontAwesome v5/v6, Ionicons v5-7, and MDI v3-6. Audit the icons in use, and bump it separately.
 
-✅ Do — migrate on a branch with a written checklist, and keep `vue-router` 4 -> 5 and `@quasar/extras` 1 -> 2 as separate commits from the app-vite bump. ❌ Don't — hide the app-vite bump inside unrelated dependency work; the env, alias, and import changes touch application code and cannot be reviewed as a lockfile diff.
+Do: migrate on a branch with a written checklist, and keep `vue-router` 4 -> 5 and `@quasar/extras` 1 -> 2 as separate commits from the app-vite bump. Do not: hide the app-vite bump inside unrelated dependency work; the env, alias, and import changes touch application code and cannot be reviewed as a lockfile diff.
 
 ## 1. Sequence
 
 1. Set `"@quasar/app-vite": "^3.0.0"`, `"vue-router": "^5"`, and the required peers in `package.json`.
-2. Install with the lockfile's package manager; never switch it.
+2. Install with the package manager that `SKILL.md` "Version rules" requires.
 3. Apply the delta set from `references/80-upstream-deltas-and-live-checks.md` §4.
 4. Run `quasar prepare`; restart the IDE and the TypeScript server.
 5. Run `quasar dev`, then `quasar build`, for **every shipped mode**, fixing mode by mode.
@@ -33,7 +33,7 @@ Two shape rules that are easy to get wrong and are stated in full elsewhere: ali
 4. Lint, typecheck, and unit tests pass; then grep the tree for `process.env.`, `#q-app/wrappers`, legacy aliases, `envFolder`, `rawDefine`, and `extendManifestJson`.
 5. Report the migrated scope, the exact commands and their results, and every blocking App Extension.
 
-✅ Do — migrate, validate, and commit SPA first, then SSR, PWA, and native separately. ❌ Don't — treat a passing SPA dev server as completion; the major breaks cluster in SSR, PWA, Electron, and Capacitor.
+Do: migrate, validate, and commit SPA first, then SSR, PWA, and native separately. Do not: treat a passing SPA dev server as completion; the major breaks cluster in SSR, PWA, Electron, and Capacitor.
 
 ## 3. Failure classes — symptom, diagnosis, smallest retry, escalation
 

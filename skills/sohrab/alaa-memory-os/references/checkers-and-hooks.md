@@ -65,13 +65,14 @@ enters session context; the event cannot block. `PreCompact` discards `systemMes
 compatibility JSON emission proves no model reminder delivery. Refresh event-specific semantics before
 changing or registering hooks.
 
-`precompact_checkpoint.sh` is a nonwriting compatibility entrypoint that exits 0. It reads no payload,
-transcript or vault, writes no vault/checkpoint and invokes no adapter. Its emitted owner pointer
-proves no continuity; /alaa-workflow must record continuity proactively through its own admitted artifacts.
+`precompact_checkpoint.sh` is a compatibility entrypoint that writes nothing and exits 0. It reads no
+payload, transcript or vault, writes nothing to a vault or a checkpoint, and invokes no adapter. The owner pointer
+it emits proves no continuity; /alaa-workflow must record continuity proactively through its own admitted
+artifacts.
 
 `session_start_context.sh` reads repository drift counts and emits conditional owner pointers. It copies
-no recall budgets, drift decisions, note policy or active workflow state. A missing/unreadable drift path
-is unknown, not zero drift. If the task touches counted contracts, inspect their records through
+no recall budgets, drift decisions, note policy or active workflow state. A missing or unreadable drift
+path is unknown, not zero drift. If the task touches counted contracts, inspect their records through
 `references/drift-management.md` before planning. Keep this hook fast; it runs every session.
 
 ## Registering the hooks
@@ -109,6 +110,8 @@ documentation above before applying, because this schema is upstream and moves.
 
 ## Script rules
 
+- Before you ship any pass over a history-growing store, state its complexity bound.
+  `/alaa-algorithms-data-structures` owns that budget. Each shipped checker states its own.
 - Write frontmatter without a byte-order mark: a mark immediately before the opening `---` can break the YAML
   parse on the reader that later loads the note.
 - For an authorized capture outside these nonwriting hooks, use a unique filename; timestamps alone can

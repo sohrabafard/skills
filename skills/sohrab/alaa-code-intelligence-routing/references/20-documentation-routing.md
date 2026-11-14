@@ -1,15 +1,15 @@
 # Documentation routing
 
 /alaa-repo-docs owns repository Markdown authoring, canonical topic ownership, language, navigation,
-alignment, redaction and link validation. Before routing source comments/docblocks, use its `SKILL.md`
+alignment, redaction and link validation. Before routing source comments or docblocks, use its `SKILL.md`
 section `Ground this skill does not own` for the verified stack-specific owner. This reference selects
 evidence surfaces, not annotation policy.
 
 | Question | Surface |
 |---|---|
-| Which Markdown file contains a phrase, heading, endpoint, event or identifier? | Markdown-scoped native search/read |
+| Which Markdown file contains a phrase, heading, endpoint, event or identifier? | Markdown-scoped native search and read |
 | Which document is canonical, what must change, or are links valid? | /alaa-repo-docs |
-| Does a documentation claim match source behavior? | Documentation owner names the implementation/runtime/configuration fact, then selects its routing-contract owner |
+| Does a documentation claim match source behavior? | The documentation owner names the implementation, runtime or configuration fact, then selects its routing-contract owner |
 | Is generated Markdown current? | Source template and generator |
 | What do installed Laravel package docs say? | Boost documentation |
 | What do other current package docs say? | Official version-aware source |

@@ -7,7 +7,7 @@ description: "UI/UX design-decision layer for Vue and Quasar apps styled with Ta
 
 ## Purpose
 
-The design-intelligence layer for the Vue 3 + Quasar + Vite app family, styled with Tailwind or Bootstrap. It owns art direction, tokens, theming, typography, color, layout, RTL and Persian rendering, motion, icons, and design-quality review.
+This skill is the design-intelligence layer for the Vue 3, Quasar and Vite app family, styled with Tailwind or Bootstrap. It owns art direction, tokens, theming, typography, color, layout, RTL and Persian rendering, motion, icons, and design-quality review.
 
 The floor is the gate list in `references/90-quality-gates-and-review.md`. No rule in this pack may forbid a visual choice that passes every gate in that list.
 
@@ -27,7 +27,7 @@ Every rule in this pack belongs to exactly one tier. Never confuse them.
 
 1. **Gates (blocking):** the numbered list in `references/90-quality-gates-and-review.md`. A design is not done while one fails, and none is skippable by disclosure.
 2. **Defaults (overridable by a repo token file or explicit user direction, never by drift):** spacing scale, duration and easing tokens, type scale, breakpoints, z-index scale, landing section order.
-3. **Taste (free creative space):** style selection, palette personality, imagery, composition, voice. This pack supplies trade-offs; it never mandates. When the user asks for bold, be bold inside the gates.
+3. **Taste (free creative space):** style selection, palette personality, imagery, composition, voice. This pack supplies trade-offs and never mandates a taste choice. When the user asks for bold, be bold inside the gates.
 
 ## Ownership and disclaimers
 
@@ -70,15 +70,8 @@ React, React Native and non-web desktop stacks are out of scope.
 
 ## Entry protocol
 
-This is not the design procedure; the only ordered design procedure in this pack is in `references/10-design-workflow.md`. Before routing:
+This is not the design procedure. The only ordered design procedure in this pack is in `references/10-design-workflow.md`. Before routing:
 
-1. Read the repo-local `AGENTS.md` and the repo's own token and theme sources. Repo tokens outrank every default in this pack.
+1. Read the repo-local `AGENTS.md` and the repo's own token and theme sources. Repo-local `AGENTS.md`, existing repo tokens, and user instructions override this shared skill. Repo tokens outrank every default in this pack.
 2. Apply `/alaa-low-noise`.
 3. Open `references/00-topic-map.md`.
-
-## Maintenance rules
-
-- Keep exactly one copy of every rule. Route instead of duplicating between references.
-- Platform-version claims live only in `references/72-modern-css-baseline-tiers.md`, each with its own `read:` date. Re-verify that file when a task depends on a Tier 2 or Tier 3 feature, or when its stamps are more than 90 days older than today.
-- Never promote a taste-tier rule to a gate; a new gate needs a check in `scripts/check-design-system.mjs` or a named manual proof in `references/95-design-proofs.md`.
-- Repo-local `AGENTS.md`, existing repo tokens, and user instructions override this shared skill.

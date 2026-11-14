@@ -4,7 +4,7 @@ You are about to write the literal text of a `quasar.config`, a boot file, a rou
 
 Detect the installed line first — `references/80-upstream-deltas-and-live-checks.md` §3.
 
-✅ Use the detected line's shape. ❌ Never guess, mix keys from two lines, or hand one line the other's shape.
+Do: Use the detected line's shape. Do not: guess, mix keys from two lines, or hand one line the other's shape.
 
 ## `quasar.config`
 
@@ -38,7 +38,7 @@ export default defineConfig((ctx) => ({
 }))
 ```
 
-❌ On v3 there is no `.cjs` or `.mjs` config, and v2 `envFolder`/`envFiles` never mix with v3 `build.env.*`.
+Do not: write a `.cjs` or `.mjs` config on v3, or mix v2 `envFolder`/`envFiles` with v3 `build.env.*`.
 
 Search: `defineConfig`, `#q-app`, `ctx.mode`, `ctx.dev`, `ctx.prod`, `build.env.folder`, `envFolder`.
 
@@ -78,9 +78,9 @@ if (import.meta.env.QUASAR_MODE === 'ssr') { /* ... */ }
 if (process.env.MODE === 'ssr') { /* ... */ }
 ```
 
-❌ Never use `'QUASAR_'` as the v3 client prefix — it collides with the framework's own constants — and never read `process.env.MODE` in v3 source.
+Do not: use `'QUASAR_'` as the v3 client prefix — it collides with the framework's own constants — and never read `process.env.MODE` in v3 source.
 
-❌ `define: { __BUILD_ID__: JSON.stringify(String(Date.now())) }` double-stringifies a number and emits a quoted string. Use `define: { __BUILD_ID__: Date.now() }`; wrap only real string literals. The semantics are `references/20-v3-config-and-features.md`.
+Do not: `define: { __BUILD_ID__: JSON.stringify(String(Date.now())) }` double-stringifies a number and emits a quoted string. Use `define: { __BUILD_ID__: Date.now() }`; wrap only real string literals. The semantics are `references/20-v3-config-and-features.md`.
 
 Search: `build.env.clientPrefix`, `defineEnv`, `import.meta.env.QUASAR_`, `dotenv`, `rawDefine`, `build.define stringify`.
 
@@ -123,7 +123,7 @@ export default defineBoot(({ app, router, store, ssrContext, urlPath, publicPath
 })
 ```
 
-❌ Never continue after `redirect()`, never throw to redirect, and never hand-prefix a string with `publicPath`; pass a router location or an absolute URL and return.
+Do not: continue after `redirect()`, never throw to redirect, and never hand-prefix a string with `publicPath`; pass a router location or an absolute URL and return.
 
 Request-scoped API client, wired from boot — the shape that keeps one user's token out of another user's SSR response:
 
@@ -161,7 +161,7 @@ register(import.meta.env.QUASAR_SERVICE_WORKER_FILE, {
 })
 ```
 
-❌ Never call `window.location.reload()` or touch the DOM inside `custom-sw`; it runs in a worker with no `window` and no `document`. The reload-once guard and the `SKIP_WAITING` message belong here and in `custom-sw` respectively — `references/30-service-worker-excellence.md` §4.
+Do not: call `window.location.reload()` or touch the DOM inside `custom-sw`; it runs in a worker with no `window` and no `document`. The reload-once guard and the `SKIP_WAITING` message belong here and in `custom-sw` respectively — `references/30-service-worker-excellence.md` §4.
 
 Search: `register-sw`, `register-service-worker`, `SERVICE_WORKER_FILE`, `updated hook`, `offline hook`.
 
@@ -181,7 +181,7 @@ build: {
 }
 ```
 
-❌ Never assign to `viteConf.resolve.alias`; merge, or use `build.alias`. Vite 8 removed object-form `manualChunks` — the replacement pair is `references/70-guardrails-a11y-performance-monorepo.md`.
+Do not: assign to `viteConf.resolve.alias`; merge, or use `build.alias`. Vite 8 removed object-form `manualChunks` — the replacement pair is `references/70-guardrails-a11y-performance-monorepo.md`.
 
 Search: `extendViteConf`, `vitePlugins`, `isServer`, `isClient`, `dedupe`, `build.alias`.
 
@@ -211,7 +211,7 @@ import MyWidget from '@/components/MyWidget.vue'
 import { useUserStore } from '@/stores/user'
 ```
 
-❌ No legacy alias in v3; no `@/` in v2 unless the repository already defines it.
+Do not: use a legacy alias in v3, or `@/` in v2 unless the repository already defines it.
 
 Search: `@/ alias`, `path alias`, `boot/`, `stores/`, `@/../`.
 
@@ -219,7 +219,7 @@ Search: `@/ alias`, `path alias`, `boot/`, `stores/`, `@/../`.
 
 In a Yarn repository use the existing Yarn dev, build, and test scripts. Use a raw `quasar ...` command only when the repository already does or the user asks.
 
-✅ `yarn build`, or the documented script. ❌ Never switch to `bun install` or `pnpm dev` because upstream supports them.
+Do: `yarn build`, or the documented script. Do not: switch to `bun install` or `pnpm dev` because upstream supports them; `SKILL.md` "Version rules" owns the package-manager rule.
 
 Search: `yarn.lock`, `yarn workspace`, `yarn dev`, `quasar command through yarn`.
 

@@ -1,0 +1,6 @@
+# Independent review of lane B1 (commit 9f7d6420; opus, medium): CHANGES-REQUESTED, 1 major, 3 minor, 1 nit group
+Major: the new rabbitmq ownership-boundary reference added "write nothing of your own on that ground", a rule the old text did not have and that conflicted with four body constraints. Removed.
+Minor: the pointers to three moved ownership tables fired only "before you state a rule" although several rows fire on a decision or an edit (widened in the three bodies and their router rows); php-clean-code created a second, broader trigger for references/php-modern-and-psr.md (aligned with the router row); alaa-bale-provider's claim about the auth command path is contradicted by the section it now cites (pre-existing; reported, not edited).
+Nit: three preference verbs had become constraints (php-clean-code "Prefer repo scripts", phpantom "prefer symbolic lookup", "optionally JSON"); restored.
+Clean: every relocated table matches the removed text row for row; the deleted "do not log" duplicates are covered in the same sections; every heading citation exists.
+B1 confirmation: APPROVED-WITH-NITS; four RESOLVED, one REPORTED (pre-existing Bale claim); one new nit (the reference's opening trigger) repaired afterwards.

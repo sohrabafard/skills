@@ -6,7 +6,7 @@ one sink's failure changes another sink's behaviour.
 
 **Where the design question belongs.** Choosing how many Vector tiers a system has,
 where the trust boundary sits, and which component owns which responsibility is
-subsystem design, and it belongs to `/alaa-system-design` (`$alaa-system-design`).
+subsystem design, and it belongs to `/alaa-system-design`.
 This file covers what is specific to Vector: how a path's delivery behaviour is
 written down, and which Vector mechanisms make paths independent of each other.
 
@@ -29,9 +29,7 @@ made:
 **Gate or contributor is the load-bearing question**, and the fleet has already
 answered it for product telemetry: fail open. The rule, the two path types, and the
 Vector option that expresses each are in `30-buffers-acks-and-backpressure.md`.
-Requirement level is owned by `/alaa-observability-soc`
-(`$alaa-observability-soc`); every Ala value is owned by `/alaa-services-contract`
-(`$alaa-services-contract`)
+Requirement level is owned by `/alaa-observability-soc`; every Ala value is owned by `/alaa-services-contract`
 `references/22-failure-load-and-deprecation-contract.md`.
 
 ## Deployment shapes, and what each one costs
@@ -51,8 +49,7 @@ Requirement level is owned by `/alaa-observability-soc`
   state the blast radius explicitly: every path shares one process, and a disk-buffer
   volume filling stops all of them at once.
 
-Choosing between these is a design question. Take it to `/alaa-system-design`
-(`$alaa-system-design`) when the answer is not obvious from the delivery contracts.
+Choosing between these is a design question. Take it to `/alaa-system-design` when the answer is not obvious from the delivery contracts.
 
 ## Fanout is where paths stop being independent
 
@@ -84,7 +81,7 @@ inputs must be measured rather than assumed — `component_received_events_total
 rate and `component_sent_bytes_total / component_sent_events_total` for event size,
 both in `60-internal-monitoring.md`. When a bound has to be *stated* as a function
 of a growing input rather than measured at one operating point, that is
-`/alaa-algorithms-data-structures` (`$alaa-algorithms-data-structures`), which owns
+`/alaa-algorithms-data-structures`, which owns
 complexity budgets and the method for deriving a bound from the system.
 
 ## Ordering of decisions
@@ -92,7 +89,7 @@ complexity budgets and the method for deriving a bound from the system.
 1. Enumerate the paths. One line each: source, transforms, sink.
 2. Write the seven contract fields per path. Stop at any blank.
 3. Decide gate or contributor per path, against
-   `/alaa-observability-soc` (`$alaa-observability-soc`).
+   `/alaa-observability-soc`.
 4. Choose the deployment shape that lets each path meet its contract, and the Helm
    role that gives it the storage it needs — `70-helm-chart-operations.md`.
 5. Only then write config. Validate it with the flag set in

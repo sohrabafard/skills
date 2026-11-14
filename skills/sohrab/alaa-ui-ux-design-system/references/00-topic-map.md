@@ -21,7 +21,8 @@ The only router in this skill. Each row states a situation you can observe in th
 | show an error the user may need to report, or decide what the UI emits when something fails | `28-ui-diagnosability.md` |
 | render a list whose length is not bounded in code, allow an edit that two tabs could make at once, or design for a slow connection | `65-lists-latency-and-concurrency.md` |
 | animate anything, add a transition, or set a duration or easing value | `70-motion-contract.md` |
-| use a CSS feature you are not certain ships in every target browser | `72-modern-css-baseline-tiers.md` |
+| use a CSS feature you are not certain ships in every target browser, depend on a Tier 2 or Tier 3 feature, or rely on a platform-version claim | `72-modern-css-baseline-tiers.md` |
+| edit this skill's rules, add a gate, or move a rule between references | `90-quality-gates-and-review.md` "Maintaining this pack" |
 | add an icon, an image, a logo, a favicon, or an Open Graph image | `80-icons-assets-and-imagery.md` |
 | add `@click` to a non-`<button>`, open an overlay, change route in an SPA, or write ARIA | `85-accessibility-patterns.md` |
 | add a font file, a hero image, a video embed, or a third-party script; or add a theme, density tier or preference axis that multiplies what must be verified | `45-render-and-asset-budgets.md` |

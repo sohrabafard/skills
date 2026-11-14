@@ -7,7 +7,7 @@ description: "Mediana/IPPanel Edge SMS provider contract for Alaa services: the 
 
 ## What this skill owns
 
-This skill owns one vendor: the Mediana/IPPanel Edge send API. That covers its wire shapes, its recipient rendering, its absence of an idempotency key, and its own failure classes. Every rule here applies only to code that builds, sends, parses, or tests a Mediana request. Route the rest. A rule restated here becomes a second strength for a rule that already has an owner.
+This skill owns one vendor: the Mediana or IPPanel Edge send API. That covers its wire shapes, its recipient rendering, its absence of an idempotency key, and its own failure classes. Every rule here applies only to code that builds, sends, parses, or tests a Mediana request. Route the rest. A rule restated here becomes a second strength for a rule that already has an owner.
 
 - Retry legality, backoff, idempotency mechanics, ambiguity doctrine → `/alaa-reliability-sla`
 - Timeout and retry-budget values, metric and event names, the notification envelope → `/alaa-services-contract`
@@ -22,7 +22,7 @@ This skill owns one vendor: the Mediana/IPPanel Edge send API. That covers its w
 
 ## Router
 
-Every send mode this vendor offers is documented at field level behind one of these rows.
+Each vendor send mode has its field-level contract behind one row.
 
 | You are about to | Read |
 |---|---|
@@ -37,13 +37,13 @@ Every send mode this vendor offers is documented at field level behind one of th
 
 ## The two send modes the fleet commands today
 
-`alaa-services-contract references/27-notification-service-contract.md:88-90` defines two SMS command families. `…sms.send_message.v1` becomes a `webservice` send. `…sms.send_pattern.v1` becomes a `pattern` send. `references/10-send-contract.md` holds the field lists. A mode outside these two needs a product decision before it needs a payload.
+`alaa-services-contract references/27-notification-service-contract.md` “Command families (payload shapes)” defines two SMS command families. `…sms.send_message.v1` becomes a `webservice` send. `…sms.send_pattern.v1` becomes a `pattern` send. `references/10-send-contract.md` holds the field lists. A mode outside these two needs a product decision before it needs a payload.
 
-Drop `users[].id` and `user.id` when building a payload, because Mediana has no field for them and an unknown key is a payload defect. Correlate outbox ids back to users in your own delivery table.
+Drop `users[].id` and `user.id` when building a payload, because Mediana has no field for them and an unknown key is a payload defect. Correlate outbox ids to users in your own delivery table.
 
 ### Mapping `pattern_values[]` onto `params{}`
 
-The envelope carries `pattern_values` as an **array of `{key, value}` pairs**. Mediana's `params` is a **JSON object**. This step is the most defect-prone in the integration, so this body states it instead of a reference.
+The envelope carries `pattern_values` as an **array of `{key, value}` pairs**. Mediana's `params` is a **JSON object**. This step is the most defect-prone in the integration.
 
 - Insert each element into `params` under its own `key`, in array order.
 - Reject the command when two elements share a `key`, and name the second index, because object insertion keeps the last write silently and sends text nobody chose.
@@ -59,16 +59,16 @@ The envelope carries `pattern_values` as an **array of `{key, value}` pairs**. M
 - Read every endpoint from configuration and ship the vendor URL only as a documented default constant, because a hardcoded host cannot be pointed at a sandbox account.
 - Decide the base-URL boundary once, and assert the final URL in a test. A `/v1` base takes the path `/api/send`. A `/v1/api` base takes `/send`. Mixing the two builds `…/v1/api/api/send`, which 404s in production and nowhere else.
 - Produce every recipient string from exactly one normaliser, and pass that normaliser the target channel. Mediana's wire form is `+989xxxxxxxxx`. Bale's wire form is `989xxxxxxxxx`. Both render one platform input form, so a shared normaliser that does not take the channel is a defect. An OTP rendered for the wrong channel is rejected by the vendor at best, and delivered to the wrong subscriber at worst. The canonical implementation is `scripts/validate_mediana_payload.py --normalize`.
-- Keep the token, recipient numbers, OTP values, pattern variable values, and message text out of **logs, traces, exception payloads, screenshots, and final reports**. These exclusions cover all five required output surfaces. By default, omit the phone number, or use an independently approved stable internal reference. `/alaa-observability-soc` `references/80-review-gates.md` under “Permitted phone derivative” governs the separately approved diagnostic derivative. Never use that derivative as an identity key, a correlation key, or a metric label. For SOC/SIEM forwarding, follow `alaa-observability-soc references/70-soc-evidence.md` “SOC and SIEM egress”. Do not log the token.
+- Keep the token, recipient numbers, OTP values, pattern variable values, and message text out of **logs, traces, exception payloads, screenshots, and final reports**. These exclusions cover all five required output surfaces. By default, omit the phone number, or use an independently approved stable internal reference. `/alaa-observability-soc` `references/80-review-gates.md` under “Permitted phone derivative” governs the separately approved diagnostic derivative. Never use that derivative as an identity key, a correlation key, or a metric label. For SOC or SIEM forwarding, follow `alaa-observability-soc references/70-soc-evidence.md` “SOC and SIEM egress”.
 - Use `POST /api/send` with the token in the `Authorization` header for all authenticated production traffic. Never use the GET URL send endpoint, because a GET query string writes the credential into access logs, proxy logs, and shell history where nothing rotates it.
 - Run a live send only against a dedicated test account, a test sender, and a recipient the user named in this session, because an accepted send cannot be recalled.
-- Deduplicate at the envelope's `idempotency_key` and add no second mechanism beside it (`alaa-services-contract references/22-failure-load-and-deprecation-contract.md:152-153`), because the Mediana send API defines no idempotency key of its own.
+- Deduplicate at the envelope's `idempotency_key` and add no second mechanism beside it (`alaa-services-contract references/22-failure-load-and-deprecation-contract.md` “Idempotency of a retried call”), because the Mediana send API defines no idempotency key of its own.
 
 ## The ambiguous send
 
 A timeout after the request bytes were written proves nothing about whether the SMS was sent. A connect refusal proves the opposite: nothing executed. **Never let those two outcomes share a code path**, because collapsing them is what double-sends an OTP.
 
-This route records `idempotent: false`, so every caller sets its HTTP retry budget to `0` and resolves an ambiguous attempt at the envelope's `idempotency_key` rather than re-issuing the request (`alaa-services-contract references/22-failure-load-and-deprecation-contract.md:149-151`). `references/30-failure-and-ambiguity.md` holds the four-class table and per-symptom recovery. `/alaa-reliability-sla` `references/20-retries.md` holds the doctrine.
+This route records `idempotent: false`, so every caller sets its HTTP retry budget to `0` and resolves an ambiguous attempt at the envelope's `idempotency_key` rather than re-issuing the request (`alaa-services-contract references/22-failure-load-and-deprecation-contract.md` “Idempotency of a retried call”). `references/30-failure-and-ambiguity.md` holds the four-class table and per-symptom recovery. `/alaa-reliability-sla` `references/20-retries.md` holds the doctrine.
 
 Emit the `alaa_dependency_*` families from `alaa-services-contract references/24-metric-registry.md` section “Downstream dependency” on every Mediana call. Invent no provider-specific family. Label no series with a recipient number or a `message_outbox_id`, because both are unbounded.
 

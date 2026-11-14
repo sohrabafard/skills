@@ -108,7 +108,7 @@ topics instead.
 Run the link check required by `references/10-language-and-links.md`, then measure every eligible
 narrative document and child with:
 
-`python $SKILL_DIR/scripts/check_markdown_links.py <repo-root> --files <paths> --line-budget`
+`python3 $SKILL_DIR/scripts/check_markdown_links.py <repo-root> --files <paths> --line-budget`
 
 The command reports every file's state. Exit `1` on an unapproved red document is a failed gate;
 exit `2` is not a pass; interpret it as `references/10-language-and-links.md` directs. Use

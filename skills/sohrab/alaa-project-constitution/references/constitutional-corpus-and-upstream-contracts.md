@@ -71,13 +71,11 @@ Classify every material source:
 | `ADVISORY` | Useful guidance that is not approved policy. |
 | `HISTORICAL` | Preserved provenance that no longer governs current work. |
 
-For each source record its topic, owner, precedence, freshness rule, and what the constitution
-intentionally does not duplicate. Two sources must not both claim canonical ownership of the same
-detail; record overlap as drift and resolve it before ratification.
-
-Record authority and approval status independently from classification. "Canonical" means the source
-owns a topic; it does not mean a human ratified it. A source may be canonical and active while its
-approver roster or formal ratification remains pending.
+For each source, record its topic, owner, precedence, freshness rule, and what the constitution
+intentionally does not duplicate. When two sources claim canonical ownership of the same detail,
+or when you record a source's authority or approval status, apply
+`references/evidence-and-module-selection.md` `## Canonical is not ratified`. It owns the drift
+rule for overlapping owners and the rule that canonical ownership never proves ratification.
 
 ## Upstream kit and framework consumer rule
 

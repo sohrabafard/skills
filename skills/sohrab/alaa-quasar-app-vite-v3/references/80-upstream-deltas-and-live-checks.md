@@ -36,8 +36,8 @@ When updating the skill or its version evidence, read [Live checks and maintenan
 
 ## 8. Posture history
 
-When reading historical skill posture or selecting a package-manager command, read [Posture and package manager](./80-upstream-deltas-and-live-checks/80-posture-and-package-manager.md) for dated evolution and the repo-owned manager rule.
+When reading historical skill posture, read [Posture and package manager](./80-upstream-deltas-and-live-checks/80-posture-and-package-manager.md) for dated evolution.
 
 ## 9. Package managers
 
-When selecting the package-manager command, read [Posture and package manager](./80-upstream-deltas-and-live-checks/80-posture-and-package-manager.md) for the repository-owned rule.
+`SKILL.md` "Version rules" owns the package-manager rule. For the pnpm v11 `allowBuilds` note and the documentation sources, read [Posture and package manager](./80-upstream-deltas-and-live-checks/80-posture-and-package-manager.md).

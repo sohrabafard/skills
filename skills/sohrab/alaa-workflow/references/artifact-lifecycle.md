@@ -10,7 +10,7 @@ Authorized multi-phase, resumable, delegated or handoff-sensitive work, includin
 
 A design-plan or execution-plan request authorizes saving the admitted planning deliverable. Plan-only uses the admitted Markdown or host planning surface and authorizes no implementation. Explicit no-file, read-only or chat-only limits prevail. Native Plan Mode uses only its host-permitted planning surface until execution is approved. A native plan file opens with a Persian decision summary (overall picture, goals, open questions), then a line containing only `<!-- design-body -->`, then the complete English design. Use that file as the approved design source after approval. If a higher-priority limit prevents a required durable record, report the gap and pause dependent work.
 
-Report the saved `beads:<root-id>` or plan/checkpoint paths. A session outline cannot satisfy durable admission.
+Report the saved `beads:<root-id>` or the plan and checkpoint paths. A session outline cannot satisfy durable admission.
 
 ## Plan kinds and approval
 
@@ -59,24 +59,32 @@ Before handoff and completion, run `python3 "$SKILL_DIR/scripts/validate_workflo
 
 ## Size and consolidate the plan
 
-This section and the dependency/concurrency plan below apply to execution.
+This section and the dependency and concurrency plan below apply to execution.
 
-Classify each phase and delegated lane before execution: missing facts to retrieve or clarify; mechanical work with settled decisions; bounded semantic judgment with a local causal path and decisive acceptance evidence; ordinary engineering judgment; or coupled judgment with interacting unresolved decisions. Record the reason, settled/open decisions and invariants. Assess risk separately: sensitivity determines gates, not reasoning complexity. The runtime orchestrator owns actual task model/effort allocation; `/alaa-prompting-guide` supplies capabilities and runtime mechanics. Planning effort never determines worker effort.
+Before execution, classify each phase and each delegated lane into one of these classes:
 
-Merge phases or tasks sharing context, ownership and a validation barrier when separation buys no decision or authority boundary. Preserve every acceptance outcome, evidence mapping, dependency, exclusion and required observer. Keep phases separate when a decision, changed tested state, independent authority or integration barrier requires it; record why. `references/workspace-and-integration.md` owns shared-check coverage and evidence reuse.
+- missing facts to retrieve or clarify;
+- mechanical work with settled decisions;
+- bounded semantic judgment with a local causal path and decisive acceptance evidence;
+- ordinary engineering judgment;
+- coupled judgment with interacting unresolved decisions.
+
+Record the reason for the class, the settled and open decisions, and the invariants. Assess risk separately from the class: sensitivity determines the gates, and reasoning complexity does not. The runtime orchestrator owns the actual task model and effort allocation. `/alaa-prompting-guide` supplies capabilities and runtime mechanics. Planning effort never determines worker effort.
+
+Merge phases or tasks that share context, ownership and a validation barrier when separating them buys no decision boundary and no authority boundary. Preserve every acceptance outcome, evidence mapping, dependency, exclusion and required observer. Keep phases separate when a decision, a changed tested state, an independent authority or an integration barrier requires it, and record why. `references/workspace-and-integration.md` owns shared-check coverage and evidence reuse.
 
 After finalizing tasks, dependencies and consolidation, route allocation for EVERY role through the active runtime orchestrator.
 In Codex, `/alaa-codex-orchestrator` owns `references/routing-matrix.md`.
 In Claude Code, `/alaa-cc-orchestrator` owns `references/routing-matrix.md`.
-Workflow records task scope/complexity, priority/reason, role authority identity, explicit model AND effort, source/evidence, invocation surface, requested/effective controls, availability and limits alongside conflict barriers and references to the selected store's readiness; it chooses no role-based pair. Material changes reassess only affected remaining tasks; never replay completed work.
+Workflow records the task scope and complexity, the priority and its reason, the role authority identity, the explicit model AND effort, the source and evidence, the invocation surface, the requested and effective controls, and availability and limits. It records them alongside the conflict barriers and references to the selected store's readiness. Workflow chooses no role-based pair. A material change reassesses only the affected remaining tasks; never replay completed work.
 
 ## Dependency and concurrency plan
 
-Use the selected task authority for dependency edges and ready sets through `references/task-tracking.md`. Each lane names disjoint write ownership, shared-resource conflicts (including fixtures, generators, ports and test environments), integration barriers and parallel/serialized rationale. Apply `references/workspace-and-integration.md` for shared-file ownership and stopped-writer recovery. Disjoint files alone do not prove independence. Keep coupled decisions together; serialize overlapping writes and conflicting resources. Record a dependency edge only where a lane or phase consumes another's output; an edge added for ordering convenience makes unrelated work wait. `alaa-codex-orchestrator` or `alaa-cc-orchestrator` Dispatch discipline owns when each lane starts.
+Use the selected task authority for dependency edges and ready sets through `references/task-tracking.md`. Each lane names its disjoint write ownership, its shared-resource conflicts (including fixtures, generators, ports and test environments), its integration barriers, and the reason it runs in parallel or serialized. Apply `references/workspace-and-integration.md` for shared-file ownership and stopped-writer recovery. Disjoint files alone do not prove independence. Keep coupled decisions together. Serialize overlapping writes and conflicting resources. Record a dependency edge only where a lane or phase consumes another's output; an edge added for ordering convenience makes unrelated work wait. `alaa-codex-orchestrator` or `alaa-cc-orchestrator` Dispatch discipline owns when each lane starts.
 
-Record each phase's post-reconciliation test collection, combined repair/retest and declared review barriers, with responsible owners, exact check coverage, failure/blocker evidence and resume position. Route generic execution and the early-repair exception to /alaa-testing-strategy `references/100-test-execution.md`; `alaa-codex-orchestrator` and `alaa-cc-orchestrator` `references/verification-and-gates.md` own phase/review scheduling and independent observers. Workflow records barriers without redefining them. Final-only review keeps phase test evidence separate from pending review.
+Record each phase's post-reconciliation test collection, combined repair/retest and declared review barriers, with their responsible owners, exact check coverage, failure and blocker evidence, and resume position. Route generic execution and the early-repair exception to /alaa-testing-strategy `references/100-test-execution.md`; `alaa-codex-orchestrator` and `alaa-cc-orchestrator` `references/verification-and-gates.md` own phase/review scheduling and independent observers. Workflow records barriers without redefining them. Final-only review keeps phase test evidence separate from pending review.
 
-Expose independently ready work to the runtime orchestrator; impose no workflow-wide writer limit. It owns observed capacity, dispatch mechanics and resource scheduling. Query/reconcile readiness at completion, scope-change or handoff boundaries; keep no persistent second ready-set cache or scheduler artifact.
+Expose independently ready work to the runtime orchestrator, and impose no workflow-wide writer limit. The orchestrator owns observed capacity, dispatch mechanics and resource scheduling. Query and reconcile readiness at completion, scope-change and handoff boundaries. Keep no persistent second ready-set cache and no scheduler artifact.
 
 ## Markdown paths and correlation
 
@@ -91,11 +99,11 @@ Continue an active task's existing family and stem. Resolve companions only from
 
 `references/context-continuity.md` owns why the artifacts divide the way they do, what each handoff field means, and when a field earns a line. This file owns only where each artifact lives and what it is permitted to contain.
 
-Kind-specific contents follow `## Plan kinds and approval`; task acceptance/results follow `references/task-tracking.md` `## Acceptance and evidence by level`. For handoff contents, checkpoint fields, status/cursor ownership and JSON projection, read `references/context-continuity.md`.
+Kind-specific contents follow `## Plan kinds and approval`; task acceptance and results follow `references/task-tracking.md` `## Acceptance and evidence by level`. For handoff contents, checkpoint fields, status and cursor ownership and JSON projection, read `references/context-continuity.md`.
 
 ## Update events
 
-`references/context-continuity.md` owns all update events, canonical status/cursor ownership and snapshot derivation. Update only the admitted artifact set; keep expensive learning in the handoff package rather than a position snapshot.
+`references/context-continuity.md` owns all update events, canonical status and cursor ownership, and snapshot derivation. Update only the admitted artifact set; keep expensive learning in the handoff package rather than a position snapshot.
 
 Do not maintain duplicate phase checklists, review history, lane definitions, documentation status, or touched-file histories in secondary state.
 

@@ -6,8 +6,8 @@ description: "Durable cross-session memory policy for Alaa work, whichever memor
 # Alaa Memory OS
 
 This skill owns what Alaa work remembers, when, in what shape, and what it derives instead of remembering.
-Each backing store has one adapter reference. This body names no memory-adapter store command
-(Beads surfaces are outside the adapter). Reason: the fleet routes here for the capability, not the product.
+Each backing store has one adapter reference. This body names no store command of a memory adapter;
+Beads surfaces are outside the adapter. Reason: the fleet routes here for the capability, not the product.
 
 ## Active adapter
 
@@ -19,35 +19,33 @@ Valid values are `local` and `hindsight`. No other store exists.
 
 **This line is the sole selection.** Before a task's first recall or write, load
 `references/store-<value>.md`. Use only its mechanics for memory store operations. A format-only section
-that the adapter explicitly routes shares serialization, not adapter activation or operation authority.
+that the adapter explicitly routes to shares serialization only; it grants no adapter activation and no
+operation authority.
 
 Exactly one adapter is active. Reason: two adapters write the same knowledge under different indexing, commit and
-concurrency assumptions, and disagreement later leaves notes duplicated or missing.
+concurrency assumptions, and their disagreement later leaves notes duplicated or missing.
 
-For a supported store switch, change the selector. Do not rewrite the neutral knowledge/drift rules here,
-in `references/knowledge-shape.md` or in `references/drift-management.md`. Conditional selected-store policy,
-including Hindsight bank/admission policy, stays here and applies only to its store. Product commands stay
-in its adapter. A store assumption inside a neutral knowledge or drift rule is a policy leak: repair it there. Do not fork
-those rules.
+Before you change the selector, or edit an adapter, a store-conditional policy, or a neutral knowledge or drift rule, read
+`references/skill-boundaries.md`. It owns the store-switch rules.
 
-Handle these failures separately. Never switch adapters around either:
+Handle these two failures separately. Never switch adapters to work around either one:
 
 - **Missing named adapter file:** stop and report it. Never fall back. Reason: a silent fallback writes to an
   unselected store, unnoticed until someone searches the other store.
-- **Unreachable selected store:** recall fails open. Continue from repository truth and name the step run
-  without memory. Writes do not fail open. Report the unwritten note and its content in the handoff, so
+- **Unreachable selected store:** recall fails open. Continue from repository truth and name each step that ran
+  without memory. Writes do not fail open. Report the unwritten note and its content in the handoff, so the
   knowledge survives the outage.
 
-Activation evidence and temporary ingestion restrictions belong in the selected adapter or owning
-repository checkpoint, never in a second selection sentence.
+Record activation evidence and temporary ingestion restrictions in the selected adapter or in the owning
+repository checkpoint. Never record them as a second selection sentence.
 
 ## Use this skill when
 
-At least one condition must be observable. Otherwise skip. Reason: a recall that names nothing shared
-returns nothing and still spends the budget below.
+At least one condition must be observable. Otherwise skip this skill. Reason: a recall that names nothing
+shared returns nothing and still spends the budget below.
 
-- The task names a service, contract, event, queue, or metric also used by a second service.
-- It names a prior session, prior decision, or file a prior session wrote.
+- The task names a service, contract, event, queue, or metric that a second service also uses.
+- It names a prior session, a prior decision, or a file that a prior session wrote.
 - It outlives one context window: phases, migration, or system review.
 - Two sources of truth disagree, or you are about to establish whether they do.
 - It asks whether existing infrastructure, another repository, or a prior decision already provides a capability, or who owns it.
@@ -59,21 +57,21 @@ returns nothing and still spends the budget below.
 
 ## When NOT to use
 
-- Deterministic single-file edits unconstrained by prior decisions.
-- Active execution plans, phase checklists and compaction continuity. `/alaa-workflow` owns these and handoff
-  contents. Store a pointer, never a copy.
+- A deterministic single-file edit that no prior decision constrains.
+- Active execution plans, phase checklists and compaction continuity. `/alaa-workflow` owns these and the
+  handoff contents. Store a pointer to them, never a copy.
 - Deciding what enters context: `/alaa-low-noise` owns context economy, which every recall spends.
-- Service dependency edges: derive, never remember.
-- Registering hooks or editing shared/global configuration: `/alaa-controlled-ops`.
-- Model or effort choice, including effort/thinking level: `/alaa-prompting-guide` `references/50-effort-and-thinking.md`.
+- Service dependency edges: derive them, never remember them.
+- Registering hooks or editing shared or global configuration: `/alaa-controlled-ops`.
+- Model or effort choice, including the effort or thinking level: `/alaa-prompting-guide` `references/50-effort-and-thinking.md`.
 
 ## The four surfaces
 
-Repository code/docs are truth. Memory is a map, not proof. `/alaa-project-constitution` owns which
-repository files carry authority. Skills define agent behaviour: never copy
-an installed skill into memory. Any human editing surface is navigation, not runtime truth. Never edit
-upstream store packs under `vendor/`. This skill owns the opinion and routes to upstream-documented
-mechanics, including whichever pack backs a successor store.
+Repository code and documentation are truth. Memory is a map, not proof. `/alaa-project-constitution` owns
+which repository files carry authority. Skills define agent behaviour, so never copy an installed skill into
+memory. A human editing surface is navigation, not runtime truth. Never edit an upstream store pack under
+`vendor/`. This skill owns the opinion and routes to the mechanics that upstream documents, including the
+pack that backs any successor store.
 
 ## Remember facts, derive relationships
 
@@ -85,87 +83,86 @@ decision reasons, contract promises and lesson costs. Derive these, never rememb
 - Symbol references. Serena and ast-grep inspect the current tree.
 
 Replace existing service-to-service `depends_on` edges with derivation pointers. Do not refresh them.
-Before you ship any pass over a history-growing store, state its complexity bound.
-`/alaa-algorithms-data-structures` owns that budget. Each shipped checker states its own.
 
 ## Recall policy and capability inquiry
 
-Recall contributes. It is no gate or authorization source. Ordinary recall has a five-second budget.
-An existence/ownership inquiry has a sixty-second budget, including at most one focused follow-up on a
-returned owner lead. Start one deadline before the initial inquiry. Paraphrasing or following leads never
-resets it. Before any new lookup, reuse sufficient fresh evidence for the same capability, environment and
-constraints.
+Recall contributes. It is neither a gate nor a source of authorization. Ordinary recall has a five-second
+budget. An existence or ownership inquiry has a sixty-second budget, which includes at most one focused
+follow-up on a returned owner lead. Start one deadline before the initial inquiry. Paraphrasing or following
+a lead never resets it. Before any new lookup, reuse sufficient fresh evidence for the same capability,
+environment and constraints.
 
-For existence/ownership, query the capability through the selected adapter, not only a proposed artifact
-name. Page search/listing misses knowledge without pages. Empty or irrelevant page results never prove
-absence. Supply required capability, target repository/check, execution environment, constraints,
-sanitized failure class and attempted evidence. Exclude raw logs, credentials, private session text and
-unrelated user data.
+For an existence or ownership inquiry, query the capability through the selected adapter, not only a proposed
+artifact name. Page search and page listing miss knowledge that has no page. Empty or irrelevant page results
+never prove absence. Supply the required capability, the target repository or check, the execution
+environment, the constraints, the sanitized failure class and the evidence already attempted. Exclude raw
+logs, credentials, private session text and unrelated user data.
 
-Timeouts, unreachable stores, denied access and empty, irrelevant or stale answers are no memory evidence.
-Continue authorized canonical-source inspection and unaffected work. Disclose the step run without memory.
-Late responses are not retroactive within-budget proof. Before acting, separate recalled claims,
-repository facts, assumptions and open questions. Never implement from memory alone.
+A timeout, an unreachable store, denied access, and an empty, irrelevant or stale answer are not memory
+evidence. Continue authorized inspection of canonical sources and unaffected work. Disclose each step that ran
+without memory. A late response is not retroactive proof within the budget. Before acting, separate recalled
+claims, repository facts, assumptions and open questions. Never implement from memory alone.
 
-Verify useful leads in the current owning repository: tool contents, version/pin source, supported
-invocation, environment fit and limitations. Only then probe proportionately within existing authority.
-Distinguish image/registry discovery, contents verification, compatible runtime start and exact required
-gate completion. Each needs observed evidence. An earlier stage proves no later stage. When admitted, keep
-capability, environment, constraints, owner/source and attempted evidence in the workflow-owned record,
-never a second memory task state.
+Verify each useful lead in the current owning repository: the tool contents, the version or pin source, the
+supported invocation, the environment fit and the limitations. Only then probe proportionately within existing
+authority. Distinguish four stages: image or registry discovery, contents verification, a compatible runtime
+start, and completion of the exact required gate. Each stage needs observed evidence. An earlier stage proves
+no later stage. When the workflow has admitted durable state, keep the capability, environment, constraints, owner or source, and
+attempted evidence in the workflow-owned record, never as a second task state in memory.
 
 | Classification | Evidence and response |
 |---|---|
-| Local capability absent | A local executable/image is missing. Inspect a verified owner/runtime lead; never infer infrastructure-wide absence. |
-| Compatible infrastructure unavailable | Current owner evidence or an authorized probe establishes environment incompatibility. Report that scope and required change. |
-| Authorization blocker | The supported next effect exceeds permission. Preserve the concrete action/evidence; obtain only missing authority. |
-| Tool or runtime error | An attempted operation returned a grounded failure. Return it to its recovery owner with remaining retries. |
-| Availability unknown | Recall, source inspection or probe is stale, empty, unavailable, denied or unrun. Preserve uncertainty; continue independent safe work. |
+| Local capability absent | A local executable or image is missing. Inspect a verified owner or runtime lead; never infer that the capability is absent across the infrastructure. |
+| Compatible infrastructure unavailable | Current owner evidence or an authorized probe establishes that the environment is incompatible. Report that scope and the required change. |
+| Authorization blocker | The supported next effect exceeds permission. Preserve the concrete action and its evidence; obtain only the missing authority. |
+| Tool or runtime error | An attempted operation returned a grounded failure. Return it to its recovery owner with the remaining retries. |
+| Availability unknown | Recall, source inspection or a probe is stale, empty, unavailable, denied or unrun. Preserve the uncertainty; continue independent safe work. |
 
 A no-host-install constraint alone does not forbid every container path. A container lead alone authorizes
-no pull or run. Recall grants no effect, resets no repair/retry budget and bypasses no native blocked
-threshold. At exhaustion, preserve evidence and stop the failed operation. A new owner lead requires
-explicit reassessment before dependent work resumes. Distinguish documented gate blockers from actual
-native status transitions. Never infer host status changes from prose classifications.
+no pull and no run. Recall grants no effect, resets no repair or retry budget, and bypasses no native blocked
+threshold. When that budget or the native blocked threshold is exhausted, preserve the evidence and stop the failed operation. A new owner lead
+requires an explicit reassessment before dependent work resumes. Distinguish a documented gate blocker from an
+actual native status transition. Never infer a host status change from a classification written in prose.
 
 ## Drift and stale memory
 
 Current canonical repository evidence wins over memory. A memory-only contradiction is a stale note, not
 canonical-source drift. A stored caution or prohibition whose stated reason no longer holds is also a stale
-note, and its correction may set its `status` to `archived` through the selected adapter. Correct it only with write authority. Otherwise defer the correction with a source
-pointer. When canonical sources disagree, record the mismatch without silently deciding it. Continue
-only on the safest verified behavior. Drift recording is a gate: if the required repository record cannot
-be written within authority, stop dependent work and report the unwritten record.
+note, and its correction may set its `status` to `archived` through the selected adapter. Correct a stale
+note only with write authority. Otherwise defer the correction with a source pointer. When canonical sources
+disagree, record the mismatch without silently deciding it. Continue only on the safest verified behavior.
+Drift recording is a gate: if the required repository record cannot be written within authority, stop
+dependent work and report the unwritten record.
 
-`references/drift-management.md` owns registry shape, lifecycle and separation of powers. Keep the registry
-in version-controlled repository files outside recall, so store synthesis cannot erase disagreement.
-/alaa-reliability-sla owns fail-open/fail-closed doctrine. /alaa-observability-soc owns severity and
-observability-record requirements. /alaa-services-contract owns field/event/metric names.
+`references/drift-management.md` owns the registry shape, the lifecycle and the separation of powers. Keep
+the registry in version-controlled repository files outside recall, so store synthesis cannot erase a
+disagreement. `/alaa-reliability-sla` owns fail-open and fail-closed doctrine.
 
 ## Write authority and outcomes
 
 Activation grants no memory write, migration, configuration, installation, commit or external effect.
-Before durable publication, apply /alaa-extract-agent-lessons for evidence-derived candidates and
-`references/knowledge-shape.md` for search-before-create, note shape and prohibited content.
-Use only the selected adapter, after task authorization of destination and effect. Report a completed
-write only after adapter-specific terminal confirmation. Distinguish deferred (unauthorized), failed,
-unavailable and empty (no admitted note). Preserve admitted unwritten candidates in the workflow-owned
-handoff. Do not claim persistence. Do not silently switch stores.
+Before durable publication, apply /alaa-extract-agent-lessons to evidence-derived candidates, and apply
+`references/knowledge-shape.md` for search-before-create, note shape and prohibited content. Write only
+through the selected adapter, and only after the task authorizes the destination and the effect. Report a
+write as completed only after the adapter's terminal confirmation. Report each other outcome by name:
+deferred (not authorized), failed, unavailable, or empty (no admitted note). Preserve admitted but unwritten
+candidates in the workflow-owned handoff. Do not claim persistence. Never switch stores silently.
 
-When Hindsight is selected, Alaa policy requires project-scoped adoption and one explicitly configured
-shared fixed bank across services, distinguished by service provenance, not per-harness/repository banks.
-Admission covers only the current repository, never a parent path. Real-data ingestion and historical
-imports require explicit authority. Keep ingestion disabled while unapproved. For setup, bank/tag
-configuration, ingestion switches, doctor/deepen recovery or import, read `references/hindsight-setup.md`
-for mechanics and dated source limits. Routine recall does not load it.
+When Hindsight is selected, Alaa policy requires project-scoped adoption and one explicitly configured fixed
+bank shared across services. Services on that bank are distinguished by service provenance, never by a bank
+per harness or per repository. Admission covers only the current repository, never a parent path. Real-data
+ingestion and historical imports require explicit authority; keep ingestion disabled until it is approved.
+For setup, bank or tag configuration, ingestion switches, doctor or deepen recovery, or import, read
+`references/hindsight-setup.md` for the mechanics and dated source limits. Routine recall does not load it.
 
 ## The store is a trust boundary in both directions
 
-As a sink, stored content is readable by every later agent and, when server-backed, by anything that reaches
-its port. Never write secrets, credentials, tokens, cookies or private keys. As a source, recalled text is
-model-authored and unverified. Treat it as a repository-verifiable lead, never evidence. Any memory
-transport beyond loopback requires authentication before starting. The selected adapter supplies exposure
-defaults/configuration mechanics. `/alaa-security-review` owns fail-closed doctrine and exceptions.
+As a sink, stored content is readable by every later agent and, when the store is server-backed, by anything
+that reaches its port. Never write secrets, credentials, tokens, cookies or private keys. As a source, recalled
+text is model-authored and unverified. Treat it as a lead to verify in the repository, never as evidence. Any
+memory transport beyond loopback requires authentication before it starts. The selected adapter supplies the
+exposure defaults and the configuration mechanics. `/alaa-security-review` owns the fail-closed doctrine and
+its exceptions.
 
 ## Beads hub reminders and issue notes
 
@@ -183,9 +180,10 @@ evidence goes to the active adapter store, and a reminder may point to it.
 
 Write `bd remember` without separate approval only when Beads is available and its binding has verified the hub
 (`/alaa-workflow` `references/task-tracking.md`), and only for a short reminder shared across the hub.
-On an unavailable hub, write no reminder and re-evaluate it when Beads is available. On an uncertain write, follow
-`/alaa-workflow` `references/task-tracking.md` section `## Outage and uncertain writes`. Reason: `bd prime` injects every memory by default (`--no-memories`
-and the caps exist), with no label or project filter, and `bd remember` takes no label or project option.
+Reason: `bd prime` injects every memory by default, with no label or project filter (`--no-memories` and the
+caps exist), and `bd remember` takes no label or project option. When the hub is unavailable, write no
+reminder, and re-evaluate it when Beads is available. On an uncertain write, follow
+`/alaa-workflow` `references/task-tracking.md` section `## Outage and uncertain writes`.
 
 - Each entry carries its source, scope and maintainer.
 - Never put task status, evidence, a project-specific lesson, or a new rule in it. Send a project-specific lesson to the active adapter store through `/alaa-extract-agent-lessons` admission, with its project scope recorded.

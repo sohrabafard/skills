@@ -5,17 +5,15 @@ description: "Frontend engineering policy and routing hub for the Vue 3 + Quasar
 
 # Alaa Frontend Developer
 
-This is the execution contract for frontend work in the standard Vue 3 + Quasar + Vite app family. Every line is a gate or a route. Only a repo-local `AGENTS.md` rule or an explicit user instruction that contradicts a named line may override that line. When you override a line, cite the file and line you override.
+This is the execution contract for frontend work in the standard Vue 3, Quasar and Vite app family. Every line is a gate or a route. Only a repo-local `AGENTS.md` rule or an explicit user instruction that contradicts a named line may override that line. When you override a line, cite the file and line you override.
 
 ## When NOT to use
 
-Stop and route when the change touches **only** one of these, with no SSR, hydration, auth-posture, service-worker-policy or Web-Vitals decision in it: an exact Quasar API or `quasar.config` key; Vue or TypeScript code quality; a visual or UX decision; a CI, container or deploy step; browser storage mechanics; browser-automation mechanics. The topic map names the owner and file for each.
+Stop and route when the change touches **only** one of these, with no SSR, hydration, auth-posture, service-worker-policy or Web-Vitals decision in it, or has no frontend surface at all: an exact Quasar API or `quasar.config` key; Vue or TypeScript code quality; a visual or UX decision; a CI, container or deploy step; browser storage mechanics; browser-automation mechanics. The topic map names the owner and file for each.
 
 ## Owned here
 
 SSR and hydration determinism and cleanup safety. Which auth and session posture the repo is on, and the client-side half of it. PWA and service-worker **policy**: what may change and what must not. The canonical Lighthouse and Core Web Vitals model in `references/41-lighthouse-and-web-vitals.md`, which two siblings route into instead of restating. The browser-automation gate and browser-debug evidence discipline. The client-side expression of every contract below.
-
-Do not use it for pure Quasar API lookup, pure visual design, browser-automation mechanics, or a task with no frontend surface.
 
 ## Non-negotiable gates
 
@@ -27,14 +25,14 @@ Do not use it for pure Quasar API lookup, pure visual design, browser-automation
    - the user asks for browser, visual or responsive validation;
    - a repo rule requires reproduction;
    - one static pass is complete and you can name the one observation source cannot produce: exact console warning text, a computed style value, or an HTTP status. State that observation first.
-6. **No service-worker strategy drift.** Do not add or widen a runtime-cache route matcher, change placeholder substitution, or alter registration and lifecycle orchestration unless that change is what was asked for.
+6. **No service-worker strategy drift.** Unless that change is what was asked for, do not change the caching strategy, add or widen a runtime-cache route matcher, change build-time placeholder variables or remote-asset path logic, or alter registration and lifecycle orchestration.
 7. **No second envelope and no second error format.** On every endpoint, use the envelope and error format that `/alaa-services-contract` defines.
 8. **A performance budget breach blocks merge.** It clears only by a recorded exception in the repo's budget config. The exception names the route, the new ceiling, and the approving maintainer.
 9. **Proof before "done".** Select the proof level for the change surface and run it. A repo with no runner for that level is a blocking finding, not a waiver.
 
 ## Router
 
-Before choosing an owner or acting on a changed frontend surface, read `references/00-topic-map.md` for
+Before choosing an owner or acting on a changed frontend surface, read `references/00-topic-map.md`. Follow
 all matching mandatory reads and companion routes.
 
 ## Workflow and maintenance
@@ -46,4 +44,4 @@ all matching mandatory reads and companion routes.
 5. Make the smallest change that removes it.
 6. Run the proof level gate 9 selects.
 
-In this skill: search keys and retired-name aliases are in `references/00-topic-map.md`. Sources and maintenance are in `references/95-sources-and-maintenance.md`. It ships no scripts.
+Search keys and retired-name aliases are in `references/00-topic-map.md`. When you refresh a source or maintain this skill, read `references/95-sources-and-maintenance.md`. This skill ships no scripts.

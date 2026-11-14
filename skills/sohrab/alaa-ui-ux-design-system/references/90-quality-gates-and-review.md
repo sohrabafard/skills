@@ -54,6 +54,12 @@ Run once, honestly, before calling UI work done.
 
 **Gates 1-13 are not skippable; an unverified gate blocks delivery.** The remaining checklist items may be reported unchecked with a stated reason — that is a statement about coverage, not a waiver.
 
+## Maintaining this pack
+
+- Keep exactly one copy of every rule. Route instead of duplicating between references.
+- Platform-version claims live only in `72-modern-css-baseline-tiers.md`, each with its own `read:` date. That file owns its re-verify trigger.
+- Never promote a taste-tier rule to a gate. A new gate needs a check in `scripts/check-design-system.mjs` or a named manual proof in `95-design-proofs.md`.
+
 ## Severity model
 
 - **Blocker:** a gate fails or is unverified.
@@ -64,5 +70,5 @@ Run once, honestly, before calling UI work done.
 
 - How to satisfy the accessibility gates well: `85-accessibility-patterns.md`
 - What each verification must leave behind: `95-design-proofs.md`
-- Engineering verification, SSR and performance evidence: `/alaa-frontend-developer` (`$alaa-frontend-developer`) `references/50-qa-and-verification.md`
-- Test design behind these checks: `/alaa-testing-strategy` (`$alaa-testing-strategy`)
+- Engineering verification, SSR and performance evidence: `/alaa-frontend-developer` `references/50-qa-and-verification.md`
+- Test design behind these checks: `/alaa-testing-strategy`

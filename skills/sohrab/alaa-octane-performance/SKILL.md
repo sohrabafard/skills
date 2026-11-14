@@ -8,28 +8,28 @@ description: "Octane runtime safety and hot-path performance for Laravel service
 ## The runtime fact this skill exists for
 
 Under Octane the framework boots once. One worker process then serves many requests in
-sequence. Any value still reachable from a long-lived object when a response is sent is readable
-by the next request on that worker. That request can belong to a different user or tenant. **A cross-request leak
+sequence. The next request on that worker can read any value still reachable from a long-lived
+object when a response is sent. That request can belong to a different user or tenant. **A cross-request leak
 of user, tenant, locale, authorization or correlation state is a security incident on these
 services, not a performance regression.** Every rule below follows from that one fact.
 
 **Scope condition.** This skill applies in any repository where `config('octane.server')` returns
-a non-null value. Read that from `config/octane.php` and the process-manager configuration, not
+a non-null value. Read it from `config/octane.php` and the process-manager configuration, not
 from the package list in `composer.json`. A repository that ships `laravel/octane` but serves
 production through PHP-FPM is still in scope for any code path a worker will later execute.
 
 ## Invariant 1 — values that may never be retained past the response
 
-Retaining any of these past the response is a defect in every case. No exception is granted by
-intent, by a comment, or by a measurement.
+Retaining any of these past the response is a defect in every case. Neither intent, a comment nor
+a measurement grants an exception.
 
 - the `Request`, and anything read from it: headers, query, body, route parameters, client IP,
   user agent, uploaded-file handles
 - the authenticated user, their profile, roles, permissions, and any authorization result
 - tenant, project, school, branch or organisation context
 - the resolved locale and timezone
-- the correlation identifier — one field, name owned by `alaa-services-contract
-  references/10-core-service-contract.md`; this skill names no alternative for it
+- the correlation identifier: one field, whose name `alaa-services-contract
+  references/10-core-service-contract.md` owns; this skill names no alternative for it
 - a validated-input DTO, a `FormRequest`, or a validation result
 - per-request credentials: bearer tokens, per-tenant API keys, signed URLs, and any header, base
   URI or auth option mutated on a shared HTTP or SDK client for one request
@@ -44,7 +44,7 @@ that site.
 - a `static` property, a `static` variable inside a function or closure, or a class constant
   computed at runtime
 - a global, a superglobal, or `$GLOBALS`
-- a container `singleton` or `instance()` binding, and every object either holds
+- a container `singleton` or `instance()` binding, and every object either one holds
 - a service-provider property, or a value captured in a closure a provider registered
 - a closure held by any of the above: capturing `$this` retains the whole enclosing object
 - a facade root swapped or mutated during a request, or a partial mock left in place
@@ -69,9 +69,9 @@ that site.
    opened outside the framework's managed pools. Register it in a provider `boot()`, never in a
    request handler.
 
-Octane flushes framework state — authentication, sessions, cookies, the request. It does not flush
-yours. Every mutable process-global your code owns is reset by one of the three, and the diff that
-introduces it names which one.
+Octane flushes framework state: authentication, sessions, cookies and the request. It does not flush
+yours. Reset every mutable process-global your code owns by one of the three, and name which one in
+the diff that introduces it.
 
 **Do not mutate, inside a request handler:** runtime configuration (`config()->set(...)`), the
 application locale (`App::setLocale(...)`), the default database or cache connection,
@@ -138,8 +138,8 @@ specifics. It is not owned by this repository; on any retention rule, this skill
 
 | You are about to, or you observe | Read |
 | --- | --- |
-| Change a `singleton`, `scoped`, provider binding, static, tenant holder, memoization, driver-specific branch, transaction, or Redis/DB connection use; a provider touching cache in `register()`/`boot()`; a key that may cross tenants; choosing between `Cache::memo()`, Redis and `Octane::table()` | `references/full-guide.md` |
-| Change a binding, a reset hook or the `flush` list; suspect a leak and need a test that fails before the fix; the suite is green and you need to know whether it could have caught the leak at all | `references/leak-detection-harness.md` |
+| Change a `singleton`, `scoped` or provider binding, a static, a tenant holder, memoization, a driver-specific branch, a transaction, or Redis or DB connection use; a provider touches cache in `register()` or `boot()`; a key may cross tenants; choose between `Cache::memo()`, Redis and `Octane::table()` | `references/full-guide.md` |
+| Change a binding, a reset hook or the `flush` list; suspect a leak and need a test that fails before the fix; the suite is green and you must know whether it could have caught the leak at all | `references/leak-detection-harness.md` |
 | Deploy, run `octane:reload`, change `max_requests` or the driver; explain a worker that vanished, restarted, or dropped in-flight requests | `references/worker-lifecycle-and-failure.md` |
 | Worker RSS grows with requests served; latency differs between workers; a new worker failure mode must be diagnosable before it ships | `references/worker-observability.md` |
 | Set or raise worker or task-worker counts; the service runs CPU-limited; requests queue behind busy workers; locks contend across workers | `references/load-and-backpressure.md` |
@@ -149,7 +149,7 @@ specifics. It is not owned by this repository; on any retention rule, this skill
 
 ## How to work
 
-1. Read the repo-local `AGENTS.md`; confirm the scope condition from `config/octane.php`.
+1. Read the repo-local `AGENTS.md`. Confirm the scope condition from `config/octane.php`.
 2. Apply `/alaa-low-noise` for terminal output and `/alaa-workflow` for the plan file when the
    task is multi-step.
 3. Read only the router rows whose condition you are in.

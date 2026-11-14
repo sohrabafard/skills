@@ -141,3 +141,8 @@ Each is phrased so one pass with the right access could answer it. None may be s
 meaning what it meant.
 **Common mistake.** Treating a `not documented` row as a documented absence, then writing "Shaka does
 not support X" into a skill or a PR description.
+
+## Packaging and model routing
+
+This skill names no model and no reasoning effort. Take both from `/alaa-prompting-guide` `references/50-effort-and-thinking.md` at the time you run the lane.
+Frontmatter is `name` and `description` only. `agents/openai.yaml` is Codex-only UI metadata.

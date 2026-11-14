@@ -4,7 +4,7 @@ Open this guide when composing hidden jobs, includes, components or child pipeli
 
 ## Reuse: hidden jobs, `extends`, `!reference`, includes and components
 
-Reuse when the same text appears in three or more jobs, or when two jobs must
+Reuse only when the same text appears in three or more jobs, or when two jobs must
 change together and a reader would otherwise have to notice that by reading both.
 Do not abstract a one-off job: a hidden template with one user costs a reader one
 extra hop and buys nothing.

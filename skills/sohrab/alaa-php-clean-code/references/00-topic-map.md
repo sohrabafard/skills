@@ -1,6 +1,6 @@
 # Topic map — the only router in this skill
 
-Three axes, three tables. Every row is an observable condition, not a subject: match the situation, read what the row names, and read nothing else.
+Four axes, four tables. Every row in tables 1 to 3 is an observable condition, not a subject: match the situation, read what the row names, and read nothing else. Table 4 answers who decides each concern this skill does not own.
 
 ## 1. Task → local file
 
@@ -19,9 +19,9 @@ Three axes, three tables. Every row is an observable condition, not a subject: m
 | Refactor, design a new slice, or touch more than one file | `refactor-modes.md` |
 | Rename a class, method, namespace, file, folder, or concept | `consistency-and-naming.md` |
 | Answer a SOLID question, or justify an abstraction | `solid-in-practice.md` |
-| Bind a service, add a static property, write an observer, or reuse an SDK client | `octane-clean-code.md`, then `/alaa-octane-performance` (`$alaa-octane-performance`) for the invariant itself |
+| Bind a service, add a static property, write an observer, or reuse an SDK client | `octane-clean-code.md`, then `/alaa-octane-performance` for the invariant itself |
 | Use a PHP 8.4+ or 8.5 language feature, a PSR interface, or a type you are unsure of | `php-modern-and-psr.md` |
-| Write or repair a Pest test, or choose a database-refresh trait | `laravel-best-practices.md` ("Tests"), then `/alaa-testing-strategy` (`$alaa-testing-strategy`) for what the test must prove |
+| Write or repair a Pest test, or choose a database-refresh trait | `laravel-best-practices.md` ("Tests"), then `/alaa-testing-strategy` for what the test must prove |
 | Change behaviour that a docblock, README, Postman item, env var, or diagram describes | `documentation-and-artifacts.md` |
 | Say "latest", "current", "deprecated", "secure", or name a tool version | `source-map.md` |
 
@@ -34,18 +34,18 @@ You are about to state something. If it appears here, this skill is not the auth
 | The claim you are about to make | Authority, which wins |
 |---|---|
 | A timeout, retry count, backoff figure, pool bound, acquire wait, or shed threshold | `alaa-services-contract references/22-failure-load-and-deprecation-contract.md`. This skill states no number |
-| Whether a call may retry at all, how it degrades, or what a breaker does | `/alaa-reliability-sla` (`$alaa-reliability-sla`) |
-| An error code, event name, queue name, metric name, log field, header name, or envelope shape | `/alaa-services-contract` (`$alaa-services-contract`) |
-| That a signal, log, or metric is required | `/alaa-observability-soc` (`$alaa-observability-soc`) wins on whether it is required; `/alaa-services-contract` wins on what it is called |
-| Which values a worker may never retain, and how state is reset between requests | `/alaa-octane-performance` (`$alaa-octane-performance`). Its wording is the invariant; `octane-clean-code.md` only shapes patterns around it |
-| A cache key layout, TTL, invalidation rule, index, or query plan | `/alaa-data-layer` (`$alaa-data-layer`) |
+| Whether a call may retry at all, how it degrades, or what a breaker does | `/alaa-reliability-sla` |
+| An error code, event name, queue name, metric name, log field, header name, or envelope shape | `/alaa-services-contract` |
+| That a signal, log, or metric is required | `/alaa-observability-soc` wins on whether it is required; `/alaa-services-contract` wins on what it is called |
+| Which values a worker may never retain, and how state is reset between requests | `/alaa-octane-performance`. Its wording is the invariant; `octane-clean-code.md` only shapes patterns around it |
+| A cache key layout, TTL, invalidation rule, index, or query plan | `/alaa-data-layer` |
 | That a repository layer is complete enough to add caching | `alaa-data-layer references/50-redis-laravel-octane.md`, "Step 0 — repository-pattern gate" |
-| Where a tenant, project, or user identity comes from | `/alaa-trust-gateway-auth` (`$alaa-trust-gateway-auth`) |
-| That a test is sufficient, that a double is honest, or that a claim is proven | `/alaa-testing-strategy` (`$alaa-testing-strategy`) |
-| A complexity bound, or which N+1 resolution a growing path needs | `/alaa-algorithms-data-structures` (`$alaa-algorithms-data-structures`) |
-| That a change needs no design pass | `/alaa-system-design` (`$alaa-system-design`) owns the trigger list |
+| Where a tenant, project, or user identity comes from | `/alaa-trust-gateway-auth` |
+| That a test is sufficient, that a double is honest, or that a claim is proven | `/alaa-testing-strategy` |
+| A complexity bound, or which N+1 resolution a growing path needs | `/alaa-algorithms-data-structures` |
+| That a change needs no design pass | `/alaa-system-design` owns the trigger list |
 | A quality criterion or review bar | `alaa-project-constitution references/quality-bar.md` |
-| A model name or reasoning-effort setting | `/alaa-prompting-guide` (`$alaa-prompting-guide`). Name no model |
+| A model name or reasoning-effort setting | `/alaa-prompting-guide`. Name no model |
 
 ### The three upstream skills
 
@@ -55,30 +55,30 @@ Four upstream rules are actively wrong for these services and are overridden by 
 
 ## 3. Task → sibling skill
 
-Routing is mandatory, not advice. If a row fires, do not continue the affected part of the task until that skill has been read. The full ownership map, including the concerns this skill contributes inside each boundary, is in `SKILL.md`.
+Routing is mandatory, not advice. If a row fires, do not continue the affected part of the task until you have read that skill. The full ownership map is table 4 below. The concerns this skill contributes inside each boundary are in `SKILL.md`, "Ownership boundary".
 
 | Your change touches… | Read first |
 |---|---|
-| More than one file, or behaviour, or the whole project | `/alaa-workflow` (`$alaa-workflow`) — create or update its plan artifact |
-| A layer boundary, an API contract, a DTO boundary, `public_id`, route binding, or outbox flow | `/alaa-laravel-architecture` (`$alaa-laravel-architecture`) |
-| An interface another component calls, which component writes a piece of data, a consistency / ordering / idempotency / concurrency / caching property, a dependency edge, a new deployable unit, or what a caller sees when a dependency is slow or gone | `/alaa-system-design` (`$alaa-system-design`) |
-| A trusted header, request identity, tenant or project derivation, step-up auth, or downstream auth propagation | `/alaa-trust-gateway-auth` (`$alaa-trust-gateway-auth`) |
-| An object-level relationship authorization decision | `/openfga` (`$openfga`) |
-| A migration, query, index, transaction, lock, Redis key, or tenant scoping in persistence | `/alaa-data-layer` (`$alaa-data-layer`) |
-| Octane, Swoole, RoadRunner, a hot path, a singleton, request-scoped state, or worker lifecycle | `/alaa-octane-performance` (`$alaa-octane-performance`) |
-| A job, event, consumer, retry, DLQ, idempotency key, or outbox consumer | `/alaa-async-messaging` (`$alaa-async-messaging`); add `/alaa-laravel-job-rabbitmq` (`$alaa-laravel-job-rabbitmq`) when RabbitMQ or AMQP topology is involved |
-| Auth, authorization, validation of untrusted input, file handling, URL fetching, secrets, tenancy, or privilege | `/alaa-security-review` (`$alaa-security-review`) |
-| A log, trace, metric, alert, correlation ID, or Sentry behaviour | `/alaa-observability-soc` (`$alaa-observability-soc`) for the requirement, `/alaa-services-contract` (`$alaa-services-contract`) for the name |
-| A test, or any claim that a check passed | `/alaa-testing-strategy` (`$alaa-testing-strategy`) |
-| CI, Pint or PHPStan configuration, a test command, or a quality gate | `/alaa-cicd-laravel-postgres` (`$alaa-cicd-laravel-postgres`) |
-| README, docs, Postman collection, env docs, or a diagram | `/alaa-repo-docs` (`$alaa-repo-docs`) — output in English unless the user asks otherwise |
-| A composer dependency bump, or a Laravel 12 → 13 upgrade | `/alaa-laravel-upgrade-all-packages` (`$alaa-laravel-upgrade-all-packages`) |
-| A Crockford Base32, integer, string, or UUIDv7 codec that must match JS, shell, or HAProxy Lua | `/alaa-crockford-base32-codecs` (`$alaa-crockford-base32-codecs`) |
-| A destructive, irreversible, or production-affecting operation | `/alaa-controlled-ops` (`$alaa-controlled-ops`) |
-| Delegation to subagents, lane planning, or a review gate | `/alaa-cc-orchestrator` (`$alaa-codex-orchestrator` in Codex) |
-| A Codex-only tool or runtime affordance, including parallel tool invocation | `/alaa-codex-runtime-ops` (`$alaa-codex-runtime-ops`) |
-| MongoDB, and the repository already uses it or the user asked for it | `/alaa-mongodb-patterns` (`$alaa-mongodb-patterns`) |
-| An OpenAI API, model, prompt, tool, or product claim in docs or examples | `/openai-docs` (`$openai-docs`) |
+| More than one file, or behaviour, or the whole project | `/alaa-workflow` — create or update its plan artifact |
+| A layer boundary, an API contract, a DTO boundary, `public_id`, route binding, or outbox flow | `/alaa-laravel-architecture` |
+| An interface another component calls, which component writes a piece of data, a consistency / ordering / idempotency / concurrency / caching property, a dependency edge, a new deployable unit, or what a caller sees when a dependency is slow or gone | `/alaa-system-design` |
+| A trusted header, request identity, tenant or project derivation, step-up auth, or downstream auth propagation | `/alaa-trust-gateway-auth` |
+| An object-level relationship authorization decision | `/openfga` |
+| A migration, query, index, transaction, lock, Redis key, or tenant scoping in persistence | `/alaa-data-layer` |
+| Octane, Swoole, RoadRunner, a hot path, a singleton, request-scoped state, or worker lifecycle | `/alaa-octane-performance` |
+| A job, event, consumer, retry, DLQ, idempotency key, or outbox consumer | `/alaa-async-messaging`; add `/alaa-laravel-job-rabbitmq` when RabbitMQ or AMQP topology is involved |
+| Auth, authorization, validation of untrusted input, file handling, URL fetching, secrets, tenancy, or privilege | `/alaa-security-review` |
+| A log, trace, metric, alert, correlation ID, or Sentry behaviour | `/alaa-observability-soc` for the requirement, `/alaa-services-contract` for the name |
+| A test, or any claim that a check passed | `/alaa-testing-strategy` |
+| CI, Pint or PHPStan configuration, a test command, or a quality gate | `/alaa-cicd-laravel-postgres` |
+| README, docs, Postman collection, env docs, or a diagram | `/alaa-repo-docs`; the output language rule is in `documentation-and-artifacts.md` |
+| A composer dependency bump, or a Laravel 12 → 13 upgrade | `/alaa-laravel-upgrade-all-packages` |
+| A Crockford Base32, integer, string, or UUIDv7 codec that must match JS, shell, or HAProxy Lua | `/alaa-crockford-base32-codecs` |
+| A destructive, irreversible, or production-affecting operation | `/alaa-controlled-ops` |
+| Delegation to subagents, lane planning, or a review gate | `/alaa-cc-orchestrator` (Claude Code), `/alaa-codex-orchestrator` (Codex) |
+| A Codex-only tool or runtime affordance, including parallel tool invocation | `/alaa-codex-runtime-ops` |
+| MongoDB, and the repository already uses it or the user asked for it | `/alaa-mongodb-patterns` |
+| An OpenAI API, model, prompt, tool, or product claim in docs or examples | `/openai-docs` |
 
 ### Combined scenarios that recur
 
@@ -87,3 +87,37 @@ Routing is mandatory, not advice. If a row fires, do not continue the affected p
 - **Whole-project cleanup**: `/alaa-workflow` and `/alaa-laravel-architecture` first, this skill throughout, then any skill whose row fires during the audit.
 
 Where multiple rows fire, read them in the order that protects contracts first. Name every skill that governed the work in the final report — that naming is the audit trail proving routing happened.
+
+## 4. Concern → owning skill
+
+This table answers *who decides*. `SKILL.md`, "Ownership boundary", owns the rule for applying it and the list of what this skill still contributes inside each boundary.
+
+| Concern | Owner |
+|---|---|
+| The quality bar itself — never restate it | `alaa-project-constitution references/quality-bar.md` |
+| Layering, API envelopes, `public_id`, DTO boundaries, outbox shape | `/alaa-laravel-architecture` |
+| A design pass before implementation, when an interface shape, a data writer, a consistency / ordering / idempotency / concurrency / caching property, a dependency edge, a deployable unit, or degraded-path behaviour changes | `/alaa-system-design` |
+| Every shared name: envelopes, error and event codes, queue and exchange names, metric names, trusted header names, request deadlines | `/alaa-services-contract` |
+| Every timeout, retry count, pool bound, acquire wait, shed threshold — every number | `alaa-services-contract references/22-failure-load-and-deprecation-contract.md` |
+| Retry, jittered backoff, retry budget, breaker, bulkhead, admission control, degradation and idempotency **doctrine** | `/alaa-reliability-sla` |
+| Octane runtime facts and every absolute worker invariant: which values may never be retained and where, the reset mechanism, worker lifecycle and reload, the leak regression test, connection and Redis lifecycle, cache tiers, worker sizing, runtime portability | `/alaa-octane-performance` |
+| Schema, migrations, indexes, query plans, transactions, pooling, Redis primitives, cache key design, TTL, invalidation | `/alaa-data-layer` |
+| S3 or MinIO client library choice and configuration | `/alaa-minio-object-storage` |
+| The repository-pattern gate preceding any caching, and its completeness definition | `alaa-data-layer references/50-redis-laravel-octane.md`, "Step 0 — repository-pattern gate" |
+| Trusted headers, JWT-derived identity, tenant and project derivation, downstream auth propagation | `/alaa-trust-gateway-auth` |
+| Object-level relationship authorization | `/openfga` |
+| Security review triggers, threat classes, fail-closed vs fail-open | `/alaa-security-review` |
+| Complexity budgets, structure choice, the whole N+1 family | `/alaa-algorithms-data-structures` |
+| What makes a test a test, test layer placement, doubles, the six proof levels, flake classification | `/alaa-testing-strategy` |
+| Queue, broker, retry transport, DLQ, ordering, message-plane design | `/alaa-async-messaging`, `/alaa-laravel-job-rabbitmq` |
+| Whether a signal is required, and the gate it feeds | `/alaa-observability-soc` |
+| CI, quality gates, Pint and PHPStan configuration, pipeline behaviour | `/alaa-cicd-laravel-postgres` |
+| Docs-alignment workflow, Postman sync, docs consistency checks | `/alaa-repo-docs` |
+| Long-task planning, phasing, resumable state, shared plan paths such as `docs/_agent_plans/*` | `/alaa-workflow` |
+| Subagent lanes, role prompts, delegation, review gates — this skill carries no subagent template | `/alaa-cc-orchestrator` (Claude Code), `/alaa-codex-orchestrator` (Codex) |
+| Controlled and risky operations, the proof-strength vocabulary | `/alaa-controlled-ops` |
+| Codex-only tools and runtime affordances, including parallel tool invocation | `/alaa-codex-runtime-ops` |
+| Model and effort choice — name no model, ever | `/alaa-prompting-guide` |
+| Crockford Base32, integer, string and UUIDv7 codecs shared with JS, shell, or HAProxy Lua | `/alaa-crockford-base32-codecs` |
+| MongoDB design, only where the repo already uses MongoDB or the user asks | `/alaa-mongodb-patterns` |
+| Current OpenAI API, model, prompt, tool and product behaviour cited in docs | `/openai-docs` |

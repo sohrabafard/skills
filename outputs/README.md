@@ -6,6 +6,7 @@ instructions. An archived result does not establish today's repository state or 
 
 | Date | Archive | Coverage |
 |---|---|---|
+| 2026-11-14 | [Clarity rewrite and body reduction](../artifacts/skill-pack-clarity-20261114/report.md) | Telegraphic rules rewritten as complete sentences in both orchestrators and the core skills, 36 skill bodies reduced with relocated content behind triggered pointers, decided repairs from the Fable 5.2 upgrade's open items, six independent reviews with dispositions, open items and pending install |
 | 2026-11-14 | [Fable 5.2 pack upgrade](../artifacts/skill-pack-fable52-20261114/report.md) | Claude Fable 5.2 capability and prompting evidence, corrected Claude Code runtime facts, uniform return header for every managed role, nested-spawn deny, two preloaded bodies reduced, closed-rubric audit of every first-party skill by nine lanes, independent instruction review, proposals and pending install |
 | 2026-11-05 | [Ponytail composition and Ent routing](../artifacts/ponytail-orchestrator-alignment-20261105/report.md) | Optional mode propagation, external specialist admission and repair/review boundaries, WSL terminal output, independent source checks and proof limits |
 | 2026-11-04 | [ClickHouse and Vector skill deliveries](../artifacts/skills-domain-upgrades-20261104/README.md) | Release deltas, aggregate DDL checker review, bounded runtime evidence and WA2 continuation |

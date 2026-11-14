@@ -6,14 +6,12 @@ description: "Production Vector pipelines: topology and per-path delivery contra
 # Vector observability pipelines
 
 **A log pipeline that drops silently under load is an observability outage that hides
-itself.** Every rule below
-is about making loss visible, chosen, and bounded, not about tidy config.
+itself.** Every rule below is about making loss visible, chosen and bounded, not about tidy config.
 
-The current documentation target, retained consumer paths and proof limits live in
-`references/80-version-and-upgrade-deltas.md`. Vector changes interpolation,
-template confinement, buffer loss handling and internal metrics across releases.
-State the version you verified against. Re-derive every
-version-sensitive claim; do not recall it. Sources: `references/90-source-map.md`.
+Vector changes interpolation, template confinement, buffer loss handling and internal
+metrics across releases. State the version you verified against. Re-derive every
+version-sensitive claim; do not recall it. `references/80-version-and-upgrade-deltas.md`
+holds the documentation target, retained consumer paths and proof limits; `references/90-source-map.md` the sources.
 
 ## Rules
 
@@ -30,10 +28,10 @@ version-sensitive claim; do not recall it. Sources: `references/90-source-map.md
 
 3. **Fail open or fail closed follows what the data is for, not which tool moves it.**
    `/alaa-security-review` owns the gate discriminator. `/alaa-reliability-sla`
-   owns contributor failure behavior. For product telemetry forwarding/export,
+   owns contributor failure behavior. For product telemetry forwarding or export,
    `/alaa-observability-soc` requires nonblocking delivery: `when_full: drop_newest`,
-   sized for the burst, never `block`. A required audit write or product data under
-   an exactness ruling is a separate path. Preserve its gate contract.
+   sized for the burst, never `block`. A required audit write, or product
+   data under an exactness ruling, is a separate path. Preserve that path's gate contract.
    `references/75-ala-ingest-pipeline.md` records the historical exactness example.
 
 4. **A path that must never slow its client is configured that way, or it is not
@@ -54,12 +52,13 @@ version-sensitive claim; do not recall it. Sources: `references/90-source-map.md
    off.** Vector 0.57.0 disabled `${VAR}` by default. Any string is a valid
    password, so a credential-only config validates clean either way and then
    authenticates with the literal `${VAR}` text. Prefer a `secret:` backend. An
-   environment variable is legitimate only with all three of these:
-   - the opt-in on every command that reads the config
-   - a format-constrained interpolated value (endpoint, port, duration) in the same config, to force a load failure
-   - a standing gate requiring exit 78 without the opt-in and exit 0 with it
+   environment variable is legitimate only when it is genuinely the only available source
+   and all three of these hold:
+   - the opt-in is set on every command that reads the config
+   - a format-constrained interpolated value (endpoint, port, duration) shares the config, to force a load failure
+   - a standing gate requires exit 78 without the opt-in and exit 0 with it
 
-   `references/85-security-and-secrets.md`.
+   `references/85-security-and-secrets.md` owns each condition in full.
 
 7. **Keep routing templates confined.** Use a literal prefix for routing identifiers.
    Read `references/85-security-and-secrets.md` for version-qualified field exceptions
@@ -67,19 +66,18 @@ version-sensitive claim; do not recall it. Sources: `references/90-source-map.md
    Never enable the confinement opt-out to make an upgrade validate.
 
 8. **Use strict validation only with trusted configs and approved secret backends.**
-   Stage synthetic secrets in an isolated copy when live backend access is unavailable.
    From 0.59.0, `vector validate --skip-healthchecks --deny-warnings` still resolves
-   secret backends. Keep component checks enabled. `--no-environment` disables them.
-   The warning "acknowledgements are not supported
-   by this source" means the durability you configured does not exist. An
-   unconsumed `route` leg fails the gate rather than scrolling past.
+   secret backends. When live backend access is unavailable, stage synthetic secrets in an
+   isolated copy. Keep component checks enabled; `--no-environment` disables them.
+   The warning "acknowledgements are not supported by this source" means the durability
+   you configured does not exist. An unconsumed `route` leg fails the gate rather than scrolling past.
    `references/50-validation-and-testing.md`.
 
 9. **Unit-test the failure classes, not the happy path.** Test these: absent
    field, wrong type, malformed payload, the event that must be dropped, and the count a transform must
    emit. A suite that only proves the good input works cannot tell a correct
-   transform from a broken one. Pass the test file together with the config defining
-   the transform. Otherwise it fails as an unknown component.
+   transform from a broken one. Pass the test file with the config that defines
+   the transform, or the test fails as an unknown component.
 
 10. **A critical path does not share an acknowledging source with an unreliable one.**
     Fanout acknowledgement uses the worst status, so one failing sink causes
@@ -119,11 +117,9 @@ Both use exit codes `0` clean, `1` findings, `2` could not run. Both take `--hel
 ## Not owned here
 
 This skill owns what the pipeline writes into a ClickHouse table and how it behaves
-when that table is unreachable. It decides no schema. `references/40-clickhouse-sink.md` states the three-way ClickHouse
-boundary against `/clickhouse-performance-schema-ops` and `/alaa-signoz-clickhouse-docs` once.
-`references/00-topic-map.md` lists every other owner once, at the question it governs:
-requirement levels, Ala names and values, reliability shape,
-design, testing, security, platform.
+when that table is unreachable. It decides no schema. `references/40-clickhouse-sink.md`
+states the ClickHouse ownership boundary. For every other owner (requirement levels, Ala
+names and values, reliability, design, testing, security, platform), read *Not in this skill* in `references/00-topic-map.md`.
 
 ## Output contract
 

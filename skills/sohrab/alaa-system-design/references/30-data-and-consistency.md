@@ -4,7 +4,7 @@
 ownership table, how to resolve a proposed second writer, how to choose a consistency model, which
 interleavings a write path must rule out, and what a fork obliges. Read it during step 4.
 
-`/alaa-data-layer` (`$alaa-data-layer`) owns the mechanics — schema, constraints, indexes, migrations,
+`/alaa-data-layer` owns the mechanics — schema, constraints, indexes, migrations,
 isolation levels, pooling, projections, Redis behaviour. This file decides what must be true; that skill
 decides how it is enforced.
 
@@ -51,7 +51,7 @@ path can produce?**
 
 | Answer | Model | What the design must then state |
 |---|---|---|
-| Takes an action that cannot be undone, moves money or entitlement, or grants access | Read from the owner inside the same transactional boundary; no cache, no replica | The boundary, and the constraint that enforces the invariant. If the read decides whether a caller may act, it is a gate and `/alaa-security-review` (`$alaa-security-review`) owns it — never a cache |
+| Takes an action that cannot be undone, moves money or entitlement, or grants access | Read from the owner inside the same transactional boundary; no cache, no replica | The boundary, and the constraint that enforces the invariant. If the read decides whether a caller may act, it is a gate and `/alaa-security-review` owns it — never a cache |
 | Takes an action a named later step can correct | Bounded staleness | The bound, the compensating step, who runs it, and how a correction is observed |
 | Is displayed, or feeds a computation that runs again | Eventual | The convergence trigger and the maximum time to converge |
 
@@ -67,8 +67,7 @@ impossible. A write path with none named has decided that all of them are accept
   check, a conditional write, or a lock held across the read and the write.
 - **Double effect** — the same logical request applied twice, from a retry, a redelivery, or a user's second
   click. Ruled out by an idempotency key with a uniqueness constraint in the same store as the effect; the
-  full contract, including two concurrent requests carrying one key, belongs to `/alaa-reliability-sla`
-  (`$alaa-reliability-sla`).
+  full contract, including two concurrent requests carrying one key, belongs to `/alaa-reliability-sla`.
 - **Out-of-order application** — a later state overwritten by an earlier one, which any at-least-once
   delivery will produce. Ruled out by a monotonic version on the datum, not by trusting delivery order.
 - **Phantom or cross-tenant read** — a query that sees rows it must not. `/alaa-security-review` owns
@@ -92,7 +91,7 @@ yet, because nothing will ever delete it.
 
 A fork carries, in the record: which copy wins when they disagree, the reconciliation path that detects and
 repairs drift, who runs it and how often, and the signal that shows drift exists — the signal's design
-belongs to `/alaa-observability-soc` (`$alaa-observability-soc`). A fork is a legitimate design; an
+belongs to `/alaa-observability-soc`. A fork is a legitimate design; an
 unrecognised fork is a data-loss incident with a long fuse.
 
 A projection or a read model is a fork unless it can be rebuilt from the owner's data alone. State the

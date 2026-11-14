@@ -14,9 +14,9 @@ For exact props, events, slots, and methods, query the installed project first �
 | Feedback and state | `QAjaxBar`, `QLinearProgress`, `QCircularProgress`, `QInnerLoading`, `QSpinner`, `QSkeleton`, `QBanner`, `QBadge`, `QChip` | `64`, `70`; failure states are `34` |
 | Layout and pages | `QLayout`, `QDrawer`, `QHeader`, `QFooter`, `QPage`, `QPageScroller`, `QPageSticky`; grid and flex, layout and page routing | `62`, `21`; `31` on SSR routes |
 
-✅ Do — nest `QPage` inside `QPageContainer` inside `QLayout`. Ownership and the route shapes are `references/62-layout-patterns-and-examples.md`.
+Do: nest `QPage` inside `QPageContainer` inside `QLayout`. Ownership and the route shapes are `references/62-layout-patterns-and-examples.md`.
 
-❌ Don't — place `QPage` directly inside `QLayout` or into a route without `QPageContainer`; spacing and scrolling break in ways that look like CSS bugs.
+Do not: place `QPage` directly inside `QLayout` or into a route without `QPageContainer`; spacing and scrolling break in ways that look like CSS bugs.
 
 ## Cross-cutting relationships
 

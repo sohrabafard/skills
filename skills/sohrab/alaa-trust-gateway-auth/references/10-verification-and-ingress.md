@@ -288,12 +288,10 @@ reports assurance it does not have.** Keying on the client address is not the
 alternative: `alaa-services-contract references/22-failure-load-and-deprecation-contract.md`
 owns the no-IP-rate-limit rule.
 
-Whether such a route carries a limit at all belongs to `/alaa-reliability-sla`
-(`$alaa-reliability-sla`), and the Ala number it carries belongs to
+Whether such a route carries a limit at all belongs to `/alaa-reliability-sla`, and the Ala number it carries belongs to
 `alaa-services-contract references/22-failure-load-and-deprecation-contract.md`.
 Bounding the page a public feed returns as a project's content grows is a complexity
-question for `/alaa-algorithms-data-structures`
-(`$alaa-algorithms-data-structures`).
+question for `/alaa-algorithms-data-structures`.
 
 ### Precedence: a verified claim wins, and the asserted value is not read
 
@@ -341,8 +339,7 @@ them disagree.
 A present value gets no shortcut because it arrived on a guest route. Validate it as
 UUIDv7 and resolve it through the same public `project_id` path as any other public
 input. That path, the header name, its value form, and the provenance statement a
-downstream service may rely on are owned by `/alaa-services-contract`
-(`$alaa-services-contract`) in
+downstream service may rely on are owned by `/alaa-services-contract` in
 `alaa-services-contract references/30-trusted-ingress-and-laravel-contract.md`, with
 the canonical public form in
 `alaa-services-contract references/25-end-to-end-flow-and-boundaries.md`.
@@ -358,9 +355,8 @@ routes emits that attribution itself. Re-derive with
 `rg -n "jwt_claim_pid|http.path" charts/gateway/templates/configmap.yaml` in the
 gateway repository.
 
-The field name and its value form are owned by `/alaa-services-contract`
-(`$alaa-services-contract`); whether the emission is required, and at what level,
-is owned by `/alaa-observability-soc` (`$alaa-observability-soc`).
+The field name and its value form are owned by `/alaa-services-contract`; whether the emission is required, and at what level,
+is owned by `/alaa-observability-soc`.
 
 ## Gateway-facing routes versus service-local routes
 

@@ -13,8 +13,8 @@ persistence layer inside a service worker without reading it.
 
 ## Default stance
 
-If the user did not ask for a service-worker strategy change, the strategy does not change. Limit the diff
-to UI around offline, update and network status.
+`SKILL.md` gate 6 owns the service-worker drift rule. When the user did not ask for a strategy change, limit
+the diff to UI around offline, update and network status.
 
 ## Standard contract
 
@@ -25,11 +25,12 @@ rules win where they differ.
 
 ## Non-negotiables
 
-- **Do not add or widen a runtime-cache route matcher.** A widening requires the four risk notes below,
-  written in the merge request body: the rollback path, the stale-asset risk, the offline-regression risk,
-  and the hydration risk.
-- Do not change build-time placeholder variables or remote-asset path logic as a side effect.
-- Do not break registration, lifecycle orchestration or manifest versioning.
+`SKILL.md` gate 6 states what must not drift. When the asked-for change widens a runtime-cache route matcher,
+write four risk notes in the merge request body: the rollback path, the stale-asset risk, the
+offline-regression risk, and the hydration risk.
+
+Even when a service-worker change was asked for, do not break registration, lifecycle orchestration or manifest
+versioning.
 
 ## Failure classes
 

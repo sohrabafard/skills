@@ -14,7 +14,7 @@ Plan before every implementation. Make long work resumable without imposing orch
 3. When `/alaa-memory-os` says its trigger holds, invoke it before planning from prior context or publishing durable knowledge. Memory may contribute verified leads. It never owns this workflow's plan, checkpoint, evidence, or handoff.
 4. Before the first non-trivial repository discovery or code-evidence choice, invoke `/alaa-code-intelligence-routing` once. Reuse its routed result instead of retrieving the same fact through a second surface.
 5. Before planning, apply Mandatory Ponytail binding in `references/companion-routing.md`, including its user opt-out. Pair with `/alaa-low-noise` and the narrowest domain skill needed for technical decisions. Before designing implementation or verification, load `/alaa-testing-strategy`.
-6. Before writing, resolve plan kind, approval and artifact/profile admission through `references/artifact-lifecycle.md`. Resolve Beads availability, execution task authority and evidence through `references/task-tracking.md`. Resolve exact skill bindings through `references/companion-routing.md`.
+6. Before writing, resolve plan kind, approval and artifact and profile admission through `references/artifact-lifecycle.md`. Resolve Beads availability, execution task authority and evidence through `references/task-tracking.md`. Resolve exact skill bindings through `references/companion-routing.md`.
 
 ## Select the planning route
 
@@ -28,14 +28,13 @@ Select kind, authority, medium and plan size through `references/artifact-lifecy
 
 This section applies to execution engagements and issue-only implementation.
 
-- Work through the selected task authority and any admitted plan; apply the resume protocol after interruption, compaction, or a branch or worktree change.
+- Work through the selected task authority and any admitted plan. On resume, and after interruption, compaction, or a branch or worktree change, apply the resume protocol in `references/context-continuity.md` before taking any action.
 - Apply the execution hierarchy and task authority in `references/task-tracking.md` before dependent work.
-- Bring canonical workflow/task owners and derived snapshots current before the next phase, handoff, or report.
+- Bring canonical workflow and task owners and derived snapshots current before the next phase, handoff, or report.
 - Record the engagement's review boundary and final phase. Pass them into nested orchestration. `alaa-codex-orchestrator` and `alaa-cc-orchestrator` `references/verification-and-gates.md` own cadence scheduling.
 - Record phase test-collection, repair/retest and inherited review barriers in the plan through `references/artifact-lifecycle.md`.
   Route generic execution and the early-repair exception to /alaa-testing-strategy `references/100-test-execution.md`. The runtime orchestrators own phase/review scheduling and independent observers through the cadence owner above.
 - Fix defects and retest the failing path within the active retry budget. Never weaken assertions, hard-code expected results, suppress findings or lower review standards. Record an unresolved blocker and next safe action. Continue independent safe work.
-- On resume, follow the read order in `references/context-continuity.md` before taking any action.
 - Complete only when implementation, validation evidence, documentation, artifact status, and the final reusable-context curation outcome agree.
 - Report completion as four independent states — `IMPLEMENTED`, `MERGE_CANDIDATE`, `RELEASE_CANDIDATE`, `PUBLISHED` — each with its own verdict, never collapsed into a single one. This skill owns that lifecycle for execution runs. `references/workspace-and-integration.md` owns what earns each state.
 
@@ -77,13 +76,13 @@ For Beads-native work, verify the bound record through `references/task-tracking
 
 ## Direct references
 
-This skill owns coordination and continuity, not architecture, security, data, runtime, frontend, infrastructure, or documentation rules. This table selects references. Their named sections own the detailed procedures.
+This skill owns coordination and continuity, not architecture, security, data, runtime, frontend, infrastructure, or documentation rules. The named sections of each reference own the detailed procedures.
 
 | You are about to | Read |
 |---|---|
 | Begin a long run, hand off (including to another PC), resume, or find you cannot name your own current position | `references/context-continuity.md` |
 | Choose plan size, medium, design or execution authority, or continue an existing family | `references/artifact-lifecycle.md` |
-| Resolve execution hierarchy, test Beads availability, select or migrate a task store, decide where task information, acceptance or evidence lives, write issue fields or a close reason, link a follow-up or cross-project dependency, assign/resume/transfer an agent's Beads identity or issue ownership, resolve readiness, or encounter a Beads outage or uncertain update | `references/task-tracking.md` |
+| Resolve execution hierarchy, test Beads availability, select or migrate a task store, decide where task information, acceptance or evidence lives, write issue fields or a close reason, link a follow-up or cross-project dependency, assign, resume or transfer an agent's Beads identity or issue ownership, resolve readiness, or encounter a Beads outage or uncertain update | `references/task-tracking.md` |
 | Make the first write of a multi-phase or delegated run, record an evidence snapshot, exercise authorized Git integration, or state which completion states a finished run reached | `references/workspace-and-integration.md` |
 | Reach an execution phase or decision boundary with a curation signal, or prepare execution completion | `references/context-curation.md` |
 | Generate a prompt pack, or resolve a runtime, model, or effort value for one | `references/phase-prompts.md` |

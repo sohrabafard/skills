@@ -1,50 +1,31 @@
 # Claude Code Runtime Features
 
-Model/API capabilities do not establish harness support. This file owns Claude Code selection
-and activation mechanics; the structured policy registers model-neutral role identities and capabilities. Refresh official
-runtime documentation against the actual CLI version before depending on a feature.
+A model or API capability does not establish harness support. This file owns Claude Code selection and activation mechanics. The structured policy registers model-neutral role identities and capabilities. Before you depend on a feature, refresh the official runtime documentation against the actual CLI version.
 
 ## Current model, effort and identity resolution
 
-Verified 25 September 2026 against model-config and sub-agents. Full API IDs pin versions;
-family aliases roll and can resolve differently by provider, parent model or gateway.
-Provider deployment mappings are separate runtime evidence, not aliases accepted by the policy.
-The policy records sourced model minimum versions. Fable 5.2 requires Claude Code 2.1.321, and the `fable` alias resolves to Fable 5.2 except in Claude apps gateway sessions (verified 14 November 2026 against model-config). Claude Code's default effort is medium for Fable 5.2, Opus 5.5, Sonnet 5.5 and Haiku 5.5; the Claude API default for Fable 5.2 is high. Haiku 5.5 requires Claude Code 2.1.293; unlike its API disabled-thinking exception, Code prevents switching thinking off for it (verified 8 October 2026 against model-config). A newer installed CLI alone proves neither account entitlement nor activation.
+Verified 25 September 2026 against model-config and sub-agents. A full API ID pins a version. A family alias rolls, and it can resolve differently by provider, parent model or gateway. A provider deployment mapping is separate runtime evidence; the policy does not accept it as an alias.
+The policy records sourced model minimum versions. Fable 5.2 requires Claude Code 2.1.321, and the `fable` alias resolves to Fable 5.2 except in Claude apps gateway sessions (verified 14 November 2026 against model-config). Also verified 14 November 2026: Claude Code's default effort is medium for Fable 5.2, Opus 5.5, Sonnet 5.5 and Haiku 5.5; the Claude API default for Fable 5.2 is high. Haiku 5.5 requires Claude Code 2.1.293; its API permits disabled thinking as an exception, but Code prevents switching thinking off for it (verified 8 October 2026 against model-config). A newer installed CLI alone proves neither account entitlement nor activation.
 
-For session selection, inspect explicit /model choice, startup --model, ANTHROPIC_MODEL,
-settings and ANTHROPIC_DEFAULT_MODEL, plus managed allowlists and host overrides. /model can
-persist a selection; inspection does not authorize changing settings or credit consent.
+To resolve the session model, inspect an explicit /model choice, the startup --model flag, ANTHROPIC_MODEL, settings and ANTHROPIC_DEFAULT_MODEL, managed allowlists, and host overrides. /model can persist a selection. Inspection authorizes neither a settings change nor credit consent.
 
-Since 2.1.251, subagent model precedence is invocation, definition frontmatter, subagent
-model environment variable, then parent. Earlier versions prioritize that environment
-variable. Since 2.1.257, CLAUDE_CODE_SUBAGENT_MODEL_FORCE=1 forces the subagent
-model environment target, or the parent when no target is set. Forks and skills with
-model: inherit retain documented exceptions; inspect them before claiming a pin won. Resolve inherit and family aliases on the target provider.
-Allowlists may substitute a different model. Requested selection is not observed identity.
+Since 2.1.251, subagent model precedence runs from the invocation, to the definition frontmatter, to the subagent model environment variable, to the parent. Earlier versions give that environment variable priority. Since 2.1.257, CLAUDE_CODE_SUBAGENT_MODEL_FORCE=1 forces the model that the subagent model environment variable targets, or the parent model when the variable sets no target. Forks and skills with model: inherit keep documented exceptions; inspect them before you claim that a pin won. Resolve inherit and family aliases on the target provider.
+An allowlist may substitute a different model. A requested selection is not an observed identity.
 
-Verified 14 November 2026 against sub-agents and the active Agent tool schema: the per-invocation `model` parameter accepts a family alias only (`sonnet`, `opus`, `haiku`, `fable`). It accepts no full ID and no `inherit`. To realize a selected full ID at dispatch, pass its family alias and verify that the alias resolves to that ID on the target provider. When it does not, the definition's `model` field is the only pin, and a managed model-neutral role blocks that lane. A nested subagent with no model runs on its parent subagent's model, not on the main conversation's model.
+Verified 14 November 2026 against sub-agents and the active Agent tool schema: the per-invocation `model` parameter accepts a family alias only (`sonnet`, `opus`, `haiku`, `fable`). It accepts no full ID and no `inherit`. To realize a selected full ID at dispatch, pass its family alias and verify that the alias resolves to that ID on the target provider. When it does not, the definition's `model` field is the only pin, and the lane of a managed model-neutral role is blocked. A nested subagent with no model runs on its parent subagent's model, not on the main conversation's model.
 
-Verified 9 October 2026: since 2.1.292, non-fork invocation effort overrides frontmatter/session effort and persists on resume. Verified 14 November 2026: with no effort field or parameter, a subagent on the main model uses the session level; on a different model that level does not apply. `CLAUDE_CODE_EFFORT_LEVEL` supersedes invocation and frontmatter; model support and effective caps can step down unsupported levels. Managed roles omit model and effort, so dispatch must explicitly provide BOTH controls on that verified surface. Inspect force/environment/hook/provider resolution; omitted pins alone prove neither pair. Older/forked/unsupported surfaces require an available exact verified realization or a blocked affected lane, never inheritance as selection. Main-session configuration stays external.
+Verified 9 October 2026: since 2.1.292, an effort given at a non-fork invocation overrides the frontmatter effort and the session effort, and it persists on resume. Verified 14 November 2026: when neither an effort field nor an effort parameter is set, a subagent on the main model uses the session level; on a different model that level does not apply. `CLAUDE_CODE_EFFORT_LEVEL` supersedes the invocation and the frontmatter; model support and effective caps can step an unsupported level down. Managed roles omit model and effort, so on that verified surface the dispatch must provide BOTH controls explicitly. Inspect how force settings, environment variables, hooks and the provider resolve the controls; omitted pins alone prove neither pair. On an older, forked or unsupported surface, use an available exact verified realization or block the affected lane. Never treat inheritance as selection. Main-session configuration stays external.
 
-Record requested profile/model/effort and resolved controls separately from observed serving
-model/effort. Use unknown where the host exposes no observation. Session/subagent status and
-response modelUsage, when available, contribute evidence; an agent's self-description does
-not prove identity. Runtime activation checks require authorized execution and must preserve
-provider/account context, control evidence and any observed mismatch.
+Record the requested profile, model and effort, and the resolved controls, separately from the observed serving model and effort. Use unknown where the host exposes no observation. Session status, subagent status and the response's modelUsage contribute evidence when they are available. An agent's self-description does not prove its identity. A runtime activation check requires authorized execution, and it must preserve the provider and account context, the control evidence and any observed mismatch.
 
 ## Fallback and safeguards
 
-Provider safety fallback and configured overload fallback are different events. Both can
-change the serving model after selection. Preserve safeguards, disclose fallback/unknown
-identity, and exclude affected runs from claims about the requested pair. Never weaken a
-safeguard, silently substitute a model or introduce a local fallback to complete a gate.
-Fable noninteractive use may spend credits without prompting; obtain the applicable execution
-authority before a live run. No source checker grants installation, settings mutation
-or paid execution authority.
+A provider safety fallback and a configured overload fallback are different events. Either can change the serving model after selection. Preserve safeguards. Disclose a fallback or an unknown identity. Exclude the affected runs from claims about the requested pair. Never weaken a safeguard, silently substitute a model or introduce a local fallback to complete a gate.
+Noninteractive Fable use may spend credits without prompting; obtain the applicable execution authority before a live run. No source checker grants authority to install, to change settings or to pay for execution.
 
 ## Native Advisor
 
-Use Claude Code's native Advisor for executor consultations. The orchestrator's read-only Advisor mode is a separate role. In a supported Code session, use `/advisor <model>`. At launch, `--advisor <model>` overrides the `advisorModel` setting. Use a supported `sonnet`, `opus` or `fable` alias or a full model ID. Verified 14 November 2026: the advisor is experimental and needs the Anthropic API or Claude Platform on AWS. Resolve aliases and verify support on the actual Code version, provider, account, managed allowlist and entitlement before depending on Advisor. Inspection grants no configuration or paid execution authority.
+Use Claude Code's native Advisor for executor consultations. The orchestrator's read-only Advisor mode is a separate role. In a supported Code session, use `/advisor <model>`. At launch, `--advisor <model>` overrides the `advisorModel` setting. Use a supported `sonnet`, `opus` or `fable` alias or a full model ID. Verified 14 November 2026: the advisor is experimental and needs the Anthropic API or Claude Platform on AWS. Before you depend on Advisor, resolve the alias and verify support on the actual Code version, provider, account, managed allowlist and entitlement. Inspection grants neither configuration authority nor paid execution authority.
 
 Claude Code ranks models for the advisor role and accepts only the pairs in its advisor table. These are its rows for the active set. Verify the exact resolved pair on the target Code surface.
 
@@ -110,7 +91,7 @@ Verified 14 November 2026 against sub-agents: nesting is on by default. Earlier 
 
 Subagents run in the background by default; Claude runs one in the foreground when it needs the result before continuing. Background subagents surface permission prompts in your main session, naming the asking subagent, and their results reach Claude as a completion notification in a later turn. `/subtask` starts a fork — a subagent that inherits the full conversation instead of starting fresh — which is the right shape for trying several approaches from the same starting point. `/fork` now copies the whole session into a separate background session instead.
 
-For current model and effort precedence, read the current-resolution section above. The historical environment-first order must not be applied to newer CLIs. Refresh thinking inheritance against the actual runtime; model/API thinking controls are not per-agent settings by inference.
+For current model and effort precedence, read the current-resolution section above. The historical environment-first order must not be applied to newer CLIs. Refresh thinking inheritance against the actual runtime. A model or API thinking control does not become a per-agent setting by inference.
 
 ```text
 Explicit authorization: you may use subagents, and you may run independent lanes of this task in parallel or
@@ -118,7 +99,7 @@ in the background, without asking again. Research the authentication, database, 
 using separate subagents, then summarize the risk each one found before you touch any code.
 ```
 
-This wording requires current host delegation authority — before reusing it on current Opus or Fable, read `references/06-invocation-and-composition.md` for the delegation-polarity rule those models need instead.
+This wording requires current host delegation authority. Before you reuse it on current Opus or Fable, read `references/06-invocation-and-composition.md` for the delegation-polarity rule those models need instead.
 
 ## Workflow tool — deterministic multi-agent orchestration scripts
 
@@ -147,7 +128,7 @@ Ultraplan hands the planning task to a Claude Code on the web session running in
 /ultraplan migrate the auth service from sessions to JWTs
 ```
 
-Three launch paths: the `/ultraplan` command, the bare keyword `ultraplan` in a prompt, or choosing "refine with Ultraplan" from a local plan's approval dialog. Status shows in the CLI prompt input (`◇ ultraplan`, `◇ ultraplan needs your input`, `◆ ultraplan ready`), and `/tasks` opens a detail view with the session link and a stop action. When the plan is ready you either approve it to execute in the same cloud session and open a pull request, or teleport it back to the terminal, where you choose **Implement here**, **Start new session**, or **Cancel** (which saves the plan to a file and prints the path). Ultraplan is in research preview, requires a Claude Code on the web account and a GitHub repository, and is unavailable on Amazon Bedrock, Google Cloud's Agent Platform, and Microsoft Foundry. `/ultrareview` is its review-side counterpart.
+Ultraplan has three launch paths: the `/ultraplan` command, the bare keyword `ultraplan` in a prompt, or choosing "refine with Ultraplan" from a local plan's approval dialog. Status shows in the CLI prompt input (`◇ ultraplan`, `◇ ultraplan needs your input`, `◆ ultraplan ready`), and `/tasks` opens a detail view with the session link and a stop action. When the plan is ready you either approve it to execute in the same cloud session and open a pull request, or teleport it back to the terminal, where you choose **Implement here**, **Start new session**, or **Cancel** (which saves the plan to a file and prints the path). Ultraplan is in research preview, requires a Claude Code on the web account and a GitHub repository, and is unavailable on Amazon Bedrock, Google Cloud's Agent Platform, and Microsoft Foundry. `/ultrareview` is its review-side counterpart.
 
 Plan mode is the closest thing to a launch gate for a large or risky autonomous run — it composes with `/goal` (condition-based continuation) and `/loop` (interval-based continuation) for the multi-turn autonomy that follows approval.
 
@@ -167,7 +148,7 @@ A goal preserves the current permission mode; it grants no installation, commit,
 
 ### Surface preflight and rejected commands
 
-Claude Desktop's **Code tab** is the documented desktop Claude Code surface. Do not infer Chat or Cowork command support from the app name; their `/goal` support is not established by these sources. Resolve the actual surface, installed runtime version, registered skill command, goal availability and relevant trust/hook restrictions before issuing a runnable kickoff. Inspection does not authorize installation or settings changes.
+Claude Desktop's **Code tab** is the documented desktop Claude Code surface. Do not infer Chat or Cowork command support from the app name; their `/goal` support is not established by these sources. Before you issue a runnable kickoff, resolve the actual surface, the installed runtime version, the registered skill command, goal availability, and the relevant trust and hook restrictions. Inspection does not authorize installation or settings changes.
 
 The user observed this Code-tab rejection on 4 October 2026 (Desktop version unprovided):
 
@@ -175,7 +156,13 @@ The user observed this Code-tab rejection on 4 October 2026 (Desktop version unp
 
 This is Desktop composer evidence, not an officially documented universal CLI grammar. It applies to **command arguments**, including a skill-led kickoff: use one leading registered command and plain arguments without secondary slash commands, non-file @mentions, links, backticks, bold or other inline formatting. Name companion skills without sigils and use plain paths. Generate the goal condition as plain text with no skill activation or file references by default; keep them in the kickoff or plan. The diagnostic permits file @mentions, but generated text cannot manufacture or validate their composer chips. A static text pass proves no structured-composer acceptance.
 
-For a rejection, record the supplied prompt, error, app/runtime version and tab; obtain only missing facts needed for diagnosis. Check composer tokens and rendered length, then classify command/surface availability, skill resolution, trust/hooks or remaining unknowns. Without the rejected payload, repair established defects but do not claim reproduction, a parser/cap change or incident closure. Provide a verified plain kickoff or report missing capability; never guess a fallback on another surface.
+When a command is rejected:
+
+1. Record the supplied prompt, the error, the app and runtime version, and the tab. Obtain only the missing facts that the diagnosis needs.
+2. Check the composer tokens and the rendered length.
+3. Classify the cause as command or surface availability, skill resolution, trust or hooks, or a remaining unknown.
+4. Without the rejected payload, repair established defects, but do not claim a reproduction, a parser or cap change, or incident closure.
+5. Provide a verified plain kickoff, or report the missing capability. Never guess a fallback on another surface.
 
 ## Choosing between `/loop`, `/goal`, subagents, workflows, and the rest
 
@@ -212,4 +199,4 @@ Ultraplan is documented as a research preview with no stated minimum version; do
 
 ## Managed task-selected authority roles
 
-The runtime orchestrator renders model-neutral definitions for every managed authority role. `scripts/render_agents.py --check` rejects source drift without claiming activation. The capability policy registers roles and supported pairs; the orchestrator chooses each actual task model AND effort and checks effective overrides. Existing model/effort-named IDs are compatibility names only. Source consistency cannot prove loaded registration, account access or serving identity. A planner draft remains advisory; main controls remain externally configured.
+The runtime orchestrator renders a model-neutral definition for every managed authority role. Its `scripts/render_agents.py --check` rejects source drift and does not claim activation. The capability policy registers the roles and their supported pairs. The orchestrator chooses the actual model AND effort for each task and checks the effective overrides. An existing ID that names a model or an effort is a compatibility name only. Source consistency cannot prove loaded registration, account access or serving identity. A planner draft remains advisory. Main-session controls remain externally configured.

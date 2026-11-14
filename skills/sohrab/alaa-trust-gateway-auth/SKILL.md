@@ -63,7 +63,7 @@ Each case carries its symptom, decision, response, log and test in
 | You are looking at | Case |
 |---|---|
 | a service reachable without crossing the gateway, or an edge that is down | 1 — deny `AUTH_CONTEXT_MISSING` with the status policy in `references/50-deny-codes.md`; strip at the service edge *and* block the exposure |
-| a request-time checker that timed out, failed, or answered unparseably | 2 — the gateway denies under the decision/enforcement contract named in that case; a service-side fallback is a bypass |
+| a request-time checker that timed out, failed, or answered unparseably | 2 — the gateway denies under the decision and enforcement contract named in that case; a service-side fallback is a bypass |
 | a required claim or trusted header absent, including `rol` | 3 and 4 — deny; an absent role never means "no restrictions apply" |
 | a malformed `X-Access`, or a permission revoked after issuance | 5 and 6 — deny at ingress with `AUTH_ACCESS_BITMAP_INVALID`; revocation latency equals the remaining token lifetime and is not fixed inside a service |
 | a step-up proof absent, expired, or issued for another purpose | TOTP — deny `403 TOTP_STEP_UP_REQUIRED` with `meta.purpose`; absent and invalid are indistinguishable by design |
@@ -80,6 +80,7 @@ Each case carries its symptom, decision, response, log and test in
 | work on an auth-service v3 route, the OTP or refresh flow, step-up issuance, or direct local testing | `references/60-auth-service-v3-contract.md` |
 | review a trust-boundary change and need the observable that decides a defect | `references/70-review-and-anti-patterns.md` |
 | assert a gateway or auth behaviour someone will act on, or find a fact older than your change | `references/90-source-map.md` |
+| find that your change lands on header names, envelopes, error taxonomy, platform values, the TOTP claim set or step-up response, purpose naming or proof caching, the bit contract or permission id allocation, fail-closed doctrine, reliability doctrine, OpenFGA modelling, cursors, HAProxy, Laravel, PHP or Octane code, telemetry, exposure or trusted-proxy delivery | *What this skill does not own* in `references/90-source-map.md`; it names the owner of each ground |
 
 ## Check it mechanically
 
@@ -101,25 +102,10 @@ Exit codes:
 contract. The canonical bitmap vectors and the cross-runtime harness belong to
 `/alaa-permission-generator`.
 
-## What this does not own
-
-| Ground | Owner |
-|---|---|
-| Trusted header **names**, response envelopes, error taxonomy, platform values | `/alaa-services-contract` |
-| TOTP proof claim set, step-up response body, purpose naming, client proof caching | `/alaa-services-contract` `references/32-auth-totp-and-step-up-contract.md` |
-| The permission bit contract, id allocation, catalog drift, decoders and harness | `/alaa-permission-generator` |
-| Fail-closed doctrine, threat classes, security-review triggers | `/alaa-security-review` |
-| Timeout shape, retry legality, backoff, circuit breakers, degrade doctrine | `/alaa-reliability-sla` |
-| Object-level relations, tuple modelling, OpenFGA model design | vendored `openfga`; `/alaa-services-contract` `references/26-request-time-authorization-openfga.md` |
-| Cursor shape, signing, and what a cursor binds | `/alaa-keyset-pagination` |
-| HAProxy directives, ACL syntax, SPOE and Lua mechanics | `/alaa-haproxy`, `/alaa-haproxy-lua` |
-| Laravel middleware, guard, policy and DTO shape; PHP code shape; Octane request state | `/alaa-laravel-architecture`, `/alaa-php-clean-code`, `/alaa-octane-performance` |
-| Telemetry requirement levels and gates; exposure and trusted-proxy delivery | `/alaa-observability-soc`, `/alaa-docker-production`, `/caas-arvan-kuber` |
-
 ## When not to use
 
 Do not use this skill for authentication in a service that does not sit behind the
 Ala gateway. It assumes a verifying edge that such a service lacks, and its rules
 will read as permission to trust headers nobody sanitized. Do not use it alone when
-the change also lands on an owner's ground above. Read the matching skill, and follow
+the change also lands on an owner's ground in *What this skill does not own* in `references/90-source-map.md`. Read the matching skill, and follow
 the stricter rule where they overlap.

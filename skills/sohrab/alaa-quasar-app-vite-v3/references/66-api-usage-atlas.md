@@ -12,7 +12,7 @@ Route/component title/meta updates; use function form for reactive state and tre
 
 Use only when completion state is genuinely needed; fix deterministic markup first, then use `QNoSsr`/`useHydration` only for truly client-only features.
 
-✅ Do — fix id/aria mismatches with Vue 3.5 `useId()` first. ❌ Don't — hide one unstable value by wrapping a whole subtree in `QNoSsr`; it loses that subtree's SSR/SEO.
+Do: fix id/aria mismatches with Vue 3.5 `useId()` first. Do not: hide one unstable value by wrapping a whole subtree in `QNoSsr`; it loses that subtree's SSR/SEO.
 
 Search: `useHydration`, `isHydrated`, `QNoSsr`, `client-only`, `useId`.
 
@@ -65,7 +65,7 @@ Import/destructure only what is used; locale/timezone-sensitive SSR formatting c
 import { date } from 'quasar'; const { formatDate } = date
 ```
 
-✅ Do — keep SSR output deterministic. ❌ Don't — assume stable locale/timezone output; format after mount or deliberately use `data-allow-mismatch`.
+Do: keep SSR output deterministic. Do not: assume stable locale/timezone output; format after mount or deliberately use `data-allow-mismatch`.
 
 Search: `formatDate`, `addToDate`, `extractDate`, `timezone`, `tree shaking`.
 

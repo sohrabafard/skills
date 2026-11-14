@@ -18,10 +18,10 @@ is read rather than estimated.
 | Rows per tenant | Nothing in the code. Read the largest tenant's current count from production and apply the growth horizon |
 | Retained history | The retention policy or the partition drop job. No retention policy means unbounded |
 | Fan-out per event | The recipient, subscriber, or consumer list length, and whatever bounds that list |
-| Concurrent in-flight work | The in-flight limit and worker count, owned by `/alaa-services-contract` (`$alaa-services-contract`) |
+| Concurrent in-flight work | The in-flight limit and worker count, owned by `/alaa-services-contract` |
 | Depth of a tree, graph, or recursion | The explicit depth limit. Recursion with no depth limit is unbounded |
 | Distinct keys in a cache or map held across requests | The eviction policy and maximum entry count. No maximum means unbounded |
-| Retries multiplying a downstream call | The retry budget, owned by `/alaa-reliability-sla` (`$alaa-reliability-sla`) |
+| Retries multiplying a downstream call | The retry budget, owned by `/alaa-reliability-sla` |
 | Elements in an uploaded or imported file | The upload size limit divided by the smallest plausible record size |
 
 The rows with no enforcing artifact are the interesting ones. They are where the defect lives, and naming the
@@ -52,7 +52,7 @@ Worked shapes that recur here:
 - a scheduled reconciliation: `rows_scanned_per_run x runs_per_day`.
 
 **A product that cannot be computed because one factor has no maximum is unbounded, and "it is probably small" is an
-unbounded answer.** This is the same discipline `/alaa-observability-soc` (`$alaa-observability-soc`) applies to
+unbounded answer.** This is the same discipline `/alaa-observability-soc` applies to
 metric cardinality, where an uncomputable worst case is refused rather than accepted.
 
 ## When production data is unavailable
@@ -84,7 +84,7 @@ downstream has to trust its caller:
 
 **Report the boundary you added or the boundary that is missing, in the same change.** An unbounded dimension
 reported with no named boundary leaves the next engineer to re-derive what you already worked out, and the platform
-values for any of these boundaries belong to `/alaa-services-contract` (`$alaa-services-contract`) rather than to
+values for any of these boundaries belong to `/alaa-services-contract` rather than to
 this file.
 
 ## Anti-patterns
@@ -95,4 +95,5 @@ this file.
 - a clamp that silently reduces an over-large request instead of rejecting it, so the caller never learns its
   request was truncated;
 - a growth horizon omitted, which bounds the dimension at the day the budget was written;
-- treating a dimension bounded by a well-behaved client as bounded.
+- treating a dimension bounded by a well-behaved client as bounded;
+- a bound taken from the median tenant or the demo dataset instead of the largest the system permits.

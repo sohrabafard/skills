@@ -7,9 +7,9 @@ description: "HAProxy configuration, tuning, troubleshooting, delivery and upgra
 
 ## What this skill decides
 
-How a routing, caching, TLS, rate-limiting, load-balancing, observability or drain decision is
-**expressed as an HAProxy directive**, and which HAProxy branch a config targets. It is the
-HAProxy source of truth for this pack.
+This skill decides how a routing, caching, TLS, rate-limiting, load-balancing, observability or
+drain decision is **expressed as an HAProxy directive**, and which HAProxy branch a config targets.
+It is the HAProxy source of truth for this pack.
 
 ## What this skill does not decide, and when not to use it
 
@@ -37,7 +37,8 @@ that silence is never mistaken for authority:
 ## Quick start
 
 1. Establish the branch that will actually run the config. `references/10-version-and-branch.md`
-   holds the branch table and the upgrade path. **3.4 is the current LTS.**
+   holds the branch table and the upgrade path. `references/SOURCES.md` holds the current LTS label
+   and its read date.
 2. Run `haproxy -vv` on that binary. It answers which features exist before any directive relies
    on one.
 3. Open `references/00-topic-map.md`. It maps the task to exactly one reference and names the
@@ -69,13 +70,8 @@ and gate register.
 
 ## Maintenance
 
-- Keep this file routing-first. Every rule lives in exactly one reference. A rule written twice is
-  a defect.
-- Every version-sensitive value in this skill is listed in `references/SOURCES.md` beside the one
-  command or URL that re-derives it. Update both together, or neither.
-- Add an example only when it represents a production pattern no existing example covers. Give
-  it the same header every other example has: charter, minimum branch, preconditions, variables,
-  failure mode. `scripts/check_examples.py` enforces that header.
+When you edit this skill, add an example, or change a version-sensitive value, read
+`references/00-topic-map.md` "Maintaining this skill".
 
 ## Completion and authority
 

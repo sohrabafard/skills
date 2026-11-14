@@ -40,7 +40,7 @@ Each row names where the rule is stated in this skill and what to re-read before
 | Validation status for `INPUT_VALIDATION_FAILED` (400 vs 422) | `errkit/constructors.go` and `CONTRACTS.md`; the open question is recorded in P4 |
 | Shutdown budget and phase interfaces | `runkit/lifecycle.go`; P9 in `30-runtime-and-observability.md` |
 | Retry, backoff, deadline, and rate-limit capabilities | `jobkit/`, `mqkit/`, `rediskit/`, `httpkit/`; P7 in `20-domain-data-and-consistency.md` |
-| Provider idempotency (Bale `request_id`, Mediana none) | `/alaa-bale-provider` (`$alaa-bale-provider`), `/alaa-sms-provider-mediana` (`$alaa-sms-provider-mediana`) |
+| Provider idempotency (Bale `request_id`, Mediana none) | `/alaa-bale-provider`, `/alaa-sms-provider-mediana` |
 | The active scope phase and the consumer roster | `/alaa-go-chi-development` `references/05-phase-and-source-truth.md` and its `scripts/phase-check.sh`; read the kit's current `<repo>/docs/CONSUMERS.md` for the roster |
 
 ## Freshness triggers
@@ -59,3 +59,17 @@ owned goroutines, boot-time config, bounded observability, boundary-true testing
 These are architectural invariants of this platform, not version-sensitive facts. Everything *quantitative* in
 this skill — a status code, a timeout, a key name, a target name — is version-sensitive and belongs to the
 table above.
+
+## Maintenance rules
+
+- Keep `SKILL.md` routing-first: the router, the principle table, the checklist, and the two mandatory companions; every other companion is in `references/50-skill-boundaries.md`. Every
+  principle's detail, example, and proof lives in `references/`.
+- State each principle at one strength in one place. If a sentence in `SKILL.md` and a sentence in a reference file say
+  the same rule with different force, delete one. An agent follows the weaker.
+- Name no model, no effort setting, and no runtime capability in this skill; route those to
+  `/alaa-prompting-guide`.
+- When a proof named in a reference file changes name, moves, or starts to exist, update that proof line in the
+  same effort. A proof line that names a check which does not run is worse than an admitted gap.
+- When the kit changes a contract this skill cites — envelope, env keys, metric names, pooling lanes, readiness
+  severities, seeder contract — update the affected reference file and `references/90-source-map.md` together.
+- Keep P-numbering stable; new principles append, never renumber.

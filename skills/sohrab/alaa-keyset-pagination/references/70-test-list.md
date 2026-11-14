@@ -1,6 +1,6 @@
 # What a paginated route must cover
 
-This file names the behaviours that must be covered. It does not judge whether a given test proves its behaviour, which layer it belongs at, or what evidence a reviewer may accept — that is `alaa-testing-strategy` (`/alaa-testing-strategy`, `$alaa-testing-strategy`), and every item here is subject to its core rule. In particular: a test that asserts only the HTTP status and the response schema does not cover any item on this list, because every failure this skill exists to prevent returns a well-formed `200`.
+This file names the behaviours that must be covered. It does not judge whether a given test proves its behaviour, which layer it belongs at, or what evidence a reviewer may accept — that is `/alaa-testing-strategy`, and every item here is subject to its core rule. In particular: a test that asserts only the HTTP status and the response schema does not cover any item on this list, because every failure this skill exists to prevent returns a well-formed `200`.
 
 A route is not shippable until each item is covered or explicitly waived with a reason recorded in the route documentation.
 

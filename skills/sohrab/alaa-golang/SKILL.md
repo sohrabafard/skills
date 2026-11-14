@@ -15,7 +15,7 @@ If a routed owner disagrees with this skill, follow that owner and report both f
 - Kit-conformance-only review of an existing `alaa-go-chi` consumer: load
   /alaa-golang-clean-code-principles directly.
 - Kit governance, change requests or active scope phase alone: load /alaa-go-chi-development.
-- A task with no Go source or module/toolchain change, such as a Dockerfile, chart, pipeline,
+- A task with no Go source, module or toolchain change, such as a Dockerfile, chart, pipeline,
   edge configuration or a document merely mentioning a Go service: use its domain owner.
 
 ## Procedure
@@ -27,7 +27,7 @@ Read `references/00-topic-map.md` before a Go decision. Open only the rows that 
    - Read `go.mod` (module path and `go` directive).
    - Read the imports and existing tests of every package to change.
    - For a source change, inspect route registration.
-   - For dependency-only work, inspect module/workspace metadata and the native dependency recipe. For that work, run source discovery only when a source or impact question needs it.
+   - For dependency-only work, inspect the module and workspace metadata and the native dependency recipe. Run source discovery for that work only when a source or impact question needs it.
    - Repository truth overrides this skill. Report discrepancies.
 2. When `go.mod` requires `git.alaatv.com/vk/alaa-go-chi`, resolve the active phase through
    /alaa-go-chi-development before you write or review a line. Run its
@@ -59,7 +59,7 @@ deployment, external mutation or destructive effects. A skill or tool being avai
 When a required owner, fact, phase authorization or proof is missing, stop the dependent action
 and report the exact blocker. Unrelated safe work may continue.
 Use the routing owner's finite failure budget for evidence and native gates.
-Do not loop. Do not claim an unrun gate passed.
+Do not loop.
 
 ## Validation gate
 
@@ -85,7 +85,7 @@ worker pool or package-level variable.
 Report commands and outcomes using /alaa-go-chi-development
 `../alaa-go-chi-development/references/05-phase-and-source-truth.md`: `passed`, `failed`, `blocked`,
 `skipped`, `not run`.
-Never report an outcome for a command you did not execute.
+Never report an outcome for a gate or command you did not execute.
 Stop successfully only when the requested behavior, required gates and completion answers are established
 in the target repository.
 
@@ -94,12 +94,12 @@ in the target repository.
 Report all four before you call Go work done:
 
 1. Each validation command and its observed outcome.
-2. What shipped: externally visible routes, request/response fields and types, error codes and
+2. What shipped: externally visible routes, request and response fields with types, error codes and
    event-payload changes. Write `no contract change` when there is none.
 3. How it is operated: every environment key added, changed or removed, its default and accepted
    range, and each dashboard panel or alert required to make the change visible in production.
 4. How it fails: each new failure mode and its exact operator signal, including metric, log event
    or degraded readiness check.
 
-/alaa-services-contract owns contract-entry shape. /alaa-observability-soc owns dashboard/alert
+/alaa-services-contract owns contract-entry shape. /alaa-observability-soc owns dashboard and alert
 shape. This skill requires the four answers without restating either owner's contract.

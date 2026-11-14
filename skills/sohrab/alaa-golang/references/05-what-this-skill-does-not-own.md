@@ -19,7 +19,7 @@ Two consequences follow, and they are absolute:
 | Owner | Load it when you are about to… |
 |---|---|
 | `/alaa-project-constitution` | decide whether a change is finished, whether a service is production ready, or what quality bar applies to a repository |
-| `/alaa-reliability-sla` | choose a retry count, a backoff curve, a jitter policy, a timeout budget, a circuit-breaker threshold, a degradation mode, a load-shedding policy, or an SLO/error-budget window |
+| `/alaa-reliability-sla` | choose a retry count, a backoff curve, a jitter policy, a timeout budget, a circuit-breaker threshold, a degradation mode, a load-shedding policy, or an SLO or error-budget window |
 | `/alaa-testing-strategy` | decide which kinds of test a change requires, where the boundary between unit, integration, contract and load testing sits, or what a test suite must cover before release |
 | `/alaa-system-design` | split a system into services, choose a synchronous or asynchronous boundary, or place a responsibility in one service rather than another |
 | `/alaa-algorithms-data-structures` | state the complexity budget for a path whose input grows with tenants, rows, retained history, or fan-out per event; find the enforced upper bound on a growing dimension; choose a data structure from an access pattern; or resolve a database, HTTP, cache, or permission call that sits inside a loop. A path on which every dimension already has a small maximum enforced in code needs none of it. How a Go map or slice itself behaves is `/golang-data-structures` |
@@ -39,7 +39,7 @@ Two consequences follow, and they are absolute:
 | `/alaa-go-chi-development` | check the active scope phase; change anything inside the kit; file a kit change request or baseline proposal; register a consumer; or discover that the capability your service needs is a kit-owned surface the kit does not yet have |
 | `/alaa-golang-clean-code-principles` | write, review, or refactor Go in a repository whose `go.mod` requires `git.alaatv.com/vk/alaa-go-chi` — its P1–P13 are the conformance bar |
 | `/alaa-golang-fiber` | edit a repository whose `go.mod` requires `github.com/gofiber/fiber/v2` or `/v3`, or build a Fiber prototype the user has explicitly scoped |
-| `/alaa-prompting-guide` | verify model/effort capabilities or thinking controls, runtime availability, or prompt authoring. The runtime orchestrator owns actual task model/effort allocation for every authority role; prompting-guide supplies evidence and mechanics. This skill names no model or effort level |
+| `/alaa-prompting-guide` | verify model and effort capabilities or thinking controls, runtime availability, or prompt authoring. The runtime orchestrator owns the actual model and effort allocation of each task for every authority role. `/alaa-prompting-guide` supplies evidence and mechanics. This skill names no model or effort level |
 
 ## Go mechanics owners
 

@@ -6,7 +6,7 @@ description: "Register, generate, apply, and validate Alaa coarse permissions th
 # Alaa Permission Generator
 
 `alaa-permission-catalog` is the only allocator of coarse permission names and global bitmap ids. Auth issues `prm`,
-`prv`, and `av` at runtime. The gateway is the trusted-header boundary. OpenFGA holds a separate object-level
+`prv` and `av` at runtime. The gateway is the trusted-header boundary. OpenFGA holds a separate object-level
 vocabulary. This skill owns allocation in the catalog and emission into consumers, and nothing beyond those two.
 
 ## Step 0 — locate the tool before anything else
@@ -18,8 +18,8 @@ The catalog is a repository of its own, separate from every service repository. 
    sibling of the service repositories, not a child of any one of them.
 
 Confirm a candidate root by the presence of `alaa-permission-catalog/scripts/permission_catalog.php`. Running it needs
-PHP 8.2 or newer and nothing else. The project has zero runtime dependencies, and that entrypoint carries its own
-autoloader. **Do not run `composer install`.** Invoke the entrypoint directly.
+PHP 8.2 or newer and nothing else, because the project has zero runtime dependencies and that entrypoint carries its
+own autoloader. **Do not run `composer install`.** Invoke the entrypoint directly.
 
 **Hard stop, and the most important rule here.** If no candidate root contains
 `alaa-permission-catalog/scripts/permission_catalog.php`, report every path you tried, stop, and ask the requester
@@ -46,8 +46,8 @@ only when the request names it.
   repository or that file as a place to change.
 - Applying the auth seed, and assigning a permission to a user, role, or admin: each requires explicit words naming the
   seed or the assignment. A request to "add a permission" authorizes neither.
-- Anything you cannot place in one of those three lines: ask. Report each unauthorized operation the change still needs
-  as remaining work, named and pathed. Lane procedure and proof strength are owned by `/alaa-controlled-ops`.
+- For an operation you cannot place in one of those three lines, ask. Report each unauthorized operation the change
+  still needs as remaining work, with its name and path. `/alaa-controlled-ops` owns lane procedure and proof strength.
 
 ## Non-negotiable contract
 
@@ -59,14 +59,14 @@ only when the request names it.
   entries only. An active entry can therefore take a `reserved` or `deprecated` id and produce no finding at all.
   Before allocating, scan entries of every status for the id. You hold this discipline; the tool does not hold this
   invariant. The project's governance doc asserts the opposite.
-- `aliases` is dead config: parsed, serialised, read by no code path. Writing it changes no behaviour. Use `legacy_keys`
-  per `references/lifecycle.md` to carry an old name forward.
+- `aliases` is dead config: the tool parses and serialises it, and no code path reads it. Writing it changes no
+  behaviour. To carry an old name forward, use `legacy_keys` as `references/lifecycle.md` describes.
 - Deprecating a permission does not retire it from Laravel. The Go and TypeScript emitters honour status. Both PHP
   emitters ignore it. Read `references/lifecycle.md` before any retirement.
-- Six rules hold for every consumer in every language: commit at the exact source path; allow no override; the bit
-  contract; ignore unknown bits and fail closed on zero known permissions; never hand-edit a generated file;
+- Six rules hold for every consumer in every language: commit at the exact source path; allow no override; follow the
+  bit contract; ignore unknown bits and fail closed on zero known permissions; never hand-edit a generated file;
   re-validate after applying. `references/shared-consumer-contract.md` states them once, with the observability
-  and per-request cost rules. Read it before writing or reviewing any consumer code.
+  and per-request cost rules. Read it before you write or review any consumer code.
 - **`MaxPermissionID()` is per-file, not per-catalog.** Each generated Go map returns the highest id in that service's
   map. The generated `Decode` uses it as the decode bound. A permission above that map's maximum is dropped by
   that service even while auth issues it. The auth seed and consuming service map must remain coherent. Apply them in
@@ -82,13 +82,13 @@ only when the request names it.
 ## One decoder, not one per service
 
 `alaa-permission-catalog` allocates ids and emits maps. It holds no encoder and no decoder in any language. The bit
-unpacking, the base64url handling, the error taxonomy, and the question "does this bitmap grant permission N" therefore
+unpacking, the base64url handling, the error taxonomy and the question "does this bitmap grant permission N" therefore
 live outside it. Until this skill shipped them, they lived in a hand-written file inside each consuming service. That
-is the shape that produced the Crockford Base32 incident this repository already paid for: four implementations under
-one contract, and the first run of all four together found five divergences.
+shape produced the Crockford Base32 incident this repository already paid for: four implementations under one
+contract, and the first run of all four together found five divergences.
 
 **A service does not hand-write a permission-bitmap decoder.** It copies the canonical implementation for its language
-from this skill. That source is generated-adjacent, and a service does not edit it locally.
+from this skill. That source is generated-adjacent, so a service does not edit it locally.
 
 | Language | Asset | Copied into, changing only |
 | --- | --- | --- |
@@ -134,34 +134,24 @@ Do not use this skill to decide whether a caller may act on a resource, or what 
 ## Ownership boundary
 
 This skill owns permission-key and bitmap-id allocation, the catalog descriptors, generation, drift interpretation, the
-apply boundary, and the consumer-side contract for reading the bitmap. Everything below belongs elsewhere, and **the
-listed owner wins on conflict**. Two refinements apply: `/alaa-services-contract` wins on what a signal is *called*,
-and `/alaa-observability-soc` wins on whether it is *required*. Every timeout, retry, pool and shed value lives in
+apply boundary, and the consumer-side contract for reading the bitmap. Before you state a rule, make a decision or edit code on any other ground,
+read `references/ownership-boundary.md`; it names the owner of everything else, and **the listed owner wins on conflict**. Two
+refinements apply: `/alaa-services-contract` wins on what a signal is *called*, and `/alaa-observability-soc` wins
+on whether it is *required*. Every timeout, retry, pool and shed value lives in
 `alaa-services-contract references/22-failure-load-and-deprecation-contract.md`. This skill states none.
-
-| Not owned here | Owner |
-| --- | --- |
-| Trusted-header assertion, JWT verification, header sanitisation, tenant derivation | `/alaa-trust-gateway-auth` |
-| Object-level relations, `can_*`, tuples | `/openfga` |
-| Log, metric, event and code **names**; request deadlines; the error envelope | `/alaa-services-contract` |
-| Whether a signal is **required**, and its gate | `/alaa-observability-soc` |
-| Retry, backoff, circuit-breaking, degradation doctrine | `/alaa-reliability-sla` |
-| Complexity budgets, structure choice, the whole N+1 family | `/alaa-algorithms-data-structures` |
-| What makes a test a test, and which layer it belongs at | `/alaa-testing-strategy` |
-| Design pass when an interface, a data writer, or a consistency, ordering, idempotency, concurrency or caching property changes | `/alaa-system-design` |
-| Security review triggers, threat classes, the fail-closed discriminator | `/alaa-security-review` |
-| Controlled-operation procedure and proof strength for the apply lanes | `/alaa-controlled-ops` |
-| Long-task phasing and resumable state | `/alaa-workflow` |
-| The quality bar itself | `alaa-project-constitution references/quality-bar.md` |
-| Model choice and reasoning effort | `/alaa-prompting-guide` |
-| Per-language validation commands and design-pattern selection | `/alaa-golang`, `/alaa-vue-typescript-clean-code`, `/alaa-mono-package`, `/alaa-laravel-architecture`, `alaa-php-clean-code references/design-patterns.md` |
 
 The test **cases** named in the three consumer references stay here. Byte-boundary bit indexing and drift-code coverage
 are domain facts, not generic test design.
 
 ## Completion evidence
 
-Report these items: the allocated keys and ids; every generated path and every applied path, separately; the drift
-counts by severity with the command that produced them; the target repository's tests you ran; and every auth-owned
-or assignment operation left outstanding. Keep three things distinct and never merge them: catalog truth,
-source-repository truth, and an unapplied generated proposal.
+Report these items:
+
+- the allocated keys and ids;
+- every generated path and every applied path, separately;
+- the drift counts by severity, with the command that produced them;
+- the target repository's tests you ran;
+- every auth-owned or assignment operation left outstanding.
+
+Keep three things distinct and never merge them: catalog truth, source-repository truth, and an unapplied generated
+proposal.

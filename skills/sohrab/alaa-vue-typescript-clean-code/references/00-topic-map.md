@@ -26,6 +26,7 @@ One file answers most tasks and two is normal. Loading every row means the task 
 | wire a `watch` on an input to a fetch, call an API inside `v-for`, `map`, or `Promise.all` over a list, add a client-side cache, size a virtual-scroll window, or sort or filter a list whose length is not a constant | `76-load-and-concurrency-binding.md` |
 | create a `.spec.ts`, mount a component, stub a store, fake a port, or claim a behaviour is proven | `78-testing-binding.md` |
 | assert a version, a "latest" or "current" fact, or cite a source | `05-sources-and-freshness.md` |
+| choose a model or reasoning effort for this work, or edit this skill's frontmatter or `agents/openai.yaml` | `05-sources-and-freshness.md` |
 
 ## Rows that are not optional when they match
 

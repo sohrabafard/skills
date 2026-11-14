@@ -39,7 +39,7 @@ In v3, never keep `capacitor.config.json`, a non-`.cjs` Electron preload, or the
 - BEX is multi-surface, not an SPA plus one file: its messaging, manifest, background and content boundaries, and dynamic assets usually change together.
 - Electron is frontend plus desktop security: context isolation, the preload boundary, and no remote module.
 - SSR plus PWA is special because HTML caching interacts with hydration. Enable the combination deliberately, never as a side effect of another change, and only after the update UX, the credentialed-request cache exclusions, the hydration behaviour, the SSR deployment, and the CI build commands are all defined.
-- In Yarn repositories use the Yarn-wrapped mode scripts; upstream support for Bun or pnpm never justifies switching.
+- In Yarn repositories use the Yarn-wrapped mode scripts. `SKILL.md` "Version rules" owns the package-manager rule.
 - Mode work usually changes `quasar.config`, so load `references/21-cli-vite-and-config.md`. Shared source can carry SSR or PWA effects into Capacitor, Cordova, and Electron.
 - With v3 dependency isolation, a "module not found" that appears in one mode only usually means the dependency was installed in the wrong location, not that the code is wrong.
 - Native permission behaviour differs from web permission behaviour in every mode with a native shell; the split is `references/45-browser-apis-and-permissions.md` §5.
