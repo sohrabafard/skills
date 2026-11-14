@@ -80,7 +80,7 @@ nothing else. Read the current kit-owned key list from the kit's `CONTRACTS.md` 
 a key to a kit family is a kit change request through `/alaa-go-chi-development`.
 
 **Proof.** Run two checks. First, from the service root, `grep -rn --include='*.go' 'os\.Getenv' internal/ cmd/` must
-return only the `configkit` wiring site — every other hit is a P10 violation. Second, write a boot test that clears one
+return only the `configkit` wiring site — every other hit is a P10 violation. Second, run a boot test that clears one
 required key and asserts the process fails to start with that key named in the error. That test proves the key
 is actually registered rather than silently defaulted.
 
