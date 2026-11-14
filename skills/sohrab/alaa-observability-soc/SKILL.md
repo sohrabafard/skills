@@ -19,11 +19,10 @@ yours. See Ownership.
    the whole `references/` tree means the task was not scoped.
 3. Start from the diff, not from the question. `references/10-signal-model.md` carries the failure-mode enumeration rule
    that every change satisfies before it is called done.
-4. For current or version-sensitive claims use `references/90-source-map.md`, and prefer official primary docs and repo
-   truth over memory.
+4. For current or version-sensitive claims, use `references/90-source-map.md`, official primary docs and repo truth,
+   not memory.
 5. When the task turns to authoring skills, prompts, agent definitions, `AGENTS.md`/`CLAUDE.md`, or model and effort
-   selection, route to `/alaa-prompting-guide` (`$alaa-prompting-guide` in Codex). This skill states no model, version,
-   or effort fact.
+   questions, route to `/alaa-prompting-guide`. This skill states no model, version, or effort fact.
 
 ## Platform invariants
 

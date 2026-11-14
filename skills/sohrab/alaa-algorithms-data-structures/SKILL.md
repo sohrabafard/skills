@@ -167,7 +167,7 @@ This skill decides inside whatever the skills below define. It states none of th
 | `/alaa-security-review` | Which cryptographic primitive belongs on which path |
 | `/alaa-controlled-ops` | That package's canonical digest specification |
 | `/alaa-project-constitution` | The quality bar whose obligation 7 this skill discharges |
-| `/alaa-prompting-guide` | Model and effort selection — never name a model here |
+| `/alaa-prompting-guide` | Model and effort capability evidence; the runtime orchestrator owns task allocation. Never name a model here |
 
 ## Anti-patterns
 
