@@ -69,7 +69,8 @@ player.configure({
     // Force MSE even on Safari for non-FairPlay content:
     preferNativeHls: false,
     preferNativeDash: false,
-    // But let FairPlay use Apple's native pipeline (the recommended default):
+    // But let FairPlay use Apple's native pipeline. Set it explicitly:
+    // the default is false from 5.3.0 (C9 in 05-provenance-and-freshness.md).
     useNativeHlsForFairPlay: true,
   },
 });

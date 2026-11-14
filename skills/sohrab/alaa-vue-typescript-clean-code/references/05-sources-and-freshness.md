@@ -10,7 +10,8 @@ this repo; official docs decide what those APIs do. Search the web only when the
 the behaviour genuinely uncertain, and when you do, record the URL and the date you read it.
 
 Run `scripts/check-frontend-versions.mjs` to get installed-versus-latest for the packages whose versions
-gate the rules in `20-typescript-composition-contract.md` and `50-quasar-vite-pinia-contract.md`. Its exit
+gate the rules in `20-typescript-composition-contract.md`, `24-typescript-project-and-antipatterns.md` and
+`50-quasar-vite-pinia-contract.md`. Its exit
 codes distinguish "clean", "drift found", and "could not run"; a "could not run" is reported as unverified,
 never rounded down to clean.
 
@@ -37,8 +38,9 @@ absent.
   `https://vuejs.org/style-guide/rules-use-with-caution.html`, `read: 2026-07-28`. Upstream discussion
   questions how large the effect is on current engines, so `10-vue-style-contract.md` states the rule on
   explicitness and cites this page for the performance rationale rather than asserting a magnitude.
-- Vue 3.6 is at release candidate with Vapor mode complete; it is not a released stable line.
-  `read: 2026-07-28`. The rule that follows from it lives in `20-typescript-composition-contract.md`.
+- Vue 3.6 is at release candidate (npm `rc` dist-tag; npm `latest` is still a 3.5 release) with Vapor mode
+  feature-complete; it is not a released stable line. Sources: `https://registry.npmjs.org/vue` dist-tags and
+  `https://github.com/vuejs/core/releases/tag/v3.6.0-rc.1`, `read: 2026-11-14`. The rule that follows from it lives in `20-typescript-composition-contract.md`.
 
 ## Official docs to refresh when the behaviour is version-sensitive
 

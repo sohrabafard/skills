@@ -67,7 +67,8 @@ Sources: PR #10786, `https://github.com/shaka-project/shaka-player/blob/v5.3.4/C
 
 `shaka.extern.AudioTrack` — `active`, `language`, `label`, `mimeType`, `codecs`, `primary`, `roles`,
 `accessibilityPurpose`, `channelsCount`, `audioSamplingRate`, `spatialAudio`, `originalLanguage`.
-**Note: no `id` field.** Key your menu rows on `language` + `roles[0]` + `label`, not on an id.
+**Note: no `id` field.** Key your menu rows on all merge-key fields in "Audio track contract (5.3)",
+not on an id. `language` + `roles[0]` + `label` alone can collide in 5.3.
 
 `shaka.extern.TextTrack` — `id`, `active`, `type`, `bandwidth`, `language`, `label`, `kind`
 (`'caption'` | `'subtitle'`), `mimeType`, `codecs`, `primary`, `roles`, `accessibilityPurpose`,

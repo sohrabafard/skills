@@ -26,7 +26,9 @@ All rows `verified` at v5.2.3, read 2026-07-28, from `lib/net/networking_engine.
 `MEDIA_PLAYLIST: 2`, `MASTER_PLAYLIST: 3`, `MPD: 4`, `// RETIRED: 'MSS': 5`, `MPD_PATCH: 6`,
 `MEDIATAILOR_SESSION_INFO: 7`, `MEDIATAILOR_TRACKING_INFO: 8`, `MEDIATAILOR_STATIC_RESOURCE: 9`,
 `MEDIATAILOR_TRACKING_EVENT: 10`, `INTERSTITIAL_ASSET_LIST: 11`, `INTERSTITIAL_AD_URL: 12`,
-`TRACKING_EVENT: 13`.
+`TRACKING_EVENT: 13`. From 5.3.0 (PR #10596) it adds `XLINK: 14` and `LINKED_MPD: 15`
+(`lib/net/networking_engine.js` at tag v5.3.4,
+`https://github.com/shaka-project/shaka-player/blob/v5.3.4/lib/net/networking_engine.js`; `verified`, read 2026-11-14).
 
 Use `RequestType.APP` for your own side-band requests through the engine, so they inherit the retry
 and abort machinery.

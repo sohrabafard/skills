@@ -34,7 +34,7 @@ Search: `Dialog plugin`, `Notify`, `Loading`, `html true`, `sanitize`.
 
 ### `Cookies`
 
-SSR-safe read/write (`Cookies.get`/`set`; server uses `ssrContext`). Quasar 2.20 changed expiry from `expires` to `MaxAge`; audit absolute-expiry assumptions. Search: `Cookies set`, `maxAge`, `expires`, `ssrContext cookies`, `httpOnly`.
+SSR-safe read/write (`Cookies.get`/`set`; server uses `ssrContext`). Quasar 2.20 changed expiry from `expires` to the `Max-Age` attribute; audit absolute-expiry assumptions. Search: `Cookies set`, `maxAge`, `expires`, `ssrContext cookies`, `httpOnly`.
 
 ### `Screen` / `Platform`
 

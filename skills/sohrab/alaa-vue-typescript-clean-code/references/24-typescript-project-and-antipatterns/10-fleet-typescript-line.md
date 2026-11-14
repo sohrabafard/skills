@@ -8,7 +8,7 @@ but its 7.0 release lacks a stable programmatic API. Microsoft's
 explicitly keeps Vue/Volar workflows on TypeScript 6 (read 2026-09-29). This is a tooling
 compatibility constraint, not a claim that TypeScript 7 is a preview.
 
-Consequences that bind every task:
+Consequences that bind every task that reads this file:
 
 - Typechecking is `vue-tsc --noEmit`, exactly as `../60-validation-gates.md` prescribes. Do not substitute a
   different typechecker, and do not add a second one alongside it.

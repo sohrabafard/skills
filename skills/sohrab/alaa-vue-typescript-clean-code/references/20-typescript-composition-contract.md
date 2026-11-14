@@ -154,7 +154,8 @@ the result.
 - **Vue 3.5+**: `useTemplateRef()`, `useId()` for SSR-stable ids, `onWatcherCleanup()` for side-effect
   cleanup inside a watcher, `watch` pause and resume, and stable reactive props destructure. Use them only
   when `package.json` proves the version and the repo already accepts the idiom.
-- **Vue 3.6**: at release candidate, with Vapor mode complete (`read: 2026-07-28`). The reactivity core is
+- **Vue 3.6**: at release candidate, with Vapor mode feature-complete (`05-sources-and-freshness.md`,
+  `read: 2026-11-14`). The reactivity core is
   rewritten internally, which changes nothing in this contract. Vapor mode is not adopted for production
   code unless the repository explicitly opts in, in a file you can point at.
 - **Pinia 3**: Vue 3 only, and the `defineStore({ id: ... })` object-id form is removed — `defineStore('id', ...)`

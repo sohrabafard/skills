@@ -102,7 +102,7 @@ def locate(name: str) -> Path:
 # Nd category does not. This is the same trap that let str.isdigit() accept
 # "۱۲۳۴۵۶" as a valid OTP.
 #
-# NOT folded, deliberately - see references in ../normalization-facts.md:
+# NOT folded, deliberately - see references/10-normalization-contract.md section 2:
 #   U+066B ARABIC DECIMAL SEPARATOR and U+066C ARABIC THOUSANDS SEPARATOR (category Po).
 #     Mapping them to "." and "," changes a number's value by a factor of 1000 the
 #     moment a downstream parser reads the ASCII character with the other locale's

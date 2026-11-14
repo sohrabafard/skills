@@ -3,7 +3,7 @@
 Compiler configuration, module syntax, type augmentation for Vue and Quasar, and the bad practices with the
 observable symptom of each. The type system itself is `22-typescript-type-system.md`.
 
-Before any task using this skill, read [Fleet TypeScript compatibility](./24-typescript-project-and-antipatterns/10-fleet-typescript-line.md#the-fleet-typescript-line); its compiler compatibility constraints and consequences apply to every task.
+Before any task that uses this file, read [Fleet TypeScript compatibility](./24-typescript-project-and-antipatterns/10-fleet-typescript-line.md#the-fleet-typescript-line); its compiler compatibility constraints and consequences apply to every such task.
 
 ## The fleet TypeScript line
 When choosing or upgrading the fleet TypeScript compiler, read [Fleet TypeScript compatibility](./24-typescript-project-and-antipatterns/10-fleet-typescript-line.md) for fleet typescript compatibility.
