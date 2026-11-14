@@ -178,7 +178,7 @@ Auth does not read `X-User-Roles`, `X-User-Mobile`, the `X-TOKEN-*` headers,
 2026-10-20 at auth `77977c3`). No extra backend-only signature header is required: the trust boundary is
 the sanitized gateway path plus the injected identity headers.
 
-**Do not freeze that positive-integer parser into the shared public contract.**
+**Do not freeze a numeric parse of `X-User-Id` into the shared public contract.**
 Translate the trusted public user UUID to the internal numeric key only at Auth's
 own storage boundary. The public project boundary remains UUIDv7 `pid`.
 
