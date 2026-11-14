@@ -89,13 +89,13 @@ Flag when: an export or report query uses a raw-SQL path that bypasses the scope
 
 ### 4. Search indexes
 
-Tenant is a filter the **server** applies on every query. Either one tenant per index or namespace, or every document carries a tenant field the server sets at index time and filters on at query time. No part of that filter comes from client text.
+Tenant is a filter the **server** applies on every query. Either each index or namespace holds one tenant, or every document carries a tenant field the server sets at index time and filters on at query time. No part of that filter comes from client text.
 
 Flag when: any part of a filter expression comes from client-supplied text; a shared index holds documents with no server-set tenant field; a re-index or backfill writes documents without the tenant field; an autocomplete, suggester, or "more like this" path queries the index without the tenant filter; a facet or aggregate count is computed across the whole index; a highlight or snippet returns text from a document the caller may not read; a deletion in the primary store leaves the document in the index.
 
 ### 5. The paths that cross tenants on purpose
 
-Admin views, support tooling, platform metrics, and billing. Each is an explicitly named path with its own exact permission, and it is the **only** way a cross-tenant read happens.
+These paths are admin views, support tooling, platform metrics, and billing. Each is an explicitly named path with its own exact permission, and it is the **only** way a cross-tenant read happens.
 
 Flag when: a general-purpose repository method exposes an `includeAllTenants`, `withoutGlobalScopes`, or `unscoped` option reachable from a normal route; a support impersonation path does not record who impersonated whom, for what reason, and for how long; a metric or dashboard exposed to tenants carries another tenant's identifier; a cross-tenant path's permission is a role rather than an exact permission.
 

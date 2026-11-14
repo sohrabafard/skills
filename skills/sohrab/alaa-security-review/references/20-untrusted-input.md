@@ -10,7 +10,7 @@ Read when the inventory shows request-derived data reaching a query, a shell, a 
 
 - **Reject, never repair.** A value outside the schema produces a rejection with a stable error code. A validator that trims, truncates, or coerces a non-conforming value approved a value the sink never receives.
 - **Order: decode once, canonicalise, validate, use.** A validator that runs before transport decoding is bypassed by encoding the payload. A validator that runs before Unicode normalisation is bypassed by a homoglyph or a combining sequence. A value decoded twice - once at the boundary, once at the sink - was validated in a form the sink never sees.
-- **Allowlist per constrained field**: an enum, a numeric range bounded at both ends, a length bound, or a regular expression anchored at both ends. A blocklist of dangerous substrings is reported as a finding, never accepted as the control.
+- **Allowlist each constrained field** with an enum, a numeric range bounded at both ends, a length bound, or a regular expression anchored at both ends. A blocklist of dangerous substrings is reported as a finding, never accepted as the control.
 - **Unknown fields**: the decoder's behaviour on a field the schema does not declare is chosen explicitly in code - reject or ignore. Silent ignoring is how mass assignment survives review.
 - **Mass assignment**: no request body is passed whole to a model constructor, an update, a merge, or a patch. Writable fields are an explicit per-endpoint allowlist, and no field carrying authorization meaning is in it - tenant or project id, owner id, role, permission, status, price, balance, quota, or any verified flag.
 - **Bound every number** that reaches a limit, offset, page size, quantity, retry count, or allocation. An unbounded integer from a request is a resource-exhaustion path on a shared fleet.
@@ -21,7 +21,7 @@ Read when the inventory shows request-derived data reaching a query, a shell, a 
 The rule above is universal; the mechanism is not. Use the mechanism the repository already has - introducing a second validation library is a finding, not a fix.
 
 - **Laravel / PHP**: a Form Request, or an explicit `validate()` call, on every write endpoint. `$fillable` is enumerated; `$guarded = []` and `Model::unguard()` are findings. `request()->all()` never reaches `create`, `update`, or `fill`.
-- **Go**: decode into a declared struct, never into `map[string]any` that is then indexed. `json.Decoder.DisallowUnknownFields()` when the chosen behaviour is reject. Validate through the repository's existing validator before use.
+- **Go**: decode into a declared struct, never into `map[string]any` that is then indexed. Call `json.Decoder.DisallowUnknownFields()` when the chosen behaviour is reject. Validate through the repository's existing validator before use.
 - **Node / TypeScript**: parse at the boundary with the repository's schema validator and carry the parsed type downstream. A TypeScript interface is a compile-time claim and validates nothing at runtime; an `as` cast on a request body is an unvalidated input.
 
 ## Injection: the general rule
