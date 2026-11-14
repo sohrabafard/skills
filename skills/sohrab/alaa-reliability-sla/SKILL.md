@@ -128,4 +128,4 @@ the references whose conditions apply. Loading the whole tree means the task was
 
 ## What this skill does not own
 
-When a question is an Ala value, a control that decides whether a caller may act, a signal or alert, broker or driver mechanics, a bulk-operation approval, language idiom or a model choice, read *Owned by another skill* in `references/00-topic-map.md`; it names each owner and what this skill keeps. When you review a change for a known defect shape, read *Anti-patterns* in the same file.
+When a question is an Ala value, a control that decides whether a caller may act, a signal or alert, broker or driver mechanics, a bulk-operation approval, language idiom or a model choice, read *Owned by another skill* in `references/00-topic-map.md`; it names each owner and what this skill keeps. When you write or review a timeout, retry, breaker, rate or concurrency limit, stale-cache fallback, idempotency store or error budget, read *Anti-patterns* in the same file.

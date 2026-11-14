@@ -281,7 +281,7 @@ metadata extension that no policy, Gate, query scope, response shaper, route, va
 ## Snapshot baseline
 
 - if a repo stores request-time user context, keep mutable projections separate from immutable snapshots
-- keep compact ids in a repository-owned projection; do not invent display names from them (the display-name rule and its one exception are in `25-end-to-end-flow-and-boundaries.md`)
+- where a repository-owned projection holds request-time user context, keep compact ids in it; do not invent display names from them (the display-name rule and its one exception are in `25-end-to-end-flow-and-boundaries.md`)
 - keep missing location ids explicit instead of fabricating location names
 
 ## Route and response reminder

@@ -95,9 +95,9 @@ Stop and raise the question. Do not decide alone when:
 - The collection is bounded by schema rather than by data: a fixed enum, a per-record set that a constraint
   caps, a list whose maximum length is enforced at write time. It cannot grow, so it needs no cursor.
 - The route returns a single record, or one aggregate computed over a window the server chooses.
-- The question is a cursor, a sort allowlist or a wire surface for an internal export or backfill. That traversal
-  takes no cursor: step 1 and `references/10-route-mode-and-sort-allowlist.md` route it to chunked primary-key
-  traversal, and `references/50-hard-cases.md` settles a traversal that must hold a snapshot.
-- The question is the collection or error envelope, the index mechanics behind the ordering, or cursor
-  tampering, rather than how the route traverses. *What this skill does not own* in `references/90-source-map.md`
-  names the owner of each and what this skill keeps.
+- The question is a cursor, a sort allowlist or a wire surface for an internal export or backfill. Step 1 and
+  `references/10-route-mode-and-sort-allowlist.md` route that traversal to chunked primary-key traversal, and
+  `references/50-hard-cases.md` settles a traversal that must hold a snapshot.
+- The question is the collection or error envelope, index mechanics, cursor tampering, whether a test proves an
+  item, why a result set must be bounded, or a model, effort or runtime claim. *What this skill does not own* in
+  `references/90-source-map.md` names the owner of each and what this skill keeps.

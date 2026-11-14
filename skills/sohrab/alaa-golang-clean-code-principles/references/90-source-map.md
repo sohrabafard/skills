@@ -62,7 +62,7 @@ table above.
 
 ## Maintenance rules
 
-- Keep `SKILL.md` routing-first: the router, the principle table, the checklist, and the companion list. Every
+- Keep `SKILL.md` routing-first: the router, the principle table, the checklist, and the two mandatory companions; every other companion is in `references/50-skill-boundaries.md`. Every
   principle's detail, example, and proof lives in `references/`.
 - State each principle at one strength in one place. If a sentence in `SKILL.md` and a sentence in a reference file say
   the same rule with different force, delete one. An agent follows the weaker.

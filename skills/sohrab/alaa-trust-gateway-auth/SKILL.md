@@ -80,7 +80,7 @@ Each case carries its symptom, decision, response, log and test in
 | work on an auth-service v3 route, the OTP or refresh flow, step-up issuance, or direct local testing | `references/60-auth-service-v3-contract.md` |
 | review a trust-boundary change and need the observable that decides a defect | `references/70-review-and-anti-patterns.md` |
 | assert a gateway or auth behaviour someone will act on, or find a fact older than your change | `references/90-source-map.md` |
-| find that your change lands on header names, envelopes, error taxonomy, platform values, the TOTP claim set, the bit contract, fail-closed doctrine, reliability doctrine, OpenFGA modelling, cursors, HAProxy, Laravel, PHP or Octane code, telemetry, exposure or trusted-proxy delivery | *What this skill does not own* in `references/90-source-map.md`; it names the owner of each ground |
+| find that your change lands on header names, envelopes, error taxonomy, platform values, the TOTP claim set or step-up response, purpose naming or proof caching, the bit contract or permission id allocation, fail-closed doctrine, reliability doctrine, OpenFGA modelling, cursors, HAProxy, Laravel, PHP or Octane code, telemetry, exposure or trusted-proxy delivery | *What this skill does not own* in `references/90-source-map.md`; it names the owner of each ground |
 
 ## Check it mechanically
 
