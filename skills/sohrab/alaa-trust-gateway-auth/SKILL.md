@@ -1,6 +1,6 @@
 ---
 name: alaa-trust-gateway-auth
-description: "Trust-boundary authority for the Ala gateway: who may assert a trusted request header, and what a service behind it may believe. Use when gateway header sanitizing or injection, JWT verification order, compact claim projection (pid, sub, prm, rol, loc) into X-Project-Id, X-User-Id, X-Access, X-User-Roles and X-Location-*, X-Access bitmap consumption, TOTP step-up headers, a public path's optional bearer, the dropped-bearer marker (WWW-Authenticate), tenant scoping behind the gateway including a guest project_id, WA ingest tenant or user attribution, auth-service v3 route shape, or a fail-closed case at that boundary is in scope: bypassed edge, absent claim, invalid bitmap. Do not use it for a service not behind the Ala gateway; route header names and response envelopes to alaa-services-contract, the permission bit contract and decoders to alaa-permission-generator, fail-closed doctrine to alaa-security-review, and cursor mechanics to alaa-keyset-pagination."
+description: "Trust-boundary authority for the Ala gateway: who may assert a trusted request header, and what a service behind it may believe. Use when gateway header sanitizing or injection, JWT verification order, compact claim projection (pid, sub, prm, rol, loc, asc) into X-Project-Id, X-User-Id, X-Access, X-User-Roles, X-Location-* and X-Admin-Scopes, X-Access bitmap consumption, TOTP step-up headers, a public path's optional bearer, the dropped-bearer marker (WWW-Authenticate), tenant scoping behind the gateway including a guest project_id, WA ingest tenant or user attribution, auth-service v3 route shape, or a fail-closed case there is in scope: bypassed edge, absent claim, invalid bitmap. Not for a service outside the Ala gateway; route header names and response envelopes to alaa-services-contract, the permission bit contract and decoders to alaa-permission-generator, fail-closed doctrine to alaa-security-review, and cursor mechanics to alaa-keyset-pagination."
 ---
 
 # Alaa Trust Gateway Auth
@@ -29,8 +29,7 @@ injects appears in it.
 request body, query string, route parameter or client-supplied header. When a
 client-supplied selector disagrees with the trusted context, deny rather than
 choose: a silent choice is a cross-tenant read nobody decided to ship. A request
-with no accepted bearer (none, or one the gateway dropped on a public path: not
-trusted; the gateway currently forwards its `Authorization` header to the backend,
+with no accepted bearer (none, or one the gateway dropped on a public path;
 `references/10-verification-and-ingress.md`) has no claim to
 derive from, so a guest carries `project_id` in the body, or in the query
 string when the request has no body. That value attributes a write.
