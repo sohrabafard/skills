@@ -10,7 +10,7 @@ Load before changing any runtime-related file in a service repo driven by `servi
 - `references/change-routing.md` — you must decide where a change belongs, or you need the regenerate command pair.
 - `references/runtime-contract-map.md` — you must find which file or variable produces a behavior, which paths are generated, which knob owns a tuning value, or how to check the pinned kit.
 - `references/debug-playbook.md` — a runtime path fails and the cause is not located.
-- `references/cross-runtime-shared-infra.md` — shared Postgres, Redis, RabbitMQ, or Adminer is touched, or a Go service on the `alaa-go-chi` kit is in scope.
+- `references/cross-runtime-shared-infra.md` — shared Postgres, Redis, RabbitMQ, ClickHouse, or Adminer is touched, or a Go service on the `alaa-go-chi` kit is in scope.
 - `references/source-map.md` — before relying on latest, current, or security-sensitive behavior.
 
 ## Goal

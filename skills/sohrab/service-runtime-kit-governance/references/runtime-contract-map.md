@@ -86,7 +86,8 @@ Typical values that belong in `.env`:
 - `DB_HOST`, `DB_PORT`, `DB_DATABASE`, `DB_USERNAME`, `DB_PASSWORD`
 - `RABBITMQ_HOST`, `RABBITMQ_PORT`, and RabbitMQ user and password values
 - `REDIS_HOST`, `REDIS_PORT`, `REDIS_CACHE_HOST`
-- direct app and infra publishing values such as `APP_PORT`, `ADMINER_PORT`, `POSTGRES_FORWARD_PORT`, `PGBOUNCER_FORWARD_PORT`
+- direct app and infra publishing values such as `APP_PORT`, `ADMINER_PORT`, `POSTGRES_FORWARD_PORT`, `PGBOUNCER_FORWARD_PORT`, `CLICKHOUSE_FORWARD_PORT`, `CLICKHOUSE_HTTP_FORWARD_PORT`
+- shared ClickHouse values `CLICKHOUSE_IMAGE` (full image override; the generated default is the Nexus reference built from `DOCKER_REGISTRY`), `CLICKHOUSE_ADMIN_USER` and `CLICKHOUSE_ADMIN_PASSWORD` (`alaa-services-contract` owns their semantics)
 
 Important current behavior:
 
@@ -147,6 +148,7 @@ These defaults are still consumed by the current kit. Service `.env` values can 
 Current detail:
 
 - setting `APP_PORT=null`, `ADMINER_PORT=null`, `POSTGRES_FORWARD_PORT=null`, or `PGBOUNCER_FORWARD_PORT=null` in `.env` disables host publishing after rerender
+- `CLICKHOUSE_FORWARD_PORT=null` or `CLICKHOUSE_HTTP_FORWARD_PORT=null` disables that host port in the rendered `docker-compose.yml` after rerender; the static `docker/shared-infra.dev.yml` does not honor `null` and always publishes both
 
 ### Build And Container Defaults
 

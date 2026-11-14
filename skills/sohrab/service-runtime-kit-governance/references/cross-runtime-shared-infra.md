@@ -1,6 +1,6 @@
 # Cross-Runtime Shared Infrastructure
 
-Use when a change touches shared local infrastructure — Postgres, Redis, RabbitMQ, Adminer — or when a Go service on the `alaa-go-chi` kit is in scope. A Laravel change that does not touch shared infra does not need this file.
+Use when a change touches shared local infrastructure — Postgres, Redis, RabbitMQ, ClickHouse, Adminer — or when a Go service on the `alaa-go-chi` kit is in scope. A Laravel change that does not touch shared infra does not need this file.
 
 ## Two generators, one contract
 
@@ -9,7 +9,7 @@ Shared infra is one running instance the whole platform reuses, emitted by two g
 - **Laravel** services get it from `service-runtime-kit` via `scripts/runtime/render-runtime.sh`.
 - **Go** services on the `alaa-go-chi` kit get it from that kit's own scaffold (`scaffold/templates.go`, `docs/consumer-templates/**`), not from `service-runtime-kit`.
 
-The infra set both emit is `postgres`, `adminer`, `redis`, `rabbitmq`. Adminer is shared local infrastructure, not a service-owned application service, so a service repo does not add its own.
+The infra set is `postgres`, `adminer`, `redis`, `rabbitmq`, `clickhouse`. `service-runtime-kit` emits all five. The `alaa-go-chi` scaffold does not emit `clickhouse` yet, so the two generators differ there until it lands. Adminer is shared local infrastructure, not a service-owned application service, so a service repo does not add its own.
 
 ## Owned here, and not owned here
 
