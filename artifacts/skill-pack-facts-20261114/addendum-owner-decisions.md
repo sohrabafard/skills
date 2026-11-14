@@ -50,3 +50,14 @@ On `main` after the 5.9.0 commit, each exited `0`: the four root checkers, the i
 - **Behaviour under the new commit protocol** has not been observed: the lanes above ran on the previous rule.
 
 No push. No tag.
+
+## Patch 5.9.1, same day
+
+A last check of the commit protocol found two gaps and the release was patched before this record closed.
+
+- **Returned work had no committer.** A lane may return its work uncommitted (no grant, or a failed commit). The lead now commits that work by path on the lane branch when the lane's focused checks passed, and first resolves the cause when the lane's commit failed.
+- **Codex cannot write `.git` from its sandbox.** The official Codex page on sandboxing and approvals, read 2026-11-14, lists `.git` among the paths that stay read-only inside a writable root in `workspace-write` mode. The page does not say how `git commit` is handled, so the orchestrator states the consequence as an inference. In Codex the lead records the lane branch, grants no commit authority unless the sandbox allows the write, and commits returned work through the host's approval path. `alaa-prompting-guide references/11-codex-runtime-features.md` holds the fact.
+- **Another writer in the checkout.** During this engagement another session committed in the same checkout. Switching that checkout's branch would have put its commits on the lane branch. The lead now checks for new commits since the recorded HEAD and for unowned files that change while it observes them; when it finds one it records isolation and keeps the checkout's branch.
+- Both routing matrices say a session started before a role was installed "may not" have it: this session received the four roles without a restart.
+
+The instruction reviewer returned CHANGES-REQUESTED on the first draft of the patch (two major: a sentence that contradicted its neighbour, and no path for a Codex lead under the same sandbox), then APPROVED-WITH-NITS after the repairs; its last wording nit was applied by the parent and not re-read. A search of the whole pack found no other sentence that states the old commit rule. Every gate exits `0` on the patched tree.
