@@ -4,3 +4,4 @@ Kept with evidence: task-tracking actor fallback names Git user.name and $USER; 
 Accepted: the worked anecdote moved to references/60 has no dedicated body pointer (it decides nothing; its rule and reason stay in the body); the relocations were reviewed here although they share a commit with rewording.
 Clean: every other least-sure task-tracking item; no Beads command, flag, exit code, decision, version or date changed; no tool name, MCP identifier, grant class or routing order changed; no cited heading changed.
 New fact found by the lead while checking: the installed bd is now 1.3.2 (9b65b9e19), while references/task-tracking.md records verification against 1.3.1 and says to recheck after an upgrade. Not rechecked in this engagement; listed as an open item.
+D2/D3 confirmation: APPROVED-WITH-NITS; seven RESOLVED, one KEPT-WITH-EVIDENCE, two ACCEPTED; one new nit (the help citation now names the command and version) repaired afterwards.

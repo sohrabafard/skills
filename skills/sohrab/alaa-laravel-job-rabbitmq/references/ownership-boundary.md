@@ -1,6 +1,6 @@
 # Ownership boundary — what this skill does not own
 
-Read this file before you state a rule about a number, a name, an observability level, messaging architecture, deployment, test design, security, code shape, complexity or worker hygiene. The named owner wins on conflict; `SKILL.md`, "Ownership boundary", owns that rule.
+Read this file before you state a rule, make a decision or edit code on ground this skill does not own. The named owner wins on conflict; `SKILL.md`, "Ownership boundary", owns that rule.
 
 - **The ten-point quality bar itself** — `alaa-project-constitution references/quality-bar.md`.
 - **Failure behaviour doctrine** (retries, backoff, deadlines, breakers, degradation, the idempotency

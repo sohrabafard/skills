@@ -89,11 +89,26 @@ Two of the reviewers dispatched at high effort reported an observed runtime effo
 
 The three major findings were relocation defects, not wording defects: a rule added to a moved ownership table, a checklist that lost its only trigger, and a router pointer that fired too late. About ten findings shared that cause: a pointer narrower than the moved content's reach. `alaa-prompting-guide references/60-skill-authoring.md` now lists it in its defects table. The repairs made after each review went back to the same reviewers for a confirmation pass; *Confirmation pass* records the result.
 
+## Confirmation pass
+
+Each reviewer received the repair commit for its own findings and judged it.
+
+| Review | Verdict | Result |
+|---|---|---|
+| Orchestrator pair | `APPROVED` | All eight resolved in both runtimes; no new finding |
+| Workflow, routing, testing, low-noise | `APPROVED-WITH-NITS` | Seven resolved, one kept with evidence, two accepted; one new nit, repaired afterwards |
+| Memory, constitution, docs, prompting guide | `APPROVED` | Nine resolved, one declared with its source; the new defects-table row conflicts with no authoring rule |
+| PHP, Laravel, providers | `APPROVED-WITH-NITS` | Four resolved, one reported; one new nit, repaired afterwards |
+| Doctrine | `APPROVED` | Seven resolved, two accepted; no new finding |
+| Platform, frontend, data | `APPROVED` | All six resolved; no new finding |
+
+The two nits repaired after the confirmation pass are one-sentence changes: the opening trigger of the rabbitmq ownership reference, and the command name and version in one Beads help citation. They and the Beads 1.3.2 help note in `alaa-workflow references/task-tracking.md` were not reviewed again.
+
 ## Open items for the owner
 
 1. `alaa-services-contract/SKILL.md` *Quick start* names a model and effort pair and requires delegation for the product overview, while the skill says it names no model.
 2. `/alaa-controlled-ops` is cited as the owner of hook registration, shared configuration, shared-system commands and API-summary source ranking by `alaa-memory-os`, `alaa-golang` and `alaa-repo-docs`. That skill governs the `alaa/controlled-ops` Composer package.
-3. The installed `bd` is version 1.3.2. `alaa-workflow references/task-tracking.md` records verification against 1.3.1 and says to recheck after an upgrade.
+3. The installed `bd` is version 1.3.2, while `alaa-workflow references/task-tracking.md` was verified against 1.3.1. The lead rechecked on 2026-11-14 that every adopted command and flag still appears in the installed help, and recorded that; behaviour under 1.3.2 was not re-tested.
 4. `alaa-bale-provider` says the services contract "names no Bale client" and that Bale "ships shortly"; the contract now registers a Bale queue and adapter. `alaa-sms-provider-mediana` presents Mediana as commanded today; the registry marks it inactive after the Magfa cutover. Magfa and Mediana point to reference 22 for the provider retry budget, and 22 defers provider calls to 33.
 5. `alaa-php-clean-code` forces English documentation output; `alaa-repo-docs` preserves each document's language.
 6. `alaa-trust-gateway-auth` says "follow the stricter rule where they overlap", against the pack principle that the owning skill wins for its half.

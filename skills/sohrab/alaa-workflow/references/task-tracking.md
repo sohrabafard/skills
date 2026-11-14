@@ -30,7 +30,7 @@ The selected store owns task registration, status, dependencies, readiness, disc
 
 ## Agent identity and ownership
 
-Before any Beads mutation, give every live agent a distinct actor, including the parent. The actor has the form `<runtime>:<run-id>:<agent-instance-id>`. Use the IDs that the host exposes. When the host exposes no ID for a component, allocate an opaque unique ID for it. Identity coordinates ownership and audit. It authenticates nobody and grants no authority. Pass the literal actor with `--actor` on every mutation. Never rely on the default fallback to the Git `user.name` or `$USER` (installed `bd --help`, observed 2026-11-14), and never rely on a shared inherited `BEADS_ACTOR`.
+Before any Beads mutation, give every live agent a distinct actor, including the parent. The actor has the form `<runtime>:<run-id>:<agent-instance-id>`. Use the IDs that the host exposes. When the host exposes no ID for a component, allocate an opaque unique ID for it. Identity coordinates ownership and audit. It authenticates nobody and grants no authority. Pass the literal actor with `--actor` on every mutation. Never rely on the default fallback to the Git `user.name` or `$USER` (installed `bd create --help`, bd 1.3.2, observed 2026-11-14), and never rely on a shared inherited `BEADS_ACTOR`.
 
 Keep the actor recoverable in the existing dispatch or the admitted handoff. A child dispatch carries the child's actor, the binding reference, the issue IDs and the ownership action. A read-only lane uses the ownership action `none` unless it is separately authorized to mutate issues. A parent never acts as a child. The same live agent keeps its actor through compaction and resume. A replacement agent gets a new actor.
 
@@ -169,7 +169,7 @@ For Beads, inspect existing issues and edges and verify IDs and project scope th
 
 ## Beads capabilities in use
 
-Verified on 2026-11-02 against installed `bd` 1.3.1 (c1c4b642a): the `--help` of every command named below (for integration and setup commands, the `bd --help` list), plus read-only `bd where`, `ping`, `ready`, `list`, `show`, `config`, `formula list`, `gate list`, `human list`, `orphans`, `dep cycles`, `graph check` and `lint`. Recheck after a Beads upgrade. Use a capability only as its row states. No row grants remote or destructive authority.
+Verified on 2026-11-02 against installed `bd` 1.3.1 (c1c4b642a): the `--help` of every command named below (for integration and setup commands, the `bd --help` list), plus read-only `bd where`, `ping`, `ready`, `list`, `show`, `config`, `formula list`, `gate list`, `human list`, `orphans`, `dep cycles`, `graph check` and `lint`. Recheck after a Beads upgrade. Rechecked 2026-11-14 against installed `bd` 1.3.2 (9b65b9e19): the `--help` of every adopted command named below still lists each flag this table names; no behaviour was re-tested. Use a capability only as its row states. No row grants remote or destructive authority.
 
 | Capability | Decision | Rule and reason |
 |---|---|---|

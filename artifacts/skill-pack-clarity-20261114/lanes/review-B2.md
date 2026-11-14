@@ -3,3 +3,4 @@ Repaired: keyset exclusion no longer claims an export "takes no cursor" (it cont
 Accepted as declared: about 28 reference files changed only to drop the legacy dual call form. The pack converts dual forms only in files edited for another reason; this engagement is the pack-wide rewrite that rule reserves for its own reviewed change, and this review covered those hunks (no behaviour change found).
 Accepted, not changed: "This skill names no model" now sits in the relocated ownership catalogues of five skills instead of their bodies; body routing for model questions remains.
 Clean: contract values, headers, codes, numbers and dates unchanged; no ownership move against the AGENTS.md table; every relocated catalogue verbatim with full row counts; the other three services-contract rule conversions are backed by existing rules; vector rule 6 matches its reference.
+B2 confirmation: APPROVED; seven RESOLVED, two ACCEPTED, no new finding.
