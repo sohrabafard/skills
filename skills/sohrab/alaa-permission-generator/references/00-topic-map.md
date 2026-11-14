@@ -1,8 +1,8 @@
 # Topic Map
 
 Load the one file whose condition matches the task in front of you. Every row states a situation you can observe
-before you act, not a subject heading, so you can route without reading the files first. The out-of-skill routing
-table lives in `SKILL.md` under "Not owned here"; this file routes only inside the skill, so the two cannot drift.
+before you act, not a subject heading, so you can route without reading the files first. This file routes only
+inside the skill. `references/ownership-boundary.md` names the owner of each concern outside it.
 
 | You are about to | Read |
 |---|---|
@@ -18,6 +18,7 @@ table lives in `SKILL.md` under "Not owned here"; this file routes only inside t
 | change any canonical decoder, or ship a decoder change of any size into any service | `scripts/bitmap-conformance.sh` |
 | add an input class every decoder must handle, or explain the harness exiting `6` | `scripts/permission-bitmap-corpus.json` |
 | judge whether the catalog tool should emit the decoder rather than only the map | `references/catalog-decoder-emission-proposal.md` |
+| state a rule on ground this skill does not own | `references/ownership-boundary.md` |
 
 ## The decoder assets
 

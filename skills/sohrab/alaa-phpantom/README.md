@@ -4,21 +4,23 @@ One canonical source directory, compatible with the user's existing global symli
 
 ## Origin and loading
 
+In this file, `$SKILLS_REPO` is the root of your checkout of this skills repository, and `$PROJECT_ROOT` is the Composer root of the target PHP repository you test against.
+
 Install **the source folder** at:
 
 ```text
-/home/sohrab/project/skills/skills/sohrab/alaa-phpantom/
+$SKILLS_REPO/skills/sohrab/alaa-phpantom/
 ```
 
 The existing user's sync script links it into:
 
 ```text
-~/.claude/skills/alaa-phpantom -> /home/sohrab/project/skills/skills/sohrab/alaa-phpantom/
+~/.claude/skills/alaa-phpantom -> $SKILLS_REPO/skills/sohrab/alaa-phpantom/
 ```
 
 And into the user's current Codex skill directory. Do **not** add a second symlink or copy skill content into each project; the user's existing script does this already.
 
-**Important:** Claude Code v2.1.0+ supports LSP plugins, but recognizing a plugin at `~/.claude/skills/<name>/.claude-plugin/plugin.json` as `@skills-dir` is a *newer* Claude Code feature. Verify support on the installed version; if not recognized, `claude --plugin-dir /home/sohrab/project/skills/skills/sohrab/alaa-phpantom` is the fallback for a local CLI session. Loading a plain skill is not proof that LSP and hooks loaded.
+**Important:** Claude Code v2.1.0+ supports LSP plugins, but recognizing a plugin at `~/.claude/skills/<name>/.claude-plugin/plugin.json` as `@skills-dir` is a *newer* Claude Code feature. Verify support on the installed version; if not recognized, `claude --plugin-dir "$SKILLS_REPO/skills/sohrab/alaa-phpantom"` is the fallback for a local CLI session. Loading a plain skill is not proof that LSP and hooks loaded.
 
 When this **plugin** is loaded, Claude gets:
 
@@ -31,13 +33,13 @@ Codex gets the same root skill and can use the installed PHPantom CLI through no
 
 ## Binary
 
-The LSP server and CLI run the installed executable directly: `/home/sohrab/.local/bin/phpantom_lsp` (`$HOME/.local/bin/phpantom_lsp`). The plugin bundles no launcher, LSP client, JSON-RPC proxy, or MCP server, and installs nothing.
+The LSP server and CLI run the installed executable directly: `$HOME/.local/bin/phpantom_lsp`. `.lsp.json` holds its absolute path. The plugin bundles no launcher, LSP client, JSON-RPC proxy, or MCP server, and installs nothing.
 
 ## Quick check (WSL)
 
 ```bash
-cd /home/sohrab/project/skills/skills/sohrab/alaa-phpantom
-bash scripts/doctor.sh /home/sohrab/project/auth
+cd "$SKILLS_REPO/skills/sohrab/alaa-phpantom"
+bash scripts/doctor.sh "$PROJECT_ROOT"
 python3 -m unittest discover -s tests -v  # optional tests, Python stdlib only
 claude plugin validate .                  # use installed CLI version that supports this
 claude plugin list
@@ -48,7 +50,7 @@ Inside a new/reloaded Claude Code session:
 1. `/plugin` -> Installed: ensure `alaa-phpantom@skills-dir` is loaded; check Errors for LSP conflicts.
 2. `/hooks`: check `PostToolUse` `Write|Edit` from this plugin. No per-project edit to `.claude/settings.json` is necessary.
 3. Edit a **throwaway** `.php` file and verify `Found N new diagnostic issues` in Claude, or request the LSP tool for definition/references. To test the hook, intentionally syntax-break that test file, see the lint diagnostic, then revert the test change.
-4. Test `phpantom_lsp analyze --project-root /home/sohrab/project/auth --severity error` on a small project subset; check installed CLI `--help` first if in doubt.
+4. Test `phpantom_lsp analyze --project-root "$PROJECT_ROOT" --severity error` on a small project subset; check installed CLI `--help` first if in doubt.
 
 If a previous version registered the same hook in per-project settings, remove **only that duplicate hook entry** after verifying `/hooks`; retain other hooks.
 

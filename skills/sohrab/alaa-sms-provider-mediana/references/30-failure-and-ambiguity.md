@@ -2,7 +2,7 @@
 
 Read this when a Mediana call did not return a clean acceptance: a timeout, a refused connection, a TLS error, a non-2xx status, or a 200 whose body carries `meta.status: false`.
 
-This file classifies **this vendor's** failures and names the smallest safe recovery for each. It states no retry count, no backoff curve, no timeout value and no breaker threshold. Retry legality and the shape of a retry belong to `/alaa-reliability-sla` (`$alaa-reliability-sla`); the Ala numbers belong to `alaa-services-contract references/22-failure-load-and-deprecation-contract.md`.
+This file classifies **this vendor's** failures and names the smallest safe recovery for each. It states no retry count, no backoff curve, no timeout value and no breaker threshold. Retry legality and the shape of a retry belong to `/alaa-reliability-sla`; the Ala numbers belong to `alaa-services-contract references/22-failure-load-and-deprecation-contract.md`.
 
 ## The four transport classes
 
@@ -15,9 +15,9 @@ A single "transport error" class is the defect this page exists to prevent. Thes
 | Read timeout or total timeout after the request was written | Nothing. The SMS may already be on its way to the subscriber | **Do not re-issue the HTTP call.** Record the attempt as ambiguous and resolve it at the envelope's `idempotency_key` |
 | Connection reset after the request was written | Nothing, for the same reason | Same as a read timeout |
 
-The refusal-versus-timeout distinction and retry doctrine belong to `/alaa-reliability-sla` (`$alaa-reliability-sla`) `references/20-retries.md`; this table records Mediana-specific outcomes and handling only.
+The refusal-versus-timeout distinction and retry doctrine belong to `/alaa-reliability-sla` `references/20-retries.md`; this table records Mediana-specific outcomes and handling only.
 
-The Mediana send API defines no idempotency key, so this route records `idempotent: false` and every caller sets its HTTP retry budget to `0` (`alaa-services-contract references/22-failure-load-and-deprecation-contract.md:149-151`). Deduplication happens one layer up, at the `idempotency_key` already inside the notification command envelope; adding a second mechanism beside it is forbidden by `22-…:152-153`.
+The Mediana send API defines no idempotency key. `SKILL.md` "The ambiguous send" and "Non-negotiables" own the rule that follows from it: the route records `idempotent: false`, every caller sets its HTTP retry budget to `0`, and deduplication happens only at the envelope's `idempotency_key`.
 
 ## Symptom to recovery
 
@@ -45,8 +45,8 @@ The Mediana send API defines no idempotency key, so this route records `idempote
 
 Emit `alaa_dependency_requests_total`, `alaa_dependency_request_duration_seconds`, `alaa_dependency_request_failures_total`, and `alaa_dependency_timeouts_total` for every Mediana call, defined at `alaa-services-contract references/24-metric-registry.md` section “Downstream dependency”. Do not invent a Mediana-specific family; the registry is the only place a metric name is coined.
 
-Label those series with the send mode and the outcome class from the first table, both of which are closed sets. Requirement levels — what must be traced, what must be logged, and at which severity — are `/alaa-observability-soc` (`$alaa-observability-soc`).
+Label those series with the send mode and the outcome class from the first table, both of which are closed sets. Requirement levels — what must be traced, what must be logged, and at which severity — are `/alaa-observability-soc`.
 
 ## When the failure is on the queue side
 
-A worker that cannot reach Mediana, a job that keeps failing, a dead-letter queue filling with send commands, and the replay of those commands are all `/alaa-async-messaging` (`$alaa-async-messaging`). RabbitMQ is the only broker on this fleet. Do not design an outbox, a retry queue, or a dead-letter topology in provider code, and do not describe one here; the seam already exists and duplicating it produces two mechanisms that disagree about what has been delivered.
+A worker that cannot reach Mediana, a job that keeps failing, a dead-letter queue filling with send commands, and the replay of those commands are all `/alaa-async-messaging`. RabbitMQ is the only broker on this fleet. Do not design an outbox, a retry queue, or a dead-letter topology in provider code, and do not describe one here; the seam already exists and duplicating it produces two mechanisms that disagree about what has been delivered.

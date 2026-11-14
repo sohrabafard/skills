@@ -6,16 +6,16 @@ Ensure your canonical `alaa-phpantom` folder contains `.claude-plugin/plugin.jso
 
 ## LSP does not start
 
-Run `bash scripts/doctor.sh /home/sohrab/project/auth` from the plugin folder. Check the existing binary with `/home/sohrab/.local/bin/phpantom_lsp --version`. The plugin installs nothing. Check `claude --debug` and `/plugin` Errors for conflicts with other PHP servers.
+Run `bash scripts/doctor.sh "$PROJECT_ROOT"` from the plugin folder, where `$PROJECT_ROOT` is the Composer root of the target repository. Check the existing binary with `$HOME/.local/bin/phpantom_lsp --version`. The plugin installs nothing. Check `claude --debug` and `/plugin` Errors for conflicts with other PHP servers.
 
 ## Incorrect classes, especially Carbon\\CarbonImmutable
 
-From the WSL project root:
+From the WSL project root (`$PROJECT_ROOT`, the Composer root of the target repository):
 
 ```bash
-cd /home/sohrab/project/auth
+cd "$PROJECT_ROOT"
 php -r 'require "vendor/autoload.php"; var_dump(class_exists("Carbon\\CarbonImmutable"));'
-/home/sohrab/.local/bin/phpantom_lsp analyze app/ --project-root "$PWD" --code unknown_class --format json
+"$HOME/.local/bin/phpantom_lsp" analyze app/ --project-root "$PWD" --code unknown_class --format json
 ```
 
 If Composer resolves it but PHPantom doesn't, examine LSP workspace root, indexing, Composer metadata, and `vendor/`. For a **Windows-hosted editor** that opens Linux files through `\\wsl.localhost`, sending `file://wsl.localhost/...` to a Linux LSP server may cause URI/workspace path mismatches; that issue is separate from Claude Code running **inside** native WSL. No proxy is needed for the latter.

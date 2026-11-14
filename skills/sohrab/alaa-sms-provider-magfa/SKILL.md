@@ -7,28 +7,28 @@ description: "Magfa HTTP v2 SMS API integration: authentication, request and res
 
 ## When NOT to use
 
-Use this skill only for communication with the Magfa HTTP v2 SMS API: wire shapes, rendering, duplicate prevention, delivery status and error codes. Mentioning SMS or OTP alone does not trigger it. General SMS/OTP flows and provider selection belong to the caller's application owner. Route other decisions:
+Use this skill only for communication with the Magfa HTTP v2 SMS API: wire shapes, rendering, duplicate prevention, delivery status and error codes. A mention of SMS or OTP alone does not trigger it. The caller's application owner decides general SMS and OTP flows and provider selection. Route other decisions to their owners:
 
-- Retry legality, backoff, idempotency doctrine, ambiguity doctrine → `/alaa-reliability-sla`
-- Timeout and retry-budget values, metric and event names, the notification envelope → `/alaa-services-contract`
-- Queues, workers, outbox, DLQ, replay → `/alaa-async-messaging`
-- Secret storage and rotation, threat classes → `/alaa-security-review`
-- Mediana/IPPanel → `/alaa-sms-provider-mediana`; Bale Safir → `/alaa-bale-provider`
-- Go or PHP client shape → `/alaa-golang`, `/alaa-php-clean-code`; test layering → `/alaa-testing-strategy`
+- Retry legality, backoff, idempotency doctrine and ambiguity doctrine → `/alaa-reliability-sla`
+- Timeout and retry-budget values, metric and event names, and the notification envelope → `/alaa-services-contract`
+- Queues, workers, the outbox, the DLQ and replay → `/alaa-async-messaging`
+- Secret storage and rotation, and threat classes → `/alaa-security-review`
+- Mediana or IPPanel → `/alaa-sms-provider-mediana`; Bale Safir → `/alaa-bale-provider`
+- Go client shape → `/alaa-golang`; PHP client shape → `/alaa-php-clean-code`; test layering → `/alaa-testing-strategy`
 
 ## Role: one driver behind a channel-neutral adapter
 
-A Magfa client is a driver behind the notification service's channel-neutral adapter. The driver translates only: request building, authentication, response parsing, and error-code classification. Line selection, fallback, retry scheduling, quiet hours and suppression stay in the caller's core; a driver containing policy is a defect.
+A Magfa client is a driver behind the notification service's channel-neutral adapter. The driver only translates: it builds the request, authenticates, parses the response and classifies the error code. Line selection, fallback, retry scheduling, quiet hours and suppression stay in the caller's core. A driver that contains policy is a defect.
 
-A sender line (a `senders` value) belongs to exactly one Magfa account. Configuration selects the line; the line determines this driver and the account credentials. Never send a line through another account's credentials. Magfa rejects it with code `20`.
+A sender line (a `senders` value) belongs to exactly one Magfa account. Configuration selects the line, and the line determines this driver and the account credentials. Never send a line through another account's credentials, because Magfa rejects it with code `20`.
 
 ## Provenance
 
-Source: `https://messaging.magfa.com/ui/?public/wiki/api/http_v2`, read 2026-10-20 from the rendered page. Facts marked `NEEDS_MAGFA_CONFIRMATION` are absent from that page. Before a production change relies on a fact, re-verify it against the live page and record the URL and read date in the same edit. Repository code, committed fixtures and account documentation outrank this file; when they disagree with this file and you cannot resolve it, mark `NEEDS_MAGFA_CONFIRMATION` and stop. Do not guess.
+Source: `https://messaging.magfa.com/ui/?public/wiki/api/http_v2`, read 2026-10-20 from the rendered page. Facts marked `NEEDS_MAGFA_CONFIRMATION` are absent from that page. Before a production change relies on a fact, re-verify it against the live page and record the URL and read date in the same edit. Repository code, committed fixtures and account documentation outrank this skill. When they disagree with this skill and you cannot resolve the disagreement, mark the fact `NEEDS_MAGFA_CONFIRMATION` and stop. Do not guess.
 
 ## Configuration and authentication
 
-Read every value from configuration; ship the vendor URL only as a documented default. Use the target repository's existing names when it has them.
+Read every value from configuration. Ship the vendor URL only as a documented default. Use the target repository's existing names when it has them.
 
 ```text
 MAGFA_SMS_API_BASE_URL=https://sms.magfa.com/api/http/sms/v2
@@ -37,64 +37,39 @@ MAGFA_SMS_DOMAIN=<domain>
 MAGFA_SMS_SERVICE_PASSWORD=<secret>
 ```
 
-- Send `Authorization: Basic base64("USERNAME/DOMAIN:SERVICE_PASSWORD")` on every call. The service password is generated in the panel under account management → password and security → service passwords. It is never the panel login password.
-- The panel can enable a source-IP allowlist. An unlisted IP fails with code `29`. Register a static egress IP before cutover.
-- HTTPS only, UTF-8 only, `Accept: application/json` on every call. Gzip is optional both ways (`Content-Encoding: gzip`, `Accept-Encoding: gzip`).
+- Send `Authorization: Basic base64("USERNAME/DOMAIN:SERVICE_PASSWORD")` on every call. The panel generates the service password under account management → password and security → service passwords. It is never the panel login password.
+- The panel can enable a source-IP allowlist. A call from an unlisted IP fails with code `29`. Register a static egress IP before cutover.
+- Use HTTPS only and UTF-8 only. Send `Accept: application/json` on every call. Gzip is optional in both directions (`Content-Encoding: gzip`, `Accept-Encoding: gzip`).
 
 ## Endpoints
 
-| Method | HTTP | Path | Purpose |
-|---|---|---|---|
-| `send` | POST | `/send` | send to at most 100 recipients |
-| `mid` | GET | `/mid/{uid}` | provider message id for a client `uid` |
-| `statuses` | GET | `/statuses/{mid1,mid2,...}` | final status, at most 100 ids |
-| `messages` | GET | `/messages` or `/messages/{count}` | inbound messages, at most 100 |
-| `balance` | GET | `/balance` | remaining credit |
+When you build a request path, read `references/10-endpoints-and-send-fields.md`. It lists the five methods (`send`, `mid`, `statuses`, `messages`, `balance`), their HTTP verbs, paths and per-call limits.
 
-Every response carries a top-level `status`: `0` is success, anything else is an error code. Parse the body on every response before deciding anything. The transport status alone is not acceptance.
+Every response carries a top-level `status`: `0` is success, and any other value is an error code. Parse the body of every response before you decide anything. The transport status alone is not acceptance.
 
 ## Send
 
-Send JSON with `Content-Type: application/json` (the vendor also accepts form encoding; Alaa sends JSON).
+Send JSON with `Content-Type: application/json`. The vendor also accepts form encoding, but Alaa sends JSON. When you build a `send` body, read `references/10-endpoints-and-send-fields.md` for each field's type and its vendor and Alaa requirement. Always send `uids`, with one client id per message (see Idempotency). Omit `udhs`. Omit `encodings` or send `0`.
 
-| Field | Type | Vendor | Alaa | Notes |
-|---|---|---|---|---|
-| `senders` | string[] | required | required | sender lines |
-| `recipients` | string[] | required | required | at most 100 |
-| `messages` | string[] | required | required | full UTF-8 text |
-| `uids` | long[] | optional | **required** | one client id per message; see Idempotency |
-| `encodings` | int[] | optional | omit or `0` | `0` auto (default), `2` Farsi, `5` 8-bit, `6` binary |
-| `udhs` | string[] | optional | omit | Alaa sends no UDH |
+- Always send equal-length `senders`, `recipients`, `messages` and `uids` arrays, and repeat the sender and text for each recipient. The vendor also allows a one-to-many shape, but its pairing with `uids` is undocumented. Equal arrays leave nothing to guess. A length mismatch fails with a code from `101` to `110`.
+- Split a send above 100 recipients before you send it, because the vendor rejects a larger request.
+- Magfa accepts these sender forms: `3000xxxxxx`, `983000xxxxxx`, `+983000xxxxxx`. The sender must belong to the account (`20`) and carry verified end-user information (`34`).
+- Magfa accepts these recipient forms: `09xxxxxxxxx`, `989xxxxxxxxx`, `+989xxxxxxxxx`, `9xxxxxxxxx`. Render `989xxxxxxxxx`, because the response echoes recipients in that form. Produce it from the platform's single normaliser, called with the target provider. Mediana renders `+989…` and Bale renders `989…`, so a normaliser without a provider parameter is a defect.
+- Text: any non-ASCII character makes the message UCS2. One Farsi part holds 70 characters, or 67 per part when the message is split. One Latin part holds 160 characters, or 153 per part when split. More than 265 parts fails with `30`. An invalid character fails with `35`. Cost is per part.
 
-- Always send equal-length `senders`, `recipients`, `messages` and `uids` arrays, repeating the sender and text per recipient. The vendor also allows a one-to-many shape. Its pairing with `uids` is undocumented. Equal arrays leave nothing to guess. Length mismatches fail with `101`–`110`.
-- Split above 100 recipients before sending; the vendor rejects larger requests.
-- Sender forms accepted: `3000xxxxxx`, `983000xxxxxx`, `+983000xxxxxx`. The sender must belong to the account (`20`) and carry verified end-user information (`34`).
-- Recipient forms accepted: `09xxxxxxxxx`, `989xxxxxxxxx`, `+989xxxxxxxxx`, `9xxxxxxxxx`. Render `989xxxxxxxxx`, because the response echoes recipients in that form. Produce it from the platform's single normaliser called with the target provider. Mediana renders `+989…` and Bale renders `989…`, so a normaliser without a provider parameter is a defect.
-- Text: any non-ASCII character makes the message UCS2. One Farsi part holds 70 characters, 67 per part when split; Latin 160 and 153. More than 265 parts fails with `30`. An invalid character fails with `35`. Cost is per part.
+When you write or test the response parser, read the response example in `references/10-endpoints-and-send-fields.md`. Parse the response by these rules:
 
-Response:
-
-```json
-{
-  "status": 0,
-  "messages": [
-    { "status": 13, "userId": "1223", "recipient": "98912xxxxxxx" },
-    { "status": 0, "id": 111111111, "userId": 1224, "parts": 3, "tariff": 160.00, "alphabet": "UCS2", "recipient": "98913xxxxxxx" }
-  ]
-}
-```
-
-- A top-level `0` does not mean every item was accepted. Evaluate each item. `status: 0` with an `id` is accepted: persist `id` (the `mid`), `parts`, `tariff` and `alphabet`. Classify any other item status by the error table.
-- Match items to deliveries by `userId` (your `uid`), never by array position or recipient, because one recipient can appear twice. The vendor example shows `userId` as both string and number; parse both.
-- A non-zero top-level `status` with an empty `messages` array rejects the whole request; classify it by the error table.
+- A top-level `0` does not mean that every item was accepted. Evaluate each item. An item with `status: 0` and an `id` is accepted: persist `id` (the `mid`), `parts`, `tariff` and `alphabet`. Classify any other item status by `references/30-error-codes.md`.
+- Match items to deliveries by `userId` (your `uid`), never by array position or recipient, because one recipient can appear twice. The vendor example shows `userId` as both a string and a number, so parse both.
+- A non-zero top-level `status` with an empty `messages` array rejects the whole request. Classify it by `references/30-error-codes.md`.
 
 ## No pattern mode
 
-HTTP v2 has no pattern or template mode as of the read date. OTP and every other message are sent as full text rendered by the caller. Never invent a pattern field. If Magfa adds one, verify its fields on the live page, record the URL and date, and add it as a new mode. Which line types may carry OTP traffic is an account and contract fact. Confirm it with the account, not from this skill.
+HTTP v2 has no pattern or template mode as of the read date. OTP and every other message are sent as full text that the caller renders. Never invent a pattern field. If Magfa adds one, verify its fields on the live page, record the URL and date, and add it as a new mode. Which line types may carry OTP traffic is an account and contract fact. Confirm it with the account, not from this skill.
 
 ## Idempotency: `uid` and `mid`
 
-**`uid` is the delivery's durable numeric id: persisted before the first call and unchanged across every retry of that delivery.** Never derive it from recipient or text, because a content-derived key collapses two legitimate OTPs into one and the user cannot log in. It must be unique within the Magfa account. When several services share one account, partition the id space or send only through one service.
+**`uid` is the delivery's durable numeric id. Persist it before the first call, and keep it unchanged across every retry of that delivery.** Never derive it from the recipient or the text, because a content-derived key collapses two legitimate OTPs into one and the user cannot log in. It must be unique within the Magfa account. When several services share one account, partition the id space or send only through one service.
 
 | Outcome | What it proves | Action |
 |---|---|---|
@@ -102,102 +77,69 @@ HTTP v2 has no pattern or template mode as of the read date. OTP and every other
 | Read timeout or reset after the request was written | Nothing | **Do not re-issue `send`.** Call `GET /mid/{uid}` |
 | Item or top-level `15`, `23` | Vendor says resend | Call `GET /mid/{uid}` first, then resend only if not found; for an OTP see the exception below |
 
-**OTP exception for `15` and `23`.** An OTP may be resent with the same code and the same `uid` after a short delay and without the `mid` lookup, because a duplicate copy of the same code is harmless. The lookup path (settle delay, then a second lookup) usually outlives the code. The caller bounds the resend with three limits: a resend count that fits the attempt budget, a minimum remaining code lifetime, and a send-time check that the code is still current. Every other message keeps the lookup, because a duplicate of other content costs the recipient or the account. This exception never covers a read timeout, for an OTP either.
+**OTP exception for `15` and `23`.** You may resend an OTP with the same code and the same `uid` after a short delay and without the `mid` lookup, because a duplicate copy of the same code is harmless. The lookup path (a settle delay, then a second lookup) usually outlives the code. The caller bounds the resend with three limits:
+
+1. a resend count that fits the attempt budget;
+2. a minimum remaining code lifetime;
+3. a send-time check that the code is still current.
+
+Every other message keeps the lookup, because a duplicate of other content costs the recipient or the account. This exception never covers a read timeout, for an OTP either.
 
 The `mid` lookup:
 
 - `mid` greater than `0`: the message was accepted. Record the `mid` and stop.
-- `mid` equal to `-1`: not found. The vendor presents this lookup as the duplicate guard, so treat `-1` as not sent and resend with the same `uid`. Two facts are `NEEDS_MAGFA_CONFIRMATION`: how soon after a timeout the lookup becomes reliable, and whether Magfa rejects a repeated `uid`. Until confirmed, wait the caller's configured settle delay before the lookup, and look up once more before resending. An OTP `15` or `23` under the OTP exception above skips this lookup.
+- `mid` equal to `-1`: not found. The vendor presents this lookup as the duplicate guard, so treat `-1` as not sent and resend with the same `uid`. Two facts are `NEEDS_MAGFA_CONFIRMATION`: how soon after a timeout the lookup becomes reliable, and whether Magfa rejects a repeated `uid`. Until both are confirmed, wait the caller's configured settle delay before the lookup, and look up once more before you resend. An OTP `15` or `23` under the OTP exception above skips this lookup.
 
 ## Delivery status (pull only)
 
-`GET /statuses/{mid1,mid2,...}` with at most 100 comma-separated ids returns `dlrs: [{ mid, status, date }]`. HTTP v2 has no webhook. Status arrives only by polling, and only within 24 hours of sending.
-
-| Magfa `status` | Meaning | Normalized | Polling |
-|---|---|---|---|
-| `1` | delivered to handset | `delivered` | stop |
-| `2` | not delivered to handset | `failed` | stop |
-| `16` | not delivered to operator | `failed` | stop |
-| `8` | delivered to operator | `sent` | continue; may become `1` or `2` |
-| `0` | no status yet | `pending` | continue |
-| `-1` | unknown id, or more than 24 hours since send | `expired` | stop |
+`GET /statuses/{mid1,mid2,...}` takes at most 100 comma-separated ids and returns `dlrs: [{ mid, status, date }]`. HTTP v2 has no webhook. Status arrives only by polling, and only within 24 hours of sending. When you map a `status` value to a normalized state or decide whether to keep polling, read `references/20-delivery-status.md`.
 
 - Move a delivery's state forward only. A late `8` after `1` changes nothing.
-- The `date` timezone is `NEEDS_MAGFA_CONFIRMATION`; store the vendor string verbatim beside your own receive time.
-- Polling cadence and budget belong to the caller.
+- The timezone of `date` is `NEEDS_MAGFA_CONFIRMATION`. Store the vendor string verbatim beside your own receive time.
+- The caller owns the polling cadence and budget.
 
 ## Inbound messages and balance
 
-- `GET /messages/{count}` returns at most 100 `{ body, senderNumber, recipientNumber, date }`. Whether a read consumes the messages is `NEEDS_MAGFA_CONFIRMATION`. That decides whether two pollers race. Run one poller per account. Treat `body` as untrusted user content and never log it. Use inbound only when a product requirement asks for it.
-- `GET /balance` returns `balance`. Use it for monitoring and alerts, never as a pre-send gate, because a check-then-send races.
+- `GET /messages/{count}` returns at most 100 `{ body, senderNumber, recipientNumber, date }` objects. Whether a read consumes the messages is `NEEDS_MAGFA_CONFIRMATION`, and that fact decides whether two pollers race. Run one poller per account. Treat `body` as untrusted user content and never log it. Use inbound messages only when a product requirement asks for them.
+- `GET /balance` returns `balance`. Use it for monitoring and alerts, never as a pre-send gate, because a check followed by a send races.
 
 ## Error codes and classes
 
-The caller acts on the class; the driver returns the class and the raw code.
+The driver returns the class and the raw code, and the caller acts on the class. When you classify a code or write the error-mapping tests, read `references/30-error-codes.md`. It maps every documented code to its class.
 
-- **transient** — retry with backoff on the same line, same `uid`, after a `mid` lookup when the outcome may have executed. An OTP `15` or `23` may skip the lookup under the OTP exception.
-- **recipient-terminal** — fail this recipient on this line; the caller may try another line or channel.
-- **account** — stop using this account or line: open its breaker and alert an operator; never retry.
-- **caller-defect** — fix the code or configuration; never retry.
-- **window** — not a failure; defer to the allowed window.
-
-| Code | Meaning | Class |
-|---|---|---|
-| `1` | invalid recipient | recipient-terminal; repeated occurrences indicate a normaliser defect |
-| `2` | invalid sender | caller-defect |
-| `3` | invalid encoding for the text | caller-defect |
-| `4` | invalid mclass | caller-defect |
-| `6` | invalid UDH | caller-defect |
-| `8` | promotional send outside 07:00–22:00 | window |
-| `13` | empty content | caller-defect |
-| `14` | insufficient credit | account |
-| `15` | internal server error, resend | transient; OTP: same-code resend without lookup allowed |
-| `16` | account inactive | account |
-| `17` | account expired | account |
-| `18` | invalid username or password | account |
-| `19` | invalid username, password and domain combination | account |
-| `20` | sender not owned by the account | caller-defect (line-to-account mapping) |
-| `22` | service not enabled for the account | account |
-| `23` | cannot process now, resend | transient; OTP: same-code resend without lookup allowed |
-| `24` | invalid message id, or older than one day | caller-defect on `mid`/`statuses`; `expired` when older than one day |
-| `25` | invalid method name | caller-defect |
-| `27` | recipient on operator blacklist (promotional) | recipient-terminal |
-| `28` | recipient prefix blocked at Magfa | recipient-terminal |
-| `29` | source IP not allowed | account (egress IP) |
-| `30` | more than 265 parts | caller-defect |
-| `31` | invalid JSON | caller-defect |
-| `33` | subscriber blocked this sender (opt-out, «لغو ۱۱») | recipient-terminal; record an opt-out suppression for this line |
-| `34` | no verified information for this sender number | account |
-| `35` | invalid character in text | caller-defect |
-| `101`–`110` | array length mismatch, empty arrays, too many recipients | caller-defect |
+- **transient**: retry with backoff on the same line with the same `uid`. Do a `mid` lookup first when the outcome may have executed. An OTP `15` or `23` may skip the lookup under the OTP exception.
+- **recipient-terminal**: fail this recipient on this line. The caller may try another line or channel.
+- **account**: stop using this account or line. Open its breaker and alert an operator. Never retry.
+- **caller-defect**: fix the code or configuration. Never retry.
+- **window**: not a failure. Defer to the allowed window.
 
 Store an unlisted code verbatim with its recipient, treat it as terminal for that item, and alert. Never retry it, because an unknown code retried as transient turns a caller defect into provider load.
 
 ## HTTP 429 and `Retry-After`
 
-HTTP 429 without a readable vendor status means the gateway throttled the call before Magfa processed it. The outcome is not-sent, the class is transient, and you retry with the same `uid`. That 429 is the only throttle signal, and it is `NEEDS_MAGFA_CONFIRMATION`. Codes `15` and `23` stay transient rejections, not throttles. Read `Retry-After` on a 429 and on no other answer, a `5xx` included. Clamp the hint to the caller's maximum (Ala: `SMS_RETRY_AFTER_MAX_SECONDS`, default 60 s). The wait, the account-wide cooldown and the provider fallback belong to the caller: `/alaa-services-contract` `references/33-outbound-messaging-provider-contract.md`.
+HTTP 429 without a readable vendor status means that the gateway throttled the call before Magfa processed it. The outcome is not-sent, the class is transient, and you retry with the same `uid`. That 429 is the only throttle signal, and it is `NEEDS_MAGFA_CONFIRMATION`. Codes `15` and `23` stay transient rejections, not throttles. Read `Retry-After` on a 429 and on no other answer, including a `5xx`. Clamp the hint to the caller's maximum (Ala: `SMS_RETRY_AFTER_MAX_SECONDS`, default 60 s). The caller owns the wait, the account-wide cooldown and the provider fallback: `/alaa-services-contract` `references/33-outbound-messaging-provider-contract.md`.
 
 ## Non-negotiables
 
 - Keep the service password, the `Authorization` header, full recipient numbers, message text and OTP values out of logs, traces, exception payloads, screenshots and reports. Mask a recipient as `98912****000`.
-- Never put a recipient number, `uid` or `mid` in a metric label or span name. All are unbounded and the first is PII.
+- Never put a recipient number, a `uid` or a `mid` in a metric label or a span name. All three are unbounded, and the first is PII.
 - Emit the four `alaa_dependency_*` families from `/alaa-services-contract` `references/24-metric-registry.md` on every Magfa call, labelled only by method and outcome class. Invent no Magfa-specific family.
 - Give every call an explicit timeout and retry budget from `/alaa-services-contract` `references/22-failure-load-and-deprecation-contract.md`.
-- Report only unexpected faults to Sentry; a classified vendor rejection is a result, not an exception.
+- Report only unexpected faults to Sentry. A classified vendor rejection is a result, not an exception.
 - Run a live send only against a test account and line, to a recipient the user named in this session, because an accepted SMS cannot be recalled.
 
 ## Required tests
 
-- Request builder: equal-length arrays, split at 100, JSON shape, exact Basic header value.
-- Normaliser corpus: `09…`, `+989…`, `9…` and Persian or Arabic digits render `989…`; invalid input is rejected.
-- Response parsing: mixed accepted and rejected items, `userId` as string and number, non-zero top-level `status` with empty `messages`.
-- Error mapping: every listed code maps to its class; an unlisted code is terminal.
+- Request builder: equal-length arrays, the split at 100, the JSON shape, and the exact Basic header value.
+- Normaliser corpus: `09…`, `+989…`, `9…` and Persian or Arabic digits render `989…`, and invalid input is rejected.
+- Response parsing: mixed accepted and rejected items, `userId` as a string and as a number, and a non-zero top-level `status` with an empty `messages` array.
+- Error mapping: every code in `references/30-error-codes.md` maps to its class, and an unlisted code is terminal.
 - Ambiguity: a read timeout never re-issues `send`; `mid > 0` records acceptance; `mid = -1` resends with the same `uid`.
-- Resend requests: a non-OTP `15` or `23` is looked up before any resend; an OTP `15` or `23` is resent with the same code and `uid` only inside the caller's resend count and remaining-lifetime bounds.
+- Resend requests: a non-OTP `15` or `23` is looked up before any resend. An OTP `15` or `23` is resent with the same code and `uid` only inside the caller's resend-count and remaining-lifetime bounds.
 - `uid` is derived from the delivery id, never from content, and is identical across retries.
-- Status mapping for every row, including `0` and `-1`, and batching at 100 ids.
-- Redaction: no password, number, text or OTP reaches a log, trace attribute, exception payload or report.
+- Status mapping for every row of `references/20-delivery-status.md`, including `0` and `-1`, and batching at 100 ids.
+- Redaction: no password, number, text or OTP reaches a log, a trace attribute, an exception payload or a report.
 
 ## Stop
 
-Done when the driver passes the tests above against fixtures and every fact it relies on is either on the provenance page or confirmed. When a change depends on a `NEEDS_MAGFA_CONFIRMATION` fact, stop and report the fact and the decision it blocks.
+The work is done when the driver passes the tests above against fixtures, and every fact it relies on is either on the provenance page or confirmed. When a change depends on a `NEEDS_MAGFA_CONFIRMATION` fact, stop and report the fact and the decision it blocks.

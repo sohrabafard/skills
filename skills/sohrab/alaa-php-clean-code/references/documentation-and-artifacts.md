@@ -13,7 +13,7 @@
 Use `/alaa-repo-docs` for the deterministic workflow that keeps docs, code, and Postman aligned.
 
 When this skill is the active coding baseline:
-- keep resulting docs in simple, fluent English unless the user explicitly asks for another language
+- keep resulting docs in simple, fluent English unless the user explicitly asks for another language, such as Persian. This overrides the docs output language of `/alaa-repo-docs` while this skill is active. This file is the one owner of that rule; `SKILL.md` and `00-topic-map.md` point here.
 - keep exact technical identifiers in the same spelling used by the codebase
 - preserve detail; do not flatten useful operational or API nuance just to shorten the docs
 
@@ -101,6 +101,5 @@ A document is stale if it:
 - duplicates another document with conflicting detail
 
 ## When to use companion doc skills
-- Use `/alaa-repo-docs` for repo-wide documentation passes, docs consistency checks, and docs/Postman sync workflow.
-- While using this skill, override the docs output language to simple English unless the user explicitly requests Persian or another language.
+- Use `/alaa-repo-docs` for repo-wide documentation passes, docs consistency checks, and docs/Postman sync workflow. Its output language follows "Documentation language and boundary" above.
 - Use `/openai-docs` when any document needs official OpenAI references, current model guidance, current prompt guidance, or up-to-date product behavior.

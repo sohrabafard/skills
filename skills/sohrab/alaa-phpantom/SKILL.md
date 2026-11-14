@@ -5,7 +5,7 @@ description: PHPantom native PHP/Blade language intelligence and Composer/Larave
 
 # Alaa PHPantom — complete PHP language intelligence
 
-PHPantom is an installed **Rust language server**, not an MCP server. Claude Code's plugin automatically supplies the read-only native `LSP` tool and post-edit diagnostics; shell CLI operations perform project-wide checks and **intentional** source mutations. Codex can use this same skill and CLI, but its standard runtime does not gain a native LSP tool merely by loading `.lsp.json`.
+PHPantom is an installed **Rust language server**, not an MCP server. In Claude Code the plugin supplies the read-only native `LSP` tool and post-edit diagnostics. Shell CLI operations perform project-wide checks and **intentional** source mutations. Codex can use this skill and the CLI, but its standard runtime gains no native LSP tool from `.lsp.json`.
 
 ## When NOT to use
 
@@ -15,29 +15,29 @@ PHPantom is an installed **Rust language server**, not an MCP server. Claude Cod
 
 ## Binary, workspace, and scope
 
-- Work inside the **native Linux/WSL** project path, not a Windows `file://wsl.localhost` workspace URI. For this machine the installed executable is `/home/sohrab/.local/bin/phpantom_lsp` (normally `$HOME/.local/bin/phpantom_lsp`).
-- Use the existing PHPantom binary directly at `/home/sohrab/.local/bin/phpantom_lsp` for both native LSP and CLI operations (`analyze`, `fix`, `format`, `move`, `init`). No bundled launcher, wrapper, MCP bridge, or separate PHPantom installation is required.
-- The command `phpantom_lsp` may be used when it resolves to the installed binary on `PATH`; otherwise invoke the absolute path. Never download, install, or build another copy.
-- Derive the **nearest relevant Composer root** (`composer.json`), not necessarily the git monorepo root. Use `--project-root "$PROJECT_ROOT"` when working outside that directory. `cd` to the root when inspecting/validating.
-- Do **not** call the LSP server without arguments from a regular shell for diagnostics: that starts an interactive JSON-RPC process. Use `phpantom_lsp analyze` for batch diagnostics.
-- Treat results as evidence: PHPantom can report false positives, particularly with dynamic Laravel behavior. Check Composer autoload, configured stubs, and workspace indexing before assuming a symbol is missing.
+- Work inside the **native Linux or WSL** project path, not a Windows `file://wsl.localhost` workspace URI.
+- Run the installed binary `$HOME/.local/bin/phpantom_lsp` directly for native LSP and for the CLI operations (`analyze`, `fix`, `format`, `move`, `init`). It needs no bundled launcher, wrapper, MCP bridge or separate installation.
+- Use the bare command `phpantom_lsp` when it resolves to that binary on `PATH`. Otherwise invoke the absolute path. Never download, install or build another copy.
+- Find the **nearest relevant Composer root** (the directory holding `composer.json`), not necessarily the git monorepo root. In this skill `$PROJECT_ROOT` means that root in the target repository. Pass `--project-root "$PROJECT_ROOT"` when you work outside that directory. `cd` to the root when you inspect or validate.
+- Do **not** start the LSP server without arguments from a regular shell for diagnostics, because that starts an interactive JSON-RPC process. Use `phpantom_lsp analyze` for batch diagnostics.
+- Treat results as evidence: PHPantom can report false positives, particularly with dynamic Laravel behavior. Check Composer autoload, configured stubs and workspace indexing before you conclude that a symbol is missing.
 
 ## Route by operation
 
 | Intent | Correct interface | Policy |
 |---|---|---|
-| Inspect definition, references, hover, type and navigation | Claude native `LSP` tool, when available | Read-only; prefer symbolic lookup over text guessing |
-| See new diagnostics after edits | Native LSP diagnostics + global `php -l` PostToolUse hook | Do not redundantly run whole-project analysis after every edit |
-| Diagnose PHP/Composer/Laravel issues | `phpantom_lsp analyze` | Scope paths first; optionally JSON for processing |
-| Remove unused imports / automated source fixes | `phpantom_lsp fix` | First `--dry-run`, then apply only task-appropriate rules/files |
-| PHP and Blade formatting | `phpantom_lsp format` | First `--check`, then apply to selected files only |
-| Rename/move class or namespace across references/PSR-4 | `phpantom_lsp move` | First `--dry-run`; check destination mappings and remaining warnings |
-| Create project-specific configuration | `.phpantom.toml` / `phpantom_lsp init` | Only when useful and explicitly within scope; no automatic init |
+| Inspect definition, references, hover, type and navigation | Claude native `LSP` tool, when available | Read-only; use symbolic lookup instead of text guessing |
+| See new diagnostics after edits | Native LSP diagnostics and the global `php -l` PostToolUse hook | Do not run whole-project analysis after every edit |
+| Diagnose a PHP, Composer or Laravel issue | `phpantom_lsp analyze` | Scope paths first; use JSON when a tool processes the output |
+| Remove unused imports or apply automated source fixes | `phpantom_lsp fix` | `--dry-run` first, then apply only the rules and files the task needs |
+| Format PHP and Blade | `phpantom_lsp format` | `--check` first, then apply to selected files only |
+| Rename or move a class or namespace across references and PSR-4 | `phpantom_lsp move` | `--dry-run` first; check destination mappings and remaining warnings |
+| Create project-specific configuration | `.phpantom.toml` or `phpantom_lsp init` | Only when useful and explicitly within scope; never init automatically |
 
 ## Fast, executable workflow
 
-1. Identify the target **Composer root** and targeted changed files. Review current `git status --short` and existing uncommitted changes. Use the current working tree as the baseline; never discard someone else's edits.
-2. For an unclear symbol/type, use Claude's native `LSP` lookup where present. The LSP tool is **read-only**, not a source-code-fix endpoint. If unavailable (including Codex), use scoped `analyze`, inspect definitions via regular file tools, and state the limitation.
+1. Identify the target **Composer root** and the targeted changed files. Review `git status --short` and the existing uncommitted changes. Use the current working tree as the baseline. Never discard someone else's edits.
+2. For an unclear symbol or type, use Claude's native `LSP` lookup where present. The LSP tool is **read-only**; it does not fix source code. When it is unavailable, including in Codex, use a scoped `analyze`, inspect definitions with the regular file tools, and state the limitation.
 3. For diagnostics use:
 
    ```bash
@@ -54,7 +54,7 @@ PHPantom is an installed **Rust language server**, not an MCP server. Claude Cod
    ```
 
    `fix --dry-run` returns `2` when it found fixable changes; that is an expected preview outcome. Do not enable `--with-phpstan` unless the installed version and existing project setup explicitly support it; the upstream CLI documentation calls that integration future-facing.
-5. For formatting, **check first**, then apply to precisely scoped targets; formatting may delegate to *already-installed* Pint/php-cs-fixer/phpcbf/blade-formatter according to project configuration:
+5. For formatting, **check first**, then apply to precisely scoped targets. Formatting may delegate to an *already-installed* Pint, php-cs-fixer, phpcbf or blade-formatter, according to project configuration:
 
    ```bash
    phpantom_lsp format app/Service/Foo.php --check --project-root "$PWD"
@@ -62,7 +62,7 @@ PHPantom is an installed **Rust language server**, not an MCP server. Claude Cod
    ```
 
    A `format --check` exit code `2` indicates changes are needed, not an execution failure. Avoid whole-repo format sweeps unrelated to the task.
-6. For class/namespace moves, preview and verify the **full destination name**, PSR-4 mapping, number of affected files, and leftover strings/config/Blade references:
+6. For a class or namespace move, preview it and verify the **full destination name**, the PSR-4 mapping, the number of affected files, and leftover references in strings, config and Blade:
 
    ```bash
    phpantom_lsp move --dry-run --project-root "$PWD" 'App\Old\Widget' 'App\New\Widget'
@@ -70,13 +70,13 @@ PHPantom is an installed **Rust language server**, not an MCP server. Claude Cod
    ```
 
    Bash single quotes preserve each namespace backslash. Never claim the move is complete if PHPantom reports unresolved external references.
-7. Validate the result: inspect `git diff --check`, review scoped `git diff`, run focused tests/static checks relevant to the task, and re-run targeted `analyze` and `format --check`. Do not mask existing diagnostics as newly introduced ones.
+7. Validate the result: inspect `git diff --check`, review the scoped `git diff`, run the focused tests and static checks relevant to the task, and re-run a targeted `analyze` and `format --check`. Do not present existing diagnostics as newly introduced ones.
 
 ## Multi-agent working tree considerations
 
 - In a shared worktree, use `fix`, `format`, and `move` only while coordinating writes to overlapping files. If another agent modified the target between preview and apply, re-run preview and review the diff.
-- Never run project-wide `fix`/`format` on a task scoped to individual files. A namespace move is inherently project-wide; coordinate the move and communicate affected paths.
-- The PostToolUse syntax hook is **read-only**. It only processes Claude `Write`/`Edit` events on `.php` (not `.blade.php`), without `jq` or installs. It does not catch arbitrary `Bash`-based writes. The hook is registered automatically as part of the loaded Claude plugin, irrespective of whether this skill was invoked.
+- Never run a project-wide `fix` or `format` on a task scoped to individual files. A namespace move is inherently project-wide; coordinate the move and communicate affected paths.
+- The PostToolUse syntax hook is **read-only**. It processes only Claude `Write` and `Edit` events on `.php` files (not `.blade.php`), and needs no `jq` or install. It does not catch a write made through `Bash`. The loaded Claude plugin registers the hook whether or not this skill was invoked.
 - Respect read-only, Plan, and user approval constraints. If instructed to implement, execute the approved scoped change after preview rather than asking for blanket approval repeatedly. Never auto-fix or auto-format from a hook.
 
 ## References — read only the one whose condition you are in
