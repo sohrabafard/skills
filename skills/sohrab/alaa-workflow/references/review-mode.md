@@ -31,7 +31,7 @@ Do not require a subagent, prompt pack, checkpoint, or JSON state for an ordinar
 
 Finish the whole review or verification pass before any fix. Record each finding when found in the selected task store under `references/task-tracking.md`, on the reviewed issue or as its own `discovered-from` issue when deferred, and continue. A read-only lane returns its findings and its parent records them. Only the early-repair obstruction in /alaa-testing-strategy `references/100-test-execution.md` permits an earlier fix.
 
-After every boundary review return arrives, from the reviewer and each triggered specialist, consolidate them into one finding list before verification or repair routing. A critical, blocker, high or major finding blocks. A medium, minor, low or nit finding defers.
+After every boundary review return arrives, from the reviewer and each triggered specialist, consolidate them into one finding list before verification or repair routing. A critical (blocker) or high (major) finding blocks. A medium (minor) or low (nit) finding defers.
 
 - Key each finding by root cause: the violated invariant or contract plus the decisive file and symbol. Line number, reporter and wording are not part of the key.
 - Merge findings with one key into one item. Keep every reporter and cited location, keep the strongest evidence, and use the highest severity any lens gave.

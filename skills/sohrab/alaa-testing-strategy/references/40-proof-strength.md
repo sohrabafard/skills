@@ -1,6 +1,6 @@
 # Proof Strength
 
-Read before reporting any claim as validated, and whenever an environment cannot reach the level a claim needs. `SKILL.md` names the six levels in order and holds the rule that a level never substitutes for a higher one. This file owns the definition of each level, the mapping from a claim to the minimum level that supports it, the escalation rule, and what to do when the level is unreachable.
+Read before you assign or review a proof level, before reporting any claim as validated, and whenever an environment cannot reach the level a claim needs. `SKILL.md` names the six levels in order and holds the rule that a level never substitutes for a higher one. This file owns the definition of each level, the mapping from a claim to the minimum level that supports it, the escalation rule, and what to do when the level is unreachable.
 
 The vocabulary exists so that one word carries the same meaning in every service, language, and report in the fleet. A reviewer reading "level 2" knows what was ruled out and what was not, without asking. That is the entire value, and it is destroyed the moment one report uses a level name loosely.
 

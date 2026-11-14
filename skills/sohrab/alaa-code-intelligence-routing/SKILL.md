@@ -16,7 +16,7 @@ Select the evidence owner for each question. Native gates own proof.
 
 ## Authority
 
-Routing grants no additional authority. Do not change MCP, hook, CodeGraph, Serena, Boost or language-server integration or configuration unless explicitly asked for setup, upgrade, repair or removal. Index lifecycle effects also need authorization. Native sandbox restrictions do not prove MCP enforcement. Apply the grant owner before assigning tools.
+Routing grants no additional authority. Do not change MCP, hook, CodeGraph, Serena, Boost or language-server integration or configuration unless explicitly asked for setup, upgrade, repair or removal. Index lifecycle effects also need authorization. Native sandbox restrictions do not prove MCP enforcement. Apply the scoped grant owner before assigning tools.
 
 ## When NOT to use
 
