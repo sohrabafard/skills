@@ -53,19 +53,21 @@ The counts are in [evidence.md](evidence.md).
 | Instructions (`alaa-instruction-reviewer`) | CHANGES-REQUESTED | 4 major, 7 minor, 2 nits | All repaired |
 | Instructions, confirmation pass | APPROVED-WITH-NITS | 2 minor, 2 nits | All repaired; not re-read by the reviewer |
 
+After the confirmation pass the parent made two more binding edits of the class the reviewer had already repaired, in commit `a1165c46`: the Go binding applies `/alaa-golang-clean-code-principles` only in an Ala service built on the alaa-go-chi kit, as that skill's own description scopes it; and the frontend binding gains the build-and-delivery and documentation-annotation triggers that the owner's global frontend rule names. The gates passed after them; no reviewer re-read them.
+
 Records: `lanes/implementation.md`, `lanes/review-code.md`, `lanes/review-instructions.md`.
 
 ## Validation observed
 
-On `main` at `4c208cbe`, each exited `0`: the four root checkers, the installer unittest, both orchestrators' `render_agents.py --check`, `validate_pack.py`, `check_agent_grants.py` and `check_agent_contracts.py`, the three `alaa-prompting-guide` checkers, `check_execution_contracts.py`, the constitution template check and the memory checksum. No fixture, self-test or model comparison was run; the pack owner excludes them. The three `ValueError` branches of the binding guard are therefore proven only by the code reviewer's own probe.
+On `main` at `4c208cbe`, and again after commit `a1165c46`, each exited `0`: the four root checkers, the installer unittest, both orchestrators' `render_agents.py --check`, `validate_pack.py`, `check_agent_grants.py` and `check_agent_contracts.py`, the three `alaa-prompting-guide` checkers, `check_execution_contracts.py`, the constitution template check and the memory checksum. No fixture, self-test or model comparison was run; the pack owner excludes them. The three `ValueError` branches of the binding guard are therefore proven only by the code reviewer's own probe.
 
 ## Installation
 
-The pack owner authorized installation. From `4c208cbe`: the Claude Code installer created 4 files and updated 7; the Codex installer installed or updated 14 of 37. A second Claude Code dry run reported 34 unchanged, and the four new Claude Code files are byte-identical to their sources. This proves the files are installed. A session started before the install keeps its old role list until it restarts.
+The pack owner authorized installation. From `4c208cbe`: the Claude Code installer created 4 files and updated 7; the Codex installer installed or updated 14 of 37. Both installers ran again after commit `a1165c46`. A final Claude Code dry run reported 34 unchanged. This proves the files are installed. A session started before the install keeps its old role list until it restarts.
 
 ## Open items for the owner
 
-These came out of the session evidence and need an owner decision. None was changed here.
+These came out of the session evidence. None was changed here. Items 1 and 4 need an owner decision, because one is a conflict of authority and the other changes a deliberate guard. Items 2, 3 and 5 are follow-up work a maintainer can do.
 
 1. **Lanes that commit.** 145 of 209 Claude Code implementation lanes ran `git commit`. The implementer contract and the orchestrator's commit protocol say a lane never commits; the owner's global runtime rule says lanes commit locally. One of the two has to change.
 2. **Omitted task controls.** The model was omitted in 508 of 714 Agent-tool dispatches and the effort in 591, although the orchestrator requires both on every dispatch. An omitted model inherits the session's model: four implementer lanes ran on Fable that way. Workflow-tool lanes carried no effort at all.
