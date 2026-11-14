@@ -6,7 +6,7 @@ Owner: <person or team>   Reviewer: <who reviewed>   Date: <YYYY-MM-DD>
 Supersedes: <record or none>   Superseded by: <record or none>
 
 Fill every section below. The two-screen budget, the status lifecycle, and the rule for a section that does
-not apply are in `/alaa-system-design` (`$alaa-system-design`) and its `references/60-design-record.md`.
+not apply are in `/alaa-system-design` and its `references/60-design-record.md`.
 
 ## 1. Frame
 

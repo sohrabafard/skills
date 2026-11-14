@@ -70,7 +70,7 @@ until someone confirms it. This applies to a provider's batch ceiling, an accoun
 id-to-recipient mapping, a queue name, a rate limit, a retry ceiling — anything you would otherwise write from
 inference. A guess ships a silent wrong behavior; a marker ships a visible to-do. An honest `[gap]` outranks a
 plausible guess, always. Exact platform contracts — envelopes, headers, queues, readiness — are owned by
-`/alaa-services-contract` (`$alaa-services-contract`); read the fact from there before marking it unknown.
+`/alaa-services-contract`; read the fact from there before marking it unknown.
 
 **Proof — say this plainly: the gate does not exist yet.** There is no producer/consumer message-type drift test
 in the kit. Verified against kit source 2026-07-26: the nearest gates are `apicontractkit.CoverageDiff`, run by
@@ -83,4 +83,4 @@ marshals each command and event struct and asserts the resulting JSON key set eq
 plus the same golden file vendored into the consuming service's test — a rename then fails on both sides instead
 of failing silently in production. And file the real gate: one timestamped change request proposing a
 message-type registry with a drift test comparing declared producers against declared consumers, submitted
-through `/alaa-go-chi-development` (`$alaa-go-chi-development`) using its change-request template.
+through `/alaa-go-chi-development` using its change-request template.

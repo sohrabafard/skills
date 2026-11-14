@@ -6,8 +6,8 @@ Load before reporting any complexity or performance claim.
 predicts, and report a single-run claim as reasoned rather than measured. This file says how to run the comparison so
 the ratio means something, and how to read a disagreement.
 
-Mechanics are not here. `/golang-benchmark` (`$golang-benchmark`) owns Go benchmarks, `pprof`, and `benchstat`;
-`/alaa-testing-strategy` (`$alaa-testing-strategy`) owns whether a benchmark is evidence, at which proof level, and
+Mechanics are not here. `/golang-benchmark` owns Go benchmarks, `pprof`, and `benchstat`;
+`/alaa-testing-strategy` owns whether a benchmark is evidence, at which proof level, and
 how a result is reported. This file owns only the two-size comparison.
 
 ## The comparison
@@ -45,7 +45,7 @@ says nothing.
 - **The real data shape**, not a uniform synthetic one. A structure whose cost depends on key distribution behaves
   differently on sequential fixture keys than on production keys.
 - **The real engine** for anything the engine decides: a query plan changes with table size, so a plan measured on a
-  thousand rows is not the plan that runs on a million. `/alaa-data-layer` (`$alaa-data-layer`) owns plan reading.
+  thousand rows is not the plan that runs on a million. `/alaa-data-layer` owns plan reading.
 - **The concurrency the path actually runs at**, when the budget is about a shared resource — a pool, a lock, a
   single-threaded consumer. A serial measurement of a contended resource measures the uncontended case.
 

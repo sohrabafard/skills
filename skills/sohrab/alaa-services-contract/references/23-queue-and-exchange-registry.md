@@ -14,7 +14,7 @@ What this file does not own:
 - The **notification command payloads**, the notification envelope aliases, and the per-producer matrix are
   owned by `27-notification-service-contract.md`.
 - Prefetch values, acknowledgement mechanics, publisher confirms, and DLQ replay procedure are owned by
-  `/alaa-async-messaging` (`$alaa-async-messaging` in Codex). Publish timeout, retry budget, and the durable
+  `/alaa-async-messaging`. Publish timeout, retry budget, and the durable
   outbox path are owned by `22-failure-load-and-deprecation-contract.md`.
 - That every consumer sets an explicit prefetch is owned by `22-failure-load-and-deprecation-contract.md`.
 
@@ -259,9 +259,9 @@ service built on the `alaa-go-chi` kit and is its intended successor once the ki
 
 ## Companion skills
 
-- `/alaa-async-messaging` (`$alaa-async-messaging` in Codex) — prefetch, acknowledgement, publisher
+- `/alaa-async-messaging` — prefetch, acknowledgement, publisher
   confirms, quorum-queue policy, and DLQ replay for any queue in this table.
-- `/alaa-laravel-job-rabbitmq` (`$alaa-laravel-job-rabbitmq` in Codex) — Laravel producer and consumer
+- `/alaa-laravel-job-rabbitmq` — Laravel producer and consumer
   wiring for the Laravel services above.
-- `/alaa-golang` (`$alaa-golang` in Codex) — Go producer message structs and their snake_case tags.
-- `/alaa-prompting-guide` (`$alaa-prompting-guide` in Codex) — every model and effort question.
+- `/alaa-golang` — Go producer message structs and their snake_case tags.
+- `/alaa-prompting-guide` — every model and effort question.

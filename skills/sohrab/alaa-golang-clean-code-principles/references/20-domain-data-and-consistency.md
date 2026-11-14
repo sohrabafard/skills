@@ -9,7 +9,7 @@ Inside domain and application code, return typed `errkit` errors (code, status, 
 causes (`fmt.Errorf("expanding chunk %d: %w", n, err)`). Exactly one place — the HTTP boundary — maps them to
 the canonical `{error:{status,code,message,meta}}` envelope. Never render JSON errors in a use case; never
 log-and-swallow; never branch on error text. (Wrapping mechanics, `errors.Is`/`As`, sentinel design:
-`/golang-error-handling` (`$golang-error-handling`) through the `/alaa-golang` (`$alaa-golang`) router.)
+`/golang-error-handling` through the `/alaa-golang` router.)
 
 ```go
 // WRONG — decision by string matching; breaks on the first reworded message
@@ -22,8 +22,7 @@ if errors.Is(err, grants.ErrIdempotencyConflict) {
 ```
 
 Codes are UPPER_SNAKE, stable, and append-only in the service's catalog; renaming a code is a contract change
-with a deprecation window, not a refactor. Code *names* are owned by `/alaa-services-contract`
-(`$alaa-services-contract`) — read the name from there, do not invent one.
+with a deprecation window, not a refactor. Code *names* are owned by `/alaa-services-contract` — read the name from there, do not invent one.
 
 **Proof.** `errkit` fails closed: an error carrying a code nobody registered, an out-of-range status, an empty
 message, or metadata that failed its budget is collapsed to the canonical `INTERNAL` envelope rather than
@@ -36,8 +35,8 @@ run `make contracttest` (`go test ./contracttest/...`).
 kit's `CONTRACTS.md` canonical envelope example shows `"status": 422` for that code while its strict-JSON and
 binding sections document 400. The envelope validator accepts both. Verified against kit source 2026-07-26.
 Pick the constructor whose status your endpoint's documented contract states, record which you chose, and route
-the contradiction itself to `/alaa-services-contract` (`$alaa-services-contract`); file the fix as a change
-request through `/alaa-go-chi-development` (`$alaa-go-chi-development`). Do not standardize a service on one
+the contradiction itself to `/alaa-services-contract`; file the fix as a change
+request through `/alaa-go-chi-development`. Do not standardize a service on one
 answer and call the question closed.
 
 ## P5 — Ports Inward, Adapters Outward, Domain Pure
@@ -72,8 +71,7 @@ skill and no analyzer enforces it. The kit's `linttools` ships five analyzers �
 Until an analyzer lands, run the complete build-graph check in `/alaa-golang`
 `references/62-import-direction-and-boundaries.md` in the service's CI and review its dependency list.
 File the real gate: one timestamped change request proposing an import-direction analyzer in `linttools/`,
-wired into `cmd/alaa-lint` and `make lint-analysis`, submitted through `/alaa-go-chi-development`
-(`$alaa-go-chi-development`) using its change-request template. These manual/CI checks do not make the
+wired into `cmd/alaa-lint` and `make lint-analysis`, submitted through `/alaa-go-chi-development` using its change-request template. These manual/CI checks do not make the
 missing kit analyzer implemented.
 
 ## P6 — One Transaction, One Truth: Business Write + Outbox + Audit Together
@@ -144,7 +142,7 @@ ON CONFLICT (category, channel) DO UPDATE SET rank = EXCLUDED.rank, mode = EXCLU
 
 **Retry doctrine is not this skill's.** How many attempts, what backoff curve, what timeout budget, how to
 degrade, and what to do about an ambiguous timeout (the request that may or may not have landed) belong to
-`/alaa-reliability-sla` (`$alaa-reliability-sla`). Read it before choosing a policy. What this skill fixes is
+`/alaa-reliability-sla`. Read it before choosing a policy. What this skill fixes is
 that whatever policy you choose must land on an idempotent target.
 
 Kit facts that constrain that policy, verified against kit source 2026-07-26 — do not assume otherwise:

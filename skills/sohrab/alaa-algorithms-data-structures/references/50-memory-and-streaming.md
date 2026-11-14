@@ -65,21 +65,20 @@ meant to remove.
    mean fewer round trips and more memory per chunk. The configurability rules are in `60-tuning-points.md`.
 2. **Deterministic ordering across chunks**, so no record is skipped or repeated between chunks. Ordering by a
    non-unique column produces both when rows tie at a chunk boundary; order by something unique, or by the
-   pagination mechanism `/alaa-data-layer` (`$alaa-data-layer`) prescribes.
+   pagination mechanism `/alaa-data-layer` prescribes.
 3. **Stable behaviour when the underlying data changes mid-run**, stated explicitly: a long export runs while rows
    are inserted and deleted, so say whether the output is a snapshot, is best-effort, or is guaranteed to include
    every row present at the start.
 4. **Resumability, or an explicit statement that it has none.** A chunked operation that fails at chunk nine hundred
    and restarts from chunk one will never finish on a large input. Resumability means recording the last completed
    position durably, and it makes re-processing a chunk possible, so the per-chunk work is idempotent —
-   `/alaa-reliability-sla` (`$alaa-reliability-sla`) owns that contract.
+   `/alaa-reliability-sla` owns that contract.
 5. **Progress that an operator can observe**, so a run that has stalled is distinguishable from a run that is slow.
-   The signal itself belongs to `/alaa-observability-soc` (`$alaa-observability-soc`).
+   The signal itself belongs to `/alaa-observability-soc`.
 
 ## Allocation inside the loop
 
-Two rules, and no more, because per-language allocation behaviour belongs to `/golang-performance`
-(`$golang-performance`) and the per-language clean-code skills:
+Two rules, and no more, because per-language allocation behaviour belongs to `/golang-performance` and the per-language clean-code skills:
 
 - **Allocate once outside the loop what is reused inside it**, when the loop is over a growing dimension and the
   allocation is proportional to element size. Below that threshold this trade buys nothing and costs readability.

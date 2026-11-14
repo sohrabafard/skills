@@ -45,16 +45,14 @@ the trusted name and location fields the service actually uses.
   one guard while others remain produces helpers, policies and controllers that
   disagree about whether the request is authenticated.
 - In Octane or any long-lived worker, trusted context is strictly request-scoped and
-  reset on every request. Read `/alaa-octane-performance`
-  (`$alaa-octane-performance`) before putting auth state anywhere a worker keeps.
+  reset on every request. Read `/alaa-octane-performance` before putting auth state anywhere a worker keeps.
 - If a compatibility layer attaches trusted context to an Eloquent model, keep the
   attribute transient and non-dirty so a later `save()` cannot persist a
   gateway-only value into a column. Auth-service demonstrates the pattern: set the
   attribute for request-time reads, then sync the original so the model is not dirty.
 
 Framework-shape questions — where the middleware lives, what the DTO looks like,
-how the response is built — belong to `/alaa-laravel-architecture`
-(`$alaa-laravel-architecture`) and `/alaa-php-clean-code` (`$alaa-php-clean-code`).
+how the response is built — belong to `/alaa-laravel-architecture` and `/alaa-php-clean-code`.
 
 ## Tenant-safe request handling
 
@@ -160,8 +158,7 @@ every `X-*` name the service reads that is not on the frozen list.
 
 The obligation is stated as an absolute in `SKILL.md`: an authorization decision
 behind the gateway comes from the decoded `X-Access` bitmap, through the decoder
-emitted and governed by `/alaa-permission-generator`
-(`$alaa-permission-generator`). This section covers what a service does around that
+emitted and governed by `/alaa-permission-generator`. This section covers what a service does around that
 decoder.
 
 - `X-Access` is the gateway's projection of the verified `prm` claim. Permission
@@ -192,7 +189,7 @@ decoder.
 **This skill states no permission id and no id range.** Ids, ranges, ownership and
 the active count are catalog state that changes without this skill knowing, and a
 copied range is stale the day it is written. Resolve every id from
-`/alaa-permission-generator` (`$alaa-permission-generator`) and the catalog's own
+`/alaa-permission-generator` and the catalog's own
 generated output. As one observation with a date attached: on 2026-07-27 the
 catalog held 130 active permissions with highest bitmap id 130, contiguous from 1,
 which is ahead of the 119 recorded in `alaa-services-contract`
@@ -212,5 +209,5 @@ catalog, not against either number.
   On async boundaries forward `traceparent` and `tracestate`, and forward only
   baggage keys reviewed as safe.
 - Requirement levels, gates and reasons for telemetry are owned by
-  `/alaa-observability-soc` (`$alaa-observability-soc`); field names and values are
+  `/alaa-observability-soc`; field names and values are
   owned by `alaa-services-contract`.

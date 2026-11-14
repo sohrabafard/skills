@@ -79,4 +79,5 @@ the trigger test, and it is asked when the code changes.
 - micro-optimising inside a request that spends most of its time waiting on one network call;
 - treating a review comment about performance as a requirement without running the trigger test first;
 - adding a benchmark for a path whose dimensions all have named maxima, which then has to be maintained forever;
-- refusing a genuine budget on this file's authority, when the trigger test did fire.
+- refusing a genuine budget on this file's authority, when the trigger test did fire;
+- replacing a list with a map, or a loop with a clever traversal, on a path whose every dimension has a small maximum enforced in code.

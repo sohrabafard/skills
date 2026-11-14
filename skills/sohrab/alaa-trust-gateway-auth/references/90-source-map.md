@@ -32,6 +32,23 @@ Canonical model/mapping: authz-openfga `<repo>/platform/openfga/contracts/`.
 Imported pinned bundles are consumer snapshots, never authoring roots; gateway
 executable configuration retains edge authority.
 
+## What this skill does not own
+
+`SKILL.md` *When not to use* states what to do when a change lands on one of these grounds.
+
+| Ground | Owner |
+|---|---|
+| Trusted header **names**, response envelopes, error taxonomy, platform values | `/alaa-services-contract` |
+| TOTP proof claim set, step-up response body, purpose naming, client proof caching | `/alaa-services-contract` `references/32-auth-totp-and-step-up-contract.md` |
+| The permission bit contract, id allocation, catalog drift, decoders and harness | `/alaa-permission-generator` |
+| Fail-closed doctrine, threat classes, security-review triggers | `/alaa-security-review` |
+| Timeout shape, retry legality, backoff, circuit breakers, degrade doctrine | `/alaa-reliability-sla` |
+| Object-level relations, tuple modelling, OpenFGA model design | vendored `openfga`; `/alaa-services-contract` `references/26-request-time-authorization-openfga.md` |
+| Cursor shape, signing, and what a cursor binds | `/alaa-keyset-pagination` |
+| HAProxy directives, ACL syntax, SPOE and Lua mechanics | `/alaa-haproxy`, `/alaa-haproxy-lua` |
+| Laravel middleware, guard, policy and DTO shape; PHP code shape; Octane request state | `/alaa-laravel-architecture`, `/alaa-php-clean-code`, `/alaa-octane-performance` |
+| Telemetry requirement levels and gates; exposure and trusted-proxy delivery | `/alaa-observability-soc`, `/alaa-docker-production`, `/caas-arvan-kuber` |
+
 ## Re-check the source when the task mentions any of these
 
 - current gateway behaviour, a JWT claim change, token refresh, trusted headers,

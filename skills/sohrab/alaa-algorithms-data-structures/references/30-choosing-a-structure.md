@@ -7,7 +7,7 @@ changed for speed.
 questions that produce the answer. This file maps answers to structures, covers the cases that actually appear in
 service code, and states the normalisation rules a key must satisfy.
 
-No language is named here. `/golang-data-structures` (`$golang-data-structures`) owns Go internals and the
+No language is named here. `/golang-data-structures` owns Go internals and the
 per-language clean-code skills own each language's idiomatic equivalent of every row below.
 
 ## Access pattern to structure
@@ -47,7 +47,7 @@ and makes the duplicate impossible to insert.
 key is a column, the right structure is an index on that column plus a query — not an in-memory map. An in-memory
 map of a table is a cache with no invalidation: its memory grows with the table rather than with the request, it is
 stale the moment another replica writes, and every replica holds its own copy. Index design, keyset pagination, and
-cache semantics belong to `/alaa-data-layer` (`$alaa-data-layer`); this file owns only the rule for when to stop
+cache semantics belong to `/alaa-data-layer`; this file owns only the rule for when to stop
 reaching for an in-memory structure.
 
 ## Keys must be normalised
@@ -69,7 +69,7 @@ State the normalisation for each of these where the key involves it:
 - **Collections inside a key** — whether element order is significant. When it is not, the elements are sorted
   before the key is built.
 
-`/alaa-controlled-ops` (`$alaa-controlled-ops`) specifies exactly this for that package's digests, in full detail
+`/alaa-controlled-ops` specifies exactly this for that package's digests, in full detail
 including function and encoding. Read it there when working on that package; the obligation stated here is the
 general one and applies to every map, set, cache key, and uniqueness check in the estate.
 

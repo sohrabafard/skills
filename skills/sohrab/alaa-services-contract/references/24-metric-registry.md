@@ -7,7 +7,7 @@ an alert, or a new metric reads this file and nothing else to learn what the fle
 What this file does not own:
 - **Whether a signal is required**, which alert or SLO gate it feeds, the label allow and deny lists beyond
   the request-middleware boundary, the cardinality budget, histogram bucket policy, and exemplar
-  requirement level — `/alaa-observability-soc` (`$alaa-observability-soc` in Codex) owns all of it, and it
+  requirement level — `/alaa-observability-soc` owns all of it, and it
   wins whenever the two appear to disagree about whether something is required.
 - The **`/metrics` endpoint, scraping, and Collector placement** — `21-alaa-platform-observability-directive.md`.
 - The **request-middleware label boundary** — `20-operational-and-observability-contract.md`.

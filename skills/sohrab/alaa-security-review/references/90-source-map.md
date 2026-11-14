@@ -2,7 +2,17 @@
 
 Read before relying on any version-sensitive claim, advisory, standard, or framework behaviour in a review.
 
-Companion skills are written `/name`; under Codex the same skill is `$name`.
+## What this skill does not own
+
+`SKILL.md` *What this skill does not own* keeps the rules that bind every review. This section names each owner and what this skill keeps.
+
+- `/alaa-trust-gateway-auth` owns how *this platform's* tokens and trusted headers are issued, verified, projected, and stripped: the claim set, the header names, the gateway configuration, key distribution. This skill owns the review questions that apply to *any* token system, plus the negative tests in `50-credentials-and-cryptography.md`. Read that skill to learn what this platform's credentials contain. The rules for judging a credential system live here. Every one of them binds a service that has never read it.
+- `/alaa-reliability-sla` owns availability-side failure behaviour, as split under the fail-closed doctrine in `SKILL.md`.
+- `/alaa-services-contract` owns the wire contracts these invariants instantiate - header names, decision codes, endpoint categories, route registration, permission catalogs. Where a rule here and a contract there describe the same control, that file owns the wire and this file owns the invariant.
+- `/alaa-minio-object-storage` owns the object store's own posture: what a bucket policy may grant, how a storage identity is scoped and rotated, which transport carries the bytes, and how long a presigned URL may live. Read it when reviewing a bucket policy, a storage identity, a plaintext hop to an object store, or a presigned URL's lifetime. That skill owns the value the review measures against. This skill owns the verdict.
+- `/alaa-observability-soc` owns what a security event contains and how it reaches a SOC. This skill names *that* an event is required at a decision point; its shape is owned there.
+- `/alaa-prompting-guide` owns model and effort capability evidence and runtime mechanics; the runtime orchestrator owns actual task allocation for every authority role.
+- Report length and noise discipline belong to `/alaa-low-noise`; they are not security decisions and never justify dropping an item.
 
 ## Source priority
 

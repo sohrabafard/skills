@@ -1,6 +1,6 @@
 # Circuit Breakers And Bulkheads
 
-Read when a dependency flaps, when one slow dependency exhausts a resource other routes need, or when a breaker is added or tuned. `SKILL.md` holds the binding rules on bounded pools and cancellation; this file is the state machine, the threshold derivation, and the isolation sizing. The Ala pool bounds and acquire waits are in `/alaa-services-contract` (`$alaa-services-contract` in Codex) `references/22-failure-load-and-deprecation-contract.md`.
+Read when a dependency flaps, when one slow dependency exhausts a resource other routes need, or when a breaker is added or tuned. `SKILL.md` holds the binding rules on bounded pools and cancellation; this file is the state machine, the threshold derivation, and the isolation sizing. The Ala pool bounds and acquire waits are in `/alaa-services-contract` `references/22-failure-load-and-deprecation-contract.md`.
 
 ## A breaker protects the caller
 
@@ -64,8 +64,8 @@ Sizing method:
 - **Bound the wait for a slot** and treat expiry as the dependency-unavailable outcome. An unbounded wait for a bulkhead slot is a queue with no depth limit, which is the failure the bulkhead was installed to prevent.
 - **A queue in front of a bulkhead is capacity for a burst, not for sustained overload**, and is bounded in depth and in wait like any other queue — `40-admission-and-shedding.md`.
 
-Isolate at the pool level too, not only in application code. Separate connection pools for calls with different failure profiles — interactive product queries versus reporting or batch, product traffic versus background workers — so a long-running consumer cannot drain the pool the request path needs. `/alaa-data-layer` (`$alaa-data-layer`) owns the driver mechanics; the decision to split, and where, is here.
+Isolate at the pool level too, not only in application code. Separate connection pools for calls with different failure profiles — interactive product queries versus reporting or batch, product traffic versus background workers — so a long-running consumer cannot drain the pool the request path needs. `/alaa-data-layer` owns the driver mechanics; the decision to split, and where, is here.
 
 ## The observable that proves it
 
-A bulkhead and a breaker are only correct if their limits are visible: the in-use and available slots per dependency, the breaker's state and its transitions, and the count of calls rejected by each. A service that caps a resource without exporting its utilisation has no way to know whether the cap is right, and will discover it during the incident. `/alaa-observability-soc` (`$alaa-observability-soc`) owns which signals are required and at what level; `/alaa-services-contract` (`$alaa-services-contract`) owns their names.
+A bulkhead and a breaker are only correct if their limits are visible: the in-use and available slots per dependency, the breaker's state and its transitions, and the count of calls rejected by each. A service that caps a resource without exporting its utilisation has no way to know whether the cap is right, and will discover it during the incident. `/alaa-observability-soc` owns which signals are required and at what level; `/alaa-services-contract` owns their names.

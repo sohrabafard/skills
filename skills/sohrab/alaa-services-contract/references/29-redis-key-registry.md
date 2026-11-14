@@ -7,7 +7,7 @@ registry instead of that service's code.
 What this file does not own:
 - **The key shape and cache design** - the shape `{app}:{env}:{tenant}:{resource}:{id}:{version}`, tenant
   isolation, TTL choice, invalidation, stampede control, locks, limiters, and behaviour while Redis is down -
-  are `/alaa-data-layer` (`$alaa-data-layer` in Codex) `references/40-redis-verification-and-anti-patterns.md`;
+  are `/alaa-data-layer` `references/40-redis-verification-and-anti-patterns.md`;
   connection and logical-database separation is its `references/50-redis-laravel-octane.md`.
 - **The `project_id` value form** - `25-end-to-end-flow-and-boundaries.md`, `Canonical project_id form`.
 - **The Redis endpoint** - `15-deployment-and-runtime-contract.md`; **the Redis command timeout** -

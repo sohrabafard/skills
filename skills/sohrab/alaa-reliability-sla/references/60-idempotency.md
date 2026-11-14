@@ -1,6 +1,6 @@
 # Idempotency
 
-Read whenever a caller may repeat a state-changing request, whenever a retry is being made legal under `20-retries.md`, and always before a key store is designed. This file owns the whole request-side contract. `/alaa-services-contract` (`$alaa-services-contract` in Codex) owns the header name, the key format, the retention period, and the response codes — `references/22-failure-load-and-deprecation-contract.md`. Consumer-side deduplication of broker messages belongs to `/alaa-async-messaging` (`$alaa-async-messaging`).
+Read whenever a caller may repeat a state-changing request, whenever a retry is being made legal under `20-retries.md`, and always before a key store is designed. This file owns the whole request-side contract. `/alaa-services-contract` owns the header name, the key format, the retention period, and the response codes — `references/22-failure-load-and-deprecation-contract.md`. Consumer-side deduplication of broker messages belongs to `/alaa-async-messaging`.
 
 An idempotency guarantee is the precondition for every retry of a non-naturally-idempotent operation, so a gap anywhere in the eight sections below is a gap in every retry that depends on it.
 

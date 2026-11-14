@@ -6,6 +6,15 @@ Every version-sensitive claim in this skill is listed here with its primary sour
 
 The seventeen-section production rules document supplied by the platform owner, ratified 2026-07-25, is the raw material for this skill. Where it says "prefer", "avoid", or "consider", this skill states the constraint instead and records why the alternative was rejected. Two of its proposals were rejected outright and the reasons are in `40-wire-contract-limits-and-errors.md`: the `pagination` response object, and the `after`/`before` request parameters.
 
+## What this skill does not own
+
+- **The collection envelope, the error envelope, identifier exposure, and the reject-don't-clamp rule**: `/alaa-services-contract`. This skill decides what goes in `meta` for a keyset list. It defers to that skill on the envelope those keys sit in.
+- **Index and query mechanics in general**: `/alaa-data-layer`. This skill states which index a paginated route needs and why. That skill owns index design, migration safety, and query tuning beyond pagination.
+- **Why an unbounded result set is a defect**: `/alaa-algorithms-data-structures`. This skill sets the page ceiling. That skill owns the complexity argument behind bounding a result set at all.
+- **Cursor tampering as a trust-boundary concern**: `/alaa-security-review`. This skill requires the cursor to be signed and states what the signature must cover. That skill owns threat classification, key handling, and fail-closed doctrine.
+- **What makes a test a test**: `/alaa-testing-strategy`. `references/70-test-list.md` names what must be covered. That skill judges whether a given test actually proves it and at which layer it belongs.
+- **Model and effort selection, and every runtime capability claim**: `/alaa-prompting-guide`.
+
 ## Laravel
 
 All retrieved **2026-07-25**. Source read from `laravel/framework` branch `13.x` (`Application::VERSION = 13.22.0`); `paginateUsingCursor` verified byte-identical on `12.x`, and `Cursor::encode()` identical on `11.x`, `12.x`, `13.x`.

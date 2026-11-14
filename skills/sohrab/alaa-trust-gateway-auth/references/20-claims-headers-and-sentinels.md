@@ -57,7 +57,7 @@ diagnostics metadata for `prm`. The single sanctioned reader outside the gateway
 the frontend SDK's unverified decoder reading the client's own token to derive UI
 hints, and that read is never an authorization decision, never becomes a header,
 and never invalidates a session when it yields no permissions. The consumer rules
-are owned by `/alaa-permission-generator` (`$alaa-permission-generator`)
+are owned by `/alaa-permission-generator`
 `references/typescript-consumer.md`.
 
 Auth is the only runtime issuer of `prm`, `prv` and `av`.
@@ -204,8 +204,7 @@ any public client.
 The proof lifetime defaults to 300 seconds.
 
 The claim set of the proof token, the step-up response body, the purpose-naming
-rules and the client-side proof-cache rules are owned by `/alaa-services-contract`
-(`$alaa-services-contract`) `references/32-auth-totp-and-step-up-contract.md`.
+rules and the client-side proof-cache rules are owned by `/alaa-services-contract` `references/32-auth-totp-and-step-up-contract.md`.
 Denial behaviour for every step-up failure is in
 `references/30-fail-closed-cases.md`.
 

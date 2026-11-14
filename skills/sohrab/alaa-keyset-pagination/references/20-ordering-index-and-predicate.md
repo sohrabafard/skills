@@ -1,6 +1,6 @@
 # Ordering, index, and continuation predicate
 
-All PostgreSQL behaviour below was verified against primary sources and measured plans; versions, URLs, and retrieval dates are in `90-source-map.md`. `alaa-data-layer` (`/alaa-data-layer`, `$alaa-data-layer`) owns index design and query tuning generally — this file owns only what pagination constrains.
+All PostgreSQL behaviour below was verified against primary sources and measured plans; versions, URLs, and retrieval dates are in `90-source-map.md`. `/alaa-data-layer` owns index design and query tuning generally — this file owns only what pagination constrains.
 
 ## The ordering tuple
 
@@ -50,7 +50,7 @@ WHERE published_at < $1 OR (published_at = $1 AND id < $2)
 
 A single index scan can only use clauses joined by `AND`; an `OR` needs a bitmap combination, and a bitmap visits rows in physical order, which destroys the ordering the query then has to restore with a sort. With `ORDER BY ... LIMIT` present the planner therefore does not use the bitmap at all — it scans the index in order and applies the `OR` as a filter. Measured on PostgreSQL 16.13 over the same table and index: the `OR` form read **173,475 buffers** and discarded 172,800 rows by filter; the row-value form read **13 buffers** and fetched 10 rows. Without `ORDER BY`, the `OR` form instead produced a `BitmapOr` of two scans against the same index where the row-value form produced one.
 
-Observable: no list query in the repository contains an `OR` between two comparisons on ordering columns. This is greppable and should be a review gate.
+The observable for this rule is owned by step 5 of the decision procedure in `SKILL.md`. It is greppable and should be a review gate.
 
 **Direction must match the scan.** Pair `<` with `ORDER BY ... DESC` and `>` with `ORDER BY ... ASC`. A row-value comparison pointing against the scan direction is not a tight range: measured on PostgreSQL 16.13, `(c, id) < (1, 5)` under a forward scan read 387 buffers, while the same predicate under `ORDER BY c DESC, id DESC` read 4. In correct keyset pagination the two always agree, so this shows up only when someone hand-writes the predicate and the ordering separately.
 

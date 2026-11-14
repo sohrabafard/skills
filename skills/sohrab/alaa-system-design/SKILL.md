@@ -26,7 +26,7 @@ Implement a change that meets none of the six directly, and review it as code. T
 
 **A design pass that produces no decision was not needed.** When the boundary, ownership, and consistency sections all read "unchanged" and only one real candidate exists, do these steps: close the record with status `not-required`; name which of the six conditions misfired; implement directly. Recording the misfire keeps the trigger list honest. Closing the record silently means the same misfire fires again next month.
 
-Both errors cost. A skipped pass relocates the decision into whichever function is written first. The next service to integrate reads the decision out of the code and copies it, so one skipped pass sets a precedent instead of causing an isolated defect. An unnecessary pass spends the review attention the next real design needs. It also produces an all-"unchanged" record, which teaches readers to skim records, including the one that mattered.
+Both errors cost. A skipped pass puts the decision into whichever function is written first, and the next service to integrate copies it from the code, so the defect becomes a precedent. An unnecessary pass spends the review attention the next real design needs, and its all-"unchanged" record teaches readers to skim records, including the one that mattered.
 
 ## What this skill consumes
 
@@ -116,7 +116,7 @@ Read `references/60-design-record.md` when creating, numbering, superseding, or 
 
 ## Review and readiness
 
-Complete the design decisions before implementation. Under /alaa-cc-orchestrator or /alaa-codex-orchestrator, inherit the plan cadence and the exact phase/task/subtask cursor through that orchestrator's `references/verification-and-gates.md` section `Review boundary and execution cadence`. That section owns review and commit timing. A decision-complete draft may guide implementation pending that boundary. It is not reviewed acceptance. Return missing or inconsistent cadence to the plan owner before dependent dispatch.
+Complete the design decisions before implementation. Under /alaa-cc-orchestrator or /alaa-codex-orchestrator, inherit the plan cadence and the exact phase, task and subtask cursor through that orchestrator's `references/verification-and-gates.md` section `Review boundary and execution cadence`. That section owns review and commit timing. A decision-complete draft may guide implementation pending that boundary. It is not reviewed acceptance. Return missing or inconsistent cadence to the plan owner before dependent dispatch.
 
 Standalone, without an orchestrator, review the record before you dispatch implementation. An unreviewed record remains `draft` in either mode. Only independent judgment with blocking findings resolved earns `reviewed`.
 
@@ -127,11 +127,11 @@ Read `references/70-review-and-readiness.md` when reviewing a record, when decid
 - The design is already decided and recorded. Implement it; re-deriving it is not review.
 - The task is reviewing code that already exists.
 - The change touches no interface another component calls, moves no data owner, alters no consistency, ordering, or caching property, adds and removes no dependency, and creates no deployable unit.
-- The question is project policy, a platform invariant, or a failure-doctrine rule. The routing table below names each owner.
+- The question is project policy, a platform invariant, or a failure-doctrine rule. `references/80-ownership-boundaries.md` names each owner.
 
 ## Stop conditions
 
-Finish design authoring when every section carries a decision or evidenced non-applicability. Under orchestration, return the record with review/commit pending until the inherited boundary. Resolve blocking findings in the record before reviewed acceptance. Standalone success requires those findings resolved and status `reviewed`.
+Finish design authoring when every section carries a decision or evidenced non-applicability. Under orchestration, return the record with review and commit pending until the inherited boundary. Resolve blocking findings in the record before reviewed acceptance. Standalone success requires those findings resolved and status `reviewed`.
 
 Stop and report a blocked state when any of these holds:
 
@@ -161,21 +161,4 @@ Open questions: each with the decision it blocks, or "blocks nothing"
 
 ## What this skill does not own
 
-This skill owns the **method**: what must be decided, in what order, and what makes the result reviewable. It names no model and states no numeric threshold. Where a rule here and a rule below disagree, the skill named below wins for its half, and this skill drops its weaker statement instead of keeping it as a second opinion.
-
-| Not owned here | Owner |
-|---|---|
-| Project policy, archetype and quality-bar obligations, and the intent model and counterfactuals consumed above | `/alaa-project-constitution` |
-| Envelopes, correlation and trusted gateway headers, the public identifier boundary, the trust boundary, event, code and permission names, and the deprecation procedure | `/alaa-services-contract` |
-| Every Ala timeout, retry, pool, acquire-wait, and shed value, with the wire behaviour carrying it | `/alaa-services-contract`'s `references/22-failure-load-and-deprecation-contract.md` |
-| Failure doctrine: gate-versus-contributor discrimination, deadlines, retries, breakers, bulkheads, admission and shedding, degradation, idempotency, error budgets, and their evidence | `/alaa-reliability-sla` |
-| Trust-boundary review, authn and authz decisions, tenant isolation, fail-closed doctrine, every security verdict | `/alaa-security-review` |
-| Signal selection, instrumentation requirement levels, cardinality and sampling budgets, alerting, retention, SOC evidence | `/alaa-observability-soc` |
-| Schema, constraints, indexes, migrations, isolation semantics, pooling mechanics, projections, Redis behaviour | `/alaa-data-layer` |
-| Broker prefetch, acknowledgement, consumer concurrency, dead-letter mechanics | `/alaa-async-messaging` |
-| Dispatch, task model and effort allocation, review/commit cadence, and the `alaa-architecture-critic` role and verdicts | `/alaa-cc-orchestrator` or `/alaa-codex-orchestrator` |
-| Plan files, resumable state, and phase prompt packs for a design spanning sessions | `/alaa-workflow` |
-| What proves a design's behaviour: the layer a behaviour is tested at, whether a double is honest, the six proof levels, and what evidence a review accepts | `/alaa-testing-strategy` |
-| The complexity budget on a path this design creates, the real bound on a growing input dimension, structure choice from the access pattern, and the N+1 family | `/alaa-algorithms-data-structures` |
-| Language idiom, patterns, and refactoring inside a component | the per-language clean-code skills, named per stack |
-| Model and effort capability evidence, prompting, and skill or agent authoring | `/alaa-prompting-guide` |
+This skill owns the **method**: what must be decided, in what order, and what makes the result reviewable. It names no model and states no numeric threshold. Where a rule here and a rule in an owning skill disagree, the owning skill wins for its half, and this skill drops its weaker statement instead of keeping it as a second opinion. When a question is project policy, a contract value, failure doctrine, a security verdict, observability, data mechanics, messaging, dispatch, plan state, proof, complexity, language idiom or prompting, read `references/80-ownership-boundaries.md`; it names the owner of each.

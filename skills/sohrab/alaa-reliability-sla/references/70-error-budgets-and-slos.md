@@ -1,6 +1,6 @@
 # Error Budgets And SLOs
 
-Read when an SLI, SLO, error budget, or release-gating policy is defined or challenged. This file owns how a target becomes a budget and what the budget obliges. **The burn-rate alerting arithmetic — the multi-window table, the confirmation-window ratio, the page-versus-ticket split, no-data behaviour, and the low-traffic exception — is owned by `/alaa-observability-soc` (`$alaa-observability-soc` in Codex) `references/40-alerting-slo-retention.md`.** Read that file to write the alert; read this one to decide what the alert is about and what happens when it fires.
+Read when an SLI, SLO, error budget, or release-gating policy is defined or challenged. This file owns how a target becomes a budget and what the budget obliges. **The burn-rate alerting arithmetic — the multi-window table, the confirmation-window ratio, the page-versus-ticket split, no-data behaviour, and the low-traffic exception — is owned by `/alaa-observability-soc` `references/40-alerting-slo-retention.md`.** Read that file to write the alert; read this one to decide what the alert is about and what happens when it fires.
 
 ## The chain: SLI, SLO, budget
 
@@ -55,7 +55,7 @@ Two more rules that keep a budget honest:
 
 Symptom SLOs survive re-architecture, because the user's experience is defined independently of how the service is built, and they cover failure modes nobody enumerated in advance. Cause SLOs fail in both directions: they go green while users are failing through a path the cause metric does not touch, and they go red while users are fine, which trains everyone to ignore them.
 
-Causes still deserve instrumentation, thresholds, and dashboards — they are how an incident is diagnosed once a symptom alert has fired. They do not carry the SLO, and they do not page. `/alaa-observability-soc` (`$alaa-observability-soc`) owns that split for alerting.
+Causes still deserve instrumentation, thresholds, and dashboards — they are how an incident is diagnosed once a symptom alert has fired. They do not carry the SLO, and they do not page. `/alaa-observability-soc` owns that split for alerting.
 
 The practical test when someone proposes an SLI: **name the user-visible failure this number would miss.** If the answer is short and easy to produce, the number is a cause.
 

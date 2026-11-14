@@ -1,6 +1,6 @@
 # Per-stack implementation
 
-The decision is the same in every stack; only the mechanism differs. Language idiom belongs to the language skills — `alaa-laravel-architecture` and `alaa-php-clean-code` (`/alaa-php-clean-code`, `$alaa-php-clean-code`), `alaa-golang` (`/alaa-golang`, `$alaa-golang`). This file owns only what pagination requires of each.
+The decision is the same in every stack; only the mechanism differs. Language idiom belongs to the language skills — `alaa-laravel-architecture` and `/alaa-php-clean-code`, `/alaa-golang`. This file owns only what pagination requires of each.
 
 ## Laravel
 

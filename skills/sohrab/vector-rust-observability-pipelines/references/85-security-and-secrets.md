@@ -225,11 +225,9 @@ for_each(["token", "password", "authorization", "api_key", "secret", "set_cookie
 
 Two ownership boundaries, and this skill owns neither:
 
-- **What must never be logged** is `/alaa-observability-soc`: *"Secrets, credentials, tokens, session values, raw
-  PII, unrestricted payloads, and customer-private content never enter logs, span
-  attributes, metric labels, alert annotations, Sentry contexts, or SOC exports.
-  Emit a stable internal reference an authorised human can resolve in the source
-  system instead."*
+- **What must never be logged** is `/alaa-observability-soc`. Its never-log invariant is in
+  *Platform invariants* in `alaa-observability-soc` `SKILL.md`. Read it there before you decide what a
+  redaction transform must remove.
 - **The field names themselves** are `/alaa-services-contract`.
 
 Redact in the pipeline as defence in depth, never as the primary control: an event

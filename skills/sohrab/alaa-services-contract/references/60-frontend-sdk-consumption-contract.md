@@ -95,7 +95,7 @@ The app must not re-implement anything the SDK or gateway already owns. Default 
   trusted-header set, and building request headers that contain it raises instead of sending. When the app does hold a
   token, the gateway supplies the project id downstream from the verified claim and the app adds nothing; a
   client-asserted `project_id` on such a request is not read downstream, so do not add one to make a call succeed. What
-  the receiving service does with either channel is owned by `/alaa-trust-gateway-auth` (`$alaa-trust-gateway-auth`) in
+  the receiving service does with either channel is owned by `/alaa-trust-gateway-auth` in
   `alaa-trust-gateway-auth references/10-verification-and-ingress.md`.
 
 ## UI capability hints in app code

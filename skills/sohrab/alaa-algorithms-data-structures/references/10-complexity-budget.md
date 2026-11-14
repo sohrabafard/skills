@@ -14,7 +14,7 @@ One budget lives in exactly one place, chosen by how long the decision must surv
 |---|---|
 | A single function or method whose cost is not obvious from reading it | A comment on the function, above the signature |
 | A route, consumer, job, or scheduled task | The handler's doc comment, beside the deadline the path already honours |
-| A decision that shaped the design of a subsystem | The design record, per `/alaa-system-design` (`$alaa-system-design`) |
+| A decision that shaped the design of a subsystem | The design record, per `/alaa-system-design` |
 | A budget a test enforces | The test's name or its one-line comment, so a failure reads as a budget breach |
 
 A budget recorded in a ticket, a chat message, or a pull-request description is not recorded. Those are read once,
@@ -48,8 +48,7 @@ measured at rows = 2,000,000, chunk = the configured default.
 ```
 
 When two dimensions multiply, state the product and the bound on the product, because that product is the number
-that actually reaches production. This is the same rule the cardinality ceiling in `/alaa-observability-soc`
-(`$alaa-observability-soc`) applies to labels.
+that actually reaches production. This is the same rule the cardinality ceiling in `/alaa-observability-soc` applies to labels.
 
 ### Amortised and worst-case bounds
 

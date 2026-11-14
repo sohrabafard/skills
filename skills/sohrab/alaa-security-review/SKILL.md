@@ -7,11 +7,9 @@ description: "Security review gate for production multi-tenant services: trust b
 
 Review a change against the rules in this skill and emit a verdict per item. The verdict is the deliverable: a named set of items, each with a named result. Orchestrators and platform contracts gate on this verdict. A verdict emitted on ground the reviewer never examined is worse than no verdict, because it launders an unexamined change as reviewed.
 
-Companion skills are written `/name` here; under Codex the same skill is `$name`.
-
 ## Modes
 
-**Fast Gate** is the default and runs on every change in scope. It is bounded by the surface inventory in `references/10-fast-gate.md`, not by a clock. When the inventory is larger than the time available, report the items you determined and report the remainder as FAIL / not determined. Never shorten the gate by dropping items.
+**Fast Gate** is the default and runs on every change in scope. It is bounded by the surface inventory in `references/10-fast-gate.md`, not by a clock. When the inventory is larger than the time available, report the items you determined and report the remainder as FAIL with reason `not determined`. Never shorten the gate by dropping items.
 
 **Deep Review** adds threat modelling, configuration and deployment hardening, and a prioritized remediation plan. Escalate when any trigger in `10-fast-gate.md` fires. That test is mechanical; it is not a judgment about how risky the change feels.
 
@@ -60,7 +58,7 @@ An agent implementing a control states which doctrine it chose, in the code or i
 
 ## Constraints on the review itself
 
-- Read the repository's own `AGENTS.md` / `CLAUDE.md` and its existing security and error contracts before judging a change against these rules. Where the repository states a stricter rule, the stricter rule wins and the report says which rule it applied.
+- Read the repository's own `AGENTS.md` and `CLAUDE.md` and its existing security and error contracts before judging a change against these rules. Where the repository states a stricter rule, the stricter rule wins and the report says which rule it applied.
 - Map every finding to a reachable entry point, an actor, the failing control, the file, and a check that proves the fix. A finding that names a standard but no route is not a finding.
 - Propose the smallest auditable fix that preserves the repository's existing architecture and error contract. Never propose a broad refactor as a remediation.
 - Never propose adding a third-party security product, scanner, or service. Name the command or mechanism the repository's stack already has; where none exists, that absence is itself a finding at the severity `60-deep-review-and-hardening.md` assigns it.
@@ -120,7 +118,7 @@ Always in this order:
 1. `Scope:` the five-column surface inventory from `10-fast-gate.md`, one line per column, plus the mode run and the trigger that selected it.
 2. `Checked:` every item examined with its verdict - PASS with file and symbol, FAIL with file and line or with `not determined` plus what would settle it, N/A with why. Close with `Items not listed above were not examined.`
 3. `Stop-the-line:` list, or `None`.
-4. `Required fixes:` P0/P1/P2, each with impact, exact file(s), the remediation, and the check that proves it fixed.
+4. `Required fixes:` each ranked P0, P1 or P2, with impact, exact file(s), the remediation, and the check that proves it fixed.
 5. `Validation:` exact commands or tests with the expected result of each, including the applicable negative tests from `50-credentials-and-cryptography.md`.
 6. `PASS` only when all three hold: no FAIL of either kind, no stop-the-line item, and section 2 enumerates every item in every trigger row the inventory hit.
 
@@ -130,7 +128,8 @@ Always in this order:
 - The change is performance tuning that alters no authentication, authorization, tenant scope, input
   handling, outbound target, uploaded or served file, or stored secret.
 - The question is availability behaviour under load (retries, timeouts, degradation, shedding) rather
-  than whether an actor is permitted to act. The routing table below names each owner.
+  than whether an actor is permitted to act. *What this skill does not own* in `references/90-source-map.md`
+  names each owner.
 
 ## Reference routing
 
@@ -147,10 +146,4 @@ Read the smallest set the surface inventory hits.
 
 ## What this skill does not own
 
-- `/alaa-trust-gateway-auth` owns how *this platform's* tokens and trusted headers are issued, verified, projected, and stripped: the claim set, the header names, the gateway configuration, key distribution. This skill owns the review questions that apply to *any* token system, plus the negative tests in `50-credentials-and-cryptography.md`. Read that skill to learn what this platform's credentials contain. The rules for judging a credential system live here. Every one of them binds a service that has never read it.
-- `/alaa-reliability-sla` owns availability-side failure behaviour, as split under the fail-closed doctrine above.
-- `/alaa-services-contract` owns the wire contracts these invariants instantiate - header names, decision codes, endpoint categories, route registration, permission catalogs. Where a rule here and a contract there describe the same control, that file owns the wire and this file owns the invariant.
-- `/alaa-minio-object-storage` (`$alaa-minio-object-storage`) owns the object store's own posture: what a bucket policy may grant, how a storage identity is scoped and rotated, which transport carries the bytes, and how long a presigned URL may live. Read it when reviewing a bucket policy, a storage identity, a plaintext hop to an object store, or a presigned URL's lifetime. That skill owns the value the review measures against. This skill owns the verdict.
-- `/alaa-observability-soc` owns what a security event contains and how it reaches a SOC. This skill names *that* an event is required at a decision point; its shape is owned there.
-- `/alaa-prompting-guide` owns model/effort capability evidence and runtime mechanics; the runtime orchestrator owns actual task allocation for every authority role.
-- Report length and noise discipline belong to `/alaa-low-noise`; they are not security decisions and never justify dropping an item.
+Where a rule here and a contract in `/alaa-services-contract` describe the same control, that skill owns the wire and this skill owns the invariant. Every rule here binds a service that has never read `/alaa-trust-gateway-auth` or that contract. Report length and noise discipline belong to `/alaa-low-noise` and never justify dropping an item. When a question is this platform's token and header issuance, availability behaviour, a wire contract, object-store posture, security-event shape or model choice, read *What this skill does not own* in `references/90-source-map.md`; it names the owner of each and what this skill keeps.

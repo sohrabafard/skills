@@ -4,10 +4,9 @@
 dependency is unfinished. This file says how to derive the dependency list so it is not derived from
 memory, what each row carries, and what load figures the design states. Read it during step 5.
 
-Doctrine is not here. `/alaa-reliability-sla` (`$alaa-reliability-sla`) owns the gate-versus-contributor
+Doctrine is not here. `/alaa-reliability-sla` owns the gate-versus-contributor
 discrimination rule, deadlines, retries, backoff, breakers, bulkheads, admission and shedding, degradation,
-idempotency, error budgets, and the evidence each mechanism demands. `/alaa-services-contract`
-(`$alaa-services-contract`) `references/22-failure-load-and-deprecation-contract.md` owns the Ala values.
+idempotency, error budgets, and the evidence each mechanism demands. `/alaa-services-contract` `references/22-failure-load-and-deprecation-contract.md` owns the Ala values.
 This file states no number and no doctrine, so nothing here can drift out of agreement with either.
 
 ## Derive the dependency list
@@ -64,8 +63,7 @@ against production later; silence cannot.
 
 Every failure mode this design introduces names the signal that will make it diagnosable in production
 without a code change. Name the failure mode and the question an operator will ask; the signal's design,
-its requirement level, its cardinality budget, and its alert belong to `/alaa-observability-soc`
-(`$alaa-observability-soc`). A failure mode with no named signal is a failure mode whose first diagnosis is
+its requirement level, its cardinality budget, and its alert belong to `/alaa-observability-soc`. A failure mode with no named signal is a failure mode whose first diagnosis is
 a code deploy.
 
 ## Anti-patterns
@@ -78,6 +76,5 @@ a code deploy.
   discrimination rule is `/alaa-reliability-sla`'s and it is about consequence, not importance;
 - a load figure copied from another service because the two look similar;
 - an assumed peak stated with no growth horizon, which designs for the day the design was written;
-- restating a timeout or pool value from the platform contract, or a piece of `/alaa-reliability-sla`
-  (`$alaa-reliability-sla`) doctrine, into the record instead of citing it, which creates a second copy that
+- restating a timeout or pool value from the platform contract, or a piece of `/alaa-reliability-sla` doctrine, into the record instead of citing it, which creates a second copy that
   drifts the next time the source changes.

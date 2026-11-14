@@ -106,6 +106,20 @@ Read a file below when the task needs an item its entry names, or when its entry
 - When an outbound call, retry, pool, or admission decision is in scope, read `22` for the Ala values and `/alaa-reliability-sla` for the doctrine.
 - When you need to know whether a service already follows a rule, read `95-fleet-conformance.md` for the snapshot and the owning reference file for the rule. A conformance line never overrides a rule, and a repository that has moved since the snapshot overrides the snapshot.
 
+## Companion skills
+
+Write cross-skill calls once as `/name`, per the pack's `AGENTS.md`. These skills load on a concern no reference file keys on:
+
+- `alaa-php-clean-code` — before implementing or refactoring any PHP.
+- `alaa-crockford-base32-codecs` — shared Crockford Base32 or UUIDv7 helper assets across runtimes.
+- `alaa-repo-docs` — when docs, Postman artifacts, or runbooks change.
+- `alaa-frontend-doc-annotations`, `alaa-quasar-app-vite-v3` — the documentation pass on a new public
+  frontend surface, and exact Quasar component or SSR shapes.
+- `alaa-keyset-pagination` — before writing or reviewing a paginated list query: the ordering tuple, the
+  index, the continuation predicate, the signed cursor, and the hard cases. This skill keeps the wire shape.
+- `alaa-prompting-guide` — every model, effort, prompt, skill, or agent-definition question. This skill
+  names no model anywhere.
+
 ## Owned by another skill
 
 `SKILL.md` owns the conflict rule for these owners. Maintainers delete the weaker statement in this skill rather than keep it as a second opinion.

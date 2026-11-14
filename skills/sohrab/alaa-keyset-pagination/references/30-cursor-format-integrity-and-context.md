@@ -1,6 +1,6 @@
 # Cursor payload, integrity, and context binding
 
-`alaa-security-review` (`/alaa-security-review`, `$alaa-security-review`) owns threat classification, key custody, and fail-closed doctrine. This file owns what the cursor must contain and what the service must check before trusting it.
+`/alaa-security-review` owns threat classification, key custody, and fail-closed doctrine. This file owns what the cursor must contain and what the service must check before trusting it.
 
 ## Payload
 

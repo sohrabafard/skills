@@ -70,18 +70,7 @@ instructions and available runtime capabilities; report a blocker if the require
 
 ## Companion skills
 
-Write cross-skill calls once as `/name`, per the pack's `AGENTS.md`. Each reference names the companions its concern needs. These
-load on a concern no reference file keys on:
-
-- `alaa-php-clean-code` — before implementing or refactoring any PHP.
-- `alaa-crockford-base32-codecs` — shared Crockford Base32 or UUIDv7 helper assets across runtimes.
-- `alaa-repo-docs` — when docs, Postman artifacts, or runbooks change.
-- `alaa-frontend-doc-annotations`, `alaa-quasar-app-vite-v3` — the documentation pass on a new public
-  frontend surface, and exact Quasar component or SSR shapes.
-- `alaa-keyset-pagination` — before writing or reviewing a paginated list query: the ordering tuple, the
-  index, the continuation predicate, the signed cursor, and the hard cases. This skill keeps the wire shape.
-- `alaa-prompting-guide` — every model, effort, prompt, skill, or agent-definition question. This skill
-  names no model anywhere.
+Each reference names the companions its concern needs. When a concern arises that no reference keys on (PHP code, a shared Crockford Base32 or UUIDv7 helper, a docs, Postman or runbook change, a new public frontend surface or an exact Quasar component or SSR shape, a paginated list query, or a model, effort, prompt, skill or agent-definition question), read *Companion skills* in `references/00-topic-map.md`. It names the skill to load for each.
 
 ## What this skill does not own
 

@@ -18,12 +18,12 @@ restating one here creates a second copy that drifts.
 | Prefetch key-set chunk size | Yes | — |
 | Maximum depth for a recursive traversal | Yes | — |
 | Maximum entries and eviction policy for an in-process map that outlives a request | Yes | — |
-| Maximum page size and its default | The rule that one must exist | The value: `/alaa-services-contract` (`$alaa-services-contract`) |
-| Connection pool maxima | No | `/alaa-services-contract` (`$alaa-services-contract`) |
-| Timeouts, retry counts, backoff, breaker thresholds | No | `/alaa-reliability-sla` (`$alaa-reliability-sla`) |
-| Cardinality ceilings, histogram boundaries, sampling rates | No | `/alaa-observability-soc` (`$alaa-observability-soc`) |
-| Cache TTLs and invalidation | No | `/alaa-data-layer` (`$alaa-data-layer`) |
-| KDF cost parameters | No | `/alaa-security-review` (`$alaa-security-review`) |
+| Maximum page size and its default | The rule that one must exist | The value: `/alaa-services-contract` |
+| Connection pool maxima | No | `/alaa-services-contract` |
+| Timeouts, retry counts, backoff, breaker thresholds | No | `/alaa-reliability-sla` |
+| Cardinality ceilings, histogram boundaries, sampling rates | No | `/alaa-observability-soc` |
+| Cache TTLs and invalidation | No | `/alaa-data-layer` |
+| KDF cost parameters | No | `/alaa-security-review` |
 
 When a value is owned elsewhere, the code reads it from wherever that skill puts it and the budget cites the owning
 skill. A budget that repeats the number is a copy, and the copy is the one that is wrong after the owner changes it.
@@ -80,4 +80,5 @@ deferred to whoever deploys, and they have less information than the author had.
 - a magic number inside a loop, with no name, no reasoning, and no test that would notice it changing;
 - a setting whose name states no unit, carrying a unit that differs between services;
 - restating a value another skill owns so the local copy drifts from the source;
-- a value made configurable to avoid deciding it.
+- a value made configurable to avoid deciding it;
+- a knob added because the correct value was never decided, with no default, no validated range, and no statement of what moving it changes.
