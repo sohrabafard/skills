@@ -5,7 +5,7 @@ Reason: a migration that cannot reverse turns a rollback into an incident, and t
 the moment nobody has time to work it out.
 
 Whether the pipeline proves reversibility, and the rollback window a release must survive, are
-`/alaa-cicd-laravel-postgres` (`$alaa-cicd-laravel-postgres`) and `alaa-services-contract`
+`/alaa-cicd-laravel-postgres` and `alaa-services-contract`
 `references/22-failure-load-and-deprecation-contract.md` respectively. This file owns what a safe migration does.
 
 ## Phased rollout — the default shape
@@ -24,7 +24,7 @@ makes a rollback survivable. A drop in the same release as the code change remov
 
 ## Large tables and lock avoidance
 
-- `CREATE INDEX CONCURRENTLY` for any table with production row counts. It cannot run inside a transaction, so
+- Use `CREATE INDEX CONCURRENTLY` on any table with production row counts. It cannot run inside a transaction, so
   isolate it in its own migration or run it through a raw runner that does not wrap. A migration runner that wraps
   every migration in a transaction will fail this statement at execution, not at review.
 - `ADD CONSTRAINT … NOT VALID` followed by `VALIDATE CONSTRAINT` shortens how long the lock is held; it does
@@ -34,7 +34,7 @@ makes a rollback survivable. A drop in the same release as the code change remov
   `SHARE UPDATE EXCLUSIVE` and does not block writes. Split the statement to shorten the hold, never in the
   belief that it takes a gentler lock, because a plan built on the gentler-lock belief will schedule the
   change into a window that cannot absorb it. A partitioned parent adds further constraints and a version
-  gate: `/alaa-partitioned-table-fk-audit` (`$alaa-partitioned-table-fk-audit`)
+  gate: `/alaa-partitioned-table-fk-audit`
   `references/20-lock-safety-and-the-fix.md` owns them.
 - Do not run a table rewrite at peak. A type change that rewrites the table holds an `ACCESS EXCLUSIVE` lock for
   the length of the rewrite, and every reader queues behind it.
@@ -51,7 +51,7 @@ that lane will serialize instead. Runtime traffic stays on `RuntimePool`.
 Partitioning helps a very large, time-ordered table and costs ongoing operational complexity. Propose it only when
 retention or archival is a requirement, or when one table is demonstrably the bottleneck and partition pruning is
 what resolves it. A foreign key pointing into a partitioned parent has its own failure class, SQLSTATE 42830 —
-`/alaa-partitioned-table-fk-audit` (`$alaa-partitioned-table-fk-audit`) owns it, and a migration that hits
+`/alaa-partitioned-table-fk-audit` owns it, and a migration that hits
 "no unique constraint matching given keys" is that bug.
 
 ## Multi-tenant strategy
@@ -78,7 +78,7 @@ Tie every index to a real query shape — its `WHERE` and its `ORDER BY` togethe
   enough to stay cheap.
 
 The index a paginated route needs follows the ordering tuple that `/alaa-keyset-pagination`
-(`$alaa-keyset-pagination`) derives; build it here, derive it there.
+derives; build it here, derive it there.
 
 ## Row-level security notes
 
@@ -90,4 +90,4 @@ If the repository uses RLS:
 - **RLS is not adoptable on the Go kit's runtime lane today.** Setting per-transaction tenant context requires a
   `SET`, which `linttools/pooledlane` forbids on `pgkit.RuntimePool` — see the rule and its positive replacement in
   `30-concurrency-projections-and-pooling.md`. Proposing RLS for a kit consumer is a kit change request through
-  `/alaa-go-chi-development` (`$alaa-go-chi-development`), not a service-local workaround.
+  `/alaa-go-chi-development`, not a service-local workaround.

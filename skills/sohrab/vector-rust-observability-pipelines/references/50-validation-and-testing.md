@@ -33,7 +33,7 @@ startup."*
 That table is historical binary evidence, not a current-version assertion.
 **0.58.0 catches confinement under `--no-environment`**, as the tagged release
 notes report. Keep `--skip-healthchecks --deny-warnings`: the fix does not restore
-the other environment/component checks skipped by `--no-environment`.
+the other environment and component checks skipped by `--no-environment`.
 
 `--no-environment` has one legitimate use: checking syntax and VRL compilation on a
 machine where the config's `data_dir` does not exist and cannot be created. It is a
@@ -214,10 +214,10 @@ applies it to `uri`. A removed HTTP `encoding` option fails as an unknown field 
 
 For affected components, extend consumer tests with explicit YAML/JSON nulls,
 generated-schema untagged-enum cases, malformed URI ports, invalid Sematext token
-templates, one-byte GELF with trace logging, GELF pending-message/timeout limits,
+templates, one-byte GELF with trace logging, GELF pending-message and timeout limits,
 and varint frames split across reads. The release fixes these classes; a local
 parse check cannot establish network framing, memory, concurrency or recovery.
-Match diagnostic class/field, not the full text: new errors include field paths.
+Match the diagnostic class and field, not the full text: new errors include field paths.
 
 The upstream check selects the numeric maximum of published stable product releases,
 excluding draft, prerelease, nightly and vdev tags and releases with missing publication

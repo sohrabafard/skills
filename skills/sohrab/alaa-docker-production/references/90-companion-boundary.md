@@ -41,7 +41,7 @@ has no owner and the gap is a finding rather than an assumption.
 ## 2. What a change to a container artifact ships with
 
 This is a required section of the merge request description, in the repository whose artifact
-changed. Not a report filed elsewhere; the merge request is the destination.
+changed. Do not file it as a report elsewhere; the merge request is the destination.
 
 1. **What changed and why.** The Dockerfile, Compose or stack keys touched, one line each.
 2. **Runtime effect.** Mode, ports, user, volumes, environment, healthchecks, secrets — state only
@@ -54,12 +54,13 @@ changed. Not a report filed elsewhere; the merge request is the destination.
    path and the severity counts from it. This skill's
    `references/15-build-secrets-and-attestations.md`.
 6. **Rollout.** Restart strategy, the `update_config` and `rollback_config` values, replica count,
-   and what an operator will see during the deploy. Not optional: a change with no rollout statement
+   and what an operator will see during the deploy. This item is not optional: a change with no rollout statement
    is a change whose downtime nobody has estimated. This skill's `references/30-swarm-delivery.md`.
 7. **Rollback.** The exact command that reverts this change and the image reference it reverts to.
    `docker service rollback <service>` for a Swarm service; the previous digest from the release
    manifest otherwise.
-8. **Checker output.** The four checkers in `scripts/`, run against the changed artifact, pasted.
+8. **Checker output.** Run the four checkers in `scripts/` against the changed artifact and paste
+   their output.
    Exit 2 from any of them is not a pass and is not "the checker could not read my file, so it is
    fine".
 

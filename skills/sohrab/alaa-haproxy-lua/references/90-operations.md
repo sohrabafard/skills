@@ -6,7 +6,7 @@ What happens to Lua when the process changes shape, and how to see a Lua module 
 
 A reload starts a new HAProxy process that parses the configuration and loads every Lua file from scratch. Three consequences follow, and each has been the cause of a production surprise.
 
-**Lua state does not survive a reload.** Every module-level table, cache, counter, and seed is rebuilt in the new process. A counter kept in a Lua local resets to zero on every reload; if the value must survive, select a persistence/replication mechanism with explicit reload semantics. A stick table alone is not a durability guarantee. Persistence of HAProxy's own stats across reloads is a configuration feature owned by `/alaa-haproxy`.
+**Lua state does not survive a reload.** Every module-level table, cache, counter, and seed is rebuilt in the new process. A counter kept in a Lua local resets to zero on every reload; if the value must survive, select a persistence or replication mechanism with explicit reload semantics. A stick table alone is not a durability guarantee. Persistence of HAProxy's own stats across reloads is a configuration feature owned by `/alaa-haproxy`.
 
 **Load-time work is paid again on every reload.** A module that reads a large file or builds a large table in the body adds that cost to every reload, multiplied by `nbthread` under `lua-load-per-thread`. A reload that takes seconds is a reload operators avoid running.
 
@@ -22,7 +22,7 @@ The old process finishes its established connections while the new one accepts n
 
 ## Observing a Lua module in production
 
-Use the target Runtime API and build capabilities plus bounded module outcome signals; do not assume a universal Lua debugger or expose debug introspection to untrusted operators.
+Observe a module through the target's Runtime API and build capabilities, plus bounded signals of the module's outcome. Do not assume a universal Lua debugger, and do not expose debug introspection to untrusted operators.
 
 - **`core.log(level, msg)`** is the module's only direct channel to the operator. Where the line goes depends on configuration the module cannot see: `tune.lua.log.loggers` (default `on`) routes it to the proxy's loggers, and `tune.lua.log.stderr` (default `auto`) additionally routes it to stderr when no logger applies. Confirm at least one of the two is in effect before relying on a log line as evidence.
 - **A HAProxy variable is the cheapest signal.** Write the handler's outcome to a variable with `TXN.set_var(txn, name, value, true)` and include it in the log format; the value then appears on every request line with no extra Lua cost.

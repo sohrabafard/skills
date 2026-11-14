@@ -11,14 +11,14 @@
 
 ## Shared-file ownership and stopped-writer recovery
 
-Allow one active writer per file, generated output or shared runtime resource, not one writer per worktree. Record ownership and conflicts in the existing plan or dispatch and in the selected task authority. The runtime orchestrator allocates lanes and capacity. Separate files permit concurrent writers only when their generated outputs and runtime resources are also disjoint. A task claim is no file or resource lock.
+Allow one active writer per file, generated output or shared runtime resource, not one writer per worktree. Record ownership and conflicts in the existing plan or dispatch and in the selected task authority. The runtime orchestrator allocates lanes and capacity. Separate files permit concurrent writers only when their generated outputs and runtime resources are also disjoint. A task claim does not lock a file or a resource.
 
 Assign distinct ports, database or tenant test namespaces, queue names and temporary output directories when the repository supports that isolation. Verify each lane's effective configuration before parallel checks. Serialize users of any resource that cannot be isolated.
 
 Before replacing or resuming a stopped writer's overlapping scope:
 
-1. Verify the prior writer process and every descendant have stopped. A returned agent turn, interrupted session or closed terminal alone proves no process termination. Preserve the process identity and the observed liveness evidence; unknown descendant liveness is unresolved ownership.
-2. Observe the scoped files and generated/shared resources are stable after those processes stop. Preserve surviving edits and compare them with the existing progress journal, bound issue and checkpoint; reconcile completed work, remaining scope, ownership and attributable evidence. Create no journal or locking system for this check.
+1. Verify the prior writer process and every descendant have stopped. A returned agent turn, interrupted session or closed terminal alone proves no process termination. Preserve the process identity and the observed liveness evidence; when any descendant's liveness is unknown, ownership is unresolved.
+2. Observe that the scoped files, generated outputs and shared resources stay stable after those processes stop. Preserve surviving edits and compare them with the existing progress journal, bound issue and checkpoint; reconcile completed work, remaining scope, ownership and attributable evidence. Create no journal or locking system for this check.
 3. Apply `references/task-tracking.md` `## Agent identity and ownership` for any authorized issue transfer and readback. Only then assign the remaining overlapping writes to the replacement. Preserve valid completed work; do not replay it or reset the diff.
 
 If liveness, stability or ownership remains ambiguous, block only overlapping writes and shared-resource use. Continue independently owned disjoint work. Recovery stays in the same checkout. Compaction does not transfer a living writer's ownership; recover the same actor and reconcile its active process before continuing. A replacement never takes over merely because context was lost.

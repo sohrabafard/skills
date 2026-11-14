@@ -23,8 +23,8 @@ touches it:
 | `CHANGE_ME_<what>` | a value you must supply | `CHANGE_ME_package` becomes `nginx` |
 
 Substitute with a plain textual replacement of `ROLE_NAME` first, then each
-`CHANGE_ME_*` token. Longest token first, so that `CHANGE_ME_service_user` is
-not partly eaten by `CHANGE_ME_service`.
+`CHANGE_ME_*` token. Substitute the longest `CHANGE_ME_*` token first, so that
+`CHANGE_ME_service_user` is not partly eaten by `CHANGE_ME_service`.
 
 **Do not reintroduce the bracketed form.** `[ role_name ]_port: [ default_port ]`
 is not a placeholder: YAML reads `[ role_name ]` as a one-element flow sequence,
@@ -124,7 +124,7 @@ ansible-config validate -t all
 Add `.ansible-cache/` to `.gitignore`: `ansible.cfg` points the fact cache and
 the log there, and neither belongs in version control.
 
-One inventory directory per environment. Sharing one inventory between
+Use one inventory directory per environment. Sharing one inventory between
 production and staging and switching on a variable means a mistyped `--limit`
 reaches production.
 

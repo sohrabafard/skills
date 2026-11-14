@@ -26,8 +26,7 @@ worker lines rather than a human reads them.
 
 `ext-pcntl` must be present in the runtime image. Without it `supportsAsyncSignals()` is false, which
 disables both the SIGALRM job timeout and graceful signal handling — so `--timeout` stops being enforced
-and every rollout becomes a hard kill mid-job. Image contents: `/alaa-docker-production`
-(`$alaa-docker-production`).
+and every rollout becomes a hard kill mid-job. Image contents: `/alaa-docker-production`.
 
 ## Deployment shape
 
@@ -38,10 +37,9 @@ and every rollout becomes a hard kill mid-job. Image contents: `/alaa-docker-pro
   second Deployment, not a second `--queue` value.
 - `terminationGracePeriodSeconds` per `SKILL.md` constraint 4. Getting it wrong is failure class 5, which
   shows up on every rollout rather than randomly.
-- Chart keys, probe shapes, resource blocks and rollout strategy belong to `/alaa-k8s-helm`
-  (`$alaa-k8s-helm`). The worker profile for the `platform-app-php` chart is
+- Chart keys, probe shapes, resource blocks and rollout strategy belong to `/alaa-k8s-helm`. The worker profile for the `platform-app-php` chart is
   `assets/helm/values.worker.rabbitmq.yaml.example`. Arvan-specific defaults, including
-  requests-equals-limits, are `/caas-arvan-kuber` (`$caas-arvan-kuber`).
+  requests-equals-limits, are `/caas-arvan-kuber`.
 
 ## Choosing the replica count
 
@@ -76,9 +74,8 @@ so the next reviewer can recompute it instead of re-guessing. Autoscaler resourc
    the message lands in the dead-letter queue.
 3. Delete a worker pod mid-job; confirm the job runs again and that the side effect applied exactly once.
    This is the required redelivery test in `SKILL.md` executed against real infrastructure.
-4. Run at the measured peak arrival rate for long enough to cross one `--max-jobs`/`--max-time` recycle;
+4. Run at the measured peak arrival rate for long enough to cross one `--max-jobs` or `--max-time` recycle;
    confirm ready depth returns to baseline afterwards and that redelivery rate stays flat.
 
 What makes each of these a test rather than a demonstration, and which of them belongs in CI:
-`alaa-testing-strategy references/40-proof-strength.md` (`/alaa-testing-strategy`,
-`$alaa-testing-strategy`).
+`alaa-testing-strategy references/40-proof-strength.md` (`/alaa-testing-strategy`).

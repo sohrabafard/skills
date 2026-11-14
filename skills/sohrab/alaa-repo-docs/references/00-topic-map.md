@@ -1,7 +1,7 @@
 # Topic map
 
-Each row is a condition and the one file that answers it. Read the row whose condition holds, and
-only that row. No other file in this skill repeats this routing, and no combined guide exists.
+Each row is a condition and the one file that answers it. Read each row whose condition holds, and
+only those rows. No other file in this skill repeats this routing, and no combined guide exists.
 A path prefixed `<repo>/` names a file in the repository being worked on; a path beginning
 `references/` names a file this skill ships.
 

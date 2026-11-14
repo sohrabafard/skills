@@ -4,7 +4,7 @@ Read the [signal prerequisites](../clickhouse-metrics-reference.md) before this 
 
 ### Counter request rate for a service
 
-For a cumulative monotonic counter. `lagInFrame` differences consecutive samples per series, and the
+This query is for a cumulative monotonic counter. `lagInFrame` differences consecutive samples per series, and the
 `nan` guard drops the negative step a counter reset produces.
 
 ```sql

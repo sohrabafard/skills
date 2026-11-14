@@ -70,11 +70,11 @@ stops there. Filing the issue or request is the whole hop, never a continuation 
 - The question is Go craft — naming, error shape, package layout, the P1-P13 bar — rather than who owns a
   change and how it reaches consumers.
 - The question is which model or effort level to run at.
-- The routing table below names the owner for each of these.
+- The list under "What this skill does not own" names the owner for each of these.
 
 ## What this skill does not own
 
-Route these; adopt the owner skill vocabulary.
+Route each of these to the owner named beside it, and use that owner's vocabulary.
 
 - Go code, layering, the P1–P13 bar — `/alaa-golang`, `/alaa-golang-clean-code-principles`.
 - What a service of this kind must guarantee, and the repository quality bar — `/alaa-project-constitution`.

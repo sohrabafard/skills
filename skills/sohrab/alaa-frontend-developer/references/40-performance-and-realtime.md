@@ -7,9 +7,9 @@ budgets and the complexity thresholds are `41-lighthouse-and-web-vitals.md`.
 
 1. **Baseline.** Name the route, the device class, the network profile, and whether the case is SSR first
    load or client navigation. A measurement without those four is not comparable to anything.
-2. **Pick the dominant bucket before optimizing.** Server and TTFB and SSR render time; client hydration,
-   JavaScript execution and long tasks; network chunking, waterfalls and blocking assets; UI layout
-   thrash, large DOM and heavy watchers.
+2. **Pick the dominant bucket before optimizing.** The buckets are server (TTFB and SSR render time);
+   client (hydration, JavaScript execution and long tasks); network (chunking, waterfalls and blocking
+   assets); and UI (layout thrash, large DOM and heavy watchers).
 3. **Apply the smallest measurable fix**, then re-measure the same profile and attribute the delta to the
    metric you targeted. A fix that cannot be attributed did not happen.
 
@@ -32,7 +32,7 @@ from there; do not invent a curve locally. What this file requires of the client
 - Suspend reconnect attempts while `navigator.onLine === false`; resume on the `online` event.
 - Cap total reconnect duration, and surface the `closed` state to the UI when the cap is hit rather than
   reconnecting silently forever.
-- One reconnect loop per connection. A second loop created by a re-mounted component is the reconnect
+- Run exactly one reconnect loop per connection. A second loop created by a re-mounted component is the reconnect
   storm.
 
 ## Message handling
@@ -71,6 +71,7 @@ put a message payload in a production log.
 
 ## Verification
 
-Connect and disconnect across route changes; reconnect after a network drop; no duplicate event handling
-after navigating away and back; CPU and memory stable over time; one targeted measurement of the
-bottleneck you actually changed. Recorded per `50-qa-and-verification.md`.
+Verify that the client connects and disconnects across route changes and reconnects after a network drop.
+Verify that no event is handled twice after navigating away and back, and that CPU and memory stay stable
+over time. Take one targeted measurement of the bottleneck you actually changed. Record the results per
+`50-qa-and-verification.md`.

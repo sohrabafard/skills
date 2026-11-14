@@ -1,6 +1,6 @@
 # Failure and Load, Expressed in Kubernetes Objects
 
-This file holds only the Kubernetes expression of a reliability decision. `/alaa-reliability-sla` (`$alaa-reliability-sla`) decides **why** a timeout, retry, backoff, circuit breaker, backpressure, or degradation mechanism exists and what shape it takes; bring the number from there and encode it here. `/alaa-services-contract` (`$alaa-services-contract`) owns any shared name or default those numbers are written against.
+This file holds only the Kubernetes expression of a reliability decision. `/alaa-reliability-sla` decides **why** a timeout, retry, backoff, circuit breaker, backpressure, or degradation mechanism exists and what shape it takes; bring the number from there and encode it here. `/alaa-services-contract` owns any shared name or default those numbers are written against.
 
 Every rule below is checkable against a rendered manifest, and `scripts/check_manifests.py` asserts the subset a static file can prove.
 
@@ -46,7 +46,7 @@ A probe threshold is a claim about how long the application takes. Derive it, do
 - **Memory limits kill.** Exceeding a memory limit is an immediate `OOMKilled` with no grace period and no `preStop`. Memory limit equals memory request is the only combination that makes eviction behaviour predictable.
 - **Requests decide scheduling and QoS.** `requests == limits` on every container gives the Pod Guaranteed QoS and takes it out of the first eviction tier. Requests below limits give Burstable, which is evicted before Guaranteed under node pressure.
 - **An HPA without CPU requests does nothing**, because CPU utilisation is a percentage of the request. Emitting an HPA with a CPU target and no request is a silently inert autoscaler.
-- Deriving the numbers themselves is `/alaa-algorithms-data-structures` (`$alaa-algorithms-data-structures`) for the complexity budget and `/alaa-reliability-sla` (`$alaa-reliability-sla`) for the headroom target. This file only says where they go.
+- `/alaa-algorithms-data-structures` derives the complexity budget behind these numbers, and `/alaa-reliability-sla` derives the headroom target. This file only says where they go.
 
 ## 5. Load amplification during rollout
 
@@ -61,8 +61,8 @@ Scaling and rollout multiply the load a workload places on everything behind it.
 
 A chart that declares a dependency inherits its failure. State, per dependency, what the workload does when it is absent:
 
-- If the workload cannot serve any request without it, the readiness probe fails and the Service stops routing. That is fail-closed and `/alaa-security-review` (`$alaa-security-review`) owns the decision when the dependency is an authorisation or policy check.
-- If the workload can serve a reduced answer, readiness stays true and the degradation is reported as a metric. That is fail-open and `/alaa-reliability-sla` (`$alaa-reliability-sla`) owns it.
+- If the workload cannot serve any request without it, the readiness probe fails and the Service stops routing. That is fail-closed and `/alaa-security-review` owns the decision when the dependency is an authorisation or policy check.
+- If the workload can serve a reduced answer, readiness stays true and the degradation is reported as a metric. That is fail-open and `/alaa-reliability-sla` owns it.
 - Classify the failure with `/alaa-security-review` `SKILL.md`, "Fail-closed versus fail-open, and which doctrine applies", before choosing the readiness and degradation behavior above.
 - An `initContainer` that waits for a dependency converts a dependency outage into `Pod Pending` with no logs from the application. Give it a bounded wait and a message that names the dependency.
 
@@ -74,4 +74,4 @@ Symptom: the workload is Running and Ready, error rate is up, and no pod restart
 2. Rule out throttling before touching the application: `kubectl -n NS top pod --containers` alongside the throttling counter, because throttled CPU looks like a slow dependency from inside the process.
 3. Identify the dependency from the application's own error output, not from the layer model: `kubectl -n NS logs POD --since=15m | grep -i 'timeout\|refused\|deadline'`.
 4. Test reachability from inside the workload rather than from the ingress: `kubectl -n NS exec POD -- sh -c 'getent hosts HOST'` and a single request with a short timeout.
-5. Only then decide whether the correct action is to shed load, to raise a timeout, or to fail closed — and that decision belongs to `/alaa-reliability-sla` (`$alaa-reliability-sla`). Do not raise a timeout to make an error disappear; that converts a fast failure into a queue.
+5. Only then decide whether the correct action is to shed load, to raise a timeout, or to fail closed — and that decision belongs to `/alaa-reliability-sla`. Do not raise a timeout to make an error disappear; that converts a fast failure into a queue.

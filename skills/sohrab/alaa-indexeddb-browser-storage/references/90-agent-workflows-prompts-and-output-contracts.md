@@ -2,7 +2,7 @@
 
 ## How to work a storage task
 
-In order, because each step constrains the next. Skipping to the schema produces stores nobody can purge
+Work the steps in order, because each step constrains the next. Skipping to the schema produces stores nobody can purge
 and indexes nobody can use.
 
 1. **Classify the data and name its source of truth** (`60-data-classification.md`). If the class is

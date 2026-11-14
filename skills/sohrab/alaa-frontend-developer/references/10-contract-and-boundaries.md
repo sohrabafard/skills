@@ -12,7 +12,7 @@ here; cite the file and line you are overriding.
   JavaScript is permitted only in a file already inside the repo's `allowJs` set. TypeScript 6 is the
   fleet line; TypeScript 7 and its native compiler are not adopted, because Quasar has not declared
   support — that ruling and the toolchain live in that skill, not here.
-- Yarn-first when the repo has a `yarn.lock`.
+- When the repo has a `yarn.lock`, use Yarn.
 - SSR and PWA may both be on, so a browser-only assumption is never safe by default.
 
 ## Hard constraints
@@ -44,7 +44,7 @@ storage rule and the refresh contract. Do not restate any of it here or in a com
 
 ## Browser automation boundary
 
-Static inspection, logs, tests and source reasoning first. The three conditions that open a browser, and
+Use static inspection, logs, tests and source reasoning before you open a browser. The three conditions that open a browser, and
 the observation you must name before you do, are gate 5 in `SKILL.md`; the evidence discipline is
 `60-browser-debug.md`.
 

@@ -8,7 +8,7 @@ looks like, and how to handle a value another skill already owns.
 
 ## Which values this skill decides
 
-Only the values that follow from a complexity decision. Everything else belongs to the skill that owns it, and
+This skill decides only the values that follow from a complexity decision. Everything else belongs to the skill that owns it, and
 restating one here creates a second copy that drifts.
 
 | Value | Owned here | Owned elsewhere |
@@ -34,8 +34,8 @@ skill. A budget that repeats the number is a copy, and the copy is the one that 
 deployment nobody tuned, which is most of them, and on the worst input the system permits. A default chosen for the
 typical tenant is a default that fails on the largest one, silently, in whichever service was deployed last.
 
-**A validated range, checked at startup, that fails the boot on a bad value.** Naming the setting, the value
-received, and the accepted range in the failure message. Three reasons the check is at startup and not at first use:
+**A validated range, checked at startup, that fails the boot on a bad value.** The failure message names the setting, the value
+received, and the accepted range. Three reasons the check is at startup and not at first use:
 a misconfigured service that refuses to start is caught by the deployment, a misconfigured service that starts and
 fails later is caught by a user; the first request is usually not the one that exercises the value; and a value
 validated at use has to be validated at every use.

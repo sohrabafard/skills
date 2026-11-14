@@ -87,7 +87,7 @@ For invocation and exit-code handling, read `references/checkers-and-hooks.md` b
 
 In Obsidian or similar editors, quote wiki links in YAML values because unquoted `[[…]]` is invalid YAML.
 Keep typed relations in the note body so they remain queryable. Editors provide navigation and review,
-not runtime truth. Use backlink/orphan views to locate graph issues and
+not runtime truth. Use backlink and orphan views to locate graph issues and
 `scripts/alaa_memory_vault_check.py linkcheck` to check them, following `references/checkers-and-hooks.md`.
 A correct note findable by search is not defective merely because it is an orphan.
 
@@ -109,8 +109,8 @@ editing as a chance to fix its frontmatter.
 
 ## Concurrency
 
-Two agents writing the same note is last-writer-wins with no warning and no merge. One agent owns a note during a task; an agent that must update a
-note it did not read this session re-reads it immediately before writing; new authorized captures use a unique filename rather than overwrite an existing note. Repository hooks
+Two agents writing the same note is last-writer-wins with no warning and no merge. One agent owns a note during a task. An agent that must update a
+note it did not read this session re-reads it immediately before writing. A new authorized capture uses a unique filename rather than overwrite an existing note. Repository hooks
 create no vault notes; `references/checkers-and-hooks.md` owns their nonwriting contract.
 
 ## Security

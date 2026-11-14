@@ -43,7 +43,7 @@ Each row states the observable situation you are in, not the destination's title
 | edit `quasar.config` `build.env`, `define`, `defineEnv`, or decide whether a value may reach the browser | `20-v3-config-and-features.md` |
 | add a Vite plugin, extend the Vite config, add an alias, configure a dev proxy, or change browser targets | `21-cli-vite-and-config.md` |
 | write the literal text of a `quasar.config`, boot file, router bootstrap, env block, or `register-sw` file | `22-cli-cookbook-and-examples.md` |
-| choose a caching strategy, write or edit a custom service worker or InjectManifest, ship an update prompt, or debug a stale page after deploy | `32-pwa-injectmanifest-guard.md` first for custom-worker/InjectManifest edits, then `30-service-worker-excellence.md`; verify install, update and offline |
+| choose a caching strategy, write or edit a custom service worker or InjectManifest, ship an update prompt, or debug a stale page after deploy | `32-pwa-injectmanifest-guard.md` first for custom-worker or InjectManifest edits, then `30-service-worker-excellence.md`; verify install, update and offline |
 | touch SSR, `ssrContext`, `preFetch`, router, store, boot, middleware, SEO, auth or a hydration mismatch | `31-ssr-pwa-and-security.md` |
 | open a file under `src-pwa/` at all, or change the InjectManifest contract | `32-pwa-injectmanifest-guard.md` first, then `30` |
 | decide what the user sees when the SSR process returns 500, the API is unreachable, or the device is offline | `34-frontend-failure-and-degradation.md` |
@@ -52,7 +52,7 @@ Each row states the observable situation you are in, not the destination's title
 | ship a PWA change and hand it to whoever operates it | `37-pwa-operations-record.md` |
 | build the SMS-OTP screen, wire `autocomplete="one-time-code"`, or add a device signal | `40-webotp-and-device-trust.md` |
 | render a step-up challenge, read a TOTP verification timestamp, or gate UI on a permission bitmap | `41-step-up-and-permission-hints.md` |
-| call an API the browser gates behind a prompt: microphone, camera, screen, geolocation, notifications, clipboard read, wake lock, sensors, Bluetooth/USB/NFC | `45-browser-apis-and-permissions.md` for the gesture/primer, denial recovery and expiring-grant contract |
+| call an API the browser gates behind a prompt: microphone, camera, screen, geolocation, notifications, clipboard read, wake lock, sensors, Bluetooth/USB/NFC | `45-browser-apis-and-permissions.md` for the gesture and primer, denial-recovery and expiring-grant contract |
 | choose SPA vs SSR vs PWA vs Capacitor for new work, or make first paint feel faster | `50-modern-experience.md` |
 | have a component family in mind but not a symbol ("a table", "a picker", "an overlay") | `60-components-and-layouts.md` |
 | choose between two Quasar components, or hit a component that behaves unexpectedly | `61-component-usage-atlas.md` |

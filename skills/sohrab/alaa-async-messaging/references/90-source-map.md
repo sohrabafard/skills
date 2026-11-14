@@ -40,7 +40,7 @@ looks authoritative and gets copied forward, which is how a skill rots without a
 
 - The task names `latest`, `current`, `upgrade`, a CVE, or a broker or framework major version.
 - The task changes prefetch, heartbeat, delivery limit, quorum-queue policy, dead-lettering, publisher
-  confirms, or reconnect behaviour; or depends on acquired/delivery counters, `basic.nack` versus
+  confirms, or reconnect behaviour; or depends on the acquired or delivery counter, `basic.nack` versus
   `basic.reject`, acknowledgement timeouts, or negotiated `consumer_cancel_notify`.
 - The task depends on a kit capability: whether `mqkit` exposes a publish timeout, how it reports a nack,
   what `outboxkit` does on a failing publish. **`mqkit`'s publisher-confirm surface, its timeout behaviour

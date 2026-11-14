@@ -2,7 +2,7 @@
 
 How an image build is expressed as a job on a runner. What goes *into* the image
 — base image choice, layer order, multi-stage boundaries, minimisation, and any
-Compose file — belongs to `/alaa-docker-production` (`$alaa-docker-production`).
+Compose file — belongs to `/alaa-docker-production`.
 
 ## Table of contents
 
@@ -91,13 +91,13 @@ DinD requires a privileged runner. That is not a preference: without
 
 - Use a **dedicated** privileged runner fleet with its own node selector.
 - Restrict it to protected refs and trusted projects.
-- Prefer TLS (port 2376, `DOCKER_TLS_CERTDIR`, `DOCKER_CERT_PATH`) and keep the
+- Use TLS (port 2376, `DOCKER_TLS_CERTDIR`, `DOCKER_CERT_PATH`) and keep the
   service alias, the port and the certificate directory consistent with each
   other, or the CLI reports only "Cannot connect to the Docker daemon".
 
 If a platform constraint makes any of these impossible, the choice is between not
-using DinD and getting an explicit exception from `/alaa-security-review`
-(`$alaa-security-review`), which owns that decision. Do not ship the
+using DinD and getting an explicit exception from `/alaa-security-review`,
+which owns that decision. Do not ship the
 unhardened form on request alone.
 
 Do not mount the host `docker.sock` into a container. It gives the job the

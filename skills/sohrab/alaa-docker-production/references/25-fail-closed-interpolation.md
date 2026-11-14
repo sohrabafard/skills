@@ -3,8 +3,7 @@
 Open this file before any change to a Compose or Swarm stack file, and before any change to a
 generator that emits one.
 
-This skill owns this invariant for Compose authorship. `/alaa-frontend-devops`
-(`$alaa-frontend-devops`) states it as a configuration gate on the frontend runtime container at
+This skill owns this invariant for Compose authorship. `/alaa-frontend-devops` states it as a configuration gate on the frontend runtime container at
 its `references/15-build-time-vs-runtime-config.md:26-36` and routes authorship here; this file
 states it as the authorship rule for every Compose file in the fleet and does not restate the
 frontend gate.
@@ -25,8 +24,8 @@ The checker is `scripts/check-compose-interpolation.mjs`. Its rule ids are the s
 
 The decision is one question, and it is not about whether a value happens to be present in your
 shell: **if this variable were unset on a manager node with a clean environment, would the
-deployment come up with a control turned off?** If yes, `:?` with no default. If no, `:-default`
-and the default is a real production value.
+deployment come up with a control turned off?** If yes, write `:?` with no default. If no, write
+`:-default`, and the default must be a real production value.
 
 The forms are the documented Compose set
 (https://docs.docker.com/reference/compose-file/interpolation/, checked 2026-07-29).
@@ -137,8 +136,8 @@ file is the defect. The `id` values match.
 | `sc-debug` | `APP_DEBUG`, `DEBUG`, `DEBUGBAR_ENABLED`, `TELESCOPE_ENABLED` | `true`, `1`, `on`, `yes` | Laravel with `APP_DEBUG=true` renders the stack trace, the environment and the database connection parameters into the body of an HTTP 500. The result is an information-disclosure endpoint that only appears when something is already going wrong, which is when it is least likely to be noticed. |
 
 Threat classification for anything not on this list — whether a newly named variable is a security
-control at all, and what class of threat it belongs to — is `/alaa-security-review`
-(`$alaa-security-review`)'s decision under its `SKILL.md` section "Fail-closed versus fail-open,
+control at all, and what class of threat it belongs to — is `/alaa-security-review`'s
+decision under its `SKILL.md` section "Fail-closed versus fail-open,
 and which doctrine applies". Apply that classification before adding a register member.
 An availability-only dependency remains `/alaa-reliability-sla`'s ground and is not a
 register member; the Compose forms and disabling defaults above remain this file's concern.
@@ -150,7 +149,7 @@ Three ways, in order of preference.
 1. **Edit the register.** Add a row to §4.2 or §4.3 above with the "why" written out, and the
    matching object to `scripts/lib/safety-controls.mjs` with the same `id`. This is the right answer
    for anything that recurs across services.
-2. **A project register file**, for a variable that is one service's own:
+2. **Write a project register file** for a variable that is one service's own:
    ```json
    { "entries": [
      { "id": "sc-comment-webhook-hmac", "class": "A",
@@ -161,7 +160,7 @@ Three ways, in order of preference.
    ```
    node scripts/check-compose-interpolation.mjs --register runtime/safety-controls.json docker-compose.yml
    ```
-3. **In the Compose file itself**, when the variable exists in one file only:
+3. **Declare it in the Compose file itself** when the variable exists in one file only:
    ```yaml
    # safety-control: COMMENT_WEBHOOK_HMAC — signs outbound webhook bodies; a default means every receiver accepts a forged body
    COMMENT_WEBHOOK_HMAC: ${COMMENT_WEBHOOK_HMAC:?set the webhook signing secret in the service .env}
@@ -197,7 +196,7 @@ into a failed deploy — which is better, but not the goal:
 2. Make the value required where it is produced. In this fleet that is
    `service-runtime-kit`'s `validate_service_env` (`render-runtime.sh:91-145`), which today requires
    `DB_USERNAME` and does not require `DB_PASSWORD`. Adding a `require_env_value` there is
-   `/service-runtime-kit-governance` (`$service-runtime-kit-governance`)'s change; naming it as
+   `/service-runtime-kit-governance`'s change; naming it as
    required is this skill's finding.
 3. Make the value present where it is consumed. For Swarm that means the credential is a Docker
    secret rather than an environment variable at all; see this skill's

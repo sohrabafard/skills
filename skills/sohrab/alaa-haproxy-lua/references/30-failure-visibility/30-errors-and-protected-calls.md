@@ -20,7 +20,7 @@ Three facts to carry from that output:
 
 ## Where `pcall` is correct and where it hides the defect
 
-`pcall` is useful in a test harness and in runtime cleanup/recovery that preserves the declared failure contract. `examples/haproxy-lua/token-guard.test.lua` uses it that way.
+`pcall` is useful in a test harness and in runtime cleanup or recovery that preserves the declared failure contract. `examples/haproxy-lua/token-guard.test.lua` uses it that way.
 
 `pcall` inside a sample handler violates the error contract when it hides an unexpected fault or returns an undeclared success-shaped value, because it can convert a fault — a genuine invalid input, a typo in the module, an out-of-memory error — into a successful sample. The shipped pattern to recognise and reject in review:
 

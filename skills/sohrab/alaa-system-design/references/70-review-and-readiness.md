@@ -12,7 +12,7 @@ record reviewed by neither is a draft.
 
 ## What the reviewer checks
 
-One check per procedure step, in order. Each is answered from the record itself — a check answered from the
+The reviewer applies one check for each procedure step, in order. Each check is answered from the record itself — a check answered from the
 reviewer's memory of a conversation is not answered, because the next reader will not have been in it.
 
 | Step | The check |

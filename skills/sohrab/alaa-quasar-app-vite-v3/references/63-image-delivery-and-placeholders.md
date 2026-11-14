@@ -4,7 +4,7 @@ You are about to emit an image URL, a `srcset`, a placeholder, or a reserved siz
 
 ## Rules
 
-- Keep SSR markup stable: never measure the DOM after hydration to compute URLs or render different server/mounted image trees; prefer native responsive images.
+- Keep SSR markup stable: never measure the DOM after hydration to compute URLs, and never render different image trees on the server and after mount; prefer native responsive images.
 - Reuse any repo-standard placeholder. Use `placeholder-src` for large/slow media and `ratio` or deterministic dimensions to reserve space and avoid CLS.
 - Responsive slot: default to `srcset` + `sizes`. Known fixed width/height: one resized URL is fine. Unknown SSR width: use candidates, not post-hydrate fake precision.
 - Backend/CDN resize params (`w/h` or equivalent): generate deterministically, preserve existing query params, replace rather than stack duplicate size params, and size for the display slot—not the original file.

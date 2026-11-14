@@ -33,7 +33,7 @@ temp file — is readable by the next job that lands on it.
 ## Container-hosted manager bootstrap
 
 Read this section only when creating or changing a runner manager hosted in a
-container. Record the host OS/runtime and manager image version, then choose the
+container. Record the host OS and runtime and the manager image version, then choose the
 job executor separately: hosting Runner in Docker does not select Docker as the
 job executor. A shell executor runs jobs in the manager's environment; the host
 daemon path and its isolation preconditions remain `container-build-strategies.md`'s.
@@ -41,13 +41,13 @@ daemon path and its isolation preconditions remain `container-build-strategies.m
 Before authoring the configuration, record:
 
 - the persistent volume or host directory mounted at `/etc/gitlab-runner`, its
-  ownership and backup/restore path; replacing the manager container must preserve
+  ownership and backup and restore path; replacing the manager container must preserve
   `config.toml` and its credentials;
 - the existing runner authentication-token source and registration target; use
   the authentication-token workflow described below, without logging the token
   or committing it to Compose or TOML examples;
 - the GitLab URL and TLS trust source. For a private CA, configure trust in the
-  manager and separately in the helper/build environment that needs it; manager
+  manager and separately in the helper or build environment that needs it; manager
   trust alone does not prove job tooling trusts the endpoint. Do not disable
   certificate verification to bypass a missing CA;
 - the executor's actual job context: filesystem and writable paths, tools,

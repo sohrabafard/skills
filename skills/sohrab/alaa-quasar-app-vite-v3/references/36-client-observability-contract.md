@@ -78,8 +78,8 @@ for SSR, not the browser SDK. No fleet package version or browser env-key defaul
   connection transitions at the WS/SSE lifecycle owner. A library's automatic capture does not prove
   every applicable signal is wired.
 - **DSN/config:** read the approved public browser DSN, release and environment through the target's typed
-  config module. A browser DSN allows event submission and can be abused; it is not a read/admin secret.
-  Never let browser initialization fall back to server `SENTRY_DSN`, and never expose an auth/upload token.
+  config module. A browser DSN allows event submission and can be abused; it is not a read or admin secret.
+  Never let browser initialization fall back to server `SENTRY_DSN`, and never expose an auth or upload token.
   Runtime config must resolve before initialization; release identity remains available at build time.
 - **SSR side:** initialize the selected server SDK at the version's documented startup point, before the
   modules it must instrument. Wire its integration to the actual SSR server framework and isolate scope
@@ -106,6 +106,6 @@ and [JavaScript v11 migration](https://github.com/getsentry/sentry-javascript/bl
 These sources explain selection; recheck version-matched docs in the target before copying options.
 
 Do: wire each applicable class, scrub before transport and contain emission failure.
-Do not send resolved URLs, loop on a failed collector, or invent a missing registry name.
+Do not: send resolved URLs, loop on a failed collector, or invent a missing registry name.
 
 Search: `sendBeacon`, `fetch keepalive`, `onunhandledrejection`, `errorHandler`, `web-vitals`, `LCP`, `INP`, `CLS`, `sampling rate`, `PII exclusion`, `scrub`, `collector unreachable`, `release identifier`, `service worker lifecycle event`.

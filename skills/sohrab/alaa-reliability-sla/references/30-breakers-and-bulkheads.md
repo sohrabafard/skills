@@ -13,7 +13,7 @@ Read when a dependency flaps, when one slow dependency exhausts a resource other
 
 ## Granularity: one breaker per dependency per operation class
 
-A breaker's scope is the smallest unit whose failures are correlated and whose consequences are shared. In practice: per dependency, and split further per operation class when one class can fail while another succeeds — reads versus writes, a cheap lookup versus an expensive report, one shard versus another.
+A breaker's scope is the smallest unit whose failures are correlated and whose consequences are shared. In practice, scope it per dependency, and split it further per operation class when one class can fail while another succeeds — reads versus writes, a cheap lookup versus an expensive report, one shard versus another.
 
 Scope too wide and a single broken endpoint opens the circuit for healthy ones, turning a partial failure into a total one. Scope too narrow — per URL with an identifier in it, per tenant — and no scope ever accumulates enough volume for its rate to be meaningful, so the breaker never trips and never protects anything. The test for a correct scope: **the failures inside it are correlated, and there is enough traffic in the window for a rate to mean something.**
 

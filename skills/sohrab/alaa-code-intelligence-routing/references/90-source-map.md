@@ -1,6 +1,6 @@
 # Official source map
 
-CodeGraph MCP and native gopls/PHPantom/Pyright claims refreshed on 2026-10-24; Serena interface/context/API claims on 2026-10-23. Other provider entries retain their 2026-10-10 assessment. Official documentation establishes potential capability; effective installed inventory/schema and repository truth bound local usability. Refresh the specific claim before changing a version-sensitive command, key, capability, hook or path. Missing evidence remains unknown.
+The CodeGraph MCP claims and the native gopls, PHPantom and Pyright claims were refreshed on 2026-10-24, and the Serena interface, context and API claims on 2026-10-23. Other provider entries retain their 2026-10-10 assessment. Official documentation establishes potential capability; the effective installed inventory and schema, together with repository truth, bound local usability. Refresh the specific claim before changing a version-sensitive command, key, capability, hook or path. Missing evidence remains unknown.
 
 ## Provider evidence
 

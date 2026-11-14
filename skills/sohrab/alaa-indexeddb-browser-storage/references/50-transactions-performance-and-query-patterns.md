@@ -22,7 +22,7 @@ file states the bounds IndexedDB itself imposes.
 | `n` puts in one transaction | one commit | correct |
 | `n` puts in `n` transactions | `n` commits | the most common performance defect in this domain |
 
-**Budgets this fleet holds.** Use a measured number where the path is measured; these until then.
+**Budgets this fleet holds.** Use a measured number where the path is measured; use these until then.
 
 - **No read on a user-facing route is `O(n)` in a store that grows with the user's history.** Learning
   state, drafts, outbox rows and cache entries all grow.
@@ -38,11 +38,11 @@ file states the bounds IndexedDB itself imposes.
 
 ## Transaction rules
 
-- `readonly` for reads; `readwrite` serialises against every other `readwrite` on the same store.
+- Use `readonly` for reads; `readwrite` serialises against every other `readwrite` on the same store.
 - Name every store an atomic operation touches in one transaction. Two transactions have no atomicity
   between them.
 - **Await transaction completion, not request success.** A request can succeed on a transaction that later
-  aborts. `txDone` in `examples/idb-core.ts`.
+  aborts. Use `txDone` from `examples/idb-core.ts`.
 - **No `await` of non-IndexedDB work inside an open transaction.**
 
 ```ts

@@ -29,7 +29,7 @@ The kit's outbox relay uses the same shape — `DELETE FROM outbox WHERE id IN (
 FOR UPDATE SKIP LOCKED LIMIT $1) RETURNING …` at `outboxkit/queries.go:3-11` — and commits the delete only after
 the publish is acknowledged (`outboxkit/doc.go:4-6`). It runs on the runtime lane, because `InTx` exists on
 `pgkit.RuntimePool` and not on `MigratePool` (`pgkit/tx.go:21`). Relay tuning, retry behaviour, DLQ, and replay
-are `/alaa-async-messaging` (`$alaa-async-messaging`); what this file owns is the claim query and the index that
+are `/alaa-async-messaging`; what this file owns is the claim query and the index that
 serves it.
 
 ### Idempotency (DB-backed)
@@ -41,8 +41,8 @@ Assume at-least-once execution for every consumer and every job.
 - Use `INSERT … ON CONFLICT DO NOTHING` or `DO UPDATE` for insert-if-absent semantics.
 - Do not design for exactly-once delivery. It does not exist; idempotent handling is what replaces it.
 - Whether a given path is idempotent is proven by a run-twice test — principle P7 in
-  `/alaa-golang-clean-code-principles` (`$alaa-golang-clean-code-principles`) for Go, and the idempotency doctrine
-  is `/alaa-reliability-sla` (`$alaa-reliability-sla`) `references/60-idempotency.md`.
+  `/alaa-golang-clean-code-principles` for Go, and the idempotency doctrine
+  is `/alaa-reliability-sla` `references/60-idempotency.md`.
 
 ## Read-models and projections (CQRS-light)
 
@@ -66,8 +66,8 @@ introduce one to avoid writing an index.
 2. Trigger: state the locking overhead, the failure mode, and how it is disabled and rolled back. A trigger runs
    inside the writer's transaction, so its cost is paid by every write.
 
-How much staleness the read may carry is a consistency budget owned by `/alaa-system-design`
-(`$alaa-system-design`) `references/30-data-and-consistency.md`. Bring it the freshness requirement; it decides.
+How much staleness the read may carry is a consistency budget owned by
+`/alaa-system-design` `references/30-data-and-consistency.md`. Bring it the freshness requirement; it decides.
 
 ## Query optimization workflow
 
@@ -79,7 +79,7 @@ How much staleness the read may carry is a consistency budget owned by `/alaa-sy
    or move the aggregate into a projection with an explicit refresh path.
 
 When the loop count grows with tenants, rows, or history, `/alaa-algorithms-data-structures`
-(`$alaa-algorithms-data-structures`) owns which of the four resolutions applies and the maximum the batch must
+owns which of the four resolutions applies and the maximum the batch must
 carry; this file owns the query and index shape the resolution lands on.
 
 ## Connection management
@@ -108,8 +108,8 @@ different server connection, because under transaction pooling it can.
   `pgkit.RuntimePool`, and its regex matches `SET LOCAL` as well — `pgkit/testdb/fence_test.go:39` uses
   `SET LOCAL statement_timeout = '1s'` as a negative fixture. The positive replacement is to carry the value as a
   bound query parameter and to bound the query with `context.WithTimeout`, which pgx honours. When the service
-  genuinely needs a transaction-scoped GUC, that is a kit change request through `/alaa-go-chi-development`
-  (`$alaa-go-chi-development`), not a rewrite that evades the check.
+  genuinely needs a transaction-scoped GUC, that is a kit change request through `/alaa-go-chi-development`,
+  not a rewrite that evades the check.
 - `pg_advisory_xact_lock` is not matched by that regex and is permitted: it releases at commit, so it is safe
   under transaction pooling.
 - **A clean `alaa_pooledlane` run is not proof that the lane is clean.** Detection is narrow by construction: the
@@ -130,8 +130,8 @@ different server connection, because under transaction pooling it can.
 
 Postgres is the source of truth, so it has no fallback. A request that cannot reach it fails; the question this
 section answers is how it fails and what it holds while failing. The status code, the error code, and the event
-name for each case are `alaa-services-contract` (`/alaa-services-contract`, `$alaa-services-contract`); the
-doctrine of degrading rather than hanging is `/alaa-reliability-sla` (`$alaa-reliability-sla`)
+name for each case are `/alaa-services-contract`; the
+doctrine of degrading rather than hanging is `/alaa-reliability-sla`
 `references/50-degradation.md`. What this file states is the mechanic and what it obliges in the repository.
 
 - **Pool exhaustion.** `pgxpool.Acquire` blocks until the context deadline. A repository call made with a context
@@ -141,7 +141,7 @@ doctrine of degrading rather than hanging is `/alaa-reliability-sla` (`$alaa-rel
 - **Deadlock, SQLSTATE `40P01`.** Postgres kills one of the two transactions and returns the error to it. Retry it
   only when the whole unit of work is idempotent; otherwise surface the failure. Prevention is a consistent lock
   ordering across every writer of the same tables, which is a design property and not a runtime setting.
-- **Serialization failure, SQLSTATE `40001`.** Only under `REPEATABLE READ` or `SERIALIZABLE`. This one is
+- **Serialization failure, SQLSTATE `40001`.** It occurs only under `REPEATABLE READ` or `SERIALIZABLE`. This one is
   designed to be retried, so a transaction using those levels ships with its retry path, not without.
 - **Statement timeout, SQLSTATE `57014`.** Reaching the request-path deadline cancels the query; this is the
   intended behaviour and not an error to swallow. The server-side backstop does not exist on the kit yet —
@@ -156,6 +156,6 @@ doctrine of degrading rather than hanging is `/alaa-reliability-sla` (`$alaa-rel
   Postgres is unreachable. Reason: it converts an outage the operator can see into silent stale answers the
   operator cannot.
 
-Which proof level each of these needs before shipping is `/alaa-testing-strategy` (`$alaa-testing-strategy`)
+Which proof level each of these needs before shipping is `/alaa-testing-strategy`
 `references/40-proof-strength.md`. The claim query and the deadlock ordering are provable at level 2 with a fake;
 pool exhaustion and lock behaviour are level 6, against a real Postgres.

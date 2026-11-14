@@ -4,7 +4,7 @@ Read this when a queue misbehaves, or when writing the runbook entry or alert fo
 5, 6 and 8 share symptoms — the diagnosis is what separates them, so never act on a symptom alone.
 
 Per class: **symptom** observed, **diagnosis** that separates it from neighbours, **smallest retry** that
-fixes it or disproves the diagnosis, **escalation**. Severity and paging: `/alaa-observability-soc`. Degradation doctrine: `/alaa-reliability-sla`
+fixes it or disproves the diagnosis, **escalation**. Severity and paging: `/alaa-observability-soc`. Degradation doctrine: `/alaa-reliability-sla`, in
 `alaa-reliability-sla references/50-degradation.md`. Every threshold and timeout value:
 `alaa-services-contract references/22-failure-load-and-deprecation-contract.md`. Broker and cluster
 operations: `/caas-arvan-kuber`.
@@ -119,8 +119,9 @@ The class this skill exists to prevent; the rule and mechanism are `SKILL.md` co
   delivery cap: `rabbitmqctl list_queues name arguments effective_policy_definition`.
 - **Smallest retry.** Verify broker version, queue type and actual AMQP return method against
   `alaa-async-messaging references/40-dead-letter-and-replay.md`. For counted failures, correct the
-  delivery-limit/DLX policy through authorized operations and observe terminal disposition. For
-  non-counting returns, fix the bounded application path; lowering the policy limit cannot spend it.
+  delivery-limit and DLX policy through authorized operations and observe terminal disposition. For
+  non-counting returns, fix the bounded application path; lowering the policy limit cannot end
+  that loop.
 - **Escalation.** A classic queue has no quorum delivery-limit bound; converting it is a topology change, so
   names come from `alaa-services-contract references/23-queue-and-exchange-registry.md`. Immediate
   containment: stop the consumer, `basic_get` the message to a file for evidence, reject it without requeue

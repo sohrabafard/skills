@@ -53,7 +53,7 @@ therefore assert the absence of that token, not merely the presence of QUIC; the
 exactly three correct outcomes and "ship it and see" is not among them:
 
 1. **Change the binary.** Select a build and TLS stack providing the required QUIC APIs.
-   Modern stock OpenSSL is version-dependent; AWS-LC/quictls are not the only
+   Modern stock OpenSSL is version-dependent; AWS-LC and quictls are not the only
    possible answer. Verify backend and 0-RTT requirements individually.
 2. **Use `limited-quic` only with a compiled compatibility layer**
    (`+QUIC +QUIC_OPENSSL_COMPAT`). It cannot add missing build features. Accept

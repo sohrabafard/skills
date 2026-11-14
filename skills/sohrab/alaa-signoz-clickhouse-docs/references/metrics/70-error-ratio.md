@@ -4,7 +4,7 @@ Read the [signal prerequisites](../clickhouse-metrics-reference.md) before this 
 
 ### Error ratio from cumulative counters
 
-Two counter-rate queries — one filtered to the error status, one unfiltered — joined on `ts`. Take
+The query joins two counter-rate queries on `ts`: one filtered to the error status, one unfiltered. Take
 the status label's name and its permitted values from
 `/alaa-services-contract` rather than from this example, which shows
 the shape only.

@@ -78,7 +78,7 @@ meant to remove.
 
 ## Allocation inside the loop
 
-Two rules, and no more, because per-language allocation behaviour belongs to `/golang-performance` and the per-language clean-code skills:
+This file gives two rules and no more, because per-language allocation behaviour belongs to `/golang-performance` and the per-language clean-code skills:
 
 - **Allocate once outside the loop what is reused inside it**, when the loop is over a growing dimension and the
   allocation is proportional to element size. Below that threshold this trade buys nothing and costs readability.

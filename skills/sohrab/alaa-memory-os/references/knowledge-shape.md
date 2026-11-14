@@ -109,5 +109,5 @@ that same path at volume, not an exception to it.
 ## Adapter serialization
 
 The selected adapter owns serialization, publication destinations, product-specific identity, tags,
-schema/search mechanics and applicable verification. These fields and observations remain store-neutral;
+schema and search mechanics and applicable verification. These fields and observations remain store-neutral;
 do not load an inactive store's upstream pack.

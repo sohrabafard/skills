@@ -10,7 +10,8 @@ you did.
 1. Read the repository instructions, the pin in `go.mod`, generated file headers, current config, route
    inventory, migrations, and the failing command or test. Reproduce the smallest failing path.
 2. Classify the fault boundary and keep the classes separate in the report: service domain bug, incorrect kit
-   usage, generated drift, kit defect, config or deploy, infrastructure, or host/tooling/network friction.
+   usage, generated drift, kit defect, config or deploy, infrastructure, or friction from the host, tooling, or
+   network.
 3. Compare behaviour against the **pinned** kit version, not against a working kit checkout. A missing command or
    symbol on an old pin is a release or upgrade issue, not a cache or tooling issue.
 4. A temporary local `replace` is allowed for deliberate diagnosis and is never committed. Never copy kit code to
@@ -46,7 +47,7 @@ you did.
 5. A red `contracttest` after an upgrade means one of two things: the service relied on something outside the
    contract, which the service fixes; or the kit broke a contract in a minor, which is a change request with
    `severity: blocking`. Minors never break.
-6. Run targeted behaviour tests, then the contract, API and generator drift gates, then full/race/static checks,
+6. Run targeted behaviour tests, then the contract, API and generator drift gates, then the full, race and static checks,
    then real-infrastructure gates, then deploy-render and local CI, in proportion to what changed, each once per
    tree state under `10-consumer-development.md` step 9; add no test for kit behaviour. Update the
    registry row's `kit_version`, `contracttest`, and `updated` fields from verified results only.

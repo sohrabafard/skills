@@ -30,7 +30,7 @@ protections; do not enable `insecure-fork-wanted` to make a module load.
    success, missing dependency, malformed input and timeout paths under the candidate
    list. Test both shared and per-thread loading if changing the load model.
 5. Remove a required library only with a reviewed redesign and equivalent tests.
-   Preserve the old list with the old module/configuration as the rollback unit.
+   Preserve the old list with the old module and configuration as the rollback unit.
 
 For the bundled token validator, `string` suffices in production: `type`, `tonumber`,
 `tostring`, `error`, and iteration are base functions. Its randomized unit test also

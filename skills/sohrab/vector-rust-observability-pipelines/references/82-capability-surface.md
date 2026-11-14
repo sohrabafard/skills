@@ -9,7 +9,7 @@ Historical scope: additions and deprecations across `0.54.0` → `0.57.0`, taken
 release pages, the `/highlights/` index, and the `0.55.0` and `0.57.0` upgrade
 guides. Every row is version-tagged. **Absence from these tables is absence from
 those pages, not evidence a capability does not exist.** The new-release section
-below extends this inventory; current version/support evidence is owned by
+below extends this inventory; current version and support evidence is owned by
 `80-version-and-upgrade-deltas.md`, exhaustive delta mapping by `81-release-coverage.md`.
 
 For later capabilities and migration choices, read the 0.59.0–0.61.0 ledger in

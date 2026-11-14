@@ -70,7 +70,7 @@ For an end-to-end design, return:
 - authorization for every tus method
 - the client-to-storage limit chain with each enforcer
 - retention's threshold, owner and metric
-- every hook/callback's failure posture
+- the failure posture of every hook and callback
 - storage lifecycle and any two-copy window
 - observability
 - regression tests

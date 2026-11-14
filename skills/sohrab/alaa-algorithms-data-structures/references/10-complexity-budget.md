@@ -20,7 +20,7 @@ One budget lives in exactly one place, chosen by how long the decision must surv
 A budget recorded in a ticket, a chat message, or a pull-request description is not recorded. Those are read once,
 by the people who already knew, and the next engineer to touch the path reads the code.
 
-**One budget per operation, not per file and not per function.** An operation that spans four functions gets one
+**Write one budget for each operation, not one for each file or each function.** An operation that spans four functions gets one
 budget on the entry point, because the bound is a property of the whole call, and four partial budgets can each be
 true while the operation misses the sum.
 

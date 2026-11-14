@@ -2,7 +2,7 @@
 
 ## P12 — Tests Prove Behavior at the Boundary You Own
 
-Three tiers, each proving a different boundary, none substituting for another:
+Tests run in three tiers. Each tier proves a different boundary, and no tier substitutes for another:
 
 - **Use-case tests** run against fakes at ports, table-driven. Where business rules *are* the product (news's
   grant rules and visibility predicate; notification's routing and etiquette rules), the tables cover every
@@ -78,7 +78,7 @@ in the kit. Verified against kit source 2026-07-26: the nearest gates are `apico
 OpenAPI spec agree on routes, methods, and path parameters; and `make tier2-drift`, which proves generated files
 still match their generator. Neither compares what one service publishes against what another consumes.
 
-Two things to do about that. Until the gate exists, prove the pair by hand in the producing service: a test that
+Do two things about that. Until the gate exists, prove the pair by hand in the producing service: a test that
 marshals each command and event struct and asserts the resulting JSON key set equals a checked-in golden file,
 plus the same golden file vendored into the consuming service's test — a rename then fails on both sides instead
 of failing silently in production. And file the real gate: one timestamped change request proposing a

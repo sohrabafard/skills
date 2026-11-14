@@ -193,7 +193,7 @@ test the composed order.
 - Implement the same interface as the wrapped class; take it as the first constructor argument.
 - Compose in the service provider binding (closure that builds inner + decorator); callers keep depending on the interface and never know the decorator exists.
 - Cache decorators delegate reads through `Cache::remember`/`flexible` and invalidate on writes right after delegating; on cache-store failure they call the inner implementation directly so a Redis outage never becomes a request failure.
-- Key design, TTL, and invalidation come from `/alaa-data-layer` (`$alaa-data-layer`), `references/50-redis-laravel-octane.md` — which also owns the "Step 0 — repository-pattern gate" that must pass before any cache decorator is added. The decorator seam in the layer flow is defined by `/alaa-laravel-architecture` (`$alaa-laravel-architecture`).
+- Key design, TTL, and invalidation come from `/alaa-data-layer`, `references/50-redis-laravel-octane.md` — which also owns the "Step 0 — repository-pattern gate" that must pass before any cache decorator is added. The decorator seam in the layer flow is defined by `/alaa-laravel-architecture`.
 
 ### Good defaults
 - One concern per decorator; stack two small decorators rather than writing one mixed one.
@@ -239,7 +239,7 @@ test the composed order.
 ### Laravel application
 - Define one interface per family member and one suite factory interface with a creation method per member; one concrete suite per provider.
 - Select and bind the concrete suite once at boot (config-driven service provider binding or contextual binding); application code receives the suite, never chooses it.
-- Under Octane the suite factory must be stateless/immutable like any singleton.
+- Under Octane the suite factory must be stateless and immutable, like any singleton.
 
 ### Good defaults
 - Reach for it only when the family is real (≥2 members whose implementations must match). One varying class is plain Strategy + Factory.

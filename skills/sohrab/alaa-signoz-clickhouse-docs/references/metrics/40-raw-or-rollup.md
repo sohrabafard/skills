@@ -21,4 +21,4 @@ metrics query that reads the raw table and carries neither a rollup nor that bou
 
 The rollup columns are `last`, `min`, `max`, `sum`, `count` per `(env, temporality, metric_name,
 fingerprint, unix_milli)`. For a gauge, `last` replaces `avg(value)`. For a cumulative counter,
-`last` is the value to difference. `sum`/`count` gives a mean without reading samples.
+`last` is the value to difference. `sum` divided by `count` gives a mean without reading samples.

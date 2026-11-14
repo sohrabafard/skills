@@ -102,7 +102,7 @@ Make the whole repository internally consistent while preserving its local diale
 - Choose one local term for each repeated concept and standardize toward that term.
 - Clean duplication, weak abstractions, inconsistent type usage, and naming drift across the repo.
 - Keep the repo's own preferred suffixes and folder names when they are stable and understandable.
-- Use `/alaa-workflow` (`$alaa-workflow`) and stage the work in reviewable phases.
+- Use `/alaa-workflow` and stage the work in reviewable phases.
 
 ### Allowed changes
 - broad mechanical renames that preserve repo-local terminology
@@ -124,7 +124,7 @@ Make the whole repository internally consistent while preserving its local diale
 Make the whole repository look and behave like an Alaa-style Laravel codebase while preserving external contracts by default.
 
 ### Required behavior
-- Read `/alaa-workflow` (`$alaa-workflow`), `/alaa-laravel-architecture` (`$alaa-laravel-architecture`), and `consistency-and-naming.md` before broad renames or moves.
+- Read `/alaa-workflow`, `/alaa-laravel-architecture`, and `consistency-and-naming.md` before broad renames or moves.
 - Use the architecture skill's canonical layer flow and naming where it applies.
 - Normalize duplicated concepts, generic helpers, manager classes, weak base repositories, raw-array boundaries, and inconsistent naming.
 - Prefer explicit DTO boundaries, constructor injection, small focused services, value objects for real concepts, and clear request/resource/policy edges.
@@ -142,7 +142,7 @@ Make the whole repository look and behave like an Alaa-style Laravel codebase wh
 - internal class, file, namespace, and method renames across the repo
 - module-level folder cleanup to make layer intent obvious
 - deleting thin wrappers that merely forward to Eloquent or the container
-- replacing vague helpers/managers/processors with explicit services, strategies, or value objects
+- replacing vague helpers, managers and processors with explicit services, strategies, or value objects
 - codemod-style consistency passes across tests, docs, and docblocks
 
 ### Preserve by default
@@ -173,9 +173,9 @@ If a change would break one of these surfaces, either preserve it or make the br
 Prefer this order:
 1. Convention inventory and routing to companion skills
 2. Naming and code-shape normalization
-3. DTO / value-object / explicit-type cleanup
+3. DTO, value-object and explicit-type cleanup
 4. repository and persistence-boundary cleanup where justified
-5. controller / request / resource / policy edge cleanup
+5. controller, request, resource and policy edge cleanup
 6. test alignment
 7. docs, Postman, diagrams, and final audit
 

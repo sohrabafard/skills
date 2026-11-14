@@ -57,9 +57,9 @@ cannot point at is not a review item.
 - **Believing a README over the active HAProxy configuration.** The config is what
   runs.
 - **Reviewing this boundary with this skill alone** when the change also lands in
-  Laravel, HAProxy, security, observability, Octane or deployment ground. The
-  companion table in `SKILL.md` names which one, and a review that skips the matching
-  companion is incomplete.
+  Laravel, HAProxy, security, observability, Octane or deployment ground.
+  *What this skill does not own* in `references/90-source-map.md` names which one, and a
+  review that skips the matching companion is incomplete.
 
 ## Before you call a trust-boundary change reviewed
 

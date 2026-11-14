@@ -1,6 +1,6 @@
 # Per-stack implementation
 
-The decision is the same in every stack; only the mechanism differs. Language idiom belongs to the language skills — `alaa-laravel-architecture` and `/alaa-php-clean-code`, `/alaa-golang`. This file owns only what pagination requires of each.
+The decision is the same in every stack; only the mechanism differs. Language idiom belongs to the language skills — `/alaa-laravel-architecture` and `/alaa-php-clean-code`, `/alaa-golang`. This file owns only what pagination requires of each.
 
 ## Laravel
 
@@ -15,7 +15,7 @@ This is a constraint, not a preference, and it rests on framework source rather 
 
 Laravel's own documentation states the constraint that follows from points 3 and 4, and has stated it unchanged since 8.x: cursor pagination *"requires that the ordering is based on at least one unique column or a combination of columns that are unique. Columns with `null` values are not supported."* The platform rules in this skill are that requirement made enforceable rather than advisory.
 
-**What to use instead.** A service-level keyset paginator, shared across the service's routes, that:
+**What to use instead.** Use a service-level keyset paginator, shared across the service's routes, that:
 
 - resolves the allowlisted sort mode to its ordering tuple server-side;
 - builds the predicate as a row-value comparison via a parameterised `whereRaw` over the ordering columns — the column list comes from the sort allowlist, never from the request, so no identifier is interpolated from client input;

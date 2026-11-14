@@ -40,7 +40,7 @@ naming only the members you call. `assets/templates/shakaTypes.ts` is that seam,
 ## Lifecycle implementation and proof
 
 Use `assets/templates/useShakaPlayer.ts` and `assets/templates/ShakaPlayer.vue` as the single
-implementation: client-only import, run tokens, synchronous invalidation/listener cleanup, a shared
+implementation: client-only import, run tokens, synchronous invalidation and listener cleanup, a shared
 idempotent disposal promise, and destruction of instances whose attach finishes after disposal.
 A null source unloads playback; it does not permanently dispose the handle.
 
@@ -55,7 +55,7 @@ await playerHandle.dispose();
 showPlayer.value = false;
 ```
 
-If disposal rejects, the controller handles the failure before deciding whether to remove/retry;
+If disposal rejects, the controller handles the failure before it decides whether to remove the component or retry;
 never log the raw Shaka error. The unmount hook remains a fallback for uncontrolled removal and
 handles rejection with the wrapper's safe classifier. Test repeated disposal while destruction or
 attachment is pending, null-source unload, and superseded loads. Node doubles prove orchestration;

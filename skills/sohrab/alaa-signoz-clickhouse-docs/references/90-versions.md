@@ -1,6 +1,6 @@
 # Versions and Compatibility Evidence
 
-Read before stating versions, selecting release-specific syntax/APIs or assessing upgrades.
+Read this file before you state a version, select release-specific syntax or APIs, or assess an upgrade.
 This file owns version facts; topic references own query procedures.
 
 ## Snapshot: 2026-09-26; upstream package refresh 2026-09-29
@@ -32,7 +32,7 @@ Never upgrade a consumer merely to match this ledger.
   requires collector `v0.144.11` for application `v0.143.0`. If that cannot be supplied,
   the vendor says to remain on `v0.142.x`. Custom trace pipelines need both
   `signozspanmapper` and `signozllmpricing`; defining processors alone does not activate them.
-  Route topology/redaction decisions to `/alaa-observability-soc`; this skill authorizes no upgrade.
+  Route topology and redaction decisions to `/alaa-observability-soc`; this skill authorizes no upgrade.
 - **Session migration:** that guide changes the default to opaque sessions and requires a new login.
   Retaining JWT requires explicit `SIGNOZ_TOKENIZER_PROVIDER=jwt` and
   `SIGNOZ_TOKENIZER_JWT_SECRET`; absent JWT secrets block startup. Never log or invent a secret,
@@ -74,7 +74,7 @@ Collector tag `v0.144.11`, read 2026-09-26:
   are opposite directions, so a drop in rollback code is not a forward removal.
 - [metrics migrations](https://raw.githubusercontent.com/SigNoz/signoz-otel-collector/v0.144.11/cmd/signozschemamigrator/schema_migrator/metrics_migrations.go):
   sample flags and reduced-series families remain; infer neither target presence nor full layout
-  from an ALTER/MV occurrence. Preserve rollup/exponential-histogram discovery gates.
+  from an ALTER/MV occurrence. Preserve the discovery gates for rollups and exponential histograms.
 
 Source confirms released definitions, not completed migrations on a target. Database overrides,
 retention, 1800-second bucket width/resource retention margin and optional tables need target

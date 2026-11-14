@@ -27,7 +27,7 @@ secrets:
   the fleet's Swarm stacks currently lands at `0444`. The container-side defence at
   `entrypoint.sh:51-57`, which `chmod 600`s the Passport keys, cannot help: a secret mount is
   read-only and `chmod` on it fails.
-- Naming: `<service>_<purpose>_v<n>`. The version suffix is not decoration; see [rotation](#6-rotation-is-a-create-new-name-operation).
+- Name each secret `<service>_<purpose>_v<n>`. The version suffix is not decoration; see [rotation](#6-rotation-is-a-create-new-name-operation).
 
 ## 6. Rotation is a create-new-name operation
 

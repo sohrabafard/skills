@@ -4,7 +4,7 @@ Read this before writing the first task.
 
 **This file is not the ruleset.** The ruleset an Ansible artifact is measured
 against is `ansible-validator references/best_practices.md`
-(`/ansible-validator`, `$ansible-validator`), because a rule is only real if
+(`/ansible-validator`), because a rule is only real if
 something reports its violation, and only that skill ships checkers. This file
 holds the subset that applies while you are typing, where knowing the rule early
 is cheaper than being told about it afterwards. Every entry cites the rule it
@@ -80,10 +80,10 @@ Ask, in this order:
 2. **Is the module in a collection?** Declare the collection in
    `requirements.yml` with a version floor, and use it. A missing collection is
    an environment defect to fix in the environment.
-3. **Is there genuinely no module?** Then `ansible.builtin.command`, with
-   `changed_when`, `creates` or `removes`. `ansible.builtin.shell` only when the
-   command needs a pipe, a redirect, a glob or a shell variable, and say which in
-   a comment.
+3. **Is there genuinely no module?** Then use `ansible.builtin.command` with
+   `changed_when`, `creates` or `removes`. Use `ansible.builtin.shell` only when
+   the command needs a pipe, a redirect, a glob or a shell variable, and say which
+   one in a comment.
 
 **Do not substitute `ansible.builtin.command` for a collection module to avoid a
 dependency.** Shelling out to `psql` instead of using
@@ -198,19 +198,17 @@ Write these in as you go, because retro-fitting them means re-reading the play:
 - A play that must not half-apply across a fleet states `any_errors_fatal: true`
   or a `max_fail_percentage`.
 
-What the numbers should be is `/alaa-reliability-sla`'s
-(`$alaa-reliability-sla`). Write the mechanism; let that skill choose the value.
+What the numbers should be is `/alaa-reliability-sla`'s. Write the mechanism; let that skill choose the value.
 
 ## A11. Performance decisions you make while writing
 
-- `gather_facts: false` unless the play reads an `ansible_*` fact. When it reads
-  fewer than three, `gather_subset` naming exactly those.
-- `update_cache` with `cache_valid_time` rather than an unconditional refresh.
+- Set `gather_facts: false` unless the play reads an `ansible_*` fact. When it
+  reads fewer than three facts, set `gather_subset` to name exactly those.
+- Use `update_cache` with `cache_valid_time` rather than an unconditional refresh.
 - A task that takes minutes runs `async` with `poll: 0`, and is polled by
   `ansible.builtin.async_status`.
 - A loop whose length grows with the inventory, the tenant count or history has
-  a stated bound. `/alaa-algorithms-data-structures`
-  (`$alaa-algorithms-data-structures`) owns complexity budgets.
+  a stated bound. `/alaa-algorithms-data-structures` owns complexity budgets.
 
 Validator section 9 carries the project-level settings — pipelining, fact
 caching and its single `fact_caching_timeout` value of 86400, `forks`, `serial`

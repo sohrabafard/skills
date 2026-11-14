@@ -36,7 +36,7 @@ Rules that remove most per-request allocation:
 
 ## What to precompute at load time
 
-Anything that does not depend on the request: alphabets and byte allowlists, parsed load-time arguments, compiled patterns, constant strings, and localised globals. Load time is the one place where cost is paid once and blocking is permitted, but bound it to meet startup/reload budgets.
+Anything that does not depend on the request: alphabets and byte allowlists, parsed load-time arguments, compiled patterns, constant strings, and localised globals. Load time is the one place where cost is paid once and blocking is permitted, but bound it to meet startup and reload budgets.
 
 Under `lua-load-per-thread`, remember the multiplier: a precomputed table costs its size times `nbthread`, and `tune.lua.maxmem` bounds Lua memory per process.
 

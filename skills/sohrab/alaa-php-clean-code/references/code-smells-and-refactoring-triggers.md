@@ -19,15 +19,15 @@ not a smell — see "When NOT to refactor".
 
 ## Bloaters
 - **Long method**: a controller action or service method past the size budget, or any fragment that needs a comment to explain itself → extract an intention-named private method or a focused service; decompose conditionals. Extra method calls are never the performance problem.
-- **Large class**: a controller/service/job accumulating unrelated verbs → Extract Class along the seams in `SKILL.md` under Size and complexity budgets (Form Request, service per use case, repository, strategy).
+- **Large class**: a controller, service or job that accumulates unrelated verbs → Extract Class along the seams in `SKILL.md` under Size and complexity budgets (Form Request, service per use case, repository, strategy).
 - **Primitive obsession**: money, phone, national id, date ranges, tenant ids traveling as strings/ints; class constants coding a closed set → value object; backed enum. The platform's `TenantId`-style value objects exist for exactly this.
 - **Long parameter list**: more than 3-4 parameters, or boolean flags steering the flow → Introduce Parameter Object (a small DTO), or split the method per flag branch.
 - **Data clumps**: the same field group recurring across signatures (page/perPage/sort, from/to dates) → one typed DTO (`...FilterData`); the test: delete one field — if the rest lose meaning, they belong together.
 
 ## OO abusers
-- **Switch statements**: the same `match`/`if` ladder on a type/provider/status repeated in more than one place → Strategy behind a map/factory, or polymorphism. One `match` centralized in a single factory is legitimate, not a smell.
+- **Switch statements**: the same `match` or `if` ladder on a type, provider or status, repeated in more than one place → Strategy behind a map or a factory, or polymorphism. One `match` centralized in a single factory is legitimate, not a smell.
 - **Temporary field**: properties that only mean something during one operation → extract the operation plus its fields into its own class (often a method object or a pipeline stage). Octane makes this smell dangerous, not just ugly.
-- **Refused bequest**: a subclass inheriting methods it stubs out or overrides to throw → replace inheritance with delegation/composition; extract the genuinely shared part into a trait-free superclass or a collaborator.
+- **Refused bequest**: a subclass inheriting methods it stubs out or overrides to throw → replace inheritance with delegation or composition; extract the genuinely shared part into a trait-free superclass or a collaborator.
 - **Alternative classes with different interfaces**: two classes doing the same job under different names (a second half-duplicate `Helper` doing what a service already does) → unify names, merge, delete one.
 
 ## Change preventers
@@ -44,9 +44,9 @@ not a smell — see "When NOT to refactor".
 ## Couplers
 - **Feature envy**: a method reading another object's data more than its own → move it (data and its operations live together). Deliberate exceptions: Strategy and Visitor split behavior from data on purpose.
 - **Inappropriate intimacy**: a class reaching into another's internals (public properties, `getAttributes()` spelunking, knowing a collaborator's private conventions) → move members, formalize the seam with an interface, cut bidirectional references.
-- **Message chains**: `$order->customer()->first()->profile->address->city` style navigation in application code → hide behind an intention-named method on the nearest owner, or a repository/read-model method. Do not over-fix into a Middle Man.
+- **Message chains**: `$order->customer()->first()->profile->address->city` style navigation in application code → hide behind an intention-named method on the nearest owner, or a repository or read-model method. Do not over-fix into a Middle Man.
 - **Middle man**: a class whose methods only delegate → remove it and call the target. Intentional middle men are fine: cache decorators, proxies, and boundary facades exist on purpose.
-- **Incomplete library class**: a vendor package missing one behavior → a small extension/wrapper at the adapter boundary, never scattered workarounds in services.
+- **Incomplete library class**: a vendor package missing one behavior → a small extension or wrapper at the adapter boundary, never scattered workarounds in services.
 
 ## When to refactor
 - **Rule of Three**: first time, just write it; second time, wince but duplicate; third time, extract. Premature abstraction is how vague `Helper`s are born.

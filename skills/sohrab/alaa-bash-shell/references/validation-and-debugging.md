@@ -99,7 +99,7 @@ Use temporary variables when they improve observability.
 
 ### Cleanup
 
-Use `mktemp` and cleanup traps for temporary files or directories. Ensure cleanup respects the exit status.
+Use `mktemp` and cleanup traps for temporary files or directories. Make the cleanup trap preserve the script's exit status.
 
 ## 4. Portability matrix checks
 

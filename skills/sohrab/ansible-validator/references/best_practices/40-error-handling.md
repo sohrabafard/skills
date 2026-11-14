@@ -35,7 +35,7 @@ For custom modules and action plugins, report failures explicitly: set `failed: 
 in a returned result, call the module's `fail_json`, or raise an appropriate error.
 A nonzero `rc` without `failed` relies on deprecated inference; test the returned
 failure state as well as the return code. The core 2.21 porting guide documents this
-transition; runtime deprecation warnings begin in 2.22, not removal in 2.21.
+transition. Runtime deprecation warnings begin in 2.22. Version 2.21 does not remove the inference.
 Source and observation date: `references/source-map.md`.
 
 

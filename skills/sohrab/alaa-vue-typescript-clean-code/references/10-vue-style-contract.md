@@ -30,7 +30,7 @@ const props = withDefaults(defineProps<Props>(), { pageSize: 20 })
 ```
 
 `defineProps(['id', 'data'])` is rejected. The literal `20` above is an example default, not a fleet value:
-page sizes, poll intervals, and limits come from `/alaa-services-contract` (`$alaa-services-contract`), and
+page sizes, poll intervals, and limits come from `/alaa-services-contract`, and
 `76-load-and-concurrency-binding.md` states where the value is read rather than typed in.
 
 Runtime validators are used only where the repo already requires runtime validation of props.
@@ -62,12 +62,12 @@ Move the condition to a computed source, or to a wrapper element when the whole 
 Use `<style scoped>`, CSS modules, utility classes, or BEM-style class naming. App-wide CSS variables,
 theme tokens, and resets live in global files on purpose. A feature-local selector never leaks globally,
 and a broad element selector never reaches Quasar internals. Design tokens, theming, and motion themselves
-belong to `/alaa-ui-ux-design-system` (`$alaa-ui-ux-design-system`).
+belong to `/alaa-ui-ux-design-system`.
 
 ## Priority B — enforced defaults
 
-These are the default contract; a repo-wide stronger convention wins over them, and mixing conventions
-inside one feature does not.
+These are the default contract. A repo-wide stronger convention wins over them. Mixing conventions inside
+one feature does not win over them.
 
 - **One component per file.** Extract a nested component as soon as it stops being trivial and local-only.
 - **Casing.** `PascalCase.vue` files and PascalCase imports, unless the repo is consistently kebab-case.
@@ -124,9 +124,9 @@ Import order, top to bottom:
 6. Types
 7. Constants
 
-The point of the order is that a reader can find the dependency class they are looking for without reading
-every line; it is not a lint rule you are inventing, so if the repo's ESLint config already sorts imports,
-its order wins and this list is not applied on top of it.
+If the repo's ESLint config already sorts imports, its order wins and this list is not applied on top of
+it. The order exists so that a reader can find the dependency class they are looking for without reading
+every line; it is not a lint rule you are inventing.
 
 ## Priority D — use with caution
 

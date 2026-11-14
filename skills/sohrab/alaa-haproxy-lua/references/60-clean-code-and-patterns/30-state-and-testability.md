@@ -29,6 +29,6 @@ Module-level locals are per Lua state and live for the lifetime of the process o
 
 **Never read a file, open a socket, or resolve a name at the top level unconditionally.** Do it inside `core.register_init`, or guard it so the test path skips it. A test that has to create `/etc/haproxy/...` to load a module will not be written.
 
-**Never call `os.exit` from module code.** It ends the HAProxy process, and it must not be relied on as an intercepted/harmless call.
+**Never call `os.exit` from module code.** It ends the HAProxy process, and it must not be relied on as an intercepted or harmless call.
 
 For scope and related decisions, return to the [parent reference](../60-clean-code-and-patterns.md).

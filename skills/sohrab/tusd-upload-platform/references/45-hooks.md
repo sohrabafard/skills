@@ -30,7 +30,7 @@ Two ordering guarantees hold and no others: `pre-create` is first for an upload,
 ## Optional hints and revocation
 
 **An optional pre-finish hint is a contributor: fail open and loud inside its implementation.**
-Catch hint-computation failures, log/count the loss, and return successful empty JSON over HTTP,
+Catch hint-computation failures, log and count the loss, and return successful empty JSON over HTTP,
 or an empty response with nil error in-process. An unreachable hook endpoint or an unhandled
 callback error still fails completion upstream. Omit the optional blocking hook when that outage
 must not affect completion; its transport has no fail-open switch established here. Keep the

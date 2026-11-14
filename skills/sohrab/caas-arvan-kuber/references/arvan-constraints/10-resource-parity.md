@@ -25,7 +25,7 @@
   | `1.5` | `3Gi` |
   | `2` | `4Gi` |
 
-  This is a starting point, not a measurement. When the workload's real memory profile is known, use the measured value and say that it deviates from the ratio and why. The complexity budget behind the number is `/alaa-algorithms-data-structures`; the headroom target is `/alaa-reliability-sla`.
+  This is a starting point, not a measurement. When the workload's real memory profile is known, use the measured value and say that it deviates from the ratio and why. `/alaa-algorithms-data-structures` owns the complexity budget behind the number; `/alaa-reliability-sla` owns the headroom target.
 
 - Include `ephemeral-storage` in both `requests` and `limits` when the namespace's LimitRange declares a default or a maximum for it. `kubectl -n NS get limitrange -o yaml` shows whether it does.
 

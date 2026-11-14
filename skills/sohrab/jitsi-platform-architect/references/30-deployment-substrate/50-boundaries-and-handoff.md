@@ -6,8 +6,8 @@ Official containers introduced rootless execution and internal web ports `8000`/
 ([release notes](https://github.com/jitsi/docker-jitsi-meet/releases/tag/stable-11146), read 2026-09-29).
 Check the pinned image, Compose mappings and proxy targets together during an upgrade; old internal ports may
 break the web path. This does not establish OpenShift restricted-policy compatibility: verify UID, filesystem,
-security context, Jibri browser/shared-memory/device needs, public UDP/TURN reachability and bridge placement
-against the target platform. Keep the hybrid fallback until that proof exists.
+security context, the browser, shared-memory and device needs of Jibri, public UDP and TURN reachability, and
+bridge placement against the target platform. Keep the hybrid fallback until that proof exists.
 
 When the team has no cluster-level command, the deliverable is: manifests or chart values only where they are
 realistic, a dependency and blocker list addressed to the cluster team, and a fallback topology for the case where

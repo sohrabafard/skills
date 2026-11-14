@@ -89,8 +89,7 @@ RUN --mount=type=cache,target=/root/.npm,sharing=locked npm ci
 ```
 
 Whether a runner keeps a builder between jobs, and whether a registry-backed cache
-(`--cache-to type=registry`) is configured, is `/alaa-gitlab-ci-cd` (`$alaa-gitlab-ci-cd`)'s
-decision. The Dockerfile side is this skill's.
+(`--cache-to type=registry`) is configured, is `/alaa-gitlab-ci-cd`'s decision. The Dockerfile side is this skill's.
 
 ## 3. Attestations: provenance is on, SBOM is opt-in
 
@@ -109,12 +108,12 @@ switched off, and the decisions to make are about level and about SBOM.
 
 Rules for this fleet:
 
-- **Never `--provenance=false` on a release build.** The only legitimate reason to disable it is a
+- **Never pass `--provenance=false` on a release build.** The only legitimate reason to disable it is a
   registry that cannot store the attestation manifest, and that is a registry problem to fix.
-- **`--provenance=mode=max` on release builds only.** `mode=max` records build arguments, so a build
+- **Pass `--provenance=mode=max` on release builds only.** `mode=max` records build arguments, so a build
   that passes anything sensitive as `ARG` publishes it in the attestation — a second reason to use
   secret mounts (§1).
-- **`--sbom=true` on release builds.** It costs a filesystem scan at build time and is what makes
+- **Pass `--sbom=true` on release builds.** It costs a filesystem scan at build time and is what makes
   "which images contain this CVE" answerable from the registry rather than by rebuilding.
 - All BuildKit exporters support attestations. The `local` and `tar` exporters write them to JSON
   files beside the output instead of into the image manifest, which is how an air-gapped release
@@ -174,9 +173,8 @@ The replacement, which holds with or without a severity policy:
   severity policy; if none exists, this is the one to adopt, because "a fix exists and we did not
   take it" is the only case that needs no judgment.
 - Anything beyond that — whether HIGH blocks, how long an exception lives — is
-  `/alaa-security-review` (`$alaa-security-review`)'s decision, and *whether* the pipeline fails on
-  it is `/alaa-frontend-devops` (`$alaa-frontend-devops`)'s for frontend images and
-  `/alaa-gitlab-ci-cd` (`$alaa-gitlab-ci-cd`)'s to express on a runner. This skill states what the
+  `/alaa-security-review`'s decision, and *whether* the pipeline fails on it is
+  `/alaa-frontend-devops`'s for frontend images and `/alaa-gitlab-ci-cd`'s to express on a runner. This skill states what the
   build produces, not what the pipeline does with it.
 
 Use an open-source scanner. Trivy is the fleet's, and it reads an image reference directly:
@@ -211,7 +209,7 @@ docker buildx imagetools inspect registry.takhtenegar.ir/alaa/comment-service:1.
   --format '{{.Manifest.Digest}}'
 ```
 
-`--push` rather than `--load` for a release: an image loaded into a local daemon and then pushed
+Use `--push`, not `--load`, for a release: an image loaded into a local daemon and then pushed
 separately can be modified in between, and the digest recorded would not be the digest deployed.
 
 ## 7. Checklist for a build change

@@ -33,7 +33,7 @@ Each item is a stop, not a preference.
 
 Show actual command output. A summary is not evidence, and a gate not run is reported as not run, never as passed.
 
-- **Formatter.** Run the formatter the repo declares in `require-dev`, path resolved per `references/40-failure-classes.md` (`laravel/pint` -> `<bin-dir>/pint --dirty --format agent`). None declared reports `formatting gate not available: none declared`.
+- **Formatter.** Run the formatter the repo declares in `require-dev`, path resolved per `references/40-failure-classes.md` (`laravel/pint` -> `<bin-dir>/pint --dirty --format agent`). When the repo declares none, report `formatting gate not available: none declared`.
 - **Test suite.** Green, or a failure matching the baseline under the identity rule in `references/20-breaking-change-detection.md`. A "pre-existing" claim that does not quote the baseline file path is not a claim.
 - **Supply chain.** `composer validate --strict` and `composer audit` clean, or every finding carries the full acceptance record from `references/30-advisory-triage.md`. No agent accepts a finding on its own authority; critical and high have no acceptance path.
 - **Proof strength.** Name the level reached from `/alaa-controlled-ops` `references/40-validation-and-release-gates.md`, "Proof vocabulary". Static inspection never clears a lockfile change under the fleet SLA; `references/20-breaking-change-detection.md` sets the level per class.

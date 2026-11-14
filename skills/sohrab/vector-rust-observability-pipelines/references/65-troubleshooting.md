@@ -106,13 +106,13 @@ arithmetic is in `30-buffers-acks-and-backpressure.md`.
   --deny-warnings`. If the source does not support acknowledgements, Vector says so
   at validate time: *"Silent data loss could occur."* The durability was never real.
 - **Loss despite disk buffering and source acknowledgements, on 0.58.0** → an
-  oversized encoded record can be dropped and acknowledged/checkpointed without
+  oversized encoded record can be dropped and acknowledged or checkpointed without
   storage. Check `buffer_discarded_events_total` and
   `buffer_discarded_bytes_total` with `intentional="false"`; a running process and
   advancing source checkpoint do not prove delivery. Counters measure loss, not
   record identity or replayability. Use `30-buffers-acks-and-backpressure.md` for
   invalid-record semantics and `75-ala-ingest-pipeline.md` for the consumer owner's
-  exactness/recoverability/privacy decision before retrying. Never log rejected
+  decision on exactness, recoverability and privacy before retrying. Never log rejected
   payloads to identify the loss; missing recovery proof leaves exactness unverified.
 - **Loss with `skip_unknown_fields` set** → fields the table does not declare are
   discarded server-side with no error. The rows arrive; the columns do not.
@@ -169,7 +169,7 @@ endpoint validation can reject a previously loadable config. Use the migration
 table in `80-version-and-upgrade-deltas.md` rather than weakening validation.
 
 When an older Redis channel source stops after disconnect, check source recovery
-and `component_errors_total` / `connection_established_total`: 0.58.0 adds
+and `component_errors_total` and `connection_established_total`: 0.58.0 adds
 reconnection and resubscription with exponential backoff capped at 30 seconds.
 For a disk-buffer stall or recovery problem, use the version-qualified fixes and
 loss caveats in `30-buffers-acks-and-backpressure.md`; a healthy running process

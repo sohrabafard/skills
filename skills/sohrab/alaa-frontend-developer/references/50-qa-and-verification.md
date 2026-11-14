@@ -18,7 +18,7 @@ offline behaviour; accessibility regressions; performance regressions on key rou
 2. **Select the proof level from `/alaa-testing-strategy` for the change
    surface and run it.** If the repo has no runner for that level, that is a blocking finding reported to
    the maintainer — not a waiver, and not a reason to substitute a weaker check.
-3. **Run the smallest meaningful set first.** Targeted before full-suite. Capture long output to a
+3. **Run the smallest meaningful set first.** Run targeted checks before the full suite. Capture long output to a
    repo-local artifact and summarize the deciding line.
 4. **When a command cannot run, write the manual plan** — exact route, exact action, exact expected
    result — rather than asserting the change is fine.
@@ -40,9 +40,9 @@ and the complete manual runbook. It owns applicability and scenarios; use the pr
 
 ## Accessibility smoke
 
-Keyboard navigation across the primary flow; focus behaviour in dialogs, drawers and menus; labels,
-helper text and errors that make sense read aloud; every visible control reachable at the intended
-viewport sizes. The full design and accessibility gates are `/alaa-ui-ux-design-system` `references/85-accessibility-patterns.md` and
+Check keyboard navigation across the primary flow and focus behaviour in dialogs, drawers and menus.
+Check that labels, helper text and errors make sense read aloud, and that every visible control is
+reachable at the intended viewport sizes. The full design and accessibility gates are `/alaa-ui-ux-design-system` `references/85-accessibility-patterns.md` and
 `references/90-quality-gates-and-review.md`.
 
 ## Evidence
@@ -53,8 +53,9 @@ not run and why. Browser evidence discipline is `60-browser-debug.md`.
 
 ## Release readiness
 
-Before calling a task done: the changed path works; the original failure no longer reproduces; no new
-SSR, PWA, asset-contract or budget regression; and the verification performed is proportional to the risk.
+Before calling a task done, confirm that the changed path works, that the original failure no longer
+reproduces, that no new SSR, PWA, asset-contract or budget regression exists, and that the verification
+performed is proportional to the risk.
 
 ## The release note
 

@@ -4,9 +4,9 @@
 
 Three modes exist on this platform. A route uses exactly one, and its documentation names which.
 
-**Keyset cursor — the default.** Every public or user-facing collection, every feed, comment thread, notification list, activity log, watch history, and every collection whose size grows with tenant data. No justification is required to choose it; a justification is required to choose anything else.
+**Keyset cursor — the default.** Use it for every public or user-facing collection, every feed, comment thread, notification list, activity log, watch history, and every collection whose size grows with tenant data. No justification is required to choose it; a justification is required to choose anything else.
 
-**Chunked primary-key traversal — service-internal only.** Exports, backfills, reindexes, migrations, and any traversal the service runs against itself. These never go through a paginated public route, because a public route applies authorization, serialisation, and rate limits per page, and an export that pages through it multiplies all three by the row count.
+**Chunked primary-key traversal — service-internal only.** Use it for exports, backfills, reindexes, migrations, and any traversal the service runs against itself. These never go through a paginated public route, because a public route applies authorization, serialisation, and rate limits per page, and an export that pages through it multiplies all three by the row count.
 
 Use `chunkById` or `lazyById` in Laravel, or a repeated keyset query over the primary key in Go. `chunk()` is forbidden: it pages by `OFFSET`, so when the callback updates or deletes rows in the chunk it just read, the offset for the next chunk points past rows that were never visited. `chunkById` re-anchors on the last primary key it saw and is therefore stable under that mutation.
 

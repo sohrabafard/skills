@@ -42,7 +42,7 @@ You are holding a live symptom. Find it, take the first action, escalate if it d
 
 ## `QuotaExceededError`
 
-`31-quota-exceeded-and-cleanup.md`, class 1: estimate, identify the data class, free refetchable data in
+Follow class 1 of `31-quota-exceeded-and-cleanup.md`: estimate, identify the data class, free refetchable data in
 the stated order, retry once, drop a tier — and tell the user if the write was their unsent work.
 
 ## A route is slow, and it was fast in staging

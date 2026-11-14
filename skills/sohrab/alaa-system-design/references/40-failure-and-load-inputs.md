@@ -42,7 +42,7 @@ what to do when a dependency cannot be classified.
 
 ## State the load the design assumes
 
-Three figures, per entry point, and each is an input the design is built against rather than a check
+State three figures for each entry point. Each figure is an input the design is built against, not a check
 performed afterwards:
 
 1. **Assumed peak** — the request rate and concurrency at the busiest realistic minute, with where the

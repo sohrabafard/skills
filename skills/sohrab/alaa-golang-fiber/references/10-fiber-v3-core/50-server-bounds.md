@@ -16,7 +16,7 @@ The official Fiber API baseline for this slice was verified on **2026-07-26**; c
 | `StructValidator` | `StructValidator` | `nil` | Bind performs no validation; see `30-validation-testing.md`. |
 | `ErrorHandler` | `ErrorHandler` | `DefaultErrorHandler` | Renders Fiber's own error shape, not the platform envelope. |
 
-`SKILL.md` requires all four to be set and names `/alaa-services-contract` as the owner of their values. For reference, the kit's chi services
+`SKILL.md` requires `ReadTimeout`, `WriteTimeout`, `IdleTimeout` and `BodyLimit` to be set and names `/alaa-services-contract` as the owner of their values. For reference, the kit's chi services
 run `HTTP_READ_TIMEOUT` 10s, `HTTP_WRITE_TIMEOUT` 30s, `HTTP_IDLE_TIMEOUT`
 120s and `HTTP_MAX_BODY_BYTES` 1 MiB, each read from validated environment configuration and
 clamped at boot to a permitted range. A Fiber service reads the same environment keys and enforces

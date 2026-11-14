@@ -71,10 +71,10 @@ PHP 8.5 (released 2025-11) is the platform baseline for new Alaa Laravel 13 serv
   - prefer it over ad-hoc `parse_url()` handling when the repo starts using it consistently
 
 Do / Don't:
-- ✅ Do: `public function withStatus(CommentStatus $status): self { return clone($this, ['status' => $status]); }` on a `readonly` DTO — one line, immutability preserved.
-- ❌ Don't: keep writing full constructor-copy withers on 8.5 repos, or mutate a `readonly`-less DTO in place because withers felt verbose — both re-open the immutability gap clone-with closed.
-- ✅ Do: `#[\NoDiscard] public function attempt(): LockResult` so an ignored lock result becomes a warning.
-- ❌ Don't: chain `|>` across closures with side effects or multi-branch logic — that hides control flow that `match`/named methods show.
+- Do: `public function withStatus(CommentStatus $status): self { return clone($this, ['status' => $status]); }` on a `readonly` DTO — one line, immutability preserved.
+- Do not: keep writing full constructor-copy withers on 8.5 repos, or mutate a `readonly`-less DTO in place because withers felt verbose — both re-open the immutability gap clone-with closed.
+- Do: `#[\NoDiscard] public function attempt(): LockResult` so an ignored lock result becomes a warning.
+- Do not: chain `|>` across closures with side effects or multi-branch logic — that hides control flow that `match`/named methods show.
 
 ### Avoid by default
 - Dynamic properties in new code.

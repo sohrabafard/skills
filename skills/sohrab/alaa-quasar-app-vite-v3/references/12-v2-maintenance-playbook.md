@@ -142,7 +142,7 @@ export const useUserStore = defineStore('user', {
 
 ## 7. Components, assets, styles
 
-- New code uses the Composition API unless Options-heavy consistency requires otherwise. Components present; composables, stores, and services orchestrate. Code shape is `/alaa-vue-typescript-clean-code` (`$alaa-vue-typescript-clean-code`).
+- New code uses the Composition API unless Options-heavy consistency requires otherwise. Components handle presentation; composables, stores, and services orchestrate. Code shape is `/alaa-vue-typescript-clean-code`.
 - Centralize mode checks where compile-time replacement is safe.
 - Where supported, prefer `<img src="~@/assets/logo.svg" alt="..." />`; add no new `~assets/...` imports.
 - Component-local styling stays scoped, or uses CSS variables and Quasar Sass variables per repository convention, rather than global CSS.

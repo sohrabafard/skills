@@ -42,7 +42,7 @@ file marks droppable; if it marks none, do not drop.**
 optional write, and branch on the data class. Refetchable cache or prefetch — fail silently, log, serve
 from the network. **User-generated unsynced work — tell the user before they rely on it**: "This device is
 out of space, so your draft is not saved here. Submit it now or free space." Silence here is the loss this
-file exists to prevent. An offline media download — `72-offline-media-store.md`.
+file exists to prevent. For an offline media download, follow `72-offline-media-store.md`.
 
 ## Class 2 — eviction under storage pressure
 
@@ -100,7 +100,7 @@ attempt partial repair; re-run the whole unit of work.
 (`examples/fallback-memory-store.ts`). The shared interface is the point: the caller does not branch.
 
 **Escalation.** Drop to tier 0 for the session, remove every offline promise from the UI, never show a
-"download for offline" affordance. A subtle notice only where the user is about to rely on persistence.
+"download for offline" affordance. Show a subtle notice only where the user is about to rely on persistence.
 
 ## Class 6 — an offline asset is gone mid-session
 

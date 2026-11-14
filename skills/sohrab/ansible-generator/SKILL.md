@@ -26,8 +26,9 @@ not yet exist have to exist when you are done? If yes, `/ansible-generator`.
 If every file you need already exists and your job is to produce a verdict about
 it, `/ansible-validator`.**
 
-Also not for Terraform, Helm, Dockerfile or CI authoring unless Ansible is the
-main artifact, nor for one-off shell automation that should stay a script.
+Also do not use it for Terraform, Helm, Dockerfile or CI authoring unless
+Ansible is the main artifact, or for one-off shell automation that should stay a
+script.
 
 ## Workflow
 

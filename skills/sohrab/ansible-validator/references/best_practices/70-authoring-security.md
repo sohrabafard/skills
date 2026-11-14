@@ -22,7 +22,7 @@ parameter instead.
 *Reported by:* `python3 scripts/check_task_safety.py`, rule
 `command[unquoted-jinja]`. Nothing else in the toolchain reports it.
 
-**8.4 `no_log: true` on any task whose module arguments or registered result can
+**8.4 `no_log: true` is set on any task whose module arguments or registered result can
 contain a value sourced from a vault file, from `lookup('env', ...)`, or from a
 variable whose name matches `(pass|secret|token|key|credential)`.**
 *Reported by:* `ansible-lint` rule `no-log-password` for the password case;

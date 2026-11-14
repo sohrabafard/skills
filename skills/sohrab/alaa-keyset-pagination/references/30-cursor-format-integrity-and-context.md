@@ -4,7 +4,7 @@
 
 ## Payload
 
-One shared codec per service. Every paginated route uses it; a route that hand-rolls its own encoding is the route whose cursor is later found unsigned.
+Each service has one shared codec. Every paginated route uses it; a route that hand-rolls its own encoding is the route whose cursor is later found unsigned.
 
 ```json
 {
@@ -24,7 +24,7 @@ One shared codec per service. Every paginated route uses it; a route that hand-r
 - `ctx` — the normalised filter-context hash. See below.
 - `exp` — absolute expiry. Required where the data is security-sensitive or reorders rapidly; optional otherwise. An expiry bounds how long a boundary computed under an old snapshot can be replayed.
 
-**Nothing else.** No user identity beyond what `ctx` already covers as scope, no permission decision, no internal table or column names beyond the ordering columns, and no value the client is not already entitled to see the effect of. The cursor may carry private database identifiers — `alaa-services-contract` `references/25-end-to-end-flow-and-boundaries.md` permits that specifically inside a signed opaque cursor and nowhere else — which is a further reason the signature is not optional.
+**The payload carries nothing else.** It carries no user identity beyond what `ctx` already covers as scope, no permission decision, no internal table or column names beyond the ordering columns, and no value the client is not already entitled to see the effect of. The cursor may carry private database identifiers — `alaa-services-contract` `references/25-end-to-end-flow-and-boundaries.md` permits that specifically inside a signed opaque cursor and nowhere else — which is a further reason the signature is not optional.
 
 ## Encoding and integrity
 
@@ -36,7 +36,7 @@ Verification order is load-bearing: **verify the signature first, then parse.** 
 
 After the signature verifies, still validate: `v` is supported; `sort` is in the allowlist; `dir` is one of the two values; `k` contains exactly the columns the named sort mode declares, each of the declared type; `exp`, when present, is in the future. A signed cursor proves the service issued it, not that it is still meaningful.
 
-Key handling — rotation, storage, and the shared-secret boundary — is `alaa-security-review`'s. Sign with a service-held secret, not a value derivable by a client, and support verifying against a previous key during rotation so a rotation does not invalidate every cursor in flight at once.
+Key handling — rotation, storage, and the shared-secret boundary — is `/alaa-security-review`'s. Sign with a service-held secret, not a value derivable by a client, and support verifying against a previous key during rotation so a rotation does not invalidate every cursor in flight at once.
 
 ## Context binding
 

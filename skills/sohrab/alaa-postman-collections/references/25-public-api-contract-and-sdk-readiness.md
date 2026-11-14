@@ -8,8 +8,7 @@ The canonical contract and the Postman artifacts are two projections of one veri
 behaviour. Which skill owns which projection depends on whether another skill can obtain
 evidence this one cannot.
 
-**On a Laravel service, `alaa-laravel-public-api-contract-pack`
-(`/alaa-laravel-public-api-contract-pack`, `$alaa-laravel-public-api-contract-pack`) owns
+**On a Laravel service, `/alaa-laravel-public-api-contract-pack` owns
 what the contract is:** the canonical document, its location, its versioning and
 breaking-change classification, its deprecation and sunset policy, and the gate that
 refuses to emit a pack while any of those is unresolved. Its parity check is driven by a
@@ -96,7 +95,7 @@ For every public operation, track:
 - pagination, filtering, sorting, expansion, and field-selection behavior
 - idempotency, concurrency, caching, and rate-limit behavior
 - async acceptance, polling/callback/result flow, and terminal states
-- source evidence and matching Postman item/examples
+- source evidence, and the matching Postman item and its examples
 
 Use the matrix to detect missing routes, branches, schemas, examples, or Postman responses. Do not confuse one example per route with complete variant coverage.
 
@@ -143,14 +142,14 @@ Make these rules explicit when applicable:
 - CORS and browser credential requirements
 - tenant/project isolation and forbidden client-supplied trusted headers
 - idempotency-key generation, scope, retention, replay, and conflict behavior
-- safe retry matrix by method/status/error code
+- safe retry matrix by method, status, and error code
 - rate-limit status and headers
 - cacheability, invalidation, ETag, and client memoization guidance
 - pagination and cursor opacity
 - optimistic concurrency and preconditions
 - date/time, binary/upload, decimal, and lossless `int64` representation
 - backward compatibility, versioning, deprecation, and unknown-enum handling
-- correlation/request IDs and safe logging/PII rules
+- the correlation ID, which is the request ID, and the rules for safe logging and PII
 
 Do not hide these semantics only in prose when the contract format can model them. Use prose extensions or companion pages only for rules the machine-readable format cannot express clearly.
 

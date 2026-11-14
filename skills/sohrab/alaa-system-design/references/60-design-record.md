@@ -82,6 +82,6 @@ everyone learns to skip.
 
 ## Size discipline
 
-Two screens. When it does not fit, one of three things is true and each has a fix: the design contains a
+The budget is two screens. When the record does not fit, one of three things is true and each has a fix: the design contains a
 specification, which moves to the contract files; it contains a discussion, which compresses into
 rejected-candidate lines; or it is two designs, which split into two records with two numbers.

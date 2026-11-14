@@ -14,7 +14,7 @@ Every rule here is written to bind **any** credential system, including one buil
 - **Expiry** in the past is rejected. **Not-before** and **issued-at** in the future beyond the configured skew are rejected. The skew is one configured number with a stated maximum, used at every verification site.
 - **Tenancy assertions** in a credential are subject to the derivation rule in `40-authorization-and-tenancy.md`: whatever a credential says about a tenant is a selection among verified memberships, never a grant.
 - **Key identifier** is an opaque value that resolves against a pre-configured key set. Never a URL, a path, a filename, or anything that can trigger a fetch or a filesystem read. An unknown identifier fails closed and makes no outbound request.
-- **Key set retrieval**, where a key set is fetched at all: only from pre-configured issuer metadata, cached with a bounded TTL and a bounded refresh rate, and an unexpected change in the key set fails closed rather than adopting the new keys.
+- **Key set retrieval**, where a key set is fetched at all, uses only pre-configured issuer metadata. The key set is cached with a bounded TTL and a bounded refresh rate. An unexpected change in the key set fails closed rather than adopting the new keys.
 - **Rotation** supports overlap: two keys verify during the rotation window, one of which signs. Keys live outside the repository, in the platform's secret mechanism.
 - **Failure is uniform.** Every verification failure returns one response shape and one code; the cause goes to the structured log with the request id. `25-browser-trust-and-output.md` owns the response rule.
 

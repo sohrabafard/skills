@@ -13,7 +13,7 @@ Before writing any log query, read [schema](logs/10-schema.md), [time/resource f
 
 ## Select the remaining topic
 
-- When searching record text, read [body search](logs/40-body-search.md) for old/new body paths, index limits and release gates.
+- When searching record text, read [body search](logs/40-body-search.md) for the old and new body paths, index limits and release gates.
 - When choosing a panel, read [panel shapes](logs/50-panel-shapes.md) for timeseries, value and table output contracts.
 - When counting records or errors, read [count/error examples](logs/60-counts-errors.md) for bounded aggregations.
 - When auditing record size, read [payload auditing](logs/70-payload-audit.md) for bounded output and grouping limits.

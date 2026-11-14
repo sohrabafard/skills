@@ -46,8 +46,9 @@ mapper. Three pages independently re-invented omission under the banner "never f
 degraded the designed layout. Honesty belongs in the source manifest and the development-mode provenance
 marker, never in a hole in the UI.
 
-If the repo has no resolver yet, create one: framework-free, unit-tested, `0` and `false` are real values,
-and `null`, `undefined`, blank string, `NaN`, and empty array fall through.
+If the repo has no resolver yet, create one. Keep it framework-free and unit-tested. It treats `0` and
+`false` as real values, and it lets `null`, `undefined`, a blank string, `NaN`, and an empty array fall
+through.
 
 **Discipline pair:** when a task proves a field's true source differs from its manifest, flip the manifest
 and the mapper in the same change, or record an explicit follow-up. Never leave a declared source lying.
@@ -64,7 +65,7 @@ and the mapper in the same change, or record an explicit follow-up. Never leave 
   of something that already exists.
 - **Why:** the first auth flow shipped exactly this and had to be re-layered wholesale.
 
-Retry behaviour anywhere in this stack is `/alaa-reliability-sla` (`$alaa-reliability-sla`); where it may
+Retry behaviour anywhere in this stack is `/alaa-reliability-sla`; where it may
 live in Vue code is `70-async-and-failure-binding.md`.
 
 ## 3) God composable to orchestrator plus focused units
@@ -113,17 +114,18 @@ sync at once.
 - **Don't:** collapse every rejection into `catch { applyLocally() }`. A 403 must never look like success.
 - **Why:** the collapsed form shipped, and a denied action appeared to the user as a completed one.
 
-Which response codes are definitive versus transient is `/alaa-reliability-sla`
-(`$alaa-reliability-sla`); that a denial is a security event rather than a transport event is
-`/alaa-security-review` (`$alaa-security-review`). This file owns only the rule that the classification
+Which response codes are definitive versus transient is `/alaa-reliability-sla`; that a denial is a
+security event rather than a transport event is `/alaa-security-review`. This file owns only the rule that
+the classification
 happens **before** the fallback runs, in a module you can test without a network.
 
 ## 7) Host route policy stays in a tiny sync composable
 
 **Trigger:** UI state that must mirror the URL — accordion deep links, tabs, wizards.
 
-- **Do:** one small `useXRouteSync` composable. Deep link to state, applied immediately *and* re-applied
-  after any state reset such as a mock-to-live swap; state to URL through `router.replace`, with no reload.
+- **Do:** keep this policy in one small `useXRouteSync` composable. It applies the deep link to state
+  immediately *and* re-applies it after any state reset such as a mock-to-live swap. It writes state to the
+  URL through `router.replace`, with no reload.
   Inject narrow `Pick<Route, 'params'>` and `Pick<Router, 'replace'>` surfaces so tests need no router.
 - **Don't:** scatter `router.replace` calls through the page, and do not trust Vue Router's `:param?` to
   make a **static** path segment optional — `course/:courseId/set/:setId?` still requires the literal
@@ -141,7 +143,7 @@ happens **before** the fallback runs, in a module you can test without a network
 - **Why:** a non-additive emit change broke consumers that were not rebuilt.
 
 The `dist` consumption half of this — rebuilding the package before browser-checking a consumer, peer
-dependencies, entry points — is `/alaa-mono-package` (`$alaa-mono-package`).
+dependencies, entry points — is `/alaa-mono-package`.
 
 ## 9) Post-teardown guards cover every exposed surface
 

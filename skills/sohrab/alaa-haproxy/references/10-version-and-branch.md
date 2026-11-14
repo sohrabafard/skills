@@ -53,11 +53,11 @@ When migrating from 3.3, read [3.3 to 3.4](10-version-and-branch/30-migration-3.
 
 The upgrade is a config change and a binary change, and the config change comes first:
 
-1. Run `haproxy -c -f <cfg>` **on the new binary** before the new binary runs anything. Startup compatibility failures surface here; runtime/default changes require
-   focused behavior checks. Compare feature lists and effective defaults as well.
+1. Run `haproxy -c -f <cfg>` **on the new binary** before the new binary runs anything. Startup compatibility failures surface here. A change in runtime behavior or in a default
+   needs a focused behavior check. Compare feature lists and effective defaults as well.
 2. Fix what it reports. Unresolved warnings block the gate under `80-gate-register.md`; a warning
    is not exempt merely because it says deprecated. Alerts block startup.
-3. `scripts/check_examples.py --haproxy <path-to-new-binary>` if the estate copied from these
+3. Run `scripts/check_examples.py --haproxy <path-to-new-binary>` if the estate copied from these
    examples, so the same check runs over every config at once.
 4. Roll the binary. Rollback is the previous image tag; the config must remain loadable by both
    binaries for the duration of the rollout, which means no directive that exists in only one of

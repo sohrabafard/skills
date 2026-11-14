@@ -17,10 +17,10 @@ is not enforced.
 2. **Values only, never keys.** Folding a key renames a field.
 3. **Strings only.** Leave numbers, booleans and nulls untouched: a JSON number cannot carry
    a Persian digit.
-4. **`text` mode for every string.** `typed` mode only for the fields a per-service list
-   names, by name, in one place a reviewer can read.
+4. **Apply `text` mode to every string.** Apply `typed` mode only to the fields that a
+   per-service list names, by name, in one place a reviewer can read.
 5. **Before validation**, so `max:255`, `max:5000` and `digits:5` measure the folded value.
-6. **The same sources every time**: JSON body, form body, and query string. State whether
+6. **Normalize the same sources every time**: JSON body, form body, and query string. State whether
    route parameters and headers are included and keep that answer the same across services;
    the fleet's default is that they are not, because a route parameter is matched against a
    pattern and a header is a protocol value.
@@ -146,14 +146,13 @@ Do not attempt to normalize at the edge. Re-opening this costs the same investig
 
 What the gateway can do: nothing about normalization. What it must not do: fold headers it
 forwards, because a trusted header is a protocol value and `/alaa-trust-gateway-auth`
-(`$alaa-trust-gateway-auth`) owns it.
+owns it.
 
 ## Companions
 
-- `/alaa-laravel-architecture` (`$alaa-laravel-architecture`): middleware ordering and where
-  a global transformer belongs in a Laravel request lifecycle.
-- `/alaa-go-chi-development` (`$alaa-go-chi-development`): `httpkit`, the Phase-0 chain, and
-  how a kit change reaches the services.
-- `/alaa-haproxy-lua` (`$alaa-haproxy-lua`): what the edge can and cannot execute.
-- `/alaa-services-contract` (`$alaa-services-contract`): the field limits validation enforces
-  after this runs.
+- `/alaa-laravel-architecture`: middleware ordering and where a global transformer belongs
+  in a Laravel request lifecycle.
+- `/alaa-go-chi-development`: `httpkit`, the Phase-0 chain, and how a kit change reaches
+  the services.
+- `/alaa-haproxy-lua`: what the edge can and cannot execute.
+- `/alaa-services-contract`: the field limits validation enforces after this runs.

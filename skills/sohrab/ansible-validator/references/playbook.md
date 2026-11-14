@@ -214,6 +214,6 @@ the change is `/alaa-security-review`'s.
 
 ### 5. "This role is not idempotent"
 
-`references/failure-classes.md` class H. Diagnose with
+Read `references/failure-classes.md` class H. Diagnose with
 `bash scripts/test_role.sh <role> default --i-confirm-disposable-host`, whose
 idempotence stage compares every host.

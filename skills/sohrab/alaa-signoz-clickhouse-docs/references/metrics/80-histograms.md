@@ -5,7 +5,7 @@ For cumulative bucket rates, use the [counter-rate procedure](60-counter-rate.md
 
 ### Histogram p99
 
-For a classic `_bucket` histogram with an `le` label. Confirm the bucket metric's name and unit from
+This query is for a classic `_bucket` histogram with an `le` label. Confirm the bucket metric's name and unit from
 `distributed_metadata` first; a p99 labelled milliseconds that is actually seconds is a wrong answer
 that renders convincingly.
 

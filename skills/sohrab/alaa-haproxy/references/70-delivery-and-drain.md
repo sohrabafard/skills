@@ -1,8 +1,8 @@
 # Delivery and Drain
 
 This file holds the **HAProxy side** of running HAProxy in a container or a pod: paths, signals,
-readiness and the drain ordering. Image authorship is decided by `/alaa-docker-production`; workload, chart and NetworkPolicy authorship by `/alaa-k8s-helm`. Load `/caas-arvan-kuber` only when the answer depends on a fact true of Arvan CaaS and false of stock Kubernetes at the same minor version; change
-control and rollout proof by `/alaa-controlled-ops`.
+readiness and the drain ordering. Image authorship is decided by `/alaa-docker-production`; workload, chart and NetworkPolicy authorship by `/alaa-k8s-helm`. Load `/caas-arvan-kuber` only when the answer depends on a fact true of Arvan CaaS and false of stock Kubernetes at the same minor version. Change
+control and rollout proof are decided by `/alaa-controlled-ops`.
 
 ## Runtime routes
 

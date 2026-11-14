@@ -50,7 +50,7 @@ The [Vue options](https://docs.sentry.io/platforms/javascript/guides/vue/configu
 major-version privacy settings and per-signal hooks. Read the target pinned version's docs before choosing an
 option; the [Vue](https://docs.sentry.io/platforms/javascript/guides/vue/) and
 [Node](https://docs.sentry.io/platforms/node/) setup guides cover different runtimes. This is upstream capability
-evidence, not an Ala env/package default, installed integration or emitted-event proof.
+evidence, not an Ala environment or package default, and not proof of an installed integration or an emitted event.
 
 Re-check primary docs when the task mentions:
 

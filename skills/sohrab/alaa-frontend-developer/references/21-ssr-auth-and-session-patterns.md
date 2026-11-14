@@ -55,7 +55,7 @@ exact redirect URIs, refresh tokens rotated or sender-constrained where the prov
 
 ## Silent refresh
 
-One refresh coordinator per tab or app shell. Concurrent refresh attempts are serialized, so five failing
+Run exactly one refresh coordinator per tab or app shell. Concurrent refresh attempts are serialized, so five failing
 requests trigger one refresh call. Original requests are retried only after refresh succeeds. On an
 auth-expired result, in-memory auth state is cleared and the repo's re-auth flow runs.
 

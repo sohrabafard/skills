@@ -44,8 +44,8 @@ answer and call the question closed.
 `domain ← application ← infrastructure`, enforced by import direction. Every side effect crosses a small,
 consumer-owned interface (port); infrastructure implements it, so use cases are testable with fakes and
 providers are swappable. Before adding an import or checking direction, read `/alaa-golang`
-`references/62-import-direction-and-boundaries.md` for the complete direct/transitive forbidden list and
-build-graph check; repository placement is its `references/60-service-architecture-patterns.md`.
+`references/62-import-direction-and-boundaries.md` for the complete list of forbidden direct and transitive imports and
+the build-graph check; repository placement is its `references/60-service-architecture-patterns.md`.
 
 ```go
 // WRONG — SQL in the use case; untestable without a database, unswappable forever
@@ -71,8 +71,8 @@ skill and no analyzer enforces it. The kit's `linttools` ships five analyzers �
 Until an analyzer lands, run the complete build-graph check in `/alaa-golang`
 `references/62-import-direction-and-boundaries.md` in the service's CI and review its dependency list.
 File the real gate: one timestamped change request proposing an import-direction analyzer in `linttools/`,
-wired into `cmd/alaa-lint` and `make lint-analysis`, submitted through `/alaa-go-chi-development` using its change-request template. These manual/CI checks do not make the
-missing kit analyzer implemented.
+wired into `cmd/alaa-lint` and `make lint-analysis`, submitted through `/alaa-go-chi-development` using its change-request template. These manual and CI checks do not
+implement the missing kit analyzer.
 
 ## P6 — One Transaction, One Truth: Business Write + Outbox + Audit Together
 

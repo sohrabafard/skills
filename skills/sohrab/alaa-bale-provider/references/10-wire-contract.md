@@ -13,7 +13,7 @@ Read this before building, changing, or reviewing a Safir request or response sh
 | Buttons under a message | `message.reply_markup.inline_keyboard` |
 | A protected message | `message_data.is_secure: true`, on `message` or `template_message` only |
 
-Exactly one primary variant per `message_data`. Field-level detail for each row is below.
+Each `message_data` carries exactly one primary variant. Field-level detail for each row is below.
 
 ## Provenance and freshness
 

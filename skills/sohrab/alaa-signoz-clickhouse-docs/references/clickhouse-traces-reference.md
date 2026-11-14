@@ -8,7 +8,7 @@ in `SKILL.md`; this file carries what is specific to spans.
 
 ## Required query prerequisites
 
-Before writing any span query, read [physical layout](traces/10-physical-layout.md), [schema](traces/20-schema.md), [time/resource filtering](traces/30-time-resource.md), and [column access](traces/40-column-access.md) for sorting/bucket rules, table availability, resource joins and optional JSON evidence.
+Before writing any span query, read [physical layout](traces/10-physical-layout.md), [schema](traces/20-schema.md), [time/resource filtering](traces/30-time-resource.md), and [column access](traces/40-column-access.md) for the sorting-key and bucket rules, table availability, resource joins and optional JSON evidence.
 
 ## Select the remaining topic
 

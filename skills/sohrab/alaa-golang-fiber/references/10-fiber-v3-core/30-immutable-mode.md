@@ -18,4 +18,4 @@ decision, not substitutes for copying. They "return `s` unchanged when `Immutabl
 (https://docs.gofiber.io/next/api/app, verified 2026-07-26). Because they are no-ops when
 `Immutable` is disabled, using them in a service that has not enabled `Immutable` retains a value
 that will be overwritten. Use them only in a service whose `Immutable` decision is recorded as
-enabled; use `utils.CopyString` / `utils.CopyBytes` everywhere else.
+enabled; use `utils.CopyString` or `utils.CopyBytes` everywhere else.

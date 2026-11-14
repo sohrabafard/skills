@@ -29,14 +29,14 @@ No configuration changes are driven here by internal performance work, dev tools
 playground UI, platform packaging outside the target, or unrelated component
 fixes. The shipped examples exercise the basic remap and ClickHouse config
 surfaces. Provider integration, real TLS, chart rendering and upgrades,
-buffer reload/drain, metric emission, backpressure, retry, and delivery require
+buffer reload and drain, metric emission, backpressure, retry, and delivery require
 their own checks on the actual target. The release ledger establishes no change
 to the skill's default interpolation posture, health endpoint contract,
 acknowledgement boundary, retry bounds, or ClickHouse schema policy.
 
 ## 0.58.0 historical coverage
 
-Verified 2026-09-26. The canonical version/support ledger is
+Verified 2026-09-26. The canonical version and support ledger is
 `80-version-and-upgrade-deltas.md`. This record covers the entire stable delta
 after the skill's baseline: one product release, including its bundled VRL
 changelog. Earlier migration guidance remains reachable; no consumer upgrade is
@@ -121,9 +121,9 @@ Row 52 affects `appsignal`, `azure_logs_ingestion`, `datadog_events`,
 `prometheus_remote_write`, `sematext`, `splunk_hec`, and `webhdfs`.
 
 **Deliberately omitted artifacts:** no runnable provider example for each optional
-sink (credentials/resources and consumer versions are unknown); no crash, disk-full,
+sink (credentials, resources and consumer versions are unknown); no crash, disk-full,
 network, timing or throughput harness (runtime unavailable and no live workload
 authorized); no claimed exactness or benchmark improvement from upstream fixes.
-The table maps those changes to selection/migration/testing instructions instead.
+The table maps those changes to selection, migration and testing instructions instead.
 Runtime versus offline proof is stated in `50-validation-and-testing.md`;
 documentation coverage is not execution coverage.

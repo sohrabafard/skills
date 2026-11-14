@@ -2,7 +2,7 @@
 
 Read this before writing any Redis call. Every rule here is absolute; none has an exception.
 
-Before relying on kit client, timeout/retry/pool, TTL, miss or readiness behavior, read `/alaa-data-layer`
+Before relying on the kit's client, timeout, retry, pool, TTL, miss or readiness behavior, read `/alaa-data-layer`
 `references/51-redis-golang.md`; it owns the dated facts and their source re-verification. This file owns
 cache mechanics, not another kit snapshot.
 

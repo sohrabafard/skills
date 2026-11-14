@@ -35,6 +35,7 @@ runs before any user-scoped view renders rather than lazily on first read.
 
 ## What is reported
 
-Stores touched, counts removed per store bucketed, and whether a deferred purge was detected and completed.
+Report the stores touched, the bucketed count removed per store, and whether a deferred purge was detected and
+completed.
 Names are `/alaa-services-contract`; level and gate are
 `/alaa-observability-soc`. Never log the `accountKey` or any record content.

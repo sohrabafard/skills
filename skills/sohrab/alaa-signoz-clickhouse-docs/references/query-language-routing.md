@@ -62,7 +62,7 @@ evidence first. If live discovery is explicitly authorized:
 Record deployment identity, application version, alert types, timestamp, method and
 sanitized acceptance evidence in `assets/alert-surface.json`. Keep secrets and customer
 payloads out. A result applies only to that target and those alert types, not all installs.
-A changed or unknown target identity/version invalidates the record. Public release notes
+A changed or unknown target identity or version invalidates the record. Public release notes
 never set its status to `dashboards-and-alerts`.
 The SQL checker reads the recorded status only; it does not verify deployment identity,
 version, age or per-alert-type applicability. Bind those facts to current authorized evidence
@@ -78,7 +78,7 @@ SQL as alert SQL. `python3 scripts/check-signoz-sql.py --sql FILE --surface aler
 
 ## Query Builder, when it is the answer
 
-Service, operation and status filters; log body search and simple log aggregations; span filtering,
+Query Builder is the answer for service, operation and status filters; log body search and simple log aggregations; span filtering,
 grouping and percentile charts; metric temporal plus spatial aggregation; and any ratio, which is a
 formula rather than hand-written arithmetic. Do not answer a Query Builder question with ClickHouse
 SQL unless the user asked for SQL or the panel needs what the builder cannot express. Choose the

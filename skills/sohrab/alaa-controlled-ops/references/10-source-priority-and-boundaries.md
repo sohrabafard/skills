@@ -8,7 +8,7 @@ Ranks 1 and 2 are the same two repositories in either order, by task class: pack
 
 3. Committed docs in the repository that owns the surface under discussion.
 4. `composer.lock`, plus Satis and Composer dist metadata for the resolved version.
-5. Generated public artifacts — Postman collections, route inventories, API summaries. When one disagrees with rank 1 or 2 the code is correct and the artifact is the defect: fix it through `/alaa-postman-collections` ($alaa-postman-collections) or `/alaa-repo-docs` ($alaa-repo-docs), never your claim.
+5. Generated public artifacts — Postman collections, route inventories, API summaries. When one disagrees with rank 1 or 2 the code is correct and the artifact is the defect: fix the artifact through `/alaa-postman-collections` or `/alaa-repo-docs`, and never change your claim to match the artifact.
 6. Plan and state files, as continuation context only, never as contract truth.
 7. Historical Codex or Claude Code sessions, as search hints only. A fact from a session is unverified until read out of rank 1 or 2.
 
@@ -24,7 +24,7 @@ The package may own reusable:
 - file metadata, access policy, import chunking, and adapter contracts
 - service-adoption test helpers and package verification gates
 
-The package owns the shape of those observability value objects, not their contract; `/alaa-observability-soc` ($alaa-observability-soc) owns that, under the condition stated in `references/90-source-map.md`.
+The package owns the shape of those observability value objects, not their contract; `/alaa-observability-soc` owns that, under the condition stated in `references/90-source-map.md`.
 
 ## Service-owned surfaces
 
@@ -33,7 +33,7 @@ The consuming service owns:
 - HTTP routes, controllers, FormRequests, resources, and public response envelopes
 - trusted gateway context normalization, permission catalog usage, and authorization policy
 - domain validation, table writes, transactions, locks, models, migrations, jobs, and outbox publication
-- audit/log/metric/outbox sink implementations
+- audit, log, metric, and outbox sink implementations
 - service docs, route inventory, Postman examples, and public API validation
 
 ## Hard boundary

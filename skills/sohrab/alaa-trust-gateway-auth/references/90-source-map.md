@@ -1,6 +1,6 @@
 # Source priority and freshness
 
-Read before asserting actionable gateway/auth behaviour or using a fact older
+Read before asserting actionable gateway or auth behaviour or using a fact older
 than your change.
 
 ## Priority when sources disagree
@@ -11,13 +11,13 @@ than your change.
 3. **The auth repository's `routes/api.php`**, then its `docs/ops/*` contracts, then
    its README.
 4. **Gateway docs and README text.**
-5. **`alaa-services-contract`** for platform-wide boundaries, header-name freezes,
-   envelopes and values; **`alaa-permission-generator`** for the bitmap contract,
+5. **`/alaa-services-contract`** for platform-wide boundaries, header-name freezes,
+   envelopes and values; **`/alaa-permission-generator`** for the bitmap contract,
    allocation and emitted decoders.
 6. **This skill's references**, for the trust doctrine that ties those together.
 7. **Primary standards** — RFC 7519 (JWT), RFC 8725 (JWT BCP), RFC 6750 (Bearer),
    RFC 9700 (OAuth 2.0 Security BCP); OpenFGA, HAProxy and Laravel documentation.
-8. **Community answers/copied snippets**, only for observed-error troubleshooting
+8. **Community answers and copied snippets**, only for observed-error troubleshooting
    after checking repositories and primary standards.
 
 HAProxy configuration wins over README drift; fix the README.
@@ -25,10 +25,10 @@ HAProxy configuration wins over README drift; fix the README.
 Resolve repository-relative paths against the named checkout. Absolute machine
 paths are non-portable; this skill carried them until 2026-07-27.
 
-Checker interface: authz-sidecar
+The checker interface is in the authz-sidecar repository at
 `<repo>/docs/integrations/gateway/authz-sidecar-contract.md`.
-Canonical model/mapping: authz-openfga `<repo>/platform/openfga/contracts/`.
-`entitlement-api` owns business truth/events; `entitlement-projector` owns projection.
+The canonical model and mapping are in the authz-openfga repository at `<repo>/platform/openfga/contracts/`.
+`entitlement-api` owns business truth and events; `entitlement-projector` owns projection.
 Imported pinned bundles are consumer snapshots, never authoring roots; gateway
 executable configuration retains edge authority.
 
@@ -65,7 +65,7 @@ executable configuration retains edge authority.
 
 **2026-10-21 user identity policy source.** Auth's existing `users.uuidv7` is the canonical public user ID;
 verified JWT `sub` projects to the existing `X-User-Id`. The policy is owned by
-`alaa-services-contract` references `25` and `22`. This dated ruling does not verify gateway or consumer
+`/alaa-services-contract` references `25` and `22`. This dated ruling does not verify gateway or consumer
 runtime adoption; inspect owning repositories and rendered configuration before making runtime claims.
 
 | Fact | Verified on | Where |

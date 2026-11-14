@@ -59,7 +59,7 @@ The defaults-scope and examples checkers have these contracts:
 
 1. `--help` describes the rules and the exit codes.
 2. Exit codes distinguish outcomes: **`0` clean, `1` findings, `2` could not run.** A missing
-   binary or an unreadable path is `2`, never `0`. Syntax/contract findings are
+   binary or an unreadable path is `2`, never `0`. Syntax and contract findings are
    `1`; a checker that cannot inspect its input does not report it clean.
 3. Pure Python 3 with the standard library only. Every file is read as text with newline
    translation, so a CRLF file does not leave a carriage return on the last field of a parsed line.
@@ -87,18 +87,18 @@ and loopback DNS are parser inputs, not certificate or resolver operation proof.
 The byte checker reads bytes without newline conversion or repair. It accepts LF, CRLF and
 UTF-8 bodies and reports a Content-Length that differs from the raw body bytes, a duplicate or
 missing length, an absurd decimal length and leading zeroes. Exit 1 means a
-length/shape finding; exit 2 means unreadable input.
+length or shape finding; exit 2 means unreadable input.
 
 The runtime probe requires a cached HAProxy 3.4.6 Alpine image, Docker and its
 `sh`/`nc`/`wget` and `+LUA` for a controlled delayed streaming origin. It has
-`--help`. It mounts a read-only scratch tree,
-one CPU, 256 MiB, no network access or published ports and cleans up its temporary
+`--help`. It mounts a read-only scratch tree and runs the container with one CPU,
+256 MiB of memory, no network access and no published ports. It cleans up its temporary
 container. Positive origin routing, unpublished fallback, preserved active-stream
 drain, successful wait replies, deletion refusal,
 reload loss and reconstruction must all pass before claiming its lifecycle proof.
 Only the observed health-transition HTTP 503 is tolerated within a bounded
 readiness deadline; other operation errors fail immediately. Exit 1 is an
-assertion failure, exit 2 an unavailable prerequisite/operation. Current task
+assertion failure, and exit 2 is an unavailable prerequisite or operation. Current task
 failures are preserved in `SOURCES.md`; a shipped harness is not evidence it passed.
 
 Only explicitly constructed parser variables reach Docker arguments;
@@ -119,7 +119,7 @@ feature satisfies that requirement. OpenTelemetry needs filter-list inspection,
 because the `OT` feature token denotes OpenTracing.
 
 Unresolved warnings from `haproxy -c -f` are `HP-EX-WARNING` findings and block the
-gate with exit1, even when the parser exits0. A warning can indicate an ineffective
+gate with exit 1, even when the parser exits 0. A warning can indicate an ineffective
 control today. No deprecation exception is currently approved. Accept one only with
 an exact message and branch and authoritative support/safety evidence;
 matching the word deprecated alone never grants an exception.

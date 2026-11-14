@@ -13,7 +13,7 @@ do not choose a local default or maximum.
 
 ## Response
 
-Use the owning contract's `Response rules`, including its null/presence semantics and excluded keys.
+Use the owning contract's `Response rules`, including its null and presence semantics and its excluded keys.
 Keep one collection parser across services; a sibling envelope would require consumers to select a parser
 by service. Cursor boundaries are computed from the trimmed, correctly ordered page, as the traversal
 references require, rather than by independently guessing whether more rows exist.
@@ -33,7 +33,7 @@ Naming these is the deliverable. A client that knows a row may appear twice dedu
 ## Errors
 
 Use `alaa-services-contract references/25-end-to-end-flow-and-boundaries.md`, `Cursor rejection codes`,
-for each condition's registered code/status and its reference 10 for the error envelope. Sort and limit
+for each condition's registered code and status, and its reference 10 for the error envelope. Sort and limit
 validation use the owning input-validation contract. This file defines no parallel code registry.
 
 **A malformed cursor is a client error, not a server error.** It returns `400`, never `500`, and never an empty `200`. An empty `200` is the worst of the three: the client sees "no more results" and stops, so a broken cursor looks like the end of the feed.

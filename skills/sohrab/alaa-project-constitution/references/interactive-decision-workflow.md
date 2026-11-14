@@ -34,7 +34,7 @@ Ask a question only when all four conditions hold:
 1. Current repository evidence, a matched archetype's mandatory obligations, and a still-valid
    prior constitution do not answer it.
 2. The answer materially changes the product or user promise, offline or degraded behaviour,
-   scope, authority, trust/security/privacy posture, cost or resource commitment, data lifecycle,
+   scope, authority, trust, security, or privacy posture, cost or resource commitment, data lifecycle,
    compatibility, mandatory validation, exception policy, ownership, status, or ratification.
 3. Omitting the topic, or recording a non-blocking factual TODO instead, would make the
    constitution unsafe, misleading, internally inconsistent, or impossible to ratify.

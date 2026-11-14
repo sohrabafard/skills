@@ -5,8 +5,7 @@ validate and render, and their input is this skill's output.**
 
 ## The division, and it is settled
 
-Owned by `/alaa-bale-provider` (`$alaa-bale-provider`) and `/alaa-sms-provider-mediana`
-(`$alaa-sms-provider-mediana`), and not restated here:
+Owned by `/alaa-bale-provider` and `/alaa-sms-provider-mediana`, and not restated here:
 
 - The two wire renderings, `989xxxxxxxxx` and `+989xxxxxxxxx`, and the rule that a normaliser
   takes the target channel as a parameter.
@@ -71,7 +70,8 @@ rejected and both validators still reject it. A future proposal to widen the fol
 or to any `isdigit()`-style predicate would break that case, and it must be refused.
 
 **What the change touched, so a reviewer can retrace it.** Both copies of
-`alaa-bale-provider` / `alaa-sms-provider-mediana` `scripts/phone-conformance-corpus.json` (one expectation, the case order re-applied per the
+`scripts/phone-conformance-corpus.json`, one in `alaa-bale-provider` and one in `alaa-sms-provider-mediana`
+(one expectation, the case order re-applied per the
 file's own invariant, `corpus_version` 3 → 4, the digest); the fold step in both providers'
 normalisation contract, which now folds by category and names this skill as the owner; both
 providers' validators, whose enumerated two-family table became a category test; and the
@@ -96,7 +96,7 @@ them one repository at a time, each with the harness output in the change record
 
 ## Adoption order, and where the change request goes
 
-Defect first, then adoption. `client` and `auth` carry live defects; `content`,
+Fix the live defects first, then do the adoption work. `client` and `auth` carry live defects; `content`,
 `comment-service`, `notification`, `ticket` and `assessment-service` are adoption; the Go
 side lands once in `alaa-go-chi` and reaches `news`, `notif`, `tusd` and the entitlement
 services from there; `gateway` gets a change request that **records the decision not to

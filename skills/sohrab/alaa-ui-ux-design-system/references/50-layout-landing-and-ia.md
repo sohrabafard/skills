@@ -6,7 +6,7 @@ Read this file when setting a breakpoint, a container width, a section order, or
 
 - Mobile-first. Systematic breakpoints (375 / 768 / 1024 / 1440); never a per-component ad-hoc breakpoint.
 - One consistent maximum content width per page type on desktop, with a readable measure inside it. No horizontal scroll at any supported width; verify 375px explicitly.
-- 4/8 spacing rhythm from the token scale (`20-design-tokens-and-theming.md`). Vertical rhythm tiers by hierarchy level; sibling sections get equal spacing.
+- 4/8 spacing rhythm from the token scale (`20-design-tokens-and-theming.md`). Set the vertical rhythm in tiers by hierarchy level; sibling sections get equal spacing.
 - Gutters grow with the viewport. Edge-to-edge only for a deliberate full-bleed section.
 - `min-h-dvh` over `100vh`. The viewport meta never disables zoom.
 - Layering from the z-index token scale only.

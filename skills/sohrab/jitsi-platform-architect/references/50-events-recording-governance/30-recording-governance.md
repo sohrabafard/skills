@@ -26,8 +26,8 @@ rule below exists because one of those two facts makes the generic answer wrong.
 
 ### Where the artifact lands
 
-- Into a named bucket and path stated in the deliverable, encrypted at rest, never public and never
-  world-readable by URL.
+- The artifact lands in a named bucket and path stated in the deliverable. It is encrypted at rest, never public,
+  and never world-readable by URL.
 - Access is granted through a short-lived platform-issued URL after a platform authorization check, so that access
   is revocable and audited. A permanent link is an unrevokable grant.
 - The room identifier may appear in the object path; the class title and any participant name may not, because

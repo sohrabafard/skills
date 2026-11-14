@@ -1,7 +1,7 @@
 # Per-request timeouts and reusable health checks
 
 3.4 extends `http-request set-timeout` to `connect`, `queue` and `tarpit`.
-Connect/queue overrides require a backend-capable section; put them in the
+Connect and queue overrides require a backend-capable section; put them in the
 selected backend, not a frontend. Tarpit may be overridden on either side.
 Without a matching action the configured timeout applies. A constant includes its
 unit; a sample expression produces milliseconds. Set bounded values from trusted

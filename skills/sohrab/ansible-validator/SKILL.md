@@ -23,8 +23,8 @@ The deciding test between this skill and its sibling: **does a file that does
 not yet exist have to exist when you are done? If yes, `/ansible-generator`. If every file you need already exists and your job is to
 produce a verdict about it, `/ansible-validator`.**
 
-Also not for Terraform, Helm, Dockerfile or CI-config validation unless Ansible
-is the main artifact, nor for YAML with no Ansible semantics.
+Also do not use it for Terraform, Helm, Dockerfile or CI-config validation
+unless Ansible is the main artifact, or for YAML with no Ansible semantics.
 
 ## What to run
 

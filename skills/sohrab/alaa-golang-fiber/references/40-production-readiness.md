@@ -64,7 +64,7 @@ which makes it exactly the place where an unmeasured "optimization" gets waved t
 
 ## Observability
 
-Before choosing or changing the span middleware package/version, re-verify its released source through
+Before choosing or changing the span middleware package or its version, re-verify its released source through
 `SOURCES.md`; the following observation is dated, not a current-version claim.
 
 **The OpenTelemetry situation, verified 2026-07-26.** An official Fiber v3 OpenTelemetry middleware
@@ -81,7 +81,7 @@ not import it into a v3 service and do not cite it as evidence that v3 tracing i
 
 **Span middleware alone is not correlation-complete.** Before implementing correlation, read
 `/alaa-services-contract` `references/20-operational-and-observability-contract.md` for response headers,
-error/probe coverage and propagation semantics. Fiber still needs outer correlation middleware alongside
+coverage of error and probe responses, and propagation semantics. Fiber still needs outer correlation middleware alongside
 the span middleware: validate inbound `traceparent` through the installed `TraceContext` propagator,
 normalize by reinjection, and replace missing or malformed input with a fresh valid context and a bounded
 warning signal. Those steps are the Fiber wiring, not a guarantee supplied by server spans.

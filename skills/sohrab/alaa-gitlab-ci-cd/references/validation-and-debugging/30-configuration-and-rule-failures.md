@@ -1,6 +1,6 @@
 # Configuration and rule failures
 
-Open this guide when YAML/schema or pipeline-creation rules prevent the expected pipeline. For version-sensitive claims, follow the [source map](../00-source-map.md).
+Open this guide when YAML or schema errors or pipeline-creation rules prevent the expected pipeline. For version-sensitive claims, follow the [source map](../00-source-map.md).
 
 ### 1. YAML or schema failure
 

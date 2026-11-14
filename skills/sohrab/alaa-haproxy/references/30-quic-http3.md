@@ -1,6 +1,6 @@
 # QUIC and HTTP/3
 
-Read build requirements before configuring any HTTP/3 mode. Use the selected mode guide only after the binary/build gate is established.
+Read build requirements before configuring any HTTP/3 mode. Use the selected mode guide only after the binary and build gate is established.
 
 ## The build requirement, which comes before everything else
 

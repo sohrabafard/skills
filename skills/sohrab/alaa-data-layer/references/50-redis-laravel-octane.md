@@ -33,8 +33,8 @@ Verify all four in the actual repository, by reading the code, before writing an
 4. Repository methods accept and return DTOs or models, not raw request arrays.
 
 When any check fails: stop, report the gap, and complete the repository layer first through
-`/alaa-laravel-architecture` (`$alaa-laravel-architecture`) for layering and binding and `/alaa-php-clean-code`
-(`$alaa-php-clean-code`) for the repository policy and the decorator pattern. Add caching afterwards.
+`/alaa-laravel-architecture` for layering and binding and `/alaa-php-clean-code`
+for the repository policy and the decorator pattern. Add caching afterwards.
 
 - Do: `CommentRepositoryInterface` → `PostgresCommentRepository` → add a `CachedCommentRepository` decorator, so
   caching is one bounded class with explicit invalidation points.
@@ -47,8 +47,8 @@ When any check fails: stop, report the gap, and complete the repository layer fi
   cannot be installed.
 - Configure client-level retry with jitter in `config/database.php`: `max_retries`, `backoff_algorithm`
   (`decorrelated_jitter`), `backoff_base`, `backoff_cap`. This is what absorbs a transient drop and a
-  worker-recycle reconnect. How many retries and how much backoff is `/alaa-reliability-sla`
-  (`$alaa-reliability-sla`) `references/20-retries.md` for the doctrine, and `alaa-services-contract`
+  worker-recycle reconnect. How many retries and how much backoff is
+  `/alaa-reliability-sla` `references/20-retries.md` for the doctrine, and `alaa-services-contract`
   `references/22-failure-load-and-deprecation-contract.md` for the values.
 - Set explicit `timeout` (connect) and `read_timeout`; the driver defaults are far longer than any request budget.
   The values are the contract file's.
@@ -140,7 +140,7 @@ Rules:
 Unlike the Go lane, a Laravel service may use Redis for processing primitives, under the same degraded-mode duty:
 
 - **Atomic locks**: `Cache::lock()` with owner tokens; pass `$lock->owner()` to a queued job and
-  `Cache::restoreLock()` there; `$lock->refresh()` extends mid-run. Short critical sections only.
+  `Cache::restoreLock()` there; `$lock->refresh()` extends mid-run. Use them for short critical sections only.
 - **Rate limiting**: the `RateLimiter` facade with `'limiter' => 'redis'` in `config/cache.php`; on a
   high-concurrency endpoint rely on the atomic return of `increment()` or `attempt()`. Concurrency caps:
   `Cache::funnel()`. Overlap guards: `Cache::withoutOverlapping()`.
@@ -148,13 +148,12 @@ Unlike the Go lane, a Laravel service may use Redis for processing primitives, u
   legal record, or audit additionally needs a database unique constraint, because a Redis key can be evicted.
 - **Counters, presence, ephemeral state**: acceptable with a TTL and a tenant-scoped key, never as the only copy
   of a business fact.
-- **Sessions and queues**: Redis is a valid backend. Queue and Horizon decisions belong to `/alaa-async-messaging`
-  (`$alaa-async-messaging`), and Horizon is forbidden for RabbitMQ workers per `/alaa-laravel-job-rabbitmq`
-  (`$alaa-laravel-job-rabbitmq`).
+- **Sessions and queues**: Redis is a valid backend. Queue and Horizon decisions belong to `/alaa-async-messaging`,
+  and Horizon is forbidden for RabbitMQ workers per `/alaa-laravel-job-rabbitmq`.
 
 ## Invalidation and flush discipline
 
-Precise, event-driven invalidation — never a global flush. The policy is in
+Invalidate precisely and on events; never flush globally. The policy is in
 `40-redis-verification-and-anti-patterns.md`; the Laravel mechanics are:
 
 - Invalidate at the write path: a repository write method, or a domain event it emits, deletes the exact keys and
@@ -179,8 +178,8 @@ fail-closed question are in `40-redis-verification-and-anti-patterns.md`; below 
    - Raw `Redis::` facade calls, locks, and a Redis-backed `RateLimiter` still throw `RedisException` or
      `Predis\...\ConnectionException`. Wrap them, and decide per call site with the fail-open versus fail-closed
      question in `40-…`: a rate limiter in front of an ordinary endpoint fails open and emits a signal; a limiter
-     guarding an abuse-critical surface fails closed and the decision is reviewed by `/alaa-security-review`
-     (`$alaa-security-review`); a lock that guards correctness is additionally backed by a database constraint.
+     guarding an abuse-critical surface fails closed and the decision is reviewed by `/alaa-security-review`;
+     a lock that guards correctness is additionally backed by a database constraint.
    - Sessions on Redis: an outage logs every user out or returns `500`. Either accept it and record that in the
      service's runbook, or keep sessions on another store.
    - Queues on Redis: producers throw on dispatch. Decide per job whether the dispatch falls back to an outbox row
@@ -199,7 +198,7 @@ try {
 
 4. **Fail fast, not slow**: short connect and read timeouts plus phpredis retry with decorrelated jitter, so a
    hanging Redis costs milliseconds per request rather than seconds. Whether a long outage additionally warrants a
-   breaker, and how to shape it, is `/alaa-reliability-sla` (`$alaa-reliability-sla`)
+   breaker, and how to shape it, is `/alaa-reliability-sla`
    `references/30-breakers-and-bulkheads.md`; the values are `alaa-services-contract` `references/22-…`.
 5. **Boot safety**: with the boot and register discipline above, a Redis outage cannot stop a worker from booting.
 6. **Recovery**: lazy connections and the failover order restore caching automatically. Expect a cold-cache
@@ -219,7 +218,7 @@ try {
 - Worker recycling via `--max-requests` closes and reopens connections; phpredis `persistent` with `persistent_id`
   reduces the reconnect cost across recycles.
 - `workers × connections-per-worker` stays well under the server's `maxclients`, counted across every service
-  sharing the instance. The connection ceiling itself is `/alaa-octane-performance` (`$alaa-octane-performance`).
+  sharing the instance. The connection ceiling itself is `/alaa-octane-performance`.
 - Swoole's `octane` store and `Octane::table()` are per-server, RAM-only complements, never a substitute for the
   shared Redis cache in a multi-replica deployment.
 - Never memoize cross-request state in a static or a global as a free cache. That is the Octane state-leak bug
@@ -240,15 +239,15 @@ In addition to the shared list in `40-redis-verification-and-anti-patterns.md`, 
    lock and per limiter, and the result of stopping Redis.
 6. Octane: connection growth checked, and no Redis usage in provider `register()` or `boot()`.
 
-Which proof level each claim needs is `/alaa-testing-strategy` (`$alaa-testing-strategy`)
+Which proof level each claim needs is `/alaa-testing-strategy`
 `references/40-proof-strength.md`. The decorator fallback is provable at level 2 with a throwing fake; item 5's
 stop-Redis result is level 6 and is produced against a real Redis, stopped and restarted.
 
 ## Companion routing
 
-- `/alaa-laravel-architecture` (`$alaa-laravel-architecture`) — repository interfaces, binding, layering.
-- `/alaa-php-clean-code` (`$alaa-php-clean-code`) — decorator pattern, repository policy, Octane-safe code shape.
-- `/alaa-octane-performance` (`$alaa-octane-performance`) — worker lifecycle, connection ceiling, memory behaviour.
-- `/alaa-async-messaging` (`$alaa-async-messaging`), `/alaa-laravel-job-rabbitmq` (`$alaa-laravel-job-rabbitmq`) —
+- `/alaa-laravel-architecture` — repository interfaces, binding, layering.
+- `/alaa-php-clean-code` — decorator pattern, repository policy, Octane-safe code shape.
+- `/alaa-octane-performance` — worker lifecycle, connection ceiling, memory behaviour.
+- `/alaa-async-messaging`, `/alaa-laravel-job-rabbitmq` —
   queues, Horizon boundaries, job middleware.
-- `/alaa-security-review` (`$alaa-security-review`) — cached data crossing a tenant or trust boundary.
+- `/alaa-security-review` — cached data crossing a tenant or trust boundary.

@@ -16,7 +16,7 @@ Cover both sample modes, nil from a converter or fetch, booleans, sanitized erro
 Run the module's unit test with the interpreter that `haproxy -vv` reported. Deployments with custom HTTP error files still need byte-level Content-Length checks owned by `/alaa-haproxy`.
 
 The lexical checker cannot prove guard conditions, helper reachability, dynamic
-registration, dependency closure or every clock/seed alias. HL007 examines
+registration, dependency closure or every clock or seed alias. HL007 examines
 resolved runtime callbacks rather than misclassifying init helpers. HL008 is retired
 because coarse timestamp unit conversion is valid. HL002 rejects direct clock seeds
 without trusting the presence of an entropy filename as provenance. Treat these

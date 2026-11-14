@@ -97,8 +97,8 @@ Why each value, so it can be changed with an argument rather than copied:
   an outage, and says so in the merge request.
 - **`order: start-first`.** The new task starts, passes its healthcheck, and only then is the old
   task stopped. This requires a healthcheck; see §4.
-- **`parallelism: 1`** on any service with fewer than six replicas. Above that,
-  `ceil(replicas / 4)` keeps the rollout from taking longer than the deploy window without
+- **`parallelism: 1`** is set on any service with fewer than six replicas. Above that, set it to
+  `ceil(replicas / 4)`, which keeps the rollout from taking longer than the deploy window without
   replacing a quarter of capacity at once.
 - **`delay: 10s`** between task groups. It exists so that a task which fails after warm-up — an
   OPcache-primed Octane worker that dies on its first real request — fails inside the rollout rather
@@ -112,8 +112,8 @@ Why each value, so it can be changed with an argument rather than copied:
 - **`failure_action: rollback`**, never `pause`. `pause` is a half-updated stack that nothing
   reports. `rollback` returns to the previous task spec automatically, and the deploy command's exit
   status tells the pipeline the truth.
-- **`max_failure_ratio: 0`** on a service with three or fewer replicas: any failure is the whole
-  rollout. At larger replica counts `0.1` tolerates one failing task in ten without rolling back a
+- **`max_failure_ratio: 0`** is set on a service with three or fewer replicas: any failure is the
+  whole rollout. At larger replica counts `0.1` tolerates one failing task in ten without rolling back a
   good deploy for one bad node.
 - **`rollback_config.failure_action: pause`** is correct here and only here: a rollback that is
   itself failing must stop and wait for a human rather than loop.

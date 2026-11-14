@@ -94,8 +94,8 @@ Everything platform-shaped above is imported.
 
 ## CLI — `cmd/alaa-go-chi`
 
-`docs/scaffold-cli-reference.md` is authoritative and itself warns that three `--help` descriptions are stale;
-prefer the reference and source over `--help` output.
+`docs/scaffold-cli-reference.md` is authoritative and itself warns that three `--help` descriptions are stale.
+When `--help` output disagrees with the reference or source, follow the reference and source.
 
 **`alaa-go-chi new service <name>`** — flags: `--parent-dir` (enforced as required at runtime, and `--help` does
 not annotate it), `--module-path`, `--kit-module`, `--kit-version`, `--kit-replace`, `--goprivate`, `--tier`

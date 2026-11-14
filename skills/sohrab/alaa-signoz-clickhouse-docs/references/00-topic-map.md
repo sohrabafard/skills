@@ -30,5 +30,5 @@ for why a span never arrived.
 **A docs question plus a SQL question is two tasks.** Answer the docs one from
 `10-docs-navigation.md`, then the SQL one from the signal reference. Do not open a routing file to
 answer a schema question: schema guidance lives in each ClickHouse reference and its linked
-children. `scripts/check-signoz-schema.py` checks declared table/column names and sorting-key
+children. `scripts/check-signoz-schema.py` checks declared table and column names and sorting-key
 assertions; it does not validate every documented type or installed capability.

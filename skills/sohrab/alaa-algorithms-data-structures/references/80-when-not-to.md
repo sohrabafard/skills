@@ -40,7 +40,8 @@ Two questions decide it, and both are answered from the code rather than from ju
 2. **Does the per-element work leave the process?** A query, a network call, a cache round trip, a lock, a file. In
    memory only means the answer is no.
 
-Named maximum and in-memory work: write the clearest code. Anything else: `SKILL.md` applies.
+When the dimension has a named maximum and the per-element work stays in memory, write the clearest code. In every
+other case, `SKILL.md` applies.
 
 ## Cases that look like they need a budget and do not
 

@@ -15,7 +15,7 @@ recreates the application and its singletons too, allowing an incorrect singleto
 Pinned framework and Octane evidence: `references/source-map.md`, "Leak-harness mechanics".
 
 Use the production registration without rebinding it in the test. Adapt the illustrative
-`TenantContext` and its setter/getter to the repository's trusted-context fixture; the setter
+`TenantContext` and its setter and getter to the repository's trusted-context fixture; the setter
 below seeds test state, not an HTTP identity input.
 
 ```php
@@ -37,12 +37,12 @@ public function test_tenant_context_is_forgotten_with_its_scope(): void
 Assert both the state and identity: static state can survive a new object; an old object can
 look empty before repopulation. This tests binding lifetime, **not Octane event wiring**.
 A configured `octane.flush` entry or custom reset listener is not exercised by this call.
-For those, captured holders, statics or memoization, use Shape B.
+For those, and for captured holders, statics or memoization, use Shape B.
 
 ## Shape B — two sequential requests against one booted worker
 
 Use this for actual worker lifecycle and reset wiring, including `flush` configuration,
-listeners, captured instances, static/vendor state, RLS connection state, SDK scopes and
+listeners, captured instances, static or vendor state, RLS connection state, SDK scopes and
 Swoole tables. Use the repository's configured driver and isolated test environment.
 
 ```bash
@@ -67,7 +67,7 @@ Per `/alaa-testing-strategy`, a test that passes both ways is not a
 test. Before the change is reported as covered:
 
 1. Remove the relevant reset: mutate the production `scoped` registration to `singleton`
-   for Shape A, or remove the `flush` entry/reset listener exercised by Shape B. Also verify
+   for Shape A, or remove the `flush` entry or reset listener exercised by Shape B. Also verify
    Shape A fails when its `forgetScopedInstances()` call is omitted. Do not combine mutations.
 2. Run the test. **It must fail**, and the failure message must name the leaked value.
 3. Restore the reset and confirm it passes.

@@ -6,11 +6,11 @@ You are calling a Quasar plugin, composable, global option, or util and need int
 
 ### `useMeta`
 
-Route/component title/meta updates; use function form for reactive state and treat as SSR/SEO flow: `useMeta(() => ({ title: pageTitle.value }))`. Search: `useMeta`, `reactive meta`, `title`, `meta tags`, `SSR SEO`.
+Use it for title and meta updates from a route or a component. Use the function form for reactive state, and treat it as SSR and SEO flow: `useMeta(() => ({ title: pageTitle.value }))`. Search: `useMeta`, `reactive meta`, `title`, `meta tags`, `SSR SEO`.
 
 ### `useHydration`
 
-Use only when completion state is genuinely needed; fix deterministic markup first, then use `QNoSsr`/`useHydration` only for truly client-only features.
+Use only when completion state is genuinely needed; fix deterministic markup first, then use `QNoSsr` or `useHydration` only for truly client-only features.
 
 Do: fix id/aria mismatches with Vue 3.5 `useId()` first. Do not: hide one unstable value by wrapping a whole subtree in `QNoSsr`; it loses that subtree's SSR/SEO.
 

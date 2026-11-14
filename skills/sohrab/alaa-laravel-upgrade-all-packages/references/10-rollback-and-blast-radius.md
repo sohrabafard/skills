@@ -1,6 +1,6 @@
 # Rollback And Blast Radius
 
-Recovery for a dependency change. Failure doctrine is `/alaa-reliability-sla` (`$alaa-reliability-sla`) and every platform number is `alaa-services-contract references/22-failure-load-and-deprecation-contract.md`; neither covers undoing a lockfile move.
+Recovery for a dependency change. Failure doctrine is `/alaa-reliability-sla` and every platform number is `alaa-services-contract references/22-failure-load-and-deprecation-contract.md`; neither covers undoing a lockfile move.
 
 `composer.lock` declares the set; `vendor/` is the installed tree, and `vendor/composer/installed.json` records what was written into it. `composer update` rewrites both, not atomically, so an interrupt between them leaves a worktree no gate can describe.
 
@@ -42,9 +42,9 @@ Deleting `vendor/` is safe only after the lock is restored and `composer validat
 
 A git revert restores the manifest and lock, not the running service.
 
-- **The deployed artifact.** The service runs an image built from a lock. The deploy-level revert is redeploying the previously known-good image digest; the git revert only makes the *next* build reproduce it. Record the pre-sweep digest beside the pre-sweep commit, or the revert has no target. Image and registry mechanics `/alaa-docker-production` (`$alaa-docker-production`); pipeline sequencing `/alaa-cicd-laravel-postgres` (`$alaa-cicd-laravel-postgres`).
+- **The deployed artifact.** The service runs an image built from a lock. The deploy-level revert is redeploying the previously known-good image digest; the git revert only makes the *next* build reproduce it. Record the pre-sweep digest beside the pre-sweep commit, or the revert has no target. `/alaa-docker-production` owns image and registry mechanics; `/alaa-cicd-laravel-postgres` owns pipeline sequencing.
 - **Regenerated artifacts.** Boost guidelines, skills and MCP registration, compiled frontend assets, generated config: each is committed with the bump that produced it. Split across commits, reverting the bump leaves a new-version artifact beside an old-version lock and nothing reports it.
-- **Compiled caches and booted workers.** Caches compiled under the new version still look valid, so `php artisan optimize:clear` (or the repo's wrapper) is part of the revert. A worker holds the booted application, so a revert is not live until workers restart: `/alaa-octane-performance` (`$alaa-octane-performance`) `references/worker-lifecycle-and-failure.md`.
+- **Compiled caches and booted workers.** Caches compiled under the new version still look valid, so `php artisan optimize:clear` (or the repo's wrapper) is part of the revert. A worker holds the booted application, so a revert is not live until workers restart: `/alaa-octane-performance` `references/worker-lifecycle-and-failure.md`.
 
 ## Blast radius, stated before the bump
 
@@ -52,7 +52,7 @@ Record what each moved package can reach; this sets the gate level in `20-breaki
 
 - **Who pulls it in:** `composer depends <vendor/package>`, with `--tree` when unclear. `require-dev`-only and absent from every container build stage means it does not reach the request path.
 - **Which surfaces load it:** routes, queue consumers, scheduled commands and console entrypoints on its code path. A bump reaching only a console command keeps the gate proportionate.
-- **Whether it crosses a trust boundary:** authentication, authorization, request parsing, deserialisation, template rendering, outbound HTTP. If it does, `30-advisory-triage.md` and `/alaa-security-review` (`$alaa-security-review`) apply on top.
+- **Whether it crosses a trust boundary:** authentication, authorization, request parsing, deserialisation, template rendering, outbound HTTP. If it does, `30-advisory-triage.md` and `/alaa-security-review` apply on top.
 
 ## One repository per diff
 

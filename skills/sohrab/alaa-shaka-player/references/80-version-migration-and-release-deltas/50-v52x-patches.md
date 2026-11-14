@@ -57,9 +57,10 @@ DRM session creation during teardown, DASH key-ID discovery from init segments, 
 parsing and CEA-708 pen opacity.
 
 Before upgrading a consumer, read every intervening patch from its installed pin; this list is not
-an exhaustive 5.2.4-5.2.11 audit. Reproduce the applicable retry/recovery, concurrent teardown/DRM,
-missing-manifest-key-ID and multi-fragment caption scenarios. Assert segment continuity, settled
-destruction with no new sessions, playable encrypted media and complete/readable captions. Use the
+an exhaustive 5.2.4-5.2.11 audit. Reproduce each applicable scenario: retry and recovery, concurrent
+teardown and DRM session creation, a key ID missing from the manifest, and multi-fragment captions.
+Assert segment continuity, settled destruction with no new sessions, playable encrypted media, and
+complete and readable captions. Use the
 proof modes in `90-qa-modes-and-checklist.md`; release notes are not consumer runtime proof.
 
 **5.2.3** (2026-07-27) — single fix: *"Reset media source before switching variant on MSE append

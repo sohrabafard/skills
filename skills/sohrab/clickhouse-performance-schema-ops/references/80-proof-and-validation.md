@@ -91,7 +91,7 @@ against source-grain results, because the damaged rollup no longer contains the 
 Missing history or a per-type discrepancy blocks cutover. Verify the live boundary with a writer
 pause and drain or a proved disjoint range. Preserve the old table and declare rollback limits
 before switching readers. Neither an engine upgrade nor switching back recreates lost history.
-Use `50-mvs-projections-and-ttl.md` for live/backfill cutover.
+Use `50-mvs-projections-and-ttl.md` for the cutover between the live view and the historical backfill.
 
 ## Compare bytes read, not wall time
 
@@ -152,5 +152,5 @@ Schema changes belong to the ingest-pipeline repository, so the evidence goes wh
 keeps its decisions: the change, its reason, and the pasted proof, in the same effort. A schema
 change merged without its decision entry leaves the next reader unable to tell a deliberate choice
 from an accident. Design-before-code obligations and who may write:
-`/alaa-system-design` (`$alaa-system-design`). The ten-point bar the finished change clears:
-`/alaa-project-constitution` (`$alaa-project-constitution`) `references/quality-bar.md`.
+`/alaa-system-design`. The ten-point bar the finished change clears:
+`/alaa-project-constitution` `references/quality-bar.md`.
