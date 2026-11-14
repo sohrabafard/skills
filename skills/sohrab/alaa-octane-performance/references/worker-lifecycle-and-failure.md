@@ -22,7 +22,7 @@ open and no connection is refused.
 - Any request whose duration can exceed `max_wait_time` must be offloaded to a queue rather
   than served synchronously; otherwise every deploy drops some of them silently.
 - Task workers are replaced by the same reload. Work in flight on a task worker is lost unless
-  the job is idempotent and re-dispatchable — `/alaa-async-messaging` (`$alaa-async-messaging`).
+  the job is idempotent and re-dispatchable — `/alaa-async-messaging`.
 
 ## Crash, and crash-loop
 
@@ -32,7 +32,7 @@ response at all**. The observable is the worker-restart signal rising with no de
 (`references/worker-observability.md`).
 
 A worker that dies before serving its first request is a boot failure, not a leak. The two
-common causes are a provider reading cache, sessions or Redis in `register()`/`boot()`, and a
+common causes are a provider reading cache, sessions or Redis in `register()` or `boot()`, and a
 PHP warning at request startup under FrankenPHP — both in `references/full-guide.md`.
 
 ## Memory-limit eviction — two different limits
@@ -43,8 +43,7 @@ PHP warning at request startup under FrankenPHP — both in `references/full-gui
   process, destroying every in-flight request on that worker with no PHP-level trace.
 
 `workers × PHP memory_limit` must stay under the container memory limit, with headroom for the
-master and task workers. The container limit is declared per `/alaa-docker-production`
-(`$alaa-docker-production`) and `/alaa-k8s-helm` (`$alaa-k8s-helm`).
+master and task workers. The container limit is declared per `/alaa-docker-production` and `/alaa-k8s-helm`.
 
 `max_requests` recycles a worker **between** requests, so it never drops a request. It is the
 last line of defence against slow accumulation, not a fix for a leak: a leak still serves wrong
@@ -56,7 +55,7 @@ data to every request before the recycle. Selecting its value:
 Swoole kills a worker whose current request exceeds `max_request_execution_time`. Set it above
 the service's request deadline, or it will kill requests the deadline would have permitted, and
 the caller gets a reset connection instead of the timeout response. The deadline doctrine is
-`/alaa-reliability-sla` (`$alaa-reliability-sla`); its value is in `alaa-services-contract
+`/alaa-reliability-sla`; its value is in `alaa-services-contract
 references/22-failure-load-and-deprecation-contract.md`.
 
 ## Graceful deploy sequence

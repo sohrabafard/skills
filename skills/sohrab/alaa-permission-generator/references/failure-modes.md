@@ -55,15 +55,14 @@ A different situation with a different remedy: something is now wrong on disk in
 
 The target file in the service repository differs from the last generated output in ways the catalog did not cause.
 **Retry:** none. **Escalate:** stop before writing, report the diff, and ask. An apply is a controlled operation per
-`/alaa-controlled-ops` (`$alaa-controlled-ops`); overwriting someone's uncommitted work is not recoverable from the
+`/alaa-controlled-ops`; overwriting someone's uncommitted work is not recoverable from the
 catalog.
 
 ## The service's bitmap semantics differ from the contract
 
 A consumer decodes with a different bit order, a different padding rule, a different base, or a zero-based id.
 **Retry:** none — do not adapt the catalog to the consumer. **Escalate:** report the divergence against
-`references/shared-consumer-contract.md` and route the wire question to `/alaa-services-contract`
-(`$alaa-services-contract`) and `/alaa-trust-gateway-auth` (`$alaa-trust-gateway-auth`). Two decoders that disagree is a
+`references/shared-consumer-contract.md` and route the wire question to `/alaa-services-contract` and `/alaa-trust-gateway-auth`. Two decoders that disagree is a
 security defect, not a formatting difference.
 
 ## Symptoms with no error at all — silent failures
@@ -75,7 +74,7 @@ These report success. Each is a case where a clean result means nothing.
 - **A `generated_targets` prefix or a descriptor path that disagrees with the entry** — see
   `references/catalog-workflow.md`. **Check:** the expected file exists under `generated/` with a moved mtime, and the
   applied path, the `source_path`, and the path inside `generated_targets` are one identical string.
-- **`--generated=, `--catalog=`, and `--services=` are unconfined.** Each is concatenated onto the repository root as
+- **`--generated=`, `--catalog=`, and `--services=` are unconfined.** Each is concatenated onto the repository root as
   text, so `--generated=..` writes into sibling repositories and an absolute path is treated as relative. **Never pass
   any of the three unless the request names the path**, and never pass one to redirect output into a service repository;
   applying is a separate, authorized copy.

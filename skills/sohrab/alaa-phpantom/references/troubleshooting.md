@@ -2,7 +2,7 @@
 
 ## Claude only sees a standalone skill, not LSP or hooks
 
-Ensure your canonical `alaa-phpantom` folder contains `.claude-plugin/plugin.json`, `.lsp.json`, `hooks/hooks.json` and root `SKILL.md`. Your existing symlink under `~/.claude/skills/alaa-phpantom` must point at that folder, not just `SKILL.md`. Restart or `/reload-plugins`; check `claude plugin list`, `/plugin` Installed and Errors, `/hooks`. The plugin is `alaa-phpantom@skills-dir` in a user skills directory. Policies can block skills-directory plugins; standalone skill may still load.
+Ensure your canonical `alaa-phpantom` folder contains `.claude-plugin/plugin.json`, `.lsp.json`, `hooks/hooks.json` and root `SKILL.md`. Your existing symlink under `~/.claude/skills/alaa-phpantom` must point at that folder, not just `SKILL.md`. Restart or `/reload-plugins`; check `claude plugin list`, `/plugin` Installed and Errors, `/hooks`. The plugin is `alaa-phpantom@skills-dir` in a user skills directory. Policies can block skills-directory plugins; the standalone skill may still load.
 
 ## LSP does not start
 
@@ -18,7 +18,7 @@ php -r 'require "vendor/autoload.php"; var_dump(class_exists("Carbon\\CarbonImmu
 "$HOME/.local/bin/phpantom_lsp" analyze app/ --project-root "$PWD" --code unknown_class --format json
 ```
 
-If Composer resolves it but PHPantom doesn't, examine LSP workspace root, indexing, Composer metadata, and `vendor/`. For a **Windows-hosted editor** that opens Linux files through `\\wsl.localhost`, sending `file://wsl.localhost/...` to a Linux LSP server may cause URI/workspace path mismatches; that issue is separate from Claude Code running **inside** native WSL. No proxy is needed for the latter.
+If Composer resolves it but PHPantom doesn't, examine the LSP workspace root, the indexing, the Composer metadata, and `vendor/`. For a **Windows-hosted editor** that opens Linux files through `\\wsl.localhost`, sending `file://wsl.localhost/...` to a Linux LSP server may cause URI/workspace path mismatches; that issue is separate from Claude Code running **inside** native WSL. No proxy is needed for the latter.
 
 ## Duplicate or conflicting hooks
 
@@ -26,7 +26,7 @@ Plugin hooks are registered on plugin load, independent of skill invocation. If 
 
 ## Multi-agent in one worktree
 
-Coordinate bulk fixes and rename/move operations; re-preview if another agent may have changed overlapping files. A read-only syntax hook is safe to run for each agent, but applying multiple format/move operations concurrently is not automatically safe.
+Coordinate bulk fixes and rename or move operations; re-preview if another agent may have changed overlapping files. A read-only syntax hook is safe to run for each agent, but applying multiple format or move operations concurrently is not automatically safe.
 
 Sources:
 - https://code.claude.com/docs/en/plugins/loading

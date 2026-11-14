@@ -26,7 +26,7 @@ grep -n 'public function stop' vendor/vladimir-yuldashev/laravel-queue-rabbitmq/
 ```
 
 Method counts locate candidates, not compatibility proof. Compare their full signatures
-with the installed Laravel parent/interface, then class-load and exercise the monitor and stop paths.
+with the installed Laravel parent class or interface, then class-load and exercise the monitor and stop paths.
 Missing methods require a compatible package release, never a fork override. Neither a dependency constraint nor
 parameter count proves compatibility with newer Laravel.
 
@@ -35,7 +35,7 @@ parameter count proves compatibility with newer Laravel.
 Verified in installed `v15.0.0` and Laravel 13: `retry_after` is read by the Beanstalkd, Database and Redis
 connectors only. The RabbitMQ driver's `src/` never mentions it, and neither does `Illuminate\Queue\Worker`,
 `WorkerOptions`, or `WorkCommand`. This driver has **no visibility timeout**: a delivery stays unacked
-until acknowledgement or a broker/client return path. Broker acknowledgement timeout and cancellation
+until acknowledgement or a broker or client return path. Broker acknowledgement timeout and cancellation
 semantics are versioned in `alaa-async-messaging references/30-consuming-ack-and-prefetch.md`. So `--timeout` below
 `retry_after` protects nothing here and any duplicate-execution reasoning built on it is wrong; the two
 timeout relationships that do decide it are stated once, in `SKILL.md`. Keep `retry_after` set anyway, so a
@@ -66,7 +66,7 @@ loss, quorum delivery limits still count failures in RabbitMQ 4.3. They do not b
 use the canonical broker-version matrix in `alaa-async-messaging references/40-dead-letter-and-replay.md`
 for nack and timeout returns, and prove their application bound separately. `release()` republishes with
 a new application attempt count; neither it nor a cancellation handler can be inferred from broker counters.
-Re-check installed source before applying this historical v15.0.0 derivation to another driver/version.
+Re-check installed source before applying this historical v15.0.0 derivation to another driver or version.
 
 ## Monitor-method behaviour
 

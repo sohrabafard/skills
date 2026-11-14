@@ -79,7 +79,7 @@ Event::listen(RequestTerminated::class, function (): void {
 });
 ```
 
-   Repeated keys are candidates, not proof that instances survived; use the harness's state/identity assertions.
+   Repeated keys are candidates, not proof that instances survived; use the harness's state and identity assertions.
 3. Move half the candidates into the `flush` array of `config/octane.php` and re-run Shape B.
    The half that turns it green contains the leak. Halve again until one abstract remains, then
    fix it with the right mechanism from `references/full-guide.md` — `flush` was the bisect

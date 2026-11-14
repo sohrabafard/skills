@@ -54,4 +54,4 @@ use Illuminate\Foundation\Http\Middleware\VerifyCsrfToken;
 $this->withoutMiddleware([VerifyCsrfToken::class]);
 ```
 
-The second form relies on old names and should only remain when the target repo is not on Laravel 13 or the local codebase intentionally preserves the old alias.
+The second form relies on old names. Keep it only when the target repo is not on Laravel 13 or the local codebase intentionally preserves the old alias.

@@ -4,7 +4,7 @@
 
 This file answers one question: **for each design pattern, what shape does it have to take so the Octane worker invariants hold?** It states no invariant of its own.
 
-**The invariants live in `/alaa-octane-performance` (`$alaa-octane-performance`), and its wording governs.** That skill owns, and this file does not restate:
+**The invariants live in `/alaa-octane-performance`, and its wording governs.** That skill owns, and this file does not restate:
 
 - the enumerated list of values that may never be retained, and the enumerated sites where retaining them is forbidden;
 - the reset mechanism — the scoped-binding form, the `config/octane.php` flush list, and the request-terminated listener;
@@ -27,7 +27,7 @@ The rest, one line each:
 | Pattern | The shape that holds under a long-lived worker |
 |---|---|
 | MVC | A controller may read request context and must not retain it. It hands validated input to a service or a DTO and keeps nothing on itself. |
-| Repository | A repository never remembers "the current tenant". It takes the tenant or project identifier, or a typed filter DTO, per call — or uses a reset-safe global-scope/RLS approach the repository already sanctions. A repository that resolves tenancy internally leaks it to the next request on that worker. |
+| Repository | A repository never remembers "the current tenant". It takes the tenant or project identifier, or a typed filter DTO, per call — or uses a reset-safe global-scope or RLS approach that the repository already sanctions. A repository that resolves tenancy internally leaks it to the next request on that worker. |
 | Factory | A factory may hold an immutable map of strategy or adapter class names. It must not hold a built provider instance that carries request headers, tokens, tenant values, or mutable options — build those per call. |
 | Strategy | A strategy is stateless. Request data arrives as an argument to `execute`, `calculate`, `handle`, or whatever the contract's method is named, never as constructor state. |
 | Builder | A builder is either constructed per use or holds no accumulated state. Never reuse one mutable builder instance across requests: the second request inherits the first request's partial payload. |
@@ -41,4 +41,4 @@ The rest, one line each:
 
 Every service, factory, strategy, adapter, observer, listener, job, and pipeline step touched by the change is either stateless or reset-safe — name which, per class, before declaring the work done. If you cannot name it for a class, that class is the finding.
 
-For a leak-prone change, the regression test and what it must assert belong to `/alaa-octane-performance` (`$alaa-octane-performance`). For cache and memoization keys, key design belongs to `alaa-data-layer references/50-redis-laravel-octane.md`.
+For a leak-prone change, the regression test and what it must assert belong to `/alaa-octane-performance`. For cache and memoization keys, key design belongs to `alaa-data-layer references/50-redis-laravel-octane.md`.
