@@ -69,9 +69,10 @@ lab and field disagree, field wins.
   fallback loses scheduler priority.
 - INP anatomy: input delay (<50 ms) + processing (<100 ms) + presentation (<50 ms). Apply the visual
   feedback synchronously, yield, then run the heavy work; push analytics to `requestIdleCallback`.
-- Third-party scripts are the classic TBT killer: `async`/`defer`, lazy-load on visibility, facade pattern
-  for video, chat and map embeds, and delete stale tags.
-- Vue cost: `shallowRef` for large structures, no broad deep watchers, `v-memo` on hot list rows.
+- Third-party scripts are the classic TBT killer: load them with `async` or `defer`, lazy-load them on
+  visibility, use the facade pattern for video, chat and map embeds, and delete stale tags.
+- To cut Vue cost, use `shallowRef` for large structures, add no broad deep watchers, and put `v-memo` on
+  hot list rows.
 
 ## 4. Complexity and size thresholds
 
@@ -122,8 +123,8 @@ PerformanceObserver (`entry.sources`) or `cls-culprits-insight`.
 
 ## 7. FCP and Speed Index (2 × 10%)
 
-Defer non-critical CSS, no `@import` chains, lean total CSS. HTML `no-cache, must-revalidate`; hashed
-assets `public, max-age=31536000, immutable`. SSR HTML paints meaningful content immediately —
+Defer non-critical CSS, write no `@import` chains, and keep total CSS lean. Serve HTML with
+`no-cache, must-revalidate` and hashed assets with `public, max-age=31536000, immutable`. SSR HTML paints meaningful content immediately —
 server-rendered skeletons count toward FCP and SI; a spinner added by JavaScript does not.
 
 ## 8. Budgets

@@ -24,14 +24,14 @@ compatibility note.
   SSR-rendered output. The positive replacement for formatting is in `55-i18n-locale-and-rtl.md`: an
   explicit locale and an explicit timezone, passed from the request, identical on both sides.
 - List ordering is deterministic; `v-for` keys are stable, unique and primitive.
-- CSS-first responsiveness rather than viewport-driven DOM branching before hydration.
+- Use CSS for responsiveness rather than branching the DOM on the viewport before hydration.
 - Reuse SSR-provided data instead of refetching it on first paint.
 - No per-request mutable state in a module-level singleton.
 
 ## Reactivity
 
-`ref()` for scalar state, `reactive()` for tightly related groups, `computed()` for derived values.
-`shallowRef` for large structures. A `watch(..., { deep: true })` needs a named reason why no narrower
+Use `ref()` for scalar state, `reactive()` for tightly related groups, and `computed()` for derived
+values. Use `shallowRef` for large structures. A `watch(..., { deep: true })` needs a named reason why no narrower
 target exists, written in the diff. Inline object and array literals in a hot template force child
 rerenders — hoist them.
 

@@ -7,7 +7,7 @@ You are building or fixing an app shell: `QLayout` `view`, drawers, a containeri
 ### `QLayout` / `view`
 
 - `view` defines behavior, not decoration: include every section; uppercase changes fixed positioning.
-- Never margin `QLayout`, `QPageContainer`, `QHeader`, `QFooter`, or drawers; use padding or offsets break.
+- Never put a margin on `QLayout`, `QPageContainer`, `QHeader`, `QFooter`, or drawers; use padding instead, because a margin breaks the layout offsets.
 
 ```vue
 <!-- Do --> <q-layout view="hHh lpR fFf"><q-page-container class="q-pa-md"><router-view /></q-page-container></q-layout>
@@ -18,7 +18,7 @@ Search: `view`, `uppercase fixed`, `layout builder`, `margin breaks layout`.
 
 ### Containerized layouts
 
-Use only inside a bounded box; set explicit height/min-height. Drawer breakpoints use container width, not window width. Search: `containerized layout`, `min-height`, `layout container width`.
+Use only inside a bounded box; set an explicit height or min-height. Drawer breakpoints use container width, not window width. Search: `containerized layout`, `min-height`, `layout container width`.
 
 ### `QDrawer`
 
@@ -34,7 +34,7 @@ Search: `overlay mode`, `mini`, `mini-to-overlay`, `no-swipe-close`, `show-if-ab
 
 ### Routing with layouts/pages
 
-The layout should own `QPageContainer` + `<router-view />`; pages own `QPage`. Prefer nested routes to conditional shell swapping. Folder structure is flexible; ownership is not.
+The layout owns `QPageContainer` + `<router-view />`; pages own `QPage`. Prefer nested routes to conditional shell swapping. Folder structure is flexible; ownership is not.
 
 ```js
 const routes = [{ path: '/user', component: () => import('layouts/UserLayout.vue'), children: [

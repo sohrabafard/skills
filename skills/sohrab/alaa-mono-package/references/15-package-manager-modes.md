@@ -6,7 +6,7 @@ Open this file to write or change a dependency specifier for an internal workspa
 
 ## The modes
 
-- **pnpm** (`pnpm-lock.yaml` plus `pnpm-workspace.yaml`): internal dependencies use the **`workspace:*`** protocol — `"@alaa/<x>": "workspace:*"`, or `workspace:^` for a package that is also published. **Never write `link:` or a `file:`/relative path.** Members come from the `packages:` glob in `pnpm-workspace.yaml`. pnpm's isolated, non-flat `node_modules` means a package can import only what it declares, so declare every used dependency explicitly; an import that works because another package hoisted the dependency will break the moment that other package drops it.
+- **pnpm** (`pnpm-lock.yaml` plus `pnpm-workspace.yaml`): internal dependencies use the **`workspace:*`** protocol — `"@alaa/<x>": "workspace:*"`, or `workspace:^` for a package that is also published. **Never write a `link:` specifier, a `file:` specifier or a relative path.** Members come from the `packages:` glob in `pnpm-workspace.yaml`. pnpm's isolated, non-flat `node_modules` means a package can import only what it declares, so declare every used dependency explicitly; an import that works because another package hoisted the dependency will break the moment that other package drops it.
 - **Yarn Berry, v2 and later** (`.yarnrc.yml`): internal dependencies use `workspace:^` or `workspace:*`; commands are `yarn workspace <pkg> <script>` and `yarn workspaces foreach`.
 - **Yarn classic, v1** and **npm**: internal dependencies are `link:` or `file:` specifiers, or `*` resolved through the root `workspaces` field; commands are `yarn workspace <pkg> <script>` and `npm -w <pkg> run <script>`.
 

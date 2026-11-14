@@ -47,7 +47,7 @@ Read every matching row, even when the user named only one surface.
 | A trace-context header, client event or error report | `47-frontend-observability.md` |
 | A UI symptom caused by backend query shape, exact-count cost or missing aggregation | `45-api-and-data-shaping.md` |
 | An animation, transition or CSS feature with uncertain support | `alaa-ui-ux-design-system references/70-motion-contract.md` and `alaa-ui-ux-design-system references/72-modern-css-baseline-tiers.md`; reduced motion is a blocking gate |
-| Lighthouse, PageSpeed, Web Vitals, LCP/INP/CLS/TBT or a score target | `41-lighthouse-and-web-vitals.md` for weighted investigation order and production/mobile/three-run/median proof |
+| Lighthouse, PageSpeed, Web Vitals, LCP/INP/CLS/TBT or a score target | `41-lighthouse-and-web-vitals.md` for the weighted investigation order and for proof from a production build on the mobile profile, three runs, median |
 
 ## Companion ownership routes
 

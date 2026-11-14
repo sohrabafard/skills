@@ -42,7 +42,7 @@ development and wrong in production is a defect that ships quietly.
 ## The single public-path source of truth
 
 The app's public or base path has exactly one source. A framework-generated `BASE_URL` may be read
-directly under the exception above; a project/runtime base is read through the config module and validated
+directly under the exception above; a project or runtime base is read through the config module and validated
 at boot. Asset paths derive from that source; no second copy is written in a component, a router, a service worker
 template, or a stylesheet. A change to it is deploy-critical —
 `/alaa-frontend-devops` `references/30-serving-caching-and-public-path.md`.

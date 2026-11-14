@@ -41,7 +41,7 @@ Re-check them when a new browser Baseline year is published.
 
 ## Package manager
 
-Stay Yarn-first when the repo has a `yarn.lock`. Upstream support for another package manager is not a
+When the repo has a `yarn.lock`, keep Yarn. Upstream support for another package manager is not a
 migration recommendation. A registry check is discovery, never a reason to change the package manager.
 Workspace and package-manager mode questions are `/alaa-mono-package` (`$alaa-mono-package`)
 `references/15-package-manager-modes.md`.

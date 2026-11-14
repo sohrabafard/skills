@@ -6,7 +6,7 @@ You are choosing between two Quasar components, or a component is behaving unexp
 
 ### `QTable`
 
-Use for interactive sorting/filtering/selection/pagination/sticky/grid tables; use `QMarkupTable` for static markup or `QVirtualScroll` table mode for DOM/scroll cost. Set a stable primitive `row-key`; declare `columns` for sorting, slots, or visibility; treat server pagination as data flow, and take the cursor, limit, and error contract from `/alaa-keyset-pagination` (`$alaa-keyset-pagination`), `references/40-wire-contract-limits-and-errors.md`; consider grid mode on mobile.
+Use it for interactive tables that need sorting, filtering, selection, pagination, sticky, or grid behavior; use `QMarkupTable` for static markup, or `QVirtualScroll` table mode when DOM or scroll cost is the problem. Set a stable primitive `row-key`; declare `columns` for sorting, slots, or visibility; treat server pagination as data flow, and take the cursor, limit, and error contract from `/alaa-keyset-pagination` (`$alaa-keyset-pagination`), `references/40-wire-contract-limits-and-errors.md`; consider grid mode on mobile.
 
 ```vue
 <!-- Do: stable key + explicit columns. Don't: object/index key; selection and updates break. -->
@@ -17,7 +17,7 @@ Search: `row-key`, `columns`, `visible-columns`, `selection`, `server-side pagin
 
 ### `QDialog`
 
-Use for focus-taking modal flows, short forms, or confirmations. Prefer the Dialog plugin for programmatic/reused dialogs; use `QMenu`/`QPopupProxy`/`QTooltip` for lighter interactions. Prefer `QCard` as the child (otherwise wrap content in `div`); `position` is independent of `transition-show`/`transition-hide`; `persistent`, `seamless`, and `maximized` change behavior; a containerized `QLayout` needs explicit width/height.
+Use for focus-taking modal flows, short forms, or confirmations. Prefer the Dialog plugin for programmatic or reused dialogs; use `QMenu`, `QPopupProxy`, or `QTooltip` for lighter interactions. Prefer `QCard` as the child (otherwise wrap content in `div`); `position` is independent of `transition-show`/`transition-hide`; `persistent`, `seamless`, and `maximized` change behavior; a containerized `QLayout` needs explicit width/height.
 
 Search: `persistent`, `seamless`, `maximized`, `position`, `transition-show`, `transition-hide`, `backdrop-filter`, `Dialog plugin`.
 
@@ -34,7 +34,7 @@ Search: `emit-value`, `map-options`, `use-input`, `behavior`, `clearable`, `mult
 
 ### `QImg`
 
-Use for responsive images, loading states, ratio, placeholders, fit, captions, and native lazy loading. For player-driven video — adaptive bitrate, subtitles, DRM, offline download — use `/alaa-shaka-player` (`$alaa-shaka-player`), `references/11-vue-quasar-binding.md`, not `QVideo`. QImg: use raw `img` when those ergonomics add nothing. `fit`/`position` map to object-fit/object-position; `srcset`/`sizes` remain native; placeholders help large media; when disabling native context menus, preserve slot pointer events. Load `63-image-delivery-and-placeholders.md` for deterministic delivery/shared placeholders/SSR-safe candidates.
+Use for responsive images, loading states, ratio, placeholders, fit, captions, and native lazy loading. For player-driven video — adaptive bitrate, subtitles, DRM, offline download — use `/alaa-shaka-player` (`$alaa-shaka-player`), `references/11-vue-quasar-binding.md`, not `QVideo`. QImg: use raw `img` when those ergonomics add nothing. `fit`/`position` map to object-fit/object-position; `srcset`/`sizes` remain native; placeholders help large media; when disabling native context menus, preserve slot pointer events. Load `63-image-delivery-and-placeholders.md` for deterministic delivery, shared placeholders, and SSR-safe candidates.
 
 Search: `ratio`, `placeholder-src`, `fit`, `position`, `srcset`, `sizes`, `loading="lazy"`, `context menu`.
 
@@ -57,7 +57,7 @@ Search: `virtual-scroll-item-size`, `slice-size`, `scroll-target`, `items-fn`, `
 
 ### `QLayout`, `QDrawer`, `QPage`, `QPageSticky`, `QPageScroller`
 
-Use for app shells and route pages. Layout and page ownership is stated once, in `references/62-layout-patterns-and-examples.md`. `view` controls fixed/revealed header/footer/drawer behavior. Drawer overlay/mini/mobile behavior changes navigation and focus; sticky/scroller affordances require responsive/a11y review. Layout bugs may instead be router, SSR-state, or container assumptions. Load `62-layout-patterns-and-examples.md` for `view`, containerization, overlay/fixed, and nested routes.
+Use for app shells and route pages. Layout and page ownership is stated once, in `references/62-layout-patterns-and-examples.md`. `view` controls whether the header, footer, and drawers are fixed or revealed. Drawer overlay, mini, and mobile behavior changes navigation and focus; sticky and scroller affordances require a responsive and accessibility review. Layout bugs may instead be router, SSR-state, or container assumptions. Load `62-layout-patterns-and-examples.md` for `view`, containerization, overlay/fixed, and nested routes.
 
 ```vue
 <q-layout view="lHh Lpr lFf">
@@ -76,7 +76,7 @@ Use for a small set of exclusive views; use routing when the URL should own dura
 
 ### `QMenu`, `QPopupProxy`, `QPopupEdit`, `QTooltip`
 
-Use `QMenu` for contextual actions, `QPopupProxy`/`QPopupEdit` for anchored popover/inline editing, and `QTooltip` only for optional lightweight hints. `QPopupProxy` responsively switches `QMenu`/`QDialog`; search `breakpoint` when its small-screen default is wrong. `QDate`, `QTime`, `QColor`, and `QCarousel` get special popup behavior unless wrapped in `div`.
+Use `QMenu` for contextual actions, `QPopupProxy` for an anchored popover, `QPopupEdit` for inline editing, and `QTooltip` only for optional lightweight hints. `QPopupProxy` responsively switches between `QMenu` and `QDialog`; search `breakpoint` when its small-screen default is wrong. `QDate`, `QTime`, `QColor`, and `QCarousel` get special popup behavior unless wrapped in `div`.
 
 Search: `anchor`, `self`, `cover`, `persistent`, `focus`, `keyboard`, `inline edit`, `breakpoint`, `context menu`, `pass-through props`.
 
@@ -93,7 +93,7 @@ Search: `rules`, `lazy-rules`, `debounce`, `mask`, `submit slot click`, `option 
 
 ### `QDate`, `QTime`, `QColor`, `QSlider`, `QRange`, `QKnob`
 
-Use for structured value picking; verify model/format assumptions in SSR/localized apps. Search: `range`, `with-seconds`, `mask`, `options`, `readonly`, `emit-immediately`.
+Use for structured value picking; verify model and format assumptions in SSR or localized apps. Search: `range`, `with-seconds`, `mask`, `options`, `readonly`, `emit-immediately`.
 
 ## Searchable quick index
 

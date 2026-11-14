@@ -6,7 +6,7 @@ You are about to write `v-close-popup`, `v-intersection`, `v-ripple`, or a touch
 
 ### `v-close-popup`
 
-Use inside real child content of `QMenu`, `QDialog`, or `QPopupProxy` to close the nearest popup chain; use direct `v-model` control when no parent-child popup chain exists. No value closes one parent; `v-close-popup="2"` closes multiple levels; chained `QMenu`s count as one level; visually nested sibling dialogs do not share a chain.
+Use inside real child content of `QMenu`, `QDialog`, or `QPopupProxy` to close the nearest popup chain; use direct `v-model` control when no parent-child popup chain exists. With no value, it closes one parent; `v-close-popup="2"` closes multiple levels; chained `QMenu`s count as one level; visually nested sibling dialogs do not share a chain.
 
 ```vue
 <q-menu><q-list>
