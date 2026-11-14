@@ -71,6 +71,8 @@ Use this file when an Ala service or shared frontend package changes `config/per
 - news permissions own bitmap ids `108-119`.
 - auth admin and scope permissions own bitmap ids `120-130`.
 - authz-sidecar (`service_key` `authz`) owns bitmap id `131`: `authz_decision_cache_clear`, the guard of the decision-cache clear route; the generated Go map is compiled into the sidecar.
+- auth admin SMS campaign, TOTP reset, self-service, role and scope admin, registration, super admin exclusion and
+  reports headcount permissions own bitmap ids `132-148`.
 - The `client` frontend is the only registered aggregate consumer. It consumes every active permission in the
   catalog and owns none of them.
 
@@ -93,6 +95,7 @@ Use this compact grouping instead of copying the full catalog into prompts:
 | `108-119`     | `news`    | news send-scope, edit/remove, root, and visibility-diagnostics permissions                    |
 | `120-130`     | `auth`    | auth admin and scope permissions                                                              |
 | `131`         | `authz`   | authz-sidecar decision-cache clear (`authz_decision_cache_clear`)                              |
+| `132-148`     | `auth`    | admin SMS campaign, TOTP reset, self-service, role and scope admin, registration, super admin exclusion, and reports headcount permissions |
 
 ## Companion Skill Boundary
 
