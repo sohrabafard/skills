@@ -70,7 +70,7 @@ def normalise(url: str) -> str:
 
 def fetch(url: str, timeout: int):
     """Return (status, final_url) or raise TransportError when the network cannot answer."""
-    request = urllib.request.Request(url, method="GET", headers={"User-Agent": "signoz-skill-link-check/1"})
+    request = urllib.request.Request(url, method="GET", headers={"User-Agent": "link-check/1"})
     try:
         with urllib.request.urlopen(request, timeout=timeout) as response:
             return response.status, response.geturl()
