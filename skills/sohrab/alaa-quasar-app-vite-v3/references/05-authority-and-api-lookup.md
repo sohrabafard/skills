@@ -4,11 +4,11 @@ You are about to assert an exact prop, event, slot, method, directive value, or 
 
 | Question | Authority | Fallback |
 |---|---|---|
-| Current app behavior | Live code/config/lockfile/tests/runtime | Maintained repo docs |
+| Current app behavior, constraints, conventions and installed line | Live code/config/lockfile/tests/runtime | Maintained repo docs |
 | Local props/events/slots/methods/options | Installed `@quasar/app-vite` project-local `quasar describe` | Installed types/API JSON, then version-matched official docs |
 | Composables/utils and TS shapes | Installed `quasar` exports/types | Version-matched official docs |
-| Current upstream/latest release | Official Quasar docs/releases/npm | Mark unverified; never substitute model memory |
-| Approach/guardrails | This workflow and routed references | Explicitly scoped repo instructions override |
+| Current upstream concepts, releases and upgrades | Official Quasar docs/releases/npm | Mark unverified; never substitute model memory |
+| Approach, guardrails and migration | This workflow and routed references | Explicitly scoped repo instructions override |
 
 On disagreement, report drift and use the authority for that question; never silently replace project truth with a newer docs example.
 

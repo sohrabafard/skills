@@ -38,7 +38,7 @@ export default defineConfig((ctx) => ({
 }))
 ```
 
-Do not: On v3 there is no `.cjs` or `.mjs` config, and v2 `envFolder`/`envFiles` never mix with v3 `build.env.*`.
+Do not: write a `.cjs` or `.mjs` config on v3, or mix v2 `envFolder`/`envFiles` with v3 `build.env.*`.
 
 Search: `defineConfig`, `#q-app`, `ctx.mode`, `ctx.dev`, `ctx.prod`, `build.env.folder`, `envFolder`.
 
@@ -211,7 +211,7 @@ import MyWidget from '@/components/MyWidget.vue'
 import { useUserStore } from '@/stores/user'
 ```
 
-Do not: legacy alias in v3; no `@/` in v2 unless the repository already defines it.
+Do not: use a legacy alias in v3, or `@/` in v2 unless the repository already defines it.
 
 Search: `@/ alias`, `path alias`, `boot/`, `stores/`, `@/../`.
 
@@ -219,7 +219,7 @@ Search: `@/ alias`, `path alias`, `boot/`, `stores/`, `@/../`.
 
 In a Yarn repository use the existing Yarn dev, build, and test scripts. Use a raw `quasar ...` command only when the repository already does or the user asks.
 
-Do: `yarn build`, or the documented script. Do not: `bun install` or `pnpm dev`; `SKILL.md` "Version rules" owns the package-manager rule.
+Do: `yarn build`, or the documented script. Do not: switch to `bun install` or `pnpm dev` because upstream supports them; `SKILL.md` "Version rules" owns the package-manager rule.
 
 Search: `yarn.lock`, `yarn workspace`, `yarn dev`, `quasar command through yarn`.
 

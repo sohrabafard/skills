@@ -41,7 +41,7 @@ Search: `ratio`, `placeholder-src`, `fit`, `position`, `srcset`, `sizes`, `loadi
 ### `QFile` vs `QUploader`
 
 - `QFile`: picking only; it is a native input and cannot be truly prefilled by script. A model display does not mean the native input holds those files.
-- `QUploader`: queue, transport customization, drag/drop, lifecycle. It needs a backend; validate the native `accept`; resumable tus transport and resume matching are `/tusd-upload-platform` (`$tusd-upload-platform`); key hooks are `headers`, `form-fields`, `with-credentials`, `factory`; `batch` changes multi-file transport; custom header/list slots often need `QUploaderAddTrigger`.
+- `QUploader`: queue, transport customization, drag/drop, lifecycle. It needs a backend; validate the native `accept`; resumable tus transport and resume matching are `/tusd-upload-platform`; key hooks are `headers`, `form-fields`, `with-credentials`, `factory`; `batch` changes multi-file transport; custom header/list slots often need `QUploaderAddTrigger`.
 
 Do: use `QUploader` plus `factory`/`headers` for managed authenticated uploads.
 

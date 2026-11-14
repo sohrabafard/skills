@@ -9,7 +9,7 @@ task in front of you. Do not read every file.
 | `pipeline-authoring/20-authoring-defaults.md` | writing or changing a job or a pipeline: its stages, `workflow:rules`, `needs:`, shared `default:` setup, a job split, or a job script |
 | `pipeline-authoring/30-reuse-composition.md` | deciding whether to reuse job text through a hidden job, `extends`, `!reference`, an include or a component, or composing child pipelines |
 | `pipeline-authoring/30-environments-and-rollback.md` | recording a deployment environment or rolling back a deployment |
-| `pipeline-authoring/40-child-pipelines-and-checklist.md` | child pipelines or multi-file layout |
+| `pipeline-authoring/40-child-pipelines-and-checklist.md` | child pipelines or multi-file layout, or finishing any pipeline design: the final authoring checklist |
 | `job-graph-and-scheduling/10-dag-edges-and-critical-path.md` | stage versus DAG ordering, job dependencies or critical-path cost |
 | `job-graph-and-scheduling/20-needs-and-artifacts.md` | writing `needs:`, checking its size limits, or controlling artifact fetching |
 | `job-graph-and-scheduling/30-parallelism-and-resource-groups.md` | `parallel:`, `parallel:matrix`, or a `resource_group` that serializes jobs on a shared resource |

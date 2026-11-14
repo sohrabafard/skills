@@ -14,7 +14,7 @@ Load a skill when the condition in its row holds, and not otherwise.
 | `/alaa-low-noise` | run a repository search, a log tail, or a command whose output would fill the context and bury the signal |
 | `/alaa-cc-orchestrator` | split Go work into specialist lanes with independent verification and review gates in Claude Code |
 | `/alaa-codex-orchestrator` | do the same in Codex |
-| `/alaa-controlled-ops` (`$alaa-controlled-ops`) | run a command that touches a shared system, a live environment, or anything not reversible from the repository |
+| `/alaa-controlled-ops` | run a command that touches a shared system, a live environment, or anything not reversible from the repository |
 | `/alaa-memory-os` | record a drift note, a decision, or context that a later session must find |
 
 ## Delivery and runtime

@@ -41,7 +41,7 @@ When a fact is missing, apply these defaults and say which ones you assumed:
 
 ## Core workflow
 
-Before you open any reference, read `references/00-topic-map.md`. It routes each task situation to one file. Open the
+Before you classify or act on any GitLab CI/CD task, read `references/00-topic-map.md`. It routes each task situation to one file. Open the
 narrowest file that matches and do not read the rest.
 
 1. Classify the task: generate, review, validate, debug, or migrate.

@@ -85,7 +85,7 @@ worker pool or package-level variable.
 Report commands and outcomes using /alaa-go-chi-development
 `../alaa-go-chi-development/references/05-phase-and-source-truth.md`: `passed`, `failed`, `blocked`,
 `skipped`, `not run`.
-Never report an outcome for a command you did not execute.
+Never report an outcome for a gate or command you did not execute.
 Stop successfully only when the requested behavior, required gates and completion answers are established
 in the target repository.
 
