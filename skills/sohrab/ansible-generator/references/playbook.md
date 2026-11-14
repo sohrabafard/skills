@@ -4,9 +4,8 @@ Read this when actually generating anything. `SKILL.md` is the router; this file
 carries the procedure by artifact type, the validation handoff and the delivery
 format. Nothing here restates the body.
 
-The validator this file hands to throughout is `ansible-validator`
-(`/ansible-validator`, `$ansible-validator`); `<ansible-validator>` below stands
-for that skill's directory.
+The validator this file hands to throughout is `/ansible-validator`;
+`<ansible-validator>` below stands for that skill's directory.
 
 ---
 
@@ -193,18 +192,18 @@ environment, and it uses `community.general.archive` rather than
 declared in `requirements.yml`.
 
 How long backups are retained, and what happens when the dump fails, are
-`/alaa-reliability-sla`'s (`$alaa-reliability-sla`). Schema shape and migration
-ordering are `/alaa-data-layer`'s (`$alaa-data-layer`).
+`/alaa-reliability-sla`'s. Schema shape and migration
+ordering are `/alaa-data-layer`'s.
 
 ## 4. Inventories
 
 **Triggered by:** "create an inventory for…", "set up the hosts file".
 
-Start from `assets/templates/inventory/`. INI form for a flat inventory, YAML
-when the group hierarchy is deep enough that `[group:children]` stops being
+Start from `assets/templates/inventory/`. Use INI form for a flat inventory. Use
+YAML when the group hierarchy is deep enough that `[group:children]` stops being
 readable.
 
-- One inventory directory per environment. Sharing one inventory between
+- Use one inventory directory per environment. Sharing one inventory between
   production and staging and switching on a variable means a mistyped `--limit`
   reaches production.
 - Group by function (`webservers`, `databases`), then compose environments with
@@ -274,7 +273,7 @@ could not run is not a gate that passed.
 
 - **A play that applies a Kubernetes manifest** uses `kubernetes.core.k8s` with
   a `definition` sourced from a file. This skill writes the task; it does not
-  write the manifest body. `/alaa-k8s-helm` (`$alaa-k8s-helm`) owns the
+  write the manifest body. `/alaa-k8s-helm` owns the
   manifest and the chart.
 
   ```yaml
@@ -288,14 +287,12 @@ could not run is not a gate that passed.
 
 - **A play that configures a container host** installs the engine, places
   `/etc/docker/daemon.json` and manages the unit. It templates a Compose file
-  authored under `/alaa-docker-production`'s (`$alaa-docker-production`) rules;
+  authored under `/alaa-docker-production`'s rules;
   it does not invent one, and it does not generate Compose YAML inline.
 - **A play that templates an HAProxy configuration** owns the `template:` task,
-  its `validate:` argument and the reload handler. `/alaa-haproxy`
-  (`$alaa-haproxy`) chooses the directives.
+  its `validate:` argument and the reload handler. `/alaa-haproxy` chooses the directives.
 - **A play invoked from a CI job**: the boundary is the `ansible-playbook`
-  command line. The arguments are `/alaa-gitlab-ci-cd`'s
-  (`$alaa-gitlab-ci-cd`); everything the command reads is this skill's.
+  command line. The arguments are `/alaa-gitlab-ci-cd`'s; everything the command reads is this skill's.
 
 ## 9. Troubleshooting the generation loop
 

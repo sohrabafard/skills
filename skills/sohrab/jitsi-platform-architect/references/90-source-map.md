@@ -22,7 +22,7 @@ has; go and read the source, then add the row.
 
 **This ledger could not be refreshed in the session that created it.** That session had no network access to Jitsi
 upstream documentation, which is why most rows below carry `unverified as of 2026-07-27` rather than a read date.
-The 2026-09-29 refresh covers release and rootless/internal-port facts only; other rows retain their original status.
+The 2026-09-29 refresh covers only the release facts and the rootless and internal-port facts; other rows retain their original status.
 
 ## The ledger
 

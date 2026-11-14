@@ -16,8 +16,8 @@ evidence about what the platform operates.
 
 ## When not to use
 
-End-user meeting help, generic WebRTC theory, or another conferencing product unless the task asks for a
-comparison. Editing Jitsi's source, unless maintaining a fork.
+Do not use this skill for end-user meeting help, generic WebRTC theory, or another conferencing product unless the
+task asks for a comparison. Do not use it to edit Jitsi's source unless you maintain a fork.
 
 ## Rules that hold on every task
 
@@ -72,7 +72,7 @@ The script asserts claim shape, never a signature: a signed token can still open
 ## Every deliverable states
 
 - which service mints, what it verifies about its caller, and the lifetime in seconds;
-- how room identifiers are generated, stored, retired;
+- how room identifiers are generated, stored and retired;
 - the recording policy: who may start one, where artifacts land, retention, who is told;
 - where public UDP terminates, how TURN is provided, whether the substrate carries more than one bridge;
 - the peak join rate from the timetable, with the date it was read;

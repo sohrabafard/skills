@@ -23,9 +23,9 @@ Every check in a pipeline appears below with a class; one present in the pipelin
 
 **Static analysis.** Level and baseline live in `phpstan.neon`; the pipeline never passes `--level`, which would let one job disagree with the repository invisibly. A Laravel repository registers the Larastan extension — without it every facade and Eloquent magic call is an error and the level gets lowered to compensate, which is how a repository ends up gating at a level that proves nothing. The baseline may only shrink: a change that adds an entry fails the gate unless that entry is recorded in the deviation register below.
 
-**Coverage.** Measured on every pipeline, by the Postgres parity run or its SQLite fallback, and published as an artifact, never a pass/fail percentage — a percentage rises when code is executed without being asserted on. The mechanical gate over test adequacy is the diff-test obligation row. An existing percentage gate stays and never substitutes for that row; `/alaa-testing-strategy` (`$alaa-testing-strategy`) owns what coverage may evidence.
+**Coverage.** The Postgres parity run or its SQLite fallback measures coverage on every pipeline. Publish it as an artifact, never as a pass/fail percentage, because a percentage rises when code is executed without being asserted on. The mechanical gate over test adequacy is the diff-test obligation row. An existing percentage gate stays and never substitutes for that row; `/alaa-testing-strategy` owns what coverage may evidence.
 
-**Complexity.** Enforced by the static-analysis gate, so it fails a pipeline rather than a comment thread. The per-unit ceiling belongs to `/alaa-php-clean-code` (`$alaa-php-clean-code`), the growth bound to `/alaa-algorithms-data-structures` (`$alaa-algorithms-data-structures`).
+**Complexity.** The static-analysis gate enforces complexity, so a violation fails a pipeline rather than a comment thread. The per-unit ceiling belongs to `/alaa-php-clean-code`. The growth bound belongs to `/alaa-algorithms-data-structures`.
 
 **Dependency advisories.** The scan runs on every pipeline and is a gate; its failing severity is read from a committed policy file, and **a missing policy file fails the job** rather than skipping the scan, because a scan skipped for want of policy is a scan nobody enables. Commit the policy.
 
@@ -33,7 +33,7 @@ Every check in a pipeline appears below with a class; one present in the pipelin
 
 1. `php artisan route:list --json` exits zero and reports no fewer routes than the merge base — a provider that throws during boot drops routes silently.
 2. `php artisan migrate:status` exits zero against the parity database — the shipped configuration reaches Postgres and reads the migration table.
-3. The built artifact, started in the form it deploys in, answers its readiness endpoint from outside its own process; that endpoint's shape belongs to `/alaa-services-contract` (`$alaa-services-contract`).
+3. The built artifact, started in the form it deploys in, answers its readiness endpoint from outside its own process; that endpoint's shape belongs to `/alaa-services-contract`.
 
 `php artisan about` is not a gate: it proves the container booted, and nothing about routes, queues or the database.
 

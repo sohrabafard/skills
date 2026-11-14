@@ -182,7 +182,7 @@ ansible -i <inventory> <host> -m ansible.builtin.command -a 'id' --become -vvv
 - Missing `become`: add `become: true` to the task that needs it, not to the
   play. Escalating the whole play means every read-only command also runs as
   root, and an audit cannot tell which tasks genuinely needed it.
-- Missing sudo password: `--ask-become-pass`, or a vaulted `ansible_become_pass`.
+- Missing sudo password: pass `--ask-become-pass`, or use a vaulted `ansible_become_pass`.
 - Passwordless sudo on the target: scope it to the commands the automation
   actually runs. A `NOPASSWD: ALL` line grants the automation user full root
   over anything on the box, which is a larger grant than the automation needs:
@@ -243,9 +243,9 @@ ansible-playbook <playbook> --check --diff --limit <one-host> -vv
 
 **Smallest retry**
 
-- A read-only command: `check_mode: false` together with `changed_when: false`,
+- A read-only command: set `check_mode: false` together with `changed_when: false`,
   so it runs in a dry run and reports no change.
-- A task that must not run in a dry run: `when: not ansible_check_mode`.
+- A task that must not run in a dry run: guard it with `when: not ansible_check_mode`.
 - A dependent task: check mode cannot see a change that did not happen. This is
   a limitation, not a defect. Report it as such rather than adding
   `ignore_errors`.
