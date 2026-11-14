@@ -30,8 +30,8 @@ carries the reason it is written out, in the source, beside the list.
 
 ## Where the fold runs
 
-The submit pipeline, on the value being sent, for every string field on the form. Not the
-keystroke handler alone, and not the component alone.
+Run the fold in the submit pipeline, on the value being sent, for every string field on the
+form. A fold that runs only in the keystroke handler, or only in the component, is not enough.
 
 - **On submit** is the load-bearing point: the value that leaves the application is folded,
   whatever route it took into the model — typing, paste, autofill, WebOTP, a restored draft,
@@ -41,11 +41,11 @@ keystroke handler alone, and not the component alone.
   It rewrites digits in place and removes no separator, so **it does not make a submit-path
   fold unnecessary**.
 - **A displayed value may be rendered in Persian digits**; that is a rendering decision owned
-  by `/alaa-ui-ux-design-system` (`$alaa-ui-ux-design-system`). A rendering choice never
+  by `/alaa-ui-ux-design-system`. A rendering choice never
   substitutes for folding at the input boundary.
 
-Mode per field: `typed` for a field that holds one number or one code — mobile, OTP,
-national code, postal code — and `text` for everything else. Choose the mode where the field
+Use `typed` mode for a field that holds one number or one code — mobile, OTP, national
+code, postal code — and `text` mode for every other field. Choose the mode where the field
 is declared, not where it is submitted, so a reviewer reading the field sees its mode.
 
 ## The three defects live in the fleet today
@@ -62,8 +62,8 @@ is declared, not where it is submitted, so a reviewer reading the field sees its
 2. **`AdsCodeInput` accepts by category and folds by table.** The OTP component filters with
    `\p{Nd}` (category-derived, correct) and then folds with a 75-entry hand-written family
    table. Any `Nd` code point the table does not list is accepted by the filter and survives
-   the fold unfolded, and is then sent to the server as a non-ASCII "digit". One predicate,
-   one fold, one source of membership.
+   the fold unfolded, and is then sent to the server as a non-ASCII "digit". The fix is one
+   predicate, one fold and one source of membership.
 3. **Two forked copies of the browser package.** `client/packages/digit-normalizer` and
    `entekhabat-front/packages/alaa-digit-normalizer` are byte-different and semantically
    identical, and nothing binds them: no shared package, no corpus, no harness. That is
@@ -87,8 +87,8 @@ or not the in-place rewrite did.
 
 ## Companions
 
-- `/alaa-vue-typescript-clean-code` (`$alaa-vue-typescript-clean-code`): the submit pipeline
-  shape, the composable boundary, and where a form's values are assembled.
-- `/alaa-ui-ux-design-system` (`$alaa-ui-ux-design-system`): the input components, their
-  RTL behaviour, and digit rendering.
-- `/alaa-services-contract` (`$alaa-services-contract`): `maxlength` and every other value.
+- `/alaa-vue-typescript-clean-code`: the submit pipeline shape, the composable boundary,
+  and where a form's values are assembled.
+- `/alaa-ui-ux-design-system`: the input components, their RTL behaviour, and digit
+  rendering.
+- `/alaa-services-contract`: `maxlength` and every other value.

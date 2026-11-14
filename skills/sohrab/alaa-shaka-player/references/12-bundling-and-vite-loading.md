@@ -129,8 +129,8 @@ NodeJS ≥ 18, and a local web server (browsers restrict `file:///` applications
 `python3 build/all.py` or the provided Docker image. `complete_non_experimental = ['+@complete',
 '-@msf', '-@dashJson']`, which is why MSF and DASH-JSON ship only in the experimental build.
 
-**Best practice.** One loader module, one dist path, `.default` unwrapped there, and the worker URL
-produced by the same module. Every other file imports your loader.
+**Best practice.** Keep one loader module that imports one dist path and unwraps `.default`.
+Produce the worker URL in the same module. Every other file imports your loader.
 **Common mistake.** `import shaka from "shaka-player"` and then `shaka.ui.Overlay` — the package
 `main` is the non-UI build, so `shaka.ui` is `undefined` at runtime while TypeScript stays quiet
 because the shipped `types` entry describes that same non-UI build.
