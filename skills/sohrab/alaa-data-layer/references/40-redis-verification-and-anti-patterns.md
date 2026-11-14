@@ -15,7 +15,7 @@ or gone?
   also a contract obligation: `alaa-services-contract` `references/22-failure-load-and-deprecation-contract.md`
   requires that a dependency marked `required: false` in `/api/ready` not fail a product request.
 - **Redis calls are bounded so a sick Redis costs milliseconds.** Why a timeout, a retry budget, a backoff, or a
-  breaker exists and how to shape it is `/alaa-reliability-sla` (`$alaa-reliability-sla`). The env keys and
+  breaker exists and how to shape it is `/alaa-reliability-sla`. The env keys and
   defaults for the Redis budgets are `60-configuration-and-kit-gaps.md`; observed kit settings and their
   re-verification are `51-redis-golang.md`. This file states no number.
 - **Nothing connects to Redis at process start or framework boot as a precondition for serving.** Connections stay
@@ -23,24 +23,24 @@ or gone?
 - **Every lock and every limiter states its behaviour when Redis is unreachable, at its call site.** The deciding
   question is `/alaa-reliability-sla`'s: when this dependency cannot answer, does proceeding without it let
   something through that must not get through? Yes makes it a gate that fails closed, and the review belongs to
-  `/alaa-security-review` (`$alaa-security-review`). No makes it a contributor that fails open, under
+  `/alaa-security-review`. No makes it a contributor that fails open, under
   `/alaa-reliability-sla`. Correctness-critical exclusion is backed by a database constraint, never by Redis alone.
 - **Running without the cache is visible.** Emit the fallback signal; do not let a silent fallback double the
-  database load unnoticed. The metric, event, log-field, and error-code names are `/alaa-services-contract`
-  (`$alaa-services-contract`) `references/24-metric-registry.md`, and when the name you need is not registered
+  database load unnoticed. The metric, event, log-field, and error-code names are
+  `/alaa-services-contract` `references/24-metric-registry.md`, and when the name you need is not registered
   there you request its registration rather than inventing one. Requirement levels, gates, and alerting are
-  `/alaa-observability-soc` (`$alaa-observability-soc`).
+  `/alaa-observability-soc`.
 - **Cold-cache recovery is designed.** After an outage every key is missing at once; the stampede control below is
   what keeps the database standing while it refills.
 
 ## Cache key design
 
-Namespaced and tenant-aware. Shape:
+Cache keys are namespaced and tenant-aware. Use this shape:
 
 - `{app}:{env}:{tenant}:{resource}:{id}:{version}`
 - Example: `comment-service:prod:project_123:thread:01J…:v1`
 - The fleet value of each segment, the ACL pattern, and the registry of every service's key templates are
-  `/alaa-services-contract` (`$alaa-services-contract`) `references/29-redis-key-registry.md`.
+  `/alaa-services-contract` `references/29-redis-key-registry.md`.
 
 Rules:
 
@@ -55,7 +55,7 @@ Rules:
 - Every cache entry has an explicit TTL. `51-redis-golang.md` owns the Go kit's enforcement evidence.
   Reason: an entry with no expiry outlives the truth it copies, and a
   missed invalidation then never heals.
-- Shorter TTLs for volatile data; event-driven invalidation where correctness is strict.
+- Use shorter TTLs for volatile data. Use event-driven invalidation where correctness is strict.
 - Spread the expiry of wide fan-out keys so they do not all expire in the same second. The jitter value is a
   platform value and belongs to `alaa-services-contract`
   `references/22-failure-load-and-deprecation-contract.md`; request its registration there if it is not yet
@@ -79,7 +79,8 @@ Rules:
 Redis locks bound a short critical section. They are an efficiency device: there is no fencing token, so a holder
 paused past its TTL and a new holder can both believe they hold the lock.
 
-- `SET key value NX PX <ttl_ms>`, with an owner token, and a release that checks the token before deleting.
+- Acquire the lock with `SET key value NX PX <ttl_ms>` and an owner token. Release it with a check of the token
+  before the delete.
 - The TTL covers the worst-case critical section plus a margin, because a lock that expires mid-work is
   indistinguishable from no lock at all.
 - Retry with backoff and jitter; shaping that is `/alaa-reliability-sla` `references/20-retries.md`.
@@ -96,8 +97,8 @@ paused past its TTL and a new holder can both believe they hold the lock.
 
 ## Rate limiting
 
-- Token bucket or sliding window, computed atomically — a Lua script or a known-atomic command sequence. A
-  read-then-write limiter under-counts at exactly the concurrency it exists to control.
+- Use a token bucket or a sliding window, and compute it atomically with a Lua script or a known-atomic command
+  sequence. A read-then-write limiter under-counts at exactly the concurrency it exists to control.
 - Limits are tenant-aware, and user-aware where the surface needs it.
 - State the scope, the window or refill rate, and the reject behaviour at the call site. The HTTP status and the
   stable error code for a rejection are `/alaa-services-contract`.
@@ -113,7 +114,7 @@ paused past its TTL and a new holder can both believe they hold the lock.
 ## Definition of done
 
 Report these, and produce the proof rather than describing it. Which level of proof each claim needs is
-`/alaa-testing-strategy` (`$alaa-testing-strategy`) `references/40-proof-strength.md`; this file states which
+`/alaa-testing-strategy` `references/40-proof-strength.md`; this file states which
 claims need proving.
 
 1. Truth versus projection: which tables are truth, which are derived, and the measured evidence behind any

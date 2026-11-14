@@ -20,7 +20,7 @@ Do not difference Delta samples as cumulative counters. Preserve stored label sp
 JSON types; a Query Builder semantic alias does not prove the same raw SQL key exists.
 A missing-label warning is a reason to inspect metadata, not to invent a filter or assume zero.
 Use the target's reduced-table topology; a vendor local-table fix does not authorize a
-single-shard panel on a distributed deployment. PromQL endpoint/provider changes concern a
+single-shard panel on a distributed deployment. Changes to the PromQL endpoint or provider concern a
 separate API, not the milliseconds variables or SQL panel result shape below.
 
 ## Required query prerequisites

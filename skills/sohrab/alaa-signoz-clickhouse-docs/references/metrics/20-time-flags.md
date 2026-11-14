@@ -4,7 +4,7 @@ Read the [signal prerequisites](../clickhouse-metrics-reference.md) before this 
 
 ## Time variables
 
-`{{.start_timestamp_ms}}` and `{{.end_timestamp_ms}}`, both in **milliseconds** — not the second or
+Use `{{.start_timestamp_ms}}` and `{{.end_timestamp_ms}}`. Both are in **milliseconds**, not the second or
 nanosecond variables the logs and traces surfaces use. Filter samples on `unix_milli`.
 
 When reading a lower-granularity time-series table, align the start down to that table's bucket or

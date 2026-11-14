@@ -40,8 +40,8 @@ the implementation once already:
 
 Re-check primary references and runtime behavior when the task mentions:
 
-- latest/current UUIDv7, RFC 9562, Node, browser Web Crypto, PHP, Python, HAProxy, Lua, OpenSSL, FIPS, or crypto-runtime behavior
-- changing encoded length, alphabet, alias normalization, integer strategy, byte order, UUID version/variant validation, or request-id generation
+- latest or current UUIDv7, RFC 9562, Node, browser Web Crypto, PHP, Python, HAProxy, Lua, OpenSSL, FIPS, or crypto-runtime behavior
+- changing encoded length, alphabet, alias normalization, integer strategy, byte order, UUID version and variant validation, or request-id generation
 - applying the helper in an edge/runtime environment with restricted crypto APIs
 
 ## Domain-bounded anti-pattern

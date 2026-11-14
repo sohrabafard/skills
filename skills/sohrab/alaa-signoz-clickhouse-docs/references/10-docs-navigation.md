@@ -8,7 +8,7 @@ Read this when the answer is a documentation page rather than a query, or when t
    `GET /api/v1/version`. A live schema outranks every document: the document describes a release,
    the install is the fact.
 2. **SigNoz source** — the schema migrator in `signoz-otel-collector`, `query-service` in
-   `SigNoz/signoz`. Outranks the docs, because the migrator is what created the tables. Select the application/collector tags through `90-versions.md`; never use `main` as released proof. Cite the file
+   `SigNoz/signoz`. Outranks the docs, because the migrator is what created the tables. Select the application tag and the collector tag through `90-versions.md`; never use `main` as released proof. Cite the file
    and the symbol, never a line number: line numbers move between reads.
 3. **Official SigNoz and OpenTelemetry documentation.** Authoritative for surface behaviour,
    dashboard variables and the documented query idioms.

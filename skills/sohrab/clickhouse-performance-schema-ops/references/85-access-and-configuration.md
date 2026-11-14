@@ -51,12 +51,12 @@ both.
 | server-level and merge-tree settings | the ClickHouse server configuration | whoever operates the cluster; a consumer cannot set them |
 
 Changing anything in the `chkit` rows above means changing `alaa-go-chi` itself, which is governed:
-`/alaa-go-chi-development` (`$alaa-go-chi-development`) owns what may change in the kit, how it is
+`/alaa-go-chi-development` owns what may change in the kit, how it is
 versioned, and how the change reaches consumers. A consumer that needs a `chkit` behaviour the kit
 does not offer files that request there rather than forking the client locally.
 
 A value that appears in none of these rows and that this skill does not state is a platform value:
-take it from `/alaa-services-contract` (`$alaa-services-contract`)
+take it from `/alaa-services-contract`
 `references/22-failure-load-and-deprecation-contract.md`, and request registration there when it is
 missing rather than inventing one.
 
@@ -79,7 +79,7 @@ instance. When a task depends on the answer, ask for one of those two artifacts 
 one you received. Treating an unverified grant as a control is how a read lane turns out to be
 running as `default` with full rights.
 
-Two further properties that need the same evidence and get the same treatment: whether the ingest
+Two further properties need the same evidence and get the same treatment: whether the ingest
 role and the read role are distinct roles, and whether the read role can see databases other than
 the one it queries.
 
@@ -88,12 +88,12 @@ the one it queries.
 Credentials reach the runtime from a secret, never from a file in the repository. On this platform
 the ingest side takes them from a shared secret named by the chart
 (`<repo>/docs/DECISIONS.md` section 10, default `shared-clickhouse-secrets`), and the consumer takes
-from the `CLICKHOUSE_PASSWORD` lane key. A password committed to git outlives the commit that
+them from the `CLICKHOUSE_PASSWORD` lane key. A password committed to git outlives the commit that
 removed it, so the only remedy after an exposure is rotation, and rotation of a shared instance's
 credential affects every service on it — say so in the change request.
 
 Threat classes, fail-closed doctrine, and when a change needs a security review at all:
-`/alaa-security-review` (`$alaa-security-review`), with tenant isolation specifically in
+`/alaa-security-review`, with tenant isolation specifically in
 `references/40-authorization-and-tenancy.md`.
 
 ### Native schema client and access checks
@@ -117,6 +117,6 @@ See `90-source-map.md` for the native client and release sources.
 The kit connects with `github.com/ClickHouse/clickhouse-go/v2` (`go.mod:6`, imported at
 `chkit/config.go:9`). `github.com/ClickHouse/ch-go` is present in the module graph as an **indirect**
 dependency (`go.mod:34`) and is imported by no kit code; it is the low-level client that
-`clickhouse-go` builds on, not a second supported option. `/alaa-golang` (`$alaa-golang`)
+`clickhouse-go` builds on, not a second supported option. `/alaa-golang`
 `references/40-production-ready-package-catalog.md` records the same default and makes `ch-go`
 conditional on a profiled ingest bottleneck. Do not introduce it without that profile.

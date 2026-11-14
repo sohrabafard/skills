@@ -3,11 +3,12 @@
 Read this when a Go service adds or changes Redis usage: a cache in front of a repository read, a lock, an
 idempotency key, or a rate limiter.
 
-This file owns the observed `rediskit` client, timeout/retry/pool, TTL, miss, readiness and optional-mechanism facts.
+This file owns the observed facts about the `rediskit` client: its timeout, retry and pool settings, TTL, miss,
+readiness and optional mechanisms.
 They were read from `alaa-go-chi` source on 2026-07-26, not from a design document
 or a decision log. Re-read the cited file before repeating a claim; `references/source-map.md` says which claims
 are version-sensitive. Cache-aside shape, key naming, serialization, and the Go cache test list are
-`/alaa-golang` (`$alaa-golang`) `references/61-redis-cache-layer.md`; that file is the pattern authority and this
+`/alaa-golang` `references/61-redis-cache-layer.md`; that file is the pattern authority and this
 one does not restate it.
 
 ## Platform policy — cache database reads, not computation
@@ -28,11 +29,11 @@ one does not restate it.
 Caching attaches at the repository seam and nowhere else.
 
 1. The read being cached goes through a repository interface owned by the use case — principle P5 in
-   `/alaa-golang-clean-code-principles` (`$alaa-golang-clean-code-principles`), which forbids a Redis import in
+   `/alaa-golang-clean-code-principles`, which forbids a Redis import in
    `domain` or `application`.
 2. The cache lives in a repository decorator or the use case. A handler that imports the Redis client fails this
    gate.
-3. When the repository layer is incomplete, finish it first through `/alaa-golang` (`$alaa-golang`) and add the
+3. When the repository layer is incomplete, finish it first through `/alaa-golang` and add the
    cache afterwards. Reason: a cache in front of a partial repository has call sites that bypass both the read and
    its invalidation, so readers see a mix of fresh and stale rows with no error anywhere.
 
@@ -84,13 +85,13 @@ registers the Redis check at `SeverityDegraded`, so a Redis blip degrades the po
    `22-…` requires at most one origin computation per cache key in flight per instance, with later callers waiting
    on it until the deadline. `rediskit/doc.go:9` assigns that single-flight to consumer domain code, and
    `golang.org/x/sync` is an indirect dependency in `go.mod` today, but the kit imports no `singleflight`, so adopting it is a direct
-   dependency addition. Take the package decision to `/alaa-golang` (`$alaa-golang`)
+   dependency addition. Take the package decision to `/alaa-golang`
    `references/40-production-ready-package-catalog.md`.
 4. **Whether to add a circuit breaker is a doctrine question, not a configuration one.** The kit contains no
    breaker: `gobreaker`, `redsync`, `redis_rate`, `rueidis`, and any `CircuitBreaker` symbol are absent from every
    `.go` file, from `go.mod`, and from `go.sum`. Whether this dependency warrants one, and how to shape it, is
-   `/alaa-reliability-sla` (`$alaa-reliability-sla`) `references/30-breakers-and-bulkheads.md`. When the answer is
-   yes, decide with `/alaa-go-chi-development` (`$alaa-go-chi-development`) whether it belongs in the kit rather
+   `/alaa-reliability-sla` `references/30-breakers-and-bulkheads.md`. When the answer is
+   yes, decide with `/alaa-go-chi-development` whether it belongs in the kit rather
    than in one service, because a breaker built once per service produces a different outage posture per service on
    one shared Redis.
 5. **Never block startup on Redis.** Construct the client at boot and let the first command discover the outage.
@@ -101,8 +102,8 @@ registers the Redis check at `SeverityDegraded`, so a Redis blip degrades the po
    `ErrMissingTTL` rather than storing it.
 7. **Whether the dependency fails open or fails closed is one question, asked once per call site.** When this
    dependency cannot answer, does proceeding without it let something through that must not get through?
-   `/alaa-reliability-sla` (`$alaa-reliability-sla`) owns that question and the fail-open contributor case;
-   `/alaa-security-review` (`$alaa-security-review`) owns the fail-closed gate case. A cache read is always a
+   `/alaa-reliability-sla` owns that question and the fail-open contributor case;
+   `/alaa-security-review` owns the fail-closed gate case. A cache read is always a
    contributor. A rate limiter in front of an abuse-sensitive surface may not be.
 
 ## Observability
@@ -112,7 +113,7 @@ with a bounded `hit|miss|error` label (`CacheResult`, `metrics.go:53-59`), trans
 durations, and pool statistics; `WithCacheMetrics` and the client's metrics option attach them. A parallel
 service-local counter double-counts the same event under a second name.
 
-Metric, log-field, event, and error-code names are `/alaa-services-contract` (`$alaa-services-contract`); its
+Metric, log-field, event, and error-code names are `/alaa-services-contract`; its
 `references/24-metric-registry.md` is the register. That register lists `alaa_db_*` families for a service with a
 database and lists no Redis cache family today, so a service adopting the kit's Redis metrics requests their
 registration rather than assuming they are covered. Requirement levels, gates, and alerting belong to
@@ -134,8 +135,8 @@ invent a metric name or double-count an outcome already emitted by the kit.
 
 ## Proof this needs before it ships
 
-State the level, then produce it. What counts as a test at each level is `/alaa-testing-strategy`
-(`$alaa-testing-strategy`) `references/40-proof-strength.md`; this file states only which level applies.
+State the level, then produce it. What counts as a test at each level is
+`/alaa-testing-strategy` `references/40-proof-strength.md`; this file states only which level applies.
 
 - The decorator's fallback on a transport error: level 2, a unit test with a fake that returns an error.
 - The cache-hit, clean-miss, and invalidate-on-write paths: level 2.
@@ -144,10 +145,10 @@ State the level, then produce it. What counts as a test at each level is `/alaa-
 
 ## Companion routing
 
-- `/alaa-golang` (`$alaa-golang`) — `references/61-redis-cache-layer.md` cache-aside authority, `60-…` repository
+- `/alaa-golang` — `references/61-redis-cache-layer.md` cache-aside authority, `60-…` repository
   seam, `40-…` package catalog.
-- `/alaa-golang-clean-code-principles` (`$alaa-golang-clean-code-principles`) — P5 ports, P7 idempotency and its
+- `/alaa-golang-clean-code-principles` — P5 ports, P7 idempotency and its
   run-twice proof, P12 boundary tests.
-- `/alaa-go-chi-development` (`$alaa-go-chi-development`) — every change to `rediskit` itself, and the change
+- `/alaa-go-chi-development` — every change to `rediskit` itself, and the change
   requests in `60-configuration-and-kit-gaps.md`.
-- `/alaa-reliability-sla` (`$alaa-reliability-sla`) — timeout, retry, breaker, and degradation doctrine.
+- `/alaa-reliability-sla` — timeout, retry, breaker, and degradation doctrine.

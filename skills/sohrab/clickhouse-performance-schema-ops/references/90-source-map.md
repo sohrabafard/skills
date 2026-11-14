@@ -102,6 +102,6 @@ finding.
 
 ## Community sources
 
-Usable to form a hypothesis about an observed failure, and for nothing else. Confirm against a page
+Use community sources only to form a hypothesis about an observed failure. Confirm against a page
 above or against evidence from the cluster in front of you before any of it becomes a
 recommendation, and say which one confirmed it.
