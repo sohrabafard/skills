@@ -1,6 +1,6 @@
 ---
 name: alaa-ui-ux-design-system
-description: "Use this skill when the task involves UI/UX design decisions: design systems, design tokens, theming, dark mode, color palettes, typography, spacing, layout, landing-page structure, visual style selection, component states and designed failure states, shared component libraries, UX writing and microcopy, RTL and Persian typography, motion language, modern CSS platform features, icons, imagery, favicons, data-viz design, accessibility patterns, render and asset budgets, or design review for Vue/Quasar apps styled with Tailwind or Bootstrap. Do not use it for pure frontend engineering (SSR, hydration, auth, PWA, performance plumbing) with no visual-design decision, for exact Quasar API or config lookup, or when the repo already has a complete design system and the task only applies its existing tokens mechanically."
+description: "UI/UX design-decision layer for Vue and Quasar apps styled with Tailwind or Bootstrap: design systems, design tokens, theming, dark mode, color palettes, typography, spacing, layout, landing-page structure, visual style selection, component states and designed failure states, shared component libraries, UX writing and microcopy, RTL and Persian typography, motion language, modern CSS platform features, icons, imagery, favicons, data-viz design, accessibility patterns, render and asset budgets, and design review. Use it when you design, theme, restyle or review the UI of such an app, or make any of these decisions. Do not use it for pure frontend engineering (SSR, hydration, auth, PWA, performance plumbing) with no visual-design decision (/alaa-frontend-developer), for exact Quasar API or config lookup (/alaa-quasar-app-vite-v3), or when the repo already has a complete design system and the task only applies its existing tokens mechanically."
 ---
 
 # Alaa UI/UX Design System
@@ -16,7 +16,7 @@ The floor is the gate list in `references/90-quality-gates-and-review.md`. No ru
 Stop and route in any of these cases:
 
 - The task carries **no visual-design decision**: frontend engineering, SSR, auth, PWA plumbing or performance work.
-- The task needs an exact Quasar API, prop or config key. Decide by this test: a rule that survives a change of component library is this skill's. A rule that names a Quasar symbol is not, so stop and route it.
+- The task needs an exact Quasar API, prop or config key. Decide with the Quasar seam test in the ownership section below, and stop and route a rule that test assigns away.
 - The repository already has a complete design system and the task only applies its existing tokens mechanically.
 
 The ownership section below names each owner.
