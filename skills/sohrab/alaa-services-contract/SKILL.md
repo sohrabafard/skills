@@ -50,9 +50,11 @@ supplementary paragraph instead. Include only facts supported by current service
 The diagram helps product and engineering liaisons assess requests and database design against the existing model.
 Use a plain `mermaid` fenced code block without custom configuration. End the document there, without explanatory
 prose or an examples table below the diagram.
-If the file is missing and creation is within authorized scope, delegate it to a subagent: use
-`gpt-6.1-terra` at `high` effort in Codex or `opus` at `medium` effort in Claude Code. Respect higher-priority
-instructions and available runtime capabilities; report a blocker if the required delegation is unavailable.
+Whenever this skill is applied in an Ala service repository (one that owns a deployable service) that lacks this
+file, creating it belongs to the current task, even when the request did not name it; this grants no commit, push or
+publication authority. Delegate it to a subagent: use `gpt-6.1-terra` at `high` effort in Codex
+or `opus` at `medium` effort in Claude Code. An explicit read-only, no-file or plan-only instruction still wins; then
+report the file as missing. Report a blocker if the required delegation is unavailable.
 
 1. Read the repo-local `AGENTS.md`. Before touching or surveying another service, read "Paused and retired services" in `references/05-scope-service-modes-and-auth-routing.md`.
 2. Read `references/00-topic-map.md` and pick the service mode.
