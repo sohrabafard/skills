@@ -131,7 +131,7 @@ helm rollback RELEASE REVISION -n NAMESPACE
 bash scripts/render-helm.sh --chart ./helm/CHART --namespace NAMESPACE --values values.yaml
 ```
 
-Usually a wrong chart path, an unbuilt dependency, or YAML indentation inside a template. Nothing reached the cluster, so there is nothing to roll back.
+The cause is usually a wrong chart path, an unbuilt dependency, or YAML indentation inside a template. Nothing reached the cluster, so there is nothing to roll back.
 
 ### 2. ImagePullBackOff or a pull authentication error
 
@@ -167,7 +167,7 @@ Quota exhaustion, a failing probe, and an image pull error all present as "the u
 
 ### 5. Admission denied on create
 
-Almost always a container without resources, or `requests` not equal to `limits`. Migration, init, and hook Jobs are containers too and are the usual omission.
+The cause is almost always a container without resources, or `requests` not equal to `limits`. Migration, init, and hook Jobs are containers too and are the usual omission.
 
 ```bash
 python3 PATH/TO/alaa-k8s-helm/scripts/check_manifests.py build/private/rendered.yaml --profile arvan
@@ -181,8 +181,8 @@ The checker names the container; the LimitRange tells you whether a bound was ex
 The API may be unavailable, disabled, or absent from incomplete discovery; this does not establish the server version. Re-run `bash scripts/verify-cluster.sh NAMESPACE`, have the operator confirm the applicable capability-matrix column from the new evidence, and re-gate. Do not remove the object silently; record what was dropped and what replaces it.
 
 Use `build/private/` as the caller-owned mode-0700 direct output parent. Its ancestors
-must be root/caller-owned and not group/other-writable, except root-owned sticky
-ancestors. An existing caller-owned `build/` at mode0755 can contain this private
+must be owned by root or by the caller and must not be writable by group or others,
+except root-owned sticky ancestors. An existing caller-owned `build/` at mode0755 can contain this private
 child. The helper creates missing parents privately; an existing `build/private/`
 with a different mode or owner blocks. Do not automatically chmod a shared directory;
 choose a fresh private child or resolve its ownership deliberately. The helper writes

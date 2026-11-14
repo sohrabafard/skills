@@ -63,7 +63,7 @@ Rules:
   every rollout; a node IP list is stale the moment a node is replaced. A configuration that names
   any of them breaks silently at the next deploy, and the symptom is a proxy sending traffic to a
   container that no longer exists.
-- One alias per role. A second alias for the same role is a second name to keep in sync, and the two
+- Each role has one alias. A second alias for the same role is a second name to keep in sync, and the two
   diverge.
 
 In Swarm the same property comes from the routing mesh: the service name resolves to a virtual IP

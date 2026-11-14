@@ -44,7 +44,7 @@ Never set `spec.externalIPs`: the field trusts every user in the cluster (CVE-20
 
 ### Ingress
 
-Standard HTTP and HTTPS exposure when an Ingress controller is installed and routing needs are host- and path-based. Confirm the controller exists with `kubectl get ingressclass` before emitting one; an Ingress with no controller is an object that does nothing and reports nothing.
+Use Ingress for standard HTTP and HTTPS exposure when an Ingress controller is installed and routing needs are host- and path-based. Confirm the controller exists with `kubectl get ingressclass` before emitting one; an Ingress with no controller is an object that does nothing and reports nothing.
 
 ### Gateway API
 

@@ -4,7 +4,7 @@ Open this procedure when implementing or auditing the container entrypoint file 
 
 ## 3. The `_FILE` convention
 
-The container-side contract, implemented generically at
+`service-runtime-kit` implements the container-side contract generically at
 `service-runtime-kit/templates/generated/docker/octane/entrypoint.sh:33-36`: for every environment
 variable whose name ends in `_FILE`, read the file it names and export the base name with the file's
 contents.

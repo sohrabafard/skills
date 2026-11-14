@@ -65,7 +65,7 @@ Four further constraints on a probe:
   database marks the whole application unhealthy when the database is briefly slow, so the
   orchestrator kills healthy application containers during a database incident and turns a degraded
   system into an outage. Whether a service should degrade or refuse when a dependency is unavailable
-  is `/alaa-reliability-sla` (`$alaa-reliability-sla`)'s decision; the probe simply must not be the
+  is `/alaa-reliability-sla`'s decision; the probe simply must not be the
   thing that decides it by accident.
 - **It must be cheaper than the work it protects.** Budget: under 50ms of CPU and no allocation
   beyond a few kilobytes.
@@ -186,8 +186,8 @@ proves nothing about whether the scheduler loop is still running.
 ```
 
 `rabbitmq-diagnostics -q check_running` boots the Erlang remote shell and takes seconds;
-`check_port_connectivity` is the cheap form and is what a client actually needs. `start_period: 60s`
-because a RabbitMQ node recovering a large mnesia table genuinely takes that long.
+`check_port_connectivity` is the cheap form and is what a client actually needs. `start_period` is
+60s because a RabbitMQ node recovering a large mnesia table genuinely takes that long.
 
 Shared-infra probes are not optional even though nothing scrapes them: `depends_on:
 condition: service_healthy` cannot be satisfied without one, so an absent probe makes every
@@ -195,7 +195,7 @@ dependent service hang on `up`.
 
 ### One-shot job
 
-No probe. Mark it, so "no healthcheck" is never ambiguous:
+A one-shot job gets no probe. Mark it, so "no healthcheck" is never ambiguous:
 
 ```dockerfile
 # healthcheck-exempt: one-shot provisioning image; it exits, so there is no steady state to probe
@@ -208,13 +208,13 @@ When Docker stops a container it sends `STOPSIGNAL` (default SIGTERM) to PID 1, 
 
 Three things must be true for a graceful stop, and all three are needed:
 
-1. **PID 1 receives the signal.** It is the container's main process, not a shell wrapping it. Exec
-   form everywhere; `exec "$@"` at the end of an entrypoint. This skill's
+1. **PID 1 receives the signal.** It is the container's main process, not a shell wrapping it. Use exec
+   form everywhere, and end an entrypoint with `exec "$@"`. This skill's
    `references/10-dockerfile-authorship.md` §9 states the Dockerfile side.
 2. **PID 1 handles the signal.** PID 1 has no default handlers: an unhandled SIGTERM to PID 1 is
    discarded. Octane and Laravel's queue worker install handlers; a bare `sh -c` loop does not.
-3. **`stop_grace_period` is longer than the longest unit of work.** Not a round number — a
-   derivation:
+3. **`stop_grace_period` is longer than the longest unit of work.** Derive it from the work, not
+   from a round number:
 
 | Role | Longest unit of work | `stop_grace_period` | Why |
 |---|---|---|---|
@@ -240,13 +240,13 @@ noticeably less, the process handled it.
     init: true
 ```
 
-Runs a minimal init process as PID 1, which reaps zombies and forwards signals. Use it when, and
+`init: true` runs a minimal init process as PID 1, which reaps zombies and forwards signals. Use it when, and
 only when, the container's main process spawns children it does not itself reap — a wrapper script
 that backgrounds a helper, a tool that forks. It is not a substitute for correct signal handling: it
 forwards the signal to the main process, which still has to act on it.
 
-Do not add a full supervisor (`supervisord`, `s6`) to run several processes in one container. One
-container, one process: with two, a healthcheck cannot say which one failed and a restart takes down
+Do not add a full supervisor (`supervisord`, `s6`) to run several processes in one container.
+Run one process per container: with two, a healthcheck cannot say which one failed and a restart takes down
 the one that was fine.
 
 ## 6. Diagnosing a probe

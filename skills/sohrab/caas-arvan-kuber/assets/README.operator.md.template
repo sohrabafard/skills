@@ -162,8 +162,8 @@ If a job is forbidden while the Helm release looks healthy, collect both namespa
 `caas-arvan-kuber references/arvan-rbac-namespace-facts.md` holds the model and the current-context identity and permission checks. Do not broaden a RoleBinding before running it.
 
 Use `build/private/` as the caller-owned mode-0700 direct output parent. Its ancestors
-must be root/caller-owned and not group/other-writable, except root-owned sticky
-ancestors. An existing caller-owned `build/` at mode0755 can contain this private
+must be owned by root or by the caller and must not be writable by group or others,
+except root-owned sticky ancestors. An existing caller-owned `build/` at mode0755 can contain this private
 child. The helper creates missing parents privately; an existing `build/private/`
 with a different mode or owner blocks. Do not automatically chmod a shared directory;
 choose a fresh private child or resolve its ownership deliberately. The helper writes

@@ -28,7 +28,7 @@ Empty output is the pass condition. A line ending `_FILE=/run/secrets/...` is co
 path, not a value. Any other match is a credential in the container config, readable by anyone with
 Docker access, and is a finding regardless of how it got there.
 
-For a Swarm service, the same question at the spec level:
+For a Swarm service, ask the same question at the spec level:
 
 ```
 docker service inspect --format '{{range .Spec.TaskTemplate.ContainerSpec.Env}}{{println .}}{{end}}' SERVICE

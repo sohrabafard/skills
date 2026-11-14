@@ -43,7 +43,7 @@ Naming rules that are load-bearing rather than cosmetic:
 - The HTTP-serving service key is `platform-app-php` and it holds the canonical DNS alias
   `<service>-platform-app-php`. Workers and schedulers never hold it. Why, and the alias mechanics,
   are in this skill's `references/50-network-dns-and-exposure.md`. The alias values themselves are
-  `/alaa-services-contract` (`$alaa-services-contract`)'s register.
+  `/alaa-services-contract`'s register.
 - A per-queue worker is `worker-<queue>` and the queue name must be usable as a Compose service-name
   suffix; the generator rejects a queue list containing a name that is not
   (`service-runtime-kit/README.md:122`).
@@ -148,13 +148,13 @@ The default and exception evidence come from `/alaa-security-review`
   app, worker or scheduler service sets it (`user:` appears only on the throwaway `composer` and
   `vendor-sync` services, `render-runtime.sh:1464,1470`), so whether the fleet runs unprivileged
   depends entirely on the ungoverned Dockerfile.
-- **`read_only: true`** with an explicit writable set. For a Laravel service the writable paths are
+- **`read_only: true`** is set, with an explicit writable set. For a Laravel service the writable paths are
   `/tmp` (tmpfs) and the `storage/` and `bootstrap/cache` trees, which are named volumes or bind
   mounts rather than tmpfs because their contents must survive a restart. The observable condition
   that permits omitting `read_only` is: the process writes to a path that is neither in `tmpfs:` nor
   a mounted volume and the path cannot be moved. Record the exact writable paths, workload reason
   and compensating control in the merge request; "the app needs to write" is not that statement.
-- **`cap_drop: [ALL]`** and then `cap_add` only for a capability with a named reason. A PHP or Node
+- **`cap_drop: [ALL]`** is set, and `cap_add` adds back only a capability with a named reason. A PHP or Node
   application server binding port 8000 or 3000 needs none: `NET_BIND_SERVICE` is required only
   below port 1024, which is why the fleet's containers listen on high ports and the proxy publishes
   80 and 443.
@@ -166,8 +166,7 @@ The default and exception evidence come from `/alaa-security-review`
 
 Today `security_opt`, `cap_drop`, `read_only`, `tmpfs` and `pids_limit` appear zero times in
 `service-runtime-kit/scripts/render-runtime.sh`. Threat classification for a specific capability —
-whether adding one back is acceptable — is `/alaa-security-review` (`$alaa-security-review`)'s
-call; expressing the key is this skill's.
+whether adding one back is acceptable — is `/alaa-security-review`'s call; expressing the key is this skill's.
 
 ## 7. Volumes
 
@@ -177,8 +176,8 @@ volumes:
     name: ${DOCKER_VOLUME_PREFIX:-comment}-storage-data
 ```
 
-- A named volume for anything that must survive `down`; a bind mount only for a file the host owns
-  and the container reads (a rendered config, a certificate).
+- Use a named volume for anything that must survive `down`. Use a bind mount only for a file the
+  host owns and the container reads (a rendered config, a certificate).
 - The volume's `name:` is set explicitly rather than left to the project-name prefix, because the
   prefix changes when `name:` at the top level changes and the data is then orphaned rather than
   deleted — the worst of both outcomes.
@@ -201,7 +200,7 @@ volumes:
 The default `json-file` driver has **no size limit**, so a service logging steadily fills the node's
 disk and takes every other container on that node down with it. Every long-lived service sets
 `max-size` and `max-file`. What the container should emit, and which signals are required, is
-`/alaa-observability-soc` (`$alaa-observability-soc`)'s decision; see this skill's
+`/alaa-observability-soc`'s decision; see this skill's
 `references/70-container-observability.md` for the boundary.
 
 ## 9. Worked artifact — a fleet Compose file
@@ -375,10 +374,10 @@ is what deploys anyway.
 
 ## 10. The delivery wrapper
 
-One wrapper, not a page of commands in a README. `service-runtime-kit/scripts/up-local.sh` and the
+Use one delivery wrapper, not a page of commands in a README. `service-runtime-kit/scripts/up-local.sh` and the
 copy it generates are the reference implementation and the rules they follow are these:
 
-- One entrypoint per repository, `scripts/docker/up-local.sh <compose|swarm>`. Extra aliases such as
+- Each repository has one entrypoint, `scripts/docker/up-local.sh <compose|swarm>`. Extra aliases such as
   `dev` or `prod` are permitted when each resolves to exactly one documented mode.
 - **Fail fast on an unsupported mode.** Exit non-zero naming the modes that exist; never fall back
   to another mode.
@@ -394,8 +393,8 @@ copy it generates are the reference implementation and the rules they follow are
   change" without reading the script.
 - Refuse to run without the service `.env` unless an explicit acknowledgement variable is set to
   exactly `true`, and refuse before invoking Docker, because Compose renders required values as
-  empty rather than failing. Shell script structure and portability are `/alaa-bash-shell`
-  (`$alaa-bash-shell`)'s subject; the obligations above are this skill's.
+  empty rather than failing. Shell script structure and portability are `/alaa-bash-shell`'s
+  subject; the obligations above are this skill's.
 
 ## 11. Reviewing a Compose file
 

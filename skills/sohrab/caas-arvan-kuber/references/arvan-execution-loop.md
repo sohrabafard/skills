@@ -21,7 +21,7 @@ Everything generic — chart shape, validation gates, rollout debugging — belo
 Symptom: `helm lint` or `helm template` returns an error, so nothing reached the cluster.
 
 1. `bash scripts/render-helm.sh --chart CHART --namespace NS --values values.yaml` reproduces it deterministically and writes nothing world-readable.
-2. Almost always one of: a wrong chart path, a dependency that was never built (`helm dependency build`), or YAML indentation or quoting inside a template.
+2. The cause is almost always one of: a wrong chart path, a dependency that was never built (`helm dependency build`), or YAML indentation or quoting inside a template.
 3. This is a chart problem, not an Arvan problem. `/alaa-k8s-helm` owns it from here.
 
 ## C. Admission rejected the manifest
@@ -45,7 +45,7 @@ Symptom: `no matches for kind` or `the server could not find the requested resou
 
 This is the alias-versus-canonical case and it has its own file. Collect the evidence and run the existing-context identity and permission checks in `references/arvan-rbac-namespace-facts.md` **before** touching any RoleBinding. Broadening a binding here grants a real permission to the wrong principal and leaves the mismatch in place.
 
-Two adjacent causes to rule out at the same time, both owned by `/alaa-gitlab-ci-cd`: the job pod's pull secrets, and a runner job that tried `kubectl get namespace` or `helm --create-namespace` and died on a scope it never had.
+Rule out two adjacent causes at the same time, both owned by `/alaa-gitlab-ci-cd`: the job pod's pull secrets, and a runner job that tried `kubectl get namespace` or `helm --create-namespace` and died on a scope it never had.
 
 ## F. The rollout never completed
 

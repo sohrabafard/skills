@@ -43,7 +43,7 @@ If any existing Service is `LoadBalancer` and carries `arvancloud.ir/domain`, fo
 
 **Rule, for every chart that renders to Arvan and sets no Pod `fsGroup`, including a chart also targeting OpenShift or OKD that must not fix one:** give each projected file a non-root process reads mode `0444`, through `defaultMode` or a per-item `mode`. `0444` is the safe default whether or not Arvan injects an `fsGroup`. Use `0440` or `0400` only when the Pod sets `fsGroup` or discovery shows the platform injects one. Reason: under the mechanics in `/alaa-k8s-helm` `references/openshift-and-managed-platforms.md`, a `0440` that works on OpenShift through its injected `fsGroup` fails on Arvan at startup with `permission denied`.
 
-**Unverified: Arvan injects no `fsGroup`.** Arvan documents no admission mutation of `runAsUser`, `fsGroup`, or any other securityContext field, and names no Pod Security level (docs.arvancloud.ir searched 2026-09-29). That absence is not proof. Discovery, on a running Pod of the release:
+**Unverified: Arvan injects no `fsGroup`.** Arvan documents no admission mutation of `runAsUser`, `fsGroup`, or any other securityContext field, and names no Pod Security level (docs.arvancloud.ir searched 2026-09-29). That absence is not proof. Run discovery on a running Pod of the release:
 
 ```bash
 kubectl -n NS get pod POD -o jsonpath='{.spec.securityContext}'   # admitted fsGroup and runAsUser, injected or not

@@ -93,8 +93,7 @@ Rule id: `context-copy-before-install`.
 A layer's cache entry is invalidated when its inputs change, and every layer after it rebuilds.
 Therefore instructions are ordered from least likely to change to most likely to change, and the
 dependency manifest and lockfile are copied on their own, before the install, and before the
-application source. The four inbound rules from `/alaa-frontend-devops`
-(`$alaa-frontend-devops`) — layer ordering by manifest and lockfile, layer-invalidation avoidance,
+application source. The four inbound rules from `/alaa-frontend-devops` — layer ordering by manifest and lockfile, layer-invalidation avoidance,
 multi-stage separation, image minimisation — are all instances of this one economic fact, and
 "do not copy the full repo before dependency install" is the specific violation that costs the most.
 
@@ -138,14 +137,14 @@ Three corollaries.
 
 Rule ids: `single-stage`, `final-stage-build-tooling`.
 
-At least two `FROM` instructions. The build stage holds the compiler, the package manager, the
+The Dockerfile has at least two `FROM` instructions. The build stage holds the compiler, the package manager, the
 development dependencies and the source tree; the final stage receives only the artifacts, by
 `COPY --from`.
 
-The testable predicate — the form `/alaa-frontend-devops` (`$alaa-frontend-devops`) already states
-as an obligation at its `references/20-ci-gates-and-predicates.md:44`, whose *how* is this section:
-**the final image contains no package manager binary, no compiler, and no development
-dependency.** Verify it against a built image rather than by reading the Dockerfile:
+The testable predicate is: **the final image contains no package manager binary, no compiler, and
+no development dependency.** `/alaa-frontend-devops` already states this predicate as an obligation
+at its `references/20-ci-gates-and-predicates.md:44`; this section owns how the image meets it.
+Verify it against a built image rather than by reading the Dockerfile:
 
 ```
 docker run --rm --entrypoint sh IMAGE -c 'command -v apt-get apk yum gcc cc make composer npm; exit 0'
@@ -251,7 +250,7 @@ The key set is the OCI predefined annotation list
 `BUILD_DATE` must be passed as an RFC 3339 timestamp; leaving it defaulted is preferable to writing
 a wrong value, because a timestamp that changes on every rebuild also changes the image digest and
 destroys the cache for every consumer of the image. Whether the pipeline passes these arguments is
-`/alaa-gitlab-ci-cd` (`$alaa-gitlab-ci-cd`)'s call; the `LABEL` instruction is this skill's.
+`/alaa-gitlab-ci-cd`'s call; the `LABEL` instruction is this skill's.
 
 ## 8. `USER`, and what runs as root
 
@@ -300,8 +299,8 @@ Rules:
   `/bin/sh -c`, which becomes PID 1 and does not forward signals to its child.
 - An entrypoint script ends with `exec "$@"` or `exec <command>`, so the real process replaces the
   shell and becomes PID 1 itself.
-- `STOPSIGNAL SIGTERM` is the default and is written explicitly when the process needs a different
-  signal — `STOPSIGNAL SIGQUIT` for an nginx front, which treats SIGQUIT as graceful shutdown and
+- SIGTERM is the default stop signal. Write `STOPSIGNAL` explicitly when the process needs a
+  different signal — `STOPSIGNAL SIGQUIT` for an nginx front, which treats SIGQUIT as graceful shutdown and
   SIGTERM as fast shutdown.
 - `ENTRYPOINT` holds what always runs; `CMD` holds the default arguments a Compose `command:` key
   overrides. This matters directly here: `service-runtime-kit` sets `command:` on every worker
@@ -356,8 +355,8 @@ Exceeding a budget is not automatically a defect; shipping past it without namin
 The merge request states which layer grew and why. `docker history --no-trunc IMAGE` orders layers
 by size and names the instruction that created each one, which identifies the cause in one command.
 
-Whether a size budget gates a pipeline is `/alaa-frontend-devops` (`$alaa-frontend-devops`)'s
-decision for frontend images and `/alaa-gitlab-ci-cd` (`$alaa-gitlab-ci-cd`)'s to express; the
+Whether a size budget gates a pipeline is `/alaa-frontend-devops`'s decision for frontend images
+and `/alaa-gitlab-ci-cd`'s to express; the
 numbers above are this skill's, and they are what a gate would assert.
 
 ---
@@ -485,13 +484,12 @@ time, because the cached configuration would freeze the environment variables pr
 build rather than the ones present at runtime; that belongs in the entrypoint, after the `_FILE`
 secrets are loaded (this skill's `references/35-secret-delivery.md`). And it does not install
 extensions: `octane-base` carries `swoole`, `pdo_pgsql`, `redis` and `intl`, which is what makes
-this Dockerfile short. Extension selection and Octane tuning are `/alaa-octane-performance`
-(`$alaa-octane-performance`)'s subject; installing them into an image is this skill's.
+this Dockerfile short. Extension selection and Octane tuning are `/alaa-octane-performance`'s
+subject; installing them into an image is this skill's.
 
 ## Worked artifact B — Node SSR frontend runtime
 
-The frontend delivery gates that this image must satisfy are `/alaa-frontend-devops`
-(`$alaa-frontend-devops`)'s register; how the image satisfies them is below.
+The frontend delivery gates that this image must satisfy are `/alaa-frontend-devops`'s register; how the image satisfies them is below.
 
 ```dockerfile
 # syntax=docker/dockerfile:1

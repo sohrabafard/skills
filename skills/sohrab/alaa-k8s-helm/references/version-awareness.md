@@ -93,7 +93,7 @@ The externalIPs timeline was verified 2026-09-26 at https://kubernetes.io/blog/2
 
 ## Check sequence before version-sensitive advice
 
-Run the smallest authorized set that answers the question. For offline authoring or prohibited cluster access, use supplied target evidence and local client versions, mark server/API evidence unknown, and do not run discovery commands:
+Run the smallest authorized set that answers the question. For offline authoring or prohibited cluster access, use supplied target evidence and local client versions, mark server and served-API evidence unknown, and do not run discovery commands:
 
 ```bash
 helm version
