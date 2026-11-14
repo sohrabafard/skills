@@ -139,7 +139,7 @@ deleting a rejected `Authorization` header before proxying.
 
 ### The dropped-bearer marker
 
-Owner ruling, 2026-11-14. Read its shipping status in `references/90-source-map.md`
+Owner ruling, 2026-11-14. Read its shipping status in `alaa-services-contract references/95-fleet-conformance.md`
 before you describe it as live.
 
 - The gateway sets the marker on a public-path response only when it dropped a

@@ -341,8 +341,8 @@ service, and both deny.
 - **Deny when `X-TOTP-VERIFIED-UNTIL` parses to an instant at or before now**, and
   never re-apply clock skew, because the gateway already applied it and
   re-applying widens the real lifetime past what the operator configured.
-- **Deny when a step-up header arrives on a request the gateway did not
-  authenticate**, because the gateway processes a proof only alongside an accepted
+- **Deny when any of the three step-up headers arrives on a request the gateway
+  did not authenticate**, because the gateway processes a proof only alongside an accepted
   bearer, on a public path as on a protected one.
 - **Deny when the gateway is unreachable or the request arrived on a bypassing
   path**, because a step-up header carries no signature a service can check and
