@@ -5,8 +5,9 @@ description: >
   concise reply. Use for coding, bug fixes, refactoring, reviews, dependency
   choices, or requests for "ponytail", "alaa-ponytail", "be lazy", YAGNI,
   the simplest solution, or less over-engineering and bloat. Levels: lite,
-  full (default), ultra. Do not replace repository-specific architecture,
-  code-intelligence routing, security, or testing rules. Instruction-only:
+  full (default), ultra. Do not use it to replace repository architecture
+  rules, /alaa-code-intelligence-routing, /alaa-security-review or
+  /alaa-testing-strategy. Instruction-only:
   no hooks or implicit subagent propagation.
 license: MIT
 ---
@@ -19,7 +20,7 @@ When activated directly or through a workflow binding, apply this mode to the cu
 
 ## When NOT to use
 
-Do not replace repository conventions or the active owners of architecture, code-intelligence/tool routing, security and validation. Minimize unnecessary implementation, not required scope or proof.
+Do not replace repository conventions or the active owners of architecture, code-intelligence and tool routing, security and validation. Minimize unnecessary implementation, not required scope or proof.
 
 ## Before you write
 
