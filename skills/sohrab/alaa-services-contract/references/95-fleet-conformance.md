@@ -56,7 +56,7 @@ Source review at deploy commit `63f6b721f3c610f06fe3a94732a15b8e09cc166b`, with 
 | Surface | Observed source and limit | Owner evidence in deploy |
 |---|---|---|
 | Shared development stack | Defines PostgreSQL, Redis, RabbitMQ and Adminer; no ClickHouse service in this file. This is a local bootstrap gap, not evidence ClickHouse is absent elsewhere. Image pins belong to the manifest, not this snapshot. | `<repo>/docker-compose-dev-only-infra.yaml`; `<repo>/docs/readme/20-local-infrastructure.md` |
-| Central Compose | Treats ClickHouse as external infrastructure. `clickhouse: {}` enables egress, infrastructure host mappings and CA integration; it creates no server and derives no connection env. | `<repo>/scripts/lib/central_compose_assembly.py`; `<repo>/docs/service-contract/25-clickhouse-delivery.md` |
+| Central Compose | Treats ClickHouse as external infrastructure. `clickhouse: {}` enables egress, infrastructure host mappings and CA integration; it creates no server and derives no connection env. Superseded by the 2026-11-14 owner ruling below: a service derives its ClickHouse address inputs through `sharedInputs`; not re-read in deploy source. | `<repo>/scripts/lib/central_compose_assembly.py`; `<repo>/docs/service-contract/25-clickhouse-delivery.md` |
 | ClickHouse schema delivery | Compose schedules the job before workloads; skip depends on a matching previous successful published digest and fresh history. Kubernetes has a separate operator Job and release-script evidence check using Job UID, image digest and contract SHA. These capabilities do not establish WA registration or a successful target run. | `<repo>/scripts/lib/central_compose_deploy.py`; `<repo>/docs/service-contract/25-clickhouse-delivery.md` |
 | Infrastructure certificates | Compose has manual collection, operator fingerprint verification and container CA injection for PostgreSQL, Redis, RabbitMQ and ClickHouse. Kubernetes parity for this CA workflow is proposed, not implemented. Host OS trust is not changed. | `<repo>/scripts/lib/central_infra_certs.py`; `<repo>/docs/delivery-topology/80-trust-and-versioning.md` |
 | Persistence and recovery | Development services use persistent volumes and healthchecks; Redis uses AOF and RabbitMQ a stable hostname. Ordinary `down` retains volumes; volume removal is destructive. Central Compose has process restart policies, not unhealthy-container autoheal. No ClickHouse backup/restore or recovery-objective proof was collected. Deploy-directory backups may contain secrets and need encryption or exclusion. | `<repo>/docs/readme/20-local-infrastructure.md`; `<repo>/docs/delivery-topology/40-runtime-and-migrations.md`; `<repo>/docs/runbook/74-central-compose/30-host-and-recovery.md` |
@@ -124,6 +124,19 @@ and `30-trusted-ingress-and-laravel-contract.md`. No runtime was observed.
 | `gateway` | Conforms in local commits: optional bearer on every public path, one public list in every profile, WA under `/wa`, no `/wa-reports`. Behind: the dropped-bearer marker is decided and not shipped; on 2026-11-14 it was uncommitted work in the gateway checkout (Beads `alaa-q23xo`). | gateway `4de96f3`, `0ffc1e5`, `df5ba2d`, `52f9edd`; `<repo>/docs/BIG_PICTURE.md` |
 | `wa` | Conforms in local commits: guest tenant from the envelope, user id only from `X-User-Id`, location scope captured, trusted user and scope discarded on a guest batch. Behind: Vector still listens on `/ingest/v1/events` while the gateway forwards `/wa/ingest/v1/events` (Beads `alaa-8sg2v`). | wa `7c21e51`, `8c64286`; `<repo>/docs/DECISIONS.md` decision 35; `<repo>/vector/wa-vector.yaml` |
 | client | Conforms in local commits: the envelope project field on every WA envelope, the `consumes.apiPrefixes` list, and the SDK's reaction to the marker. | client `71487628`, `05f5001a`, `aacf4adc`; `<repo>/deploy/service.yaml` |
+
+## 2026-11-14 owner rulings
+
+Source reading only where a commit is named; no runtime was observed and no deployment is confirmed. The rules
+live in `alaa-trust-gateway-auth` references `10`, `20`, `40` and `50`, `15-deployment-and-runtime-contract.md`
+and `30-trusted-ingress-and-laravel-contract.md`.
+
+| Surface | Observation | Evidence |
+|---|---|---|
+| `X-Admin-Scopes`: `asc` projection, sanitize on every route, service readers | Gateway projection and sanitize: source reading in local commits. Readers: unverified; the `alaa-go-chi` kit's `TrustCtx.AdminScopes()` was not read here, and no service reader was surveyed. | gateway `c0230d4`, hardened `3527962` |
+| `Authorization` deleted before WA ingest | Source reading in a local commit. Deletion on every other public path except logout is planned after launch. | gateway `a8f4d7d` |
+| ClickHouse fleet variables (`CLICKHOUSE_HOST`, `CLICKHOUSE_PORT`, `CLICKHOUSE_HTTP_PORT`, `CLICKHOUSE_TRANSPORT`) | Unverified: no kit configkit, deploy `sharedInputs` or consumer source was read. | none |
+| Class `go` naming in `deploy/service.yaml` (`serviceNameIsRelease`, `<service>-<workload>`, `{serviceName}:{containerPort}`) | Unverified: no deploy, gateway or consumer source was read. | none |
 
 ## How to refresh this file
 
@@ -502,10 +515,12 @@ by naming the component that renders each surface.
    render error bodies, so the gateway renders `4xx`/`5xx` for `/wa/*`, and `wa`'s `AGENTS.md` records that
    the gateway owns it. Rule: `10-core-service-contract.md`, empty-body clause. Evidence:
    `vector/wa-vector.yaml:12-29`.
-2. **Serve the probe paths or alias them explicitly.** `GET /health` on `8687` answers today and the gateway
-   aliases `/wa/api/ready` to it. Record that mapping in the `wa` repository, and align the Kubernetes probes,
-   which are TCP checks on the ingest port and therefore prove only that a socket is open. Rule:
-   `10-core-service-contract.md`, frozen surfaces clause. Evidence: `charts/wa/templates/deployment.yaml:67-76`.
+2. **Serve the probe paths or alias them explicitly.** `GET /health` on `8687` answers, and the gateway aliases
+   `/wa/api/ready` to it; `wa` records the mapping (ownership record 2, decision 41, constitution 5.0.0). The
+   chart readiness probe is `httpGet /health` when `service.exposeHealthPort` is true, the default; liveness and
+   startup stay TCP on purpose. Gap: a `200` passes Vector's health body, which is not the readiness envelope.
+   Rule: `10-core-service-contract.md`, frozen surfaces clause. Evidence:
+   `<repo>/charts/wa/templates/deployment.yaml:86-113`, `<repo>/charts/wa/values.yaml:24`.
 3. **Read and store `traceparent`.** `X-Request-Id` is stored; trace context is neither read nor stored, so a
    watch event cannot be joined to the request that produced it. Rule:
    `20-operational-and-observability-contract.md`. Evidence: `vector/wa-vector.yaml:44-48`;
