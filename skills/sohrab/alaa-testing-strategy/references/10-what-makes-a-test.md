@@ -68,7 +68,7 @@ Check a test, a suite and a test plan against each item.
 - repairing the product in response to a shell, container-runtime, permission, or stale-cache failure that was never classified;
 - deleting or weakening an assertion so a test can run in a constrained environment, instead of recording the level not reached and the blocker;
 - a consumer test re-proving framework, kit, package, or vendor behaviour, which passes against every implementation the consumer can ship;
-- a test for a failure that cannot reach this project's code under *Reachable failure*, which charges its cost forever and defends nothing;
+- a test for a failure that cannot reach this project's code under `SKILL.md` *Reachable failure*, which charges its cost forever and defends nothing;
 - an engine, container, migration, or application boot created per test, which multiplies the suite's cost by its test count;
 - a test reachable only through the whole-suite command, which makes every change pay for the whole suite;
 - a build, compile, type check, render, or image produced twice in one pass, which charges the build again for no new information.

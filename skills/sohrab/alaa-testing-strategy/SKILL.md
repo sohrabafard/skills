@@ -222,4 +222,4 @@ Stop and report blocked when any one of these holds:
 
 ## Reference routing
 
-Before reading any reference, read `references/00-topic-map.md`; it names the condition under which each reference is read. Before you assert a contract value, design fault injection, test a security control or write a request test, read its *Owned by another skill* section. When you review an existing test, suite or test plan, read `references/10-what-makes-a-test.md` *Anti-patterns*.
+Before reading any reference, read `references/00-topic-map.md`; it names the condition under which each reference is read. Before you assert a contract value, design fault injection, test a security control or write a request test, read its *Owned by another skill* section. When you design, review or execute a test, a suite or a test plan, read `references/10-what-makes-a-test.md` *Anti-patterns*.

@@ -108,8 +108,7 @@ Read a file below when the task needs an item its entry names, or when its entry
 
 ## Owned by another skill
 
-Where a rule in this skill and a rule in one of these skills disagree, the skill named below wins for its half.
-Maintainers delete the weaker statement in this skill rather than keep it as a second opinion.
+`SKILL.md` owns the conflict rule for these owners. Maintainers delete the weaker statement in this skill rather than keep it as a second opinion.
 
 - **`alaa-observability-soc`** owns every observability requirement level, gate, threshold, alert, Collector
   topology and processor placement, metric label allow and deny list, resource-identity policy, exemplar
@@ -151,12 +150,12 @@ Maintainers delete the weaker statement in this skill rather than keep it as a s
 
 ## Maintenance rules
 
-- Keep this file routing-first; every exact contract detail lives in `references/`.
+- Keep `SKILL.md` routing-first; every exact contract detail lives in `references/`.
 - State each rule in exactly one file. When a rule appears twice, delete the weaker statement and leave a
   one-line pointer to the owner.
 - Change a route, header, event, code, metric, permission, or queue name only through the deprecation
   procedure in `references/22-failure-load-and-deprecation-contract.md`.
-- Never pin a tool, kit, or library version here. Name the skill that owns the version instead, because a
+- Never pin a tool, kit, or library version in this skill. Name the skill that owns the version instead, because a
   version pin in a contract file goes stale silently and is then copied forward as authoritative.
 - When a change touches a contract owned jointly with a companion skill, update that skill in the same
   effort and record the split in *Owned by another skill* above.

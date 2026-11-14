@@ -5,32 +5,32 @@
     {
       "name": "alaa-accessibility-reviewer",
       "file": "agents/alaa-accessibility-reviewer.toml",
-      "sha256": "d969766a624e3be8ffce02693d108e2773ca88ef4cffc6a6f284b42d2edd97ed"
+      "sha256": "2f74b7de33afd15d0d44d4aff3beda2f23d038557eeca3bed8f1c5ab7ddc2987"
     },
     {
       "name": "alaa-adversarial-reviewer",
       "file": "agents/alaa-adversarial-reviewer.toml",
-      "sha256": "8c5de0850237ed7aa6dbd54d18f4d6bad58b2b9bd34d824e737f4d736bbc868a"
+      "sha256": "6a49f8418b822dde3db728baf58e3be144bed89d9b4c48056592be078f04e30b"
     },
     {
       "name": "alaa-api-contract-reviewer",
       "file": "agents/alaa-api-contract-reviewer.toml",
-      "sha256": "941f882a7a23610ad1b856c6ff43c8c525b35949ec5df436612ddab531a2ce11"
+      "sha256": "3503c3d3f0b6108ad28f73a82fbff1b9e927b6d8ab35f693256fdeb98507e638"
     },
     {
       "name": "alaa-architecture-critic",
       "file": "agents/alaa-architecture-critic.toml",
-      "sha256": "53b72d9a75c8d04cae0e567fa78ba1d05156f4b1cd7fbbc04d7f0bd8fd9d7a2c"
+      "sha256": "4418ae0817727e5d88a75836f83ffd66abb4f93ef9c57a7fa9f7dfdf3ab13bfc"
     },
     {
       "name": "alaa-browser-qa",
       "file": "agents/alaa-browser-qa.toml",
-      "sha256": "ef12f0d7429d47e538054394778ddd64d801d6e6387af5c06d54a8e2cee54163"
+      "sha256": "514d18c610c04b63e3462cae8d4469bd54eea35b32cad9d6a79ba82694a257b4"
     },
     {
       "name": "alaa-dependency-auditor",
       "file": "agents/alaa-dependency-auditor.toml",
-      "sha256": "0f08005ee49521daf70f436163c991d1f1e39d381299f304bf9f6715f9ae2d33"
+      "sha256": "b8b173b344fbca317d8e237d3b0a2d9bec82fc18d0e9d378ee036e227af82b9c"
     },
     {
       "name": "alaa-documenter",
@@ -100,22 +100,22 @@
     {
       "name": "alaa-instruction-reviewer",
       "file": "agents/alaa-instruction-reviewer.toml",
-      "sha256": "facfb7b6995a19cb99bdd70a58a653b6c194d8cd0e80a7a600562c84c41d0406"
+      "sha256": "d87f1439fb6ded6b4532609eb8a24612110f33995b6aa1c7c6b18e4cff6c77ef"
     },
     {
       "name": "alaa-migration-guardian",
       "file": "agents/alaa-migration-guardian.toml",
-      "sha256": "2a7aae802693b89d39881e8d37d6933d7dc42b0b6c69cc2854b994cdeb5cb1d2"
+      "sha256": "c417a7c398ba66009e7960085a14a50ce694f23643ab6eae31d2e92475f699f1"
     },
     {
       "name": "alaa-observability-reviewer",
       "file": "agents/alaa-observability-reviewer.toml",
-      "sha256": "f13d7c79b25406df131bf6a38218ceebb42dcfd945b541e7f3415b6009d59817"
+      "sha256": "c73e21d04a0bfe8958cb129b7062b41050b031848cec6ea299b262758f1de5db"
     },
     {
       "name": "alaa-performance-profiler",
       "file": "agents/alaa-performance-profiler.toml",
-      "sha256": "2355323953418d65151b9b8a0493e0502be43730fe043c7e5f73efa1bee59ca9"
+      "sha256": "422d73a7b27e4dd590696dc2aeaee01dc73c15b481799cc1b22f2dfbebc78b5a"
     },
     {
       "name": "alaa-planner-high",
@@ -130,7 +130,7 @@
     {
       "name": "alaa-release-guardian",
       "file": "agents/alaa-release-guardian.toml",
-      "sha256": "de96eb4378d75e015c20b8013e22ed808633450290c6d9bd36ff56acb522f68b"
+      "sha256": "405def379313337bb1ed6e166b735d62080ced103a000de763aaf9ecae550d51"
     },
     {
       "name": "alaa-researcher",
@@ -140,17 +140,17 @@
     {
       "name": "alaa-reviewer-deep",
       "file": "agents/alaa-reviewer-deep.toml",
-      "sha256": "a841637ad00c77ba01d0d9daa8c49d8c9f16a3fcb43b88319bf67b9f1daa14ca"
+      "sha256": "bd2847a4f6808c69e1ef231522e5e039e09d80594483851abcff69ec4524fd1d"
     },
     {
       "name": "alaa-reviewer",
       "file": "agents/alaa-reviewer.toml",
-      "sha256": "841cd6ae264d5696dd8a23b84dd7c046ee7fffad8a828f75f1542ebc5fb4f0e1"
+      "sha256": "0eb335c6678848b57b7f50b436d26d4aec6e5531181f086132a0b06a20d54f84"
     },
     {
       "name": "alaa-security-reviewer",
       "file": "agents/alaa-security-reviewer.toml",
-      "sha256": "a901b468e3ee4b25d955724c9e1e57fb17b5ec07e610138301e96b7af967f608"
+      "sha256": "748177b1f6d187e93015ca67caf4d90f241dbe493b2c872ae243f2d7c5b8c5e4"
     },
     {
       "name": "alaa-spec-analyst",

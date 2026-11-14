@@ -68,7 +68,7 @@ Every managed role starts its report with one fixed line, and the lead routes on
 | `STATUS: INCOMPLETE` | The same roles, when work ended before the completion condition | Read the named remainder, then continue the same agent or reassign the remainder; never accept the lane |
 | `STATUS: BLOCKED` | Any role, when a required dispatch input, an authority or a dependency is missing | Supply the named input to the same agent, or reclassify the lane; a gate that returned it has judged nothing |
 
-A missing report, `STATUS: BLOCKED` or `STATUS: INCOMPLETE` blocks acceptance of that lane even without findings. Each gate report ends with `NOT ASSESSED`; a verdict covers only the inspected scope, so an entry there that touches the declared scope leaves that part ungated. The role templates under `delegation-prompts.md` name each role's required dispatch inputs. `alaa-browser-qa` also has `VERDICT: BLOCKED`, which reports an observed environment block, not a missing input.
+A missing report, `STATUS: BLOCKED` or `STATUS: INCOMPLETE` blocks acceptance of that lane even without findings. Each gate report ends with `NOT ASSESSED`; a verdict covers only the inspected scope, so an entry there that touches the declared scope leaves that part ungated. The role templates under `delegation-prompts.md` name each role's required dispatch inputs. `alaa-browser-qa` also has `VERDICT: BLOCKED`, which reports an observed environment block, not a missing input. A verdict token that is neither a pass nor a fail (`INCONCLUSIVE`, `FLAKY`, `VERDICT: BLOCKED`) leaves its gate open: treat the gate as not passed, then resolve the named gap or report it to the user.
 
 ## External companion admission
 

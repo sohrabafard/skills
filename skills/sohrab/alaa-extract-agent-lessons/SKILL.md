@@ -32,7 +32,7 @@ Reject or merge candidates failing any gate.
 
 An explicit user correction or choice evidences that user's or team's judgment within its stated scope, not universal correctness. Patterns inferred from accepted/rejected work stay advisory and labelled inferred.
 
-A caution candidate holds an action back. It must state its scope and its reason; reject it when either is missing. When the agent keeps the action through approval, write "ask for approval before <exact action>", not "never <action>", because a "never" rule blocks routine work the task needs. Keep "never" only for a true invariant, with its reason. When the reason of a caution no longer holds, reject the candidate. When that caution is already published, report it to /alaa-memory-os as a candidate for status `stale`, with the expired reason and its evidence; that owner keeps the write authority.
+A caution candidate holds an action back. Write it in the shape that `alaa-memory-os references/knowledge-shape.md` *Cautions and prohibitions* owns, and reject a candidate that states no scope or no reason. When the reason of a caution no longer holds, reject the candidate. When that caution is already published, report it to /alaa-memory-os as a stale note, with the expired reason and its evidence; that owner keeps the write authority and sets the status.
 
 ## Choose the reusable form
 
@@ -60,7 +60,7 @@ Report:
 - retained candidates by form
 - each candidate's provenance, authority and destination
 - merged/rejected candidates, each with a short reason
-- notes created, updated, reported as `stale` candidates, or deliberately unwritten
+- notes created, updated, reported as stale, or deliberately unwritten
 - promotion or drift still needing an owner
 
 Stop successfully when every admitted candidate has one form, scoped authority, source pointer,

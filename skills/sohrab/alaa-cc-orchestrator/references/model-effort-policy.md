@@ -10,7 +10,7 @@ This file alone owns orchestration defaults for this runtime; capability registr
 
 Claude Code default: `model = claude-opus-5-5`, `effort = medium`.
 
-The Agent invocation accepts a family alias only (`sonnet`, `opus`, `haiku`, `fable`), never a full ID. Pass the alias of the selected model, `opus` for this default, and verify that the alias resolves to the selected ID on the target provider. When it does not, block the affected lane.
+The Agent invocation accepts a family alias only (`sonnet`, `opus`, `haiku`, `fable`), never a full ID. Pass the alias of the selected model, `opus` for this default, and verify that the alias resolves to the selected ID on the target provider. When it does not, block the affected lane. `alaa-prompting-guide references/41-claude-code-runtime-features.md` owns this runtime fact and the advisor pair table.
 
 Verified 2026-10-18 against the official sources below and the active invocation schema; the alias-only invocation model was verified 2026-11-14. Refresh mapping/capability evidence when it drifts; unresolved future alias mapping is `NEEDS_CONFIRMATION`, never a guessed model ID. Defaults change no role authority, tools, skills, verdicts or independent gates; managed wrappers remain neutral.
 

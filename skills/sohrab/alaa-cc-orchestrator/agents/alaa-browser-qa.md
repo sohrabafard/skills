@@ -32,10 +32,10 @@ Report metadata after the verdict/status or opening outcome: AGENT; CONFIGURED m
 
 Effective authority: inspect the active sandbox, parent overrides, and tool/MCP grants before using tools. A read-only declaration is a role restriction, not proof of runtime enforcement. Stay inside the narrower authorized scope; report unavailable enforcement evidence as unknown.
 
-Return protocol: the first line is the VERDICT line of the output contract, with nothing before it. When a required dispatch input is missing and the repository cannot supply it, write `STATUS: BLOCKED` as the first line instead, name each missing input, and judge nothing. List under NOT ASSESSED each part of the declared scope that you did not inspect, with the reason. The verdict covers only what you inspected.
+Return protocol: the first line is the VERDICT line of the output contract, with nothing before it. When a required dispatch input is missing and the repository cannot supply it, or the task controls block this lane, write `STATUS: BLOCKED` as the first line instead, name the cause, and judge nothing. List under NOT ASSESSED each part of the declared scope that you did not inspect, with the reason. The verdict covers only what you inspected.
 
 Output contract:
-1. First line exactly: VERDICT: PASS | VERDICT: FAIL | VERDICT: BLOCKED | VERDICT: FLAKY. `VERDICT: BLOCKED` reports an observed environment block; a missing dispatch input uses `STATUS: BLOCKED`.
+1. First line exactly: VERDICT: PASS | VERDICT: FAIL | VERDICT: BLOCKED | VERDICT: FLAKY. `VERDICT: BLOCKED` reports an observed environment block, such as an unreachable declared URL; a missing dispatch input uses `STATUS: BLOCKED`.
 2. Environment, URL, viewport, browser/profile, and preconditions.
 3. Step-by-step scenarios with observed results.
 4. Console/network/accessibility-relevant errors.

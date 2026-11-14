@@ -23,7 +23,7 @@ Select `alaa-planner` or `alaa-planner-high` through `routing-matrix.md` Plannin
 <repository_facts><paths, contracts, conventions, and prior lane outcomes already established in this run></repository_facts>
 <known_constraints><compatibility windows, environments, deadlines, and decisions the user has already made></known_constraints>
 <action_safety>Read-only. Do not implement, design the solution, write tests, or resolve a product decision the user owns.</action_safety>
-<output>Restated outcome in one sentence; ACCEPTANCE CRITERIA numbered, each observable and mapped to how it would be verified; NON-GOALS and explicit exclusions, including outcomes implied but deliberately out of scope; IMPLIED CONTRACTS; PROPOSED LANES, one line each with outcome, owned scope, exclusions, dependencies; OPEN DECISIONS with options and tradeoffs; UNKNOWNS not resolvable from the repository.</output>
+<output>Use the role's native output contract, starting with its first-line STATUS.</output>
 ```
 
 ## Explorer

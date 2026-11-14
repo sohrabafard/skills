@@ -4,10 +4,11 @@
 
 - Every managed role returns a fixed first line: a gate writes `VERDICT: <token>`, every other role writes `STATUS: COMPLETE`, `STATUS: INCOMPLETE` or `STATUS: BLOCKED`. `references/agent-catalog.md` *Return header* owns the lead's routing. Architecture, security, migration, observability, release, browser QA and performance gates move from role-specific labels to the `VERDICT:` line; the performance gate gains the tokens `WITHIN-BUDGET`, `OVER-BUDGET` and `INCONCLUSIVE`.
 - Every role states its completion condition, returns `STATUS: BLOCKED` with the missing inputs instead of a partial judgment, and lists unassessed scope under `NOT ASSESSED`.
-- Task controls: a control the subagent cannot observe is recorded as unknown and the lane continues; only an observed missing, unsupported or contradicted control blocks the lane.
+- Task controls: a control the subagent cannot observe is recorded as unknown and the lane continues; only an observed missing, inherited-only, unsupported or contradicted control blocks the lane.
 - A lane starts no subagent of its own. The implementation contract states it, and the lead owns every dispatch and its allocation.
 - The exceptional-model implementer identities state their admission condition in the description.
 - The final report is written for a reader who saw no tool call.
+- The contract, release, interface, adversarial and spec-analyst dispatch templates defer to the role's native output contract instead of restating it.
 
 - Task tracking follows the Beads-first policy owned by `alaa-workflow references/task-tracking.md`: Beads when available, plan-held local tasks when not, never a replacement Beads database.
 - Remove the `--self-test` modes and the red-fixture corpora from the checkers and renderer; the normal-mode checkers are the validation gate.

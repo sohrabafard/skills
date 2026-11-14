@@ -15,7 +15,7 @@ Apply Gate economics in `verification-and-gates.md` to scope and serialize the r
   <excluded>the full suite, race detector, end-to-end suite, and any other lane's checks</excluded>
 </verification>
 <task_acceptance><only for the explicitly assigned task owner: exact bounded task-acceptance selectors changed by these fixes, or not assigned></task_acceptance>
-<output>For each finding: fixed | disputed with repository evidence; touched files; verification; new risks.</output>
+<output>After the role's first-line STATUS, for each finding: fixed | disputed with repository evidence; touched files; verification; new risks.</output>
 ```
 
 ## Documenter
