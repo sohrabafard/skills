@@ -35,7 +35,7 @@ An independent gate is always required, whatever the decision says, for a change
 - a production deployment or release: a miss reaches every user;
 - any surface the user asks to have reviewed: the user wants a judgment other than the author's.
 
-On a floor surface the author never approves its own work. The gate's blocking verdict binds the lead. Implementer evidence does not replace the gate. `alaa-reviewer` is the gate when the user asks for a review and no specialist fits.
+On a floor surface the author never approves its own work. The gate's blocking verdict binds the lead. Implementer evidence does not replace the gate. `alaa-reviewer` is the gate on a floor surface that no specialist trigger covers, including a review the user asks for.
 
 ## Evidence
 
@@ -49,7 +49,7 @@ Triage every finding by its consequence under `alaa-workflow references/review-m
 
 ## After a fix
 
-Whoever fixes proves the fix with the check that failed, or with the check that would have caught the defect. A further review needs a stated reason: the fix changed the design, touched a floor surface, or the first review could not see what it needed. There is no cycle count. A new round needs a new reason. When a second round finds blocking findings of the same kind, stop repairing and reconsider the approach or the decomposition, because a returning defect class points at the plan, not the patch. Tell the user when you cannot resolve that yourself.
+Whoever fixes proves the fix with the check that failed, or with the check that would have caught the defect. A fix that touches a floor surface returns to that floor's gate, because its author cannot approve it; the gate judges the fix, not the whole change again. Any other further review needs a stated reason: the fix changed the design, or the first review could not see what it needed. There is no cycle count. A new round needs a new reason. When a second round finds blocking findings of the same kind, stop repairing and reconsider the approach or the decomposition, because a returning defect class points at the plan, not the patch. Tell the user when you cannot resolve that yourself.
 
 ## Who fixes
 
@@ -92,8 +92,8 @@ Local commits follow the main instruction file's local-commit rule through `alaa
 - Reuse applicable standing authority without another approval.
 - Preserve an identified snapshot when authority or validation is missing.
 - Pending review never delays a lane's or the parent's authorized checkpoint.
-- Under `Review boundary: final`, later ready sets continue on the same lane branch. The parent merges it once, after the final review accepts it. A fix after that merge follows `## Lane branches and commits` step 7.
-- Under `Review boundary: phase`, the parent merges the lane branch at each phase's review, after that review accepts it.
+- Under `Review boundary: final`, later ready sets continue on the same lane branch. The parent merges it once, after the final boundary accepts it under the rule below. A fix after that merge follows `## Lane branches and commits` step 7.
+- Under `Review boundary: phase`, the parent merges the lane branch at each phase's review, after that boundary accepts it.
 - The documenter's lane branch is created after the last implementation merge. It merges after the Stage E documentation gate accepts it and before the Stage E final validation.
 - A boundary accepts a lane branch when the verification its tasks' decisions and the floors require has passed. Without an independent review there, the lead records its own verdict and the accepted evidence with its reason in `Review status` and `Review evidence`.
 - Push, tag, history rewrite and any merge other than the lane-branch merge still require explicit permission.
@@ -110,7 +110,7 @@ Nested invocations return tested evidence, their lane commits and branch, pendin
    - Give each lane one concrete outcome, owned files or modules, exclusions, acceptance criteria in the dispatch envelope's criterion shape, focused commands, dependencies, resolved skill bindings under `alaa-workflow references/companion-routing.md` including its matching clean-code owner, and a return shape with a line bound.
    - Split a lane only for one of these reasons: a disjoint write scope run in parallel, a different owning skill or authority, a different task model or effort, or work that exceeds one agent's context. Sequential work in one scope stays one lane, because each extra lane adds a dispatch, a context transfer and a reconciliation.
    - The lane, not the subtask, is the dispatch unit. One dispatch carries every subtask of a task that shares one registered profile and owning skill, and that agent runs the task-acceptance selectors at its end.
-   - Before implementation or fix-cycle dispatch, classify actual command scope, never tier labels. Then send focused commands to subtask workers and explicitly bounded task-acceptance commands to the task owner, and reserve affected/exhaustive commands for boundary gates. A focused command is the topic selector that `/alaa-testing-strategy` names.
+   - Before implementation or fix dispatch, classify actual command scope, never tier labels. Then send focused commands to subtask workers and explicitly bounded task-acceptance commands to the task owner, and reserve affected/exhaustive commands for boundary gates. A focused command is the topic selector that `/alaa-testing-strategy` names.
 4. Apply `alaa-workflow references/workspace-and-integration.md` for its rule of one writer per file, generated output or shared resource, and for stopped-writer recovery. Lanes with disjoint files may share the current checkout. Do not create a worktree automatically. Before the first implementation or documentation dispatch of a ready set, create or continue the lane branch that file's `## Lane branches and commits` prescribes, and name it in each write-lane dispatch.
 
 ## Reusable-context owner
@@ -156,7 +156,7 @@ Always first, never skipped, because every lane inherits its decisions.
 
 ## Stage D — Review and specialist gates
 
-1. At the inherited review boundary, after Stage C's collection, batch repair and required retests pass, dispatch the independent review and specialist gates that the tasks' decisions and the floors require, against the complete diff and lane plan. Spawn the one correctness reviewer the routing matrix selects: `alaa-reviewer` or `alaa-reviewer-deep`. The lead's own diff reading happens at the same point.
+1. At the inherited review boundary, after Stage C's collection, batch repair and required retests pass, dispatch the independent review and specialist gates that the tasks' decisions and the floors require, against the complete diff and lane plan. Spawn the one correctness reviewer the routing matrix selects: `alaa-reviewer` or `alaa-reviewer-deep`. When a decision chose the lead's own diff reading, it happens at the same point.
 2. Spawn `alaa-adversarial-reviewer` only when its condition in `references/routing-matrix.md` holds. Its conflicting-judgment arm, discovered here, fires without resetting the inherited boundary.
 3. `APPROVED` and `APPROVED-WITH-NITS` proceed. Under `CHANGES-REQUESTED`, route each finding triaged for fixing verbatim to the hand Who fixes selects.
 4. Present every finding this phase leaves open for the user as one decision set: each item with its severity per lens, the smallest fix that closes it, and what closing it costs. Ask once, because each separate answer can move the tree and invalidate final evidence, including a required exhaustive run.
@@ -203,7 +203,7 @@ The orchestrator may report completion only when:
 - every acceptance criterion maps to evidence, each marked run, cited, or review-only with its review evidence; run or cited items carry their tier;
 - required final checks and proof levels passed on the final candidate, including a fresh exhaustive tier when required, with no unverified candidate changes afterward;
 - no mandatory command is failed, flaky, timed out, blocked, or contaminated;
-- the verification that each task's decision and the floors require is complete; every finding has a recorded disposition, each finding triaged for fixing is fixed and proven, and each blocking floor-gate finding is resolved or explicitly accepted by the user;
+- the verification that each task's decision and the floors require is complete; every finding has a recorded disposition, each finding triaged for fixing is fixed and proven, and each blocking floor-gate finding is confirmed fixed by that gate or explicitly accepted by the user;
 - final touched files match authorized scopes;
 - documentation ran or was explicitly skipped for a grounded reason;
 - the final reusable-context pass reported persisted, deferred, rejected, or no admitted candidates;

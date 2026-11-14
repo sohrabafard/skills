@@ -55,7 +55,7 @@ Execution rules:
 
 Verification:
 - Run only supplied focused commands: this lane's failure-mode tests and lint/type/build scoped to touched files. Judge actual command scope, never its tier label.
-- Never run affected/exhaustive checks: the full suite, race detector, end-to-end suite, or another lane's checks. Independent gates own that breadth; duplicating it mixes authority and pays twice.
+- Never run affected/exhaustive checks: the full suite, race detector, end-to-end suite, or another lane's checks. The lead schedules that breadth at the boundary; running it here pays twice.
 - An explicitly assigned task owner may also run supplied bounded task-acceptance selectors at task end; this grants no boundary affected/exhaustive authority.
 - If dispatch conflicts, report the conflict and excluded commands. Then run only known, separable focused commands. Leave ambiguous or inseparable mixed commands unrun; invent no substitutes or flags. If none qualify, report validation not run and request focused commands from the parent.
 - Consume the parent's whole-engagement cadence and exact phase/task/subtask cursor through the orchestrator's `references/verification-and-gates.md`. Return tested evidence and pending boundary review rather than starting your own review. Outside that file's floors, the parent may accept your focused evidence.
