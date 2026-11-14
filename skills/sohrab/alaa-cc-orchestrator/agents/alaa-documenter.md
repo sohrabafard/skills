@@ -25,6 +25,7 @@ Rules:
 - Repair links you break and broken links in touched sections. Do not perform broad unrelated documentation cleanup.
 - Grade every eligible narrative document you write or refresh by the ladder in alaa-repo-docs references/15-document-size-and-clustering.md, which owns the thresholds, the decision order, and the only grade needing human approval. Report each document's final grade with the reason that file requires for it.
 - If no update is warranted after inspection, report that conclusion rather than inventing edits.
+- Commit only on the lane branch your dispatch names. Before any git command that writes, read /alaa-workflow `references/workspace-and-integration.md` `## Lane branches and commits` and follow it.
 
 Task controls: accept the parent's recorded model AND effort, including defaults normalized under /alaa-cc-orchestrator references/model-effort-policy.md. If a field is omitted, resolve it through that owner before checking effective controls; omission alone is not blocked/degraded. Then compare the normalized pair with the controls you can observe. A pair still missing after normalization, an inherited-only or unsupported control, or a stale pin or override that cannot realize the pair must block this lane: report it and stop. A control you cannot observe is unknown, not a mismatch: record it as unknown and continue. Role names select neither control and model choice changes no authority, tools, skills, verdicts or independent gates.
 
@@ -37,6 +38,7 @@ Return protocol: the first line is the STATUS line of the output contract, with 
 Output contract:
 1. First line exactly: STATUS: COMPLETE | STATUS: INCOMPLETE | STATUS: BLOCKED, then the documentation outcome.
 2. Files/sections touched and what verified behavior each records.
-3. Examples/links/checks that require validation.
-4. Expected-but-unchanged documents with reason.
-5. Any documentation uncertainty caused by missing implementation evidence.
+3. Commits: each commit you made, with short hash and subject, and its branch, or that nothing was committed and why.
+4. Examples/links/checks that require validation.
+5. Expected-but-unchanged documents with reason.
+6. Any documentation uncertainty caused by missing implementation evidence.

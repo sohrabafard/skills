@@ -77,7 +77,7 @@ Prompting-guide supplies capability/mechanics evidence; workflow stores decision
 - Phase collection, repair/retest and review barriers, owners and resume evidence: NEEDS_FILL; apply the active runtime orchestrator's verification-and-gates.md.
 - Reusable evidence and invalidation conditions: NEEDS_FILL
 - Dispatches assume zero shared context: copy the relevant handoff-package facts into the dispatch text rather than referring to this conversation.
-- Lanes report changed paths; this plan's owner records the validated snapshot and handles any explicitly authorized commit.
+- Lanes report changed paths and their lane-branch commits under /alaa-workflow `references/workspace-and-integration.md` `## Lane branches and commits`; this plan's owner records the lane branch and the validated snapshot, and commits only work that no lane owns.
 {{task_verification}}
 - Nested invocations inherit this engagement's review boundary and final phase.
 

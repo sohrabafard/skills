@@ -4,7 +4,7 @@
 
 ```xml
 <task>Implement lane <n>: <bounded outcome>.</task>
-<role_selection><outcome/scope; settled and open decisions; failure/invariant reasoning; registered profile, selection reason and exceptional-admission evidence go once in `<task_controls>`></role_selection>
+<role_selection><outcome/scope; settled and open decisions; failure/invariant reasoning; registered profile, selection reason, verified admission predicates and exceptional-admission evidence go once in `<task_controls>`></role_selection>
 <scope><owned files/modules and the test files that cover them and that no other lane owns>; exclude <everything else>.</scope>
 <acceptance_criteria><numbered, in the envelope criterion shape></acceptance_criteria>
 <dependencies><completed lane contracts or none></dependencies>
@@ -17,8 +17,11 @@
 </verification>
 <baseline_failures><tests or checks that already fail before this lane starts, each with the command that shows it, or: none recorded></baseline_failures>
 <task_acceptance><only for the explicitly assigned task owner: exact bounded task-acceptance selectors at task end, or not assigned; never boundary affected/exhaustive checks></task_acceptance>
-<action_safety>No unrelated work, commit, deploy, publish, destructive action, or global configuration change.</action_safety>
+<action_safety>No unrelated work, deploy, publish, destructive action, or global configuration change; commit only as `<commit>` grants.</action_safety>
+<commit><lane branch name: commit your owned paths by path when the focused checks pass> | <none: return the work uncommitted></commit>
 ```
+
+Record the verified admission predicates in `<task_controls>` of every implementation dispatch. For a mechanical, bounded or bug route, record the selected route's own predicates with their recorded values. For a workhorse or stack-bound route, record the workload class and the stack-family test result. A dispatch without them is incomplete: complete it before you send it, because the lane checks those predicates instead of reading `routing-matrix.md`. Fill `<commit>` with the lane branch that `verification-and-gates.md` *Before any dispatch* step 4 prescribes, or with `none`.
 
 Select the exact registered variant from the ratified lane record using `routing-matrix.md`. For a single-stack lane outside the mechanical and bounded branches, the registered variant is the stack-bound role that routing-matrix.md names. Demanding workhorse work alone does not admit the exceptional implementation profile. Preserve surviving work. Require no trial ladder and no replay of completed work.
 

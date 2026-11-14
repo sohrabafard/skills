@@ -1,6 +1,6 @@
 {
   "pack": "alaa-cc-orchestrator",
-  "version": "5.8.0",
+  "version": "5.9.0",
   "managed_agents": [
     {
       "name": "alaa-accessibility-reviewer",
@@ -35,7 +35,7 @@
     {
       "name": "alaa-documenter",
       "file": "agents/alaa-documenter.md",
-      "sha256": "30babacee4ab819b95673350436e49f0b725661c5f81c9f9209a944aa79375dc"
+      "sha256": "93d3eada88d6d597f133c07eb31c63496950381eb3f6df2af1ef6f887a59b898"
     },
     {
       "name": "alaa-explorer",
@@ -50,57 +50,57 @@
     {
       "name": "alaa-implementer-fable",
       "file": "agents/alaa-implementer-fable.md",
-      "sha256": "e7a810152a0ea2132b046d578c71da93daeb5be284632c38b451674ffe9b0b63"
+      "sha256": "14e47f628553f3694401404eaf57c18a8224331cf867e71e595d9151dc3f30f2"
     },
     {
       "name": "alaa-implementer-frontend",
       "file": "agents/alaa-implementer-frontend.md",
-      "sha256": "0908ba12c60aded1e3b9c831c30288c5ad0711bf92c07acd50ec69ce8b4b16b0"
+      "sha256": "c85e1c115d88f8d22507519b7c4780c6aa0fba772cefb858fd628d953fe06456"
     },
     {
       "name": "alaa-implementer-go",
       "file": "agents/alaa-implementer-go.md",
-      "sha256": "cdd8ec682b56545dbe0446bc3001f3107f29b546b60faf0b5c473e03186179e1"
+      "sha256": "ebf8c11dbaea4722c31838e18d62adcbe1684250947da5efa4bd9dac065d881b"
     },
     {
       "name": "alaa-implementer-haiku-high",
       "file": "agents/alaa-implementer-haiku-high.md",
-      "sha256": "a1cffe71dbcaf30385dc27a499da61490e764a827eab04d4cf96994a429596df"
+      "sha256": "12e924cfce66b6b1d55916d15355432294c672e2fece565ee20c8021d0d9f423"
     },
     {
       "name": "alaa-implementer-haiku",
       "file": "agents/alaa-implementer-haiku.md",
-      "sha256": "c988a58aa81979422d94b77c50468e33d4a0fcb9583186ab26d895d35fe02ef1"
+      "sha256": "1183a1e29ca5202e480b5e5931d604e6eaa4f2fdbac541591ce4ab571ef31105"
     },
     {
       "name": "alaa-implementer-infra",
       "file": "agents/alaa-implementer-infra.md",
-      "sha256": "31092fd49a6b7d2b3e15113a509d3082e12677ec4b5c123175f80f93ce24510a"
+      "sha256": "ac643b08dca4fced0be0e89af34a8f15d0e34739957e6a103574f4da52bef7ab"
     },
     {
       "name": "alaa-implementer-laravel",
       "file": "agents/alaa-implementer-laravel.md",
-      "sha256": "62f27728a7425f15003882c05ccccbf67868b0ea2921a2390c8896e2bfa45b66"
+      "sha256": "22c26b89aac40abdc7a5a39830aa3833ac02e5991b76c2ef28a215d84fdb4f94"
     },
     {
       "name": "alaa-implementer-opus-high",
       "file": "agents/alaa-implementer-opus-high.md",
-      "sha256": "1ab27c518caeceaff40c26f29250aec4b402fdab323bc49288cc814baf038e04"
+      "sha256": "a11c53db96a97301fc59d1fd622fcd858f45567974610be43ace7a22b9ae0525"
     },
     {
       "name": "alaa-implementer-opus",
       "file": "agents/alaa-implementer-opus.md",
-      "sha256": "78bfdeea9c03c057ab2bfe3fa10cf808017fe0907b7756b094bc54a9750a8b75"
+      "sha256": "6435b2542aa26e146f7f94841f6edfc90f7ad2ac7e8db908ccd70aba06f3a84e"
     },
     {
       "name": "alaa-implementer-sonnet-high",
       "file": "agents/alaa-implementer-sonnet-high.md",
-      "sha256": "79f53dec56ccc96cc6f2211d465543a6653e20e6d6a6e08df005f7fb71dfcde3"
+      "sha256": "b897cd4ce9b36bf1ed8080e03bc689468e12a1e3d2f255826e3478c1f96c727c"
     },
     {
       "name": "alaa-implementer",
       "file": "agents/alaa-implementer.md",
-      "sha256": "3051ae4756144f267e771ec1e231d998ccdc9b0dc6f48bf0e2b9b0cf5a597864"
+      "sha256": "7e1da2f79d1f3b430e5c26bd8361d27d1f7bbd8e41afc7aee9a7341b55002136"
     },
     {
       "name": "alaa-instruction-reviewer",

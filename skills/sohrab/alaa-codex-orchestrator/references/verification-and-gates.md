@@ -27,17 +27,20 @@ Read these plan fields in the plan's canonical medium: `Review boundary: phase|f
 - Under `phase`, only the declared phase end earns review.
 - Preserve stricter genuine repository gates and necessary focused feedback. If a required earlier gate conflicts with the declared boundary, return the conflict to the plan owner rather than silently skipping either rule.
 
-Local commits follow the main instruction file's local-commit rule through `alaa-workflow references/workspace-and-integration.md`:
+Local commits follow the main instruction file's local-commit rule through `alaa-workflow references/workspace-and-integration.md`. Its `## Lane branches and commits` owns the lane branch, lane commits, the merge and the lead's own commits:
 
-- The integration parent commits each finished, validated topic or lane on the current work branch as it lands, at any phase, including before final review.
+- Implementation and documentation lanes commit their owned paths on the lane branch their dispatch names, when their focused checks pass, at any phase, including before final review.
+- The integration parent commits only work that no lane owns, as it lands.
 - A commit is a checkpoint, not acceptance; record review status separately.
 - Reuse applicable standing authority without another approval.
 - Preserve an identified snapshot when authority or validation is missing.
-- The parent serializes commits and stages only owned changes; worker roles return evidence and do not write the shared index or commit.
-- Pending worker review/commit handoffs never delay the parent's authorized checkpoint.
-- Push, merge into another branch, tag and history rewrite still require explicit permission.
+- Pending review never delays a lane's or the parent's authorized checkpoint.
+- Under `Review boundary: final`, later ready sets continue on the same lane branch. The parent merges it once, after the final review accepts it. A fix after that merge follows `## Lane branches and commits` step 7.
+- Under `Review boundary: phase`, the parent merges the lane branch at each phase's review, after that review accepts it.
+- The documenter's lane branch is created after the last implementation merge. It merges after the Stage E documentation gate accepts it and before the Stage E final validation.
+- Push, tag, history rewrite and any merge other than the lane-branch merge still require explicit permission.
 
-Nested invocations return tested evidence, pending review and commit work, and the next cursor. Stage C collects focused phase evidence. Stage D waits for the inherited review boundary. When required checks need whole-engagement breadth, plan one whole-engagement broad gate stage in Stage E, after final documentation. Phase transitions earn no broad pass. Earlier required repository gates follow the conflict rule above.
+Nested invocations return tested evidence, their lane commits and branch, pending review and merge work, and the next cursor. Stage C collects focused phase evidence. Stage D waits for the inherited review boundary. When required checks need whole-engagement breadth, plan one whole-engagement broad gate stage in Stage E, after final documentation. Phase transitions earn no broad pass. Earlier required repository gates follow the conflict rule above.
 
 ## Plan and allocation
 
@@ -52,7 +55,7 @@ Apply `routing-matrix.md` for planning controls and for the single worker alloca
    - Split a lane only for one of these reasons: a disjoint write scope run in parallel, a different owning skill or authority, a different task model or effort, or work that exceeds one agent's context. Absent another split reason, sequential work in one scope stays one lane, because each extra lane adds a dispatch, a context transfer and a reconciliation.
    - The lane, not the subtask, is the dispatch unit. One dispatch carries every subtask of a task that shares one registered profile and owning skill, and that agent runs the task-acceptance selectors at its end.
    - Before implementation or fix-cycle dispatch, classify actual command scope, never tier labels. Then send focused commands to subtask workers and explicitly bounded task-acceptance commands to the task owner, and reserve affected/exhaustive commands for boundary gates. A focused command is the topic selector that `/alaa-testing-strategy` names.
-4. Apply `alaa-workflow references/workspace-and-integration.md` for its rule of one writer per file, generated output or shared resource, and for stopped-writer recovery. Lanes with disjoint files may share the current checkout. Do not create a worktree automatically.
+4. Apply `alaa-workflow references/workspace-and-integration.md` for its rule of one writer per file, generated output or shared resource, and for stopped-writer recovery. Lanes with disjoint files may share the current checkout. Do not create a worktree automatically. Before the first implementation or documentation dispatch of a ready set, create or continue the lane branch that file's `## Lane branches and commits` prescribes, and name it in each write-lane dispatch.
 
 `references/routing-matrix.md` owns every specialist trigger; `references/delegation-prompts.md` owns
 the dispatch contracts.
@@ -156,7 +159,7 @@ For required Ent review, interpret the native report under `alaa-ent-go-orm-db r
 
 This phase applies only when the user requests integration. A local-only request completes after Stage E without a merge prompt. For requested integration, present the candidate, diff, gate evidence, and residual risks. Reuse existing explicit authorization for the exact operation. When it is absent, ask only after the result is reviewable, and do not merge before it arrives.
 
-Integrate under `alaa-workflow references/workspace-and-integration.md`. If the base advanced after final verification, incorporate it on the work branch and rerun the required final gates against the changed candidate; a clean merge also changes the tested tree. When the base did not move and the evidence remains applicable, no repeated gate is owed. Push, tag, branch deletion, worktree removal, and remote effects each require explicit authority. A declined or unanswered integration request leaves the candidate intact and is reported accurately, without invalidating completed local work.
+Integrate under `alaa-workflow references/workspace-and-integration.md`. If the base advanced after final verification, incorporate it on the work branch and rerun the required final gates against the changed candidate; a clean merge also changes the tested tree. When the base did not move and the evidence remains applicable, no repeated gate is owed. Push, tag, branch deletion other than the lane-branch deletion, worktree removal other than a merged lane's worktree, and remote effects each require explicit authority. A declined or unanswered integration request leaves the candidate intact and is reported accurately, without invalidating completed local work.
 
 ## Evidence quality
 

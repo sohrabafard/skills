@@ -96,7 +96,7 @@ For Ent or PostgreSQL work owned by /alaa-ent-go-orm-db, select `alaa-ent-specia
 
 ## Implementation routing
 
-Choose directly from the completed lane record. No mandatory sequence of attempts applies. These compatibility role contracts classify workload fit, never model or effort. Apply All-role task allocation separately; selecting a named compatibility role does not select a pair.
+Choose directly from the completed lane record. No mandatory sequence of attempts applies. The lead copies the admission predicates it verified for the selected route into the dispatch, and the lane rechecks them there before editing. These compatibility role contracts classify workload fit, never model or effort. Apply All-role task allocation separately; selecting a named compatibility role does not select a pair.
 
 Select the exact mechanical branch of `alaa-implementer-haiku` directly only when ALL of these are recorded before dispatch:
 
