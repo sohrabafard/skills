@@ -31,13 +31,13 @@ This is the only file in this skill that carries a version string. Every asset t
 | `github.com/tus/tusd/v2` module used by the Ala service | `v2.8.0` | 2026-07-27 | Ala `tusd` `go.mod` |
 | Ala `tusd` Go toolchain | `go 1.25.0` | 2026-07-27 | Ala `tusd` `go.mod` |
 
-The browser and Ala rows are historical snapshots, not current installed-version claims. The latest-release refresh covers release notes only; existing handler/storage details retain the historical baseline and need re-verification at the consumer's pin. Re-read its lock/module and image pin before asserting it contains an upstream fix.
+The browser and Ala rows are historical snapshots, not current installed-version claims. The latest-release refresh covers release notes only; existing handler and storage details retain the historical baseline and need re-verification at the consumer's pin. Re-read the consumer's lockfile or module file and its image pin before asserting that the consumer contains an upstream fix.
 
 The latest tusd release fixes `MaxSize` enforcement for IETF draft creates and deferred uploads with `Content-Length`, plus silent S3 truncation of deferred-length uploads. Before consumer adoption, run the relevant size, integrity and resume gates in `55-tests.md` against its actual enabled protocols and storage backend. Release-note evidence does not prove the consumer is fixed; preserve its existing cap and protocol policy.
 
 ## Targeted source verification on 2026-10-18
 
-This check covers hook failure/stop semantics and independent part sizing only; it refreshes no
+This check covers hook failure and stop semantics and independent part sizing only; it refreshes no
 other default, latest-release claim or Ala runtime observation.
 
 - At the historical consumer pin `v2.8.0` and generic baseline `v2.9.2`, upstream

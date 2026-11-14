@@ -2,7 +2,7 @@
 
 Load when the task enables, tunes, or reviews Sentry, or turns profiling on or off.
 
-Verified shared Sentry names/values and configuration authority are in
+Verified shared Sentry names and values, and the configuration authority, are in
 `alaa-services-contract references/21-alaa-platform-observability-directive.md`; it defines no fleet browser env defaults.
 The target repository's approved frontend configuration owns its browser keys, and the frontend owner selects SDKs
 against pinned runtime versions and current official documentation. PHP package choices remain with the PHP owners.
@@ -19,9 +19,9 @@ notification.
 ## Optional direct SDK telemetry
 
 Direct Sentry SDK logs and traces are optional alongside application -> Vector -> Collector. Both paths may run
-simultaneously and deliver duplicate logs/traces; no duplication approval is required. Direct delivery adds no filtering
+simultaneously and deliver duplicate logs and traces; no duplication approval is required. Direct delivery adds no filtering
 or data-inspection gate; the platform privacy invariant still binds. In sensitive environments, operators disable direct
-Sentry logs/traces while retaining Sentry exceptions and the Vector/Collector path.
+Sentry logs and traces while retaining Sentry exceptions and the Vector/Collector path.
 
 ## Exception coverage gates
 
@@ -50,7 +50,7 @@ No, and the reason is specific. Dated 2026-07; version-sensitive, re-check `90-s
 
 ## Sentry configuration gates
 
-- Real DSNs are never committed. A browser DSN is a public event-submission address, not a secret read/admin credential;
+- Real DSNs are never committed. A browser DSN is a public event-submission address, not a secret read or admin credential;
   publicity still permits event-injection abuse and never authorizes arbitrary destinations or payloads. Auth and
   source-map upload tokens stay secret. Release and environment are injected by the build or deploy, never hardcoded, because a
   Sentry issue with the wrong release attribution sends the regression hunt to the wrong commit.

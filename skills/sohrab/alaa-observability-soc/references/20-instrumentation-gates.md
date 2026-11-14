@@ -47,7 +47,7 @@ Take emitted names and fields from /alaa-services-contract. These requirement cl
 event, metric or environment name. If the shared registry lacks a required name, report the gap and
 settle its owner entry before changing the emitted wire surface; preserve a target repository's
 approved existing contract through the compatibility procedure. /alaa-quasar-app-vite-v3 owns browser
-transport, scrub-before-send and client/SSR wiring; /alaa-frontend-developer owns Web Vitals measurement.
+transport, scrub-before-send, and client and SSR wiring; /alaa-frontend-developer owns Web Vitals measurement.
 
 ## Cache signals
 

@@ -12,5 +12,5 @@ correct stop budget unknowable; and **stop accepting new deliveries first, then 
 the drain is bounded by one handler's deadline rather than by the queue's depth.
 
 The Go kit expresses shutdown in ordered phases against a fixed budget, and Laravel workers express it
-through the worker command and its process supervisor. Neither expression is this file's ground: the rule is
+through the worker command and its process supervisor. This file rules on neither expression: its rule is
 the ordering between the two budgets. Laravel specifics are `/alaa-laravel-job-rabbitmq`; container and Deployment expression are `/alaa-docker-production` and `/alaa-k8s-helm`.

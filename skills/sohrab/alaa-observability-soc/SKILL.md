@@ -33,7 +33,7 @@ These bind on every Alaa service: a repo satisfies each one or carries a blockin
 - Every service with a latency SLO emits latency histograms carrying exemplars. The one exemption, and the evidence it
   demands, are in `references/20-instrumentation-gates.md`.
 - Telemetry is fail-open for product traffic: a failed backend, Collector, Vector sidecar, or SOC destination degrades
-  observability and never the hot path. This governs forwarding/export; a privileged-action audit write required by
+  observability and never the hot path. This governs forwarding and export; a privileged-action audit write required by
   repository non-repudiation policy remains a control under /alaa-security-review's audit-write boundary.
   Fail-closed telemetry ships only on a written operator request.
 - Secrets, credentials, tokens, session values, raw PII, unrestricted payloads, and customer-private content never enter

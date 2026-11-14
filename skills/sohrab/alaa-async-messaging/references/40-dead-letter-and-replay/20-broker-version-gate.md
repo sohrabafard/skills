@@ -16,7 +16,7 @@ to consumers (not proof the consumer saw them), while `x-delivery-count` counts 
 
 A quorum `delivery-limit` bounds counted failures only; exhaustion drops the message unless a DLX exists.
 Never treat acquired count, Laravel attempt headers and delivery count as interchangeable. For non-counting
-returns or a classic queue, require an explicit bounded application retry/disposition path under
+returns or a classic queue, require an explicit bounded application path for retry and disposition under
 `alaa-reliability-sla references/20-retries.md`; an unchanging delivery count is not evidence of progress.
 Preserve identity and resolve uncertain effects before retrying. Prove the actual path with the broker test
 in `../60-telemetry-and-proof.md`; do not silently switch nack to reject to manufacture a retry policy.

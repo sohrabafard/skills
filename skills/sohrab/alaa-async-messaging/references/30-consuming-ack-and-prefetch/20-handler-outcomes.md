@@ -12,7 +12,7 @@ by its severity.
 | Permanent failure — the message can never succeed as written: schema violation, unknown type, referenced entity absent for good | **reject without requeue** | dead-letters it | none: nothing committed |
 
 **A timeout is not proof that no effect committed.** Preserve identity on redelivery and resolve the
-receipt/effect outcome before repeating an uncertain effect. The same-store transaction below owns local
+outcome of the receipt and the effect before repeating an uncertain effect. The same-store transaction below owns local
 deduplication; external effects use the reconciliation contract in
 `alaa-reliability-sla references/60-idempotency.md`. Attempt expiry and job disposition are distinct under
 `alaa-reliability-sla references/10-deadlines-and-timeouts.md`.

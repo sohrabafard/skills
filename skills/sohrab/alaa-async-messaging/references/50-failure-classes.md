@@ -25,7 +25,7 @@ When the same message loops, read [Poison redelivery loop](./50-failure-classes/
 
 ## 4. Duplicate storm
 
-When side effects duplicate, read [Duplicate storm](./50-failure-classes/40-duplicate-storm.md) for receipt/key comparison and safe containment.
+When side effects duplicate, read [Duplicate storm](./50-failure-classes/40-duplicate-storm.md) for comparing receipt rows and idempotency keys, and for safe containment.
 
 ## 5. Outbox stalled, or a claimed row orphaned
 
@@ -33,7 +33,7 @@ When the relay stops publishing or claims go stale, read [Outbox stalled](./50-f
 
 ## 6. Dead-letter queue filling
 
-When the DLQ grows while live traffic drains, read [Dead-letter queue filling](./50-failure-classes/60-dead-letter-queue-filling.md) for tenant/error grouping and the replay gate.
+When the DLQ grows while live traffic drains, read [Dead-letter queue filling](./50-failure-classes/60-dead-letter-queue-filling.md) for grouping by tenant and error code, and for the replay gate.
 
 ## 7. A replay produced duplicates
 
