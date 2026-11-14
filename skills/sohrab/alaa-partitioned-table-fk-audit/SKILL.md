@@ -1,6 +1,6 @@
 ---
 name: alaa-partitioned-table-fk-audit
-description: "Audit PostgreSQL repositories for incomplete foreign keys into partitioned tables, including id-only references, SQLSTATE 42830, and 'no unique constraint matching given keys'. Ships a source detector that discovers partitioned parents, reads their keys, and flags incomplete raw-SQL and Laravel-shorthand references. Use when asked to audit or harden partitioned-table integrity, when a migration or query fails with 42830, before a partitioned-table migration reaches its reversibility gate, or for a proactive sweep. Report source results and durable guard status separately; installation or CI wiring in a target repository requires authorization. Do not use for general lock safety, index design, or tenancy -- use /alaa-data-layer ($alaa-data-layer) -- or for an ordinary id-only foreign key into a non-partitioned table."
+description: "Audit PostgreSQL repositories for incomplete foreign keys into partitioned tables, including id-only references, SQLSTATE 42830, and 'no unique constraint matching given keys'. Ships a source detector that discovers partitioned parents, reads their keys, and flags incomplete raw-SQL and Laravel-shorthand references. Use when asked to audit or harden partitioned-table integrity, when a migration or query fails with 42830, before a partitioned-table migration reaches its reversibility gate, or for a proactive sweep. Report source results and durable guard status separately; installation or CI wiring in a target repository requires authorization. Do not use for general lock safety, index design, or tenancy -- use /alaa-data-layer -- or for an ordinary id-only foreign key into a non-partitioned table."
 ---
 
 # Alaa Partitioned Table FK Audit
@@ -75,5 +75,5 @@ level 6, unreachable here. Report it as a gap in the words "level 6, unreachable
 | Judge whether the finished work is shippable | `/alaa-project-constitution` `references/quality-bar.md` |
 | Hand the migration to the gate proving it reverses | `/alaa-cicd-laravel-postgres` `references/30-migration-reversibility.md`, which runs after this audit |
 | Move a fix across module or repository/DTO boundaries | `/alaa-laravel-architecture` |
-| Report why the database could not be reached | `/alaa-codex-runtime-ops` |
+| Report why the database could not be reached, in Codex | `/alaa-codex-runtime-ops` |
 | Choose a model or an effort level | `/alaa-prompting-guide` |
