@@ -41,10 +41,10 @@ turns and disappears when the session ends.
 
 **Deliver the answer and preserve admitted plans.** Put reviews, assessments, explanations and advice in the reply.
 For execution-plan admission and exceptions, read `alaa-workflow references/artifact-lifecycle.md`.
-Persist the admitted plan and position in the workflow-selected medium. Report its canonical reference
-with a concise outcome. Report file paths for file artifacts. Outside admission, create files for
-read-only or advisory requests only when explicitly requested. `/alaa-repo-docs` owns documents.
-Preserve required checklists, resume context and phase/task skill bindings when shortening output.
+Persist the admitted plan and position in the medium the workflow selects. Report its canonical
+reference with a concise outcome. Report file paths for file artifacts. Outside admission,
+create a file for a read-only or advisory request only on explicit request. `/alaa-repo-docs` owns
+documents. When shortening output, keep required checklists, resume context and phase and task skill bindings.
 
 - Where a person follows the run, write a one-line opening and a one-line update every few tool calls. An unattended lane needs neither. Beyond those lines, report only milestones, blockers, scope changes, validation outcomes, and useful artifact paths. Never duplicate status already surfaced by the harness.
 - Bound terminal output. Do not dump unbounded files, trees, manifests, or logs. Prefer purpose-built tools, changed-file lists, diff stats, and path-scoped diffs.
@@ -55,7 +55,7 @@ Preserve required checklists, resume context and phase/task skill bindings when 
 
 #### The three leaks
 
-These actions can feel like diligence. Use their replacements to avoid noise:
+These actions feel like diligence but add noise. Use their replacements:
 
 1. **Narrating a plan before execution:** State a plan only when the user must decide something before it runs. Otherwise, run it and report the outcome; the next action shows the plan. The one-line opening of an attended run is not a narrated plan.
 2. **Pasting output to prove a command ran:** Report the command, the result, the one line that mattered, and the path to the rest. The outcome is evidence; the transcript is not.

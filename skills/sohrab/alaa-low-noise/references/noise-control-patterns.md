@@ -33,7 +33,7 @@ Avoid by default:
 
 - full-file dumps to prove a file was inspected;
 - full directory trees, especially of generated output;
-- Pulling a large result into context when a count, path, or slice answers the question. Large results are re-read on every later turn.
+- pulling a large result into context when a count, path, or slice answers the question, because a large result is re-read on every later turn.
 
 ## Runtime notes: Claude Code and Codex
 

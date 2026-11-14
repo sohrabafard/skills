@@ -9,25 +9,25 @@ Select the evidence owner for each question. Native gates own proof.
 
 ## Decision procedure
 
-1. Name independently answerable questions and their intended worktree/environment.
+1. Name each independently answerable question and its target worktree and environment.
 2. Read `references/00-topic-map.md` before selecting an owner, handling results or failures, choosing grants, or advising on Serena contexts or REPL APIs.
 3. Apply the routing contract: select one primary owner, reuse adequate evidence, and ask only the missing question.
-4. Treat editing, runtime observation and proof as distinct questions; execute applicable authorized native gates.
+4. Treat editing, runtime observation and proof as separate questions. Run the applicable authorized native gates.
 
 ## Authority
 
-Routing grants no additional authority. Do not change MCP, hooks, CodeGraph, Serena, Boost or language-server integrations/configuration unless explicitly asked for setup, upgrade, repair or removal. Index lifecycle effects require authorization too. Native sandbox restrictions do not establish MCP enforcement. Use the scoped grant owner before assigning tools.
+Routing grants no additional authority. Do not change MCP, hook, CodeGraph, Serena, Boost or language-server integration or configuration unless explicitly asked for setup, upgrade, repair or removal. Index lifecycle effects also need authorization. Native sandbox restrictions do not prove MCP enforcement. Apply the grant owner before assigning tools.
 
 ## When NOT to use
 
-- An exact native/domain owner is already named and no routing choice exists.
+- An exact native or domain owner is already named and no routing choice exists.
 - Domain implementation, repository-document authoring, durable state or agent allocation is the task itself.
-- Static evidence is being used to prove another repository, runtime behavior or completion.
-- Unsupported artifacts are being forced through a graph or semantic backend.
+- Static evidence is meant to prove another repository, runtime behavior or completion.
+- Unsupported artifacts are forced through a graph or semantic backend.
 
 ## Output
 
-Report outcome, question, primary owner, established evidence, each fallback's gap, owner and lost guarantee, worktree/environment identity, changed artifacts, observed native command/results and partial or blocked claims. Do not emit raw transcripts.
+Report outcome, question, primary owner and established evidence; each fallback's gap, owner and lost guarantee; worktree and environment identity; changed artifacts; each observed native command and result; and partial or blocked claims. Emit no raw transcript.
 
 ## Stop and failure
 

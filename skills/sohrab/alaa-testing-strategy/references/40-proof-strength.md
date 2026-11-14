@@ -1,8 +1,19 @@
 # Proof Strength
 
-Read before reporting any claim as validated, and whenever an environment cannot reach the level a claim needs. `SKILL.md` names the six levels and defines each; this file owns the mapping from a claim to the minimum level that supports it, the escalation rule, and what to do when the level is unreachable.
+Read before reporting any claim as validated, and whenever an environment cannot reach the level a claim needs. `SKILL.md` names the six levels in order and holds the rule that a level never substitutes for a higher one. This file owns the definition of each level, the mapping from a claim to the minimum level that supports it, the escalation rule, and what to do when the level is unreachable.
 
 The vocabulary exists so that one word carries the same meaning in every service, language, and report in the fleet. A reviewer reading "level 2" knows what was ruled out and what was not, without asking. That is the entire value, and it is destroyed the moment one report uses a level name loosely.
+
+## The six levels
+
+The ordering is by what a level can rule out.
+
+1. **Static proof** — inspection only: the code, the configuration, the types, a linter, a schema validation. Proves an artifact says something. Proves nothing about behaviour.
+2. **Unit or in-memory proof** — the behaviour executed in process against in-memory or embedded substitutes: an embedded database standing in for the production engine, an in-memory broker, a controllable clock. Proves the logic. Proves nothing that the substituted engine decides.
+3. **Parity proof** — one suite run against the double and against the real implementation, with identical results required. Proves the double is honest, and proves nothing else.
+4. **Local smoke proof** — the built artifact started in its real container or process form and exercised from outside itself over its real interface. Proves it boots, wires, and answers.
+5. **In-runtime service proof** — the service running inside the composed local runtime with its declared dependencies present, exercised through its real transport. Proves the behaviour in the shape it is deployed in.
+6. **Live-dependency proof** — the behaviour exercised against the real production-grade dependency engine, with real drivers, transactions, ordering, and delivery. Proves what only that engine decides.
 
 ## The mapping: which level a claim requires
 
@@ -24,7 +35,7 @@ Find the claim being made. The level named is the **minimum**; a higher level sa
 | "This index is used" / "this constraint holds" / "this migration is safe on existing data" | 6 |
 | "This isolation level, lock, or transaction boundary behaves correctly under concurrency" | 6 |
 | "This delivery, acknowledgement, redelivery, ordering, or dead-letter behaviour is correct" | 6 |
-| "This control cannot be bypassed" | 6 wherever the datastore enforces it — a row-level policy, a unique constraint, a tenant filter; 2 only where the control is entirely in process. `/alaa-security-review` (`$alaa-security-review`) owns which controls exist and what each must refuse |
+| "This control cannot be bypassed" | 6 wherever the datastore enforces it — a row-level policy, a unique constraint, a tenant filter; 2 only where the control is entirely in process. `/alaa-security-review` owns which controls exist and what each must refuse |
 | "Latency, throughput, pool, or contention behaviour is acceptable" | 6, under load, because the pool, planner, and lock behaviour is the claim |
 
 Two claims recur and have no level, because no test produces them: "this is fast enough" with no stated budget, and "this is secure". Convert each into a claim from the table above or record it as an unmade decision.
@@ -52,6 +63,6 @@ Then write the test anyway at the required level and mark it with the repository
 
 ## Where the runtimes come from
 
-Levels 4, 5, and 6 need a running local runtime. Obtain it through `/service-runtime-kit-governance` (`$service-runtime-kit-governance`) — its render, bootstrap, and validate path — rather than assembling one per service, because a per-service runtime makes level 5 mean something different in every repository and the vocabulary stops carrying information.
+Levels 4, 5, and 6 need a running local runtime. Obtain it through `/service-runtime-kit-governance` — its render, bootstrap, and validate path — rather than assembling one per service, because a per-service runtime makes level 5 mean something different in every repository and the vocabulary stops carrying information.
 
-Level 6 needs the production-grade engine itself. Where the fleet's own release gates name the engines and the commands, `/alaa-controlled-ops` (`$alaa-controlled-ops`) owns those gate lists; this file owns only what the resulting proof is called and what it rules out.
+Level 6 needs the production-grade engine itself. Where the fleet's own release gates name the engines and the commands, `/alaa-controlled-ops` owns those gate lists; this file owns only what the resulting proof is called and what it rules out.
