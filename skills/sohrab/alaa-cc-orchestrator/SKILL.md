@@ -60,7 +60,7 @@ The lead must not implement beyond that mechanical-edit exception, run heavy ver
 
 ### Dispatch discipline
 
-**One agent per lane.** No duplicate lane or summary-check agent. Independent verification and review inspect the actual artifact under separate authority. Dispatch independent lanes together. Keep inspection and Orchestrator mode's mechanical edit inline.
+**One agent per lane.** No duplicate lane or summary-check agent. A lane starts no subagent of its own: the lead owns every dispatch and its task allocation. Independent verification and review inspect the actual artifact under separate authority. Dispatch independent lanes together. Keep inspection and Orchestrator mode's mechanical edit inline.
 
 **Start a dependent lane as soon as the lanes it consumes finish.** Join lanes behind one barrier only when the next step consumes all of their outputs. A barrier over a lane whose output the next step never reads idles that step for the unrelated lane's whole runtime.
 
@@ -121,6 +121,8 @@ Orchestrator mode preserves A–E. F requires requested integration and explicit
 
 Report outcome; independent lifecycle verdicts (`IMPLEMENTED`, `MERGE_CANDIDATE`, `RELEASE_CANDIDATE`, `PUBLISHED`) under `alaa-workflow references/workspace-and-integration.md`; lane changes and files; commands and results, marked run or cited, with tier; review and specialist verdicts and dispositions; each touched document's outcome and grade; curation as persisted, deferred or empty; risks, skipped checks, follow-ups. List each dispatched agent once with its configured and requested pair, separately observed identity or unknown, observable mismatches, and the exceptional-model admission for each escalated dispatch.
 
+Write the report for a reader who saw no tool call and no lane report. Put the outcome first, use full sentences, and define any lane label or abbreviation the run invented.
+
 Close with one line from the existing plan, roster and evidence: dispatches and distinct roles; underlying checks run or cited, covered children counted once; span from plan `Created` to last authorized commit, or unavailable. Use no timer, extra command or invented budget.
 
 ## 6. Advisor-mode output
@@ -166,6 +168,6 @@ Reviewers only judge. Verifiers only execute evidence commands. Researchers only
 | Dispatch a role | `references/delegation-prompts.md` |
 | Start Stage A, consolidate checks or decide gate requirements | `references/verification-and-gates.md` |
 | Select or deviate from a model/effort profile | `references/model-effort-policy.md` |
-| Inspect role authority, output or grants | `references/agent-catalog.md` |
+| Inspect role authority, output or grants, or route a returned report on its first-line `VERDICT` or `STATUS` | `references/agent-catalog.md` |
 | Set command priority, workers, timeout or resource limits | `references/resource-policy.md` |
 | Classify a failed check | `references/failure-taxonomy.md` |

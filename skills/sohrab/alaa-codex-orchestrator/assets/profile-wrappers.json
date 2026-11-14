@@ -17,7 +17,7 @@
     "alaa-implementer-astra": {
       "contract": "assets/implementation-contract.md",
       "metadata": {
-        "description": "Compatibility implementation authority identity. Exceptional model admission is a separate task decision under the all-role allocation record; the role name selects neither model nor effort. Never self-review or widen scope.",
+        "description": "Implementation lane whose recorded task allocation carries an exceptional-model admission: an official-source recommendation for the task, documented workhorse inadequacy, or an explicit user selection. Scoped implementation; admission in /alaa-codex-orchestrator references/routing-matrix.md. Never self-review or widen scope. Model and effort are selected for the task, never from this compatibility ID.",
         "sandbox_mode": "workspace-write"
       }
     },
@@ -73,14 +73,14 @@
     "alaa-implementer-astra-medium": {
       "contract": "assets/implementation-contract.md",
       "metadata": {
-        "description": "Compatibility implementation authority identity. Exceptional model admission is a separate task decision under the all-role allocation record; the role name selects neither model nor effort. Never self-review or widen scope.",
+        "description": "Implementation lane whose recorded task allocation carries an exceptional-model admission: an official-source recommendation for the task, documented workhorse inadequacy, or an explicit user selection. Scoped implementation; admission in /alaa-codex-orchestrator references/routing-matrix.md. Never self-review or widen scope. Model and effort are selected for the task, never from this compatibility ID.",
         "sandbox_mode": "workspace-write"
       }
     },
     "alaa-implementer-astra-xhigh": {
       "contract": "assets/implementation-contract.md",
       "metadata": {
-        "description": "Compatibility implementation authority identity. Exceptional model admission is a separate task decision under the all-role allocation record; the role name selects neither model nor effort. Never self-review or widen scope.",
+        "description": "Implementation lane whose recorded task allocation carries an exceptional-model admission: an official-source recommendation for the task, documented workhorse inadequacy, or an explicit user selection. Scoped implementation; admission in /alaa-codex-orchestrator references/routing-matrix.md. Never self-review or widen scope. Model and effort are selected for the task, never from this compatibility ID.",
         "sandbox_mode": "workspace-write"
       }
     }

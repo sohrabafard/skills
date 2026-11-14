@@ -10,7 +10,9 @@ This file alone owns orchestration defaults for this runtime; capability registr
 
 Claude Code default: `model = claude-opus-5-5`, `effort = medium`.
 
-Verified 2026-10-18 against the official sources below and the active invocation schema. Refresh mapping/capability evidence when it drifts; unresolved future alias mapping is `NEEDS_CONFIRMATION`, never a guessed model ID. Defaults change no role authority, tools, skills, verdicts or independent gates; managed wrappers remain neutral.
+The Agent invocation accepts a family alias only (`sonnet`, `opus`, `haiku`, `fable`), never a full ID. Pass the alias of the selected model, `opus` for this default, and verify that the alias resolves to the selected ID on the target provider. When it does not, block the affected lane.
+
+Verified 2026-10-18 against the official sources below and the active invocation schema; the alias-only invocation model was verified 2026-11-14. Refresh mapping/capability evidence when it drifts; unresolved future alias mapping is `NEEDS_CONFIRMATION`, never a guessed model ID. Defaults change no role authority, tools, skills, verdicts or independent gates; managed wrappers remain neutral.
 
 ## Before every dispatch
 
@@ -24,7 +26,7 @@ Report configured and requested model/effort separately from observed identity; 
 
 ## Native Advisor consultation
 
-After selecting the executor's task pair, consider native Advisor for a named unresolved decision that can benefit from consultation. Resolve missing facts and tool or context failures first. Read **Native Advisor** in `alaa-prompting-guide references/41-claude-code-runtime-features.md` for supported pair candidates, session checks and data sharing. Use it only on a verified, authorized surface. Record the reason and effective advisor control when used. The executor chooses when to consult and owns the result. Keep consultation optional. Preserve the executor pair, role authority and independent gates.
+After selecting the executor's task pair, consider native Advisor for a named unresolved decision that can benefit from consultation. Resolve missing facts and tool or context failures first. Read **Native Advisor** in `alaa-prompting-guide references/41-claude-code-runtime-features.md` for supported pair candidates, session checks and data sharing. Use it only on a verified, authorized surface. Record the reason and effective advisor control when used. A configured advisor also reaches each subagent, which applies the pair check against its own model. A Fable 5.2 executor accepts only a Fable 5.2 advisor, and Claude Code attaches no lower-ranked advisor and raises no error. The executor chooses when to consult and owns the result. Keep consultation optional. Preserve the executor pair, role authority and independent gates.
 
 ## Source generation and proof
 

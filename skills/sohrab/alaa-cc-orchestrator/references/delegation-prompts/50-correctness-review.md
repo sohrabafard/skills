@@ -46,5 +46,5 @@ Dispatch a fresh instance of the lens-owning role under `alaa-workflow reference
 <blast_radius><what is irreversible, who is affected, and the cost of undoing it></blast_radius>
 <stance>Fresh independent lens, read-only, no fixes. Do not re-run the correctness review or restate findings `alaa-reviewer` already raised.</stance>
 <disposition>Reported to the user as a ship decision. Findings are not routed into another fix cycle.</disposition>
-<output>First line exactly VERDICT: NO-BLOCKING-OBJECTION | VERDICT: OBJECTION-WITH-CONDITIONS | VERDICT: DO-NOT-SHIP; then OBJECTIONS with the assumption attacked, the concrete failure scenario, the cost to undo, confidence 0-1; WHAT WOULD CHANGE MY VERDICT; EVIDENCE INSPECTED.</output>
+<output>First line exactly VERDICT: NO-BLOCKING-OBJECTION | VERDICT: OBJECTION-WITH-CONDITIONS | VERDICT: DO-NOT-SHIP; then OBJECTIONS with the assumption attacked, the concrete failure scenario, the cost to undo, confidence 0-1; WHAT WOULD CHANGE MY VERDICT; EVIDENCE INSPECTED; NOT ASSESSED.</output>
 ```

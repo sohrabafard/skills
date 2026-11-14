@@ -44,6 +44,9 @@ MUST_DENY = frozenset((
     # Server-level pattern: removes every Hindsight tool, including retain and ingest,
     # because a memory write is the lead's decision, never an implementation lane's.
     "mcp__hindsight",
+    # Nesting is on by default: a lane that spawns its own subagents bypasses the
+    # lead's task allocation and cost control.
+    "Agent",
 ))
 
 
