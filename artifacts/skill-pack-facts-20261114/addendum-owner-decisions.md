@@ -105,3 +105,15 @@ The pack owner answered three questions.
 - **Push.** The owner authorized pushing `main` to `origin`.
 
 The other domain and policy questions stay with the owner: the throttle-hint wait across three provider skills, the IndexedDB threshold policies, the Kubernetes authoring floor, "below the floor" in the Laravel upgrade triage, the PHPantom absolute path, the GitLab parent guides, the Arvan object-storage default prompt, object keys as secrets in the MinIO skill, and three items in `alaa-trust-gateway-auth`.
+
+## The trust-boundary skill, after the parallel session went idle
+
+Beads issue `alaa-2y7li`. The parallel session's six commits to `alaa-trust-gateway-auth` and `alaa-services-contract` had been pushed without a review by this engagement, and three wording-pass items in the trust-boundary skill had been deferred while that session was active. Both were handled once it had been idle for hours.
+
+- **Review of the parallel session's commits.** The instruction review found two major defects in already-published text: two sentences of `references/40-downstream-normalization.md` could be read as fail-open. One read as if a body field may override trusted tenant context on WA; the other as if a malformed trusted `X-Project-Id` may fall back to the client envelope. The owner file of that rule says the opposite. Both now state that a body or envelope value never replaces a present trusted header and that a malformed one never falls back.
+- **The deferred items.** An empty or blank `X-Access` is reported as `AUTH_ACCESS_HEADER_MISSING` in the case text, the router row and the checker script, as the skill's own deny-code table states; the script's unit test passes. The "four layers" sentence no longer states a count that its three-row table contradicts. The dangling "that positive-integer parser" names what it means.
+- **Process.** One lane on a lane branch committed by path; the review returned CHANGES-REQUESTED, the lane applied twelve repairs on the same branch, the confirmation returned APPROVED-WITH-NITS, its last clause landed before the merge (`6629b88b`). Record: `lanes/review-trust-gateway.md`.
+- **Left for the owner, in `alaa-services-contract`:** a router row states a who-may-set rule that the trust-boundary skill owns, and two references restate the optional-bearer rule. They agree with their owner today.
+- **Not verified:** the contract values themselves against the gateway, wa and client repositories.
+
+These commits are local. The owner's push authorization covered the state at that time; pushing these needs the owner's word again.
