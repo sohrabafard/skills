@@ -115,7 +115,7 @@ These scope definitions choose check breadth, not review timing. `alaa-codex-orc
 | **Focused** | the smallest test, path or scenario that distinguishes the subtask's changed behavior from its plausible failure, plus the lint, type-check and build steps the touched files need | the implementing lane | subtask end under the declared cadence |
 | **Task acceptance** | bounded acceptance selectors that combine the focused selectors of that task's subtasks, with still-valid coverage cited | the task owner | task end under the declared cadence |
 | **Affected** | selectors of topics reachable from changed surfaces, including callers, shared fixtures and contract checks | the required boundary observer | in the final gate stage by default, or earlier when repository policy requires |
-| **Exhaustive** | the whole suite and only the race, end-to-end and higher-level proofs the claims require | independent final authority | once on the whole engagement's final candidate, when required |
+| **Exhaustive** | the whole suite and only the race, end-to-end and higher-level proofs the claims require | the required final observer | once on the whole engagement's final candidate, when required |
 
 A subtask's short check adds no expensive setup and runs no full suite. When it needs infrastructure, it reuses reset-safe infrastructure that is already available. This rule sets no fixed duration and no blanket ban on containers. At task acceptance, combine the focused selectors. Plan required broad coverage for the whole engagement's final candidate. Keep every stricter repository gate. Labels never narrow an actual command's scope.
 
