@@ -112,9 +112,13 @@ claim set stays stable across users:
 **Gateway rule.** The gateway never forwards a sentinel. It injects an
 `X-Location-*` header only for a positive `loc` value, and a name header only for
 a non-empty `fn` or `ln`, so a sentinel arrives as an absent header (gateway
-`<repo>/charts/gateway/templates/configmap.yaml:1549-1557`, verified 2026-11-09). It
-never invents a value that is not in the verified claims. An absent claim also
-produces no header; the gateway does not substitute a sentinel.
+`<repo>/charts/gateway/templates/configmap.yaml`, the `jwt_claim_positive_*` rules,
+verified 2026-11-14). It never invents a value that is not in the verified claims.
+An absent claim also produces no header; the gateway does not substitute a sentinel.
+
+WA ingest stores each injected `X-Location-*` level as trusted scope on the row,
+and stores none on a guest batch (owner ruling 2026-11-14;
+`references/10-verification-and-ingress.md`, "WA ingest").
 
 Consequence: `authz-sidecar` requires all six `X-Location-*` headers, so a token
 with any zero location level is refused on every sidecar-protected route.
@@ -157,8 +161,9 @@ repositories is how `0` ends up saved as a real school id.
   states when, and states that the gateway still reads neither.
 - The gateway does not decode `prm` and does not consume any service's generated
   permission map. It projects the claim and stops.
-- `Authorization` is stripped after successful verification in the current
-  deployment values, so no service receives the raw bearer.
+- `Authorization` is stripped after successful verification on a protected route in
+  the current deployment values. On a public path it is not stripped;
+  `references/10-verification-and-ingress.md` states that case.
 - `X-Request-ID` is preserved when the client sent one and generated otherwise. It
   is correlation only and is neither an auth nor a tenant header.
 - Client address and forwarding headers: `alaa-services-contract references/30-trusted-ingress-and-laravel-contract.md`

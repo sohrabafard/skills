@@ -46,9 +46,9 @@ values, not contract.
 ## Sanitize runs on every route
 
 The gateway deletes every spoofable inbound auth and context header before
-proxying, and this step runs on public routes as well as protected ones. A public
-route skips token verification; it does not skip sanitizing. Without that, a
-public route is a direct channel for a client to hand a backend a chosen
+proxying, and this step runs first on public routes as well as protected ones. A
+public route makes the bearer optional; it does not skip sanitizing. Without that,
+a public route is a direct channel for a client to hand a backend a chosen
 `X-User-Id`.
 
 The delete list covers the whole trusted-header set — the identity, token-metadata,
@@ -69,7 +69,8 @@ service-side change ships.
 
 ## Public routes
 
-The gateway currently treats these paths as public and skips token verification:
+The gateway currently treats these paths as public, so a request needs no token
+there:
 
 - `/auth/api/v3/otp/request`, `/auth/api/v3/otp/verify`, `/auth/api/v3/token/refresh`,
   `/auth/api/v3/logout`
@@ -80,13 +81,79 @@ The gateway currently treats these paths as public and skips token verification:
 - `/vod/api/ready`, `/vod/api/health`
 - `/comment/api/ready`, `/comment/api/health`
 - `/ticket/api/ready`, `/ticket/api/health`
-- `/wa/api/ready`
+- `/wa/api/ready`, exact match
 - `/healthz`
-- `/wa/ingest/v1/events`
+- `/wa/ingest/v1/events`, exact match
+
+The gateway profiles also list the `/api/ready` and `/api/health` pair of every other
+service prefix. The values files are the list; re-derive with
+`rg -n -A24 "^publicPaths:|^publicExactPaths:" charts/gateway/values.alaa-service.yaml`
+in the gateway repository.
 
 A public path at the gateway is not permission to trust the caller. The service
-behind it applies its own route-level rules, and it receives no trusted context to
-lean on.
+behind it applies its own route-level rules. It receives trusted context only when
+the request carried a bearer the gateway accepted, and none otherwise.
+
+### One public list, one behaviour, in every profile
+
+Owner ruling, 2026-11-14. Whether a path requires a token never differs between
+gateway profiles (dev, up-local, production). A profile that adds, removes or
+re-classifies a public path for itself is a defect: a path tested as public in one
+profile and protected in another proves nothing about either. Gateway source at
+`0ffc1e5` gives the Kubernetes, header and shared-Docker profiles the same public
+lists; deployment is not confirmed here.
+
+### A public path takes an optional bearer
+
+Owner ruling, 2026-11-14. It binds every public path, auth's own included. In
+gateway source at `0ffc1e5` and `df5ba2d` (`txn.jwt_accepted` in
+`<repo>/charts/gateway/templates/configmap.yaml`); deployment is not confirmed here.
+
+| The request carries | The gateway does |
+|---|---|
+| no bearer | forwards it; injects no trusted header; returns no error |
+| a bearer that passes every check a protected route applies | injects the trusted headers exactly as on a protected route |
+| a bearer that fails any check (expired, bad signature or algorithm, a TOTP proof sent as the bearer, bad `sub` or `rol`, a missing required claim) | drops the verdict; injects no trusted header; clears the token's claims from its log and from the request-time checker; forwards the request; returns no error |
+
+**"No accepted bearer" is the one guest condition in this skill.** It covers a
+request with no bearer and a request whose bearer was dropped. Where this skill
+says tokenless, read that. A service cannot tell the two apart and must not try:
+its branch condition is "no trusted `X-Project-Id` arrived".
+
+**This weakens no protected route.** A path off the public list keeps every `401`
+in "Verification order on a protected route". Optional applies only to a path
+written into the public list.
+
+**A dropped bearer never becomes identity.** No rule may project a claim, attribute
+a log line, or process a TOTP proof from a token that `txn.jwt_accepted` did not
+admit. A good signature on an expired token is a dropped token.
+
+**The gateway deletes `Authorization` only on a protected route.** On a public path
+the header reaches the backend unchanged, accepted or not (gateway
+`<repo>/docs/BIG_PICTURE.md`, read 2026-11-14). The backend still never reads it;
+the first absolute in `SKILL.md` binds a public route as well.
+`NEEDS_CONFIRMATION`: whether the owner's "the gateway drops it" also requires
+deleting a rejected `Authorization` header before proxying.
+
+### The dropped-bearer marker
+
+Owner ruling, 2026-11-14. **Decided, not shipped:** on 2026-11-14 it existed only
+as uncommitted work in the gateway checkout (gateway Beads `alaa-q23xo`). Never
+describe it as live; read the gateway template before relying on it.
+
+- The gateway sets the marker on a public-path response only when it dropped a
+  presented bearer.
+- It sets none for a request with no bearer, none when it accepted the bearer, and
+  none on a protected path, which answers `401` instead.
+- Only the gateway asserts it on those responses. A backend's own copy must not
+  reach the client there.
+- The marker reports the token, never the request. The backend's status and body
+  pass through unchanged, and a client must not treat the response as failed.
+
+The header name, its two values and its CORS exposure are owned by
+`alaa-services-contract references/30-trusted-ingress-and-laravel-contract.md`
+("Dropped-bearer response marker"). The client's reaction is owned by
+`alaa-services-contract references/60-frontend-sdk-consumption-contract.md`.
 
 **When a route must always carry an access token, remove it from the public list.**
 Do not teach a downstream service to partially trust missing auth context, because
@@ -94,26 +161,27 @@ that moves the decision from one auditable list into every service's middleware.
 
 ## Where `X-Project-Id` comes from
 
-Maintainer ruling, 2026-07-31. All four cases are settled, and this page is
-implementable. The case is fixed by two observables: whether the route requires
-authentication, and whether the request carried an access token. When it carried
-none, one further observable picks the transport: whether the request has a body.
+Maintainer ruling, 2026-07-31; case 2 amended by the owner ruling of 2026-11-14.
+All four cases are settled, and this page is implementable. The case is fixed by
+two observables: whether the route requires authentication, and whether the
+request carried a bearer the gateway accepted. When it carried none, one further
+observable picks the transport: whether the request has a body.
 
-| Case | Route requires auth | Request carries a token | Where the project id comes from |
+| Case | Route requires auth | Request carries an accepted bearer | Where the project id comes from |
 |---|---|---|---|
 | 1 | yes | yes | the gateway injects `X-Project-Id` from the verified `pid` claim |
 | 2 | no | yes | the gateway injects `X-Project-Id` from the verified `pid` claim |
 | 3 | no | no, and the request has a body | the request body field `project_id` |
 | 4 | no | no, and the request has no body | the query parameter `project_id` |
 
-**Case 2 verifies the token it was given.** A token presented on a route that does
-not require authentication runs the same verification order listed above, and a
-token failing any step is denied exactly as it would be on a protected route. Read
-"the route does not require authentication" as "the route admits a request
-carrying no token", never as "a token that arrives is not checked". An
-implementation that skips verification because the route is not protected lets a
-caller forge `pid` by presenting a malformed token, which is the failure this rule
-exists to prevent.
+**Case 2 verifies the token it was given.** A token presented on a public route
+runs the same verification order listed above. A token failing any step is dropped
+under "A public path takes an optional bearer": the request is not denied, and it
+continues as case 3 or 4. Read "the route does not require authentication" as "the
+route admits a request carrying no accepted bearer", never as "a token that
+arrives is not checked". An implementation that injects from a token it did not
+fully verify lets a caller forge `pid`, which is the failure this rule exists to
+prevent.
 
 **Cases 3 and 4 are one rule with two transports.** The transport is chosen by
 whether there is a body to carry the value, and by nothing else: a GET and a HEAD
@@ -357,6 +425,40 @@ gateway repository.
 
 The field name and its value form are owned by `/alaa-services-contract`; whether the emission is required, and at what level,
 is owned by `/alaa-observability-soc`.
+
+## WA ingest: the shipped guest write
+
+Owner ruling, 2026-11-14 (wa `<repo>/docs/DECISIONS.md` decision 35; Vector source
+at wa `7c21e51` and `8c64286`; deployment not confirmed here). `/wa/ingest/v1/events`
+is the cases 1 to 3 rule applied to one route, with two named exceptions. Neither
+exception extends to another service.
+
+- **The token is the only source of a verified tenant.** With an accepted bearer the
+  project comes only from `pid` through `X-Project-Id`. Vector then never reads,
+  compares or logs the body value, so a token holder cannot write into another
+  project.
+- **Without the header, Vector reads the client-asserted envelope project** as the
+  batch tenant. The field name and value form are owned by
+  `alaa-services-contract references/25-end-to-end-flow-and-boundaries.md` ("WA
+  route family").
+- **Exception 1, the field is always sent.** The client puts it on every envelope,
+  token or not, because a dropped bearer turns the batch into a guest batch after
+  the client has sent it.
+- **Exception 2, a bad guest batch is discarded, not answered with `400`.** A guest
+  batch whose project is absent or not in the canonical form is discarded and
+  counted, and the response stays `202`, because Vector acknowledges intake before
+  it validates. Do not expect `TENANT_CONTEXT_MISSING` here.
+- **Accepted risk, guests only.** Anyone who reaches the route can write guest rows
+  under any project id. The owner accepted that for an anonymous analytics write.
+  The value authorizes nothing, and every WA read still requires the injected
+  `X-Project-Id`, so a forged write never becomes a read.
+- **A guest batch carries no trusted actor and no trusted scope.** WA ingest takes
+  the user id only from `X-User-Id`. `identity.user_logged_in` is a client
+  assertion: it never creates, implies or substitutes a trusted user id. A row with
+  `user_logged_in` set and no user id counts as an anonymous viewer. Vector discards
+  `X-User-Id` and `X-Location-*` on a batch that arrived without `X-Project-Id`, so
+  a gateway regression cannot stamp a verified identity into a client-chosen
+  project.
 
 ## Gateway-facing routes versus service-local routes
 

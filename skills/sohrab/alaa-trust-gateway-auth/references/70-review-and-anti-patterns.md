@@ -31,7 +31,10 @@ cannot point at is not a review item.
 | A step-up-required route is allowed because the step-up feature flag is off in this environment | the route's protection state is invisible to whoever reads the route list |
 | An `X-TOTP-*` name other than the three backend-only headers is read by a service | that name is not on the sanitize list, so a public client can set it |
 | `202 Accepted` is treated as evidence that auth and tenant validation succeeded | the transport was accepted; the auth result had not been computed yet |
-| A client payload field such as `identity.user_id`, `visitor_id` or `device_id` is promoted to trusted actor context when `X-User-Id` is absent | the client names the actor |
+| A client payload field such as `identity.user_id`, `identity.user_logged_in`, `visitor_id` or `device_id` is promoted to trusted actor context, or counted as an authenticated user, when `X-User-Id` is absent | the client names the actor |
+| A path requires a token in one gateway profile and not in another, or a profile carries its own public list | the tested posture is not the deployed one |
+| The gateway answers `401` on a public path for a missing or failing bearer, or injects a trusted header, logs a claim or processes a TOTP proof from a bearer it did not fully accept | the first breaks a guest whose session expired; the second turns a rejected token into identity |
+| A backend on a public path reads `Authorization`, which the gateway forwards there | a second verifier, on the one path class where the header survives |
 | A truthy bypass switch appears in a deployed environment file with no recorded decision beside it | a control is off and nobody chose it in a way that can be audited |
 | `tenant_id`, `tenant_public_id` or `X-Tenant-Public-Id` is documented as a distinct concept rather than a legacy alias | two names for one boundary, enforced differently |
 

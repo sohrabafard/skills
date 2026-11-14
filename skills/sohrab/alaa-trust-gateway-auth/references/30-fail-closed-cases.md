@@ -92,6 +92,8 @@ route that admits tokenless requests takes a guest request's project id from the
 request body, or from a `project_id` query parameter when the request has no body,
 so an absent header there is the normal shape and not a deny;
 `references/10-verification-and-ingress.md` states that rule and what it rejects.
+A missing or failing bearer on a public path is likewise not a gateway deny: that
+file's "A public path takes an optional bearer" owns it.
 The request-time checker's requirement for all six `X-Location-*` headers is owned by
 `/alaa-services-contract` `references/26-request-time-authorization-openfga/30-sidecar-and-openfga-check.md`.
 
@@ -338,9 +340,9 @@ service, and both deny.
 - **Deny when `X-TOTP-VERIFIED-UNTIL` parses to an instant at or before now**, and
   never re-apply clock skew, because the gateway already applied it and
   re-applying widens the real lifetime past what the operator configured.
-- **Deny when a step-up header arrives on a route the gateway did not
-  authenticate**, because the gateway processes a proof only alongside a verified
-  bearer.
+- **Deny when a step-up header arrives on a request the gateway did not
+  authenticate**, because the gateway processes a proof only alongside an accepted
+  bearer, on a public path as on a protected one.
 - **Deny when the gateway is unreachable or the request arrived on a bypassing
   path**, because a step-up header carries no signature a service can check and
   its trustworthiness rests entirely on having crossed the gateway.

@@ -21,16 +21,17 @@ parses, verifies or introspects a bearer token on a gateway-fronted route. Reaso
 two verifiers means two verification policies, and the weaker one decides.
 
 **The gateway deletes every spoofable inbound trusted header on every route,
-including public routes.** A public route skips token verification, not sanitizing.
-Observable: the delete list runs unconditionally, and every header the gateway
+including public routes.** A public route makes the bearer optional; it never skips
+sanitizing. Observable: the delete list runs unconditionally, and every header the gateway
 injects appears in it.
 
 **Tenant and actor context are derived from the verified token** — never from a
 request body, query string, route parameter or client-supplied header. When a
 client-supplied selector disagrees with the trusted context, deny rather than
-choose: a silent choice is a cross-tenant read nobody decided to ship. A tokenless
-route has no token to derive from, so a guest carries `project_id` in the body, or
-in the query string when the request has no body. That value attributes a write.
+choose: a silent choice is a cross-tenant read nobody decided to ship. A request
+with no accepted bearer (none, or one the gateway dropped on a public path) has no
+claim to derive from, so a guest carries `project_id` in the body, or in the query
+string when the request has no body. That value attributes a write.
 That value scopes a read only on an explicitly listed route. That value authorizes nothing. Once a
 verified claim is present, nothing reads that value.
 
@@ -72,7 +73,7 @@ Each case carries its symptom, decision, response, log and test in
 
 | You are about to | Read |
 |---|---|
-| change gateway verification order, the public-route list, prefix stripping or sanitizing, or decide where a request's `X-Project-Id` came from | `references/10-verification-and-ingress.md` |
+| change gateway verification order, the public-route list, prefix stripping or sanitizing; decide what a public path does with a present, absent or failing bearer; decide where a request's `X-Project-Id` came from; or touch WA ingest tenant or user attribution | `references/10-verification-and-ingress.md` |
 | decide which claim a value travels in, which header it arrives as, what absence looks like, or which step-up headers a service may read | `references/20-claims-headers-and-sentinels.md` |
 | decide what happens when the gateway, a claim, a header, a checker or a proof is missing or wrong | `references/30-fail-closed-cases.md` |
 | write or review a service's ingress layer — middleware, guards, context builders, tenant scoping, bitmap consumption | `references/40-downstream-normalization.md` |
