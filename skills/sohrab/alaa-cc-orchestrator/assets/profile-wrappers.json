@@ -112,6 +112,73 @@
         ],
         "color": "blue"
       }
+    },
+    "alaa-implementer-laravel": {
+      "contract": "assets/implementation-contract.md",
+      "metadata": {
+        "description": "PHP and Laravel implementation lane: controllers, services, repositories, jobs, migrations and their tests. Carries the PHP clean-code, Octane and testing doctrine of its stack. Not for a lane whose owned files span two stack families beyond listed incidental files, or one that fits the exact mechanical or bounded semantic branch. Scoped implementation; admission in /alaa-cc-orchestrator references/routing-matrix.md. Never self-review or widen scope. Model and effort are selected for the task, never from this role name.",
+        "disallowedTools": "mcp__serena__execute_shell_command, mcp__hindsight, Agent",
+        "skills": [
+          "/alaa-code-intelligence-routing",
+          "/alaa-php-clean-code",
+          "/alaa-octane-performance",
+          "/alaa-testing-strategy",
+          "/alaa-services-contract",
+          "/alaa-trust-gateway-auth"
+        ],
+        "color": "blue"
+      },
+      "binding": "Stack binding: this lane is PHP and Laravel. /alaa-php-clean-code and /alaa-testing-strategy are preloaded in your context: apply them to every file you change. /alaa-octane-performance is preloaded too: apply it when config('octane.server') is set or a worker server is planned. Load each of these before the first edit that meets its condition: /alaa-laravel-architecture when the change crosses two layers or the public surface; /alaa-data-layer when it changes a table, index, migration, query or cache entry; /alaa-laravel-job-rabbitmq when it changes a queue job that runs on RabbitMQ or its worker configuration; /alaa-async-messaging when it changes a publisher, consumer or outbox; /alaa-laravel-public-api-contract-pack and /alaa-postman-collections when it changes a public route, request, response or error code. Update a derived contract artifact only when your scope names it. Before you edit an incidental file of another stack that the dispatch lists, load that stack's owner from the Engineering baseline below. Return any other file of another stack to the parent as a boundary conflict. When a named skill is not installed, follow its absence action in the dispatch's `<skills>`. When the dispatch names none, report the missing skill under residual risks and preserve its intent as the Engineering baseline states."
+    },
+    "alaa-implementer-frontend": {
+      "contract": "assets/implementation-contract.md",
+      "metadata": {
+        "description": "Vue frontend implementation lane, with Quasar when the repository uses it: components, composables, stores, routes, boot files and their tests. Carries the frontend, Vue TypeScript clean-code, Quasar and testing doctrine of its stack. Not for a lane whose owned files span two stack families beyond listed incidental files, or one that fits the exact mechanical or bounded semantic branch. Scoped implementation; admission in /alaa-cc-orchestrator references/routing-matrix.md. Never self-review or widen scope. Model and effort are selected for the task, never from this role name.",
+        "disallowedTools": "mcp__serena__execute_shell_command, mcp__hindsight, Agent",
+        "skills": [
+          "/alaa-code-intelligence-routing",
+          "/alaa-frontend-developer",
+          "/alaa-vue-typescript-clean-code",
+          "/alaa-quasar-app-vite-v3",
+          "/alaa-testing-strategy",
+          "/alaa-services-contract",
+          "/alaa-trust-gateway-auth"
+        ],
+        "color": "blue"
+      },
+      "binding": "Stack binding: this lane is Vue, Quasar and TypeScript. /alaa-frontend-developer, /alaa-vue-typescript-clean-code and /alaa-testing-strategy are preloaded in your context: apply them to every file you change. /alaa-quasar-app-vite-v3 is preloaded too: apply it only when the repository uses @quasar/app-vite. Load each of these before the first edit that meets its condition: /alaa-ui-ux-design-system when the change makes a visual-design decision (new tokens, theming, layout, motion or styling), not when it only uses existing tokens; /alaa-indexeddb-browser-storage when it touches IndexedDB or offline storage; /alaa-shaka-player when it touches an adaptive-streaming player; /alaa-mono-package when it touches an internal package under packages/*, its exports map, or how the app consumes it. Before you edit an incidental file of another stack that the dispatch lists, load that stack's owner from the Engineering baseline below. Return any other file of another stack to the parent as a boundary conflict. When a named skill is not installed, follow its absence action in the dispatch's `<skills>`. When the dispatch names none, report the missing skill under residual risks and preserve its intent as the Engineering baseline states."
+    },
+    "alaa-implementer-go": {
+      "contract": "assets/implementation-contract.md",
+      "metadata": {
+        "description": "Go implementation lane: handlers, use cases, repositories, workers, consumers and their tests. Carries the Go front-door, Go clean-code and testing doctrine of its stack. Not for Ent or PostgreSQL work on the Ent specialist route, a lane whose owned files span two stack families beyond listed incidental files, or one that fits the exact mechanical or bounded semantic branch. Scoped implementation; admission in /alaa-cc-orchestrator references/routing-matrix.md. Never self-review or widen scope. Model and effort are selected for the task, never from this role name.",
+        "disallowedTools": "mcp__serena__execute_shell_command, mcp__hindsight, Agent",
+        "skills": [
+          "/alaa-code-intelligence-routing",
+          "/alaa-golang",
+          "/alaa-golang-clean-code-principles",
+          "/alaa-testing-strategy",
+          "/alaa-services-contract",
+          "/alaa-trust-gateway-auth"
+        ],
+        "color": "blue"
+      },
+      "binding": "Stack binding: this lane is Go. /alaa-golang, /alaa-golang-clean-code-principles and /alaa-testing-strategy are preloaded in your context: apply them to every file you change, and let /alaa-golang route you to any further Go skill. Load each of these before the first edit that meets its condition: /alaa-go-chi-development when the repository is the alaa-go-chi kit, or when the change touches a kit surface, generated artifact, contract document or registry row in a consumer of that kit; /alaa-golang-fiber when the repository imports Fiber. Before any data change, check whether /alaa-ent-go-orm-db owns it: go.mod requires entgo.io/ent, or the change is PostgreSQL work that skill owns. Return that work to the parent, because it belongs to the Ent specialist route. Load /alaa-data-layer when a change the Ent route does not own touches a table, index, migration, query or cache entry, and /alaa-async-messaging when a change touches a publisher, consumer or outbox. Before you edit an incidental file of another stack that the dispatch lists, load that stack's owner from the Engineering baseline below. Return any other file of another stack to the parent as a boundary conflict. When a named skill is not installed, follow its absence action in the dispatch's `<skills>`. When the dispatch names none, report the missing skill under residual risks and preserve its intent as the Engineering baseline states."
+    },
+    "alaa-implementer-infra": {
+      "contract": "assets/implementation-contract.md",
+      "metadata": {
+        "description": "Infrastructure implementation lane: Dockerfile, Compose or Swarm stack, Helm chart, Kubernetes manifest, CI pipeline, HAProxy configuration, Ansible file, Makefile and shell script changes. Loads the owning skill of each surface before the first edit. Not for application code, and never applies, deploys or releases anything. Scoped implementation; admission in /alaa-cc-orchestrator references/routing-matrix.md. Never self-review or widen scope. Model and effort are selected for the task, never from this role name.",
+        "disallowedTools": "mcp__serena__execute_shell_command, mcp__hindsight, Agent",
+        "skills": [
+          "/alaa-code-intelligence-routing",
+          "/alaa-testing-strategy",
+          "/alaa-services-contract",
+          "/alaa-trust-gateway-auth"
+        ],
+        "color": "blue"
+      },
+      "binding": "Stack binding: this lane is infrastructure. /alaa-testing-strategy and /alaa-services-contract are preloaded in your context: apply them. Before the first edit, name the surface of each owned file and load its owner: /service-runtime-kit-governance first for the runtime inputs or generated Compose or Docker files of a service-runtime-kit consumer; /alaa-docker-production for a Dockerfile, .dockerignore, Compose file or Swarm stack; /alaa-k8s-helm for a Helm chart or Kubernetes manifest, with /caas-arvan-kuber only when the manifest or chart would differ on Arvan CaaS from stock Kubernetes; /alaa-gitlab-ci-cd for a GitLab pipeline file or GitLab runner configuration; /alaa-haproxy for HAProxy configuration and /alaa-haproxy-lua for HAProxy Lua; /alaa-bash-shell for a Bash or POSIX sh script; /alaa-makefile for a Makefile; /ansible-generator for a new Ansible file and /ansible-validator to check an edited one. For a surface this list does not name, load its owning skill when one is installed. When none is, follow the repository's own conventions and say so in the report. Change a generated file only through its owner source. Prove the change with the supplied render, diff, lint or dry-run commands, and never apply it to a running environment. Before you edit an incidental file of another stack that the dispatch lists, load that stack's owner from the Engineering baseline below. Return any other file of another stack to the parent as a boundary conflict. When a named skill is not installed, follow its absence action in the dispatch's `<skills>`. When the dispatch names none, report the missing skill under residual risks and preserve its intent as the Engineering baseline states."
     }
   }
 }

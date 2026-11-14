@@ -55,6 +55,10 @@ Activation inspects roles only. An explicitly authorized installer validates mod
 - `alaa-test-strategist`
 - `alaa-implementer`
 - `alaa-implementer-astra`
+- `alaa-implementer-laravel`
+- `alaa-implementer-frontend`
+- `alaa-implementer-go`
+- `alaa-implementer-infra`
 - `alaa-verifier`
 - `alaa-failure-analyst`
 - `alaa-reviewer`

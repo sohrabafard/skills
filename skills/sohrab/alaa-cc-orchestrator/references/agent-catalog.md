@@ -24,6 +24,10 @@ The manifest lists the executable agents managed by this pack.
 | `alaa-implementer-fable` | workspace-write | Compatibility implementation identity; exceptional model selection requires the all-role task admission. Complexity, sensitivity, file count, failure count and imagined insufficiency alone do not qualify. Reuse applicable prior evidence; no mandatory trial ladder, synthetic benchmark or replay of completed work. | Self-review or unrecorded profile admission |
 | `alaa-implementer-sonnet-high` | workspace-write | Harder or longer grounded work with bounded local decisions. | Self-review or unrecorded profile admission |
 | `alaa-implementer-opus-high` | workspace-write | Interacting unresolved design decisions and demanding system reasoning. | Self-review or unrecorded profile admission |
+| `alaa-implementer-laravel` | workspace-write | PHP and Laravel implementation with the stack's clean-code, Octane and testing doctrine. | Another stack's files, the mechanical or bounded branches, self-review, or unrecorded profile admission |
+| `alaa-implementer-frontend` | workspace-write | Vue frontend implementation, with Quasar when used, and the stack's frontend, clean-code and testing doctrine. | Another stack's files, the mechanical or bounded branches, self-review, or unrecorded profile admission |
+| `alaa-implementer-go` | workspace-write | Go implementation with the stack's front-door, clean-code and testing doctrine. | Another stack's files, the mechanical or bounded branches, self-review, or unrecorded profile admission |
+| `alaa-implementer-infra` | workspace-write | Infrastructure file changes; loads the owning skill of each surface before the first edit. | Another stack's files, the mechanical or bounded branches, self-review, applying, deploying or releasing, or unrecorded profile admission |
 | `alaa-implementer-haiku` | workspace-write | Exact mechanical edits or bounded semantic work with settled local cause, named scope, invariants and regression checks | Mechanical branch: semantic discretion or design changes; both branches: ambiguous scope, interacting design or wider authority |
 | `alaa-implementer-haiku-high` | workspace-write | Longer or stricter bounded semantic work satisfying the same recorded fit | Interacting design, unresolved cross-boundary contracts, trust, shared-state or consistency decisions |
 | `alaa-verifier` | artifacts only | Exact commands and reproducible evidence | Fixing, debugging, or changing commands |
@@ -144,6 +148,8 @@ The `Skill` tool covers everything a preload cannot know in advance. Which clean
 needs depends on the repository's language and the surface the dispatch hands over, and the pack's
 rule is to name the one skill the lane needs rather than preload every candidate into every lane.
 Every managed general allowlisted role keeps `Skill` for that reason, and every managed implementation role inherits it.
+
+A stack-bound implementation role is the exception. It preloads the owning skills of its one stack and the testing doctrine, because a stack skill that a dispatch only mentions is often not loaded.
 
 Withholding `Skill` from the allowlists was tried and reverted. It narrows nothing on a role that
 already holds `Bash`, `Read`, `Write`, and `Edit`; it makes the dispatch's own `skills`

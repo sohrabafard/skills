@@ -29,8 +29,14 @@ The manifest lists the executable agents managed by this pack.
 | `alaa-implementer-xhigh` | workspace-write | Sustained demanding workhorse reasoning from the batch mapping | Self-review, unrecorded admission or wider authority |
 | `alaa-implementer-astra-medium` | workspace-write | Exact official task/priority admission with reasoning need and rejected cheaper/decomposed alternatives | Self-review, unrecorded admission or wider authority |
 | `alaa-implementer-astra-xhigh` | workspace-write | Exact official task/priority admission with sustained reasoning need and rejected cheaper/decomposed alternatives | Self-review, unrecorded admission or wider authority |
+| `alaa-implementer-laravel` | workspace-write | PHP and Laravel implementation with the stack's clean-code, Octane and testing doctrine. | Another stack's files, the mechanical or bounded branches, self-review, or unrecorded profile admission |
+| `alaa-implementer-frontend` | workspace-write | Vue frontend implementation, with Quasar when used, and the stack's frontend, clean-code and testing doctrine. | Another stack's files, the mechanical or bounded branches, self-review, or unrecorded profile admission |
+| `alaa-implementer-go` | workspace-write | Go implementation with the stack's front-door, clean-code and testing doctrine. | Another stack's files, the mechanical or bounded branches, self-review, or unrecorded profile admission |
+| `alaa-implementer-infra` | workspace-write | Infrastructure file changes; loads the owning skill of each surface before the first edit. | Another stack's files, the mechanical or bounded branches, self-review, applying, deploying or releasing, or unrecorded profile admission |
 | `alaa-verifier` | workspace-write (artifacts only) | Exact commands and reproducible evidence | Fixing, debugging, or changing commands |
 | `alaa-failure-analyst` | read-only | Diagnose ambiguous, flaky, environment, or cross-lane failures | Applying fixes |
+
+A stack-bound implementation role names the owning skills of its one stack and the testing doctrine in its instructions. It loads them before the first edit, because a stack skill that a dispatch only mentions is often not loaded.
 
 ## Review
 

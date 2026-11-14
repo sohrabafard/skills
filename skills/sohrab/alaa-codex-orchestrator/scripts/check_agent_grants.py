@@ -178,7 +178,7 @@ ROLE_POLICY: dict[str, dict[str, dict]] = {
     "alaa-instruction-reviewer": {},
 }
 ROLE_POLICY["alaa-reviewer-deep"] = ROLE_POLICY["alaa-reviewer"]
-for name in ("alaa-implementer-luna", "alaa-implementer-high", "alaa-implementer-low", "alaa-implementer-luna-high", "alaa-implementer-luna-low", "alaa-implementer-xhigh", "alaa-implementer-astra-medium", "alaa-implementer-astra-xhigh"):
+for name in ("alaa-implementer-luna", "alaa-implementer-high", "alaa-implementer-low", "alaa-implementer-luna-high", "alaa-implementer-luna-low", "alaa-implementer-xhigh", "alaa-implementer-astra-medium", "alaa-implementer-astra-xhigh", "alaa-implementer-laravel", "alaa-implementer-frontend", "alaa-implementer-go", "alaa-implementer-infra"):
     ROLE_POLICY[name] = ROLE_POLICY["alaa-implementer"]
 for name in ("alaa-planner", "alaa-planner-high"):
     ROLE_POLICY[name] = ROLE_POLICY["alaa-spec-analyst"]

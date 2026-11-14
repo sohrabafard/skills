@@ -1,6 +1,6 @@
 {
   "schema_version": 2,
-  "policy_version": "2.0.0",
+  "policy_version": "2.1.0",
   "surface": "codex",
   "verified_on": "2026-11-03",
   "sources": [
@@ -161,6 +161,34 @@
       "selection_mode": "task-selected",
       "artifacts": [
         "skills/sohrab/alaa-codex-orchestrator/agents/alaa-implementer.toml"
+      ]
+    },
+    "alaa-implementer-laravel": {
+      "kind": "agent",
+      "selection_mode": "task-selected",
+      "artifacts": [
+        "skills/sohrab/alaa-codex-orchestrator/agents/alaa-implementer-laravel.toml"
+      ]
+    },
+    "alaa-implementer-frontend": {
+      "kind": "agent",
+      "selection_mode": "task-selected",
+      "artifacts": [
+        "skills/sohrab/alaa-codex-orchestrator/agents/alaa-implementer-frontend.toml"
+      ]
+    },
+    "alaa-implementer-go": {
+      "kind": "agent",
+      "selection_mode": "task-selected",
+      "artifacts": [
+        "skills/sohrab/alaa-codex-orchestrator/agents/alaa-implementer-go.toml"
+      ]
+    },
+    "alaa-implementer-infra": {
+      "kind": "agent",
+      "selection_mode": "task-selected",
+      "artifacts": [
+        "skills/sohrab/alaa-codex-orchestrator/agents/alaa-implementer-infra.toml"
       ]
     },
     "alaa-implementer-astra": {

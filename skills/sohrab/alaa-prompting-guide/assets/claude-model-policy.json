@@ -1,6 +1,6 @@
 {
   "schema_version": 2,
-  "policy_version": "3.1.0",
+  "policy_version": "3.2.0",
   "surface": "claude-code",
   "verified_on": "2026-11-14",
   "sources": [
@@ -273,6 +273,34 @@
       "selection_mode": "task-selected",
       "artifacts": [
         "skills/sohrab/alaa-cc-orchestrator/agents/alaa-implementer.md"
+      ]
+    },
+    "alaa-implementer-laravel": {
+      "kind": "agent",
+      "selection_mode": "task-selected",
+      "artifacts": [
+        "skills/sohrab/alaa-cc-orchestrator/agents/alaa-implementer-laravel.md"
+      ]
+    },
+    "alaa-implementer-frontend": {
+      "kind": "agent",
+      "selection_mode": "task-selected",
+      "artifacts": [
+        "skills/sohrab/alaa-cc-orchestrator/agents/alaa-implementer-frontend.md"
+      ]
+    },
+    "alaa-implementer-go": {
+      "kind": "agent",
+      "selection_mode": "task-selected",
+      "artifacts": [
+        "skills/sohrab/alaa-cc-orchestrator/agents/alaa-implementer-go.md"
+      ]
+    },
+    "alaa-implementer-infra": {
+      "kind": "agent",
+      "selection_mode": "task-selected",
+      "artifacts": [
+        "skills/sohrab/alaa-cc-orchestrator/agents/alaa-implementer-infra.md"
       ]
     },
     "alaa-failure-analyst": {

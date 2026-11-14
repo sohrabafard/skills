@@ -6,7 +6,7 @@ from datetime import date
 from pathlib import Path
 from task_model_controls import validate_task_selection
 
-ARTIFACTS = {f"alaa-{role}": f"skills/sohrab/alaa-codex-orchestrator/agents/alaa-{role}.toml" for role in "spec-analyst explorer researcher test-strategist implementer implementer-astra verifier failure-analyst reviewer reviewer-deep adversarial-reviewer documenter architecture-critic security-reviewer migration-guardian api-contract-reviewer dependency-auditor accessibility-reviewer browser-qa performance-profiler observability-reviewer release-guardian instruction-reviewer implementer-high planner planner-high implementer-luna implementer-low implementer-luna-high implementer-luna-low implementer-xhigh implementer-astra-medium implementer-astra-xhigh".split()}
+ARTIFACTS = {f"alaa-{role}": f"skills/sohrab/alaa-codex-orchestrator/agents/alaa-{role}.toml" for role in "spec-analyst explorer researcher test-strategist implementer implementer-laravel implementer-frontend implementer-go implementer-infra implementer-astra verifier failure-analyst reviewer reviewer-deep adversarial-reviewer documenter architecture-critic security-reviewer migration-guardian api-contract-reviewer dependency-auditor accessibility-reviewer browser-qa performance-profiler observability-reviewer release-guardian instruction-reviewer implementer-high planner planner-high implementer-luna implementer-low implementer-luna-high implementer-luna-low implementer-xhigh implementer-astra-medium implementer-astra-xhigh".split()}
 ARTIFACTS["alaa-rule-writer"] = "skills/sohrab/alaa-prompting-guide/assets/rule-writer/codex/alaa-rule-writer.toml"
 
 DEFAULT_POLICY = Path(__file__).resolve().parents[1] / "assets/codex-model-policy.json"

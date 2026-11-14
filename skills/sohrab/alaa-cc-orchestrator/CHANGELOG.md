@@ -1,5 +1,12 @@
 # Changelog
 
+## 5.7.0 - 2026-11-14
+
+- Four stack-bound implementation roles: `alaa-implementer-laravel`, `alaa-implementer-frontend`, `alaa-implementer-go` and `alaa-implementer-infra`. Each one preloads the owning skills of its stack and the testing doctrine through `skills:`, plus the reads its surfaces trigger. `references/routing-matrix.md` *Stack-bound roles* admits them for a single-stack lane outside the mechanical and bounded branches. For such a lane they replace the generic workhorse identities. A session that does not have the role records and dispatches the generic role instead. They select neither model nor effort. Both model policies register them.
+- `assets/profile-wrappers.json` accepts an optional `binding` paragraph on an implementation entry. The renderer inserts it before the contract's `Engineering baseline:` line; an entry without it renders unchanged.
+- The implementation contract gains an infrastructure line in the engineering baseline and a rule to list every derived contract artifact a public-surface change left stale under boundary conflicts. Every implementer wrapper changes with it.
+- The implementation dispatch template scopes the lane's covering test files, writes each resolved skill binding as a call, names the stack-bound role as the registered variant of a single-stack lane, and carries a `<baseline_failures>` field.
+
 ## 5.6.0 - 2026-11-14
 
 - Wording rewritten for clarity, with behaviour unchanged: `SKILL.md`, the routing matrix, the model-effort policy, the gate policy, the agent catalog, the implementation template and the implementation and planner contracts now state each rule as complete sentences or numbered steps. `SKILL.md` section 7 states the render, validation and contract checks and their exit codes once, and `references/model-effort-policy.md` points to it.

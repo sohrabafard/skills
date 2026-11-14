@@ -129,6 +129,30 @@ For either bounded route, if fit ceases, preserve valid edits, stop dependent wo
 
 The legacy exceptional IDs `alaa-implementer-astra`, `alaa-implementer-astra-medium`, and `alaa-implementer-astra-xhigh` remain implementation authority identities. They set no model or effort. Apply the all-role exceptional model admission above only when the selected task pair is exceptional, and record its evidence before dispatch. Return missing facts, unavailable tools and unresolved product intent to their owners. An unresolved decision alone never establishes model inadequacy.
 
+### Stack-bound roles
+
+`alaa-implementer-laravel`, `alaa-implementer-frontend`, `alaa-implementer-go` and `alaa-implementer-infra` are implementation authority identities bound to one stack family. Each one carries the owning skills of its stack and the reads its surfaces trigger. A stack-bound role selects neither model nor effort, and it changes no tool, verdict or independent gate. Apply All-role task allocation to it as to every role.
+
+Select a stack-bound role when both of these hold:
+
+- Every owned file belongs to one stack family, apart from incidental files of another family that the lane record lists by path. Decide the family from the repository manifests and the owned file types, never from the repository name.
+- The lane is not admitted to the mechanical branch or either bounded route above. Those routes keep their own roles: their admission predicates decide them, and a mechanical edit needs no stack doctrine.
+
+For such a lane, the stack-bound role replaces `alaa-implementer`, `alaa-implementer-high`, `alaa-implementer-xhigh`, `alaa-implementer-astra`, `alaa-implementer-astra-medium` and `alaa-implementer-astra-xhigh`. An exceptional pair admitted under All-role task allocation runs on the stack-bound role.
+
+| Owned files | Role |
+|---|---|
+| PHP or Laravel code, migrations and their tests | `alaa-implementer-laravel` |
+| Vue or Quasar frontend code in TypeScript or JavaScript, and its tests | `alaa-implementer-frontend` |
+| Go code and its tests, except work on the Ent specialist route | `alaa-implementer-go` |
+| Dockerfile, Compose or Swarm stack, Helm chart, Kubernetes manifest, CI pipeline, HAProxy configuration, Ansible file, Makefile or shell script | `alaa-implementer-infra` |
+
+Record the workload class of the lane under scope and complexity in the allocation record: normal, substantial interacting, or sustained coupled. For a stack-bound lane the class informs the task pair and selects no role identity.
+
+Split a lane that owns files of two families when the parts are independent. Otherwise dispatch the generic role for its workload class and name each stack's skills in the dispatch as calls. Do the same for a stack that has no bound role.
+
+When the selected stack-bound role is not available in this session, do not block the lane for that reason. Before dispatch, record the generic role for the workload class as the registered profile in the allocation record, with the unavailable stack-bound role as its reason. Dispatch that role and name the stack's skills in the dispatch as calls. This fallback replaces only the role identity. Step 6 of All-role task allocation and `model-effort-policy.md` still govern the model and effort pair, and they still block the lane when the pair cannot be realized. A session started before the role was installed does not have it.
+
 Reassess remaining work only at three boundaries: the initial assignment, a material scope change and a fix follow-up. Keep the assignment while the same reason applies. Do not switch during a command or an ordinary progress update. Before you replace a writer, apply the stopped-writer recovery in `alaa-workflow references/workspace-and-integration.md`, then retire its assignment. Hand off the remaining scope, acceptance criteria and evidence. Preserve independent gates. Never overlap writers or replay completed work.
 
 Read `model-effort-policy.md` before profile changes.

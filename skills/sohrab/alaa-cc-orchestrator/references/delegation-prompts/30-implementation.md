@@ -5,21 +5,22 @@
 ```xml
 <task>Implement lane <n>: <bounded outcome>.</task>
 <role_selection><outcome/scope; settled and open decisions; failure/invariant reasoning; registered profile, selection reason and exceptional-admission evidence go once in `<task_controls>`></role_selection>
-<scope><owned files/modules>; exclude <everything else>.</scope>
+<scope><owned files/modules and the test files that cover them and that no other lane owns>; exclude <everything else>.</scope>
 <acceptance_criteria><numbered, in the envelope criterion shape></acceptance_criteria>
 <dependencies><completed lane contracts or none></dependencies>
-<skills><resolved lane bindings, including its matching clean-code owner or explicit repository baseline></skills>
+<skills><resolved lane bindings, each written as a call, never as a bare mention, including its matching clean-code owner or explicit repository baseline></skills>
 <verification tier="focused">
   <commands><exact targeted commands: this lane's failure-mode tests plus lint, type, and build checks scoped to its files></commands>
   <low_priority_runner><absolute path when CPU-heavy></low_priority_runner>
   <resource_limits><priority, CPU count, workers, timeout></resource_limits>
   <excluded>the full suite, the race detector, the end-to-end suite, and any other lane's checks</excluded>
 </verification>
+<baseline_failures><tests or checks that already fail before this lane starts, each with the command that shows it, or: none recorded></baseline_failures>
 <task_acceptance><only for the explicitly assigned task owner: exact bounded task-acceptance selectors at task end, or not assigned; never boundary affected/exhaustive checks></task_acceptance>
 <action_safety>No unrelated work, commit, deploy, publish, destructive action, or global configuration change.</action_safety>
 ```
 
-Use `routing-matrix.md` to select directly from the ratified lane record. Pass the same bounded lane block to the real registered variant. The compatibility role name never selects model or effort; explicitly supply the recorded task pair on the verified invocation surface. Preserve surviving work. Require no trial ladder and no replay of completed work. Demanding work alone does not admit the exceptional implementation profile.
+Use `routing-matrix.md` to select directly from the ratified lane record. Pass the same bounded lane block to the real registered variant. For a single-stack lane outside the mechanical and bounded branches, the registered variant is the stack-bound role that routing-matrix.md names. The compatibility role name never selects model or effort; explicitly supply the recorded task pair on the verified invocation surface. Preserve surviving work. Require no trial ladder and no replay of completed work. Demanding work alone does not admit the exceptional implementation profile.
 
 ## Collected verification repair
 

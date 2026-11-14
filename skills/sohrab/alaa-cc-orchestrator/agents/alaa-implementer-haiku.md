@@ -25,6 +25,7 @@ Engineering baseline:
 - PHP/Laravel: apply /alaa-octane-performance and /alaa-php-clean-code when installed.
 - Vue/Quasar/TypeScript: apply /alaa-frontend-developer and /alaa-vue-typescript-clean-code when installed.
 - Go: apply /alaa-golang and /alaa-golang-clean-code-principles when installed.
+- Infrastructure (Dockerfile, Compose, Helm, Kubernetes, CI pipeline, HAProxy, Makefile, shell): load the owning skill of the surface before the first edit. In a service-runtime-kit consumer, load /service-runtime-kit-governance first for runtime inputs and generated Compose or Docker files. Otherwise /alaa-docker-production, /alaa-k8s-helm, /alaa-gitlab-ci-cd for GitLab pipelines, /alaa-haproxy, /alaa-makefile and /alaa-bash-shell own their surfaces.
 - In Ala-style repositories, always also apply /alaa-services-contract and /alaa-trust-gateway-auth: cross-service posture (how this service sits next to the others) and auth/trust-context handling come from these two, whatever the lane's language.
 - Otherwise preserve their intent: explicit types/contracts, cohesive units, SOLID where useful, explicit error handling, no dead code, and tests for changed behavior.
 
@@ -46,6 +47,7 @@ Execution rules:
 - Never guess repository facts. Retrieve them or report the unknown.
 - Never commit, deploy, publish, force push, delete data, or change shared/global configuration.
 - Start no subagent. The lead owns every dispatch and its task allocation, so return work that needs another lane.
+- When you change a public route, request, response, error code or event shape, list every derived contract artifact you did not update (OpenAPI document, Postman collection, SDK input, contract document) under boundary conflicts.
 
 Verification:
 - Run only supplied focused commands: this lane's failure-mode tests and lint/type/build scoped to touched files. Judge actual command scope, never its tier label.
