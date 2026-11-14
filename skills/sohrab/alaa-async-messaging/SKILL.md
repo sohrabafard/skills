@@ -84,8 +84,9 @@ sh scripts/check-consumer-bounds.sh --root .
 
 - Exit **0**: no findings.
 - Exit **1**: findings with file and line. Resolve every one before reporting the change complete.
-- Exit **2**: could not determine (no broker lane or no recognisable declaration). Run the three checks by
-  hand and report each. Exit 2 is never a pass.
+- Exit **2**: could not determine (no broker lane or no recognisable declaration). Run the script's three
+  checks by hand and report each: an explicit prefetch at every consumer construction site, a dead-letter
+  target on every declared queue, and every broker name against the registry grammar. Exit 2 is never a pass.
 
 Detection is narrow, like the kit's pooled-lane analyzer, so a constant or a wrapper escapes it.
 

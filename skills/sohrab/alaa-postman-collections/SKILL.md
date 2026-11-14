@@ -1,6 +1,6 @@
 ---
 name: alaa-postman-collections
-description: "Create, update, synchronize, and validate Postman Collection v2.1 collections and environments so every request carries saved examples for its success case and for every error it can actually return, a post-response script that captures tokens and ids into the variables later requests consume, tests that would fail against a broken implementation, and documentation a frontend developer and a security tester can both work from — while the artifact stays importable into Insomnia. Use for Postman collections, environments, examples, scripts, tests, request documentation, mock servers, Insomnia portability, and proving a collection matches the repository's public API contract. Do not use for generic docs work with no Postman ownership, or to decide what a public contract says: on a Laravel service that is /alaa-laravel-public-api-contract-pack."
+description: "Postman Collection v2.1 authoring and validation for collections and environments: every request carries saved examples for its success case and for every error it can actually return, a post-response script that captures tokens and ids into the variables later requests consume, tests that would fail against a broken implementation, and documentation a frontend developer and a security tester can both work from — while the artifact stays importable into Insomnia. Use to create, update, synchronize or validate Postman collections, environments, examples, scripts, tests, request documentation, mock servers or Insomnia portability, and to prove a collection matches the repository's public API contract. Do not use for generic docs work with no Postman ownership, or to decide what a public contract says: on a Laravel service that is /alaa-laravel-public-api-contract-pack."
 ---
 
 # Alaa Postman Collections
@@ -62,9 +62,8 @@ files the current task touches.
 3. Read `references/00-topic-map.md` to pick the smallest set of reference files, and read
    `references/25-public-api-contract-and-sdk-readiness.md` when the repo owns a public API.
 4. Follow the ordered workflow in `references/10-scope-and-trigger-rules.md`. It also
-   holds the generated-artifact rule and the stop-and-ask conditions.
-5. Prefer a minimal update to an existing artifact over a rewrite.
-6. Before running any artifact check, read `references/60-validation-and-output-contract.md`
+   holds the generated-artifact rule, the update-versus-rewrite rule and the stop-and-ask conditions.
+5. Before running any artifact check, read `references/60-validation-and-output-contract.md`
    for the offline workflow, flags, and exit codes.
 
 ## Deliverables
@@ -77,13 +76,14 @@ files the current task touches.
 
 ## Other references
 
-- ownership, the ordered workflow, source-of-truth order, stop rules:
-  `references/10-scope-and-trigger-rules.md`
-- public-contract parity and SDK readiness:
-  `references/25-public-api-contract-and-sdk-readiness.md`
-- aggregate collections, and a repository holding its own copy of a script from here:
-  `references/70-aggregate-collections-and-consumer-repos.md`
-- official-first source map and freshness triggers: `references/90-source-map.md`
+- When you decide who owns an artifact, walk the ordered workflow, rank sources of truth, or meet a stop
+  rule, read `references/10-scope-and-trigger-rules.md`.
+- When you prove parity with a public contract or judge SDK readiness, read
+  `references/25-public-api-contract-and-sdk-readiness.md`.
+- When you merge several services' collections, or a repository holds its own copy of a script from here,
+  read `references/70-aggregate-collections-and-consumer-repos.md`.
+- When the work depends on current schema, Postman or Insomnia behaviour, or on API source truth, read
+  `references/90-source-map.md`. It holds the official-first sources and the freshness triggers.
 
 ## Companion routing
 
