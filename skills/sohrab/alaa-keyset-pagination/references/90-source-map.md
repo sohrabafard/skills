@@ -37,12 +37,14 @@ Documentation pages are the `current` series, **PostgreSQL 18**, retrieved **202
 - A `(x, y)` index satisfies `ORDER BY x, y` forward and `ORDER BY x DESC, y DESC` backward; a mixed-direction ordering needs a mixed-direction index: https://www.postgresql.org/docs/current/indexes-ordering.html
 - `ASC` implies `NULLS LAST`, `DESC` implies `NULLS FIRST`: https://www.postgresql.org/docs/current/queries-order.html
 
-Measured figures quoted in this skill, all on PostgreSQL 16.13:
+Measured figures quoted in this skill, all on PostgreSQL 16.13 and not re-measured as of 2026-11-14:
 
 - Row-value predicate 4 buffers against 927 for the `OR` form, without `ORDER BY`, on a 100,010-row table with a `(c, id)` index.
 - Row-value predicate 13 buffers against 173,475 for the `OR` form under `ORDER BY ... LIMIT 10`, with 172,800 rows removed by filter in the `OR` case.
 - The same row-value predicate against a mixed-direction `(c ASC, id DESC)` index read 387 buffers instead of 4, while printing an identical `Index Cond` line — the basis for the rule that buffers, not plan text, are the observable.
 - `ORDER BY c DESC, id ASC` over a `(created_at, id)` index planned an `Incremental Sort`; `ORDER BY c DESC NULLS LAST` over a default index planned a full `Sort` over a `Seq Scan`.
+
+No raw record of these runs exists in this repository, and the files of this skill describe the setup behind the mixed-direction buffer figure in ways that disagree, so these figures await a new measurement.
 
 ## Unverified — do not assert these
 

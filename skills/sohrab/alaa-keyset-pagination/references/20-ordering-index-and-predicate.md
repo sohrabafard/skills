@@ -26,7 +26,7 @@ This serves `WHERE status = $1 ORDER BY published_at DESC, id DESC` through a ba
 
 Equality filters belong to the left of the ordering columns because PostgreSQL uses equality constraints on leading columns plus the first inequality to bound the index range; a filter column placed to the right of the ordering columns is checked but does not narrow the scanned range.
 
-**Observable: buffers, not plan text.** Run `EXPLAIN (ANALYZE, BUFFERS)` on the route's real query, at the route's maximum `limit`, against production-shaped row counts. Require no `Sort` or `Incremental Sort` node, and require the buffer count to stay flat as the cursor advances deeper into the table. Do not accept the `Index Cond` line as proof: PostgreSQL prints the original qualifier there even when it could only use a loose bound. Measured case — the same row-value predicate against a mixed-direction index still printed an identical `Index Cond` while reading 387 buffers instead of 4.
+**Observable: buffers, not plan text.** Run `EXPLAIN (ANALYZE, BUFFERS)` on the route's real query, at the route's maximum `limit`, against production-shaped row counts. Require no `Sort` or `Incremental Sort` node, and require the buffer count to stay flat as the cursor advances deeper into the table. Do not accept the `Index Cond` line as proof: PostgreSQL prints the original qualifier there even when it could only use a loose bound. Measured case — the same row-value predicate against a mixed-direction index still printed an identical `Index Cond` while reading 387 buffers instead of 4 (not re-measured as of 2026-11-14).
 
 ## The continuation predicate
 
@@ -48,11 +48,11 @@ Row-value comparison in PostgreSQL compares elements left to right, stopping at 
 WHERE published_at < $1 OR (published_at = $1 AND id < $2)
 ```
 
-A single index scan can only use clauses joined by `AND`; an `OR` needs a bitmap combination, and a bitmap visits rows in physical order, which destroys the ordering the query then has to restore with a sort. With `ORDER BY ... LIMIT` present the planner therefore does not use the bitmap at all — it scans the index in order and applies the `OR` as a filter. Measured on PostgreSQL 16.13 over the same table and index: the `OR` form read **173,475 buffers** and discarded 172,800 rows by filter; the row-value form read **13 buffers** and fetched 10 rows. Without `ORDER BY`, the `OR` form instead produced a `BitmapOr` of two scans against the same index where the row-value form produced one.
+A single index scan can only use clauses joined by `AND`; an `OR` needs a bitmap combination, and a bitmap visits rows in physical order, which destroys the ordering the query then has to restore with a sort. With `ORDER BY ... LIMIT` present the planner therefore does not use the bitmap at all — it scans the index in order and applies the `OR` as a filter. Measured on PostgreSQL 16.13 over the same table and index (not re-measured as of 2026-11-14): the `OR` form read **173,475 buffers** and discarded 172,800 rows by filter; the row-value form read **13 buffers** and fetched 10 rows. Without `ORDER BY`, the `OR` form instead produced a `BitmapOr` of two scans against the same index where the row-value form produced one.
 
 The observable for this rule is owned by step 5 of the decision procedure in `SKILL.md`. It is greppable and should be a review gate.
 
-**Direction must match the scan.** Pair `<` with `ORDER BY ... DESC` and `>` with `ORDER BY ... ASC`. A row-value comparison pointing against the scan direction is not a tight range: measured on PostgreSQL 16.13, `(c, id) < (1, 5)` under a forward scan read 387 buffers, while the same predicate under `ORDER BY c DESC, id DESC` read 4. In correct keyset pagination the two always agree, so this shows up only when someone hand-writes the predicate and the ordering separately.
+**Direction must match the scan.** Pair `<` with `ORDER BY ... DESC` and `>` with `ORDER BY ... ASC`. A row-value comparison pointing against the scan direction is not a tight range: measured on PostgreSQL 16.13, `(c, id) < (1, 5)` under a forward scan read 387 buffers, while the same predicate under `ORDER BY c DESC, id DESC` read 4 (not re-measured as of 2026-11-14). In correct keyset pagination the two always agree, so this shows up only when someone hand-writes the predicate and the ordering separately.
 
 ## NULLS placement
 
