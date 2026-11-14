@@ -30,7 +30,7 @@ Re-check current behavior when the task mentions:
 
 - The latest Claude Code or Codex release, or new tool, terminal, or Bash behavior.
 - Very large generated logs, new validation runners, or new output caps.
-- A model change affecting reasoning, verbosity, narration, tool eagerness, or delegation polarity. First read `references/model-output-profiles.md`. For a model newer than that file, re-verify it against vendor documentation.
+- A model change affecting reasoning, verbosity, narration, tool eagerness, or delegation polarity. Read `references/model-output-profiles.md`; it routes the model claim to `/alaa-prompting-guide`, which owns current model guidance.
 - Subagent fan-out that could flood the parent's context.
 - Context-window, compaction, or caching behavior. These change the actual cost of a long tool result.
 
@@ -42,12 +42,6 @@ Re-check current behavior when the task mentions:
 - Treat fewer tokens, calls, or turns as improvements only when final output still meets its quality bar.
 - State the desired output shape positively and explicitly. Avoid model-specific rituals and repeated phrasing.
 - Keep bounded reads, reviewable edits, and validation evidence with newer models. Greater capability does not remove this discipline.
-
-## Domain-bounded anti-patterns
-
-**Pasting a 2,000-line validation log to prove a command ran:** Capture it in a repo-local artifact when useful. Read the failing slice. Report the command, result, and path.
-
-**Reading six full files to answer a question about one function:** Search for the symbol. Read the bounded range around it, then stop.
 
 ## Caveats
 

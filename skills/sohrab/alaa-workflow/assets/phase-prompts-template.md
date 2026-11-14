@@ -30,7 +30,7 @@ For Beads-bound work, populate each dispatch's actor, binding reference, issue I
 
 **Done:** The phase acceptance criteria pass and status reflects verified reality.
 
-**Blocked:** Record the exact blocker, attempted safe checks, and next executable action; do not claim completion.
+**Blocked:** Diagnose an ordinary failure, such as a failing command, a timeout or a failing tool, and work through it. Stop only for a deliberate blocker such as a human gate, a missing authority or user decision, or an exhausted active retry budget. Then record the exact blocker, attempted safe checks, and next executable action; do not claim completion.
 
 ## Independent reviewer
 

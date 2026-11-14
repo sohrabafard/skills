@@ -1,6 +1,6 @@
 ---
 name: alaa-workflow
-description: "Plan before implementation. Use a compact plan for bounded work and a complete durable plan for multi-phase, resumable, delegated, or handoff-sensitive work. Prefer Beads-native execution plans with exact phase/task skills; keep admitted Markdown families and file consumers. Plan-only authorizes planning only. Respect native Plan Mode and explicit no-file, read-only, or chat-only limits. Short advice and ordinary review need no execution plan."
+description: "Planning and continuity workflow for agent work: compact or durable execution plans, Beads task tracking, handoff and resume. Use to plan before implementation, track tasks in Beads, resume after compaction or a restart, or hand work to another agent or PC. Use a compact plan for bounded work and a complete durable plan for multi-phase, resumable, delegated, or handoff-sensitive work. Prefer Beads-native execution plans with exact phase/task skills; keep admitted Markdown families and file consumers. Plan-only authorizes planning only. Respect native Plan Mode and explicit no-file, read-only, or chat-only limits. Short advice and ordinary review need no execution plan. Do not use it to publish durable knowledge, which /alaa-memory-os owns."
 ---
 
 # Alaa Workflow
