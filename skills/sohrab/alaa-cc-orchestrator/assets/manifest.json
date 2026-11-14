@@ -55,12 +55,12 @@
     {
       "name": "alaa-implementer-frontend",
       "file": "agents/alaa-implementer-frontend.md",
-      "sha256": "2a496ce4e222715e9a93a3c2967a26f395e57c7bb0963000771de575a6bc7296"
+      "sha256": "1fbc0d0d45b8ed5f3347d5732a0c3e5f1a770f55d3f47362b29f6e0c42661493"
     },
     {
       "name": "alaa-implementer-go",
       "file": "agents/alaa-implementer-go.md",
-      "sha256": "3f232f90006b57dc23f1e49f55ae60b0fd3adcc1b956b16121f29b9b39b47616"
+      "sha256": "14bc2ab78856054ce7c1ac9507c49035652d7be118661cd29cb4d4b2ed350cf3"
     },
     {
       "name": "alaa-implementer-haiku-high",

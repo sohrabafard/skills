@@ -65,12 +65,12 @@
     {
       "name": "alaa-implementer-frontend",
       "file": "agents/alaa-implementer-frontend.toml",
-      "sha256": "3627ac0567266eaae24b103b1fb20e382827f6c656e36b3b55e746c58dabbc09"
+      "sha256": "61a8c711f649a20b512ffdc7c30fd0a2cbca6def8ce4c82ad1632917b6076f26"
     },
     {
       "name": "alaa-implementer-go",
       "file": "agents/alaa-implementer-go.toml",
-      "sha256": "cfcf504a56746a5f57d7eb8c34c038c2cc2a47887b8f6db0669ad26331cb2ef8"
+      "sha256": "77c65a5b3dbc80805b37053594bb1c91f0e1a127453d1f845b3c3cd81a32455b"
     },
     {
       "name": "alaa-implementer-high",
