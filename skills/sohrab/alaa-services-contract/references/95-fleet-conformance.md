@@ -113,6 +113,18 @@ Source reading only, against `22-failure-load-and-deprecation-contract.md`. No r
 | `gateway` | Conforms: no IP-keyed rate limit; the `rateLimit` block stays in the chart, disabled. | gateway merge `823e53a` (Beads `alaa-2nv79`): `charts/gateway/values.yaml` `rateLimit.enabled: false`; no client-address stick table in `snapshots/*.haproxy.cfg` |
 | `content`, `comment-service` | Unverified: no source reading for IP-keyed limits. | none |
 
+## Optional bearer, one `/wa` prefix, guest tenant — 2026-11-14
+
+Source reading only, against the owner rulings of 2026-11-14 recorded in
+`alaa-trust-gateway-auth references/10-verification-and-ingress.md`, `25-end-to-end-flow-and-boundaries.md`
+and `30-trusted-ingress-and-laravel-contract.md`. No runtime was observed.
+
+| Component | Observation | Evidence |
+|---|---|---|
+| `gateway` | Conforms in local commits: optional bearer on every public path, one public list in every profile, WA under `/wa`, no `/wa-reports`. Behind: the dropped-bearer marker is uncommitted work (Beads `alaa-q23xo`). | gateway `4de96f3`, `0ffc1e5`, `df5ba2d`, `52f9edd`; `<repo>/docs/BIG_PICTURE.md` |
+| `wa` | Conforms in local commits: guest tenant from the envelope, user id only from `X-User-Id`, location scope captured, trusted user and scope discarded on a guest batch. Behind: Vector still listens on `/ingest/v1/events` while the gateway forwards `/wa/ingest/v1/events` (Beads `alaa-8sg2v`). | wa `7c21e51`, `8c64286`; `<repo>/docs/DECISIONS.md` decision 35; `<repo>/vector/wa-vector.yaml` |
+| client | Conforms in local commits: the envelope project field on every WA envelope, and the `consumes.apiPrefixes` list. Unverified: the reaction to the marker. | client `71487628`, `05f5001a`; `<repo>/deploy/service.yaml` |
+
 ## How to refresh this file
 
 **2026-10-18 ownership consolidation, no consumer re-survey.** Pagination defaults moved from keyset

@@ -49,6 +49,18 @@ This set is frozen, and the fleet already agrees on it. In the 2026-07-25 fleet 
 - The obligation to read `X-Access` in any service that authorizes, and the observable that decides it,
   are owned by `28-backend-permission-authorization-and-role-freeze.md`.
 
+## Dropped-bearer response marker
+
+Owner ruling 2026-11-14. **Decided, not shipped:** on that date it existed only as uncommitted work in the
+gateway checkout (gateway Beads `alaa-q23xo`). Do not describe it as live.
+
+- Header: the standard `WWW-Authenticate`. No custom header name carries this signal.
+- Values: `Bearer error="invalid_token", error_description="expired"` for an expired token, and
+  `Bearer error="invalid_token", error_description="invalid"` for every other failure.
+- The gateway lists `WWW-Authenticate` in `Access-Control-Expose-Headers`, so a browser client can read it.
+- When the gateway sets it, who may set it, and what it means are owned by
+  `alaa-trust-gateway-auth references/10-verification-and-ingress.md` ("The dropped-bearer marker").
+
 ## Client address, forwarded headers, and metrics routes
 
 Owner decision 2026-11-12, confirmed in gateway source at merge `823e53a` (gateway Beads `alaa-2nv79`). It binds the
@@ -169,9 +181,10 @@ Public request rule:
 
 Trusted context rule:
 - `X-Project-Id` is injected by the gateway from the verified token `pid` claim, and from nothing else. That
-  holds whether or not the route required authentication: a token presented on a route that admits tokenless
-  requests is still verified, and an invalid one is still rejected.
-- On a request that carried no token the gateway injects no `X-Project-Id` at all. An absent header is therefore
+  holds whether or not the route required authentication: a token presented on a public route is still
+  verified. An invalid or expired one is dropped there, not rejected, and injects nothing (owner ruling
+  2026-11-14, owned by `alaa-trust-gateway-auth references/10-verification-and-ingress.md`).
+- On a request that carried no accepted token the gateway injects no `X-Project-Id` at all. An absent header is therefore
   not evidence that the request was rejected or that the caller is untrusted; it is the normal shape of a
   legitimate guest request on a route that admits one, and a service that assumes the header is always present
   denies every guest. On that branch the project id arrives in the request body as `project_id`; the service

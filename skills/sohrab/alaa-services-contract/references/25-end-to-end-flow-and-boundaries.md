@@ -7,7 +7,7 @@ Use this file when the task is about how the Ala platform fits together end-to-e
 The Ala platform is organized in layers with clear ownership:
 - client applications send public traffic to the gateway
 - the gateway is the external trust boundary
-- the gateway verifies access tokens for protected routes, removes untrusted internal headers, injects trusted identity and project context, and forwards requests to the right backend
+- the gateway verifies access tokens, required on a protected route and optional on a public one, removes untrusted internal headers, injects trusted identity and project context, and forwards requests to the right backend
 - when a route family needs fine-grained request-time authorization, the gateway calls `authz-sidecar` or `entitlement-spoa`
 - backend services own their business domains and internal logic
 - `entitlement-api` keeps business truth; the `reflector` role inside `entitlement-api` writes derived tuples (`entitlement-projector` is retired); `authz-sidecar` checks OpenFGA under the `authz-openfga` model contract; the steps are under "Authorization mesh flow" below
@@ -159,6 +159,12 @@ Route-shape reminder:
   - `tusd` -> `/tusd`
   - `wa` -> `/wa`
   - `entitlement` -> `/entitlement`
+- WA route family (owner ruling 2026-11-14; gateway source at `4de96f3`, wa decision 35). All of WA sits under the one public prefix `/wa`. There is no `/wa-reports` prefix; a document or client that names one is drift to remove.
+  - `POST /wa/ingest/v1/events`: public, exact path, optional bearer, guests counted; goes to Vector, prefix not stripped. **Decided, not shipped on the wa side:** on 2026-11-14 Vector still listened on `/ingest/v1/events`; the move ships in lockstep with the gateway release (Beads `alaa-8sg2v`).
+  - `GET /wa/api/v1/*`: bearer required, `401` without; goes to `wa-api`, service-local `/api/v1/*`.
+  - `GET /wa/api/ready`: public, exact path; the gateway aliases it to Vector's health route.
+  - Ingest envelope project: `identity.project_id`, a lowercase canonical UUIDv7. The client sends it on every envelope and never sends `X-Project-Id`. WA reads it only when no `X-Project-Id` arrived. When WA reads it and how it treats a bad value are owned by `alaa-trust-gateway-auth references/10-verification-and-ingress.md` ("WA ingest").
+- the client contract's `consumes.apiPrefixes` are exactly `/auth`, `/content`, `/comment`, `/tusd`, `/wa`, `/entitlement`; the gateway's `clientDelivery.apiPrefixes` mirrors that list
 - `entitlement` is the `entitlement-api` admin/control-plane surface (a privileged admin/operator SDK such as `@alaa/sdk-entitlement`), not an anonymous end-user route family; the public prefix uses the short key `/entitlement`, never `/entitlement-api`, and the internal service name stays `entitlement-api`. As with every entry here, the gateway repo owns activation — verify the rendered HAProxy route table before relying on it.
 - that first service prefix is a gateway routing prefix, not necessarily a backend route prefix and not necessarily the same concept as a child SDK `servicePrefix`, `apiPrefix`, or fixed ingest path
 - clients and SDKs compose the public gateway path exactly once, through an existing public configuration seam such as a service base URL or a child route-prefix option, and must not change a child SDK or service route definition in order to satisfy gateway routing
