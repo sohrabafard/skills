@@ -96,6 +96,8 @@ For WA ClickHouse, read the service's ratified engine RFC before selecting engin
 
 Use the outbound transport contract at the start of this file. Route caller identity and internal mTLS status to `25-end-to-end-flow-and-boundaries.md`; database transport and gateway ingress are separate boundaries.
 
+ClickHouse location is fleet-wide (owner, 2026-11-14): `CLICKHOUSE_HOST`, `CLICKHOUSE_PORT` (native), `CLICKHOUSE_HTTP_PORT` and `CLICKHOUSE_TRANSPORT` (`plain`, `tls-verified` or `tls-unverified`). These names replace the `<SERVICE_PREFIX>_<DEPENDENCY>_TRANSPORT` pattern for ClickHouse, and unset `CLICKHOUSE_TRANSPORT` means `plain`, the kit's default, not a scheme-derived value. The `alaa-go-chi` kit's configkit keys and deploy's operator inputs own these names. Each service derives its own address inputs from them through deploy `sharedInputs`. Production prefers `tls-verified` with the self-signed infra CA in `INFRA_CA_BUNDLE`.
+
 Before relying on CA injection or a schema job, verify current implementation and adoption for the selected delivery path. In central Compose, use deploy-owned `INFRA_EXTRA_HOSTS` and `INFRA_CA_BUNDLE` when needed. Accept collected certificates only after the operator verifies their fingerprints; never turn network retrieval into automatic trust. Follow deploy `<repo>/docs/delivery-topology/80-trust-and-versioning.md`. Compose support does not prove Kubernetes support.
 
 Complete required provisioning and schema jobs before dependent workloads. Follow deploy's current job and evidence contract; unknown success history does not permit skipping a required job. Job failure stops dependent delivery. Preserve the broker topology modes and verification contract in `23-queue-and-exchange-registry.md`. A schema job provisions objects, not infrastructure servers. Read deploy `<repo>/docs/service-contract/25-clickhouse-delivery.md` for ClickHouse job scheduling and evidence identity; a direct Helm upgrade does not establish the release script's schema evidence gate.
@@ -229,6 +231,7 @@ Rules:
 - make gateways, reverse proxies, and internal Docker callers target the canonical alias instead of replica container names or node IPs
 - in Swarm, configure the canonical HTTP service with `endpoint_mode: vip` or an equivalent stable service-DNS behavior
 - when a service is not PHP-based, expose one stable internal DNS name and document the equivalent canonical alias explicitly
+- in `deploy/service.yaml`, a class `go` service's primary workload sets `serviceNameIsRelease: true`, and its cluster Service and local route target keep the service name; every other workload is `<service>-<workload>`, for example `wa` and `wa-api`. The gateway assembles class `go` siblings as `{serviceName}:{containerPort}`. The PHP alias rule above is unchanged (owner, 2026-11-14)
 
 ## Gateway routing contract for Docker runtimes
 

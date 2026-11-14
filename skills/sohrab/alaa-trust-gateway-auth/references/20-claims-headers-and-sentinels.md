@@ -14,7 +14,7 @@ and the trust rules attached to it.
 
 Standard claims are unchanged: `aud`, `jti`, `iat`, `nbf`, `exp`, `sub`, `scopes`.
 
-Custom compact claims are `m`, `prm`, `rol`, `prv`, `av`, `pid`, `loc`, `fn`, `ln`.
+Custom compact claims are `m`, `prm`, `rol`, `prv`, `av`, `pid`, `loc`, `fn`, `ln`, `asc`.
 
 | Claim | Meaning | Projected to |
 |---|---|---|
@@ -39,6 +39,20 @@ Custom compact claims are `m`, `prm`, `rol`, `prv`, `av`, `pid`, `loc`, `fn`, `l
 | `loc.sh` | shahr | `X-Location-Shahr` |
 | `loc.br` | shobe | `X-Location-Shobe` |
 | `loc.sc` | school | `X-Location-School` |
+| `asc` | admin report scopes | `X-Admin-Scopes` |
+
+`asc` is a JSON array of at most 32 entries. The entry `{}` covers the whole project. Every other entry
+is a chain that starts at `o` and continues through `sr`, `b` and `sh` as a contiguous prefix. Only a
+chain that reaches `sh` may add exactly one of `br` or `sc`. Every id is a positive integer. The gateway
+emits canonical compact JSON: keys in the order `o`, `sr`, `b`, `sh`, then `br` or `sc`, with no
+whitespace. An absent claim, an empty array or an out-of-contract value produces no header, and the
+gateway never rejects the request for it (owner, 2026-11-14; gateway `c0230d4`, hardened `3527962`;
+deployment not confirmed). `references/40-downstream-normalization.md` owns what a service does with
+the header.
+
+For a report read, the caller's own `X-Location-*` attributes data and never widens or selects report
+rows. The request-time sidecar's use of location as an OpenFGA membership input is unchanged:
+`/alaa-services-contract` `references/26-request-time-authorization-openfga/30-sidecar-and-openfga-check.md`.
 
 Auth issues its existing `users.uuidv7` as `sub`; after verification the gateway
 projects that same value into the existing `X-User-Id`. Do not add a second
@@ -161,9 +175,7 @@ repositories is how `0` ends up saved as a real school id.
   states when, and states that the gateway still reads neither.
 - The gateway does not decode `prm` and does not consume any service's generated
   permission map. It projects the claim and stops.
-- `Authorization` is stripped after successful verification on a protected route in
-  the current deployment values. On a public path it is not stripped;
-  `references/10-verification-and-ingress.md` states that case.
+- Where the gateway deletes `Authorization`: `references/10-verification-and-ingress.md`.
 - `X-Request-ID` is preserved when the client sent one and generated otherwise. It
   is correlation only and is neither an auth nor a tenant header.
 - Client address and forwarding headers: `alaa-services-contract references/30-trusted-ingress-and-laravel-contract.md`

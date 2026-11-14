@@ -136,6 +136,13 @@ envelope under the WA guest-ingest rule in
   to optional. When it is optional and absent, continue without mobile context. When
   it is present and malformed, return `422` `AUTH_MOBILE_HEADER_INVALID`. When it is
   required and missing or blank, return `401` `AUTH_MOBILE_HEADER_MISSING`.
+- `X-Admin-Scopes` bounds which report rows a read covers. It never grants a read; `X-Access` still
+  decides whether a read is allowed. Read it once at ingress: the `alaa-go-chi` kit exposes
+  `TrustCtx.AdminScopes()`. A present value that violates the shape in
+  `references/20-claims-headers-and-sentinels.md` denies with `401` `AUTH_CONTEXT_INVALID` (kit owner
+  decision). An absent header or an empty array `[]` means the caller has no admin report scope, so a
+  report read returns `403` with the service's forbidden code (`AUTH_FORBIDDEN` in `wa`; owner, 2026-11-14). The gateway drops a malformed claim, so a service cannot tell it
+  from no admin role.
 - `X-User-Fname` and `X-User-Lname` are optional trusted strings; every
   `X-Location-*` header is an optional trusted integer id.
 - Normalize the compact null sentinels — empty string for a name, `0` for a location

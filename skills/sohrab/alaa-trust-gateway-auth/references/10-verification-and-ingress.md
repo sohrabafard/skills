@@ -52,7 +52,7 @@ a public route is a direct channel for a client to hand a backend a chosen
 `X-User-Id`.
 
 The delete list covers the whole trusted-header set — the identity, token-metadata,
-name and location headers, `X-User-Roles`, and the backend-only `X-TOTP-*`
+name and location headers, `X-User-Roles`, `X-Admin-Scopes`, and the backend-only `X-TOTP-*`
 names — plus a wildcard sweep of `x-location-*`, `x-authz-*` and `x-totp-*`, which
 spares only the public proof carrier `X-TOTP-Proof`. The authoritative list of
 names lives with the gateway configuration; the frozen contract-level set is owned
@@ -82,7 +82,8 @@ no token there (the two `/wa` entries are exact in every profile since gateway
 - `/vod/api/ready`, `/vod/api/health`
 - `/comment/api/ready`, `/comment/api/health`
 - `/ticket/api/ready`, `/ticket/api/health`
-- `/wa/api/ready`, exact match
+- `/wa/api/ready`, exact match; what it aliases and returns: `alaa-services-contract`
+  `references/25-end-to-end-flow-and-boundaries.md` ("WA route family")
 - `/healthz`
 - `/wa/ingest/v1/events`, exact match
 
@@ -130,12 +131,11 @@ proof presented beside a dropped or absent bearer still produces
 in "Verification order on a protected route". Optional applies only to a path
 written into the public list.
 
-**The gateway deletes `Authorization` only on a protected route.** On a public path
-the header reaches the backend unchanged, accepted or not (gateway
-`<repo>/docs/BIG_PICTURE.md`, read 2026-11-14). The backend still never reads it;
-the first absolute in `SKILL.md` binds a public route as well.
-`NEEDS_CONFIRMATION`: whether the owner's "the gateway drops it" also requires
-deleting a rejected `Authorization` header before proxying.
+**The gateway deletes `Authorization` on a protected route and before WA ingest.** Every other public
+path receives it unchanged, accepted or not, because auth logout needs it; deleting it on every public
+path except logout is planned after launch (owner, 2026-11-14; gateway `a8f4d7d`; deployment not
+confirmed). The backend still never reads it; the first absolute in `SKILL.md` binds a public route as
+well.
 
 ### The dropped-bearer marker
 

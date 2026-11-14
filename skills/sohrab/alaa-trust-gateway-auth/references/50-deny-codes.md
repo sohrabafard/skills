@@ -60,6 +60,7 @@ public path takes an optional bearer") owns that case.
 | `TENANT_CONTEXT_MISSING` | 400 on an HTTP route, or 401/403 by service policy | a tenant-safe operation has no trusted tenant context |
 | `TENANT_CONTEXT_MISMATCH` | 403 | trusted tenant context and the requested target do not match |
 | `TENANT_CONTEXT_INVALID` | 403 | a client-supplied tenant selector conflicts with trusted context, or a tenant-override attempt was detected |
+| `AUTH_CONTEXT_INVALID` | 401 | a present trusted context header (`X-Admin-Scopes`) violates its compact contract (kit owner decision) |
 
 Auth rows verified on 2026-10-20 in auth `app/Enums/ApiErrorCode.php`,
 `app/Exceptions/Security/TotpLifecycleException.php` and the middleware named in

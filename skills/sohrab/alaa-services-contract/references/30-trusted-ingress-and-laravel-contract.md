@@ -28,11 +28,13 @@ Use these exact header names unless a temporary migration is explicitly document
 - `X-Location-Shahr`
 - `X-Location-Shobe`
 - `X-Location-School`
+- `X-Admin-Scopes`
 
 This set is frozen, and the fleet already agrees on it. In the 2026-07-25 fleet survey the gateway projected
 `pid -> X-Project-Id`, `sub -> X-User-Id`, `prm -> X-Access`, `rol -> X-User-Roles`, `jti -> X-Access-Token-Id`,
 `m -> X-User-Mobile`, `fn`/`ln` -> the name headers, and the location claims to `X-Location-*`, and `comment`,
-`content`, `entitlement-api`, and the `alaa-go-chi` kit each read that same spelling.
+`content`, `entitlement-api`, and the `alaa-go-chi` kit each read that same spelling. `X-Admin-Scopes` joined the
+set on 2026-11-14 by owner ruling; its adoption is recorded in `95-fleet-conformance.md`.
 
 - The list is closed. A service reads no trusted identity header outside it, plus the correlation headers
   owned by `20-operational-and-observability-contract.md`, the four step-up headers owned by
@@ -124,6 +126,7 @@ Required validation behavior:
 - keep trusted roles distinct from permissions: `X-User-Roles` projects the verified `rol` role snapshot, while `X-Access` projects the verified `prm` permission bitmap
 - normalize `X-Access-Token-Id` as an optional non-empty trusted token identifier when present
 - handle `X-User-Mobile` exactly according to `/alaa-trust-gateway-auth`
+- handle `X-Admin-Scopes` exactly according to `/alaa-trust-gateway-auth` (shape in reference 20, handling in reference 40)
 - normalize `X-User-Fname` and `X-User-Lname` as nullable trimmed strings
 - validate each `X-Location-*` header as a non-negative integer when present
 - use the exact auth error codes owned by `/alaa-trust-gateway-auth`
