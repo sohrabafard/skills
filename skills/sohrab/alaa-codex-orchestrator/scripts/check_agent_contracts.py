@@ -518,12 +518,12 @@ COLLECTION_SEAMS = {
     ),
     "verifier": ("<collection_barrier>", "Execute the canonical collection barrier through this independent verifier"),
     "repair": ("each scoped assignment in the serialized repair batch", "For an admitted early repair, scope only the recorded obstruction and return to collection without Review"),
-    "workflow": ("Record phase test-collection, repair/retest and inherited review barriers",),
+    "workflow": ("Record phase test-collection and repair/retest barriers, and the inherited review boundary",),
     "planning": ("Record each phase's post-reconciliation test collection, combined repair/retest and declared review barriers", "Workflow records barriers without redefining them"),
     "plan_template": ("Phase collection, repair/retest and review barriers, owners and resume evidence",),
     "phase_template": ("Collection/repair/retest barrier and evidence owner",),
     "prompt_routing": ("Carry the plan's phase collection and repair/retest barriers and their evidence owner",),
-    "prompt_template": ("Run only assigned focused or bounded task-owner checks", "centralized phase collection, repair/retest barriers and inherited review"),
+    "prompt_template": ("Run only assigned focused or bounded task-owner checks", "centralized phase collection, repair/retest barriers and any review that its verification decision or a floor calls for at the inherited boundary"),
 }
 COLLECTION_CONTRADICTIONS = (
     "Route to the owning implementation lane.",
