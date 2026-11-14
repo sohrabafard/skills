@@ -69,7 +69,7 @@ A wrap is the only sanctioned interim form of kit-shaped code in a consumer, and
 The kit's own suite proves kit behaviour, so a consumer test never re-proves it: envelope rendering, trust-header
 parsing, route-posture enforcement, readiness shape, outbox relay and retry mechanics, config loading, and any
 other kit symbol's internal behaviour. Such a test passes against every consumer implementation; report it as a
-finding, and delete it only once an independent reviewer accepts that finding. A consumer tests what it decides: its domain rules, use cases, repositories and queries, handler parsing and
+finding, and delete it only once the finding is accepted under /alaa-testing-strategy `references/90-test-economy.md`. A consumer tests what it decides: its domain rules, use cases, repositories and queries, handler parsing and
 status mapping, the kit options and policies it chooses, and the wiring that can be wrong. `contracttest` stays
 mandatory, because it proves this consumer's conformance to the kit, not the kit itself. `/alaa-testing-strategy`
 owns the rule; this section names where it falls for a kit consumer.
