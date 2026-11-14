@@ -52,7 +52,7 @@ a public route is a direct channel for a client to hand a backend a chosen
 `X-User-Id`.
 
 The delete list covers the whole trusted-header set — the identity, token-metadata,
-name and location headers, `X-User-Roles`, and the three backend-only `X-TOTP-*`
+name and location headers, `X-User-Roles`, and the backend-only `X-TOTP-*`
 names — plus a wildcard sweep of `x-location-*`, `x-authz-*` and `x-totp-*`, which
 spares only the public proof carrier `X-TOTP-Proof`. The authoritative list of
 names lives with the gateway configuration; the frozen contract-level set is owned
@@ -69,8 +69,9 @@ service-side change ships.
 
 ## Public routes
 
-The gateway currently treats these paths as public, so a request needs no token
-there:
+Gateway source read on 2026-11-14 treats these paths as public, so a request needs
+no token there (the two `/wa` entries are exact in every profile since gateway
+`0ffc1e5`):
 
 - `/auth/api/v3/otp/request`, `/auth/api/v3/otp/verify`, `/auth/api/v3/token/refresh`,
   `/auth/api/v3/logout`
@@ -113,12 +114,17 @@ gateway source at `0ffc1e5` and `df5ba2d` (`txn.jwt_accepted` in
 |---|---|
 | no bearer | forwards it; injects no trusted header; returns no error |
 | a bearer that passes every check a protected route applies | injects the trusted headers exactly as on a protected route |
-| a bearer that fails any check (expired, bad signature or algorithm, a TOTP proof sent as the bearer, bad `sub` or `rol`, a missing required claim) | drops it: injects no trusted header, processes no TOTP proof, clears the token's claims from its log and from the request-time checker, forwards the request, returns no error. A good signature on an expired token is a dropped token |
+| a bearer that fails any check (expired, bad signature or algorithm, a TOTP proof sent as the bearer, bad `sub` or `rol`, a missing required claim) | drops it: injects no trusted header, validates no TOTP proof, clears the token's claims from its log and from the request-time checker, forwards the request, returns no error. A good signature on an expired token is a dropped token |
 
 **"No accepted bearer" is the one guest condition in this skill.** It covers a
 request with no bearer and a request whose bearer was dropped. Where this skill
 says tokenless, read that. A service cannot tell the two apart and must not try:
 its branch condition is "no trusted `X-Project-Id` arrived".
+
+**One advisory header is the exception to "injects no trusted header".** A TOTP
+proof presented beside a dropped or absent bearer still produces
+`X-TOTP-PROOF-REJECTED`, which may change a message and never a decision;
+`alaa-services-contract references/32-auth-totp-and-step-up-contract.md` owns it.
 
 **This weakens no protected route.** A path off the public list keeps every `401`
 in "Verification order on a protected route". Optional applies only to a path
@@ -133,18 +139,18 @@ deleting a rejected `Authorization` header before proxying.
 
 ### The dropped-bearer marker
 
-Owner ruling, 2026-11-14. **Decided, not shipped:** on 2026-11-14 it existed only
-as uncommitted work in the gateway checkout (gateway Beads `alaa-q23xo`). Never
-describe it as live; read the gateway template before relying on it.
+Owner ruling, 2026-11-14. Read its shipping status in `references/90-source-map.md`
+before you describe it as live.
 
 - The gateway sets the marker on a public-path response only when it dropped a
   presented bearer.
 - It sets none for a request with no bearer, none when it accepted the bearer, and
   none on a protected path, which answers `401` instead.
 - Only the gateway asserts it on a public route: it deletes a backend-sent copy on
-  every public-route response, marked or not.
+  every public-route response, marked or not. Auth's public routes are public
+  routes, so a `WWW-Authenticate` that auth sets on one never reaches the client.
 - The marker reports the token, never the request. The backend's status and body
-  pass through unchanged, and a client must not treat the response as failed.
+  pass through unchanged.
 
 The header name, its two values and its CORS exposure are owned by
 `alaa-services-contract references/30-trusted-ingress-and-laravel-contract.md`
@@ -422,11 +428,11 @@ gateway repository.
 The field name and its value form are owned by `/alaa-services-contract`; whether the emission is required, and at what level,
 is owned by `/alaa-observability-soc`.
 
-## WA ingest: the shipped guest write
+## WA ingest: the guest write (local commits, 2026-11-14)
 
 Owner ruling, 2026-11-14 (wa `<repo>/docs/DECISIONS.md` decision 35; Vector source
 at wa `7c21e51` and `8c64286`; deployment not confirmed here). `/wa/ingest/v1/events`
-is the cases 1 to 3 rule applied to one route, with two named exceptions. Neither
+is the rule of cases 2 and 3 applied to one route, with two named exceptions. Neither
 exception extends to another service.
 
 - **The token is the only source of a verified tenant.** With an accepted bearer the

@@ -1,6 +1,6 @@
 ---
 name: alaa-trust-gateway-auth
-description: "Trust-boundary authority for the Ala gateway: who may assert a trusted request header, and what a service behind it may believe. Use when gateway header sanitizing or injection, JWT verification order, compact claim projection (pid, sub, prm, rol, loc) into X-Project-Id, X-User-Id, X-Access, X-User-Roles and X-Location-*, X-Access permission-bitmap consumption, TOTP step-up headers, tenant scoping behind the gateway including a guest project_id in a body or query parameter, auth-service v3 route shape, or a fail-closed case at that boundary is in scope: bypassed edge, absent claim, invalid bitmap. Do not use it for a service not behind the Ala gateway; route header names and response envelopes to alaa-services-contract, the permission bit contract and decoders to alaa-permission-generator, fail-closed doctrine to alaa-security-review, and cursor mechanics to alaa-keyset-pagination."
+description: "Trust-boundary authority for the Ala gateway: who may assert a trusted request header, and what a service behind it may believe. Use when gateway header sanitizing or injection, JWT verification order, compact claim projection (pid, sub, prm, rol, loc) into X-Project-Id, X-User-Id, X-Access, X-User-Roles and X-Location-*, X-Access bitmap consumption, TOTP step-up headers, a public path's optional bearer, the dropped-bearer marker (WWW-Authenticate), tenant scoping behind the gateway including a guest project_id, WA ingest tenant or user attribution, auth-service v3 route shape, or a fail-closed case at that boundary is in scope: bypassed edge, absent claim, invalid bitmap. Do not use it for a service not behind the Ala gateway; route header names and response envelopes to alaa-services-contract, the permission bit contract and decoders to alaa-permission-generator, fail-closed doctrine to alaa-security-review, and cursor mechanics to alaa-keyset-pagination."
 ---
 
 # Alaa Trust Gateway Auth
@@ -29,8 +29,9 @@ injects appears in it.
 request body, query string, route parameter or client-supplied header. When a
 client-supplied selector disagrees with the trusted context, deny rather than
 choose: a silent choice is a cross-tenant read nobody decided to ship. A request
-with no accepted bearer (none, or one the gateway dropped on a public path) has no
-claim to derive from, so a guest carries `project_id` in the body, or in the query
+with no accepted bearer (none, or one the gateway dropped on a public path: not
+trusted; the header itself is still forwarded to the backend) has no claim to
+derive from, so a guest carries `project_id` in the body, or in the query
 string when the request has no body. That value attributes a write.
 That value scopes a read only on an explicitly listed route. That value authorizes nothing. Once a
 verified claim is present, nothing reads that value.
@@ -65,7 +66,7 @@ Each case carries its symptom, decision, response, log and test in
 |---|---|
 | a service reachable without crossing the gateway, or an edge that is down | 1 — deny `AUTH_CONTEXT_MISSING` with the status policy in `references/50-deny-codes.md`; strip at the service edge *and* block the exposure |
 | a request-time checker that timed out, failed, or answered unparseably | 2 — the gateway denies under the decision and enforcement contract named in that case; a service-side fallback is a bypass |
-| a required claim or trusted header absent, including `rol` | 3 and 4 — deny; an absent role never means "no restrictions apply" |
+| a required claim or trusted header absent, including `rol`, on a protected route or a tenant-scoped route with no guest rule | 3 and 4 — deny; an absent role never means "no restrictions apply" |
 | a malformed `X-Access`, or a permission revoked after issuance | 5 and 6 — deny at ingress with `AUTH_ACCESS_BITMAP_INVALID`; revocation latency equals the remaining token lifetime and is not fixed inside a service |
 | a step-up proof absent, expired, or issued for another purpose | TOTP — deny `403 TOTP_STEP_UP_REQUIRED` with `meta.purpose`; absent and invalid are indistinguishable by design |
 
@@ -73,7 +74,7 @@ Each case carries its symptom, decision, response, log and test in
 
 | You are about to | Read |
 |---|---|
-| change gateway verification order, the public-route list, prefix stripping or sanitizing; decide what a public path does with a present, absent or failing bearer; decide where a request's `X-Project-Id` came from; or touch WA ingest tenant or user attribution | `references/10-verification-and-ingress.md` |
+| change gateway verification order, the public-route list, prefix stripping or sanitizing; decide what a public path does with a present, absent or failing bearer, or when the gateway sets the dropped-bearer marker; decide where a request's `X-Project-Id` came from; or touch WA ingest tenant or user attribution | `references/10-verification-and-ingress.md` |
 | decide which claim a value travels in, which header it arrives as, what absence looks like, or which step-up headers a service may read | `references/20-claims-headers-and-sentinels.md` |
 | decide what happens when the gateway, a claim, a header, a checker or a proof is missing or wrong | `references/30-fail-closed-cases.md` |
 | write or review a service's ingress layer — middleware, guards, context builders, tenant scoping, bitmap consumption | `references/40-downstream-normalization.md` |

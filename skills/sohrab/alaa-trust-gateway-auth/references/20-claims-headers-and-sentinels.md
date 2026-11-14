@@ -171,9 +171,11 @@ repositories is how `0` ends up saved as a real school id.
 
 ## TOTP step-up headers
 
-A service reads exactly three step-up headers. Reading any other `X-TOTP-*` name
-leaves that name off the sanitize list, and an unsanitized header is forgeable by
-any public client.
+A service takes a step-up decision from exactly three headers. The gateway sets one
+more, the advisory `X-TOTP-PROOF-REJECTED`, which a service may read only to choose
+a message; `alaa-services-contract references/32-auth-totp-and-step-up-contract.md`
+owns it. Reading any other `X-TOTP-*` name leaves that name off the sanitize list,
+and an unsanitized header is forgeable by any public client.
 
 | Header | Set by | Carries |
 |---|---|---|

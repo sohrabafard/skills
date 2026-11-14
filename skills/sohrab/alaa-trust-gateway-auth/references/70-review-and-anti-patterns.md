@@ -29,7 +29,7 @@ cannot point at is not a review item.
 | A response `code` and the deny-log `code` for the same event differ | the incident cannot be joined to the report |
 | A service documents a header rule its code does not enforce | the document is read as the contract and the gap ships |
 | A step-up-required route is allowed because the step-up feature flag is off in this environment | the route's protection state is invisible to whoever reads the route list |
-| An `X-TOTP-*` name other than the three backend-only headers is read by a service | that name is not on the sanitize list, so a public client can set it |
+| An `X-TOTP-*` name other than the three verified headers and the advisory `X-TOTP-PROOF-REJECTED` is read by a service, or the advisory one changes an allow or deny | that name is not on the sanitize list, so a public client can set it |
 | `202 Accepted` is treated as evidence that auth and tenant validation succeeded | the transport was accepted; the auth result had not been computed yet |
 | A client payload field such as `identity.user_id`, `identity.user_logged_in`, `visitor_id` or `device_id` is promoted to trusted actor context, or counted as an authenticated user, when `X-User-Id` is absent | the client names the actor |
 | A path requires a token in one gateway profile and not in another, or a profile carries its own public list | the tested posture is not the deployed one |
