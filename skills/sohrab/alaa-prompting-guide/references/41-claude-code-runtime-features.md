@@ -46,6 +46,31 @@ Subagents inherit the configured advisor and apply the same pairing check agains
 
 Pair table and subagent inheritance verified 14 November 2026 against [Code advisor](https://code.claude.com/docs/en/advisor). Other mechanics verified 3 November 2026 against [Advisor API mechanics and compatibility](https://platform.claude.com/docs/en/agents-and-tools/tool-use/advisor-tool), [Code CLI flags](https://code.claude.com/docs/en/cli-reference#cli-flags), [Code release notes](https://code.claude.com/docs/en/changelog#21260), [model configuration](https://code.claude.com/docs/en/model-config) and [subagents](https://code.claude.com/docs/en/sub-agents).
 
+
+### Prompts for a session that may have an advisor
+
+Apply this when you write a prompt, a system prompt or a dispatch for a Claude model. The advisor is a session setting and a subagent inherits it, so you usually cannot know whether it is on. Write the prompt so that it works in both cases.
+
+**What the prompt can rely on.** The executor decides when to call; the call takes no parameters; the advisor reads the whole transcript, which includes your prompt, the tool definitions, earlier turns, tool results and the text written so far. When a call fails, the executor continues without advice. The platform page disagrees with itself on whether the executor's reasoning reaches the advisor, so do not rely on it.
+
+1. **State the goal, the constraints and the acceptance criteria in the prompt text.** The advisor judges the work against what it can read. Tell the executor to write a decision down in visible text before it acts on it. Never tell it to "send" or "summarize for" the advisor: nothing written into the call reaches the advisor.
+2. **Never make the task depend on the advisor.** It can be off, refused or failing. Advice grants no authority and replaces no review.
+3. **Name the points where a consultation pays, and only on a long multi-step task:** before the approach is fixed, on a recurring error, and before the executor declares the work done. For a short or reactive task, write nothing about the advisor: the first call carries most of the value and a short task is a weak fit.
+4. **Ask for a durable result before the completion consultation.** The executor saves or writes its deliverable, within its authority, and then consults. A call takes time, and a saved result survives a session that ends during it.
+5. **Do not write restraint and a nudge together.** "Reserve the advisor for real uncertainty" beside "consult the advisor before you continue" conflict; the platform page says to drop the nudge when restraint language is present. Choose one.
+6. **Fit the executor model.** Opus calls at an appropriate rate without prompting: add no nudge and no checkpoint by default. A nudge had no measurable effect on Sonnet. For a Haiku coding executor the platform page gives a hard-rule block and a second-turn nudge; its stated evidence is Haiku 4.5. For Fable the pages state no prompting guidance.
+7. **Do not ask for a forced call through `tool_choice`.** Fable 5.2, Opus 5.5 and Sonnet 5.5 executors reject the `tool` and `any` types. Use one sentence in the prompt.
+8. **Do not ask for a consultation at every step.** Each call bills at the advisor model's rates and, in Claude Code, processes the full transcript again. Claude Code has no setting that caps or forces calls.
+9. **Shorten the advice only when you must.** The tested placement is one line in the user message, such as "(Advisor: please keep your guidance under 80 words.)". It is a soft limit, so name about 80% of the real ceiling. The hard cap is the tool's `max_tokens`, which only an API caller sets.
+
+**Claude Code session or subagent.** Add no timing block and no block about how much weight advice gets. The Code page says only that a prompt can ask for a consultation and can say that Claude should consult more or less often. In one observed Claude Code 2.1.307 subagent the harness had already supplied the platform's timing and weight text; no page states this, so treat it as observed, not guaranteed, and never contradict it.
+
+**API or Agent SDK caller who writes the executor's system prompt.** The platform page gives a timing block and a weight block for coding executors. Put the timing block before any other sentence that mentions the advisor, and the weight block directly after it. Copy both from the page; do not paraphrase them. They tell the executor to consult before substantive work, when stuck, on a change of approach and before it declares completion; to give advice serious weight; to adapt when a step fails or a primary source contradicts a claim; and to raise a conflict in one more call instead of switching silently.
+
+**A dispatch to a subagent.** The pages state no prompt guidance for delegated lanes beyond inheritance. Apply rules 1 to 9, and name a consultation point only for a lane that carries long multi-step work.
+
+Verified 14 November 2026 against [Code advisor](https://code.claude.com/docs/en/advisor) and [Advisor tool](https://platform.claude.com/docs/en/agents-and-tools/tool-use/advisor-tool). Before you copy a block, a model rule or a number from this section into a prompt, read the page again.
+
 ## Historical harness mechanics
 
 The remaining loop, workflow and scheduling details retain their original
