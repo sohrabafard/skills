@@ -85,7 +85,7 @@ The `docs/BIG_PICTURE.md` cluster tree must answer each of these without the rea
 - Which caveats and hotspots have caused regressions before?
 - Which files and documents are the real source of truth for each topic?
 
-This file may be long when the system is complex. Length is not the constraint; an unanswered question is.
+The cluster tree may be long when the system is complex. Its total length is not the constraint; an unanswered question is. Each file's size follows `references/15-document-size-and-clustering.md`.
 
 ## Diagram and flow coverage requirements
 
@@ -93,7 +93,7 @@ This file may be long when the system is complex. Length is not the constraint; 
 
 1. **Request flow** — at least one diagram for the main request path, plus a variant when auth or trust behavior differs by route family or caller type.
 2. **Async and event flow** — event emit, consume, or job flow when the service uses an outbox, queues, notifications, or schedulers.
-3. **Error and observability flow** — the correlation path from request to logs, metrics, tracing, and SOC or monitoring handoff, when implemented. Name correlation headers exactly as `alaa-services-contract references/20-operational-and-observability-contract.md` spells them — `X-Request-Id` and `traceparent` — and never a local variant. Whether a given signal is required at all is `/alaa-observability-soc`'s (`$alaa-observability-soc`) decision.
+3. **Error and observability flow** — the correlation path from request to logs, metrics, tracing, and SOC or monitoring handoff, when implemented. Name correlation headers exactly as `alaa-services-contract references/20-operational-and-observability-contract.md` spells them — `X-Request-Id` and `traceparent` — and never a local variant. Whether a given signal is required at all is `/alaa-observability-soc`'s decision.
 4. **Deployment or runtime flow** — one topology diagram when route or runtime behavior differs by local Docker, shared Docker, Swarm, Helm, or Kubernetes mode.
 
 When a deep-dive document exists, `docs/BIG_PICTURE.md` may keep the diagram small and link to the companion instead of duplicating every state snapshot or payload detail.

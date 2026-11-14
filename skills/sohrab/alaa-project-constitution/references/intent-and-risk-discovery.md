@@ -84,13 +84,9 @@ Research is mandatory for every obligation a matched archetype marks mandatory, 
 claim whose current value is version-sensitive. Run it after the intent model and the archetype
 match are written, so each query names a surface and a failure mode rather than a topic.
 
-Source priority and the freshness rule are owned by `freshness-source-map.md`. Record source,
-verification date, applicability, and limitation for every value used.
-
-When live verification is unavailable, write the rule with the metric named and the budget marked
-unresolved through a non-blocking factual TODO. State the obligation and defer only the number.
-Dropping the obligation because the number could not be fetched inverts the failure: a stated
-metric with a pending value governs behaviour, and a missing rule governs nothing.
+Source priority, the freshness rule and the rule for a value that cannot be verified live are
+owned by `freshness-source-map.md`. Record source, verification date, applicability, and
+limitation for every value used.
 
 ## Disposition every candidate
 

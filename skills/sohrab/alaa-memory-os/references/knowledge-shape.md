@@ -47,6 +47,15 @@ proposed value carries `[proposal]`, `[draft_contract]`, or `[decision_needed]`,
 `needs_review` until the decision is recorded in repository truth. A Design Mode value that reaches `active`
 without that record has become a fact nobody agreed to.
 
+## Cautions and prohibitions
+
+A note that holds an action back states its scope and its reason. Reason: later agents follow a stored
+caution closely, and a caution without scope or reason blocks work the task needs.
+When the agent keeps the action through approval, write "ask for approval before <exact action>", not
+"never <action>". Keep "never" only for a true invariant, such as a secret, tenancy or data-loss boundary,
+and state its reason. When you update a caution that lacks its scope or reason, add both from its source.
+If no source states them, set the note's `status` to `needs_review`.
+
 ## Source language of curated knowledge
 
 For a source-derived candidate or note, choose the language for each prose span from its source. Keep

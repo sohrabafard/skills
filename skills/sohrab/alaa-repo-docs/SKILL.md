@@ -91,7 +91,7 @@ Route by name rather than restating.
   `/alaa-prompting-guide` owns spawning mechanics. The active runtime orchestrator owns allocation. Keep
   runtime mechanics out of documentation rules.
 - Keep final wording, conflict resolution, and every write in the parent agent unless a delegated file is fully isolated from the others.
-- The track split, the return contract, the fan-out bound, and the rule for a subagent that fails or returns nothing are in `references/70-subagent-doc-workflows.md`.
+- Before you split discovery into subagent tracks, or when a subagent fails or returns nothing, read `references/70-subagent-doc-workflows.md`. It sets the track split, the return contract and the fan-out bound.
 
 ## Reference navigation
 
