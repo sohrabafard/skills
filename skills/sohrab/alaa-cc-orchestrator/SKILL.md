@@ -67,6 +67,8 @@ The lead must not implement beyond that mechanical-edit exception, run heavy ver
 
 **Start a dependent lane as soon as the lanes it consumes finish.** Join lanes behind one barrier only when the next step consumes all of their outputs. A barrier over a lane whose output the next step never reads idles that step for the unrelated lane's whole runtime.
 
+**Count live lanes before each spawn or follow-up.** Compare the live lanes with the runtime's concurrency limit first. At the limit, free a slot before you start the next lane, because a call at the limit can fail. On a limit error, never resend the same call unchanged: free a slot first. On a usage-limit error, record the lane's last evidence in the plan or compact dispatch, apply section 3's interruption rule and the stopped-writer recovery that `routing-matrix.md` cites, then re-dispatch only the remaining scope. In Claude Code, running subagents count against the limit, and the Agent tool refuses a spawn at the limit; its error says not to retry. Free a slot by waiting for a running lane to finish. `alaa-prompting-guide references/41-claude-code-runtime-features.md` owns the limit values, the error text and Workflow-run limits.
+
 **Keep dispatches lean.** Apply /alaa-prompting-guide. Carry lane facts only: outcome, owned files, exclusions, acceptance, commands, dependencies, resolved skills and return contract. Do not restate the native role definition, which dilutes both contracts. State each instruction once. Expose task-relevant tools and only requirement-bearing examples.
 
 **Preserve proportional verification.** Read `references/verification-and-gates.md` for gate economics and independent acceptance. /alaa-prompting-guide owns model-specific verification wording.

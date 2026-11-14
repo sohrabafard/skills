@@ -1,6 +1,6 @@
 {
   "pack": "alaa-codex-orchestrator",
-  "version": "5.7.0",
+  "version": "5.8.0",
   "managed_agents": [
     {
       "name": "alaa-accessibility-reviewer",
@@ -65,12 +65,12 @@
     {
       "name": "alaa-implementer-frontend",
       "file": "agents/alaa-implementer-frontend.toml",
-      "sha256": "61a8c711f649a20b512ffdc7c30fd0a2cbca6def8ce4c82ad1632917b6076f26"
+      "sha256": "fd6f5345619040b82e1d37bd8f09353b1ade27fe7cfde1f6d0a1d1cf9c0d1ffc"
     },
     {
       "name": "alaa-implementer-go",
       "file": "agents/alaa-implementer-go.toml",
-      "sha256": "77c65a5b3dbc80805b37053594bb1c91f0e1a127453d1f845b3c3cd81a32455b"
+      "sha256": "bd0dc993a0d1d91e5dbe567d19a4c106786cb73a126f35af5cd93ba363ec7023"
     },
     {
       "name": "alaa-implementer-high",

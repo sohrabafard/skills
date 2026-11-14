@@ -4,6 +4,7 @@ description: "Materially coupled unresolved system decisions beyond bounded impl
 disallowedTools: mcp__serena__execute_shell_command, mcp__hindsight, Agent
 skills:
   - /alaa-code-intelligence-routing
+  - /alaa-testing-strategy
   - /alaa-services-contract
   - /alaa-trust-gateway-auth
 color: blue

@@ -7,6 +7,7 @@
         "disallowedTools": "mcp__serena__execute_shell_command, mcp__hindsight, Agent",
         "skills": [
           "/alaa-code-intelligence-routing",
+          "/alaa-testing-strategy",
           "/alaa-services-contract",
           "/alaa-trust-gateway-auth"
         ],
@@ -20,6 +21,7 @@
         "disallowedTools": "mcp__serena__execute_shell_command, mcp__hindsight, Agent",
         "skills": [
           "/alaa-code-intelligence-routing",
+          "/alaa-testing-strategy",
           "/alaa-services-contract",
           "/alaa-trust-gateway-auth"
         ],
@@ -33,6 +35,7 @@
         "disallowedTools": "mcp__serena__execute_shell_command, mcp__hindsight, Agent",
         "skills": [
           "/alaa-code-intelligence-routing",
+          "/alaa-testing-strategy",
           "/alaa-services-contract",
           "/alaa-trust-gateway-auth"
         ],
@@ -46,6 +49,7 @@
         "disallowedTools": "mcp__serena__execute_shell_command, mcp__hindsight, Agent",
         "skills": [
           "/alaa-code-intelligence-routing",
+          "/alaa-testing-strategy",
           "/alaa-services-contract",
           "/alaa-trust-gateway-auth"
         ],
@@ -59,6 +63,7 @@
         "disallowedTools": "mcp__serena__execute_shell_command, mcp__hindsight, Agent",
         "skills": [
           "/alaa-code-intelligence-routing",
+          "/alaa-testing-strategy",
           "/alaa-services-contract",
           "/alaa-trust-gateway-auth"
         ],
@@ -94,6 +99,7 @@
         "disallowedTools": "mcp__serena__execute_shell_command, mcp__hindsight, Agent",
         "skills": [
           "/alaa-code-intelligence-routing",
+          "/alaa-testing-strategy",
           "/alaa-services-contract",
           "/alaa-trust-gateway-auth"
         ],
@@ -107,6 +113,7 @@
         "disallowedTools": "mcp__serena__execute_shell_command, mcp__hindsight, Agent",
         "skills": [
           "/alaa-code-intelligence-routing",
+          "/alaa-testing-strategy",
           "/alaa-services-contract",
           "/alaa-trust-gateway-auth"
         ],
@@ -146,7 +153,7 @@
         ],
         "color": "blue"
       },
-      "binding": "Stack binding: this lane is Vue, Quasar and TypeScript. /alaa-frontend-developer, /alaa-vue-typescript-clean-code and /alaa-testing-strategy are preloaded in your context: apply them to every file you change. /alaa-quasar-app-vite-v3 is preloaded too: apply it only when the repository uses @quasar/app-vite. Load each of these before the first edit that meets its condition: /alaa-ui-ux-design-system when the change makes a visual-design decision (new tokens, theming, layout, motion or styling), not when it only uses existing tokens; /alaa-indexeddb-browser-storage when it touches IndexedDB or offline storage; /alaa-shaka-player when it touches an adaptive-streaming player; /alaa-mono-package when it touches an internal package under packages/*, its exports map, or how the app consumes it; /alaa-frontend-devops when it touches build or delivery configuration; /alaa-frontend-doc-annotations when it only adds documentation annotations. Before you edit an incidental file of another stack that the dispatch lists, load that stack's owner from the Engineering baseline below. Return any other file of another stack to the parent as a boundary conflict. When a named skill is not installed, follow its absence action in the dispatch's `<skills>`. When the dispatch names none, report the missing skill under residual risks and preserve its intent as the Engineering baseline states."
+      "binding": "Stack binding: this lane is Vue frontend code, with Quasar when the repository uses it. /alaa-frontend-developer, /alaa-vue-typescript-clean-code and /alaa-testing-strategy are preloaded in your context: apply them to every file you change. /alaa-quasar-app-vite-v3 is preloaded too: apply it only when the repository uses @quasar/app-vite. Load each of these before the first edit that meets its condition: /alaa-ui-ux-design-system when the change makes a visual-design decision (new tokens, theming, layout, motion or styling), not when it only uses existing tokens; /alaa-indexeddb-browser-storage when it touches IndexedDB or offline storage; /alaa-shaka-player when it touches an adaptive-streaming player; /alaa-mono-package when it touches an internal package under packages/*, its exports map, or how the app consumes it; /alaa-frontend-devops when it changes the build artifact contract, public path or asset base, cache policy, what is compiled into the client bundle, or a frontend CI or delivery gate; /alaa-frontend-doc-annotations when the change is documentation-only: JSDoc or comments added or corrected, with byte-identical build output. Before you edit an incidental file of another stack that the dispatch lists, load that stack's owner from the Engineering baseline below. Return any other file of another stack to the parent as a boundary conflict. When a named skill is not installed, follow its absence action in the dispatch's `<skills>`. When the dispatch names none, report the missing skill under residual risks and preserve its intent as the Engineering baseline states."
     },
     "alaa-implementer-go": {
       "contract": "assets/implementation-contract.md",
@@ -163,7 +170,7 @@
         ],
         "color": "blue"
       },
-      "binding": "Stack binding: this lane is Go. /alaa-golang and /alaa-testing-strategy are preloaded in your context: apply them to every file you change, and let /alaa-golang route you to any further Go skill. /alaa-golang-clean-code-principles is preloaded too: apply it when the repository is an Ala service built on the alaa-go-chi kit. Load each of these before the first edit that meets its condition: /alaa-go-chi-development when the repository is the alaa-go-chi kit, or when the change touches a kit surface, generated artifact, contract document or registry row in a consumer of that kit; /alaa-golang-fiber when the repository imports Fiber. Before any data change, check whether /alaa-ent-go-orm-db owns it: go.mod requires entgo.io/ent, or the change is PostgreSQL work that skill owns. Return that work to the parent, because it belongs to the Ent specialist route. Load /alaa-data-layer when a change the Ent route does not own touches a table, index, migration, query or cache entry, and /alaa-async-messaging when a change touches a publisher, consumer or outbox. Before you edit an incidental file of another stack that the dispatch lists, load that stack's owner from the Engineering baseline below. Return any other file of another stack to the parent as a boundary conflict. When a named skill is not installed, follow its absence action in the dispatch's `<skills>`. When the dispatch names none, report the missing skill under residual risks and preserve its intent as the Engineering baseline states."
+      "binding": "Stack binding: this lane is Go. /alaa-golang and /alaa-testing-strategy are preloaded in your context: apply them to every file you change, and let /alaa-golang route you to any further Go skill. /alaa-golang-clean-code-principles is preloaded too: apply it when the repository is an Ala service built on the alaa-go-chi kit. This condition narrows the Go line of the Engineering baseline below. Load each of these before the first edit that meets its condition: /alaa-go-chi-development when the repository is the alaa-go-chi kit, or when the change touches a kit surface, generated artifact, contract document or registry row in a consumer of that kit; /alaa-golang-fiber when the repository imports Fiber. Before any data change, check whether /alaa-ent-go-orm-db owns it: go.mod requires entgo.io/ent, or the change is PostgreSQL work that skill owns. Return that work to the parent, because it belongs to the Ent specialist route. Load /alaa-data-layer when a change the Ent route does not own touches a table, index, migration, query or cache entry, and /alaa-async-messaging when a change touches a publisher, consumer or outbox. Before you edit an incidental file of another stack that the dispatch lists, load that stack's owner from the Engineering baseline below. Return any other file of another stack to the parent as a boundary conflict. When a named skill is not installed, follow its absence action in the dispatch's `<skills>`. When the dispatch names none, report the missing skill under residual risks and preserve its intent as the Engineering baseline states."
     },
     "alaa-implementer-infra": {
       "contract": "assets/implementation-contract.md",

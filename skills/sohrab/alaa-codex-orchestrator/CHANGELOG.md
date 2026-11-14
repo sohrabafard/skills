@@ -1,5 +1,11 @@
 # Changelog
 
+## 5.8.0 - 2026-11-14
+
+- Task controls are checked where the lead composes a dispatch: `references/delegation-prompts.md` requires a read-back that the invocation carries a model and an effort parameter that realize the pair in `<task_controls>`. The sentence mirrors the Claude Code change; no Codex mechanics changed, because all 146 Codex dispatches that set a model matched their requested controls.
+- `SKILL.md` *Dispatch discipline* counts live lanes against the runtime's concurrency limit before each spawn or follow-up, frees a slot instead of resending a call after a limit error, and re-dispatches only the remaining scope after a usage-limit error. It reads the effective limit from `agents.max_concurrent_threads_per_session` and frees a slot by closing a completed thread that Gate economics will not continue; `alaa-prompting-guide references/11-codex-runtime-features.md` owns the key, its alias and the default. Session evidence: "agent thread limit reached" stopped 11 follow-ups and 1 spawn, and 3 lanes ended on a usage limit.
+- No change for the testing-doctrine preload added to the Claude Code generic implementers: Codex has no preload, and its implementation lanes already load `/alaa-testing-strategy`.
+
 ## 5.7.0 - 2026-11-14
 
 - Four stack-bound implementation roles: `alaa-implementer-laravel`, `alaa-implementer-frontend`, `alaa-implementer-go` and `alaa-implementer-infra`. Each one names the owning skills of its stack and the testing doctrine to load before the first edit, plus the reads its surfaces trigger. `references/routing-matrix.md` *Stack-bound roles* admits them for a single-stack lane outside the mechanical and bounded branches. For such a lane they replace the generic workhorse identities. A session that does not have the role records and dispatches the generic role instead. They select neither model nor effort. Both model policies register them.

@@ -20,7 +20,7 @@
 <action_safety>No unrelated work, commit, deploy, publish, destructive action, or global configuration change.</action_safety>
 ```
 
-Use `routing-matrix.md` to select directly from the ratified lane record. Pass the same bounded lane block to the real registered variant. For a single-stack lane outside the mechanical and bounded branches, the registered variant is the stack-bound role that routing-matrix.md names. The compatibility role name never selects model or effort; explicitly supply the recorded task pair on the verified invocation surface. Preserve surviving work. Require no trial ladder and no replay of completed work. Demanding work alone does not admit the exceptional implementation profile.
+Use `routing-matrix.md` to select directly from the ratified lane record. Pass the same bounded lane block to the real registered variant. For a single-stack lane outside the mechanical and bounded branches, the registered variant is the stack-bound role that routing-matrix.md names. The compatibility role name never selects model or effort; pass the recorded effort as the `effort` parameter and the recorded model's alias, as `model-effort-policy.md` maps it, as the `model` parameter of the verified Agent invocation. Preserve surviving work. Require no trial ladder and no replay of completed work. Demanding work alone does not admit the exceptional implementation profile.
 
 ## Collected verification repair
 

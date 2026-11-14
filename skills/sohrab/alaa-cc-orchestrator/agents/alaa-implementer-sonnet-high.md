@@ -4,6 +4,7 @@ description: "Harder or longer grounded work with bounded decisions and local fa
 disallowedTools: mcp__serena__execute_shell_command, mcp__hindsight, Agent
 skills:
   - /alaa-code-intelligence-routing
+  - /alaa-testing-strategy
   - /alaa-services-contract
   - /alaa-trust-gateway-auth
 color: blue

@@ -4,6 +4,7 @@ description: "Exact mechanical edits with no semantic discretion, or bounded sem
 disallowedTools: mcp__serena__execute_shell_command, mcp__hindsight, Agent
 skills:
   - /alaa-code-intelligence-routing
+  - /alaa-testing-strategy
   - /alaa-services-contract
   - /alaa-trust-gateway-auth
 color: blue

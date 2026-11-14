@@ -142,14 +142,16 @@ Preloading and runtime invocation are complementary mechanisms for that reachabi
 measured against. `alaa-architecture-critic` carries the constitution it reviews against,
 `alaa-performance-profiler` both runtime performance skills, `alaa-test-strategist` the Go testing
 skill beside the doctrine, and `alaa-verifier` the testing doctrine whose proof levels and tiers it
-must name.
+must name. Every managed implementation role preloads the testing doctrine, because the
+implementation contract makes it mandatory in every lane and a lane often skips a skill that the
+dispatch only names.
 
 The `Skill` tool covers everything a preload cannot know in advance. Which clean-code skill a lane
 needs depends on the repository's language and the surface the dispatch hands over, and the pack's
 rule is to name the one skill the lane needs rather than preload every candidate into every lane.
 Every managed general allowlisted role keeps `Skill` for that reason, and every managed implementation role inherits it.
 
-A stack-bound implementation role is the exception. It preloads the owning skills of its one stack and the testing doctrine, because a stack skill that a dispatch only mentions is often not loaded.
+A stack-bound implementation role is the exception. It also preloads the owning skills of its one stack, because a stack skill that a dispatch only mentions is often not loaded.
 
 Withholding `Skill` from the allowlists was tried and reverted. It narrows nothing on a role that
 already holds `Bash`, `Read`, `Write`, and `Edit`; it makes the dispatch's own `skills`

@@ -1,5 +1,11 @@
 # Changelog
 
+## 5.8.0 - 2026-11-14
+
+- Task controls are checked where the lead composes a dispatch: `references/delegation-prompts.md` requires a read-back that the invocation carries a model and an effort parameter that realize the pair in `<task_controls>`, and `references/delegation-prompts/30-implementation.md` names the Agent `model` and `effort` parameters. `references/model-effort-policy.md` states that an omitted parameter falls through the runtime precedence that `alaa-prompting-guide references/41-claude-code-runtime-features.md` owns, which usually ends at the session's model and effort. Session evidence: model omitted in 508 of 714 Agent dispatches, effort in 591. The official workflows page names no effort option for `agent()`, so no Workflow effort rule was added.
+- `SKILL.md` *Dispatch discipline* counts live lanes against the runtime's concurrency limit before each spawn or follow-up, frees a slot instead of resending a call after a limit error, and re-dispatches only the remaining scope after a usage-limit error. `alaa-prompting-guide references/41-claude-code-runtime-features.md` owns the limit values, the error text and Workflow-run limits.
+- The seven generic implementer profiles preload `/alaa-testing-strategy`, and `references/agent-catalog.md` *How a lane gets its skills* says every implementation role preloads it. Session evidence: 74 lanes were told to use it and never loaded it.
+
 ## 5.7.0 - 2026-11-14
 
 - Four stack-bound implementation roles: `alaa-implementer-laravel`, `alaa-implementer-frontend`, `alaa-implementer-go` and `alaa-implementer-infra`. Each one preloads the owning skills of its stack and the testing doctrine through `skills:`, plus the reads its surfaces trigger. `references/routing-matrix.md` *Stack-bound roles* admits them for a single-stack lane outside the mechanical and bounded branches. For such a lane they replace the generic workhorse identities. A session that does not have the role records and dispatches the generic role instead. They select neither model nor effort. Both model policies register them.
