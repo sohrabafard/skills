@@ -4,8 +4,8 @@ When publishing ports or trusting forwarded headers, read this reference.
 
 ## 3. Exposure, with a scope
 
-"Publicly exposed" needs a definition or the rule cannot be applied. Four distinct things are called
-"exposing a port", and only one of them is a public exposure:
+"Publicly exposed" needs a definition or the rule cannot be applied. Six distinct forms are called
+"exposing a port", and the table marks two of them as a public exposure:
 
 | Form | Reachable from | Verdict |
 |---|---|---|

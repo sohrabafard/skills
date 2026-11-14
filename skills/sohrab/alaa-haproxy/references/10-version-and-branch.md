@@ -3,17 +3,18 @@
 ## The branch table
 
 Branch table refreshed on 2026-10-01 from `https://docs.haproxy.org/` (branch labels) and `https://www.haproxy.org/`
-(latest patch and end-of-life dates). Re-derive both with the commands in `SOURCES.md`.
+(end-of-life dates); the latest-patch column re-read on 2026-11-14 from `https://www.haproxy.org/` and the branch
+`CHANGELOG` files. Re-derive both with the commands in `SOURCES.md`.
 
-| Branch | Label | Latest patch, read 2026-10-01 | End of life |
+| Branch | Label | Latest patch, read 2026-11-14 | End of life |
 |---|---|---|---|
 | 3.5 | DEV | not for production | — |
-| **3.4** | **LTS** | **3.4.6, released 2026-09-28** (branch opened 2026-06-03) | 2031-Q2 |
-| 3.3 | no label (stable) | 3.3.16 | **2027-Q1** |
-| 3.2 | LTS | 3.2.25 | 2030-Q2 |
-| 3.0 | LTS | 3.0.29 | 2029-Q2 |
-| 2.8 | LTS, critical fixes only | 2.8.30 | 2028-Q2 |
-| 2.6 | LTS, critical fixes only | 2.6.34 | 2027-Q2 |
+| **3.4** | **LTS** | **3.4.7, released 2026-10-14** (branch opened 2026-06-03); this skill's compatibility target stays 3.4.6, see `SOURCES.md` | 2031-Q2 |
+| 3.3 | no label (stable) | 3.3.17 | **2027-Q1** |
+| 3.2 | LTS | 3.2.26 | 2030-Q2 |
+| 3.0 | LTS | 3.0.30 | 2029-Q2 |
+| 2.8 | LTS, critical fixes only | 2.8.31 | 2028-Q2 |
+| 2.6 | LTS, critical fixes only | 2.6.35 | 2027-Q2 |
 | 3.1 and below, except the rows above | EOL | — | passed |
 
 ## Which branch to target

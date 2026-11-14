@@ -22,15 +22,15 @@ has; go and read the source, then add the row.
 
 **This ledger could not be refreshed in the session that created it.** That session had no network access to Jitsi
 upstream documentation, which is why most rows below carry `unverified as of 2026-07-27` rather than a read date.
-The 2026-09-29 refresh covers only the release facts and the rootless and internal-port facts; other rows retain their original status.
+The 2026-09-29 refresh covers only the release facts and the rootless and internal-port facts. The 2026-11-14 refresh re-read rows 2 and 3 only. Other rows retain their original status.
 
 ## The ledger
 
 | # | Fact class | What this skill asserts | Source | Applies to release | Read | Status |
 |---|---|---|---|---|---|---|
 | 1 | container release snapshot | latest official release is `stable-11248`, published 2026-09-14 | https://github.com/jitsi/docker-jitsi-meet/releases | `stable-11248` | 2026-09-29 | documentation verified; installed release unknown |
-| 2 | handbook currency | the handbook releases page was updated 2026-04-11 | https://jitsi.github.io/handbook/docs/releases | unpinned | 2026-04-24 | expired 2026-07-23 |
-| 3 | IFrame API page currency | the IFrame API page was updated 2026-04-16 | https://jitsi.github.io/handbook/docs/dev-guide/dev-guide-iframe | unpinned | 2026-04-24 | expired 2026-07-23 |
+| 2 | handbook currency | the handbook releases page was updated 2026-11-11 | https://jitsi.github.io/handbook/docs/releases | unpinned | 2026-11-14 | fresh until 2027-02-12 |
+| 3 | IFrame API page currency | the IFrame API page was updated 2026-11-11 | https://jitsi.github.io/handbook/docs/dev-guide/dev-guide-iframe | unpinned | 2026-11-14 | fresh until 2027-02-12 |
 | 4 | token claim names | `iss`, `aud`, `sub`, `room`, `exp`, `nbf`, `iat` and the `context.*` object are the claims the verifier reads | https://github.com/jitsi/lib-jitsi-meet/blob/master/doc/tokens.md | unpinned | unverified as of 2026-07-27 | read before first use |
 | 5 | verifier algorithms | which signature algorithms the Prosody token verifier accepts, and how a public key is supplied to it | token authentication handbook page and `lib-jitsi-meet` token docs | unpinned | unverified as of 2026-07-27 | read before choosing an algorithm |
 | 6 | reconnect re-validation | whether the token is re-validated when a client reconnects to a conference it is already part of | upstream source; not documented in the handbook pages this skill cites | unpinned | unverified as of 2026-07-27 | **read before any incident report asserts it** |

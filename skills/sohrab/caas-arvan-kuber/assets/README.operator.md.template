@@ -71,7 +71,7 @@ helm upgrade --install RELEASE ./helm/CHART \
 
 **TIMEOUT** is not a magic number. Derive it from the CI job timeout minus the time the job needs afterwards, and never let it exceed the job timeout, or the job is killed mid-rollout with the release in a pending state. `/alaa-reliability-sla` owns the value.
 
-**Rollback safety flag.** The flag was renamed in Helm 4, and each name fails on the other major:
+**Rollback safety flag.** The flag was renamed in Helm 4. `--rollback-on-failure` fails on Helm 3, and `--atomic` is only a deprecated alias on Helm 4:
 
 ```bash
 if helm version --template '{{.Version}}' | grep -q '^v4'; then
@@ -81,7 +81,7 @@ else
 fi
 ```
 
-Helm 4 still accepts `--atomic` on `helm upgrade` with a deprecation warning, and **removed it from `helm install`**; Helm 3 does not know `--rollback-on-failure` at all.
+Helm 4 still accepts `--atomic` on both `helm install` and `helm upgrade` as a deprecated alias with a warning (Helm v4.3.2 sources, checked 2026-11-14: https://github.com/helm/helm/blob/v4.3.2/pkg/cmd/install.go); Helm 3 does not know `--rollback-on-failure` at all.
 
 ## Rollback
 

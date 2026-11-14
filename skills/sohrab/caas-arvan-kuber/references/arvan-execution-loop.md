@@ -11,7 +11,7 @@ Everything generic — chart shape, validation gates, rollout debugging — belo
 3. **Read the existing exposure.** The jsonpath in `references/arvan-constraints.md` section 4 tells you which exposure mode the cluster already uses. Match it rather than introducing a second one.
 4. **State the constraints that are active** for this workload — parity, stateless-only scaling, disk lifecycle, exposure mode — and only those. A constraint listed but not applicable is noise that hides the ones that matter.
 5. **Build the chart or manifests with `/alaa-k8s-helm`**, then apply the Arvan facts from `references/arvan-constraints.md`.
-6. **Gate it.** Run the register in `alaa-k8s-helm references/validation-workflows.md`, and add `python3 alaa-k8s-helm scripts/check_manifests.py rendered.yaml --profile arvan` for the Arvan predicates.
+6. **Gate it.** Run the register in `alaa-k8s-helm references/validation-workflows.md`, and add `python3 PATH/TO/alaa-k8s-helm/scripts/check_manifests.py rendered.yaml --profile arvan` for the Arvan predicates.
 7. **Hand it over.** When the scope is production or stateful, emit `assets/README.operator.md.template` and `assets/RUNBOOK.operator.md.template` filled in, and confirm that every filename that can hold a decoded Secret is in the repository's ignore rules.
 
 **When there is no shell access to the cluster**, say so in the first line of the deliverable, generate for the more restrictive of the two lines — that is column A, the pinned line — mark every line-dependent choice as an assumption, and hand the operator the exact discovery commands that settle each one.
@@ -28,7 +28,7 @@ Symptom: `helm lint` or `helm template` returns an error, so nothing reached the
 
 Symptom: `helm template` succeeded and the API server refused the object.
 
-1. **A container without resources, or `requests` not equal to `limits`, is the first hypothesis** — it is the constraint Arvan documents and enforces. `python3 alaa-k8s-helm scripts/check_manifests.py rendered.yaml --profile arvan` names the container.
+1. **A container without resources, or `requests` not equal to `limits`, is the first hypothesis** — it is the constraint Arvan documents and enforces. `python3 PATH/TO/alaa-k8s-helm/scripts/check_manifests.py rendered.yaml --profile arvan` names the container.
 2. Check the LimitRange: a request above `max`, or below `min`, is rejected with a message naming the LimitRange rather than the container.
 3. Migration, init, and hook Jobs are containers too, and are the usual place a resource block is forgotten.
 

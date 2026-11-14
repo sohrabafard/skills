@@ -68,15 +68,15 @@ export const VERSION_REGISTER = {
   rows: [
     {
       subject: 'Docker Engine',
-      value: '29.8.1 (15 September 2026)',
-      verified: '2026-09-29',
+      value: '29.9.3 (3 November 2026)',
+      verified: '2026-11-14',
       source: 'https://docs.docker.com/engine/release-notes/29/',
       recheck: 'docker version --format "{{.Server.Version}}" ; https://docs.docker.com/engine/release-notes/29/',
     },
     {
       subject: 'Docker Compose',
-      value: 'v5.5.1 (3 September 2026); v5.3.0 added native init containers',
-      verified: '2026-09-29',
+      value: 'v5.7.1 (11 November 2026); v5.3.0 added native init containers',
+      verified: '2026-11-14',
       source: 'https://github.com/docker/compose/releases',
       recheck: 'docker compose version ; https://github.com/docker/compose/releases',
     },
@@ -100,9 +100,10 @@ export const VERSION_REGISTER = {
     },
     {
       subject: 'Alpine',
-      value: '3.24 stable (3.24.0, 9 June 2026); 3.21 and newer still supported; 3.20 support ended 2026-04-01',
+      value: '3.24 stable (3.24.0, 9 June 2026); 3.22 and newer still supported; 3.21 support ended 2026-11-01; 3.20 support ended 2026-04-01',
+      verified: '2026-11-14',
       source: 'https://www.alpinelinux.org/releases/',
-      recheck: 'https://www.alpinelinux.org/releases/ — read the "supported until" column',
+      recheck: 'https://www.alpinelinux.org/releases/ — read the "End of support" column',
     },
     {
       subject: 'Debian slim',
@@ -118,7 +119,8 @@ export const VERSION_REGISTER = {
     },
     {
       subject: 'Node.js',
-      value: '24 "Krypton" Active LTS (maintenance from 2026-10-20, EOL 2028-04-30); 22 "Jod" maintenance; 26 Current; 20 and older EOL',
+      value: '26 Active LTS since 2026-10-28 (EOL 2029-04-30); 24 "Krypton" maintenance LTS since 2026-10-20 (EOL 2028-04-30); 22 "Jod" maintenance LTS (EOL 2027-04-30); 20 and older EOL',
+      verified: '2026-11-14',
       source: 'https://github.com/nodejs/Release',
       recheck: 'https://github.com/nodejs/Release — read the release schedule table',
     },
@@ -129,7 +131,7 @@ export const VERSION_REGISTER = {
 const EOL_LINES = [
   { image: /^(.*\/)?node$/, tags: [/^(0|4|6|8|10|12|14|16|18|19|20|21|23|25)(\D|$)/], why: 'Node.js line is past end-of-life; see --versions' },
   { image: /^(.*\/)?php$/, tags: [/^(5|7|8\.0|8\.1)(\D|$)/], why: 'PHP line is past end-of-life; see --versions' },
-  { image: /^(.*\/)?alpine$/, tags: [/^3\.(1\d|20)(\D|$)/], why: 'Alpine line is past end-of-support; see --versions' },
+  { image: /^(.*\/)?alpine$/, tags: [/^3\.(1\d|20|21)(\D|$)/], why: 'Alpine line is past end-of-support; see --versions' },
   { image: /^(.*\/)?debian$/, tags: [/^(buster|stretch|jessie|10|9|8)(\D|$)/], why: 'Debian line is archived; see --versions' },
 ];
 

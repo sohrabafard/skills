@@ -35,6 +35,6 @@ The default verifier is `ansible`: a playbook of assertions.
         fail_msg: "nginx.conf is {{ conf.stat.mode | default('absent') }}, expected 0644"
 ```
 
-The `check_mode: true` plus `failed_when: result.changed` shape is how you
+The `check_mode: true` plus `failed_when: service_state.changed` shape is how you
 assert a state without changing it. What a verify playbook should cover — the
 layering, the doubles, the flake control — is `/alaa-testing-strategy`'s; this skill owns the mechanics of running it.

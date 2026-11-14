@@ -217,7 +217,7 @@ and should be raised to the version you tested.
 | 2.10 | Collections split out of core. FQCN becomes meaningful. |
 | 2.12 | Many modules removed from core; redirects remain. |
 | 2.17 onward | Progressive removal of the redirects themselves. |
-| 2.19 | Current security-only branch; end of life November 2026. |
+| 2.19 | Security-only branch; end of life November 2026 (re-read 2026-11-14 in `references/source-map.md`). |
 | 2.20 | Control node requires Python 3.12 or newer. Targets require 3.9 or newer. |
 | 2.21 | Current fully supported branch (2.21.2 on 2026-07-29). |
 

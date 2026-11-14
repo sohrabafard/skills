@@ -12,13 +12,13 @@ user asks for current or latest behaviour.
 ## Pinned values and how to re-derive each one
 
 Historical read date: **2026-07-29**, except release/status and current image
-metadata refreshed **2026-10-01**. Runtime captures in the historical section
+metadata refreshed **2026-10-01** and the latest-patch row refreshed **2026-11-14**. Runtime captures in the historical section
 remain dated evidence, distinct from the new requested-build checks below.
 
 | Pinned value | Where it is written | Re-derive with |
 |---|---|---|
 | 3.4 is the current LTS; 3.3 carries no label; 3.2 and 3.0 are LTS; 2.8/2.6 receive critical fixes; 3.1 is EOL | `10-version-and-branch.md` branch table | open `https://docs.haproxy.org/` and read the labels beside each branch in the index |
-| 3.4.6, 3.3.16, 3.2.25, 3.0.29 and 2.8.30 released 2026-09-28; 2.6.34 released 2026-09-24 | `10-version-and-branch.md` branch table | `https://www.haproxy.org/` front-page table, or list `https://www.haproxy.org/download/<branch>/src/` and take the highest tarball |
+| Latest patches read 2026-11-14: 3.4.7 and 3.3.17 released 2026-10-14 (branch `CHANGELOG` files); 3.2.26, 3.0.30, 2.8.31 and 2.6.35 listed as latest | `10-version-and-branch.md` branch table | `https://www.haproxy.org/` front-page table, or list `https://www.haproxy.org/download/<branch>/src/` and take the highest tarball |
 | 3.3 end of life 2027-Q1; 3.4 to 2031-Q2; 3.2 to 2030-Q2 | `10-version-and-branch.md` branch table | the end-of-life column on `https://www.haproxy.org/` |
 | the 3.2 to 3.3 deprecation and breaking-change list | `10-version-and-branch.md` | `https://www.haproxy.com/blog/announcing-haproxy-3-3` |
 | the 3.3 to 3.4 deprecation and breaking-change list | `10-version-and-branch.md` | `https://www.haproxy.com/blog/announcing-haproxy-3-4` |

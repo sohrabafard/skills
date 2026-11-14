@@ -28,7 +28,7 @@ Do not use `#!/bin/sh` for Bash code.
 
 Every user-facing CLI script must implement `-h` and `--help`. Both must render the same text and exit with status `0`, so that help is never mistaken for a usage error.
 
-The help output should include:
+The help output must include:
 
 - usage line
 - short description
@@ -39,7 +39,7 @@ The help output should include:
 - exit codes
 - at least one realistic example
 
-Help should not require network access, user input, or external state that is unnecessary for showing usage.
+Help must not require network access, user input, or external state that is unnecessary for showing usage.
 
 Prefer help that fits this shape:
 
@@ -102,7 +102,7 @@ Avoid decorative banners that make the file harder to scan.
 
 ## 4. Function contract
 
-Non-trivial functions should have a short docblock immediately above them.
+In a user-facing CLI script, non-trivial functions must have a short docblock immediately above them.
 
 Use this style:
 
@@ -153,7 +153,7 @@ Recommended exit code convention:
 - `1` runtime or dependency failure
 - `2` usage or argument error
 
-User-facing error messages should:
+User-facing error messages must:
 
 - go to stderr
 - name the failing argument, file, command, or assumption

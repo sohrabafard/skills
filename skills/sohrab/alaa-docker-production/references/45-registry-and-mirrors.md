@@ -95,7 +95,7 @@ decision; that they exist and are separate is this skill's.
 ## 3. Tags, digests, and what "pinned" means
 
 A tag is a mutable pointer. A digest is the content address of a manifest and cannot be repointed.
-Three levels, each correct in a different place:
+Four levels. Two are never correct; the other two are each correct in a different place:
 
 | Level | Form | Use in |
 |---|---|---|
@@ -145,18 +145,18 @@ resolved digest changed even though the file did not.
 
 ## 5. Upstream lines, and how to re-derive them
 
-Verified 2026-07-29. Run `node scripts/check-image-pinning.mjs --versions` for the full table with
+Verified 2026-07-29; the Engine, Compose, Alpine and Node.js rows re-verified 2026-11-14. Run `node scripts/check-image-pinning.mjs --versions` for the full table with
 re-derivation commands; the checker also reports `image-eol-line` for an image built on a line that
 has left support.
 
 | Line | Current | Re-derive with |
 |---|---|---|
-| Docker Engine | 29.6.2 (16 July 2026) | `docker version --format '{{.Server.Version}}'`; https://docs.docker.com/engine/release-notes/29/ |
-| Docker Compose | v5.3.1 (7 July 2026) | `docker compose version`; https://github.com/docker/compose/releases |
-| Alpine | 3.24 stable; 3.21+ supported | https://www.alpinelinux.org/releases/ |
+| Docker Engine | 29.9.3 (3 November 2026) | `docker version --format '{{.Server.Version}}'`; https://docs.docker.com/engine/release-notes/29/ |
+| Docker Compose | v5.7.1 (11 November 2026) | `docker compose version`; https://github.com/docker/compose/releases |
+| Alpine | 3.24 stable; 3.22+ supported | https://www.alpinelinux.org/releases/ |
 | Debian slim | 13 "trixie", point release 13.6 | https://www.debian.org/releases/ |
 | PHP | 8.5 newest; 8.4 and 8.5 active | https://www.php.net/supported-versions.php |
-| Node.js | 24 "Krypton" Active LTS | https://github.com/nodejs/Release |
+| Node.js | 26 Active LTS; 24 "Krypton" and 22 "Jod" maintenance LTS | https://github.com/nodejs/Release |
 | PostgreSQL image | pinned in the generator at 18.3 | `docker buildx imagetools inspect mirror.cdn.ir/postgres:18 --format '{{json .Manifest}}'` |
 
 An image pinned to a line that has left support is a defect even when nothing is currently broken:

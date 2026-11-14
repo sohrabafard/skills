@@ -42,7 +42,10 @@ Checked 2026-09-29 against publisher metadata: [ansible-core](https://pypi.org/p
 2.21.4 and [Ansible community](https://pypi.org/project/ansible/) 14.4.0, both released
 2026-09-08. Core 2.22.0b1 and community 15.0.0a1 are previews, not stable defaults.
 These observations do not raise `scripts/requirements.txt` floors or replace historical
-runtime evidence below. For custom module/action failure semantics, apply
+runtime evidence below. Re-read 2026-11-14 on the
+[releases and maintenance page](https://docs.ansible.com/projects/ansible/latest/reference_appendices/release_and_maintenance.html):
+2.19 reaches end of life in November 2026, and 2.20 entered security-only support on 2026-11-02.
+For custom module/action failure semantics, apply
 `references/best_practices.md` section 5 and the
 [2.21 porting guide](https://docs.ansible.com/projects/ansible/latest/porting_guides/porting_guide_core_2.21.html).
 

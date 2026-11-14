@@ -75,6 +75,13 @@ require_cmd() {
   command -v "${tool}" >/dev/null 2>&1 || die "missing required command: ${tool}"
 }
 
+#######################################
+# Parse command-line arguments.
+# Outputs:
+#   Sets global flag variables.
+# Returns:
+#   0 on success. Exits non-zero through die on an unknown option.
+#######################################
 parse_args() {
   while [ "$#" -gt 0 ]; do
     case "$1" in

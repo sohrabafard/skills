@@ -31,7 +31,7 @@ the service runs one task; with no `update_config` the order is `stop-first`; th
 `docker stack deploy` stops the only task, waits for the new image to pull and the process to boot,
 and only then has a serving container again. For an Octane service that is tens of seconds of hard
 downtime **per service, per deploy**. For a fleet with a 99.99% target — 4 minutes 23 seconds of
-unavailability per month, total — a handful of deploys exhausts the entire annual budget.
+unavailability per month, total — a handful of deploys exhausts the entire monthly budget.
 
 ## 2. What `stack deploy` does when you say nothing
 

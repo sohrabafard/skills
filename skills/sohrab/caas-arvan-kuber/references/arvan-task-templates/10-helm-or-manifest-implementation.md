@@ -34,7 +34,7 @@ Implement:
 
 Validate:
 - alaa-k8s-helm references/validation-workflows.md gates: <which ran, and the output>
-- python3 alaa-k8s-helm scripts/check_manifests.py rendered.yaml --profile arvan
+- `python3 PATH/TO/alaa-k8s-helm/scripts/check_manifests.py rendered.yaml --profile arvan`
 
 Deliver:
 - install, upgrade, and rollback commands, with the Helm major detected

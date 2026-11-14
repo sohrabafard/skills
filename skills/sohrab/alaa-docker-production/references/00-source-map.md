@@ -26,15 +26,15 @@ recorded language and distribution support facts, not freshly fetched lifecycle 
 
 ## Verification ledger - dated observations
 
-Engine and Compose rows were refreshed on 2026-09-29; other rows retain the
+Engine, Compose, Alpine and Node.js rows were refreshed on 2026-11-14; other rows retain the
 2026-07-29 observation date. These are upstream releases, not installed versions
 or tested replacement image pins. Preserve consumer requirements and validate an
 exact image tag and compatibility before changing examples.
 
 | Subject | Value at the stated observation date | Source | Re-derive with |
 |---|---|---|---|
-| Docker Engine | 29.8.1, released 2026-09-15; observed 2026-09-29 | https://docs.docker.com/engine/release-notes/29/ | `docker version --format '{{.Server.Version}}'` |
-| Docker Compose | v5.5.1, released 2026-09-03; observed 2026-09-29. Earlier v5.3.0 added native init-container support | https://github.com/docker/compose/releases | `docker compose version` |
+| Docker Engine | 29.9.3, released 2026-11-03; observed 2026-11-14 | https://docs.docker.com/engine/release-notes/29/ | `docker version --format '{{.Server.Version}}'` |
+| Docker Compose | v5.7.1, released 2026-11-11; observed 2026-11-14. Earlier v5.3.0 added native init-container support | https://github.com/docker/compose/releases | `docker compose version` |
 | Compose `version:` property | Obsolete. "Only informative"; Compose warns when present and "always uses the most recent schema to validate the Compose file, regardless of the `version` field". `name:` is current and is exposed as `COMPOSE_PROJECT_NAME` | https://docs.docker.com/reference/compose-file/version-and-name/ | Add `version: "3.8"` to a file and run `docker compose config`; the warning is the check |
 | Compose interpolation forms | `${VAR:-d}`, `${VAR-d}`, `${VAR:?e}`, `${VAR?e}`, `${VAR:+a}`, `${VAR+a}`; `$$` escapes a literal `$` | https://docs.docker.com/reference/compose-file/interpolation/ | `docker compose config` on a file using each form |
 | What interpolation reads | Shell environment; the file named by `--env-file`; otherwise the project `.env`. **Not** the service-level `env_file:` key | https://docs.docker.com/compose/how-tos/environment-variables/variable-interpolation/ | Put a value only in a service `env_file:` and read it back with `docker compose config` |
@@ -47,10 +47,10 @@ exact image tag and compatibility before changing examples.
 | Registry mirrors | `"registry-mirrors": ["https://host"]` in `/etc/docker/daemon.json`. Documented limitation: "It's currently not possible to mirror another private registry. Only the central Hub can be mirrored." | https://docs.docker.com/docker-hub/image-library/mirror/ | `docker info --format '{{json .RegistryConfig.Mirrors}}'` |
 | OCI image annotations | Predefined keys include `org.opencontainers.image.created`, `.authors`, `.url`, `.documentation`, `.source`, `.version`, `.revision`, `.vendor`, `.licenses`, `.ref.name`, `.title`, `.description`, `.base.digest`, `.base.name` | https://github.com/opencontainers/image-spec/blob/main/annotations.md | `docker inspect --format '{{json .Config.Labels}}' IMAGE` |
 | `docker init` | GA, no deprecation notice. Generates `Dockerfile`, `compose.yaml`, `.dockerignore`, `README.Docker.md`. Templates: ASP.NET Core, Go, Java, Node, PHP with Apache, Python, Rust, Other. Its PHP template is Apache-based and is not a starting point for an Octane or Swoole service | https://docs.docker.com/reference/cli/docker/init/ | `docker init --help` |
-| Alpine | 3.24 stable (3.24.0, 9 June 2026). Supported: 3.24 to 2028-06-01, 3.23 to 2027-11-01, 3.22 to 2027-05-01, 3.21 to 2026-11-01. 3.20 support ended 2026-04-01 | https://www.alpinelinux.org/releases/ | Read the "supported until" column |
+| Alpine | 3.24 stable (3.24.0, 9 June 2026); observed 2026-11-14. Supported: 3.24 to 2028-06-01, 3.23 to 2027-11-01, 3.22 to 2027-05-01. 3.21 support ended 2026-11-01; 3.20 support ended 2026-04-01 | https://www.alpinelinux.org/releases/ | Read the "supported until" column |
 | Debian | 13 "trixie" stable, point release 13.6 (11 July 2026). 12 "bookworm" is oldstable | https://www.debian.org/releases/ | The page names the current stable codename |
 | PHP | 8.5 newest (20 Nov 2025). Active support: 8.4 to 2026-12-31, 8.5 to 2027-12-31. Security-only: 8.2 to 2026-12-31, 8.3 to 2027-12-31, 8.4 to 2028-12-31. 8.1 and older EOL | https://www.php.net/supported-versions.php | The page's two tables |
-| Node.js | 24 "Krypton" Active LTS since 2025-10-28, maintenance from 2026-10-20, EOL 2028-04-30. 22 "Jod" in maintenance, EOL 2027-04-30. 26 Current since 2026-05-05. 20 and older EOL | https://github.com/nodejs/Release | The release schedule table |
+| Node.js | Observed 2026-11-14. 26 Active LTS since 2026-10-28, maintenance from 2027-10-20, EOL 2029-04-30. 24 "Krypton" maintenance LTS since 2026-10-20, EOL 2028-04-30. 22 "Jod" maintenance LTS, EOL 2027-04-30. 20 and older EOL | https://github.com/nodejs/Release | The release schedule table |
 | Trivy | Current; used as the fleet's open-source image scanner | https://trivy.dev/latest/ | `trivy --version` |
 
 Values that could not be retrieved verbatim are marked as such in the table rather than asserted.

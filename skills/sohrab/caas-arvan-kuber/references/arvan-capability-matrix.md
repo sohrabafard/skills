@@ -89,4 +89,4 @@ This is the part that matters, and it is why a single-column matrix is a defect 
 2. Offer the Arvan-compatible alternative where one exists: for `NetworkPolicy`, state that traffic isolation is platform-owned and name what the application must do instead; for `PodDisruptionBudget`, state that voluntary disruption is unprotected and put the manual drain procedure in the RUNBOOK; for `DaemonSet`, use a sidecar in the workload that needs the agent.
 3. Where no alternative exists, ask for cluster confirmation and name the exact command that would settle it.
 
-`python3 alaa-k8s-helm scripts/check_manifests.py rendered.yaml --profile arvan` enforces rule 1 mechanically against the pinned line's absent-kind list.
+`python3 PATH/TO/alaa-k8s-helm/scripts/check_manifests.py rendered.yaml --profile arvan` enforces rule 1 mechanically against the pinned line's absent-kind list.
