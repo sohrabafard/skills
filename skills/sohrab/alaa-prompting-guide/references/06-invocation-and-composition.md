@@ -30,7 +30,7 @@ Resolve the registered name rather than guessing it. In Claude Code the command 
 
 ## Compose from skill owners
 
-Route reusable doctrine to the narrowest applicable canonical skill. Before replacing prompt text with a skill call, resolve its registered name, target syntax, and source the recipient can read. Make each companion's load condition and decision explicit. If a required source is unavailable when needed, use an already authorized equivalent that preserves the obligation, or block dependent work.
+Route reusable doctrine to the narrowest applicable canonical skill. Before you replace prompt text with a skill call, resolve the skill's registered name, its syntax on the target surface, and a source that the recipient can read. Make each companion's load condition and decision explicit. If a required source is unavailable when needed, use an already authorized equivalent that preserves the obligation, or block dependent work.
 
 State the outcome, scope, inputs, constraints, authority, acceptance criteria, required evidence and stopping conditions in the prompt or named task record. Load `/alaa-workflow` when composing workflow prompts. Resolve exact bindings and pass them to children through `alaa-workflow references/companion-routing.md`. Carry the engagement's review cadence and cursor through the runtime orchestrator's gate contract.
 
@@ -70,17 +70,17 @@ The example bound is task input, not a runtime default. A blocked or bounded exi
 
 ## Satisfiable completion conditions
 
-Keep completion reachable: unlimited fresh adversarial passes may never converge. Use the orchestrator's severity, fix-cycle and reporting rules without copying them into the goal. Include a task-specific turn or time bound and a blocked exit naming the cause and next safe action. Distinguish success, blocked and incomplete; a bound proves no acceptance and a goal grants no new authority.
+Keep completion reachable: unlimited fresh adversarial passes may never converge. Use the orchestrator's severity, fix-cycle and reporting rules without copying them into the goal. Include a task-specific turn or time bound and a blocked exit naming the cause and next safe action. Distinguish success, blocked and incomplete. A bound proves no acceptance, and a goal grants no new authority.
 
 ## Delegation polarity
 
 This section owns the rule; other references point here rather than restating it.
 
-**Match the polarity of your delegation language to the target model's default bias.** There is no single correct direction. A prompt that authorizes fan-out on a model that already over-delegates multiplies cost for nothing; a prompt that only restricts fan-out on a model that never delegates unprompted produces a single-threaded session that quietly does everything itself. Polarity defects are silent — nothing errors, and the verb-ownership audit will not catch them — so check polarity separately against the target model.
+**Match the polarity of your delegation language to the target model's default bias.** There is no single correct direction. A prompt that authorizes fan-out on a model that already over-delegates multiplies cost for nothing; a prompt that only restricts fan-out on a model that never delegates unprompted produces a single-threaded session that quietly does everything itself. Polarity defects are silent: nothing errors, and the verb-ownership audit will not catch them. Check polarity separately against the target model.
 
-- **Claude Opus 5.5 — bound delegation.** Current guidance says Opus delegates readily and small-task delegation multiplies cost/time. State observable delegation criteria or a justified task cap: independent parallel tracks must warrant isolation, and work finishable in a handful of tool calls stays inline. Do not impose a universal one-agent preference; the invoked orchestrator owns lane scheduling and observed capacity.
+- **Claude Opus 5.5 — bound delegation.** Current guidance says Opus delegates readily, and delegating a small task multiplies cost and time. State observable delegation criteria or a justified task cap: independent parallel tracks must warrant isolation, and work finishable in a handful of tool calls stays inline. Do not impose a universal one-agent preference; the invoked orchestrator owns lane scheduling and observed capacity.
 - **Claude Fable 5.2 — state the cost and the criteria.** Delegation depends on the harness. Fable 5.2 rarely delegates through a minimal subagent tool and delegates readily where prompts invite it. At `xhigh` and `max` it can start subagents to review its own work. Remove a standing delegate line the task no longer needs. State what a subagent costs, when delegation is worth it, when it is not, and how to brief one. Send review to the declared independent gate, never to a self-review subagent. Check which model each subagent uses by default. The Fable 5.1 guidance to delegate frequently is historical.
-- **Claude Haiku 5.5 — bound delegated work explicitly.** Give one concrete task, named retrieval sources, required checks and completion/failure conditions. General fan-out polarity remains unmeasured; never infer lead suitability from subagent performance. Read `references/36-haiku-5-5.md` before tuning.
+- **Claude Haiku 5.5 — bound delegated work explicitly.** Give one concrete task, named retrieval sources, required checks, and completion and failure conditions. General fan-out polarity remains unmeasured; never infer lead suitability from subagent performance. Read `references/36-haiku-5-5.md` before tuning.
 - **Claude Sonnet 5.5 — general polarity remains unmeasured.** Current guidance describes extra reviewer delegation at higher efforts, not a universal delegation bias. Give explicit independent scopes and stopping conditions; measure fan-out in the target harness before adding broader encouragement or suppression.
 - **Codex — explicit authorization and bounded lanes.** Use the current host's delegation
   rules and available tools. When authorized, name concrete independent scopes and their result

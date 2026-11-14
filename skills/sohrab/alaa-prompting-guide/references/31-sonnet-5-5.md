@@ -1,19 +1,16 @@
 # Claude Sonnet 5.5
 
-Use for current Sonnet prompting and migration. `assets/claude-model-policy.json` owns
-role identity, capability snapshots and availability; `references/30-sonnet-5.md` is historical.
+Use this file for current Sonnet prompting and migration. `assets/claude-model-policy.json` owns role identity, capability snapshots and availability. `references/30-sonnet-5.md` is historical.
 Source checks do not prove account access, runtime activation or workload quality.
 
 ## Prompting and effort
 
-Claude Code and Claude apps default to `medium`; Platform/API defaults to `high`. These surface defaults are not task choices. Begin at `medium` for well-specified agentic work and
-`high` for harder or longer tasks. Effort levels were recalibrated: workload recommendations are
-unrun hypotheses, not inherited calibration. Use `references/50-effort-and-thinking.md`
+Claude Code and the Claude apps default to `medium`. The Platform and the API default to `high`. These surface defaults are not task choices. Begin at `medium` for well-specified agentic work and at `high` for harder or longer tasks. Effort levels were recalibrated, so workload recommendations are unrun hypotheses, not inherited calibration. Use `references/50-effort-and-thinking.md`
 for effort evidence. Raise effort only after excluding context, tool and specification gaps.
 
-The launch reports high-effort Sonnet approaching Opus on some work at similar cost; it proves no universal local equivalence. Medium and high remain distinct supported task settings. In two reported benchmark cases, max underperformed xhigh because extra reviewer subagents caused timeouts or out-of-scope edits. Treat this as a workload-specific caveat, not a universal effort ranking; higher effort can change tool behavior without improving acceptance.
+The launch reports high-effort Sonnet approaching Opus on some work at similar cost. It proves no universal local equivalence. Medium and high remain distinct supported task settings. In two reported benchmark cases, max underperformed xhigh because extra reviewer subagents caused timeouts or out-of-scope edits. Treat this as a workload-specific caveat, not a universal effort ranking. Higher effort can change tool behavior without improving acceptance.
 
-Everyday coding can involve bounded local decisions; it need not be transcription of a fully settled patch. Use the runtime orchestrator routing matrix for task allocation/admission and canonical policy for supported pairs. The orchestrator decides the route for materially coupled unresolved design.
+Everyday coding can involve bounded local decisions; it need not be transcription of a fully settled patch. Use the runtime orchestrator routing matrix for task allocation and admission, and the canonical policy for supported pairs. The orchestrator decides the route for materially coupled unresolved design.
 
 Do not turn thinking-reminder removal into a blanket ban. The Sonnet prompting page specifically permits private reasoning before a strict JSON answer when that improves structured-output reliability. This is a task-specific exception, never authority to disclose private chain-of-thought. Preserve the required JSON schema and evaluate the change on that workload.
 
@@ -21,8 +18,7 @@ At low effort, supply an observable done condition and required checks: early st
 skipped verification are documented risks. At high or xhigh effort, constrain scope and stop
 after the requested outcome and checks; extra features or refactors are not completion.
 Preserve focused implementation checks and independent gates through the authority test in
-`references/80-subagent-authoring.md`. Extra reviewer delegation at higher efforts does not
-establish a general delegation bias; `references/06-invocation-and-composition.md` owns routing.
+`references/80-subagent-authoring.md`. Extra reviewer delegation at higher efforts does not establish a general delegation bias. `references/06-invocation-and-composition.md` owns delegation routing.
 
 For a bounded implementation, adapt this contract without broadening its authority:
 
@@ -58,7 +54,7 @@ compatibility need integration tests in the consuming client; this skill perform
 
 ## Claude Code availability
 
-The minimum is v2.1.284. A `sonnet` alias can select older generations on other providers;
+The minimum Claude Code version is v2.1.284. A `sonnet` alias can select older generations on other providers;
 use the exact ID or a verified deployment mapping. Before activation, inspect account access,
 allowlists, effective overrides, effort caps and observed identity through
 `references/41-claude-code-runtime-features.md`. Missing availability blocks selection;

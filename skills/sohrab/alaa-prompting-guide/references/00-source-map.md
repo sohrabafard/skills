@@ -33,11 +33,7 @@ Carry caveats forward as caveats. Never convert uncertainty into a firm instruct
 
 Where official sources and `/alaa-workflow` disagree with this skill, report the drift, prefer current official and runtime truth for the task in hand, and reconcile the owning file afterwards. Silently choosing a side leaves two sources of truth and no record of which one was followed.
 
-OpenAI active-model/subagent and Claude model, prompting, effort and selection sources were
-refreshed 25 September 2026. Other harness mechanics retain their section-specific historical
-dates until re-fetched. For lifecycle, use the official model-deprecations page; for API ID
-semantics, use model-ids-and-versions. Full system cards were unavailable after bounded retrieval;
-release summaries are weaker evidence. Vendor scores and source validation do not prove
+The OpenAI active-model and subagent sources, and the Claude model, prompting, effort and selection sources, were refreshed 25 September 2026. Other harness mechanics retain their section-specific historical dates until re-fetched. For lifecycle, use the official model-deprecations page. For API ID semantics, use model-ids-and-versions. Full system cards were unavailable after bounded retrieval. Release summaries are weaker evidence. Vendor scores and source validation do not prove
 local runtime activation, account access or a profile's comparative quality.
 
 Sonnet 5.5 model, migration, prompting, effort and Claude Code selection sources were
@@ -57,11 +53,11 @@ is user-observed on 4 October 2026; no app version or official documentation of 
 restriction was supplied. Keep this evidence separate from the official goal limit and
 from any inferred release change. The rejected payload and live repaired submission remain unverified.
 
-Haiku 5.5 launch, migration, prompting, effort and Claude Code selection/subagent sources were refreshed 8 October 2026. Read `references/36-haiku-5-5.md` for URLs, workload limits and API-versus-harness controls. Local calibration and installed activation remain unrun.
+Haiku 5.5 launch, migration, prompting, effort, and Claude Code selection and subagent sources were refreshed 8 October 2026. Read `references/36-haiku-5-5.md` for URLs, workload limits and API-versus-harness controls. Local calibration and installed activation remain unrun.
 
 Sonnet 5.5 launch, overview, prompting, effort and Code selection sources were refreshed 8 October 2026 for the corrected active profiles. Its migration snapshot retains its 29 September date. Retained effort pins remain unrun workload hypotheses; vendor guidance proves no local calibration.
 
-Plan-first selection and runtime-control sources were reverified 8 October 2026: current Claude Sonnet/Opus prompting, model selection, model overview, Code model controls/subagents, Codex models/subagent configuration and current GPT model pages. Read canonical policy source entries and `references/11-codex-runtime-features.md` or `references/41-claude-code-runtime-features.md` for exact surfaces and precedence. These sources inform unrun local admission boundaries; they do not establish model equivalence or live activation.
+Plan-first selection and runtime-control sources were reverified 8 October 2026: current Claude Sonnet and Opus prompting, model selection, model overview, Code model controls and subagents, Codex models and subagent configuration, and current GPT model pages. Read canonical policy source entries and `references/11-codex-runtime-features.md` or `references/41-claude-code-runtime-features.md` for exact surfaces and precedence. These sources inform unrun local admission boundaries; they do not establish model equivalence or live activation.
 
 Task selection, GPT proportional-test guidance and Opus/Sonnet thinking exceptions refreshed 9 October 2026 through the official selection and prompting pages. `references/90-model-selection.md` separates explicit prose, rendered defaults and supplied screenshots. Other capability/runtime snapshots retain their own dates; neither unavailable selector cells nor unrun calibration become negative evidence.
 

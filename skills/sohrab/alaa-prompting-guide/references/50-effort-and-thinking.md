@@ -1,43 +1,41 @@
 # Effort and Thinking: A Cross-Model Decision Procedure
 
-Owns cross-runtime effort evidence and control validation. Model references own supported levels; runtime orchestrators own actual task choices.
+This file owns cross-runtime effort evidence and control validation. Each model reference owns that model's supported levels. The runtime orchestrators own the actual task choices.
 
 ## The two levers do different jobs
 
-**Model** selects judgment; **effort** selects search depth. Choose from the lane's remaining decisions and required search, then verify. Higher effort proves no cross-model equivalence.
+**Model** selects judgment, and **effort** selects search depth. Choose both from the decisions the lane still has to make and the search it requires, then verify the choice. A higher effort proves no equivalence across models.
 
 ## What effort does not control
 
-Response length, deliverable length, update cadence and scope require explicit prompt controls. Effort can change tokens and tool behavior; lowering it is not a reliable substitute for output/scope constraints. Read the target model reference for observed workload-specific effects.
+Response length, deliverable length, update cadence and scope require explicit prompt controls. Effort can change token use and tool behavior. Lowering it is not a reliable substitute for output constraints or scope constraints. Read the target model reference for the workload-specific effects observed on that model.
 
 ## Thinking: keep it on, lower the effort instead
 
-Use the registered model capability snapshot and refresh its API documentation before changing
-thinking controls. Current model references own modes and exceptions. Haiku 5.5 supports effort and adaptive thinking; its API disabled-thinking exception does not transfer to Claude Code. Historical Haiku 4.5 uses extended thinking without effort. These API controls are not interchangeable Claude Code settings.
+Before you change thinking controls, use the registered model capability snapshot and refresh the model's API documentation. The current model references own thinking modes and their exceptions. Haiku 5.5 supports effort and adaptive thinking. Its API exception that permits disabled thinking does not transfer to Claude Code. Historical Haiku 4.5 uses extended thinking without effort. These API controls are not interchangeable with Claude Code settings.
 
 For effort-enabled models, lower the supported effort to cut cost. Check retrieval, tool-use reliability and task quality. Report unsupported controls. Never substitute them. Read `references/36-haiku-5-5.md` for current Haiku controls.
 
-Do not carry manual thinking budgets into current adaptive models. Historical Haiku 4.5 is the extended-thinking exception. The value `adaptive` names a thinking mode, never an effort. Neither `ultra` nor
-`ultracode` is a Claude API effort value; harness orchestration modes require separate proof.
+Do not carry manual thinking budgets into current adaptive models. Historical Haiku 4.5 is the extended-thinking exception. The value `adaptive` names a thinking mode, never an effort. Neither `ultra` nor `ultracode` is a Claude API effort value. A harness orchestration mode requires separate proof.
 
 ## Choosing a starting level
 
-Read the target's reference for supported levels, default and workload starting point; shared effort names do not imply shared search depth. An inherited effort is untested: refresh guidance and retain unrun status. Selection requires no experiment.
+Read the target model's reference for its supported levels, its default and its workload starting point. A shared effort name does not imply a shared search depth. An inherited effort is untested: refresh the guidance and keep its unrun status. Selection requires no experiment.
 
 ## The decision procedure
 
 1. **Resolve missing evidence.** Retrieve or clarify absent context, capability or intent; a different model does not supply missing facts.
-2. **Obtain the task selection from its owner.** The runtime orchestrator selects model AND effort for each authority role through its routing matrix, using `references/90-model-selection.md` as evidence. Planning and implementation are separate actual tasks; role names and vendor defaults do not allocate them.
-3. **Validate capabilities and realization.** First normalize omitted fields through `alaa-codex-orchestrator references/model-effort-policy.md` or its `alaa-cc-orchestrator` mirror. Then check both explicit controls against the structured capability policy and actual host. Inspect loaded definitions, pins, fork restrictions, force/environment/provider overrides and caps. Missing after normalization, unsupported or mismatched controls block the affected lane; use only an available exact verified compatibility realization, never invented fallback.
+2. **Obtain the task selection from its owner.** The runtime orchestrator selects model AND effort for each authority role through its routing matrix, using `references/90-model-selection.md` as evidence. Planning and implementation are separate actual tasks. Role names and vendor defaults do not allocate them.
+3. **Validate capabilities and realization.** First normalize omitted fields through `alaa-codex-orchestrator references/model-effort-policy.md` or its `alaa-cc-orchestrator` mirror. Then check both explicit controls against the structured capability policy and the actual host. Inspect the loaded definitions, pins, fork restrictions and caps, and the overrides from force settings, the environment and the provider. A control that is missing after normalization, unsupported or mismatched blocks the affected lane. Use only an available exact verified compatibility realization. Never invent a fallback.
 4. **Keep selection separate from calibration.** Recommendations and selected pairs stay unmeasured. Selection needs no paid experiment or replay.
-5. **Preserve authority.** Model controls change neither scope, tools, verdict responsibilities nor independent gates. Main-session configuration stays external. Source consistency does not prove installed activation or observed serving identity.
+5. **Preserve authority.** Model controls change no scope, tool, verdict responsibility or independent gate. Main-session configuration stays external. Source consistency does not prove installed activation or observed serving identity.
 
 
 ## Capability registries and realized controls
 
-The structured Codex/Claude policies register neutral role identities and supported pairs. Supported levels are capabilities, not task recommendations or role-wide ceilings. Historical entries do not authorize active selection. The runtime orchestrator owns actual task admission, priority and deliberate departures; this skill validates controls without allocating work.
+The structured Codex and Claude policies register neutral role identities and supported pairs. Supported levels are capabilities, not task recommendations or role-wide ceilings. Historical entries do not authorize active selection. The runtime orchestrator owns actual task admission, priority and deliberate departures. This skill validates controls and allocates no work.
 
-Stale executable pins can defeat caller controls. Read the target runtime reference and verify the loaded definition, explicit pair and effective resolution. A source edit does not reload the current registry. Use an available exact verified realization or block the affected lane; never silently substitute or change installed configuration. Unknown observed identity is a reporting limit when configured resolution is established, not a requirement for paid probing.
+A stale executable pin can defeat the caller's controls. Read the target runtime reference, and verify the loaded definition, the explicit pair and the effective resolution. A source edit does not reload the current registry. Use an available exact verified realization or block the affected lane. Never silently substitute or change installed configuration. When the configured resolution is established, an unknown observed identity is a reporting limit, not a requirement for paid probing.
 
 ## Effort is not the only cost lever
 
@@ -49,7 +47,7 @@ Before raising effort, resolve prompt bloat and missing context. Vendor lean-pro
 - Disabling thinking to control cost instead of lowering effort, then writing repair instructions for the resulting behavior.
 - Treating lower effort as a reliable verbosity or scope control instead of specifying the required output and boundaries.
 - Writing a prompt line that asks the model to think less instead of lowering the effort; `references/43-fable-5-2.md` holds the Fable 5.2 evidence.
-- Arbitrary model/effort escalation from a vague importance or sensitivity label; record consequence and priority through the runtime orchestrator allocation owner.
+- Arbitrary model or effort escalation from a vague importance or sensitivity label. Record the consequence and the priority through the runtime orchestrator, which owns allocation.
 - Pinning maximum effort by habit without measured quality benefit and a stated workload need.
 - Treating a supported effort as proof it is appropriate, or changing model and effort together in a comparison.
 - Setting an explicit thinking budget on a generation that no longer accepts one.
@@ -59,7 +57,7 @@ Before raising effort, resolve prompt bloat and missing context. Vendor lean-pro
 
 ## Caveats
 
-Thinking-disable constraints and the availability of manual thinking budgets are vendor-stated and time-sensitive; effort level names, per-model defaults, and starting-point recommendations are not restated here — read the target model's own file, which is the current source for its own numbers. The measured lean-prompt figures are from a specific vendor's internal testing on a specific generation and should not be generalized. Re-read the sources below before hard-coding any of these anywhere, and distinguish orchestrator task policy from vendor capability.
+Thinking-disable constraints and the availability of manual thinking budgets are vendor-stated and time-sensitive. This file does not restate effort level names, per-model defaults or starting-point recommendations. Read the target model's own file, which is the current source for its own numbers. The measured lean-prompt figures come from one vendor's internal testing on one generation, and they should not be generalized. Re-read the sources below before you hard-code any of these values anywhere, and distinguish orchestrator task policy from vendor capability.
 
 ## Sources
 
