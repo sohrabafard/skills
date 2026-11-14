@@ -27,7 +27,7 @@ Use this when the user asks to release, publish, push, or make a new version ava
 4. Apply the authorization gate in `SKILL.md` to each planned effect and target before acting; ask only for authority it does not already cover.
 5. Once tag creation is authorized, the working tree is committed and every gate is clean, create the tag: `git tag -a vX.Y.Z -m "vX.Y.Z"`.
 6. With authority for both pushes, push the verified branch, then the verified tag.
-7. After the branch/tag push and with authority for the Satis rebuild, run `docker compose --profile build run --rm satis-build` from the resolved `$SATIS_LOCAL_DIR`. Git push alone does not rebuild the index; until the build is authorized and succeeds, report the package as unavailable to adopters rather than published.
+7. After the branch and tag pushes, and with authority for the Satis rebuild, run `docker compose --profile build run --rm satis-build` from the resolved `$SATIS_LOCAL_DIR`. Git push alone does not rebuild the index; until the build is authorized and succeeds, report the package as unavailable to adopters rather than published.
 8. `satis-build` is a one-shot builder: it must exit `0` and write `satis-output`, and is not expected to stay `Up`. On any other exit code, stop, report the code with the last twenty lines of output, and tell the user the package is not published. Never continue to adoption on a failed build.
 9. Verify availability before adoption: confirm the tag on the primary remote; when the Satis web stack is running, fetch `$SATIS_PACKAGES_URL` and confirm the tag is listed; confirm `composer show alaa/controlled-ops --available -vvv` resolves it before update, and the adopter's lock after.
 

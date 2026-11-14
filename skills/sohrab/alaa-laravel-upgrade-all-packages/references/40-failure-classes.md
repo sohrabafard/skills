@@ -36,7 +36,7 @@ When a sandbox, locked-file or path failure falls within the declared scope of /
 
 **Diagnosis.** In order: does the parent directory exist and is it writable by the current user; is another process holding the file (editor, language server, second agent); is the target a symlink into a read-only mount or container bind.
 
-**Smallest retry.** Re-run the same command with exactly one thing changed, and name which: the holding process closed, or a shell with write access to that path. Once. A second identical retry is not an escalation.
+**Smallest retry.** Re-run the same command with exactly one thing changed, and name which: the holding process closed, or a shell with write access to that path. Make this retry once. A second identical retry is not an escalation.
 
 **Escalation.** Report the artifact as not regenerated, naming the path and the operating system's error text, and leave the dependency change intact. A stale generated artifact is reported, never accepted as fresh, because the next run reads it as current state.
 
@@ -58,7 +58,7 @@ export npm_config_cache="$MANIFEST_ROOT/.npm-cache"
 rm -rf "$COMPOSER_HOME" "$COMPOSER_CACHE_DIR" "$npm_config_cache"
 ```
 
-**Escalation.** Confirm cleanup by both checks, since either can pass while the other fails: `git status --short` shows only intended files, and none of the three directories still exists on disk. Then `/alaa-codex-runtime-ops`. Do not escalate privileges broadly and do not abandon the sweep over a cache error.
+**Escalation.** Confirm cleanup by both checks, since either can pass while the other fails: `git status --short` shows only intended files, and none of the three directories still exists on disk. Then apply `/alaa-codex-runtime-ops`. Do not escalate privileges broadly and do not abandon the sweep over a cache error.
 
 ## 6. Partially-applied update
 

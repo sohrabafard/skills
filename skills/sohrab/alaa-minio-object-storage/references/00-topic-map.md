@@ -8,12 +8,12 @@ another skill owns.
 |---|---|
 | read a storage value from the environment, choose or change a default for one, name a new storage variable, or validate one at startup | `references/05-environment-contract.md` |
 | choose the provider a deployment points at, set `STORAGE_PROVIDER_PROFILE`, add a column for a provider the fleet has not used before, or decide whether a difference between two providers is a new `STORAGE_*` knob or a branch in code | `references/05-environment-contract.md` |
-| create/name a bucket, choose bucket count, or define generic key namespaces and trusted tenant prefixes, including those used by tus | `references/10-buckets-and-object-keys.md` |
+| create or name a bucket, choose bucket count, or define generic key namespaces and trusted tenant prefixes, including those used by tus | `references/10-buckets-and-object-keys.md` |
 | add or change a lifecycle rule, decide how long anything stays in a bucket, or explain a bill that grows with no matching object count | `references/20-lifecycle-and-retention.md` |
 | create a storage identity, write or review a bucket or IAM policy, hand a credential to a process, or rotate one | `references/30-identity-credentials-and-access.md` |
 | turn on server-side encryption or replication, decide whether a bucket may be versioned or whether versioning may be turned off again, or decide whether a plaintext hop to the store is acceptable | `references/40-encryption-tls-and-durability.md` |
-| size a non-tus application client's parts/buffers, check provider bounds, or set bucket capacity and cost budgets | `references/50-multipart-capacity-and-cost.md` |
-| size tusd parts/temp disk or choose its upload-specific key/sidecar layout under the shared namespace rules | `/tusd-upload-platform` `references/35-storage-lifecycle.md` |
+| size a non-tus application client's parts and buffers, check provider bounds, or set bucket capacity and cost budgets | `references/50-multipart-capacity-and-cost.md` |
+| size tusd parts and temp disk, or choose its upload-specific key and sidecar layout under the shared namespace rules | `/tusd-upload-platform` `references/35-storage-lifecycle.md` |
 | issue a presigned URL, let a browser talk to the bucket directly, or put a CDN in front of it | `references/60-presigned-urls-and-delivery.md` |
 | add, replace or configure an object-storage client library in any language, or set the S3 signature version a client signs with | `references/70-client-libraries.md` |
 | set `STORAGE_USE_PATH_STYLE`, explain a bucket that answers under one addressing style and not the other, or read a TLS hostname mismatch that names a bucket | `references/70-client-libraries.md` |

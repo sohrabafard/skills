@@ -1,7 +1,7 @@
 # Multipart, capacity and cost
 
 This file owns provider bounds, application-client multipart capacity and bucket costs. Read it before
-sizing non-tus application parts/buffers or setting a quota. For tusd controls and temp-disk sizing,
+sizing the parts and buffers of a non-tus application client, or before setting a quota. For tusd controls and temp-disk sizing,
 read `/tusd-upload-platform` `references/35-storage-lifecycle.md`; its parts must fit these provider bounds.
 
 ## Multipart mechanics

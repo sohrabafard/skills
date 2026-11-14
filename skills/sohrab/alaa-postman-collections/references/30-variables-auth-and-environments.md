@@ -64,7 +64,7 @@ of values they have to supply by hand before the first request works.
   example, a request body, or a script.
 - Placeholders are obviously placeholders: `<replace-me>`, `https://api.example.test`,
   `09120000000`. A realistic-looking sample value gets copied into a real system.
-- Never a production hostname as a committed default.
+- Never commit a production hostname as a default.
 - Postman no longer maintains a separate initial value and current value; a variable has one
   value that is local by default. So the value in the exported file is the value that lands
   in git — there is no shared-versus-local split to hide a real secret behind.
