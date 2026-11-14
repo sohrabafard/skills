@@ -65,7 +65,11 @@ Eight edit lanes ran as general-purpose subagents on Opus 5.5. The five core lan
 | B2 | nine doctrine skills |
 | B3 | twelve platform, frontend and data skills |
 
-Skills with no edit in this engagement: the 25 skills that neither exceeded the body line target nor carried a listed repair, and the references of Quasar, Shaka, Vue, HAProxy, Makefile, MinIO and ui-ux beyond their listed repairs.
+Coverage of the 75 first-party skills in this engagement, counted from the diff against the first engagement's merge:
+
+- Sentence-level rewrite of body and references: 12 skills (both orchestrators, alaa-workflow, alaa-prompting-guide, alaa-code-intelligence-routing, alaa-testing-strategy, alaa-low-noise, alaa-memory-os, alaa-project-constitution, alaa-repo-docs, alaa-extract-agent-lessons, alaa-ent-go-orm-db).
+- Body rewrite, body reduction and listed repairs, references touched only where a repair needed it: 29 skills (lanes B1, B2 and B3 without alaa-ent-go-orm-db).
+- No edit: 34 skills. Twelve of them had no edit in either engagement, because the first engagement's audit found no rubric hit: alaa-arvan-object-storage, alaa-cicd-laravel-postgres, alaa-crockford-base32-codecs, alaa-data-layer, alaa-laravel-architecture, alaa-laravel-upgrade-all-packages, alaa-legacy-path-map, alaa-mongodb-patterns, alaa-signoz-clickhouse-docs, clickhouse-performance-schema-ops, jitsi-platform-architect, tusd-upload-platform.
 
 ## Review outcome
 
@@ -73,15 +77,17 @@ Skills with no edit in this engagement: the 25 skills that neither exceeded the 
 
 | Review | Effort | Findings | Disposition |
 |---|---|---|---|
-| Orchestrator pair (D1) | high | 6 minor, 2 nit | All repaired in both runtimes |
-| Workflow, routing, testing, low-noise (D2, D3) | high | 4 minor, 6 nit | Eight repaired; one kept with evidence observed in the installed `bd` help; one accepted |
-| Memory, constitution, docs, prompting guide (D4, D5) | high | 7 minor, 3 nit | Nine repaired; one declared with its source |
+| Orchestrator pair (D1) | requested high | 6 minor, 2 nit | All repaired in both runtimes |
+| Workflow, routing, testing, low-noise (D2, D3) | requested high | 4 minor, 6 nit | Seven repaired; one kept with evidence observed in the installed `bd` help; two accepted |
+| Memory, constitution, docs, prompting guide (D4, D5) | requested high | 7 minor, 3 nit | Nine repaired; one declared with its source |
 | PHP, Laravel, providers (B1) | medium | 1 major, 3 minor, 1 nit group | Repaired, except one pre-existing stale claim that is reported below |
 | Doctrine (B2) | medium | 6 minor, 3 nit | Seven repaired; two accepted as declared |
 | Platform, frontend, data (B3) | medium | 2 major, 1 minor, 3 nit | All repaired |
 | First engagement's final fixes | medium | 1 minor, 1 nit | `APPROVED-WITH-NITS`; nit repaired; the minor item is pre-engagement text |
 
-The three major findings were relocation defects, not wording defects: a rule added to a moved ownership table, a checklist that lost its only trigger, and a router pointer that fired too late. The repairs made after each review were not reviewed again. Each restores earlier wording or widens a trigger, and every gate ran after them.
+Two of the reviewers dispatched at high effort reported an observed runtime effort value of 15 whose mapping to a named level is unknown, so the realized effort of the high-effort reviews is not confirmed.
+
+The three major findings were relocation defects, not wording defects: a rule added to a moved ownership table, a checklist that lost its only trigger, and a router pointer that fired too late. About ten findings shared that cause: a pointer narrower than the moved content's reach. `alaa-prompting-guide references/60-skill-authoring.md` now lists it in its defects table. The repairs made after each review went back to the same reviewers for a confirmation pass; *Confirmation pass* records the result.
 
 ## Open items for the owner
 

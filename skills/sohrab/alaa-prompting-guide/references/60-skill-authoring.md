@@ -146,6 +146,7 @@ The test to apply sentence by sentence: **could a competent agent follow this ex
 | Rule weakened during compression | Same rules, softer verbs; the file passes review | Diff the verbs, the scopes, and the conditions, not the word count |
 | Reference nobody reads | A reference file exists and never loads | Rewrite the pointer to name the triggering situation and what the file decides |
 | Lookup table in the body | Every run pays for a matrix used in one run out of five | Move the table to its own reference and leave a pointer |
+| Relocated content with a narrower pointer | A moved table, list or checklist is reached in fewer situations than before, and nothing errors | Write the pointer's trigger as the union of the situations in which each moved item applies, and add no rule during the move |
 | Body duplicates a reference | The same rule in two files, drifting apart | Assign one owner per rule; leave a one-line pointer where the rule used to be |
 | Instruction stated more than once | Long body, degraded compliance | State each rule once; measure fidelity and required coverage |
 | Skill tries to be a whole workflow | The body sprawls into phases, state files, resumable plans | Split it, and route the durable multi-phase part to a workflow skill by name in the description |
