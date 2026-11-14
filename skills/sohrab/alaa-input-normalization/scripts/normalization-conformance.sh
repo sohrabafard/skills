@@ -615,8 +615,12 @@ main() {
     fi
 
     if [[ -n "${GO_BIN}" ]]; then
+        # -buildvcs=false is a build flag, not part of GOFLAGS, because this line replaces
+        # the caller's GOFLAGS. Without it, a stray .git directory above TMPDIR (an empty
+        # /tmp/.git is enough) makes go run git, which exits 128 and fails the build. The
+        # driver is a throwaway binary, so VCS stamping proves nothing about normalization.
         if (cd "${WORKDIR}/go" && GOCACHE="${WORKDIR}/gocache" GOFLAGS=-mod=mod \
-            "${GO_BIN}" build -o "${WORKDIR}/go/driver" . ) > "${WORKDIR}/go.build" 2>&1; then
+            "${GO_BIN}" build -buildvcs=false -o "${WORKDIR}/go/driver" . ) > "${WORKDIR}/go.build" 2>&1; then
             if "${WORKDIR}/go/driver" "${CORPUS}" > "${WORKDIR}/go.out" 2> "${WORKDIR}/go.err"; then
                 report_runtime go "${WORKDIR}/go.out"
             else
