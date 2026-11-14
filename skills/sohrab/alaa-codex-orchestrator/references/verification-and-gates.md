@@ -2,7 +2,7 @@
 
 Read this file before Stage A and whenever a gate's requirement is in question.
 
-Stages A-F define outcomes and authority. They are distinct from workflow phases. Combine compatible actions in the workflow plan. Keep each required outcome, observer and ordering constraint.
+Stages A-F give the order of work. The verification decision below sets which checks and reviews run inside them. They are distinct from workflow phases. Combine compatible actions in the workflow plan. Keep each required outcome, observer and ordering constraint.
 
 ## The verification decision
 
@@ -121,9 +121,9 @@ Apply `alaa-workflow references/context-curation.md` at material boundaries and 
 
 Always first, never skipped, because every lane inherits its decisions.
 
-1. Before the first write, apply `alaa-workflow references/workspace-and-integration.md`. Record the base and checkout identity, inspect unrelated changes, and resolve overlapping ownership. Use its current-checkout or isolation decision. Disjoint existing changes alone require neither refusal nor a new branch.
+1. Before the first write, apply `alaa-workflow references/workspace-and-integration.md` `## Before the first write` and use its current-checkout or isolation decision.
 2. Dispatch the specification, exploration, and research lanes whose conditions in `references/routing-matrix.md` hold, in parallel only when their questions are independent.
-3. Reconcile observed facts and label unresolved assumptions. Resolve missing facts through retrieval or clarification. Then select the planning profile through `routing-matrix.md` before you make the plan. The lead ratifies an advisory planner draft.
+3. Reconcile observed facts and label unresolved assumptions. Then select the planning profile through `routing-matrix.md` before you make the plan.
 4. Run a capability inquiry before you approve a new container image, toolchain, chart, CI include or template, generator, hook pack, or script reused across repositories or pipelines. An edit to an existing artifact is out of scope. The inquiry is required because this tree cannot establish what another owner already provides.
    1. Read any /alaa-services-contract infrastructure registry first, and reuse sufficient current evidence.
    2. Apply the /alaa-memory-os capability inquiry.
@@ -132,58 +132,54 @@ Always first, never skipped, because every lane inherits its decisions.
 
    Use the same memory-owned inquiry before local absence becomes a validation blocker, and when a permitted additional repair has an unresolved owner; then return to the runtime recovery owner. The lookup adds no retry and no native status authority.
 5. Decide the solution before decomposing it. Name the chosen approach and each rejected alternative with the reason it was rejected. Where the goal stores, indexes, caches, or moves data, decide the representation and the access path with `/alaa-data-layer`. Where a path grows with tenants, rows, history, or events, state its complexity bound with `/alaa-algorithms-data-structures`. Run the design pass under `/alaa-system-design` when that skill's conditions hold; `references/routing-matrix.md` names the three conditions it adds beyond the architecture critic's own triggers.
-6. Record the architecture-critic trigger whenever `references/routing-matrix.md` or step 5 requires it. Complete the design record before implementation, also when the change meets the adversarial reviewer's blast-radius condition, because an irreversible change has no cheap second attempt. Schedule the judgment the decision calls for at the declared review boundary, subject to the stricter repository gates above.
-7. Record known API-contract triggers and decide consumer impact, compatibility and deprecation before implementation. Schedule the contract judgment the decision or a floor calls for at the declared review boundary; a newly discovered trigger reopens the affected plan and gate.
+6. Record the architecture-critic trigger whenever `references/routing-matrix.md` or step 5 requires it. Complete the design record before implementation, also when the change meets the adversarial reviewer's blast-radius condition, because an irreversible change has no cheap second attempt.
+7. Record known API-contract triggers and decide consumer impact, compatibility and deprecation before implementation.
 8. Use `alaa-test-strategist` before implementation, not after, whenever its condition in `references/routing-matrix.md` holds: a test matrix designed after the code exists is written against what was built rather than against what the change had to prove.
 9. Record the plan through /alaa-workflow or adopt the existing parent plan. Record ordered phases, acceptance, focused phase checks, the final gate and handoff knowledge. Use `alaa-workflow references/context-continuity.md` for canonical position and resume. Apply `alaa-workflow references/companion-routing.md` for executable phase/task skill bindings before implementation or write-lane dispatch. Workflow owns this machinery; the orchestrator consumes it without duplicating task state.
-10. After tasks and dependencies are consolidated, run Batch allocation from `references/routing-matrix.md` once and record all lane choices in the workflow plan; create no second allocation artifact. Record each task's verification decision. Present the plan and the decisions in one compact message, then continue without waiting. Wait only when an irreversible decision, destructive action, external side effect, or genuine product choice belongs to the user.
+10. Run Batch allocation from `references/routing-matrix.md`, record all lane choices in the workflow plan, and create no second allocation artifact. Present the plan and the decisions in one compact message, then continue without waiting. Wait only when an irreversible decision, destructive action, external side effect, or genuine product choice belongs to the user.
 
 ## Stage B — Implementation
 
 1. Select the managed implementation profile or admitted external role through `references/routing-matrix.md` before assignment or reassignment, then dispatch one agent per ready lane. Carry the selection evidence in the dispatch and the roster.
 2. Take dependencies and readiness from the selected task authority and the phase barriers. Take write ownership and shared-resource conflicts from the workflow plan. A lane is ready only after its required dependency contracts are reconciled. Dispatch ready independent lanes together when observed host slots and declared resource ceilings permit. Increase parallel writers when capacity and ready work justify it. When capacity is not observable, record that and use the smallest supported batch until capacity is established. Do not invent a ceiling or assume unlimited capacity.
-3. Never overlap writes to files, generated outputs, contracts, migrations or shared runtime state. Reconcile at declared integration barriers before dependent work starts. Reserve capacity for the next required gate only when it is ready. Apply /alaa-testing-strategy `references/110-execution-resources.md` before scheduling CPU-heavy work.
-4. Each subtask lane runs its focused failure-mode topic selectors and the necessary touched-file lint/type/build on the shared build cache. The explicitly assigned task owner runs bounded task-acceptance selectors at task end. Neither may run boundary affected/exhaustive checks. A lane writes no test that `/alaa-testing-strategy` finds unowed; that skill owns the tiers and the test-need decision. Choose the smallest discriminating checks for the claimed behavior and for changed exported-surface, contract, type or lint properties. Return the observed output, or mark the property not checked. Role definitions own dispatch-conflict handling; reconcile every excluded command and unrun check before accepting the lane.
+3. Reconcile at declared integration barriers before dependent work starts. Reserve capacity for the next required gate only when it is ready.
+4. Lanes run the subtask-end and task-end checks of the cadence table above and no boundary affected/exhaustive check. Choose the smallest discriminating checks for the claimed behavior and for changed exported-surface, contract, type or lint properties. Return the observed output, or mark the property not checked. Role definitions own dispatch-conflict handling; reconcile every excluded command and unrun check before accepting the lane.
 5. Wait for all required lanes. A blocked lane is blocked; do not pad it into success.
-6. Reconcile actual diffs and lane evidence, not summaries alone. Detect scope violations, accidental generated changes, contract mismatches, and cross-lane breakage. Record observed task progress and tested closure through `alaa-workflow references/task-tracking.md`. Closure implies neither reviewed acceptance nor commit authority.
+6. Reconcile actual diffs and lane evidence, not summaries alone. Detect scope violations, accidental generated changes, contract mismatches, and cross-lane breakage. Record observed task progress and tested closure through `alaa-workflow references/task-tracking.md`.
 
 ## Stage C — Verification
 
 1. At phase implementation end, reconcile focused lane and task evidence against the phase's acceptance criteria. Collect only missing or invalidated focused checks and explicit earlier repository obligations. Apply each task's verification decision and the floors to the reconciled candidate. When the decision or a floor names an independent verifier, collect missing, invalidated or required-fresh coverage through `alaa-verifier`.
 2. When independent checks remain to run, dispatch `alaa-verifier` with the exact consolidated commands, cwd, timeout, artifact directory and resource policy derived through /alaa-testing-strategy `references/110-execution-resources.md`. Use only host-exposed dispatch and continuation mechanisms. Under Codex, route Docker socket permission failures through /alaa-codex-runtime-ops before the canonical host fallback.
-3. Route classified results through Failure routing in `references/routing-matrix.md`. Neither a clear owner nor a cheap fix bypasses the canonical collection barrier.
-4. After batch repair, apply After a fix and the canonical retest procedure. Unresolved required pre-review results block review. Unresolved required results block acceptance.
+3. Route classified results through Failure routing in `references/routing-matrix.md`.
+4. After batch repair, apply After a fix and the canonical retest procedure.
 
 ## Stage D — Review and specialist gates
 
-1. At the inherited review boundary, after Stage C's collection, batch repair and required retests pass, dispatch the independent review and specialist gates that the tasks' decisions and the floors require, against the complete diff and lane plan. Spawn the one correctness reviewer the routing matrix selects: `alaa-reviewer` or `alaa-reviewer-deep`. When a decision chose the lead's own diff reading, it happens at the same point.
+1. At the inherited review boundary, once Check collection above lets review start, dispatch the independent review and specialist gates that the tasks' decisions and the floors require, against the complete diff and lane plan. Spawn the one correctness reviewer the routing matrix selects: `alaa-reviewer` or `alaa-reviewer-deep`. When a decision chose the lead's own diff reading, it happens at the same point.
 2. Spawn `alaa-adversarial-reviewer` only when its condition in `references/routing-matrix.md` holds. Its conflicting-judgment arm, discovered here, fires without resetting the inherited boundary.
 3. `APPROVED` and `APPROVED-WITH-NITS` proceed. Under `CHANGES-REQUESTED`, route each finding triaged for fixing verbatim to the hand Who fixes selects.
 4. Present every finding this phase leaves open for the user as one decision set: each item with its severity per lens, the smallest fix that closes it, and what closing it costs. Ask once, because each separate answer can move the tree and invalidate final evidence, including a required exhaustive run.
 
-For required Ent review, interpret the native report under `alaa-ent-go-orm-db references/85-specialist-delegation.md`. `STATUS: COMPLETE` means the assessment finished. It grants no approval. A missing report, `STATUS: BLOCKED`, `STATUS: INCOMPLETE` or missing required evidence blocks acceptance even without findings. Triage its findings under Findings above.
+For required Ent review, interpret the native report under `alaa-ent-go-orm-db references/85-specialist-delegation.md`. `STATUS: COMPLETE` means the assessment finished. It grants no approval. A missing report, `STATUS: BLOCKED`, `STATUS: INCOMPLETE` or missing required evidence blocks acceptance even without findings.
 
 ## Stage E — Documentation and final validation
 
 1. Spawn `alaa-documenter` when its condition in `references/routing-matrix.md` holds. It is the final write lane, so every check below runs after it.
-2. `alaa-repo-docs references/15-document-size-and-clustering.md` owns the size ladder, its thresholds, the measuring command, and the one condition under which the largest grade may stand; `/alaa-repo-docs` applies it. This skill requires only that the grade is measured and reported; a local copy of the ladder would go stale.
-3. After documentation edits, run the documentation gate below.
-4. Run the final validation in this order:
+2. After documentation edits, run the documentation gate below and report the size grade it measures.
+3. Run the final validation in this order:
    1. If integration is requested and explicitly authorized, bring the base branch into the work branch before final verification. Otherwise keep the current candidate as the verification target, and mark integration as not requested or as awaiting authority.
    2. Freeze the final candidate. Record its content snapshot and any integrated base commit.
    3. Select required checks and proof from repository policy and /alaa-testing-strategy.
-   4. Collect required affected and exhaustive checks in one whole-engagement gate stage. Run any required exhaustive tier once, fresh on the final candidate after documentation. Cite matching coverage and run only uncovered checks.
-   5. Allow no candidate write to overlap the final pass.
-   6. If a result blocks acceptance, apply After a fix and the existing retry budget. Repeat only failed, invalidated or required-fresh checks.
-5. Consume the workflow owner's final reusable-context gate after evidence is stable; an empty retained set is valid. Follow its `pipeline reopen required` outcome before closure.
-6. Re-check the final Git status and diff against the declared scopes. Confirm that canonical task progress and workflow status match what landed. Record the last authorized commit timestamp when available; otherwise record it as unavailable.
-7. Report in the order `SKILL.md` states, and audit every claim against an actual tool result from this session before reporting it.
+   4. Collect required affected and exhaustive checks in one whole-engagement gate stage. Run any required exhaustive tier once, fresh on the final candidate after documentation.
+   5. If a result blocks acceptance, apply After a fix and the existing retry budget.
+4. Consume the workflow owner's final reusable-context gate after evidence is stable; an empty retained set is valid. Follow its `pipeline reopen required` outcome before closure.
+5. Re-check the final Git status and diff against the declared scopes. Confirm that canonical task progress and workflow status match what landed. Record the last authorized commit timestamp when available; otherwise record it as unavailable.
+6. Report in the order `SKILL.md` states, and audit every claim against an actual tool result from this session before reporting it.
 
 ## Stage F — Requested integration
 
-This phase applies only when the user requests integration. A local-only request completes after Stage E without a merge prompt. For requested integration, present the candidate, diff, gate evidence, and residual risks. Reuse existing explicit authorization for the exact operation. When it is absent, ask only after the result is reviewable, and do not merge before it arrives.
-
-Integrate under `alaa-workflow references/workspace-and-integration.md`. If the base advanced after final verification, incorporate it on the work branch and rerun the required final gates against the changed candidate; a clean merge also changes the tested tree. When the base did not move and the evidence remains applicable, no repeated gate is owed. Push, tag, branch deletion other than the lane-branch deletion, worktree removal other than a merged lane's worktree, and remote effects each require explicit authority. A declined or unanswered integration request leaves the candidate intact and is reported accurately, without invalidating completed local work.
+This phase applies only when the user requests integration. A local-only request completes after Stage E without a merge prompt. Run requested integration through `alaa-workflow references/workspace-and-integration.md` `## The integration handshake`, and reuse existing explicit authorization for the exact operation. If the base advanced after final verification, rerun the required final gates on the changed candidate.
 
 ## Documentation gate
 

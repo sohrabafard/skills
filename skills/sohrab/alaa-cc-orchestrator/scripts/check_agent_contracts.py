@@ -337,7 +337,7 @@ def task_allocation_failures(routing: str, controls: str) -> list[str]:
 
 # Cadence assertions are source contracts, not a simulation of agent obedience.
 # Workflow owns hierarchy validation; this consumer checks its scheduling seam.
-CADENCE_REQUIREMENTS = ('Stages A-F define outcomes and authority. They are distinct from workflow phases',
+CADENCE_REQUIREMENTS = ('Stages A-F give the order of work. The verification decision below sets which checks and reviews run inside them. They are distinct from workflow phases',
  'read `alaa-workflow references/task-tracking.md` for task-store selection',
  'never initialize a replacement Beads database',
  '`Review boundary: phase|final`',
