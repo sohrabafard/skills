@@ -47,7 +47,7 @@ On `main` after the 5.9.0 commit, each exited `0`: the four root checkers, the i
 - **Domain and policy questions** from the report's list that no file or history settles: the keyset-pagination measurement figures; the throttle-hint wait across three provider skills; "below the floor" in the Laravel upgrade triage; the RATIFY word in the constitution workflow (history shows it was never a mode); the PHPantom absolute path that a test asserts; the GitLab parent guides that act as second routers; the IndexedDB threshold policies; the Arvan object-storage default prompt; object keys as secrets in the MinIO skill; a HAProxy source row whose content a past commit removed.
 - **`alaa-trust-gateway-auth`**: three reported items, skipped while another session edits that skill.
 - **Lua.** No Lua runtime is installed on this host, so the Lua implementation in `alaa-crockford-base32-codecs` stays unproven. Installing one needs the owner's approval.
-- **Behaviour under the new commit protocol** has not been observed: the lanes above ran on the previous rule.
+- **Behaviour under the new commit protocol** was observed once, in the last section of this file; shared-checkout concurrency, a rejected lane and the Codex path remain unobserved. The laravel, frontend and go roles have not run: this repository holds no real task for them, and an invented one would be the evaluation the pack owner excludes.
 
 No push. No tag.
 
@@ -61,3 +61,21 @@ A last check of the commit protocol found two gaps and the release was patched b
 - Both routing matrices say a session started before a role was installed "may not" have it: this session received the four roles without a restart.
 
 The instruction reviewer returned CHANGES-REQUESTED on the first draft of the patch (two major: a sentence that contradicted its neighbour, and no path for a Codex lead under the same sandbox), then APPROVED-WITH-NITS after the repairs; its last wording nit was applied by the parent and not re-read. A search of the whole pack found no other sentence that states the old commit rule. Every gate exits `0` on the patched tree.
+
+## First run of the lane-branch commit protocol, same day
+
+The protocol of pack version 5.9.1 was then used once on real work (Beads issue `alaa-szivq`): clearing four ShellCheck findings in the input-normalization conformance harness, findings that an earlier lane had reported and left.
+
+| Step of the protocol | Observed |
+|---|---|
+| The lead inspects hooks and other writers, records HEAD, creates the lane branch and switches the checkout | No commit hook, no other writer, HEAD `38dc9e0d`, branch `lane/normalization-harness-shellcheck` |
+| The dispatch names the branch and carries the verified admission predicates | Yes |
+| The lane loads its surface owner skill before the first edit | Yes (`/alaa-bash-shell`); it said it did not load the skill of the harness itself |
+| The lane commits its owned path by path when its focused checks pass | One commit, `8ac5e7bf`, one path, a Conventional Commit subject, no attribution; the checkout was left on the branch and clean |
+| The lane report names the commit and the branch | Yes |
+| Independent review before the merge | `alaa-reviewer`: APPROVED-WITH-NITS; it ran ShellCheck (exit 0) and the harness (exit 0, four runtimes at 290 of 290) |
+| The lead switches back while no lane is live, merges with `--no-ff` and deletes the branch | Merge commit `b84e60ed`; branch deleted; every gate exits 0 on `main` |
+
+The role was `alaa-implementer-infra`, requested opus/medium. One nit from the review could not be applied to the lane's commit without rewriting history, so the merge message carries it: a failed resolution of the script's own directory now stops the script at once.
+
+This is one run of one role with one lane. It shows that the protocol can be followed as written in Claude Code. It does not show two lanes sharing a checkout, a rejected lane, a fix on the same branch, or the Codex path.
