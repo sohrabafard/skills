@@ -40,7 +40,7 @@ Limits: the Fable 5.2 behaviour statements are vendor test results. No local cal
 | Unobservable task controls are recorded as unknown and do not block a lane | A subagent cannot observe its invocation controls; the owner files already treat unknown identity as a reporting limit; the Fable 5.2 page reports needless approval stops when cautions pile up across agents |
 | Implementers deny `Agent` | Nesting is on by default; the lead owns every dispatch and its task allocation |
 | One `STATUS:` vocabulary (`COMPLETE`, `INCOMPLETE`, `BLOCKED`) for non-gate roles | It reuses the vocabulary the Ent specialist contract already used |
-| No role was renamed, added or removed; `VERSION` is unchanged | Changes are recorded under *Unreleased* in both changelogs; a release is the owner's decision |
+| No role was renamed, added or removed; both packs move to version 5.6.0 | The output contract of every role changed, and the version lets an installed copy be recognised as older than the source |
 | Lane edits were limited to a closed rubric | The pack forbids growth without a capability and forbids editing a domain fact that the lane cannot verify |
 
 ## Closed rubric used by the edit lanes
@@ -103,7 +103,7 @@ These need the owner's decision. No lane edited them.
 
 - Install. The installed agent definitions and any non-symlinked skill copy are unchanged. `install-skills.md` owns the commands. Until an authorized install, sessions keep the previous agent definitions, including the old first-line labels.
 - Push. The lane branch is merged locally only.
-- Release. `VERSION` is 5.5.0 in both orchestrators; the changes are under *Unreleased*.
+- Activation skew. After the merge the skills are live through the symlinked install, while the installed agent copies still hold version 5.5.0 text with the old first-line labels. An orchestrator run reports those roles as stale until the install.
 
 ## Validation observed
 

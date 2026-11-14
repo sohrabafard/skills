@@ -154,7 +154,7 @@
         "xhigh",
         "max"
       ],
-      "default_effort": "medium",
+      "default_effort": "high",
       "thinking_mode": "adaptive-always-on",
       "source_ids": [
         "models",
@@ -165,7 +165,7 @@
         "fable-5-2-launch"
       ],
       "minimum_claude_code": "2.1.321",
-      "notes": "default_effort denotes the Claude Code default, medium; the Claude API default is high. All values are surface snapshots, not observed installed controls. references/43-fable-5-2.md owns the behaviour evidence and references/41-claude-code-runtime-features.md the advisor pairs. Mythos is excluded from active selection and custom profiles.",
+      "notes": "default_effort denotes the Claude API default, high; Claude Code defaults to medium. All values are surface snapshots, not observed installed controls. references/43-fable-5-2.md owns the behaviour evidence and references/41-claude-code-runtime-features.md the advisor pairs. Mythos is excluded from active selection and custom profiles.",
       "selection_enabled": true
     },
     "claude-fable-5-1": {
