@@ -133,8 +133,8 @@ and `30-trusted-ingress-and-laravel-contract.md`.
 
 | Surface | Observation | Evidence |
 |---|---|---|
-| `X-Admin-Scopes`: `asc` projection, sanitize on every route, service readers | Gateway projection and sanitize: source reading in local commits. Readers: unverified; the `alaa-go-chi` kit's `TrustCtx.AdminScopes()` was not read here, and no service reader was surveyed. | gateway `c0230d4`, hardened `3527962` |
-| `Authorization` deleted before WA ingest | Source reading in a local commit. Deletion on every other public path except logout is planned after launch. | gateway `a8f4d7d` |
+| `X-Admin-Scopes`: `asc` projection, sanitize on every route, service readers | Gateway projection and sanitize: source reading at the named commits. Readers: unverified; the `alaa-go-chi` kit's `TrustCtx.AdminScopes()` was not read here, and no service reader was surveyed. | gateway `c0230d4`, hardened `3527962` |
+| `Authorization` deleted before WA ingest | Source reading at the named commit. Deletion on every other public path except logout is planned after launch. | gateway `a8f4d7d` |
 | ClickHouse fleet variables (`CLICKHOUSE_HOST`, `CLICKHOUSE_PORT`, `CLICKHOUSE_HTTP_PORT`, `CLICKHOUSE_TRANSPORT`) | Unverified: no kit configkit, deploy `sharedInputs` or consumer source was read. | none |
 | Class `go` naming in `deploy/service.yaml` (`serviceNameIsRelease`, `<service>-<workload>`, `{serviceName}:{containerPort}`) | Unverified: no deploy, gateway or consumer source was read. | none |
 
