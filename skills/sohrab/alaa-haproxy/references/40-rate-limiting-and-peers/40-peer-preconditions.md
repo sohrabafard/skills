@@ -11,7 +11,7 @@ Three, each of which fails silently:
    passes `haproxy -c -f`, the process still starts, the table is still created, and the limit
    still works per node in isolation, with no error anywhere. With Kubernetes-generated pod names
    the hostname never matches a hand-written peer name, so `localpeer` or `-L` is mandatory there.
-2. **Keep replicated table definitions compatible.** Use consistent names, key types/lengths,
+2. **Keep replicated table definitions compatible.** Use consistent names, key types and lengths,
    stored data and periods. This package keeps sizing aligned for review, but a size
    difference alone is not a documented universal sync-refusal rule. Verify `show peers`
    and real updates; declaration in the peers section makes the schema reviewable.

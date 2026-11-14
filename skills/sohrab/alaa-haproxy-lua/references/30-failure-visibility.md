@@ -12,4 +12,4 @@ Before deciding a converter or fetch failure policy, read [explicit rejection an
 
 When raising or catching a Lua error, read [source-position exposure, logs and protected-call failure semantics](./30-failure-visibility/30-errors-and-protected-calls.md).
 
-When assigning decision variables or handling startup/timeouts, read [variable persistence, explicit reset and failures outside the handler](./30-failure-visibility/40-variable-state-and-external-failures.md).
+When assigning decision variables or handling startup failures or timeouts, read [variable persistence, explicit reset and failures outside the handler](./30-failure-visibility/40-variable-state-and-external-failures.md).

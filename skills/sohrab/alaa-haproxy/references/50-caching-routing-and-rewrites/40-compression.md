@@ -3,7 +3,7 @@
 ## Compression
 
 3.4 adds explicit `comp-req`/`comp-res` filters. Implicit compression remains
-possible with no other filters or only cache/FastCGI filters; explicit declarations
+possible with no other filters or only cache or FastCGI filters; explicit declarations
 make ordering reviewable. A branch-aware file uses:
 
 ```
@@ -41,8 +41,8 @@ that serves files the HTML pins by hash.
 Compression needs `+ZLIB` or `+SLZ`, not necessarily both. When caching and
 compression coexist, declare `filter cache <name>` before the compression filter
 to store the uncompressed representation; changing their order changes stored
-bytes/negotiation behavior. Test cache hits with different Accept-Encoding values
+bytes and negotiation behavior. Test cache hits with different Accept-Encoding values
 and compare decompressed body bytes. Legacy `filter compression` and
 `compression direction` are deprecated in 3.4; use separate `comp-req`/`comp-res`.
 `filter-sequence` from the announcement was reverted in 3.4.5 and is unavailable
-on 3.4.6. The worked example states explicit cache/compression order.
+on 3.4.6. The worked example states explicit cache and compression order.

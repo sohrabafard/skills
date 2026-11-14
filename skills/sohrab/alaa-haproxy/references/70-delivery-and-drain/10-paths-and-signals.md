@@ -23,7 +23,7 @@
 - `SIGUSR2` — reload in master-worker mode: a new worker takes the listeners, the old one finishes
   its streams and exits. The official image entrypoint prepends HAProxy arguments and runs `exec`; it does
   not translate signals. The Dockerfile declares `STOPSIGNAL SIGUSR1` for container
-  stop. Choose the explicit master-worker reload signal/process target.
+  stop. Choose the master-worker reload signal and the process that receives it explicitly.
 - `SIGTERM` — hard stop. In-flight requests are cut.
 - `hard-stop-after <duration>` in `global` bounds how long a soft stop may take before the process
   exits regardless. **Scope: it is process-wide, and it applies to every soft stop and every

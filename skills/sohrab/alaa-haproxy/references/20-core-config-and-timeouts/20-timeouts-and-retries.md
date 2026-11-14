@@ -26,7 +26,7 @@ each one bounds, and how the directive is written.
 
 `retries N` defaults to retrying failed new connection attempts. `retry-on`
 extends the triggering failures and can replay an HTTP request; it requires the
-workload's replay/idempotency decision from `/alaa-reliability-sla`.
+workload's replay and idempotency decision from `/alaa-reliability-sla`.
 `option redispatch` allows breaking persistence to select another usable server;
 without an argument, this normally applies on the last retry, not every attempt.
 Health and available-server state also affect selection. Do not promise that all

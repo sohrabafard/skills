@@ -14,10 +14,10 @@ cannot match there.
 
 Normalize only according to the URI/header contract: decoding twice, changing
 case on case-sensitive paths, or discarding query parameters can change routing.
-Use `hdr_cnt`/the appropriate fetch when duplicate security headers must be
+Use `hdr_cnt` or the appropriate fetch when duplicate security headers must be
 rejected. `set-header` replaces copies; `add-header` appends deliberately.
 `option forwardfor` alone does not establish a trustworthy forwarding chain.
-For identity/tenant selection, obtain the trust and shared-name contract from
+For identity or tenant selection, obtain the trust and shared-name contract from
 `/alaa-trust-gateway-auth` and `/alaa-services-contract` before writing conditions.
 Examples 11 and 18 state the upstream trust prerequisite. `unique-id` requires
 `unique-id-format`; an unset format does not generate a correlation identifier.
@@ -67,10 +67,10 @@ written, is decided by `/service-runtime-kit-governance`. The
 Example 06 uses `resolvers`, `server-template`, `init-addr none` and `check`.
 Templates bound address slots rather than allowing unlimited membership.
 `init-addr none` tolerates missing initial DNS but can start with no usable server.
-Verify resolver reachability, answer size/family, SRV versus A/AAAA semantics, and
+Verify resolver reachability, answer size and address family, SRV versus A/AAAA semantics, and
 actual template range. `hold valid` controls valid-resolution reuse; other `hold`
-states and resolve/retry timeouts govern failure/recovery. Diagnose the failed
+states and the resolve and retry timeouts govern failure and recovery. Diagnose the failed
 state before raising hold times: longer holds can delay convergence. Inspect
-`show resolvers` and `show servers state`, then test empty/truncated answers,
+`show resolvers` and `show servers state`, then test empty and truncated answers,
 missing names, address churn and DNS recovery. Configuration manual section 5.3
-owns exact state/timer interactions; delivery owns nameserver wiring.
+owns exact state and timer interactions; delivery owns nameserver wiring.

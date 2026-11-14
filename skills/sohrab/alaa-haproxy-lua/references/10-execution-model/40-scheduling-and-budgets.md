@@ -32,7 +32,7 @@ Sleeping time is not counted against `burst-timeout`, `session-timeout`, or `ser
 **Bounded computation may run without yielding.** Ordinary function calls, string
 validation and arithmetic are not prohibited merely because they complete
 synchronously. Converters and fetches require this short, non-yielding shape.
-Blocking filesystem/process operations and unbounded C-library calls can stall the
+Blocking filesystem and process operations and unbounded C-library calls can stall the
 thread; HAProxy cannot make an arbitrary library scheduler-aware. The upstream Lua
 architecture lists runtime-prohibited operations (`io`, file I/O, process execution,
 filesystem mutation, package loading and stdout printing). Treat this as an API usage

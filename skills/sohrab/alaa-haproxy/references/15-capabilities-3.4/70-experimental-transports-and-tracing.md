@@ -13,7 +13,7 @@ OpenTelemetry is a separate experimental component from
 [haproxy-opentelemetry](https://github.com/haproxy/haproxy-opentelemetry).
 Its client library must be compiled into the HAProxy build; `filter opentelemetry`
 also needs event and exporter configuration. It is inactive unless configured.
-Check the available filter list in `haproxy -vv` and the component's build/config
+Check the available filter list in `haproxy -vv` and the component's build and configuration
 documentation; `-OT` is the OpenTracing flag and does not independently establish
 OpenTelemetry absence. The observed official 3.4.6 Alpine image has no
 OpenTelemetry filter. Do not infer availability from the image tag or add a

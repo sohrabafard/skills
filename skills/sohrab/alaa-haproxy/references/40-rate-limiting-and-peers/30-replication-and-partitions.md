@@ -32,8 +32,8 @@ Inspect `show peers` for session state, heartbeat and acknowledged updates. A
 partition is not reliably visible from request-rate panels alone. On reconnect,
 current state is synchronized rather than an admission journal; concurrent updates
 and expired entries prevent reconstructing a reliable global admitted-request total.
-Test partition/reconnect with representative keys and measurement windows before
-claiming limiter behavior. Signal/alert policy stays with `/alaa-observability-soc`.
+Test partition and reconnect behavior with representative keys and measurement windows before
+claiming limiter behavior. Signal and alert policy stays with `/alaa-observability-soc`.
 
 ### Deciding what to do about it
 

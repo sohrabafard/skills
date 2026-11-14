@@ -22,6 +22,6 @@ run queues, p99 latency and throughput on the actual deployment shape.
 `tune.sched.low-latency on` prioritizes lower-priority task classes at the cost of
 bulk processing; default `off`. It predates 3.4, whose scheduler has additional
 improvements. Do not describe it as a new 3.4 directive. Compare latency and bulk
-throughput under the same saturation load. Process/container memory, descriptor
+throughput under the same saturation load. Process and container memory, descriptor
 limits, stick tables, caches, TLS sessions and old workers still consume capacity;
 route limit implementation to `/alaa-docker-production` or `/alaa-k8s-helm`.

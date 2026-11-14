@@ -14,8 +14,8 @@ can hide protocol failures. `show profiling memory` gains execution-context
 attribution in 3.4; capture the configured profiling state, overhead and access
 policy before a bounded investigation. The exporter adds
 `haproxy_sticktable_local_updates`; first inspect real exposition and scope
-parameters, then route alert/catalog decisions to their owners. `set-dumpable libs`
-can embed matching executables/libraries in a core: the dump can also contain
+parameters, then route alert and catalog decisions to their owners. `set-dumpable libs`
+can embed matching executables and libraries in a core: the dump can also contain
 secrets. 3.4.6 adds log `+utf8` handling; this is a maintenance addition, not a
 3.4.0 capability. See [observability](../60-observability-and-runtime.md) for emission
 and control-plane mechanics.

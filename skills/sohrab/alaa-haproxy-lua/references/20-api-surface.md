@@ -4,7 +4,7 @@ Organised by what you are trying to do. Every entry names the object or function
 
 ## Registering behaviour
 
-Register configuration-facing converters, fetches, actions, services and filters at load time. Init callbacks, tasks, events and Runtime API commands have their own invocation paths; they are not all `lua.` configuration keywords. Check each pinned API signature/context before use.
+Register configuration-facing converters, fetches, actions, services and filters at load time. Init callbacks, tasks, events and Runtime API commands have their own invocation paths; they are not all `lua.` configuration keywords. Check the pinned signature and context of each API before use.
 
 | You need | Call | Handler shape |
 |---|---|---|
@@ -80,18 +80,18 @@ Log **field and event names** are owned by `/alaa-services-contract`, and whethe
 
 ## Less common contexts
 
-- **Tasks:** define a bounded unit of work, a scheduler-aware wait, failure/backoff
-  policy and stop/drain behavior. A task is per registered Lua state, not a cluster
+- **Tasks:** define a bounded unit of work, a scheduler-aware wait, a failure and backoff
+  policy, and stop and drain behavior. A task is per registered Lua state, not a cluster
   singleton. Idempotency or external coordination is required for side effects.
 - **CLI handlers:** `register_cli` receives an applet and command arguments. Bound
-  input/output and expose only the required Runtime API privilege. Test denied
+  input and output, and expose only the required Runtime API privilege. Test denied
   access and disconnected clients; do not treat a command's presence as authorization.
 - **Filters:** follow the pinned `register_filter` constructor and callback contract,
-  use per-stream instances, and preserve callback return/count semantics and message
-  framing. Test both directions, empty/end-of-message input and aborted streams.
+  use per-stream instances, and preserve callback return and count semantics and message
+  framing. Test both directions, empty and end-of-message input, and aborted streams.
   Do not call yieldable APIs from a callback unless its specific contract permits it.
 - **Events:** keep callbacks bounded and account for subscription lifetime and stale
-  server/backend objects. Test deletion/reload behavior before administrative mutation.
+  server and backend objects. Test deletion and reload behavior before administrative mutation.
 - **Services/applets:** read and write through the appropriate HTTP/TCP applet,
   respect backpressure, cap response size, and test disconnects and partial output.
 

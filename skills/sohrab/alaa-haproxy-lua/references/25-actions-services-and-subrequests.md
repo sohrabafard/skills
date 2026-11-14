@@ -14,8 +14,8 @@ if HAProxy ignored them. Source: v3.4.6 `hlua_action` and API `Act` class.
 
 An uncaught Lua action error logs and normally continues rule processing. Therefore
 an access-controlling action still needs a preinitialized deny decision and a
-configuration guard for unexpected errors/timeouts, even if normal rejection uses
-`act.DENY`. A service/applet writes its own response instead of returning a sample.
+configuration guard for unexpected errors and timeouts, even if normal rejection uses
+`act.DENY`. A service or applet writes its own response instead of returning a sample.
 For advisory work, use the owner-approved degradation policy rather than demanding
 that every action deny traffic.
 
@@ -39,7 +39,7 @@ txn:set_var("txn.guard_ok", true, true)
 
 An advisory action may have a documented degradation policy instead. A service
 writes its own response; a later action-style deny rule cannot repair a partially
-sent response. Decide status/body before sending headers and test partial failures.
+sent response. Decide the status and the body before sending headers and test partial failures.
 
 The reason code is a contract name. `/alaa-services-contract` owns every such name and its wire spelling; do not invent one in Lua. Whether the unreachable-dependency case denies or admits is a fail-closed judgement owned by `/alaa-security-review`, and the status code and its retry semantics come from `/alaa-services-contract` `references/22-failure-load-and-deprecation-contract.md`.
 
