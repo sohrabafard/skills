@@ -44,7 +44,7 @@ Measured figures quoted in this skill, all on PostgreSQL 16.13 and not re-measur
 - The same row-value predicate against a mixed-direction `(c ASC, id DESC)` index read 387 buffers instead of 4, while printing an identical `Index Cond` line — the basis for the rule that buffers, not plan text, are the observable.
 - `ORDER BY c DESC, id ASC` over a `(created_at, id)` index planned an `Incremental Sort`; `ORDER BY c DESC NULLS LAST` over a default index planned a full `Sort` over a `Seq Scan`.
 
-No raw record of these runs exists, and the files of this skill describe the setup behind the mixed-direction buffer figure in ways that disagree, so these figures await a new measurement.
+No raw record of these runs exists in this repository, and the files of this skill describe the setup behind the mixed-direction buffer figure in ways that disagree, so these figures await a new measurement.
 
 ## Unverified — do not assert these
 
