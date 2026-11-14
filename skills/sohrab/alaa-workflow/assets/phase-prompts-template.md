@@ -14,7 +14,7 @@
 
 Before use, load the runtime-correct prompting guide and re-check unresolved or stale source evidence. Before EVERY dispatch, apply the active runtime orchestrator's task allocation and verify BOTH effective model and effort against the plan; missing or conflicting controls block that lane.
 
-Resolve the whole engagement, current phase/task/subtask, final phase and review boundary from the plan's canonical cursor. Nested invocations inherit that boundary; the reviewer below runs only when the active orchestrator schedules that boundary. Its local phase is not automatically the final candidate.
+Resolve the whole engagement, current phase/task/subtask, final phase and review boundary from the plan's canonical cursor. Nested invocations inherit that boundary; the reviewer below runs at that boundary only when the active orchestrator's verification decision or a floor calls for a review. Its local phase is not automatically the final candidate.
 
 For Beads-bound work, populate each dispatch's actor, binding reference, issue IDs, ownership action and `bd` flags through `/alaa-workflow` `references/task-tracking.md` `## Agent identity and ownership` and `## Beads capabilities in use` before use.
 
@@ -26,7 +26,7 @@ For Beads-bound work, populate each dispatch's actor, binding reference, issue I
 
 **Scope:** Change only the phase-owned surfaces. Preserve unrelated work. Delegate only independent, disjoint work or high-volume context isolation; the main agent owns integration.
 
-**Validation:** Run only assigned focused or bounded task-owner checks. Return evidence to the integration owner, who follows the active runtime orchestrator's verification-and-gates.md for centralized phase collection, repair/retest barriers and inherited review. Preserve exact failures and blockers.
+**Validation:** Run only assigned focused or bounded task-owner checks. Return evidence to the integration owner, who follows the active runtime orchestrator's verification-and-gates.md for centralized phase collection, repair/retest barriers and any review that its verification decision or a floor calls for at the inherited boundary. Preserve exact failures and blockers.
 
 **Done:** The phase acceptance criteria pass and status reflects verified reality.
 

@@ -32,7 +32,7 @@ This section applies to execution engagements and issue-only implementation.
 - Apply the execution hierarchy and task authority in `references/task-tracking.md` before dependent work.
 - Bring canonical workflow and task owners and derived snapshots current before the next phase, handoff, or report.
 - Record the engagement's review boundary and final phase. Pass them into nested orchestration. `alaa-codex-orchestrator` and `alaa-cc-orchestrator` `references/verification-and-gates.md` own cadence scheduling.
-- Record phase test-collection, repair/retest and inherited review barriers in the plan through `references/artifact-lifecycle.md`.
+- Record phase test-collection, repair/retest and review barriers in the plan through `references/artifact-lifecycle.md`.
   Route generic execution and the early-repair exception to /alaa-testing-strategy `references/100-test-execution.md`. The runtime orchestrators own the scheduling of phases and reviews and independent observers through the cadence owner above.
 - Fix defects and retest the failing path within the active retry budget. Never weaken assertions, hard-code expected results, suppress findings or lower review standards. Record an unresolved blocker and next safe action. Continue independent safe work.
 - Complete only when implementation, validation evidence, documentation, artifact status, and the final reusable-context curation outcome agree.

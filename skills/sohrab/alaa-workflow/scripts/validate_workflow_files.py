@@ -424,7 +424,7 @@ def validate_review_contract(content: str, status: str) -> list[str]:
         if not evidence or (verdict in approved and (evidence == "not run" or UNRESOLVED_RE.search(evidence))):
             messages.append(error("plan.review-evidence", f"{title} has no attributable review evidence.", "Record the boundary evidence; pending review may say not run."))
         if boundary == "final" and (field_value(header, "Local final phase") is not None or phase_key(title) != final_phase) and verdict != "REVIEW_PENDING":
-            messages.append(error("plan.review-boundary", "Intermediate phase claims review under final-only cadence.", "Keep REVIEW_PENDING; the final phase owns independent acceptance."))
+            messages.append(error("plan.review-boundary", "Intermediate phase claims review under final-only cadence.", "Keep REVIEW_PENDING; the final phase owns boundary acceptance."))
         required_boundary = boundary == "phase" or (not field_value(header, "Local final phase") and phase_key(title) == final_phase)
         completed_boundary = is_complete_status(status) or (is_complete_status(field_value(block, "Status") or "") and verdict in approved)
         if required_boundary and completed_boundary and not boundary_validation_observed(block):
