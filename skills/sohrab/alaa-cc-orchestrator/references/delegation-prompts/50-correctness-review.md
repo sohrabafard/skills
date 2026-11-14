@@ -7,6 +7,7 @@
 <plan><lanes and acceptance criteria></plan>
 <diff_scope><base/head or touched files></diff_scope>
 <verification_evidence><integrated verifier results></verification_evidence>
+<review_reason><what the author cannot see, or the floor></review_reason>
 <stance>Fresh context, read-only, findings-first, no fixes.</stance>
 <refuted_findings><after a prior round: key, one-line claim and one-line reason per refuted item; else none. Do not re-raise a listed item unless code at its location changed since the recorded snapshot or you have new evidence. Mark a re-raise `RE-RAISED: <key>` with that evidence.></refuted_findings>
 <review_depth>standard | deep, with the routing trigger and selected profile. Use only one correctness reviewer for this scope.</review_depth>

@@ -5,7 +5,7 @@ description: "Production-grade multi-agent coding orchestration for Codex. Use w
 
 # Alaa Codex Orchestrator
 
-Lead a controlled, evidence-driven multi-agent goal. Narrow subagents inspect, implement, verify, challenge, and document. No lane approves itself, and no unverified claim is reported as complete.
+Lead a controlled, evidence-driven multi-agent goal. Narrow subagents inspect, implement, verify, challenge, and document. The main thread decides how much verification each change needs, and no unverified claim is reported as complete.
 
 **Mirrored behavior.** Change both runtime orchestrators together. Only runtime mechanics and model-family delegation polarity may differ; `/alaa-prompting-guide` owns the latter.
 
@@ -41,7 +41,7 @@ Install or update only with explicit user authorization for the target paths. Va
 
 ### Orchestrator mode
 
-Use when the user asks to build, fix, refactor, migrate, integrate, optimize, or otherwise change a repository. The main thread plans, dispatches, reconciles, gates and reports. It implements only a mechanical local edit with known scope, no design decision, and a few tool calls, in files no active or pending lane owns, because dispatching such an edit costs more than making it. Viable implementers own all other implementation. The verifier runs heavy suites.
+Use when the user asks to build, fix, refactor, migrate, integrate, optimize, or otherwise change a repository. The main thread plans, dispatches, reconciles, verifies as it decides, and reports. It may make a small, local, obvious correction itself, in files no active or pending lane owns, when that is cheaper than a dispatch. Implementers own all other implementation.
 
 ### Advisor mode
 
@@ -57,19 +57,19 @@ Use `references/routing-matrix.md` for the actual main-thread task selection and
 
 The main thread owns goal normalization, scope control, repository-aware lanes, selection and dispatch authority, reconciliation, verification and review, specialist triggers, truthful reporting and stopping.
 
-The main thread must not implement beyond that mechanical-edit exception, run heavy verification, silently take over failed lanes, permit self-approval, soften or omit review findings, claim unobserved checks or overlap writers. Save bulky output and report its path.
+The main thread must not silently take over failed lanes, soften or omit review findings, claim unobserved checks or overlap writers. Save bulky output and report its path.
 
 ### Dispatch discipline
 
-**One agent per lane.** Dispatch no duplicate lane and no summary-check agent. A lane starts no subagent of its own: the lead owns every dispatch and its task allocation. Independent verification and review inspect the actual artifact under separate authority. Dispatch independent lanes together. Keep inspection and Orchestrator mode's mechanical edit inline.
+**One agent per lane.** Dispatch no duplicate lane and no summary-check agent. A lane starts no subagent of its own: the lead owns every dispatch and its task allocation. Independent verification and review inspect the actual artifact under separate authority. Dispatch independent lanes together. Keep inspection and the main thread's own small correction inline.
 
 **Start a dependent lane as soon as the lanes it consumes finish.** Join lanes behind one barrier only when the next step consumes all of their outputs. A barrier over a lane whose output the next step never reads idles that step for the unrelated lane's whole runtime.
 
-**Count live lanes before each spawn or follow-up.** Compare the live lanes with the runtime's concurrency limit first. At the limit, free a slot before you start the next lane, because a call at the limit can fail. On a limit error, never resend the same call unchanged: free a slot first. On a usage-limit error, record the lane's last evidence in the plan or compact dispatch, apply section 3's interruption rule and the stopped-writer recovery that `routing-matrix.md` cites, then re-dispatch only the remaining scope. In Codex, the limit counts open spawned-agent threads, and closing a completed thread is its own operation. Read the effective limit from `agents.max_concurrent_threads_per_session` in the active configuration. When it is unset, treat the live count at the first limit error as the limit for this session. A call at the limit failed in observed sessions; the documentation does not describe that behaviour. To free a slot, close the thread of a completed lane that Gate economics in `references/verification-and-gates.md` will not continue. When none qualifies, wait for a running lane to finish. `alaa-prompting-guide references/11-codex-runtime-features.md` owns the key, its alias and the default.
+**Count live lanes before each spawn or follow-up.** Compare the live lanes with the runtime's concurrency limit first. At the limit, free a slot before you start the next lane, because a call at the limit can fail. On a limit error, never resend the same call unchanged: free a slot first. On a usage-limit error, record the lane's last evidence in the plan or compact dispatch, apply section 3's interruption rule and the stopped-writer recovery that `routing-matrix.md` cites, then re-dispatch only the remaining scope. In Codex, the limit counts open spawned-agent threads, and closing a completed thread is its own operation. Read the effective limit from `agents.max_concurrent_threads_per_session` in the active configuration. When it is unset, treat the live count at the first limit error as the limit for this session. A call at the limit failed in observed sessions; the documentation does not describe that behaviour. To free a slot, close the thread of a completed lane that Who fixes in `references/verification-and-gates.md` will not continue. When none qualifies, wait for a running lane to finish. `alaa-prompting-guide references/11-codex-runtime-features.md` owns the key, its alias and the default.
 
 **Keep dispatches lean.** Apply /alaa-prompting-guide. Carry lane facts only: outcome, owned files, exclusions, acceptance, commands, dependencies, resolved skills and return contract. Do not restate the native role definition, which dilutes both contracts. State each instruction once. Expose task-relevant tools and only requirement-bearing examples.
 
-**Preserve proportional verification.** Read `references/verification-and-gates.md` for gate economics and independent acceptance. /alaa-prompting-guide owns model-specific verification wording.
+**Decide verification per change.** Read `references/verification-and-gates.md` for the verification decision, the floors and who fixes. /alaa-prompting-guide owns model-specific verification wording.
 
 **Correct sparingly.** Revise a statement only when its error changes user code, conclusions or decisions. State the correction plainly and briefly, then continue. Fix immaterial slips without narration.
 
@@ -95,30 +95,16 @@ Report a missing model or role as blocked or degraded; never fall back silently.
 
 ## 5. Orchestrator execution pipeline
 
-Orchestrator mode keeps every Stage A–E outcome. Stage F needs requested integration, and explicit authority before its effects. Advisor mode runs no execution stage; section 1 routes its planning artifacts. Stages are logical outcomes, not workflow phases or separate mandatory dispatches. Coalesce compatible actions and evidence in the workflow plan while preserving outcomes, independence and gate economics. Before Stage A dispatch, read `references/verification-and-gates.md` for the inherited phase and final review boundary, cadence, triggers and requirements.
+Orchestrator mode keeps Stages A, B and E. Stages C and D run as the verification decision and the floors in `references/verification-and-gates.md` require; that file replaces fixed stages and profiles. Stage F needs requested integration, and explicit authority before its effects. Advisor mode runs no execution stage; section 1 routes its planning artifacts. Stages are logical outcomes, not workflow phases or separate mandatory dispatches. Coalesce compatible actions and evidence in the workflow plan while preserving outcomes and floors. Before Stage A dispatch, read `references/verification-and-gates.md` for the decision, the inherited review boundary and the cadence.
 
 | Stage | Owns | Ends when |
 |---|---|---|
-| A — Plan | workspace setup, evidence lanes, the chosen solution and its rejected alternatives, the written plan, the profile | the plan and profile are recorded and presented |
+| A — Plan | workspace setup, evidence lanes, the chosen solution and its rejected alternatives, the written plan, each task's verification decision | the plan and decisions are recorded and presented |
 | B — Implementation | disjoint lanes, focused subtask checks and bounded task acceptance, with tested diff evidence | every required lane is reconciled against its actual diff |
-| C — Verification | focused phase evidence and required pre-review checks under their assigned observers | every command reached `PASS`, or the phase ended blocked with the failure classified and its owner named |
-| D — Review and specialist gates | at the declared boundary, independent review and every triggered specialist | required assessments are complete and findings are resolved or explicitly accepted by the user |
+| C — Verification | the checks that the decisions and the floors require, under the observers they name | every command reached `PASS`, or the phase ended blocked with the failure classified and its owner named |
+| D — Review and specialist gates | at the declared boundary, the independent review and specialist gates that the decisions and the floors require | required assessments are complete and every finding has a recorded disposition |
 | E — Documentation and final validation | documentation and its grade, required final gates, the report; base integration only when requested and authorized | applicable documentation is validated; whole-engagement final gates wait for its final candidate |
 | F — Requested integration | reviewable integration details and explicit authority, then the local merge | authorized integration is complete, or its declined/blocked status is reported; not applicable to local-only work |
-
-### Execution profile: size the pipeline to the plan
-
-**Every profile preserves A–E outcomes and required gates at the inherited review boundary.** Record the profile from the finished plan. Escalate to a heavier profile when its condition appears. Do not de-escalate while qualifying evidence persists. `references/routing-matrix.md` owns implementation-role reassessment.
-
-| Profile | Conditions — every one must hold | Shape |
-|---|---|---|
-| `lean` | one lane, one implementation phase, a diff that stays inside the lane plan, and none of the `hardened` conditions or deep-review triggers | Stages A–E, and F only when requested; the main thread performs Stage D's review itself instead of dispatching `alaa-reviewer`, and specialists still fire on their own triggers |
-| `standard` | anything that is neither `lean` nor `hardened` | Stages A–E with every required gate; F only when requested |
-| `hardened` | the change meets the adversarial reviewer's blast-radius condition in `references/routing-matrix.md` | `standard`, plus the architecture design record in Stage A and critic/adversarial judgment at the declared review boundary |
-
-`lean` review is independent because the lead authored no diff. If the work leaves the lane plan, or the lead made a mechanical edit, select `standard` and dispatch `alaa-reviewer` on the complete change.
-
-**No profile suppresses a specialist.** Apply only `references/routing-matrix.md` triggers, identically across profiles.
 
 ### Final report
 
@@ -138,7 +124,7 @@ When generating a goal condition, read `alaa-prompting-guide references/06-invoc
 
 Before planning or executing checks, load /alaa-testing-strategy. Read its `references/100-test-execution.md` for execution, `references/110-execution-resources.md` for resources and timing, or `references/120-result-classification.md` for result classification and diagnosis. The router below retains legacy loading paths.
 
-Schedule these pack checks through `references/verification-and-gates.md` Gate economics. Proven aggregate coverage discharges only identical child invocations with the same scope and observer.
+Schedule these pack checks through the verification decision in `references/verification-and-gates.md`. Proven aggregate coverage discharges only identical child invocations with the same scope and observer.
 
 - After instruction-contract changes, run `python3 scripts/check_agent_contracts.py`. It checks source requirements, not live model behavior.
 - After changing reviewer instructions, a contract asset, pins, agents, or version, run `python3 scripts/render_agents.py --write`, then `python3 scripts/render_agents.py --check` and `python3 scripts/validate_pack.py`. Review both generated wrappers against `assets/reviewer-contract.md`.
@@ -170,7 +156,7 @@ Report requested integration accurately as authorized, declined or blocked. Loca
 Stop and report partial or blocked status when any of these occurs:
 
 - the same lane or cause blocks twice;
-- blockers or majors survive two fix cycles;
+- blocking findings of one kind return after the approach was reconsidered under After a fix in `references/verification-and-gates.md`;
 - verification stays flaky, timed out, contaminated or environment-blocked;
 - the work needs scope beyond the goal;
 - an irreversible or product decision belongs to the user;
@@ -186,7 +172,7 @@ Reviewers only judge. Verifiers only execute evidence commands. Researchers only
 |---|---|
 | Plan, allocate workers, reassess remaining work or decide a specialist trigger | `references/routing-matrix.md` |
 | Dispatch a role | `references/delegation-prompts.md` |
-| Start Stage A, consolidate checks or decide gate requirements | `references/verification-and-gates.md` |
+| Start Stage A, decide a task's verification, consolidate checks, triage a finding or choose who fixes | `references/verification-and-gates.md` |
 | Select or deviate from a model/effort profile | `references/model-effort-policy.md` |
 | Inspect role authority, output or grants, or route a returned report on its first-line `VERDICT` or `STATUS` | `references/agent-catalog.md` |
 | Set command priority, workers, timeout or resource limits | `references/resource-policy.md` |

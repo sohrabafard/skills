@@ -40,5 +40,5 @@ Output contract:
 2. First causal failure versus secondary noise.
 3. Ranked hypotheses with evidence.
 4. Owning lane/component.
-5. Smallest safe next diagnostic or fix instruction.
+5. Smallest safe next diagnostic, or the proposed fix with the check that proves it.
 6. Risks of misclassification and unresolved unknowns.

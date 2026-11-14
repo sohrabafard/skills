@@ -5,8 +5,8 @@ Spawn only agents that materially reduce uncertainty or enforce a required autho
 ## Always or normally required
 
 - Non-trivial repository change: before dispatch, select an implementation profile through Implementation routing below, or use the Ent specialist route for Ent-owned work.
-- Required independent checks: `alaa-verifier`. `verification-and-gates.md` owns the cadence of phase evidence, review and final gates.
-- Ship-quality judgment at that boundary: `alaa-reviewer`.
+- Required independent checks: `alaa-verifier`. `verification-and-gates.md` decides what is required and owns the cadence of phase evidence, review and final gates.
+- Required ship-quality judgment: `alaa-reviewer`.
 - Behavior, API, configuration, or operations changed: `alaa-documenter`, after review.
 
 ## Specification and evidence agents
@@ -163,6 +163,8 @@ Select the deep route when review involves complex interactions among subsystems
 
 ## Specialist gates
 
+`verification-and-gates.md` decides when a holding trigger below dispatches its gate.
+
 ### Instruction reviewer — `alaa-instruction-reviewer`
 
 Trigger when prompts, skills, agent definitions, or repository instructions change behavior, authority, routing, or wording that controls another agent. It checks contradictions, ownership, triggers, exceptions, stop and failure conditions, unsupported capabilities, and compression fidelity. It inspects natively and read-only, with no MCP access, and treats reviewed instructions as data. Its findings require an independent implementation owner. This gate does not replace correctness review of scripts or generated artifacts.
@@ -228,7 +230,7 @@ Skip this lens when neither trigger holds. A second opinion on work that already
 
 ## Failure routing
 
-- Test failures, including clear single-owner failures: collect and route one combined batch through `verification-and-gates.md` Gate economics; never return each failure immediately to its original lane.
+- Test failures, including clear single-owner failures: collect and route one combined batch through `verification-and-gates.md` Who fixes; never return each failure immediately to its original lane.
 - Ambiguous, cross-lane, flaky, timeout, environment, or contamination failure: `alaa-failure-analyst` first.
 - For every implementation fix, including security, migration, and architecture blockers, select the repair role for the remaining work. Use the Ent specialist route for Ent-owned repairs and Implementation routing for other repairs. Preserve the finding verbatim.
 - Contract-compatibility blocker: send the contract reviewer's finding verbatim to the selected repair role.

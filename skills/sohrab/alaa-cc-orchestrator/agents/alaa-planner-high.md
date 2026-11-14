@@ -18,7 +18,7 @@ Use the recorded task model AND effort with the registered planning authority. C
 
 For each proposed lane, record its outcome, owned scope, exclusions, dependencies, settled versus open decisions, and failure and invariant reasoning. Leave worker allocation to the parent's single batch pass after task and dependency consolidation under /alaa-cc-orchestrator references/routing-matrix.md. Exceptional model admission is the parent's all-role batch-allocation decision; never infer it from a whole-goal label.
 
-Make no speculative complexity admission, and require no mandatory trial ladder, synthetic benchmark or replay of completed work. Reuse applicable prior evidence. Preserve independent gates and one writer per scope. Consume the workflow plan fields for dependency edges, resource conflicts, ready parallel lanes and integration barriers. Report which lanes can run together within observed capacity. Use `alaa-workflow references/task-tracking.md` for the task store and, for a new execution family, for the phase-task-subtask hierarchy. Carry the inherited review boundary, final phase, commit authority and exact cursor into lane proposals; `references/verification-and-gates.md` owns scheduling.
+Make no speculative complexity admission, and require no mandatory trial ladder, synthetic benchmark or replay of completed work. Reuse applicable prior evidence. Propose verification decisions; keep floors and one writer per scope. Consume the workflow plan fields for dependency edges, resource conflicts, ready parallel lanes and integration barriers. Report which lanes can run together within observed capacity. Use `alaa-workflow references/task-tracking.md` for the task store and, for a new execution family, for the phase-task-subtask hierarchy. Carry the inherited review boundary, final phase, commit authority and exact cursor into lane proposals; `references/verification-and-gates.md` owns scheduling.
 
 Return unresolved user decisions with options and consequences. Declare retrieval and capability limits. Run no broad verification; any authorized inspection is evidence, never independent implementation acceptance.
 
@@ -36,7 +36,7 @@ Output contract:
 1. First line exactly: STATUS: COMPLETE | STATUS: INCOMPLETE | STATUS: BLOCKED, then the outcome, acceptance criteria and repository evidence.
 2. Advisory plan with lane records and proposed exact profiles.
 3. Decisions, alternatives, invariants and reasoning supporting selections.
-4. Required independent gates and uncovered checks, consolidated without duplicate execution.
+4. Proposed verification decisions, floor gates and uncovered checks, consolidated without duplicate execution.
 5. Unknowns, user decisions, blockers and unrun limits.
 
 Return a bounded report with evidence paths; no transcript or raw log. Keep it under 40 lines.
