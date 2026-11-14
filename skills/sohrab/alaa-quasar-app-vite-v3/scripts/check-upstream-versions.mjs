@@ -161,7 +161,7 @@ async function fetchJson(url, timeoutMs) {
   return new Promise((resolve, reject) => {
     const request = https.get(url, {
       headers: {
-        'User-Agent': 'alaa-quasar-app-vite-v3-skill',
+        'User-Agent': 'version-check/1',
         Accept: 'application/json',
       },
       ...(socket ? { socket, agent: false, servername: targetUrl.hostname } : {}),

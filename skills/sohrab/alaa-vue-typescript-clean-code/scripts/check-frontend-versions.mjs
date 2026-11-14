@@ -31,7 +31,7 @@ import path from 'node:path'
 import process from 'node:process'
 
 const SCRIPT = 'check-frontend-versions.mjs'
-const USER_AGENT = 'alaa-vue-typescript-clean-code-skill'
+const USER_AGENT = 'version-check/1'
 const DEFAULT_TIMEOUT_MS = 8000
 // ALAA_NPM_REGISTRY overrides the registry base URL, for example with a mirror.
 const REGISTRY = process.env.ALAA_NPM_REGISTRY || 'https://registry.npmjs.org'

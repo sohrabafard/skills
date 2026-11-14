@@ -68,7 +68,7 @@ async function httpGet(url) {
   try {
     const res = await fetch(url, {
       signal: AbortSignal.timeout(TIMEOUT_MS),
-      headers: { 'user-agent': 'vector-skill-version-check' },
+      headers: { 'user-agent': 'version-check/1' },
     });
     if (!res.ok) return { ok: false, status: res.status };
     return { ok: true, body: await res.text() };
