@@ -8,8 +8,9 @@ Shared infra is one running instance the whole platform reuses, emitted by two g
 
 - **Laravel** services get it from `service-runtime-kit` via `scripts/runtime/render-runtime.sh`.
 - **Go** services on the `alaa-go-chi` kit get it from that kit's own scaffold (`scaffold/templates.go`, `docs/consumer-templates/**`), not from `service-runtime-kit`.
+- A service that is neither Laravel nor on the `alaa-go-chi` kit (for example WA) takes only the shared-infra files with `scripts/runtime/render-runtime.sh --shared-infra-only`, and checks them with `scripts/runtime/validate-runtime.sh --shared-infra-only`. It never hand-copies them.
 
-The infra set is `postgres`, `adminer`, `redis`, `rabbitmq`, `clickhouse`. `service-runtime-kit` emits all five. The `alaa-go-chi` scaffold does not emit `clickhouse` yet, so the two generators differ there until it lands. Adminer is shared local infrastructure, not a service-owned application service, so a service repo does not add its own.
+The infra set is `postgres`, `adminer`, `redis`, `rabbitmq`, `clickhouse`. Both generators emit all five. Adminer is shared local infrastructure, not a service-owned application service, so a service repo does not add its own.
 
 ## Owned here, and not owned here
 
