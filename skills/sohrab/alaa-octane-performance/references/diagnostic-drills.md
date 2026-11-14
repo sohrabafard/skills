@@ -1,7 +1,8 @@
 # Diagnostic drills — named tools, exact commands, pass thresholds
 
 No rule in this skill says "profile if tooling exists" or "validate with load tests". The tools
-are named here; if one is absent from the environment, installing it is part of the task.
+are named here. If one is absent from the environment, ask the user for approval before you
+install it. Once approved, the install is part of the task.
 
 ## Load test — k6
 

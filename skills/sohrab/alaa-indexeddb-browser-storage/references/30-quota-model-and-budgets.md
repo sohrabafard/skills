@@ -87,8 +87,9 @@ softStop = min(200 MB, 5% of estimated quota)   # stop optional prefetch and cac
 hardStop = min(500 MB, 10% of estimated quota)  # stop every write except user-generated unsynced work
 ```
 
-Both are house policy. `examples/quota-manager.ts` reads them from configuration and embeds neither. Their
-names are `/alaa-services-contract` (`$alaa-services-contract`).
+Both are house policy. `examples/quota-manager.ts` reads its thresholds from configuration, but its
+`DEFAULT_BUDGET_POLICY` embeds defaults: usage ratios 0.85 and 0.95, a 50 MB free-byte floor, and a
+200 MB soft-stop cap. Their names are `/alaa-services-contract` (`$alaa-services-contract`).
 
 ## User-facing storage controls
 

@@ -52,7 +52,7 @@ Relevant success criteria: 2.4.3 focus order, 2.4.7 focus visible, 2.4.11 focus 
 **Minimum pass, with no self-granted exception:**
 
 1. A keyboard-only walk of every primary flow.
-2. An automated scan. Run the repository's own integration if it has one; otherwise run `npx @axe-core/cli <url>`. **If neither can run in this environment, say so in the delivery note and list which flows were walked by keyboard instead. An unrun scan is reported, never assumed clean.**
+2. An automated scan. Run the repository's installed axe integration. A downloading package runner such as `npx @axe-core/cli <url>` runs only after the user approves it. **If neither can run in this environment, say so in the delivery note and list which flows were walked by keyboard instead. An unrun scan is reported, never assumed clean.**
 3. A screen-reader smoke test of any new flow.
 
 **An automated scan finds a minority of accessibility defects** — the classes it can detect mechanically, such as missing names, contrast on solid backgrounds, and structural errors. It does not detect a wrong reading order, a misleading label, or a trap. It supplements the keyboard and screen-reader passes and never replaces them. (The frequently-quoted "about 40%" figure has no primary source this pack can cite, so it is stated qualitatively rather than as a number.)

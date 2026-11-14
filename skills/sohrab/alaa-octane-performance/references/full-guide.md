@@ -106,7 +106,7 @@ at which it stopped reproducing.
   thing that authorises a connection-lifecycle change, and the remedy is the listener below — never
   a `disconnect()` in a request handler, which discards the reuse and pays a TCP and AUTH handshake
   per request.
-- Known upstream defect `laravel/octane#1094`: Octane can leave Redis connections lingering after
+- Known upstream defect `laravel/octane#1094` (its issue page was not reachable on 2026-11-14): Octane can leave Redis connections lingering after
   request termination. When the observable above is present, register an `OperationTerminated` /
   `RequestTerminated` listener that disconnects the Redis manager, mirroring the commented-out
   database disconnect in `config/octane.php`.

@@ -16,7 +16,7 @@ This file states what each verification must leave behind. Test design and the p
 | "Reduced motion is honoured" | one screenshot or recording pair per animated surface, preference on and off | a browser with the preference emulated |
 | "It works at 375px and at 200% zoom" | one screenshot per changed route at each | a browser |
 | "It is keyboard operable" | the ordered list of stops for each primary flow, walked, not inferred | a person at a keyboard |
-| "It passes an automated scan" | the scan output, or a statement that the scan could not run and what was done instead | the repo's integration, or `npx @axe-core/cli` |
+| "It passes an automated scan" | the scan output, or a statement that the scan could not run and what was done instead | the repo's installed axe integration, or `npx @axe-core/cli` after the user approves the download |
 | "Nothing else changed visually" | the visual-regression diff set | the repo's visual-regression suite |
 
 **A row with no artefact is reported as unverified.** Never as passing.

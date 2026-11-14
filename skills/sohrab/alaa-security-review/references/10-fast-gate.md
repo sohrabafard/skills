@@ -18,7 +18,7 @@ If all five columns are `none`, the change is out of scope for this skill: say s
 
 ## Step 2 - Read the rows the inventory hit
 
-Read only these rows' files, and only the named section within each.
+Read only these rows' files.
 
 | The inventory contains | Read | Note |
 |---|---|---|
