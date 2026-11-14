@@ -112,8 +112,8 @@ These scope definitions choose check breadth, not review timing. `alaa-codex-orc
 
 | Tier | What runs | Who runs it | When |
 |---|---|---|---|
-| **Focused** | the smallest test/path/scenario distinguishing the subtask's changed behavior from its plausible failure, plus necessary touched-file lint/type/build | the implementing lane | subtask end under the declared cadence |
-| **Task acceptance** | bounded acceptance selectors combining that task's subtasks, with still-valid coverage cited | the task owner | task end under the declared cadence |
+| **Focused** | the smallest test, path or scenario that distinguishes the subtask's changed behavior from its plausible failure, plus the lint, type-check and build steps the touched files need | the implementing lane | subtask end under the declared cadence |
+| **Task acceptance** | bounded acceptance selectors that combine the focused selectors of that task's subtasks, with still-valid coverage cited | the task owner | task end under the declared cadence |
 | **Affected** | selectors of topics reachable from changed surfaces, including callers, shared fixtures and contract checks | the required boundary observer | in the final gate stage by default, or earlier when repository policy requires |
 | **Exhaustive** | the whole suite and only the race, end-to-end and higher-level proofs the claims require | independent final authority | once on the whole engagement's final candidate, when required |
 
@@ -138,7 +138,7 @@ When one of them changes, say which one, and re-run every result downstream of i
 
 After batch repair, apply `references/100-test-execution.md` to select retests. Reuse passing evidence only where its inputs, observer and freshness requirements still match.
 
-A required final aggregate may discharge covered narrower checks only when the covered inputs, environment, flags and required observer match demonstrably. Cite its coverage instead of dispatching those checks again. Markdown/templates may be checker inputs, so a documentation-only difference proves no equivalence. A phase transition, new agent or compaction alone invalidates nothing. Repair a defect and rerun its failing path. Never weaken assertions, suppress findings, lower standards or alter fixtures to conceal a failure. `references/80-evidence-and-reporting.md` distinguishes a repaired input from an unchanged flaky rerun.
+A required final aggregate may discharge covered narrower checks only when the covered inputs, environment, flags and required observer match demonstrably. Cite its coverage instead of dispatching those checks again. Markdown files and templates may be checker inputs, so a documentation-only difference proves no equivalence. A phase transition, new agent or compaction alone invalidates nothing. Repair a defect and rerun its failing path. Never weaken assertions, suppress findings, lower standards or alter fixtures to conceal a failure. `references/80-evidence-and-reporting.md` distinguishes a repaired input from an unchanged flaky rerun.
 
 ### A failing tier is classified before it is repaired
 

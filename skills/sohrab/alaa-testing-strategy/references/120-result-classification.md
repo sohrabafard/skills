@@ -8,7 +8,7 @@ The exact recorded command completed successfully, evidence was captured, and no
 
 ## PRODUCT-FAILURE
 
-The implemented repository behavior violates a test, lint rule, type/build contract, smoke scenario, or acceptance criterion. Identify its behavior owner; follow `100-test-execution.md` collection and batch repair before changing code.
+The implemented repository behavior violates a test, lint rule, type or build contract, smoke scenario, or acceptance criterion. Identify its behavior owner; follow `100-test-execution.md` collection and batch repair before changing code.
 
 ## TEST-INFRA-FAILURE
 
@@ -16,11 +16,11 @@ The test harness, fixture, runner, generated setup, service dependency, or test 
 
 ## ENVIRONMENT-BLOCKED
 
-A required executable, service, permission, network dependency, secret, browser, database, or platform capability is unavailable. Do not disguise this as a product failure or install/change the environment without authority.
+A required executable, service, permission, network dependency, secret, browser, database, or platform capability is unavailable. Do not disguise this as a product failure, and do not install anything or change the environment without authority.
 
 ## TIMEOUT
 
-The command exceeded its declared timeout. Preserve partial logs and process/resource evidence. A timeout may indicate product deadlock, test deadlock, resource starvation, or an unrealistic timeout; diagnose the cause before assigning repair; an unavailable diagnosis remains unresolved.
+The command exceeded its declared timeout. Preserve partial logs and process and resource evidence. A timeout may indicate product deadlock, test deadlock, resource starvation, or an unrealistic timeout; diagnose the cause before assigning repair; when the cause cannot be diagnosed, the timeout remains unresolved.
 
 ## FLAKY
 
@@ -28,7 +28,7 @@ Identical execution produces inconsistent outcomes, including fail-then-pass. Ne
 
 ## CONTAMINATED
 
-Unexpected tracked-source changes, concurrent external modifications, wrong worktree, stale generated output, or unowned service/state makes the result unreliable. Do not revert automatically.
+Unexpected tracked-source changes, concurrent external modifications, wrong worktree, stale generated output, or an unowned service or state makes the result unreliable. Do not revert automatically.
 
 ## SKIPPED
 
@@ -54,11 +54,11 @@ Clearing a cache, installing a tool, changing a permission, or starting a servic
 ## Diagnostic sequence
 
 1. Identify the first causal error, not the last stack trace.
-2. Confirm command/cwd/environment/resource limits.
-3. Compare initial/final git status and concurrent changes.
+2. Confirm the command, working directory, environment and resource limits.
+3. Compare the initial and final git status, and check for concurrent changes.
 4. Determine whether the failure reproduces in the smallest targeted scope, if one authorized rerun exists.
-5. Inspect the owning code/test/config path.
-6. Classify owner: product, test infrastructure, environment, or unresolved ownership.
+5. Inspect the owning code, test or configuration path.
+6. Classify the owner as product, test infrastructure, environment, or unresolved ownership.
 7. Route the smallest grounded next action.
 
 A `TEST-INFRA-FAILURE` or `ENVIRONMENT-BLOCKED` recurring with the same first causal error earns no further full run: its owner reproduces the smallest failing path within the active retry budget while safe independent checks continue, because a full rerun repeats the cost and returns the same evidence.
