@@ -139,7 +139,7 @@ deleting a rejected `Authorization` header before proxying.
 
 ### The dropped-bearer marker
 
-Owner ruling, 2026-11-14. Read its shipping status in `references/90-source-map.md`
+Owner ruling, 2026-11-14. Read its shipping status in `alaa-services-contract references/95-fleet-conformance.md`
 before you describe it as live.
 
 - The gateway sets the marker on a public-path response only when it dropped a
@@ -483,8 +483,9 @@ work in another.
 
 ## The tenant boundary and its names
 
-`tenant_id`, `tenant_public_id`, `project_id` and the compact claim `pid` are one
-concept expressed at four layers. The canonical form per layer is fixed:
+`tenant_id`, `tenant_public_id`, `project_id`, the compact claim `pid` and the
+header `X-Project-Id` name one concept; `tenant_id` and `tenant_public_id` are
+legacy aliases. The canonical form per layer is fixed:
 
 | Layer | Canonical name |
 |---|---|

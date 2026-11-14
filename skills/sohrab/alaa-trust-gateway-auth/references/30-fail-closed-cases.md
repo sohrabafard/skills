@@ -201,7 +201,7 @@ what is recognised, find nothing, and let the request continue until a later
 generic `unauthorized` fires. That produces a deny with the wrong code, a log line
 that does not say what actually happened, and an incident that cannot be
 diagnosed from the logs. The code in the response and the code in the deny log
-are identical, and both name the bitmap.
+are identical, and both name the failure.
 
 **A set bit whose id this service does not know grants nothing and is not an
 error.** The bitmap is issued against the whole platform catalog, so a service
@@ -210,8 +210,9 @@ always sees ids outside its own range. Only the empty result is a failure.
 **Test.** Feed the normalizer an empty value, a padded value, a value with a
 character outside the base64url alphabet, a value of impossible length, a value
 whose set bits are all outside this service's range, and a value wider than this
-service's maximum id. The first four deny with `AUTH_ACCESS_BITMAP_INVALID`, the
-fifth denies with the same code, and the sixth decodes normally.
+service's maximum id. The first denies with `AUTH_ACCESS_HEADER_MISSING`, the next
+three deny with `AUTH_ACCESS_BITMAP_INVALID`, the fifth denies with the same code,
+and the sixth decodes normally.
 
 ---
 
@@ -340,8 +341,8 @@ service, and both deny.
 - **Deny when `X-TOTP-VERIFIED-UNTIL` parses to an instant at or before now**, and
   never re-apply clock skew, because the gateway already applied it and
   re-applying widens the real lifetime past what the operator configured.
-- **Deny when a step-up header arrives on a request the gateway did not
-  authenticate**, because the gateway processes a proof only alongside an accepted
+- **Deny when any of the three step-up headers arrives on a request the gateway
+  did not authenticate**, because the gateway processes a proof only alongside an accepted
   bearer, on a public path as on a protected one.
 - **Deny when the gateway is unreachable or the request arrived on a bypassing
   path**, because a step-up header carries no signature a service can check and
