@@ -78,7 +78,7 @@ def expected_profiles(root, policy, kind):
         raise ValueError("wrapper specification must cover every implementation and planner profile")
     outputs = {}
     for name, entry in specification["profiles"].items():
-        if not re.fullmatch(r"alaa-[a-z0-9-]+", name) or set(entry) != {"contract", "metadata"}:
+        if not re.fullmatch(r"alaa-[a-z0-9-]+", name) or set(entry) - {"binding"} != {"contract", "metadata"}:
             raise ValueError("invalid profile wrapper entry")
         contract = entry["contract"]
         if not isinstance(contract, str) or "\\" in contract or ":" in contract:
@@ -90,6 +90,14 @@ def expected_profiles(root, policy, kind):
         if not path.is_relative_to(root.resolve()) or not path.is_file():
             raise ValueError(f"invalid contract path: {contract}")
         body = path.read_text(encoding="utf-8")
+        if "binding" in entry:
+            # Insert the stack binding immediately before the shared baseline it narrows.
+            binding, anchor = entry["binding"], "\nEngineering baseline:"
+            if (not isinstance(binding, str) or not binding.startswith("Stack binding: ")
+                    or binding != binding.strip() or len(binding.splitlines()) != 1
+                    or relative.name != "implementation-contract.md" or body.count(anchor) != 1):
+                raise ValueError(f"invalid binding for {name}")
+            body = body.replace(anchor, "\n" + binding + "\n\n" + anchor[1:])
         text = profile_text(kind, name, entry["metadata"], body, policy["profiles"][name], contract)
         suffix = ".toml" if kind == "toml" else ".md"
         outputs[root / "agents" / (name + suffix)] = text.encode("utf-8")
