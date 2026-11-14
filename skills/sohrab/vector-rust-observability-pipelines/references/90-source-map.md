@@ -84,11 +84,11 @@ distroless image. Historical evidence below retains its original scope.
 **2026-09-26 — compatibility refresh.** Read the complete tagged latest-release
 source, including bundled VRL notes, and its upgrade guide; cross-check product
 selection against the official release index and published GitHub tag. The dated
-version/support matrix is `80-version-and-upgrade-deltas.md`; every release item is
+version and support matrix is `80-version-and-upgrade-deltas.md`; every release item is
 mapped in `81-release-coverage.md`. The tagged buffering model still warns against
 production overflow and retains fatal flush I/O behavior. Tagged chart metadata
 replaces the earlier mutable-branch pairing. Runtime claims below remain historical.
-No installed Vector execution or consumer/deployment inventory was established.
+No installed Vector execution, consumer inventory or deployment inventory was established.
 
 Official sources were readable through web retrieval. Local HTTPS retrieval and
 the one curl retry failed TLS initialization; that environment failure is not a

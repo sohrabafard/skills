@@ -139,7 +139,7 @@ Its `parse_aws_vpc_flow_log` understands producer-format fields from versions
 7 through 11. Select fixtures by the producer format; do not infer field presence
 on older producers. `round` now declares a float result for float input; assert
 the downstream type rather than relying on its earlier incorrect integer typing.
-NaN-producing float arithmetic returns a runtime error instead of panic/zero;
+NaN-producing float arithmetic returns a runtime error instead of a panic or a zero;
 `reduce` with `sum` also reports NaN addition errors. Test these error branches
 alongside valid arithmetic and keep the deliberate fallibility handling above.
 These are released-source claims, not locally executed VRL results.

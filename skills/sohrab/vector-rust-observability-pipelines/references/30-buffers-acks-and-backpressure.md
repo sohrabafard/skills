@@ -141,7 +141,7 @@ invalid records, not the full-volume rule above:
   ordering, metric-sink disk-buffer deadlock, and the `expire_metrics_secs: 0`
   panic. They do not prove a destination outage or recovery deadline on a consumer.
 
-For a path requiring exactness, bound/reject unsupported records before acceptance
+For a path requiring exactness, bound or reject unsupported records before acceptance
 and prove the rejection and recovery contract with the owner. Disk buffering plus
 acks alone is insufficient. In an authorized exact-binary test, cover oversized
 and deeply nested records, ordinary-record survival, source acknowledgement,
@@ -236,7 +236,7 @@ sink becomes a reportable error, and choose `when_full` from the rule below.
 The fleet has already decided, and this skill's job is to name the Vector option
 that expresses that decision — not to re-open it.
 
-`/alaa-observability-soc` owns the nonblocking telemetry forwarding/export
+`/alaa-observability-soc` owns the nonblocking telemetry forwarding or export
 requirement and the written-operator exception. `/alaa-security-review` owns the
 gate discriminator, including required privileged-action audit writes. Apply the
 chosen path contract with these Vector mechanisms:

@@ -173,7 +173,7 @@ The 0.58.0 released source narrows confinement for these fields only:
 On older binaries retain their existing literal prefixes. On the newer binary,
 use a field exception only after checking that field's data and destination policy;
 it never authorizes `dangerously_allow_unconfined_template_resolution` or removes
-ClickHouse `table`/`database` confinement. Keep hostile routing input tests.
+ClickHouse `table` and `database` confinement. Keep hostile routing input tests.
 
 URI templates inside the host or immediately adjacent without `/` are now rejected
 at build time. Use a static, approved host and a literal path separator, for example
@@ -206,7 +206,7 @@ They require authorized synthetic runtime tests before deployment claims:
 - AWS FIPS endpoint selection now reaches STS AssumeRole; MQTT honors configured
   ALPN while retaining its previous default when unset; S3 KMS time templates honor
   the configured timezone; Azure account-key uploads above 4 MiB fix final-request
-  signing. For affected consumers, test the actual selected endpoint/protocol/key
+  signing. For affected consumers, test the actual selected endpoint, protocol and key
   and upload completion rather than weakening authentication on failure.
 
 ## Rule 3 — redaction is a named field list, not an example
