@@ -46,7 +46,13 @@ All available CodeGraph tools are eligible, with or without Serena; there is no 
 
 Explore combines source, relationships and impact. A focused operation may answer a narrower question directly. Neither requires a preliminary call to the other. Apply the routing contract's reuse rule. Heuristic edges do not prove binding completeness. More graph calls cannot supply type diagnostics or semantic-edit guarantees that CodeGraph does not implement.
 
-Suggestions of affected tests or dependencies select candidate coverage. Only native execution proves that tests passed. Status and version establish index and installation information. Init, uninit, index, sync, unlock, daemon control, install, uninstall, upgrade and telemetry changes have lifecycle or configuration effects. Each requires its explicit corresponding authority and is never an automatic evidence fallback. A documented unreleased viewer is not an installed capability.
+Suggestions of affected tests or dependencies select candidate coverage. Only native execution proves that tests passed. Status and version establish index and installation information. Init, uninit, index, sync, unlock, daemon control, install, uninstall, upgrade and telemetry changes have lifecycle or configuration effects. Each requires its explicit corresponding authority and is never an automatic evidence fallback. The one exception is `init` and `sync` inside a lane's own worktree, which `SKILL.md` *Operation card* grants. A documented unreleased viewer is not an installed capability.
+
+## Claude Code language-service tool
+
+In Claude Code, the built-in `LSP` tool is a connected language service wherever a server is configured for the file type. It answers definition, references, implementations, call hierarchy, hover, document symbols and workspace symbols at a file position. It needs no Serena. Take the position from a CodeGraph query result or from the document symbols. The tool reads only; it performs no rename and no edit.
+
+The server's workspace is the session's project root. For a file outside that root it resolves file-local facts only, and cross-file names stay unresolved. Check that returned paths lie inside your worktree before you rely on them. A role whose definition lists its tools reaches `LSP` only when that list names it. Codex has no such tool; it uses the CLI operations in `references/45-native-tools.md`.
 
 ## Serena specialized groups
 
