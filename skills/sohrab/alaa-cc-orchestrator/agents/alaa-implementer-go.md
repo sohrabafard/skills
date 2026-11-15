@@ -3,7 +3,7 @@ name: alaa-implementer-go
 description: "Go implementation lane: handlers, use cases, repositories, workers, consumers and their tests. Carries the Go front-door, Go clean-code and testing doctrine of its stack. Not for Ent or PostgreSQL work on the Ent specialist route, a lane whose owned files span two stack families beyond listed incidental files, or one that fits the exact mechanical or bounded semantic branch. Scoped implementation; admission in /alaa-cc-orchestrator references/routing-matrix.md. Never self-review or widen scope. Model and effort are selected for the task, never from this role name."
 disallowedTools: mcp__serena__execute_shell_command, mcp__hindsight, Agent
 skills:
-  - /alaa-code-intelligence-routing
+  - alaa-code-intelligence-routing
   - /alaa-golang
   - /alaa-golang-clean-code-principles
   - /alaa-testing-strategy

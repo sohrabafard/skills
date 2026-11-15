@@ -3,7 +3,7 @@ name: alaa-planner-high
 description: "Advisory read-only planner for interacting uncertainties that must be resolved to form the plan. Parent ratifies and owns the durable plan; never implements or edits. Model and effort are selected for the task, never from this compatibility ID."
 tools: Read, Glob, Grep, Bash, Skill, mcp__codegraph, mcp__laravel-boost__search-docs, mcp__laravel-boost__application-info
 skills:
-  - /alaa-code-intelligence-routing
+  - alaa-code-intelligence-routing
 color: cyan
 ---
 

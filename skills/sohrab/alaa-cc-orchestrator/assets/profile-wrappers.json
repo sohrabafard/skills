@@ -6,7 +6,7 @@
         "description": "Everyday grounded coding, features, local refactoring or debugging with known patterns, explicit contracts and bounded local decisions. Scoped implementation; admission in /alaa-cc-orchestrator references/routing-matrix.md. Never self-review or widen scope. Model and effort are selected for the task, never from this compatibility ID.",
         "disallowedTools": "mcp__serena__execute_shell_command, mcp__hindsight, Agent",
         "skills": [
-          "/alaa-code-intelligence-routing",
+          "alaa-code-intelligence-routing",
           "/alaa-testing-strategy",
           "/alaa-services-contract",
           "/alaa-trust-gateway-auth"
@@ -20,7 +20,7 @@
         "description": "Harder or longer grounded work with bounded decisions and local failure reasoning. Scoped implementation; admission in /alaa-cc-orchestrator references/routing-matrix.md. Never self-review or widen scope. Model and effort are selected for the task, never from this compatibility ID.",
         "disallowedTools": "mcp__serena__execute_shell_command, mcp__hindsight, Agent",
         "skills": [
-          "/alaa-code-intelligence-routing",
+          "alaa-code-intelligence-routing",
           "/alaa-testing-strategy",
           "/alaa-services-contract",
           "/alaa-trust-gateway-auth"
@@ -34,7 +34,7 @@
         "description": "Materially coupled unresolved system decisions beyond bounded implementation. Scoped implementation; admission in /alaa-cc-orchestrator references/routing-matrix.md. Never self-review or widen scope. Model and effort are selected for the task, never from this compatibility ID.",
         "disallowedTools": "mcp__serena__execute_shell_command, mcp__hindsight, Agent",
         "skills": [
-          "/alaa-code-intelligence-routing",
+          "alaa-code-intelligence-routing",
           "/alaa-testing-strategy",
           "/alaa-services-contract",
           "/alaa-trust-gateway-auth"
@@ -48,7 +48,7 @@
         "description": "Interacting unresolved design decisions and demanding system reasoning. Scoped implementation; admission in /alaa-cc-orchestrator references/routing-matrix.md. Never self-review or widen scope. Model and effort are selected for the task, never from this compatibility ID.",
         "disallowedTools": "mcp__serena__execute_shell_command, mcp__hindsight, Agent",
         "skills": [
-          "/alaa-code-intelligence-routing",
+          "alaa-code-intelligence-routing",
           "/alaa-testing-strategy",
           "/alaa-services-contract",
           "/alaa-trust-gateway-auth"
@@ -62,7 +62,7 @@
         "description": "Implementation lane whose recorded task allocation carries an exceptional-model admission: an official-source recommendation for the task, documented workhorse inadequacy, or an explicit user selection. Scoped implementation; admission in /alaa-cc-orchestrator references/routing-matrix.md. Never self-review or widen scope. Model and effort are selected for the task, never from this compatibility ID.",
         "disallowedTools": "mcp__serena__execute_shell_command, mcp__hindsight, Agent",
         "skills": [
-          "/alaa-code-intelligence-routing",
+          "alaa-code-intelligence-routing",
           "/alaa-testing-strategy",
           "/alaa-services-contract",
           "/alaa-trust-gateway-auth"
@@ -76,7 +76,7 @@
         "description": "Advisory read-only planner for clear scope, contracts and constraints. Parent ratifies and owns the durable plan; never implements or edits. Model and effort are selected for the task, never from this compatibility ID.",
         "tools": "Read, Glob, Grep, Bash, Skill, mcp__codegraph, mcp__laravel-boost__search-docs, mcp__laravel-boost__application-info",
         "skills": [
-          "/alaa-code-intelligence-routing"
+          "alaa-code-intelligence-routing"
         ],
         "color": "cyan"
       }
@@ -87,7 +87,7 @@
         "description": "Advisory read-only planner for interacting uncertainties that must be resolved to form the plan. Parent ratifies and owns the durable plan; never implements or edits. Model and effort are selected for the task, never from this compatibility ID.",
         "tools": "Read, Glob, Grep, Bash, Skill, mcp__codegraph, mcp__laravel-boost__search-docs, mcp__laravel-boost__application-info",
         "skills": [
-          "/alaa-code-intelligence-routing"
+          "alaa-code-intelligence-routing"
         ],
         "color": "cyan"
       }
@@ -98,7 +98,7 @@
         "description": "Exact mechanical edits with no semantic discretion, or bounded semantic work with settled local cause, named scope, invariants and discriminating regression checks. Admission in /alaa-cc-orchestrator references/routing-matrix.md. Never self-review or widen scope. Model and effort are selected for the task, never from this compatibility ID.",
         "disallowedTools": "mcp__serena__execute_shell_command, mcp__hindsight, Agent",
         "skills": [
-          "/alaa-code-intelligence-routing",
+          "alaa-code-intelligence-routing",
           "/alaa-testing-strategy",
           "/alaa-services-contract",
           "/alaa-trust-gateway-auth"
@@ -112,7 +112,7 @@
         "description": "Longer or stricter bounded work with settled local cause, named scope, invariants and discriminating regression checks. Interacting design selects the grounded workhorse route. Admission in /alaa-cc-orchestrator references/routing-matrix.md. Never self-review or widen scope. Model and effort are selected for the task, never from this compatibility ID.",
         "disallowedTools": "mcp__serena__execute_shell_command, mcp__hindsight, Agent",
         "skills": [
-          "/alaa-code-intelligence-routing",
+          "alaa-code-intelligence-routing",
           "/alaa-testing-strategy",
           "/alaa-services-contract",
           "/alaa-trust-gateway-auth"
@@ -126,7 +126,7 @@
         "description": "PHP and Laravel implementation lane: controllers, services, repositories, jobs, migrations and their tests. Carries the PHP clean-code, Octane and testing doctrine of its stack. Not for a lane whose owned files span two stack families beyond listed incidental files, or one that fits the exact mechanical or bounded semantic branch. Scoped implementation; admission in /alaa-cc-orchestrator references/routing-matrix.md. Never self-review or widen scope. Model and effort are selected for the task, never from this role name.",
         "disallowedTools": "mcp__serena__execute_shell_command, mcp__hindsight, Agent",
         "skills": [
-          "/alaa-code-intelligence-routing",
+          "alaa-code-intelligence-routing",
           "/alaa-php-clean-code",
           "/alaa-octane-performance",
           "/alaa-testing-strategy",
@@ -143,7 +143,7 @@
         "description": "Vue frontend implementation lane, with Quasar when the repository uses it: components, composables, stores, routes, boot files and their tests. Carries the frontend, Vue TypeScript clean-code, Quasar and testing doctrine of its stack. Not for a lane whose owned files span two stack families beyond listed incidental files, or one that fits the exact mechanical or bounded semantic branch. Scoped implementation; admission in /alaa-cc-orchestrator references/routing-matrix.md. Never self-review or widen scope. Model and effort are selected for the task, never from this role name.",
         "disallowedTools": "mcp__serena__execute_shell_command, mcp__hindsight, Agent",
         "skills": [
-          "/alaa-code-intelligence-routing",
+          "alaa-code-intelligence-routing",
           "/alaa-frontend-developer",
           "/alaa-vue-typescript-clean-code",
           "/alaa-quasar-app-vite-v3",
@@ -161,7 +161,7 @@
         "description": "Go implementation lane: handlers, use cases, repositories, workers, consumers and their tests. Carries the Go front-door, Go clean-code and testing doctrine of its stack. Not for Ent or PostgreSQL work on the Ent specialist route, a lane whose owned files span two stack families beyond listed incidental files, or one that fits the exact mechanical or bounded semantic branch. Scoped implementation; admission in /alaa-cc-orchestrator references/routing-matrix.md. Never self-review or widen scope. Model and effort are selected for the task, never from this role name.",
         "disallowedTools": "mcp__serena__execute_shell_command, mcp__hindsight, Agent",
         "skills": [
-          "/alaa-code-intelligence-routing",
+          "alaa-code-intelligence-routing",
           "/alaa-golang",
           "/alaa-golang-clean-code-principles",
           "/alaa-testing-strategy",
@@ -178,7 +178,7 @@
         "description": "Infrastructure implementation lane: Dockerfile, Compose or Swarm stack, Helm chart, Kubernetes manifest, CI pipeline, HAProxy configuration, Ansible file, Makefile and shell script changes. Loads the owning skill of each surface before the first edit. Not for application code, and never applies, deploys or releases anything. Scoped implementation; admission in /alaa-cc-orchestrator references/routing-matrix.md. Never self-review or widen scope. Model and effort are selected for the task, never from this role name.",
         "disallowedTools": "mcp__serena__execute_shell_command, mcp__hindsight, Agent",
         "skills": [
-          "/alaa-code-intelligence-routing",
+          "alaa-code-intelligence-routing",
           "/alaa-testing-strategy",
           "/alaa-services-contract",
           "/alaa-trust-gateway-auth"

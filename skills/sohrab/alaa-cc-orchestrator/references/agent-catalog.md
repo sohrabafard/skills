@@ -138,6 +138,11 @@ adapter: when its `ACTIVE_ADAPTER` changes, change this set and the grant checke
 Before dispatch, verify the role can reach its bindings under `alaa-workflow references/companion-routing.md`.
 Preloading and runtime invocation are complementary mechanisms for that reachability.
 
+Write a `skills:` entry as the plain registered skill name. Claude Code resolves the entry literally
+and preloads nothing for `/name` (headless probe, Claude Code 2.1.307, 2026-11-15). Only the routing
+entry has the plain form. Every other entry keeps its leading `/` and preloads nothing until the owner
+accepts its cost: a converted entry adds that skill's whole body to every run of the role.
+
 `skills:` preloads what a role always needs: the routing contract, and the doctrine its verdict is
 measured against. `alaa-architecture-critic` carries the constitution it reviews against,
 `alaa-performance-profiler` both runtime performance skills, `alaa-test-strategist` the Go testing

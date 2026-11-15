@@ -3,7 +3,7 @@ name: alaa-implementer-fable
 description: "Implementation lane whose recorded task allocation carries an exceptional-model admission: an official-source recommendation for the task, documented workhorse inadequacy, or an explicit user selection. Scoped implementation; admission in /alaa-cc-orchestrator references/routing-matrix.md. Never self-review or widen scope. Model and effort are selected for the task, never from this compatibility ID."
 disallowedTools: mcp__serena__execute_shell_command, mcp__hindsight, Agent
 skills:
-  - /alaa-code-intelligence-routing
+  - alaa-code-intelligence-routing
   - /alaa-testing-strategy
   - /alaa-services-contract
   - /alaa-trust-gateway-auth

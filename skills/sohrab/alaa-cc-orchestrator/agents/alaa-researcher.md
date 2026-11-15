@@ -3,7 +3,7 @@ name: alaa-researcher
 description: Read-only external and repository research specialist. Spawn for version-specific APIs, official documentation, standards, third-party behavior, prior decisions, or evidence-based comparisons. Never edits or makes the final decision.
 tools: Read, Glob, Grep, Bash, WebFetch, WebSearch, Skill, mcp__laravel-boost__search-docs, mcp__laravel-boost__application-info, mcp__hindsight__hindsight_search_knowledge_pages, mcp__hindsight__hindsight_read_knowledge_page, mcp__hindsight__hindsight_list_knowledge_pages, mcp__hindsight__hindsight_reflect
 skills:
-  - /alaa-code-intelligence-routing
+  - alaa-code-intelligence-routing
 color: cyan
 ---
 

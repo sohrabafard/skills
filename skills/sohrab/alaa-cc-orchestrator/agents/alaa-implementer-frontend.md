@@ -3,7 +3,7 @@ name: alaa-implementer-frontend
 description: "Vue frontend implementation lane, with Quasar when the repository uses it: components, composables, stores, routes, boot files and their tests. Carries the frontend, Vue TypeScript clean-code, Quasar and testing doctrine of its stack. Not for a lane whose owned files span two stack families beyond listed incidental files, or one that fits the exact mechanical or bounded semantic branch. Scoped implementation; admission in /alaa-cc-orchestrator references/routing-matrix.md. Never self-review or widen scope. Model and effort are selected for the task, never from this role name."
 disallowedTools: mcp__serena__execute_shell_command, mcp__hindsight, Agent
 skills:
-  - /alaa-code-intelligence-routing
+  - alaa-code-intelligence-routing
   - /alaa-frontend-developer
   - /alaa-vue-typescript-clean-code
   - /alaa-quasar-app-vite-v3

@@ -3,7 +3,7 @@ name: alaa-architecture-critic
 description: Read-only architecture pressure-test specialist. Judge public-contract, service-boundary, distributed workflow, consistency, caching, concurrency, or cross-cutting design changes at the inherited declared review boundary. Challenges the plan; never owns it or edits code.
 tools: Read, Glob, Grep, Bash, Skill, mcp__codegraph, mcp__laravel-boost__search-docs, mcp__laravel-boost__application-info, mcp__laravel-boost__database-schema, mcp__laravel-boost__database-connections, mcp__hindsight__hindsight_search_knowledge_pages, mcp__hindsight__hindsight_read_knowledge_page, mcp__hindsight__hindsight_list_knowledge_pages, mcp__hindsight__hindsight_reflect
 skills:
-  - /alaa-code-intelligence-routing
+  - alaa-code-intelligence-routing
   - /alaa-system-design
   - /alaa-services-contract
   - /alaa-laravel-architecture

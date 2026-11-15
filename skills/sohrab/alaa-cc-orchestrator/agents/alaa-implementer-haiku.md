@@ -3,7 +3,7 @@ name: alaa-implementer-haiku
 description: "Exact mechanical edits with no semantic discretion, or bounded semantic work with settled local cause, named scope, invariants and discriminating regression checks. Admission in /alaa-cc-orchestrator references/routing-matrix.md. Never self-review or widen scope. Model and effort are selected for the task, never from this compatibility ID."
 disallowedTools: mcp__serena__execute_shell_command, mcp__hindsight, Agent
 skills:
-  - /alaa-code-intelligence-routing
+  - alaa-code-intelligence-routing
   - /alaa-testing-strategy
   - /alaa-services-contract
   - /alaa-trust-gateway-auth

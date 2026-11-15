@@ -38,7 +38,8 @@ AGENTS = os.path.join(ROOT, "agents")
 PACK = os.path.dirname(ROOT)
 REPO = os.path.dirname(os.path.dirname(PACK))
 
-ROUTING_SKILL = "/alaa-code-intelligence-routing"
+# Plain registered name: Claude Code preloads nothing for a "/name" entry.
+ROUTING_SKILL = "alaa-code-intelligence-routing"
 MUST_DENY = frozenset((
     "mcp__serena__execute_shell_command",
     # Server-level pattern: removes every Hindsight tool, including retain and ingest,
