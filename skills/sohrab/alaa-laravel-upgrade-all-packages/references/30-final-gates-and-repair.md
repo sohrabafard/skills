@@ -6,6 +6,8 @@
 
 Run the gates after every dependency move and every planned code change is in place. Do not run the suite before the upgrade or between packages; the stepwise fallback in `20-apply-and-recover.md` is the one exception.
 
+A gate is one of the checks below. A repository script that proves runtime, release or delivery behaviour is not a gate of this skill; run it only when the owner asks.
+
 Run each gate once and keep its full output:
 
 - The repository's test command.

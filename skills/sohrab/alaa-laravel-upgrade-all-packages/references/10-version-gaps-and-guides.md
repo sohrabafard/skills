@@ -4,6 +4,7 @@
 
 Run `composer outdated --direct --format=json`. Each row gives `version`, `latest`, `latest-status` and `abandoned`. When a `package.json` exists, run `npm outdated --json`; each row gives `current` and `latest`. Field names observed on Composer 2.9.5 and npm 9.2.0, 2026-11-16; check `--help` after an upgrade of either tool.
 
+- **Platform.** Composer reports the latest release that the resolving platform can install. That platform is `config.platform` when the manifest sets it, and the local PHP otherwise. Confirm that it equals the production image before you trust the inventory. To find a package that the platform holds back, compare with `composer outdated --direct --ignore-platform-reqs --format=json`: a row whose `latest` differs meets the first condition in `SKILL.md` *Stop and ask*. Use that flag for this read only, never for a resolution.
 - **Latest stable** is the `latest` value under the repository's `minimum-stability`. Never move to an alpha, beta, RC or dev version, unless the manifest already requires that stability for that package.
 - `latest-status: semver-safe-update` means the current constraint already allows the latest release. `update-possible` means the constraint must be raised.
 - A row whose `latest` is not a version, such as a private package that the configured repositories do not list, is reported as not resolvable and left where it is.

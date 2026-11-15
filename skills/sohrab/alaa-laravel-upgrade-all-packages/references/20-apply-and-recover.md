@@ -13,13 +13,13 @@ Use the repository wrapper when `SKILL.md` *Scope* found one. If the wrapper can
 1. For each package whose `latest-status` is `update-possible`, raise the constraint without resolving: `composer require <vendor/package>:<constraint> --no-update`, with `--dev` for a `require-dev` entry. Write the constraint that admits the latest stable release.
 2. Resolve once: `composer update --with-all-dependencies --no-interaction`.
 3. Run `composer bump`, so that each lower bound in `composer.json` equals the version the lockfile resolved.
-4. With a `package.json`, move every outdated direct dependency in one command: `npm install <package>@latest ...`, with `--save-dev` for a development dependency.
+4. With a `package.json`, move every outdated direct dependency in one command: `npm install <package>@latest ...`, with `--save-dev` for a development dependency. Then run `npm update`, so that packages inside their current ranges, transitive ones included, also move.
 
 **Direct jump first.** Move every package, majors included, in the one resolution above. Use the **stepwise fallback** in two cases only: the resolution fails and `why-not` shows conflicts among several majors, or the final failure list cannot be assigned to causes. Then restore, and move one major at a time with the framework first, running the gates after each step. Record that the fallback ran and why.
 
 ## Blocked package
 
-Run `composer why-not <vendor/package> <version>` and record its output verbatim. Leave the package at its current version and continue.
+Run `composer why-not <vendor/package> <version>` and record its output verbatim. Restore that package's entry in `composer.json` to its previous constraint, resolve again, and continue. When the blocked package is the framework itself, also restore every package whose new release requires the new framework major, and report the framework as blocked.
 
 - Never force a move past a confirmed blocker, and never hand-edit `composer.lock`.
 - `--ignore-platform-req` and `--ignore-platform-reqs` are forbidden: they produce a lock that cannot install on the target runtime.

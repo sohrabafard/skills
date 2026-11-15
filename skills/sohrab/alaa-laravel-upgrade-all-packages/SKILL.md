@@ -26,7 +26,7 @@ Each item is a stop, not a preference.
 6. **Gates, once.** Run every repository gate one time and collect every failure into one list, through `references/30-final-gates-and-repair.md`.
 7. **Repair, in one batch.** Fix the causes together, rerun the failed checks, then run every gate once more.
 8. **Documentation.** Update each document that states a changed version or a changed behaviour, each regenerated artifact, and `.env.example` when a guide adds a key. Touch no other document.
-9. **Commit and record.** Commit in this order: manifest and lockfiles; code and configuration changes; regenerated artifacts; documentation and the run record. Replace the content of `<repo>/docs/agents/upgrade-all-packages-execution-state.md` with this run: the plan table, the versions that landed, each blocked package with its reason, each remaining advisory, each gate with its result, and each check that did not run. Carry unexpired advisory acceptance records forward unchanged. Git history holds the earlier runs.
+9. **Commit and record.** Commit in this order: manifest and lockfiles; code and configuration changes; regenerated artifacts; documentation and the run record. Replace the content of `<repo>/docs/agents/upgrade-all-packages-execution-state.md` with this run: the plan table, the versions that landed, each blocked package with its reason, each remaining advisory, each gate with its result, and each check that did not run. Carry forward, unchanged, each unexpired advisory acceptance record and each deliberate version pin with its reason. Git history holds the earlier runs.
 
 ## Stop and ask
 
@@ -46,9 +46,14 @@ These hold in every run. Each one removed hours of work that proved nothing abou
 - Create no scratch directory and copy no source tree. The branch point is the restore point.
 - Write no test for the behaviour of a third-party package.
 - Run no memory measurement, dependency-outage test or telemetry comparison. `references/50-runtime-verification.md` holds those checks for a run where the owner asks for them by name.
-- Do no API contract, Postman or product documentation work. Record a finding outside the upgrade as a follow-up in the bound task store, or list it in the report.
-- Run no review loop. Allow at most one review, which returns one list, repaired in one batch with no confirmation pass.
-- Load `/alaa-testing-strategy` before the gate run and the stack's clean-code skill before the first code edit. Load `/alaa-workflow` only when the run will span sessions. Load another skill only when a stop condition or a failing gate names its surface.
+- Do no API contract, Postman or product documentation work, even when another loaded skill would add it. Record a finding outside the upgrade as a follow-up in the bound task store, or list it in the report.
+- Run the upgrade in the lead session. Invoke the runtime orchestrator only when the owner asks for lanes.
+- Run no review loop. Allow at most one review, which returns one list, repaired in one batch with no confirmation pass. A dependency audit that an orchestrator schedules is that one review.
+- Load `/alaa-testing-strategy` before the gate run and the stack's clean-code skill before the first code edit. When `/alaa-workflow` applies, its plan is the plan table and its phases are the nine steps above; add none. Load another skill only when a stop condition or a failing gate names its surface.
+
+## Named advisory
+
+When the request names one advisory, move only the vulnerable package: raise its constraint when needed, then run `composer update <vendor/package> --with-dependencies`. Read its guide when the fix is a major move. Run steps 6 to 9 for that change alone. Do not widen the run into a full upgrade.
 
 ## Done
 
