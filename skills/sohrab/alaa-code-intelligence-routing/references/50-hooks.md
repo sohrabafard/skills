@@ -46,6 +46,7 @@ been observed belongs in the candidate list, not the adopted one.
 | Deviation | Where | Evidence |
 |---|---|---|
 | The reminder hook is omitted | Both `codegraph-indexed` profiles | Read from the hook's own source: its counters reset only on the semantic server's symbolic tools, so structural-index calls never clear them and correct graph-driven reads eventually trip a deny that routes to the wrong owner. |
+| The vendor prompt hook runs behind a gate that requires the prompt to name an indexed symbol or an indexed code file | The `UserPromptSubmit` entry of both runtimes | Replay of one week of typed prompts in one Laravel repository, CodeGraph 1.6.2, 2026-11-15: the vendor hook matches prompt words lexically and injected source for prompts that named no symbol. Behind the gate, injected text fell from about 140,000 to about 37,000 characters. The gate fails open, and a vendor reinstall can restore the bare entry. |
 
 **Candidate, not adopted.** Extending session-start activation to the clear and compact events on the
 runtime that documents all four matchers. The reasoning is that those two events are exactly when the

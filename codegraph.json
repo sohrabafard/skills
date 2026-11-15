@@ -1,0 +1,3 @@
+{
+  "exclude": ["skills/.curated/", "skills/.system/", "artifacts/", "outputs/", "test-results/", "_to_delete/"]
+}
