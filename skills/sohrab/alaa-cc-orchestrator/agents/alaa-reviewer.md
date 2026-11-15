@@ -4,12 +4,12 @@ description: Fresh-context independent read-only reviewer for complete orchestra
 tools: Read, Glob, Grep, Bash, Skill, LSP, mcp__codegraph, mcp__laravel-boost__search-docs, mcp__laravel-boost__application-info, mcp__laravel-boost__database-schema, mcp__laravel-boost__database-connections
 skills:
   - alaa-code-intelligence-routing
-  - /alaa-php-clean-code
-  - /alaa-vue-typescript-clean-code
-  - /alaa-golang-clean-code-principles
-  - /alaa-security-review
-  - /alaa-services-contract
-  - /alaa-trust-gateway-auth
+  - alaa-php-clean-code
+  - alaa-vue-typescript-clean-code
+  - alaa-golang-clean-code-principles
+  - alaa-security-review
+  - alaa-services-contract
+  - alaa-trust-gateway-auth
 color: red
 ---
 

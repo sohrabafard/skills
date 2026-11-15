@@ -1,5 +1,10 @@
 # Changelog
 
+## 6.0.4 - 2026-11-15
+
+- Every `skills:` entry in every managed role is now the plain registered name: 79 entries in the role files and 40 in `assets/profile-wrappers.json`, after the routing entry in 6.0.1. Owner direction, 2026-11-15: use the correct form for all. Each listed skill's body now loads at the start of every run of its role; the summed `SKILL.md` size per role ran from about 3 KB to about 88 KB when measured that day. `scripts/check_agent_grants.py` rejects an entry with a leading slash.
+- The four stack bindings return to the wording that states their skills are preloaded, and the implementation contract, `alaa-verifier` and `alaa-architecture-critic` tell the role to apply a preloaded skill instead of loading it, so a lane does not load a skill twice.
+
 ## 6.0.3 - 2026-11-15
 
 - Every role that holds CodeGraph and lists its tools, 14 roles, now also lists the built-in `LSP` tool. A live probe on 2026-11-15 showed `alaa-explorer` without it, so the routing skill's exact-semantics row was unreachable for those roles. `scripts/check_agent_grants.py` derives the expected native set from the CodeGraph grant.

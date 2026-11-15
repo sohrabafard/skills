@@ -215,6 +215,8 @@ def grant_failures(
     if allow is not None and len(allow) != len(set(allow)):
         failures.append(f"{name}: duplicate tool grant")
 
+    for entry in sorted(s for s in skills if s.startswith("/")):
+        failures.append(f"{name}: skills entry {entry} has a leading slash and preloads nothing")
     for unknown in unresolved_skills(skills, roots):
         failures.append(f"{name}: preloads {unknown}, which resolves to no installed skill")
 

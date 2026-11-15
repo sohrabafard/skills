@@ -4,8 +4,8 @@ description: Read-only data and schema migration safety gate. Spawn for migratio
 tools: Read, Glob, Grep, Bash, Skill, LSP, mcp__codegraph, mcp__laravel-boost__search-docs, mcp__laravel-boost__application-info, mcp__laravel-boost__database-schema, mcp__laravel-boost__database-connections
 skills:
   - alaa-code-intelligence-routing
-  - /alaa-data-layer
-  - /alaa-partitioned-table-fk-audit
+  - alaa-data-layer
+  - alaa-partitioned-table-fk-audit
 color: orange
 ---
 

@@ -1,5 +1,9 @@
 # Changelog
 
+## 6.0.4 - 2026-11-15
+
+- No Codex change. `alaa-cc-orchestrator` 6.0.4 converts every Claude `skills:` preload entry to the plain name. Codex has no preload, so its role instructions keep the sentence that tells the lane to load each skill.
+
 ## 6.0.3 - 2026-11-15
 
 - No Codex change. `alaa-cc-orchestrator` 6.0.3 grants the built-in `LSP` tool to its CodeGraph roles; Codex has no such tool. The Serena read-set names in this pack's role templates are stale under Serena's REPL interface as well; they stay until the owner decides the Serena configuration.

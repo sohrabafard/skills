@@ -4,10 +4,10 @@ description: Read-only release and operability gate for CI/CD, Docker, deploymen
 tools: Read, Glob, Grep, Bash, Skill, mcp__laravel-boost__search-docs, mcp__laravel-boost__application-info
 skills:
   - alaa-code-intelligence-routing
-  - /alaa-docker-production
-  - /alaa-gitlab-ci-cd
-  - /alaa-cicd-laravel-postgres
-  - /alaa-k8s-helm
+  - alaa-docker-production
+  - alaa-gitlab-ci-cd
+  - alaa-cicd-laravel-postgres
+  - alaa-k8s-helm
 color: orange
 ---
 

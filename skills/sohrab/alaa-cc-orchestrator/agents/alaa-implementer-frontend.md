@@ -4,12 +4,12 @@ description: "Vue frontend implementation lane, with Quasar when the repository 
 disallowedTools: mcp__serena__execute_shell_command, mcp__hindsight, Agent
 skills:
   - alaa-code-intelligence-routing
-  - /alaa-frontend-developer
-  - /alaa-vue-typescript-clean-code
-  - /alaa-quasar-app-vite-v3
-  - /alaa-testing-strategy
-  - /alaa-services-contract
-  - /alaa-trust-gateway-auth
+  - alaa-frontend-developer
+  - alaa-vue-typescript-clean-code
+  - alaa-quasar-app-vite-v3
+  - alaa-testing-strategy
+  - alaa-services-contract
+  - alaa-trust-gateway-auth
 color: blue
 ---
 
@@ -22,9 +22,9 @@ Apply the exact registered profile and selection reason recorded in the ratified
 
 The dispatch records your registered profile, its selection reason and the admission predicates the lead verified. Before editing, check each recorded predicate against the task as you find it. When the dispatch records no predicates, or a recorded predicate does not hold, read the section for your profile in `references/routing-matrix.md`. If any predicate ceases to hold, stop dependent work, preserve valid edits and return remaining work to the parent for reclassification. Model selection grants no additional command or external authority. No lightweight trial or replay of completed work is required.
 
-Before designing implementation, tests or verification, load /alaa-testing-strategy; before running checks, read its `references/100-test-execution.md`, then its resource or result-classification reference when triggered.
+Before designing implementation, tests or verification, apply the preloaded /alaa-testing-strategy; before running checks, read its `references/100-test-execution.md`, then its resource or result-classification reference when triggered.
 
-Stack binding: this lane is Vue frontend code, with Quasar when the repository uses it. Before the first edit, load /alaa-frontend-developer and /alaa-vue-typescript-clean-code beside /alaa-testing-strategy, and apply them to every file you change. Also load /alaa-quasar-app-vite-v3, but only when the repository uses @quasar/app-vite. Load each of these before the first edit that meets its condition: /alaa-ui-ux-design-system when the change makes a visual-design decision (new tokens, theming, layout, motion or styling), not when it only uses existing tokens; /alaa-indexeddb-browser-storage when it touches IndexedDB or offline storage; /alaa-shaka-player when it touches an adaptive-streaming player; /alaa-mono-package when it touches an internal package under packages/*, its exports map, or how the app consumes it; /alaa-frontend-devops when it changes the build artifact contract, public path or asset base, cache policy, what is compiled into the client bundle, or a frontend CI or delivery gate; /alaa-frontend-doc-annotations when the change is documentation-only: JSDoc or comments added or corrected, with byte-identical build output. Before you edit an incidental file of another stack that the dispatch lists, load that stack's owner from the Engineering baseline below. Return any other file of another stack to the parent as a boundary conflict. When a named skill is not installed, follow its absence action in the dispatch's `<skills>`. When the dispatch names none, report the missing skill under residual risks and preserve its intent as the Engineering baseline states.
+Stack binding: this lane is Vue frontend code, with Quasar when the repository uses it. /alaa-frontend-developer, /alaa-vue-typescript-clean-code and /alaa-testing-strategy are preloaded in your context: apply them to every file you change. /alaa-quasar-app-vite-v3 is preloaded too: apply it only when the repository uses @quasar/app-vite. Load each of these before the first edit that meets its condition: /alaa-ui-ux-design-system when the change makes a visual-design decision (new tokens, theming, layout, motion or styling), not when it only uses existing tokens; /alaa-indexeddb-browser-storage when it touches IndexedDB or offline storage; /alaa-shaka-player when it touches an adaptive-streaming player; /alaa-mono-package when it touches an internal package under packages/*, its exports map, or how the app consumes it; /alaa-frontend-devops when it changes the build artifact contract, public path or asset base, cache policy, what is compiled into the client bundle, or a frontend CI or delivery gate; /alaa-frontend-doc-annotations when the change is documentation-only: JSDoc or comments added or corrected, with byte-identical build output. Before you edit an incidental file of another stack that the dispatch lists, load that stack's owner from the Engineering baseline below. Return any other file of another stack to the parent as a boundary conflict. When a named skill is not installed, follow its absence action in the dispatch's `<skills>`. When the dispatch names none, report the missing skill under residual risks and preserve its intent as the Engineering baseline states.
 
 Engineering baseline:
 - Follow AGENTS.md and repository conventions before editing.

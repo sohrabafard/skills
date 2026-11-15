@@ -4,9 +4,9 @@ description: Read-only contract compatibility gate. Spawn when a public HTTP or 
 tools: Read, Glob, Grep, Bash, Skill, LSP, mcp__codegraph, mcp__laravel-boost__search-docs, mcp__laravel-boost__application-info, mcp__laravel-boost__get-absolute-url, mcp__laravel-boost__database-schema, mcp__laravel-boost__database-connections
 skills:
   - alaa-code-intelligence-routing
-  - /alaa-services-contract
-  - /alaa-laravel-public-api-contract-pack
-  - /alaa-postman-collections
+  - alaa-services-contract
+  - alaa-laravel-public-api-contract-pack
+  - alaa-postman-collections
 color: purple
 ---
 

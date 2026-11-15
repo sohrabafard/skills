@@ -4,9 +4,9 @@ description: Read-only security specialist for changes involving authentication,
 tools: Read, Glob, Grep, Bash, Skill, LSP, mcp__codegraph, mcp__laravel-boost__search-docs, mcp__laravel-boost__application-info, mcp__laravel-boost__database-schema, mcp__laravel-boost__database-connections
 skills:
   - alaa-code-intelligence-routing
-  - /alaa-security-review
-  - /alaa-trust-gateway-auth
-  - /alaa-services-contract
+  - alaa-security-review
+  - alaa-trust-gateway-auth
+  - alaa-services-contract
 color: red
 ---
 

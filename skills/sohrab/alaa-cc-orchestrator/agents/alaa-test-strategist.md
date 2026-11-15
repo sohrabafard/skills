@@ -4,8 +4,8 @@ description: Read-only test strategy specialist for subtle behavior, legacy code
 tools: Read, Glob, Grep, Bash, Skill, LSP, mcp__codegraph, mcp__laravel-boost__search-docs, mcp__laravel-boost__application-info, mcp__laravel-boost__database-schema, mcp__laravel-boost__database-connections
 skills:
   - alaa-code-intelligence-routing
-  - /alaa-testing-strategy
-  - /golang-testing
+  - alaa-testing-strategy
+  - golang-testing
 color: yellow
 ---
 

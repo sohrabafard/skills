@@ -141,18 +141,15 @@ adapter: when its `ACTIVE_ADAPTER` changes, change this set and the grant checke
 Before dispatch, verify the role can reach its bindings under `alaa-workflow references/companion-routing.md`.
 Preloading and runtime invocation are complementary mechanisms for that reachability.
 
-Write a `skills:` entry as the plain registered skill name. Claude Code resolves the entry literally
-and preloads nothing for `/name` (headless probe, Claude Code 2.1.307, 2026-11-15). Three entries
-have the plain form: the routing entry on every role that lists it, `alaa-testing-strategy` on
-`alaa-verifier`, and `alaa-prompting-guide` on `alaa-instruction-reviewer`. Those two roles hold no
-`Skill` tool, so the preload is how they reach the skill. Every other entry keeps its leading `/` and
-preloads nothing until the owner accepts its cost: a converted entry adds that skill's whole body to
-every run of the role.
+Write every `skills:` entry as the plain registered skill name. Claude Code resolves the entry literally
+and preloads nothing for `/name` (headless probe, Claude Code 2.1.307, 2026-11-15). Every entry in this
+pack has the plain form, so the whole body of each listed skill loads at the start of every run of the
+role. List a skill only when the role needs it on every run. Name any other skill in the role body, and
+the role loads it through the `Skill` tool.
 
-A plain-name entry preloads what a role always needs: the routing contract, and on `alaa-verifier`
-the testing doctrine whose proof levels and tiers it must name. A `/name` entry preloads nothing. It
-records the doctrine the role's verdict is measured against, and the role loads that skill through the
-`Skill` tool: `alaa-architecture-critic` lists the constitution it reviews against,
+A preload carries what a role always needs: the routing contract, and the doctrine the role's verdict is
+measured against. `alaa-verifier` and `alaa-instruction-reviewer` hold no `Skill` tool, so the preload is
+the only way they reach their skill. `alaa-architecture-critic` lists the constitution it reviews against,
 `alaa-performance-profiler` both runtime performance skills, and `alaa-test-strategist` the Go testing
 skill beside the doctrine. Every managed implementation role lists the testing doctrine, and the
 implementation contract tells the lane to load it, because a lane often skips a skill that the
@@ -177,8 +174,8 @@ its own subagents outside the lead's task allocation and cost control. Every all
 The checker enforces reachability in both directions. Every `skills:` entry must resolve to an
 installed skill, because a stale entry removes a standard silently. And a role that does not hold
 `Skill` must list every installed skill its body names, because it has no other way to reach one —
-`alaa-verifier` and `alaa-instruction-reviewer` use this restricted form. The checker accepts either
-entry form there; only the plain form preloads. When no skill root is visible, as in an installed copy
+`alaa-verifier` and `alaa-instruction-reviewer` use this restricted form. The checker rejects an
+entry with a leading `/`. When no skill root is visible, as in an installed copy
 with no siblings, resolution is reported as skipped rather than passed.
 
 Schedule `python3 scripts/check_agent_grants.py` (or its identical aggregate-covered invocation) after any change to `agents/`. The checker compares every

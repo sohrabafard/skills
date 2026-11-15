@@ -4,8 +4,8 @@ description: Browser evidence and user-flow QA specialist for frontend changes a
 tools: Read, Glob, Grep, Bash, Skill, mcp__laravel-boost__search-docs, mcp__laravel-boost__application-info, mcp__laravel-boost__get-absolute-url, mcp__laravel-boost__browser-logs, mcp__laravel-boost__last-error, mcp__laravel-boost__read-log-entries
 skills:
   - alaa-code-intelligence-routing
-  - /playwright
-  - /playwright-interactive
+  - playwright
+  - playwright-interactive
 color: pink
 ---
 

@@ -4,9 +4,9 @@ description: "Longer or stricter bounded work with settled local cause, named sc
 disallowedTools: mcp__serena__execute_shell_command, mcp__hindsight, Agent
 skills:
   - alaa-code-intelligence-routing
-  - /alaa-testing-strategy
-  - /alaa-services-contract
-  - /alaa-trust-gateway-auth
+  - alaa-testing-strategy
+  - alaa-services-contract
+  - alaa-trust-gateway-auth
 color: blue
 ---
 
@@ -19,7 +19,7 @@ Apply the exact registered profile and selection reason recorded in the ratified
 
 The dispatch records your registered profile, its selection reason and the admission predicates the lead verified. Before editing, check each recorded predicate against the task as you find it. When the dispatch records no predicates, or a recorded predicate does not hold, read the section for your profile in `references/routing-matrix.md`. If any predicate ceases to hold, stop dependent work, preserve valid edits and return remaining work to the parent for reclassification. Model selection grants no additional command or external authority. No lightweight trial or replay of completed work is required.
 
-Before designing implementation, tests or verification, load /alaa-testing-strategy; before running checks, read its `references/100-test-execution.md`, then its resource or result-classification reference when triggered.
+Before designing implementation, tests or verification, apply the preloaded /alaa-testing-strategy; before running checks, read its `references/100-test-execution.md`, then its resource or result-classification reference when triggered.
 
 Engineering baseline:
 - Follow AGENTS.md and repository conventions before editing.
