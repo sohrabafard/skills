@@ -24,12 +24,13 @@ Select the evidence owner for each question. Native gates own proof.
 | Source of one named symbol or one indexed file | `codegraph node <name>`; MCP `codegraph_node` |
 | How an area works, a call path or impact, with the location unknown | `codegraph explore "<symbol names>"`; MCP `codegraph_explore` |
 | Exact definition, complete references, implementations, typed callers or the type of a symbol | Claude Code: the `LSP` tool at the position that the query operation returned; load the tool by name when it is deferred. Codex: the gopls CLI in `references/45-native-tools.md` for Go, or configured Serena. Where neither answers, record the missing guarantee |
+| Replace or insert a whole symbol body, or rename a symbol across files | Configured Serena: `serena_repl` with `s.edit` and `s.lsp.rename_symbol`. Call `initial_instructions` once for the session id. Compose the reads and edits of one change in one call, and return only the result you need |
 | Known lines of a file | The runtime's file-read tool with a line range. Use `sed -n` only where the runtime reads files through the shell |
 | Literal text, Markdown, configuration, logs or a shell script | `rg` |
 
 Explore returns one large fixed budget of source for every query, so send a narrow question to its narrow operation. Matching is lexical: query with symbol and file names, not prose. Search indexed source for a symbol name through the query operation first; use `rg` for that name only after the operation gave no adequate answer. Do not read again a file that an operation returned. Use the CLI form where the MCP tool is not exposed. Before you rename, delete or change the signature of a symbol, get its references from the language service: CodeGraph edges are name-based and can miss or add a caller.
 
-In a linked Git worktree whose root holds no `.codegraph/codegraph.db`, run `codegraph init -y` once in that root before the first query. Run `codegraph sync` there before a query about code that the lane changed. This card grants these two effects inside the lane's own worktree only; the index is removed with the worktree. When the init fails, read `references/10-routing-contract.md` *Selection and identity*; it decides which parts of a main-checkout result you may use.
+In a linked Git worktree whose root holds no `.codegraph/codegraph.db`, run `codegraph init -y` once in that root before the first query. Run `codegraph sync` there before a query about code that the lane changed. This card grants these two effects inside the lane's own worktree only; the index is removed with the worktree. When the init fails, read `references/10-routing-contract.md` *Selection and identity*; it decides which parts of a main-checkout result you may use. A Serena service reads and edits its own project root, which is the main checkout: in a lane worktree, edit with the native tools and never through Serena.
 
 ## Authority
 

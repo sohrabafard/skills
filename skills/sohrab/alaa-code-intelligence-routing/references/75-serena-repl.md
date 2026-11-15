@@ -49,7 +49,7 @@ included_apis:
   - edit.insert_after_symbol
 ```
 
-This LSP candidate is source-checked, not locally deployed. Reconcile every facade and method with the installed version: newly introduced default facades remain enabled unless excluded. For another backend, derive a narrow profile from observed signatures and semantic support; do not substitute prefixes blindly. Re-enable an operation only for a named gap and authorized configuration change; eligible native fallback needs no profile expansion.
+The owner's project services run a variant of this candidate since 2026-11-15: a live probe of each service listed the facades `cfg`, `edit` and `lsp` only, with no shell, file or memory facade and without `lsp.safe_delete_symbol`. Reconcile every facade and method with the installed version: newly introduced default facades remain enabled unless excluded. For another backend, derive a narrow profile from observed signatures and semantic support; do not substitute prefixes blindly. Re-enable an operation only for a named gap and authorized configuration change; eligible native fallback needs no profile expansion.
 
 For an analysis-only steering profile, omit rename and the three edit methods. This still does not make REPL a read-only security boundary; reference 80 owns that decision.
 
