@@ -76,6 +76,14 @@ Rules:
 
 Apply fleet infrastructure policy to PostgreSQL, Redis, RabbitMQ, and ClickHouse. Preserve product-specific provisioning and recovery rules; similar lifecycles do not make commands or topology interchangeable.
 
+Credentials, local bootstrap, and operator modes follow one pattern for every infrastructure product, including a new one (owner, 2026-11-15). The pattern is:
+- Deploy's renderer generates each service-account password into the operator `infra.env`, as it does `*_DB_PASSWORD`; the password is never an operator `services.env` input.
+- Deploy `scripts/up-infra-local.sh` creates or re-syncs the accounts from those values.
+- Deploy's first-deployment guide gives each product the same three modes: local admin, employer admin, and password only.
+- TLS uses the shared certificate collection and `INFRA_CA_BUNDLE`.
+
+Implement a new product, or a deviating one, from the existing PostgreSQL and RabbitMQ implementation instead of asking the user.
+
 ### Resolve three independent choices
 
 Record infrastructure source (`shared` or `external`), delivery path (local Docker, central Compose, Swarm, or Kubernetes/OpenShift), and dependency topology separately. None implies another. Local Docker covers local Compose and local Swarm; apply the Swarm verification below as an additional check. The sections below define canonical Docker names, ports, and reuse rules; they do not prove live endpoints. Environment values belong to the target operator. Read current owner configuration before asking the user for technical facts.
