@@ -1,6 +1,6 @@
 {
   "pack": "alaa-cc-orchestrator",
-  "version": "6.0.2",
+  "version": "6.0.3",
   "managed_agents": [
     {
       "name": "alaa-accessibility-reviewer",
@@ -10,17 +10,17 @@
     {
       "name": "alaa-adversarial-reviewer",
       "file": "agents/alaa-adversarial-reviewer.md",
-      "sha256": "8d3abe891c3bdf59ef7b4f9a6f55dc089aeddcf2362e1c1bf85e432eee3c92e3"
+      "sha256": "ea20abd3d0d45175e39e189c91ff8d60a80d099953b9ec38c3321fc63746415d"
     },
     {
       "name": "alaa-api-contract-reviewer",
       "file": "agents/alaa-api-contract-reviewer.md",
-      "sha256": "2ac39e39eeb08f14751929b89a164d9ebe211711f61a6782b68487e778b294e2"
+      "sha256": "6d2906ab7f3baac1271c1bc9a881ccaf58a62774a432e4c53ab4d7263871e216"
     },
     {
       "name": "alaa-architecture-critic",
       "file": "agents/alaa-architecture-critic.md",
-      "sha256": "ffbb41a059cbdf94c50e768d1280380359787f7790d724b490de9077e88a9cb5"
+      "sha256": "af79dddeafedf951233d9ae2546d1138c4091bcef85bbecbf8a9e107ec50aa98"
     },
     {
       "name": "alaa-browser-qa",
@@ -40,12 +40,12 @@
     {
       "name": "alaa-explorer",
       "file": "agents/alaa-explorer.md",
-      "sha256": "489b403484308dde5887f65eebba7db9c2dc7c02dc2295efa163ef58cd98c3c3"
+      "sha256": "ef1e8249bb6906da24ad5bb887041b2106710c5f29d55563f60cb1f9731ee087"
     },
     {
       "name": "alaa-failure-analyst",
       "file": "agents/alaa-failure-analyst.md",
-      "sha256": "2cc0b51b1ee58e576528ffb951c288f696ef54a8c3a039a2ca6cadac243e1734"
+      "sha256": "e50580f989924992d8298d369d191bad268a88b4a07eb99bebbc9ed3d391df65"
     },
     {
       "name": "alaa-implementer-fable",
@@ -110,27 +110,27 @@
     {
       "name": "alaa-migration-guardian",
       "file": "agents/alaa-migration-guardian.md",
-      "sha256": "daaa483c50ef6c13269709570376639cbd7130456bf11552258686e165c13382"
+      "sha256": "0b0dc747215ffe649264f3c415b6ee75852286d65d13df12316eebe6f3e9711b"
     },
     {
       "name": "alaa-observability-reviewer",
       "file": "agents/alaa-observability-reviewer.md",
-      "sha256": "779fae212d3ad1843567114e47ba130af8fb8f1564924e5a6a20bda39108e7ed"
+      "sha256": "d1b7ae49cd3a221a68233c0b6f64ba3226ff5efd2905b694233e8588de6c2269"
     },
     {
       "name": "alaa-performance-profiler",
       "file": "agents/alaa-performance-profiler.md",
-      "sha256": "bf53ebde1af51c63299966ee59d22ea1c8c45968dccdafaf7b779dc14e9abfd6"
+      "sha256": "4e8af93d1acdcf1a112bb824ef833094dce56960e42d948ecdd090ba12ff304b"
     },
     {
       "name": "alaa-planner-high",
       "file": "agents/alaa-planner-high.md",
-      "sha256": "2871112e803188fbd101ddca29da78cc6a0accfb7fd9f9c6e82a86f50af84211"
+      "sha256": "c7f2f62e4e0b4a23c97438ea460faa6397fd028df75f99180810b0a407b11cc2"
     },
     {
       "name": "alaa-planner",
       "file": "agents/alaa-planner.md",
-      "sha256": "b7017ea13f311dc8a4f0228d120ab9e92d364a44b5ac560cda7a42b758e8dd11"
+      "sha256": "9fd3ee15f1c0524afe880c92267b03dd7ae5e85cf745dc862725455d0e2cb69e"
     },
     {
       "name": "alaa-release-guardian",
@@ -145,22 +145,22 @@
     {
       "name": "alaa-reviewer",
       "file": "agents/alaa-reviewer.md",
-      "sha256": "c3d9cc1b37e13ddf21a752ba68a312505db303f9f81ed9dbd9e229d70686b2f9"
+      "sha256": "0cd95119eceae8a6cbf905065eac915b87bec21145ddc6ec03a3f37f694780d4"
     },
     {
       "name": "alaa-security-reviewer",
       "file": "agents/alaa-security-reviewer.md",
-      "sha256": "4c678d6bcb817400f28e49b2ccdc6739c4201bb8741b3878e5df3f5de6529070"
+      "sha256": "d0ab1aeae633d612ecdf0471303df013d7baf794fe720ba21499fbfc5eb33196"
     },
     {
       "name": "alaa-spec-analyst",
       "file": "agents/alaa-spec-analyst.md",
-      "sha256": "4252f3e961de8a03e919a7d2323ce504a09a9e04c2e1f535bd3ddfe3246eb51c"
+      "sha256": "1d02ad8ab696370aef717410037d12db96a09b22482ae0338c1701c18feefe2c"
     },
     {
       "name": "alaa-test-strategist",
       "file": "agents/alaa-test-strategist.md",
-      "sha256": "5745c219498c2c31d6351a130f5ee69fb0db6d8bd783e4b1ea18e5d266afd736"
+      "sha256": "7e7d08e5a409fdcb075774a454f2410b9ec7643e93f8e5920e9f613e8a3bfaf7"
     },
     {
       "name": "alaa-verifier",

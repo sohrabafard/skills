@@ -1,5 +1,10 @@
 # Changelog
 
+## 6.0.3 - 2026-11-15
+
+- Every role that holds CodeGraph and lists its tools, 14 roles, now also lists the built-in `LSP` tool. A live probe on 2026-11-15 showed `alaa-explorer` without it, so the routing skill's exact-semantics row was unreachable for those roles. `scripts/check_agent_grants.py` derives the expected native set from the CodeGraph grant.
+- Removed the six `mcp__serena__*` names from `alaa-reviewer`, `alaa-adversarial-reviewer`, `alaa-security-reviewer` and `alaa-failure-analyst`. Serena 2.1.0 runs the REPL interface here and exposes none of them, so the grant gave nothing. Roles without CodeGraph keep no language-service tool.
+
 ## 6.0.2 - 2026-11-15
 
 - Pair-drift repair. Owner direction, 2026-11-15: both orchestrator packs state the same behavioural rules, and each difference takes the stronger side. The finding ids below come from the 2026-11-15 orchestrator pair drift audit in the repository's `outputs` directory.

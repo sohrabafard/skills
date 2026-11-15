@@ -1,5 +1,9 @@
 # Changelog
 
+## 6.0.3 - 2026-11-15
+
+- No Codex change. `alaa-cc-orchestrator` 6.0.3 grants the built-in `LSP` tool to its CodeGraph roles; Codex has no such tool. The Serena read-set names in this pack's role templates are stale under Serena's REPL interface as well; they stay until the owner decides the Serena configuration.
+
 ## 6.0.2 - 2026-11-15
 
 - Pair-drift repair. Owner direction, 2026-11-15: both orchestrator packs state the same behavioural rules, and each difference takes the stronger side. The finding ids below come from the 2026-11-15 orchestrator pair drift audit in the repository's `outputs` directory.

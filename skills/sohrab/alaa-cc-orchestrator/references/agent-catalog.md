@@ -95,10 +95,10 @@ inside that skill is the definition. This table is only the assignment.
 | `alaa-migration-guardian` | CodeGraph | docs, schema |
 | `alaa-observability-reviewer` | CodeGraph | docs, app-errors, browser |
 | `alaa-performance-profiler` | CodeGraph | docs, schema, app-errors |
-| `alaa-reviewer` | CodeGraph + Serena read set | docs, schema |
-| `alaa-adversarial-reviewer` | CodeGraph + Serena read set | docs, schema |
-| `alaa-security-reviewer` | CodeGraph + Serena read set | docs, schema |
-| `alaa-failure-analyst` | CodeGraph + Serena read set | docs, app-errors, browser |
+| `alaa-reviewer` | CodeGraph | docs, schema |
+| `alaa-adversarial-reviewer` | CodeGraph | docs, schema |
+| `alaa-security-reviewer` | CodeGraph | docs, schema |
+| `alaa-failure-analyst` | CodeGraph | docs, app-errors, browser |
 | `alaa-implementer` and every other `alaa-implementer-*` profile | full, minus Serena's shell tool and the Hindsight server | full |
 | `alaa-planner`, `alaa-planner-high` | CodeGraph | docs |
 | `alaa-researcher` | none | docs |
@@ -115,7 +115,10 @@ The framework classes are composed, not bundled, so no read-only lane carries a 
 `read-log-entries`; and `browser` is `browser-logs`. Implementation lanes inherit Laravel Boost's native surface;
 this orchestrator does not create a second server-wide Boost policy.
 
-Read-only lanes receive Serena tools by exact name rather than the whole server. An MCP server is a
+Every role that holds CodeGraph also holds the built-in `LSP` tool for exact definitions, references and
+implementations. It reads only and runs no second process. Read-only lanes hold no Serena tool: under Serena's REPL
+interface the server exposes one execution tool, which `alaa-code-intelligence-routing references/80-agent-scoping.md`
+does not accept as a read-only grant. An MCP server is a
 separate process, so a withheld `Edit` tool and a restrictive permission mode does not stop that server's own rename and delete tools; only the allow
 list does. The same reason removes Serena's shell tool from the implementation lanes, which already hold `Bash` under the runtime's own approval rules.
 

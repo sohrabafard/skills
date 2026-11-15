@@ -1,7 +1,7 @@
 ---
 name: alaa-migration-guardian
 description: Read-only data and schema migration safety gate. Spawn for migrations, backfills, index operations, data transformations, compatibility windows, cleanup, or zero-downtime rollout concerns. Never runs or edits migrations.
-tools: Read, Glob, Grep, Bash, Skill, mcp__codegraph, mcp__laravel-boost__search-docs, mcp__laravel-boost__application-info, mcp__laravel-boost__database-schema, mcp__laravel-boost__database-connections
+tools: Read, Glob, Grep, Bash, Skill, LSP, mcp__codegraph, mcp__laravel-boost__search-docs, mcp__laravel-boost__application-info, mcp__laravel-boost__database-schema, mcp__laravel-boost__database-connections
 skills:
   - alaa-code-intelligence-routing
   - /alaa-data-layer

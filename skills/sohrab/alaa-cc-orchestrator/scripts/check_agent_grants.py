@@ -83,14 +83,8 @@ def named_skills(body: str, roots: list[str]) -> set[str]:
     return {"/" + t for t in re.findall(r"(?<![\w-])/([\w-]+)", body) if t in installed}
 
 CODEGRAPH = {"mcp__codegraph"}
-SERENA_READ = {
-    "mcp__serena__find_symbol",
-    "mcp__serena__get_symbols_overview",
-    "mcp__serena__find_referencing_symbols",
-    "mcp__serena__find_declaration",
-    "mcp__serena__find_implementations",
-    "mcp__serena__get_diagnostics_for_file",
-}
+# The built-in language-service tool reads only and runs no second process.
+LSP_TOOL = "LSP"
 BOOST_DOCS = {
     "mcp__laravel-boost__search-docs",
     "mcp__laravel-boost__application-info",
@@ -116,14 +110,14 @@ HINDSIGHT_READ = {
 
 EXPECTED_MCP = {
     "alaa-accessibility-reviewer": BOOST_DOCS | BOOST_ROUTING,
-    "alaa-adversarial-reviewer": CODEGRAPH | SERENA_READ | BOOST_DOCS | BOOST_SCHEMA,
+    "alaa-adversarial-reviewer": CODEGRAPH | BOOST_DOCS | BOOST_SCHEMA,
     "alaa-api-contract-reviewer": CODEGRAPH | BOOST_DOCS | BOOST_ROUTING | BOOST_SCHEMA,
     "alaa-architecture-critic": CODEGRAPH | BOOST_DOCS | BOOST_SCHEMA | HINDSIGHT_READ,
     "alaa-browser-qa": BOOST_DOCS | BOOST_ROUTING | BOOST_ERRORS | BOOST_BROWSER,
     "alaa-dependency-auditor": BOOST_DOCS,
     "alaa-documenter": BOOST_DOCS | BOOST_ROUTING,
     "alaa-explorer": CODEGRAPH | BOOST_DOCS | BOOST_ROUTING | HINDSIGHT_READ,
-    "alaa-failure-analyst": CODEGRAPH | SERENA_READ | BOOST_DOCS | BOOST_ERRORS | BOOST_BROWSER,
+    "alaa-failure-analyst": CODEGRAPH | BOOST_DOCS | BOOST_ERRORS | BOOST_BROWSER,
     "alaa-implementer-opus": None,
     "alaa-implementer-fable": None,
     "alaa-implementer": None,
@@ -136,8 +130,8 @@ EXPECTED_MCP = {
     "alaa-performance-profiler": CODEGRAPH | BOOST_DOCS | BOOST_SCHEMA | BOOST_ERRORS,
     "alaa-release-guardian": BOOST_DOCS,
     "alaa-researcher": BOOST_DOCS | HINDSIGHT_READ,
-    "alaa-reviewer": CODEGRAPH | SERENA_READ | BOOST_DOCS | BOOST_SCHEMA,
-    "alaa-security-reviewer": CODEGRAPH | SERENA_READ | BOOST_DOCS | BOOST_SCHEMA,
+    "alaa-reviewer": CODEGRAPH | BOOST_DOCS | BOOST_SCHEMA,
+    "alaa-security-reviewer": CODEGRAPH | BOOST_DOCS | BOOST_SCHEMA,
     "alaa-spec-analyst": CODEGRAPH | BOOST_DOCS,
     "alaa-test-strategist": CODEGRAPH | BOOST_DOCS | BOOST_SCHEMA,
     "alaa-verifier": set(),
@@ -150,7 +144,9 @@ READ_NATIVE = {"Read", "Glob", "Grep", "Bash", "Skill"}
 EXPECTED_MCP.update({"alaa-implementer-haiku": None, "alaa-implementer-haiku-high": None, "alaa-implementer-sonnet-high": None, "alaa-implementer-opus-high": None,
                      "alaa-planner": EXPECTED_MCP["alaa-spec-analyst"],
                      "alaa-planner-high": EXPECTED_MCP["alaa-spec-analyst"]})
-EXPECTED_NATIVE = {name: READ_NATIVE for name in EXPECTED_MCP}
+# Every role that holds CodeGraph also holds the language-service tool for exact semantics.
+EXPECTED_NATIVE = {name: READ_NATIVE | ({LSP_TOOL} if mcp and CODEGRAPH <= mcp else set())
+                   for name, mcp in EXPECTED_MCP.items()}
 EXPECTED_NATIVE.update({
     "alaa-researcher": READ_NATIVE | {"WebFetch", "WebSearch"},
     "alaa-documenter": READ_NATIVE | {"Write", "Edit"},

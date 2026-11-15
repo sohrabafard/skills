@@ -15,7 +15,7 @@ A read-only role never earns full. A declared-command verifier earns none. Boost
 
 ## Exact allowlists
 
-Start a semantic-read grant from observed supported equivalents of `find_symbol`, `get_symbols_overview`, `find_referencing_symbols`, `find_declaration`, `find_implementations` and `get_diagnostics_for_file`. Optional symbol diagnostics or backend-specific declaration, reference, hierarchy or inspection operations are eligible only after their exact inventory and read semantics are verified. A remembered name grants nothing.
+In Claude Code, the semantic-read grant is the built-in `LSP` tool: it reads only and runs no second process. Where Serena's tools interface is active instead, start a semantic-read grant from observed supported equivalents of `find_symbol`, `get_symbols_overview`, `find_referencing_symbols`, `find_declaration`, `find_implementations` and `get_diagnostics_for_file`. Optional symbol diagnostics or backend-specific declaration, reference, hierarchy or inspection operations are eligible only after their exact inventory and read semantics are verified. A remembered name grants nothing.
 
 Unknown operations are not read-safe. Exclude from a read-only grant: edits, file creation and deletion, shell, memory writes, activation and onboarding, and unrestricted REPL or debug execution. An advertised read query through a general execution tool is insufficient without observable restriction to that read set.
 
