@@ -21,7 +21,7 @@ Batch compatible diagnostics, and scope queries to the needed symbols and files.
 | Known region | Native file read limited to needed lines | Does not prove call or reference coverage |
 | Supported syntax pattern | Installed ast-grep with a language-bound and path-bound pattern selected from its help | Syntax matches are not bindings, types or complete references. Native text can supply partial evidence |
 
-Read a bounded region with `sed -n '<first>,<last>p' <path>`. Reuse adequate graph source instead of performing these reads again.
+Read a bounded region with the runtime's file-read tool and a line range. Use `sed -n '<first>,<last>p' <path>` only where the runtime reads files through the shell. Reuse adequate graph source instead of performing these reads again.
 
 ## Structured data and saved working state
 

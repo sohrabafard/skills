@@ -10,9 +10,25 @@ Select the evidence owner for each question. Native gates own proof.
 ## Decision procedure
 
 1. Name each independently answerable question and its target worktree and environment.
-2. Read `references/00-topic-map.md` before selecting an owner, handling results or failures, choosing grants, or advising on Serena contexts or REPL APIs.
-3. Apply the routing contract: select one primary owner, reuse adequate evidence, and ask only the missing question.
-4. Treat editing, runtime observation and proof as separate questions. Run the applicable authorized native gates.
+2. For a source question in a repository whose root holds `.codegraph/`, apply the operation card.
+3. Read `references/00-topic-map.md` before selecting an owner that the card does not name, handling results or failures, choosing grants, or advising on Serena contexts or REPL APIs.
+4. Apply the routing contract: select one primary owner, reuse adequate evidence, and ask only the missing question.
+5. Treat editing, runtime observation and proof as separate questions. Run the applicable authorized native gates.
+
+## Operation card
+
+| Question | Operation |
+|---|---|
+| Location of a named symbol | `codegraph query <name>`; MCP `codegraph_search` |
+| Callers of a named symbol | `codegraph callers <name>`; MCP `codegraph_callers` |
+| Source of one named symbol or one indexed file | `codegraph node <name>`; MCP `codegraph_node` |
+| How an area works, a call path or impact, with the location unknown | `codegraph explore "<symbol names>"`; MCP `codegraph_explore` |
+| Known lines of a file | The runtime's file-read tool with a line range. Use `sed -n` only where the runtime reads files through the shell |
+| Literal text, Markdown, configuration, logs or a shell script | `rg` |
+
+Explore returns one large fixed budget of source for every query, so send a narrow question to its narrow operation. Matching is lexical: query with symbol and file names, not prose. Search indexed source for a symbol name through the query operation first; use `rg` for that name only after the operation gave no adequate answer. Do not read again a file that an operation returned. Use the CLI form where the MCP tool is not exposed.
+
+When a result carries a different-worktree warning, read `references/10-routing-contract.md` *Selection and identity*; it decides which parts of that result you may use.
 
 ## Authority
 
