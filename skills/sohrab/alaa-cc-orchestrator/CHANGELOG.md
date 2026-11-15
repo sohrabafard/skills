@@ -2,7 +2,7 @@
 
 ## 6.0.1 - 2026-11-15
 
-- Every managed role now preloads the routing skill: its `skills:` entry is the plain name `alaa-code-intelligence-routing`. One week of transcripts showed the routing body in 2 of 982 subagent contexts, and a headless probe (Claude Code 2.1.307) showed that a `/name` entry preloads nothing while a plain name preloads the body with its base directory. `scripts/check_agent_grants.py` requires the plain form.
+- Every managed role that listed the routing skill, 31 of 33, now preloads it: its `skills:` entry is the plain name `alaa-code-intelligence-routing`. One week of transcripts showed the routing body in 2 of 982 subagent contexts, and a headless probe (Claude Code 2.1.307) showed that a `/name` entry preloads nothing while a plain name preloads the body with its base directory. `scripts/check_agent_grants.py` requires the plain form.
 - Not changed: every other `skills:` entry keeps its leading `/` and stays inert. Converting one adds that skill's whole `SKILL.md` to each run of the role, so it waits for an owner decision; `references/agent-catalog.md` *How a lane gets its skills* records the rule.
 
 ## 6.0.0 - 2026-11-14
