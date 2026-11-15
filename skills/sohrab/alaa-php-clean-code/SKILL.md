@@ -23,7 +23,7 @@ This skill owns code shape inside files, classes, methods and local module bound
 
 ## Compatibility target
 
-PHP 8.5 and Laravel 13 are the current baseline for new Alaa Laravel services. `composer.json` in the target repository is the authority for what that repository runs. Use a newer feature only where the installed runtime and toolchain support it. Do not let a Laravel 13 repository drift back to Laravel 12 conventions in new code, refactors, reviews or upgrade planning. `/alaa-laravel-upgrade-all-packages` owns dependency resolution and isolation, not framework code migration. For migration scope, follow its boundary and the official target-version upgrade guide. `references/laravel-best-practices.md` holds the surviving code-level audit points.
+PHP 8.5 and Laravel 13 are the current baseline for new Alaa Laravel services. `composer.json` in the target repository is the authority for what that repository runs. Use a newer feature only where the installed runtime and toolchain support it. Do not let a Laravel 13 repository drift back to Laravel 12 conventions in new code, refactors, reviews or upgrade planning. `/alaa-laravel-upgrade-all-packages` owns dependency and framework upgrades, which it plans from the official target-version upgrade guide. `references/laravel-best-practices.md` holds the surviving code-level audit points.
 
 **Resolve runtime scope before you relax worker safety.** Read `/alaa-octane-performance` `SKILL.md`, "Scope condition", for applicability. When it applies, use Octane-safe code shape by default, including in code that a planned worker will execute.
 

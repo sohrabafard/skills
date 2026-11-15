@@ -27,7 +27,7 @@ Boost tells you what the application *is*. It does not decide anything: explicit
 
 ## Laravel 13 audit points
 
-Dependency resolution and isolation belong to `/alaa-laravel-upgrade-all-packages`; framework code migration follows its separate-scope boundary and the official target-version upgrade guide. These audit points outlive the upgrade and apply whenever you touch the named surface:
+Dependency and framework upgrades belong to `/alaa-laravel-upgrade-all-packages`, which plans them from the official target-version upgrade guide. These audit points outlive the upgrade and apply whenever you touch the named surface:
 
 - Replace direct references to `VerifyCsrfToken` or `ValidateCsrfToken` with `PreventRequestForgery` when touching middleware config, route exclusions, or tests.
 - Cache payloads are arrays and scalars. A class-typed payload requires the class to be listed in `cache.serializable_classes`; add a name to that list only as a recorded interim step while an existing class-typed payload is migrated to arrays, never as the default, and never widen it to a wildcard.

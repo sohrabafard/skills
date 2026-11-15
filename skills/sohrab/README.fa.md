@@ -111,7 +111,7 @@
 | `alaa-octane-performance` | ایمنی runtime و کارایی مسیر داغ زیر Octane با worker های طولانی‌عمر: چه چیزی هرگز نباید بین دو request باقی بماند، مکانیزم reset، چرخه عمر worker، و تست رگرسیون نشتی |
 | `alaa-laravel-job-rabbitmq` | job های صف‌شده Laravel روی RabbitMQ از طریق `vladimir-yuldashev/laravel-queue-rabbitmq`: تصمیم `queue:work` در برابر `rabbitmq:consume`، سیاست ack و nack، سقف تحویل و خطر crash-loop، و هشت کلاس خطای نام‌گذاری‌شده |
 | `alaa-laravel-public-api-contract-pack` | ساخت و ممیزی بسته قرارداد API عمومی یک سرویس Laravel از روی حقیقت اجرایی مخزن: فهرست route، نسخه‌بندی، معنای retry هر route، مستندات OpenAPI و Postman و SDK، و gate ای که تا تاریخ deprecation حل‌نشده باشد بسته نمی‌شود |
-| `alaa-laravel-upgrade-all-packages` | جاروب ارتقای وابستگی Composer و npm برای سرویس Laravel: اول restore point و baseline تست، سپس وضعیت outdated و audit، اولویت‌بندی advisory بر اساس severity، و یک تغییر قابل بازگشت |
+| `alaa-laravel-upgrade-all-packages` | ارتقای همه وابستگی‌های مستقیم Composer و npm یک سرویس Laravel به آخرین نسخه stable: فهرست فاصله نسخه‌ها، راهنمای رسمی upgrade برای هر major، یک plan، یک اجرای نهایی gate ها و رفع دسته‌ای خطاها |
 | `alaa-cicd-laravel-postgres` | دروازه‌های انتشار برای سرویس‌های Laravel روی Postgres: کدام چک gate است و کدام advisory، gate برگشت‌پذیری up-down-up مایگریشن، ایزولاسیون پایگاه‌داده تست per-worker، و تطابق نسخه production با Postgres |
 | `alaa-permission-generator` | ثبت و تولید و اعمال و اعتبارسنجی دسترسی‌های coarse علاء از طریق `alaa-permission-catalog`: کلید و bitmap id دسترسی، مصرف‌کننده Laravel و Go و TypeScript، seed احراز هویت، و رمزگشایی bitmap معتمد `X-Access` |
 

@@ -2,12 +2,7 @@
 
 ## When this file applies
 
-Any one of these makes every check below mandatory:
-
-- The runtime applicability rule in `/alaa-octane-performance` `SKILL.md`, "Scope condition", applies, including a planned worker path; read that owner to decide.
-- The moved set includes `laravel/framework`, or a queue, cache, database, Redis or AMQP client.
-- The moved set includes an HTTP client, a telemetry SDK, a Collector component, a logger, or a Sentry package.
-- The moved set changes a `php` or `ext-*` platform requirement.
+Read this file only when the owner asks for deep runtime verification by name. No upgrade triggers it by itself; `SKILL.md` *Limits* owns that rule. Run only the checks that the owner names, and report every other check here as not requested.
 
 The reason is a runtime fact no test suite reproduces: under a long-lived worker the framework boots once and one process then serves many requests, so a dependency move changes worker-boot behaviour and connection lifetime, and a suite running one request per process never reaches the second request on a worker. Worker lifecycle, reload and drain semantics, the leak harness, connection lifecycle, worker sizing and cache tiers are owned by `/alaa-octane-performance`. This file adds only what is specific to a dependency having just moved, and states no threshold of its own.
 
@@ -15,20 +10,20 @@ The reason is a runtime fact no test suite reproduces: under a long-lived worker
 
 Start the runtime and confirm a worker serves one real request. A bump that changes a service provider's boot path, a deferred provider's registration, or an auto-discovery manifest fails here and nowhere else, because the test suite boots the framework differently and passes.
 
-Proof level: `host-to-Docker smoke` at minimum, `in-runtime service proof` for a framework or server bump, named from `/alaa-controlled-ops` `references/40-validation-and-release-gates.md`. The runtime comes up through `/service-runtime-kit-governance`; a runtime that will not start is handled by the rule in `20-breaking-change-detection.md`.
+Proof level: `host-to-Docker smoke` at minimum, `in-runtime service proof` for a framework or server bump, named from `/alaa-controlled-ops` `references/40-validation-and-release-gates.md`. The runtime comes up through `/service-runtime-kit-governance`; a runtime that will not start is reported with its error, per `30-final-gates-and-repair.md` *Boot proof*.
 
 ## 2. The second request on the same worker
 
 Send the same authenticated request repeatedly against a single worker and compare responses field by field, with attention to anything derived from identity: the authenticated subject, the tenant, the locale, the timezone, the permission or role set. Any drift between request 1 and request N is cross-request state and a hard failure of this gate, not a performance observation.
 
-Two rules from the upstream `laravel-best-practices/` skill -- not owned by this repository, see `90-ownership-boundary.md` -- are actively wrong here and are overridden by name:
+Two rules from the upstream `laravel-best-practices/` skill, which a Laravel repository ships under `.agents/skills/` and this repository does not own, are actively wrong here and are overridden by name:
 
 - `rules/caching.md` heads a section "Use `once()` for Per-Request Memoization". Under a long-lived worker the object lifetime of a service the worker resolved once **is the worker lifetime**, so `once()` on such a service is cross-request state: a `once()`-wrapped roles or permissions lookup returns request 1's authorization set to every later request on that worker. A bump that introduces, moves or newly memoizes such a lookup fails this gate.
 - `rules/architecture.md` teaches `Context::add('tenant_id', $request->header('X-Tenant-ID'));`, taking tenant identity from an untrusted client header. Tenant derivation, trusted headers and JWT verification are `/alaa-trust-gateway-auth`, which forbids it. After a bump touching request handling, authentication or the container, re-verify that tenant identity is still derived where that skill requires.
 
 ## 3. Memory behaviour
 
-Compare steady-state worker RSS and the recycling rate against the pre-sweep baseline from `20-breaking-change-detection.md`. Growth per request the baseline did not show is a leak this bump introduced, and its regression test belongs in `/alaa-octane-performance` `references/leak-detection-harness.md`. No number appears here: the mechanism is that skill's and every platform value is `alaa-services-contract references/22-failure-load-and-deprecation-contract.md`.
+Compare steady-state worker RSS and the recycling rate against a baseline that the owner asked you to measure at the branch-point commit. Growth per request the baseline did not show is a leak this bump introduced, and its regression test belongs in `/alaa-octane-performance` `references/leak-detection-harness.md`. No number appears here: the mechanism is that skill's and every platform value is `alaa-services-contract references/22-failure-load-and-deprecation-contract.md`.
 
 ## 4. Connection lifetime
 

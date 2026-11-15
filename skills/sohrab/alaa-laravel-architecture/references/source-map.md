@@ -22,6 +22,6 @@ Read this file when the task says `latest`, `current`, `upgrade`, `Laravel 13`, 
 
 ## Which Laravel version this assumes
 
-Laravel 13 on PHP 8.5, unless the repository is pinned lower. `/alaa-laravel-upgrade-all-packages` owns dependency resolution, classification and isolation; `alaa-php-clean-code references/laravel-best-practices.md` owns the surviving per-symbol audit points. Framework code migration requires a separately scoped plan and the official target-version upgrade guide above; this skill contributes only the boundary question below.
+Laravel 13 on PHP 8.5, unless the repository is pinned lower. `/alaa-laravel-upgrade-all-packages` owns the upgrade of the framework and its dependencies; `alaa-php-clean-code references/laravel-best-practices.md` owns the surviving per-symbol audit points. Framework code migration follows that skill's plan and the official target-version upgrade guide above; this skill contributes only the boundary question below.
 
 What this skill contributes to an upgrade is the boundary question only: if the upgrade changes a public request or response shape, a route's precedence, or a serialization result a consumer reads, it is a contract change and runs through the deprecation procedure in `alaa-services-contract references/22-failure-load-and-deprecation-contract.md` rather than shipping as an upgrade side effect.

@@ -1,61 +1,70 @@
 ---
 name: alaa-laravel-upgrade-all-packages
-description: "Composer and npm dependency-upgrade sweep for a Laravel service: restore point and test baseline, outdated and audit state, classified lockfile moves, advisory triage, composer why-not blockers, manifest-versus-lockfile honesty, worker-boot and telemetry proof, and rollback. Use for scheduled or ad-hoc dependency sweeps or a named advisory. Do not use for non-Composer ecosystems, a dependency-freeze marker awaiting its owner, or alaa/controlled-ops and tag/Satis publication (/alaa-controlled-ops). Major framework code migration requires a separately scoped plan and the official target-version upgrade guide; this skill resolves and isolates its dependency changes only."
+description: "Upgrade of every direct Composer and npm dependency of a Laravel service to its latest stable release: version-gap inventory, official upgrade guides for each major move, one upgrade plan, a direct jump with a stepwise fallback, one final run of the repository gates, batch repair of every failure without weakening a test, and documentation updated to the new versions. Use to upgrade a Laravel application and its packages, a framework major included, or to act on a named advisory. Do not use for a repository with no composer.json, a dependency-freeze marker awaiting its owner, or alaa/controlled-ops and tag or Satis publication (/alaa-controlled-ops). Deep runtime verification runs only when the owner asks for it."
 ---
 
 # Alaa Laravel Upgrade All Packages
 
-You move a live service's dependency set and prove the service still behaves.
+You bring a Laravel service to the latest stable release of every direct dependency. You plan each major move from its official upgrade guide. You prove the result with the repository's own gates, run once at the end.
 
 ## Before the first command
 
 Each item is a stop, not a preference.
 
-- **Continuity.** `/alaa-workflow` `references/context-continuity.md` owns plan, phasing, state and resume; follow it unchanged. It cannot know two facts. First, this sweep's state file is `<repo>/docs/agents/upgrade-all-packages-execution-state.md`. Second, a dirty `composer.lock` plus a dirty `vendor/` is an interrupted **resolution**, not an interrupted plan. Diagnose that via `references/40-failure-classes.md` before reading any plan.
-- **Freeze marker.** A `docs/agents/dependency-freeze.md` file or an `extra.alaa.dependency-freeze` key in `composer.json` marks a frozen dependency baseline. Each marker names the freeze owner and reason. If either exists, change no dependency and report its contents. If a human says the repo is frozen and no marker exists, write the marker from the owner and reason they give and change nothing else, so the next run detects it without asking.
-- **Scope of the run.** `git ls-files '*composer.json' | grep -v '^vendor/'` enumerates manifests. Run once per root and name that root in the state file. Derive every path from its absolute path, never from the working directory, which in a monorepo is not the manifest root. Then run `grep -rn 'composer \(update\|install\)' Makefile* .gitlab-ci.yml .github .circleci docker 2>/dev/null`. Any hit means Composer is wrapped. The wrapper is what runs, since it may set flags, environment or ordering the raw commands omit.
-- **ControlledOps.** `"name": "alaa/controlled-ops"` in this manifest, or a run that would cut a tag or publish to Satis, belongs to `/alaa-controlled-ops`, whose release gates outrank every step here.
-- **Restore point and baseline.** Take both before any mutating command. A sweep with no restore point is not run; with no baseline, no later failure may be called pre-existing.
+- **Freeze marker.** A `docs/agents/dependency-freeze.md` file or an `extra.alaa.dependency-freeze` key in `composer.json` marks a frozen dependency baseline and names its owner and reason. If either exists, change no dependency and report its contents. If a human says the repository is frozen and no marker exists, write the marker from the owner and reason they give, and change nothing else.
+- **ControlledOps.** `"name": "alaa/controlled-ops"` in the manifest, or a run that would cut a tag or publish to Satis, belongs to `/alaa-controlled-ops`.
+- **Scope.** `git ls-files '*composer.json' | grep -v '^vendor/'` lists the manifests. Run once per manifest root and derive every path from that root. Then run `grep -rn 'composer \(update\|install\)' Makefile* .gitlab-ci.yml .github .circleci docker 2>/dev/null`. A hit means the repository wraps Composer: run the wrapper, because it can set flags and environment that the raw command omits.
+- **Clean tree.** `git status --porcelain` is empty in the manifest root. Unrelated changes: stop and ask. A modified `composer.lock` or `vendor/` from an earlier run: read `references/20-apply-and-recover.md` *Interrupted resolution* first.
 
 ## Procedure
 
-1. Read state: `composer outdated --direct --format=json` and `composer audit --locked --format=json`, plus `npm outdated --json` and `npm audit --json` when a `package.json` exists. A non-empty audit result reorders the work.
-2. Resolve without writing: `composer update --with-all-dependencies --dry-run`. That flag applies whatever the declared constraints permit, including a major bump under a loose constraint; it is not a safe-subset flag. Classify every moved package, and split each major bump into its own change with its own gates.
-3. Apply only the classified patch/minor set through the scoped preview/apply procedure in `references/20-breaking-change-detection.md`. Add, remove or re-constrain no manifest entry outside the authorized upgrade scope (`require`/`require-dev`, `dependencies`/`devDependencies`). Read and report the entire lock diff, including transitive additions, removals and version moves; package scoping does not exclude transitive majors. A framework code migration stops here for a separately scoped plan and the official target-version Laravel upgrade guide; this sweep owns dependency resolution and isolation only.
-4. When a bump is blocked, run `composer why-not <package> <version>`, record the exact blocking constraint, and leave that package where it is. Never force a bump past a confirmed blocker, never hand-edit `composer.lock`, and do not guess at the reason.
-5. Regenerate what the upgrade invalidated (Laravel Boost guidelines, skills and MCP registration; compiled config, route and view caches), then align each direct constraint in `composer.json` with the version the lockfile actually resolved to. A green lockfile update does not by itself keep the manifest honest.
-6. With a `package.json`, give it the same treatment and the same `why-not`-style capture for anything blocked. Decide first whether the frontend build is production surface or dev-only tooling; that answer sets which gates apply to it.
-7. Verify runtime behaviour now that the lock moved. A test suite runs one request per process and proves nothing about a worker's second request.
-8. Sweep docs and state files for stale version strings and leftover "blocked" or "now resolves" language from the previous run.
-9. Record in the state file: versions landed, every blocker with its `why-not` output, every advisory acceptance record, the proof level reached, and the restore point.
+1. **Inventory.** List every direct dependency with its current version, its latest stable version and its gap class, through `references/10-version-gaps-and-guides.md`.
+2. **Guides.** For each major move, read the official upgrade guide, and every intermediate guide when the gap spans several majors.
+3. **Plan.** Write one plan table. Check each required change against this repository and mark the ones that do not apply.
+4. **Stop conditions.** Check the list below before the first mutating command.
+5. **Apply.** On one branch, raise the constraints and move everything to the latest stable release in one resolution, through `references/20-apply-and-recover.md`. Then make the code and configuration changes that the plan lists, and regenerate what the upgrade invalidated.
+6. **Gates, once.** Run every repository gate one time and collect every failure into one list, through `references/30-final-gates-and-repair.md`.
+7. **Repair, in one batch.** Fix the causes together, rerun the failed checks, then run every gate once more.
+8. **Documentation.** Update each document that states a changed version or a changed behaviour, each regenerated artifact, and `.env.example` when a guide adds a key. Touch no other document.
+9. **Commit and record.** Commit in this order: manifest and lockfiles; code and configuration changes; regenerated artifacts; documentation and the run record. Replace the content of `<repo>/docs/agents/upgrade-all-packages-execution-state.md` with this run: the plan table, the versions that landed, each blocked package with its reason, each remaining advisory, each gate with its result, and each check that did not run. Carry unexpired advisory acceptance records forward unchanged. Git history holds the earlier runs.
 
-## Gates
+## Stop and ask
 
-Show actual command output. A summary is not evidence, and a gate not run is reported as not run, never as passed.
+For each case below, leave that package at its current version, continue with every package that does not depend on it, and ask the owner in the final report.
 
-- **Formatter.** Run the formatter the repo declares in `require-dev`, path resolved per `references/40-failure-classes.md` (`laravel/pint` -> `<bin-dir>/pint --dirty --format agent`). When the repo declares none, report `formatting gate not available: none declared`.
-- **Test suite.** Green, or a failure matching the baseline under the identity rule in `references/20-breaking-change-detection.md`. A "pre-existing" claim that does not quote the baseline file path is not a claim.
-- **Supply chain.** `composer validate --strict` and `composer audit` clean, or every finding carries the full acceptance record from `references/30-advisory-triage.md`. No agent accepts a finding on its own authority; critical and high have no acceptance path.
-- **Proof strength.** Name the level reached from `/alaa-controlled-ops` `references/40-validation-and-release-gates.md`, "Proof vocabulary". Static inspection never clears a lockfile change under the fleet SLA; `references/20-breaking-change-detection.md` sets the level per class.
-- **Diff.** `git status --short`, `git diff --stat` and `git diff --check` show only intended dependency, generated-artifact, doc and state files, and no scratch or cache directory survives.
+- The latest release needs a PHP version or an extension that the production image does not have.
+- A guide requires a change that stored data or running workers cannot read back: a data migration, or a new queue payload, cache, session or serialisation format.
+- A `critical` or `high` advisory, or one with no severity, remains after the upgrade.
+- Composer reports the package as abandoned.
+- A required change needs a product or contract decision.
+
+## Limits
+
+These hold in every run. Each one removed hours of work that proved nothing about the upgrade.
+
+- Take no test baseline before the upgrade, and repair a failing gate whatever its age.
+- Create no scratch directory and copy no source tree. The branch point is the restore point.
+- Write no test for the behaviour of a third-party package.
+- Run no memory measurement, dependency-outage test or telemetry comparison. `references/50-runtime-verification.md` holds those checks for a run where the owner asks for them by name.
+- Do no API contract, Postman or product documentation work. Record a finding outside the upgrade as a follow-up in the bound task store, or list it in the report.
+- Run no review loop. Allow at most one review, which returns one list, repaired in one batch with no confirmation pass.
+- Load `/alaa-testing-strategy` before the gate run and the stack's clean-code skill before the first code edit. Load `/alaa-workflow` only when the run will span sessions. Load another skill only when a stop condition or a failing gate names its surface.
+
+## Done
+
+The run is complete when every direct dependency is at its latest stable release or listed as blocked with its reason, the final run of every gate is green, the documentation and the run record are updated, and the commits exist. Then stop. Report a gate that did not run as not run, never as passed.
 
 ## When NOT to use
 
-- The repository has no `composer.json`: a Go module, an npm-only service, or any other ecosystem.
+- The repository has no `composer.json`: a Go module, an npm-only service, or another ecosystem.
 - The repository carries a dependency-freeze marker whose named owner has not answered.
-- The manifest is `alaa/controlled-ops`, or the run would cut a tag or publish to Satis.
-- The task is a major framework migration rather than bringing current dependencies forward.
-- The routing section below names the owner for each of these.
+- The manifest is `alaa/controlled-ops`, or the run would cut a tag or publish to Satis: `/alaa-controlled-ops`.
 
 ## Routing
 
 | You are about to | Read |
 |---|---|
-| Take a restore point, undo a lockfile change, or revert a bump that already reached an environment | `references/10-rollback-and-blast-radius.md` |
-| Capture the baseline, classify a change as major, decide whether the frontend ships, or verify what tests cannot see | `references/20-breaking-change-detection.md` |
-| Act on a `composer audit` or `npm audit` finding, or decide whether and by whom one may be accepted | `references/30-advisory-triage.md` |
-| Hit a resolution conflict, test regression, unwritable artifact, cache permission error, or half-applied update | `references/40-failure-classes.md` |
-| Ship a framework, driver, extension or telemetry bump to a service with a long-lived worker | `references/50-runtime-verification.md` |
-| Decide which skill owns a question this sweep raised, and which wins on conflict | `references/90-ownership-boundary.md` |
-
-`/alaa-workflow` loads on every run. `references/90-ownership-boundary.md` holds what this skill owns, what it does not own, the ten-criterion bar, and the upstream skills this repository does not own.
+| List version gaps, decide what "latest stable" means, find or read an upgrade guide, or write the plan table | `references/10-version-gaps-and-guides.md` |
+| Create the branch, raise constraints, resolve, record a blocked package, undo a change, recover an interrupted resolution, or regenerate artifacts | `references/20-apply-and-recover.md` |
+| Run the final gates, build the failure list, repair, change a test, prove the application boots, or act on an audit finding | `references/30-final-gates-and-repair.md` |
+| Run deep runtime verification that the owner asked for by name | `references/50-runtime-verification.md` |
