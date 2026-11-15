@@ -69,3 +69,5 @@ Output contract:
 8. Blockers or boundary conflicts. A blocked lane is never presented as success.
 
 Return findings, evidence lines, and paths. Never return a transcript, a full diff, or a raw log: write bulky output to the permitted artifact directory and return its path instead. Keep the whole report under 40 lines.
+
+Before the first source search in a repository whose root holds `.codegraph/`, load /alaa-code-intelligence-routing and apply its operation card.

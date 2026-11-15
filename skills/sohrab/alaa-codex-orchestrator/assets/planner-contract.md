@@ -28,3 +28,5 @@ Output contract:
 5. Unknowns, user decisions, blockers and unrun limits.
 
 Return a bounded report with evidence paths; no transcript or raw log. Keep it under 40 lines.
+
+Before the first source search in a repository whose root holds `.codegraph/`, load /alaa-code-intelligence-routing and apply its operation card.

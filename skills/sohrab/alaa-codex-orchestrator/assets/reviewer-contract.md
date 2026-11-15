@@ -35,3 +35,5 @@ Output contract:
 4. GATE EVIDENCE: files, diffs, commands, tests, and documents inspected.
 5. NOT ASSESSED: unavailable evidence, omitted coverage, and the limit each places on the verdict.
 If there are no findings, say so explicitly.
+
+Before the first source search in a repository whose root holds `.codegraph/`, load /alaa-code-intelligence-routing and apply its operation card.

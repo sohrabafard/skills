@@ -14,7 +14,7 @@ Then read `README.fa.md` for the routing map. Read the owning skill for anything
 
 A rule has exactly one owning file. When two skills state the same rule, one of them is wrong.
 
-**One pair is the deliberate exception.** `alaa-cc-orchestrator` and `alaa-codex-orchestrator` are one skill for two runtimes. Their behaviour is identical by design. A behavioural rule added to one is added to the other in the same change. An unexplained divergence between them is drift, not ownership. Only two things may differ:
+**One pair is the deliberate exception.** `alaa-cc-orchestrator` and `alaa-codex-orchestrator` are one skill for two runtimes. Their behaviour is identical by design. Make every change to one in the other in the same change. Add a behavioural rule to both in identical terms. Express a mechanics change as its equivalent in the other runtime's idiom. When the other runtime has no equivalent, record that in the other pack's changelog in the same change. An unexplained divergence between them is drift, not ownership. Only two things may differ:
 
 - the mechanics, expressed in each runtime's own idiom;
 - delegation polarity, which stays matched to each target family, because flattening it yields either a swarm or a single-threaded session, and neither errors.

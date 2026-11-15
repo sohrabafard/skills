@@ -1,5 +1,9 @@
 # Changelog
 
+## 6.0.1 - 2026-11-15
+
+- Every managed role except `alaa-instruction-reviewer` and `alaa-verifier` now carries one instruction: load /alaa-code-intelligence-routing before the first source search in a CodeGraph-indexed repository and apply its operation card. This is the Codex equivalent of the plain-name `skills:` preload in `alaa-cc-orchestrator` 6.0.1: Codex has no preload, so the role instruction names the skill. One week of Codex sessions showed about 5,800 `exec` calls with shell search or read against about 350 with CodeGraph (coarse count, 2026-11-15).
+
 ## 6.0.0 - 2026-11-14
 
 - Owner direction, 2026-11-14: "I expect the agent to decide and act like a senior developer." The lead makes one verification decision per task at plan time and needs a stated reason for an independent observer. `references/verification-and-gates.md` owns the decision, six floors with reasons, evidence, after-a-fix and who-fixes; `alaa-workflow references/review-mode.md` owns consequence-based triage.
