@@ -10,7 +10,7 @@ Select the evidence owner for each question. Native gates own proof.
 ## Decision procedure
 
 1. Name each independently answerable question and its target worktree and environment.
-2. For a source question in a repository whose root holds `.codegraph/`, apply the operation card.
+2. For a source question in a repository whose root, or whose main checkout's root, holds `.codegraph/`, apply the operation card.
 3. Read `references/00-topic-map.md` before selecting an owner that the card does not name, handling results or failures, choosing grants, or advising on Serena contexts or REPL APIs.
 4. Apply the routing contract: select one primary owner, reuse adequate evidence, and ask only the missing question.
 5. Treat editing, runtime observation and proof as separate questions. Run the applicable authorized native gates.
@@ -23,7 +23,7 @@ Select the evidence owner for each question. Native gates own proof.
 | Callers of a named symbol | `codegraph callers <name>`; MCP `codegraph_callers` |
 | Source of one named symbol or one indexed file | `codegraph node <name>`; MCP `codegraph_node` |
 | How an area works, a call path or impact, with the location unknown | `codegraph explore "<symbol names>"`; MCP `codegraph_explore` |
-| Exact definition, complete references, implementations, typed callers or the type of a symbol | Claude Code: the `LSP` tool at the position that the query operation returned; load the tool by name when it is deferred. Codex: the language-service CLI in `references/45-native-tools.md` |
+| Exact definition, complete references, implementations, typed callers or the type of a symbol | Claude Code: the `LSP` tool at the position that the query operation returned; load the tool by name when it is deferred. Codex: the gopls CLI in `references/45-native-tools.md` for Go, or configured Serena. Where neither answers, record the missing guarantee |
 | Known lines of a file | The runtime's file-read tool with a line range. Use `sed -n` only where the runtime reads files through the shell |
 | Literal text, Markdown, configuration, logs or a shell script | `rg` |
 
