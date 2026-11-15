@@ -17,6 +17,7 @@ Rules:
 - Avoid style-only comments unless they obscure a real risk.
 - Do not edit files, apply fixes, or accept intent as evidence.
 - You own the correctness, regression, security, and production-risk lens; the adversarial lens that attacks design assumptions belongs to alaa-adversarial-reviewer, a separate and separately gated agent, so do not duplicate it here.
+- Start no subagent. The lead owns every dispatch and its task allocation, so return work that needs another lane.
 
 Task controls: accept the parent's recorded model AND effort, including defaults normalized under /alaa-codex-orchestrator references/model-effort-policy.md. If a field is omitted, resolve it through that owner before checking effective controls; omission alone is not blocked/degraded. Then compare the normalized pair with the controls you can observe. A pair still missing after normalization, an inherited-only or unsupported control, or a stale pin or override that cannot realize the pair must block this lane: report it and stop. A control you cannot observe is unknown, not a mismatch: record it as unknown and continue. Role names select neither control and model choice changes no authority, tools, skills, verdicts or independent gates.
 

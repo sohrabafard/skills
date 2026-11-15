@@ -3,7 +3,7 @@ name: alaa-instruction-reviewer
 description: Independent read-only reviewer for prompts, skills, agent definitions, and repository instructions. Checks behavioral contracts, authority, ownership, and compression fidelity; never edits.
 tools: Read, Glob, Grep
 skills:
-  - /alaa-prompting-guide
+  - alaa-prompting-guide
 color: red
 ---
 

@@ -53,7 +53,7 @@ In orchestrator mode, adopt an existing parent plan. `/alaa-workflow` owns plan,
 
 ## 2. Main-thread contract
 
-Use `references/routing-matrix.md` for the actual main-thread task selection and /alaa-prompting-guide for current capabilities and control mechanics. A requested profile is not evidence of this session's observed identity.
+Use `references/routing-matrix.md` for the actual main-thread task selection and /alaa-prompting-guide for current capabilities and control mechanics. Report configured and requested settings separately from observed identity. Unobservable values stay unknown.
 
 The main thread owns goal normalization, scope control, repository-aware lanes, selection and dispatch authority, reconciliation, verification and review, specialist triggers, truthful reporting and stopping.
 
@@ -89,7 +89,7 @@ Every dispatch carries `/alaa-low-noise`. Every return carries findings, verdict
 
 For EVERY dispatch, apply the model AND effort allocation and the role triggers in `references/routing-matrix.md`. Before explicit dispatch, normalize omitted controls through `references/model-effort-policy.md`. `references/agent-catalog.md` owns role authority and output.
 
-Choose one correctness reviewer for a scope. Deep review changes the review task, so it requires its own justified model AND effort selection. `alaa-reviewer-deep` is a compatibility identity with the same authority, never a fixed-model escalation.
+Choose one correctness reviewer for a scope. Deep review changes the review task, so it requires its own justified model AND effort selection. `alaa-reviewer-deep` is a compatibility identity with the same authority, never a fixed-model escalation. Record the deep-review trigger without creating a duplicate review lane.
 
 Report a missing model or role as blocked or degraded; never fall back silently. Diagnose context, tool and specification failures before you attribute a shortfall to capacity. Dispatch only catalog roles whose trigger holds.
 
@@ -116,7 +116,7 @@ Close with one line from the existing plan, roster and evidence: dispatches and 
 
 ## 6. Advisor-mode output
 
-Provide grounded repository findings; a lane plan with dependencies and gates; one ready-to-run prompt per lane using the templates; recommended agent, variant, and effort per lane; a verification plan and resource policy; and the risks, assumptions, and decisions that require the user. Apply section 1's artifact admission. When a plan is admitted, report the canonical plan address and recovery reference. Otherwise deliver the plan in the reply. Do not imply implementation occurred.
+Provide grounded repository findings; a lane plan with dependencies and gates; one ready-to-run prompt per lane using the templates; recommended agent, model, and effort per lane; a verification plan and resource policy; and the risks, assumptions, and decisions that require the user. Apply section 1's artifact admission. When a plan is admitted, report the canonical plan address and recovery reference. Otherwise deliver the plan in the reply. Do not imply implementation occurred.
 
 When generating a goal condition, read `alaa-prompting-guide references/06-invocation-and-composition.md`; it owns condition syntax and the skill-led kickoff.
 
@@ -127,7 +127,7 @@ Before planning or executing checks, load /alaa-testing-strategy. Read its `refe
 Schedule these pack checks through the verification decision in `references/verification-and-gates.md`. Proven aggregate coverage discharges only identical child invocations with the same scope and observer.
 
 - After instruction-contract changes, run `python3 scripts/check_agent_contracts.py`. It checks source requirements, not live model behavior.
-- After changing reviewer instructions, a contract asset, pins, agents, or version, run `python3 scripts/render_agents.py --write`, then `python3 scripts/render_agents.py --check` and `python3 scripts/validate_pack.py`. Review both generated wrappers against `assets/reviewer-contract.md`.
+- After changing agent instructions, a contract asset, pins, agents, or version, run `python3 scripts/render_agents.py --write`, then `python3 scripts/render_agents.py --check` and `python3 scripts/validate_pack.py`. Review the generated wrappers against `assets/reviewer-contract.md`, `assets/implementation-contract.md` and `assets/planner-contract.md`.
 - After any change to `agents/`, run `python3 scripts/check_agent_grants.py`. It verifies the transport-neutral templates. `references/installation.md` owns the manual live-resolution check and the installers' resolved-grant validation.
 
 For each command above, exit `0` is clean, `1` is findings, drift or grant findings, and `2` means unavailable proof. Either nonzero exit blocks completion.

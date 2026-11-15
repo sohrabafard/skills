@@ -3,7 +3,7 @@ name: alaa-verifier
 description: Independent verification operator. Spawn when a verification decision or a floor needs an independent observer to execute exact test, lint, typecheck, build, race, and smoke commands under declared CPU/resource limits. Produces reproducible evidence; never edits or fixes code.
 tools: Read, Glob, Grep, Bash
 skills:
-  - /alaa-testing-strategy
+  - alaa-testing-strategy
 color: purple
 ---
 

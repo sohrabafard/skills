@@ -1,5 +1,19 @@
 # Changelog
 
+## 6.0.2 - 2026-11-15
+
+- Pair-drift repair. Owner direction, 2026-11-15: both orchestrator packs state the same behavioural rules, and each difference takes the stronger side. The finding ids below come from the 2026-11-15 orchestrator pair drift audit in the repository's `outputs` directory.
+- D01: the four stack bindings in `assets/profile-wrappers.json` tell the lane to load its stack skills before the first edit. They no longer claim a preload, because a `/name` entry preloads nothing. `alaa-verifier` and `alaa-instruction-reviewer` hold no `Skill` tool, so their one `skills:` entry is now the plain name and preloads. `references/agent-catalog.md` *How a lane gets its skills* claims a preload only for a plain-name entry. `scripts/check_agent_grants.py` accepts the plain entry in its reach test for a role without `Skill`.
+- D05: the implementation contract adds "After editing, inspect the full diff and callers."
+- D07: `SKILL.md` section 0 adds the comparison of installed files with `assets/manifest.json` and the retirement of the installed file of a renamed or removed role.
+- D08 to D12: `alaa-adversarial-reviewer`, `alaa-spec-analyst`, `alaa-dependency-auditor`, `alaa-api-contract-reviewer` and `alaa-accessibility-reviewer` each hold the union of both packs' rules in one body. The accessibility RTL check applies where the product ships an RTL locale.
+- D13: `alaa-architecture-critic` loads five named domain skills when the change touches their surface.
+- D16: `references/routing-matrix.md` no longer cites a bug branch, which this pack does not have.
+- D17, D20: the exceptional-admission passage in the implementation contract and the deep-review sentences in `SKILL.md` section 4 hold the union of both packs and are identical in both.
+- D22: `SKILL.md` section 7 schedules `scripts/check_agent_grants.py` after any change to `agents/`.
+- D25: `alaa-security-reviewer` names `/alaa-trust-gateway-auth` with its slash.
+- Codex-only repairs, no change here: D02, D03, D04, D06, D14, D15, D18, D21, D23, D24. This pack expresses D06 by withholding `Agent` from every role. D19 stays a mechanics difference.
+
 ## 6.0.1 - 2026-11-15
 
 - Every managed role that listed the routing skill, 31 of 33, now preloads it: its `skills:` entry is the plain name `alaa-code-intelligence-routing`. One week of transcripts showed the routing body in 2 of 982 subagent contexts, and a headless probe (Claude Code 2.1.307) showed that a `/name` entry preloads nothing while a plain name preloads the body with its base directory. `scripts/check_agent_grants.py` requires the plain form.

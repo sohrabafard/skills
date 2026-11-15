@@ -35,7 +35,7 @@ Planning effort never sets worker effort. Worker selection alone needs no planne
 3. Report missing, stale or unavailable roles before dispatch. Never silently substitute a model or a generic role. Continue only the independent work whose required roles are available, and report the rest as blocked.
 4. Before relying on isolation, inspect the effective sandbox, parent overrides and MCP grants. A read-only declaration proves no enforcement. Report unobservable permissions as unknown, and operate within role restrictions.
 
-Install or update only with explicit user authorization for the target paths. Validate model-neutral source roles, grants, and generated artifacts before the first target write. Run `python3 scripts/validate_pack.py` and `python3 scripts/check_agent_grants.py` before an authorized copy of the managed agent files. Do not change unrelated agents or settings.
+Install or update only with explicit user authorization for the target paths. Validate model-neutral source roles, grants, and generated artifacts before the first target write. Run `python3 scripts/validate_pack.py` and `python3 scripts/check_agent_grants.py` before an authorized copy of the managed agent files. After the copy, compare the SHA-256 of each installed managed file with its entry in `assets/manifest.json`, and report each missing or different file. A copy removes no file, so a renamed or removed managed role stays discoverable. During the same authorized update, move its old installed file out of the agent discovery directory under that update's target-path authority. Verify the new role and the absence of the retired role before claiming activation. Do not change unrelated agents or settings.
 
 ## 1. Operating modes
 
@@ -91,7 +91,7 @@ Every dispatch carries `/alaa-low-noise`. Every return carries findings, verdict
 
 For EVERY dispatch, apply the model AND effort allocation and the role triggers in `references/routing-matrix.md`. Before explicit dispatch, normalize omitted controls through `references/model-effort-policy.md`. `references/agent-catalog.md` owns role authority and output.
 
-Choose one correctness review profile for a scope. Both standard and deep review routes use the existing `alaa-reviewer`. Record the deep-review trigger without creating a duplicate review lane.
+Choose one correctness review profile for a scope. Both standard and deep review routes use the existing `alaa-reviewer`. Deep review changes the review task, so it requires its own justified model AND effort selection. Record the deep-review trigger without creating a duplicate review lane.
 
 Report a missing model or role as blocked or degraded; never fall back silently. Diagnose context, tool and specification failures before you attribute a shortfall to capacity. Dispatch only catalog roles whose trigger holds.
 
@@ -130,8 +130,9 @@ Schedule these pack checks through the verification decision in `references/veri
 
 - After instruction-contract changes, run `python3 scripts/check_agent_contracts.py`. It checks source requirements, not live model behavior.
 - After changing agent instructions, a contract asset, pins, agents, or version, run `python3 scripts/render_agents.py --write`, then `python3 scripts/render_agents.py --check` and `python3 scripts/validate_pack.py`. Review the generated wrappers against `assets/implementation-contract.md` and `assets/planner-contract.md`.
+- After any change to `agents/`, run `python3 scripts/check_agent_grants.py`. `references/agent-catalog.md` states what it compares.
 
-For each command above, exit `0` is clean, `1` is findings or drift, and `2` means unavailable proof. Either nonzero exit blocks completion.
+For each command above, exit `0` is clean, `1` is findings, drift or grant findings, and `2` means unavailable proof. Either nonzero exit blocks completion.
 
 ## 8. Safety and authority
 

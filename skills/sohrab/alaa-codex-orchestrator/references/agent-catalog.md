@@ -93,6 +93,7 @@ assigned here, including servers unknown to this pack, are disabled in that role
 |---|---|---|
 | `alaa-explorer` | CodeGraph | docs, routing |
 | `alaa-spec-analyst` | CodeGraph | docs |
+| `alaa-planner`, `alaa-planner-high` | CodeGraph | docs |
 | `alaa-architecture-critic` | CodeGraph | docs, schema |
 | `alaa-test-strategist` | CodeGraph | docs, schema |
 | `alaa-api-contract-reviewer` | CodeGraph | docs, routing, schema |
@@ -138,6 +139,10 @@ it, which `/alaa-memory-os` answers; reflect is in the set because knowledge-pag
 topic that has no page. No managed role holds a retain, ingest, or capture tool, because a memory write is the main
 thread's decision under `/alaa-memory-os`. The set belongs to that skill's `hindsight` adapter: when its
 `ACTIVE_ADAPTER` changes, change this set and the grant checker together.
+
+## How a lane gets its skills
+
+Before dispatch, verify the role can reach its bindings under `alaa-workflow references/companion-routing.md`.
 
 ## Policy and runtime evidence
 

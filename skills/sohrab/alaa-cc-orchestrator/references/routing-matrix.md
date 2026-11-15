@@ -76,7 +76,7 @@ This orchestrator owns the actual task complexity, priority, model and effort de
 3. **Select the cheapest suitable pair.**
    1. Evaluate the cheapest eligible supported available model AND effort pair for EVERY role: evidence, planning, implementation, verification, review, specialists, documentation and rule-writer.
    2. A task has bounded suitability only when it has all of these: an explicit outcome, a finite named scope, grounded local contracts/known invariants, a known pattern or causal path, settled cross-boundary decisions, bounded local discretion and a discriminating check.
-   3. Non-bug semantic work needs no reproduced failure. The mechanical and bug branches keep their own predicates below.
+   3. Non-bug semantic work needs no reproduced failure. The mechanical branch keeps its own predicates below.
    4. Select the least costly suitable available pair. Depart from it only when an explicit user choice or recorded task evidence justifies the departure. Apply no quotas.
    5. Justify model and effort separately. Base each on the remaining reasoning need, the priority, current official guidance and applicable prior evidence.
    6. For each cheaper pair you reject, record the actual failed fit predicate or stronger task-specific evidence, the decomposition you rejected, and the applicable exact source row and its date. Titles, volume, priority labels and whole-goal complexity are not failed predicates.

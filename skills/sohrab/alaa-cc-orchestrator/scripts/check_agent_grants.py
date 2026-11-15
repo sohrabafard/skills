@@ -224,7 +224,8 @@ def grant_failures(
 
     can_invoke = (allow is None and "Skill" not in deny) or (allow is not None and "Skill" in allow)
     if not can_invoke:
-        for unreachable in sorted(named_skills(body, roots) - skills):
+        listed = {"/" + skill.lstrip("/") for skill in skills}
+        for unreachable in sorted(named_skills(body, roots) - listed):
             failures.append(
                 f"{name}: names {unreachable} but holds no Skill tool and does not preload it"
             )

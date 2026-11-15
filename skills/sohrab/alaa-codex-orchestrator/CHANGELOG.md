@@ -1,5 +1,19 @@
 # Changelog
 
+## 6.0.2 - 2026-11-15
+
+- Pair-drift repair. Owner direction, 2026-11-15: both orchestrator packs state the same behavioural rules, and each difference takes the stronger side. The finding ids below come from the 2026-11-15 orchestrator pair drift audit in the repository's `outputs` directory.
+- D02, D03, D04: `alaa-documenter`, `alaa-explorer` and `alaa-browser-qa` gain the scope, return-to-lead and completion rules of their Claude counterparts. Browser QA tests the declared scenario and its supplied boundary states, and returns missing decisions to the lead.
+- D06: the planner contract, the reviewer contract and 18 hand-written roles add "Start no subagent. The lead owns every dispatch and its task allocation, so return work that needs another lane." `alaa-instruction-reviewer` already forbids delegation and is unchanged.
+- D08 to D12: `alaa-adversarial-reviewer`, `alaa-spec-analyst`, `alaa-dependency-auditor`, `alaa-api-contract-reviewer` and `alaa-accessibility-reviewer` each hold the union of both packs' rules in one body. The accessibility RTL check applies where the product ships an RTL locale.
+- D13: `alaa-architecture-critic` loads its domain skills only when the change touches their surface, and the list adds /alaa-laravel-architecture.
+- D14: `SKILL.md` section 7 covers every agent-instruction change and all three contract assets.
+- D15, D18: `references/agent-catalog.md` adds the pre-dispatch skill-reach check and the planner grant row.
+- D17, D20: the exceptional-admission passage in the implementation contract and the deep-review sentences in `SKILL.md` section 4 hold the union of both packs and are identical in both.
+- D21, D23: `SKILL.md` reports configured and requested settings separately from observed identity, and advisor-mode output recommends agent, model, and effort.
+- D24: native Advisor consultation in the Claude pack is a Claude Code mechanic. `alaa-prompting-guide references/11-codex-runtime-features.md` documents no Codex equivalent (read 2026-11-15), so this pack carries no such route.
+- Claude-only repairs, no change here: D01, D05, D07, D16, D22, D25. D19 stays a mechanics difference: this pack's instruction reviewer inspects files through shell and Git commands.
+
 ## 6.0.1 - 2026-11-15
 
 - Every managed role except `alaa-instruction-reviewer` and `alaa-verifier` now carries one instruction: load /alaa-code-intelligence-routing before the first source search in a CodeGraph-indexed repository and apply its operation card. This is the Codex equivalent of the plain-name `skills:` preload in `alaa-cc-orchestrator` 6.0.1: Codex has no preload, so the role instruction names the skill. One week of Codex sessions showed about 5,800 `exec` calls with shell search or read against about 350 with CodeGraph (coarse count, 2026-11-15).
