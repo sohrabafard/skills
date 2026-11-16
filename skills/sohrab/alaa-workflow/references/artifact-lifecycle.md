@@ -4,33 +4,48 @@ Choose the smallest plan that preserves authority, acceptance and recovery.
 
 ## Admission
 
-Before any implementation, record the outcome, scope, settled approach, prerequisites, exact skill bindings, acceptance and focused checks. For bounded single-phase work, keep this compact plan in the bound task issue when Beads is available, or in the session if durable tracking is unnecessary. `references/task-tracking.md` owns availability and tracking triggers. Advice and ordinary review require no execution plan.
+Before any implementation, record the outcome, scope, settled approach, prerequisites, exact skill bindings, acceptance and focused checks. That record is the compact plan.
 
-Authorized multi-phase, resumable, delegated or handoff-sensitive work, including a continuing fix loop, requires a complete durable execution plan before dependent implementation or write-lane dispatch. Continue an existing family's contract. For a new eligible execution with available bound Beads, use the native family in `references/task-tracking.md`. Use a Markdown family when Beads is unavailable at admission or an explicit file request or file-consuming tool requires one. Record the file consumer. Use one canonical plan.
+| Work | Plan |
+|---|---|
+| Advice or ordinary review | No execution plan |
+| Bounded single-phase work | The compact plan, in the bound task issue when Beads is available, or in the session when durable tracking is unnecessary |
+| Authorized multi-phase, resumable, delegated or handoff-sensitive work, including a continuing fix loop | A complete durable execution plan, before dependent implementation or write-lane dispatch |
 
-A design-plan or execution-plan request authorizes saving the admitted planning deliverable. Plan-only uses the admitted Markdown or host planning surface and authorizes no implementation. Explicit no-file, read-only or chat-only limits prevail. Native Plan Mode uses only its host-permitted planning surface until execution is approved. A native plan file opens with a Persian decision summary (overall picture, goals, open questions), then a line containing only `<!-- design-body -->`, then the complete English design. Use that file as the approved design source after approval. If a higher-priority limit prevents a required durable record, report the gap and pause dependent work.
+For a durable plan, continue an existing family's contract. For a new eligible execution with available bound Beads, use the native family in `references/task-tracking.md`. Use a Markdown family when Beads is unavailable at admission, or when an explicit file request or a file-consuming tool requires one; record that file consumer. Use one canonical plan.
 
-Report the saved `beads:<root-id>` or the plan and checkpoint paths. A session outline cannot satisfy durable admission.
+A design-plan or execution-plan request authorizes saving that planning deliverable. Plan-only authorizes no implementation. An explicit no-file, read-only or chat-only limit prevails. Native Plan Mode uses only its host-permitted planning surface until execution is approved. A native plan file opens with a Persian decision summary (overall picture, goals, open questions), then a line that contains only `<!-- design-body -->`, then the complete English design. After approval, use that file as the approved design source. When a higher-priority limit prevents a required durable record, report the gap and pause dependent work.
+
+Report the saved `beads:<root-id>`, or the plan and checkpoint paths. A session outline never satisfies durable admission.
 
 ## Plan kinds and approval
 
-Every durable plan declares `Plan kind: design` or `Plan kind: execution`. Existing unmarked families retain their recorded authority and kind.
+Every durable plan declares `Plan kind: design` or `Plan kind: execution`. An existing unmarked family keeps its recorded authority and kind.
 
-A **design** plan discusses ideas, alternatives and algorithms before implementation. It always uses `Task store: local` and `Profile: resumable`, with no Beads binding, issue registration, phase, task or subtask hierarchy, executable checklist, prompt pack or machine state. Keep outcome, scope, proposed design, acceptance criteria, `## Decisions` with `Date | Owner | Decision | Reason`, and `## Open Questions`. Date and attribute each decision and its reason. `references/context-continuity.md` owns its required handoff package and checkpoint. Stop design work by presenting the design for explicit user approval; do not dispatch implementation from it.
+A **design** plan discusses ideas, alternatives and algorithms before implementation. It always uses `Task store: local` and `Profile: resumable`. It has no Beads binding, issue registration, phase, task or subtask hierarchy, executable checklist, prompt pack or machine state. It keeps the outcome, scope, proposed design, acceptance criteria, `## Decisions` with `Date | Owner | Decision | Reason`, `## Open Questions`, and the handoff package and checkpoint that `references/context-continuity.md` defines. Date and attribute each decision and its reason. Design work ends when you present the design for explicit user approval; dispatch no implementation from it.
 
-The design header records `Approval status: pending|approved`, `Approval by`, `Approval on`, and `Approval evidence`. Pending values remain explicit. Approval requires an identifiable approver, a valid ISO date and evidence of the user's approval of this design and scope. Do not infer approval from file creation, schema success or a request to discuss the design. A material change to an approved design returns affected decisions to pending approval before dependent execution.
+The design header records `Approval status: pending|approved`, `Approval by`, `Approval on` and `Approval evidence`. Approval needs an identifiable approver, a valid ISO date and evidence that the user approved this design and scope. Never infer approval from file creation, schema success or a request to discuss the design. A material change to an approved design returns the affected decisions to pending before dependent execution.
 
-An **execution** plan admits implementation only with execution authority and settled design. Record actual design approval with its source and scope when required or obtained. Where the implementation request delegates design decisions, record that request, authorized scope, and decision owner separately. Resolve and record those decisions before dependent work. Delegation is no evidence of human design approval. Unresolved human-only decisions, pending required approval, or changes outside the approved scope block dependent work. Neither an issue nor offline validation authenticates authority.
+An **execution** plan admits implementation only with execution authority and a settled design. Record the authority by its actual route:
 
-For Markdown execution with an approved separate design, set `Approved design` to its readable portable path and resolve its approval before execution. For a design approved in the current session, use a **single plan**. Set `Approved design: embedded` and the four approval fields. Keep `## Approved Design` last. After its `<!-- approved-design:start -->` line, copy the source after `<!-- design-body -->`, or the whole source when it has no marker, byte-for-byte. A material change returns the affected approval to pending.
+- **Approved design:** the actual approval, with its source and scope.
+- **Delegated decisions:** the implementation request that delegates design decisions, its authorized scope and the decision owner. Resolve and record those decisions before dependent work. Delegation is no evidence of human design approval.
 
-For Markdown execution with delegated decisions, use `Execution authority: delegated` with `Execution source`, `Execution scope` and `Decision owner`. Record the settled design in `## Execution Design`. Approval and delegated headers are mutually exclusive in this file. Preserve existing approval evidence when continuing an approved family.
+An unresolved human-only decision, a pending required approval or a change outside the approved scope blocks dependent work. Neither an issue nor offline validation authenticates authority.
 
-Before execution, populate ordered phases, acceptance, dependencies, ownership, exclusions, validation, resume context and skill bindings through their owners. `references/task-tracking.md` owns task authority and hierarchy. `references/companion-routing.md` owns exact skill bindings.
+A Markdown execution plan records the route in its header:
+
+- **Separate approved design:** set `Approved design` to its readable portable path, and resolve its approval before execution.
+- **Design approved in the current session:** use a single plan. Set `Approved design: embedded` and the four approval fields. Keep `## Approved Design` last. After its `<!-- approved-design:start -->` line, copy the source after `<!-- design-body -->`, or the whole source when it has no marker, byte-for-byte.
+- **Delegated decisions:** set `Execution authority: delegated` with `Execution source`, `Execution scope` and `Decision owner`, and record the settled design in `## Execution Design`. One plan never carries both the approval headers and the delegated headers.
+
+Preserve existing approval evidence when you continue an approved family.
+
+Before execution, populate the ordered phases, acceptance, dependencies, ownership, exclusions, validation, resume context and skill bindings.
 
 ## Markdown profiles
 
-Select a file profile only after admitting a Markdown family. Design uses the profile specified above. For execution and existing compatible families:
+Select a file profile only after you admit a Markdown family; no profile overrides an admission exception. Design uses `resumable`. For execution and existing compatible families:
 
 | Profile | Plan | Checkpoint | JSON state | Prompt pack | Use for |
 |---|---:|---:|---:|---:|---|
@@ -39,52 +54,42 @@ Select a file profile only after admitting a Markdown family. Design uses the pr
 | `orchestrated` | required | required | required | opt-in | An automated consumer parses the state |
 | `legacy` | required | required | required | required | An old four-file consumer requires it |
 
-Use `resumable` for multi-phase work: event-driven checkpoints preserve position without repeating discovery after interruption. Choose `direct` deliberately for genuinely single-phase bounded work; it accepts rediscovery after interruption. No profile promises a fixed checkpoint size or update count.
-
-Apply admission before selecting a profile; no profile overrides its exceptions. An actionable execution-plan request uses `resumable` unless a real consumer requires a heavier profile.
-
-For execution task authority and hierarchy, apply `references/task-tracking.md` `## Select before tracking-dependent work` regardless of profile.
+An actionable execution-plan request uses `resumable` unless a real consumer requires a heavier profile. Choose `direct` deliberately: it accepts rediscovery after an interruption. No profile promises a fixed checkpoint size or update count. Under every profile, task authority and hierarchy follow `references/task-tracking.md` `## Select before tracking-dependent work`.
 
 ## Markdown helpers
 
-Set `SKILL_DIR` to the installed skill directory. From the target repository root, run `python3 "$SKILL_DIR/scripts/init_workflow_files.py" --task <title> --plan-kind design` for design. For execution use `--plan-kind execution` and one authority route:
+Set `SKILL_DIR` to the installed skill directory, and run both helpers from the target repository root.
+
+**Initializer.** For design, run `python3 "$SKILL_DIR/scripts/init_workflow_files.py" --task <title> --plan-kind design`. For execution, use `--plan-kind execution` and one authority route:
 
 - `--approved-design <path>` for linked approval.
 - `--approved-design embedded --design-source <path> --approval-by <approver> --approval-on <YYYY-MM-DD> --approval-evidence <evidence>` for embedded approval.
 - `--execution-source <request-reference> --execution-scope <authorized-scope> --decision-owner <owner>` for delegated design. Fill the generated design before execution.
 
-Supply either `--task-store beads --beads-binding <portable-reference>` or `--task-store local --beads-unavailable-reason <observed failure>` through `references/task-tracking.md`. Use `--profile <profile>`, `--review-boundary phase|final` or `--with-prompts` when admitted. Exit `0` creates files (or prints paths on dry run), `1` means collision without writes, and `2` means the invocation could not run. Continue an existing family instead of forcing over it.
+Supply either `--task-store beads --beads-binding <portable-reference>` or `--task-store local --beads-unavailable-reason <observed failure>` through `references/task-tracking.md`. Use `--profile <profile>`, `--review-boundary phase|final` or `--with-prompts` when admitted. Exit `0` creates the files, or prints their paths on a dry run. Exit `1` means a collision and no write; continue the existing family instead of forcing over it. Exit `2` means that the invocation could not run.
 
-Before handoff and completion, run `python3 "$SKILL_DIR/scripts/validate_workflow_files.py" --plan <path>`. It checks kind, explicit companion references or selected stem, and legacy compatibility offline. Exit `0` means no blocking errors, `1` blocks advancement until repaired, and `2` means validation could not run. Warnings alone do not fail it. Live Beads checks still apply when the file family binds Beads.
+**Validator.** Before handoff and completion, run `python3 "$SKILL_DIR/scripts/validate_workflow_files.py" --plan <path>`. It checks kind, explicit companion references or the selected stem, and legacy compatibility, all offline. Exit `0` means no blocking errors; warnings alone do not fail it. Exit `1` blocks advancement until repaired. Exit `2` means that validation could not run, which is never a pass. Live Beads checks still apply when the family binds Beads.
 
 ## Size and consolidate the plan
 
 This section and the dependency and concurrency plan below apply to execution.
 
-Before execution, classify each phase and each delegated lane into one of these classes:
+For each phase and each delegated lane, record the settled and open decisions and the invariants. Assess risk apart from reasoning complexity: sensitivity sets the gates. Planning effort never sets worker effort.
 
-- missing facts to retrieve or clarify;
-- mechanical work with settled decisions;
-- bounded semantic judgment with a local causal path and decisive acceptance evidence;
-- ordinary engineering judgment;
-- coupled judgment with interacting unresolved decisions.
+Merge phases or tasks that share context, ownership and a validation barrier when the split buys no decision boundary and no authority boundary. Keep every acceptance outcome, evidence mapping, dependency, exclusion and required observer. Keep phases separate, and record why, when a decision, a changed tested state, an independent authority or an integration barrier requires it.
 
-Record the reason for the class, the settled and open decisions, and the invariants. Assess risk separately from the class: sensitivity determines the gates, and reasoning complexity does not. The runtime orchestrator owns the actual task model and effort allocation. `/alaa-prompting-guide` supplies capabilities and runtime mechanics. Planning effort never determines worker effort.
-
-Merge phases or tasks that share context, ownership and a validation barrier when separating them buys no decision boundary and no authority boundary. Preserve every acceptance outcome, evidence mapping, dependency, exclusion and required observer. Keep phases separate when a decision, a changed tested state, an independent authority or an integration barrier requires it, and record why. `references/workspace-and-integration.md` owns shared-check coverage and evidence reuse.
-
-After finalizing tasks, dependencies and consolidation, route allocation for EVERY role through the active runtime orchestrator.
+After you finalize tasks, dependencies and consolidation, route allocation for EVERY role through the active runtime orchestrator.
 In Codex, `/alaa-codex-orchestrator` owns `references/routing-matrix.md`.
 In Claude Code, `/alaa-cc-orchestrator` owns `references/routing-matrix.md`.
-Workflow records the task scope and complexity, the priority and its reason, the role authority identity, the explicit model AND effort, the source and evidence, the invocation surface, the requested and effective controls, and availability and limits. It records them alongside the conflict barriers and references to the selected store's readiness. Workflow chooses no role-based pair. A material change reassesses only the affected remaining tasks; never replay completed work.
+Workflow chooses no pair. It stores the orchestrator's allocation record, with the explicit model AND effort for each task, beside the conflict barriers and the references to the store's readiness. A material change reassesses only the affected remaining tasks; never replay completed work.
 
 ## Dependency and concurrency plan
 
-Use the selected task authority for dependency edges and ready sets through `references/task-tracking.md`. Each lane names its disjoint write ownership, its shared-resource conflicts (including fixtures, generators, ports and test environments), its integration barriers, and the reason it runs in parallel or serialized. Apply `references/workspace-and-integration.md` for shared-file ownership and stopped-writer recovery. Disjoint files alone do not prove independence. Keep coupled decisions together. Serialize overlapping writes and conflicting resources. Record a dependency edge only where a lane or phase consumes another's output; an edge added for ordering convenience makes unrelated work wait. `alaa-codex-orchestrator` or `alaa-cc-orchestrator` Dispatch discipline owns when each lane starts.
+Take dependency edges and ready sets from the selected task authority through `references/task-tracking.md`. Each lane names its disjoint write ownership, its shared-resource conflicts (fixtures, generators, ports and test environments included), its integration barriers, and the reason it runs in parallel or serialized. Disjoint files alone prove no independence: apply `references/workspace-and-integration.md` `## Shared-file ownership and stopped-writer recovery`. Keep coupled decisions together. Serialize overlapping writes and conflicting resources. Record a dependency edge only where a lane or phase consumes another's output, because an edge added for ordering convenience makes unrelated work wait. `alaa-codex-orchestrator` or `alaa-cc-orchestrator` Dispatch discipline owns when each lane starts.
 
-Record each phase's post-reconciliation test collection, combined repair/retest and declared review barriers, with their responsible owners, exact check coverage, failure and blocker evidence, and resume position. Route generic execution and the early-repair exception to /alaa-testing-strategy `references/100-test-execution.md`; `alaa-codex-orchestrator` and `alaa-cc-orchestrator` `references/verification-and-gates.md` own the scheduling of phases and reviews and independent observers. Workflow records barriers without redefining them. Final-only review keeps phase test evidence separate from pending review.
+Record each phase's post-reconciliation test collection, combined repair/retest and declared review barriers, with their owners, exact check coverage, failure and blocker evidence, and resume position. Workflow records barriers without redefining them. /alaa-testing-strategy `references/100-test-execution.md` owns generic execution and the early-repair exception. `alaa-codex-orchestrator` and `alaa-cc-orchestrator` `references/verification-and-gates.md` schedule phases, reviews and independent observers. Final-only review keeps phase test evidence apart from pending review.
 
-Expose independently ready work to the runtime orchestrator, and impose no workflow-wide writer limit. The orchestrator owns observed capacity, dispatch mechanics and resource scheduling. Query and reconcile readiness at completion, scope-change and handoff boundaries. Keep no persistent second ready-set cache and no scheduler artifact.
+Expose independently ready work to the runtime orchestrator, and impose no workflow-wide writer limit. Query and reconcile readiness at completion, scope-change and handoff boundaries. Keep no persistent ready-set cache and no scheduler artifact.
 
 ## Markdown paths and correlation
 
@@ -95,17 +100,12 @@ Expose independently ready work to the runtime orchestrator, and impose no workf
 
 Continue an active task's existing family and stem. Resolve companions only from explicit references or this selected stem; never attach an unrelated newest file.
 
-## Contents, updates, resume and delegation
+## Artifact contents
 
-This file owns only where each artifact lives and what it may contain.
-
-- `references/context-continuity.md` owns why the artifacts divide as they do, handoff field meanings and contents, when a field earns a line, checkpoint fields, status and cursor ownership, JSON projection, all update events, snapshot derivation, the read order, the cold-start test and the post-compaction rules. Do not restate them here.
-- Kind-specific contents follow `## Plan kinds and approval`. Task acceptance and results follow `references/task-tracking.md` `## Acceptance and evidence by level`.
-- Update only the admitted artifact set. Keep expensive learning in the handoff package, not in a position snapshot. Keep no duplicate phase checklists, review history, lane definitions, documentation status or touched-file histories in secondary state.
-- `SKILL.md` `## Delegate selectively` owns which work may be delegated, what the parent stays responsible for and where lane ownership is recorded. It forbids a lane-plan file, because a second plan splits the workflow destination in two; task-store ownership stays separate.
+Update only the admitted artifact set. `references/context-continuity.md` defines what each artifact holds and when to update it. Keep expensive learning in the handoff package, not in a position snapshot. Keep no duplicate phase checklists, review history, lane definitions, documentation status or touched-file histories in secondary state.
 
 ## Compatibility
 
-Execution compatibility aliases `--with-state`, `--state-only`, `--no-continuation`, `--lane`, `--parent-plan`, and `--mode` remain subject to the initializer's kind checks and emit deprecation warnings when they alter profile behavior. They never bypass kind admission. New initialization rejects `--state-only`: it cannot represent an execution plan and hierarchy. Continue historical standalone snapshots in place. Use `--profile legacy` when an old execution consumer requires four files.
+The execution aliases `--with-state`, `--state-only`, `--no-continuation`, `--lane`, `--parent-plan` and `--mode` stay subject to the initializer's kind checks. They warn when they alter profile behavior, and they never bypass kind admission. New initialization rejects `--state-only`, because it cannot represent an execution plan and its hierarchy; continue a historical standalone snapshot in place. Use `--profile legacy` when an old execution consumer requires four files.
 
-Completed legacy artifacts remain historical evidence. Validate them with warnings; do not rewrite them unless they become actively executable.
+A completed legacy artifact is historical evidence. Validate it with warnings, and rewrite it only when it becomes actively executable.

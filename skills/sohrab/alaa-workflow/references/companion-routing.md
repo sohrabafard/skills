@@ -1,24 +1,26 @@
 # Companion Skill Routing
 
-`alaa-workflow` owns workflow admission, hierarchy, plan and checkpoint continuity, delegation boundaries and handoff. The mirrored runtime orchestrators own review cadence scheduling. Pair with the narrowest owner for every technical decision.
+Pair with the narrowest owner for every technical decision. Repository truth and closer instructions override generic skill guidance. Never copy a domain skill's rules into the workflow plan or state.
 
 ## Core companions
 
-- Prompt design, supported model and effort capabilities and source guidance, runtime feature syntax, and freshness: `/alaa-prompting-guide`. It owns capability and trigger-syntax evidence. Actual task allocation belongs to the runtime orchestrator. Add `/openai-docs` for current OpenAI guidance.
-- Actual task model AND effort allocation for every role and per-goal orchestration: `/alaa-codex-orchestrator` in Codex, `/alaa-cc-orchestrator` in Claude Code — a bounded goal or single phase across parallel role lanes. The workflow plan owns phase gates and records the orchestrator's final report as phase evidence.
-- Context economy and output discipline: `/alaa-low-noise`. It owns what enters the context window and what gets printed. This skill owns what is written down durably; neither substitutes for the other.
-- Prior-context recall when its trigger holds, and durable publication after curation: `/alaa-memory-os`. Recall supplies leads to verify against repository truth; this workflow still owns active plans, checkpoints, evidence and handoffs.
-- Reusable-context curation at signal-bearing phase boundaries and before completion: `/alaa-extract-agent-lessons`. It owns admission and the decision-interface, judgment-rubric, and knowledge-card shapes. This workflow owns the intermediate handoff location and the final lifecycle gate; `/alaa-memory-os` owns durable publication.
-- Which surface answers a phase's code question (a code graph, a semantic language server, a framework MCP, or plain read and search) and which of those a delegated lane may be granted: `/alaa-code-intelligence-routing`. Invoke it before the first non-trivial code-evidence choice, and consume that result instead of retrieving the same fact twice. Record what a lane established as a confirmed fact in the handoff package, with the owner that established it, so the next phase does not re-run the query.
-- Codex runtime and harness failures inside WSL/Linux: `/alaa-codex-runtime-ops`. Codex-only, with no Claude Code equivalent.
+| Decision | Owner |
+|---|---|
+| Prompt design, model and effort capability, runtime feature syntax and freshness | `/alaa-prompting-guide`. Add `/openai-docs` for current OpenAI guidance |
+| The task model AND effort for every role, review cadence scheduling, and per-goal orchestration of a bounded goal or single phase across parallel role lanes | `/alaa-codex-orchestrator` in Codex, `/alaa-cc-orchestrator` in Claude Code. The workflow plan owns phase gates and records the orchestrator's final report as phase evidence |
+| What enters the context window and what gets printed | `/alaa-low-noise`. This skill owns what is written down durably |
+| Prior-context recall when its trigger holds, and durable publication after curation | `/alaa-memory-os`. Recall supplies leads to verify against repository truth |
+| Reusable-context curation at a signal-bearing phase boundary and before completion | `/alaa-extract-agent-lessons`. This workflow sets the timing and the parking location |
+| Which surface answers a code question, and which surfaces a delegated lane may be granted | `/alaa-code-intelligence-routing`. Record what a lane established as a confirmed fact in the handoff package, with the owner that established it, so that the next phase does not repeat the query |
+| Codex runtime and harness failures inside WSL/Linux | `/alaa-codex-runtime-ops`. Codex-only |
 
 ## Mandatory Ponytail binding
 
 Use /alaa-ponytail for every workflow or orchestrator task unless the user explicitly opts out. Load it before planning. Resolve its level from the skill and from any user selection. Apply it within the existing scope, authority, domain rules, required checks and review cadence.
 
-Bind every child lane explicitly, including external specialists. Pass the exact skill binding and the resolved level. When the user opts out, pass that exception and its scope instead. On resume, redispatch or continuation, recheck the user's opt-out and level. Preserve the opt-out within its stated scope until the user changes it; a recorded binding cannot override it.
+Bind every child lane explicitly, external specialists included. Pass the exact skill binding and the resolved level, or the user's opt-out and its scope. On resume, redispatch or continuation, recheck the opt-out and the level. An opt-out holds within its stated scope until the user changes it; a recorded binding cannot override it.
 
-Before continuing a child, compare its prior Ponytail assignment with the current one. If the user opted out, explicitly tell the child to stop applying the mode. For a new binding or changed level, send the exact current binding and level. The child applies the update before further work.
+Before you continue a child, compare its prior Ponytail assignment with the current one. After an opt-out, tell the child to stop applying the mode. After a new binding or a changed level, send the exact current binding and level. The child applies the update before further work.
 
 ## Domain owners
 
@@ -28,23 +30,31 @@ Before continuing a child, compare its prior Ponytail assignment with the curren
 - Public and cross-service contracts: `alaa-services-contract`; use `alaa-trust-gateway-auth` for trust boundaries.
 - Queues and jobs: `alaa-async-messaging` or `alaa-laravel-job-rabbitmq`.
 - Data: `alaa-data-layer`.
-- Subsystem design before a phase implements it: `alaa-system-design`. Route a phase there first when the phase changes an interface another component calls, moves which component writes a piece of data, alters a consistency, ordering or caching property, adds or removes a dependency between components, or creates a new deployable unit. It produces the design record the later phases implement.
-- Before designing implementation or verification, load `/alaa-testing-strategy`. It owns test necessity, layers, doubles, selectors and proof. Before you plan or run checks, read its `references/100-test-execution.md`. Before you decide resources or timing, read its `references/110-execution-resources.md`. Before you classify a result or diagnose a failure, read its `references/120-result-classification.md`. Record only the level and tier reached at the evidence owner.
+- Subsystem design before a phase implements it: `alaa-system-design`, when its trigger applies. It produces the design record that the later phases implement.
+- Test design, execution, resources and result classification: `/alaa-testing-strategy`. Load it before you design implementation or verification. Record only the proof level and tier reached at the evidence owner.
 - Security: `alaa-security-review`.
 - Observability: `alaa-observability-soc`.
-- Containers, Kubernetes, and CI/CD: the matching Docker, Kubernetes, or pipeline skill.
-- Documentation: `alaa-repo-docs` when the document language or task requires it.
-
-Repository truth and closer instructions override generic skill guidance. Do not duplicate a domain skill's rules in the workflow plan or state.
+- Containers, Kubernetes and CI/CD: the matching Docker, Kubernetes or pipeline skill.
+- Documentation: `alaa-repo-docs` when the document language or the task requires it.
 
 ## Executable skill bindings
 
-Map skills before any implementation. A compact plan records its exact bindings in its issue or session. Design may record decision owners without an execution hierarchy.
+Map skills before any implementation. A compact plan records its exact bindings in its issue or session. A design may record decision owners without an execution hierarchy.
 
-Before execution or handoff, inventory skills from the active catalog and accessible source. Use `Skill | Source | Load before | When | If unavailable` in `## Skill Bindings`. Record the exact name from the catalog or frontmatter, the readable `SKILL.md` path, the decision or load point, the observable condition (`always` when unconditional) and the absence action. Resolve relative paths from the target repository root or Markdown plan directory. Consumer plans may use a portable home-relative installed path or a readable absolute POSIX path; expand the home directory and verify the source and its frontmatter. Keep repository-owned paths portable.
+Before execution or handoff, inventory skills from the active catalog and accessible source. Record each skill in `## Skill Bindings`, with the columns `Skill | Source | Load before | When | If unavailable`:
 
-In a native plan, put shared rows in the root description and node-specific rows at their node. Each phase records its exact `Required skills`. Each task or subtask records `Required skills: inherit` from its immediate parent or a complete override list. Resolve each selected name to its applicable binding row; the closest row wins. For Markdown, keep the phase list and `[skills: inherit]` or complete override on each task mapping. If no skill applies, record `none (reason)`. Store names and binding details without copying manuals.
+| Column | Value |
+|---|---|
+| `Skill` | The exact name from the catalog or the frontmatter |
+| `Source` | The readable `SKILL.md` path, or `unavailable` |
+| `Load before` | The decision or load point |
+| `When` | The observable condition, or `always` when unconditional |
+| `If unavailable` | The absence action |
 
-An unavailable conditional owner records `Source: unavailable` and names its activating condition; when the condition activates, stop that work unless the recorded authorized fallback applies. Ask the user for approval before installing it, and never substitute it silently. A missing unconditional owner blocks its work. Draft `NEEDS_FILL` values remain visible warnings; unresolved or absent mappings block executable work. Existing active execution plans add these fields before continuing; completed legacy history remains readable without migration.
+Resolve a relative path from the target repository root or the Markdown plan directory. A consumer plan may use a portable home-relative installed path or a readable absolute POSIX path; verify the source and its frontmatter name. Keep repository-owned paths portable.
 
-Load mapped skills before their recorded decisions on first execution, resume, and delegated entry. Read phase bindings, task overrides and then subtask overrides under the hierarchy contract; pass exact skill names, sources, conditions, and absence actions to children. Resolve runtime-correct invocation through `/alaa-prompting-guide`; an empty installed result is unknown until its source is checked.
+In a native plan, put shared rows in the root description and node-specific rows at their node; the closest row wins. Each phase records its exact `Required skills`. Each task or subtask records `Required skills: inherit` from its immediate parent, or a complete override list. In Markdown, keep the phase list, and `[skills: inherit]` or a complete override on each task mapping. When no skill applies, record `none (reason)`. Store names and binding details; never copy a manual.
+
+An unavailable conditional owner records `Source: unavailable` and names its activating condition. When the condition activates, stop that work unless the recorded authorized fallback applies. Ask the user before you install the skill, and never substitute it silently. A missing unconditional owner blocks its work. A draft `NEEDS_FILL` value warns; an unresolved or absent mapping blocks executable work.
+
+Load mapped skills before their recorded decisions on first execution, on resume and on delegated entry: phase bindings, then task overrides, then subtask overrides. Pass the exact skill names, sources, conditions and absence actions to children. Resolve the invocation form for the runtime through `/alaa-prompting-guide`. An empty installed result is unknown until you check its source.
