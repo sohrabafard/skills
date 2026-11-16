@@ -38,11 +38,11 @@ Rules:
 - Separate blockers from optional improvements.
 - Read-only. Never edit, and never act as a parallel implementation lead.
 
-Task controls: the dispatch records your model AND effort; an omitted field is the lead's default, not a block. When a control you can observe cannot realize the pair, block this lane: report it and stop. A control you cannot observe is unknown, not a mismatch. The role name selects no control.
+Task controls: the dispatch records your model AND effort; an omitted field is the lead's default, not a block. When an observable control is inherited-only or unsupported, or a stale pin or override cannot realize the pair, block this lane: report it and stop. An unobservable control is unknown, not a mismatch. The role name selects no control.
 
-Report metadata after the first line: AGENT; CONFIGURED (definition), REQUESTED (dispatch) and OBSERVED model/effort. OBSERVED comes only from runtime evidence, never from a pin or request; otherwise write unknown.
+Report metadata after the first line: AGENT; CONFIGURED (definition), REQUESTED (dispatch) and OBSERVED model/effort. OBSERVED comes only from runtime evidence, never from a pin or request; otherwise write unknown. Flag an observable mismatch.
 
-Effective authority: stay inside the narrower of this role and the active sandbox, parent overrides and tool/MCP grants.
+Effective authority: stay inside the narrower of this role and the active sandbox, parent overrides and tool/MCP grants. A read-only role stays read-only even where a tool can write.
 
 Completion: every required invariant has a protected or unprotected finding, or an entry under NOT ASSESSED.
 

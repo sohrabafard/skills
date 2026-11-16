@@ -13,11 +13,12 @@ its sentence back in the named file of both packs and, where a clause is named, 
 |---|---|---|---|---|
 | 1 | all agents, `Task controls:` | The agent resolves an omitted model or effort itself through `references/model-effort-policy.md`. Replaced by "an omitted field is the lead's default, not a block". | P3 | `agent_failures`: "resolve an omitted field through" |
 | 2 | all agents, `Task controls:` | Block the lane when the pair is still missing after that normalization. The case cannot occur once rule 1 is gone. | P3 | `agent_failures`: "missing after normalization" |
-| 3 | all agents, `Task controls:` | "Model choice changes no authority, tools, skills, verdicts or independent gates." The first half of the sentence, "The role name selects no control", stays. | P1 | none; the literal "model choice changes no authority" is reworded to "The role name selects no control" |
+| 3 | all agents, `Task controls:`; `assets/implementation-contract.md` | "Model choice changes no authority, tools, skills, verdicts or independent gates", and its twin in the implementation contract, "Model selection grants no additional command or external authority." The first half of the block sentence, "The role name selects no control", stays. | P1 | none; the literal "model choice changes no authority" is reworded to "The role name selects no control" |
 | 4 | all agents, `Effective authority:` | "Before using tools, inspect the active sandbox, parent overrides and tool/MCP grants." The limit "stay inside the narrower of this role and the active sandbox, parent overrides and tool/MCP grants" stays. | P2 | none |
-| 5 | all agents, `Effective authority:` | "A read-only declaration proves no runtime enforcement; report missing enforcement evidence as unknown." No output item and no lead step reads that report. | P3 | none |
+| 5 | all agents, `Effective authority:` | "…proves no runtime enforcement; report missing enforcement evidence as unknown." No output item and no lead step reads that report. The binding half stays as "A read-only role stays read-only even where a tool can write." | P3 | none |
 | 6 | cc agents, `Runtime:` | "Runtime: Claude Code subagent." The Bash limit of a read-only role stays. | P4 | none |
 | 7 | `assets/implementation-contract.md` | "Your dispatch gives the outcome, owned files/modules, exclusions, acceptance criteria, verification commands, constraints and known dependencies." | P4 | none |
+| 7a | `assets/implementation-contract.md` | "Apply the exact registered profile and selection reason that the ratified plan records." The agent's act, the check of each recorded admission predicate, stays. | P5 | none |
 | 8 | `assets/implementation-contract.md` | The three bases of an exceptional-model admission (official route with the remaining reasoning need and the rejected alternatives; inadequacy of the high-effort workhorse; explicit user selection) and "Complexity or role identity alone is insufficient". The lead applies them under `references/routing-matrix.md`; the agent keeps "comes only from the lead's recorded task allocation" and the pointer to its profile's section. | P5 | none; the cc-only literal is reworded |
 | 9 | `assets/implementation-contract.md` | "Never assume that prose or a caller override changed pinned controls." | P1 | none |
 | 10 | `assets/implementation-contract.md` | "No lightweight trial or replay of completed work is required." | P1 | none |
@@ -40,6 +41,11 @@ its sentence back in the named file of both packs and, where a clause is named, 
 | 27 | `agents/alaa-architecture-critic` | What `/alaa-system-design` owns ("the six conditions that require a design pass, the boundary and seam tests, contract-before-code, one writer per datum, the dependency classification and the two-candidate rule"). The call line and the pointer to its `references/70-review-and-readiness.md` stay. | P5 | none |
 | 28 | `agents/alaa-performance-profiler` | What the complexity budget of `/alaa-algorithms-data-structures` contains ("the named operation, the growing input dimension, the bound, and the input size at which the bound was measured"). The three read conditions stay. | P5 | none |
 | 29 | `agents/alaa-documenter` | "which owns the thresholds, the decision order and the only grade that needs human approval" beside the size-ladder pointer. | P5 | none |
+
+Kept in the shared blocks after review of the first pass's restore commit `4c72f765`: the three
+block causes of `Task controls:` ("inherited-only or unsupported, or a stale pin or override cannot
+realize the pair"), "Flag an observable mismatch" in `Report metadata`, and the binding half of the
+read-only sentence in `Effective authority:`.
 
 ## 2. Sentences removed as restatements of a skill the agent loads
 

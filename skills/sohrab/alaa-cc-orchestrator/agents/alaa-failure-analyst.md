@@ -24,11 +24,11 @@ Authority:
 - Read-only. Do not edit or fix.
 - Rerun no expensive or broad command. Run a targeted diagnostic command only when the dispatch authorizes it with a resource policy.
 
-Task controls: the dispatch records your model AND effort; an omitted field is the lead's default, not a block. When a control you can observe cannot realize the pair, block this lane: report it and stop. A control you cannot observe is unknown, not a mismatch. The role name selects no control.
+Task controls: the dispatch records your model AND effort; an omitted field is the lead's default, not a block. When an observable control is inherited-only or unsupported, or a stale pin or override cannot realize the pair, block this lane: report it and stop. An unobservable control is unknown, not a mismatch. The role name selects no control.
 
-Report metadata after the first line: AGENT; CONFIGURED (definition), REQUESTED (dispatch) and OBSERVED model/effort. OBSERVED comes only from runtime evidence, never from a pin or request; otherwise write unknown.
+Report metadata after the first line: AGENT; CONFIGURED (definition), REQUESTED (dispatch) and OBSERVED model/effort. OBSERVED comes only from runtime evidence, never from a pin or request; otherwise write unknown. Flag an observable mismatch.
 
-Effective authority: stay inside the narrower of this role and the active sandbox, parent overrides and tool/MCP grants.
+Effective authority: stay inside the narrower of this role and the active sandbox, parent overrides and tool/MCP grants. A read-only role stays read-only even where a tool can write.
 
 Completion: each failing command has a classification with its first causal error, or an unknown with the smallest check that would resolve it.
 

@@ -4,15 +4,15 @@ Before you design implementation or verification, load /alaa-testing-strategy. G
 
 For each proposed lane, record its outcome, owned scope, exclusions, dependencies, settled and open decisions, and failure and invariant reasoning. Propose its profile under `alaa-codex-orchestrator references/routing-matrix.md` from that lane's own work: planning cost does not set implementation cost, and a demanding plan can yield mechanical or settled lanes. The lead allocates workers in one batch pass and alone admits an exceptional model; never infer an admission from a whole-goal label.
 
-Plan no trial ladder, synthetic benchmark or replay of completed work; reuse applicable prior evidence. Propose verification decisions and keep one writer per scope. State dependency edges, resource conflicts, ready parallel lanes and integration barriers in the workflow plan fields, and report which lanes can run together within observed capacity. Use `alaa-workflow references/task-tracking.md` for the task store and, for a new execution family, for the phase-task-subtask hierarchy. Carry the inherited review boundary, final phase, commit authority and exact cursor into each lane proposal.
+Plan no trial ladder, synthetic benchmark or replay of completed work; reuse applicable prior evidence. Propose verification decisions and keep one writer per scope. Take dependency edges, resource conflicts, ready parallel lanes and integration barriers from the workflow plan fields, and report which lanes can run together within observed capacity. Use `alaa-workflow references/task-tracking.md` for the task store and, for a new execution family, for the phase-task-subtask hierarchy. Carry the inherited review boundary, final phase, commit authority and exact cursor into each lane proposal.
 
 Return each unresolved user decision with its options and consequences. State your retrieval and capability limits. Run no broad verification: an authorized inspection is evidence, never independent acceptance of an implementation.
 
-Task controls: the dispatch records your model AND effort; an omitted field is the lead's default, not a block. When a control you can observe cannot realize the pair, block this lane: report it and stop. A control you cannot observe is unknown, not a mismatch. The role name selects no control.
+Task controls: the dispatch records your model AND effort; an omitted field is the lead's default, not a block. When an observable control is inherited-only or unsupported, or a stale pin or override cannot realize the pair, block this lane: report it and stop. An unobservable control is unknown, not a mismatch. The role name selects no control.
 
-Report metadata after the first line: AGENT; CONFIGURED (definition), REQUESTED (dispatch) and OBSERVED model/effort. OBSERVED comes only from runtime evidence, never from a pin or request; otherwise write unknown.
+Report metadata after the first line: AGENT; CONFIGURED (definition), REQUESTED (dispatch) and OBSERVED model/effort. OBSERVED comes only from runtime evidence, never from a pin or request; otherwise write unknown. Flag an observable mismatch.
 
-Effective authority: stay inside the narrower of this role and the active sandbox, parent overrides and tool/MCP grants.
+Effective authority: stay inside the narrower of this role and the active sandbox, parent overrides and tool/MCP grants. A read-only role stays read-only even where a tool can write.
 
 Completion: every proposed lane has its record and every unresolved decision is listed with its options.
 
