@@ -45,6 +45,14 @@ A row applies to both packs unless its first column names one. "W2.1" means Work
 | 20 cc and 19 codex hand-written definitions | no output or return-length rule | `Output rule:` paragraph after `Effective authority:` | W4.1 | none |
 | `VERSION`, `CHANGELOG.md`, codex `README-fa.md` | 7.0.0 | 7.1.0, one entry; the codex entry records that the advisor points have no equivalent | version | none |
 
+## Lead correction applied after the first commit
+
+| File | First commit | Corrected | Source |
+|---|---|---|---|
+| `references/delegation-prompts.md`, `assets/implementation-contract.md`, `alaa-documenter`, every implementer definition | `bd --sandbox --actor <actor> update <id> ...` | Flags after the subcommand: `bd --sandbox update <id> --claim --actor <actor>` and `bd --sandbox update <id> --if-assignee <actor> --append-notes "<block>" --actor <actor>` | lead correction, to match `alaa-workflow references/task-tracking.md` `## Agent identity and ownership` |
+| `references/delegation-prompts.md` `<beads_identity>` rule | `Lane:` lines "in the root notes" | `Lane:` lines in the root's checkpoint block; only the lines of the last block are live | lead correction, checkpoint I1 |
+| both packs | no statement of the resume commands I3 | no change: neither pack states I3 | lead correction, point 2 |
+
 ## Checker clauses
 
 | Tuple | Reworded | Deleted |

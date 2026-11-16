@@ -56,8 +56,8 @@ Verification:
 - Repair only owned failures, within the dispatch and its retry budget. Return an environmental, cross-lane, ambiguous or out-of-scope failure with exact evidence.
 
 Task tracking: follow the ownership action in the dispatch's `<beads_identity>`, with the actor and the leaf ID it gives.
-- `claim`: before the first edit, run `bd --sandbox --actor <actor> update <id> --claim`, then `bd show <id>`. Continue only when the assignee is your actor and the status is `in_progress`; otherwise report the lane blocked.
-- `claim` or `retain`: before you return or stop, append the checkpoint below to the leaf's notes with `bd --sandbox --actor <actor> update <id> --if-assignee <actor> --append-notes "<block>"`. The last block is the current one. When the append fails, put the block in your return.
+- `claim`: before the first edit, run `bd --sandbox update <id> --claim --actor <actor>`, then `bd show <id>`. Continue only when the assignee is your actor and the status is `in_progress`; otherwise report the lane blocked.
+- `claim` or `retain`: before you return or stop, append the checkpoint below to the leaf's notes with `bd --sandbox update <id> --if-assignee <actor> --append-notes "<block>" --actor <actor>`. The last block is the current one. When the append fails, put the block in your return.
 - Never close the leaf: the lead closes it after it reconciles your diff.
 - `none`, or no Beads binding: run no `bd` command that writes. For any other action, run only the `bd` writes that the dispatch states.
 
