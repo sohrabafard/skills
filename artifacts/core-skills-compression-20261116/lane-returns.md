@@ -437,3 +437,49 @@ Owned rule families, for other lanes to point at (`SKILL.md`): tiers `## Scope t
 
 Skills: /alaa-ponytail full, /alaa-low-noise, /alaa-prompting-guide with `60-skill-authoring.md` (*ASD-STE100 style*, *The wording is the mechanism*) before the first edit; `skills/sohrab/AGENTS.md` read before the first edit; /alaa-workflow *Lane branches and commits* read before the first commit. Preloaded /alaa-code-intelligence-routing, /alaa-services-contract, /alaa-trust-gateway-auth: no decision in this lane needed them. /alaa-testing-strategy was the text under edit.
 Residual risk: no fixture, comparison or live-agent run (excluded). Criterion 5 was checked by hand only. Boundary conflicts: none; no public route or contract changed.
+
+## L3b — second pass, alaa-workflow
+
+STATUS: COMPLETE — `alaa-workflow` is rewritten and pruned under lane-brief-2; all seven gates exit 0, and the measured cut is 13.6 percent (18,814 to 16,251 words), which is below "far fewer" and is reported as measured.
+
+AGENT: alaa-implementer-fable; CONFIGURED: unknown (no definition file read); REQUESTED: `claude-fable-5-2` / high; OBSERVED: model `claude-fable-5-2` (runtime environment), effort unknown.
+
+1. Predicates: explicit owner selection recorded; task matched it (instruction rewrite plus checker literals). No mismatch.
+2. Branch `worktree-agent-a333c58dd978caf56`, worktree `agent-a333c58dd978caf56`, ff-merged to `37ce87a4` first.
+   - `854c74bb` docs(alaa-workflow): rewrite and prune the skill text
+   - `f8b8c728` docs(alaa-workflow): restore four rules the rewrite cut too far
+3. Words (measure.py): body 1104 to 869; references 15766 to 13450; assets 1800 to 1788; total 18814 to 16251.
+4. Files above four fifths, and what kept them there:
+   - `task-tracking.md` 5645 to 4825: the capability table (about 1170 words, every decision kept, three row merges), seven externally cited sections that root `AGENTS.md` relies on, validator-enforced formats.
+   - `workspace-and-integration.md` 2476 to 2217: 17 bound clauses, the 10-step lane section this skill owns and other lanes now point to, the lifecycle rows.
+   - `artifact-lifecycle.md` 1845 to 1605: approval and helper formats the scripts enforce.
+   - `companion-routing.md` 1024 to 896: the skill-binding format the validator enforces.
+   - `review-mode.md` 845 to 833: dense protocol text (`## Finding triage`, tokens cited by both packs); restructured into lists, almost nothing removable.
+   - `phase-prompts.md` 907 to 737, `context-curation.md` 393 to 343: small files, each remaining sentence is a rule.
+   - Assets: script-read labels, tokens and bound clauses; only two prose lines in `plan-template.md` changed.
+   - Below four fifths: `context-continuity.md` (2631 to 1994), `SKILL.md` body.
+5. Pruned: P1 5, P2 1, P3 14, P4 2, P5 17, P6 1 rows (several rows group sentences). Ledger: `agent-a333c58dd978caf56/artifacts/core-skills-compression-20261116/pruned-L3b.md`.
+6. Checker clauses: reworded 0, deleted 0 in `COLLECTION_SEAMS`, `COLLECTION_CONTRADICTIONS`, `workspace`, `continuity`. Reason: each bound clause is already a minimal rule; I rewrote the text around them. No checker file was touched.
+7. Restatements replaced by pointers: never-weaken-assertions and repair/retest (testing-strategy); five reasoning classes and allocation-record fields (orchestrator `routing-matrix.md`); testing reference routing; `$name`/`/name` sigils (prompting-guide 06); lane return shape (low-noise *Delegated lanes*); system-design conditions (one-line summary kept). Left: context-reassurance wording, because only the historical `40-fable-5.md` carries it; handshake step 2 "validate the tree that would land".
+8. Kept but doubted:
+   - `task-tracking.md:65` `Registration: draft|registered` protocol.
+   - `task-tracking.md:39` read before and after `bd close` (root `AGENTS.md` shows the same).
+   - `task-tracking.md:33` lease and heartbeat.
+   - `task-tracking.md:216` install-together and rollback rule.
+   - `context-continuity.md:28` JSON projection rules.
+   - `context-continuity.md:113` per-item lane progress record.
+   - `context-curation.md:27` run the final gate when empty.
+   - `workspace-and-integration.md:51` manifest digest for uncommitted state.
+   - `companion-routing.md:25` domain owner list.
+   - `assets/phase-template.md:5` `Reasoning and selection reason` now has no definition in this skill.
+9. Gates, final text, `PYTHONDONTWRITEBYTECODE=1 python3 -B`: `validate_sohrab_skill_pack` 0, `check_skill_index` 0, `check_fleet_references` 0, `check_lifecycle_contract` 0 (worktree root); `check_execution_contracts` 0 (testing-strategy); `check_agent_contracts` 0 (cc), 0 (codex). Criterion 4: 15 headings, one hit each. Criterion 5: token sets equal in all eight assets. Criterion 7: each cited rule found (claim readback, exit 13, `bd lint` block, `--sandbox`/`--readonly`, close-reason parts, learned-knowledge placement, cross-PC record).
+
+Skills loaded before the first edit: alaa-ponytail (full), alaa-low-noise, alaa-prompting-guide with `60-skill-authoring.md` (both sections); routing, testing-strategy, services-contract and trust-gateway were preloaded. Late: testing-strategy `100-test-execution.md` was read after the first gate run, before the final one.
+
+Residual risks and not run:
+- The gates ran three times, not once (two interim runs).
+- `init_workflow_files.py` and `validate_workflow_files.py` were not run (excluded); asset safety rests on reading their regexes. Validator lines 1132 to 1532 and the initializer after line 407 were not read.
+- Three internal headings changed or went: `## Division of labor`, `## Where task information lives`, `## What this file does not own` (removed), `## Contents, updates, resume and delegation` (now `## Artifact contents`), `## Evidence order` and `## Must-check areas` (merged); a grep found no outside citation.
+- Other lanes that turn copies into pointers should target `## Lane branches and commits` step numbers unchanged (1 to 10).
+
+Boundary conflicts: none.
