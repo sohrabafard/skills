@@ -4,14 +4,7 @@ A subagent is a second agent with its own context window, its own tool set, and 
 
 ## When a subagent is the right tool
 
-Four mechanisms overlap here, and the cost of choosing wrong is high in both directions — an unnecessary subagent multiplies latency and tokens, a missing one collapses an authority boundary.
-
-- **An inline instruction** is right when the current agent has the context and the authority to do the work and would finish in a handful of tool calls. Delegating that is pure overhead.
-- **A skill** is right when you want to change *how the current agent behaves* for a class of task. Skills and subagents compose: a subagent definition can preload skills so the specialist carries the same clean-code rules the lead would have applied.
-- **A deterministic workflow script** is right when the steps are fixed and the judgment content is zero. A script that runs the same four commands in the same order is more reliable than any agent asked to run them, and it costs no tokens.
-- **A subagent** is right when at least one of three conditions holds: the work would flood the caller's context with search results, logs, or file contents it will never reference again; the work needs a *different tool set* than the caller has, particularly a narrower one; or the work must be judged by something that is not the thing that produced it.
-
-The third condition is the one that cannot be satisfied any other way, and it is the subject of the authority-boundary section below.
+When you must choose between an inline instruction, a skill, a script and a subagent, read `references/60-skill-authoring.md` *Should this be a skill at all?*; it holds the test and the three conditions that justify a subagent. The condition that nothing else satisfies, judgment by an agent that did not produce the work, is the subject of *Authority boundaries beat instructions* below.
 
 ## Definition files
 
@@ -25,7 +18,7 @@ Only `name` and `description` are required. The documented optional fields are `
 
 ### Codex: standalone TOML
 
-Personal agents live in `~/.codex/agents/`, project agents in `.codex/agents/`, one file per agent. Required keys are `name`, `description`, and `developer_instructions`. Optional keys are `nickname_candidates`, `model`, `model_reasoning_effort`, `sandbox_mode`, `mcp_servers`, and `skills.config`. `sandbox_mode` accepts `"read-only"` and `"workspace-write"`, and inherits from the parent when omitted.
+Personal agents live in the active Codex home `agents/` directory (`~/.codex/agents/` by default), project agents in `.codex/agents/`, one file per agent. Required keys are `name`, `description`, and `developer_instructions`. Optional keys are `nickname_candidates`, `model`, `model_reasoning_effort`, `sandbox_mode`, `mcp_servers`, and `skills.config`. `sandbox_mode` accepts `"read-only"` and `"workspace-write"`, and inherits from the parent when omitted.
 
 **`skills.config` is not the Codex equivalent of Claude's `skills:` preload, and reaching for it as one is the mistake to avoid.** It is `[ { path = "…", enabled = true } ]`: an enable/disable override naming a directory that contains a `SKILL.md`. It selects which skills an agent may use; it never injects one into the agent's context the way a preload does, and each entry carries a filesystem path, so a committed definition would hard-code one machine's layout. Codex documents no per-agent preload at all. Where a Codex lane must apply doctrine, name the files in `developer_instructions` and let it read them from the installed skills path.
 

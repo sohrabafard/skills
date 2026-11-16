@@ -6,7 +6,7 @@
 
 For every managed role, including research, review, verification, documentation and rule-writer, the runtime orchestrator owns task allocation, priority, admission and deliberate source departures. Read `/alaa-codex-orchestrator` or `/alaa-cc-orchestrator` `references/routing-matrix.md` for that decision. For bounded standalone delegation, the parent uses that allocation procedure and records a compact dispatch; it need not start the full pipeline or create a plan solely for selection. `/alaa-workflow` records allocation when durable state is admitted. The tables below are evidence inputs, not executable defaults.
 
-To realize an explicit task model AND effort, use `references/11-codex-runtime-features.md` or `references/41-claude-code-runtime-features.md`. For capability and uncertainty checks, use `references/50-effort-and-thinking.md`. A registered role name selects authority only, and so does a retained compatibility ID that names a model or an effort. Neither a name nor an inherited control counts as task selection. Before explicit dispatch, `alaa-codex-orchestrator references/model-effort-policy.md` or its `alaa-cc-orchestrator` mirror normalizes omitted fields; its resolved defaults count as task selection.
+To realize an explicit task model AND effort, use `references/11-codex-runtime-features.md` or `references/41-claude-code-runtime-features.md`. For capability and uncertainty checks, use `references/50-effort-and-thinking.md`. A registered role name selects authority only, and so does a retained compatibility ID that names a model or an effort. Neither a name nor an inherited control counts as task selection. A vendor ranking, model availability, a file count or a planning effort selects nothing either, and no source claim proves local superiority. Before explicit dispatch, `alaa-codex-orchestrator references/model-effort-policy.md` or its `alaa-cc-orchestrator` mirror normalizes omitted fields; its resolved defaults count as task selection.
 
 Ordinary Codex selection excludes GPT-6 Sol and retains its effort snapshot as history. GPT-6.1 Sol is the current Sol candidate. Use the newest member of the selected family that is verified, supported and eligible; a suitable Luna stays eligible. If current Sol is unavailable, require an exact eligible realization or block the affected lane. Never fall back to old Sol. Record an explicit user request for a legacy model separately. It neither restores ordinary eligibility nor passes ordinary task-control validation.
 
@@ -69,12 +69,7 @@ These recommendations establish no measured local quality, cost or speed. Read
 | Demanding reasoning or long-horizon work that falls short on Opus at `xhigh` or `max` | Move to Fable 5.2 (selection guide, 14 November 2026) | No selected Fable effort; `references/43-fable-5-2.md` holds the vendor starting point |
 | Bulk execution with difficult decisions | Cheaper executor plus frontier advisor, or a frontier orchestrator that delegates bulk work to lower-cost workers. For native Code candidates and preflight, read `references/41-claude-code-runtime-features.md`. | No default pair or effort |
 
-The guide recommends Opus as the starting point for most workloads. Qualify each default effort by surface:
-
-- Opus: medium.
-- Haiku: medium.
-- Sonnet: medium in Claude Code and the Claude apps; high on the Platform and the API.
-- Fable 5.2: medium in Claude Code; high on the Claude API.
+The guide recommends Opus as the starting point for most workloads. Qualify each default effort by surface; each current model reference states its defaults per surface.
 
 Preserve both the capability-first path and the efficiency-first path. The separate Sonnet prompting guidance recommends medium for well-specified agentic coding and high for harder or longer work. The source's examples of regressions at higher effort rule out automatic maximization. Any local Fable admission belongs to the runtime orchestrator and remains distinct from the vendor's xhigh and max advice. No live run is implied.
 

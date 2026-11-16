@@ -50,10 +50,8 @@ Build worked examples from `references/12-gpt-6.md` plus the template above: one
 
 Delegate only within authorization granted by the user or an applicable instruction. The host's current collaboration tools define roles, nesting, concurrency, inheritance and waiting. Do not copy defaults or tool names from another Codex surface. A prompt may authorize concrete independent lanes, but it cannot enable an unavailable runtime feature.
 
-Custom agents are standalone TOML files in the active Codex home `agents/` directory or the
-project's `.codex/agents/`. Required fields are `name`, `description`, and
-`developer_instructions`. The official subagent page documents optional model and effort pins,
-sandbox, MCP, and skill configuration; use only keys supported by the target host.
+When you write a custom agent TOML, read `references/80-subagent-authoring.md`; it owns the
+directories and keys. Use only keys supported by the target host.
 
 **Custom TOML model and effort pins win over spawn arguments.** Verified 9 October 2026: when both pins are omitted, explicit spawn controls precede global agent defaults and parent settings. Managed authority roles omit both pins. Supply BOTH task controls on a verified compatible spawn surface. An inherited value is not a task decision. In the active host, a full-history fork can forbid overrides. Neither prose nor a disk edit can change a stale loaded pin; use an available exact verified realization or block the affected lane.
 A definition created in the repository does not prove that the current session has loaded it.
@@ -64,7 +62,7 @@ A subagent inherits the parent sandbox policy and runtime overrides. A `read-onl
 
 In `workspace-write`, these paths stay read-only inside a writable root, recursively: `.git`, whether it is a directory or a pointer file, together with the Git directory a pointer file names; and the directories `.agents`, `.codex` and `.aws` when they exist. The page does not say how `git commit` is handled. Verified 14 November 2026 against [Sandbox and approvals](https://learn.chatgpt.com/docs/agent-approvals-security).
 
-Keep the requested profile, model and effort separate from the observed runtime identity. Use `unknown` for a value the host does not expose; a copied pin is not an observation. A report that carries a verdict puts the verdict first and the metadata after it. A replacement-only agent keeps its output contract, and the caller records its requested configuration externally.
+When you report a subagent's model and effort, read `references/80-subagent-authoring.md` *Configuration and observed identity*; it separates requested from observed values and fixes the metadata position.
 
 The sources below were verified on 25 September 2026. The policy JSON records a dated
 supported-effort snapshot; verify availability again on the actual dispatch host.
@@ -85,7 +83,7 @@ max_concurrency=4
 
 ## `AGENTS.md` — durable project instructions
 
-Codex rebuilds a resolved `AGENTS.md` chain on every run and at the start of each TUI session, so there is no cache to clear. Resolution order: global scope (`~/.codex` by default, checking `AGENTS.override.md` first, then `AGENTS.md`), then project scope walked from the Git root down to the current directory, checking `AGENTS.override.md`, `AGENTS.md`, then any configured fallback filenames at each level. Files are concatenated root-first and joined with blank lines, so files closer to the working directory override earlier guidance by appearing later in the combined prompt. Override files take precedence at their own level; `~/.codex/AGENTS.override.md` is the documented way to apply a temporary global override without deleting the base file.
+When you rely on the `AGENTS.md` resolution order, read `references/70-agent-instruction-files.md` *Nesting and precedence*; it owns the chain.
 
 `project_doc_max_bytes` caps the combined size (32 KiB default, configurable up to 65536 bytes); Codex stops adding files once the limit is reached, which means a deep chain can silently drop the outermost files. `project_doc_fallback_filenames` in `~/.codex/config.toml` adds alternative filenames. `CODEX_HOME` relocates the global profile used for discovery.
 
@@ -93,26 +91,7 @@ No manual invocation is needed. Codex does **not** update these files on its own
 
 ## Agent Skills
 
-Skills package instructions, references, scripts, and assets into a directory so Codex can follow a workflow reliably — this skill is one. A skill requires `SKILL.md` (frontmatter with `name` and `description`, plus the body). `scripts/`, `references/`, `assets/`, and `agents/openai.yaml` are optional.
-
-Discovery runs across these scopes, highest priority first:
-
-| Scope | Path | Status |
-|---|---|---|
-| Repo (cwd) | `.agents/skills` | documented |
-| Repo (parent) | `../.agents/skills` | documented |
-| Repo (root) | `$REPO_ROOT/.agents/skills` | documented |
-| User | `$HOME/.agents/skills` | documented |
-| User | `$HOME/.codex/skills` | **undocumented; WSL discovery unverified** |
-| System | Bundled by OpenAI | documented |
-
-The `$HOME/.codex/skills` row is absent from the official page but earlier evidence for its discovery came from a retired Windows host. Discovery on WSL is unverified. Express the path as `$HOME/.codex/skills`, and check it in the target runtime before relying on it. Treat the official list as incomplete evidence, not as grounds to reject this path. It sits next to `~/.codex/agents/`, where agent TOMLs live, so a Codex user who keeps both under `~/.codex/` has one coherent tree.
-
-When generating install instructions, name `$HOME/.codex/skills` for personal skills unless the user has said otherwise, and `.agents/skills` for repository-scoped skills that travel with a project.
-
-For context efficiency Codex first loads only each skill's name and description. That listing is capped at 2% of the model's context window, or 8,000 characters when the context window is unknown; the full `SKILL.md` loads only once a skill is selected, regardless of that budget. A skill has three invocation paths: `/skills` or a `$name` mention in the CLI and IDE, direct selection in the app, and implicit matching of the prompt against the skill's `description`. That last path is why a skill's `description` must state a clear, assertive trigger scope. `agents/openai.yaml` carries presentation metadata and `allow_implicit_invocation` (default `true`) for skills that should never fire on their own.
-
-Codex documents no skill frontmatter keys beyond `name` and `description`. Treat Claude-side keys as inert here. See `references/60-skill-authoring.md`.
+When you write a Codex skill, its install instructions or its description, read `references/61-skill-platform-mechanics.md`; it owns the discovery scopes, the install default, the listing budget and the frontmatter keys. `references/06-invocation-and-composition.md` owns the invocation paths.
 
 ## Session-shaping slash commands
 

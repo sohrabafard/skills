@@ -5,7 +5,7 @@ A model or API capability does not establish harness support. This file owns Cla
 ## Current model, effort and identity resolution
 
 Verified 25 September 2026 against model-config and sub-agents. A full API ID pins a version. A family alias rolls, and it can resolve differently by provider, parent model or gateway. A provider deployment mapping is separate runtime evidence; the policy does not accept it as an alias.
-The policy records sourced model minimum versions. Fable 5.2 requires Claude Code 2.1.321, and the `fable` alias resolves to Fable 5.2 except in Claude apps gateway sessions (verified 14 November 2026 against model-config). Also verified 14 November 2026: Claude Code's default effort is medium for Fable 5.2, Opus 5.5, Sonnet 5.5 and Haiku 5.5; the Claude API default for Fable 5.2 is high. Haiku 5.5 requires Claude Code 2.1.293; its API permits disabled thinking as an exception, but Code prevents switching thinking off for it (verified 8 October 2026 against model-config). A newer installed CLI alone proves neither account entitlement nor activation.
+The policy records sourced model minimum versions. When you need a model's minimum Claude Code version, alias behaviour, default effort per surface or thinking control in Code, read that model's current reference. A newer installed CLI alone proves neither account entitlement nor activation.
 
 To resolve the session model, inspect an explicit /model choice, the startup --model flag, ANTHROPIC_MODEL, settings and ANTHROPIC_DEFAULT_MODEL, managed allowlists, and host overrides. /model can persist a selection. Inspection authorizes neither a settings change nor credit consent.
 
@@ -18,7 +18,7 @@ Verified 9 October 2026: since 2.1.292, an effort given at a non-fork invocation
 
 Verified 14 November 2026 against [workflows](https://code.claude.com/docs/en/workflows): a Workflow-tool `agent()` call takes its model in the same order as a subagent. A model the script names counts as the per-invocation model. When nothing else assigns one, the agent runs on the session's model. The workflows page names no effort option for `agent()`.
 
-Record the requested profile, model and effort, and the resolved controls, separately from the observed serving model and effort. Use unknown where the host exposes no observation. Session status, subagent status and the response's modelUsage contribute evidence when they are available. An agent's self-description does not prove its identity. A runtime activation check requires authorized execution, and it must preserve the provider and account context, the control evidence and any observed mismatch.
+When you report identity, follow `references/80-subagent-authoring.md` *Configuration and observed identity*, and record the resolved controls as well. In Claude Code, session status, subagent status and the response's modelUsage contribute evidence when they are available. An agent's self-description does not prove its identity. A runtime activation check requires authorized execution, and it must preserve the provider and account context, the control evidence and any observed mismatch.
 
 ## Fallback and safeguards
 

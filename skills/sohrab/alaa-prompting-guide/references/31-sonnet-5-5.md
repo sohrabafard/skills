@@ -5,19 +5,19 @@ Source checks do not prove account access, runtime activation or workload qualit
 
 ## Prompting and effort
 
-Claude Code and the Claude apps default to `medium`. The Platform and the API default to `high`. These surface defaults are not task choices. Begin at `medium` for well-specified agentic work and at `high` for harder or longer tasks. Effort levels were recalibrated, so workload recommendations are unrun hypotheses, not inherited calibration. Use `references/50-effort-and-thinking.md`
-for effort evidence. Raise effort only after excluding context, tool and specification gaps.
+Claude Code and the Claude apps default to `medium` (Claude Code verified 14 November 2026 against model-config). The Platform and the API default to `high`. These surface defaults are not task choices. Begin at `medium` for well-specified agentic work and at `high` for harder or longer tasks. Effort levels were recalibrated, so workload recommendations are unrun hypotheses, not inherited calibration. When you set or raise effort, read
+`references/50-effort-and-thinking.md`; it owns the evidence and when to raise effort.
 
 The launch reports high-effort Sonnet approaching Opus on some work at similar cost. It proves no universal local equivalence. Medium and high remain distinct supported task settings. In two reported benchmark cases, max underperformed xhigh because extra reviewer subagents caused timeouts or out-of-scope edits. Treat this as a workload-specific caveat, not a universal effort ranking. Higher effort can change tool behavior without improving acceptance.
 
-Everyday coding can involve bounded local decisions; it need not be transcription of a fully settled patch. Use the runtime orchestrator routing matrix for task allocation and admission, and the canonical policy for supported pairs. The orchestrator decides the route for materially coupled unresolved design.
+Everyday coding can involve bounded local decisions; it need not be transcription of a fully settled patch. When you select a task pair, including one for materially coupled unresolved design, read `references/90-model-selection.md`; it routes allocation and admission to the runtime orchestrator. The canonical policy owns supported pairs.
 
 Do not turn thinking-reminder removal into a blanket ban. The Sonnet prompting page specifically permits private reasoning before a strict JSON answer when that improves structured-output reliability. This is a task-specific exception, never authority to disclose private chain-of-thought. Preserve the required JSON schema and evaluate the change on that workload.
 
 At low effort, supply an observable done condition and required checks: early stopping and
 skipped verification are documented risks. At high or xhigh effort, constrain scope and stop
 after the requested outcome and checks; extra features or refactors are not completion.
-Preserve focused implementation checks and independent gates through the authority test in
+Before you remove verification language, apply the authority test in
 `references/80-subagent-authoring.md`. Extra reviewer delegation at higher efforts does not establish a general delegation bias. `references/06-invocation-and-composition.md` owns delegation routing.
 
 For a bounded implementation, adapt this contract without broadening its authority:

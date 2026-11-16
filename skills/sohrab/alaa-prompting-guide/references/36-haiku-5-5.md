@@ -6,11 +6,11 @@ Use for bounded retrieval, exact procedures, admitted mechanical or bounded sema
 
 Give one outcome, named inputs or retrieval starts, the required evidence and checks, the allowed tools and side effects, and explicit completion and failure conditions. Require retrieval before factual conclusions and observed checks before success. Keep narrow lanes complete: report every requested item as evidenced or unresolved, and stop at the acceptance criteria. Return missing scope or evidence, wider architecture judgment, or ambiguous failures to the lead rather than inventing facts or expanding the task.
 
-The runtime orchestrator owns task allocation, admission, triggers and independent gates for every role. Vendor bounded-work guidance is capability evidence, not a role default. Missing scope or evidence, or interacting design decisions, require reassessment, not an inherited Haiku choice. Unknown serving identity stays unknown. A missing account or control capability blocks the affected dispatch.
+When you select a task pair, read `references/90-model-selection.md`; it names the owner of allocation, admission, triggers and independent gates, and it treats vendor bounded-work guidance as evidence, not a role default. Missing scope or evidence, or interacting design decisions, require reassessment, not an inherited Haiku choice. A missing account or control capability blocks the affected dispatch.
 
 ## API and Claude Code controls
 
-Verified 8 October 2026: exact ID `claude-haiku-5-5`; supported efforts `low`, `medium`, `high`, `xhigh`, `max`; default `medium`. Adaptive thinking is supported and manual token budgets are unsupported. The API permits disabled thinking through `high`; `xhigh` and `max` require adaptive. Claude Code prevents disabling thinking for this model and requires version 2.1.293 or later. API controls do not establish a Claude Code setting.
+Verified 8 October 2026: exact ID `claude-haiku-5-5`; supported efforts `low`, `medium`, `high`, `xhigh`, `max`; default `medium`, in Claude Code too (verified 14 November 2026 against model-config). Adaptive thinking is supported and manual token budgets are unsupported. The API permits disabled thinking through `high`; `xhigh` and `max` require adaptive. Claude Code prevents disabling thinking for this model and requires version 2.1.293 or later. API controls do not establish a Claude Code setting.
 
 Treat a selected task effort as an unrun workload hypothesis. Claim no quality or savings without task evidence. Before activation, inspect the account and provider mapping, override precedence, caps and effective tools through `references/41-claude-code-runtime-features.md`. Historical Haiku 4.5 has no effort parameter; its controls never govern this generation.
 

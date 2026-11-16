@@ -6,14 +6,15 @@ When you are about to choose a directory layout, a discovery path, a frontmatter
 
 ## Should this be a skill at all?
 
-Four artifacts compete for the same job, and choosing wrong is the most common authoring defect. Decide by what the content is conditional on and who owns the context.
+Five artifacts compete for the same job, and choosing wrong is the most common authoring defect. Decide by what the content is conditional on and who owns the context.
 
-- **A plain instruction** belongs in the prompt when it applies to one task and will never be reused. Do not package a one-off.
+- **A plain instruction** belongs in the prompt when it applies to one task and will never be reused. Do not package a one-off. Keep work inline when the current agent has the context and the authority and would finish in a handful of tool calls, because delegating it is pure overhead.
+- **A deterministic script** is right when the steps are fixed and need no judgment, because a script is more reliable than an agent and costs no tokens.
 - **An instruction file** (`AGENTS.md`, `CLAUDE.md`) holds what is true for *every* task in the repository, because it is always loaded and therefore always costs context. When the content is unconditional, read `references/70-agent-instruction-files.md` instead of continuing here.
 - **A skill** holds a procedure or body of knowledge that applies *conditionally* — to some tasks, in some repositories — and costs nothing until it applies. Claude Code's own guidance is explicit: a section of `CLAUDE.md` that has grown into a procedure should become a skill, because a skill's body loads only when used.
-- **A subagent** is right when the work needs its own context window, its own tool set, or an authority boundary the caller cannot cross. A skill changes how the current agent behaves; a subagent creates a different agent. When the answer is a subagent, read `references/80-subagent-authoring.md`.
+- **A subagent** is right when at least one condition holds: the work would flood the caller's context with search results, logs or file contents it will never reference again; the work needs a different tool set, particularly a narrower one; or the work must be judged by an agent that did not produce it. Only a subagent satisfies the third condition. A skill changes how the current agent behaves; a subagent creates a different agent. Skills and subagents compose: a subagent definition can preload skills. An unnecessary subagent multiplies latency and tokens; a missing one collapses an authority boundary. When the answer is a subagent, read `references/80-subagent-authoring.md`.
 
-The test in one line: if the answer to "when does this apply?" is "always," it is an instruction file; if it is "never again," it is a prompt; if it is "sometimes, and here is the trigger," it is a skill; if it is "when someone other than me must judge it," it is a subagent.
+The test in one line: if the answer to "when does this apply?" is "always," it is an instruction file; if it is "never again," it is a prompt; if it is "sometimes, and here is the trigger," it is a skill; if it is "when someone other than me must judge it," it is a subagent; if the steps never vary, it is a script.
 
 ## The description carries the activation decision
 
@@ -126,13 +127,13 @@ Six failure modes account for most of it, and each is invisible in review becaus
 
 **Rules with no stated scope.** "Keep it concise" leaves the model to guess where. Models apply an instruction precisely where it appears and nowhere else, especially at lower effort. Name the scope: every section, every file, each finding, the final report only.
 
-**Negative-only instruction.** "Do not use a purple gradient" moves the model to a different fixed default rather than to good judgment, because the instruction removed one option without supplying a decision procedure. Pair every prohibition with what to do instead, or replace it with the positive rule that makes the prohibition unnecessary.
+**Negative-only instruction.** "Do not use a purple gradient" moves the model to a different fixed default rather than to good judgment, because the instruction removed one option without supplying a decision procedure. Pair every prohibition with what to do instead, or replace it with the positive rule that makes the prohibition unnecessary. Keep a bare prohibition only for a genuine boundary, where no alternative action exists and the boundary itself is the point.
 
 **Abstract nouns standing in for observable conditions.** "Handle errors properly", "ensure good performance", "write clean code" cannot be complied with or violated, so they are decorative. Replace each with the observable: which envelope, which budget, which rule. If you cannot make it observable, you have found a decision you have not yet made.
 
 **Constraints buried mid-paragraph.** A rule inside a long explanatory sentence is weighted like explanation. One rule per sentence, and put the rule before its rationale — the reader who stops early should still have the rule.
 
-**Arbitrary-looking rules with no reason attached.** A rule whose purpose is invisible gets rationalized away the first time the model meets a situation the author did not anticipate. One clause of reason is usually enough to survive contact with a novel case. This is also why an example that contradicts its rule is so costly: when prose and example disagree, the example wins.
+**Arbitrary-looking rules with no reason attached.** A rule whose purpose is invisible gets rationalized away the first time the model meets a situation the author did not anticipate. One clause of reason is usually enough to survive contact with a novel case. A rule whose rationale is obvious needs no reason; a rule that looks like a preference needs one. This is also why an example that contradicts its rule is so costly: when prose and example disagree, the example wins.
 
 The test to apply sentence by sentence: **could a competent agent follow this exactly and still do the wrong thing?** If yes, the sentence is underspecified however well it reads. That question is worth more than any style rule, and it is why skill authoring is a judgment lane rather than a transcription lane.
 

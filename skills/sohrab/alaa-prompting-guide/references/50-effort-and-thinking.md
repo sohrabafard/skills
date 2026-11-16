@@ -39,7 +39,7 @@ A stale executable pin can defeat the caller's controls. Read the target runtime
 
 ## Effort is not the only cost lever
 
-Before raising effort, resolve prompt bloat and missing context. Vendor lean-prompt results support shorter prompts. They prove no local quality or cost gain. Better retrieval addresses absent evidence.
+Raise effort only after you exclude prompt bloat, missing context, and tool or specification gaps, and quality still falls short. Vendor lean-prompt results support shorter prompts. They prove no local quality or cost gain. Better retrieval addresses absent evidence.
 
 ## Anti-patterns
 
