@@ -43,7 +43,10 @@ Use Claude Code's native Advisor for executor consultations. The orchestrator's 
 
 **Start.** Use `/advisor <model>` in a supported Code session. At launch, `--advisor <model>` overrides the `advisorModel` setting. Give a supported `sonnet`, `opus` or `fable` alias or a full model ID.
 
-**Preflight.** The advisor is experimental and needs the Anthropic API or Claude Platform on AWS (14 November 2026). Before you depend on it, resolve the alias and verify support on the actual Code version, provider, account, managed allowlist and entitlement. Inspection grants neither configuration authority nor paid execution authority.
+- From v2.1.260, `/advisor` also works with `-p`, in the Agent SDK and in the desktop app. `/advisor off` turns the advisor off (17 November 2026).
+- `--advisor` is not listed in `claude --help`. An invalid pair given with `--advisor` exits at launch; a background session starts without the advisor instead (17 November 2026).
+
+**Preflight.** The advisor is experimental. It needs the Anthropic API, Claude Platform on AWS, or Claude Models on Google Cloud (Anthropic managed); the two cloud providers need v2.1.300 or later. It is not available on Amazon Bedrock, Google Cloud's Agent Platform or Microsoft Foundry. It needs a feature-flag fetch, so `DISABLE_TELEMETRY` breaks it (17 November 2026). Before you depend on it, resolve the alias and verify support on the actual Code version, provider, account, managed allowlist and entitlement. Inspection grants neither configuration authority nor paid execution authority.
 
 **Pairs.** Claude Code ranks models for the advisor role and accepts only the pairs in its table. These are its rows for the active set; verify the exact resolved pair on the target surface.
 
@@ -54,37 +57,53 @@ Use Claude Code's native Advisor for executor consultations. The orchestrator's 
 | Opus 5.5 | Fable, Opus 5 or later |
 | Fable 5.2 | Fable 5.2 only; the API also accepts Mythos 5.2, which stays excluded from selection |
 
-Claude Code attaches no lower-ranked advisor: an Opus or Sonnet advisor on a Fable 5.2 main model runs no consultation and raises no error.
+Haiku 5.5 as a main model needs v2.1.293 or later. Haiku 4.5 can call the advisor but cannot act as one. The platform page requires an advisor at least as capable as the executor (17 November 2026).
+
+Claude Code attaches no lower-ranked advisor: an Opus or Sonnet advisor on a Fable 5.2 main model runs no consultation and raises no error. The `/advisor` command output and a notification show that the pair is not accepted. A subagent whose own model satisfies the pairing can still use the advisor (17 November 2026).
 
 **What the advisor receives.** The model-request transcript, including system context, tool interactions and partial output, as quoted context. It has no tools and no context management of its own.
 
 **Limits.** The executor decides when to consult and owns the resulting action. Account for the added latency and model usage. Advice grants no authority and cannot satisfy independent review.
 
+**`max_tokens`** (platform page, 17 November 2026). An API caller sets the advisor tool's `max_tokens`: the minimum is 1024, and the page recommends 2048 as a starting point. The Managed Agents advisor takes no `max_tokens`.
+
 **Subagents** inherit the configured advisor and apply the same pairing check against their own model. The checked sources establish no Advisor subagent frontmatter and no per-advisor effort control. Keep Advisor out of generated role definitions and dispatch controls unless the target runtime documents and verifies those controls.
 
-Pair table and subagent inheritance: [Code advisor](https://code.claude.com/docs/en/advisor), 14 November 2026. Other mechanics, 3 November 2026: [Advisor tool](https://platform.claude.com/docs/en/agents-and-tools/tool-use/advisor-tool), [Code CLI flags](https://code.claude.com/docs/en/cli-reference#cli-flags), [Code release notes](https://code.claude.com/docs/en/changelog#21260), [model configuration](https://code.claude.com/docs/en/model-config) and [subagents](https://code.claude.com/docs/en/sub-agents).
+Pair table and subagent inheritance: [Code advisor](https://code.claude.com/docs/en/advisor), 14 November 2026. Lines dated 17 November 2026: [Code advisor](https://code.claude.com/docs/en/advisor) and [Advisor tool](https://platform.claude.com/docs/en/agents-and-tools/tool-use/advisor-tool). Other mechanics, 3 November 2026: [Advisor tool](https://platform.claude.com/docs/en/agents-and-tools/tool-use/advisor-tool), [Code CLI flags](https://code.claude.com/docs/en/cli-reference#cli-flags), [Code release notes](https://code.claude.com/docs/en/changelog#21260), [model configuration](https://code.claude.com/docs/en/model-config) and [subagents](https://code.claude.com/docs/en/sub-agents).
 
 ### Prompts for a session that may have an advisor
 
-Apply this to a prompt, a system prompt or a dispatch for a Claude model. The advisor is a session setting that a subagent inherits, so you usually cannot know whether it is on: write the prompt to work in both cases. Verified 14 November 2026 against the Code advisor and Advisor tool pages; before you copy a block, a model rule or a number from this section into a prompt, read the page again.
+Apply this section to every prompt, system prompt or dispatch for a Claude model. The advisor is a session setting that a subagent inherits, so you usually cannot know whether it is on: write the prompt to work in both cases. Before you copy a block, a model rule or a number from this section into a prompt, read the page again.
 
 **What the prompt can rely on.** The call takes no parameters. The advisor reads the whole transcript: the prompt, the tool definitions, earlier turns, tool results and the text written so far. When a call fails, the executor continues without advice. The platform page disagrees with itself on whether the executor's reasoning reaches the advisor, so do not rely on that.
 
-1. **State the goal, the constraints and the acceptance criteria in the prompt text.** The advisor judges the work against what it can read. Tell the executor to write a decision in visible text before it acts on it. Never tell it to "send" or "summarize for" the advisor: nothing written into the call reaches the advisor.
-2. **Never make the task depend on the advisor.** It can be off, refused or failing.
-3. **Name consultation points only on a long multi-step task:** before the approach is fixed, on a recurring error, and before the executor declares the work done. For a short or reactive task, write nothing about the advisor.
-4. **Ask for a durable result before the completion consultation.** The executor saves its deliverable, within its authority, and then consults: a call takes time, and a saved result survives a session that ends during it.
-5. **Never write restraint and a nudge together.** "Reserve the advisor for real uncertainty" conflicts with "consult the advisor before you continue"; the platform page says to drop the nudge when restraint language is present.
-6. **Fit the executor model.** Opus calls at an appropriate rate unprompted: add no nudge and no checkpoint by default. A nudge had no measurable effect on Sonnet. For a Haiku coding executor the platform page gives a hard-rule block and a second-turn nudge; its stated evidence is Haiku 4.5. For Fable the pages state no prompting guidance.
-7. **Never ask for a forced call through `tool_choice`.** Fable 5.2, Opus 5.5 and Sonnet 5.5 executors reject the `tool` and `any` types. Use one sentence in the prompt.
-8. **Never ask for a consultation at every step.** Each call bills at the advisor model's rates and, in Claude Code, processes the full transcript again. Claude Code has no setting that caps or forces calls.
-9. **Shorten the advice only when you must.** The tested placement is one line in the user message, such as "(Advisor: please keep your guidance under 80 words.)". It is a soft limit, so name about 80% of the real ceiling. The hard cap is the tool's `max_tokens`, which only an API caller sets.
+**Every Claude prompt does these four things, whether or not an advisor exists:**
 
-**Claude Code session or subagent.** Add no timing block and no block about the weight of advice. The Code page says only that a prompt can ask for a consultation and can say that Claude should consult more or less often. In one observed Claude Code 2.1.307 subagent the harness had already supplied the platform's timing and weight text. No page states this: treat it as observed, not guaranteed, and never contradict it.
+1. State the goal, the constraints and the acceptance criteria in the prompt text. The advisor judges the work against what it can read.
+2. Tell the executor to write a decision in visible text before it acts on it. Never tell it to "send" or "summarize for" the advisor: nothing written into the call reaches the advisor.
+3. Tell the executor to save its deliverable, within its authority, before the completion consultation. A call takes time, and a saved result survives a session that ends during it.
+4. Never make the task depend on the advisor. It can be off, refused or failing.
 
-**API or Agent SDK caller who writes the executor's system prompt.** The platform page gives a timing block and a weight block for coding executors. Put the timing block before any other sentence that mentions the advisor, and the weight block directly after it. Copy both from the page; never paraphrase them.
+**What to write about the advisor, by surface and executor model** (17 November 2026, [Code advisor](https://code.claude.com/docs/en/advisor) and [Advisor tool](https://platform.claude.com/docs/en/agents-and-tools/tool-use/advisor-tool)). "Copy" means copy the named block from the platform page at use time; never paraphrase it.
 
-**A dispatch to a subagent.** The pages state no guidance for delegated lanes beyond inheritance. Apply rules 1 to 9.
+| Executor | Claude Code session or subagent | API or Agent SDK system prompt |
+|---|---|---|
+| Haiku 5.5 | Write nothing by default. | For a coding or write-task load only: copy the hard-rule coding block, which replaces the timing and weight blocks. Optionally copy the second-turn nudge. The block's Haiku 5.5 label and the nudge text are page-text unverified. The nudge's stated evidence is Haiku 4.5. |
+| Sonnet 5.5 | Write nothing by default. | Copy the timing block, then the weight block. Write no nudge: it had no measurable effect. |
+| Opus 5.5 | Write nothing by default. | Copy the timing block, then the weight block. Write no nudge. Copy the optional checkpoint only when you observe under-calling. |
+| Fable 5.2 | Write nothing by default. | The page gives no guidance (page-text unverified). Write nothing. |
+
+- **Claude Code surface.** The Code page gives no timing or weight block. It says only that a prompt can ask for a consultation and can say that Claude should consult more or less often. Name consultation points only on a long multi-step task: before the approach is fixed, on a recurring error, and before the executor declares the work done. For a short or reactive task, write nothing about the advisor.
+- **Harness text.** In one observed Claude Code 2.1.307 subagent the harness had already supplied the platform's timing and weight text. No page states this: treat it as observed, not guaranteed, and never contradict it.
+- **Block placement on the API surface.** Put the timing block before any other sentence that mentions the advisor, and the weight block directly after it.
+- **A dispatch to a subagent** uses the Claude Code column. The pages state no guidance for delegated lanes beyond inheritance.
+
+Rules the table does not carry:
+
+- **Never write restraint and a nudge together.** "Reserve the advisor for real uncertainty" conflicts with "consult the advisor before you continue"; the platform page says to drop the nudge when restraint language is present.
+- **Never ask for a forced call through `tool_choice`.** Fable 5.2, Opus 5.5 and Sonnet 5.5 executors reject the `tool` and `any` types. Use one sentence in the prompt.
+- **Never ask for a consultation at every step.** Each call bills at the advisor model's rates and, in Claude Code, processes the full transcript again. Claude Code has no setting that caps or forces calls.
+- **Shorten the advice only when you must.** The tested placement is one line in the user message, such as "(Advisor: please keep your guidance under 80 words.)". It is a soft limit, so name about 80% of the real ceiling. The hard cap is the tool's `max_tokens`, which only an API caller sets.
 
 ## Historical harness mechanics
 

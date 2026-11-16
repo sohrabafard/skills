@@ -19,13 +19,13 @@
 
 ## Official task guidance
 
-OpenAI matrix refreshed 9 October 2026; Claude rows refreshed 14 November 2026. Each current model reference holds that model's defaults per surface. The complete served selector asset was read as text, without execution or browser interaction; the supplied screenshots match its cells. L = GPT-6 Luna, S = GPT-6.1 Sol, A = GPT-6 Astra.
+OpenAI matrix refreshed 9 October 2026; Claude rows refreshed 14 November 2026. Each current model reference holds that model's defaults per surface. The complete served selector asset was read as text, without execution or browser interaction; the supplied screenshots match its cells. L = GPT-6 Luna, S = GPT-6.1 Sol, T = GPT-6.1 Terra, A = GPT-6 Astra. Cells dated 17 November 2026 come from the asset's 21 October editorial update.
 
 | Category | Task | Lower latency/cost | Balanced | Higher quality |
 |---|---|---|---|---|
 | Deliverables | Small existing-file edits | L low | L medium | L high |
 | Deliverables | Slides or spreadsheets | L medium | S medium | A xhigh |
-| Deliverables | Adapt existing content | S low | S medium | S high |
+| Deliverables | Adapt existing content | S low | S medium; alternative T medium (17 November 2026) | S high |
 | Deliverables | Coordinated files from input data | S medium | S high | S xhigh |
 | Deliverables | Source material to finished output | S medium | S medium | A xhigh |
 | Deliverables | Complex polished deliverable | S medium | A high | A xhigh |
@@ -46,8 +46,8 @@ OpenAI matrix refreshed 9 October 2026; Claude rows refreshed 14 November 2026. 
 | Research/analysis | Research decisions/fact verification | S low | S medium | S xhigh |
 | Research/analysis | Data analysis/problem solving | L medium | S high | A xhigh |
 | Research/analysis | Other (editorial fallback) | S medium | S medium | S xhigh |
-| Computer use | Find app information/controls | S low | S medium | S high |
-| Computer use | Complete app workflow | S low | S medium | S high |
+| Computer use | Find app information/controls | S low | T medium (17 November 2026) | S high |
+| Computer use | Complete app workflow | S low | T medium (17 November 2026) | S high |
 | Computer use | App/website testing | S medium | S high | S xhigh |
 | Computer use | Other (editorial fallback) | S low | S medium | S xhigh |
 
@@ -70,23 +70,25 @@ The [Codex Terra guidance](https://learn.chatgpt.com/docs/model-selection#when-t
 
 | Claude workload/path | Source recommendation | Effort evidence |
 |---|---|---|
-| Everyday coding, analysis, content, vision, agent tools | Sonnet | Unspecified in selection guide |
-| Complex autonomous coding, broad refactors, systems, computer use | Opus | Unspecified in model matrix |
-| Highest capability, agent sessions that run for hours, multistep deep research, finished documents | Fable 5.2 | Unspecified in model matrix |
-| Real-time, bulk, cost-sensitive processing/subagents | Haiku | Unspecified in model matrix |
-| Efficiency-first prototypes, latency or straightforward bulk | Start Haiku; move up for a demonstrated capability gap | No task-specific effort |
+| Everyday coding, analysis, content, vision, agent tools | Sonnet | API default `high` (17 November 2026). Effort page: `medium` for well-specified agentic coding and multistep tool use, `high` for harder or longer work, `medium` or `low` for chat; `xhigh` or `max` only where evals show a gain |
+| Complex autonomous coding, broad refactors, systems, computer use | Opus | API default `medium`; an omitted effort runs one level lower than on Opus 5 (17 November 2026) |
+| Highest capability, agent sessions that run for hours, multistep deep research, finished documents | Fable 5.2 | API default `high` (17 November 2026) |
+| Real-time, bulk, cost-sensitive processing/subagents | Haiku | API default `medium` (17 November 2026) |
+| Efficiency-first prototypes, latency or straightforward bulk | Start Haiku; move up for a demonstrated capability gap | Effort page (17 November 2026): start with `medium`; `low` for chat, short tool tasks and simple high-volume requests, but a long agent prompt at `low` is more likely to skip a search, stop early or skip a check; `high` for knowledge work, longer agent tasks and strict instruction following; `xhigh` or `max` only where evals show a gain over Sonnet 5.5 |
 | Capability-first complex reasoning, accuracy or advanced autonomous coding | Start Opus; optimize downward after adequate quality | Opus medium starting effort |
-| Demanding reasoning or long-horizon work that falls short on Opus at `xhigh` or `max` | Move to Fable 5.2 (selection guide, 14 November 2026) | No selected Fable effort; `references/43-fable-5-2.md` holds the vendor starting point |
+| Demanding reasoning or long-horizon work that falls short on Opus at `xhigh` or `max` | Move to Fable 5.2 (selection guide, 14 November 2026) | Effort page (17 November 2026): start with `high`; `xhigh` for the hardest long-running work where a gain was measured; step down to `medium` or `low` where evals show that quality holds; reserve `max`, often for only a small gain |
 | Bulk execution with difficult decisions | Cheaper executor plus frontier advisor, or a frontier orchestrator that delegates bulk work to lower-cost workers. For native Code candidates and preflight, read `references/41-claude-code-runtime-features.md`. | No default pair or effort |
 
 - The guide recommends Opus as the starting point for most workloads. Keep both the capability-first path and the efficiency-first path.
-- The Sonnet prompting page, not the selection guide, gives `medium` for well-specified agentic coding and `high` for harder or longer work. Its examples of regressions at higher effort rule out automatic maximization.
+- The API defaults above are Messages API defaults. Each model reference holds the Claude Code default; the checked pages state none for the 5.5 models (17 November 2026).
+- The Sonnet prompting page gives regression examples at higher effort, which rule out automatic maximization.
 - A local Fable admission belongs to the runtime orchestrator and stays distinct from the vendor's `xhigh` and `max` advice.
 
 Sources (refresh the current page and asset before reuse):
 
-- [OpenAI model selection](https://developers.openai.com/api/docs/guides/model-selection) and its [served selector asset](https://developers.openai.com/_astro/ModelSelection.react.DJkmSLnH.js)
+- [OpenAI model selection](https://developers.openai.com/api/docs/guides/model-selection) and its [served selector asset](https://developers.openai.com/_astro/ModelSelection.react.BKCv-TnC.js) (17 November 2026; the earlier `DJkmSLnH` asset returns 404)
 - [Claude model selection](https://platform.claude.com/docs/en/about-claude/models/choosing-a-model)
+- [Claude effort](https://platform.claude.com/docs/en/build-with-claude/effort)
 - [Sonnet prompting](https://platform.claude.com/docs/en/build-with-claude/prompt-engineering/prompting-claude-sonnet-5-5)
 
 ## Companion routing
