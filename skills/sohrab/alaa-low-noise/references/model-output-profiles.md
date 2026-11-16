@@ -6,9 +6,7 @@ Calibration controls output length and cadence without losing required content. 
 
 ## Ownership
 
-This skill owns output shape and context economy, not model profiles, effort policy, or universal behavioral guarantees.
-
-Before model-specific claims or model/effort selection, read `/alaa-prompting-guide`. Follow its conditional topic router for current model guidance.
+`SKILL.md` *Model calibration* states what this skill does not own. Before model-specific claims or model/effort selection, read `/alaa-prompting-guide`. Follow its conditional topic router for current model guidance.
 
 ## Calibration rules
 

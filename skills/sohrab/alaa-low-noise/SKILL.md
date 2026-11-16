@@ -27,7 +27,7 @@ Repository validation policy owns stricter invocation requirements.
 ### Part 1 — Context economy: what enters the window
 
 - Treat each tool result as a recurring cost when choosing retrieval.
-- Search or inventory before reading. Then read the bounded slice around the match. Read a whole file only when safe editing requires it.
+- Search or inventory before reading. Then read the bounded slice around the match. Read a whole file only when safe editing requires it. Stop at the first step that answers the question, and summarize the result, not the material.
 - Re-read only for a new reason. Examples include your own edit, a failed check, or a changed hypothesis. Reconfirming content already in context does not qualify.
 - Prefer a scoped search with a few context lines, a changed-file list, or a count over raw dumps. Examples of raw dumps include `cat`, a full tree, or an unbounded log.
 - Prefer one well-chosen query to several exploratory queries.

@@ -15,25 +15,12 @@ These patterns control context input and printed output. Discovery and runtime s
 
 ## Discovery and bounded reads
 
-Work down this order and stop at the first step that answers the question:
-
-1. Search or inventory to locate the relevant path, symbol, or line range.
-2. Read the bounded excerpt around the match.
-3. Read the full file only when safe editing requires the whole file.
-4. Summarize the result, not the material.
-
-Prefer:
+`SKILL.md` *Part 1* owns the search, slice and capture rules. These commands express them:
 
 - `rg -n "pattern" <paths>` to locate before reading.
 - `rg -n -C 3 "pattern" <paths>` when the surrounding lines decide the answer.
 - `rg -c "pattern" <paths>` or a file list when the question is "how widespread is this."
 - a changed-file list instead of a full folder dump.
-
-Avoid by default:
-
-- full-file dumps to prove a file was inspected;
-- full directory trees, especially of generated output;
-- pulling a large result into context when a count, path, or slice answers the question, because a large result is re-read on every later turn.
 
 ## Runtime notes: Claude Code and Codex
 
@@ -61,16 +48,9 @@ Prefer these reporting shapes before raw diff output:
 - `git diff --name-only`
 - `git diff -- <path>` for the one file that matters
 
-By default, report changes, reasons, validation, remaining risks or blockers, and saved artifact paths. Do not paste a repository-wide unified diff unless requested.
-
 ## Large-log capture patterns
 
-When validation or diagnostics are long, keep the bulk out of both the transcript and the context window:
-
-1. Create or reuse a repo-local artifact directory.
-2. Redirect the full command output there.
-3. Read back only the tail or the failing slice.
-4. Report the key outcome and the path.
+Create or reuse a repo-local artifact directory, redirect the full command output there, and read back only the tail or the failing slice.
 
 ## Bash notes
 
