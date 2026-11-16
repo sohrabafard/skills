@@ -292,3 +292,66 @@ AGENT: alaa-implementer-sonnet-high. CONFIGURED: none (the role is model-neutral
    - Not run: install scripts. The pair-parity diff shows only the existing hunks. Independent review is pending at the final boundary.
 
 Skills loaded before the first edit: /alaa-prompting-guide (60 and 80 read), /alaa-ponytail full, /alaa-low-noise. /alaa-code-intelligence-routing, /alaa-testing-strategy, /alaa-services-contract and /alaa-trust-gateway-auth were preloaded. Scratch tooling is in `/tmp/claude-1000/-home-sohrab-project-skills/75ecedca-09c9-4d1a-998e-2f75020937a5/scratchpad/l5b/`, with sources in `src/`, and `build.py`, `tool.py` and `wrappers.py`.
+
+## L1 — alaa-prompting-guide
+
+STATUS: COMPLETE. Lane L1 is done. `alaa-prompting-guide` retired its six superseded model files and its dated refresh log, gave each repeated rule one owner, and was compressed. Every gate in criteria 1 to 3 exits 0.
+AGENT alaa-implementer-sonnet-high; CONFIGURED unknown (none observable in a definition); REQUESTED claude-opus-5-5 / medium; OBSERVED model claude-opus-5-5 (from the system prompt), effort unknown.
+
+1. **Outcome.** The six retired files hold 7,801 words. The surviving text was compressed too, but unevenly (see item 3).
+2. **Branch, worktree and commits.** Branch `worktree-agent-a43dd3681f6f3868e`, worktree `agent-a43dd3681f6f3868e`.
+   - 0c22acae refactor: retire superseded model references (class 2)
+   - 8701b080 refactor: give each repeated rule one owner (class 2)
+   - 6bddb6ac docs: cut vendor restatement in the runtime references (41 and 11, owner-approved; this also compresses them)
+   - dd87d3ab docs: compress the skill text (class 1). It also holds two moves inside a file: the Opus unattended-completion rule (21) and the Haiku admission paragraph (36).
+   - bee4a45a docs: tighten model references and put the SKILL.md body back as it was (class 1)
+   - 05bdc23c docs: restore clauses lost in the compress passes (class 1 repair)
+   - Correction to the 6bddb6ac message: its key-term grep ran before the cuts, on about 15 terms. A wider grep after the cuts found no citation outside the skill (05bdc23c records it).
+   - Correction to the dd87d3ab message: its "nothing removed" claim was true only after the 05bdc23c repairs. My final sentence-level check found no further loss, but it is a self-check, not a review.
+3. **Word counts (measure.py).**
+   - Before: frontmatter 89, body 797, references 36,913, assets 4,507, total 42,355.
+   - After: frontmatter 89, body 790, references 25,947, assets 4,452, total 31,327 (−26%).
+   - Most of the cut is the retired files. The surviving references fell about 11%.
+   - 06, 12, 43 and 90 changed by less than 5%. 43 is left almost as it was because it is the reference the carry-over review judges against.
+   - 60, 61 and 50 grew slightly because they became owners of relocated rules. 31 and 36 also grew slightly, because their pointers are longer than the copies they replaced.
+4. **Relocations (rule: old sites → owner; pointers left at the old sites).**
+   - Artifact test, now with the script option: 80 and 70 → 60.
+   - Wording failure modes: 70 → 60. The owner gained two exceptions: a bare prohibition for a genuine boundary, and no reason needed when the rationale is obvious.
+   - Allocation ownership: 12, 31, 36 and 43 → 90.
+   - Focused checks: 12, 21 and 31 → 80.
+   - Observed identity: 11 and 41 → 80.
+   - Codex TOML directories and keys: 11 → 80.
+   - Codex skill discovery, install default, listing load and `allow_implicit_invocation`: 11 → 61.
+   - Codex AGENTS.md chain: 11 → 70.
+   - Per-surface default effort, minimum Code version and alias: 41 and 90 → each current model file.
+   - When to raise effort: 21 and 31 → 50.
+   - Haiku 4.5 effort rule: 35 → 50.
+   - Legacy-model request: 12 and the topic map now point to 90.
+   - Retired with sizes unchanged: 10-gpt-5-6 14642, 20-opus-5 12410, 30-sonnet-5 10134, 35-haiku-4-5 1325, 40-fable-5 13764, 42-fable-5-1 3358. New file `_to_delete/20261116-core-skills-compression/alaa-prompting-guide/00-source-map-refresh-log.md` (4873 bytes).
+   - Not moved, with reasons:
+     - The 41 and 11 managed-roles sections and the 41 goal-evidence sentence stay because they are on the keep-list.
+     - The 43 safeguard sentence stays because merging it with 41 would widen 41's narrower scope ("to complete a gate").
+     - The ownership lines in 50 step 2 and in the 80 task-control text stay as short pointers.
+5. **Checker literals changed:** none. The clause checkers bind no text in this skill. G5 holds: both wrappers embed `contract.md` verbatim.
+6. **Left for Phase 2:**
+   - `skills/sohrab/AGENTS.md` "The wording test" restates the six failure modes that 60 owns.
+   - Both repository rules that cite 60 and 41 are unchanged.
+7. **Re-review and re-test rules (not changed):**
+   - 60:151 requires a new stated reason for each further fix or review round.
+   - SKILL.md:57 and 80:45 allow removing a repeated check only when no input changed.
+   - 06:73 says unlimited fresh adversarial passes may never converge.
+   - contract.md:23 requires the rewriter to walk every cut and restore.
+8. **Stale or contradictory (not changed):**
+   - 70:30 and 70:36 say the tail is dropped, but 11:80 says the outermost files are dropped. Left verbatim.
+   - The Claude frontmatter lists in 80:15 and 41:87 differ. Left verbatim.
+   - 60:21 says "Write all three parts" above four items.
+   - 90:17 says "defaults refreshed", but the defaults now live in the model files.
+   - Retired 35:3 cites a "legacy-replacement rule" that the policy JSON notes do not contain.
+9. **Gates (worktree root, `PYTHONDONTWRITEBYTECODE=1 python3 -B`):**
+   - validate_sohrab_skill_pack 0, check_skill_index 0, check_fleet_references 0, check_lifecycle_contract 0.
+   - In the skill directory: check_rule_writer_grants 0, check_claude_model_policy 0, check_codex_model_policy --agent-root assets/rule-writer/codex 0.
+   - cc and codex orchestrators: render_agents --check 0 and validate_pack 0 for each.
+   - Criterion 4: a grep of `skills/` finds no retired file name.
+   - Criterion 5: the excluded section of 60 is byte-identical to fc9da127.
+   - No `__pycache__` directory was created, and the tree is clean.
+   - Not run: any other suite. Criterion 6 (Appendix A and C presence) was checked by grep only and is still pending independent review.
