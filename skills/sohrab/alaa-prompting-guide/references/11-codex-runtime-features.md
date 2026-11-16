@@ -1,39 +1,25 @@
 # Codex Runtime Features
 
-These are features of the Codex app and CLI, not raw model behavior. Read only the feature section you need. Model and API guidance lives in `references/12-gpt-6.md`.
+These are features of the Codex app and CLI, not model behavior. Read only the section you need. `references/12-gpt-6.md` holds model and API guidance.
 
 ## Rejected tool input or patch context
 
-Before you repair a rejected call, read the active host's tool schema. JavaScript orchestration, shell-command arguments, structured objects and patch text are different input contracts. Keep each language in its declared input. An API example does not establish the host's schema.
+Grounded in active host schemas inspected 18 October 2026. Recheck the executing host; never copy a remembered tool signature.
 
-For a patch-context mismatch, inspect the current target region and the scoped diff, including other owners' edits. Then rebuild the smallest patch that matches that state. For a duplicate-operation error, combine or split operations only as the active patch contract permits. If a mutation may have occurred, reconcile the actual state before you retry. Never blindly replay an uncertain write.
-
-This section owns schema and context mistakes. Route process, shell, path or sandbox failures to
-`/alaa-codex-runtime-ops`. Neither diagnosis authorizes a settings change or broader writes.
-Use the active repair and retry budget. When the required contract or the safe resulting state remains unknown, report the exact blocker and stop the dependent operation. This procedure is grounded in active host schemas inspected 18 October 2026. Recheck the executing host rather than copying a remembered tool signature.
+- **Before you repair a rejected call, read the active host's tool schema.** JavaScript orchestration, shell-command arguments, structured objects and patch text are different input contracts. Keep each language in its declared input. An API example does not establish the host's schema.
+- **Patch-context mismatch:** inspect the current target region and the scoped diff, including other owners' edits. Rebuild the smallest patch that matches that state.
+- **Duplicate-operation error:** combine or split operations only as the active patch contract permits.
+- **A mutation may have occurred:** reconcile the actual state before you retry. Never blindly replay an uncertain write.
+- **Process, shell, path or sandbox failure:** route it to `/alaa-codex-runtime-ops`. This section owns only schema and context mistakes.
+- Neither diagnosis authorizes a settings change or broader writes. Use the active repair and retry budget. When the required contract or the safe resulting state stays unknown, report the exact blocker and stop the dependent operation.
 
 ## `/goal` — persistent objective mode
 
-A Goal is durable, thread-scoped state that keeps a Codex thread working toward one outcome across many turns. Codex stops when it is fairly confident the stopping condition is met, when it hits its budget, or when it is genuinely blocked; evidence, not speculation, decides completion. Reaching a budget limit is not completion: Codex then stops substantive work, summarizes progress and blockers, and names the next useful step.
+A Goal is durable, thread-scoped state that keeps a Codex thread working toward one outcome across turns. Codex stops when evidence makes it fairly confident that the stop condition is met, when it hits its budget, or when it is blocked. A budget limit is not completion.
 
-A strong Goal defines seven things: the **outcome**; the **verification surface** (the test, benchmark, artifact or log that proves it); the **constraints** that must not regress; the **boundaries** (files, tools, resources); the **iteration policy** for choosing the next action; the **blocked stop condition** and what would unblock it; and a **bounded budget**, an explicit turn or time cap, so a non-converging goal cannot run unbounded.
+**Activation.** Use the goal tool or command of the current host only when the user explicitly requests an objective loop; ordinary implementation work activates none. Read that host's goal tool schema for lifecycle, budget and blocked-state rules. Report an unavailable capability; write no remembered feature flag or version gate into configuration.
 
-### CLI composer and objective storage
-
-Verified 3 November 2026 against installed `codex-cli 0.163.0` and its tagged source. The TUI accepts a leading `/goal` with a multiline objective in one composer message. The protocol caps the stored objective at **4,000 Rust characters** (`str::chars().count()`). Above that cap, the TUI writes the full objective to `goal-objective.md` and stores a short file reference. The CLI source does not establish Desktop composer behavior or the active goal tool's limits. Verify the target host and input path before depending on the file route.
-
-- [Multiline composer input](https://github.com/openai/codex/blob/rust-v0.163.0/codex-rs/tui/src/chatwidget/tests/goal_validation.rs#L78)
-- [Stored objective limit](https://github.com/openai/codex/blob/rust-v0.163.0/codex-rs/protocol/src/protocol.rs#L4207)
-- [TUI file route](https://github.com/openai/codex/blob/rust-v0.163.0/codex-rs/tui/src/goal_files.rs#L121)
-
-### Activation
-
-Use the goal tools or command exposed by the current host only when the user explicitly requests
-an objective loop. Do not infer goal activation from ordinary implementation work. Read that
-host's current goal tool schema for lifecycle, budget, and blocked-state rules; report unavailable
-capabilities instead of writing remembered feature flags or a version gate into configuration.
-
-### Ready-to-use `/goal` template
+**A strong Goal defines seven things:** the outcome, the verification surface, the constraints that must not regress, the boundaries, the iteration policy, the blocked stop condition with what would unblock it, and an explicit turn or time cap.
 
 ```text
 /goal <desired end state> verified by <specific command, test, or artifact>, while preserving <what must not regress>.
@@ -42,62 +28,74 @@ If blocked or no valid path remains, report exactly what is blocking progress an
 Stop after <turn or time cap> even if incomplete, reporting progress, evidence so far, and the next step.
 ```
 
-Build worked examples from `references/12-gpt-6.md` and this template: one objective, one stopping condition, one validation loop. Size a goal larger than one prompt and smaller than an open-ended backlog. Documented fits are migrations, large refactors, experiments and long-running coding work with a clear success condition and a validation loop.
+Write one objective, one stop condition and one validation loop. Size a goal larger than one prompt and smaller than an open-ended backlog.
 
-**This is not Claude Code's `/goal`.** Same command name, different mechanism: never carry a `/goal` block between the runtimes unedited. Read `references/41-claude-code-runtime-features.md` for how the two differ in what proves completion, how each is enabled and what each costs.
+**CLI composer and objective storage.** Verified 3 November 2026 against installed `codex-cli 0.163.0` and its tagged source:
 
-## Subagents — explicit delegation and parallel spawning
+- The TUI accepts a leading `/goal` with a multiline objective in one composer message ([test](https://github.com/openai/codex/blob/rust-v0.163.0/codex-rs/tui/src/chatwidget/tests/goal_validation.rs#L78)).
+- The protocol caps the stored objective at **4,000 Rust characters**, `str::chars().count()` ([source](https://github.com/openai/codex/blob/rust-v0.163.0/codex-rs/protocol/src/protocol.rs#L4207)).
+- Above the cap, the TUI writes the full objective to `goal-objective.md` and stores a short file reference ([source](https://github.com/openai/codex/blob/rust-v0.163.0/codex-rs/tui/src/goal_files.rs#L121)).
+- The CLI source establishes neither Desktop composer behavior nor the limits of the active goal tool. Verify the target host and input path before you depend on the file route.
 
-Delegate only within authorization granted by the user or an applicable instruction. The host's current collaboration tools define roles, nesting, concurrency, inheritance and waiting. Do not copy defaults or tool names from another Codex surface. A prompt may authorize concrete independent lanes, but it cannot enable an unavailable runtime feature.
+**This is not Claude Code's `/goal`.** Never carry a `/goal` block between the runtimes unedited. `references/41-claude-code-runtime-features.md` states how the two differ in what proves completion, how each is enabled and what each costs.
 
-When you write a custom agent TOML, read `references/80-subagent-authoring.md`; it owns the
-directories and keys. Use only keys supported by the target host.
+## Subagents
 
-**Custom TOML model and effort pins win over spawn arguments.** Verified 9 October 2026: when both pins are omitted, explicit spawn controls precede global agent defaults and parent settings. Managed authority roles omit both pins. Supply BOTH task controls on a verified compatible spawn surface. An inherited value is not a task decision. In the active host, a full-history fork can forbid overrides. Neither prose nor a disk edit can change a stale loaded pin; use an available exact verified realization or block the affected lane.
-A definition created in the repository does not prove that the current session has loaded it.
+**Authority.** Delegate only within authorization granted by the user or an applicable instruction. A prompt can authorize concrete independent lanes; it cannot enable an unavailable runtime feature. The host's current collaboration tools define roles, nesting, concurrency, inheritance and waiting. Copy no default or tool name from another Codex surface.
 
-`agents.max_concurrent_threads_per_session` caps the spawned-agent threads open at once, excluding the primary thread. `agents.max_threads` is its legacy alias. When the key is unset, Codex chooses the default; neither source states a number. Verified 14 November 2026 against [Subagents](https://learn.chatgpt.com/docs/agent-configuration/subagents) and the [Configuration Reference](https://learn.chatgpt.com/docs/config-file/config-reference).
+**Definitions.** To write a custom agent TOML, read `references/80-subagent-authoring.md`; it owns the directories and keys. A definition created in the repository does not prove that the current session loaded it.
 
-A subagent inherits the parent sandbox policy and runtime overrides. A `read-only` TOML value does not prove that every capability is read-only. Inspect the effective native permissions, the parent overrides and the MCP tool grants; the server-side effects of an MCP tool are outside native sandbox enforcement. Before you claim a read-only boundary, restrict or withhold mutation-capable tools. Do not change installed configuration without authority.
+**Pin precedence** (verified 9 October 2026):
 
-In `workspace-write`, these paths stay read-only inside a writable root, recursively: `.git`, whether it is a directory or a pointer file, together with the Git directory a pointer file names; and the directories `.agents`, `.codex` and `.aws` when they exist. The page does not say how `git commit` is handled. Verified 14 November 2026 against [Sandbox and approvals](https://learn.chatgpt.com/docs/agent-approvals-security).
+1. A model or effort pin in the custom TOML wins over spawn arguments.
+2. With both pins omitted, explicit spawn controls precede global agent defaults and parent settings.
 
-When you report a subagent's model and effort, read `references/80-subagent-authoring.md` *Configuration and observed identity*; it separates requested from observed values and fixes the metadata position.
+Managed authority roles omit both pins, so supply BOTH task controls on a verified compatible spawn surface. An inherited value is not a task decision. A full-history fork can forbid overrides in the active host. Neither prose nor a disk edit changes a stale loaded pin: use an available exact verified realization or block the affected lane. The policy JSON records a dated supported-effort snapshot; verify availability on the dispatch host.
 
-The sources below were verified on 25 September 2026. The policy JSON records a dated
-supported-effort snapshot; verify availability again on the actual dispatch host.
+**Concurrency.** `agents.max_concurrent_threads_per_session` caps the spawned-agent threads open at once, excluding the primary thread. `agents.max_threads` is its legacy alias. When the key is unset, Codex chooses the default; neither source states a number. Verified 14 November 2026 against [Subagents](https://learn.chatgpt.com/docs/agent-configuration/subagents) and the [Configuration Reference](https://learn.chatgpt.com/docs/config-file/config-reference).
+
+**Sandbox.** A subagent inherits the parent sandbox policy and runtime overrides.
+
+- A `read-only` TOML value does not prove that every capability is read-only. The server-side effects of an MCP tool are outside native sandbox enforcement.
+- Before you claim a read-only boundary, inspect the effective native permissions, the parent overrides and the MCP tool grants, and restrict or withhold mutation-capable tools.
+- Change no installed configuration without authority.
+- In `workspace-write`, these paths stay read-only inside a writable root, recursively: `.git`, whether it is a directory or a pointer file, together with the Git directory a pointer file names; and the directories `.agents`, `.codex` and `.aws` when they exist. The page does not say how `git commit` is handled. Verified 14 November 2026 against [Sandbox and approvals](https://learn.chatgpt.com/docs/agent-approvals-security).
+
+**Identity.** To report a subagent's model and effort, read `references/80-subagent-authoring.md` *Configuration and observed identity*.
 
 ## `spawn_agents_on_csv` — background batch jobs
 
-An experimental tool for many similar tasks that map one-to-one to CSV rows. It applies an instruction template with `{column_name}` placeholders to each row, spawns one worker per row, and exports the combined results to an output CSV. Its parameters are `csv_path`, `instruction`, `id_column`, `output_schema`, `output_csv_path`, `max_concurrency` and `max_runtime_seconds`, which overrides `agents.job_max_runtime_seconds` per call.
+An experimental tool that spawns one worker per CSV row from an instruction template with `{column_name}` placeholders, and exports the combined results to an output CSV. Parameters: `csv_path`, `instruction`, `id_column`, `output_schema`, `output_csv_path`, `max_concurrency`, and `max_runtime_seconds`, which overrides `agents.job_max_runtime_seconds` per call.
 
-Each worker **must call `report_agent_job_result` exactly once**. A worker that exits without reporting produces an error row. Make that call an explicit, unconditional final step in every instruction template you generate, including on the failure path.
+Each worker **must call `report_agent_job_result` exactly once**; a worker that exits without it produces an error row. Make that call an explicit, unconditional final step of every instruction template, on the failure path too.
 
-## `AGENTS.md` — durable project instructions
+## `AGENTS.md`
 
-When you rely on the `AGENTS.md` resolution order, read `references/70-agent-instruction-files.md` *Nesting and precedence*; it owns the chain.
-
-`project_doc_max_bytes` caps the combined size (32 KiB default, configurable up to 65536 bytes); Codex stops adding files once the limit is reached, which means a deep chain can silently drop the outermost files. `project_doc_fallback_filenames` in `~/.codex/config.toml` adds alternative filenames. `CODEX_HOME` relocates the global profile used for discovery.
-
-Codex does **not** update these files on its own. When a correction must persist, the prompt must tell Codex to write it back into `AGENTS.md`. For authoring guidance, read `references/70-agent-instruction-files.md`.
+- For the resolution order, the `project_doc_max_bytes` limit and the fallback filenames, read `references/70-agent-instruction-files.md` *Nesting and precedence*. For authoring, read the rest of that file.
+- Codex does **not** update these files on its own. When a correction must persist, the prompt must tell Codex to write it back into `AGENTS.md`.
 
 ## Agent Skills
 
-When you write a Codex skill, its install instructions or its description, read `references/61-skill-platform-mechanics.md`; it owns the discovery scopes, the install default, the listing budget and the frontmatter keys. `references/06-invocation-and-composition.md` owns the invocation paths.
+To write a Codex skill, its install instructions or its description, read `references/61-skill-platform-mechanics.md`; it owns the discovery scopes, the install default, the listing budget and the frontmatter keys. `references/06-invocation-and-composition.md` owns the invocation paths.
 
 ## Session-shaping slash commands
 
-Name these explicitly in a generated operating prompt rather than leaving them to the operator: `/plan` (propose a strategy before implementing), `/review` (review local changes), `/experimental` (toggle optional features, including subagents and goals), `/fork` (clone the conversation into a new thread), `/side` or `/btw` (an ephemeral side conversation), `/personality`, `/compact`, and `/model`, `/permissions`, `/status`, `/approve`, `/new`, `/resume`. A `/plan` gate followed by a `/goal` is the Codex plan-then-autonomy pattern: approve the approach, then hand the thread a bounded objective.
+Name the command in a generated operating prompt; do not leave it to the operator: `/plan`, `/review`, `/experimental` (toggles optional features, including subagents and goals), `/fork`, `/side` or `/btw`, `/personality`, `/compact`, `/model`, `/permissions`, `/status`, `/approve`, `/new`, `/resume`. A `/plan` gate followed by a `/goal` is the Codex plan-then-autonomy pattern: approve the approach, then hand the thread a bounded objective.
 
-## Automations — scheduled recurring tasks
+## Automations
 
-Codex can schedule recurring background tasks: standalone automations that report into Triage, project automations that need the app running and the project on disk, and thread automations that wake the current thread. Put two cautions in any prompt that sets one up. On a Git repository an automation runs in the local project or on a dedicated background worktree, and frequent schedules accumulate worktrees. In read-only sandbox mode, tool calls fail when they need to modify files, use the network or work with apps.
+Put two cautions in a prompt that sets up a scheduled Codex task:
+
+- On a Git repository an automation runs in the local project or on a dedicated background worktree, and a frequent schedule accumulates worktrees.
+- In read-only sandbox mode, a tool call fails when it must modify files, use the network or work with apps.
 
 ## Caveats
 
-Goal lifecycle and subagent guidance were refreshed 25 September 2026; the CLI composer evidence has its own date above. The remaining sections were verified 24 July 2026 and need a live refresh before use. These historical defaults are not dispatch authority and must be re-checked before you depend on them: `agents.max_depth` (1), `agents.job_max_runtime_seconds` (1800), the 32 KiB / 65536-byte `project_doc_max_bytes` bounds, and the `codex-cli` 0.128.0 requirement for goals. The former `agents.max_threads` (6) default is superseded; see Subagents.
-
-Goals, `spawn_agents_on_csv` and the batch flow are experimental. The `features.goals` key did not appear in the visible, truncated portion of the configuration reference; the enabling paths come from the Goals use-case page. `features.memories` exists and is off by default; how memories interact with `AGENTS.md` is unverified.
+- Goal lifecycle and subagent guidance were refreshed 25 September 2026. Sections with no later date were verified 24 July 2026 and need a live refresh before use.
+- Historical defaults, not dispatch authority; re-check each before you depend on it: `agents.max_depth` (1), `agents.job_max_runtime_seconds` (1800), and the `codex-cli` 0.128.0 requirement for goals. The former `agents.max_threads` default (6) is superseded; see Subagents.
+- Goals, `spawn_agents_on_csv` and the batch flow are experimental.
+- The `features.goals` key did not appear in the visible, truncated portion of the configuration reference; the enabling paths come from the Goals use-case page.
+- `features.memories` exists and is off by default. How memories interact with `AGENTS.md` is unverified.
 
 ## Sources
 
@@ -105,11 +103,15 @@ Goals, `spawn_agents_on_csv` and the batch flow are experimental. The `features.
 - [Using Goals in Codex (Cookbook)](https://developers.openai.com/cookbook/examples/codex/using_goals_in_codex)
 - [Subagents – Codex](https://developers.openai.com/codex/subagents)
 - [Agent Skills – Codex](https://learn.chatgpt.com/docs/build-skills)
-- [Custom instructions with AGENTS.md – Codex](https://developers.openai.com/codex/guides/agents-md)
+- [Custom instructions with AGENTS.md – Codex](https://learn.chatgpt.com/docs/agent-configuration/agents-md)
 - [Configuration Reference – Codex](https://developers.openai.com/codex/config-reference)
 - [Slash commands – Codex CLI](https://developers.openai.com/codex/cli/slash-commands)
 - [Automations – Codex app](https://developers.openai.com/codex/app/automations)
 
 ## Managed task-selected authority roles
 
-The orchestrator renders model-neutral definitions that preserve role authority, grants and contracts. Its `scripts/render_agents.py --check` checks projection consistency, not serving identity. The canonical capability policy registers the roles and supports explicit task controls. An existing ID that names a model or an effort is a compatibility label only. The orchestrator selects every actual task pair, and it verifies the loaded definitions, the controls and the effective permissions. Main-session configuration remains external. A planner draft stays advisory, and the parent owns the durable plan. No source check proves installation, loaded registration or model obedience.
+- The orchestrator renders model-neutral definitions that preserve role authority, grants and contracts. Its `scripts/render_agents.py --check` checks projection consistency, not serving identity.
+- The capability policy registers the roles and supports explicit task controls. An existing ID that names a model or an effort is a compatibility label only.
+- The orchestrator selects every task pair, and it verifies the loaded definitions, the controls and the effective permissions. Main-session configuration stays external.
+- A planner draft stays advisory, and the parent owns the durable plan.
+- No source check proves installation, loaded registration or model obedience.
