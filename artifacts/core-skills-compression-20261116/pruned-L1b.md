@@ -63,7 +63,7 @@ Listed so that the owner can restore a second statement. Each rule still exists 
 | `60` *Defects and fixes* | 7 of 14 rows restated the prose | The 7 rows that carry a rule or a symptom the prose lacks stay |
 | `60` *Lean prompts must preserve behavior* | The vendor guidance and the keep-list restatement | `12` *Prompt design*; `60` never-remove list |
 | `70` *Defects and fixes*, *Checklist* | 7 of 9 rows and all 10 items | `70` prose; 2 rows stay as *Symptoms of a chain defect* |
-| `80` *Defects and fixes*, *Checklist* | All 12 rows and 9 of 10 items | `80` prose; checklist item 5 (the description states when to delegate) moved into *The four things every definition pins* |
+| `80` *Defects and fixes*, *Checklist* | All 12 rows and 9 of 10 items | `80` prose, except "Untested escalation", which stays in `50` *Raising effort*, and "Wrong delegation polarity", which stays in `06` *Delegation polarity*; checklist item 5 (the description states when to delegate) moved into *The four things every definition pins* |
 | `80` *When a subagent is the right tool* | Pointer section | One line under the title |
 | `50` *Anti-patterns* | 8 of 11 items restated the prose | `50` prose; 3 items stay under *Raising effort* |
 | `50` *Capability registries and realized controls* | Restated procedure steps | `50` procedure steps 3 to 5 |
@@ -73,5 +73,5 @@ Listed so that the owner can restore a second statement. Each rule still exists 
 | `36` | "Historical Haiku 4.5 has no effort parameter" | `50` *Thinking* |
 | `41` | Agent definition directories and the frontmatter list | `80` *Definition files* |
 | `80` | Nesting default and the inherited `Agent` tool | `41` *Agent tool and subagents* |
-| `11` | `CODEX_HOME`, `project_doc_fallback_filenames`, the byte limit | `70` |
+| `11` | `CODEX_HOME`, `project_doc_fallback_filenames`, the byte limit, and "Codex does not update these files on its own" | `70` |
 | `12` | "Give explicit delegation scope when delegation is authorized" | `06` *Delegation polarity*, Codex row |

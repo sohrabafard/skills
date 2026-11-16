@@ -6,14 +6,14 @@ This file owns Claude Code selection and activation mechanics. A model or API ca
 
 **IDs and aliases** (model-config and sub-agents, 25 September 2026). A full API ID pins a version. A family alias rolls, and it can resolve differently by provider, parent model or gateway; resolve `inherit` and family aliases on the target provider. A provider deployment mapping is separate runtime evidence, and the policy does not accept it as an alias. An allowlist can substitute a different model, so a requested selection is not an observed identity. For a model's minimum Claude Code version, alias behaviour, default effort per surface and thinking control in Code, read that model's reference. A newer installed CLI alone proves neither account entitlement nor activation.
 
-**Session model.** Inspect an explicit `/model` choice, the startup `--model` flag, `ANTHROPIC_MODEL`, settings and `ANTHROPIC_DEFAULT_MODEL`, managed allowlists, and host overrides. `/model` can persist a selection. Inspection authorizes neither a settings change nor credit consent.
+**Session model** (25 September 2026). Inspect an explicit `/model` choice, the startup `--model` flag, `ANTHROPIC_MODEL`, settings and `ANTHROPIC_DEFAULT_MODEL`, managed allowlists, and host overrides. `/model` can persist a selection. Inspection authorizes neither a settings change nor credit consent.
 
-**Subagent model precedence.**
+**Subagent model precedence** (25 September 2026).
 
 - Since 2.1.251: the invocation, then the definition frontmatter, then the subagent model environment variable, then the parent. Earlier versions give the environment variable priority; never apply that order to a newer CLI.
 - Since 2.1.257: `CLAUDE_CODE_SUBAGENT_MODEL_FORCE=1` forces the model that the environment variable targets, or the parent model when the variable sets no target.
 - Forks and skills with `model: inherit` keep documented exceptions; inspect them before you claim that a pin won.
-- A nested subagent with no model runs on its parent subagent's model, not on the main conversation's model.
+- A nested subagent with no model runs on its parent subagent's model, not on the main conversation's model (14 November 2026).
 
 **The Agent tool's `model` parameter** (sub-agents and the active tool schema, 14 November 2026) accepts a family alias only: `sonnet`, `opus`, `haiku`, `fable`. It accepts no full ID and no `inherit`. To realize a selected full ID at dispatch, pass its family alias and verify that the alias resolves to that ID on the target provider. When it does not, the definition's `model` field is the only pin, and the lane of a managed model-neutral role is blocked.
 
@@ -88,7 +88,7 @@ Apply this to a prompt, a system prompt or a dispatch for a Claude model. The ad
 
 ## Historical harness mechanics
 
-The loop, subagent, workflow and plan-mode details below keep their 24 July 2026 verification unless a sentence carries a later date. They are lookup leads, not capability promises: re-fetch the feature's official page before use. An unverified limit receives no new date.
+The loop, workflow and scheduling details below keep their 24 July 2026 verification unless a sentence carries a later date. They are lookup leads, not capability promises: re-fetch the feature's official page before use. An unverified limit receives no new date.
 
 ## `/loop`
 

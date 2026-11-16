@@ -40,6 +40,7 @@ Both runtimes concatenate root-down and override nothing. A file nearer the work
 - Global level: `AGENTS.override.md` first, then `AGENTS.md`; only the first non-empty file is used. `~/.codex/AGENTS.override.md` is a temporary global override that leaves the base file in place.
 - Each directory from the project root down to the working directory: `AGENTS.override.md`, then `AGENTS.md`, then any configured fallback name; at most one file per directory. Empty files are skipped.
 - The files are joined root-down with blank lines. Codex stops searching at the working directory, so put a per-team override as close to the specialized work as possible.
+- Codex does **not** update these files on its own. When a correction must persist, the prompt must tell Codex to write it back into `AGENTS.md`.
 - **Size limit.** `project_doc_max_bytes` bounds the combined size, 32 KiB by default. Codex adds files from the root down and "stops adding files once the combined size reaches the limit". The files nearest the working directory, which hold the most specific guidance, are therefore the ones left out: a bloated root `AGENTS.md` evicts the leaf file that governs the directory being edited. The page advises: "Raise the limit or split instructions across nested directories". It does not say whether a file that crosses the limit is cut or skipped whole, and its 65536 is an example value, not a stated maximum. Source: [AGENTS.md (Codex)](https://learn.chatgpt.com/docs/agent-configuration/agents-md), 16 November 2026.
 
 Symptoms of a chain defect:

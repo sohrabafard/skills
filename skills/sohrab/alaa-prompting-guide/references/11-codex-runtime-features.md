@@ -71,8 +71,7 @@ Each worker **must call `report_agent_job_result` exactly once**; a worker that 
 
 ## `AGENTS.md`
 
-- For the resolution order, the `project_doc_max_bytes` limit and the fallback filenames, read `references/70-agent-instruction-files.md` *Nesting and precedence*. For authoring, read the rest of that file.
-- Codex does **not** update these files on its own. When a correction must persist, the prompt must tell Codex to write it back into `AGENTS.md`.
+For the resolution order, the `project_doc_max_bytes` limit, the fallback filenames and the write-back rule, read `references/70-agent-instruction-files.md` *Nesting and precedence*. For authoring, read the rest of that file.
 
 ## Agent Skills
 
