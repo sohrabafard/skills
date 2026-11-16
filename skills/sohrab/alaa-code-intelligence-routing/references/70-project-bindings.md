@@ -40,6 +40,6 @@ During authorized setup, put this fragment under the installed schema's supporte
 Follow the repository binding and /alaa-code-intelligence-routing for evidence selection.
 ```
 
-Keep it as a pointer, not a copied routing table. Confirm contract reachability after activation; activation alone does not prove that the client received it.
+Confirm contract reachability after activation; activation alone does not prove that the client received it.
 
 Sources and freshness are owned by reference 90: Boost custom guidelines and Serena clients, workflow and configuration. No external setup-tree file is needed.

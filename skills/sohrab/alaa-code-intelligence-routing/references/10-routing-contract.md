@@ -31,7 +31,7 @@ Serena and its hooks are not prerequisites for native language operations. Recor
 
 ## Consume evidence
 
-Reuse adequate fresh verbatim source, graph paths, metadata and prior results. Do not reread for reassurance. If a region is missing or stale, retrieve only that live region. A new semantic, implementation or runtime question must name its missing fact rather than repeat an answered one.
+Reuse adequate fresh source, graph paths, metadata and prior results, and never reread them for reassurance. If a region is missing or stale, retrieve only that live region. A new semantic, implementation or runtime question must name its missing fact rather than repeat an answered one.
 
 Honor returned provenance: heuristic edges, runtime dispatch boundaries and unexplained path gaps cannot establish a complete call path. Answer a missing dispatch fact through its eligible owner without restarting discovery. A text-search miss does not establish unused code.
 

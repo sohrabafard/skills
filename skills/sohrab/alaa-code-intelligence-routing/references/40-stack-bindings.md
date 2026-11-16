@@ -44,15 +44,15 @@ When application-info is unavailable, inspect the installed package metadata dir
 
 All available CodeGraph tools are eligible, with or without Serena; there is no explore-only allowlist. Match the question to explore, node/source, query/search, files, callers, callees, impact, context, affected tests, status or another verified operation. A CLI-only operation needs no preceding MCP failure. Verify the index, the worktree and the role permissions. For an unlisted MCP tool, use its eligible CLI equivalent or report the missing surface without changing configuration.
 
-Explore combines source, relationships and impact. A focused operation may answer a narrower question directly. Neither requires a preliminary call to the other. Apply the routing contract's reuse rule. Heuristic edges do not prove binding completeness. More graph calls cannot supply type diagnostics or semantic-edit guarantees that CodeGraph does not implement.
+Explore combines source, relationships and impact. A focused operation may answer a narrower question directly. Neither requires a preliminary call to the other. More graph calls cannot supply type diagnostics or semantic-edit guarantees that CodeGraph does not implement.
 
-Suggestions of affected tests or dependencies select candidate coverage. Only native execution proves that tests passed. Status and version establish index and installation information. Init, uninit, index, sync, unlock, daemon control, install, uninstall, upgrade and telemetry changes have lifecycle or configuration effects. Each requires its explicit corresponding authority and is never an automatic evidence fallback. The one exception is `init` and `sync` inside a lane's own worktree, which `SKILL.md` *Operation card* grants. A documented unreleased viewer is not an installed capability.
+Suggestions of affected tests or dependencies select candidate coverage. Only native execution proves that tests passed. Status and version establish index and installation information. Init, uninit, index, sync, unlock, daemon control, install, uninstall, upgrade and telemetry changes have lifecycle or configuration effects. Each requires its explicit corresponding authority and is never an automatic evidence fallback, except the lane-local `init` and `sync` that `SKILL.md` *Operation card* grants. A documented unreleased viewer is not an installed capability.
 
 ## Claude Code language-service tool
 
-In Claude Code, the built-in `LSP` tool is a connected language service wherever a server is configured for the file type. It answers definition, references, implementations, call hierarchy, hover, document symbols and workspace symbols at a file position. It needs no Serena. Take the position from a CodeGraph query result or from the document symbols. The tool reads only; it performs no rename and no edit.
+`SKILL.md` *Operation card* owns when to use the built-in `LSP` tool. It is a connected language service wherever a server is configured for the file type, and it needs no Serena. It answers definition, references, implementations, call hierarchy, hover, document symbols and workspace symbols at a file position. The document symbols can also supply that position. The tool reads only; it performs no rename and no edit.
 
-The server's workspace is the session's project root. For a file outside that root it resolves file-local facts only, and cross-file names stay unresolved. Check that returned paths lie inside your worktree before you rely on them. A role whose definition lists its tools reaches `LSP` only when that list names it. Codex has no such tool; it uses the CLI operations in `references/45-native-tools.md`.
+The server's workspace is the session's project root. For a file outside that root it resolves file-local facts only, and cross-file names stay unresolved. Check that returned paths lie inside your worktree before you rely on them. A role whose definition lists its tools reaches `LSP` only when that list names it.
 
 ## Serena specialized groups
 
@@ -83,4 +83,4 @@ Apply the routing contract to source questions about components, composables, st
 
 ## Other source
 
-Supported indexed structure uses CodeGraph. Exact semantics use the configured stack owner or Serena. Unsupported or unindexed code uses an eligible native operation and keeps the lost graph and semantic guarantees on record. /alaa-laravel-architecture owns Laravel implementation doctrine.
+Apply the routing contract. For unsupported or unindexed code, record the lost graph and semantic guarantees. /alaa-laravel-architecture owns Laravel implementation doctrine.
