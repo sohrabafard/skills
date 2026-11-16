@@ -19,7 +19,7 @@
 
 ## Official task guidance
 
-OpenAI matrix refreshed 9 October 2026; Claude rows refreshed 14 November 2026. Each current model reference holds that model's defaults per surface. The complete served selector asset was read as text, without execution or browser interaction; the supplied screenshots match its cells. L = GPT-6 Luna, S = GPT-6.1 Sol, T = GPT-6.1 Terra, A = GPT-6 Astra. The two computer-use cells dated 17 November 2026 come from the asset's 21 October editorial update. The asset also lists T medium as an alternative for "Adapt existing content", with Sol kept as primary (17 November 2026).
+OpenAI matrix refreshed 9 October 2026; Claude rows refreshed 14 November 2026. Each current model reference holds that model's defaults per surface. The complete served selector asset was read as text, without execution or browser interaction; the supplied screenshots match its cells. L = GPT-6 Luna, S = GPT-6.1 Sol, T = GPT-6.1 Terra, A = GPT-6 Astra. The two computer-use rows dated 17 November 2026 come from the asset's 21 October editorial update, which renamed them; Terra medium covers only those narrower tasks. The asset also lists T medium as an alternative for "Adapt existing content", with Sol kept as primary (17 November 2026).
 
 | Category | Task | Lower latency/cost | Balanced | Higher quality |
 |---|---|---|---|---|
@@ -46,8 +46,8 @@ OpenAI matrix refreshed 9 October 2026; Claude rows refreshed 14 November 2026. 
 | Research/analysis | Research decisions/fact verification | S low | S medium | S xhigh |
 | Research/analysis | Data analysis/problem solving | L medium | S high | A xhigh |
 | Research/analysis | Other (editorial fallback) | S medium | S medium | S xhigh |
-| Computer use | Find app information/controls | S low | T medium (17 November 2026) | S high |
-| Computer use | Complete app workflow | S low | T medium (17 November 2026) | S high |
+| Computer use | Find visible controls in an app | S low | T medium (17 November 2026) | S high |
+| Computer use | Update specified records in an app | S low | T medium (17 November 2026) | S high |
 | Computer use | App/website testing | S medium | S high | S xhigh |
 | Computer use | Other (editorial fallback) | S low | S medium | S xhigh |
 
@@ -88,6 +88,7 @@ Sources (refresh the current page and asset before reuse):
 
 - [OpenAI model selection](https://developers.openai.com/api/docs/guides/model-selection) and its [served selector asset](https://developers.openai.com/_astro/ModelSelection.react.BKCv-TnC.js) (17 November 2026; the earlier `DJkmSLnH` asset returns 404)
 - [Claude model selection](https://platform.claude.com/docs/en/about-claude/models/choosing-a-model)
+- [Claude models overview](https://platform.claude.com/docs/en/about-claude/models/overview) (default effort row, 17 November 2026)
 - [Claude effort](https://platform.claude.com/docs/en/build-with-claude/effort)
 - [Sonnet prompting](https://platform.claude.com/docs/en/build-with-claude/prompt-engineering/prompting-claude-sonnet-5-5)
 

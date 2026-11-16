@@ -44,8 +44,8 @@ Raise effort only when quality still falls short after you exclude prompt bloat,
 Evidence for the runtime orchestrator's choice (17 November 2026):
 
 - Lower effort for a short, fully specified or high-volume task ([effort](https://platform.claude.com/docs/en/build-with-claude/effort)).
-- At a low level, a long agent prompt is more likely to skip a search, stop early or skip a check ([effort](https://platform.claude.com/docs/en/build-with-claude/effort)). Keep the higher level for such a lane.
-- Step down only where your evals show that quality holds ([effort](https://platform.claude.com/docs/en/build-with-claude/effort)).
+- At `low`, a long agent prompt is more likely to skip a search, stop early or skip a check (stated for Haiku 5.5 on the [effort](https://platform.claude.com/docs/en/build-with-claude/effort) page). Start such a lane at `medium` or above; at a lowered level, add the done condition or finish rule that the model reference gives.
+- For Fable 5.2, which starts at `high`, step down to `medium` or `low` only where your evals show that quality holds ([effort](https://platform.claude.com/docs/en/build-with-claude/effort)).
 - Tuning effort is often a better lever than a model switch ([choosing a model](https://platform.claude.com/docs/en/about-claude/models/choosing-a-model)).
 
 ## Caveats

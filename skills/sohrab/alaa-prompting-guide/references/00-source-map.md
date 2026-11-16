@@ -46,9 +46,9 @@ In three areas a carried-forward value is a defect, because nothing errors when 
 
 Each reference keeps the date beside the fact it supports. The latest date per source group:
 
-- 17 November 2026: Code `advisor` page, Advisor tool page, Claude model selection and effort pages, the OpenAI served selector asset, and the Codex subagents page, for the facts dated 17 November 2026 in `41`, `50`, `90` and `12`.
+- 17 November 2026: Code `advisor` page, Advisor tool page, Claude model selection, models overview and effort pages, the OpenAI served selector asset, and the Codex subagents page, for the facts dated 17 November 2026 in `41`, `50`, `90` and `12`.
 - 16 November 2026: Codex models page, Codex `AGENTS.md` page, OpenAI skills blog, Claude Code `skills` page, Agent Skills best practices, and the Claude subagent field list.
-- 14 November 2026: OpenAI latest-model and model-selection pages; Codex subagents, configuration reference, and sandbox and approvals pages; Claude Fable 5.2 prompting and migration, models overview, effort, model selection, and the Code `model-config`, `sub-agents`, `env-vars`, `workflows` and `advisor` pages (`https://code.claude.com/docs/en/advisor`, `https://platform.claude.com/docs/en/agents-and-tools/tool-use/advisor-tool`).
+- 14 November 2026: OpenAI latest-model and model-selection pages; Codex subagents, configuration reference, and sandbox and approvals pages; Claude Fable 5.2 prompting and migration, effort, model selection, and the Code `model-config`, `sub-agents`, `env-vars`, `workflows` and `advisor` pages (`https://code.claude.com/docs/en/advisor`, `https://platform.claude.com/docs/en/agents-and-tools/tool-use/advisor-tool`).
 - 3 November 2026: Codex Terra pages.
 - 9 October 2026: Claude Opus 5.5, Sonnet 5.5 and Haiku 5.5 prompting pages.
 - 4 October 2026: Claude Code `goal` and `desktop` pages.

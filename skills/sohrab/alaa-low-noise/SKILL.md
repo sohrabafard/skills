@@ -18,7 +18,7 @@ These four rules save the most context. Each tool result costs context again on 
 
 **Default command-output budget: about 40 lines per command that enters the context.** Larger output goes to a file, and you read only its failing or relevant slice. Required evidence that exceeds it stays.
 
-A dispatched lane carries its own output rule in its agent definition. The lead names this skill in a dispatch only for a discovery-heavy or log-heavy lane.
+Each agent definition of /alaa-cc-orchestrator and /alaa-codex-orchestrator carries its own output rule. For such a lane, the lead names this skill in the dispatch only when the lane is discovery-heavy or log-heavy. Every other dispatched lane names this skill in its dispatch.
 
 ## Contract
 

@@ -59,7 +59,7 @@ Use Claude Code's native Advisor for executor consultations. The orchestrator's 
 
 Haiku 5.5 needs v2.1.293 or later. The platform page requires an advisor at least as capable as the executor (17 November 2026).
 
-Claude Code attaches no lower-ranked advisor: an Opus or Sonnet advisor on a Fable 5.2 main model runs no consultation and raises no error. The `/advisor` command output and a notification show that the pair is not accepted. A subagent whose own model satisfies the pairing can still use the advisor (17 November 2026).
+Claude Code attaches no lower-ranked advisor: an Opus or Sonnet advisor set through `/advisor` or the `advisorModel` setting on a Fable 5.2 main model runs no consultation and raises no error; given with `--advisor`, the same pair exits at launch. The `/advisor` command output and a notification show that the pair is not accepted. A subagent whose own model satisfies the pairing can still use the advisor (17 November 2026).
 
 **What the advisor receives.** The model-request transcript, including system context, tool interactions and partial output, as quoted context. It has no tools and no context management of its own.
 
@@ -88,12 +88,12 @@ Apply this section to every prompt, system prompt or dispatch for a Claude model
 
 | Executor | Claude Code session or subagent | API or Agent SDK system prompt |
 |---|---|---|
-| Haiku 5.5 | Write nothing by default. | For a coding or write-task load only: copy the hard-rule coding block, which replaces the timing and weight blocks. Optionally copy the second-turn nudge. The block's Haiku 5.5 label and the nudge text are page-text unverified. The nudge's stated evidence is Haiku 4.5. |
+| Haiku 5.5 | Write nothing by default. | For a coding or write-task load only: copy the hard-rule coding block, which replaces the timing and weight blocks. Optionally copy the second-turn nudge. The block's Haiku 5.5 label and the nudge text are page-text unverified. The nudge's stated evidence is Haiku 4.5 (page-text unverified). |
 | Sonnet 5.5 | Write nothing by default. | For a coding executor: copy the timing block, then the weight block. Write no nudge: it had no measurable effect. |
 | Opus 5.5 | Write nothing by default. | For a coding executor: copy the timing block, then the weight block. Opus calls at a reasonable rate unprompted, so write no nudge. Copy the optional checkpoint only when you observe under-calling. |
-| Fable 5.2 | Write nothing by default. | The page gives no Fable guidance beyond the `tool_choice` rule below (page-text unverified). |
+| Fable 5.2 | Write nothing by default. | For a coding executor: copy the timing block, then the weight block, which are the page's default for coding prompts. Write no nudge and no checkpoint. The page gives no Fable-specific guidance beyond the `tool_choice` rule below (page-text unverified). |
 
-- **Claude Code surface.** The Code page gives no timing or weight block. It says only that a prompt can ask for a consultation and can say that Claude should consult more or less often. Name consultation points only on a long multi-step task: before the approach is fixed, on a recurring error, and before the executor declares the work done. For a short or reactive task, write nothing about the advisor.
+- **Claude Code surface.** Write no timing block and no weight block: the Code page gives none. It says only that a prompt can ask for a consultation and can say that Claude should consult more or less often. Name consultation points only on a long multi-step task: before the approach is fixed, on a recurring error, and before the executor declares the work done. For a short or reactive task, write nothing about the advisor.
 - **Harness text.** In one observed Claude Code 2.1.307 subagent the harness had already supplied the platform's timing and weight text. No page states this: treat it as observed, not guaranteed, and never contradict it.
 - **Block placement on the API surface.** Put the timing block before any other sentence that mentions the advisor, and the weight block directly after it.
 - **A dispatch to a subagent** uses the Claude Code column. The pages state no guidance for delegated lanes beyond inheritance.

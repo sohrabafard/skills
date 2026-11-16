@@ -14,9 +14,9 @@ binds these files, so no checker clause was reworded or deleted.
 | alaa-prompting-guide/references/41 | Rule 3: consultation points only on a long multi-step task | Kept, moved to the *Claude Code surface* bullet under the table | W3.2 | none |
 | alaa-prompting-guide/references/41 | "A dispatch to a subagent ... Apply rules 1 to 9" | A dispatch uses the Claude Code column | W3.2 | none |
 | alaa-prompting-guide/references/41 | Rules 5, 7, 8, 9; harness-text paragraph; block placement | Kept unchanged as "Rules the table does not carry" and bullets | W3.2 | none |
-| alaa-prompting-guide/references/41 | Start: `/advisor` and `--advisor` only | Adds v2.1.260 `-p`, Agent SDK and desktop; `/advisor off`; `--advisor` not in `--help`, invalid pair exits at launch, background session starts without advisor (17 November 2026) | W3.3, Q1 41:44 | none |
+| alaa-prompting-guide/references/41 | Start: `/advisor` and `--advisor` only | Adds v2.1.260 `-p`, Agent SDK and desktop; `/advisor off`; invalid pair exits at launch, background session starts without advisor (17 November 2026) | W3.3, Q1 41:44 | none |
 | alaa-prompting-guide/references/41 | Preflight: Anthropic API or Claude Platform on AWS (14 November 2026) | Adds Claude Models on Google Cloud (Anthropic managed), v2.1.300+ on the cloud providers, not on Bedrock, Agent Platform or Foundry, feature-flag fetch broken by `DISABLE_TELEMETRY` (17 November 2026) | W3.3, Q1 41:46 | none |
-| alaa-prompting-guide/references/41 | new | Haiku 5.5 main model needs v2.1.293+; Haiku 4.5 can call but not act as advisor; advisor at least as capable as executor (17 November 2026) | W3.3, Q1 41:52-55 | none |
+| alaa-prompting-guide/references/41 | new | Haiku 5.5 main model needs v2.1.293+; advisor at least as capable as executor (17 November 2026) | W3.3, Q1 41:52-55 | none |
 | alaa-prompting-guide/references/41 | Unaccepted pair: no consultation, no error | Adds `/advisor` output and a notification show it; a subagent whose model satisfies the pairing can still use the advisor (17 November 2026) | W3.3, Q1 41:57 | none |
 | alaa-prompting-guide/references/41 | new | `max_tokens`: minimum 1024, recommended start 2048; Managed Agents advisor takes none (17 November 2026) | W3.3, Q1 41:81 | none |
 | alaa-prompting-guide/references/06 | new | *Kickoff and completion condition*: for a goal that will run long on a Claude model, apply the `41` advisor section to the kickoff | W3.3 (plan) / dispatch item 4 | none |
@@ -41,3 +41,4 @@ Kept, not changed: `90:69` Terra guidance URL (open), `12:15` models-page defaul
 Notes: `41` keeps its 14 November 2026 verification stamp for the unchanged rules. In `50`, the
 skipped-check risk at a low level is stated generally, as the dispatch words it; `sources.md` ties
 it to Haiku 5.5 at `low`.
+| alaa-prompting-guide/assets/codex-model-policy.json | Selector source `ModelSelection.react.DJkmSLnH.js`, verified 2026-10-09 | `ModelSelection.react.BKCv-TnC.js`, verified 2026-11-17; the scope says the asset name changes with each site build (the owner added this repair to the scope on 2026-11-17, commit c3f8438d) | Q3 90:88 | none |
