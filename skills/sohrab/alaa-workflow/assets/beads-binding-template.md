@@ -4,7 +4,7 @@
 
 Project label: `repo:__PROJECT__`
 
-Expected workspace: `/home/sohrab/project/alaa-task-hub/.beads`
+Expected workspace: `__BEADS_WORKSPACE__`
 
 User, repository and orchestrator constraints govern. This binding overrides conflicting upstream Beads skill or hook guidance and grants no authority. Under Codex, read each `/name` as `$name`. A `##` name is a section of `/alaa-workflow` `references/task-tracking.md`, unless a file is named; if it cannot load, run no `bd` write.
 
@@ -41,8 +41,8 @@ If the list is empty or your actor is unknown, omit `--assignee`; the user or th
 
 This file is the canonical text of the Beads binding block. It is information for the owner of a repository; no script renders it.
 
-- Copy the text from the `BEGIN` marker to the `END` marker into the repository's main instruction file. Replace each `__PROJECT__` with the repository's project name. Keep both markers, so that a later refresh replaces only this block.
-- Change the `Expected workspace` line only for a repository that is bound to another hub.
+- Copy the text from the `BEGIN` marker to the `END` marker into the repository's main instruction file. Replace each `__PROJECT__` with the repository's project name and `__BEADS_WORKSPACE__` with the path that `bd where` must report for the bound hub. Keep both markers, so that a later refresh replaces only this block.
+- The workspace line of a binding block is the one place where a machine path is allowed. This template holds a placeholder, because a template states no machine path.
 - Writing the block into a repository needs that repository's own authorization.
 
 ## Allow-list entries for these commands
