@@ -672,3 +672,174 @@ AGENT alaa-implementer-fable; CONFIGURED unknown (no definition observable); REQ
 **Skills.** Loaded before the first edit: `alaa-ponytail` (full), `alaa-low-noise`; preloaded: `alaa-code-intelligence-routing`, `alaa-testing-strategy`, `alaa-services-contract`, `alaa-trust-gateway-auth`. Late: `alaa-workflow references/workspace-and-integration.md` *Lane branches and commits* was read after the first two commits (they conform: by path, no amend); `alaa-testing-strategy references/100-test-execution.md` was read after the first gate run and before the final rerun. `references/routing-matrix.md` profile section not read: the recorded predicates held.
 
 **Residual risk.** Criterion 5 is self-checked only: a token inventory (numbers, dates, backticked names, URLs) before and after shows no number lost, and the lost names are ledger rows 11 to 21 or correction A. Sentence-level behaviour equivalence of the rewrite is unreviewed. The first commit lost three dates and one rule route in `41`, `11` and `12`; `6fa2743d` restores them, so the review should read those three files first. No web fetch was run; the 16 November facts rest on `freshness.md` and the dispatch.
+
+## Final review R1 — orchestrator pair (alaa-instruction-reviewer)
+
+VERDICT: APPROVED-WITH-NITS
+
+AGENT: alaa-instruction-reviewer. CONFIGURED model/effort: none pinned (the catalog says managed roles carry no pins; I did not see the definition's frontmatter). REQUESTED: claude-opus-5-5 (alias opus), effort high. OBSERVED model: claude-opus-5-5, from the runtime environment statement. OBSERVED effort: unknown. The runtime shows only a raw numeric reasoning-effort value, and I have no documented mapping from it to `high`. That is not a mismatch and not a block. Both task controls were supplied, so nothing blocked this lane.
+
+I found no blocker and no major finding. No floor bullet, verdict or status token, lifecycle state, exit code or stop condition was lost. The seven Floors bullets are intact in both packs. The success stop conditions in both `SKILL.md` files are stricter than before: they now also require touched-file scope, a grounded documentation skip, and integration complete or reported. The Safety list, the approval-required actions and the secrets rule survive in both packs. Codex mirrors cc everywhere I compared, except for runtime mechanics.
+
+FINDINGS (all minor; the file path is in the cc pack, and the same text is in the codex mirror unless noted):
+
+1. `agents/*.md` `Task controls:` (for example `alaa-reviewer.md:38`) and `assets/implementation-contract.md:43`. Severity: minor.
+   - Old: "model choice changes no authority, tools, skills, verdicts or independent gates" and "Model selection grants no additional command or external authority" (old implementation-contract:7, :51).
+   - These are authority limits, which the brief's Never-prune list protects whatever the criterion. Ledger L5c-b row 3 codes the removal P1, so it is outside the declared intent.
+   - Behavioural effect: none observed. "Effective authority: stay inside the narrower of this role and…" still caps authority without regard to the model.
+   - Restore: append "Model choice grants no authority." to the Task controls line in each agent and contract.
+
+2. `assets/implementation-contract.md:63` and `assets/planner-contract.md:30`. Severity: minor.
+   - Old: "Keep the whole report under 40 lines." New: "Default length: about 40 lines; exceed it only for required items."
+   - A limit went from hard to soft. The ledger records it under Corrections C1, not as a prune. `alaa-low-noise references/workflow-integration.md:16` requires a length bound but leaves it to the dispatch.
+   - The owner should confirm the change, or restore "under 40 lines".
+
+3. `references/verification-and-gates.md:178-185` (Final success criteria). Severity: minor; the loss is not recorded in the ledger.
+   - Old :200: "the verification that each task's decision and the floors require is complete". The ledger does not list this. Row 45 (P3) separately dropped "the declared boundary has attributable verification evidence".
+   - Partial cover remains: `SKILL.md` "mandatory gates pass", the Stage D "Ends when" column, and the merge rule at :86.
+   - Without the line, the final checklist no longer names a floor gate that was never dispatched. "Every finding has a disposition" is then true with no findings.
+   - Restore: "- the verification that each task's decision and the floors require is complete, with attributable evidence at the declared boundary;"
+
+4. `assets/planner-contract.md:1`. Severity: minor.
+   - Old: "Use Bash only for authorized read-only inspection." New: "a read-only role uses Bash only to inspect and to run authorized checks."
+   - The planner's Bash authority is now wider. Ledger A9 calls this an alignment, not a widening.
+   - Restore: "Runtime: use Bash only for authorized read-only inspection."
+
+5. Agent `Task controls:` text versus `references/model-effort-policy.md:17`. Severity: minor; this is the Q4 contradiction.
+   - The agents now say "an omitted field is the lead's default". The policy says an omitted invocation parameter falls to the session value, not to that default.
+   - A subagent with an omitted field now assumes a value that may be false, and it no longer resolves the default to compare it (L5c-b rows 1–2).
+   - Who normalizes is now consistent: the lead does, per `model-effort-policy.md` steps 1–3 and the `delegation-prompts.md` `<task_controls>` field. No file still asks an agent to normalize.
+   - Restore: "an omitted field is not a block; report it as omitted under REQUESTED."
+
+6. Agent `Effective authority:` (for example `alaa-reviewer.md:42`). Severity: minor.
+   - Old: "inspect the active sandbox, parent overrides, and tool/MCP grants before using tools" was dropped as P2 (L5c-b row 4).
+   - P2 itself keeps a step that an agent would not take unprompted, and "stay inside the narrower of…" cannot be applied without that inspection.
+   - Restore: prefix the line with "Before using tools, inspect them;".
+
+Nits: 9. Five examples:
+- `routing-matrix.md:21` drops "six" from "six proof levels".
+- `verification-and-gates.md:94` turns "Name only the lane's matching clean-code skill" (old `SKILL.md` §10) into "including its matching clean-code owner", which loses "only".
+- Ledger row 4, codex half, cites `11-codex-runtime-features.md` for the observed failure of a call at the limit. That file does not state it. The behaviour stays in the codex `SKILL.md`.
+- Reassignment (`routing-matrix.md:117`) dropped "Preserve independent gates". Other lines in the file still cover it.
+- Not in the ledger: the old planning step 7, "Do not use a caller override that a custom profile ignores".
+
+Q3, the OWN rows: I opened the owner for all 29.
+- 27 owners still state the rule: `alaa-low-noise` (SKILL.md:15, workflow-integration:17), `41-claude-code-runtime-features.md` (lines 18, 22, 57, 63, 119–121), `alaa-testing-strategy` (SKILL.md:60, 105, 157; 110:56, 73), `workspace-and-integration.md` (lines 9, 23–28, 53), `task-tracking.md` (lines 19, 57, 146, 182, 198), `80-agent-scoping.md` (lines 18, 22, 24), `alaa-system-design` (lines 16, 93), `alaa-algorithms-data-structures` (line 22), `alaa-memory-os` (lines 61, 110), and workflow `artifact-lifecycle.md:44`.
+- Row 4, codex half: the evidence note is dangling, as in the nit above.
+- Row 7, partial: "task-relevant tools" survives only in `12-gpt-6.md`. `60-skill-authoring.md:70` covers the example half.
+- Row 55, second half ("existing profile settings"): not found in 110.
+
+Q5, wording force: apart from findings 2 and 4 and the "only" nit, I found no constraint verb weakened in a rule that stays.
+
+NOT ASSESSED (the verdict covers only what I inspected):
+- cc `references/delegation-prompts/**` templates (ledger rows 72–76), `resource-policy.md`, `failure-taxonomy.md`.
+- cc agents other than reviewer, verifier, security-reviewer and architecture-critic.
+- `assets/profile-wrappers.json` (L5c-b rows 25–26, R1).
+- All codex agents.
+- Codex `planner-contract.md`, and the full text of codex `model-effort-policy.md`, `agent-catalog.md` and `delegation-prompts.md`. I only grepped them for normalization and review depth.
+- Codex `routing-matrix.md` outside lines 60–129.
+- Codex baselines other than `SKILL.md`.
+- The clause edits in both `scripts/check_agent_contracts.py`. I did not compare them with their tuples.
+- Generated wrappers, skipped as instructed.
+- No agent run was observed, so live behaviour is unknown.
+
+EVIDENCE:
+- Brief `artifacts/core-skills-compression-20261116/lane-brief-2.md` and ledgers `pruned-L5c-a.md` and `pruned-L5c-b.md`.
+- Old and new text of both `SKILL.md` files, of cc `verification-and-gates.md`, `routing-matrix.md`, `model-effort-policy.md`, `agent-catalog.md` and `delegation-prompts.md`, of both cc contracts, and of the four cc agents listed above.
+- New text only of codex `verification-and-gates.md`, `implementation-contract.md`, `reviewer-contract.md`, `routing-matrix.md:60-129` and `installation.md:8-11`.
+- The owner files listed under Q3, all under `skills/sohrab/`.
+- Baseline root: `/tmp/claude-1000/-home-sohrab-project-skills/75ecedca-09c9-4d1a-998e-2f75020937a5/scratchpad/before/skills/sohrab/`.
+
+## Final review R2 — five skills (alaa-instruction-reviewer)
+
+VERDICT: CHANGES-REQUESTED
+
+AGENT: alaa-instruction-reviewer. CONFIGURED model/effort: the definition sets neither (model-neutral). REQUESTED: claude-opus-5-5 (alias opus) / high. OBSERVED: model claude-opus-5-5 (the runtime environment states it); effort unknown, because I could not observe it. I saw no mismatch. Authority: I only read files with native tools. I used no MCP, ran no commands and edited nothing.
+
+Summary: the review found 3 major, 6 minor and 8 nit findings. No blocker. All new paths are under `skills/sohrab/`. All old paths are under the baseline directory you supplied.
+
+FINDINGS
+
+1. MAJOR. `alaa-workflow/SKILL.md:28`, with its owner `alaa-testing-strategy/SKILL.md:120`. Two prohibitions were lost when the rule moved to its owner.
+   - Old text (workflow SKILL.md:37): "Never weaken assertions, hard-code expected results, suppress findings or lower review standards."
+   - Workflow now points to testing-strategy as the owner of "the rule against weakening an assertion". Ledger L3b also records the rule as moved to that owner.
+   - The owner sentence names neither hard-coding an expected result nor lowering a review standard. It also narrowed the old testing-strategy wording "lower standards" (old SKILL.md:141) to "lowering a threshold".
+   - Effect: an agent can make a check pass by hard-coding the value the test expects, or can relax review acceptance, and break no stated rule. This weakens an independent-gate floor.
+   - Fix: append to the owner sentence at testing-strategy SKILL.md:120: ", hard-coding an expected result or lowering a review standard". Reword the NORM/REQ doctrine clause and its hash to match.
+
+2. MAJOR. `alaa-workflow/references/task-tracking.md:206` and `:224`. Two readbacks that guard against data loss were pruned as P3 ceremony. P3 is the wrong criterion: the next step uses each readback.
+   - Old text (task-tracking.md:226): "register or record each pending entry at its Beads owner and read it back before you clear the list". Old text (:244): "registered in Beads, read back, then marked migrated". Ledger L3b rows 26 and 27.
+   - Effect, line 206: the agent clears the dated pending list after a write it has not verified. A write that silently failed then has no record left anywhere.
+   - Effect, line 224: the agent marks a local task `[-] migrated`, which freezes it, after a registration it has not verified. The task can end up in neither store.
+   - The uncertain-write rule at :208 does not cover this case, because it fires only when the outcome looks uncertain.
+   - Data-loss rules are on the never-prune list.
+   - Fix, :206: "On recovery, record each entry at its Beads owner and read it back before you clear the list."
+   - Fix, :224: "register it in Beads and read it back, then mark it ...".
+
+3. MAJOR. `alaa-prompting-guide/references/41-claude-code-runtime-features.md:93-103`. `/loop` limits were removed and no ledger records them.
+   - Old text at 41:95-97 included:
+     - up to 50 scheduled tasks per session, each with an 8-character ID;
+     - recurring tasks fire up to 30 minutes late, or up to half the interval for sub-hourly tasks;
+     - one-shot tasks fire up to 90 seconds early;
+     - `loop.md` is truncated beyond 25,000 bytes;
+     - tasks are restored on `--resume`/`--continue` only if unexpired;
+     - `CLAUDE_CODE_DISABLE_CRON=1` turns the scheduler off;
+     - seconds round up, and intervals round to a clean cron step.
+   - Numbers and limits are on the never-prune list. pruned-L1b.md has no row for them, and nothing else in the pack restates them, so the owner has no restore path.
+   - Effect: a generated loop setup can exceed the 50-task limit or write a `loop.md` that gets truncated, and nothing warns about it.
+   - Fix: restore one bullet: "Up to 50 scheduled tasks per session; `loop.md` is truncated beyond 25,000 bytes; jitter: recurring up to 30 min late (half the interval when sub-hourly), one-shots at :00/:30 up to 90 s early; tasks are restored on `--resume`/`--continue` only if unexpired; `CLAUDE_CODE_DISABLE_CRON=1` disables the scheduler." Keep the 24 July 2026 date.
+
+4. MINOR. `alaa-workflow/references/workspace-and-integration.md:51`. "observation time" was pruned as P3, but a consumer still uses it. testing-strategy SKILL.md:94 and 80-evidence-and-reporting.md:49 require citing a result with its original timestamp, and no tested-state record keeps that timestamp now. Restore "and the observation time" after "manifest method".
+
+5. MINOR. `alaa-code-intelligence-routing/SKILL.md:50`. The Output contract dropped "each observed native command and result" (P3). The stop rule at :54 still requires mandatory gates "observed to pass in the same worktree", and that report line was the caller's only evidence of it. Restore that field.
+
+6. MINOR. `alaa-workflow/SKILL.md:15`. The trigger got narrower and no ledger records it. Old text: "Before the first non-trivial repository discovery or code-evidence choice". New text drops "repository discovery". Restore it.
+
+7. MINOR. `task-tracking.md:206`. "Label unsaved items pending." was removed and no ledger records it. Restore it, or fold it into the fix for finding 2.
+
+8. MINOR. `alaa-testing-strategy/references/50-flake.md:28`. The lane decision changes behavior: an intermittent failure still unclassified after every step is now a blocker with no class. Before, it was treated as a product defect, so the test stayed in the suite as the reproduction. The change is recorded and it removes a real tension with the SKILL.md stop condition. However, the declared intent covered shortening and pruning, not resolving contradictions. Confirm with the owner that the old safer default should go.
+
+9. MINOR (Q6). `alaa-prompting-guide/references/60-skill-authoring.md:147` and `:160`.
+   - Line 147, "Record each removal", names no place to record it.
+   - The Default-behaviour row judges against "the weakest model loading the file". The gate at :148 applies a check only when the target model's reference documents the behavior, and only `12-gpt-6.md` does. For a file that both GPT-6 and Haiku load, it is unclear whether the row applies.
+   - Fix: name the record location, such as the change's ledger or report. Add: "for a multi-model file, apply the row only when every loading model's reference documents the behavior."
+   - The done-test, the never-remove list and the Step-by-step itinerary row are each unambiguous.
+
+NITS: 8 in total. Five examples:
+- `task-tracking.md:23` "never state the current task state" overstates the old "neither owns it".
+- `alaa-code-intelligence-routing/SKILL.md:39` "A native sandbox does not restrict an MCP server" is unconditional. The old text said "does not prove".
+- The routing card sends JSON, YAML and TOML to `rg` only; the parser route is gone.
+- testing-strategy SKILL.md:105 dropped "Cite its coverage instead of dispatching those checks again".
+- The repository-root `AGENTS.md:49` sends exit-13 handling to `## Beads capabilities in use`, but the response now lives in `## Agent identity and ownership`. It still resolves through the "Use them as ... states" pointer.
+
+ANSWERS TO YOUR QUESTIONS
+- Q1: never-prune losses are findings 2 (data loss) and 3 (numbers), plus finding 1 (gate floor). The authority limits, status tokens, close reason, completion states, dates and version gates I checked all remain. The Fable, Haiku and per-model default values moved to model references 43, 36, 21 and 31; I checked they are there.
+- Q2 (testing-strategy): all 15 non-negotiables are present. The detail of NN10, 13 and 14 sits behind triggered pointers to 90-test-economy.md *Setup once*, *Topic and layer selectors* and *Build once*.
+  - The owed-test decision, tiers, validity rules, classification classes and both stop lists are intact.
+  - Each of the 20 deleted Anti-patterns items has an owner sentence: SKILL core rule, NN2-11, NN13 and NN14, the validity section, the classification section, 30-doubles, 50-flake quarantine and 90 *Setup once*.
+  - All 5 Review checks are covered in 90 *Candidates*, *Topic and layer selectors*, *Setup once* and *Build once*.
+  - Unrecorded losses elsewhere are findings 3, 6 and 7.
+- Q3: every root `AGENTS.md` citation still resolves to a section that states the rule it relies on. These are lines 17, 25, 28, 31, 38, 39, 44, 49, 55 and 61. The only caveat is the line 49 nit.
+- Q4: every owner still states its moved rule, except finding 1. The `alaa-low-noise` delegated-lane return shape and "no universal watchdog timeout", the `80-agent-scoping.md` grants and MCP enforcement, and the 41 alias, effort precedence, advisor pairs and concurrency error are all present.
+- Q5: I found no contradiction inside one skill or across the five skills. Finding 4 is a tension across skills, not a contradiction.
+- Q6: I found no constraint verb softened into a preference. Trigger narrowing is finding 6.
+
+NOT ASSESSED (the verdict does not cover these; each was outside my reading budget)
+- alaa-workflow: artifact-lifecycle.md, companion-routing.md, context-curation.md and assets. I read only the first 15 lines of phase-prompts.md.
+- alaa-testing-strategy: 00, 20, 30, 40, 60 and 110. I read only the headings of 10 and 70.
+- alaa-code-intelligence-routing: 00, 30, 40, 45, 50, 70, 75 and 90.
+- alaa-low-noise: noise-control-patterns.md, model-output-profiles.md and 90-source-map.md.
+- alaa-prompting-guide: 00, 06, 21, 31, 36, 43, 50, 90 and dispatch.md. I searched 61 and 70 only with greps.
+- agents/openai.yaml files and the checker scripts. I verified no gate exit codes myself; I took them from your statement.
+- Nothing here proves live agent behavior.
+
+EVIDENCE
+- Brief and ledgers: lane-brief-2.md, pruned-L1b.md, pruned-L2b.md, pruned-L3b.md and pruned-L4b.md, in `artifacts/core-skills-compression-20261116/`.
+- Old and new text of these files, compared:
+  - testing-strategy: SKILL.md, 10 (old), 50, 80, 90, 100 and 120;
+  - workflow: SKILL.md, task-tracking.md, context-continuity.md, workspace-and-integration.md and review-mode.md;
+  - code-intelligence-routing: SKILL.md, 10 and 80;
+  - low-noise: SKILL.md and workflow-integration.md;
+  - prompting-guide: SKILL.md, 11, 12, 41, 60, 80 and assets/rule-writer/contract.md.
+- Root `AGENTS.md` citation lines checked: 17-68.
+
