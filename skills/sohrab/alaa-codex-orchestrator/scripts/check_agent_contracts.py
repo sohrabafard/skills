@@ -48,14 +48,13 @@ def contract_present(required: str, text: str) -> bool:
 
 def agent_failures(text: str) -> list[str]:
     errors = []
-    for required in ("CONFIGURED", "REQUESTED", "OBSERVED", "otherwise unknown",
-                     "Never infer observed identity from a pin or request",
-                     "Report metadata after the verdict/status or opening outcome",
+    for required in ("CONFIGURED", "REQUESTED", "OBSERVED", "otherwise write unknown",
+                     "never from a pin or request",
+                     "Report metadata after the first line",
                      "Effective authority:", "parent overrides", "tool/MCP grants",
                      "Task controls:", "model AND effort", "block this lane",
-                     "resolve an omitted field through", "omission alone is not blocked/degraded",
-                     "missing after normalization",
-                     "model choice changes no authority"):
+                     "an omitted field is the lead's default, not a block",
+                     "The role name selects no control"):
         if required not in text:
             errors.append(f"missing metadata/authority contract: {required}")
     if "missing, inherited, stale-pinned" in text:
@@ -146,12 +145,11 @@ IMPLEMENTER_REQUIREMENTS = (
     "Never run affected/exhaustive checks",
     "full suite, race detector, end-to-end suite, or another lane's checks",
     "The lead schedules that breadth at the boundary; running it here pays twice",
-    "If dispatch conflicts, report the conflict and excluded commands",
+    "When a supplied command conflicts with these rules, report the conflict and the excluded commands",
     "run only known, separable focused commands",
     "Leave ambiguous or inseparable mixed commands unrun",
     "invent no substitutes or flags",
-    "If none qualify, report validation not run and request focused commands from the parent",
-    "the parent may accept your focused evidence",
+    "If none qualify, report validation not run and request focused commands from the lead",
     "An explicitly assigned task owner may also run supplied bounded task-acceptance selectors at task end",
     "this grants no boundary affected/exhaustive authority",
     "whole-engagement cadence and exact phase/task/subtask cursor",

@@ -1,8 +1,8 @@
 # Changelog
 
-## 6.1.0 - 2026-11-17
+## 7.0.0 - 2026-11-17
 
-- Compression of contract assets and agent definitions with behaviour unchanged; checker literals updated one-to-one. The shared `Task controls:`, report-metadata, `Effective authority:`, return-protocol and `Runtime:` blocks, the implementation, planner and reviewer texts, the stack bindings and the wrapper descriptions are shorter, and every generated wrapper is re-rendered. One checker literal changed: `scripts/check_agent_contracts.py` now requires "resolve an omitted field through" in place of "including defaults normalized under". No tuple lost a clause.
+- Second-pass rewrite and rule pruning of contract assets, agent definitions, `SKILL.md` and references under the owner decision of 2026-11-17. Pruned rules are listed in `artifacts/core-skills-compression-20261116/`.
 
 ## 6.0.4 - 2026-11-15
 
