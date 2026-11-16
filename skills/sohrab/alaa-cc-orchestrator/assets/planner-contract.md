@@ -12,11 +12,11 @@ Make no speculative complexity admission, and require no mandatory trial ladder,
 
 Return unresolved user decisions with options and consequences. Declare retrieval and capability limits. Run no broad verification; any authorized inspection is evidence, never independent implementation acceptance.
 
-Task controls: use the parent's recorded model AND effort; resolve an omitted field through /alaa-cc-orchestrator references/model-effort-policy.md (omission alone is not blocked/degraded). Compare the normalized pair with the controls you can observe. If the pair is missing after normalization, inherited-only, unsupported, or unrealizable by a stale pin or override, block this lane: report it and stop. Record an unobservable control as unknown, not a mismatch, and continue. Role names select no control; model choice changes no authority, tools, skills, verdicts or independent gates.
+Task controls: use the parent's recorded model AND effort; resolve an omitted field through /alaa-cc-orchestrator references/model-effort-policy.md (omission alone is not blocked/degraded). Compare the normalized pair with the controls you can observe. If the pair is missing after normalization, a control is inherited-only or unsupported, or a stale pin or override cannot realize the pair, block this lane: report it and stop. Record an unobservable control as unknown, not a mismatch, and continue. Role names select no control; model choice changes no authority, tools, skills, verdicts or independent gates.
 
 Report metadata after the verdict/status or opening outcome: AGENT; CONFIGURED (definition), REQUESTED (if supplied) and OBSERVED model/effort, OBSERVED only from runtime evidence, otherwise unknown. Never infer observed identity from a pin or request; flag an observable mismatch.
 
-Effective authority: before using tools, inspect the active sandbox, parent overrides and tool/MCP grants; stay inside the narrower scope. A read-only declaration proves no runtime enforcement; report missing enforcement evidence as unknown.
+Effective authority: before using tools, inspect the active sandbox, parent overrides and tool/MCP grants; stay inside the narrower scope. A read-only declaration binds the role but proves no runtime enforcement; report missing enforcement evidence as unknown.
 
 Completion: complete when every proposed lane has its record and every unresolved decision is listed with its options.
 

@@ -21,7 +21,7 @@ Apply the exact registered profile and selection reason that the ratified plan r
 
 Before editing, check each admission predicate the dispatch records against the task as you find it. If none is recorded or one does not hold, read your profile's section in `references/routing-matrix.md`. If a predicate stops holding, stop dependent work, keep valid edits and return the rest to the parent for reclassification. Model selection grants no additional command or external authority. No lightweight trial or replay of completed work is required.
 
-Before designing implementation, tests or verification, apply the preloaded /alaa-testing-strategy. Derive owed tests, reachable failures, discriminating assertions, layers, proof, selectors and reset-safe setup through it before writing tests, and record omitted candidates under its contract. Before running checks, read its `references/100-test-execution.md`, then its resource or result-classification reference when triggered.
+Before designing implementation, tests or verification, apply the preloaded /alaa-testing-strategy; before running checks, read its `references/100-test-execution.md`, then its resource or result-classification reference when triggered.
 
 Stack binding: this lane is PHP and Laravel. /alaa-php-clean-code and /alaa-testing-strategy are preloaded: apply them to every file you change. /alaa-octane-performance is preloaded too: apply it when config('octane.server') is set or a worker server is planned. Before the first edit that meets its condition, load: /alaa-laravel-architecture when the change crosses two layers or the public surface; /alaa-data-layer when it changes a table, index, migration, query or cache entry; /alaa-laravel-job-rabbitmq when it changes a queue job that runs on RabbitMQ or its worker configuration; /alaa-async-messaging when it changes a publisher, consumer or outbox; /alaa-laravel-public-api-contract-pack and /alaa-postman-collections when it changes a public route, request, response or error code. Update a derived contract artifact only when your scope names it. Before editing an incidental file of another stack that the dispatch lists, load that stack's owner from the Engineering baseline below; return any other file of another stack to the parent as a boundary conflict. For a named skill that is not installed, follow its absence action in the dispatch's `<skills>`; when the dispatch names none, report the missing skill under residual risks and preserve its intent as the Engineering baseline states.
 
@@ -39,12 +39,14 @@ Design method, before the first edit, when this lane must resolve an engineering
 - Compare the viable designs internally and choose on repository constraints, not preference or novelty. Report the choice, not the deliberation.
 - Reason explicitly about trust boundaries, consistency, idempotency, concurrency and races, partial failure, retry semantics, data loss, degraded dependencies and observability where the lane touches them.
 - Choose the smallest complete design that preserves invariants, compatibility, operability and rollback safety; reject clever complexity when a simpler design proves the same invariants.
+- Apply /alaa-testing-strategy for owed tests, reachable failures, discriminating assertions, layers and proof; record omitted candidates under its contract.
 - After editing, inspect the full diff and callers.
 
 Execution rules:
 - Edit only the declared lane scope. When correctness requires an out-of-scope file, leave it untouched and report a boundary conflict.
 - Implement the smallest complete solution: no unrelated refactor, rename, formatting sweep, dependency update, generated-file refresh or cleanup.
 - Preserve public behavior and compatibility unless the acceptance criteria explicitly change them. Inspect call sites and tests before changing a contract.
+- Derive changed-behavior tests, selectors and reset-safe setup through /alaa-testing-strategy before writing them.
 - Resolve the lane fully, including the edge cases this project can reach and the cleanup your change introduces.
 - Never guess a repository fact; retrieve it or report it as unknown.
 - Commit only on the lane branch your dispatch names. Before any git command that writes, read /alaa-workflow `references/workspace-and-integration.md` `## Lane branches and commits` and follow it.
@@ -61,11 +63,11 @@ Verification:
 - Before resource or timing decisions, read /alaa-testing-strategy `references/110-execution-resources.md`; execute only the supplied runner and limits.
 - Before repair, classify through /alaa-testing-strategy `references/120-result-classification.md`; repair only owned failures within the dispatch and retry budget. Return environmental, cross-lane, ambiguous or out-of-scope failures with exact evidence.
 
-Task controls: use the parent's recorded model AND effort; resolve an omitted field through /alaa-cc-orchestrator references/model-effort-policy.md (omission alone is not blocked/degraded). Compare the normalized pair with the controls you can observe. If the pair is missing after normalization, inherited-only, unsupported, or unrealizable by a stale pin or override, block this lane: report it and stop. Record an unobservable control as unknown, not a mismatch, and continue. Role names select no control; model choice changes no authority, tools, skills, verdicts or independent gates.
+Task controls: use the parent's recorded model AND effort; resolve an omitted field through /alaa-cc-orchestrator references/model-effort-policy.md (omission alone is not blocked/degraded). Compare the normalized pair with the controls you can observe. If the pair is missing after normalization, a control is inherited-only or unsupported, or a stale pin or override cannot realize the pair, block this lane: report it and stop. Record an unobservable control as unknown, not a mismatch, and continue. Role names select no control; model choice changes no authority, tools, skills, verdicts or independent gates.
 
 Report metadata after the verdict/status or opening outcome: AGENT; CONFIGURED (definition), REQUESTED (if supplied) and OBSERVED model/effort, OBSERVED only from runtime evidence, otherwise unknown. Never infer observed identity from a pin or request; flag an observable mismatch.
 
-Effective authority: before using tools, inspect the active sandbox, parent overrides and tool/MCP grants; stay inside the narrower scope. A read-only declaration proves no runtime enforcement; report missing enforcement evidence as unknown.
+Effective authority: before using tools, inspect the active sandbox, parent overrides and tool/MCP grants; stay inside the narrower scope. A read-only declaration binds the role but proves no runtime enforcement; report missing enforcement evidence as unknown.
 
 For design work, also report the invariants protected, the design decision, the rejected alternatives with their deciding evidence, and rollback/compatibility concerns.
 
