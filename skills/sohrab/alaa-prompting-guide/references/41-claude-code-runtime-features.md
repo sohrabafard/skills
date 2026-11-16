@@ -43,7 +43,7 @@ Use Claude Code's native Advisor for executor consultations. The orchestrator's 
 
 **Start.** Use `/advisor <model>` in a supported Code session. At launch, `--advisor <model>` overrides the `advisorModel` setting. Give a supported `sonnet`, `opus` or `fable` alias or a full model ID.
 
-- From v2.1.260, `/advisor` also works with `-p`, in the Agent SDK and in the desktop app. `/advisor off` turns the advisor off (17 November 2026).
+- `/advisor` also works with `-p`, in the Agent SDK, and in the desktop app from v2.1.260. `/advisor off` turns the advisor off (17 November 2026).
 - `--advisor` is not listed in `claude --help`. An invalid pair given with `--advisor` exits at launch; a background session starts without the advisor instead (17 November 2026).
 
 **Preflight.** The advisor is experimental. It needs the Anthropic API, Claude Platform on AWS, or Claude Models on Google Cloud (Anthropic managed); the two cloud providers need v2.1.300 or later. It is not available on Amazon Bedrock, Google Cloud's Agent Platform or Microsoft Foundry. It needs a feature-flag fetch, so `DISABLE_TELEMETRY` breaks it (17 November 2026). Before you depend on it, resolve the alias and verify support on the actual Code version, provider, account, managed allowlist and entitlement. Inspection grants neither configuration authority nor paid execution authority.
@@ -57,7 +57,7 @@ Use Claude Code's native Advisor for executor consultations. The orchestrator's 
 | Opus 5.5 | Fable, Opus 5 or later |
 | Fable 5.2 | Fable 5.2 only; the API also accepts Mythos 5.2, which stays excluded from selection |
 
-Haiku 5.5 as a main model needs v2.1.293 or later. Haiku 4.5 can call the advisor but cannot act as one. The platform page requires an advisor at least as capable as the executor (17 November 2026).
+Haiku 5.5 needs v2.1.293 or later. Haiku 4.5 can call the advisor but cannot act as one. The platform page requires an advisor at least as capable as the executor (17 November 2026).
 
 Claude Code attaches no lower-ranked advisor: an Opus or Sonnet advisor on a Fable 5.2 main model runs no consultation and raises no error. The `/advisor` command output and a notification show that the pair is not accepted. A subagent whose own model satisfies the pairing can still use the advisor (17 November 2026).
 
@@ -73,7 +73,7 @@ Pair table and subagent inheritance: [Code advisor](https://code.claude.com/docs
 
 ### Prompts for a session that may have an advisor
 
-Apply this section to every prompt, system prompt or dispatch for a Claude model. The advisor is a session setting that a subagent inherits, so you usually cannot know whether it is on: write the prompt to work in both cases. Before you copy a block, a model rule or a number from this section into a prompt, read the page again.
+Apply this section to every prompt, system prompt or dispatch for a Claude model. The advisor is a session setting that a subagent inherits, so you usually cannot know whether it is on: write the prompt to work in both cases. Text in this section without a later date was verified 14 November 2026 against the Code advisor and Advisor tool pages. Before you copy a block, a model rule or a number from this section into a prompt, read the page again.
 
 **What the prompt can rely on.** The call takes no parameters. The advisor reads the whole transcript: the prompt, the tool definitions, earlier turns, tool results and the text written so far. When a call fails, the executor continues without advice. The platform page disagrees with itself on whether the executor's reasoning reaches the advisor, so do not rely on that.
 
@@ -89,9 +89,9 @@ Apply this section to every prompt, system prompt or dispatch for a Claude model
 | Executor | Claude Code session or subagent | API or Agent SDK system prompt |
 |---|---|---|
 | Haiku 5.5 | Write nothing by default. | For a coding or write-task load only: copy the hard-rule coding block, which replaces the timing and weight blocks. Optionally copy the second-turn nudge. The block's Haiku 5.5 label and the nudge text are page-text unverified. The nudge's stated evidence is Haiku 4.5. |
-| Sonnet 5.5 | Write nothing by default. | Copy the timing block, then the weight block. Write no nudge: it had no measurable effect. |
-| Opus 5.5 | Write nothing by default. | Copy the timing block, then the weight block. Write no nudge. Copy the optional checkpoint only when you observe under-calling. |
-| Fable 5.2 | Write nothing by default. | The page gives no guidance (page-text unverified). Write nothing. |
+| Sonnet 5.5 | Write nothing by default. | For a coding executor: copy the timing block, then the weight block. Write no nudge: it had no measurable effect. |
+| Opus 5.5 | Write nothing by default. | For a coding executor: copy the timing block, then the weight block. Opus calls at a reasonable rate unprompted, so write no nudge. Copy the optional checkpoint only when you observe under-calling. |
+| Fable 5.2 | Write nothing by default. | The page gives no Fable guidance beyond the `tool_choice` rule below (page-text unverified). |
 
 - **Claude Code surface.** The Code page gives no timing or weight block. It says only that a prompt can ask for a consultation and can say that Claude should consult more or less often. Name consultation points only on a long multi-step task: before the approach is fixed, on a recurring error, and before the executor declares the work done. For a short or reactive task, write nothing about the advisor.
 - **Harness text.** In one observed Claude Code 2.1.307 subagent the harness had already supplied the platform's timing and weight text. No page states this: treat it as observed, not guaranteed, and never contradict it.

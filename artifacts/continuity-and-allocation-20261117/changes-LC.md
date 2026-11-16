@@ -8,7 +8,7 @@ binds these files, so no checker clause was reworded or deleted.
 |---|---|---|---|---|
 | alaa-prompting-guide/SKILL.md | new | Decision procedure step 6: for a Claude target, apply `41` *Prompts for a session that may have an advisor* before you ship a prompt, system prompt or dispatch | W3.1 | none |
 | alaa-prompting-guide/references/41 | Rules 1, 2, 4 and the decision-in-visible-text sentence, spread over a nine-rule list | The four things every Claude prompt does: goal, constraints, acceptance; visible decision; save before the completion consultation; never depend on the advisor | W3.2 | none |
-| alaa-prompting-guide/references/41 | Rule 6 "Fit the executor model" and the two surface paragraphs | One table, surface by executor model: Claude Code cells "write nothing by default"; API cells per `sources.md` Q1 (Haiku 5.5 hard-rule block and optional nudge, page-text unverified; Sonnet timing then weight, no nudge; Opus timing and weight, no nudge, checkpoint only on observed under-calling; Fable no guidance, page-text unverified), 17 November 2026 | W3.2 | none |
+| alaa-prompting-guide/references/41 | Rule 6 "Fit the executor model" and the two surface paragraphs | One table, surface by executor model: Claude Code cells "write nothing by default"; API cells per `sources.md` Q1 (Haiku 5.5 hard-rule block and optional nudge, page-text unverified; Sonnet timing then weight, no nudge; Opus timing and weight, no nudge, checkpoint only on observed under-calling; Fable no guidance, page-text unverified), 17 November 2026; Sonnet and Opus API cells scoped to coding executors | W3.2 | none |
 | alaa-prompting-guide/references/41 | Rule 6: hard-rule block's stated evidence is Haiku 4.5 | Block labelled Haiku 5.5 (page-text unverified); only the nudge cites Haiku 4.5 | W3.2, Q1 41:78 | none |
 | alaa-prompting-guide/references/41 | new | Opus API cell: optional checkpoint only when under-calling is observed | W3.2, Q1 41:78 | none |
 | alaa-prompting-guide/references/41 | Rule 3: consultation points only on a long multi-step task | Kept, moved to the *Claude Code surface* bullet under the table | W3.2 | none |
@@ -24,9 +24,9 @@ binds these files, so no checker clause was reworded or deleted.
 | alaa-prompting-guide/references/90 | Claude effort evidence "Unspecified" (four workload rows) | Messages API defaults per model; Sonnet effort-page guidance (17 November 2026) | Q2 90:73-76, 90:83 | none |
 | alaa-prompting-guide/references/90 | Haiku efficiency row "No task-specific effort" | Effort-page Haiku guidance (17 November 2026) | Q2 90:77 | none |
 | alaa-prompting-guide/references/90 | Fable row "No selected Fable effort" | Effort-page Fable guidance (17 November 2026) | Q2 90:79 | none |
-| alaa-prompting-guide/references/90 | Sonnet prompting page, not the selection guide, gives medium/high | API defaults are Messages API defaults; Claude Code default stays with each model reference (open); Sonnet regression examples still rule out maximization | Q2 90:83 | none |
+| alaa-prompting-guide/references/90 | Sonnet prompting page, not the selection guide, gives medium/high | API defaults are Messages API defaults; the three platform pages checked state no Claude Code default and model-config was not re-read, so each model reference keeps its Code default; Sonnet regression examples still rule out maximization | Q2 90:83 | none |
 | alaa-prompting-guide/references/90 | Two computer-use rows, balanced S medium | Balanced T medium (17 November 2026); legend adds T = GPT-6.1 Terra | Q3 90:49-50 | none |
-| alaa-prompting-guide/references/90 | Adapt existing content balanced S medium | Adds alternative T medium (17 November 2026), Sol primary | Q3 90:28 | none |
+| alaa-prompting-guide/references/90 | Adapt existing content balanced S medium | Matrix cell unchanged; a note under the legend records the asset's alternative T medium, Sol primary, with no column assigned (17 November 2026) | Q3 90:28 | none |
 | alaa-prompting-guide/references/90 | Asset URL `DJkmSLnH` | `BKCv-TnC` (17 November 2026); old asset returns 404 | Q3 90:88 | none |
 | alaa-prompting-guide/references/12 | new | Subagent inheritance: unset model or effort inherits the parent's; model without effort uses its default; order spawn, `[agents]`, parent (17 November 2026) | Q3 subagents | none |
 | alaa-prompting-guide/references/00-source-map | new | 17 November 2026 row in *Latest verification dates* | dates of the corrections | none |
@@ -37,3 +37,7 @@ binds these files, so no checker clause was reworded or deleted.
 
 Kept, not changed: `90:69` Terra guidance URL (open), `12:15` models-page defaults and date
 (unverified), every matching matrix row, and the progress budget.
+
+Notes: `41` keeps its 14 November 2026 verification stamp for the unchanged rules. In `50`, the
+skipped-check risk at a low level is stated generally, as the dispatch words it; `sources.md` ties
+it to Haiku 5.5 at `low`.

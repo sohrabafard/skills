@@ -19,13 +19,13 @@
 
 ## Official task guidance
 
-OpenAI matrix refreshed 9 October 2026; Claude rows refreshed 14 November 2026. Each current model reference holds that model's defaults per surface. The complete served selector asset was read as text, without execution or browser interaction; the supplied screenshots match its cells. L = GPT-6 Luna, S = GPT-6.1 Sol, T = GPT-6.1 Terra, A = GPT-6 Astra. Cells dated 17 November 2026 come from the asset's 21 October editorial update.
+OpenAI matrix refreshed 9 October 2026; Claude rows refreshed 14 November 2026. Each current model reference holds that model's defaults per surface. The complete served selector asset was read as text, without execution or browser interaction; the supplied screenshots match its cells. L = GPT-6 Luna, S = GPT-6.1 Sol, T = GPT-6.1 Terra, A = GPT-6 Astra. The two computer-use cells dated 17 November 2026 come from the asset's 21 October editorial update. The asset also lists T medium as an alternative for "Adapt existing content", with Sol kept as primary (17 November 2026).
 
 | Category | Task | Lower latency/cost | Balanced | Higher quality |
 |---|---|---|---|---|
 | Deliverables | Small existing-file edits | L low | L medium | L high |
 | Deliverables | Slides or spreadsheets | L medium | S medium | A xhigh |
-| Deliverables | Adapt existing content | S low | S medium; alternative T medium (17 November 2026) | S high |
+| Deliverables | Adapt existing content | S low | S medium | S high |
 | Deliverables | Coordinated files from input data | S medium | S high | S xhigh |
 | Deliverables | Source material to finished output | S medium | S medium | A xhigh |
 | Deliverables | Complex polished deliverable | S medium | A high | A xhigh |
@@ -80,7 +80,7 @@ The [Codex Terra guidance](https://learn.chatgpt.com/docs/model-selection#when-t
 | Bulk execution with difficult decisions | Cheaper executor plus frontier advisor, or a frontier orchestrator that delegates bulk work to lower-cost workers. For native Code candidates and preflight, read `references/41-claude-code-runtime-features.md`. | No default pair or effort |
 
 - The guide recommends Opus as the starting point for most workloads. Keep both the capability-first path and the efficiency-first path.
-- The API defaults above are Messages API defaults. Each model reference holds the Claude Code default; the checked pages state none for the 5.5 models (17 November 2026).
+- The API defaults above are Messages API defaults. The choosing-a-model, models overview and effort pages checked on 17 November 2026 state no Claude Code default for the 5.5 models; model-config was not re-read. Each model reference holds its Claude Code default.
 - The Sonnet prompting page gives regression examples at higher effort, which rule out automatic maximization.
 - A local Fable admission belongs to the runtime orchestrator and stays distinct from the vendor's `xhigh` and `max` advice.
 
