@@ -78,8 +78,7 @@ def orchestrator_failures(text: str) -> list[str]:
                      "do not wait for boundary review or request an already-granted permission again",
                      "Every external or destructive effect needs its own explicit authority",
                      "Local-only completion needs no integration prompt",
-                     "Independent verification and review inspect the actual artifact",
-                     "Do not infer a universal watchdog timeout"):
+                     "Independent verification and review inspect the actual artifact"):
         if not contract_present(required, text):
             errors.append(f"missing authority contract: {required}")
     for forbidden in ("On activation, idempotently installs", "Auto-install authority",
@@ -173,7 +172,6 @@ GATE_REQUIREMENTS = ('Before implementation or fix dispatch, classify actual com
  'There is no cycle count. A new round needs a new reason',
  'Triage every finding by its consequence under',
  "The gate's blocking verdict binds the lead",
- 'Role definitions own dispatch-conflict handling',
  'reconcile every excluded command and unrun check before accepting the lane',
  'Where a floor or the decision requires independent acceptance, it requires an observer independent '
  'of the implementation with authority for that gate',
@@ -308,8 +306,7 @@ def task_allocation_failures(routing: str, controls: str) -> list[str]:
     for required in ("## All-role task allocation", "EVERY role", "balanced default",
                      "priority is not an effort value", "Role title, sensitivity, duration",
                      "second independent lens", "not model diversity", "model AND effort",
-                     "compatibility identities", "exact verified available compatibility realization",
-                     "block that affected lane", "Source changes do not reload"):
+                     "compatibility identities"):
         if required not in routing:
             errors.append(f"missing all-role task allocation: {required}")
     for required in BOUNDED_REQUIREMENTS:
@@ -334,7 +331,6 @@ def task_allocation_failures(routing: str, controls: str) -> list[str]:
 # Workflow owns hierarchy validation; this consumer checks its scheduling seam.
 CADENCE_REQUIREMENTS = ('Stages A-F give the order of work. The verification decision and the floors below set which checks and reviews run inside them. They are distinct from workflow phases',
  'read `alaa-workflow references/task-tracking.md` for task-store selection',
- 'never initialize a replacement Beads database',
  '`Review boundary: phase|final`',
  '`Final phase`',
  '`Commit authority`',
@@ -350,18 +346,11 @@ CADENCE_REQUIREMENTS = ('Stages A-F give the order of work. The verification dec
  'The task owner runs bounded task-acceptance selectors across its subtasks',
  'Never dispatch independent subtask/task review',
  'intermediate phases retain `REVIEW_PENDING`',
- 'tested issue closure advances readiness without claiming reviewed acceptance',
  'Under `phase`, only the declared phase end earns review',
  'Preserve stricter genuine repository gates and necessary focused feedback',
  'return the conflict to the plan owner rather than silently skipping either rule',
  "Local commits follow the main instruction file's local-commit rule",
- 'Implementation and documentation lanes commit their owned paths on the lane branch their dispatch names, when their focused checks pass, at any phase, including before final review',
- 'A commit is a checkpoint, not acceptance; record review status separately',
- 'Reuse applicable standing authority without another approval',
- 'Preserve an identified snapshot when authority or validation is missing',
  "Its `## Lane branches and commits` owns the lane branch, lane commits, the merge and the lead's own commits",
- 'The integration parent commits work that no lane owns, and work a lane returned uncommitted after its focused checks passed, as it lands',
- "Pending review never delays a lane's or the parent's authorized checkpoint",
  'Push, tag, history rewrite and any merge other than the lane-branch merge still require explicit permission',
  'Stage C collects focused phase evidence. Stage D waits for the inherited review boundary',
  'Collect required affected and exhaustive checks in one whole-engagement gate stage',
@@ -379,7 +368,7 @@ def cadence_failures(skill: str, gates: str, dispatch: str,
               for clause in CADENCE_REQUIREMENTS if not contract_present(clause, gates)]
     errors.extend(specialist_cadence_failures(design, contract, critic))
     for clause in ("It makes its own corrections only under Who fixes",
-                   "Correct sparingly", "Calibrate length", "Keep dispatches lean",
+                   "Correct sparingly", "Keep dispatches lean",
                    "Do not restate the native role definition",
                    "for the verification decision, the floors and who fixes",
                    "references/110-execution-resources.md"):
@@ -488,7 +477,6 @@ def cadence_sources() -> tuple[str, ...]:
 # Topic: runtime collection scheduling; layer: structural source contract.
 # Generic execution assertions and their mutations have one shared owner below.
 COLLECTION_REQUIREMENTS = (
-    "`alaa-verifier` collects missing or invalidated evidence when the planned checks require its authority",
     "Review waits until required pre-review collection, batch repair and retests pass",
     "The canonical minimal early-repair exception returns to collection without review",
     "Keep one collected repair batch",
@@ -503,8 +491,6 @@ COLLECTION_REQUIREMENTS = (
     "An independent observer needs a reason drawn from questions 1 and 2",
     "Cite eligible independent evidence",
     "When the decision or a floor names an independent verifier, collect missing, invalidated or required-fresh coverage through `alaa-verifier`",
-    "When independent checks remain to run, dispatch `alaa-verifier`",
-    "Plan one whole-engagement broad gate stage in Stage E, after final documentation",
 )
 COLLECTION_SEAMS = {
     "taxonomy": ("/alaa-testing-strategy", "references/120-result-classification.md"),

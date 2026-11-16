@@ -6,14 +6,14 @@
 <task>Independently verify the combined change for: <goal>.</task>
 <repository><absolute worktree path></repository>
 <initial_expectation><expected clean/known git status></initial_expectation>
-<tree_pin><identified frozen snapshot and authorized scope under /alaa-workflow references/workspace-and-integration.md; apply /alaa-testing-strategy references/100-test-execution.md></tree_pin>
+<tree_pin><identified frozen snapshot and authorized scope under /alaa-workflow references/workspace-and-integration.md></tree_pin>
 <commands>
   <command id="1" cpu_heavy="true|false" timeout_seconds="...">exact command and cwd</command>
 </commands>
 <artifacts><permitted artifact directory only></artifacts>
 <execution_owner>Load /alaa-testing-strategy before verification design/execution. Apply its references/100-test-execution.md for command selection, collection and evidence; references/110-execution-resources.md for resources; references/120-result-classification.md for results.</execution_owner>
 <resource_policy><absolute canonical testing-strategy runner or authorized container path, priority, CPU/container allocation, workers and timeout from the resource owner></resource_policy>
-<collection_barrier>Execute the canonical collection barrier through this independent verifier. Return its combined results for the serialized repair batch; verification-and-gates.md retains the scheduling of phases and reviews and observer authority.</collection_barrier>
+<collection_barrier>Execute the canonical collection barrier through this independent verifier. Return its combined results for the serialized repair batch.</collection_barrier>
 <review_boundary><inherited phase|final boundary, whole-engagement final candidate identity and source plan; no subtask/task independent acceptance></review_boundary>
 <tier><actual scoped tier selected through /alaa-testing-strategy; inherited final candidate and cadence from the plan></tier>
 <already_observed><eligible evidence citations and required post-repair selectors; include the independent observer></already_observed>

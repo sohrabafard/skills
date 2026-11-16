@@ -2,15 +2,15 @@
 
 ## Planner variants
 
-Select `alaa-planner` or `alaa-planner-high` through `routing-matrix.md` Planning profile selection; the parent ratifies the draft and owns durable plan/state writes.
+Select `alaa-planner` or `alaa-planner-high` through `routing-matrix.md` Planning profile selection. The parent ratifies the draft and owns durable plan and state writes.
 
 ```xml
 <task>Draft a grounded advisory plan for <outcome>.</task>
 <planning_profile><exact registered planner; verified configured controls; clear constraints or interacting uncertainties requiring planning judgment></planning_profile>
 <repository_facts><current owners, contracts, constraints and retrieved evidence; missing facts stay unknown></repository_facts>
-<lane_records><outcome, owned scope, exclusions, dependencies, settled/open decisions, failure/invariant reasoning, worker allocation reserved for the parent batch pass after consolidation; workflow dependency edges, resource conflicts, ready parallel lanes and integration barriers></lane_records>
-<allocation_boundary>Finalize and consolidate tasks/dependencies first; the parent then applies one canonical batch allocation, including exceptional admission. A model mention alone is no model-selection instruction.</allocation_boundary>
-<action_safety>Read-only advisory draft. Never implement, edit or persist workflow state; the parent ratifies and writes it. No trial ladder, synthetic benchmark or replay of completed work.</action_safety>
+<lane_records><outcome, owned scope, exclusions, dependencies, settled/open decisions, failure/invariant reasoning; workflow dependency edges, resource conflicts, ready parallel lanes and integration barriers></lane_records>
+<allocation_boundary>Finalize and consolidate tasks/dependencies first; the parent then applies one batch allocation, including exceptional admission. A model mention alone is no model-selection instruction.</allocation_boundary>
+<action_safety>Read-only advisory draft. Never implement, edit or persist workflow state. No trial ladder, synthetic benchmark or replay of completed work.</action_safety>
 <output>Use the planner's bounded native output contract; include decisions, evidence, independent consolidated checks and unknowns.</output>
 ```
 
@@ -18,9 +18,9 @@ Select `alaa-planner` or `alaa-planner-high` through `routing-matrix.md` Plannin
 
 ```xml
 <task>Convert this goal into a checkable acceptance contract and a lane decomposition: <goal>.</task>
-<trigger>The request uses quality language that is not yet checkable, two competent readers would define "done" differently, a contract is implied but never stated, or the goal bundles several outcomes that need separating before lanes can be drawn.</trigger>
+<trigger><the routing-matrix.md condition that holds></trigger>
 <request_verbatim><the user's own wording, unparaphrased></request_verbatim>
-<repository_facts><paths, contracts, conventions, and prior lane outcomes already established in this session></repository_facts>
+<repository_facts><paths, contracts, conventions, and prior lane outcomes already established in this run></repository_facts>
 <known_constraints><compatibility windows, environments, deadlines, and decisions the user has already made></known_constraints>
 <action_safety>Read-only. Do not implement, design the solution, write tests, or resolve a product decision the user owns.</action_safety>
 <output>Use the role's native output contract, starting with its first-line STATUS.</output>
