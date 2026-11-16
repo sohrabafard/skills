@@ -2,7 +2,7 @@
 
 ## Introduction
 
-These patterns control context input and printed output. Discovery and runtime sections govern context input. Remaining patterns govern printed output and bulk storage. Patterns are runtime-neutral unless a section names a runtime.
+These commands express the rules in `SKILL.md`. Discovery and runtime sections govern context input; the rest govern printed output and bulk storage. Patterns are runtime-neutral unless a section names a runtime.
 
 ## Table of contents
 
@@ -15,62 +15,32 @@ These patterns control context input and printed output. Discovery and runtime s
 
 ## Discovery and bounded reads
 
-Work down this order and stop at the first step that answers the question:
-
-1. Search or inventory to locate the relevant path, symbol, or line range.
-2. Read the bounded excerpt around the match.
-3. Read the full file only when safe editing requires the whole file.
-4. Summarize the result, not the material.
-
-Prefer:
+`SKILL.md` *Part 1* owns the search, slice and capture rules. These commands express them:
 
 - `rg -n "pattern" <paths>` to locate before reading.
 - `rg -n -C 3 "pattern" <paths>` when the surrounding lines decide the answer.
 - `rg -c "pattern" <paths>` or a file list when the question is "how widespread is this."
 - a changed-file list instead of a full folder dump.
 
-Avoid by default:
-
-- full-file dumps to prove a file was inspected;
-- full directory trees, especially of generated output;
-- pulling a large result into context when a count, path, or slice answers the question, because a large result is re-read on every later turn.
-
 ## Runtime notes: Claude Code and Codex
 
 **Claude Code**
 
-- Prefer file and search tools over shell commands. Matching paths or lines are cheaper and more structured than terminal `rg` output. Explicit offsets and limits cost less than `cat` plus mental filtering.
-- Read only the range you need.
+- Prefer file and search tools over shell commands: matching paths or lines are cheaper and more structured than terminal `rg` output, and explicit offsets and limits cost less than `cat` plus mental filtering.
 - Dispatch independent searches in one turn so they run concurrently.
-- When a question needs a wide sweep across many files, delegate it to a subagent. Require findings or paths, not excerpts. The sweep then consumes the child's context instead of the parent's.
+- Delegate a wide sweep across many files to a subagent, and require findings or paths, not excerpts. The sweep then consumes the child's context instead of the parent's.
 
 **Codex**
 
-Discovery mostly uses the shell. Express bounds in each command:
-
-- Scope every search to real paths.
-- Keep `-C` context small.
-- Pipe through `head` or `tail` instead of emitting whole files.
+Discovery mostly uses the shell, so express bounds in each command: scope every search to real paths, keep `-C` context small, and pipe through `head` or `tail` instead of emitting whole files.
 
 ## Diff and reporting patterns
 
-Prefer these reporting shapes before raw diff output:
-
-- `git status --short`
-- `git diff --stat`
-- `git diff --name-only`
-- `git diff -- <path>` for the one file that matters
-
-By default, report changes, reasons, validation, remaining risks or blockers, and saved artifact paths. Do not paste a repository-wide unified diff unless requested.
+Prefer these shapes to raw diff output: `git status --short`, `git diff --stat`, `git diff --name-only`, and `git diff -- <path>` for the one file that matters.
 
 ## Large-log capture patterns
 
-When validation or diagnostics are long, keep the bulk out of both the transcript and the context window:
-
-1. Create or reuse a repo-local artifact directory.
-2. Redirect the full command output there.
-3. Read back only the tail or the failing slice.
-4. Report the key outcome and the path.
+Create or reuse a repo-local artifact directory, redirect the full command output there, and read back only the tail or the failing slice.
 
 ## Bash notes
 
@@ -86,10 +56,7 @@ pnpm test > artifacts/test.log 2>&1
 tail -n 80 artifacts/test.log
 ```
 
-Notes:
-
-- Prefer `tail`, bounded `sed`, or focused `rg -C` over full `cat` output.
-- Use `git diff -- path/to/file` before showing larger diffs.
+Prefer `tail`, bounded `sed` or focused `rg -C` to full `cat` output. Use `git diff -- path/to/file` before showing larger diffs.
 
 ## When the user wants raw output
 
@@ -99,5 +66,5 @@ Notes:
 
 ## Caveats
 
-- The `rg`, `git`, and Bash examples describe common cases, not portable guarantees. Before scripting them, verify flags and tool names against the installed shell and versions.
+- The `rg`, `git` and Bash examples describe common cases, not portable guarantees. Before scripting them, verify flags and tool names against the installed shell and versions.
 - Claude Code guidance describes general file and search operations. Exact tool parameters change between releases.

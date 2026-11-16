@@ -1,16 +1,16 @@
 # Native evidence and proof
 
-This guide ships with the skill and depends on no workstation inventory. Select the needed operation, inspect its repository recipe and configuration, and check only its executable with `command -v <tool>`. Check the version and dialect when the operation depends on them. Availability is not compatibility.
+This guide ships with the skill and depends on no workstation inventory. Select the needed operation, inspect its repository recipe and configuration, and check only its executable with `command -v <tool>`. Check the version and dialect when the operation depends on them; availability is not compatibility.
 
-Do not install, upgrade or allow package-runner downloads as discovery. Use installed project tooling or report the required gate blocked. Inspect scripts before execution: names such as check or dry-run do not establish harmlessness. Bound the scope and the output, and avoid secret payloads. The examples below are starting points for reads and diagnostics, not universal proof commands. Substitute the actual scoped path and the inspected project recipe.
+Never install, upgrade or allow package-runner downloads as discovery: use installed project tooling or report the required gate blocked. Inspect scripts before execution, because names such as check or dry-run do not establish harmlessness. Bound the scope and the output, and avoid secret payloads. The examples below are starting points for reads and diagnostics, not universal proof commands; substitute the actual scoped path and the inspected project recipe.
 
 ## CLI versus language-service access
 
-Distinguish the executable, a supported CLI subcommand, a connected LSP or MCP operation, and the bound workspace and document version. A language-server binary or an editor extension proves no agent access. A supported CLI needs no Serena, hooks or MCP. Do not invoke a bare server for a CLI answer: LSP requires initialization, document synchronization and capability handling through an available client. Missing access follows the routing contract. It does not authorize bridge installation or ad hoc client construction as an evidence fallback.
+Distinguish the executable, a supported CLI subcommand, a connected LSP or MCP operation, and the bound workspace and document version. A language-server binary or an editor extension proves no agent access. A supported CLI needs no Serena, hooks or MCP. Do not invoke a bare server for a CLI answer, because LSP requires initialization, document synchronization and capability handling through an available client. Missing access follows the routing contract; it authorizes no bridge installation or ad hoc client construction as an evidence fallback.
 
-Resolve the Git worktree and the language root, because a nested Composer, module or Python project can differ from the Git root. Run from the intended language root with the matching configuration, build or interpreter environment, and files. Saved-file CLI results do not describe unsaved buffers. Reuse a suitable authorized session bound to that target. Do not switch another client's workspace, and do not provision daemons as discovery.
+Resolve the Git worktree and the language root, because a nested Composer, module or Python project can differ from the Git root. Run from the intended language root with the matching configuration, build or interpreter environment, and files. Saved-file CLI results do not describe unsaved buffers. Reuse a suitable authorized session bound to that target. Never switch another client's workspace or provision daemons as discovery.
 
-Batch compatible diagnostics, and scope queries to the needed symbols and files. Rerun only after a relevant change to source, configuration or environment, or for a new uncovered question. Avoid repeated cold loads and a whole-project scan for each small read. Focused checks do not replace mandatory full-project gates. Size concurrency to the available resources and the competing work. Do not run a separate analyzer for each subagent by default.
+Batch compatible diagnostics, and scope queries to the needed symbols and files. Rerun only after a relevant change to source, configuration or environment, or for a new uncovered question. Avoid repeated cold loads and a whole-project scan for each small read. Focused checks do not replace mandatory full-project gates. Size concurrency to the available resources and the competing work, and by default run no separate analyzer for each subagent.
 
 ## Files, literals and syntax
 
@@ -20,8 +20,6 @@ Batch compatible diagnostics, and scope queries to the needed symbols and files.
 | Occurrence of a literal, or of text in Markdown or configuration | `rg -n -F -- '<literal>' <scope>`; `rg -n -g '*.md' -- '<pattern>' <scope>` | A miss proves absence only in a demonstrated complete searched scope |
 | Known region | Native file read limited to needed lines | Does not prove call or reference coverage |
 | Supported syntax pattern | Installed ast-grep with a language-bound and path-bound pattern selected from its help | Syntax matches are not bindings, types or complete references. Native text can supply partial evidence |
-
-Read a bounded region with the runtime's file-read tool and a line range. Use `sed -n '<first>,<last>p' <path>` only where the runtime reads files through the shell. Reuse adequate graph source instead of performing these reads again.
 
 ## Structured data and saved working state
 
@@ -49,7 +47,7 @@ For a dependency-metadata or upgrade question, inspect `go.mod`, `go.sum`, appli
 Inspect `gopls help <operation>` for exact flags and scope. Installed CLI candidates include
 `gopls definition <file.go:line:column>`, `gopls references <file.go:line:column>`,
 `gopls implementation <file.go:line:column>`, `gopls call_hierarchy <file.go:line:column>`
-and `gopls check <file.go>`. CLI line and column positions are one-based, and columns count UTF-8 bytes. Do not copy another client's position encoding without conversion. Check the error and loading output and the build coverage before interpreting an empty answer. Rename, code actions and import fixes can write; inspect their flags and effects before applying them. Gopls documents its CLI as experimental and inefficient, so use bounded queries under the cost rule above. Its built-in MCP is another possible surface only when it is already configured and exposed, not an automatic setup step. Package loading can invoke Go tooling and fetch dependencies. Honor the authorized runtime and cache policy rather than treating a semantic read as permission to download or change the toolchain. Go tests and builds can launch processes, dependencies and generated work. Select the authorized scoped recipe and resource policy rather than assuming pure reads.
+and `gopls check <file.go>`. CLI line and column positions are one-based, and columns count UTF-8 bytes; convert another client's position encoding before use. Check the error and loading output and the build coverage before interpreting an empty answer. Rename, code actions and import fixes can write; inspect their flags and effects before applying them. Gopls documents its CLI as experimental and inefficient, so use bounded queries under the cost rule above. Its built-in MCP is another surface only when already configured and exposed, never an automatic setup step. Package loading can invoke Go tooling and fetch dependencies, so honor the authorized runtime and cache policy; a semantic read grants no permission to download or change the toolchain. Go tests and builds can launch processes, dependencies and generated work, so select the authorized scoped recipe and resource policy rather than assume pure reads.
 
 ## Python
 
