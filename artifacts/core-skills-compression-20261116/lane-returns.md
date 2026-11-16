@@ -546,3 +546,75 @@ AGENT: alaa-implementer-fable. CONFIGURED: none (model-neutral definition). REQU
 - I ran the gates without first reading testing-strategy `references/100-test-execution.md`.
 
 Skills loaded before the first edit: /alaa-prompting-guide (60 and 80 sections read), /alaa-ponytail full, /alaa-low-noise; preloaded: /alaa-code-intelligence-routing, /alaa-testing-strategy, /alaa-services-contract, /alaa-trust-gateway-auth. Builder and checks are in `/tmp/claude-1000/-home-sohrab-project-skills/75ecedca-09c9-4d1a-998e-2f75020937a5/scratchpad/` (`texts.py`, `build.py`, `verify.py`, `pct.py`).
+
+## L5c-a — second pass, orchestrator SKILL.md and references
+
+STATUS: COMPLETE — both packs' `SKILL.md` and `references/**` are rewritten in identical terms and every gate exits 0, but the cut is about 21 percent, not "far fewer words".
+AGENT: alaa-implementer-fable (lane L5c-a). CONFIGURED: none (model-neutral role). REQUESTED: claude-fable-5-2 (`fable`), high. OBSERVED: claude-fable-5-2 per the runtime system context; effort unknown.
+
+1. **Outcome.** Each behavioural rule is stated once, with the same text in both packs. Shared files are generated from the cc text by asserted substitution: 11 files are byte-identical, the rest differ only by runtime hunks. The Stage A capability inquiry is still **step 4**.
+
+2. **Branch and commits.** Branch `worktree-agent-ad830aefde7c5c4f7`, worktree `agent-ad830aefde7c5c4f7`, HEAD after the merge `fe101a53`, tree clean.
+   - `eb16a7c9` docs(orchestrators): rewrite and prune SKILL.md and references of the mirrored pair
+   - `7ab48c62` fix(orchestrators): restore four safeguards the rewrite dropped
+
+3. **Words (`measure.py`), before → after.**
+
+   | Pack | `SKILL.md` body | References |
+   |---|---|---|
+   | cc | 2521 → 2001 | 13693 → 10768 |
+   | codex | 2512 → 1972 | 14218 → 11471 |
+
+4. **Files that ended above four fifths (`wc`), and why.**
+   - `verification-and-gates.md` (cc 3740 → 3040, codex 3881 → 3166): nearly all of it is what the dispatch says the pair must keep (decision and four questions, floors, evidence, after a fix, who fixes, cadence table, stages), and about 75 clauses still bind it.
+   - `routing-matrix.md` (cc 3235 → 2592, codex 3373 → 2726): the allocation procedure, admission predicates and every specialist trigger.
+   - `delegation-prompts.md` (692 → 582) and every template except `20-design.md`: XML tags that checkers match; only prose around them could go.
+   - `SKILL.md` whole file is 80.2 percent in cc because the frontmatter is untouched; the body is under four fifths.
+   - Well under: catalog (66 and 74 percent), `model-effort-policy.md` (59 and 60), the two pointer files.
+
+5. **Pruned rules.** Ledger: `artifacts/core-skills-compression-20261116/pruned-L5c-a.md`, 80 rows: P1 8, P2 1, P3 8, P4 1, P5 19, P6 2, plus `OWN` 29 (restated another skill's rule), `DUP` 11 (stays elsewhere in the pack), and 1 row for dropped reason clauses. `OWN` and `DUP` are my labels, not brief criteria.
+
+6. **Checker clauses.** 17 deleted, 0 reworded, same edit in both `check_agent_contracts.py`, no logic change: `CADENCE_REQUIREMENTS` 8, `COLLECTION_REQUIREMENTS` 3, routing tuple in `task_allocation_failures` 3, `GATE_REQUIREMENTS` 1, `orchestrator_failures` 1, skill tuple in `cadence_failures` 1. I reworded none because the surviving bound sentences were already minimal.
+   - Kept verbatim because another lane owns the tuple or shares the clause: the `COLLECTION_SEAMS` phrases in routing *Failure routing*, `40-verification.md`, `30-implementation.md` and `failure-taxonomy.md`; the seven shared `<review_boundary>` clauses in `20-design.md` and `60-contract-review.md` (the critic agent needs them too); the testing-strategy citations.
+
+7. **Cross-skill restatements.**
+   - Replaced by pointers, by owner (ledger rows):
+     - alaa-workflow: 10, 16, 20–24, 26, 27, 29, 33, 69
+     - alaa-testing-strategy: 14, 30, 35, 46, 55, 60, 72
+     - alaa-prompting-guide: 4, 7, 63, 64
+     - alaa-low-noise: 1–3
+     - alaa-code-intelligence-routing: 58
+     - alaa-system-design: 73
+     - alaa-algorithms-data-structures: 74
+   - Risk: I checked each owner at `fe101a53` only. If a parallel lane prunes the same rule on its side, it exists nowhere and no gate catches it; grep these rows again after the merges.
+   - Left in place:
+     - the watchdog sentence in `delegation-prompts.md`, bound by an `if`, not a tuple entry;
+     - the push/tag authority limit in gates;
+     - the `<return>` wording inside the envelope, since a child does not load the owner;
+     - the framework-class tool lists in the catalog, which `80-agent-scoping.md` does not define.
+
+8. **Kept but doubted** (cc paths; codex mirrors):
+   - `SKILL.md:97` — the final-report close line (dispatch and check counts, time span).
+   - `SKILL.md:103` — pack-maintenance commands in the always-loaded body.
+   - `references/routing-matrix.md:72` — the lane rechecks the admission predicates.
+   - `references/routing-matrix.md:55` and `:63` — recording rejected pairs and the allocation record.
+   - `references/verification-and-gates.md:159` — the Stage E scope and status check.
+   - `references/verification-and-gates.md:163` — rerun the final gates if the base advanced.
+   - `references/delegation-prompts/40-verification.md:20` — one identical rerun for flake detection.
+   - `references/delegation-prompts.md:28` — the invocation read-back.
+
+9. **Gates** (`PYTHONDONTWRITEBYTECODE=1 python3 -B`, final run on the tree that `7ab48c62` commits), all exit 0:
+   - root: `validate_sohrab_skill_pack.py`, `check_skill_index.py`, `check_fleet_references.py`, `check_lifecycle_contract.py`;
+   - each pack: `render_agents.py --check`, `validate_pack.py`, `check_agent_contracts.py`, `check_agent_grants.py`;
+   - `alaa-testing-strategy`: `check_execution_contracts.py`.
+   - Review-only, by script: no template tag, verdict or status token, role name or Appendix A heading present at `fe101a53` is missing; each of `## Admission`, `Final report`, `## Batch allocation`, `## All-role task allocation` has one hit per pack.
+   - Not run: `render_agents.py --write`, install scripts. Independent review is pending at the final boundary.
+
+**Skills.** Loaded before the first edit: /alaa-prompting-guide (`60-skill-authoring.md` sections read), /alaa-ponytail full, /alaa-low-noise; the four preloaded skills were in context. Late: testing-strategy `references/100-test-execution.md` was read after the first gate run and before the last, because I went straight to the supplied commands.
+
+**Boundary notes for the lead.**
+- `CHANGELOG.md` and `VERSION` are untouched (L5c-b).
+- `SKILL.md` sections lost their numbers, and routing "Always or normally required" is now "Default roles". Nothing in `assets/` or `agents/` cited either. The critic's "Phase A step 4" should read "Stage A step 4".
+- Conflict: the brief asks for one commit per skill, the dispatch for commits covering both packs; I followed the dispatch.
+- Restored after a self-check, in `7ab48c62`: the Ent acceptance rule, the compatibility-realization exception, the `bd` flag names, and the native-plan clause.
+- Scratch tooling: `/tmp/claude-1000/-home-sohrab-project-skills/75ecedca-09c9-4d1a-998e-2f75020937a5/scratchpad/l5ca/` (`gen.py`, `checker_edits.py`, `checker_edits2.py`, `audit.py`, `measure-before.txt`).
