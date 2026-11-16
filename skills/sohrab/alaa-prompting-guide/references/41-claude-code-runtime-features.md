@@ -44,7 +44,7 @@ Use Claude Code's native Advisor for executor consultations. The orchestrator's 
 **Start.** Use `/advisor <model>` in a supported Code session. At launch, `--advisor <model>` overrides the `advisorModel` setting. Give a supported `sonnet`, `opus` or `fable` alias or a full model ID.
 
 - `/advisor` also works with `-p`, in the Agent SDK, and in the desktop app from v2.1.260. `/advisor off` turns the advisor off (17 November 2026).
-- `--advisor` is not listed in `claude --help`. An invalid pair given with `--advisor` exits at launch; a background session starts without the advisor instead (17 November 2026).
+- An invalid pair given with `--advisor` exits at launch; a background session starts without the advisor instead (17 November 2026).
 
 **Preflight.** The advisor is experimental. It needs the Anthropic API, Claude Platform on AWS, or Claude Models on Google Cloud (Anthropic managed); the two cloud providers need v2.1.300 or later. It is not available on Amazon Bedrock, Google Cloud's Agent Platform or Microsoft Foundry. It needs a feature-flag fetch, so `DISABLE_TELEMETRY` breaks it (17 November 2026). Before you depend on it, resolve the alias and verify support on the actual Code version, provider, account, managed allowlist and entitlement. Inspection grants neither configuration authority nor paid execution authority.
 
@@ -57,7 +57,7 @@ Use Claude Code's native Advisor for executor consultations. The orchestrator's 
 | Opus 5.5 | Fable, Opus 5 or later |
 | Fable 5.2 | Fable 5.2 only; the API also accepts Mythos 5.2, which stays excluded from selection |
 
-Haiku 5.5 needs v2.1.293 or later. Haiku 4.5 can call the advisor but cannot act as one. The platform page requires an advisor at least as capable as the executor (17 November 2026).
+Haiku 5.5 needs v2.1.293 or later. The platform page requires an advisor at least as capable as the executor (17 November 2026).
 
 Claude Code attaches no lower-ranked advisor: an Opus or Sonnet advisor on a Fable 5.2 main model runs no consultation and raises no error. The `/advisor` command output and a notification show that the pair is not accepted. A subagent whose own model satisfies the pairing can still use the advisor (17 November 2026).
 
