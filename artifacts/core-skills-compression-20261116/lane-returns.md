@@ -618,3 +618,57 @@ AGENT: alaa-implementer-fable (lane L5c-a). CONFIGURED: none (model-neutral role
 - Conflict: the brief asks for one commit per skill, the dispatch for commits covering both packs; I followed the dispatch.
 - Restored after a self-check, in `7ab48c62`: the Ent acceptance rule, the compatibility-realization exception, the `bd` flag names, and the native-plan clause.
 - Scratch tooling: `/tmp/claude-1000/-home-sohrab-project-skills/75ecedca-09c9-4d1a-998e-2f75020937a5/scratchpad/l5ca/` (`gen.py`, `checker_edits.py`, `checker_edits2.py`, `audit.py`, `measure-before.txt`).
+
+## L1b — second pass, alaa-prompting-guide
+
+STATUS: COMPLETE — `alaa-prompting-guide` is rewritten and pruned under the second-pass brief, the five source corrections are applied, the ledger is committed, and all eleven gates exit 0; the word cut is 15.6 percent for the skill, well short of "far fewer".
+AGENT alaa-implementer-fable; CONFIGURED unknown (no definition observable); REQUESTED claude-fable-5-2 / high; OBSERVED model claude-fable-5-2 (system prompt), effort unknown.
+
+1. **Outcome.** Every reference, the `SKILL.md` body, `contract.md` (copied byte-identical into both wrappers) and `dispatch.md` are rewritten. 26 rules pruned and recorded. Policy JSON, `scripts/**`, `agents/openai.yaml` and the `SKILL.md` description are unchanged. No file retired.
+
+2. **Branch, worktree, commits.** Branch `worktree-agent-a4dbb6ed6a8238e99`, worktree `agent-a4dbb6ed6a8238e99`, base `b8a00eb8` (fast-forward done). Tree clean.
+   - `430f0944` docs(alaa-prompting-guide): rewrite and prune the skill text, apply five source corrections
+   - `b0289c0c` docs(artifacts): record the L1b pruned-rule ledger
+   - `6fa2743d` docs(alaa-prompting-guide): restore dates and a rule route lost in the rewrite (repair after self-review; no amend)
+
+3. **Words (measure.py).** Before: frontmatter 89, body 790, references 25,947, assets 4,452, other 49, total 31,327. After: 89, 772, 21,219, 4,316, 49, total 26,445. References −18.2%, total −15.6%. `measure.py` counts whitespace tokens, so each table pipe and list dash counts as a word.
+
+4. **Files above four fifths of their start (after/before words), and why.**
+   - `43` 99%: dispatch forbids pruning any fact row or behaviour entry; it was already in short STE sentences.
+   - `41` 87%: Appendix C facts plus never-prune numbers, limits, version gates and dated sources fill it; only non-numeric platform prose was prunable (ledger rows 11 to 16).
+   - `11` 84%, `90` 89%, `12` 89%, `36` 90%: same cause. `90` is mostly the 27-row selector matrix and the Claude table. `12` also gained the correction C quotes and one blog line.
+   - `61` 92%: six new official facts (+110 words) offset the cut.
+   - `00-source-map` 100%: URL lists and dates are sources; it gained the redirect example and a 16 November date group.
+   - `00-topic-map` 92%: every row is a trigger; none is prunable.
+   - `SKILL.md` body 98%: gate commands, exit codes, authority limits and stop conditions; sections were reordered (decision procedure first), not cut.
+   - `contract.md` 92%, `dispatch.md` 99%: invariants, stop conditions and dispatch fields are never-prune.
+   - Below four fifths: `21` 69%, `50` 69%, `80` 69%, `70` 73%, `60` 75%, `06` 78%, `31` 79%.
+
+5. **Pruned rules: 26.** P1 3, P2 1, P3 1, P4 10, P5 7, P6 4. Ledger: `artifacts/core-skills-compression-20261116/pruned-L1b.md`. It also has the A to E correction rows, the additions with their sources, and a table of removed duplicates (checklists and defect tables) with where each rule still lives.
+
+6. **Checker clauses.** Reworded 0, deleted 0. No clause checker binds this skill. G5 holds (wrappers equal `contract.md`), G6 holds (no model name).
+
+7. **Cross-skill restatements.**
+   - Replaced by pointers: the orchestrator role catalog and lead/verifier rules in `90`; the plugin-build reason for the single `/name` form in `06` (pointer to `skills/sohrab/AGENTS.md`).
+   - Left: `80` "no lane approves its own change" (this skill owns the authority test); the managed-roles sections of `41` and `11` (Appendix C).
+   - Outside my scope, still restating `60`: `skills/sohrab/AGENTS.md` *The wording test* and its "Write all three parts" (60 now says four).
+   - Conflict followed per dispatch: the brief's owner table puts `AGENTS.md` chain facts in `11`; the dispatch puts them in `70`. They are in `70`; `11` points there, and the Codex write-back rule moved with them.
+
+8. **Kept but doubted.**
+   - `60:132` optional comparative evaluation (owner bans comparisons for skills).
+   - `60:35` activation side effect as a fourth description part (freshness.md: unsourced).
+   - `41:187` *Choosing a mechanism* list (mostly platform restatement).
+   - `41:81` advisor rule 9, advice length.
+   - `41:217` and `11:110` near-identical managed-roles sections.
+   - `11:66` CSV batch tool; `11:80` slash-command name list.
+   - `12:23` planning sentence and "finite enumerated batch".
+   - `90:95` reviewer-profile sentence.
+   - `80:81` "After you change a dispatch, measure quality".
+   - Also: new dates are written "16 November 2026", not ISO, to match the files. Seven references exceed 100 lines with no table of contents (`41`, `60`, `06`, `11`, `70`, `61`, `90`), against the new `61` line; I added none.
+   - The two new carry-over rows apply through the existing gate ("only when the target model's reference documents the behaviour"), so I added one dated blog line to `12`; they are not applicable to a Claude-only text unless the owner widens the gate.
+
+9. **Gates, all on the final tree, `PYTHONDONTWRITEBYTECODE=1 python3 -B`.** Root: `validate_sohrab_skill_pack` 0, `check_skill_index` 0, `check_fleet_references` 0, `check_lifecycle_contract` 0. Skill dir: `check_rule_writer_grants` 0, `check_claude_model_policy` 0, `check_codex_model_policy --agent-root assets/rule-writer/codex` 0. Each orchestrator: `render_agents.py --check` 0, `validate_pack.py` 0. No `__pycache__` created.
+
+**Skills.** Loaded before the first edit: `alaa-ponytail` (full), `alaa-low-noise`; preloaded: `alaa-code-intelligence-routing`, `alaa-testing-strategy`, `alaa-services-contract`, `alaa-trust-gateway-auth`. Late: `alaa-workflow references/workspace-and-integration.md` *Lane branches and commits* was read after the first two commits (they conform: by path, no amend); `alaa-testing-strategy references/100-test-execution.md` was read after the first gate run and before the final rerun. `references/routing-matrix.md` profile section not read: the recorded predicates held.
+
+**Residual risk.** Criterion 5 is self-checked only: a token inventory (numbers, dates, backticked names, URLs) before and after shows no number lost, and the lost names are ledger rows 11 to 21 or correction A. Sentence-level behaviour equivalence of the rewrite is unreviewed. The first commit lost three dates and one rule route in `41`, `11` and `12`; `6fa2743d` restores them, so the review should read those three files first. No web fetch was run; the 16 November facts rest on `freshness.md` and the dispatch.
