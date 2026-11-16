@@ -33,7 +33,7 @@
 
 {{delegated_design_section}}## Handoff Package
 
-Fill a field when knowledge is learned, not on a schedule, because knowledge held only in the agent's head is lost on compaction. Leave unused fields empty. Field semantics are in the skill's `alaa-workflow references/context-continuity.md`, not in this repository.
+Knowledge held only in the current agent's head disappears on compaction. Fill a field when knowledge is learned, not on a schedule; leave unused fields empty. Field semantics are in the skill's `alaa-workflow references/context-continuity.md`, not in this repository.
 
 - Confirmed facts (verified, each with how it was verified): none yet.
 - Open assumptions (believed but unverified, each with what would verify it): none yet.

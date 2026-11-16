@@ -10,7 +10,7 @@ Plan before every implementation. Make long work resumable without imposing orch
 ## Start
 
 1. Read repository instructions and every user-named read-first artifact.
-2. If a plan already exists, read it before execution, resume, delegation, review or handoff.
+2. If a plan already exists, read it before execution, resume, delegation, review or handoff, and follow the resume protocol in `references/context-continuity.md`.
 3. When `/alaa-memory-os` says its trigger holds, invoke it before planning from prior context or publishing durable knowledge. Memory may contribute verified leads. It never owns this workflow's plan, checkpoint, evidence, or handoff.
 4. Before the first non-trivial repository discovery or code-evidence choice, invoke `/alaa-code-intelligence-routing` once. Reuse its routed result instead of retrieving the same fact through a second surface.
 5. Before planning, apply Mandatory Ponytail binding in `references/companion-routing.md`, including its user opt-out. Pair with `/alaa-low-noise` and the narrowest domain skill needed for technical decisions. Before designing implementation or verification, load `/alaa-testing-strategy`.
@@ -80,7 +80,7 @@ This skill owns coordination and continuity, not architecture, security, data, r
 
 | You are about to | Read |
 |---|---|
-| Begin a long run, hand off (including to another PC), resume after context loss or a branch or worktree change, or find you cannot name your own current position | `references/context-continuity.md` |
+| Begin a long run, hand off (including to another PC), resume, or continue after compaction, interruption or a branch or worktree change, or find you cannot name your own current position | `references/context-continuity.md` |
 | Choose plan size, medium, design or execution authority, or continue an existing family | `references/artifact-lifecycle.md` |
 | Resolve execution hierarchy, test Beads availability, select or migrate a task store, decide where task information, acceptance or evidence lives, write issue fields or a close reason, link a follow-up or cross-project dependency, assign, resume or transfer an agent's Beads identity or issue ownership, resolve readiness, or encounter a Beads outage or uncertain update | `references/task-tracking.md` |
 | Make the first write of a multi-phase or delegated run, record an evidence snapshot, exercise authorized Git integration, or state which completion states a finished run reached | `references/workspace-and-integration.md` |

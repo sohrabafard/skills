@@ -11,4 +11,4 @@
 - Worktree identity and last evidence snapshot: not captured
 - Updated: `{{created_at}}`
 
-This checkpoint owns execution position. Its status snapshots the plan header, and any JSON cursor derives from it. The plan owns scope, phases, acceptance and handoff knowledge; the selected task store owns task progress. Record the actual command and result under last verified result, never a paraphrase.
+This checkpoint owns execution position. Its status snapshots the plan header; any JSON cursor derives from this checkpoint. The plan owns scope, phases, acceptance, and handoff knowledge; its selected task store owns task progress. Record the actual command and its result under last verified result, never a paraphrase.

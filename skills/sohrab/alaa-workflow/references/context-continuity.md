@@ -9,7 +9,7 @@ Treat these four as one problem:
 - **Compaction:** older turns are summarized away, often unannounced; exact error text, abandoned paths and decision reasons disappear.
 - **A new session:** the agent starts with only the repository and its files.
 - **A different agent:** a subagent, another runtime or a fresh agent has no memory of the conversation and cannot ask.
-- **A subagent boundary:** every dispatch is a one-way context wall; the child sees only its dispatch text, and the parent sees only its return.
+- **A subagent boundary:** every dispatch is a one-way context wall (`## Delegation is a context boundary`).
 
 The design target is a task that any competent agent can resume from the canonical task and workflow owners and the available source and evidence, without conversation history. The cold-start test below checks this.
 
@@ -136,7 +136,7 @@ Do not show the model raw context-budget numbers, because they cause premature s
 
 ## Delegation is a context boundary
 
-A dispatch is a one-way wall: the child cannot ask, and the parent cannot see what the child saw.
+A dispatch is a one-way wall: the child sees only its dispatch text and cannot ask, and the parent sees only the child's return.
 
 Write dispatches for zero shared context: the outcome, the owned scope, the exclusions, the acceptance criteria, the verification commands and the handoff-package facts that bear on the lane. Copy those facts into the dispatch; never point at a conversation the child never had.
 
