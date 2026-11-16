@@ -1,8 +1,6 @@
 # Agent Catalog
 
-The orchestrator leads the session; it is not a custom subagent. `routing-matrix.md` owns role triggers and the actual task allocation of model and effort, including the rule that a role name selects neither control. /alaa-prompting-guide owns capabilities and runtime mechanics. Managed role definitions omit model and effort pins. Apply to every role the explicit controls normalized through `model-effort-policy.md`, including its omission defaults.
-
-The manifest lists the executable agents managed by this pack.
+`assets/manifest.json` lists the managed agents. A managed role definition carries no model or effort pin, and a role name selects neither. `routing-matrix.md` selects the role and the pair for each dispatch.
 
 ## Specification and evidence
 
@@ -17,57 +15,47 @@ The manifest lists the executable agents managed by this pack.
 
 ## Implementation and verification
 
+`routing-matrix.md` *Implementation routing* states the workload that admits each implementation role. No implementation role reviews its own work or runs without a recorded admission.
+
 | Agent | Sandbox | Use | Never use for |
 |---|---|---|---|
-| `alaa-implementer` | workspace-write | Normal engineering with grounded scope and acceptance criteria. | Self-review or unrecorded profile admission |
-| `alaa-implementer-astra` | workspace-write | Compatibility implementation identity; exceptional model selection requires the all-role task admission. Complexity, sensitivity, file count, failure count and imagined insufficiency alone do not qualify. Reuse applicable prior evidence; no mandatory trial ladder, synthetic benchmark or replay of completed work. | Self-review or unrecorded profile admission |
-| `alaa-implementer-high` | workspace-write | Substantial interacting engineering reasoning. | Self-review or unrecorded profile admission |
-| `alaa-implementer-luna` | workspace-write | Exact mechanical edits with every fit predicate, or balanced-priority reproduced local bug with traced cause, bounded decisions and regression oracle | Mechanical branch: semantic discretion or design changes; both branches: ambiguous scope, unresolved cross-boundary contracts, trust, shared-state or consistency design, or wider authority |
-| `alaa-implementer-low` | workspace-write | Bounded semantic edits with recorded fit and cheap discriminating checks | Unresolved cross-boundary design, consistency or trust |
-| `alaa-implementer-luna-high` | workspace-write | Local reproduced bug with traced cause, bounded decisions and regression oracle | Unresolved cross-boundary contracts, trust or shared-state design |
-| `alaa-implementer-luna-low` | workspace-write | Bounded local reproduced bug at the canonical cost priority | Self-review, unrecorded admission or wider authority |
-| `alaa-implementer-xhigh` | workspace-write | Sustained demanding workhorse reasoning from the batch mapping | Self-review, unrecorded admission or wider authority |
-| `alaa-implementer-astra-medium` | workspace-write | Exact official task/priority admission with reasoning need and rejected cheaper/decomposed alternatives | Self-review, unrecorded admission or wider authority |
-| `alaa-implementer-astra-xhigh` | workspace-write | Exact official task/priority admission with sustained reasoning need and rejected cheaper/decomposed alternatives | Self-review, unrecorded admission or wider authority |
-| `alaa-implementer-laravel` | workspace-write | PHP and Laravel implementation with the stack's clean-code, Octane and testing doctrine. | Another stack's files, the mechanical or bounded branches, self-review, or unrecorded profile admission |
-| `alaa-implementer-frontend` | workspace-write | Vue frontend implementation, with Quasar when used, and the stack's frontend, clean-code and testing doctrine. | Another stack's files, the mechanical or bounded branches, self-review, or unrecorded profile admission |
-| `alaa-implementer-go` | workspace-write | Go implementation with the stack's front-door, clean-code and testing doctrine. | Another stack's files, the mechanical or bounded branches, self-review, or unrecorded profile admission |
-| `alaa-implementer-infra` | workspace-write | Infrastructure file changes; loads the owning skill of each surface before the first edit. | Another stack's files, the mechanical or bounded branches, self-review, applying, deploying or releasing, or unrecorded profile admission |
+| `alaa-implementer`, `alaa-implementer-high`, `alaa-implementer-xhigh` | workspace-write | Workhorse routes | Self-review |
+| `alaa-implementer-astra`, `alaa-implementer-astra-medium`, `alaa-implementer-astra-xhigh` | workspace-write | Compatibility implementation identities; an exceptional pair needs the all-role admission | Self-review |
+| `alaa-implementer-luna`, `alaa-implementer-low`, `alaa-implementer-luna-low`, `alaa-implementer-luna-high` | workspace-write | Mechanical, bounded semantic and bug routes | Semantic discretion on the mechanical branch; ambiguous scope, unresolved cross-boundary design or wider authority on any route |
+| `alaa-implementer-laravel`, `alaa-implementer-frontend`, `alaa-implementer-go`, `alaa-implementer-infra` | workspace-write | Stack-bound roles | Another stack's files, the mechanical or bounded branches, self-review; `alaa-implementer-infra` never applies, deploys or releases |
 | `alaa-verifier` | workspace-write (artifacts only) | Exact commands and reproducible evidence | Fixing, debugging, or changing commands |
 | `alaa-failure-analyst` | read-only | Diagnose ambiguous, flaky, environment, or cross-lane failures | Applying fixes |
-
-A stack-bound implementation role names the owning skills of its one stack and the testing doctrine in its instructions, and it loads them before the first edit, because a stack skill that a dispatch only mentions is often not loaded.
 
 ## Review
 
 | Agent | Sandbox | Verdict |
 |---|---|---|
 | `alaa-reviewer` | read-only | `APPROVED`, `APPROVED-WITH-NITS`, `CHANGES-REQUESTED` |
+| `alaa-reviewer-deep` | read-only | Same correctness contract and verdicts as `alaa-reviewer` |
 | `alaa-adversarial-reviewer` | read-only | `NO-BLOCKING-OBJECTION`, `OBJECTION-WITH-CONDITIONS`, `DO-NOT-SHIP` |
 | `alaa-documenter` | workspace-write (docs only) | Verified documentation only, never intended behavior |
 | `alaa-instruction-reviewer` | read-only native inspection | `APPROVED`, `APPROVED-WITH-NITS`, `CHANGES-REQUESTED` |
-| `alaa-reviewer-deep` | read-only | Same correctness contract and verdicts as `alaa-reviewer` |
 
 ## Conditional specialist gates
 
-| Agent | Sandbox | Subject | Gate output |
-|---|---|---|---|
-| `alaa-architecture-critic` | read-only | Cross-cutting design | `SOUND`, `SOUND-WITH-CONDITIONS`, `REVISE` |
-| `alaa-security-reviewer` | read-only | Trust boundaries | `PASS`, `PASS-WITH-HARDENING`, `BLOCK` |
-| `alaa-migration-guardian` | read-only | Schema and data changes | `SAFE`, `SAFE-WITH-CONDITIONS`, `BLOCK` |
-| `alaa-api-contract-reviewer` | read-only | Public contract shape | `COMPATIBLE`, `COMPATIBLE-WITH-MIGRATION`, `BREAKING` |
-| `alaa-dependency-auditor` | read-only | Dependency changes | `CLEAR`, `CLEAR-WITH-CONDITIONS`, `BLOCK` |
-| `alaa-accessibility-reviewer` | read-only | User-visible interface | `ACCESSIBLE`, `ACCESSIBLE-WITH-GAPS`, `BLOCK` |
-| `alaa-browser-qa` | workspace-write | User-visible web behavior | `PASS`, `FAIL`, `BLOCKED`, `FLAKY` |
-| `alaa-performance-profiler` | workspace-write | Measurable performance question | `WITHIN-BUDGET`, `OVER-BUDGET`, `INCONCLUSIVE` against the declared baseline and budget |
-| `alaa-observability-reviewer` | read-only | Runtime failure and degraded paths | `PASS`, `PASS-WITH-GAPS`, `BLOCK` |
-| `alaa-release-guardian` | read-only | Build, configuration and release | `READY`, `READY-WITH-CONDITIONS`, `NOT-READY` |
+`routing-matrix.md` *Specialist gates* owns every trigger; a gate fires from that file alone.
 
-The `Subject` column orients and decides nothing. `references/routing-matrix.md` owns every trigger, and a gate fires from that file alone, because a roster line read as a trigger leaves conditions out and under-fires.
+| Agent | Sandbox | Gate output |
+|---|---|---|
+| `alaa-architecture-critic` | read-only | `SOUND`, `SOUND-WITH-CONDITIONS`, `REVISE` |
+| `alaa-security-reviewer` | read-only | `PASS`, `PASS-WITH-HARDENING`, `BLOCK` |
+| `alaa-migration-guardian` | read-only | `SAFE`, `SAFE-WITH-CONDITIONS`, `BLOCK` |
+| `alaa-api-contract-reviewer` | read-only | `COMPATIBLE`, `COMPATIBLE-WITH-MIGRATION`, `BREAKING` |
+| `alaa-dependency-auditor` | read-only | `CLEAR`, `CLEAR-WITH-CONDITIONS`, `BLOCK` |
+| `alaa-accessibility-reviewer` | read-only | `ACCESSIBLE`, `ACCESSIBLE-WITH-GAPS`, `BLOCK` |
+| `alaa-browser-qa` | workspace-write | `PASS`, `FAIL`, `BLOCKED`, `FLAKY` |
+| `alaa-performance-profiler` | workspace-write | `WITHIN-BUDGET`, `OVER-BUDGET`, `INCONCLUSIVE` against the declared baseline and budget |
+| `alaa-observability-reviewer` | read-only | `PASS`, `PASS-WITH-GAPS`, `BLOCK` |
+| `alaa-release-guardian` | read-only | `READY`, `READY-WITH-CONDITIONS`, `NOT-READY` |
 
 ## Return header
 
-Every managed role starts its report with one fixed line, and the lead routes on that line before it reads anything else.
+Every managed role starts its report with one fixed line. Route on that line before you read anything else.
 
 | First line | Written by | Lead action |
 |---|---|---|
@@ -76,25 +64,26 @@ Every managed role starts its report with one fixed line, and the lead routes on
 | `STATUS: INCOMPLETE` | The same roles, when work ended before the completion condition | Read the named remainder, then continue the same agent or reassign the remainder; never accept the lane |
 | `STATUS: BLOCKED` | Any role, when a required dispatch input, an authority or a dependency is missing, or the task controls block the lane | Supply the named input to the same agent, correct the controls, or reclassify the lane; a gate that returned it has judged nothing |
 
-A missing report, `STATUS: BLOCKED` or `STATUS: INCOMPLETE` blocks acceptance of that lane even without findings. Each gate report ends with `NOT ASSESSED`. A verdict covers only the inspected scope, so an entry there that touches the declared scope leaves that part ungated. The role templates under `delegation-prompts.md` name each role's required dispatch inputs. `alaa-browser-qa` also has `VERDICT: BLOCKED`, which reports an observed environment block, not a missing input. A verdict token that is neither a pass nor a fail (`INCONCLUSIVE`, `FLAKY`, `VERDICT: BLOCKED`) leaves its gate open: treat the gate as not passed, then resolve the named gap or report it to the user. A finding refuter gives no verdict: it writes a `STATUS:` line and then one line for each disputed item.
+- A missing report, `STATUS: BLOCKED` or `STATUS: INCOMPLETE` blocks acceptance of that lane even without findings.
+- Each gate report ends with `NOT ASSESSED`. A verdict covers only the inspected scope, so an entry there that touches the declared scope leaves that part ungated.
+- `alaa-browser-qa` also has `VERDICT: BLOCKED`, which reports an observed environment block, not a missing input.
+- A verdict token that is neither a pass nor a fail (`INCONCLUSIVE`, `FLAKY`, `VERDICT: BLOCKED`) leaves its gate open: treat the gate as not passed, then resolve the named gap or report it to the user.
+- A finding refuter gives no verdict: it writes a `STATUS:` line and then one line for each disputed item.
 
 ## External companion admission
 
-`alaa-ent-specialist` is an external catalog role owned by /alaa-ent-go-orm-db. For a triggered lane, verify the installed role, readable canonical sources and effective grants through `alaa-ent-go-orm-db references/90-surfaces.md`. Admit the role through this catalog and apply the delegated mode's authority. Validate both task controls against the canonical capability policy and actual host. Missing, stale or unreachable prerequisites block the affected lane. Pack manifests, installers and grant projections cover managed roles only.
+`alaa-ent-specialist` is an external role owned by /alaa-ent-go-orm-db. For a triggered lane, verify the installed role, readable canonical sources and effective grants through `alaa-ent-go-orm-db references/90-surfaces.md`, and apply the delegated mode's authority. Validate both task controls against the canonical capability policy and actual host. Missing, stale or unreachable prerequisites block the affected lane. Pack manifests, installers and grant projections cover managed roles only.
 
 ## Code-intelligence scope
 
-Each managed agent receives the narrowest live server grant its question class earns. Servers not assigned here, including servers unknown to this pack, are disabled in that role.
+Each managed agent receives the narrowest live server grant that its question class earns. A server not assigned here, including a server unknown to this pack, is disabled in that role. `alaa-code-intelligence-routing references/80-agent-scoping.md` defines the grant classes and the Serena read set, and gives their reasons. This table is the assignment.
 
 | Agent | Structural and semantic | Framework context |
 |---|---|---|
 | `alaa-explorer` | CodeGraph | docs, routing |
-| `alaa-spec-analyst` | CodeGraph | docs |
-| `alaa-planner`, `alaa-planner-high` | CodeGraph | docs |
-| `alaa-architecture-critic` | CodeGraph | docs, schema |
-| `alaa-test-strategist` | CodeGraph | docs, schema |
+| `alaa-spec-analyst`, `alaa-planner`, `alaa-planner-high` | CodeGraph | docs |
+| `alaa-architecture-critic`, `alaa-test-strategist`, `alaa-migration-guardian` | CodeGraph | docs, schema |
 | `alaa-api-contract-reviewer` | CodeGraph | docs, routing, schema |
-| `alaa-migration-guardian` | CodeGraph | docs, schema |
 | `alaa-observability-reviewer` | CodeGraph | docs, app-errors, browser |
 | `alaa-performance-profiler` | CodeGraph | docs, schema, app-errors |
 | `alaa-reviewer`, `alaa-reviewer-deep`, `alaa-adversarial-reviewer`, `alaa-security-reviewer` | CodeGraph + Serena read set | docs, schema |
@@ -105,20 +94,18 @@ Each managed agent receives the narrowest live server grant its question class e
 | `alaa-browser-qa` | none | docs, routing, browser, app-errors |
 | `alaa-verifier`, `alaa-instruction-reviewer` | none | none |
 
-The Serena read set and framework classes come from `alaa-code-intelligence-routing references/80-agent-scoping.md`: `docs` is `search-docs` and `application-info`; `schema` is `database-schema` and `database-connections`; `routing` is `get-absolute-url`; `app-errors` is `last-error` and `read-log-entries`; and `browser` is `browser-logs`. Read-only roles receive only the classes their question requires. Implementation roles inherit Laravel Boost's native surface; this orchestrator creates no second server-wide Boost policy.
+- Framework classes: `docs` is `search-docs` and `application-info`; `schema` is `database-schema` and `database-connections`; `routing` is `get-absolute-url`; `app-errors` is `last-error` and `read-log-entries`; `browser` is `browser-logs`. Implementation lanes inherit Laravel Boost's native surface.
+- A custom-agent TOML is a configuration layer. Omitting `mcp_servers` inherits the parent. Naming a server with only `enabled_tools`, `disabled_tools` or `enabled` is malformed, because the table has no transport, and an empty map does not clear the inherited map. The portable files under `agents/` therefore carry a materialization marker and no MCP table, and a plain copy is unsupported.
+- The supported installers query `codex mcp list --json`, preserve each live server's `command` or `url` discriminator, apply the role's exact allow and deny set, set unassigned servers to `enabled = false`, validate the generated TOMLs, and record an inventory fingerprint. A changed inventory requires a newly authorized materialization before dispatch. A catalog server absent from the live inventory stays unavailable; never invent a machine-specific transport for it.
 
-A custom-agent TOML is a configuration layer. Omitting `mcp_servers` inherits the parent. Naming a server with only `enabled_tools`, `disabled_tools` or `enabled` is malformed, because the table has no transport, and an empty map does not clear the inherited map. The portable files under `agents/` therefore carry a materialization marker and no MCP table. The supported installers query `codex mcp list --json`, preserve each live server's `command` or `url` discriminator, apply this role's exact allow/deny set, set unassigned servers to `enabled = false`, validate the generated TOMLs, and record an inventory fingerprint. A changed inventory requires a newly authorized materialization before dispatch; activation never installs. A catalog server absent from the live inventory stays unavailable; never invent a machine-specific transport for it.
-
-Run `python3 scripts/check_agent_grants.py` after any source-agent change. Exit `0` is clean, `1` reports a grant mismatch, and `2` means the checker could not run. Both nonzero results fail the gate. The pack validator checks the templates, and both installers materialize and validate the resolved live grants. Plain copies are unsupported because they would inherit the parent grant.
+After any change to `agents/`, run `python3 scripts/check_agent_grants.py`; the pack validator also runs it on the templates. Exit `0` is clean, `1` reports a grant mismatch, and `2` means the checker could not run. Both nonzero results fail the gate.
 
 ## Memory scope
 
-`alaa-researcher`, `alaa-explorer` and `alaa-architecture-critic` receive the `hindsight` server restricted to `hindsight_search_knowledge_pages`, `hindsight_read_knowledge_page`, `hindsight_list_knowledge_pages` and `hindsight_reflect`; every other managed role has it disabled, like any unassigned server. Their question can be whether something already exists or who owns it, which `/alaa-memory-os` answers; reflect is in the set because knowledge-page search cannot reveal a topic that has no page. No managed role holds a retain, ingest or capture tool, because a memory write is the main thread's decision under `/alaa-memory-os`. The set belongs to that skill's `hindsight` adapter: when its `ACTIVE_ADAPTER` changes, change this set and the grant checker together.
+`alaa-researcher`, `alaa-explorer` and `alaa-architecture-critic` receive the `hindsight` server restricted to `hindsight_search_knowledge_pages`, `hindsight_read_knowledge_page`, `hindsight_list_knowledge_pages` and `hindsight_reflect`. Reflect is in the set because knowledge-page search cannot reveal a topic that has no page. Every other managed role has the server disabled, and no managed role holds a retain, ingest or capture tool, because a memory write is the lead's decision under `/alaa-memory-os`. The set belongs to that skill's `hindsight` adapter: when its `ACTIVE_ADAPTER` changes, change this set and the grant checker together.
 
 ## How a lane gets its skills
 
 Before dispatch, verify the role can reach its bindings under `alaa-workflow references/companion-routing.md`.
 
-## Policy and runtime evidence
-
-Read `model-effort-policy.md` for the canonical policy route and profile precedence. Catalog sandbox/access labels are requested role restrictions; inspect effective sandbox, parent overrides, and MCP permissions before relying on enforcement. Unknown runtime identity or permission state remains unknown.
+A stack-bound role names the owning skills of its stack and the testing doctrine in its instructions and loads them before the first edit, because a lane often skips a skill that the dispatch only names.

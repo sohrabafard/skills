@@ -4,7 +4,7 @@
 
 ```xml
 <task>Audit this dependency change: <packages added, upgraded, removed, or replaced>.</task>
-<trigger>A dependency was added, upgraded, removed, or replaced, a lockfile changed outside a scoped upgrade lane, or a transitive tree shifted materially.</trigger>
+<trigger><the routing-matrix.md condition that holds></trigger>
 <change><resolved before and after versions per package, and the manifest and lockfile diff></change>
 <manifests><absolute manifest and lockfile paths, the project's own license, and its distribution model></manifests>
 <audit_tooling><the repository's existing audit, license, and lock-verification commands, or none available></audit_tooling>

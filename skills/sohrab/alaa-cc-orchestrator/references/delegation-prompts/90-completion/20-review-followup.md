@@ -2,7 +2,7 @@
 
 ## Fix dispatch
 
-Apply Who fixes in `verification-and-gates.md` to scope and serialize the repair batch. Select the role for this assignment through Failure routing in `routing-matrix.md`. For Ent-owned findings, use the Ent specialist dispatch contract from the common router in `implement` mode. Preserve the repair scope and focused retest limits below. If continuing a lane, apply the common envelope's Mandatory Ponytail binding route. Route a `disputed` result under `alaa-workflow references/review-mode.md` `## Finding triage`.
+Apply Who fixes in `verification-and-gates.md` to scope and serialize the repair batch, and select the role for each assignment through Failure routing in `routing-matrix.md`. For Ent-owned findings, use the Ent specialist dispatch contract from the common router in `implement` mode. If you continue a lane, apply the common envelope's Mandatory Ponytail binding route. Route a `disputed` result under `alaa-workflow references/review-mode.md` `## Finding triage`.
 
 ```xml
 <task>Resolve reviewer/specialist findings assigned to this repair scope.</task>

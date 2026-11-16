@@ -4,7 +4,7 @@
 
 ```xml
 <task>Review accessibility for: <changed interface>.</task>
-<trigger>New or changed user-visible interface — components, forms, dialogs, navigation, tables, and any flow a user completes with a keyboard or a screen reader.</trigger>
+<trigger><the routing-matrix.md condition that holds></trigger>
 <surface><components, templates, styles, and routes in scope, and the flows they compose></surface>
 <rendered_evidence><supported viewports; snapshots, accessibility tree output, automated scan results, or explicitly none></rendered_evidence>
 <design_system><design tokens, focus-style resets, and motion conventions in force></design_system>

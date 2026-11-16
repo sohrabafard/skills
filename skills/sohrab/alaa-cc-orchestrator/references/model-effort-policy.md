@@ -1,47 +1,39 @@
 # Model and Effort Control Route
 
-`routing-matrix.md` owns actual task allocation and admission for EVERY role. Its *All-role task allocation* also owns these rules: role identities select no pair, a second lens never selects a stronger or different model, review depth gets its own pair, model choice changes no tools, skills, verdicts or independent gates, capacity is blamed only after context, tool and specification failures are diagnosed, and only remaining work is reassessed. `/alaa-prompting-guide` owns supported capabilities, source guidance, runtime precedence and the checked model-neutral projections. Its `references/50-effort-and-thinking.md` and `references/90-model-selection.md` inform the decision.
-
-The registry is `alaa-prompting-guide assets/claude-model-policy.json`. Managed roles carry no executable model or effort pins. Before you realize task-selected controls, check ordinary eligibility, effort support and host availability separately.
+`routing-matrix.md` *All-role task allocation* selects the model and effort for EVERY role. This file realizes that pair. The capability registry is `alaa-prompting-guide assets/claude-model-policy.json`. Managed roles carry no executable model or effort pins. Check ordinary eligibility, effort support and host availability separately.
 
 ## Normalize omitted controls
 
-This file alone owns orchestration defaults for this runtime. Capability registries own supported pairs, never these defaults. Preserve ordinary allocation when both controls are selected. Before every dispatch:
+This file alone owns orchestration defaults for this runtime. Preserve ordinary allocation when both controls are selected. Before every dispatch:
 
 1. Retain every explicit field and fill only missing model or effort from the default below. Fill each field independently.
 2. Validate the resulting pair against the capability registry and actual host before invocation. Unsupported, inactive or unrealizable pairs still block the affected lane.
-3. Record the normalized model AND effort in the plan or compact dispatch, then explicitly supply both. Inherited controls are not normalization.
+3. Record the normalized model AND effort in the plan or compact dispatch. Inherited controls are not normalization.
 
 Omission alone and a successfully resolved default are never blocked/degraded.
 
 Claude Code default: `model = claude-opus-5-5`, `effort = medium`.
 
-The Agent invocation accepts only a family alias (`sonnet`, `opus`, `haiku`, `fable`), never a full ID. Pass the alias of the selected model; for this default, pass `opus`. Verify that the alias resolves to the selected ID on the target provider, or block the affected lane. An omitted parameter does not resolve to this default: it falls through the runtime precedence, which usually ends at the session's model and effort. Supply both parameters on every dispatch. `alaa-prompting-guide references/41-claude-code-runtime-features.md` owns this runtime fact and the advisor pair table.
+Pass the family alias of the selected model on the Agent invocation; for this default, pass `opus`. Supply both parameters on every dispatch, because an omitted parameter falls through to the session's value, not to this default. Verify that the alias resolves to the selected ID on the target provider, or block the affected lane. `alaa-prompting-guide references/41-claude-code-runtime-features.md` owns the alias and precedence facts.
 
-Verified 2026-10-18 against the official sources below and the active invocation schema; the alias-only invocation model was verified 2026-11-14. Refresh the mapping and capability evidence when it drifts. Record an unresolved future alias mapping as `NEEDS_CONFIRMATION`, never a guessed model ID. Defaults change no role authority, tools, skills, verdicts or independent gates; managed wrappers remain neutral.
+Verified 2026-10-18 against the official sources below and the active invocation schema. Record an unresolved future alias mapping as `NEEDS_CONFIRMATION`, never a guessed model ID. Defaults change no role authority, tools, skills, verdicts or independent gates; managed wrappers remain neutral.
 
 ## Before every dispatch
 
-1. Read the owner's current runtime reference. Inspect the actual host controls, the installed and session role definitions, capability and access evidence, the context mode and effective overrides.
-2. Explicitly supply BOTH model AND effort, as normalized in the plan or compact dispatch, on the verified invocation surface.
+1. Inspect the loaded role definition, the active version, the invocation controls and the effective overrides: environment, hook, force, provider and parent overrides can take precedence over the definition and the invocation.
+2. Explicitly supply BOTH model AND effort, as normalized, on the verified Agent invocation surface.
 3. Check that the effective configured pair matches the selected pair. Prose, requested controls or source validation alone cannot prove it.
-4. If exact realization is unavailable, use only an exact verified available compatibility realization that preserves the role contract, or block the affected lane with evidence.
+4. If a fork, an older version or a restricted surface cannot realize both values, use only an exact verified available compatibility realization that preserves the role contract, or block the affected lane with evidence. A separate CLI session changes context and permissions, so it is not an automatic substitute.
 
-Never silently change the pair, install, mutate shared configuration or claim that source edits activated a session.
+Never silently change the pair, install, mutate shared configuration or claim that source edits activated a session. Source checks prove neither installed activation, account access nor serving identity.
 
-For Claude Code, inspect the loaded definition, the active version and the invocation controls before dispatch. Model-neutral YAML omits BOTH `model` and `effort`; pass both explicitly on the verified Agent invocation surface. Current owner evidence supports invocation effort on a non-fork invocation since version 2.1.292. Environment, hook, force and provider overrides can still take precedence: inspect their effective precedence, and do not assume that YAML or invocation controls win. If a fork, an older version or a restricted surface cannot realize both values, require an exact verified available compatibility realization that preserves role authority, or block that lane. A separate CLI session changes context and permissions, so it is not an automatic substitute. `alaa-prompting-guide references/41-claude-code-runtime-features.md` owns runtime precedence and current official evidence.
+Keep permissions separate from model choice. When enforcement is unknown, stay within the narrower role authority.
 
-Keep permissions separate from model choice. Inspect the effective sandbox or permission mode, parent overrides, and native and MCP grants. When enforcement is unknown, stay within the narrower role authority.
-
-Report the configured and requested model and effort separately from the observed identity. An unknown observation stays unknown. Put the verdict or outcome first, then the metadata. /alaa-prompting-guide owns the rule-writer replacement-only contract.
+Report the configured and requested model and effort separately from the observed identity. An unknown observation stays unknown.
 
 ## Native Advisor consultation
 
-After you select the executor's task pair, consider native Advisor for a named unresolved decision that consultation can help. Resolve missing facts and tool or context failures first. Read **Native Advisor** in `alaa-prompting-guide references/41-claude-code-runtime-features.md` for supported pair candidates, session checks and data sharing. Use Advisor only on a verified, authorized surface, and record the reason and the effective advisor control. A configured advisor also reaches each subagent, which applies the pair check against its own model. A Fable 5.2 executor accepts only a Fable 5.2 advisor; Claude Code attaches no lower-ranked advisor and raises no error. The executor chooses when to consult and owns the result. Keep consultation optional. Preserve the executor pair, role authority and independent gates.
-
-## Source generation and proof
-
-The existing projection engine renders the implementation and planner contracts into their wrappers. It neutralizes every other managed definition and preserves its authority and body. Wrapper metadata never owns model or effort. `SKILL.md` section 7 owns when to run `python3 scripts/render_agents.py --write`, the checks that follow it and their exit codes; aggregate validation checks drift. Source checks prove neither installed activation, account access nor serving identity.
+After you select the executor's task pair, consider native Advisor for a named unresolved decision that consultation can help. Resolve missing facts and tool or context failures first. Read **Native Advisor** in `alaa-prompting-guide references/41-claude-code-runtime-features.md` for supported pairs, session checks and data sharing. Use Advisor only on a verified, authorized surface, and record the reason and the effective advisor control. Consultation stays optional and changes no executor pair, role authority or independent gate.
 
 ## Default mapping sources
 
