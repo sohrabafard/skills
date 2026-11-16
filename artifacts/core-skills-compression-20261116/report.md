@@ -28,7 +28,7 @@ Text that is paid on every dispatch or activation:
 
 | Text | Baseline | Final | Change |
 |---|---|---|---|
-| cc `assets/implementation-contract.md` (rendered into 11 implementer agents) | 1,438 | 1047 | -27% |
+| cc `assets/implementation-contract.md` (rendered into 11 implementer agents) | 1,438 | 1,047 | -27% |
 | `alaa-testing-strategy/SKILL.md` body (preloads into 13 agents) | 3,986 | 2,510 | -37% |
 | `alaa-cc-orchestrator/SKILL.md` body | 2,564 | 2,001 | -22% |
 | `alaa-workflow/SKILL.md` body | 1,116 | 872 | -22% |
@@ -59,11 +59,15 @@ checker clause: `pruned-L1b.md` (prompting guide), `pruned-L2b.md` (testing), `p
 references), `pruned-L5c-b.md` (contracts and agents). To restore a rule, take its sentence from
 `main` before the merge commit and put it back with its checker clause.
 
-**Checker clauses.** No checker logic changed. Literal counts moved from 748 to 718 across the
-three clause checkers: `CADENCE_REQUIREMENTS` 36 to 28, `COLLECTION_REQUIREMENTS` 17 to 14,
-`GATE_REQUIREMENTS` 24 to 23, `IMPLEMENTER_REQUIREMENTS` minus 1 in each pack;
-`REQUIREMENTS` 213 to 211, `NORMATIVE_DUPLICATES` 105 to 102 and `CONTRADICTIONS` 19 to 20 in
-the testing checker, with its SHA-256 recomputed. Each deletion has a ledger row.
+**Checker clauses.** No checker logic changed. In the module-level tuples of the three clause
+checkers, literal counts moved from 748 to 718: `CADENCE_REQUIREMENTS` 36 to 28,
+`COLLECTION_REQUIREMENTS` 17 to 14, `GATE_REQUIREMENTS` 24 to 23, `IMPLEMENTER_REQUIREMENTS`
+minus 1 in each pack; `REQUIREMENTS` 213 to 211, `NORMATIVE_DUPLICATES` 105 to 102 and
+`CONTRADICTIONS` 19 to 20 in the testing checker, with its SHA-256 recomputed. Inline tuples
+inside checker functions, which `measure.py` does not count, also lost clauses in each pack:
+`agent_failures` 16 to 14, the routing tuple of `task_allocation_failures` minus 3,
+`orchestrator_failures` minus 1, and the skill tuple of `cadence_failures` minus 1. Each
+deletion has a ledger row.
 
 ## Deliberate behaviour changes
 
@@ -114,6 +118,11 @@ All of these exit 0 on the final tree, run once after the last change:
 
 Also checked: each heading cited from outside its skill still exists (script over 189 files);
 each of the seven `task-tracking.md` headings that the root `AGENTS.md` cites has one hit.
+A number inventory compared every numeric token (numbers, versions, dates) in the 178 changed
+files before the work with the seven skills now: four tokens are gone, all intended (the stale
+`4.0.0` version line, the names of two retired files, one example pull-request number). The
+inventory proves that a number still exists somewhere in the pack, not that it stayed at each
+site. `git diff --name-status` between `main` and this branch shows no deleted file.
 
 Not verified:
 
