@@ -173,3 +173,22 @@ changed. The lists are in `lane-returns.md` (items 6 or 7 of each first-pass ret
   the new line in `61` asks for.
 - One ledger row points at `11-codex-runtime-features.md` for the call-at-limit failure, which
   that file does not state; the behaviour stays in the codex `SKILL.md`.
+
+## Merge and install
+
+- Merge: `work/core-skills-compression` merged into `main` as `d82abfc7` with `git merge --no-ff`
+  on 2026-11-17. The merged tree equals the gated integration tree. The integration worktree and
+  its branch were removed after the merge. Rollback of the skills: revert that merge commit.
+- Claude Code agents: `python3 scripts/install_claude_agents.py --apply` exited 0 and updated the
+  33 managed agents and `alaa-rule-writer` under the user's Claude agent directory. Each of the
+  33 installed files has the SHA-256 that `alaa-cc-orchestrator/assets/manifest.json` records
+  for version 7.0.0, and the installed rule-writer equals its source. The installer's backup of
+  the replaced files is `alaa-agent-backups/install-e4vymzs2` under the Claude home.
+- Codex agents: `bash skills/sohrab/alaa-codex-orchestrator/scripts/install-agents.sh` exited 0
+  with 37 definitions installed or updated; the installed version marker reads 7.0.0. The Codex
+  installer materializes MCP grants, so installed files differ from the templates by design and
+  are not compared with the manifest. It keeps no backup. The Codex rule-writer file was copied
+  and equals its source.
+- No role was added, renamed or removed, so no installed file was retired.
+- A session that was already running keeps the agent definitions it loaded. Start a fresh
+  session to use the new ones. Installation proves file placement, not agent behaviour.
