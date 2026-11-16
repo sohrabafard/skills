@@ -4,7 +4,7 @@
 
 ```xml
 <task>Implement lane <n>: <bounded outcome>.</task>
-<role_selection><outcome/scope; settled and open decisions; failure/invariant reasoning; registered profile, selection reason, verified admission predicates and exceptional-admission evidence go once in `<task_controls>`></role_selection>
+<role_selection><outcome/scope; settled and open decisions; failure/invariant reasoning; registered profile, fit-table row and column, verified admission predicates and exceptional-admission evidence go once in `<task_controls>`></role_selection>
 <scope><owned files/modules and the test files that cover them and that no other lane owns>; exclude <everything else>.</scope>
 <acceptance_criteria><numbered, in the envelope criterion shape></acceptance_criteria>
 <dependencies><completed lane contracts or none></dependencies>
@@ -22,7 +22,8 @@
 ```
 
 - Select the exact registered variant from the ratified lane record through `routing-matrix.md`. For a single-stack lane outside the mechanical and bounded branches, it is the stack-bound role.
-- Record the verified admission predicates in `<task_controls>` before you send, because the lane checks them instead of reading `routing-matrix.md`. For a mechanical, bounded or bug route, record the route's own predicates with their recorded values. For a workhorse or stack-bound route, record the workload class and the stack-family test result.
+- Record the verified admission predicates in `<task_controls>` before you send, because the lane checks them instead of reading `routing-matrix.md`. For a mechanical, bounded or bug route, record the route's own predicates with their recorded values. For a workhorse or stack-bound route, record the two fit facts and the stack-family test result.
+- For a Beads-bound lane, fill `<beads_identity>` with the lane's own actor and the action `claim` for its leaf, under the common envelope's `<beads_identity>` rule.
 - Fill `<commit>` with the lane branch that `verification-and-gates.md` *Before any dispatch* prescribes, or with `none`.
 - Demanding work alone does not admit the exceptional implementation profile.
 

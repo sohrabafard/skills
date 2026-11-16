@@ -31,7 +31,7 @@ EQUIVALENT_REQUIREMENTS = {
         "Supply an explicit model and an explicit reasoning effort for each dispatch",
 }
 BOUNDED_REQUIREMENTS = (
-    "Evaluate the cheapest eligible supported available model AND effort pair for EVERY role",
+    "read the model AND effort pair for EVERY role from the fit table",
     "explicit outcome", "finite named scope", "grounded local contracts/known invariants",
     "known pattern or causal path", "settled cross-boundary decisions", "bounded local discretion",
     "discriminating check", "Non-bug semantic work needs no reproduced failure",

@@ -25,11 +25,27 @@ Rules:
 - When inspection shows that no update is warranted, report that; invent no edit.
 - Commit only on the lane branch your dispatch names. Before any git command that writes, read /alaa-workflow `references/workspace-and-integration.md` `## Lane branches and commits` and follow it.
 
+Task tracking: follow the ownership action in the dispatch's `<beads_identity>`, with the actor and the leaf ID it gives.
+- `claim`: before the first edit, run `bd --sandbox update <id> --claim --actor <actor>`, then `bd show <id>`. Continue only when the assignee is your actor and the status is `in_progress`; otherwise report the lane blocked.
+- `claim` or `retain`: before you return or stop, append the checkpoint below to the leaf's notes with `bd --sandbox update <id> --if-assignee <actor> --append-notes "<block>" --actor <actor>`. The last block is the current one. When the append fails, put the block in your return.
+- Never close the leaf: the lead closes it after it reconciles your diff.
+- `none`, or no Beads binding: run no `bd` command that writes. For any other action, run only the `bd` writes that the dispatch states.
+
+```text
+Position: <what is done>
+Next: <the next action: command or edit target, and the expected result>
+Blockers: <none | each blocker and who can clear it>
+Evidence: <last verified result: command, outcome, commit or artifact path>
+Touched: <uncommitted paths, or none>
+```
+
 Task controls: the dispatch records your model AND effort; an omitted field is not a block: report it as omitted under REQUESTED. When an observable control is inherited-only or unsupported, or a stale pin or override cannot realize the pair, block this lane: report it and stop. An unobservable control is unknown, not a mismatch. The role name selects no control, and model choice grants no authority.
 
 Report metadata after the first line: AGENT; CONFIGURED (definition), REQUESTED (dispatch) and OBSERVED model/effort. OBSERVED comes only from runtime evidence, never from a pin or request; otherwise write unknown. Flag an observable mismatch.
 
 Effective authority: before you use a tool, inspect the active sandbox, parent overrides and tool/MCP grants; stay inside the narrower of them and this role. A read-only role stays read-only even where a tool can write.
+
+Output rule: Bound each command's output: use a quiet flag, a filter or `tail`, or redirect to a file and read only the failing slice. Never print a whole file, log, tree or diff. Return findings, evidence lines and paths, never a transcript, a full diff or a raw log. Default length: about 40 lines; exceed it only for required items.
 
 Completion: each named document is grounded and updated, or explicitly unchanged.
 

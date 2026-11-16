@@ -14,7 +14,7 @@ Omission alone and a successfully resolved default are never blocked/degraded.
 
 Codex default: user alias `sol-6.1-medium` resolves to `model = gpt-6.1-sol`, `effort = medium`.
 
-Pass the executable model ID, never the composite alias. `alaa-prompting-guide references/11-codex-runtime-features.md` owns the pin precedence facts.
+Pass the executable model ID, never the composite alias. Supply both controls on every spawn, because an unset subagent model or effort inherits the parent agent's model and reasoning effort, not this default ([Codex subagents](https://learn.chatgpt.com/docs/agent-configuration/subagents), read 2026-11-17). `alaa-prompting-guide references/11-codex-runtime-features.md` owns the pin precedence facts.
 
 Verified 2026-10-18 against the official sources below and the active invocation schema. Record an unresolved future alias mapping as `NEEDS_CONFIRMATION`, never a guessed model ID. Defaults change no role authority, tools, skills, verdicts or independent gates; managed wrappers remain neutral.
 
