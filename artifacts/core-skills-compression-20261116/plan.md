@@ -316,3 +316,23 @@ Facts that another skill cites or that Phase 2 will point to:
 
 Before cutting a paragraph of either file, L1 greps the other six skills and the agent files
 for its key term. A hit keeps the paragraph.
+
+## Addendum, 2026-11-17 — second pass (owner decision)
+
+First-pass results: `alaa-workflow` 3.3 percent, `alaa-code-intelligence-routing` 3 percent,
+`alaa-low-noise` 9 percent, `alaa-testing-strategy` 15 percent, orchestrator `SKILL.md` and
+references about 4 percent. The lanes removed duplicates and reworded almost nothing.
+
+The owner then decided, through two direct questions:
+
+1. Run a second pass that rewrites every sentence and prunes rules under six stated criteria
+   (default behaviour, itinerary, ceremony, restated platform fact, ownership noise, repeated
+   disclaimer). A checker clause is deleted together with a pruned sentence. Each pruned rule
+   goes in a ledger so the owner can restore it. Floors, authority limits, security rules and
+   stop conditions are never pruned. This supersedes "no clause is deleted" and the
+   clause-count comparison in this plan: a lower count is valid when the ledger accounts for it.
+2. Fable 5.2 writes every second-pass lane (explicit owner model selection).
+
+`lane-brief-2.md` in this directory is the controlling brief. The second pass also performs the
+cross-skill ownership work of Phase 2 and the three corrections from `freshness.md`. Phase 3
+keeps the carry-over walk, the descriptions and `60-skill-authoring.md`. Phase 4 is unchanged.
