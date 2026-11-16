@@ -11,7 +11,7 @@ Before resolving any runtime, model, agent feature, or skill-trigger syntax:
 3. Record the resolved implementer runtime and model, the reviewer runtime and model, the effort levels, source URLs, and verification date in the generated pack.
 4. Leave a visible `NEEDS_LIVE_VERIFICATION` marker when live verification cannot be completed. Never guess.
 
-**Resolved values belong in the generated prompt pack with their verification date, and never in stable skill text.** This is the rule that keeps this skill from decaying. A model name or effort level written into a reference file is wrong the next time either vendor ships, and it will be copied forward long after it stopped being true — into packs where nobody re-checked it, because it looked authoritative. Stable workflow files name the decision and point at its owner; only the dated pack carries the answer. Actual task model AND effort choices come from the active runtime orchestrator, never from role identity, memory or an older prompt pack.
+**Resolved values belong in the generated prompt pack with their verification date, and never in stable skill text,** because a model name or effort level in a reference file goes stale at the next vendor release and is then copied forward as if authoritative. Stable workflow files name the decision and point at its owner; only the dated pack carries the answer. Actual task model AND effort choices come from the active runtime orchestrator, never from role identity, memory or an older prompt pack.
 In Codex, `/alaa-codex-orchestrator` owns `references/routing-matrix.md`.
 In Claude Code, `/alaa-cc-orchestrator` owns `references/routing-matrix.md`.
 Current `/alaa-prompting-guide` capabilities and mechanics inform those choices. Model and effort are two questions, not one; resolve them separately.
@@ -47,13 +47,13 @@ Every generated dispatch identifies the whole engagement, the current phase, tas
 
 For Beads-bound dispatches, resolve actor, binding, issue IDs, ownership action and the `bd` flags a lane without write or sync authority passes through `references/task-tracking.md` `## Agent identity and ownership` and `## Beads capabilities in use` before use.
 
-The read-first section must carry the handoff-package facts that bear on this lane: the confirmed facts with how they were verified, the approaches already ruled out and why, and the environment notes and traps that apply to the surfaces this role owns. The executing agent has no shared context — it sees this prompt and the files it names, and nothing else. Copy the facts in rather than pointing at a conversation it never had. A prompt that omits them buys a rediscovery, or a repeat of an experiment that already failed. Field semantics are in `references/context-continuity.md`.
+The read-first section must carry the handoff-package facts that bear on this lane: confirmed facts with how they were verified, approaches ruled out and why, and the environment notes and traps for the surfaces this role owns. Copy the facts in; never point at a conversation the agent never had, because it sees only this prompt and the files it names, and an omitted fact buys a rediscovery or a repeated failed experiment. `references/context-continuity.md` owns field semantics.
 
 Start from `assets/phase-prompts-template.md`. Keep each role prompt at or below 250 words by default. Add only task-specific constraints that affect correctness. Put detailed checklists in the plan or read-first sources; do not repeat the plan, repository instructions, generic engineering advice, or the other role's prompt. The 250-word target yields whenever exhaustive or required behavior-affecting content does not fit: exceed it rather than drop any, say so, and compress the rest as normal.
 
 ## Delegation in prompts
 
-`SKILL.md` owns which work may be delegated. What belongs in the prompt is the consequence: when a prompt authorizes delegation, it names the owned surfaces and who owns integration, because the executing agent cannot ask.
+`SKILL.md` owns which work may be delegated. A prompt that authorizes delegation names the owned surfaces and the integration owner, because the executing agent cannot ask.
 
 ## Bootstrap metadata
 

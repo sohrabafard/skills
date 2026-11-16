@@ -4,14 +4,14 @@
 
 ## Before the first write
 
-1. **Record the base and checkout.** Capture the current branch, HEAD SHA, and worktree path. If integration is requested, also capture the target branch and its base SHA. A resumed agent needs those identities to determine what changed.
+1. **Record the base and checkout.** Capture the current branch, HEAD SHA and worktree path, and, when integration is requested, the target branch and its base SHA, because a resumed agent needs them to determine what changed.
 2. **Map existing changes.** Treat unowned modified and untracked paths as user or other-lane work. Preserve them and continue on disjoint paths. Resolve overlapping ownership before editing the same file; never stash, stage, overwrite, or commit another owner's change.
 3. **Keep the checkout.** Continue in the same checkout and preserve its diff. Disjoint-file writers may share it. Do not create a branch or worktree automatically; the one exception is the lane branch that `## Lane branches and commits` prescribes for dispatched write lanes. Use a different checkout only when that section routes a lane to a worktree, or when the user or an already authorized explicit plan requires it. Reconcile overlapping ownership before writes through the protocol below.
 4. **Honor explicitly authorized isolation.** If a lane worktree is explicitly required, create it from the recorded HEAD SHA, pass its path to the lane and verify `git merge-base --is-ancestor <base-sha> HEAD` before editing. A remote default branch or runtime isolation option is no substitute for the recorded base; a mismatch blocks that lane. Creating a branch or worktree grants no commit or merge authority by itself; `## Lane branches and commits` states the only lane commit grant and the lane merge.
 
 ## Lane branches and commits
 
-This section applies when a runtime orchestrator dispatches implementation or documentation lanes that write files. `alaa-cc-orchestrator` and `alaa-codex-orchestrator` `references/verification-and-gates.md` time the merge against the declared review boundary.
+This section applies when a runtime orchestrator dispatches file-writing implementation or documentation lanes. `alaa-cc-orchestrator` and `alaa-codex-orchestrator` `references/verification-and-gates.md` time the merge against the declared review boundary.
 
 1. **Create the lane branch.** Before the first implementation or documentation dispatch of a ready set, the lead creates one lane branch from the recorded HEAD and switches the checkout it runs in to that branch, unless step 2 recorded isolation for a writer the lead does not control. The lead records the branch name in the plan or the compact dispatch. When an accepted lane branch was merged, the next ready set gets a new lane branch; an unmerged one stays the branch for later ready sets. The lead switches branches or merges only while no lane is live in that checkout. When the run stops before a merge, the lead switches back to the work branch once no lane is live, and reports the unmerged lane branch.
 2. **Share the checkout.** One implementer, or several implementers whose owned files do not overlap, work in that same checkout on that one branch. They need no separate worktree. Before lanes share the checkout, the lead inspects the repository's commit hooks. When a hook stashes, stages, restores or rewrites files outside the committed paths, the lead records isolation as required in the plan, so that step 3 gives each write lane its own worktree. A lane never bypasses a hook. The lead also checks for a writer it does not control: new commits on the checked-out branch since the recorded HEAD, or unowned files that change while the lead observes them. When it finds one, the lead records isolation as required in the plan and keeps that checkout's branch. Step 3 then gives each write lane its own worktree and branch, and the lead commits its own records on the branch it is on.
@@ -60,7 +60,7 @@ The main instruction file supplies local-commit authority; skill activation supp
 
 ## The completion lifecycle
 
-Every execution run reports all four states of proven work. Each carries its own verdict — proven, not proven with the blocker named, or not requested — because one word for "done" reads the same over a change that is committed and reviewed as over one that is merely written.
+Every execution run reports all four states of proven work. Each carries its own verdict — proven, not proven with the blocker named, or not requested — because one word for "done" cannot tell committed and reviewed work from merely written work.
 
 | State | Proven when |
 |---|---|
@@ -69,7 +69,7 @@ Every execution run reports all four states of proven work. Each carries its own
 | `RELEASE_CANDIDATE` | the user asked for a release, and the release prerequisites the target repository itself defines passed |
 | `PUBLISHED` | an authorized immutable publication landed — a push, a tag, a released artifact — and its evidence was observed on the remote rather than inferred from a command that exited zero |
 
-**A blocker in a later state never unproves an earlier one.** A failed release prerequisite leaves `IMPLEMENTED` and `MERGE_CANDIDATE` exactly as they were proven. Collapsing the ladder to its lowest failure hides finished work and buys it a second time, and that is the whole reason a run reports four verdicts instead of one. Only evidence against a state's own condition moves that state — a commit that is gone, a gate that now fails.
+**A blocker in a later state never unproves an earlier one.** A failed release prerequisite leaves `IMPLEMENTED` and `MERGE_CANDIDATE` exactly as they were proven. Collapsing the ladder to its lowest failure hides finished work and buys it a second time. Only evidence against a state's own condition moves that state — a commit that is gone, a gate that now fails.
 
 **A release is requested, never inferred.** An instruction to implement, fix, or merge authorizes no release step. With no explicit release request from the user, `RELEASE_CANDIDATE` and `PUBLISHED` report not requested, which is a complete outcome and not a gap to close.
 

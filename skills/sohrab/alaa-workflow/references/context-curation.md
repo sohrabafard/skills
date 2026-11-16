@@ -1,6 +1,6 @@
 # Reusable-Context Curation
 
-Three skills meet here and the boundary is settled. `alaa-extract-agent-lessons` owns admission and the reusable shapes — what qualifies as a decision interface, a judgment rubric, or a knowledge card. `alaa-memory-os` owns durable publication. This workflow owns when curation runs, where a candidate is parked while the engagement is still open, and what happens to the plan when the final gate changes something.
+`alaa-extract-agent-lessons` owns admission and the reusable shapes: decision interface, judgment rubric and knowledge card. `alaa-memory-os` owns durable publication. This workflow owns when curation runs, where a candidate is parked while the engagement is open, and what happens to the plan when the final gate changes something.
 
 The gates below cover execution and issue-only implementation. Design retains context through `references/context-continuity.md` without implementation-completion curation.
 
@@ -16,15 +16,15 @@ At a completed or failed phase, or a material decision boundary, invoke `/alaa-e
 - a coordination bottleneck;
 - non-obvious reusable knowledge.
 
-A boundary that produced none of them waits for the final gate. Scanning every boundary spends context on nothing and trains the run to skip the scan that mattered.
+A boundary that produced none of them waits for the final gate, because scanning every boundary spends context on nothing and trains the run to skip the scan that mattered.
 
 Park each admitted candidate at its knowledge owner through `references/context-continuity.md`. Record judgments as confirmed facts about who chose what and why. Link the record from other owners.
 
-Do not publish active plan, checkpoint, or validation state to memory. That is position, it is stale within the hour, and a memory store has no way to learn that it went stale.
+Do not publish active plan, checkpoint or validation state to memory, because position goes stale within the hour and a memory store cannot learn that it did.
 
 ## The final gate
 
-Run the full-engagement gate before completion, once implementation, validation, review, and documentation evidence are stable — and run it even when the expected result is empty, because a gate that runs only when something is expected has stopped being a gate.
+Run the full-engagement gate before completion, once implementation, validation, review and documentation evidence are stable. Run it even when the expected result is empty, because a gate that runs only when something is expected is no gate.
 
 1. Reconcile the intermediate candidates against the final evidence.
 2. Consume the /alaa-extract-agent-lessons admission and routing decisions, and route authorized durable publication through

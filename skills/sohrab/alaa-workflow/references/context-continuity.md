@@ -1,28 +1,23 @@
 # Context Continuity
 
-This file owns the question "will the work survive losing the conversation?" Everything else in this skill is ordering and artifact hygiene; this is the part that decides whether a long task can be picked up again.
+This file owns the question "will the work survive losing the conversation?" It decides whether a long task can be picked up again.
 
 ## The four ways context is lost
 
-Long work loses context in four ways, and only one of them is dramatic enough that anyone plans for it.
+Treat these four as one problem:
 
-**Compaction.** The session hits its context limit and older turns are summarized away. The agent continues in the same conversation and often does not announce it. What survives is a compressed summary; what disappears is the detail — the exact error text, the path that was tried and abandoned, the reason a decision went the way it did.
+- **Compaction:** older turns are summarized away, often unannounced; exact error text, abandoned paths and decision reasons disappear.
+- **A new session:** the agent starts with only the repository and its files.
+- **A different agent:** a subagent, another runtime or a fresh agent has no memory of the conversation and cannot ask.
+- **A subagent boundary:** every dispatch is a one-way context wall; the child sees only its dispatch text, and the parent sees only its return.
 
-**A new session.** The user comes back tomorrow, or a run is resumed after an interruption. The agent starts with nothing but the repository and whatever files exist in it.
-
-**A different agent.** A subagent takes a lane, or the work moves between runtimes, or a fresh agent inherits an unfinished task. It has no memory of the conversation at all and no way to ask.
-
-**A subagent boundary.** Every dispatch is a one-way context wall. The child sees only its dispatch text; the parent sees only the child's return. Anything the parent knew and did not write down never reaches the child.
-
-Treat all four as the same problem. The design target is a task any competent agent can resume from the canonical task and workflow owners and the available source and evidence, without conversation history. The cold-start test below checks this recovery goal.
+The design target is a task that any competent agent can resume from the canonical task and workflow owners and the available source and evidence, without conversation history. The cold-start test below checks this.
 
 ## Two different things get lost, and they need different homes
 
-**Position** is where the work currently stands: which phase is finished, what the last verification actually returned, what is blocking right now, what the next executable action is. Position changes constantly and is cheap to write.
+**Position** is where the work stands: finished phases, what the last verification returned, current blockers and the next executable action. It changes constantly and is cheap to write.
 
-**Knowledge** is what the work learned along the way: which approach was tried and abandoned and why, which facts are verified versus still assumed, which command shape actually works in this environment, which plausible-looking path is a trap. Knowledge accumulates slowly, is expensive to rediscover, and is the first thing compaction destroys — precisely because it lives in the middle of the conversation rather than at the end.
-
-Most workflow tooling records position and forgets knowledge. That is why a resumed task so often repeats a failed experiment: the agent knows where it is, but not what the last agent already ruled out.
+**Knowledge** is what the work learned: abandoned approaches and why, verified versus assumed facts, command shapes that work here, and plausible-looking traps. Record it as well as position, because it is expensive to rediscover and compaction destroys it first; a resumed task that has only position repeats experiments the last agent already ruled out.
 
 For admitted Markdown families, the artifacts divide the work as follows:
 
@@ -32,9 +27,9 @@ For admitted Markdown families, the artifacts divide the work as follows:
 | Checkpoint | Position | Where are we right now |
 | Handoff package | Knowledge | What has this work already learned |
 
-The handoff package is a section inside the plan rather than a separate file, because knowledge is only useful next to the route it belongs to, and because a fourth file is a fourth thing to keep honest.
+Keep the handoff package as a section inside the plan, not a separate file, because knowledge is useful only next to its route and a fourth file is one more to keep honest.
 
-For a Beads-native plan, root notes own aggregate position and the root description holds the six-field handoff. Issue-only work keeps its compact plan, position, results and knowledge in its issue, without a separate checkpoint or handoff package. See `references/task-tracking.md` for the fields and local fallback.
+For a Beads-native plan, root notes own aggregate position and the root description holds the six-field handoff. Issue-only work keeps its compact plan, position, results and knowledge in its issue, without a separate checkpoint or handoff package. `references/task-tracking.md` owns the fields and the local fallback.
 
 ## Status and position
 
@@ -56,21 +51,21 @@ For a `phase-task-subtask` family the cursor also records `Current task` and `Cu
 
 ## The handoff package
 
-Six fields. Each exists because a real resume fails without it.
+Six fields; a real resume fails without each one.
 
-**Confirmed facts.** Things verified by inspection or execution, each with how it was verified. "The session table has no index on `user_id` — checked with `\d sessions`." A fact without its verification method decays into an assumption the moment someone doubts it.
+**Confirmed facts.** Facts verified by inspection or execution, each with how it was verified: "The session table has no index on `user_id` — checked with `\d sessions`." A fact without its method decays into an assumption when someone doubts it.
 
-**Open assumptions.** Things currently believed but not verified, each with what would verify it. Keeping these explicitly separate from confirmed facts is the single highest-value line in the package, because a resumed agent that cannot tell the two apart will either re-verify everything or trust something it should not.
+**Open assumptions.** Beliefs not yet verified, each with what would verify it. Keep them strictly separate from confirmed facts, because an agent that cannot tell the two apart re-verifies everything or trusts what it should not.
 
-**Ruled out.** Approaches tried and abandoned, each with the reason and the evidence. This is what stops a fresh agent from spending an hour rediscovering that the obvious approach does not work. Record the reason, not just the outcome: "rejected — the ORM strips the CTE" is reusable, "did not work" is not.
+**Ruled out.** Approaches tried and abandoned, each with the reason and the evidence, so a fresh agent does not rediscover the failure. Record the reason, not only the outcome: "rejected — the ORM strips the CTE" is reusable; "did not work" is not.
 
-**Read first on resume.** An ordered, minimal list of exact paths a resuming agent must read before touching anything. Not every file the task touches; the two or three whose content is load-bearing for the remaining work.
+**Read first on resume.** An ordered, minimal list of exact paths to read before touching anything: only the two or three whose content is load-bearing for the remaining work.
 
-**Environment notes.** Command shapes that actually work here, and ones that look right but fail. Exact invocations, not descriptions. This is the knowledge that is most annoying to rediscover and least likely to be in any documentation.
+**Environment notes.** Exact invocations that work here, and ones that look right but fail. This knowledge is costly to rediscover and rarely documented.
 
-**Traps.** Anything that looks correct and is not. A test that passes for the wrong reason, a config that is overridden elsewhere, a name that appears twice with different meanings.
+**Traps.** Anything that looks correct and is not: a test that passes for the wrong reason, a config overridden elsewhere, a name with two meanings.
 
-Keep all six fields present in an admitted handoff package. Write a field when you learn something that belongs in it, not on a schedule. An empty field stays empty; do not pad it.
+Keep all six fields present in an admitted handoff package. Write a field when you learn something that belongs in it, not on a schedule. Leave an empty field empty; do not pad it.
 
 ## Task resume and phase resume
 
@@ -88,15 +83,15 @@ A handoff to another PC records the responsible device, Git and applicable Dolt 
 
 ## When to write
 
-Write only at these moments, including the additional long-conversation trigger below. Writing continuously is a tax, and writing only at the end risks losing detail.
+Write only at these moments, including the long-conversation trigger below, because continuous writing is a tax and writing only at the end loses detail.
 
-1. **Material task progress, or a phase completes or fails.** Update the selected task authority and the affected canonical workflow fields, then derive the admitted snapshots. This is the routine case and it is cheap.
+1. **Material task progress, or a phase completes or fails.** Update the selected task authority and the affected canonical workflow fields, then derive the admitted snapshots.
 2. **A decision, blocker or scope change.** Update the affected workflow owners and snapshots. If a decision closed off an alternative, add that alternative to *ruled out*.
 3. **A validation runs.** Record design evidence at the design plan. Record execution evidence at its level owner in `references/task-tracking.md` `## Acceptance and evidence by level`. When a checkpoint is admitted, point its last verified result to that evidence. `references/workspace-and-integration.md` owns tested identity, write isolation, and reuse; without attributable inputs, a result cannot be cited on resume.
 4. **Something is learned that would be expensive to rediscover.** Record it immediately at its owner under `## Task resume and phase resume`.
 5. **Before handing off, and before any long autonomous stretch.** Bring the selected task and workflow owners and the admitted snapshots current, then verify them with the cold-start test.
 
-One more trigger is easy to miss: **when the conversation is getting long.** Do not wait for a compaction warning. If the work has run for many turns, or has just finished an expensive investigation, write the knowledge down while it is still verbatim. After compaction the same information is available only as a summary of a summary.
+**When the conversation is getting long**, do not wait for a compaction warning. After many turns, or after an expensive investigation, write the knowledge down while it is still verbatim, because after compaction it survives only as a summary of a summary.
 
 ## The cold-start test
 
@@ -106,9 +101,7 @@ Before handoff, and periodically during long work, apply one question to the can
 
 If the answer is no, repair its canonical home: stale position in the cursor, unclear task readiness in the selected task store, coarse phase design in the plan, rejected approaches in *ruled out*, and unverified beliefs in *open assumptions* rather than *confirmed facts*.
 
-The next action names its owned scope, its satisfied prerequisites, any unresolved decision or blocker, the exact command or edit target, and the expected result. The plan identifies reusable evidence, invalidation conditions and the progress paths of interrupted lanes. Repair gaps in existing fields; add no resume artifact or fresh agent solely for this test.
-
-This test is worth running mentally before any long unattended stretch, because that is exactly when nobody is watching to catch the gap.
+The next action names its owned scope, its satisfied prerequisites, any unresolved decision or blocker, the exact command or edit target, and the expected result. The plan identifies reusable evidence, invalidation conditions and the progress paths of interrupted lanes. Repair gaps in existing fields; add no resume artifact or fresh agent solely for this test. Run it mentally before any long unattended stretch, because nobody is watching then to catch the gap.
 
 ## The resume protocol
 
@@ -133,21 +126,21 @@ On execution resume, add explicit phase and task skill bindings to older active 
 
 ## After compaction, specifically
 
-Compaction is the one case where the agent continues in the same conversation and may not realise anything was lost. Two rules.
+After compaction the agent continues in the same conversation and may not notice the loss. Two rules apply.
 
-**Repeat the resume protocol.** Read every applicable task and workflow owner above. Do not continue from what a summary says they contained: it keeps the shape and drops the specifics.
+**Repeat the resume protocol.** Read every applicable task and workflow owner above. Do not continue from what a summary says they contained, because a summary keeps the shape and drops the specifics.
 
-**Trust reconciled canonical owners over recollection.** After compaction, verify snapshots against actual state through the resume protocol. Record a discrepancy in the admitted cursor or issue notes; do not trust a remembered detail over reconciled task and workflow evidence.
+**Trust reconciled canonical owners over recollection.** Verify snapshots against actual state through the resume protocol. Record a discrepancy in the admitted cursor or issue notes; do not trust a remembered detail over reconciled task and workflow evidence.
 
-Do not surface raw context-budget numbers to the model as a way of managing this; that tends to produce premature stopping rather than better prioritisation. Where a model needs reassurance to keep going on a long run, state it plainly instead — that ample context remains, and that it should not stop, summarise, or suggest a new session on account of context limits.
+Do not show the model raw context-budget numbers, because they cause premature stopping rather than better prioritisation. When a model needs reassurance on a long run, state plainly that ample context remains and that it must not stop, summarise or suggest a new session because of context limits.
 
 ## Delegation is a context boundary
 
-A dispatch is a one-way wall. The child cannot ask, and the parent cannot see what the child saw.
+A dispatch is a one-way wall: the child cannot ask, and the parent cannot see what the child saw.
 
-Write dispatches assuming zero shared context: the outcome, the owned scope, the exclusions, the acceptance criteria, the verification commands, and any handoff-package facts that bear on this lane. Copy the relevant facts into the dispatch rather than pointing at a conversation the child never had.
+Write dispatches for zero shared context: the outcome, the owned scope, the exclusions, the acceptance criteria, the verification commands and the handoff-package facts that bear on the lane. Copy those facts into the dispatch; never point at a conversation the child never had.
 
-Require the child to return a compact structured result rather than a narrative, and record its evidence in the parent's artifacts. A finding that exists only inside a subagent's return has already been lost — the parent's context will compact too.
+Require a compact structured return, not a narrative, and record its evidence in the parent's artifacts, because a finding that exists only in a subagent's return is lost when the parent's context compacts.
 
 A long-running or restart-sensitive lane records done items, remaining items and last evidence address after each item. Name the owner in the dispatch: leaf notes for native work, or the admitted lane-local progress path for Markdown. After interruption, reconcile the record, files and attributable evidence through `references/workspace-and-integration.md`. Preserve valid completed work and dispatch only the remainder.
 
@@ -155,14 +148,14 @@ Keep the parent responsible for synthesis. Children return findings and artifact
 
 ## What not to write
 
-The failure mode opposite to losing context is drowning in it. These do not belong in any workflow artifact:
+These do not belong in any workflow artifact, because drowning in context fails as surely as losing it:
 
-- **Raw logs and full command output.** Record the command, the outcome, and the one line that mattered.
-- Secondary snapshots must not duplicate scope, acceptance, phase definitions, or task state owned by the plan or selected task store; reference the canonical owner instead.
-- **A transcript of what happened.** The artifacts describe state, not history. "Phase 2 complete, tests pass" is state; three paragraphs about how Phase 2 went is history.
+- **Raw logs and full command output.** Record the command, the outcome and the one line that mattered.
+- **Duplicated owner content.** Secondary snapshots must not duplicate scope, acceptance, phase definitions or task state owned by the plan or selected task store; reference the canonical owner instead.
+- **A transcript of what happened.** Artifacts describe state, not history: "Phase 2 complete, tests pass" is state; three paragraphs about how Phase 2 went is history.
 - **Speculation recorded as fact.** If it is not verified, it belongs in *open assumptions* with what would verify it.
 - **Secrets, tokens, credentials, or private data**, in any artifact, ever.
 
 ## Caveats
 
-Compaction behavior, context window sizes, and whether a runtime signals compaction to the agent are all runtime- and model-specific and change between versions. The rules here are written to hold regardless, but re-check `/alaa-prompting-guide` and its runtime references before depending on any specific harness behavior.
+Compaction behavior, context window sizes and compaction signalling are runtime- and model-specific and change between versions. The rules here hold regardless. Before you depend on a specific harness behavior, re-check `/alaa-prompting-guide` and its runtime references.
