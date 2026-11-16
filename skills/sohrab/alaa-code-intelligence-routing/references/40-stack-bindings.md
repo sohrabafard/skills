@@ -1,6 +1,6 @@
 # Stack and capability fit
 
-Select operations from the effective inventory and the active backend, not from remembered names. An optional, beta or newly documented capability stays unusable until it is actually exposed, supported and authorized. Reference 90 owns sources and dated discrepancies. Reference 80 owns grants.
+Select operations from the effective inventory and the active backend, not from remembered names. An optional, beta or newly documented capability stays unusable until it is exposed, supported and authorized. Reference 90 owns sources and dated discrepancies. Reference 80 owns grants.
 
 ## Project applicability
 
@@ -24,11 +24,11 @@ For PHP diagnostics and navigation, use the PHP section below. Boost owns the fr
 | Durable project instruction | Installed rule-recording operation | Writes agent instructions; separate authorized authoring, not evidence retrieval |
 | Guidelines/skills generation | Installed resource commands | Setup/update effects, not fallback or proof |
 
-Do not assume every group above exists in a particular Boost version. Inspect the semantics of a command or tool before use. CodeGraph answers application source structure, and Serena answers supported PHP semantics. Neither proves framework conventions, runtime registration, database state or completion.
+Do not assume every group above exists in a given Boost version; inspect a command's or tool's semantics before use. CodeGraph answers application source structure, and Serena answers supported PHP semantics. Neither proves framework conventions, runtime registration, database state or completion.
 
 Vendor or excluded source may lie outside Serena's configured coverage. Verify inclusion before you interpret a missed framework symbol. Keep the result unknown, and for a guidance question select the documentation owner for the installed version.
 
-Some versions gate tinker separately and constrain database queries with read-only transaction controls. Verify the installed gate, the driver and its enforcement, and the task scope. Do not infer harmlessness from a tool name or annotation. Upgrade and simplification prompts remain subject to the authorized change scope and repository rules.
+Some versions gate tinker separately and constrain database queries with read-only transaction controls. Verify the installed gate, the driver and its enforcement, and the task scope; never infer harmlessness from a tool name or annotation. Upgrade and simplification prompts stay subject to the authorized change scope and repository rules.
 
 ### Independent failure domains
 
@@ -42,11 +42,11 @@ When application-info is unavailable, inspect the installed package metadata dir
 
 ## CodeGraph specialized groups
 
-All available CodeGraph tools are eligible, with or without Serena; there is no explore-only allowlist. Match the question to explore, node/source, query/search, files, callers, callees, impact, context, affected tests, status or another verified operation. A CLI-only operation needs no preceding MCP failure. Verify the index, the worktree and the role permissions. For an unlisted MCP tool, use its eligible CLI equivalent or report the missing surface without changing configuration.
+Every available CodeGraph tool is eligible, with or without Serena; there is no explore-only allowlist. Match the question to explore, node/source, query/search, files, callers, callees, impact, context, affected tests, status or another verified operation. A CLI-only operation needs no preceding MCP failure. Verify the index, the worktree and the role permissions. For an unlisted MCP tool, use its eligible CLI equivalent or report the missing surface without changing configuration.
 
-Explore combines source, relationships and impact. A focused operation may answer a narrower question directly. Neither requires a preliminary call to the other. More graph calls cannot supply type diagnostics or semantic-edit guarantees that CodeGraph does not implement.
+Explore combines source, relationships and impact. Neither explore nor a focused operation requires a preliminary call to the other. More graph calls cannot supply type diagnostics or semantic-edit guarantees that CodeGraph does not implement.
 
-Suggestions of affected tests or dependencies select candidate coverage. Only native execution proves that tests passed. Status and version establish index and installation information. Init, uninit, index, sync, unlock, daemon control, install, uninstall, upgrade and telemetry changes have lifecycle or configuration effects. Each requires its explicit corresponding authority and is never an automatic evidence fallback, except the lane-local `init` and `sync` that `SKILL.md` *Operation card* grants. A documented unreleased viewer is not an installed capability.
+Suggested affected tests or dependencies select candidate coverage; only native execution proves that tests passed. Status and version establish index and installation information. Init, uninit, index, sync, unlock, daemon control, install, uninstall, upgrade and telemetry changes have lifecycle or configuration effects. Each requires its explicit corresponding authority and is never an automatic evidence fallback, except the lane-local `init` and `sync` that `SKILL.md` *Operation card* grants. A documented unreleased viewer is not an installed capability.
 
 ## Claude Code language-service tool
 
@@ -56,26 +56,26 @@ The server's workspace is the session's project root. For a file outside that ro
 
 ## Serena specialized groups
 
-Use supported symbol search and overview, declaration, references, implementations and diagnostics for a separately needed semantic fact, or for an eligible source fallback that the routing contract selects. Known identity alone does not require a Serena read after adequate CodeGraph evidence. Optional symbol diagnostics and backend-specific hierarchy and inspection operations require a backend that exposes them. Inspections diagnose source. They do not discharge project proof.
+Use supported symbol search and overview, declaration, references, implementations and diagnostics for a separately needed semantic fact, or for an eligible source fallback that the routing contract selects. Known identity alone does not require a Serena read after adequate CodeGraph evidence. Optional symbol diagnostics and backend-specific hierarchy and inspection operations require a backend that exposes them. Inspections diagnose source; they do not discharge project proof.
 
-Supported symbol-body, insert and rename operations, and backend-specific move, inline and safe-delete operations, are writes. Each is subject to mutation reconciliation. A safety-oriented name does not establish authorization or complete coverage.
+Supported symbol-body, insert and rename operations, and backend-specific move, inline and safe-delete operations, are writes under mutation reconciliation. A safety-oriented name establishes neither authorization nor complete coverage.
 
-Inspecting the configuration or the manual instructions can identify the active project, context, modes and tools. Activation, onboarding, language-server restart, project removal and dashboard opening are lifecycle effects. Inspect their side effects and your authority first. Serena file and search tools keep native coverage limits. They add no semantic guarantee and must not repeat answered facts.
+Inspecting the configuration or the manual instructions can identify the active project, context, modes and tools. Activation, onboarding, language-server restart, project removal and dashboard opening are lifecycle effects; inspect their side effects and your authority first. Serena file and search tools keep native coverage limits, add no semantic guarantee and must not repeat answered facts.
 
-Shell, REPL and debug evaluation carry execution authority. REPL and backend-specific evaluation require observed availability of the operation. The topic map routes interface mechanics and grant enforcement to their owners. An external-project query requires an explicitly named authorized target and an independently verified identity. Provider memories remain under the task's memory owner, not this routing skill.
+Shell, REPL and debug evaluation carry execution authority. REPL and backend-specific evaluation require observed availability of the operation. The topic map routes interface mechanics and grant enforcement to their owners. An external-project query requires an explicitly named authorized target and an independently verified identity. Provider memories stay under the task's memory owner, not this routing skill.
 
 ## Go
 
-For Go source and structure, use the routing contract. Installed gopls can answer supported definition, reference, implementation, call-hierarchy and diagnostic questions through its CLI or a connected language service. Serena is not required. Verify the selected operation against the module or workspace, the build tags, the toolchain and the file version. A configured Serena gopls backend and direct gopls are alternative surfaces, not reasons to retrieve the same evidence twice. The native reference owns invocation and cost limits and dependency recipes. Native Go recipes own build, vet and test proof.
+Apply the routing contract to Go source and structure. Installed gopls can answer supported definition, reference, implementation, call-hierarchy and diagnostic questions through its CLI or a connected language service, without Serena. Verify the selected operation against the module or workspace, the build tags, the toolchain and the file version. A configured Serena gopls backend and direct gopls are alternative surfaces, not reasons to retrieve the same evidence twice. The native reference owns invocation, cost limits and dependency recipes. Native Go recipes own build, vet and test proof.
 /alaa-golang owns implementation doctrine. Routing does not authorize backend activation.
 
 ## PHP, including Laravel
 
-PHPantom's `analyze` CLI supplies native diagnostics for symbol resolution and type coverage without Serena or an LSP client. It neither runs PHPStan nor proves complete references. Definition, hover and references require an exposed LSP operation or a verified equivalent, not analyze. Installed `fix`, `format` and `move` require the matching authorized change, coverage checks and mutation reconciliation. Repository recipes retain the PHPStan, Pest, PHPUnit and Pint obligations.
+PHPantom's `analyze` CLI supplies native diagnostics for symbol resolution and type coverage without Serena or an LSP client. It neither runs PHPStan nor proves complete references. Definition, hover and references require an exposed LSP operation or a verified equivalent, not analyze. Installed `fix`, `format` and `move` require the matching authorized change, coverage checks and mutation reconciliation. Repository recipes keep the PHPStan, Pest, PHPUnit and Pint obligations.
 
 ## Python
 
-The `pyright` CLI supplies type checking and diagnostics for the configured Python environment. Navigation and rename require a connected `pyright-langserver` client or bridge that exposes those operations. Type checking does not prove complete references or test success. Mandatory repository checks retain their scope.
+The `pyright` CLI supplies type checking and diagnostics for the configured Python environment. Navigation and rename require a connected `pyright-langserver` client or bridge that exposes them. Type checking proves neither complete references nor test success. Mandatory repository checks keep their scope.
 
 ## Vue and Quasar
 

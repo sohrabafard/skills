@@ -4,13 +4,13 @@ This file owns interface mechanics and API steering. The routing contract select
 
 ## Discover and consume
 
-Distinguish `agent_interface: tools` from `agent_interface: REPL`. The interface is fixed at startup. The startup project or the CLI can override the global setting. REPL exposes `serena_repl` plus session-management tools without REPL counterparts. Missing legacy MCP tool names do not establish missing semantic capability.
+Distinguish `agent_interface: tools` from `agent_interface: REPL`. The interface is fixed at startup; the startup project or the CLI can override the global setting. REPL exposes `serena_repl` plus session-management tools that have no REPL counterpart. Missing legacy MCP tool names do not establish missing semantic capability.
 
-Read the current Serena instructions and effective API overview. For a needed operation, inspect `s.info("lsp.find_symbol")` or the corresponding observed facade or method before using its signature or returned types. Use `s.overview()` when the advertised inventory is missing or stale. Verify project identity with the supported configuration surface, such as `s.cfg.get_current_config()`. Discover only what the named question needs. LSP and JetBrains expose different APIs, not interchangeable names. The `ide` context name does not select a language backend or a same-named facade.
+Read the current Serena instructions and effective API overview. Before using a needed operation's signature or returned types, inspect `s.info("lsp.find_symbol")` or the corresponding observed facade or method. Use `s.overview()` when the advertised inventory is missing or stale. Verify project identity with the supported configuration surface, such as `s.cfg.get_current_config()`. Discover only what the named question needs. LSP and JetBrains expose different APIs, not interchangeable names. The `ide` context name selects no language backend or same-named facade.
 
-Compose operations only after selecting Serena for an unresolved question. Bound paths, output and continuations. Return the required evidence and its coverage limits. Reuse session objects, and invalidate the affected results after edits, after a change of project, backend or mode, or after reconnection. Shared HTTP project state does not imply shared client-session Python variables.
+Compose operations only after selecting Serena for an unresolved question. Bound paths, output and continuations, and return the required evidence with its coverage limits. Reuse session objects. Invalidate the affected results after edits, after a change of project, backend or mode, or after reconnection. Shared HTTP project state does not imply shared client-session Python variables.
 
-Do not repeat CodeGraph source retrieval merely because Python can combine symbol overview, body and references in one call. Keep those APIs for distinct semantic questions and for eligible fallback during a graph outage. A batch with possible writes can partially succeed, because it is not a transaction. Reconcile every attempted mutation before retrying under the routing contract.
+Do not repeat CodeGraph source retrieval merely because Python can combine symbol overview, body and references in one call; keep those APIs for distinct semantic questions and for eligible fallback during a graph outage. A batch with possible writes is not a transaction and can partially succeed. Reconcile every attempted mutation before retrying under the routing contract.
 
 ## Configuration semantics
 
