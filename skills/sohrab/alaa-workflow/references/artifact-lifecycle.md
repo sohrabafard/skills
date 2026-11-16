@@ -4,7 +4,7 @@ Choose the smallest plan that preserves authority, acceptance and recovery.
 
 ## Admission
 
-Before any implementation, record the outcome, scope, settled approach, prerequisites, exact skill bindings, acceptance and focused checks. For bounded single-phase work, keep this compact plan in the bound task issue when Beads is available, or in the session if durable tracking is unnecessary. See `references/task-tracking.md` for availability and tracking triggers. Advice and ordinary review require no execution plan.
+Before any implementation, record the outcome, scope, settled approach, prerequisites, exact skill bindings, acceptance and focused checks. For bounded single-phase work, keep this compact plan in the bound task issue when Beads is available, or in the session if durable tracking is unnecessary. `references/task-tracking.md` owns availability and tracking triggers. Advice and ordinary review require no execution plan.
 
 Authorized multi-phase, resumable, delegated or handoff-sensitive work, including a continuing fix loop, requires a complete durable execution plan before dependent implementation or write-lane dispatch. Continue an existing family's contract. For a new eligible execution with available bound Beads, use the native family in `references/task-tracking.md`. Use a Markdown family when Beads is unavailable at admission or an explicit file request or file-consuming tool requires one. Record the file consumer. Use one canonical plan.
 
@@ -95,25 +95,14 @@ Expose independently ready work to the runtime orchestrator, and impose no workf
 
 Continue an active task's existing family and stem. Resolve companions only from explicit references or this selected stem; never attach an unrelated newest file.
 
-## Permitted contents
+## Contents, updates, resume and delegation
 
-`references/context-continuity.md` owns why the artifacts divide the way they do, what each handoff field means, and when a field earns a line. This file owns only where each artifact lives and what it is permitted to contain.
+This file owns only where each artifact lives and what it may contain.
 
-Kind-specific contents follow `## Plan kinds and approval`; task acceptance and results follow `references/task-tracking.md` `## Acceptance and evidence by level`. For handoff contents, checkpoint fields, status and cursor ownership and JSON projection, read `references/context-continuity.md`.
-
-## Update events
-
-`references/context-continuity.md` owns all update events, canonical status and cursor ownership, and snapshot derivation. Update only the admitted artifact set; keep expensive learning in the handoff package rather than a position snapshot.
-
-Do not maintain duplicate phase checklists, review history, lane definitions, documentation status, or touched-file histories in secondary state.
-
-## Resume and handoff
-
-`references/context-continuity.md` owns the read order, the cold-start test, the post-compaction rules, and what a handoff must contain. Do not restate them here.
-
-## Delegation
-
-`SKILL.md` `## Delegate selectively` owns which work may be delegated, what the parent stays responsible for, and where lane ownership is recorded. It forbids a lane-plan file because a second plan splits the workflow destination in two; task-store ownership remains separate.
+- `references/context-continuity.md` owns why the artifacts divide as they do, handoff field meanings and contents, when a field earns a line, checkpoint fields, status and cursor ownership, JSON projection, all update events, snapshot derivation, the read order, the cold-start test and the post-compaction rules. Do not restate them here.
+- Kind-specific contents follow `## Plan kinds and approval`. Task acceptance and results follow `references/task-tracking.md` `## Acceptance and evidence by level`.
+- Update only the admitted artifact set. Keep expensive learning in the handoff package, not in a position snapshot. Keep no duplicate phase checklists, review history, lane definitions, documentation status or touched-file histories in secondary state.
+- `SKILL.md` `## Delegate selectively` owns which work may be delegated, what the parent stays responsible for and where lane ownership is recorded. It forbids a lane-plan file, because a second plan splits the workflow destination in two; task-store ownership stays separate.
 
 ## Compatibility
 
