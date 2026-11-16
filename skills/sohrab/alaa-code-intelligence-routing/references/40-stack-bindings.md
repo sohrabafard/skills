@@ -1,86 +1,90 @@
 # Stack and capability fit
 
-Select operations from the effective inventory and the active backend, not from remembered names. An optional, beta or newly documented capability stays unusable until it is exposed, supported and authorized. Reference 90 owns sources and dated discrepancies. Reference 80 owns grants.
+Select an operation from the effective inventory and the active backend, never from a remembered name. An optional, beta or newly documented capability is unusable until it is exposed, supported and authorized.
 
-## Project applicability
-
-CodeGraph requires a matching supported index. Serena requires the needed language backend to be configured. Boost applies only to Laravel and is optional there. PHP without Laravel uses source and native routes. For operation eligibility, provider combinations, absence, unhealthy or partial states, and fallback, apply `references/10-routing-contract.md`.
+CodeGraph needs a matching supported index. Serena needs the language backend configured. Boost applies only to Laravel and is optional there; PHP without Laravel uses the source and native routes. `references/10-routing-contract.md` owns eligibility, absence and fallback.
 
 ## Laravel
 
-For PHP diagnostics and navigation, use the PHP section below. Boost owns the framework and runtime questions in this table, even without Serena. Boost does not replace symbol semantics.
+Boost owns the framework and runtime questions below, with or without Serena. It does not replace symbol semantics: for PHP diagnostics and navigation, use *PHP, including Laravel*. CodeGraph and Serena prove no framework convention, runtime registration or database state.
 
-| Needed fact | Eligible installed Boost group | Evidence limit |
-|---|---|---|
-| Installed PHP and Laravel versions, packages and models | Application info | Installed metadata. A lockfile alone shows only the intended resolution |
-| Existing metadata resource, or an upgrade or simplification prompt | Installed resource/prompt | Reuse adequate metadata. A prompt is controlling advice, not authority or proof |
-| Framework convention or package guidance | Search docs | Establish installed versions first. Source implementation is a different question |
-| Registered routes, one resolved URL | Route inventory if exposed; absolute-URL operation | A resolved URL does not prove route registration. The native route list can observe registration |
-| Connections or live schema | Connection inventory/schema | It must observe the intended environment and database. Migrations show intent only |
-| One database fact | Database query | Inspect the query, credentials and effects. A query tool does not guarantee read-only access |
-| Application or browser errors and logs | Last error/log entries/browser logs | Verify the application, session and time window, and redact sensitive values. An absence of entries does not prove an absence of failures |
-| Available Artisan commands or execution | Installed command inventory/execution | An inventory does not authorize execution. Boot and dependency effects apply |
-| Arbitrary application expressions | Installed tinker/code-execution operation | Execution can mutate despite an apparently read-only expression |
-| Durable project instruction | Installed rule-recording operation | Writes agent instructions; separate authorized authoring, not evidence retrieval |
-| Guidelines/skills generation | Installed resource commands | Setup/update effects, not fallback or proof |
+Installed Boost groups that read:
 
-Do not assume every group above exists in a given Boost version; inspect a command's or tool's semantics before use. CodeGraph answers application source structure, and Serena answers supported PHP semantics. Neither proves framework conventions, runtime registration, database state or completion.
+- Application info, or an existing metadata resource: installed PHP and Laravel versions, packages and models. A lockfile alone shows only the intended resolution.
+- Search docs: framework convention and package guidance. Establish the installed versions first.
+- Route inventory, if exposed, and the absolute-URL operation: registered routes and one resolved URL. A resolved URL does not prove route registration; the native route list observes it.
+- Connection inventory and schema: the live schema. It must observe the intended environment and database. Migrations show intent only.
+- Last error, log entries and browser logs: verify the application, session and time window, and redact sensitive values.
 
-Vendor or excluded source may lie outside Serena's configured coverage. Verify inclusion before you interpret a missed framework symbol. Keep the result unknown, and for a guidance question select the documentation owner for the installed version.
+Installed Boost groups with effects:
 
-Some versions gate tinker separately and constrain database queries with read-only transaction controls. Verify the installed gate, the driver and its enforcement, and the task scope; never infer harmlessness from a tool name or annotation. Upgrade and simplification prompts stay subject to the authorized change scope and repository rules.
+- Database query: the tool guarantees no read-only access. Verify the installed read-only control, the driver and the task scope. Inspect the query, its credentials and its effects.
+- Artisan command execution: the command inventory authorizes no execution. Boot and dependency effects apply.
+- Tinker or code execution: it can mutate, whatever the expression looks like. Some versions gate tinker separately; verify the installed gate.
+- Rule recording: it writes agent instructions. That is separate authorized authoring, not evidence retrieval.
+- Resource commands for guidelines or skills: setup or update effects, never a fallback or proof.
+- An upgrade or simplification prompt: advice inside the authorized change scope, not authority or proof.
+
+Never infer harmlessness from a tool name or annotation: inspect what the operation does.
+
+A framework symbol that Serena misses can lie in vendor or excluded source outside its coverage. Verify inclusion first. Otherwise keep the result unknown and, for a guidance question, select the documentation owner for the installed version.
 
 ### Independent failure domains
 
-Classify the failed operation, not the whole provider:
+Classify the failed operation, not the whole provider.
 
-- **Docs transport or service failure:** keep the healthy application metadata, and use version-correct official documentation.
-- **Application boot failure:** keep the healthy docs and the directly readable installed package metadata. Another boot-dependent Artisan command is not an independent fallback. Use static source only for intent. Block a live application claim that has no equivalent observation.
-- **Database failure, or the wrong connection or environment:** keep the docs and application evidence. A live schema or query claim requires equivalent authorized observation of the intended database. Migrations do not recover that guarantee.
+- **Docs transport or service fails:** application metadata stays valid. Use version-correct official documentation.
+- **Application boot fails:** docs and the directly readable installed package metadata stay valid. Another boot-dependent Artisan command is no independent fallback. Static source gives intent only. Block a live application claim that has no equivalent observation.
+- **Database fails, or the connection or environment is wrong:** docs and application evidence stay valid. A live schema or query claim needs an equivalent authorized observation of the intended database. Migrations do not recover it.
 
-When application-info is unavailable, inspect the installed package metadata directly, and distinguish it from lockfile intent. Before a runtime claim from a native alternative, verify its working directory, runtime or container, application and environment, and connection.
+When application info is unavailable, read the installed package metadata directly, and keep it apart from lockfile intent.
 
 ## CodeGraph specialized groups
 
-Every available CodeGraph tool is eligible, with or without Serena; there is no explore-only allowlist. Match the question to explore, node/source, query/search, files, callers, callees, impact, context, affected tests, status or another verified operation. A CLI-only operation needs no preceding MCP failure. Verify the index, the worktree and the role permissions. For an unlisted MCP tool, use its eligible CLI equivalent or report the missing surface without changing configuration.
-
-Explore combines source, relationships and impact. Neither explore nor a focused operation requires a preliminary call to the other. More graph calls cannot supply type diagnostics or semantic-edit guarantees that CodeGraph does not implement.
-
-Suggested affected tests or dependencies select candidate coverage; only native execution proves that tests passed. Status and version establish index and installation information. Init, uninit, index, sync, unlock, daemon control, install, uninstall, upgrade and telemetry changes have lifecycle or configuration effects. Each requires its explicit corresponding authority and is never an automatic evidence fallback, except the lane-local `init` and `sync` that `SKILL.md` *Operation card* grants. A documented unreleased viewer is not an installed capability.
+- Every available CodeGraph tool is eligible within the role's grant, with or without Serena: explore, node or source, query or search, files, callers, callees, impact, context, affected tests, status or another verified operation. No explore-only allowlist exists.
+- A CLI-only operation needs no MCP failure first. Neither explore nor a focused operation needs a call to the other first.
+- For a tool that MCP does not list, use its CLI equivalent or report the missing surface. Change no configuration.
+- Suggested affected tests select candidates. Only native execution proves that tests passed.
+- Init, uninit, index, sync, unlock, daemon control, install, uninstall, upgrade and telemetry changes are lifecycle or configuration effects. Each needs its own explicit authority and is never an automatic fallback, except the lane-local `init` and `sync` that `SKILL.md` *Operation card* grants.
 
 ## Claude Code language-service tool
 
-`SKILL.md` *Operation card* owns when to use the built-in `LSP` tool. It is a connected language service wherever a server is configured for the file type, and it needs no Serena. It answers definition, references, implementations, call hierarchy, hover, document symbols and workspace symbols at a file position. The document symbols can also supply that position. The tool reads only; it performs no rename and no edit.
+`SKILL.md` *Operation card* owns when to use the built-in `LSP` tool.
 
-The server's workspace is the session's project root. For a file outside that root it resolves file-local facts only, and cross-file names stay unresolved. Check that returned paths lie inside your worktree before you rely on them. A role whose definition lists its tools reaches `LSP` only when that list names it.
+- It works wherever a server is configured for the file type, and it needs no Serena.
+- It answers definition, references, implementations, call hierarchy, hover, document symbols and workspace symbols at a file position. Document symbols can supply that position.
+- It reads only: no rename and no edit.
+- Its workspace is the session's project root. For a file outside that root it resolves file-local facts only, and cross-file names stay unresolved. Check that returned paths lie inside your worktree before you rely on them.
+- A role whose definition lists its tools reaches `LSP` only when that list names it.
 
 ## Serena specialized groups
 
-Use supported symbol search and overview, declaration, references, implementations and diagnostics for a separately needed semantic fact, or for an eligible source fallback that the routing contract selects. Known identity alone does not require a Serena read after adequate CodeGraph evidence. Optional symbol diagnostics and backend-specific hierarchy and inspection operations require a backend that exposes them. Inspections diagnose source; they do not discharge project proof.
-
-Supported symbol-body, insert and rename operations, and backend-specific move, inline and safe-delete operations, are writes under mutation reconciliation. A safety-oriented name establishes neither authorization nor complete coverage.
-
-Inspecting the configuration or the manual instructions can identify the active project, context, modes and tools. Activation, onboarding, language-server restart, project removal and dashboard opening are lifecycle effects; inspect their side effects and your authority first. Serena file and search tools keep native coverage limits, add no semantic guarantee and must not repeat answered facts.
-
-Shell, REPL and debug evaluation carry execution authority. REPL and backend-specific evaluation require observed availability of the operation. The topic map routes interface mechanics and grant enforcement to their owners. An external-project query requires an explicitly named authorized target and an independently verified identity. Provider memories stay under the task's memory owner, not this routing skill.
+- Writes: symbol-body, insert and rename operations, and backend-specific move, inline and safe-delete operations. They fall under `references/10-routing-contract.md` *Mutation uncertainty*. A safety-oriented name establishes neither authorization nor complete coverage.
+- Lifecycle effects: activation, onboarding, language-server restart, project removal and dashboard opening. Check their side effects and your authority first. To identify the active project, context, modes and tools, read the configuration or the manual instructions.
+- Shell, REPL and debug evaluation carry execution authority.
+- An external-project query needs an explicitly named authorized target and an independently verified identity.
+- Provider memories belong to the task's memory owner, not to this skill.
+- Serena file and search tools add no semantic guarantee to the native ones.
 
 ## Go
 
-Apply the routing contract to Go source and structure. Installed gopls can answer supported definition, reference, implementation, call-hierarchy and diagnostic questions through its CLI or a connected language service, without Serena. Verify the selected operation against the module or workspace, the build tags, the toolchain and the file version. A configured Serena gopls backend and direct gopls are alternative surfaces, not reasons to retrieve the same evidence twice. The native reference owns invocation, cost limits and dependency recipes. Native Go recipes own build, vet and test proof.
-/alaa-golang owns implementation doctrine. Routing does not authorize backend activation.
+Installed gopls answers definition, reference, implementation, call-hierarchy and diagnostic questions through its CLI or a connected language service, without Serena. Verify the operation against the module or workspace, the build tags, the toolchain and the file version. A configured Serena gopls backend and direct gopls are alternatives: use one. `references/45-native-tools.md` owns invocation, cost limits and dependency recipes. Routing authorizes no backend activation.
 
 ## PHP, including Laravel
 
-PHPantom's `analyze` CLI supplies native diagnostics for symbol resolution and type coverage without Serena or an LSP client. It neither runs PHPStan nor proves complete references. Definition, hover and references require an exposed LSP operation or a verified equivalent, not analyze. Installed `fix`, `format` and `move` require the matching authorized change, coverage checks and mutation reconciliation. Repository recipes keep the PHPStan, Pest, PHPUnit and Pint obligations.
+- PHPantom's `analyze` CLI gives native diagnostics for symbol resolution and type coverage, without Serena or an LSP client. It does not run PHPStan and proves no complete references.
+- Definition, hover and references need an exposed LSP operation or a verified equivalent, not `analyze`.
+- Installed `fix`, `format` and `move` write. Each needs the matching authorized change, coverage checks and mutation reconciliation.
+- The repository recipes keep their PHPStan, Pest, PHPUnit and Pint obligations.
 
 ## Python
 
-The `pyright` CLI supplies type checking and diagnostics for the configured Python environment. Navigation and rename require a connected `pyright-langserver` client or bridge that exposes them. Type checking proves neither complete references nor test success. Mandatory repository checks keep their scope.
+The `pyright` CLI gives type checking and diagnostics for the configured Python environment. Navigation and rename need a connected `pyright-langserver` client or bridge that exposes them. Type checking proves neither complete references nor test success.
 
 ## Vue and Quasar
 
-Apply the routing contract to source questions about components, composables, stores and clients, including known files and symbols. Required Vue or TypeScript semantics use capable Serena only with the correct configured backend. Do not add another backend merely because TypeScript exists. Authorized browser observation owns runtime UI facts. Native frontend recipes own proof. /alaa-frontend-developer and /alaa-vue-typescript-clean-code own implementation doctrine.
+Vue or TypeScript semantics use Serena only with the correct configured backend. Add no backend merely because TypeScript exists. Authorized browser observation owns runtime UI facts.
 
 ## Other source
 
-Apply the routing contract. For unsupported or unindexed code, record the lost graph and semantic guarantees. /alaa-laravel-architecture owns Laravel implementation doctrine.
+For unsupported or unindexed code, record the lost graph and semantic guarantees.
