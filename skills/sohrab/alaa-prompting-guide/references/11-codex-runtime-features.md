@@ -14,9 +14,9 @@ Use the active repair and retry budget. When the required contract or the safe r
 
 ## `/goal` — persistent objective mode
 
-A Goal is durable, thread-scoped state that keeps a Codex thread working toward one defined outcome across many turns instead of stopping after a single reply. Codex keeps working across turns toward a verifiable stopping condition, works in checkpoints, keeps a short progress log, and can run independently for hours. **Evidence, not speculation, determines completion**: it stops when it is fairly confident the stopping condition is met, when it hits its budget, or when it is genuinely blocked. Reaching a budget limit is explicitly not the same as completing the objective — in that case Codex stops substantive work, summarizes progress and blockers, and names the next useful step rather than claiming success.
+A Goal is durable, thread-scoped state that keeps a Codex thread working toward one outcome across many turns. Codex stops when it is fairly confident the stopping condition is met, when it hits its budget, or when it is genuinely blocked; evidence, not speculation, decides completion. Reaching a budget limit is not completion: Codex then stops substantive work, summarizes progress and blockers, and names the next useful step.
 
-A strong Goal defines seven things: **outcome** (what should be true when work concludes), **verification surface** (the test, benchmark, artifact, or log that proves it), **constraints** (what must not regress), **boundaries** (which files, tools, or resources are in play), **iteration policy** (how Codex picks the next action after each attempt), **blocked stop condition** (when to halt and what would unblock it), and **bounded budget** (an explicit turn or time cap so a stalled or non-converging goal cannot run unbounded).
+A strong Goal defines seven things: the **outcome**; the **verification surface** (the test, benchmark, artifact or log that proves it); the **constraints** that must not regress; the **boundaries** (files, tools, resources); the **iteration policy** for choosing the next action; the **blocked stop condition** and what would unblock it; and a **bounded budget**, an explicit turn or time cap, so a non-converging goal cannot run unbounded.
 
 ### CLI composer and objective storage
 
@@ -42,9 +42,9 @@ If blocked or no valid path remains, report exactly what is blocking progress an
 Stop after <turn or time cap> even if incomplete, reporting progress, evidence so far, and the next step.
 ```
 
-Build worked examples from `references/12-gpt-6.md` plus the template above: one objective, one stopping condition, one validation loop. A goal should be larger than one prompt but smaller than an open-ended backlog. Documented fits are migrations, large refactors, experiments, and any long-running coding work with a clear success condition and a validation loop.
+Build worked examples from `references/12-gpt-6.md` and this template: one objective, one stopping condition, one validation loop. Size a goal larger than one prompt and smaller than an open-ended backlog. Documented fits are migrations, large refactors, experiments and long-running coding work with a clear success condition and a validation loop.
 
-**This is not Claude Code's `/goal`.** Same command name, different mechanism — never carry a `/goal` block between the runtimes unedited. Read `references/41-claude-code-runtime-features.md` for how Claude Code's version differs and what that changes about what proves completion, how it's enabled, and what it costs.
+**This is not Claude Code's `/goal`.** Same command name, different mechanism: never carry a `/goal` block between the runtimes unedited. Read `references/41-claude-code-runtime-features.md` for how the two differ in what proves completion, how each is enabled and what each costs.
 
 ## Subagents — explicit delegation and parallel spawning
 
@@ -64,22 +64,14 @@ In `workspace-write`, these paths stay read-only inside a writable root, recursi
 
 When you report a subagent's model and effort, read `references/80-subagent-authoring.md` *Configuration and observed identity*; it separates requested from observed values and fixes the metadata position.
 
-The sources below were verified on 25 September 2026. The policy JSON records a dated
+The other statements in this section were verified on 25 September 2026. The policy JSON records a dated
 supported-effort snapshot; verify availability again on the actual dispatch host.
 
 ## `spawn_agents_on_csv` — background batch jobs
 
-An experimental tool for many similar tasks that map one-to-one to rows. Codex reads a CSV, applies an instruction template with `{column_name}` placeholders per row, spawns one worker per row, waits for the batch, and exports combined results to an output CSV carrying the original row data plus `job_id`, `item_id`, `status`, `last_error`, and `result_json`.
+An experimental tool for many similar tasks that map one-to-one to CSV rows. It applies an instruction template with `{column_name}` placeholders to each row, spawns one worker per row, and exports the combined results to an output CSV. Its parameters are `csv_path`, `instruction`, `id_column`, `output_schema`, `output_csv_path`, `max_concurrency` and `max_runtime_seconds`, which overrides `agents.job_max_runtime_seconds` per call.
 
-Parameters: `csv_path`, `instruction`, `id_column` (optional stable item identifier), `output_schema` (the JSON structure each worker returns), `output_csv_path`, `max_concurrency`, and `max_runtime_seconds` (per-call override of `agents.job_max_runtime_seconds`).
-
-Each worker **must call `report_agent_job_result` exactly once**. A worker that exits without reporting produces an error row rather than hanging the batch — so any instruction template you generate must make that call an explicit, unconditional final step, including on the failure path.
-
-```text
-spawn_agents_on_csv with csv_path="tickets.csv", instruction="Investigate ticket {ticket_id} about {summary}
-and propose a fix; report your finding.", output_csv_path="ticket_results.csv", id_column="ticket_id",
-max_concurrency=4
-```
+Each worker **must call `report_agent_job_result` exactly once**. A worker that exits without reporting produces an error row. Make that call an explicit, unconditional final step in every instruction template you generate, including on the failure path.
 
 ## `AGENTS.md` — durable project instructions
 
@@ -87,7 +79,7 @@ When you rely on the `AGENTS.md` resolution order, read `references/70-agent-ins
 
 `project_doc_max_bytes` caps the combined size (32 KiB default, configurable up to 65536 bytes); Codex stops adding files once the limit is reached, which means a deep chain can silently drop the outermost files. `project_doc_fallback_filenames` in `~/.codex/config.toml` adds alternative filenames. `CODEX_HOME` relocates the global profile used for discovery.
 
-No manual invocation is needed. Codex does **not** update these files on its own, so a prompt must explicitly instruct it to write a correction back into `AGENTS.md` when the correction should persist. For authoring guidance, read `references/70-agent-instruction-files.md`.
+Codex does **not** update these files on its own. When a correction must persist, the prompt must tell Codex to write it back into `AGENTS.md`. For authoring guidance, read `references/70-agent-instruction-files.md`.
 
 ## Agent Skills
 
@@ -95,32 +87,17 @@ When you write a Codex skill, its install instructions or its description, read 
 
 ## Session-shaping slash commands
 
-These change how a thread runs and are worth naming explicitly in a generated operating prompt rather than leaving to the operator:
-
-| Command | Effect |
-|---|---|
-| `/plan` | Switch to plan mode so Codex proposes an execution strategy before implementing |
-| `/review` | Request a working-tree review of local changes |
-| `/experimental` | Toggle optional features, including subagents and goals |
-| `/fork` | Clone the current conversation into a new thread to explore an alternative in parallel |
-| `/side` (alias `/btw`) | Start an ephemeral side conversation without disturbing the main thread |
-| `/personality` | Set communication style without rewriting the prompt |
-| `/compact` | Summarize the conversation to reclaim context |
-| `/model`, `/permissions`, `/status`, `/approve`, `/new`, `/resume` | Model selection, approval requirements, session configuration and token usage, retry of an auto-review denial, and thread lifecycle |
-
-A `/plan` gate followed by a `/goal` is the Codex analogue of the plan-then-autonomy pattern: approve the approach first, then hand the thread a bounded objective.
+Name these explicitly in a generated operating prompt rather than leaving them to the operator: `/plan` (propose a strategy before implementing), `/review` (review local changes), `/experimental` (toggle optional features, including subagents and goals), `/fork` (clone the conversation into a new thread), `/side` or `/btw` (an ephemeral side conversation), `/personality`, `/compact`, and `/model`, `/permissions`, `/status`, `/approve`, `/new`, `/resume`. A `/plan` gate followed by a `/goal` is the Codex plan-then-autonomy pattern: approve the approach, then hand the thread a bounded objective.
 
 ## Automations — scheduled recurring tasks
 
-Codex can schedule recurring background tasks that add findings to the inbox, or archive themselves when there is nothing to report. Automations take three shapes: standalone automations that start fresh runs on a schedule and report into Triage; project automations, which require the app to be running and the selected project to be available on disk; and thread automations, heartbeat-style recurring wake-ups attached to the current thread. Scheduling accepts predefined daily and weekly slots, custom cron syntax, and minute-based intervals for active follow-up loops.
-
-Two operational cautions belong in any prompt that sets one up: on a Git repository an automation runs either in the local project or on a dedicated background worktree, and frequent schedules accumulate worktrees over time; and in read-only sandbox mode, tool calls fail when they need to modify files, use the network, or work with apps.
+Codex can schedule recurring background tasks: standalone automations that report into Triage, project automations that need the app running and the project on disk, and thread automations that wake the current thread. Put two cautions in any prompt that sets one up. On a Git repository an automation runs in the local project or on a dedicated background worktree, and frequent schedules accumulate worktrees. In read-only sandbox mode, tool calls fail when they need to modify files, use the network or work with apps.
 
 ## Caveats
 
-Goal lifecycle and subagent guidance refreshed on 25 September 2026. CLI composer evidence has its own date above. Remaining historical sections were verified on 24 July 2026 and require live refresh before use. Historical defaults are not current dispatch authority: the `agents.max_depth` (1) and `agents.job_max_runtime_seconds` (1800) defaults (the former `agents.max_threads` (6) default is superseded; see Subagents); the 32 KiB / 65536-byte `project_doc_max_bytes` bounds; the 2%-or-8,000-character skill listing budget; and the `codex-cli` 0.128.0 requirement for goals are current published values and should be re-checked before being depended on.
+Goal lifecycle and subagent guidance were refreshed 25 September 2026; the CLI composer evidence has its own date above. The remaining sections were verified 24 July 2026 and need a live refresh before use. These historical defaults are not dispatch authority and must be re-checked before you depend on them: `agents.max_depth` (1), `agents.job_max_runtime_seconds` (1800), the 32 KiB / 65536-byte `project_doc_max_bytes` bounds, and the `codex-cli` 0.128.0 requirement for goals. The former `agents.max_threads` (6) default is superseded; see Subagents.
 
-Goals, `spawn_agents_on_csv`, and the agent-team-style batch flow are all marked experimental and may change. The `features.goals` key did not appear in the visible portion of the configuration reference, which is truncated on fetch; the two enabling paths cited above come from the Goals use-case page. `features.memories` exists and is off by default, but Codex's memory documentation redirects off the developer docs domain, so this pack makes no claim about how memories interact with `AGENTS.md` — treat that as unverified.
+Goals, `spawn_agents_on_csv` and the batch flow are experimental. The `features.goals` key did not appear in the visible, truncated portion of the configuration reference; the enabling paths come from the Goals use-case page. `features.memories` exists and is off by default; how memories interact with `AGENTS.md` is unverified.
 
 ## Sources
 
