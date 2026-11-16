@@ -203,7 +203,7 @@ A Beads-bound family that loses Beads mid-run keeps its store. Preserve evidence
 
 When you hold no claimed task, wait for the hub, unless the user names one unclaimed task and chooses to proceed on it. On recovery, read the task back. If another actor holds it, stop and report the collision. If it is unassigned, claim it before more work.
 
-Record the outage and a dated `Pending Beads reconciliation` list of evidence, notes and discoveries in the admitted Markdown checkpoint or direct cursor. For a native plan or issue-only work, use the session, or an already authorized evidence-only artifact. Keep no offline task mirror. On recovery, record each entry at its Beads owner before you clear the list. Pending reconciliation blocks closure and completion. At an outage handoff, transmit the list verbatim and name the blocker.
+Record the outage and a dated `Pending Beads reconciliation` list of evidence, notes and discoveries in the admitted Markdown checkpoint or direct cursor. For a native plan or issue-only work, use the session, or an already authorized evidence-only artifact. Keep no offline task mirror. Label unsaved items pending. On recovery, record each entry at its Beads owner and read it back before you clear the list. Pending reconciliation blocks closure and completion. At an outage handoff, transmit the list verbatim and name the blocker.
 
 After a mutation with an uncertain outcome, read the actual task state through the bound owner, then perform only the authorized change that is still required. Never retry blindly, and never report success without evidence.
 
@@ -221,5 +221,5 @@ Apply this when `## Select before tracking-dependent work` finds Beads available
 
 1. Before the first Beads task, replace `Task binding: not applicable` with the adopted portable binding. Keep `Task store: local` and its reason as history.
 2. Register every new task in Beads and map it as `- Issue: <issue-id> [skills: inherit]` in its phase. A Beads task never depends on an open local task; migrate that task first.
-3. To migrate an open local task, register it in Beads, then mark it `- [-] T2: <outcome> [depends: T1] [migrated: <issue-id>] [skills: inherit]`, with its `- Issue:` mapping in the same plan. Migrate its local dependents with it. Every prerequisite of a migrated task must already be completed or migrated. The validator rejects a local task that depends on a migrated one, and a migrated task with any other prerequisite (`plan.local-dependency`).
+3. To migrate an open local task, register it in Beads and read it back, then mark it `- [-] T2: <outcome> [depends: T1] [migrated: <issue-id>] [skills: inherit]`, with its `- Issue:` mapping in the same plan. Migrate its local dependents with it. Every prerequisite of a migrated task must already be completed or migrated. The validator rejects a local task that depends on a migrated one, and a migrated task with any other prerequisite (`plan.local-dependency`).
 4. Completed local tasks stay as history. A migrated task lives only in Beads. Never migrate from Beads back to local.

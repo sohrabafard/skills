@@ -36,7 +36,7 @@ Select one evidence owner for each question and reuse its answer. Native gates o
 
 ## Authority
 
-Routing grants no authority. Change no MCP, hook, CodeGraph, Serena, Boost or language-server integration or configuration unless the task explicitly asks for its setup, upgrade, repair or removal. The same holds for an index lifecycle effect, except the lane-local index above. A native sandbox does not restrict an MCP server: before you assign tools to a role, apply `references/80-agent-scoping.md`.
+Routing grants no authority. Change no MCP, hook, CodeGraph, Serena, Boost or language-server integration or configuration unless the task explicitly asks for its setup, upgrade, repair or removal. The same holds for an index lifecycle effect, except the lane-local index above. A native sandbox restriction does not prove that an MCP server is restricted: before you assign tools to a role, apply `references/80-agent-scoping.md`.
 
 ## When NOT to use
 
@@ -47,7 +47,7 @@ Routing grants no authority. Change no MCP, hook, CodeGraph, Serena, Boost or la
 
 ## Output
 
-Report the established evidence with its owner, each fallback with its gap and lost guarantee, the worktree and environment of the evidence, and each partial or blocked claim. Emit no raw transcript.
+Report the established evidence with its owner, each fallback with its gap and lost guarantee, the worktree and environment of the evidence, each observed native command with its result, and each partial or blocked claim. Emit no raw transcript.
 
 ## Stop and failure
 

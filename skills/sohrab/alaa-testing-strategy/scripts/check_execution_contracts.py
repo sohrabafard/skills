@@ -104,7 +104,7 @@ REQUIREMENTS = MappingProxyType({
         "makes every later result over that state `CONTAMINATED`",
         "Classify first, then act",
         "Four classes stay separate",
-        "Never make a check pass by deleting or weakening an assertion, suppressing a finding, lowering a threshold, widening a tolerance, adding an assertion retry, skipping a case or altering a fixture",
+        "Never make a check pass by deleting or weakening an assertion, suppressing a finding, lowering a threshold, widening a tolerance, adding an assertion retry, skipping a case, altering a fixture, hard-coding an expected result or lowering a review standard",
     ),
     "resources": (
         "OS process priority (`BelowNormal` by default, which is `nice 10`)",
@@ -336,12 +336,12 @@ NORMATIVE_DUPLICATES = MappingProxyType({
         "A phase transition, new agent or compaction alone invalidates nothing",
         "A case failing never stops an independent case from running",
         "Classify first, then act",
-        "Never make a check pass by deleting or weakening an assertion, suppressing a finding, lowering a threshold, widening a tolerance, adding an assertion retry, skipping a case or altering a fixture",
+        "Never make a check pass by deleting or weakening an assertion, suppressing a finding, lowering a threshold, widening a tolerance, adding an assertion retry, skipping a case, altering a fixture, hard-coding an expected result or lowering a review standard",
     ),
 })
 
 # Frozen preservation baseline over every NORMATIVE_DUPLICATES clause.
-EXPECTED_NORMATIVE_INVENTORY_SHA256 = "bd3f0425e3667548c00aaaacd4140c46415d8c77bffdc90a7e2b3e0c72d45fe9"
+EXPECTED_NORMATIVE_INVENTORY_SHA256 = "3bd9f7ced7cdfe3dc6408c2521a77fc568196f5b856391b006267e270adc7b56"
 
 # These are contradictory positive instructions, not mere absent keywords.
 # Append them with all required clauses intact to prove contradiction detection.

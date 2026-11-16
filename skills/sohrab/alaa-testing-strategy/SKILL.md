@@ -117,7 +117,7 @@ Classify first, then act: a repair aimed at the wrong class turns a host problem
 
 `references/120-result-classification.md` holds the status vocabulary and the host sub-classes. No class permits reporting the change as passed.
 
-Repair the defect and rerun its failing path. Never make a check pass by deleting or weakening an assertion, suppressing a finding, lowering a threshold, widening a tolerance, adding an assertion retry, skipping a case or altering a fixture. Report an unreachable tier as unreached, with its blocker.
+Repair the defect and rerun its failing path. Never make a check pass by deleting or weakening an assertion, suppressing a finding, lowering a threshold, widening a tolerance, adding an assertion retry, skipping a case, altering a fixture, hard-coding an expected result or lowering a review standard. Report an unreachable tier as unreached, with its blocker.
 
 ## Executing checks
 

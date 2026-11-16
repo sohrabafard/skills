@@ -53,7 +53,7 @@ def agent_failures(text: str) -> list[str]:
                      "Report metadata after the first line",
                      "Effective authority:", "parent overrides", "tool/MCP grants",
                      "Task controls:", "model AND effort", "block this lane",
-                     "an omitted field is the lead's default, not a block",
+                     "an omitted field is not a block",
                      "The role name selects no control"):
         if required not in text:
             errors.append(f"missing metadata/authority contract: {required}")

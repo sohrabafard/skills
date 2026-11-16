@@ -97,7 +97,8 @@ A bundled skill that re-runs a prompt inside the current session. Limits that ch
 - An interval and a prompt run on a fixed schedule; the minimum interval is 1 minute.
 - A prompt alone self-paces: Claude picks a delay between 1 minute and 1 hour after each iteration. On Amazon Bedrock, Claude Platform on AWS, Google Cloud's Agent Platform and Microsoft Foundry it runs every 10 minutes instead, and `loop.md` is not read.
 - An interval alone, or nothing, runs the built-in maintenance prompt or your `loop.md`.
-- Tasks are session-scoped: a fresh conversation clears them, and recurring tasks expire after 7 days.
+- Tasks are session-scoped: a fresh conversation clears them, and recurring tasks expire after 7 days. `--resume` or `--continue` restores only unexpired tasks.
+- Limits: up to 50 scheduled tasks per session; `loop.md` is truncated beyond 25,000 bytes; a recurring task fires up to 30 minutes late (up to half the interval when sub-hourly), and a one-shot task set for `:00` or `:30` fires up to 90 seconds early; seconds round up to a minute, and an interval with no clean cron step rounds to one; `CLAUDE_CODE_DISABLE_CRON=1` disables the scheduler.
 - Fires carry deterministic jitter, so pick an off-round minute when timing matters. A fire missed while Claude was busy is not caught up.
 - A scheduled fire runs only skills Claude may invoke on its own. A built-in command, a skill marked `disable-model-invocation: true`, a skill withheld by settings and an MCP prompt arrive as plain text.
 - To watch a process, use the `Monitor` tool, not a loop.

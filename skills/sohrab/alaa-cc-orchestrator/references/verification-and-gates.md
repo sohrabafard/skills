@@ -179,6 +179,7 @@ Report completion only when the stop conditions in `SKILL.md` hold and also:
 
 - every acceptance criterion maps to evidence marked run, cited, or review-only with its review evidence; run or cited evidence carries its tier;
 - required final checks and proof levels passed on the final candidate, with no unverified candidate change afterward, and no mandatory command is failed, flaky, timed out, blocked or contaminated;
+- the verification that each task's decision and the floors require is complete, with attributable evidence at the declared boundary;
 - every finding has a recorded disposition, each finding triaged for fixing is fixed and proven, and each blocking floor-gate finding is confirmed fixed by that gate or explicitly accepted by the user;
 - no `pipeline reopen required` result remains unresolved;
 - every changed subtask has tested diff evidence;

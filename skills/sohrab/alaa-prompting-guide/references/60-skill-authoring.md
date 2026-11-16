@@ -144,8 +144,8 @@ When prose and example disagree, the example wins. Never ship an example that co
 Run this review when a controlling text written for an earlier model will run on a newer one: a prompt, a skill, an agent file, an instruction file, a memory or a note.
 
 - **A carry-over repair is a deliberate behavior change, and the done-test does not judge it.** Judge it against the target model's reference and the declared intent of the text. Leave every other rule's behavior unchanged.
-- **Record each removal:** the rule removed and the reason.
-- **Apply a check only when the target model's reference documents the behavior,** and take the repair from that reference: `references/43-fable-5-2.md` for Fable 5.2, `references/12-gpt-6.md` for GPT-6. Report an undocumented check as not applicable. The stale-fact check applies to every model: replace the fact from the current source and date it.
+- **Record each removal in the change's ledger or report:** the rule removed and the reason.
+- **Apply a check only when the target model's reference documents the behavior,** and take the repair from that reference: `references/43-fable-5-2.md` for Fable 5.2, `references/12-gpt-6.md` for GPT-6. For a file that several models load, apply a check only when every loading model's reference documents the behavior. Report an undocumented check as not applicable. The stale-fact check applies to every model: replace the fact from the current source and date it.
 - **A model upgrade removes no required test, independent gate, stop condition or authority limit.** `references/80-subagent-authoring.md` owns that distinction.
 
 | Check | Hit |

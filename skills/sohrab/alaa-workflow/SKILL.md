@@ -12,7 +12,7 @@ Plan before every implementation. Make long work resumable without imposing orch
 1. Read every artifact that the user names as read-first.
 2. Read an existing plan before execution, resume, delegation, review or handoff. After context loss, interruption, compaction, or a branch or worktree change, apply the resume protocol in `references/context-continuity.md` before any other action.
 3. When the `/alaa-memory-os` trigger holds, invoke it before you plan from prior context or publish durable knowledge. Memory supplies leads to verify. It never owns this workflow's plan, checkpoint, evidence or handoff.
-4. Invoke `/alaa-code-intelligence-routing` once before the first non-trivial code-evidence choice, and reuse its result.
+4. Invoke `/alaa-code-intelligence-routing` once before the first non-trivial repository discovery or code-evidence choice, and reuse its result.
 5. Before planning, apply Mandatory Ponytail binding in `references/companion-routing.md`, including its user opt-out. Load `/alaa-low-noise` and the narrowest domain skill for each technical decision. Load `/alaa-testing-strategy` before you design implementation or verification.
 6. Before writing, resolve plan kind, approval, admission and profile through `references/artifact-lifecycle.md`. Resolve Beads availability, task authority and evidence through `references/task-tracking.md`. Resolve exact skill bindings through `references/companion-routing.md`.
 7. Before the first write, identify the base, the checkout and unrelated changes through `references/workspace-and-integration.md`.
