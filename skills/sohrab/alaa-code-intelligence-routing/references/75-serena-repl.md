@@ -1,27 +1,27 @@
 # Serena REPL alongside CodeGraph
 
-This file owns interface mechanics and API steering. The routing contract selects each question's owner. The grant owner decides execution authority. Advice authorizes no configuration change.
+This file covers interface mechanics and API steering. Its advice authorizes no configuration change. `references/80-agent-scoping.md` decides execution authority.
 
 ## Discover and consume
 
-Distinguish `agent_interface: tools` from `agent_interface: REPL`. The interface is fixed at startup; the startup project or the CLI can override the global setting. REPL exposes `serena_repl` plus session-management tools that have no REPL counterpart. Missing legacy MCP tool names do not establish missing semantic capability.
-
-Read the current Serena instructions and effective API overview. Before using a needed operation's signature or returned types, inspect `s.info("lsp.find_symbol")` or the corresponding observed facade or method. Use `s.overview()` when the advertised inventory is missing or stale. Verify project identity with the supported configuration surface, such as `s.cfg.get_current_config()`. Discover only what the named question needs. LSP and JetBrains expose different APIs, not interchangeable names. The `ide` context name selects no language backend or same-named facade.
-
-Compose operations only after selecting Serena for an unresolved question. Bound paths, output and continuations, and return the required evidence with its coverage limits. Reuse session objects. Invalidate the affected results after edits, after a change of project, backend or mode, or after reconnection. Shared HTTP project state does not imply shared client-session Python variables.
-
-Do not repeat CodeGraph source retrieval merely because Python can combine symbol overview, body and references in one call; keep those APIs for distinct semantic questions and for eligible fallback during a graph outage. A batch with possible writes is not a transaction and can partially succeed. Reconcile every attempted mutation before retrying under the routing contract.
+- `agent_interface` is `tools` or `REPL`, fixed at startup; the startup project or the CLI can override the global setting. REPL exposes `serena_repl` plus session-management tools that have no REPL counterpart. A missing legacy MCP tool name does not establish a missing semantic capability.
+- Before you rely on an operation, inspect its signature and returned types with `s.info("lsp.find_symbol")` or the matching facade or method. Use `s.overview()` when the advertised inventory is missing or stale. Discover only what the question needs.
+- Verify the project identity through the supported configuration surface, such as `s.cfg.get_current_config()`.
+- LSP and JetBrains expose different APIs, not interchangeable names. The `ide` context name selects no language backend and no same-named facade.
+- Invalidate session results after an edit, after a change of project, backend or mode, and after a reconnection. Clients of one shared HTTP server share no Python session variables.
+- Do not repeat CodeGraph source retrieval because one Python call can combine symbol overview, body and references. Keep those APIs for distinct semantic questions and for the fallback during a graph outage.
+- A batch with possible writes is not a transaction and can partially succeed. Reconcile every attempted mutation before a retry, under `references/10-routing-contract.md` *Mutation uncertainty*.
 
 ## Configuration semantics
 
-- `excluded_tools`, `included_optional_tools` and `fixed_tools` govern the tools interface, not REPL operations. Use `included_apis` and `excluded_apis` with `facade` or `facade.method` identifiers. This file establishes no wildcard recipe.
-- `included_apis` is additive, not an exclusive allowlist. Nonoptional methods remain available by default. To admit selected methods only, exclude the containing facade and explicitly include its selected methods in the same definition. Including a whole facade does not automatically enable its optional methods.
-- In the source snapshot linked by reference 90, each definition processes exclusions before inclusions. Layers apply in this order: global configuration, context, active modes, then project configuration. A later definition can change an earlier choice. Project read-only filtering additionally removes edit-marked methods. Inspect the final inventory rather than infer it from one YAML fragment.
-- Configure the narrowest appropriate owner: a project for project-specific policy or an explicitly selected custom context for a reusable client profile. Set the interface in the supported global, project or CLI setting. Preserve unrelated configuration and inspect mode overrides. A project `initial_prompt` is a prompt, not an API filter.
+- `excluded_tools`, `included_optional_tools` and `fixed_tools` govern the tools interface, not REPL operations. For REPL, use `included_apis` and `excluded_apis` with `facade` or `facade.method` identifiers. This file establishes no wildcard recipe.
+- `included_apis` is additive, not an exclusive allowlist: nonoptional methods stay available by default. To admit selected methods only, exclude the containing facade and include those methods in the same definition. Including a whole facade does not enable its optional methods.
+- Each definition processes exclusions before inclusions. Layers apply in this order: global configuration, context, active modes, project configuration. A later layer can change an earlier choice, and project read-only filtering also removes edit-marked methods. These facts come from the source snapshot in `references/90-source-map.md`: inspect the final inventory.
+- Configure the narrowest owner: a project for project-specific policy, or an explicitly selected custom context for a reusable client profile. Preserve unrelated configuration, and inspect mode overrides. A project `initial_prompt` is a prompt, not an API filter.
 
 ## Candidate LSP profile
 
-For a coding session with authorized local semantic edits, CodeGraph discovery and native file and shell tools, this project or global fragment retains semantic reads, rename and symbol-body edits. It deliberately omits generic file and text edits, shell, provider memory, external-project access, deletion and server restart. Optional symbol diagnostics remain subject to backend support. API availability grants no task permission to mutate.
+For a coding session with authorized local semantic edits, CodeGraph discovery and native file and shell tools, this project or global fragment keeps semantic reads, rename and symbol-body edits. It omits generic file and text edits, shell, provider memory, external-project access, deletion and server restart. Optional symbol diagnostics depend on backend support. API availability grants no task permission to mutate.
 
 ```yaml
 agent_interface: REPL
@@ -49,12 +49,13 @@ included_apis:
   - edit.insert_after_symbol
 ```
 
-The owner's project services run a variant of this candidate since 2026-11-15: a live probe of each service listed the facades `cfg`, `edit` and `lsp` only, with no shell, file or memory facade and without `lsp.safe_delete_symbol`. Reconcile every facade and method with the installed version: newly introduced default facades remain enabled unless excluded. For another backend, derive a narrow profile from observed signatures and semantic support; do not substitute prefixes blindly. Re-enable an operation only for a named gap and authorized configuration change; eligible native fallback needs no profile expansion.
+The owner's project services run a variant of this candidate since 2026-11-15: a live probe of each service listed the facades `cfg`, `edit` and `lsp` only, with no shell, file or memory facade and without `lsp.safe_delete_symbol`.
 
-For an analysis-only steering profile, omit rename and the three edit methods. This still does not make REPL a read-only security boundary; reference 80 owns that decision.
+- Reconcile every facade and method with the installed version: a newly introduced default facade stays enabled unless it is excluded.
+- For another backend, derive a narrow profile from observed signatures and semantic support. Do not substitute prefixes blindly.
+- Re-enable an operation only for a named gap and under an authorized configuration change. An eligible native fallback needs no profile expansion.
+- For an analysis-only steering profile, omit rename and the three edit methods. That still makes REPL no read-only security boundary; `references/80-agent-scoping.md` owns that decision.
 
 ## Validate an authorized application
 
-Check the installed startup help and schema, and parse the merged configuration. Start or reconnect only within setup authority. In each client, confirm the same intended root, the startup context and interface, and the effective API overview. Inspect a retained method's help, and perform one bounded semantic read. Check that unwanted APIs are absent and required methods survive overrides by context, mode and project. Confirm that missing or unsupported methods follow the finite fallback contract. Compare results after a relevant change of mode or project without disrupting another client's session.
-
-Static checks of configuration or source prove neither live enforcement, nor client behavior, nor performance. Report each unrun cell explicitly. Sources, snapshot and refresh obligations belong to reference 90.
+Start or reconnect only within setup authority, and disrupt no other client's session. In each client, confirm the intended root, the startup context and interface, and the effective API overview: unwanted APIs are absent, and required methods survive the overrides by context, mode and project. Then perform one bounded semantic read. A static check of configuration or source proves no live enforcement. Report each check that you did not run.
