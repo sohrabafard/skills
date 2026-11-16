@@ -483,3 +483,66 @@ Residual risks and not run:
 - Other lanes that turn copies into pointers should target `## Lane branches and commits` step numbers unchanged (1 to 10).
 
 Boundary conflicts: none.
+
+## L5c-b — second pass, orchestrator contract assets and agents
+
+STATUS: COMPLETE — both packs' contract assets, hand-written agents, wrapper descriptions and stack bindings are rewritten from one source text with identical behavioural wording, pruned under the brief with a ledger, re-rendered, and every gate in criteria 1 to 3 exits 0 on the final tree.
+AGENT: alaa-implementer-fable. CONFIGURED: none (model-neutral definition). REQUESTED: claude-fable-5-2 / high. OBSERVED: claude-fable-5-2 (system prompt); effort unknown.
+
+1. **Outcome.** The implementation contract and all 26 implementer wrappers end at 76–78% of their start. The specialist agents end at 82–91%, so the "far fewer words" goal is met for the per-dispatch implementer text and only partly for the specialists.
+
+2. **Branch and commits.** Branch `worktree-agent-aa7638c1870d92761`, worktree `agent-aa7638c1870d92761`, fast-forwarded to `fe101a53` first. Tree is clean.
+   - `955eec66` refactor(orchestrators): rewrite and prune contract assets and agent definitions
+   - `a9f88090` fix(orchestrators): keep the control block causes, mismatch flag and read-only sentence
+   Both cover both packs. Brief says one commit per skill; I followed the dispatch.
+
+3. **Words (`measure.py`), before → after.**
+   | Pack | Assets | Hand-written agents | Generated agents |
+   |---|---|---|---|
+   | cc | 4096 → 3429 | 12430 → 10615 | 18096 → 14052 |
+   | codex | 4770 → 4052 | 11556 → 9933 | 22673 → 17758 |
+   `wc` counts a slash-joined list as one word, and I kept those lists, so this is like for like.
+
+4. **Files above four fifths (47 of 77).**
+   - Hand-written specialists and codex reviewer contract (82–91%): frontmatter cannot change; the five shared blocks are at their floor (about 175 words, down from about 250); the rest is a checklist of review dimensions, never-prune limits and output items the lead reads.
+   - `alaa-verifier` (90%): six `RUN_ECONOMY` clauses kept verbatim. `alaa-architecture-critic` (86%): seven shared cadence clauses kept verbatim.
+   - Planner contracts and planners (85–87%): three cadence literals plus planning rules that each change a proposal.
+   - `profile-wrappers.json` (87%): bindings are condition-to-skill routing lists; only tails and repeated sentences went.
+
+5. **Pruned rules.** 30 rows: P1 7, P2 3, P3 3, P4 6, P5 11, P6 0. Also 4 restatements of a loaded skill, 6 relocations, 10 pack alignments, 3 corrections. Ledger: `artifacts/core-skills-compression-20261116/pruned-L5c-b.md`. Row 2 removes one block condition ("pair missing after normalization") under the dispatch's permission to delete that clause.
+
+6. **Checker clauses** (`check_agent_contracts.py`, same edits in both packs).
+   - `agent_failures`: 16 → 14; 2 deleted, 5 reworded.
+   - `IMPLEMENTER_REQUIREMENTS`: cc 17 → 16, codex 16 → 15; 1 deleted, 2 reworded, plus the cc-only literal reworded. The two checkers stay one clause apart, as before.
+   - Unchanged and verbatim in my files: the seven shared `specialist_cadence_failures` clauses, the six `verifier_agent` clauses, "settled decision a later lane or repair owner must know", and the inline `cadence_failures` implementer and planner clauses.
+
+7. **Cross-skill restatements.**
+   - Replaced by the one call line: two testing-strategy bullets in the implementation contract, the eight-step procedure in `alaa-test-strategist`, the routing-skill bullet in `alaa-researcher`, the `/alaa-system-design` and `/alaa-algorithms-data-structures` content lists.
+   - Left: the lane-commit rule with its citation, the three testing-strategy reference pointers (each names its trigger), the Verification bullets, the operation-card line.
+
+8. **Kept but doubted** (cc paths under `skills/sohrab/alaa-cc-orchestrator/`; codex mirrors).
+   - `assets/implementation-contract.md:20` "After editing, inspect the full diff and its callers."
+   - `:28` "Never guess a repository fact".
+   - `:36` reason clause "running it here pays twice".
+   - `:43` "The role name selects no control."
+   - `assets/planner-contract.md:9` "Plan no trial ladder, synthetic benchmark or replay".
+   - `agents/alaa-architecture-critic.md:29` re-check of infrastructure answers through /alaa-memory-os.
+   - `agents/alaa-researcher.md:18` "Go breadth first".
+   - `agents/alaa-reviewer.md:34` style-only comment rule.
+   - codex `agents/alaa-browser-qa.toml` keeps `$playwright`, unlike every other call site.
+
+9. **Gates, final tree, `PYTHONDONTWRITEBYTECODE=1 python3 -B`, all exit 0.**
+   - Root: `validate_sohrab_skill_pack.py`, `check_skill_index.py`, `check_fleet_references.py`, `check_lifecycle_contract.py`.
+   - Each pack, in order: `render_agents.py --write`, `--check`, `validate_pack.py`, `check_agent_contracts.py`, `check_agent_grants.py`.
+   - `alaa-prompting-guide`: `check_claude_model_policy.py`, `check_codex_model_policy.py --agent-root assets/rule-writer/codex`.
+   - Review-only criterion 5, by my own script: every hand-written head differs from `fe101a53` only in `description`; verdict and status token sets and output-item counts are unchanged; no never-prune marker is lost. A first run flagged the read-only sentence of `Effective authority:` as gone from codex read-only roles; `a9f88090` restored it.
+   - Not run: install scripts. Independent review is pending at the final boundary.
+
+**Boundary notes for the lead.**
+- New shared block text, identical in every file of both packs: see `Task controls:`, `Report metadata`, `Effective authority:` and both `Return protocol` forms in either `assets/implementation-contract.md` and `agents/alaa-reviewer.md`. Agents no longer resolve an omitted control themselves; L5c-a's `model-effort-policy.md` and `agent-catalog.md` should not say they do.
+- Critic now cites "Stage A step 4"; align the step number.
+- Codex reviewer descriptions live in `render_agents.py` (excluded), so I left the cc `alaa-reviewer` description equal to them.
+- `freshness.md`: none of its three corrections lands in my files.
+- I ran the gates without first reading testing-strategy `references/100-test-execution.md`.
+
+Skills loaded before the first edit: /alaa-prompting-guide (60 and 80 sections read), /alaa-ponytail full, /alaa-low-noise; preloaded: /alaa-code-intelligence-routing, /alaa-testing-strategy, /alaa-services-contract, /alaa-trust-gateway-auth. Builder and checks are in `/tmp/claude-1000/-home-sohrab-project-skills/75ecedca-09c9-4d1a-998e-2f75020937a5/scratchpad/` (`texts.py`, `build.py`, `verify.py`, `pct.py`).
