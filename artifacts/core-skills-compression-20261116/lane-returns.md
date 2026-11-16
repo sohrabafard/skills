@@ -355,3 +355,41 @@ AGENT alaa-implementer-sonnet-high; CONFIGURED unknown (none observable in a def
    - Criterion 5: the excluded section of 60 is byte-identical to fc9da127.
    - No `__pycache__` directory was created, and the tree is clean.
    - Not run: any other suite. Criterion 6 (Appendix A and C presence) was checked by grep only and is still pending independent review.
+
+## L4b — second pass, alaa-code-intelligence-routing and alaa-low-noise
+
+STATUS: COMPLETE — both skills are rewritten under the second-pass brief, 57 pruned rules are in the ledger, and all six gates exit 0 on the committed tree; the routing skill ends at 80 percent of its start, not "far fewer".
+AGENT alaa-implementer-fable; CONFIGURED unknown (definition file not read); REQUESTED claude-fable-5-2 / high; OBSERVED model claude-fable-5-2 (runtime statement), effort unknown.
+Skills: loaded before the first edit: /alaa-prompting-guide (60-skill-authoring, *ASD-STE100 style* and *The wording is the mechanism*), /alaa-ponytail full; preloaded /alaa-code-intelligence-routing, /alaa-testing-strategy, /alaa-services-contract, /alaa-trust-gateway-auth. Read testing-strategy `100-test-execution.md` before the gates and workflow `## Lane branches and commits` before the commits (after the ff merge the brief names). 110 and 120 were not triggered.
+
+2. Branch `worktree-agent-ae759aa886871fd05`, worktree `agent-ae759aa886871fd05`, base `37ce87a4` (ff merge confirmed). Tree clean.
+   - `bb6c3a3a` refactor(alaa-code-intelligence-routing): rewrite and prune the skill around the operation card
+   - `c91e5899` refactor(alaa-low-noise): rewrite and prune the skill, record the L4b ledger
+3. Words (measure.py; frontmatter / body / references / other / total):
+   - routing: before 105/753/8963/47/9868, after 105/712/7056/47/7920 (-20%).
+   - low-noise: before 77/960/1371/29/2437, after 77/714/964/29/1784 (-27%).
+4. Files above four fifths, and why:
+   - routing `SKILL.md` body 95%: the eight card rows are verbatim (about 265 of 753 words); the rest is the four card-safety rules, the lane-local index grant, authority limits and stop conditions.
+   - `80-agent-scoping.md` 97%: owner of grant scoping and read-only MCP enforcement; every sentence is an authority limit.
+   - `90-source-map.md` 93%: sources, dates, pinned SHAs, versions and the two local observations.
+   - `50-hooks.md` 85%: the deviation register with its figures, the adoption order, rollback and permission rules.
+   - `75-serena-repl.md` 87%: the YAML profile, the 2026-11-15 probe and API-filter semantics. `70-project-bindings.md` 85%: two fixed fragments and setup-authority limits.
+   - `20` 91% and `30` 89%: small provider-ownership tables. low-noise `workflow-integration.md` 85% (owner of the lane return contract) and `model-output-profiles.md` 83% (two rules became pointers that cost as many words).
+5. Pruned rules: P1 28, P2 4, P3 5, P4 5, P5 14, P6 1; plus 2 corrections (the `50-hooks.md` "checker" sentence; the Codex skills URL, now `https://learn.chatgpt.com/docs/build-skills`, dated 2026-11-16). Ledger: `agent-ae759aa886871fd05/artifacts/core-skills-compression-20261116/pruned-L4b.md`.
+6. Checker clauses: 0 reworded, 0 deleted. No clause checker binds these skills.
+7. Cross-skill restatements:
+   - Replaced by pointers: low-noise `model-output-profiles.md` repeated-check removal -> `alaa-prompting-guide references/80-subagent-authoring.md` (the floor sentence stays); calibration evaluation -> prompting-guide `60-skill-authoring.md`. low-noise body plan persistence -> the existing `alaa-workflow references/artifact-lifecycle.md` pointer. Authoring rules in low-noise `90-source-map.md` pruned with the owner named in the ledger.
+   - Left: return shape, budgets and "no universal watchdog timeout" (low-noise owns); read-only MCP and grant rules in `80` (routing owns); retry budgets in `10`; one clause in `45` that a focused check does not replace a full-project gate (gate floor).
+   - Structure changes inside the routing references: the six fallback bullets of *Finite degraded operation* are merged into the selection table of `10`; generated, runtime, external and cross-repository rows now live only in `30`; the topic map lost its third column.
+8. Kept but doubted:
+   - routing `10-routing-contract.md:47` "record the missing fact, the failed capability and the guarantee you lose", and its `## Handoff` section; kept because `alaa-workflow references/companion-routing.md:12` consumes the owner and the established fact.
+   - routing `SKILL.md` `## Output`: lane contracts own report shape.
+   - routing `40-stack-bindings.md:47` (affected tests are candidates) and `:66` (provider memories).
+   - routing `70-project-bindings.md:30` "Record the expected semantic owner".
+   - low-noise `noise-control-patterns.md:14`: a standing "Delegate a wide sweep" line with no cost or criteria; left for the Phase 3 carry-over walk.
+   - low-noise `90-source-map.md:8,10` and routing `90-source-map.md` *Runtime and hook owners*: other `developers.openai.com` links have no fetched redirect evidence; left unchanged.
+   - Operation card rows: diff of table lines against `37ce87a4` is empty.
+9. Gates, cwd worktree root, `PYTHONDONTWRITEBYTECODE=1 python3 -B`: `scripts/validate_sohrab_skill_pack.py` 0; `scripts/check_skill_index.py` 0; `scripts/check_fleet_references.py` 0; `scripts/check_lifecycle_contract.py` 0; `scripts/check_agent_grants.py` from `alaa-cc-orchestrator` 0 and from `alaa-codex-orchestrator` 0. Criterion 3: `## Operation card` one hit (SKILL.md:15); `## Delegated lanes` one hit (workflow-integration.md:12).
+   - Conflict with "once": the six gates ran twice. The first run (all 0) preceded a last round of edits that restored rule force and rows; the second run (all 0) is on the committed tree.
+
+Residual risk: no agent run was observed, so behaviour equivalence rests on a source walkthrough only. Two pointers name prompting-guide files that another lane is rewriting now; I cited fixed file names only. Not run: any other suite, any `codegraph` index command. Independent review is pending at the final boundary. Blockers: none.
