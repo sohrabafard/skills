@@ -1,7 +1,5 @@
 # Failure-Mode-First Design
 
-Read at the start of every change, before any test is written. `SKILL.md` holds the binding rule: the test list is derived from the enumerated failure modes, and the happy path is added last as a control.
-
 ## One enumeration, two consumers
 
 `/alaa-observability-soc` requires every change to enumerate the failure modes it introduces and to name a signal for each. This skill requires every change to enumerate the failure modes it introduces and to name a test for each. **It is the same enumeration, produced once, and the enumeration table lives in that skill — `references/10-signal-model.md`, the section "Start from the diff, not from the question".**
@@ -52,7 +50,7 @@ Write the failure tests first, then the happy path. The order is not a preferenc
 - Starting from the happy path produces a suite shaped by what the code does, so the branches the code does not take are never noticed, and every mode arrives later as a production incident.
 - Starting from the failure modes produces a suite shaped by what can go wrong, and the happy path is then one more case in a list rather than the frame the whole suite is built in.
 
-The happy path still gets written, last, and its job is stated in `10-what-makes-a-test.md`: it proves the failure tests fail for the reason claimed rather than because the arrangement could never have succeeded.
+Write one happy-path test per behaviour, last. It proves that the failure tests fail for the reason claimed, not because the arrangement could never succeed: a failure test that passes against an arrangement no implementation could satisfy proves nothing. A suite of happy paths alone proves only that the routes are routed.
 
 ## The enumeration is part of the change
 

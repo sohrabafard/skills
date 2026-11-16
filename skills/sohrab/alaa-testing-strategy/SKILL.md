@@ -31,13 +31,13 @@ Test-design obligations do not apply to a change that alters no behaviour and no
 Derive that broken implementation from the code under test in four steps:
 
 1. **Name the decision the code makes.** Every unit under test decides something (a branch, a comparison, a filter, a limit), transforms something, or causes an effect. Write the decision as one sentence. If you cannot write that sentence, you cannot design the test yet. Get the sentence first.
-2. **Write the plausible wrong version.** Write the version a competent engineer ships by mistake. It is not a crash and not nonsense. Examples: the check omitted, the comparison inverted, the tenant filter dropped, the configured default returned, the first row returned, the input echoed back unchanged, the error swallowed and success returned, the effect applied twice, the effect silently skipped, or the inner layer trusting an outer layer that no longer checks. `references/10-what-makes-a-test.md` carries the catalogue and the mapping from code shape to its characteristic break.
+2. **Write the plausible wrong version.** Write the version a competent engineer ships by mistake. It is not a crash and not nonsense. To find it, read the catalogue in `references/10-what-makes-a-test.md`, which maps each code shape to its characteristic break.
 3. **Ask whether the candidate assertion fails against that version.** If it passes, the assertion measures something else, usually that the code is reachable. The real test has not been written yet.
 4. **Prove it by removal, for every control.** Apply this to an authentication check, an authorization check, a tenancy filter, a limit, an idempotency key, a validation, or any mechanism whose absence is a defect. Delete or invert the mechanism in a scratch copy. Run the test. Require it to fail. Repair or delete a test that passes both ways in the same change, because it will be read as protection that is not there.
 
 Two properties every negative test carries:
 
-- **It asserts the absence of the effect, not only the presence of the error.** A rejection test that asserts only the status or error code passes against an implementation that rejects *after* doing the work: after the outbound request, after the write, after the token was minted. Assert zero outbound requests, zero rows written and zero events emitted, alongside the refusal.
+- **It asserts the absence of the effect, not only the presence of the error.** A rejection test that asserts only the status or error code passes against an implementation that rejects *after* doing the work: after the outbound request, after the write, after the token was minted. Assert zero outbound requests, rows written, events emitted, files created, credentials minted and messages published, alongside the refusal.
 - **A control claimed at more than one layer is asserted separately at each layer, with the other layers neutralised.** One passing assertion at the outermost layer hides every missing layer beneath it. The layers beneath are the ones that run when the outer one is bypassed.
 
 That second property and the rule against testing one behaviour at three layers do not conflict. The discriminator is observable: **remove the mechanism at one layer and run all three tests. If only that layer's test fails, they are three tests for three independent mechanisms and all three stay. If all three fail, they are one test written three times, and two are deleted.**
@@ -52,18 +52,18 @@ That second property and the rule against testing one behaviour at three layers 
   - generated code, which its generator's suite owns;
   - a declaration that a type, schema, lint, or render gate already rejects when it is wrong.
 
-  The consumer tests only its own use of the dependency: the configuration it chooses, the inputs it passes, the policy it applies, and wiring that can be wrong. Record the owner instead: `covered by <owner> <suite>`. A conformance harness its owner requires the consumer to run stays required, because it tests the consumer's conformance, not the owner.
+  Record the owner instead: `covered by <owner> <suite>`. A conformance harness its owner requires the consumer to run stays required, because it tests the consumer's conformance, not the owner.
 - **Reachable failure.** A failure mode earns a test only when it cites one reachability source:
   - a path in this diff, or in the code it changes, that can produce it;
   - an incident or defect on this surface;
   - a dependency failure mode this deployment exercises;
   - a contract obligation the code must honour.
 
-  Record a mode with no source as `not reachable: <reason>`. Examples: input already refused by an owned, tested check upstream, a dependency this path never calls, a configuration that never ships.
+  Record a mode with no source as `not reachable: <reason>`.
 - **A changed file is not a reason for a test; a changed decision is.**
 - **Always owed, whatever the conditions above say:** every control `/alaa-security-review` names, every reported defect's regression test, and every boundary where untrusted input is parsed — obligations 1, 6 and 9 in `references/60-coverage.md` — plus the per-surface floor under *No shipped surface is exempt*. A check upstream never makes a mode unreachable across a trust boundary, because the downstream check is what runs when the upstream one is bypassed.
 
-When a candidate is not owed a test, read `references/90-test-economy.md` for what the consumer tests instead.
+When a candidate is not owed a test, or a mode looks unreachable, read `references/90-test-economy.md` *Candidates that are not owed a test* for what the consumer tests instead and the unreachable examples.
 
 Before adding a discretionary test, review, specialist, proof tool or gate beyond the declared cadence or repository requirements, state its concrete uncovered risk and why existing evidence is insufficient. Without that answer, do not add it. Required checks remain required. Record the answer in the plan's check list when a plan is admitted, and otherwise in the existing evidence owner.
 
@@ -97,7 +97,7 @@ Walk this in order. Each step names the reference that owns its detail.
 6. **Give each test its topic and layer selector and its shared setup**, reusing the suite's existing fixtures before creating one. (`references/90-test-economy.md`)
 7. **Assign the proof level each claim requires**, and check that the level is reachable in this environment before writing the test that assumes it. (`references/40-proof-strength.md`)
 8. **Check the named coverage obligations** and add the tests any unmet obligation requires. (`references/60-coverage.md`)
-9. **Add one happy-path test per behaviour**, last, and confirm each failure test fails when its mode is injected and passes otherwise. (`references/10-what-makes-a-test.md`)
+9. **Add one happy-path test per behaviour**, last, and confirm each failure test fails when its mode is injected and passes otherwise. (`references/70-failure-mode-first.md`)
 10. **Run the focused selectors, and report at the level reached**, with the blocker named for every claim whose level was not reachable. (`references/80-evidence-and-reporting.md`)
 
 ## Proof levels
@@ -138,7 +138,7 @@ When one of them changes, say which one, and re-run every result downstream of i
 
 After batch repair, apply `references/100-test-execution.md` to select retests. Reuse passing evidence only where its inputs, observer and freshness requirements still match.
 
-A required final aggregate may discharge covered narrower checks only when the covered inputs, environment, flags and required observer match demonstrably. Cite its coverage instead of dispatching those checks again. Markdown files and templates may be checker inputs, so a documentation-only difference proves no equivalence. A phase transition, new agent or compaction alone invalidates nothing. Repair a defect and rerun its failing path. Never weaken assertions, suppress findings, lower standards or alter fixtures to conceal a failure. `references/80-evidence-and-reporting.md` distinguishes a repaired input from an unchanged flaky rerun.
+A required final aggregate may discharge covered narrower checks only when the covered inputs, environment, flags and required observer match demonstrably. Cite its coverage instead of dispatching those checks again. Markdown files and templates may be checker inputs, so a documentation-only difference proves no equivalence. A phase transition, new agent or compaction alone invalidates nothing. Repair a defect and rerun its failing path. `references/100-test-execution.md` owns the ban on concealing a failure. `references/80-evidence-and-reporting.md` distinguishes a repaired input from an unchanged flaky rerun.
 
 ### A failing tier is classified before it is repaired
 

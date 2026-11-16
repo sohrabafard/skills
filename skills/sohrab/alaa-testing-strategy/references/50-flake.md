@@ -1,7 +1,5 @@
 # Flake
 
-Read when any test has produced two different outcomes on the same code, and when a retry is being proposed anywhere. `SKILL.md` holds the binding rule: classify before acting, and never retry blindly.
-
 ## Why the classification comes first
 
 A flaky test and an intermittent product defect produce the identical symptom — a test that passes and fails on unchanged code — and the correct response to them is opposite. Repairing a product defect as though it were a test defect suppresses it; repairing a test defect as though it were a product defect burns days looking for a race that is not there. Every other decision in this file depends on the classification, so it is made first and recorded.

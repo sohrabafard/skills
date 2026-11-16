@@ -1,7 +1,5 @@
 # Test Economy
 
-Read when deciding whether a candidate is owed a test, giving a test its selector, creating or sharing setup, repairing or deleting an existing test on a touched topic, choosing which commands a gate runs, or finding a build, compile, render, or image produced more than once in a pass. `SKILL.md` holds the binding rules: *Whether a test is owed* and non-negotiables 10, 13, and 14. This file holds the detail; the per-stack skills own the native mechanism for each rule.
-
 ## Candidates that are not owed a test
 
 | Kind | Example | What this project tests instead |
@@ -14,7 +12,7 @@ Read when deciding whether a candidate is owed a test, giving a test its selecto
 | A declaration a gate already rejects | a typed field, a schema shape, a lint-enforced convention, a chart that fails to render | nothing beyond that gate |
 | An unreachable mode | input already refused by an owned, tested check upstream inside the same trust boundary; a dependency this path never calls; a configuration that never ships | nothing; record `not reachable: <reason>` |
 
-The always-owed tests in `SKILL.md` — named security controls, reported-defect regressions, untrusted-input boundaries, and the per-surface floor — are never placed in a row above.
+Never place an always-owed test from `SKILL.md` in a row above. The per-stack skills own the native mechanism for each rule in this file.
 
 **The boundary that decides a hard case: could this project's code be wrong in a way the test catches?** If only the dependency could be wrong, the dependency's suite owns the test. If this project's choice, input, or wiring could be wrong, the test is owed and it asserts that choice.
 
@@ -24,19 +22,19 @@ A failure alone never justifies deleting a test: a failing test is repaired, or 
 
 ## Existing tests on a touched topic
 
-Repair, in the same change, only the existing tests of topics the change touches, and only to: name the failure a test defends against, add its topic and layer selector, split independent scenarios into independent cases, and remove a duplicate that the layer discriminator in `SKILL.md` proves. Redesigning shared test infrastructure or migrating untouched topics is a separate task, recorded as a follow-up, because it widens the change's review scope and retest breadth beyond the behaviour that changed.
+Repair, in the same change, only the existing tests of topics the change touches, and only to: name the failure a test defends against, add its topic and layer selector, split independent scenarios into independent cases, and remove a duplicate that the removal discriminator in `SKILL.md` *The core rule* proves. Redesigning shared test infrastructure or migrating untouched topics is a separate task, recorded as a follow-up, because it widens the change's review scope and retest breadth beyond the behaviour that changed.
 
 ## Topic and layer selectors
 
 - **Every test belongs to one topic**: the behaviour or surface it defends, at the granularity a single change touches — a route family, a use case, a consumer, a policy, a migration.
 - **The topic is expressed through the runner's native selector**: a package or directory, a name prefix matched by the runner's filter, a group or tag, or a project. Layer is a second, independent selector, so the unit tests of one topic run without its integration tests.
 - **The repository records the selector map** — each topic and layer, and the exact command that runs it — in its validation policy. `/alaa-project-constitution` carries the slot. When a repository has no map, derive the selector from test location, use it, and report the missing map as a gap.
-- **Focused selects the smallest discriminating changed case; task acceptance combines bounded task coverage; affected selects reachable topics.** `SKILL.md` owns those scopes and the runtime orchestrators own scheduling. A whole-suite command remains exhaustive regardless of its label.
+- `SKILL.md` *Scope tiers* owns which selectors each tier runs.
 - **A new test joins an existing topic** when its behaviour belongs to one; a new topic is created only for a new behaviour or surface.
 
 ## Setup once
 
-Expensive resettable infrastructure is an engine or container, a migrated schema, a booted application, a built artifact, or immutable fixture data. Non-negotiable 10 in `SKILL.md` requires it to be created once and shared. Per-test creation multiplies the suite's cost by its test count and buys no isolation that rollback or a namespace does not.
+Expensive resettable infrastructure is an engine or container, a migrated schema, a booted application, a built artifact, or immutable fixture data. Per-test creation multiplies the suite's cost by its test count and buys no isolation that rollback or a namespace does not.
 
 Choose the widest scope at which the resource is reset-safe:
 

@@ -1,7 +1,5 @@
 # Layers, And How To Choose One
 
-Read when deciding where a behaviour is tested, when a suite is slow, or when the same behaviour appears to be tested more than once. `SKILL.md` holds the binding rule: each behaviour is verified at exactly one layer, and the removal discriminator settles the defence-in-depth exception.
-
 ## The four layers, defined by what they can rule out
 
 A layer is not a directory name and not a framework feature. It is defined by which components are real, because that is what fixes the class of failure the layer can produce.
@@ -41,7 +39,7 @@ The step that decides everything is 2, and the question that gets it wrong is "w
 
 **A behaviour verified at three layers buys the confidence once and charges a maintenance obligation three times: every future change to the behaviour must be reflected in three places, and all three tests fail together for the same cause, so the second and third failures carry no information.** Delete two, keeping the one whose layer the placement procedure selects.
 
-The exception is a genuine defence-in-depth control implemented three times, and the discriminator in `SKILL.md` separates the two cases mechanically: remove the mechanism at one layer, run all three tests, and count the failures. One failure means three mechanisms and three tests. Three failures mean one mechanism and one test.
+The exception is a genuine defence-in-depth control implemented at several layers. The removal discriminator in `SKILL.md` *The core rule* separates the two cases.
 
 ## Distribution is an output, not a target
 

@@ -1,7 +1,5 @@
 # What Makes A Test A Test
 
-Read when writing or reviewing any individual test, and whenever an existing test's value is in question. `SKILL.md` holds the core rule and the four-step derivation; this file holds the catalogue that step 2 draws on, the assertion rules that follow from it, and the procedure for auditing tests that already exist.
-
 ## The catalogue of plausible broken implementations
 
 Step 2 of the derivation asks for the version a competent engineer ships by mistake. Find the row that matches the shape of the code under test and take its break. A row applies only to code this project owns and to a break that can reach it, under *Whether a test is owed* in `SKILL.md`. For a shape the table lacks, derive the break by the same four steps.
@@ -27,7 +25,6 @@ Step 2 of the derivation asks for the version a competent engineer ships by mist
 ## Assertion rules
 
 - **Assert the value, not its presence.** `is not null` passes against a placeholder, another tenant's record, and the previous version of the resource. Assert the value a correct implementation produces and no plausible broken one does.
-- **Assert the absence of every effect a refusal was supposed to prevent.** Outbound requests, rows written, events emitted, files created, credentials minted, messages published. A refusal asserted only by its status code proves the code was returned, not that nothing happened.
 - **Assert exactly one behaviour per test.** Several assertions in one test are allowed when all of them prove that one behaviour. A test asserting five unrelated things reports one failure for five possible causes, and the reader must run it to find out which — which is the cost the test was supposed to remove.
 - **Assert on the observable outcome rather than the call sequence**, except where the call *is* the outcome. Zero outbound requests, exactly one effect, and an emitted audit event are outcomes; the order in which two internal collaborators were invoked is not. `30-doubles.md` owns the rest of that boundary.
 - **Never assert on a value the test computed with the same expression the code uses.** A test that recomputes the expected value with the production formula passes against every formula, including a wrong one. Write the expected value as a literal, or derive it by an independent route.
@@ -43,10 +40,6 @@ Run this over a suite whose value is unknown — a suite inherited, a suite that
 4. **Report the survivor count**, because it is the only honest measure of the suite's strength and it is the number a coverage percentage conceals.
 
 Three survivor patterns are worth naming because they are common and each looks fine in review: a test that asserts only the status of a response; a test whose fixture makes every branch produce the same output; and a test whose double is configured to return the value the assertion expects, so the assertion tests the test's own setup.
-
-## The happy path's job
-
-One happy-path test per behaviour, written last. Its job is to prove that the failure tests fail for the reason claimed rather than because the arrangement never worked — a failure test passing against an arrangement that could not succeed under any implementation proves nothing. A suite of happy paths alone proves the routes are routed.
 
 ## Anti-patterns
 

@@ -1,7 +1,5 @@
 # Test Doubles
 
-Read when substituting anything for a real dependency, when a double already exists in the repository, or when a suite passes while an integration breaks. `SKILL.md` holds the binding rules: the real dependency is used whenever it runs deterministically inside the budget, a substitution records which of two reasons applies, and every double that can drift is bound by a parity suite.
-
 ## Vocabulary, fixed
 
 These five words are used inconsistently across teams, and an unfixed vocabulary makes every review of a double ambiguous. In this fleet they mean exactly this.

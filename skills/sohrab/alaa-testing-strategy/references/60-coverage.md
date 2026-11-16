@@ -1,7 +1,5 @@
 # Coverage
 
-Read when coverage is being measured, gated, or cited as evidence, and when deciding what still needs a test. `SKILL.md` holds the binding rule: coverage obligations are named, never expressed as a percentage target.
-
 ## What coverage measures, and what it does not
 
 A coverage tool records which lines, branches, or statements were **executed** while the suite ran. That is all it records.

@@ -1,7 +1,5 @@
 # Evidence And Reporting
 
-Read when reporting a test result, when reviewing someone else's reported result, and when a test cannot be run at all. `SKILL.md` holds the binding rule: a check not observed to run is reported as not run.
-
 ## What a reviewer needs, per claim
 
 A reviewer's job is to decide whether to trust a claim without re-running it. That decision needs five facts, and a claim missing any one of them is reported back as unverified rather than accepted:
