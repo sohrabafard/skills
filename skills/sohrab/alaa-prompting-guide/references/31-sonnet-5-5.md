@@ -1,6 +1,6 @@
 # Claude Sonnet 5.5
 
-Use this file for current Sonnet prompting and migration. `assets/claude-model-policy.json` owns role identity, capability snapshots and availability. `references/30-sonnet-5.md` is historical.
+Use this file for current Sonnet prompting and migration. `assets/claude-model-policy.json` owns role identity, capability snapshots and availability.
 Source checks do not prove account access, runtime activation or workload quality.
 
 ## Prompting and effort

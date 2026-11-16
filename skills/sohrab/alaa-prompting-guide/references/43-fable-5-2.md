@@ -1,6 +1,6 @@
 # Claude Fable 5.2
 
-Use this file for current Fable prompting. `references/42-fable-5-1.md` and `references/40-fable-5.md` are historical. Fable 5.2 and Mythos 5.2 are one model; Mythos stays excluded from active selection and custom profiles. The runtime orchestrator selects Fable from task evidence. A role title, a vendor ranking or availability selects nothing, and no source claim proves local superiority.
+Use this file for current Fable prompting. Fable 5.2 and Mythos 5.2 are one model; Mythos stays excluded from active selection and custom profiles. The runtime orchestrator selects Fable from task evidence. A role title, a vendor ranking or availability selects nothing, and no source claim proves local superiority.
 
 ## Facts
 

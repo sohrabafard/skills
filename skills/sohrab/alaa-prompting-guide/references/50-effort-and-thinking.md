@@ -12,7 +12,7 @@ Response length, deliverable length, update cadence and scope require explicit p
 
 ## Thinking: keep it on, lower the effort instead
 
-Before you change thinking controls, use the registered model capability snapshot and refresh the model's API documentation. The current model references own thinking modes and their exceptions. Haiku 5.5 supports effort and adaptive thinking. Its API exception that permits disabled thinking does not transfer to Claude Code. Historical Haiku 4.5 uses extended thinking without effort. These API controls are not interchangeable with Claude Code settings.
+Before you change thinking controls, use the registered model capability snapshot and refresh the model's API documentation. The current model references own thinking modes and their exceptions. Haiku 5.5 supports effort and adaptive thinking. Its API exception that permits disabled thinking does not transfer to Claude Code. Historical Haiku 4.5 uses extended thinking without effort. Give it no effort metadata, because an invented effort pin is invalid, and never put it on one effort scale with an effort-enabled model. These API controls are not interchangeable with Claude Code settings.
 
 For effort-enabled models, lower the supported effort to cut cost. Check retrieval, tool-use reliability and task quality. Report unsupported controls. Never substitute them. Read `references/36-haiku-5-5.md` for current Haiku controls.
 

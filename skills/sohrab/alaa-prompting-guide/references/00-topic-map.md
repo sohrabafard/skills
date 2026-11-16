@@ -9,18 +9,13 @@ Rows are conditions, not headings. If your situation is not listed, no reference
 | Activate a skill in a generated prompt, choose a kickoff and compact goal condition, or prepare phase and task skill routing | `references/06-invocation-and-composition.md` | Direct invocation, role ownership and reachable completion decide the message shape |
 | Write delegation language and need to know whether to cap fan-out or authorize it | `references/06-invocation-and-composition.md` | It owns delegation polarity, and the wrong direction fails silently on either family |
 | Tune GPT prompts or choose active Codex profiles | `references/12-gpt-6.md` | Separates model capability, runtime availability, and local policy |
-| Consult a recorded legacy exception or historical GPT behavior | `references/10-gpt-5-6.md` | Legacy guidance is not the active routing default |
+| Handle an explicit user request for a legacy model | `references/90-model-selection.md` | It records the request separately; the request neither restores ordinary eligibility nor passes task-control validation |
 | Use Codex's goal loop, subagents, batch jobs, `AGENTS.md` discovery or slash commands, or diagnose rejected tool input or patch context | `references/11-codex-runtime-features.md` | Harness mechanics and the active tool contract determine the supported operation |
 | Tune current Opus prompting or migrate older Opus instructions | `references/21-opus-5-5.md` | Calibration and API boundaries differ from historical Opus 5 |
-| Consult historical Opus 5 behavior | `references/20-opus-5.md` | Retained evidence does not authorize current pins |
 | Tune current Sonnet prompting or migrate Sonnet API controls | `references/31-sonnet-5-5.md` | Recalibrated effort, thinking modes and tool contracts differ from Sonnet 5 |
-| Consult historical Sonnet 5 behavior | `references/30-sonnet-5.md` | Retained evidence does not authorize current pins |
 | Tune current Fable prompting | `references/43-fable-5-2.md` | Its early-stop, approval, ownership, delegation and style behaviors differ from Fable 5.1 and Opus 5.5 |
 | Carry a prompt, skill, agent file, instruction file, memory or note written for an earlier model to a newer one | `references/60-skill-authoring.md` | It owns the carry-over review; the target model's reference owns the evidence for each check |
-| Consult historical Fable 5.1 behavior | `references/42-fable-5-1.md` | Retained evidence does not authorize current pins |
-| Consult historical Fable 5 behavior | `references/40-fable-5.md` | Older verification reminders are historical, not current instructions |
 | Tune current Haiku prompts or select bounded retrieval, verification or documentation | `references/36-haiku-5-5.md` | Explicit completion, retrieval and check instructions preserve bounded work |
-| Consult historical Haiku 4.5 behavior | `references/35-haiku-4-5.md` | Its missing effort support does not transfer to Haiku 5.5 |
 | Use Claude Code's `/advisor`, `/loop`, subagents, workflows, plan mode or `/goal`, resolve a Desktop tab, or diagnose a rejected goal | `references/41-claude-code-runtime-features.md` | Surface support, advisor compatibility and evaluator scope decide what can run |
 | Write a prompt, system prompt or dispatch for a Claude model whose session may have the advisor on | `references/41-claude-code-runtime-features.md` section *Prompts for a session that may have an advisor* | The advisor reads the transcript and bills per call, and the right nudge differs by executor model |
 | Set or change an effort level, or judge whether a lane needs a higher tier | `references/50-effort-and-thinking.md` | Model and effort are separate decisions, and an effort inherited from another generation is an untested assumption |

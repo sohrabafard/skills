@@ -10,7 +10,7 @@ Own instruction authoring, model and effort capability evidence, and runtime con
 ## When NOT to use
 
 - General coding, review or refactoring without instruction or agentic-workflow authoring.
-- Retired Claude generations or models outside scope; the historical references are for reference only. GPT tuning outside Codex is excluded, but ChatGPT invocation sigils remain covered for generated prompts.
+- Retired Claude generations or models outside scope. GPT tuning outside Codex is excluded, but ChatGPT invocation sigils remain covered for generated prompts.
 - Durable multi-phase plans, state and phase prompts: `/alaa-workflow` owns them.
 - Per-goal lanes, role prompts and review gates: the runtime orchestrator owns them. A generated prompt names its trigger and goal without restating its contract.
 
