@@ -1,6 +1,6 @@
 ---
 name: alaa-golang-clean-code-principles
-description: Mandatory kit-era Go clean-code baseline for Ala services built on alaa-go-chi (news, wa-api, and every future Go service). Use BEFORE writing, reviewing, or refactoring any Go code in these repos — handlers, use cases, repositories, workers, consumers, relays, seeders, migrations, or tests — and whenever a task touches the canonical error envelope, TrustCtx or trusted headers, route families, outbox or transaction boundaries, idempotency, JSON wire tags, UUIDv7 public ids, goroutine lifecycles, config or env loading, metric and log vocabulary, or cross-service contracts. Enforces the thirteen P1–P13 principles with wrong/right Go examples, a named proof per principle, and a pre-commit checklist. Do not use for non-Go work; for generic Go questions with no Ala platform context route to alaa-golang; for kit-internal contract, release, or scope-phase decisions route to alaa-go-chi-development.
+description: Mandatory kit-era Go clean-code baseline for Ala services built on alaa-go-chi (news, wa-api, and every future Go service). Use BEFORE writing, reviewing, or refactoring any Go code in these repos — handlers, use cases, repositories, workers, consumers, relays, seeders, migrations, or tests — and whenever a task touches the canonical error envelope, TrustCtx or trusted headers, route families, outbox or transaction boundaries, idempotency, JSON wire tags, UUIDv7 public ids, goroutine lifecycles, config or env loading, metric and log vocabulary, or cross-service contracts. Enforces the thirteen P1–P13 principles with wrong/right Go examples, a named proof per principle, and a review checklist. Do not use for non-Go work; for generic Go questions with no Ala platform context route to alaa-golang; for kit-internal contract, release, or scope-phase decisions route to alaa-go-chi-development.
 ---
 
 # Alaa Golang Clean Code Principles
@@ -89,9 +89,9 @@ Each row is the rule at full strength. Each principle's reference file adds the 
 
 `/alaa-golang` is the mandatory router for every Go depth topic. `/alaa-security-review` is mandatory when authn, authz, tenant isolation, or a trust boundary changes. When a task needs another owner (the kit scope phase and change requests, contract names, trusted headers, observability, reliability, testing, design above one service, the quality bar, messaging, or a model and runtime question), read *Companion routing* in `references/50-skill-boundaries.md`; it names each owner and what it decides.
 
-## Completion checks (the pre-commit checklist)
+## Completion checks (the review checklist)
 
-Run this before every commit and PR in an Ala Go service. It is the only checklist here.
+Apply this when you write or review Go code in an Ala Go service. Run its commands as proof once, on the frozen final candidate before the PR. Add no per-commit gate. It is the only checklist here.
 
 - [ ] Nothing kit-owned re-implemented locally (P1); route postures declared (P2).
 - [ ] No raw trusted headers past the edge; project id is a UUIDv7 string and user id a positive int64 (P3).
