@@ -102,7 +102,7 @@ Before the next execution task, load its phase bindings and task overrides throu
 After compaction you continue in the same conversation and may not notice the loss.
 
 - Repeat the resume protocol and read each applicable owner again. A summary keeps the shape and drops the specifics, so trust the reconciled owners over your recollection.
-- Never show a model raw context-budget numbers, because they cause premature stopping. When a long run needs reassurance about context, use the wording that /alaa-prompting-guide gives for that model.
+- Never show a model raw context-budget numbers, because they cause premature stopping. When a model needs reassurance on a long run, state plainly that ample context remains and that it must not stop, summarise or suggest a new session because of context limits.
 
 ## Delegation is a context boundary
 

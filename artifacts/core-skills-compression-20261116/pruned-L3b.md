@@ -16,7 +16,7 @@ column is empty in every row.
 | `references/task-tracking.md` | `## Division of labor`: the store owns registration, status and evidence; workflow owns planning and completion rules. Kept: only `Task store: local` tracks mutable task state in Markdown | P5 | |
 | `references/task-tracking.md` | `## Where task information lives`: status, priority, assignee and dependencies live in the Beads issue. Kept in `## Issue fields`: notes, comments, the plan's share and the memory pointer | P5 | |
 | `references/task-tracking.md` | Select: verify the active workspace and project through the binding owner before every issue read or change. Kept: availability condition 3 | P3 | |
-| `references/task-tracking.md` | Native plan: read back every node's parent, label, criteria, skill bindings and edges with `bd show` and `bd children`. Kept: the graph check and the `bd ready` query | P3 | |
+| `references/task-tracking.md` | Native plan: read back every node's parent, label, criteria, skill bindings and edges with `bd show`. Kept: the graph check, one `bd children <root-id>` hierarchy check and the `bd ready` query | P3 | |
 | `references/task-tracking.md` | Native plan: read the root back after the guarded update that marks it `registered` | P3 | |
 | `references/task-tracking.md` | Native plan: repeat the registration checks on every resume. Kept: the resume protocol verifies registration and ancestry; a material change returns the root to `draft` | P3 | |
 | `references/task-tracking.md` | Hierarchy: verify distinct subtask scope and acceptance in the bound issues before execution. Kept: the distinct-acceptance rule | P3 | |
@@ -58,8 +58,7 @@ These rules still bind; the owner states them. Listed so that the owner can rest
 | `SKILL.md` | Fix defects and retest the failing path within the retry budget; never weaken assertions, hard-code expected results, suppress findings or lower review standards | /alaa-testing-strategy and its `references/100-test-execution.md` |
 | `references/artifact-lifecycle.md` | Classify each phase and lane into five reasoning classes and record the reason for the class | The runtime orchestrator's `references/routing-matrix.md` (task grounding and workload class) |
 | `references/artifact-lifecycle.md` | Field list of the allocation record | The runtime orchestrator's `references/routing-matrix.md` (record the allocation) |
-| `references/companion-routing.md` | The five conditions that route a phase to subsystem design | `alaa-system-design`, "when its trigger applies" |
+| `references/companion-routing.md` | The full wording of the five conditions that route a phase to subsystem design. Kept: a one-line summary of the trigger | `alaa-system-design` `SKILL.md` |
 | `references/companion-routing.md` | When to read testing references 100, 110 and 120 | `/alaa-testing-strategy`, which routes its own references |
 | `references/phase-prompts.md` | `$name` in Codex, `/name` in Claude Code | `/alaa-prompting-guide` `references/06-invocation-and-composition.md` |
 | `references/context-continuity.md` | Require a compact structured return, not a narrative; children return findings and paths, the parent synthesizes | /alaa-low-noise `references/workflow-integration.md` *Delegated lanes* |
-| `references/context-continuity.md` | Wording that reassures a model about remaining context | /alaa-prompting-guide. Kept here: never show raw context-budget numbers |

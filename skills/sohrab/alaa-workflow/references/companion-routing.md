@@ -30,7 +30,7 @@ Before you continue a child, compare its prior Ponytail assignment with the curr
 - Public and cross-service contracts: `alaa-services-contract`; use `alaa-trust-gateway-auth` for trust boundaries.
 - Queues and jobs: `alaa-async-messaging` or `alaa-laravel-job-rabbitmq`.
 - Data: `alaa-data-layer`.
-- Subsystem design before a phase implements it: `alaa-system-design`, when its trigger applies. It produces the design record that the later phases implement.
+- Subsystem design before a phase implements it: `alaa-system-design`. Route a phase there first when it changes an interface, a data owner, a consistency property, a component dependency or a deployable unit; that skill states the exact conditions. It produces the design record that the later phases implement.
 - Test design, execution, resources and result classification: `/alaa-testing-strategy`. Load it before you design implementation or verification. Record only the proof level and tier reached at the evidence owner.
 - Security: `alaa-security-review`.
 - Observability: `alaa-observability-soc`.
