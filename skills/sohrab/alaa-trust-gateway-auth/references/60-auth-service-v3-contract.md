@@ -55,6 +55,31 @@ Request details:
 - Do not teach a client to depend on a retired `/auth/api/v2/*` route or a one-step
   `/login` path. The active contract is OTP request then OTP verify.
 
+## Signing-key rotation
+
+Read this section before you plan or review a rotation of auth's Passport RSA key pair, or
+change how refresh reads the presented access token. Evidence and read date:
+`references/90-source-map.md`.
+
+- **Sessions survive.** The refresh token is an opaque random string, stored as a SHA-256
+  hash; no key signs it. Refresh reads only `jti` from the presented access token and does
+  not verify its signature. A refresh that verified that signature would end every session
+  at each rotation. Auth signs each new access token with the private key it reads from
+  disk on that call.
+- **TOTP enrolment survives.** `APP_KEY` encrypts the enrolment secret; the RSA key does
+  not. This section does not cover an `APP_KEY` rotation.
+- **What fails.** Every access token and step-up proof signed before the rotation fails
+  verification at the gateway. The client refreshes once with the cookie and repeats
+  step-up with a fresh code. Plan no forced login, session revocation or re-enrolment for
+  the rotation.
+- **Condition.** The gateway verifies against one static PEM and reads no `kid`, so it
+  trusts one key at a time. Every refreshed token fails until the gateway holds the new
+  public key.
+  `/alaa-services-contract` `references/15-deployment-and-runtime-contract.md` owns delivery of that key.
+- **Unverified.** Whether the gateway reloads the key without a restart, and whether
+  Passport caches the key under Octane. Establish both before you plan a rotation without
+  a restart.
+
 ## The generic OTP component
 
 Canonical home for the fleet's OTP mechanism. Source: auth `docs/contracts/auth/openapi.yaml`
