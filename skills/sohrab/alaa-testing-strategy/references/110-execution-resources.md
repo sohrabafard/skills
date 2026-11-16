@@ -1,8 +1,6 @@
 # Execution Resources
 
-Read before CPU-heavy checks, dependency-container setup or comparative timing. This policy applies to direct work and either runtime; repository-specific constraints remain binding.
-
-Resource controls have separate layers:
+This policy applies to direct work and either runtime. Repository-specific constraints stay binding. Resource controls have separate layers:
 
 1. OS process priority (`BelowNormal` by default, which is `nice 10`).
 2. Optional CPU affinity/count.
@@ -13,7 +11,7 @@ Lower priority does not limit parallelism. Configure both.
 
 ## Low-priority runner
 
-Resolve the absolute script path from this testing-strategy skill; do not install or update anything automatically:
+Resolve the absolute script path from this skill. Install or update nothing automatically.
 
 ```bash
 bash "<TESTING_SKILL_ROOT>/scripts/run-low-priority.sh" \
@@ -28,7 +26,7 @@ Use `Idle` only for benchmark, fuzz or full-profile work that is explicitly back
 
 ## Go verification profiles
 
-Derive final commands from repository guidance. Common conservative examples:
+Derive final commands from repository guidance. Conservative examples:
 
 ```bash
 # Targeted unit package

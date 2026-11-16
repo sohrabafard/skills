@@ -2,11 +2,11 @@
 
 ## Why the classification comes first
 
-A flaky test and an intermittent product defect produce the identical symptom — a test that passes and fails on unchanged code — and the correct response to them is opposite. Repairing a product defect as though it were a test defect suppresses it; repairing a test defect as though it were a product defect burns days looking for a race that is not there. Every other decision in this file depends on the classification, so it is made first and recorded.
+A flaky test and an intermittent product defect show one symptom, a test that passes and fails on unchanged code, and need opposite responses. Repairing a product defect as a test defect suppresses it. Repairing a test defect as a product defect burns days on a race that is not there. Make and record the classification first, because every other decision here depends on it.
 
 ## The classification procedure
 
-Hold the product code constant and change only what surrounds the test. Run each step until one of them changes the outcome.
+Hold the product code constant and change only what surrounds the test. Run each step until one changes the outcome.
 
 1. **Run the test alone**, with nothing else in the process.
 2. **Run it in a different order**, using the runner's seeded shuffle, and record the seed.
@@ -27,15 +27,15 @@ Classify by what changed the outcome:
 | Nothing the test controls — same order, workers, environment, machine, still intermittent | **Product defect** | Non-determinism inside the product: a race, an unsynchronised structure, an uninitialised value, iteration-order dependence, an unordered query, a retry that is not idempotent |
 | The race or concurrency detector reports a finding | **Product defect** | Treat a detector finding as decisive; it names the defect directly |
 
-**The deciding question, when the table leaves it open: does the varying mechanism also run in production?** A goroutine or thread, a lock, a retry, a clock read, a map iteration, a database isolation choice, a queue delivery — all run in production, so the test found a real defect and did its job. A sleep, a mutated shared fixture, a leaked temp directory, another test's rows, a hardcoded port — exist only in the harness, so the test is broken.
+**When the table leaves it open, ask whether the varying mechanism also runs in production.** A goroutine or thread, a lock, a retry, a clock read, a map iteration, an isolation choice or a queue delivery runs in production, so the test found a real defect. A sleep, a mutated shared fixture, a leaked temp directory, another test's rows or a hardcoded port exists only in the harness, so the test is broken.
 
-An unclassifiable case is treated as a product defect and reported as such, because a suppressed product defect returns as an incident while a suppressed test defect returns as an annoyance.
+Treat and report an unclassifiable case as a product defect, because a suppressed product defect returns as an incident and a suppressed test defect returns as an annoyance.
 
 ## What happens to a flaky test
 
 **A test that fails intermittently is either a product defect or a broken test, and it is classified as one of the two before any other action. A blanket retry is never the response to either: retrying a broken test hides that it asserts nothing, and retrying a real intermittent failure suppresses a production defect that will next appear as an incident. A test classified as broken is repaired in the same change, or quarantined with a named owner and a dated deadline, or deleted — and a quarantined test past its deadline is deleted, because a permanently retried or permanently quarantined test asserts nothing while still being counted as coverage.**
 
-A test classified as a product defect is not quarantined at all. It is reported as a defect at the severity of the behaviour it found, and the failing test stays in the suite as the reproduction — removing it removes the only evidence anyone has.
+A test classified as a product defect is not quarantined at all. Report it as a defect at the severity of the behaviour it found, and keep the failing test in the suite as the reproduction, because it is the only evidence.
 
 ## Quarantine mechanics
 
@@ -43,26 +43,25 @@ Quarantine is a bounded state with an exit, not a folder.
 
 - **Named owner**: one person, recorded in the quarantine entry, not a team.
 - **Dated deadline**: an absolute date, not "next sprint".
-- **The classification and the evidence**: the step from the procedure above that changed the outcome, and the observed failure rate.
-- **Excluded from the gating suite, and still run**: the quarantined suite runs on the same cadence and its results are reported, because a quarantined test that stops running stops producing the information that would let anyone fix it.
-- **Visible count**: the number of quarantined tests is reported with every suite run. A quarantine with no visible count grows without anyone deciding that it should.
-- **At the deadline**: repaired, or deleted, with no third option. An extension is a new deadline recorded by the same owner with a stated reason, and a second extension means the test is deleted, because two extensions have already demonstrated that nobody will fix it.
+- **Classification and evidence**: the procedure step that changed the outcome, and the observed failure rate.
+- **Excluded from the gating suite, and still run**: the quarantined suite runs on the same cadence and its results are reported, because a test that stops running stops producing the information needed to fix it.
+- **Visible count**: report the number of quarantined tests with every suite run, so that nobody lets quarantine grow undecided.
+- **At the deadline**: repair or delete, with no third option. An extension is a new deadline recorded by the same owner with a reason. A second extension means deletion, because two extensions show that nobody will fix it.
 
 ## The only legitimate retry
 
-**A retry keyed to a named infrastructure failure class, which never retries an assertion failure, is not a test retry and is permitted.** The named classes are: the runner or agent was lost, an image or package could not be pulled, the network to a registry or artifact store failed, or a container failed to start. Each is identified by its own signature — an exit code, a log line, an absent process — and never by "the suite failed".
+**A retry keyed to a named infrastructure failure class, which never retries an assertion failure, is not a test retry and is permitted.** The named classes are a lost runner or agent, an image or package that could not be pulled, a failed network path to a registry or artifact store, and a container that failed to start. Identify each by its own signature, such as an exit code, a log line or an absent process, never by "the suite failed".
 
-Everything else is forbidden, including all of these: a global retry count in the runner configuration; a per-test retry annotation; a rerun-failed-tests step; and a human re-running a job until it goes green. Each converts an intermittent product defect into an invisible one and adds latency to every future run.
+Every other retry is forbidden: a global retry count in the runner configuration, a per-test retry annotation, a rerun-failed-tests step, and a person re-running a job until it goes green. Each converts an intermittent product defect into an invisible one and adds latency to every run.
 
-`80-evidence-and-reporting.md` owns the reporting consequence: a pass after a failure is a flaky result, never a clean pass.
+`80-evidence-and-reporting.md` *Reruns* owns the reporting consequence.
 
 ## Preventing flake by construction
 
-Most flake is prevented by the same four properties, and every one of them is checkable in review:
+Check these properties in review:
 
-1. **Injected time.** The product reads a clock it was given, so the test sets it. No test sleeps to reach a boundary.
-2. **Waiting on conditions.** A test waits for the condition it needs, with a bounded timeout and a clear failure message, never for a duration.
-3. **Per-test isolation by construction.** A transaction rolled back, a unique namespace, or a reset of the data the test touched, over infrastructure shared under `90-test-economy.md` — so no order exists in which tests interfere.
-4. **Seeded randomness.** Any randomness in the product or the fixture is seeded, and the seed is printed on failure so the run is reproducible.
+1. **Injected time and condition waits**, under `SKILL.md` non-negotiable 11.
+2. **Per-test isolation by construction** over shared infrastructure, under `90-test-economy.md` *Setup once*.
+3. **Seeded randomness**: seed all randomness in the product or the fixture, and print the seed on failure so that the run is reproducible.
 
-`/alaa-reliability-sla` owns the product-side mechanisms whose absence produces genuine intermittency — retry legality, idempotency, and concurrency bounds. When the classification lands on product defect, that skill owns the fix and this file owns only the classification.
+`/alaa-reliability-sla` owns the product-side mechanisms whose absence produces genuine intermittency: retry legality, idempotency and concurrency bounds. When the classification is product defect, that skill owns the fix, and this file owns only the classification.

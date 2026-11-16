@@ -2,77 +2,71 @@
 
 ## What a reviewer needs, per claim
 
-A reviewer's job is to decide whether to trust a claim without re-running it. That decision needs five facts, and a claim missing any one of them is reported back as unverified rather than accepted:
+A reviewer decides whether to trust a claim without re-running it. Return a claim that lacks any of these five facts as unverified:
 
-1. **The command, verbatim**, including its flags and its environment overrides.
+1. **The command, verbatim**, with its flags and environment overrides.
 2. **The working directory** it ran in.
-3. **The proof level reached**, by name from `40-proof-strength.md`.
-4. **The observed outcome** — the exit status, plus the specific assertion that mattered. "Suite passed" is not the assertion that mattered; "the refusal path asserted zero outbound requests" is.
-5. **The artifact path**, where the run produced logs, coverage, profiles, or screenshots.
+3. **The proof level reached**, named from `40-proof-strength.md`.
+4. **The observed outcome**: the exit status and the specific assertion that mattered. "Suite passed" is not that assertion; "the refusal path asserted zero outbound requests" is.
+5. **The artifact path**, where the run produced logs, coverage, profiles or screenshots.
 
-Two claims are never accepted, however confidently they are written: a check that was not executed, and a check whose result was not observed by whoever is reporting it. Both are reported as `not run`, with the reason.
+Report as `not run`, with the reason, both a check that was not executed and a check whose result the reporter did not observe, however confidently either is written.
 
 ## Reruns
 
-**An unchanged rerun that passes after a failure is a flaky result, never a clean pass.** Report both outcomes and enter the classification procedure in `50-flake.md`. A named defect repair changes the input: report the failure, repair, new tested identity and retest separately; a successful repaired path is not automatically flaky. Never conceal the original failure.
-
-Reporting the second run alone is the single most common way a real intermittent defect is lost, because the first run is the only evidence it ever produced.
+**An unchanged rerun that passes after a failure is a flaky result, never a clean pass.** Report both outcomes and enter the classification procedure in `50-flake.md`, because the first run is often the only evidence an intermittent defect ever produces. A named defect repair changes the input: report the failure, the repair, the new tested identity and the retest separately. A successful repaired path is not automatically flaky. Never conceal the original failure.
 
 ## Scoping a pass
 
-**A pass runs the gates the change's paths reach, and cites the rest.** Reachability is computed from the changed paths — the suites, contract tests, and checks that read them, directly or through a caller — and is never re-decided as a per-phase judgement. A gate no changed path can reach observes nothing new, so running it charges its full cost for a result already recorded.
+**A pass runs the gates the change's paths reach, and cites the rest.** Compute reachability from the changed paths: the suites, contract tests and checks that read them, directly or through a caller. Never re-decide it per phase. A gate that no changed path reaches observes nothing new.
 
-**The pass names the gates it cited, not only the ones it ran.** List each cited gate beside the run ones in the `Tier` field, with its command and timestamp. A report showing only what ran leaves a reader unable to tell a gate that was unreachable from one that was forgotten, and both read as coverage.
+**Name the cited gates beside the run ones** in the `Tier` field, each with its command and timestamp. A report that shows only what ran cannot tell an unreachable gate from a forgotten one.
 
 ## Reusing an earlier result instead of re-running it
 
-`SKILL.md` carries the binding rule and the four validity conditions. This section owns how a reused result is reported, because a cited result and a fresh one are not interchangeable in a report even when they are interchangeable as evidence.
+`SKILL.md` *A result stays valid until something named invalidates it* owns when reuse is valid. This section owns how to report it.
 
-A cited claim carries the five facts above **plus two more**: the timestamp of the run it is citing, and the tree identity it ran against — the commit or, on an uncommitted tree, the exact paths and their state. Without the second, no reader can check the first validity condition, and the citation degrades into an assertion that nothing changed.
+A cited claim carries the five facts **plus** the timestamp of the cited run and the tree identity it ran against: the commit, or on an uncommitted tree the exact paths and their state. Without the tree identity, nobody can check the first validity condition.
 
-Write it as one row, marked: `cited` rather than `run`. A report that presents a cited result as a fresh one has misstated when the evidence was obtained, which is the same class of error as misstating the proof level.
+Write it as one row marked `cited`, not `run`. Presenting a cited result as fresh misstates when the evidence was obtained, the same class of error as misstating the proof level.
 
-Three rules settle the common disputes:
-
-- **A reviewer may demand one re-run**, and gets it without argument. The reuse rule exists to stop unprompted repetition, not to refuse a check that a reviewer has a reason to want.
-- **A citation across a subagent boundary names the agent that observed it.** A result the reporting agent did not observe is reported as not run — that rule is not relaxed by citation; the observing lane's evidence is carried forward with its owner attached.
-- **A merge, rebase, or conflict resolution requires evidence reconciliation.** Invalidate affected inputs and integration claims; unchanged narrower checks remain citable when all four validity conditions hold. Required final exhaustive proof still runs fresh on the resulting candidate.
+- **A reviewer may demand one re-run**, and gets it without argument. The reuse rule stops unprompted repetition, not a check that a reviewer has a reason to want.
+- **A citation across a subagent boundary names the agent that observed it.** Citation does not relax the not-run rule above; the observing lane's evidence carries its owner.
+- **A merge, rebase or conflict resolution requires evidence reconciliation.** Invalidate the affected inputs and integration claims. Unchanged narrower checks stay citable when all four validity conditions hold. Required final exhaustive proof still runs fresh on the resulting candidate.
 
 ## A result obtained after changing the command
 
-Changing a command, a flag, a timeout, an environment variable, a fixture, or a seed produces a result for a *different* check. Report both: the original command with its failure, and the altered command with its result, stated as two separate rows. The reviewer decides whether the alteration was legitimate; the report does not decide it by omitting the first row.
+A changed command, flag, timeout, environment variable, fixture or seed produces a result for a different check. Report two rows: the original command with its failure, and the altered command with its result. The reviewer decides whether the alteration was legitimate.
 
-Before choosing or running commands, read `100-test-execution.md` for execution policy and `110-execution-resources.md` for resources; before interpreting outcomes, read `120-result-classification.md`. This file owns claim evidence and proof reporting.
+This file owns claim evidence and proof reporting. Before you choose or run commands, read `100-test-execution.md` and `110-execution-resources.md`. Before you interpret outcomes, read `120-result-classification.md`.
 
 ## A removal or mutation experiment
 
-`SKILL.md` requires every control to be proven by removal, and that experiment is evidence only when its observed failure output is reported — the test that failed and the assertion that produced it. An experiment reported as having failed as expected, with no output, is indistinguishable from one that was never run, and is recorded as not run.
+A removal experiment is evidence only when its observed failure output is reported: the test that failed and the assertion that produced it. Record an experiment reported as "failed as expected" with no output as not run.
 
-**A surviving mutation is reported as surviving, before anything is repaired.** When the test still passes with the mechanism removed or inverted, that outcome is written down and reported first. What is then repaired is the cause — the test that failed to defend the control — and never the experiment: adjusting the mutation until the test fails converts a missing test into a report of a passing one.
+**Report a surviving mutation as surviving, before you repair anything.** Then repair the cause, the test that failed to defend the control, and never the experiment, because adjusting the mutation until the test fails turns a missing test into a reported passing one.
 
 ## When a test cannot be run at all
 
-Five steps, in order, and none of them is optional:
+Do all five steps, in order:
 
 1. **Name the level reached and the level required**, from `40-proof-strength.md`.
-2. **Name the blocker in one line** — the runtime that would not start, the dependency absent, the credential missing, the platform unsupported, the fixture data unavailable.
-3. **Write the test anyway**, at the level the claim requires, and mark it with the repository's own skip mechanism carrying the blocker as its reason string. A test that exists and skips is recovered the moment the environment appears and is visible in every run's skip count; a test never written is invisible forever, and the claim it would have proven is indistinguishable from a claim nobody thought of.
-4. **Record the claim as a gap**, at the severity the claim carries, in the report's `Gaps` field.
-5. **Report the whole change as `pass-with-actions` or `blocked`**, never `pass`. It is `blocked` when the claim depends on what the unreachable level alone decides — a query, a constraint, an isolation behaviour, a delivery guarantee, a datastore-enforced control. It is `pass-with-actions` when the unreachable level would only have raised confidence in a claim already proven at a lower level.
+2. **Name the blocker in one line**: the runtime that would not start, the dependency absent, the credential missing, the platform unsupported, the fixture data unavailable.
+3. **Write the test anyway**, at the required level, and mark it with the repository's own skip mechanism, with the blocker as its reason string. A skipping test is recovered when the environment appears and shows in every skip count; a test never written is invisible, and its claim looks like one nobody thought of.
+4. **Record the claim as a gap**, at its severity, in the report's `Gaps` field.
+5. **Report the change as `pass-with-actions` or `blocked`**, never `pass`. It is `blocked` when the claim depends on what the unreachable level alone decides: a query, a constraint, an isolation behaviour, a delivery guarantee, a datastore-enforced control. It is `pass-with-actions` when that level would only raise confidence in a claim already proven at a lower level.
 
-Two things are never done in place of these five: deleting the assertion so the test can run, and weakening the assertion until it passes at a lower level. Both convert a visible gap into an invisible false claim, which is the exact failure this whole skill exists to prevent.
+These steps replace any assertion change. Never delete or weaken an assertion so that the test runs or passes at a lower level, because that turns a visible gap into an invisible false claim.
 
 ## Reviewing someone else's reported result
 
-Four checks, each mechanical:
+1. **Does every claim carry the five facts?** A claim with a missing fact is unverified, however the run went.
+2. **Does the level named match the components that were real?** Look for an embedded engine reported as level 6; the command usually reveals it.
+3. **Does any claim rest on a test that would pass against a broken implementation?** Ask for the broken implementation the test names. A test that cannot name one is not evidence. The audit in `10-what-makes-a-test.md` settles it.
+4. **Was any run repeated?** One reported pass where the transcript shows two runs is a flaky result reported as clean. Return it for reclassification.
 
-1. **Does every claim carry the five facts above?** Missing facts make the claim unverified regardless of how the run went.
-2. **Does the level named match the components that were actually real?** An embedded engine reported as level 6 is the specific error to look for, and the command in fact 1 usually reveals it.
-3. **Does any claim rest on a test that would pass against a broken implementation?** Ask for the broken implementation the test names; a claim whose test cannot name one is not evidence. `10-what-makes-a-test.md` owns the audit that settles it.
-4. **Was any run repeated?** A report showing one pass where the transcript shows two runs is a flaky result reported as clean, and it is returned for reclassification.
-
-Findings are reported most severe first, and a finding at any of these four is reported before the substance of the change, because the substance cannot be assessed on evidence that has not been established as evidence.
+Report findings most severe first, and report a finding from these four checks before the substance of the change, because unestablished evidence cannot support an assessment.
 
 ## The report field
 
-The `Evidence` and `Gaps` fields of the output contract in `SKILL.md` are where all of this lands. One line per claim in `Evidence`; one line per unproven claim in `Gaps`, each carrying the blocker and the severity. No other output contract exists in this skill, and no reference defines another.
+All of this lands in the `Evidence` and `Gaps` fields of the output contract in `SKILL.md`: one line per claim in `Evidence`, and one line per unproven claim in `Gaps` with its blocker and severity. No other output contract exists in this skill.
