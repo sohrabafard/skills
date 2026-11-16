@@ -60,7 +60,7 @@ Every other retry is forbidden: a global retry count in the runner configuration
 
 Check these properties in review:
 
-1. **Injected time and condition waits**, under `SKILL.md` non-negotiable 11.
+1. **Injected time and condition waits**, under `SKILL.md` non-negotiable 11. A condition wait fails with a clear message when its timeout expires.
 2. **Per-test isolation by construction** over shared infrastructure, under `90-test-economy.md` *Setup once*.
 3. **Seeded randomness**: seed all randomness in the product or the fixture, and print the seed on failure so that the run is reproducible.
 

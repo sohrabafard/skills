@@ -61,4 +61,4 @@ A hand-written double of a third-party API encodes a belief about a vendor, who 
 
 - Mutable data shared across tests breaks hermeticity. Build the data a test asserts on per test, through a factory that produces a fresh, independent instance. `90-test-economy.md` shares expensive infrastructure and immutable fixture data.
 - A factory sets only the fields the assertion discriminates on, and randomises or defaults the rest. A factory that sets every field hides which field mattered.
-- Clean up by construction: a rolled-back transaction, a unique namespace per test, or a reset of the touched data. Never use a teardown that deletes named rows, because a failing test skips its teardown and poisons every later test.
+- Clean up by construction, with the isolation order in `90-test-economy.md` *Setup once*. Never use a teardown that deletes named rows, because a failing test skips its teardown and poisons every later test.

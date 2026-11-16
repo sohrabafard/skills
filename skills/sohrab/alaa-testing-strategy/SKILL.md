@@ -115,7 +115,7 @@ While all four hold, cite the result with its original command and timestamp, be
 
 After batch repair, select retests under `references/100-test-execution.md`. Reuse passing evidence only where its inputs, observer and freshness requirements still match.
 
-A required final aggregate may discharge covered narrower checks only when the covered inputs, environment, flags and required observer match demonstrably. Cite its coverage instead of dispatching those checks again. Markdown files and templates may be checker inputs, so a documentation-only difference proves no equivalence. A phase transition, new agent or compaction alone invalidates nothing. Repair a defect and rerun its failing path. `references/100-test-execution.md` owns the ban on concealing a failure, and `references/80-evidence-and-reporting.md` separates a repaired input from an unchanged flaky rerun.
+A required final aggregate may discharge covered narrower checks only when the covered inputs, environment, flags and required observer match demonstrably. Cite its coverage instead of dispatching those checks again. Markdown files and templates may be checker inputs, so a documentation-only difference proves no equivalence. A phase transition, new agent or compaction alone invalidates nothing. Repair a defect and rerun its failing path. Never weaken assertions, suppress findings, lower standards or alter fixtures to conceal a failure. `references/80-evidence-and-reporting.md` separates a repaired input from an unchanged flaky rerun.
 
 ### A failing tier is classified before it is repaired
 

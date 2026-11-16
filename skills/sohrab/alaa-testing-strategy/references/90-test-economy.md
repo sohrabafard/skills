@@ -47,7 +47,7 @@ Choose the widest scope at which the resource is reset-safe:
 | Worker | one copy of each run- or package-scope resource per parallel worker, created once per worker |
 | Test | only the data the test asserts on |
 
-- **Isolate each test over shared infrastructure, in this order of preference**: a transaction rolled back after the test; a unique namespace (schema, key prefix, queue or topic name, tenant identifier); a reset of exactly the data the test touched. Use a fresh instance per test only when creation is the behaviour under test.
+- **Isolate each test over shared infrastructure, in this order of preference**: a transaction rolled back after the test; a unique namespace (schema, key prefix, queue or topic name, tenant identifier); a reset of exactly the data the test touched. Use a fresh instance per test when creation is the behaviour under test, or under the no-reset exception below.
 - **Migrate once per run.** Re-migrate only when the migration sources changed since the last run.
 - **Keep shared fixture data immutable.** A test that must change it builds its own copy through a factory.
 - **Prove a new shared resource reset-safe** by running its suite once in the runner's seeded shuffle order when you introduce it (`50-flake.md`, step 2), because leaking shared state shows first as order dependence.
