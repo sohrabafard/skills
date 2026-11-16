@@ -2,7 +2,7 @@
 
 ## Introduction
 
-These patterns control context input and printed output. Discovery and runtime sections govern context input. Remaining patterns govern printed output and bulk storage. Patterns are runtime-neutral unless a section names a runtime.
+These commands express the rules in `SKILL.md`. Discovery and runtime sections govern context input; the rest govern printed output and bulk storage. Patterns are runtime-neutral unless a section names a runtime.
 
 ## Table of contents
 
@@ -26,27 +26,17 @@ These patterns control context input and printed output. Discovery and runtime s
 
 **Claude Code**
 
-- Prefer file and search tools over shell commands. Matching paths or lines are cheaper and more structured than terminal `rg` output. Explicit offsets and limits cost less than `cat` plus mental filtering.
-- Read only the range you need.
+- Prefer file and search tools over shell commands: matching paths or lines are cheaper and more structured than terminal `rg` output, and explicit offsets and limits cost less than `cat` plus mental filtering.
 - Dispatch independent searches in one turn so they run concurrently.
-- When a question needs a wide sweep across many files, delegate it to a subagent. Require findings or paths, not excerpts. The sweep then consumes the child's context instead of the parent's.
+- Delegate a wide sweep across many files to a subagent, and require findings or paths, not excerpts. The sweep then consumes the child's context instead of the parent's.
 
 **Codex**
 
-Discovery mostly uses the shell. Express bounds in each command:
-
-- Scope every search to real paths.
-- Keep `-C` context small.
-- Pipe through `head` or `tail` instead of emitting whole files.
+Discovery mostly uses the shell, so express bounds in each command: scope every search to real paths, keep `-C` context small, and pipe through `head` or `tail` instead of emitting whole files.
 
 ## Diff and reporting patterns
 
-Prefer these reporting shapes before raw diff output:
-
-- `git status --short`
-- `git diff --stat`
-- `git diff --name-only`
-- `git diff -- <path>` for the one file that matters
+Prefer these shapes to raw diff output: `git status --short`, `git diff --stat`, `git diff --name-only`, and `git diff -- <path>` for the one file that matters.
 
 ## Large-log capture patterns
 
@@ -66,10 +56,7 @@ pnpm test > artifacts/test.log 2>&1
 tail -n 80 artifacts/test.log
 ```
 
-Notes:
-
-- Prefer `tail`, bounded `sed`, or focused `rg -C` over full `cat` output.
-- Use `git diff -- path/to/file` before showing larger diffs.
+Prefer `tail`, bounded `sed` or focused `rg -C` to full `cat` output. Use `git diff -- path/to/file` before showing larger diffs.
 
 ## When the user wants raw output
 
@@ -79,5 +66,5 @@ Notes:
 
 ## Caveats
 
-- The `rg`, `git`, and Bash examples describe common cases, not portable guarantees. Before scripting them, verify flags and tool names against the installed shell and versions.
+- The `rg`, `git` and Bash examples describe common cases, not portable guarantees. Before scripting them, verify flags and tool names against the installed shell and versions.
 - Claude Code guidance describes general file and search operations. Exact tool parameters change between releases.
