@@ -229,3 +229,66 @@ Metadata: AGENT alaa-implementer-sonnet-high (lane L5a). CONFIGURED model and ef
    - Not run: `render_agents.py --write`, which belongs to L5b.
 
 Boundary conflicts: none. The scratchpad is shared with another session, which overwrote my first `gates.sh`. My scripts there now use the `l5a_` prefix.
+
+## L5b — orchestrator pair, contract assets and agents
+
+STATUS: COMPLETE. Both packs' contract assets, hand-written agents, stack bindings and wrapper description tails are compressed and the generated wrappers are re-rendered. Every assigned gate exits 0. The reduction is modest (about 5–7%), not the "far fewer words" the goal asked for.
+AGENT: alaa-implementer-sonnet-high. CONFIGURED: none (the role is model-neutral). REQUESTED: claude-opus-5-5, medium. OBSERVED: claude-opus-5-5 (system prompt); effort unknown.
+
+1. **Outcome:** same as the STATUS line, and behaviour is unchanged by the walk-through. Most bodies are lists in which each item is a rule, and the contract's Verification section is almost all checker literal, so little can be cut without dropping a rule.
+
+2. **Branch and commits:** branch `worktree-agent-a2f9b95f003d9d1f8`, worktree `agent-a2f9b95f003d9d1f8`.
+   - `83b5e655` refactor(orchestrators): compress contract assets and agent definitions
+   - `4c72f765` fix(orchestrators): restore control and read-only clauses lost in compression
+
+   Both commits cover both packs and are class 1 only.
+
+3. **Words (`measure.py`), baseline to now:**
+
+| Pack | Assets | Hand-written agents | Generated agents | Source total |
+|---|---|---|---|---|
+| cc | 4270 → 4096 | 13324 → 12430 | 19091 → 18096 | 34657 → 33589 |
+| codex | 4977 → 4770 | 12270 → 11556 | 23862 → 22673 | 35267 → 34346 |
+
+   The implementation contract went from 1438 to about 1350 words.
+
+4. **Relocations and retirements:** no files were retired and no rule moved between files. Two in-file pointers:
+   - In 9 VERDICT agents per pack, the output item "NOT ASSESSED: each part of the declared scope you did not inspect, and why" now reads "NOT ASSESSED, as the Return protocol defines it". The Return protocol in the same file states that content.
+   - An attempt to merge the contract's testing-strategy lines widened a design-only rule to every lane. It was reverted in `4c72f765`.
+
+5. **Checker literals:** one literal changed one-to-one in both `check_agent_contracts.py` files, inside the inline 16-item `agent_failures` tuple, which stays at 16. "including defaults normalized under" became "resolve an omitted field through". Every module-level tuple count equals `baseline.md` in both checkers. No other literal changed.
+
+6. **Left for Phase 2 (verbatim in my files):**
+   - The seven `specialist_cadence_failures` shared clauses in `agents/alaa-architecture-critic` (L5a's templates require them too).
+   - The `RUN_ECONOMY` `verifier_agent` and `implementation_contract` clauses (checked across both packs).
+   - The `## Lane branches and commits` citation.
+   - The operation-card line.
+
+7. **Rules that make an agent re-review, re-test or re-confirm (listed only, none changed):**
+   - architecture-critic Evaluate bullet: re-check the plan's existing-infrastructure answers through /alaa-memory-os.
+   - explorer and researcher: verify every memory hit or material claim against current sources.
+   - reviewer: "Report every issue… including uncertain and low-severity ones".
+   - implementation contract: "After editing, inspect the full diff and callers."
+
+8. **Rules that look wrong, stale or contradictory (listed only):**
+   - Pre-existing divergences between the packs:
+     - the verifier's "never diagnose" bullets;
+     - the reviewer's filtering and adversarial-lens bullets;
+     - the instruction-reviewer's authority sentence;
+     - the architecture-critic's "preloaded" versus "when installed";
+     - the test-strategist's codex-only "Doctrine:" line;
+     - descriptions of adversarial-reviewer, api-contract-reviewer, dependency-auditor, documenter and spec-analyst (only escaping differs for spec-analyst).
+   - Codex-only lines in hand-written agents and the planner contract, which I treat as runtime mechanics: "Start no subagent" and the shell-access line.
+   - The critic cites "verification-and-gates.md Phase A step 4", but the mapping report lists that file's sections as Stage A to F, so the citation is possibly stale.
+   - Move 4: I trimmed only the repeated wrapper tails. The hand-written descriptions held no repeated or decorative words worth cutting. The code-graph line is unchanged.
+   - Dispatch conflict: the required changelog sentence says "checker literals updated one-to-one". It is true, but only one literal changed, and each entry says so.
+
+9. **Gates (final run, `PYTHONDONTWRITEBYTECODE=1`, `python3 -B`), all exit 0:**
+   - Repository root: `validate_sohrab_skill_pack.py`, `check_skill_index.py`, `check_fleet_references.py`, `check_lifecycle_contract.py`.
+   - Each pack: `render_agents.py --write`, `render_agents.py --check`, `validate_pack.py`, `check_agent_contracts.py`, `check_agent_grants.py`.
+   - `alaa-prompting-guide`: `check_claude_model_policy.py`, `check_codex_model_policy.py --agent-root assets/rule-writer/codex`.
+   - No `__pycache__` was created and the tree is clean.
+   - Review-only checks: every output-contract item count is unchanged, and only the `description` frontmatter of the generated wrappers changed.
+   - Not run: install scripts. The pair-parity diff shows only the existing hunks. Independent review is pending at the final boundary.
+
+Skills loaded before the first edit: /alaa-prompting-guide (60 and 80 read), /alaa-ponytail full, /alaa-low-noise. /alaa-code-intelligence-routing, /alaa-testing-strategy, /alaa-services-contract and /alaa-trust-gateway-auth were preloaded. Scratch tooling is in `/tmp/claude-1000/-home-sohrab-project-skills/75ecedca-09c9-4d1a-998e-2f75020937a5/scratchpad/l5b/`, with sources in `src/`, and `build.py`, `tool.py` and `wrappers.py`.
