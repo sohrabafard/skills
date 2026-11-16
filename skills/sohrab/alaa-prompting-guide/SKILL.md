@@ -5,7 +5,7 @@ description: "Instruction authoring for GPT-6 in Codex and Claude Opus 5.5, Fabl
 
 # Alaa Prompting Guide
 
-Own instruction authoring, model and effort capability evidence, and runtime control mechanics for the stated models and runtimes. The runtime orchestrator owns task allocation and admission for every authority role. Apply this skill before you write, choose, review or repair a prompt, a skill, a subagent definition, an `AGENTS.md` or `CLAUDE.md` file, or a pin. Read the current owners, because behavior can invert between generations.
+Own instruction authoring, model and effort capability evidence, and runtime control mechanics for the stated models and runtimes. The runtime orchestrator owns task allocation and admission for every authority role. Apply it before writing, choosing, reviewing or repairing prompts, skills, subagent definitions, `AGENTS.md` or `CLAUDE.md` files, or pins. Read the current owners, because behavior can invert between generations.
 
 ## When NOT to use
 
@@ -16,11 +16,11 @@ Own instruction authoring, model and effort capability evidence, and runtime con
 
 ## The rule-writer specialist
 
-Before you dispatch `alaa-rule-writer`, read `assets/rule-writer/dispatch.md`; it also owns the specialist's task controls. The specialist rewrites an existing draft and returns replacement text. Authorship, decisions, research and edits stay with the caller.
+Before dispatching `alaa-rule-writer`, read `assets/rule-writer/dispatch.md`, which also owns its task controls. The specialist rewrites an existing draft and returns replacement text. Authorship, decisions, research and edits stay with the caller.
 
 For personal Claude Code installation, and for installing `assets/rule-writer/codex/alaa-rule-writer.toml` into `~/.codex/agents`, follow the repository-root `install-skills.md`. Never write an installation sentinel, and never run the grants checker as an install gate.
 
-After you change `assets/rule-writer/`, run `python3 scripts/check_rule_writer_grants.py`.
+After changing `assets/rule-writer/`, run `python3 scripts/check_rule_writer_grants.py`.
 
 ## Codex policy validation
 
@@ -28,23 +28,23 @@ When you need to know what a policy file owns or decides, read `references/90-mo
 
 ## Claude policy validation
 
-`references/90-model-selection.md` also states what this policy file owns; the file sets no role default. After a change to `assets/claude-model-policy.json` or a projection, run `python3 scripts/check_claude_model_policy.py` from this skill directory. The default covers both managed roots. Repeat `--agent-root <path>` for a selected source or generated subset. Use `--policy <path>` for an explicit policy.
+`references/90-model-selection.md` also states what this policy file owns; it sets no role default. After a change to `assets/claude-model-policy.json` or a projection, run `python3 scripts/check_claude_model_policy.py` from this skill directory. The default covers both managed roots. Repeat `--agent-root <path>` for a selected source or generated subset. Use `--policy <path>` for an explicit policy.
 
-The gate needs the YAML parser bundled with the repository-root checker. A verified aggregate can discharge an identical covered command, and the orchestrator owns that consolidation. Uncovered managed roots still need their checks. Source agreement proves neither installed activation nor calibration.
+The gate needs the repository-root checker's bundled YAML parser. A verified aggregate can discharge an identical covered command, and the orchestrator owns that consolidation. Uncovered managed roots still need their checks. Source agreement proves neither installed activation nor calibration.
 
 All gates exit `0` when clean, `1` on findings and `2` on unavailable proof, including malformed or unreadable input. Either nonzero code blocks the affected completion. Repair the stated cause within the active retry budget, or report blocked. Static checks prove neither live acceptance nor instruction compliance.
 
 ## Decision procedure
 
 1. Identify the runtime, surface and model. Ask only for missing facts that change the artifact. A Desktop app name proves no tab's command support.
-2. Read `references/00-topic-map.md` before you answer, and load only the references whose conditions hold.
+2. Read `references/00-topic-map.md` before answering, and load only the references whose conditions hold.
 3. Resolve version-sensitive facts from sources, never from recall.
 4. Draft, then compress, every controlling artifact through `references/60-skill-authoring.md`, including edits and dispatches. Ship the fewest words that preserve behavior. Soft targets yield. Hard limits require equivalent restructuring or a blocked report. Conversational prose is exempt.
 5. Choose between a prompt, an instruction file, a skill and a subagent through its routed owner.
 
 For a goal, follow `references/06-invocation-and-composition.md` for the kickoff and the completion condition. `/alaa-workflow` owns plans and the mappings of phases and tasks to skills.
 
-For a rendered Claude condition, run `python3 scripts/check_goal_condition.py --surface claude-desktop-code --condition-file <path>` from this skill directory, with the observed surface in place of `claude-desktop-code`.
+For a rendered Claude condition, run `python3 scripts/check_goal_condition.py --surface claude-desktop-code --condition-file <path>` from this skill directory, substituting the observed surface.
 
 ## Principles that govern every artifact this skill produces
 
@@ -68,4 +68,4 @@ Finish when the usable artifact preserves its intended contract and the required
 
 ## Style
 
-Use precise, direct technical English unless the request says otherwise. Write no emoji, marketing, storytelling, filler or hidden assumptions, and disclose no chain of thought. For work outside this role, provide a prompt or a skill, or obtain explicit confirmation. Deliver a usable artifact unless the user changes the role.
+Use precise, direct technical English unless requested otherwise. Write no emoji, marketing, storytelling, filler or hidden assumptions, and disclose no chain of thought. For work outside this role, provide a prompt or a skill, or obtain explicit confirmation. Deliver a usable artifact unless the user changes the role.

@@ -8,11 +8,11 @@ This file owns cross-runtime effort evidence and control validation. Each model 
 
 ## What effort does not control
 
-Response length, deliverable length, update cadence and scope require explicit prompt controls. Effort can change token use and tool behavior. Lowering it is not a reliable substitute for output constraints or scope constraints. Read the target model reference for the workload-specific effects observed on that model.
+Response length, deliverable length, update cadence and scope need explicit prompt controls. Effort changes token use and tool behavior, and lowering it does not reliably constrain output or scope. Read the target model reference for the workload-specific effects observed on that model.
 
 ## Thinking: keep it on, lower the effort instead
 
-Before you change thinking controls, use the registered model capability snapshot and refresh the model's API documentation. The current model references own thinking modes and their exceptions. Haiku 5.5 supports effort and adaptive thinking. Its API exception that permits disabled thinking does not transfer to Claude Code. Historical Haiku 4.5 uses extended thinking without effort. Give it no effort metadata, because an invented effort pin is invalid, and never put it on one effort scale with an effort-enabled model. These API controls are not interchangeable with Claude Code settings.
+Before you change thinking controls, use the registered model capability snapshot and refresh the model's API documentation. The current model references own thinking modes and their exceptions; Haiku 5.5's API exception that permits disabled thinking does not transfer to Claude Code. Historical Haiku 4.5 uses extended thinking without effort. Give it no effort metadata, because an invented effort pin is invalid, and never put it on one effort scale with an effort-enabled model. These API controls are not interchangeable with Claude Code settings.
 
 For effort-enabled models, lower the supported effort to cut cost, then check retrieval, tool-use reliability and task quality. Report an unsupported control; never substitute another. Read `references/36-haiku-5-5.md` for current Haiku controls.
 
@@ -56,7 +56,7 @@ Raise effort only after you exclude prompt bloat, missing context, and tool or s
 
 ## Caveats
 
-Thinking-disable constraints and the availability of manual thinking budgets are vendor-stated and time-sensitive. This file does not restate effort level names, per-model defaults or starting-point recommendations. Read the target model's own file, which is the current source for its own numbers. The measured lean-prompt figures come from one vendor's internal testing on one generation, and they should not be generalized. Re-read the sources below before you hard-code any of these values anywhere, and distinguish orchestrator task policy from vendor capability.
+Thinking-disable constraints and manual thinking budgets are vendor-stated and time-sensitive. Effort level names, per-model defaults and starting points live in each model's own file. Measured lean-prompt figures come from one vendor's testing on one generation; do not generalize them. Re-read the sources below before you hard-code any of these values, and keep orchestrator task policy distinct from vendor capability.
 
 ## Sources
 

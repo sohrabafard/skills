@@ -6,15 +6,15 @@ Use for bounded retrieval, exact procedures, admitted mechanical or bounded sema
 
 Give one outcome, named inputs or retrieval starts, the required evidence and checks, the allowed tools and side effects, and explicit completion and failure conditions. Require retrieval before factual conclusions and observed checks before success. Keep narrow lanes complete: report every requested item as evidenced or unresolved, and stop at the acceptance criteria. Return missing scope or evidence, wider architecture judgment or ambiguous failures to the lead; never invent facts or expand the task.
 
-When you select a task pair, read `references/90-model-selection.md`; it names the owner of allocation, admission, triggers and independent gates, and it treats vendor bounded-work guidance as evidence, not a role default. Missing scope or evidence, or interacting design decisions, require reassessment, not an inherited Haiku choice. A missing account or control capability blocks the affected dispatch.
+Vendor bounded-work guidance is capability evidence, not a role default; `references/90-model-selection.md` names the owner of allocation, admission, triggers and independent gates. Missing scope or evidence, or interacting design decisions, require reassessment, not an inherited Haiku choice. A missing account or control capability blocks the affected dispatch.
 
-Registered implementation admission is local task policy. Apply the `/alaa-cc-orchestrator` routing-matrix predicates, with no arbitrary file-count cap and no trial ladder. Implementation authority replaces neither bounded support-role restrictions nor independent gates. Canonical policy owns capability support.
+Registered implementation admission is local task policy: apply the `/alaa-cc-orchestrator` routing-matrix predicates, with no arbitrary file-count cap and no trial ladder. Implementation authority replaces neither bounded support-role restrictions nor independent gates.
 
 ## API and Claude Code controls
 
 Verified 8 October 2026: exact ID `claude-haiku-5-5`; supported efforts `low`, `medium`, `high`, `xhigh`, `max`; default `medium`, in Claude Code too (verified 14 November 2026 against model-config). Adaptive thinking is supported and manual token budgets are unsupported. The API permits disabled thinking through `high`; `xhigh` and `max` require adaptive. Claude Code prevents disabling thinking for this model and requires version 2.1.293 or later. API controls do not establish a Claude Code setting.
 
-Treat a selected task effort as an unrun workload hypothesis, and claim no quality or savings without task evidence. Before activation, inspect the account and provider mapping, override precedence, caps and effective tools through `references/41-claude-code-runtime-features.md`. Historical Haiku 4.5 has no effort parameter; its controls never govern this generation.
+A selected task effort is an unrun workload hypothesis; claim no quality or savings without task evidence. Before activation, inspect the account and provider mapping, override precedence, caps and effective tools through `references/41-claude-code-runtime-features.md`. Historical Haiku 4.5 has no effort parameter; its controls never govern this generation.
 
 Current prompting guidance uses low for short or simple work, medium for most work including agentic coding, and high for longer work, stricter instruction following or knowledge tasks. At medium the model may skip checks, so retain the declared completion and evidence requirements and independent acceptance. Xhigh and max need a stated benefit over Sonnet, and they can produce thinking without a visible reply. No supported level is an automatic role default; the orchestrator must justify the actual task choice.
 

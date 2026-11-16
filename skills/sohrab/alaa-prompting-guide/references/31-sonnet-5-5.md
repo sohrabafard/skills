@@ -1,16 +1,14 @@
 # Claude Sonnet 5.5
 
-Use this file for current Sonnet prompting and migration. `assets/claude-model-policy.json` owns role identity, capability snapshots and availability.
-Source checks do not prove account access, runtime activation or workload quality.
+Use this file for current Sonnet prompting and migration. `assets/claude-model-policy.json` owns role identity, capability snapshots and availability. Source checks prove no account access, runtime activation or workload quality.
 
 ## Prompting and effort
 
-Claude Code and the Claude apps default to `medium` (Claude Code verified 14 November 2026 against model-config). The Platform and the API default to `high`. These surface defaults are not task choices. Begin at `medium` for well-specified agentic work and at `high` for harder or longer tasks. Effort levels were recalibrated, so workload recommendations are unrun hypotheses, not inherited calibration. When you set or raise effort, read
-`references/50-effort-and-thinking.md`; it owns the evidence and when to raise effort.
+Claude Code and the Claude apps default to `medium` (Claude Code verified 14 November 2026 against model-config). The Platform and the API default to `high`. Surface defaults are not task choices. Begin at `medium` for well-specified agentic work and at `high` for harder or longer tasks. Effort levels were recalibrated, so workload recommendations are unrun hypotheses. Before you raise effort, read `references/50-effort-and-thinking.md`.
 
 The launch reports high-effort Sonnet approaching Opus on some work at similar cost; that proves no universal local equivalence. Medium and high remain distinct supported task settings. In two reported benchmark cases, max underperformed xhigh because extra reviewer subagents caused timeouts or out-of-scope edits. Treat this as a workload-specific caveat, not a universal effort ranking: higher effort can change tool behavior without improving acceptance.
 
-Everyday coding can involve bounded local decisions; it need not be transcription of a fully settled patch. When you select a task pair, including one for materially coupled unresolved design, read `references/90-model-selection.md`; it routes allocation and admission to the runtime orchestrator. The canonical policy owns supported pairs.
+Everyday coding can involve bounded local decisions; it need not be transcription of a fully settled patch. `references/90-model-selection.md` routes task allocation, including for materially coupled unresolved design, to the runtime orchestrator.
 
 Do not turn thinking-reminder removal into a blanket ban. The Sonnet prompting page permits private reasoning before a strict JSON answer when that improves structured-output reliability. This task-specific exception never authorizes disclosure of private chain-of-thought. Preserve the required JSON schema and evaluate the change on that workload.
 
@@ -28,10 +26,9 @@ unrelated behavior. Run the supplied checks and report their observed results. S
 the acceptance criteria and checks pass; report blockers without claiming unrun checks passed.
 ```
 
-Specify output length and visible progress separately from effort. Some progress narration
-can move into thinking; when visible updates are needed, request concise status text at
-meaningful milestones. Do not request private reasoning, and do not assume hidden thinking satisfies
-the host's communication requirements. Keep durable state through `/alaa-workflow`.
+Specify output length and visible progress separately from effort. Some progress narration can move into thinking. When visible updates are needed, request concise
+status text at meaningful milestones. Do not request private reasoning, and do not assume hidden
+thinking satisfies the host's communication requirements. Keep durable state through `/alaa-workflow`.
 
 ## API migration boundary
 
@@ -54,11 +51,11 @@ compatibility need integration tests in the consuming client; this skill perform
 
 ## Claude Code availability
 
-The minimum Claude Code version is v2.1.284. A `sonnet` alias can select older generations on other providers;
+The minimum Claude Code version is v2.1.284. A `sonnet` alias can select older generations on other providers, so
 use the exact ID or a verified deployment mapping. Before activation, inspect account access,
 allowlists, effective overrides, effort caps and observed identity through
-`references/41-claude-code-runtime-features.md`. Missing availability blocks selection;
-it does not authorize fallback, installation or a settings change.
+`references/41-claude-code-runtime-features.md`. Missing availability blocks selection and
+authorizes no fallback, installation or settings change.
 
 ## Sources and limits
 
