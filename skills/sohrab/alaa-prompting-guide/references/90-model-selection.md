@@ -6,11 +6,11 @@
 
 For every managed role, including research, review, verification, documentation and rule-writer, the runtime orchestrator owns task allocation, priority, admission and deliberate source departures. Read `/alaa-codex-orchestrator` or `/alaa-cc-orchestrator` `references/routing-matrix.md` for that decision. For bounded standalone delegation, the parent uses that allocation procedure and records a compact dispatch; it need not start the full pipeline or create a plan solely for selection. `/alaa-workflow` records allocation when durable state is admitted. The tables below are evidence inputs, not executable defaults.
 
-To realize an explicit task model AND effort, use `references/11-codex-runtime-features.md` or `references/41-claude-code-runtime-features.md`. For capability and uncertainty checks, use `references/50-effort-and-thinking.md`. A registered role name selects authority only, and so does a retained compatibility ID that names a model or an effort. Neither a name nor an inherited control counts as task selection. Before explicit dispatch, `alaa-codex-orchestrator references/model-effort-policy.md` or its `alaa-cc-orchestrator` mirror normalizes omitted fields; its resolved defaults count as task selection.
+To realize an explicit task model AND effort, use `references/11-codex-runtime-features.md` or `references/41-claude-code-runtime-features.md`. For capability and uncertainty checks, use `references/50-effort-and-thinking.md`. A registered role name selects authority only, and so does a retained compatibility ID that names a model or an effort. Neither a name nor an inherited control counts as task selection. A vendor ranking, model availability, a file count or a planning effort selects nothing either, and no source claim proves local superiority. Before explicit dispatch, `alaa-codex-orchestrator references/model-effort-policy.md` or its `alaa-cc-orchestrator` mirror normalizes omitted fields; its resolved defaults count as task selection.
 
 Ordinary Codex selection excludes GPT-6 Sol and retains its effort snapshot as history. GPT-6.1 Sol is the current Sol candidate. Use the newest member of the selected family that is verified, supported and eligible; a suitable Luna stays eligible. If current Sol is unavailable, require an exact eligible realization or block the affected lane. Never fall back to old Sol. Record an explicit user request for a legacy model separately. It neither restores ordinary eligibility nor passes ordinary task-control validation.
 
-The active Claude set is Haiku 5.5, Sonnet 5.5, Opus 5.5 and Fable 5.2 (Fable 5.1 became history on 14 November 2026). Mythos is excluded from active selection and custom profiles. Historical models supply reference evidence only; availability and loaded registry remain separately verified.
+The active Claude set is Haiku 5.5, Sonnet 5.5, Opus 5.5 and Fable 5.2 (since 14 November 2026). Mythos is excluded from active selection and custom profiles. Historical models supply reference evidence only; availability and loaded registry remain separately verified.
 
 ## Official task guidance and local policy
 
@@ -69,14 +69,9 @@ These recommendations establish no measured local quality, cost or speed. Read
 | Demanding reasoning or long-horizon work that falls short on Opus at `xhigh` or `max` | Move to Fable 5.2 (selection guide, 14 November 2026) | No selected Fable effort; `references/43-fable-5-2.md` holds the vendor starting point |
 | Bulk execution with difficult decisions | Cheaper executor plus frontier advisor, or a frontier orchestrator that delegates bulk work to lower-cost workers. For native Code candidates and preflight, read `references/41-claude-code-runtime-features.md`. | No default pair or effort |
 
-The guide recommends Opus as the starting point for most workloads. Qualify each default effort by surface:
+The guide recommends Opus as the starting point for most workloads. Qualify each default effort by surface; each current model reference states its defaults per surface.
 
-- Opus: medium.
-- Haiku: medium.
-- Sonnet: medium in Claude Code and the Claude apps; high on the Platform and the API.
-- Fable 5.2: medium in Claude Code; high on the Claude API.
-
-Preserve both the capability-first path and the efficiency-first path. The separate Sonnet prompting guidance recommends medium for well-specified agentic coding and high for harder or longer work. The source's examples of regressions at higher effort rule out automatic maximization. Any local Fable admission belongs to the runtime orchestrator and remains distinct from the vendor's xhigh and max advice. No live run is implied.
+Preserve both the capability-first path and the efficiency-first path. The separate Sonnet prompting guidance recommends medium for well-specified agentic coding and high for harder or longer work; its examples of regressions at higher effort rule out automatic maximization. Any local Fable admission belongs to the runtime orchestrator and stays distinct from the vendor's xhigh and max advice. No live run is implied.
 
 - [OpenAI model selection](https://developers.openai.com/api/docs/guides/model-selection) and its [served selector asset](https://developers.openai.com/_astro/ModelSelection.react.DJkmSLnH.js) (refresh the current page/asset before reuse)
 - [Claude model selection](https://platform.claude.com/docs/en/about-claude/models/choosing-a-model)
@@ -84,9 +79,7 @@ Preserve both the capability-first path and the efficiency-first path. The separ
 
 ## Companion routing
 
-`/alaa-codex-orchestrator` (Codex) and `/alaa-cc-orchestrator` (Claude Code) are the production multi-agent orchestration packs, each carrying a conditionally routed role catalog for its runtime: core lanes (spec analyst, explorer, researcher, test strategist, implementer with a separate escalated implementer, independent verifier, failure analyst, reviewer, documenter) plus conditionally gated specialists (adversarial review, architecture, security, migration, API contract, dependency audit, accessibility, browser QA, performance, observability, release).
-
-The catalog is a menu: dispatch only triggered roles. The orchestrator owns parallel scheduling and gate economics; this reference imposes no spawn-count default.
+`/alaa-codex-orchestrator` (Codex) and `/alaa-cc-orchestrator` (Claude Code) are the production multi-agent orchestration packs. Each carries a conditionally routed role catalog for its runtime: core lanes (spec analyst, explorer, researcher, test strategist, implementer with a separate escalated implementer, independent verifier, failure analyst, reviewer, documenter) and conditionally gated specialists (adversarial review, architecture, security, migration, API contract, dependency audit, accessibility, browser QA, performance, observability, release). Dispatch only triggered roles. The orchestrator owns parallel scheduling and gate economics; this reference sets no spawn-count default.
 
 Claude role identity and neutral controls are checked against `assets/claude-model-policy.json`. Executable frontmatter preserves authority and selects no task pair. The standard and deep reviewer scopes share the existing reviewer profile. Scope breadth alone does not create a second executable identity.
 
@@ -102,4 +95,4 @@ Other companions:
 
 ## Caveats
 
-Benchmark claims, relative pricing, effort defaults, and the capability ordering among current models are vendor-stated and time-sensitive — a single release can invalidate any ranking here. Re-check `references/00-source-map.md` and the live model pages before treating any ranking here as current.
+Benchmark claims, relative pricing, effort defaults and the capability ordering among current models are vendor-stated and time-sensitive; one release can invalidate any ranking here. Re-check `references/00-source-map.md` and the live model pages before you treat a ranking here as current.

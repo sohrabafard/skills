@@ -1,35 +1,28 @@
 # Topic Map
 
-The router for this skill. Every reference below is unread until its condition fires, and that is the point: the body of a skill is paid for on every run, while a reference is paid for only when something makes it necessary. Match your situation to a row, read that file, and do not pre-load the rest.
-
-Rows are conditions, not headings. If your situation is not listed, no reference here owns it — say so rather than reading the nearest-looking file.
+The router for this skill. Match your situation to a row, read that file, and pre-load no other reference, because a reference costs context only when read. Rows are conditions, not headings. When no row matches, no reference here owns the situation: say so rather than read the nearest-looking file.
 
 | You are about to | Read | Because |
 |---|---|---|
 | Activate a skill in a generated prompt, choose a kickoff and compact goal condition, or prepare phase and task skill routing | `references/06-invocation-and-composition.md` | Direct invocation, role ownership and reachable completion decide the message shape |
-| Write delegation language and need to know whether to cap fan-out or authorize it | `references/06-invocation-and-composition.md` | It owns delegation polarity, and the wrong direction fails silently on either family |
-| Tune GPT prompts or choose active Codex profiles | `references/12-gpt-6.md` | Separates model capability, runtime availability, and local policy |
-| Consult a recorded legacy exception or historical GPT behavior | `references/10-gpt-5-6.md` | Legacy guidance is not the active routing default |
-| Use Codex's goal loop, subagents, batch jobs, `AGENTS.md` discovery or slash commands, or diagnose rejected tool input or patch context | `references/11-codex-runtime-features.md` | Harness mechanics and the active tool contract determine the supported operation |
+| Write delegation language and need to know whether to cap fan-out or authorize it | `references/06-invocation-and-composition.md` | It owns delegation polarity; the wrong direction fails silently on either family |
+| Tune GPT prompts or choose active Codex profiles | `references/12-gpt-6.md` | It separates model capability, runtime availability and local policy |
+| Handle an explicit user request for a legacy model | `references/90-model-selection.md` | It records the request separately; the request neither restores ordinary eligibility nor passes task-control validation |
+| Use Codex's goal loop, subagents, batch jobs, `AGENTS.md` discovery or slash commands, or diagnose rejected tool input or patch context | `references/11-codex-runtime-features.md` | Harness mechanics and the active tool contract decide the supported operation |
 | Tune current Opus prompting or migrate older Opus instructions | `references/21-opus-5-5.md` | Calibration and API boundaries differ from historical Opus 5 |
-| Consult historical Opus 5 behavior | `references/20-opus-5.md` | Retained evidence does not authorize current pins |
 | Tune current Sonnet prompting or migrate Sonnet API controls | `references/31-sonnet-5-5.md` | Recalibrated effort, thinking modes and tool contracts differ from Sonnet 5 |
-| Consult historical Sonnet 5 behavior | `references/30-sonnet-5.md` | Retained evidence does not authorize current pins |
 | Tune current Fable prompting | `references/43-fable-5-2.md` | Its early-stop, approval, ownership, delegation and style behaviors differ from Fable 5.1 and Opus 5.5 |
 | Carry a prompt, skill, agent file, instruction file, memory or note written for an earlier model to a newer one | `references/60-skill-authoring.md` | It owns the carry-over review; the target model's reference owns the evidence for each check |
-| Consult historical Fable 5.1 behavior | `references/42-fable-5-1.md` | Retained evidence does not authorize current pins |
-| Consult historical Fable 5 behavior | `references/40-fable-5.md` | Older verification reminders are historical, not current instructions |
 | Tune current Haiku prompts or select bounded retrieval, verification or documentation | `references/36-haiku-5-5.md` | Explicit completion, retrieval and check instructions preserve bounded work |
-| Consult historical Haiku 4.5 behavior | `references/35-haiku-4-5.md` | Its missing effort support does not transfer to Haiku 5.5 |
 | Use Claude Code's `/advisor`, `/loop`, subagents, workflows, plan mode or `/goal`, resolve a Desktop tab, or diagnose a rejected goal | `references/41-claude-code-runtime-features.md` | Surface support, advisor compatibility and evaluator scope decide what can run |
 | Write a prompt, system prompt or dispatch for a Claude model whose session may have the advisor on | `references/41-claude-code-runtime-features.md` section *Prompts for a session that may have an advisor* | The advisor reads the transcript and bills per call, and the right nudge differs by executor model |
-| Set or change an effort level, or judge whether a lane needs a higher tier | `references/50-effort-and-thinking.md` | Model and effort are separate decisions, and an effort inherited from another generation is an untested assumption |
-| Decide whether what you are about to write is a prompt, an instruction file, a skill, or a subagent | `references/60-skill-authoring.md` | It holds the four-way test, and choosing wrong is the most common authoring defect |
-| Write, review, or repair a skill | `references/60-skill-authoring.md` | It owns the authoring procedure and how to split a subject into references |
-| Shorten or edit an artifact that controls another agent, or judge whether a change altered behavior | `references/60-skill-authoring.md` | It owns equivalence and compression; read it with the artifact's own reference, which owns that artifact's required structure and content |
+| Set or change an effort level, or judge whether a lane needs a higher tier | `references/50-effort-and-thinking.md` | Model and effort are separate decisions; an effort inherited from another generation is untested |
+| Decide whether what you are about to write is a prompt, an instruction file, a skill, a script or a subagent | `references/60-skill-authoring.md` | It holds the artifact test; choosing wrong is the most common authoring defect |
+| Write, review or repair a skill | `references/60-skill-authoring.md` | It owns the authoring procedure and how to split a subject into references |
+| Shorten or edit an artifact that controls another agent, or judge whether a change altered behavior | `references/60-skill-authoring.md` | It owns equivalence and compression; read it with the artifact's own reference, which owns that artifact's structure and content |
 | Plan an authorized comparison of instruction variants | `references/60-skill-authoring.md` | It owns comparable starting conditions, outcome measures and evidence limits |
-| Look up a skill discovery path, a frontmatter key surface, or a description character budget | `references/61-skill-platform-mechanics.md` | These are per-runtime lookups that go stale and must not be recalled from memory |
-| Write, trim, or split an `AGENTS.md` or `CLAUDE.md` | `references/70-agent-instruction-files.md` | An instruction file is loaded unconditionally, so its economics differ from every other artifact here; trimming one also needs the row above |
-| Define a model-neutral subagent and tools, or write explicit task controls in dispatch | `references/80-subagent-authoring.md` | It owns authority boundaries, output contracts, and the test separating a redundant self-check from a real gate; shortening a definition or a dispatch also needs the compression row |
+| Look up a skill discovery or install path, a frontmatter key surface, or a description character budget | `references/61-skill-platform-mechanics.md` | These per-runtime values go stale and must not be recalled from memory |
+| Write, trim or split an `AGENTS.md` or `CLAUDE.md` | `references/70-agent-instruction-files.md` | An instruction file loads unconditionally, so its economics differ; trimming one also needs the compression row |
+| Define a model-neutral subagent and tools, or write explicit task controls in a dispatch | `references/80-subagent-authoring.md` | It owns authority boundaries, output contracts and the test separating a redundant self-check from a real gate; shortening a definition or a dispatch also needs the compression row |
 | Choose a model for either runtime | `references/90-model-selection.md` | Structured policies own capabilities; runtime orchestrators own actual all-role task selection |
-| Ground a version-sensitive claim, or judge whether a number must be re-fetched before it is quoted | `references/00-source-map.md` | It owns source priority and the freshness triggers that decide when recall is not allowed |
+| Ground a version-sensitive claim, or judge whether a number must be re-fetched before it is quoted | `references/00-source-map.md` | It owns source priority and the freshness triggers that forbid recall |

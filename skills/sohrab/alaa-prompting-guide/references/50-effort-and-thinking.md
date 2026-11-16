@@ -8,15 +8,15 @@ This file owns cross-runtime effort evidence and control validation. Each model 
 
 ## What effort does not control
 
-Response length, deliverable length, update cadence and scope require explicit prompt controls. Effort can change token use and tool behavior. Lowering it is not a reliable substitute for output constraints or scope constraints. Read the target model reference for the workload-specific effects observed on that model.
+Response length, deliverable length, update cadence and scope need explicit prompt controls. Effort changes token use and tool behavior, and lowering it does not reliably constrain output or scope. Read the target model reference for the workload-specific effects observed on that model.
 
 ## Thinking: keep it on, lower the effort instead
 
-Before you change thinking controls, use the registered model capability snapshot and refresh the model's API documentation. The current model references own thinking modes and their exceptions. Haiku 5.5 supports effort and adaptive thinking. Its API exception that permits disabled thinking does not transfer to Claude Code. Historical Haiku 4.5 uses extended thinking without effort. These API controls are not interchangeable with Claude Code settings.
+Before you change thinking controls, use the registered model capability snapshot and refresh the model's API documentation. The current model references own thinking modes and their exceptions; Haiku 5.5's API exception that permits disabled thinking does not transfer to Claude Code. Historical Haiku 4.5 uses extended thinking without effort. Give it no effort metadata, because an invented effort pin is invalid, and never put it on one effort scale with an effort-enabled model. These API controls are not interchangeable with Claude Code settings.
 
-For effort-enabled models, lower the supported effort to cut cost. Check retrieval, tool-use reliability and task quality. Report unsupported controls. Never substitute them. Read `references/36-haiku-5-5.md` for current Haiku controls.
+For effort-enabled models, lower the supported effort to cut cost, then check retrieval, tool-use reliability and task quality. Report an unsupported control; never substitute another. Read `references/36-haiku-5-5.md` for current Haiku controls.
 
-Do not carry manual thinking budgets into current adaptive models. Historical Haiku 4.5 is the extended-thinking exception. The value `adaptive` names a thinking mode, never an effort. Neither `ultra` nor `ultracode` is a Claude API effort value. A harness orchestration mode requires separate proof.
+Do not carry manual thinking budgets into current adaptive models; Haiku 4.5 is the extended-thinking exception. The value `adaptive` names a thinking mode, never an effort. Neither `ultra` nor `ultracode` is a Claude API effort value. A harness orchestration mode requires separate proof.
 
 ## Choosing a starting level
 
@@ -30,16 +30,15 @@ Read the target model's reference for its supported levels, its default and its 
 4. **Keep selection separate from calibration.** Recommendations and selected pairs stay unmeasured. Selection needs no paid experiment or replay.
 5. **Preserve authority.** Model controls change no scope, tool, verdict responsibility or independent gate. Main-session configuration stays external. Source consistency does not prove installed activation or observed serving identity.
 
-
 ## Capability registries and realized controls
 
-The structured Codex and Claude policies register neutral role identities and supported pairs. Supported levels are capabilities, not task recommendations or role-wide ceilings. Historical entries do not authorize active selection. The runtime orchestrator owns actual task admission, priority and deliberate departures. This skill validates controls and allocates no work.
+The structured Codex and Claude policies register neutral role identities and supported pairs. Supported levels are capabilities, not task recommendations or role-wide ceilings. Historical entries do not authorize active selection. This skill validates controls and allocates no work; `references/90-model-selection.md` names the owner of admission, priority and deliberate departures.
 
 A stale executable pin can defeat the caller's controls. Read the target runtime reference, and verify the loaded definition, the explicit pair and the effective resolution. A source edit does not reload the current registry. Use an available exact verified realization or block the affected lane. Never silently substitute or change installed configuration. When the configured resolution is established, an unknown observed identity is a reporting limit, not a requirement for paid probing.
 
 ## Effort is not the only cost lever
 
-Before raising effort, resolve prompt bloat and missing context. Vendor lean-prompt results support shorter prompts. They prove no local quality or cost gain. Better retrieval addresses absent evidence.
+Raise effort only after you exclude prompt bloat, missing context, and tool or specification gaps, and quality still falls short. Vendor lean-prompt results support shorter prompts but prove no local quality or cost gain. Better retrieval addresses absent evidence.
 
 ## Anti-patterns
 
@@ -57,7 +56,7 @@ Before raising effort, resolve prompt bloat and missing context. Vendor lean-pro
 
 ## Caveats
 
-Thinking-disable constraints and the availability of manual thinking budgets are vendor-stated and time-sensitive. This file does not restate effort level names, per-model defaults or starting-point recommendations. Read the target model's own file, which is the current source for its own numbers. The measured lean-prompt figures come from one vendor's internal testing on one generation, and they should not be generalized. Re-read the sources below before you hard-code any of these values anywhere, and distinguish orchestrator task policy from vendor capability.
+Thinking-disable constraints and manual thinking budgets are vendor-stated and time-sensitive. Effort level names, per-model defaults and starting points live in each model's own file. Measured lean-prompt figures come from one vendor's testing on one generation; do not generalize them. Re-read the sources below before you hard-code any of these values, and keep orchestrator task policy distinct from vendor capability.
 
 ## Sources
 
