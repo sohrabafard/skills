@@ -28,7 +28,7 @@ Touched: <uncommitted paths, or none>
 
 - The last block is the current one. The holder may replace the whole field with `--notes` to drop old blocks.
 - A leaf block states the position of that leaf only.
-- The root `notes` hold the same block for the engagement, plus one line per live leaf: `Lane: <leaf id> <actor>`. Name a pending review or commit in its `Next` line.
+- The root `notes` hold the same block for the engagement, plus one line per live leaf: `Lane: <leaf id> <actor>`. The `Lane:` lines are part of the root block, so only the lines of the last block are live. Name a pending review or commit in its `Next` line.
 - Append a block at each event in `## When to write` that moves the position. A dispatched write lane appends one before it returns or stops, because the lead and a later session read the lane's position from the leaf.
 
 In Markdown, the plan header owns the overall status, and the checkpoint and the JSON state project it. Every checkpoint names its exact `Plan`, status, last verified evidence address, blockers, next action, touched surfaces and update time. An execution checkpoint also names the current phase. A plan that has a checkpoint links to it and never copies the position. A `direct` profile keeps its cursor in its only plan file.
@@ -71,7 +71,7 @@ bd show <id>
 
 - Run `bd show` for the root and for the leaf. One call prints the description, design, acceptance, notes and comments.
 - The run part of the actor is the session identifier that the host exposes, so the same session derives the same actor after a compaction.
-- When you cannot name your actor, omit `--assignee` and find your leaf through the `Lane:` lines of the root.
+- A new session has a new actor that holds nothing, so its list is empty. When the list is empty, or you cannot name your actor, run the list again without `--assignee`. Take the issue that the user, the dispatch or the handoff names, or find your leaf through the `Lane:` lines of the root.
 - When more than one issue can be yours and neither the user nor a `Lane:` line decides it, ask before any write.
 - Position is the last checkpoint block in `notes` (`## Status and position`). Knowledge is the tagged comments. Continue from the `Next` line.
 - A new session that finds its own earlier claim under an earlier actor takes it over before any write, under `references/task-tracking.md` `## Agent identity and ownership`.

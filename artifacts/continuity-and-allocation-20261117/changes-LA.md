@@ -55,9 +55,11 @@ clause was reworded or deleted: no bound sentence changed. Paths are relative to
 | `## Status and position` | Root notes name the phase, task and subtask IDs, evidence address, blockers, next action, touched surfaces, pending review or commit | The five-line checkpoint block I1, appended by the claim holder; the last block is current; `--notes` may drop old blocks; a pending review or commit goes in the root `Next` line | I1 |
 | `## Status and position` | The parent keeps the aggregate cursor and links to each lane's leaf notes | The root block carries one `Lane: <leaf id> <actor>` line per live leaf | I1 |
 | `## Status and position` | A task or subtask cursor names its actual ancestry; clear a finished cursor before you advance | removed for Beads: the native parent relation gives the ancestry, and an appended block supersedes the earlier one | I1 |
+| `## Status and position` | new | The `Lane:` lines are part of the root block; only the lines of the last block are live. The lead drops a closed leaf, or changes an actor, by appending a new root block | I1, W1.3 |
 | `## Status and position` | new | Append a block at each write event that moves the position; a dispatched write lane appends one before it returns or stops | W1.3 |
 | `## The handoff package` | Six fields | Same six fields, now stated as the definition of knowledge for every medium, each with its comment tag; "keep all six present" is scoped to the Markdown package | W1.4 |
 | `## Task resume and phase resume` | new | Resume commands I3 with their trigger (session start, after a compaction, when you cannot name your position); the actor rule; the `Lane:` fallback; where position and knowledge are; the pointer to the takeover | I3, W1.4 |
+| `## Task resume and phase resume` | new, beyond I3 as fixed | A new session has a new actor, so its list is empty: on an empty list, as for an unknown actor, list again without `--assignee` and take the issue that the user, the dispatch or the handoff names | I3, W1.4 |
 | `## Task resume and phase resume` | new in this file (was in the root block: resolve an ambiguous active task before implementation) | When more than one issue can be yours and neither the user nor a `Lane:` line decides it, ask before any write | W1.6 |
 | `## Task resume and phase resume` | Learned knowledge goes to issue comments; the native root handoff links to task findings | Knowledge comments I2: seven tags, root or leaf placement, nothing rewritten. The root handoff link is removed | I2 |
 | `## Cross-PC handoff record` | Record it in the task notes or the native root notes | Same, plus: append a current checkpoint block after it, so that the last block stays the position | I1 |
@@ -92,7 +94,7 @@ clause was reworded or deleted: no bound sentence changed. Paths are relative to
 | Resume: read the active issue and its plan; check worktree, scope, ownership, blockers | Replaced by the resume commands I3 with their trigger; the checks are in `context-continuity.md` `## The resume protocol` |
 | A summary or `bd prime` cannot replace task-state recovery | Kept |
 | Resolve an ambiguous active task before implementation | Moved to `context-continuity.md` `## Task resume and phase resume` |
-| Pass the required global flags; batch-script rule; no per-command environment override | Write form kept in the block; the rest moved to the capability table |
+| Pass the required global flags; batch-script rule; no per-command environment override | Write form kept in the block, now with `--actor` after the subcommand, as the owner section writes it (the old Quick Reference put `--actor` before it); the rest moved to the capability table |
 | Label filter on `ready`, `list`, `blocked`; label new issues | Kept |
 | Unfiltered hook output does not expand scope | Moved to `task-tracking.md` `## Select before tracking-dependent work` |
 | Verify the label before a change; never relabel into scope; other-project writes need authorization | Kept. "Other-project dependency reads are allowed" is removed: no rule forbids a read |
