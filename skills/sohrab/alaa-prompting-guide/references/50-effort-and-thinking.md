@@ -39,6 +39,15 @@ Raise effort only when quality still falls short after you exclude prompt bloat,
 - pin maximum effort without a measured quality benefit and a stated workload need;
 - change model and effort together in a comparison.
 
+## Lowering effort
+
+Evidence for the runtime orchestrator's choice (17 November 2026):
+
+- Lower effort for a short, fully specified or high-volume task ([effort](https://platform.claude.com/docs/en/build-with-claude/effort)).
+- At a low level, a long agent prompt is more likely to skip a search, stop early or skip a check ([effort](https://platform.claude.com/docs/en/build-with-claude/effort)). Keep the higher level for such a lane.
+- Step down only where your evals show that quality holds ([effort](https://platform.claude.com/docs/en/build-with-claude/effort)).
+- Tuning effort is often a better lever than a model switch ([choosing a model](https://platform.claude.com/docs/en/about-claude/models/choosing-a-model)).
+
 ## Caveats
 
 Thinking constraints are vendor-stated and time-sensitive. Lean-prompt figures come from one vendor's tests on one generation and prove no local quality or cost gain. Re-read the sources before you hard-code a value.
@@ -46,6 +55,7 @@ Thinking constraints are vendor-stated and time-sensitive. Lean-prompt figures c
 ## Sources
 
 - [Effort parameter reference](https://platform.claude.com/docs/en/build-with-claude/effort)
+- [Choosing a Claude model](https://platform.claude.com/docs/en/about-claude/models/choosing-a-model)
 - [Prompting Claude Opus 5.5](https://platform.claude.com/docs/en/build-with-claude/prompt-engineering/prompting-claude-opus-5-5)
 - [Prompting Claude Sonnet 5.5](https://platform.claude.com/docs/en/build-with-claude/prompt-engineering/prompting-claude-sonnet-5-5)
 - [Prompting Claude Fable 5.2](https://platform.claude.com/docs/en/build-with-claude/prompt-engineering/prompting-claude-fable-5-2)
