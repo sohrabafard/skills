@@ -8,7 +8,7 @@ Pair with the narrowest owner for every technical decision. Repository truth and
 |---|---|
 | Prompt design, model and effort capability, runtime feature syntax and freshness | `/alaa-prompting-guide`. Add `/openai-docs` for current OpenAI guidance |
 | The task model AND effort for every role, review cadence scheduling, and per-goal orchestration of a bounded goal or single phase across parallel role lanes | `/alaa-codex-orchestrator` in Codex, `/alaa-cc-orchestrator` in Claude Code. The workflow plan owns phase gates and records the orchestrator's final report as phase evidence |
-| What enters the context window and what gets printed | `/alaa-low-noise`. This skill owns what is written down durably |
+| What enters the context window and what gets printed | `/alaa-low-noise`, loaded by the session that leads the work. A dispatched lane takes its output rule from its agent definition, so name `/alaa-low-noise` in a dispatch only for a discovery-heavy or log-heavy lane. This skill owns what is written down durably |
 | Prior-context recall when its trigger holds, and durable publication after curation | `/alaa-memory-os`. Recall supplies leads to verify against repository truth |
 | Reusable-context curation at a signal-bearing phase boundary and before completion | `/alaa-extract-agent-lessons`. This workflow sets the timing and the parking location |
 | Which surface answers a code question, and which surfaces a delegated lane may be granted | `/alaa-code-intelligence-routing`. Record what a lane established as a confirmed fact in the handoff package, with the owner that established it, so that the next phase does not repeat the query |
