@@ -218,7 +218,7 @@ cited file at the cited commit, and deployment is unconfirmed for all of it.
 
 | # | Rule | Owning file | Conforms | Does not conform |
 |---|---|---|---|---|
-| 22 | A downstream step-up guard decides from the three verified headers and denies unusable metadata with `403 TOTP_STEP_UP_REQUIRED` and `meta.purpose` | `32-auth-totp-and-step-up-contract.md` | none proven in full | undecided for `content` and the kit, pending the owner questions below; `comment` has no guard |
+| 22 | A downstream step-up guard decides from the three verified headers and denies unusable metadata with `403 TOTP_STEP_UP_REQUIRED` and `meta.purpose` | `32-auth-totp-and-step-up-contract.md`; the denial conditions are in `/alaa-trust-gateway-auth` `references/30-fail-closed-cases.md` | none proven in full | undecided for `content` and the kit, pending the owner questions below; `comment` has no guard |
 
 Evidence and open owner questions for #22:
 - `content` (`ef78156`) gates bulk approve and execute through ControlledOps, with namespaced codes and no
