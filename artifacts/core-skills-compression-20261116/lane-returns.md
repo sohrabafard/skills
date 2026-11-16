@@ -100,3 +100,132 @@ Not run, as excluded: `init_workflow_files.py` and `validate_workflow_files.py`.
 Acceptance criteria 4 and 5: all 14 Appendix A headings return one hit each, and no heading was renamed.
 
 Boundary conflicts: none.
+
+## L2 — alaa-testing-strategy
+
+STATUS: COMPLETE. Lane L2 compressed `alaa-testing-strategy` and gave each repeated rule one owner. All gates exit 0. The reduction is moderate (about 15%), not large, because no checker literal was reworded.
+
+AGENT: alaa-implementer-sonnet-high. CONFIGURED model/effort: unknown (not observable). REQUESTED: claude-opus-5-5 (opus) at medium effort. OBSERVED: model claude-opus-5-5 from the runtime environment; effort unknown.
+
+1. Outcome. Every always-apply rule has one compressed statement in `SKILL.md`. The body routes through `references/00-topic-map.md`. References 10 to 90 no longer restate body rules. The design step list keeps one pointer per step and no restated rule.
+
+2. Branch `worktree-agent-a0d1f951f3f2d3946`, worktree `agent-a0d1f951f3f2d3946`.
+- fda42de9 refactor(alaa-testing-strategy): give each repeated testing rule one owner
+- c9dc5100 docs(alaa-testing-strategy): compress body, references and metadata
+- 051b32b8 fix(alaa-testing-strategy): restore rules lost in compression
+
+The fix commit restores four items the compression had dropped:
+- the always-loaded ban on suppressing findings and altering fixtures;
+- the no-reset exception in `90` *Setup once*;
+- the `30` cleanup pointer to `90`;
+- the clear timeout message in `50`.
+
+Every commit was made by path. `git status` is clean. Only owned paths changed. `check_execution_contracts.py` has no diff.
+
+3. Words (`measure.py`, before → after):
+- frontmatter 112 → 104;
+- body 3986 → 3412;
+- references 14635 → 12406;
+- other 240 → 211;
+- total 18973 → 16133 (-15%).
+
+Most of the remaining body is checker-bound or required content: the tier table and validity text, the output contract and the 15 non-negotiables. References 100, 110 and 120 are almost entirely checker literals, so they were only trimmed.
+
+4. Relocations (rule: old site → owner, pointer site):
+- Effect-absence list: `10` assertion rules → `SKILL.md` core rule. The body line now also names files, credentials and messages.
+- Happy-path job: `10` section → `70` *Ordering*. Design step 9 now points to `70`.
+- Step-2 break examples: `SKILL.md` → `10` catalogue, behind a pointer.
+- Consumer-tests-instead text and unreachable examples: `SKILL.md` → `90` *Candidates that are not owed a test*, behind a triggered pointer.
+- Triplication discriminator: one copy, kept in the body because it applies on every run and a pointer cost as many words. `20` keeps only which test survives. The pointers in `10`, `20` and `90` go to `SKILL.md` *The core rule*.
+- Substitution reasons: `30` → non-negotiable 3. `30` keeps only the examples.
+- Unreachable-level procedure: `40` → `80` *When a test cannot be run at all*.
+- Flake-by-construction list in `50`: replaced by pointers to non-negotiable 11 and `90` *Setup once*. Seeded randomness and the clear timeout message stay in `50`.
+- `10` *Anti-patterns*: every item kept, with its reason replaced by a pointer to the owning file.
+- Preambles that restated the router or a body rule were removed from 10 to 120.
+- `00-topic-map.md`: the `90` row gains "write or review a test over shared infrastructure" and the `70` row gains "write its happy path".
+- No file was retired.
+
+5. Checker literals changed: 0 in every tuple. Clause counts match baseline: REQUIREMENTS 213, NORMATIVE_DUPLICATES 105, CONTRADICTIONS 19. The hash is unchanged. Appendix A headings, the `90` heading and the `100` section names are verbatim.
+
+6. Left for Phase 2:
+- `100` and `120` still restate the concealment and unrun-check rules beside the body's lines. The checker binds them to those files, so they stay.
+- Most of `110` and `120`, and the 27 doctrine clauses in `SKILL.md`, can shrink only together with their literals.
+- Restated in other skills: the tier definitions in both `verification-and-gates.md`, and the "never weaken assertions" line in workflow `SKILL.md`.
+
+7. Rules that cause re-review, re-test or re-confirmation (listed only):
+- `80-evidence-and-reporting.md:33`: a reviewer may demand one re-run.
+- `100-test-execution.md:13`: confirm selection before citing a result.
+- `100-test-execution.md:23`: rerun failed or invalidated checks.
+- `SKILL.md:114`: re-run every result downstream of a changed condition.
+
+8. Looks contradictory (listed, not changed): `50-flake.md:32` treats an unclassifiable flake as a product defect, while the `SKILL.md:179` stop condition says to report blocked.
+
+9. Gates, each exit 0 (`PYTHONDONTWRITEBYTECODE=1`, `-B`):
+- `validate_sohrab_skill_pack`: 0 (warning: body is 192 lines);
+- `check_skill_index`: 0;
+- `check_fleet_references`: 0;
+- `check_lifecycle_contract`: 0;
+- `check_execution_contracts`: 0;
+- `check_agent_contracts` for cc and codex: 0 each.
+
+Skills loaded before the first edit: /alaa-prompting-guide (with `60-skill-authoring.md`), /alaa-ponytail full, /alaa-low-noise, and the preloaded /alaa-code-intelligence-routing, /alaa-services-contract and /alaa-trust-gateway-auth. /alaa-workflow *Lane branches and commits* was read late, after the first two commits. All three commits comply with it. /alaa-testing-strategy was the text under edit, not doctrine applied to this lane.
+
+Residual risk: no independent review has run yet; it is pending at the final boundary. The review-only acceptance criterion 5 was checked by hand: every non-negotiable, stop condition and output field is still in `SKILL.md`.
+
+## L5a — orchestrator pair, SKILL.md and references
+
+STATUS: COMPLETE. Lane L5a is done: `SKILL.md` and `references/**` of both orchestrator packs are compressed in identical terms, with each repeated rule given one owner, and every gate exits 0. The reduction is small, about 4.5% of reference words in cc and 3.7% in codex.
+
+Metadata: AGENT alaa-implementer-sonnet-high (lane L5a). CONFIGURED model and effort: unknown. REQUESTED: `claude-opus-5-5` (`opus`) at `medium`. OBSERVED: the model is claude-opus-5-5 according to the runtime system context; effort was not observable.
+
+1. **Branch:** `worktree-agent-aa0d3616432fb65d3`, worktree `agent-aa0d3616432fb65d3`.
+   - `06ed7919` docs(orchestrators): compress SKILL.md and references of the mirrored pair (compress class)
+   - `9ee00ad5` docs(orchestrators): give each repeated pair rule one owner file (relocate class; the body gives the reason for each move)
+2. **Words, from `measure.py`** (before → after):
+
+   | Pack | `SKILL.md` body | references |
+   |---|---|---|
+   | cc | 2564 → 2521 | 14370 → 13693 |
+   | codex | 2554 → 2512 | 14757 → 14218 |
+
+   - The cap is the checker-pinned prose. About 250 literals bind whole sentences, mostly in gates, routing and `SKILL.md`. I changed no literal, so those sentences stay verbatim. Going much further needs Phase 2 rewording of literals together with the checkers.
+   - The XML templates under `delegation-prompts/` were already terse and carry literals and regexes. I left them unchanged except `30-implementation.md`.
+3. **Relocations** (owner ← old site; the old site keeps a pointer, or the always-loaded body carries the rule):
+   - `SKILL.md` §9 ← gates *Final success criteria* bullets: diff scope, documentation, reusable context, integration. §9 took the stronger wording; the gates list now points at §9.
+   - `SKILL.md` *Dispatch discipline* ← routing intro "one agent per lane".
+   - `SKILL.md` *Plan and allocation* ← routing's "planning effort is not worker effort" line and its "worker selection needs no planner dispatch" line.
+   - `model-effort-policy.md` ← routing step 6 default and omission sentences.
+   - routing *All-role task allocation* ← model-effort-policy rules: legacy IDs, second lens, review-depth pair, "model choice changes no tools", capacity diagnosis, reassessment. The policy intro now names each of these.
+   - `SKILL.md` §8 and routing ← catalog intro install and legacy-ID sentences.
+   - `delegation-prompts.md` read-back rule ← cc `30-implementation.md` pair-passing sentence. The codex template gained the same pointer.
+   - Inside each file I also merged repeats: install authority, testing-strategy pointers, never-fall-back and diagnose-capacity in `SKILL.md`; the scattered role-ID statements in routing.
+   - No file was retired.
+4. **Checker literals:** none changed in either `check_agent_contracts.py`. Every tuple count equals the baseline (cc IMPLEMENTER 17, codex 16, and so on).
+   - Clauses also required in L5b files that stay verbatim in mine: "model choice changes no authority"; the Task controls, Effective authority and metadata substrings; "Commit only on the lane branch your dispatch names".
+5. **Left for Phase 2:**
+   - Bound by a checker outside my scope, kept verbatim: `COLLECTION_SEAMS` and `COLLECTION_CONTRADICTIONS` text, and the testing-strategy pointers in `SKILL.md`, gates, `resource-policy.md` and `failure-taxonomy.md`.
+   - Restating another skill, compressed in place only:
+     - alaa-workflow: gates lane-commit bullets, gates `task-tracking.md` restatements (no replacement Beads database, `REVIEW_PENDING`), the `--sandbox`/`--readonly` sentence in `delegation-prompts.md`.
+     - alaa-prompting-guide: `SKILL.md` concurrency-limit paragraph; model-effort-policy alias-only, 2.1.292 precedence and Fable advisor paragraphs.
+     - alaa-low-noise: `SKILL.md` §2 and §3 return rules.
+     - alaa-code-intelligence-routing: catalog LSP/Serena paragraph.
+     - alaa-testing-strategy: the `<doctrine>` in `20-design.md`.
+6. **Rules that make an agent re-review, re-test or re-confirm** (cc lines; codex mirrors them):
+   - `verification-and-gates.md`:
+     - :50 — a fix on a floor surface returns to that floor's gate.
+     - :171 — re-apply After a fix on a blocking result.
+     - :173 — re-check the final Git status and diff.
+     - :174 — audit every claim against a tool result.
+     - :178 — rerun the final gates if the base advanced.
+   - `delegation-prompts.md`:28 — read back each invocation.
+   - `routing-matrix.md`:99 — the lane rechecks the admission predicates.
+   - `40-verification.md`:20 — one identical rerun for flake detection.
+7. **Rules that look stale or wrong** (left unchanged):
+   - codex `installation.md` keeps the "Version 5" and "Version 4" migration notes. They are history-dated, and the rules in them are restated in routing.
+   - `README-fa.md` says 4.0.0; that file belongs to L5b.
+8. **Gate exits:** each command in criteria 1–3 exited 0 on the committed state. That is 4 root gates, 4 per pack, and `check_execution_contracts.py`.
+   - Criterion 5: identical files stay identical. 10, 30 and 50 keep only 2–4 differing lines. Gates differs only by the codex `.git` paragraph, the `AGENTS.md` guidance line, the Docker routing line and the reviewer-deep line.
+   - Criterion 6: Appendix A headings are intact.
+   - Not run: `render_agents.py --write`, which belongs to L5b.
+
+Boundary conflicts: none. The scratchpad is shared with another session, which overwrote my first `gates.sh`. My scripts there now use the `l5a_` prefix.
