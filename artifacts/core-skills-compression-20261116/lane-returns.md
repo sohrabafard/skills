@@ -393,3 +393,47 @@ Skills: loaded before the first edit: /alaa-prompting-guide (60-skill-authoring,
    - Conflict with "once": the six gates ran twice. The first run (all 0) preceded a last round of edits that restored rule force and rows; the second run (all 0) is on the committed tree.
 
 Residual risk: no agent run was observed, so behaviour equivalence rests on a source walkthrough only. Two pointers name prompting-guide files that another lane is rewriting now; I cited fixed file names only. Not run: any other suite, any `codegraph` index command. Independent review is pending at the final boundary. Blockers: none.
+
+## L2b — second pass, alaa-testing-strategy
+
+STATUS: COMPLETE — `alaa-testing-strategy` is rewritten and pruned under the second-pass brief: total 16,133 to 13,047 words (-19%), body 3,412 to 2,502 (-27%); all seven gates exit 0 on the final tree; independent review is pending at the final boundary.
+AGENT: alaa-implementer-fable. CONFIGURED model/effort: unknown (definition not observable). REQUESTED: claude-fable-5-2 / high. OBSERVED: model claude-fable-5-2 (runtime environment line); effort unknown. No mismatch observed.
+
+1. Outcome: every file under `skills/sohrab/alaa-testing-strategy/` except `run-low-priority.sh` and the frontmatter description (Phase 3 owns descriptions) was rewritten; checker literals, the normative hash and one contradiction guard follow the text.
+
+2. Branch `worktree-agent-a9c0b6742b793f697`, worktree `agent-a9c0b6742b793f697` (fast-forwarded to `37ce87a4` first). Commits, each by path:
+- `ce493f05` refactor(alaa-testing-strategy): rewrite and prune the skill in fewer words
+- `832a604e` docs(artifacts): record the pruned rules of lane L2b
+- `6e34ceef` fix(alaa-testing-strategy): restore body tokens and the repair budget, rebind the execution pointer
+
+3. Words by `measure.py` (before to after): frontmatter 104 to 104; body 3,412 to 2,502; references 12,406 to 10,381; other 211 to 60; total 16,133 to 13,047. `SKILL.md` is 181 lines.
+
+4. Files above four fifths of their start:
+- `70` (86%) and `80` (97%): they received body content (the ten design steps, +180; the report-field content, +215). Their own text fell to about 63% and 77%.
+- `100` (92%), `110` (90%), `120` (92%): 7 clauses reworded and 4 deleted there. The remaining sentences are distinct authority limits, numbers, status tokens and exceptions (never-prune classes), and were already one rule per sentence.
+- `40` (85%): six level definitions and the claim-to-level table, the vocabulary 18 external files cite.
+- `90` (86%), `30` (81%), `50` (81%): three tables each row a decision; `90` also received the detail of non-negotiables 10, 13 and 14.
+
+5. Pruned rules: 21 rows — P1 2, P2 4, P3 1, P4 1, P5 12, P6 1. Ledger: `agent-a9c0b6742b793f697/artifacts/core-skills-compression-20261116/pruned-L2b.md`. It also records six decisions, including the flake resolution: an unclassified case is reported blocked (`references/50-flake.md`), never defaulted to product defect.
+
+6. Checker clauses (`scripts/check_execution_contracts.py`), reworded / deleted / added:
+- `REQUIREMENTS`: body 1/0/0; execution 5/1/2 (one clause split in two, one added for the realigned orphan); doctrine 2/0/0; resources 0/1/0; classification 0/2/0. Count 213 to 211.
+- `NORMATIVE_DUPLICATES`: execution 4/1/2; resources 0/1/0; classification 0/2/0; doctrine 1/1/0 (orphan moved to execution). Count 105 to 102; SHA-256 recomputed by the script's own function.
+- `CONTRADICTIONS`: +1 (the old flake sentence). `workspace`, `continuity`, `economy`, `router`, `flake` untouched. The lead should re-check the six reworded forbidden strings against the packs at integration; no hit at `37ce87a4`.
+
+7. Cross-skill restatements: replaced by nothing new (this skill is the owner). Removed ownership restatements of other skills: prompting-guide, workflow, orchestrators, per-language, controlled-ops rows in `00`. Left: the orchestrator cadence pointer in the tier section and the `100` authority limit, because each routes a real decision.
+Owned rule families, for other lanes to point at (`SKILL.md`): tiers `## Scope tiers: how much of the suite runs, and when` line 77; fresh exhaustive run line 88 and validity `### A result stays valid until something named invalidates it` line 92; classification and the concealment ban `### A failing tier is classified before it is repaired` line 109 (ban sentence line 120); CPU and timing `references/110-execution-resources.md`; statuses `references/120-result-classification.md`.
+
+8. Kept or changed with doubt:
+- `10` *Anti-patterns* (20 items) and `90` *Review checks* deleted as duplicates; the body pointer to the first went with it.
+- `SKILL.md:128` output contract: names, order and tokens in the body, field content in `80` *The report fields*.
+- `SKILL.md:180`: "read the topic map first" narrowed to references no body pointer names.
+- `SKILL.md:57` non-negotiable 4 says parity suite only, while `30-doubles.md` lists generation as a stronger binding.
+- `agents/openai.yaml` `default_prompt` cut to two sentences.
+- `50-flake.md` "a rerun-failed-tests step" is forbidden while `100` step 3 reruns failed checks after repair; wording kept.
+- `110-execution-resources.md` forwarder paragraph: describes scripts in the orchestrator packs.
+
+9. Gates on the final tree, from the worktree root with `PYTHONDONTWRITEBYTECODE=1 python3 -B`: `validate_sohrab_skill_pack` 0; `check_skill_index` 0; `check_fleet_references` 0; `check_lifecycle_contract` 0; `check_execution_contracts` (skill dir) 0; `check_agent_contracts` cc 0, codex 0. First run was clean; all seven were rerun after the fix commit.
+
+Skills: /alaa-ponytail full, /alaa-low-noise, /alaa-prompting-guide with `60-skill-authoring.md` (*ASD-STE100 style*, *The wording is the mechanism*) before the first edit; `skills/sohrab/AGENTS.md` read before the first edit; /alaa-workflow *Lane branches and commits* read before the first commit. Preloaded /alaa-code-intelligence-routing, /alaa-services-contract, /alaa-trust-gateway-auth: no decision in this lane needed them. /alaa-testing-strategy was the text under edit.
+Residual risk: no fixture, comparison or live-agent run (excluded). Criterion 5 was checked by hand only. Boundary conflicts: none; no public route or contract changed.
