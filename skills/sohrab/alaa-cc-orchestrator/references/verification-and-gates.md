@@ -61,7 +61,7 @@ Record the check list and evidence at the workflow-selected owner before dispatc
 
 Before dispatch, read `alaa-workflow references/task-tracking.md` for task-store selection, plan resolution, registration, phase evidence and closure.
 
-Read a native `beads:<root-id>` plan through the bound issue store, and a Markdown plan through its admitted file family. Verify live registration, hierarchy, prerequisite edges, resolved skills and readiness through the recorded store.
+Read a native `beads:<root-id>` plan through the bound issue store, with no Markdown prerequisite, and a Markdown plan through its admitted file family. Verify live registration, hierarchy, prerequisite edges, resolved skills and readiness through the recorded store.
 
 Read these plan fields: `Review boundary: phase|final`, `Final phase`, `Commit authority`, and each phase's `Review status` and `Review evidence`. Pass that whole-engagement contract, plan reference and exact phase/task/subtask cursor into every nested invocation. Missing or inconsistent executing mappings block dependent dispatch. Nested goals never reset the boundary or relabel intermediate output as final.
 
@@ -144,7 +144,7 @@ Stage A always runs first.
 3. `APPROVED` and `APPROVED-WITH-NITS` proceed. Under `CHANGES-REQUESTED`, route each finding triaged for fixing verbatim to the hand Who fixes selects.
 4. Present every finding this phase leaves open for the user as one decision set: each item with its severity per lens, the smallest fix that closes it, and its cost. Ask once, because each separate answer can move the tree and invalidate final evidence.
 
-For required Ent review, interpret the native report under `alaa-ent-go-orm-db references/85-specialist-delegation.md`. Its `STATUS: COMPLETE` means the assessment finished and grants no approval.
+For required Ent review, interpret the native report under `alaa-ent-go-orm-db references/85-specialist-delegation.md`. Its `STATUS: COMPLETE` means the assessment finished and grants no approval. A missing report, `STATUS: BLOCKED`, `STATUS: INCOMPLETE` or missing required evidence blocks acceptance even without findings.
 
 ## Stage E — Documentation and final validation
 

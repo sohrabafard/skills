@@ -21,7 +21,7 @@ that clause back in the named tuple of both checker files.
 |---|---|---|---|---|
 | 1 | Do not infer a universal watchdog timeout or a need for per-command narration | OWN | `alaa-low-noise` `SKILL.md` Contract; `references/delegation-prompts.md` keeps it for `<progress>` | `orchestrator_failures`: "Do not infer a universal watchdog timeout" |
 | 2 | Every return carries findings, verdicts, counts and artifact paths, never transcripts, full diffs or logs; save bulky output before reporting its path; use bounded invocations | OWN | `alaa-low-noise references/workflow-integration.md` Delegated lanes; "Every dispatch carries `/alaa-low-noise`" stays | none |
-| 3 | **Calibrate length**: cover required substance, then stop; start with the outcome; conversation is not storage | OWN | `alaa-low-noise` `SKILL.md` | `cadence_failures` skill tuple: "Calibrate length" |
+| 3 | **Calibrate length**: cover required substance, then stop without filler; conversation is not storage | OWN | `alaa-low-noise` `SKILL.md` Contract and Check; "outcome first" stays in Final report | `cadence_failures` skill tuple: "Calibrate length" |
 | 4 | Concurrency facts: what counts against the limit, the refusal and its error text, the undocumented failure at the limit | OWN | `alaa-prompting-guide references/41-claude-code-runtime-features.md` (cc), `references/11-codex-runtime-features.md` (codex); the instruction to free a slot stays | none |
 | 5 | The lead owns goal normalization, scope control, lanes, selection, reconciliation, verification, triggers, reporting and stopping | P1 | none | none |
 | 6 | Use `routing-matrix.md` for the lead-session task selection and /alaa-prompting-guide for capabilities and control mechanics | P5 | none | none |
@@ -43,7 +43,7 @@ that clause back in the named tuple of both checker files.
 | # | Rule removed | Code | Owner or remaining home | Checker clause deleted |
 |---|---|---|---|---|
 | 19 | This orchestrator pair owns scheduling; /alaa-testing-strategy owns check necessity, breadth and proof; workflow owns validation of the mappings | P5 | none | none |
-| 20 | A native plan requires its registered issue graph, with no Markdown prerequisite; follow the workflow owner's outage and existing-family rules; use the final phase's exact issue ID | OWN | `alaa-workflow references/task-tracking.md` | none |
+| 20 | Follow the workflow owner's outage and existing-family rules; for a native plan use the final phase's exact issue ID | OWN | `alaa-workflow references/task-tracking.md` `## Outage and uncertain writes`, `## Beads-native execution plan`; "no Markdown prerequisite" stays | none |
 | 21 | Never initialize a replacement Beads database | OWN | `alaa-workflow references/task-tracking.md` `## Select before tracking-dependent work` | `CADENCE_REQUIREMENTS`: "never initialize a replacement Beads database" |
 | 22 | Tested issue closure advances readiness without claiming reviewed acceptance | OWN | `alaa-workflow references/task-tracking.md` (closure under a pending review) | `CADENCE_REQUIREMENTS`: "tested issue closure advances readiness without claiming reviewed acceptance" |
 | 23 | Implementation and documentation lanes commit their owned paths on the named lane branch when their focused checks pass, at any phase, including before final review | OWN | `alaa-workflow references/workspace-and-integration.md` `## Lane branches and commits` and `## Record the tested state` | `CADENCE_REQUIREMENTS`: "Implementation and documentation lanes commit their owned paths …" |
@@ -112,7 +112,7 @@ that clause back in the named tuple of both checker files.
 
 | # | Rule removed | Code | Owner or remaining home | Checker clause deleted |
 |---|---|---|---|---|
-| 69 | Pass `--sandbox` on each `bd` command that can write, and `--readonly` for a read-only lane | OWN | `alaa-workflow references/task-tracking.md` `## Agent identity and ownership` and `## Beads capabilities in use` | none |
+| 69 | When each `bd` flag applies: `--sandbox` on each command that can write unless the user authorized Dolt sync, `--readonly` for a read-only lane | OWN | `alaa-workflow references/task-tracking.md` `## Beads capabilities in use`; the flag names and the pointer stay | none |
 | 70 | `<task_controls>` field "availability or affected-lane blocker" | P3 | none | none |
 | 71 | Workflow owns persistence; `SKILL.md` owns interrupted-lane recovery; `verification-and-gates.md` retains scheduling (in `<collection_barrier>`) | P5 | none | none |
 | 72 | `20-design.md` `<doctrine>`: the enumerated test-design method | OWN | `alaa-testing-strategy` | none |
