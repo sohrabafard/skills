@@ -32,7 +32,7 @@ Read the target model's reference for its supported levels, its default and its 
 
 ## Capability registries and realized controls
 
-The structured Codex and Claude policies register neutral role identities and supported pairs. Supported levels are capabilities, not task recommendations or role-wide ceilings. Historical entries do not authorize active selection. This skill validates controls and allocates no work; step 2 above names the owner of admission, priority and deliberate departures.
+The structured Codex and Claude policies register neutral role identities and supported pairs. Supported levels are capabilities, not task recommendations or role-wide ceilings. Historical entries do not authorize active selection. This skill validates controls and allocates no work; `references/90-model-selection.md` names the owner of admission, priority and deliberate departures.
 
 A stale executable pin can defeat the caller's controls. Read the target runtime reference, and verify the loaded definition, the explicit pair and the effective resolution. A source edit does not reload the current registry. Use an available exact verified realization or block the affected lane. Never silently substitute or change installed configuration. When the configured resolution is established, an unknown observed identity is a reporting limit, not a requirement for paid probing.
 

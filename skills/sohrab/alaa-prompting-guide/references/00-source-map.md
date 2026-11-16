@@ -33,7 +33,7 @@ Carry caveats forward as caveats. Never convert uncertainty into a firm instruct
 
 Where official sources and `/alaa-workflow` disagree with this skill, report the drift, prefer current official and runtime truth for the task in hand, and reconcile the owning file afterwards, because a silent choice leaves two sources of truth and no record of which one was followed.
 
-For model lifecycle, use the official model-deprecations page. For API ID semantics, use model-ids-and-versions. Release summaries are weaker evidence than full system cards, which were unavailable after bounded retrieval. Vendor scores and source validation do not prove local runtime activation, account access or a profile's comparative quality. The advisor platform page was read through a summarizing fetch, so re-read it before you quote it. The model-config and sub-agents pages were read to their first 100,000 characters; their later sections keep their earlier dates.
+For model lifecycle, use the official model-deprecations page. For API ID semantics, use model-ids-and-versions. Release summaries are weaker evidence than full system cards, which were unavailable after bounded retrieval. Vendor scores and source validation do not prove local runtime activation, account access, model equivalence or a profile's comparative quality. The advisor platform page was read through a summarizing fetch, so re-read it before you quote it. The model-config and sub-agents pages were read to their first 100,000 characters; their later sections keep their earlier dates.
 
 ## Latest verification dates
 

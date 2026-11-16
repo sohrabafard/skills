@@ -6,7 +6,7 @@ Use for bounded retrieval, exact procedures, admitted mechanical or bounded sema
 
 Give one outcome, named inputs or retrieval starts, the required evidence and checks, the allowed tools and side effects, and explicit completion and failure conditions. Require retrieval before factual conclusions and observed checks before success. Keep narrow lanes complete: report every requested item as evidenced or unresolved, and stop at the acceptance criteria. Return missing scope or evidence, wider architecture judgment or ambiguous failures to the lead; never invent facts or expand the task.
 
-Vendor bounded-work guidance is capability evidence, not a role default; `references/90-model-selection.md` names the owner of allocation, admission, triggers and independent gates. Missing scope or evidence, or interacting design decisions, require reassessment, not an inherited Haiku choice. A missing account or control capability blocks the affected dispatch.
+Vendor bounded-work guidance is capability evidence, not a role default; `references/90-model-selection.md` names the owner of allocation, admission, triggers and independent gates. Missing scope or evidence, or interacting design decisions, require reassessment, not an inherited Haiku choice. Unknown serving identity stays unknown (`references/80-subagent-authoring.md`). A missing account or control capability blocks the affected dispatch.
 
 Registered implementation admission is local task policy: apply the `/alaa-cc-orchestrator` routing-matrix predicates, with no arbitrary file-count cap and no trial ladder. Implementation authority replaces neither bounded support-role restrictions nor independent gates.
 

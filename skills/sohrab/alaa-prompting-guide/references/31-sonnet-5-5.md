@@ -4,7 +4,7 @@ Use this file for current Sonnet prompting and migration. `assets/claude-model-p
 
 ## Prompting and effort
 
-Claude Code and the Claude apps default to `medium` (Claude Code verified 14 November 2026 against model-config). The Platform and the API default to `high`. Surface defaults are not task choices. Begin at `medium` for well-specified agentic work and at `high` for harder or longer tasks. Effort levels were recalibrated, so workload recommendations are unrun hypotheses. Before you raise effort, read `references/50-effort-and-thinking.md`.
+Claude Code and the Claude apps default to `medium` (Claude Code verified 14 November 2026 against model-config). The Platform and the API default to `high`. Surface defaults are not task choices. Begin at `medium` for well-specified agentic work and at `high` for harder or longer tasks. Effort levels were recalibrated, so workload recommendations are unrun hypotheses. When you need effort evidence or decide to raise effort, read `references/50-effort-and-thinking.md`.
 
 The launch reports high-effort Sonnet approaching Opus on some work at similar cost; that proves no universal local equivalence. Medium and high remain distinct supported task settings. In two reported benchmark cases, max underperformed xhigh because extra reviewer subagents caused timeouts or out-of-scope edits. Treat this as a workload-specific caveat, not a universal effort ranking: higher effort can change tool behavior without improving acceptance.
 

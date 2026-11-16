@@ -123,7 +123,7 @@ The exit, relaunch, usage-limit pause and size-setting statements were verified 
 
 Plan mode lets Claude read and explore but not edit, and it produces a plan you approve before any change. Enter it with `Shift+Tab`, a `/plan` prefix on one prompt, or `claude --permission-mode plan`. Shell commands outside the built-in read-only set still prompt during planning. Approving switches the session into the permission mode the chosen option describes. When you name modes in a prompt, the full set is `default`, `acceptEdits`, `plan`, `auto`, `dontAsk`, `bypassPermissions`; the CLI labels `default` as **Manual** and accepts `manual` as an alias.
 
-Ultraplan drafts the plan in a Claude Code on the web session in plan mode, for review in the browser. Launch it with `/ultraplan <task>`, the bare keyword `ultraplan` in a prompt, or "refine with Ultraplan" in a local plan's approval dialog. It is a research preview with no stated minimum version, requires a Claude Code on the web account and a GitHub repository, and is unavailable on Amazon Bedrock, Google Cloud's Agent Platform and Microsoft Foundry. `/ultrareview` is its review-side counterpart.
+Ultraplan drafts the plan in a Claude Code on the web session in plan mode, for review in the browser. Launch it with `/ultraplan <task>`, the bare keyword `ultraplan` in a prompt, or "refine with Ultraplan" in a local plan's approval dialog. It is a research preview with no stated minimum version, so carry forward no version gate for it. It requires a Claude Code on the web account and a GitHub repository, and is unavailable on Amazon Bedrock, Google Cloud's Agent Platform and Microsoft Foundry. `/ultrareview` is its review-side counterpart.
 
 Plan mode is the closest thing to a launch gate for a large or risky autonomous run. It composes with `/goal` and `/loop` for the autonomy that follows approval.
 
@@ -173,7 +173,7 @@ These compose: a workflow's `agent()` calls are subagents, a `/goal` can supervi
 
 ## Caveats
 
-Goal condition, evaluator, permissions, restrictions and Desktop Code guidance were refreshed 4 October 2026. No live Desktop command was exercised and no parser or cap change is established. Re-check every version gate and exact limit before use; the most volatile are dynamic workflow concurrency and total caps, `ultracode`, nesting and subagent caps, workflow warnings and loop limits. A chosen autonomous permission mode has separate account, model and provider requirements; a goal prompt cannot enable it.
+Goal condition, evaluator, permissions, restrictions and Desktop Code guidance were refreshed 4 October 2026. No live Desktop command was exercised and no parser or cap change is established. Re-check every version gate and exact limit before use; the most volatile are dynamic workflow concurrency and total caps, `ultracode`, nesting and subagent caps, workflow warnings and loop limits. Historical defaults are not activation evidence. A chosen autonomous permission mode has separate account, model and provider requirements; a goal prompt cannot enable it.
 
 ## Sources
 

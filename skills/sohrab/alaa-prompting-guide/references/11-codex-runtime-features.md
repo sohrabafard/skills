@@ -64,7 +64,7 @@ In `workspace-write`, these paths stay read-only inside a writable root, recursi
 
 When you report a subagent's model and effort, read `references/80-subagent-authoring.md` *Configuration and observed identity*; it separates requested from observed values and fixes the metadata position.
 
-The other statements in this section were verified on 25 September 2026. The policy JSON records a dated
+The sources below were verified on 25 September 2026. The policy JSON records a dated
 supported-effort snapshot; verify availability again on the actual dispatch host.
 
 ## `spawn_agents_on_csv` — background batch jobs
