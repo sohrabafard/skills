@@ -61,7 +61,7 @@ Clearing a cache, installing a tool, changing a permission, or starting a servic
 1. Identify the first causal error, not the last stack trace.
 2. Confirm the command, working directory, environment and resource limits.
 3. Compare the initial and final git status, and check for concurrent changes.
-4. Reproduce the failure in the smallest targeted scope, if one authorized rerun exists.
+4. Determine whether the failure reproduces in the smallest targeted scope, if one authorized rerun exists.
 5. Classify the owner as product, test infrastructure, environment, or unresolved ownership.
 
 A `TEST-INFRA-FAILURE` or `ENVIRONMENT-BLOCKED` recurring with the same first causal error earns no further full run: its owner reproduces the smallest failing path within the active retry budget while safe independent checks continue.

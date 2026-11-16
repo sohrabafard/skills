@@ -2,7 +2,7 @@
 
 ## The report fields
 
-The output contract in `SKILL.md` fixes the field names, their order and the tokens of `Decision`, `Not written` and `Tier`. The other fields hold:
+The output contract in `SKILL.md` fixes the field names, their order and the tokens it shows. The fields hold:
 
 ```text
 Scope: the change, and the surfaces and suites examined

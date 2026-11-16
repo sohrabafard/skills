@@ -19,7 +19,8 @@ The checker is `scripts/check_execution_contracts.py`. `REQ` is `REQUIREMENTS`, 
 
 | File | Rule, in one line | Code | Checker clause deleted |
 |---|---|---|---|
-| `SKILL.md` | After a failed maintainer check: "Preserve evidence. Repair within the caller's existing budget, or report blocked." | P1 | none; "Either nonzero blocks the affected claim" stays bound |
+| `SKILL.md` | After a failed maintainer check: "Preserve evidence." The repair budget and the blocked report stay. | P1 | none; "Either nonzero blocks the affected claim" stays bound |
+| `SKILL.md` | "This skill owns what each class licenses you to conclude." The rule that no class permits a pass report stays. | P5 | none |
 | `SKILL.md` | "Source checks prove no live-agent compliance." The script docstring states it. | P6 | none |
 | `SKILL.md` | "Before you read any reference, read the topic map." Narrowed to a reference that no body pointer names. | P2 | none |
 | `SKILL.md` | "Runtime orchestration is optional. Role allocation, observer independence and scheduling stay with the caller's runtime orchestrator" in *Executing checks*. | P5 | none |
@@ -59,6 +60,7 @@ no hit.
 
 | Tuple | Old clause, start | New clause |
 |---|---|---|
+| `REQ.body` | "references/00-topic-map.md" | "references/100-test-execution.md": the *Executing checks* sentence now names the execution reference directly, and the literal follows it |
 | `REQ.execution`, `NORM.execution` | "Runtime orchestrators own role authority, observer independence, allocation, and the scheduling…" | "This procedure grants no role authority, observer independence, allocation or scheduling" |
 | `REQ.execution`, `NORM.execution` | "required gates, exact commands and scoped inputs, cwd, timeout, … and eligible citations" (one clause) | "the required gates, with each exact command, its scoped inputs, cwd, timeout, environment and resource limits" and "the expected cases, declared case dependencies, aggregate-to-child coverage and eligible citations" (two clauses) |
 | `REQ.execution`, `NORM.execution` | "Record each command's machine-readable reporter when available and retain its output" | "each command's machine-readable reporter, with its output retained; without one, the raw exit status and output" |
@@ -69,17 +71,18 @@ no hit.
 Counts by `measure.py`, before to after: `REQUIREMENTS` 213 to 211; `NORMATIVE_DUPLICATES` 105
 to 102; `CONTRADICTIONS` 19 to 20. As tuple lengths they are 205 to 203 and 101 to 98.
 `EXPECTED_NORMATIVE_INVENTORY_SHA256` was recomputed by the script's
-own `normative_inventory_failures`. The tuples `body`, `router`, `flake`, `economy`,
-`workspace` and `continuity` are unchanged.
+own `normative_inventory_failures`. The tuples `router`, `flake`, `economy`, `workspace`
+and `continuity` are unchanged.
 
 ## Removed without a row (duplicates of a rule that stays in this skill, and reasons)
 
 Listed so that the owner can find them; the brief requires no row.
 
 - `references/10-what-makes-a-test.md` *Anti-patterns*: 20 negative restatements, each with a
-  pointer to its owner file. 18 restate an always-loaded body rule. The other two stay in
-  `30-doubles.md` (no mock for an outcome observable in state) and `50-flake.md` (quarantine
-  owner and deadline).
+  pointer to its owner file. 17 restate an always-loaded body rule. The other three stay in
+  `30-doubles.md` (no mock for an outcome observable in state), `50-flake.md` (quarantine
+  owner and deadline) and `90-test-economy.md` *Setup once* (no engine, container, migration
+  or application boot per test).
 - `references/90-test-economy.md` *Review checks*: five restatements of rules in the same file.
   Its one unique rule stays in *Candidates that are not owed a test*: a kit or package under
   development keeps the tests of the behaviour it owns.
@@ -98,6 +101,8 @@ Listed so that the owner can find them; the brief requires no row.
 - `references/110-execution-resources.md`: the targeted Go example (the runner example shows
   the same flags), the restated validity and exhaustive-tier rules, and the shared-container
   rule that `90-test-economy.md` owns.
+- `SKILL.md`: the pointer to `80` *Reruns* under the validity rules and the "under `80`"
+  pointer for an unreachable tier. The topic-map row for reporting a result routes both.
 - `agents/openai.yaml` `default_prompt`: eleven sentences that restated `SKILL.md`.
 - Reason clauses that only restated their rule, in non-negotiables 1, 2, 4, 5, 9, 11, 13, 14
   and 15 and across the references.

@@ -24,7 +24,7 @@ CLASSIFICATION = "references/120-result-classification.md"
 REQUIREMENTS = MappingProxyType({
     "body": (
         "For any direct or delegated validation run",
-        "references/00-topic-map.md",
+        "references/100-test-execution.md",
         "python3 scripts/check_execution_contracts.py",
         "`0` clean, `1` findings, `2` unavailable",
         "Either nonzero blocks the affected claim",

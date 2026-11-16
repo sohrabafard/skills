@@ -123,7 +123,7 @@ Repair the defect and rerun its failing path. Never make a check pass by deletin
 
 For any direct or delegated validation run, read `references/100-test-execution.md` before you choose commands, resources or a result status.
 
-After you change this skill's execution policy or consumer routes, run `python3 scripts/check_execution_contracts.py` from this skill directory: `0` clean, `1` findings, `2` unavailable input. Either nonzero blocks the affected claim. Never treat `2` as a pass. This maintainer check does not run on ordinary application tasks.
+After you change this skill's execution policy or consumer routes, run `python3 scripts/check_execution_contracts.py` from this skill directory: `0` clean, `1` findings, `2` unavailable input. Either nonzero blocks the affected claim: repair within the caller's existing budget, or report blocked. Never treat `2` as a pass. This maintainer check does not run on ordinary application tasks.
 
 ## Output contract
 
@@ -136,10 +136,10 @@ Failure modes
 Not written: candidate -> framework | owner suite <owner> <suite> | generated | declaration gate | not reachable: <reason>
 Broken implementations
 Layer placement
-Doubles
+Doubles: real|fake|stub|mock|spy, can-drift yes|no
 Coverage obligations
 Selectors
-Shared setup
+Shared setup: scope run | package | worker
 Build reuse
 Evidence
 Tier: focused | task acceptance | affected | exhaustive -> run now | cited
