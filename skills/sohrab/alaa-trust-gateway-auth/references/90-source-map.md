@@ -39,7 +39,7 @@ executable configuration retains edge authority.
 | Ground | Owner |
 |---|---|
 | Trusted header **names**, response envelopes, error taxonomy, platform values | `/alaa-services-contract` |
-| TOTP proof claim set, step-up response body, purpose naming, client proof caching | `/alaa-services-contract` `references/32-auth-totp-and-step-up-contract.md` |
+| TOTP proof claim set, step-up response body, purpose naming, client proof caching, the two enforcement paths and mode rules, the revocation boundary, the prerequisites of a new step-up route | `/alaa-services-contract` `references/32-auth-totp-and-step-up-contract.md` |
 | The permission bit contract, id allocation, catalog drift, decoders and harness | `/alaa-permission-generator` |
 | Fail-closed doctrine, threat classes, security-review triggers | `/alaa-security-review` |
 | Timeout shape, retry legality, backoff, circuit breakers, degrade doctrine | `/alaa-reliability-sla` |

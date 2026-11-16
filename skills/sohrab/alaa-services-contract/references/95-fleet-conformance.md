@@ -212,6 +212,39 @@ application guard and rendered deployment exposure are checked together.
 |---|---|---|---|---|
 | 21 | The central scraper calls each private `GET /metrics` directly, with no application-layer credential or source-IP allowlist and no public gateway route | `21-alaa-platform-observability-directive.md` | none proven | `auth`, `comment`, `content`, and the `alaa-go-chi` kit require a fresh application-plus-deployment conformance pass |
 
+One row was added on 2026-11-16, when `32-auth-totp-and-step-up-contract.md` separated Auth-local from
+downstream step-up enforcement. No repository was re-surveyed and nothing was run. Each cell comes from the
+cited file at the cited commit, and deployment is unconfirmed for all of it.
+
+| # | Rule | Owning file | Conforms | Does not conform |
+|---|---|---|---|---|
+| 22 | A downstream step-up guard decides from the three verified headers and denies unusable metadata with `403 TOTP_STEP_UP_REQUIRED` and `meta.purpose` | `32-auth-totp-and-step-up-contract.md` | none proven in full | undecided for `content` and the kit, pending the owner questions below; `comment` has no guard |
+
+Evidence and open owner questions for #22:
+- `content` (`ef78156`) gates bulk approve and execute through ControlledOps, with namespaced codes and no
+  `TOTP_STEP_UP_REQUIRED`: `403 CONTROLLED_OPERATION_TOTP_REQUIRED` with `error.meta.purpose`, a distinct
+  wrong-purpose code, `403 CONTROLLED_OPERATION_TOTP_PROOF_EXPIRED`, and
+  `400 CONTROLLED_OPERATION_TOTP_PROOF_INVALID` for partial or malformed metadata
+  (`<repo>/docs/bulk/totp-proof-controlledops-contract.md:3-31`,
+  `<repo>/app/ControlledOps/Context/ContentTrustedActorContextResolver.php:62-97`). Three of the codes come from the
+  ControlledOps package (`cb456b1`, `<repo>/src/Enums/ErrorCode.php:21-23`);
+  `CONTROLLED_OPERATION_TOTP_PROOF_INVALID` is a literal in `content`'s resolver. The bulk operations default to
+  disabled (`<repo>/config/controlled_ops.php:49`). **Open, for the ControlledOps and `content` owners:** are
+  the namespaced codes a sanctioned exception, or a deviation to converge under
+  `22-failure-load-and-deprecation-contract.md`?
+- `comment` (`f69d4a4`) documents a target flow and has no step-up guard
+  (`<repo>/docs/contracts/comment/security/totp-proof-contract.md:7`). The row does not apply until a route
+  adopts step-up.
+- The kit (`e69fcc5`) answers `TOTP_STEP_UP_REQUIRED` with `meta.purpose` for an absent, wrong-purpose or
+  expired proof (`<repo>/trustkit/require_totp.go:21-46`, `<repo>/errkit/constructors.go:135-137`). Its ingress
+  parser answers `AUTH_CONTEXT_INVALID` for partial or non-integer metadata before the guard runs
+  (`<repo>/trustkit/parse.go:187-198`). **Open, for the kit owner:** is `AUTH_CONTEXT_INVALID` for partial or
+  non-integer metadata a sanctioned exception to `/alaa-trust-gateway-auth` `references/30-fail-closed-cases.md`
+  ("TOTP step-up"), or a deviation to converge?
+- `auth` (`caa45fed`) `<repo>/docs/ops/totp-step-up-mechanism.md:190-201,277` still calls the gateway the
+  enforcement bridge and says that it matches `purpose` to the route. Gateway source compares `purpose` to
+  nothing. **Open, for the `auth` owner:** correct that document.
+
 Corrections to note, because the evidence did not support the first reading:
 - #3: `entitlement-api` is keyset (`cursor` and `limit` reach the query services), but its survey shows
   responses wrapped only as `{"data":...}` by `writeData`; a `meta.next_cursor` field is not evidenced. It is

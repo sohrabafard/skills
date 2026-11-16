@@ -171,7 +171,7 @@ Read next:
 
 ### Mode D+ - Auth TOTP management and forced route step-up
 
-Use when the task is about optional TOTP enrollment, authenticator-app setup, QR generation, `AUTH_TOTP_ENABLED`, recovery codes, forced route-level MFA, `require_totp:<purpose>`, or SDK/frontend step-up handling.
+Use when the task is about optional TOTP enrollment, authenticator-app setup, QR generation, `AUTH_TOTP_ENABLED`, recovery codes, forced route-level MFA on an Auth route or a downstream route, `require_totp:<purpose>`, or SDK/frontend step-up handling.
 
 Read next:
 - `32-auth-totp-and-step-up-contract.md`

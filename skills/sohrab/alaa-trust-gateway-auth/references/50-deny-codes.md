@@ -53,7 +53,7 @@ public path takes an optional bearer") owns that case.
 | `AUTH_NAME_OR_LOCATION_HEADER_INVALID` | 400 | a trusted name or location header violates the compact contract |
 | `AUTH_NAME_OR_LOCATION_HEADER_REQUIRED` | 400 | a route that deliberately requires trusted identity headers did not receive one |
 | `SESSION_EXPIRED` | 401 | auth: a refresh finds no usable session (`references/60-auth-service-v3-contract.md`), or a live-token route's `X-Access-Token-Id` is missing or names an unknown, revoked, expired or another user's token (`references/30-fail-closed-cases.md` case 9) |
-| `TOTP_REQUIRED` | 403 | the operation requires TOTP and the actor has not enrolled |
+| `TOTP_REQUIRED` | 403 | auth: a step-up guard on an auth route finds no enabled factor for the actor |
 | `TOTP_FRESH_LOGIN_REQUIRED` | 403 | auth: TOTP enroll or confirm on a session whose SMS-OTP login is not fresh or cannot be dated (`references/30-fail-closed-cases.md` case 10) |
 | `TOTP_ALREADY_ENABLED` | 409 | auth: TOTP enrolment while a factor is enabled; nothing changes |
 | `TOTP_ADMIN_RESET_FORBIDDEN` | 403 | auth: an admin TOTP reset refused by peer protection; the conditions are in auth `docs/contracts/auth/endpoints/admin-public/50-admin-totp-reset.md` |
@@ -64,11 +64,12 @@ public path takes an optional bearer") owns that case.
 
 Auth rows verified on 2026-10-20 in auth `app/Enums/ApiErrorCode.php`,
 `app/Exceptions/Security/TotpLifecycleException.php` and the middleware named in
-cases 9 and 10.
+cases 9 and 10. The `TOTP_REQUIRED` row was re-read on 2026-11-16 at auth `caa45fed`.
 
 For `AUTHZ_DENIED` and dependency-failure mappings, read
 `alaa-services-contract references/26-request-time-authorization-openfga/40-decision-and-enforcement.md`.
-For `TOTP_STEP_UP_REQUIRED`, its status and `meta.purpose`, read
+For `TOTP_STEP_UP_REQUIRED`, its status and `meta.purpose`, and for which route
+emits `TOTP_REQUIRED`, `TOTP_UNAVAILABLE` or `TOTP_FEATURE_DISABLED`, read
 `alaa-services-contract references/32-auth-totp-and-step-up-contract.md`.
 Those owner rows are not redefined here. `AUTH_CONTEXT_MISSING` in the sidecar's gateway-facing
 decision table is scoped to that hop's missing trusted context; it does not override the downstream

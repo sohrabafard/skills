@@ -1,6 +1,6 @@
 # Auth TOTP And Step-Up Contract
 
-Use this file when the task touches auth TOTP management, optional MFA setup, forced route-level TOTP enforcement, SDK/client handling of TOTP errors, QR setup UX, or `require_totp:<purpose>` rollout.
+Use this file when the task touches auth TOTP management, optional MFA setup, forced route-level TOTP enforcement on an Auth route or a downstream route, SDK/client handling of TOTP errors, QR setup UX, or `require_totp:<purpose>` rollout.
 
 ## Source priority
 
@@ -9,7 +9,7 @@ the `auth` repository checkout; resolve them there and never hardcode an absolut
 
 1. `routes/api.php`
 2. `bootstrap/app.php`
-3. `app/Http/Controllers/Api/V3/TotpController.php`
+3. `app/Http/Controllers/Api/Auth/TotpController.php`
 4. `docs/contracts/auth/endpoints/totp.md`
 5. `docs/contracts/auth/flows/totp-enrollment.md`
 6. `docs/contracts/auth/flows/totp-step-up.md`
@@ -27,9 +27,20 @@ component".
 ## Feature flag and availability
 
 - TOTP management is feature-flagged by `AUTH_TOTP_ENABLED` through `auth.totp.enabled`.
-- When disabled, `/api/v3/totp*` answers HTTP 404 with body `{ "message": "TOTP feature is disabled." }`.
-- Clients normalize that response as `totp_unavailable` and hide or disable the TOTP setup UI. Never treat it as an ordinary missing route, because a missing route means a deploy defect and this means a flag is off.
-- When enabled, self-service setup routes are usable by any authenticated user, and enrollment is never forced by the flag alone. Only `require_totp:<purpose>` on a route forces it.
+- Only Auth knows the flag and a user's enrollment state, because no trusted header carries either.
+
+| Response | Emitted by | When |
+|---|---|---|
+| `404 TOTP_FEATURE_DISABLED`, message `TOTP feature is disabled.` | every Auth `/api/v3/totp*` route, step-up included | the flag is off |
+| `403 TOTP_UNAVAILABLE` | Auth's `gateway_step_up` guard, and its `require_totp` guard in `required` mode | the flag is off |
+| `403 TOTP_REQUIRED` with `meta.purpose` | both Auth guards | the flag is on and the caller has no enabled factor |
+| `403 TOTP_STEP_UP_REQUIRED` with `meta.purpose` | both Auth guards and every downstream guard | the caller has no usable proof for the purpose the route requires |
+
+- `meta.purpose` is the exact purpose the route requires, never the presented one. `TOTP_STEP_UP_REQUIRED` carries the same `meta` key set from every emitter, under the one-key-set rule in `10-core-service-contract.md`.
+- Verified 2026-11-16 at auth `caa45fed`: `<repo>/app/Http/Controllers/Api/Auth/TotpController.php:169-178`, `<repo>/app/Support/Http/ApiErrorResponseRenderer.php:58-64,164`, `<repo>/app/Http/Middleware/RequireTotpMiddleware.php:54-71`, `<repo>/app/Http/Middleware/RequireGatewayStepUpProof.php:73-90` and `<repo>/tests/Feature/TotpManagementTest.php:57`.
+- Clients normalize the 404 as `totp_unavailable` and hide or disable the TOTP setup UI. Never treat it as an ordinary missing route, because a missing route means a deploy defect and this means a flag is off.
+- When enabled, self-service setup routes are usable by any authenticated user, and enrollment is never forced by the flag alone. Only a route that requires step-up forces it.
+- Turning the flag off stops proof issuance, because step-up answers the 404. **Proof binding to the issuing credential** below owns what a flag change, a disable or a reset revokes.
 - In image-first or cached-config runtimes, changing `AUTH_TOTP_ENABLED` requires refreshing config and recreating affected app/worker containers as appropriate.
 
 ## Public versus internal route shape
@@ -52,11 +63,22 @@ component".
 9. TOTP is enabled only after confirm succeeds.
 10. Client shows recovery codes once and never logs, persists, or sends them to analytics.
 
+Enroll and confirm need a fresh SMS-OTP login. `/alaa-trust-gateway-auth` `references/30-fail-closed-cases.md` case 10 owns that rule and `TOTP_FRESH_LOGIN_REQUIRED`.
+
 Never log or persist TOTP `secret`, `otpauth_uri`, user-entered TOTP codes, or recovery codes outside the intended secure storage and one-time display path.
 
 ## Forced route-level TOTP
 
-To force TOTP on a sensitive route, keep the route behind the normal authenticated gateway/trusted flow and add `require_totp:<purpose>,<mode>`.
+The service that owns a route enforces step-up on it. The gateway never enforces TOTP: it verifies `X-TOTP-Proof`, injects the `X-TOTP-*` headers and returns no TOTP response. A route uses exactly one of two enforcement paths. To lift a step-up requirement on either path, remove it from the route deliberately and record the removal, so an operator who reads the route list sees the real protection state.
+
+| Path | Routes | The guard decides from | Knows the flag and enrollment |
+|---|---|---|---|
+| Auth-local | Auth's own routes | `require_totp`: Auth's local proof record. `gateway_step_up`: the three verified headers and the credential binding | yes |
+| Downstream proof | every other service's routes | the three verified headers only | no |
+
+**Downstream service responsibilities** below owns the downstream path. The rest of this section, up to **Purpose rules**, owns the Auth-local path.
+
+On an Auth route, keep the route behind the normal authenticated gateway/trusted flow and add `require_totp:<purpose>,<mode>`.
 
 Example Laravel route shape:
 
@@ -69,8 +91,8 @@ Route::middleware('auth:trusted_gateway')->group(function (): void {
 
 Mode rules (`<mode>` is `optional` or `required`):
 
-- The gateway never enforces TOTP. It verifies `X-TOTP-Proof` and injects the `X-TOTP-*` headers; the backend decides per route.
-- `required` is for admin and high-risk operations. With `AUTH_TOTP_ENABLED=false` the request fails closed with `403 TOTP_UNAVAILABLE`. With TOTP enabled, a user without TOTP gets `403 TOTP_REQUIRED`, and a missing or invalid proof gets `403 TOTP_STEP_UP_REQUIRED`.
+- Modes exist only on Auth's `require_totp` guard. A downstream guard has no mode.
+- `required` is for admin and high-risk operations. With `AUTH_TOTP_ENABLED=false` the request fails closed with `403 TOTP_UNAVAILABLE`. With TOTP enabled it answers as the table in **Feature flag and availability** states.
 - `optional` is for self-protective actions on the caller's own account, such as revoking all own sessions. It passes when `AUTH_TOTP_ENABLED=false`, because blocking a user from protecting their own account is worse than the step-up gap. With TOTP enabled it behaves like `required`.
 - Choose the mode per route by risk. A disabled flag never permits a `required` operation.
 - A missing or unknown mode is a configuration error and fails loudly. There is no default mode.
@@ -83,6 +105,28 @@ Purpose rules:
 - A successful step-up for one purpose must not unlock a different purpose.
 - Do not use generic names such as `default`, `admin`, `write`, or route paths that may change.
 - Do not silently attach forced TOTP. Update route docs, OpenAPI, Postman, SDK/client notes, tests, and rollout notes.
+
+## Adding step-up to a route
+
+A new step-up route changes only its own service, with the two exceptions below.
+
+- **No new enrollment.** The user's one site-level credential serves every purpose, as the next section states.
+- **No Auth registration.** Auth holds no purpose allow-list. It signs any purpose of at most 120 characters that matches `^[A-Za-z0-9._:-]+$` (auth `<repo>/app/Http/Requests/Auth/TotpStepUpRequest.php:17`).
+- **No gateway TOTP registration.** The gateway holds no route-to-purpose map and verifies every presented proof (gateway `<repo>/docs/totp-proof-gateway-contract.md:3`, `<repo>/charts/gateway/values.yaml:200-206`).
+- **Exception: a documented allow-list.** When current Auth or gateway source documents an allow-list of purposes or step-up routes, report the registration as a required change in that repository. None existed at auth `caa45fed` and gateway `1042fd4` on 2026-11-16.
+- **Exception: route exposure.** Exposing a new path through the gateway, or making a path public, is a separate change. Before it, read `/alaa-trust-gateway-auth` `references/10-verification-and-ingress.md`. It owns the public-route list and what a public path does with a bearer. `references/30-fail-closed-cases.md` ("TOTP step-up") owns when the gateway processes a proof on a public path. `references/90-source-map.md` ("What this skill does not own") names the owners of deployment exposure.
+
+Report three kinds of evidence separately, each by name:
+
+| Kind | Covers | Proved by |
+|---|---|---|
+| Local enforcement | the service's guard: the required purpose, the three headers and the deny shape | service tests that inject the trusted headers |
+| Deployment prerequisites | `AUTH_TOTP_ENABLED=true`; proof-token issuance on (`AUTH_TOTP_PROOF_TOKEN_ENABLED`), because step-up without it returns no `proof_token`; gateway `totpProof.enabled`; one audience, issuer and verification key shared by Auth and the gateway; the route reachable only through the gateway | the deployed Auth and gateway profiles |
+| Ingress acceptance | the challenge, the step-up call and the retry with `X-TOTP-Proof` through the deployed gateway | an observed run against the real ingress |
+
+A header-injection test proves local enforcement only. The gateway's `<repo>/ci/scripts/smoke-totp-proof.sh` runs a rendered configuration against an echo backend, so it proves neither the deployed profile nor ingress acceptance. When live gateway evidence is unavailable, report ingress acceptance as not run. Never report it as passed from the other two kinds. When a deployed profile is unreadable, report deployment prerequisites as not verified, because a chart or config default is not the deployed profile.
+
+Take the downstream guard contract from **Downstream service responsibilities** below and the two files it names, not from an existing service. `95-fleet-conformance.md` row 22 records what each current service does and which code questions its owner has not decided.
 
 ## Site-level credential and purpose-scoped proof
 
@@ -98,13 +142,13 @@ Purpose rules:
 The target cross-service flow is signed proof-token based:
 
 1. The client calls the protected route normally.
-2. The gateway or backend returns a TOTP challenge with the required `purpose`.
+2. The route's service answers `403 TOTP_STEP_UP_REQUIRED` with the required purpose in `meta.purpose`. The gateway returns no TOTP challenge.
 3. The client calls `POST /auth/api/v3/totp/step-up` with that `purpose` and a fresh TOTP code or recovery code.
 4. Auth verifies the code against the user's enabled site-level TOTP credential and returns:
 
 ```json
 {
-  "purpose": "content.bulk_delete",
+  "purpose": "auth.messaging.campaign.create",
   "verified_until": "2026-07-04T12:05:00Z",
   "proof_token": "<signed proof token>"
 }
@@ -128,6 +172,9 @@ Rules:
   code and obtain a fresh proof through `POST /auth/api/v3/totp/step-up`.
 - Clear cached proofs on logout, account switch, project switch, TOTP disable/reset, token/session revocation,
   permission context changes, explicit step-up failure, or proof expiry.
+- Keep cached proofs across an ordinary same-session token refresh. A refresh is neither a logout nor a login: the
+  gateway binds a proof to the access token's `sub` and `pid`, not to one access token (gateway
+  `<repo>/docs/totp-proof-gateway-contract.md:20`, read 2026-11-16 at `1042fd4`).
 
 ## Gateway and downstream service contract
 
@@ -172,6 +219,16 @@ requires step-up denies the operation whenever the three verified headers are ab
 
 Downstream service responsibilities:
 
+- Define which operations require step-up, and one stable purpose for each under **Purpose rules**. Only the
+  route's service holds that policy.
+- Take the step-up decision from all three verified headers. `/alaa-trust-gateway-auth`
+  `references/20-claims-headers-and-sentinels.md` ("TOTP step-up headers") owns the exact purpose comparison, the
+  integer expiry check and what each header proves.
+- Deny as `/alaa-trust-gateway-auth` `references/30-fail-closed-cases.md` ("TOTP step-up") states. It owns which
+  conditions deny, and which of them carry `403 TOTP_STEP_UP_REQUIRED` with `meta.purpose`.
+- Never infer the Auth feature flag or the user's enrollment state, and never emit `TOTP_FEATURE_DISABLED`,
+  `TOTP_UNAVAILABLE` or `TOTP_REQUIRED`, because none of the four headers carries that state. The client learns
+  it from Auth, as **Client challenge handling** states.
 - Never validate raw TOTP codes.
 - Never trust public `X-TOTP-*` metadata.
 - Enforce only route/business purpose policy against gateway-verified proof metadata after normal authentication,
@@ -181,8 +238,16 @@ Downstream service responsibilities:
 
 ## Proof binding to the issuing credential
 
-A step-up proof is bound to the credential that issued it, so a disable or reset invalidates every earlier proof.
+Auth binds a step-up proof to the credential that issued it, so on Auth's own routes a disable or reset invalidates
+every earlier proof.
 
+- A downstream service honours a gateway-verified proof until its `exp`, because the gateway verifies a proof by
+  signature and a service makes no direct call to Auth (owner rule). A disable, a reset, or `AUTH_TOTP_ENABLED`
+  turned off stops new issuance and revokes no proof downstream. The proof lifetime is in `/alaa-trust-gateway-auth`
+  `references/20-claims-headers-and-sentinels.md`. State no shorter downstream revocation time without evidence
+  from the deployed gateway.
+- With `AUTH_TOTP_ENABLED` off, Auth's `gateway_step_up` guard and its `required` `require_totp` guard deny at
+  once with `TOTP_UNAVAILABLE`, also for a proof that was valid when issued (`<repo>/tests/Feature/AdminWriteStepUpTest.php:227-241`, `<repo>/app/Http/Middleware/RequireTotpMiddleware.php:54-57`).
 - `auth` stores the issuing credential's id under the proof's `jti` and under the local proof key. A request passes
   only when the stored id equals the user's currently enabled credential (`app/Support/Auth/TotpProofBindingVerifier.php:29-40`,
   `app/Services/Security/TotpStepUpService.php:89-98`). A disable or reset retires the credential and forgets the user's
@@ -330,9 +395,12 @@ The counter that makes a rejection spike visible without log search is
 
 Clients and SDKs model forced TOTP as a challenge-and-retry flow:
 
-- On `TOTP_STEP_UP_REQUIRED`, preserve the original request intent, show a TOTP challenge, call `POST /auth/api/v3/totp/step-up` with the same purpose plus `code` or `recovery_code`, cache the returned `proof_token` until `verified_until`, then retry the original request with public `X-TOTP-Proof`.
+- On `TOTP_STEP_UP_REQUIRED`, after the status read below when the route is outside Auth, preserve the original request intent, show a TOTP challenge, call `POST /auth/api/v3/totp/step-up` with `meta.purpose` from that response plus `code` or `recovery_code`, cache the returned `proof_token` until `verified_until`, then retry the original request with public `X-TOTP-Proof`.
+- Send the server's `meta.purpose` unchanged. Never derive the purpose from the route or from a client-side table, because only the route's service knows which purpose it requires.
+- On `TOTP_STEP_UP_REQUIRED` from a route outside Auth, read `GET /auth/api/v3/totp` before you show the code prompt. When `enabled=false`, run the enrollment path first. Such a route answers `TOTP_STEP_UP_REQUIRED` to an unenrolled user too, and Auth answers that user's step-up with `422 TOTP_STEP_UP_FAILED` and counts a failed attempt (auth `<repo>/app/Services/Security/TotpStepUpService.php:51-53`, `<repo>/app/Http/Controllers/Api/Auth/TotpController.php:132-134,197-204`, read 2026-11-16 at `caa45fed`).
 - On `TOTP_REQUIRED`, guide the user through status, enroll, confirm, and then step-up or retry the original action if it still requires proof.
-- On `TOTP_UNAVAILABLE`, show a controlled unavailable state and report rollout/config drift to operators.
+- On `TOTP_FRESH_LOGIN_REQUIRED`, send the user through a new SMS-OTP login, then resume enrollment. An ordinary token refresh does not satisfy it (auth `<repo>/docs/ops/totp-step-up-mechanism.md:19`).
+- On `TOTP_UNAVAILABLE`, or on `404 TOTP_FEATURE_DISABLED` from the status read or the step-up call made while recovering from a step-up challenge, show a controlled unavailable state and report rollout/config drift to operators. The original operation stays denied.
 - On `TOTP_STEP_UP_FAILED` or `TOTP_DISABLE_FAILED`, keep the challenge open and do not update local enabled state.
 - On `TOTP_RATE_LIMITED`, stop retries until the returned retry window expires.
 - On `AUTH_LIMITER_UNAVAILABLE`, fail closed with a temporary unavailable state.
@@ -361,9 +429,9 @@ SDK/frontend expectations:
 
 ## Review
 
-The TOTP and step-up review checklist is owned by `$alaa-security-review`, so that a reviewer who loads
+The TOTP and step-up review checklist is owned by `/alaa-security-review`, so that a reviewer who loads
 that skill sees it. This file owns the shapes it triggers against: the public versus internal route shape,
-the `otpauth_uri`-not-an-image setup contract, the purpose naming rules, the proof-token binding
-requirements, the client proof-cache rules, the gateway and downstream header responsibilities above, and
-the advisory-and-non-blocking rule on `X-TOTP-PROOF-REJECTED`. When a change touches any of those shapes,
-load `$alaa-security-review` and run its checklist against them.
+the `otpauth_uri`-not-an-image setup contract, the two enforcement paths, the purpose naming rules, the
+proof-token binding requirements, the client proof-cache rules, the gateway and downstream header
+responsibilities above, and the advisory-and-non-blocking rule on `X-TOTP-PROOF-REJECTED`. When a change
+touches any of those shapes, load `/alaa-security-review` and run its checklist against them.

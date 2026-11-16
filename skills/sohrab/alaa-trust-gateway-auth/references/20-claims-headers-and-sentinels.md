@@ -189,6 +189,10 @@ a message; `alaa-services-contract references/32-auth-totp-and-step-up-contract.
 owns it. Reading any other `X-TOTP-*` name leaves that name off the sanitize list,
 and an unsanitized header is forgeable by any public client.
 
+None of the four headers carries the Auth feature flag or the user's enrollment
+state. The same reference owns which service enforces step-up on a route, and which
+TOTP codes only Auth emits.
+
 | Header | Set by | Carries |
 |---|---|---|
 | `X-TOTP-PURPOSE` | gateway, only on full validity | the proof's `purpose` claim, verbatim |
@@ -200,10 +204,10 @@ and an unsanitized header is forgeable by any public client.
   allow-list, `typ`, `aud`, `iss`, required-claim completeness, `exp`/`nbf` with
   clock skew, and the binding of the proof's `sub` and `pid` to the already-verified
   access token all passed.
-- **Compare `X-TOTP-PURPOSE` to the purpose the operation requires before allowing
-  the operation**, because the gateway forwards a proof issued for one operation to
+- **Compare `X-TOTP-PURPOSE` exactly, with no normalization, to the purpose the
+  operation requires before allowing the operation**, because the gateway forwards a proof issued for one operation to
   every other operation unchanged, and only this comparison keeps them apart.
-- **Read `X-TOTP-VERIFIED-UNTIL` as Unix epoch seconds and reject the request when
+- **Read `X-TOTP-VERIFIED-UNTIL` as integer Unix epoch seconds and reject the request when
   that instant is past**, because the response body carries the same instant as an
   ISO 8601 string and a parser written against the body reads the header wrong.
 - **`X-TOTP-PROOF-ID` is the `jti` and is the correlation key in audit records.** A
@@ -223,14 +227,12 @@ and an unsanitized header is forgeable by any public client.
 The proof lifetime defaults to 300 seconds.
 
 The claim set of the proof token, the step-up response body, the purpose-naming
-rules and the client-side proof-cache rules are owned by `/alaa-services-contract` `references/32-auth-totp-and-step-up-contract.md`.
+rules, the client-side proof-cache rules, the two enforcement paths and the
+prerequisites of a new step-up route are owned by `/alaa-services-contract` `references/32-auth-totp-and-step-up-contract.md`.
 Denial behaviour for every step-up failure is in
 `references/30-fail-closed-cases.md`.
 
-**One correction to record.** `alaa-services-contract`
-`references/32-auth-totp-and-step-up-contract.md:125` states that the gateway
-verifies the proof's `purpose`. The gateway checks that the claim is present and
-forwards it verbatim; it compares it to nothing, because it holds no list of
-step-up-required routes. Only the backend compares. Verified against the gateway
-repository on 2026-07-27 at `charts/gateway/templates/configmap.yaml:487-583` and
-`docs/totp-proof-gateway-contract.md:53`.
+The gateway checks that the proof's `purpose` claim is present and forwards it
+verbatim. It compares the claim to nothing, because it holds no list of
+step-up-required routes. Read on 2026-11-16 at gateway `1042fd4`,
+`<repo>/docs/totp-proof-gateway-contract.md:49,55`.

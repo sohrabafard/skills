@@ -333,14 +333,17 @@ only when every check passed, and it returns no TOTP error and blocks no request
 An absent proof and an invalid proof are therefore indistinguishable to a
 service, and both deny.
 
-- **Deny with `403` `TOTP_STEP_UP_REQUIRED` and `meta.purpose` when any of the
-  three step-up headers is absent on a step-up-required route**, because the
-  client needs that exact purpose string to request a usable proof.
+- **Answer a denial for an absent header, a purpose mismatch or an unusable
+  `X-TOTP-VERIFIED-UNTIL` with `403` `TOTP_STEP_UP_REQUIRED` and `meta.purpose`**,
+  because the client needs that exact purpose string to request a usable proof.
+- **Deny when any of the three step-up headers is absent on a step-up-required
+  route.**
 - **Deny on a purpose mismatch**, because a valid proof for any purpose reaches
   every route.
-- **Deny when `X-TOTP-VERIFIED-UNTIL` parses to an instant at or before now**, and
-  never re-apply clock skew, because the gateway already applied it and
-  re-applying widens the real lifetime past what the operator configured.
+- **Deny when `X-TOTP-VERIFIED-UNTIL` is not an integer, or parses to an instant at
+  or before now**, and never re-apply clock skew, because the gateway already
+  applied it and re-applying widens the real lifetime past what the operator
+  configured.
 - **Deny when any of the three step-up headers arrives on a request the gateway
   did not authenticate**, because the gateway processes a proof only alongside an accepted
   bearer, on a public path as on a protected one.
@@ -350,17 +353,14 @@ service, and both deny.
 - **Return `503` with a distinct unavailable code rather than the step-up
   challenge when the decision itself depends on a store that is down**, because a
   challenge tells the client to spend a TOTP code the service cannot evaluate.
-- **Never allow a `required` step-up operation because the feature flag is off in
-  this environment.** Deny with `403` `TOTP_UNAVAILABLE`. Remove the route's
-  requirement deliberately and record the removal, so an operator reading the route
-  list sees the real protection state.
-- **The only exception is an `optional` route**: a self-protective action on the
-  caller's own account (for example revoke all own sessions) passes while the flag
-  is off, because blocking a user from protecting their own account is worse than
-  the step-up gap. With the flag on it behaves like `required`.
-- **Choose the mode per route by risk, explicitly.** Admin and high-risk operations
-  are `required`. A missing or unknown mode is a configuration error, never a
-  default. The gateway never enforces TOTP; the backend decides.
+- **Before a service other than auth reads the flag or the enrollment state, or
+  answers a TOTP code other than `TOTP_STEP_UP_REQUIRED`**, read
+  `alaa-services-contract references/32-auth-totp-and-step-up-contract.md`
+  ("Gateway and downstream service contract"). It owns which codes only auth
+  emits. The denied operation stays denied while auth issues no proof.
+- **Before you choose a step-up mode, or decide what a guard does while the flag
+  is off**, read the same reference ("Forced route-level TOTP"). It owns the mode
+  rules and the fail-closed `required` mode.
 - **Log the denial with the proof id, the required purpose, the presented
   purpose, the route, the user id, the project id and the decision.** Never log
   the proof token, a TOTP code, a recovery code, the enrolment secret or the
@@ -368,26 +368,23 @@ service, and both deny.
   does not.
 
 **Every service other than auth enforces step-up against the gateway-injected
-headers.** Auth verifies the TOTP code itself, and enforces `require_totp` routes
-against its own proof record (`require_totp:<purpose>,<optional|required>`) and
-`gateway_step_up` routes, which are always `required`, against the three headers
-(auth `app/Http/Middleware/RequireTotpMiddleware.php`,
-`app/Http/Middleware/RequireGatewayStepUpProof.php`).
+headers.** Auth's own routes use a second path. Before you decide which path a
+route uses, read `/alaa-services-contract` `references/32-auth-totp-and-step-up-contract.md`
+("Forced route-level TOTP"). It owns both paths.
 
-**Proof binding is local to auth.** Auth binds each proof it issues to the active
-TOTP credential in its own Redis and denies a proof whose credential is no longer
-the enabled one, so a disable or reset voids earlier proofs at once on auth routes;
-an unreadable store fails closed (auth `app/Support/Auth/TotpStepUpProofStore.php`,
-`app/Support/Auth/TotpProofBindingVerifier.php`). An agent debugging a step-up
-denial at auth checks the binding record and the credential state, not only the
-headers. Every other service honours a gateway-verified proof until its `exp`,
-because services make no direct call to auth (owner rule). The step-up contract is
-`/alaa-services-contract` `references/32-auth-totp-and-step-up-contract.md`.
+**Proof binding is local to auth.** An agent debugging a step-up denial at auth
+checks the binding record and the credential state, not only the headers. Before
+you state what a disable, a reset or a flag change revokes, on auth routes or
+downstream, read `/alaa-services-contract` `references/32-auth-totp-and-step-up-contract.md`
+("Proof binding to the issuing credential"). It owns the binding and the
+revocation boundary.
 
 **Test.** For a step-up-required route: assert a deny with each of the three
 headers removed in turn; assert a deny when `X-TOTP-PURPOSE` names a different
-purpose; assert a deny when `X-TOTP-VERIFIED-UNTIL` is one second in the past and
-an allow when it is one second in the future; assert a deny when the headers
+purpose; assert a deny when `X-TOTP-VERIFIED-UNTIL` is one second in the past or is
+not an integer, and an allow when it is one second in the future; assert that each
+of these denials answers `403` `TOTP_STEP_UP_REQUIRED` with `meta.purpose` equal to
+the required purpose; assert a deny when the headers
 arrive without gateway authentication; and assert that no denial log line contains
 the proof token or any code.
 
