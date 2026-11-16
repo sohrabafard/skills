@@ -146,7 +146,7 @@ After all V1 executions complete, remove the old Workflow function.
 
 ## Worker Versioning
 
-Worker Versioning allows multiple Worker versions to run simultaneously, routing Workflows to specific versions without code-level patching. Workflows are pinned to the Worker Deployment Version they started on.
+Worker Versioning is GA and allows multiple Worker versions to run simultaneously. Pinned Workflows stay on their original Worker Deployment Version; Auto-Upgrade Workflows can move at Workflow Task boundaries and require replay-compatible code.
 
 ### Key Concepts
 
@@ -169,6 +169,7 @@ const worker = await Worker.create({
       deploymentName: 'order-service',
       buildId: '1.0.0',  // Git hash, semver, build number, etc.
     },
+    defaultVersioningBehavior: 'PINNED',  // or 'AUTO_UPGRADE'
   },
 });
 ```
@@ -178,6 +179,22 @@ const worker = await Worker.create({
 - `useWorkerVersioning`: Enables Worker Versioning
 - `version.deploymentName`: Logical name for your service (consistent across versions)
 - `version.buildId`: Unique identifier for this build
+- `defaultVersioningBehavior`: `'PINNED'` or `'AUTO_UPGRADE'`, used for Workflows that don't declare their own. **Required** when `useWorkerVersioning` is `true` (TypeScript type error otherwise, and `Worker.create` throws `Unknown versioning behavior: undefined` at runtime)
+
+### Per-Workflow Versioning Behavior
+
+Override the Worker default for an individual Workflow with `setWorkflowOptions`:
+
+```typescript
+import { setWorkflowOptions } from '@temporalio/workflow';
+
+setWorkflowOptions({ versioningBehavior: 'AUTO_UPGRADE' }, longRunningWorkflow);
+export async function longRunningWorkflow(): Promise<void> {
+  // ...
+}
+```
+
+**PINNED**: The Workflow stays on the Worker Deployment Version it started on. **AUTO_UPGRADE**: The Workflow moves to its Target Version (the Current Version, or the Ramping Version if it's routed to the ramp) on its next Workflow Task, so it still needs patching to handle version transitions safely.
 
 ### Deployment Workflow
 
@@ -189,18 +206,12 @@ const worker = await Worker.create({
      --build-id 2.0.0
    ```
 3. New Workflows start on the new version
-4. Existing Workflows continue on their original version until completion
+4. Pinned Workflows continue on their original version; Auto-Upgrade Workflows move to the Target Version
 5. Decommission old Workers once all their Workflows complete
 
 ### When to Use Worker Versioning
 
-Worker Versioning is best suited for:
-
-- **Short-running Workflows**: Old Workers only need to run briefly during deployment transitions
-- **Frequent deployments**: Eliminates the need for code-level patching on every change
-- **Blue-green deployments**: Run old and new versions simultaneously with traffic control
-
-For long-running Workflows, consider combining Worker Versioning with the Patching API, or use Continue-as-New to move Workflows to newer versions.
+Prefer Worker Versioning for production deployments when you can run versioned Workers. Choose `PINNED` for runs that finish within a deployment's lifetime, or for long-running Workflows that upgrade at Continue-as-New boundaries. For long-running Workflows without Continue-as-New, use `AUTO_UPGRADE` with patching. Blue-green deployments default to Auto-Upgrade; Pinning fits rainbow deployments. See the [core guide](../core/versioning.md) for rollout and recovery tooling.
 
 ## Upgrading on Continue-as-New
 
