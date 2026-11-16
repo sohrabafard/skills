@@ -128,3 +128,63 @@ AGENT: alaa-implementer-fable. CONFIGURED: not inspected. REQUESTED: claude-fabl
 - Not run: `init_workflow_files.py`, `validate_workflow_files.py`, any `bd` write, any other suite. Live agent behaviour is unproved.
 
 Skills loaded before the first edit: `/alaa-prompting-guide` (with `60-skill-authoring.md` *ASD-STE100 style* and *The wording is the mechanism*), `/alaa-ponytail` full, `/alaa-low-noise`; `/alaa-testing-strategy` and `/alaa-code-intelligence-routing` were preloaded. Not read: testing-strategy `100`, `110` and `120` references, and the routing-matrix profile section; the lane ran only the supplied commands and no repair was needed. Blockers and boundary conflicts: none. Independent review is pending at the final boundary.
+
+## LB — orchestrator pair
+
+STATUS: COMPLETE — Lane LB is in both orchestrator packs at version 7.1.0 in identical terms, every gate of criteria 1 to 3 exits 0 on the final tree, and the lead's three-point correction is applied.
+AGENT: alaa-implementer-fable. CONFIGURED: no model or effort pin in the definition. REQUESTED: claude-fable-5-2, effort high. OBSERVED: model claude-fable-5-2 (runtime self-identification); effort unknown.
+
+**1. Outcome.** Allocation by fit, the output rule in all 70 definitions, write lanes that own their Beads leaf, and the lead's advisor consultation points (cc only) are implemented, mirrored, rendered and committed.
+
+**2. Branch and commits.** Branch `worktree-agent-aed540898f5596814`, worktree `agent-aed540898f5596814`, fast-forwarded to `c6fc56b9` first.
+- `d891fcad` feat(orchestrators): allocate by fit, bound agent output, let write lanes own their Beads leaf
+- `91399a0d` docs(artifacts): add the lane LB ledger with both fit-table walks
+- `4d518183` fix(orchestrators): put bd flags after the subcommand and keep Lane lines in the root checkpoint
+
+**3. Plan items** (both packs unless marked).
+- W2.1 to W2.6: done in `references/routing-matrix.md` *All-role task allocation*. Step 3 is the fit table with the two facts, effort rule, exceptional-model row with its three evidence arms, and both defects. Step 4 is feedback. Step 5 is the one-line record. *Implementation routing* names the fit row of each route; *Stack-bound roles* records the two fit facts.
+- W2 inheritance fact: done in `references/delegation-prompts.md` `<task_controls>` (the read-back), plus the mechanics sentence in codex `references/model-effort-policy.md`.
+- W4.1: done. One `Output rule:` paragraph after `Effective authority:` in the three contract assets and the 39 hand-written definitions. Criterion 4 holds with `grep -L` scoped to `agents/alaa-*`; a bare `agents/*` prints `openai.yaml`, which is interface metadata.
+- W4.2: done in `SKILL.md` *Dispatch discipline*.
+- W1 pair side: done in `references/delegation-prompts.md` `<beads_identity>`, `delegation-prompts/30-implementation.md`, `assets/implementation-contract.md` and `alaa-documenter` (`Task tracking:` block with I1), and `references/verification-and-gates.md` cadence.
+- W3 pair side: done in cc `references/model-effort-policy.md` *Native Advisor consultation*, cc `references/delegation-prompts.md`, the cc `SKILL.md` pointer; the codex changelog records no equivalent.
+- Version: `VERSION`, one `7.1.0` changelog entry each, codex `README-fa.md` line.
+- Ledger with both seven-lane walks: `agent-aed540898f5596814/artifacts/continuity-and-allocation-20261117/changes-LB.md`. All seven cc walks match the expected pairs; codex gives official cells for (a), (b), (c), (f) and marked local policy for (d), (e), (g).
+
+**4. Words before and after (`wc -w`).**
+
+| File | cc | codex |
+|---|---|---|
+| `SKILL.md` | 2105 to 2133 | 2075 to 2099 |
+| `routing-matrix.md` | 2592 to 3400 | 2726 to 3613 |
+| `model-effort-policy.md` | 525 to 562 | 413 to 441 |
+| `delegation-prompts.md` | 582 to 771 | 582 to 727 |
+| `30-implementation.md` | 455 to 483 | 456 to 484 |
+| `verification-and-gates.md` | 3060 to 3088 | 3186 to 3214 |
+| `implementation-contract.md` | 1047 to 1263 | 1050 to 1266 |
+| `planner-contract.md` | 552 to 588 | 577 to 613 |
+| `reviewer-contract.md` | n/a | 584 to 645 |
+| all `agents/alaa-*` | 25183 to 29033 | 28283 to 32627 |
+
+Counts were taken before the correction commit, which moved flags only. `20-review-followup.md` changed by wording only (314 words).
+
+**5. Checker clauses.** `BOUNDED_REQUIREMENTS`: 1 reworded, 0 deleted, identically in both `check_agent_contracts.py`. Every other tuple: 0 and 0. `validate_pack.py` holds no literal of its own. No checker logic changed.
+
+**6. Deviations and limits.**
+- Lead correction applied in `4d518183`: (1) flags after the subcommand in both commands, everywhere in both packs; (2) neither pack states I3, so nothing changed; (3) `Lane:` lines are in the root's checkpoint block and only the last block's lines are live.
+- Feedback rule: I added no reopen trigger. The lowering arm therefore cannot reach lanes that the same batch already allocated; it fires only at a later initial assignment, scope change or fix follow-up.
+- Effort cells: `90-model-selection.md` has no effort row for Haiku or Fable and none for most steps. Those cells rest on the model references and `50-effort-and-thinking.md`, and the table says so as local policy.
+- Codex: `.codex/rules/beads.rules` allows only `bd <subcommand>` prefixes, so a command that starts `bd --sandbox` does not match it. Whether a Codex write lane's sandbox can reach the issue store is unverified, and a failed claim now reports the lane blocked.
+- Additions beyond the plan text: "the root is the one phase for the phase rules of this file" (depends on LA's field layout); the append-failure fallback (put the block in the return); `retain` handling in the `Task tracking:` block; the codex sentence on reading the official row's other cell under an explicit user priority.
+- The implementer-only sentence "Write bulky output to the permitted artifact directory" stays outside the shared paragraph, so read-only roles get no write instruction.
+
+**7. Rules kept but doubted.**
+- cc `routing-matrix.md:60`: the Fable support row lists "finished documents", which a reader could stretch to lane (e).
+- `routing-matrix.md:72`: "duration ... alone never select[s]" sits beside lane (f), which reaches the exceptional model through the hours-long official row.
+- codex `routing-matrix.md` `alaa-implementer-xhigh` bullet: "admitted by the batch source mapping" is defined nowhere.
+- cc `agents/alaa-reviewer.md` and codex `assets/reviewer-contract.md`: "Report every issue you find" against the 40-line default; findings count as required items.
+- `delegation-prompts/30-implementation.md` continuation bullet: a continued implementer keeps `<beads_identity>`, with action `retain` implied but not stated.
+
+**8. Gates.** All exit 0, with `PYTHONDONTWRITEBYTECODE=1 python3 -B`, last run after the correction: the four root checkers; in each pack `render_agents.py --write`, `--check`, `validate_pack.py`, `check_agent_contracts.py`, `check_agent_grants.py`; `check_execution_contracts.py`; `check_claude_model_policy.py`; `check_codex_model_policy.py --agent-root assets/rule-writer/codex`. The pack gates ran three times, not once: an early run, the final run, and the run after the correction. No fixture, install or `bd` write ran.
+
+Skills: loaded before the first edit `/alaa-prompting-guide` (with `60`, `90`, `50`), `/alaa-ponytail` full, `/alaa-low-noise`; preloaded `/alaa-testing-strategy`, `/alaa-code-intelligence-routing`. Read late, after the first commits: `alaa-workflow references/workspace-and-integration.md` `## Lane branches and commits` (all three commits comply) and `alaa-testing-strategy references/100-test-execution.md`. No boundary conflict and no blocker; independent review stays pending at the final boundary.
