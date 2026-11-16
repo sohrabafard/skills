@@ -1,191 +1,191 @@
 {
   "pack": "alaa-codex-orchestrator",
-  "version": "6.0.4",
+  "version": "6.1.0",
   "managed_agents": [
     {
       "name": "alaa-accessibility-reviewer",
       "file": "agents/alaa-accessibility-reviewer.toml",
-      "sha256": "3302a7c9ce6abac9fb80a51e0cba98dacc74e55344deeb394e2aa9653a569d79"
+      "sha256": "7e8bd7be737ba71e6f776f8ea5769163552d685d9bb0f45d9c0678a4bdd2708d"
     },
     {
       "name": "alaa-adversarial-reviewer",
       "file": "agents/alaa-adversarial-reviewer.toml",
-      "sha256": "832dd60471be04a6c0c43ce1fb893be1581f7c168e34e01fb741626cdf35de3c"
+      "sha256": "550228381589503e9840936b9c1bfb0116a87c75e054e549512c79f60a9e5fd1"
     },
     {
       "name": "alaa-api-contract-reviewer",
       "file": "agents/alaa-api-contract-reviewer.toml",
-      "sha256": "1929a022a4d1f12d5fe21fce13e6b1b08f81dba3fe2455b023ea0741b30a9d1c"
+      "sha256": "b3420cd20f0219889cda1fe57db2167921368a1cc98b99dcb7dcabbfc4216e72"
     },
     {
       "name": "alaa-architecture-critic",
       "file": "agents/alaa-architecture-critic.toml",
-      "sha256": "40fa12a40662994b0f87c6fb6a74acf3de5b5044925bb29c504576e284e8ef33"
+      "sha256": "b85c8f25598d254d7d372d561eddc458f98012b96277e2ffaa3dee3d2a33f873"
     },
     {
       "name": "alaa-browser-qa",
       "file": "agents/alaa-browser-qa.toml",
-      "sha256": "821e3920a589a119b4454735b8bf1c9a4cc4a220b6fa5f56375be7b33842db14"
+      "sha256": "cf2a3d52359fa04a3f67a22821d4bfc303d196e7bffaa1d1903d198632a8dd9a"
     },
     {
       "name": "alaa-dependency-auditor",
       "file": "agents/alaa-dependency-auditor.toml",
-      "sha256": "6e6c349272ff06255c4c56751e5716d359a5828c8fca249adec466dbd5ff1b31"
+      "sha256": "83cb28a45000905d742db269c94c2c687089e1f04dad045c080c93c756cf8672"
     },
     {
       "name": "alaa-documenter",
       "file": "agents/alaa-documenter.toml",
-      "sha256": "c2b24a7adc38cfff5788ccaf07b6a9a933e31ab502ac5d8e8686d5b3130be532"
+      "sha256": "e02ee80a0ef7058c17b2d376fd961d694e75dc2a96df2d18fe6cac6315ff6cca"
     },
     {
       "name": "alaa-explorer",
       "file": "agents/alaa-explorer.toml",
-      "sha256": "a8aaee76db5ffdbe475f79461f1c1b679b64bc0f77b9c4afcc353e947d289ef9"
+      "sha256": "91699bc22baae4d5cb5f188b18deff2b674e8fb41b4da4b0b9d8a1cff0b080f1"
     },
     {
       "name": "alaa-failure-analyst",
       "file": "agents/alaa-failure-analyst.toml",
-      "sha256": "0b9a206875f6caf76d33fa9a35450e6233f92cab84afb7f8821ee37a8d0025e8"
+      "sha256": "a665e4e0fc68abf093a1e1475399fd3a4275baa09067be230c7562c097487b24"
     },
     {
       "name": "alaa-implementer-astra-medium",
       "file": "agents/alaa-implementer-astra-medium.toml",
-      "sha256": "fa75789e14a2560b818bc51e45a4aed00d3542a7a1423ecbf5eff09929e112bc"
+      "sha256": "7aa5d35b973fe33d2994af4e71d7d63e9197e03abf8fb707f60b208a402fb84a"
     },
     {
       "name": "alaa-implementer-astra-xhigh",
       "file": "agents/alaa-implementer-astra-xhigh.toml",
-      "sha256": "03cc3e94fbbdaf81519286e6e599a98a9cb6d0dd6e93cce75258a9a61f3b47fa"
+      "sha256": "e6add00146f9660894c22acb6da1e6d2128a8bc9da7b7e7836897227f2ea7cf5"
     },
     {
       "name": "alaa-implementer-astra",
       "file": "agents/alaa-implementer-astra.toml",
-      "sha256": "c0014ae71a5648bb1f834e4896ae03125ef0ca8dd75b4dbd0909cd7948d1d4dd"
+      "sha256": "67bf125609947539396a458d342ced11ff5b0647e4d78de25d66bc7cff3ed839"
     },
     {
       "name": "alaa-implementer-frontend",
       "file": "agents/alaa-implementer-frontend.toml",
-      "sha256": "9815df26803cb0329659f3a16675dcbde584f2bbc825da223e45e58e06952951"
+      "sha256": "7cbb832b4d7571c9370dca93e9af5b584dc3d7f3184abe7e553590359fbde76d"
     },
     {
       "name": "alaa-implementer-go",
       "file": "agents/alaa-implementer-go.toml",
-      "sha256": "7ffaf26de8e02dc90fb9eb931571771f88eb00717fb388888e48a31464dc677e"
+      "sha256": "f1793f559e013af05eec5ae3924d2572ddba8e82d6da534ab73c40dc02d164c4"
     },
     {
       "name": "alaa-implementer-high",
       "file": "agents/alaa-implementer-high.toml",
-      "sha256": "453f31e7385d9936b3527aaf0ce1de930f8d3e55073cdb81ebe49b4ad52afaeb"
+      "sha256": "07e0bb3dec0faab15a745ecd9bf4dc499e4b4f6810d416271999a064aa79944b"
     },
     {
       "name": "alaa-implementer-infra",
       "file": "agents/alaa-implementer-infra.toml",
-      "sha256": "620ecec11831e877af6ad4686c346fa975e67eeb5dc92b78f92486a1d185ab47"
+      "sha256": "f4d90198d9406667229ce9a56b6d0b5739489d50a0dc3f307cc227e6bcb74598"
     },
     {
       "name": "alaa-implementer-laravel",
       "file": "agents/alaa-implementer-laravel.toml",
-      "sha256": "20306f9108ae591d770cf8b9c9f39cb867cf464c25136d9e0f4d6dc9e1d26dfa"
+      "sha256": "185d228da1f1e1c1b23366123e83925f2dd0f0493a0dd37d7ec4df8b0ae3d1a4"
     },
     {
       "name": "alaa-implementer-low",
       "file": "agents/alaa-implementer-low.toml",
-      "sha256": "acc9d0bdca1ba7310cbeec8622e763b103e3ad84104843f9a3e27e04a8960bae"
+      "sha256": "51e3611f73d4a9c7efb8270d7f282fe332ae296cb24721aaa62adee57690cf4d"
     },
     {
       "name": "alaa-implementer-luna-high",
       "file": "agents/alaa-implementer-luna-high.toml",
-      "sha256": "1ad4bf61608ae51bdccda0c50661edcfca46ec66b4a18cf839d32a0f5bb963e8"
+      "sha256": "4a486141bb23b3a9b5dd2b2bd7b6290238467c252928c3a3b71ae71611e45a9c"
     },
     {
       "name": "alaa-implementer-luna-low",
       "file": "agents/alaa-implementer-luna-low.toml",
-      "sha256": "6e185c882154e1122b87985e29975cd84cf12e68d1bc3db42fe4baeda43de230"
+      "sha256": "a7acd263683c538a4005d5b269abf770a0d9bb89c7d13dd3a3accfc070352306"
     },
     {
       "name": "alaa-implementer-luna",
       "file": "agents/alaa-implementer-luna.toml",
-      "sha256": "6b6b54926de61c42f51687f969223c6222a03b806459c854f288ca7708e64917"
+      "sha256": "065feba36db9bb605322a21a34cfe3f54797e5313470eb3f5f01c0939a65984e"
     },
     {
       "name": "alaa-implementer-xhigh",
       "file": "agents/alaa-implementer-xhigh.toml",
-      "sha256": "65183c2cacfb7633acf743bbdcb5f03a66cad89b8dec6ed82ceeb11a33c3c460"
+      "sha256": "833697162de0d2e4b4bb8ee10de8dabad26b2187fe10638d6da6a1822e46ffc7"
     },
     {
       "name": "alaa-implementer",
       "file": "agents/alaa-implementer.toml",
-      "sha256": "5f77e19e5ce1b1628f097914b3ba62bf500b1e95a3498088b1fa674e5a906447"
+      "sha256": "3c98ca928f7b4bad10f82eb3e2438a241160ca55e47baa29e61e7d2f82f4211a"
     },
     {
       "name": "alaa-instruction-reviewer",
       "file": "agents/alaa-instruction-reviewer.toml",
-      "sha256": "d87f1439fb6ded6b4532609eb8a24612110f33995b6aa1c7c6b18e4cff6c77ef"
+      "sha256": "da65d49430d865b4348dbc7c8868ede45a8aa9b83ca136824c9399a5556d0b69"
     },
     {
       "name": "alaa-migration-guardian",
       "file": "agents/alaa-migration-guardian.toml",
-      "sha256": "30bbc426f80ca753881ab5779b6253c3ecd3090e0cd3a63f01c0ee525b15c013"
+      "sha256": "3a068e173e9c7096e84e349488b998d9670b0c9e26ddf4b68ace9af1776358ff"
     },
     {
       "name": "alaa-observability-reviewer",
       "file": "agents/alaa-observability-reviewer.toml",
-      "sha256": "2a7f35e8095bccb03f6c3999844e869d11f4035e19e4d9d69e3d0ca47676f5f7"
+      "sha256": "ee6ac3e671bd6d2a2125e8029c4530466c3c48d92339c5fc478710a89fec83fc"
     },
     {
       "name": "alaa-performance-profiler",
       "file": "agents/alaa-performance-profiler.toml",
-      "sha256": "c55d35b1fcbb83c9cef8258237c34423b5a690106198aaabd4bf46a4b0b0e204"
+      "sha256": "9dfdb8b2ae59824af51216c66c9f88d3adf4ff561b7a1f93b51a0b058eb2f23e"
     },
     {
       "name": "alaa-planner-high",
       "file": "agents/alaa-planner-high.toml",
-      "sha256": "e39f11749f2671b812c9d02f1f46fbdb42c86e7425121dfaddeffa7b06fde891"
+      "sha256": "0d009b44117ffbd18ff0df9a94582590fba34d9d05d307370cd52c6b61770b5c"
     },
     {
       "name": "alaa-planner",
       "file": "agents/alaa-planner.toml",
-      "sha256": "aab97d4d69664fe40d674639e5350c92dc09d2ed0f3e9a491bd084b66110d40a"
+      "sha256": "abbfce860e5fb15848130978365920758a7638dff4cd7c56dc4647c663990b3a"
     },
     {
       "name": "alaa-release-guardian",
       "file": "agents/alaa-release-guardian.toml",
-      "sha256": "f1bd8f5a88ba0515bf849d6ad793640343fd618139f02cee82365f6096a35042"
+      "sha256": "258e27359787d950f9070ce8951389f1a20446bcfc4450b1c9ebb279ede57698"
     },
     {
       "name": "alaa-researcher",
       "file": "agents/alaa-researcher.toml",
-      "sha256": "b01f0b6bd1077548ccf9f1f4f592e257fa2a692af4e297174f05d74622b0187e"
+      "sha256": "5ac4d9f127012ad778d8d61e9c8870b5f2b95b4c67b84398a917a0d8c0260f38"
     },
     {
       "name": "alaa-reviewer-deep",
       "file": "agents/alaa-reviewer-deep.toml",
-      "sha256": "3f135aa13ada65e3971697f661a0d552d85c389a26ddf4bc6d8617487e5e830f"
+      "sha256": "056fb63cfa2f97d7eb0c90fd5ab981774a1e1ec6e43040ec789f3c55a203cbd3"
     },
     {
       "name": "alaa-reviewer",
       "file": "agents/alaa-reviewer.toml",
-      "sha256": "fd903884c8115d7535eb742778caccfae09a0f82f4464ccf48c4aff6a352aa8f"
+      "sha256": "e530e22175d4b840b7bf55ff7eec80e59adb380a3aa38f5a100f7e3573c4cdbc"
     },
     {
       "name": "alaa-security-reviewer",
       "file": "agents/alaa-security-reviewer.toml",
-      "sha256": "262549a11ac3e7092e3784c9f39a7c728224d27bbcac651c154b9260e2796353"
+      "sha256": "e74b1b0f7c735b0a530a54ac3fcdd4dc3dfab236bed0dba0b2153c56edb307de"
     },
     {
       "name": "alaa-spec-analyst",
       "file": "agents/alaa-spec-analyst.toml",
-      "sha256": "9f09ca6057b844070f40c462590020c86030425ada7487e8332d6d3248e11d2b"
+      "sha256": "aae8e5f648952771ddc2d06387f4474b4b5e79fa71de14c116210a9808f46127"
     },
     {
       "name": "alaa-test-strategist",
       "file": "agents/alaa-test-strategist.toml",
-      "sha256": "7ce73312a6f7ddb050a76c8a3129adb6782ec45d4f28335cd25fb5cc48356130"
+      "sha256": "c14bc320d278d6092488853dd4889a047ae0dd0df07e74fb5b2a33c839e6b57e"
     },
     {
       "name": "alaa-verifier",
       "file": "agents/alaa-verifier.toml",
-      "sha256": "a099f48120c410614c0b0668bcbfb161885454d42ff810086ff985a28c99db99"
+      "sha256": "bbd7278d04d481e9693cca1cd547719dd08a3020871633e7e7cf998772aa1f72"
     }
   ]
 }

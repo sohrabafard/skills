@@ -53,7 +53,7 @@ def agent_failures(text: str) -> list[str]:
                      "Report metadata after the verdict/status or opening outcome",
                      "Effective authority:", "parent overrides", "tool/MCP grants",
                      "Task controls:", "model AND effort", "block this lane",
-                     "including defaults normalized under", "omission alone is not blocked/degraded",
+                     "resolve an omitted field through", "omission alone is not blocked/degraded",
                      "missing after normalization",
                      "model choice changes no authority"):
         if required not in text:

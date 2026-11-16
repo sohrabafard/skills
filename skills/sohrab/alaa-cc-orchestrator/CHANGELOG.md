@@ -1,5 +1,9 @@
 # Changelog
 
+## 6.1.0 - 2026-11-17
+
+- Compression of contract assets and agent definitions with behaviour unchanged; checker literals updated one-to-one. The shared `Task controls:`, report-metadata, `Effective authority:`, return-protocol and `Runtime:` blocks, the implementation, planner and reviewer texts, the stack bindings and the wrapper descriptions are shorter, and every generated wrapper is re-rendered. One checker literal changed: `scripts/check_agent_contracts.py` now requires "resolve an omitted field through" in place of "including defaults normalized under". No tuple lost a clause.
+
 ## 6.0.4 - 2026-11-15
 
 - Every `skills:` entry in every managed role is now the plain registered name: 79 entries in the role files and 40 in `assets/profile-wrappers.json`, after the routing entry in 6.0.1. Owner direction, 2026-11-15: use the correct form for all. Each listed skill's body now loads at the start of every run of its role; the summed `SKILL.md` size per role ran from about 3 KB to about 88 KB when measured that day. `scripts/check_agent_grants.py` rejects an entry with a leading slash.

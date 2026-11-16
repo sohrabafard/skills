@@ -1,5 +1,9 @@
 # Changelog
 
+## 6.1.0 - 2026-11-17
+
+- Compression of contract assets and agent definitions with behaviour unchanged; checker literals updated one-to-one. The shared `Task controls:`, report-metadata, `Effective authority:` and return-protocol blocks, the implementation, planner and reviewer contracts, the stack bindings and the wrapper descriptions are shorter, and every generated wrapper is re-rendered. One checker literal changed: `scripts/check_agent_contracts.py` now requires "resolve an omitted field through" in place of "including defaults normalized under". No tuple lost a clause. The `README-fa.md` version line now matches `VERSION`.
+
 ## 6.0.4 - 2026-11-15
 
 - No Codex change. `alaa-cc-orchestrator` 6.0.4 converts every Claude `skills:` preload entry to the plain name. Codex has no preload, so its role instructions keep the sentence that tells the lane to load each skill.
