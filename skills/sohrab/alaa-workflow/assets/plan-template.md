@@ -33,7 +33,7 @@
 
 {{delegated_design_section}}## Handoff Package
 
-Knowledge held only in the current agent's head disappears on compaction. Fill a field when knowledge is learned, not on a schedule; leave unused fields empty. Field semantics are in the skill's `alaa-workflow references/context-continuity.md`, not in this repository.
+Fill a field when you learn something that belongs in it, not on a schedule; leave unused fields empty. The skill's `alaa-workflow references/context-continuity.md` defines the fields; that file is not in this repository.
 
 - Confirmed facts (verified, each with how it was verified): none yet.
 - Open assumptions (believed but unverified, each with what would verify it): none yet.
@@ -60,7 +60,7 @@ Keep only phases with a distinct decision, authority or integration barrier. Mer
 After finalizing tasks, dependencies and consolidation, record the runtime orchestrator's all-role allocation.
 In Codex, `/alaa-codex-orchestrator` owns `references/routing-matrix.md`.
 In Claude Code, `/alaa-cc-orchestrator` owns `references/routing-matrix.md`.
-Prompting-guide supplies capability/mechanics evidence; workflow stores decisions. Unresolved controls or availability block the affected dispatch. Material changes reassess only affected remaining tasks.
+Unresolved controls or availability block the affected dispatch. Material changes reassess only affected remaining tasks.
 
 | Task/scope/complexity | Role authority | Priority/reason | Model | Effort | Selection/admission evidence and source date | Invocation/requested/effective controls | Availability/limits |
 |---|---|---|---|---|---|---|---|
