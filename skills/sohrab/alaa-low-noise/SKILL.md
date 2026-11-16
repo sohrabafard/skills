@@ -12,7 +12,7 @@ Bound what enters the context and what gets printed. Never bound the work: task 
 These four rules save the most context. Each tool result costs context again on every later turn.
 
 1. **Bound each command's output at its source.** Use a quiet flag, a filter, a count or `tail`. Never dump an unbounded file, tree, manifest, diff or log.
-2. **Search before you read, then read the bounded slice around the match.** Read a whole file only when safe editing requires it. Stop at the first step that answers the question.
+2. **Search or inventory before you read, then read the bounded slice around the match.** Read a whole file only when safe editing requires it. Stop at the first step that answers the question.
 3. **Save bulky output to a file and report its path.** Bulky output is logs, diffs, inventories and generated data. Save it to an authorized file, and inspect only its failing or relevant slice. Reason: terminal output is gone when the session ends.
 4. **Never paste output to prove that a command ran.** Report the command, the result, the one line that mattered and the path to the rest.
 
