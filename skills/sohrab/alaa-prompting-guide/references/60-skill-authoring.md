@@ -1,8 +1,8 @@
 # Skill Authoring
 
-A skill is an execution contract, not a document. It states who the agent is for the duration of the task, what outcome counts as done, what it may and may not touch, how it validates its own work, and when it stops. The frontmatter is how the runtime finds and loads that contract, the `description` is how the model decides the contract applies, and the body is the contract itself. One package serves both runtimes: Claude Code implements the Agent Skills open standard and Codex reads the same `SKILL.md` shape.
+A skill is an execution contract, not a document. It states who the agent is for the task, what outcome counts as done, what it may and may not touch, how it validates its own work, and when it stops. The frontmatter lets the runtime find and load the contract, the `description` lets the model decide that the contract applies, and the body is the contract. One package serves both runtimes: Claude Code implements the Agent Skills open standard and Codex reads the same `SKILL.md` shape.
 
-When you are about to choose a directory layout, a discovery path, a frontmatter key, or a description length, read `references/61-skill-platform-mechanics.md` — every per-runtime value lives there and none is restated here. When a generated example must name a skill so that the skill actually activates, read `references/06-invocation-and-composition.md` for the invocation rule.
+When you are about to choose a directory layout, a discovery path, a frontmatter key or a description length, read `references/61-skill-platform-mechanics.md`; it holds every per-runtime value and this file restates none. When a generated example must name a skill so that the skill actually activates, read `references/06-invocation-and-composition.md` for the invocation rule.
 
 ## Should this be a skill at all?
 
@@ -10,43 +10,43 @@ Five artifacts compete for the same job, and choosing wrong is the most common a
 
 - **A plain instruction** belongs in the prompt when it applies to one task and will never be reused. Do not package a one-off. Keep work inline when the current agent has the context and the authority and would finish in a handful of tool calls, because delegating it is pure overhead.
 - **A deterministic script** is right when the steps are fixed and need no judgment, because a script is more reliable than an agent and costs no tokens.
-- **An instruction file** (`AGENTS.md`, `CLAUDE.md`) holds what is true for *every* task in the repository, because it is always loaded and therefore always costs context. When the content is unconditional, read `references/70-agent-instruction-files.md` instead of continuing here.
-- **A skill** holds a procedure or body of knowledge that applies *conditionally* — to some tasks, in some repositories — and costs nothing until it applies. Claude Code's own guidance is explicit: a section of `CLAUDE.md` that has grown into a procedure should become a skill, because a skill's body loads only when used.
+- **An instruction file** (`AGENTS.md`, `CLAUDE.md`) holds what is true for *every* task in the repository, because it is always loaded and always costs context. When the content is unconditional, read `references/70-agent-instruction-files.md` instead of continuing here.
+- **A skill** holds a procedure or body of knowledge that applies *conditionally*, to some tasks in some repositories, and costs nothing until it applies. Claude Code's guidance says the same: a `CLAUDE.md` section that has grown into a procedure should become a skill, because a skill's body loads only when used.
 - **A subagent** is right when at least one condition holds: the work would flood the caller's context with search results, logs or file contents it will never reference again; the work needs a different tool set, particularly a narrower one; or the work must be judged by an agent that did not produce it. Only a subagent satisfies the third condition. A skill changes how the current agent behaves; a subagent creates a different agent. Skills and subagents compose: a subagent definition can preload skills. An unnecessary subagent multiplies latency and tokens; a missing one collapses an authority boundary. When the answer is a subagent, read `references/80-subagent-authoring.md`.
 
 The test in one line: if the answer to "when does this apply?" is "always," it is an instruction file; if it is "never again," it is a prompt; if it is "sometimes, and here is the trigger," it is a skill; if it is "when someone other than me must judge it," it is a subagent; if the steps never vary, it is a script.
 
 ## The description carries the activation decision
 
-A description that only says what a skill does under-triggers, because the model has no phrase to match a user's actual request against. A description that only says "use when" over-triggers, because nothing tells the model where the boundary is. Write all three parts:
+A description that only says what a skill does under-triggers, because the model has no phrase to match a request against. A description that only says "use when" over-triggers, because nothing marks the boundary. Write all three parts:
 
 1. **What it is**, in one noun phrase, first, so truncation cannot remove it.
-2. **When to use it**, in the verbs a user would actually type, not the verbs you would use to describe your own architecture.
-3. **When not to use it**, naming the alternative skill where one exists. This is the part authors skip and the part that stops over-triggering, because naming the alternative gives the model somewhere to go instead of only somewhere not to go.
+2. **When to use it**, in the verbs a user would actually type, not the verbs of your own architecture.
+3. **When not to use it**, naming the alternative skill where one exists. Authors skip this part, and it is the part that stops over-triggering, because a named alternative gives the model somewhere to go.
 4. **Any activation side effect.** A skill whose activation writes files must say so where the model reads before deciding, not only in the body it reads afterwards.
 
 ## Progressive disclosure
 
-The body is always paid for; a reference is paid for only when read. Once a skill loads its content stays in context across turns, so every body line is a recurring cost.
+The body is always paid for; a reference is paid for only when read. A loaded skill stays in context across turns, so every body line is a recurring cost.
 
 **In the body:** the role and its authority limits; the operating modes; the decision procedure the agent walks every time; the pipeline or phase order; stop conditions; safety rules; and one-line pointers naming each reference and the condition under which to read it.
 
-**In a reference:** anything consulted rather than followed — lookup tables, per-ecosystem command matrices, failure taxonomies, catalogs of roles or triggers, long worked examples, installation detail. If the agent needs it in one run out of five, it is a reference.
+**In a reference:** anything consulted rather than followed: lookup tables, per-ecosystem command matrices, failure taxonomies, catalogs of roles or triggers, long worked examples, installation detail. If the agent needs it in one run out of five, it is a reference.
 
-Ship deterministic work as a script rather than as prose, because a script is deterministic where a regenerated implementation is not. Reference its exact invocation from the body, state what a failure obliges the agent to do, and pre-approve it with `allowed-tools` so it runs without prompting.
+Ship deterministic work as a script rather than as prose, because a regenerated implementation is not deterministic. Reference its exact invocation from the body, state what a failure obliges the agent to do, and pre-approve it with `allowed-tools` so it runs without prompting.
 
 ## Reference decomposition
 
-This is the procedure for designing a low-volume, high-power skill: a body small enough to pay for on every run, with the detail still reachable when it is needed. Run it whenever a skill's subject is larger than one file.
+Run this procedure whenever a skill's subject is larger than one file. It yields a body small enough to pay for on every run, with the detail still reachable when needed.
 
-1. **Partition the subject into topics that do not overlap.** A topic is a question the agent arrives with, not a heading you would like to write. Two topics overlap when the same rule would be correct in either file; merge them, or move the rule to whichever topic owns the decision it drives.
-2. **Give each topic exactly one reference file.** One topic split across two files drifts, and the agent follows whichever it reads first. Two topics packed into one file force the agent to load both to use either, which is the cost the split existed to avoid.
-3. **Write the pointer from the body.** A pointer sentence carries three things: the observable situation that triggers the read, the path, and what the file decides once read. Without the situation the agent cannot know when to fire it; without what it decides the agent cannot tell whether reading it would answer the question in front of it.
-4. **Confirm the body now decides nothing it delegated.** A value left behind in the body after its topic moved is a second owner, and it will drift from the first.
+1. **Partition the subject into topics that do not overlap.** A topic is a question the agent arrives with, not a heading you would like to write. Two topics overlap when the same rule would be correct in either file; merge them, or move the rule to the topic that owns the decision it drives.
+2. **Give each topic exactly one reference file.** One topic split across two files drifts, and the agent follows whichever it reads first. Two topics in one file force the agent to load both to use either.
+3. **Write the pointer from the body.** A pointer sentence carries the observable situation that triggers the read, the path, and what the file decides. Without the situation the agent cannot know when to fire it; without the decision it cannot tell whether reading the file would answer its question.
+4. **Confirm the body now decides nothing it delegated.** A value left in the body after its topic moved is a second owner, and it will drift from the first.
 
-This routes: *"When you are about to choose a frontmatter key or a description length, read `references/61-skill-platform-mechanics.md` — it holds every per-runtime value and this file states none."* This does not: *"See also `references/61-skill-platform-mechanics.md` for platform details."* Same file, same topic. The second names no situation, so it fires either never or on every run, and "details" describes no decision the agent could be looking for.
+This routes: *"When you are about to choose a frontmatter key or a description length, read `references/61-skill-platform-mechanics.md` — it holds every per-runtime value and this file states none."* This does not: *"See also `references/61-skill-platform-mechanics.md` for platform details."* The second names no situation, so it fires either never or on every run, and "details" names no decision.
 
-The cost model decides it. Inlining a failure taxonomy into the body charges every run for it, including the four runs in five that never fail a check; moving it behind a pointer charges one line and buys the whole file conditionally.
+Inlining a failure taxonomy into the body charges every run for it, including the four runs in five that never fail a check; a pointer charges one line and buys the whole file conditionally.
 
 Choose router placement by actual always-loaded cost and selective routing needs, never reference count alone. Preserve an existing external router unless evidence justifies relocation. Keep one router: a body table or an external file with one short triggered body pointer. Relocation is a separate justified change, never compression; preserve every trigger and destination. Repository-specific routing and retirement rules govern.
 
@@ -109,33 +109,30 @@ A model upgrade removes no required test, no independent gate, no stop condition
 
 ## Lean prompts must preserve behavior
 
-Current OpenAI guidance favors small routers, precise triggers, conditional reads, and lean
-instructions. This supports removing duplicated instructions and irrelevant examples; it does
-not prove a fixed quality or cost gain for every task. Keep every load-bearing condition,
-authority boundary, required check, and caveat through the compression test above.
-
-When selecting GPT-6 guidance, read `references/12-gpt-6.md`. Historical percentages measured on earlier prompts are
-not forecasts for this pack.
+Current OpenAI guidance favors small routers, precise triggers, conditional reads and lean
+instructions. It supports removing duplicated instructions and irrelevant examples, but it
+proves no fixed quality or cost gain for every task. Keep every load-bearing condition,
+authority boundary, required check and caveat through the compression test above.
+When you select GPT-6 guidance, read `references/12-gpt-6.md`. Historical percentages
+measured on earlier prompts are not forecasts for this pack.
 
 ## The wording is the mechanism
 
-**In a skill the words are the executable logic**, where in ordinary software prose is only commentary around it. There is no compiler underneath to enforce what the sentence failed to say, so a rule phrased ambiguously executes ambiguously — every time the skill loads, in every session, for as long as the file survives.
+**In a skill the words are the executable logic.** No compiler enforces what a sentence failed to say, so an ambiguous rule executes ambiguously every time the skill loads. Six failure modes account for most of it, and each is invisible in review because the sentence reads fine.
 
-Six failure modes account for most of it, and each is invisible in review because the sentence reads fine.
-
-**Preference verbs where a constraint was meant.** "Should ideally", "try to", "prefer to avoid" are read as optional and are the first things dropped when the model is under pressure from a conflicting instruction. Write a non-negotiable rule as non-negotiable — "never", "must not", "always" — or state it as a fact about the system rather than as a request.
+**Preference verbs where a constraint was meant.** "Should ideally", "try to" and "prefer to avoid" read as optional, and they are dropped first under pressure from a conflicting instruction. Write a non-negotiable rule as non-negotiable ("never", "must not", "always"), or state it as a fact about the system.
 
 **Rules with no stated scope.** "Keep it concise" leaves the model to guess where. Models apply an instruction precisely where it appears and nowhere else, especially at lower effort. Name the scope: every section, every file, each finding, the final report only.
 
-**Negative-only instruction.** "Do not use a purple gradient" moves the model to a different fixed default rather than to good judgment, because the instruction removed one option without supplying a decision procedure. Pair every prohibition with what to do instead, or replace it with the positive rule that makes the prohibition unnecessary. Keep a bare prohibition only for a genuine boundary, where no alternative action exists and the boundary itself is the point.
+**Negative-only instruction.** "Do not use a purple gradient" moves the model to a different fixed default, not to good judgment, because it removes one option and supplies no decision procedure. Pair every prohibition with what to do instead, or replace it with the positive rule that makes the prohibition unnecessary. Keep a bare prohibition only for a genuine boundary, where no alternative action exists and the boundary itself is the point.
 
-**Abstract nouns standing in for observable conditions.** "Handle errors properly", "ensure good performance", "write clean code" cannot be complied with or violated, so they are decorative. Replace each with the observable: which envelope, which budget, which rule. If you cannot make it observable, you have found a decision you have not yet made.
+**Abstract nouns standing in for observable conditions.** "Handle errors properly" or "write clean code" can be neither complied with nor violated. Replace each with the observable: which envelope, which budget, which rule. If you cannot make it observable, you have found a decision you have not yet made.
 
-**Constraints buried mid-paragraph.** A rule inside a long explanatory sentence is weighted like explanation. One rule per sentence, and put the rule before its rationale — the reader who stops early should still have the rule.
+**Constraints buried mid-paragraph.** A rule inside a long explanatory sentence is weighted like explanation. Write one rule per sentence, and put the rule before its rationale, so a reader who stops early still has the rule.
 
-**Arbitrary-looking rules with no reason attached.** A rule whose purpose is invisible gets rationalized away the first time the model meets a situation the author did not anticipate. One clause of reason is usually enough to survive contact with a novel case. A rule whose rationale is obvious needs no reason; a rule that looks like a preference needs one. This is also why an example that contradicts its rule is so costly: when prose and example disagree, the example wins.
+**Arbitrary-looking rules with no reason attached.** A rule whose purpose is invisible gets rationalized away at the first unanticipated case. One clause of reason is usually enough. A rule whose rationale is obvious needs no reason; a rule that looks like a preference needs one. This is also why an example that contradicts its rule is so costly: when prose and example disagree, the example wins.
 
-The test to apply sentence by sentence: **could a competent agent follow this exactly and still do the wrong thing?** If yes, the sentence is underspecified however well it reads. That question is worth more than any style rule, and it is why skill authoring is a judgment lane rather than a transcription lane.
+The test to apply sentence by sentence: **could a competent agent follow this exactly and still do the wrong thing?** If yes, the sentence is underspecified however well it reads. That question outranks any style rule, and it makes skill authoring a judgment lane, not a transcription lane.
 
 ## Defects and fixes
 
@@ -158,7 +155,7 @@ The test to apply sentence by sentence: **could a competent agent follow this ex
 
 ## Checklist
 
-1. The artifact passes the "should this be a skill" test rather than belonging in an instruction file, a prompt, or a subagent.
+1. The artifact passes the "should this be a skill" test rather than belonging in an instruction file, a prompt, a script or a subagent.
 2. Frontmatter uses documented keys only, and any runtime-specific key is deliberate and known to be inert or rejected elsewhere.
 3. The `description` front-loads what it is, gives the user's own trigger verbs, states at least one negative, names the alternative where one exists, and declares any activation side effect.
 4. The description fits the caps with room to spare, and the key use case survives shortening.

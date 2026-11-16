@@ -1,6 +1,6 @@
 # Agent Instruction Files: `AGENTS.md` and `CLAUDE.md`
 
-An instruction file is the standing context a coding agent carries into every task in a repository. It is not documentation and not a skill: it is the small set of facts and rules that would otherwise be re-explained at the start of every session. Because it is loaded unconditionally, every line is a permanent tax on the context window of every task, including the tasks the line is irrelevant to. That single property determines everything about how these files should be written.
+An instruction file is the standing context a coding agent carries into every task in a repository: the small set of facts and rules that would otherwise be re-explained at the start of every session. It is neither documentation nor a skill. It loads unconditionally, so every line costs context on every task, including tasks it is irrelevant to. That property decides how these files are written.
 
 ## What each file is and which runtime reads it
 
@@ -15,17 +15,17 @@ An instruction file is the standing context a coding agent carries into every ta
 
 Organizations can also inline managed content through the `claudeMd` key in managed settings, which loads before user and project files and cannot be excluded.
 
-**`AGENTS.md`** is Codex's instruction file. Codex looks in two places: the Codex home directory (`~/.codex` by default, or `$CODEX_HOME`) for global guidance, and then the project, starting at the project root — typically the Git root — and walking down to the current working directory.
+**`AGENTS.md`** is Codex's instruction file. Codex reads global guidance from the Codex home directory (`~/.codex` by default, or `$CODEX_HOME`), then walks the project from its root, typically the Git root, down to the current working directory.
 
-The two runtimes are not symmetric. Verified 14 November 2026 against the Claude Code memory page: since v2.1.277 Claude Code reads a repository's `AGENTS.md` by default only when no `CLAUDE.md`, `.claude/CLAUDE.md` or `CLAUDE.local.md` exists in the working directory or above it. The user-level `~/.claude/CLAUDE.md`, a managed `CLAUDE.md` and `.claude/rules/` files do not count for that check and load alongside. The project-instructions setting `instructionFiles` changes the default: `claude-md-and-agents-md` loads both, and `managed-only` loads neither. A session with the built-in `AGENTS.md` plugin disabled reads no `AGENTS.md`. Codex's fallback filenames are configurable through `project_doc_fallback_filenames` but are not documented to include `CLAUDE.md` by default. A repository that ships both files must therefore still bridge them, because the presence of a `CLAUDE.md` stops the `AGENTS.md` fallback.
+The two runtimes are not symmetric. Verified 14 November 2026 against the Claude Code memory page: since v2.1.277 Claude Code reads a repository's `AGENTS.md` by default only when no `CLAUDE.md`, `.claude/CLAUDE.md` or `CLAUDE.local.md` exists in the working directory or above it. The user-level `~/.claude/CLAUDE.md`, a managed `CLAUDE.md` and `.claude/rules/` files do not count for that check and load alongside. The project-instructions setting `instructionFiles` changes the default: `claude-md-and-agents-md` loads both, and `managed-only` loads neither. A session with the built-in `AGENTS.md` plugin disabled reads no `AGENTS.md`. Codex's fallback filenames are configurable through `project_doc_fallback_filenames` but are not documented to include `CLAUDE.md` by default. A repository that ships both files must still bridge them, because the presence of a `CLAUDE.md` stops the `AGENTS.md` fallback.
 
 ## Nesting and precedence
 
-Both runtimes concatenate rather than override, and both order the concatenation root-down so that files closer to the working directory are read last and therefore win a contradiction by position rather than by rule.
+Both runtimes concatenate rather than override, root-down, so files closer to the working directory are read last and win a contradiction by position, not by rule.
 
-**Claude Code** walks up the directory tree from the working directory and loads every `CLAUDE.md` and `CLAUDE.local.md` it finds, in full, at launch. Content is ordered from the filesystem root down to the working directory, and within a directory `CLAUDE.local.md` is appended after `CLAUDE.md`. Files in subdirectories *below* the working directory are not loaded at launch; they load on demand when Claude reads a file in that subdirectory. `@path/to/import` pulls additional files in, recursively, to a maximum depth of four hops — but imports expand at launch, so they organize content without reducing its context cost. `claudeMdExcludes` skips ancestor files by glob, which matters in monorepos where other teams' files would otherwise be picked up; managed policy files cannot be excluded.
+**Claude Code** walks up the directory tree from the working directory and loads every `CLAUDE.md` and `CLAUDE.local.md` it finds, in full, at launch. Content is ordered from the filesystem root down to the working directory, and within a directory `CLAUDE.local.md` is appended after `CLAUDE.md`. Files in subdirectories *below* the working directory are not loaded at launch; they load on demand when Claude reads a file in that subdirectory. `@path/to/import` pulls in more files recursively, up to four hops, but imports expand at launch, so they organize content without reducing its context cost. `claudeMdExcludes` skips ancestor files by glob, for example other teams' files in a monorepo; managed policy files cannot be excluded.
 
-**Codex** rebuilds the chain on every run and at the start of each TUI session, so no cache needs clearing. It resolves one file per level. At the global level it checks `AGENTS.override.md` first, then `AGENTS.md`, and uses only the first non-empty file; `~/.codex/AGENTS.override.md` applies a temporary global override without deleting the base file. At each directory from the project root down to the working directory it checks `AGENTS.override.md`, then `AGENTS.md`, then any configured fallback names, and includes at most one file per directory. It concatenates those files root-down joined by blank lines, so, in its own words, files closer to your current directory override earlier guidance because they appear later in the combined prompt. Codex stops searching at the current directory, which is why per-team overrides belong as close to the specialized work as possible. The whole set is bounded by `project_doc_max_bytes`, 32 KiB by default; empty files are skipped and Codex stops adding files once the combined size reaches the limit.
+**Codex** rebuilds the chain on every run and at the start of each TUI session, so no cache needs clearing. It resolves one file per level. At the global level it checks `AGENTS.override.md` first, then `AGENTS.md`, and uses only the first non-empty file; `~/.codex/AGENTS.override.md` applies a temporary global override without deleting the base file. At each directory from the project root down to the working directory it checks `AGENTS.override.md`, then `AGENTS.md`, then any configured fallback names, and includes at most one file per directory. It joins those files root-down with blank lines, so files closer to the current directory override earlier guidance by appearing later. Codex stops searching at the current directory, so put per-team overrides as close to the specialized work as possible. The whole set is bounded by `project_doc_max_bytes`, 32 KiB by default; empty files are skipped and Codex stops adding files once the combined size reaches the limit.
 
 Note what the byte limit implies. Codex silently truncates the *tail* of the merge order when a repository's instruction files grow past 32 KiB, and the tail is where the most specific guidance lives. A bloated root `AGENTS.md` can therefore evict the leaf file that actually governs the directory being edited.
 
@@ -39,21 +39,21 @@ Two corollaries follow. First, an instruction file that has crossed roughly 200 
 
 Include only what an agent cannot derive from the repository in a few tool calls, or would derive incorrectly.
 
-- **Commands that actually work.** The real build, test, lint, and format invocations, including the ones that differ from the ecosystem default. Codex's own examples are exactly this shape: "Always run `npm test` after modifying JavaScript files," "Run `npm run lint` before opening a pull request," "Use `make test-payments` instead of `npm test`." Verify each command before writing it down; a stale command is worse than no command, because the agent will trust it and report a check it never ran.
+- **Commands that actually work.** The real build, test, lint and format invocations, including those that differ from the ecosystem default, such as "Use `make test-payments` instead of `npm test`." Verify each command before you write it down: the agent trusts a stale command and reports a check it never ran.
 - **Architecture and directory ownership** where the layout is non-obvious or misleading — which package owns which contract, where generated code comes from, which directory is a vendored copy nobody edits.
 - **Conventions a newcomer would violate.** The error-response shape, the logging contract, the migration naming scheme, the dependency-injection idiom the codebase uses everywhere.
 - **Non-obvious constraints and invariants.** The table that must not be written to outside a transaction, the service that cannot tolerate a schema change without a compatibility window, the endpoint whose response shape is consumed by a client you do not control.
-- **What is off limits.** Directories that are never edited, operations that require a human — publishing, deployment, force-push, credential rotation, production data movement — and the escalation path when one is needed. Codex's example, "Never rotate API keys without notifying the security channel," is the right register: specific, actionable, and about a real boundary.
+- **What is off limits.** Directories that are never edited, operations that require a human (publishing, deployment, force-push, credential rotation, production data movement) and the escalation path. Write each one specific, actionable and about a real boundary, such as "Never rotate API keys without notifying the security channel."
 
 ## What does not belong
 
-Claude Code's `/doctor` trim check encodes the distinction better than any argument: it cuts content the agent can derive from the codebase — directory layouts, dependency lists, architecture overviews — and keeps pitfalls, rationale, and conventions that differ from tool defaults. Apply that filter yourself.
+Apply the filter of Claude Code's `/doctor` trim check: cut content the agent can derive from the codebase (directory layouts, dependency lists, architecture overviews), and keep pitfalls, rationale and conventions that differ from tool defaults.
 
-- **Anything re-derivable from the filesystem.** A directory tree, a list of dependencies with versions, a summary of what each module does. The agent can read these, they go stale, and they cost tokens on every task.
+- **Anything re-derivable from the filesystem**, such as a directory tree, a dependency list or a module summary. These go stale and cost tokens on every task.
 - **Aspirational rules nobody follows.** A rule the codebase violates in fifty places teaches the agent that the file's rules are advisory. Delete it or fix the codebase.
-- **General programming advice.** "Write clean code," "handle errors," "add tests." The model already knows, and this content displaces the repository-specific facts it does not know.
-- **Duplicated skill content.** If a procedure lives in a skill, the instruction file should at most name the skill and the condition that triggers it — one line, not a summary.
-- **Long code samples.** A twenty-line example costs twenty lines on every task. Point at a real file in the repository that exemplifies the pattern instead; the pointer is one line and the example cannot go stale.
+- **General programming advice**, such as "write clean code". The model already knows it, and it displaces the repository-specific facts the model does not know.
+- **Duplicated skill content.** When a procedure lives in a skill, name the skill and its trigger in one line, not a summary.
+- **Long code samples.** Point at a real file that shows the pattern instead: the pointer costs one line and cannot go stale.
 
 ## Writing rules that are actually obeyed
 
@@ -61,15 +61,13 @@ Instruction files are context, not enforcement. Claude Code delivers `CLAUDE.md`
 
 ## One repository, two runtimes
 
-Three approaches, with honest tradeoffs.
+**Import bridge (recommended).** Keep `AGENTS.md` as the single source of truth and create a `CLAUDE.md` containing `@AGENTS.md`, optionally followed by Claude-only additions. Claude Code's documentation recommends this by name. The shared part cannot diverge, and Claude-only guidance still has a place. Cost: two files exist, and a reader must know which one is authoritative.
 
-**Import bridge (recommended).** Keep `AGENTS.md` as the single source of truth and create a `CLAUDE.md` containing `@AGENTS.md`, optionally followed by Claude-specific additions. This is the approach Claude Code's documentation recommends by name. Both runtimes read the same content, divergence is structurally impossible for the shared part, and there is still a place to put genuinely Claude-only guidance. Cost: two files exist, and a reader must know which one is authoritative.
+**Symlink.** `ln -s AGENTS.md CLAUDE.md` is simplest and truly one file. Costs: no place for runtime-specific content, and on Windows a symlink needs Administrator privileges or Developer Mode, so mixed-OS teams use the import bridge instead.
 
-**Symlink.** `ln -s AGENTS.md CLAUDE.md`. Simplest, and truly one file. Two costs: there is nowhere to add runtime-specific content, and on Windows creating a symlink requires Administrator privileges or Developer Mode, so mixed-OS teams should use the import bridge instead.
+**Two maintained files.** Use them only when the runtimes genuinely need different content: different agent rosters, tool availability or sandbox semantics. Every convention change is then made twice, and the files drift silently because nothing fails when they disagree. Keep the shared 90% in a third file that both import or include, and let each runtime file hold only its delta.
 
-**Two maintained files.** Only justified when the two runtimes genuinely need different content — different agent rosters, different tool availability, different sandbox semantics. The cost is real and recurring: every convention change must be made twice, and the files drift silently because nothing fails when they disagree. If you choose this, keep the shared 90% in a third file that both import or include, and let each runtime file hold only its own delta.
-
-Whichever you choose, do not hard-code a runtime-specific call prefix into the shared body. A shared file names the skill in prose, with no prefix — "the alaa-security-review skill," not a call form — and a prefixed call form belongs only in a runtime-specific section. When deciding which call form belongs at a live invocation site, read `references/06-invocation-and-composition.md`, which owns the per-runtime call syntax.
+Whichever you choose, keep runtime-specific call prefixes out of the shared body. A shared file names the skill in prose ("the alaa-security-review skill"); a prefixed call form belongs only in a runtime-specific section. When you decide which call form belongs at a live invocation site, read `references/06-invocation-and-composition.md`; it owns the per-runtime call syntax.
 
 ## Defects and fixes
 

@@ -14,9 +14,9 @@ Response length, deliverable length, update cadence and scope require explicit p
 
 Before you change thinking controls, use the registered model capability snapshot and refresh the model's API documentation. The current model references own thinking modes and their exceptions. Haiku 5.5 supports effort and adaptive thinking. Its API exception that permits disabled thinking does not transfer to Claude Code. Historical Haiku 4.5 uses extended thinking without effort. Give it no effort metadata, because an invented effort pin is invalid, and never put it on one effort scale with an effort-enabled model. These API controls are not interchangeable with Claude Code settings.
 
-For effort-enabled models, lower the supported effort to cut cost. Check retrieval, tool-use reliability and task quality. Report unsupported controls. Never substitute them. Read `references/36-haiku-5-5.md` for current Haiku controls.
+For effort-enabled models, lower the supported effort to cut cost, then check retrieval, tool-use reliability and task quality. Report an unsupported control; never substitute another. Read `references/36-haiku-5-5.md` for current Haiku controls.
 
-Do not carry manual thinking budgets into current adaptive models. Historical Haiku 4.5 is the extended-thinking exception. The value `adaptive` names a thinking mode, never an effort. Neither `ultra` nor `ultracode` is a Claude API effort value. A harness orchestration mode requires separate proof.
+Do not carry manual thinking budgets into current adaptive models; Haiku 4.5 is the extended-thinking exception. The value `adaptive` names a thinking mode, never an effort. Neither `ultra` nor `ultracode` is a Claude API effort value. A harness orchestration mode requires separate proof.
 
 ## Choosing a starting level
 
@@ -30,16 +30,15 @@ Read the target model's reference for its supported levels, its default and its 
 4. **Keep selection separate from calibration.** Recommendations and selected pairs stay unmeasured. Selection needs no paid experiment or replay.
 5. **Preserve authority.** Model controls change no scope, tool, verdict responsibility or independent gate. Main-session configuration stays external. Source consistency does not prove installed activation or observed serving identity.
 
-
 ## Capability registries and realized controls
 
-The structured Codex and Claude policies register neutral role identities and supported pairs. Supported levels are capabilities, not task recommendations or role-wide ceilings. Historical entries do not authorize active selection. The runtime orchestrator owns actual task admission, priority and deliberate departures. This skill validates controls and allocates no work.
+The structured Codex and Claude policies register neutral role identities and supported pairs. Supported levels are capabilities, not task recommendations or role-wide ceilings. Historical entries do not authorize active selection. This skill validates controls and allocates no work; step 2 above names the owner of admission, priority and deliberate departures.
 
 A stale executable pin can defeat the caller's controls. Read the target runtime reference, and verify the loaded definition, the explicit pair and the effective resolution. A source edit does not reload the current registry. Use an available exact verified realization or block the affected lane. Never silently substitute or change installed configuration. When the configured resolution is established, an unknown observed identity is a reporting limit, not a requirement for paid probing.
 
 ## Effort is not the only cost lever
 
-Raise effort only after you exclude prompt bloat, missing context, and tool or specification gaps, and quality still falls short. Vendor lean-prompt results support shorter prompts. They prove no local quality or cost gain. Better retrieval addresses absent evidence.
+Raise effort only after you exclude prompt bloat, missing context, and tool or specification gaps, and quality still falls short. Vendor lean-prompt results support shorter prompts but prove no local quality or cost gain. Better retrieval addresses absent evidence.
 
 ## Anti-patterns
 

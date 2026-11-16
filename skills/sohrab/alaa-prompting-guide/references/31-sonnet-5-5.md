@@ -8,17 +8,17 @@ Source checks do not prove account access, runtime activation or workload qualit
 Claude Code and the Claude apps default to `medium` (Claude Code verified 14 November 2026 against model-config). The Platform and the API default to `high`. These surface defaults are not task choices. Begin at `medium` for well-specified agentic work and at `high` for harder or longer tasks. Effort levels were recalibrated, so workload recommendations are unrun hypotheses, not inherited calibration. When you set or raise effort, read
 `references/50-effort-and-thinking.md`; it owns the evidence and when to raise effort.
 
-The launch reports high-effort Sonnet approaching Opus on some work at similar cost. It proves no universal local equivalence. Medium and high remain distinct supported task settings. In two reported benchmark cases, max underperformed xhigh because extra reviewer subagents caused timeouts or out-of-scope edits. Treat this as a workload-specific caveat, not a universal effort ranking. Higher effort can change tool behavior without improving acceptance.
+The launch reports high-effort Sonnet approaching Opus on some work at similar cost; that proves no universal local equivalence. Medium and high remain distinct supported task settings. In two reported benchmark cases, max underperformed xhigh because extra reviewer subagents caused timeouts or out-of-scope edits. Treat this as a workload-specific caveat, not a universal effort ranking: higher effort can change tool behavior without improving acceptance.
 
 Everyday coding can involve bounded local decisions; it need not be transcription of a fully settled patch. When you select a task pair, including one for materially coupled unresolved design, read `references/90-model-selection.md`; it routes allocation and admission to the runtime orchestrator. The canonical policy owns supported pairs.
 
-Do not turn thinking-reminder removal into a blanket ban. The Sonnet prompting page specifically permits private reasoning before a strict JSON answer when that improves structured-output reliability. This is a task-specific exception, never authority to disclose private chain-of-thought. Preserve the required JSON schema and evaluate the change on that workload.
+Do not turn thinking-reminder removal into a blanket ban. The Sonnet prompting page permits private reasoning before a strict JSON answer when that improves structured-output reliability. This task-specific exception never authorizes disclosure of private chain-of-thought. Preserve the required JSON schema and evaluate the change on that workload.
 
-At low effort, supply an observable done condition and required checks: early stopping and
+At low effort, supply an observable done condition and required checks, because early stopping and
 skipped verification are documented risks. At high or xhigh effort, constrain scope and stop
 after the requested outcome and checks; extra features or refactors are not completion.
 Before you remove verification language, apply the authority test in
-`references/80-subagent-authoring.md`. Extra reviewer delegation at higher efforts does not establish a general delegation bias. `references/06-invocation-and-composition.md` owns delegation routing.
+`references/80-subagent-authoring.md`. Extra reviewer delegation at higher efforts does not establish a general delegation bias; `references/06-invocation-and-composition.md` owns delegation routing.
 
 For a bounded implementation, adapt this contract without broadening its authority:
 
@@ -30,7 +30,7 @@ the acceptance criteria and checks pass; report blockers without claiming unrun 
 
 Specify output length and visible progress separately from effort. Some progress narration
 can move into thinking; when visible updates are needed, request concise status text at
-meaningful milestones. Do not request private reasoning or assume hidden thinking satisfies
+meaningful milestones. Do not request private reasoning, and do not assume hidden thinking satisfies
 the host's communication requirements. Keep durable state through `/alaa-workflow`.
 
 ## API migration boundary
@@ -39,17 +39,17 @@ the host's communication requirements. Keep durable state through `/alaa-workflo
   an error. The optional `thinking: {"type": "between_tools"}` mode permits only low,
   medium and high effort; it does not accept `display`, `budget_tokens` or `block_binding`.
   Per-message effort changes require adaptive mode.
-- Forced `tool_choice` values `any` and `tool` are rejected. Use `auto`; validate required
+- Forced `tool_choice` values `any` and `tool` are rejected. Use `auto`, and validate required
   tool use in the application. Use strict tool schemas only where the provider supports
   them; strict schemas do not force invocation.
 - Preserve returned signed thinking blocks and append-only history through tool loops.
   Rewriting earlier messages can invalidate replay; follow the migration guide's account
-  and binding conditions before transforming history.
+  and binding conditions before you transform history.
 - Recheck integrations with computer use or an advisor. The Claude API and Google use
   `computer_toolset_20260801`; advisor configurations cannot carry forward Sonnet 5 or
   Opus 4.7/4.8 targets. Verify the selected provider's supported tool surface.
 
-These are API controls, not new Claude Code configuration keys. Tool replay and provider
+These are API controls, not Claude Code configuration keys. Tool replay and provider
 compatibility need integration tests in the consuming client; this skill performs no API calls.
 
 ## Claude Code availability
@@ -63,7 +63,7 @@ it does not authorize fallback, installation or a settings change.
 ## Sources and limits
 
 Verified 29 September 2026. General delegation polarity, local quality and installed serving
-identity remain unmeasured. Re-fetch the relevant source before reusing a version-sensitive value.
+identity remain unmeasured. Re-fetch the relevant source before you reuse a version-sensitive value.
 
 - [Sonnet overview](https://platform.claude.com/docs/en/models/sonnet-5-5/overview)
 - [Sonnet prompting](https://platform.claude.com/docs/en/build-with-claude/prompt-engineering/prompting-claude-sonnet-5-5)
@@ -73,6 +73,4 @@ identity remain unmeasured. Re-fetch the relevant source before reusing a versio
 - [Claude Code model configuration](https://code.claude.com/docs/en/model-config)
 - [Sonnet launch](https://www.anthropic.com/claude-sonnet-5-5)
 
-Agentic effort and structured-JSON prompting scope refreshed 9 October 2026; API migration facts retain their 29 September snapshot. The selection guide assigns everyday coding to Sonnet without an effort; medium/high come from the separate prompting source.
-
-Launch defaults and benchmark caveats refreshed 9 October 2026 from the official 28 September launch and effort documentation. No local calibration ran.
+Agentic effort and structured-JSON prompting scope were refreshed 9 October 2026; API migration facts keep their 29 September snapshot. The selection guide assigns everyday coding to Sonnet without an effort; medium and high come from the separate prompting source. Launch defaults and benchmark caveats were refreshed 9 October 2026 from the official 28 September launch and the effort documentation. No local calibration ran.
