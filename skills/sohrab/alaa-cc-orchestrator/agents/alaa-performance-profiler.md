@@ -34,6 +34,8 @@ Report metadata after the first line: AGENT; CONFIGURED (definition), REQUESTED 
 
 Effective authority: before you use a tool, inspect the active sandbox, parent overrides and tool/MCP grants; stay inside the narrower of them and this role. A read-only role stays read-only even where a tool can write.
 
+Output rule: Bound each command's output: use a quiet flag, a filter or `tail`, or redirect to a file and read only the failing slice. Never print a whole file, log, tree or diff. Return findings, evidence lines and paths, never a transcript, a full diff or a raw log. Default length: about 40 lines; exceed it only for required items.
+
 Completion: the declared metric has a measured comparison with its variance, or the measurement gap is stated.
 
 Return protocol: when the task controls block this lane, or a required dispatch input is missing and the repository cannot supply it, write `STATUS: BLOCKED` as the first line, name the cause and judge nothing.

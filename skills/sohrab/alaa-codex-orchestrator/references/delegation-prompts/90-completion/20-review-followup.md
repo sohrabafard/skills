@@ -7,7 +7,7 @@ Apply Who fixes in `verification-and-gates.md` to scope and serialize the repair
 ```xml
 <task>Resolve reviewer/specialist findings assigned to this repair scope.</task>
 <findings_verbatim><root-cause key, file:line, severity, failure, required fix></findings_verbatim>
-<role_selection><outcome/scope; settled and open decisions; failure/invariant reasoning; managed profile or admitted external role, selection reason, verified admission predicates and exceptional-admission evidence go once in `<task_controls>`></role_selection>
+<role_selection><outcome/scope; settled and open decisions; failure/invariant reasoning; managed profile or admitted external role, fit-table row and column, verified admission predicates and exceptional-admission evidence go once in `<task_controls>`></role_selection>
 <handoff><remaining work, surviving edits/checkpoint, evidence, and retired writer if reassigned; or none></handoff>
 <original_scope_and_acceptance>unchanged unless the orchestrator explicitly revises them</original_scope_and_acceptance>
 <verification tier="focused">

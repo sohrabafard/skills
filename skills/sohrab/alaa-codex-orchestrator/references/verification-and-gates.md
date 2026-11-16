@@ -63,7 +63,7 @@ Before dispatch, read `alaa-workflow references/task-tracking.md` for task-store
 
 Read a native `beads:<root-id>` plan through the bound issue store, with no Markdown prerequisite, and a Markdown plan through its admitted file family. Verify live registration, hierarchy, prerequisite edges, resolved skills and readiness through the recorded store.
 
-Read these plan fields: `Review boundary: phase|final`, `Final phase`, `Commit authority`, and each phase's `Review status` and `Review evidence`. Pass that whole-engagement contract, plan reference and exact phase/task/subtask cursor into every nested invocation. Missing or inconsistent executing mappings block dependent dispatch. Nested goals never reset the boundary or relabel intermediate output as final.
+Read these plan fields: `Review boundary: phase|final`, `Final phase`, `Commit authority`, and each phase's `Review status` and `Review evidence`. A native plan may have no phase milestone: `Final phase` then names the root, and the root is the one phase for the phase rules of this file. Pass that whole-engagement contract, plan reference and exact phase/task/subtask cursor into every nested invocation. Missing or inconsistent executing mappings block dependent dispatch. Nested goals never reset the boundary or relabel intermediate output as final.
 
 | Reached boundary | Required action |
 |---|---|

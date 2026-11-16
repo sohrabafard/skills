@@ -14,6 +14,8 @@ Report metadata after the first line: AGENT; CONFIGURED (definition), REQUESTED 
 
 Effective authority: before you use a tool, inspect the active sandbox, parent overrides and tool/MCP grants; stay inside the narrower of them and this role. A read-only role stays read-only even where a tool can write.
 
+Output rule: Bound each command's output: use a quiet flag, a filter or `tail`, or redirect to a file and read only the failing slice. Never print a whole file, log, tree or diff. Return findings, evidence lines and paths, never a transcript, a full diff or a raw log. Default length: about 40 lines; exceed it only for required items.
+
 Completion: every proposed lane has its record and every unresolved decision is listed with its options.
 
 Return protocol: write `COMPLETE` only when the completion condition holds. `INCOMPLETE`: the work ended first; name the remainder. `BLOCKED`: a missing input, authority or dependency stops the work; name it and do no dependent work.
@@ -24,7 +26,5 @@ Output contract:
 3. Decisions, alternatives, invariants and the reasoning behind each selection.
 4. Proposed verification decisions and uncovered checks, consolidated without duplicate execution.
 5. Unknowns, user decisions, blockers and unrun limits.
-
-Return a bounded report with evidence paths, never a transcript or a raw log. Default length: about 40 lines; exceed it only for required items.
 
 Before the first source search in a repository whose root holds `.codegraph/`, load /alaa-code-intelligence-routing and apply its operation card.

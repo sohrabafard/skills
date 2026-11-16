@@ -33,7 +33,7 @@ Report the configured and requested model and effort separately from the observe
 
 ## Native Advisor consultation
 
-After you select the executor's task pair, consider native Advisor for a named unresolved decision that consultation can help. Resolve missing facts and tool or context failures first. Read **Native Advisor** in `alaa-prompting-guide references/41-claude-code-runtime-features.md` for supported pairs, session checks and data sharing. Use Advisor only on a verified, authorized surface, and record the reason and the effective advisor control. Consultation stays optional and changes no executor pair, role authority or independent gate.
+When the lead's session has an advisor, consult it at two points: before you ratify the plan, and before the final report. At any other point, after you select the executor's task pair, consider native Advisor for a named unresolved decision that consultation can help. Resolve missing facts and tool or context failures first. Read **Native Advisor** in `alaa-prompting-guide references/41-claude-code-runtime-features.md` for supported pairs, session checks and data sharing. Use Advisor only on a verified, authorized surface, and record the reason and the effective advisor control. Consultation changes no pair, role authority or independent gate. The run never depends on it: without an advisor, or after a failed consultation, continue.
 
 ## Default mapping sources
 
