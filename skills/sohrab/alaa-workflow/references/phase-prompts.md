@@ -26,7 +26,7 @@ Record the runtime and both task-selected controls for every role only after the
 
 When a phase runs through `/alaa-codex-orchestrator` (Codex) or `/alaa-cc-orchestrator` (Claude Code), these prompts feed that pack's role lanes. Never restate its dispatch machinery, review gate, roster or role definitions. A prompt pack keeps only the three roles above.
 
-Build prompts through `/alaa-prompting-guide` `references/06-invocation-and-composition.md`. It decides goal composition and the trigger syntax that each runtime accepts. Name the exact installed orchestrator, give it orchestration authority, and put implementation authority in the lane rules.
+Build prompts through `/alaa-prompting-guide` `references/06-invocation-and-composition.md`. It decides goal composition and the trigger syntax that each runtime accepts. Name the exact installed orchestrator, give it orchestration authority, and put implementation authority in the lane rules. For a Claude target, apply `/alaa-prompting-guide` `references/41-claude-code-runtime-features.md` section *Prompts for a session that may have an advisor* before the prompt ships.
 
 ## Compact prompt shape
 

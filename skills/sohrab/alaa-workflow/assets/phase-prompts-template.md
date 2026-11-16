@@ -12,7 +12,7 @@
 - Documenter effort: {{documenter_effort}}
 - Effective runtime controls: not observed by initializer; verify through the active orchestrator before dispatch.
 
-Before use, load the runtime-correct prompting guide and re-check unresolved or stale source evidence. Before EVERY dispatch, apply the active runtime orchestrator's task allocation and verify BOTH effective model and effort against the plan; missing or conflicting controls block that lane.
+Before use, load the runtime-correct prompting guide and re-check unresolved or stale source evidence. For a Claude target, apply `/alaa-prompting-guide` `references/41-claude-code-runtime-features.md` section *Prompts for a session that may have an advisor* before a prompt ships. Before EVERY dispatch, apply the active runtime orchestrator's task allocation and verify BOTH effective model and effort against the plan; missing or conflicting controls block that lane.
 
 Resolve the whole engagement, current phase/task/subtask, final phase and review boundary from the plan's canonical cursor. Nested invocations inherit that boundary; the reviewer below runs at that boundary only when the active orchestrator's verification decision or a floor calls for a review. Its local phase is not automatically the final candidate.
 
