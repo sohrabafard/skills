@@ -5,7 +5,7 @@ description: "Production-grade multi-agent coding orchestration for Claude Code.
 
 # Alaa CC Orchestrator
 
-Lead a controlled, evidence-driven multi-agent goal inside Claude Code. Narrow subagents inspect, implement, verify, challenge, and document. The lead decides how much verification each change needs, and no unverified claim is reported as complete.
+Lead an evidence-driven multi-agent goal inside Claude Code. Narrow subagents inspect, implement, verify, challenge and document. The lead decides how much verification each change needs and reports no unverified claim as complete.
 
 **Mirrored behavior.** Change both runtime orchestrators together. Only runtime mechanics and model-family delegation polarity may differ; `/alaa-prompting-guide` owns the latter.
 
@@ -26,22 +26,22 @@ Planning effort never sets worker effort. Worker selection alone needs no planne
 - A single edit one reader can confirm without a second lane; delegation costs more than the work.
 - A destructive or external effect, including push, deploy, data change or publication, lacks explicit authorization.
 - The runtime is Codex rather than Claude Code. These agent files do not serve it.
-- A multi-session program centers on plan continuity: `/alaa-workflow` leads and invokes this skill for a phase. This skill still writes its plan through workflow.
+- A multi-session program centers on plan continuity: `/alaa-workflow` leads and invokes this skill per phase. This skill still writes its plan through workflow.
 
 ## 0. Inspect role availability
 
-1. The separate companion /alaa-testing-strategy is required for test design, test execution, and legacy runner forwarding. If it is unavailable, report the missing owner and block dependent work. Never auto-install it.
+1. Test design, test execution and legacy runner forwarding need the separate companion /alaa-testing-strategy. If it is unavailable, report the missing owner and block dependent work. Never auto-install it.
 2. Activation grants no installation or update authority. Inspect installed definitions, the version and effective tools without writes. Compare the required managed roles with the shipped definitions. For a required external companion, apply its admission in `references/agent-catalog.md`.
-3. Report missing, stale or unavailable roles before dispatch. Never silently substitute a model or a generic role. Continue only the independent work whose required roles are available, and report the rest as blocked.
+3. Before dispatch, report each missing, stale or unavailable model or role as blocked or degraded. Never silently substitute a model or a generic role. Continue only the independent work whose required roles are available, and report the rest as blocked.
 4. Before relying on isolation, inspect the effective sandbox, parent overrides and MCP grants. A read-only declaration proves no enforcement. Report unobservable permissions as unknown, and operate within role restrictions.
 
-Install or update only with explicit user authorization for the target paths. Validate model-neutral source roles, grants, and generated artifacts before the first target write. Run `python3 scripts/validate_pack.py` and `python3 scripts/check_agent_grants.py` before an authorized copy of the managed agent files. After the copy, compare the SHA-256 of each installed managed file with its entry in `assets/manifest.json`, and report each missing or different file. A copy removes no file, so a renamed or removed managed role stays discoverable. During the same authorized update, move its old installed file out of the agent discovery directory under that update's target-path authority. Verify the new role and the absence of the retired role before claiming activation. Do not change unrelated agents or settings.
+For an install or update that section 8 authorizes, validate the model-neutral source roles, grants and generated artifacts before the first target write. Run `python3 scripts/validate_pack.py` and `python3 scripts/check_agent_grants.py` before you copy the managed agent files. After the copy, compare the SHA-256 of each installed managed file with its entry in `assets/manifest.json`, and report each missing or different file. A copy removes no file, so a renamed or removed managed role stays discoverable: in the same update, move its old installed file out of the agent discovery directory under that update's target-path authority. Verify the new role and the absence of the retired role before claiming activation. Change no unrelated agent or setting.
 
 ## 1. Operating modes
 
 ### Orchestrator mode
 
-Use when the user asks to build, fix, refactor, migrate, integrate, optimize, or otherwise change a repository. The lead plans, dispatches, reconciles, verifies as it decides, and reports. It makes its own corrections only under Who fixes in `references/verification-and-gates.md`; implementers own all other implementation.
+Use it when the user asks to build, fix, refactor, migrate, integrate, optimize or otherwise change a repository. The lead plans, dispatches, reconciles, verifies as it decides, and reports. It makes its own corrections only under Who fixes in `references/verification-and-gates.md`; implementers own all other implementation. Adopt an existing parent plan. `/alaa-workflow` owns plan, checkpoint and prompts. This skill leads one goal.
 
 ### Advisor mode
 
@@ -51,23 +51,19 @@ For plans, critiques, architecture advice, prompts, lane definitions or review w
 
 Follow explicit wording. Otherwise choose the lowest-side-effect interpretation that answers the request. Do not ask merely to select a mode.
 
-In orchestrator mode, adopt an existing parent plan. `/alaa-workflow` owns plan, checkpoint and prompts. This skill leads one goal. Workflow leads multi-session programs and invokes it per phase.
-
 ## 2. Lead-session contract
 
 Use `references/routing-matrix.md` for the actual lead-session task selection and /alaa-prompting-guide for current capabilities and control mechanics. Report configured and requested settings separately from observed identity. Unobservable values stay unknown.
 
-The lead owns goal normalization, scope control, repository-aware lanes, selection and dispatch authority, reconciliation, verification and review, specialist triggers, truthful reporting and stopping.
-
-The lead must not silently take over failed lanes, soften or omit review findings, claim unobserved checks or overlap writers. Save bulky output and report its path.
+The lead owns goal normalization, scope control, repository-aware lanes, selection and dispatch authority, reconciliation, verification and review, specialist triggers, truthful reporting and stopping. It never silently takes over a failed lane, softens or omits a review finding, claims an unobserved check or overlaps writers.
 
 ### Dispatch discipline
 
 **One agent per lane.** Dispatch no duplicate lane and no summary-check agent. A lane starts no subagent of its own: the lead owns every dispatch and its task allocation. Independent verification and review inspect the actual artifact under separate authority. Dispatch independent lanes together. Keep inspection and the lead's own small correction inline.
 
-**Start a dependent lane as soon as the lanes it consumes finish.** Join lanes behind one barrier only when the next step consumes all of their outputs. A barrier over a lane whose output the next step never reads idles that step for the unrelated lane's whole runtime.
+**Start a dependent lane as soon as the lanes it consumes finish.** Join lanes behind one barrier only when the next step consumes all of their outputs. A barrier over a lane whose output the next step never reads idles that step for the whole runtime of that lane.
 
-**Count live lanes before each spawn or follow-up.** Compare the live lanes with the runtime's concurrency limit first. At the limit, free a slot before you start the next lane, because a call at the limit can fail. On a limit error, never resend the same call unchanged: free a slot first. On a usage-limit error, record the lane's last evidence in the plan or compact dispatch, apply section 3's interruption rule and the stopped-writer recovery that `routing-matrix.md` cites, then re-dispatch only the remaining scope. In Claude Code, running subagents count against the limit, and the Agent tool refuses a spawn at the limit; its error says not to retry. Free a slot by waiting for a running lane to finish. `alaa-prompting-guide references/41-claude-code-runtime-features.md` owns the limit values, the error text and Workflow-run limits.
+**Count live lanes before each spawn or follow-up.** At the runtime's concurrency limit, free a slot before you start the next lane, because a call at the limit can fail. After a limit error, free a slot; never resend the same call unchanged. After a usage-limit error, record the lane's last evidence in the plan or compact dispatch, apply section 3's interruption rule and the stopped-writer recovery that `routing-matrix.md` cites, then re-dispatch only the remaining scope. In Claude Code, running subagents count against the limit, and the Agent tool refuses a spawn at the limit with an error that says not to retry. Free a slot by waiting for a running lane to finish. `alaa-prompting-guide references/41-claude-code-runtime-features.md` owns the limit values, the error text and Workflow-run limits.
 
 **Keep dispatches lean.** Apply /alaa-prompting-guide. Carry lane facts only: outcome, owned files, exclusions, acceptance, commands, dependencies, resolved skills and return contract. Do not restate the native role definition, which dilutes both contracts. State each instruction once. Expose task-relevant tools and only requirement-bearing examples.
 
@@ -75,25 +71,21 @@ The lead must not silently take over failed lanes, soften or omit review finding
 
 **Correct sparingly.** Revise a statement only when its error changes user code, conclusions or decisions. State the correction plainly and briefly, then continue. Fix immaterial slips without narration.
 
-**Calibrate length.** Cover required substance, then stop without filler, redundant summaries or boilerplate. Start with the outcome and supporting detail. Save reusable material before reporting its path. Conversation is not storage. /alaa-low-noise owns budgets.
+**Calibrate length.** Cover required substance, then stop without filler, redundant summaries or boilerplate. Start with the outcome. Conversation is not storage. /alaa-low-noise owns budgets.
 
 ## 3. Intake and planning
 
-Before designing implementation or verification, load /alaa-testing-strategy. Before dispatch, inspect guidance and affected paths. Settle outcome, acceptance, preserved behavior and irreversible actions. Draw disjoint lanes. `references/verification-and-gates.md` owns intake, lane fields and infrastructure reuse.
+Before dispatch, inspect guidance and affected paths. Settle outcome, acceptance, preserved behavior and irreversible actions. Draw disjoint lanes. `references/verification-and-gates.md` owns intake, lane fields, infrastructure reuse, and gate ordering and freezing before expensive dispatch.
 
 Before Stage A evidence dispatch, apply `/alaa-memory-os` when its trigger holds: make one bounded recall, verify useful claims in repository truth, and keep active state in workflow. Route unresolved prior-session, ownership and shared-contract questions to `alaa-researcher`. `alaa-explorer` uses memory only when the repository cannot answer. Apply `/alaa-code-intelligence-routing` before code-evidence selection and reuse its result.
 
-Every dispatch carries `/alaa-low-noise`. Every return carries findings, verdicts, counts and permitted artifact paths, never transcripts, full diffs or logs. Persist reusable context before returning its path. Use bounded invocations and the progress reporting the host requires. Do not infer a universal watchdog timeout or a need for per-command narration. After an interruption, reconcile the transcript, the checkpoint and the surviving files before resuming writes.
-
-`references/verification-and-gates.md` owns gate ordering and freezing before expensive dispatch.
+Every dispatch carries `/alaa-low-noise`. Every return carries findings, verdicts, counts and permitted artifact paths, never transcripts, full diffs or logs. Save bulky output and persist reusable context before reporting its path. Use bounded invocations and the progress reporting the host requires. Do not infer a universal watchdog timeout or a need for per-command narration. After an interruption, reconcile the transcript, the checkpoint and the surviving files before resuming writes.
 
 ## 4. Model and role routing
 
-For EVERY dispatch, apply the model AND effort allocation and the role triggers in `references/routing-matrix.md`. Before explicit dispatch, normalize omitted controls through `references/model-effort-policy.md`. `references/agent-catalog.md` owns role authority and output.
+For EVERY dispatch, apply the model AND effort allocation and the role triggers in `references/routing-matrix.md`. Before explicit dispatch, normalize omitted controls through `references/model-effort-policy.md`. `references/agent-catalog.md` owns role authority and output. Dispatch only catalog roles whose trigger holds. Diagnose context, tool and specification failures before you attribute a shortfall to capacity.
 
-Choose one correctness review profile for a scope. Both standard and deep review routes use the existing `alaa-reviewer`. Deep review changes the review task, so it requires its own justified model AND effort selection. Record the deep-review trigger without creating a duplicate review lane.
-
-Report a missing model or role as blocked or degraded; never fall back silently. Diagnose context, tool and specification failures before you attribute a shortfall to capacity. Dispatch only catalog roles whose trigger holds.
+Choose one correctness review profile for a scope. Standard and deep review both use the existing `alaa-reviewer`. Deep review changes the review task, so it requires its own justified model AND effort selection. Record the deep-review trigger without creating a duplicate review lane.
 
 ## 5. Orchestrator execution pipeline
 
@@ -112,36 +104,36 @@ Orchestrator mode keeps Stages A, B and E. Stages C and D run as the verificatio
 
 Report outcome; independent lifecycle verdicts (`IMPLEMENTED`, `MERGE_CANDIDATE`, `RELEASE_CANDIDATE`, `PUBLISHED`) under `alaa-workflow references/workspace-and-integration.md`; lane changes and files; commands and results, marked run or cited, with tier; review and specialist verdicts and dispositions; each touched document's outcome and grade; curation as persisted, deferred or empty; risks, skipped checks, follow-ups. List each dispatched agent once with its configured and requested pair, separately observed identity or unknown, observable mismatches, and the exceptional-model admission for each escalated dispatch.
 
-Write the report for a reader who saw no tool call and no lane report. Put the outcome first, use full sentences, and define any lane label or abbreviation the run invented.
+Write for a reader who saw no tool call and no lane report: outcome first, full sentences, and a definition for each lane label or abbreviation the run invented.
 
 Close with one line from the existing plan, roster and evidence: dispatches and distinct roles; underlying checks run or cited, covered children counted once; span from plan `Created` to last authorized commit, or unavailable. Use no timer, extra command or invented budget.
 
 ## 6. Advisor-mode output
 
-Provide: grounded repository findings; a lane plan with dependencies and gates; one ready-to-run prompt per lane using the templates; recommended agent, model, and effort per lane; a verification plan and resource policy; and the risks, assumptions, and decisions that require the user. Apply section 1's artifact admission. When a plan is admitted, report the canonical plan address and recovery reference. Otherwise deliver the plan in the reply. Do not imply implementation occurred.
+Provide: grounded repository findings; a lane plan with dependencies and gates; one ready-to-run prompt per lane from the templates; the recommended agent, model and effort per lane; a verification plan and resource policy; and the risks, assumptions and decisions that require the user. Apply section 1's artifact admission. When a plan is admitted, report the canonical plan address and recovery reference. Otherwise deliver the plan in the reply. Do not imply implementation occurred.
 
 When generating a goal condition, read `alaa-prompting-guide references/06-invocation-and-composition.md`; it owns condition syntax and the skill-led kickoff.
 
 ## 7. Verification and resource rules
 
-Before planning or executing checks, load /alaa-testing-strategy. Read its `references/100-test-execution.md` for execution, `references/110-execution-resources.md` for resources and timing, or `references/120-result-classification.md` for result classification and diagnosis. The router below retains legacy loading paths.
+Before designing implementation or verification, and before planning or executing checks, load /alaa-testing-strategy. Read its `references/100-test-execution.md` for execution, `references/110-execution-resources.md` for resources and timing, or `references/120-result-classification.md` for result classification and diagnosis, and before product edits for repair eligibility. The router below retains legacy loading paths.
 
 Schedule these pack checks through the verification decision in `references/verification-and-gates.md`. Proven aggregate coverage discharges only identical child invocations with the same scope and observer.
 
 - After instruction-contract changes, run `python3 scripts/check_agent_contracts.py`. It checks source requirements, not live model behavior.
-- After changing agent instructions, a contract asset, pins, agents, or version, run `python3 scripts/render_agents.py --write`, then `python3 scripts/render_agents.py --check` and `python3 scripts/validate_pack.py`. Review the generated wrappers against `assets/implementation-contract.md` and `assets/planner-contract.md`.
+- After changing agent instructions, a contract asset, pins, agents or version, run `python3 scripts/render_agents.py --write`, then `python3 scripts/render_agents.py --check` and `python3 scripts/validate_pack.py`. Review the generated wrappers against `assets/implementation-contract.md` and `assets/planner-contract.md`.
 - After any change to `agents/`, run `python3 scripts/check_agent_grants.py`. `references/agent-catalog.md` states what it compares.
 
-For each command above, exit `0` is clean, `1` is findings, drift or grant findings, and `2` means unavailable proof. Either nonzero exit blocks completion.
+Each command exits `0` when clean, `1` on findings, drift or grant findings, and `2` on unavailable proof. Either nonzero exit blocks completion.
 
 ## 8. Safety and authority
 
 - Repository-local, reversible edits inside declared scopes may proceed in orchestrator mode.
-- Ask before destructive Git operations, force pushes, history rewrites, deployment, publishing, production access, data deletion, credential changes, shared-system configuration changes, or irreversible migrations.
+- Ask before destructive Git operations, force pushes, history rewrites, deployment, publishing, production access, data deletion, credential changes, shared-system configuration changes or irreversible migrations.
 - Installation and updates require explicit user authorization for named target paths; activation grants none.
 - Agent files own code-intelligence grants; dispatches do not. `references/agent-catalog.md` assigns each role its CodeGraph, language-service and Serena grants. `/alaa-code-intelligence-routing` owns the rationale. Change grants in this pack, not in `~/.claude/agents`, because a reinstall restores the pack grants.
-- Local commits follow the main instruction file's local-commit rule through `alaa-workflow references/workspace-and-integration.md`. Lanes commit on the lane branch their dispatch names, and the lead merges that branch only after the required verification accepts it, as that file's `## Lane branches and commits` states. For a commit, do not wait for boundary review or request an already-granted permission again. Every external or destructive effect needs its own explicit authority. Never add Co-Authored tags.
-- Never expose secrets in prompts, logs, artifacts, or reports.
+- Local commits follow the main instruction file's local-commit rule through `alaa-workflow references/workspace-and-integration.md`. Lanes commit on the lane branch their dispatch names. The lead merges that branch only after the required verification accepts it, as that file's `## Lane branches and commits` states. For a commit, do not wait for boundary review or request an already-granted permission again. Every external or destructive effect needs its own explicit authority. Never add Co-Authored tags.
+- Never expose secrets in prompts, logs, artifacts or reports.
 
 ## 9. Stop conditions
 
@@ -149,11 +141,11 @@ Stop successfully only when all of these hold:
 
 - acceptance is evidenced;
 - mandatory gates pass, and the final candidate's scope and proof satisfy repository policy and /alaa-testing-strategy;
-- the final diff scope is clean;
-- documentation is completed or explicitly skipped;
+- the final diff scope is clean, and final touched files match authorized scopes;
+- documentation ran, or was explicitly skipped for a grounded reason;
 - the final reusable-context gate reports its disposition: persisted, deferred, rejected or absent.
 
-Report requested integration accurately as authorized, declined or blocked. Local-only completion needs no integration prompt.
+Requested integration is complete, or explicitly reported as declined or blocked; report its status accurately. Local-only completion needs no integration prompt.
 
 Stop and report partial or blocked status when any of these occurs:
 
@@ -166,7 +158,7 @@ Stop and report partial or blocked status when any of these occurs:
 
 ## 10. Failure discipline
 
-Reviewers only judge. Verifiers only execute evidence commands. Researchers only retrieve. Before product edits, load /alaa-testing-strategy `references/120-result-classification.md` for classification and repair eligibility. Report adversarial findings without another fix loop. Name only the lane's matching clean-code skill.
+Reviewers only judge. Verifiers only execute evidence commands. Researchers only retrieve. Report adversarial findings without another fix loop. Name only the lane's matching clean-code skill.
 
 ## Direct references
 
