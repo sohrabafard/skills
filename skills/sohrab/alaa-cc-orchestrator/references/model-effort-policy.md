@@ -1,8 +1,8 @@
 # Model and Effort Control Route
 
-`routing-matrix.md` owns actual task allocation and admission for EVERY role. `/alaa-prompting-guide` owns supported capabilities, source guidance, runtime precedence and the checked model-neutral projections. Its `references/50-effort-and-thinking.md` and `references/90-model-selection.md` inform the decision; they assign no pair from role identity.
+`routing-matrix.md` owns actual task allocation and admission for EVERY role. Its *All-role task allocation* also owns these rules: role identities select no pair, a second lens never selects a stronger or different model, review depth gets its own pair, model choice changes no tools, skills, verdicts or independent gates, capacity is blamed only after context, tool and specification failures are diagnosed, and only remaining work is reassessed. `/alaa-prompting-guide` owns supported capabilities, source guidance, runtime precedence and the checked model-neutral projections. Its `references/50-effort-and-thinking.md` and `references/90-model-selection.md` inform the decision.
 
-The registry is `alaa-prompting-guide assets/claude-model-policy.json`. Managed roles carry no executable model or effort pins. Before you realize task-selected controls, check ordinary eligibility, effort support and host availability separately. Legacy roles named for a model or effort are authority-compatible workload identities, never default pairs. Choose review depth from the actual review scope, and allocate its pair separately. Never use a stronger or different model solely for a second lens.
+The registry is `alaa-prompting-guide assets/claude-model-policy.json`. Managed roles carry no executable model or effort pins. Before you realize task-selected controls, check ordinary eligibility, effort support and host availability separately.
 
 ## Normalize omitted controls
 
@@ -31,7 +31,7 @@ Never silently change the pair, install, mutate shared configuration or claim th
 
 For Claude Code, inspect the loaded definition, the active version and the invocation controls before dispatch. Model-neutral YAML omits BOTH `model` and `effort`; pass both explicitly on the verified Agent invocation surface. Current owner evidence supports invocation effort on a non-fork invocation since version 2.1.292. Environment, hook, force and provider overrides can still take precedence: inspect their effective precedence, and do not assume that YAML or invocation controls win. If a fork, an older version or a restricted surface cannot realize both values, require an exact verified available compatibility realization that preserves role authority, or block that lane. A separate CLI session changes context and permissions, so it is not an automatic substitute. `alaa-prompting-guide references/41-claude-code-runtime-features.md` owns runtime precedence and current official evidence.
 
-Keep permissions separate from model choice. Inspect the effective sandbox or permission mode, parent overrides, and native and MCP grants. When enforcement is unknown, stay within the narrower role authority. Model choice changes no tools, required skills, verdicts or independent gates. Diagnose missing context, tool failures and specification ambiguity before you attribute a shortfall to capacity. Reassess only remaining work, under the allocation boundary.
+Keep permissions separate from model choice. Inspect the effective sandbox or permission mode, parent overrides, and native and MCP grants. When enforcement is unknown, stay within the narrower role authority.
 
 Report the configured and requested model and effort separately from the observed identity. An unknown observation stays unknown. Put the verdict or outcome first, then the metadata. /alaa-prompting-guide owns the rule-writer replacement-only contract.
 

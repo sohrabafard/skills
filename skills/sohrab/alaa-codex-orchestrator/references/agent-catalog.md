@@ -1,6 +1,6 @@
 # Agent Catalog
 
-The orchestrator leads the session; it is not a custom subagent. Installation requires explicit authorization. `routing-matrix.md` owns role triggers and the actual task allocation of model and effort. /alaa-prompting-guide owns capabilities and runtime mechanics. Managed role definitions omit model and effort pins. Apply to every role the explicit controls normalized through `model-effort-policy.md`, including its omission defaults. Legacy IDs named for a model or effort keep workload and authority compatibility; their names select neither control.
+The orchestrator leads the session; it is not a custom subagent. `routing-matrix.md` owns role triggers and the actual task allocation of model and effort, including the rule that a role name selects neither control. /alaa-prompting-guide owns capabilities and runtime mechanics. Managed role definitions omit model and effort pins. Apply to every role the explicit controls normalized through `model-effort-policy.md`, including its omission defaults.
 
 The manifest lists the executable agents managed by this pack.
 

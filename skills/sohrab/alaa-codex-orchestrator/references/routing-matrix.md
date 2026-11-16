@@ -1,6 +1,6 @@
 # Routing Matrix
 
-Spawn only agents that materially reduce uncertainty or enforce a required authority boundary. The catalog is a menu, not a role quota. Dispatch one agent per lane. Never dispatch several agents for the same lane, and add no duplicate summary-check lane. Independent gates inspect the actual artifact under separate authority.
+Spawn only agents that materially reduce uncertainty or enforce a required authority boundary. The catalog is a menu, not a role quota. `SKILL.md` *Dispatch discipline* owns one agent per lane.
 
 ## Always or normally required
 
@@ -54,9 +54,8 @@ Before planning, separate missing facts from coupled design judgment. Retrieve o
 2. Select the planning model AND effort for the actual planning task through All-role task allocation below.
 3. The lead may plan inline only when its effective controls match that recorded pair. Otherwise dispatch a compatible registered planner.
 4. A planner draft is advisory. The lead ratifies it, persists the durable plan and owns the workflow plan.
-5. Planning effort is independent of implementation effort; a high-effort plan may yield cheap implementation.
-6. Before worker allocation, finalize the lane outcomes, scopes, exclusions, dependencies, decisions, and failure and invariant reasoning.
-7. Prose does not switch controls. Do not use a caller override that a custom profile ignores.
+5. Before worker allocation, finalize the lane outcomes, scopes, exclusions, dependencies, decisions, and failure and invariant reasoning.
+6. Prose does not switch controls. Do not use a caller override that a custom profile ignores.
 
 ## Batch allocation
 
@@ -64,7 +63,6 @@ After workflow tasks, dependencies and consolidation decisions are finalized, al
 
 - Before dispatch, record each role with its explicit model AND effort: evidence, planning, implementation, verification, review, specialist and documentation lanes.
 - Compare the ready tasks so that no task inherits the complexity of the whole goal.
-- Planning roles are separate. Choosing workers alone needs no planner dispatch.
 - Reopen allocation only for remaining work, at a material scope change or a fix follow-up. Reuse unchanged allocations and evidence.
 
 ## All-role task allocation
@@ -90,7 +88,7 @@ Role identities are compatibility identities: a role name, including a legacy ID
 
    A repairable defect or an imagined insufficiency is not model inadequacy. A model mention alone is not a selection instruction.
 5. **Record the allocation** in the existing workflow plan, or in a compact dispatch when no durable plan is admitted: the task, the role and authority identity, the scope and complexity, the priority and its reason, the selected model AND effort, the admission and its evidence, the runtime control surface, the requested and effective configured controls, availability, and unresolved limits. A bounded standalone delegation needs no full pipeline and no new workflow artifact solely for model selection.
-6. **Realize the pair.** Before EVERY dispatch, follow `model-effort-policy.md`: normalize any omitted field, validate the resulting pair, and explicitly supply BOTH controls. A default normalized by that owner is a valid task selection, and an omission alone does not block or degrade a lane. If the host cannot realize the selected pair, use only an exact verified available compatibility realization that preserves authority. Otherwise block that affected lane with evidence. Make no silent substitution, automatic installation or global configuration edit. Source changes do not reload installed or current-session roles. Unknown serving identity is a reporting limit, not evidence of a control mismatch and not a reason for paid calibration.
+6. **Realize the pair.** Before EVERY dispatch, follow `model-effort-policy.md`: normalize any omitted field, validate the resulting pair, and explicitly supply BOTH controls. If the host cannot realize the selected pair, use only an exact verified available compatibility realization that preserves authority. Otherwise block that affected lane with evidence. Make no silent substitution, automatic installation or global configuration edit. Source changes do not reload installed or current-session roles. Unknown serving identity is a reporting limit, not evidence of a control mismatch and not a reason for paid calibration.
 
 ### Codex Terra eligibility
 

@@ -23,7 +23,7 @@
 
 Record the verified admission predicates in `<task_controls>` of every implementation dispatch. For a mechanical, bounded or bug route, record the selected route's own predicates with their recorded values. For a workhorse or stack-bound route, record the workload class and the stack-family test result. Complete a dispatch that lacks them before you send it, because the lane checks those predicates instead of reading `routing-matrix.md`. Fill `<commit>` with the lane branch that `verification-and-gates.md` *Before any dispatch* step 4 prescribes, or with `none`.
 
-Select the exact registered variant from the ratified lane record through `routing-matrix.md`, and pass it the same bounded lane block. For a single-stack lane outside the mechanical and bounded branches, it is the stack-bound role that `routing-matrix.md` names. Demanding workhorse work alone does not admit the exceptional implementation profile. Preserve surviving work. Require no trial ladder and no replay of completed work.
+Select the exact registered variant from the ratified lane record through `routing-matrix.md`, and pass it the same bounded lane block. For a single-stack lane outside the mechanical and bounded branches, it is the stack-bound role that `routing-matrix.md` names. Pass the pair as the read-back rule in `delegation-prompts.md` requires. Demanding workhorse work alone does not admit the exceptional implementation profile. Preserve surviving work. Require no trial ladder and no replay of completed work.
 
 ## Collected verification repair
 

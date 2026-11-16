@@ -1,8 +1,8 @@
 # Model and Effort Control Route
 
-`routing-matrix.md` owns actual task allocation and admission for EVERY role. `/alaa-prompting-guide` owns supported capabilities, source guidance, runtime precedence and the checked model-neutral projections. Its `references/50-effort-and-thinking.md` and `references/90-model-selection.md` inform the decision; they assign no pair from role identity.
+`routing-matrix.md` owns actual task allocation and admission for EVERY role. Its *All-role task allocation* also owns these rules: role identities select no pair, a second lens never selects a stronger or different model, review depth gets its own pair, model choice changes no tools, skills, verdicts or independent gates, capacity is blamed only after context, tool and specification failures are diagnosed, and only remaining work is reassessed. `/alaa-prompting-guide` owns supported capabilities, source guidance, runtime precedence and the checked model-neutral projections. Its `references/50-effort-and-thinking.md` and `references/90-model-selection.md` inform the decision.
 
-The registry is `alaa-prompting-guide assets/codex-model-policy.json`. Managed roles carry no executable model or effort pins. Before you realize task-selected controls, check ordinary eligibility, effort support and host availability separately. Legacy roles named for a model or effort are authority-compatible workload identities, never default pairs. Choose review depth from the actual review scope, and allocate its pair separately. Never use a stronger or different model solely for a second lens.
+The registry is `alaa-prompting-guide assets/codex-model-policy.json`. Managed roles carry no executable model or effort pins. Before you realize task-selected controls, check ordinary eligibility, effort support and host availability separately.
 
 ## Normalize omitted controls
 
@@ -29,7 +29,7 @@ Never silently change the pair, install, mutate shared configuration or claim th
 
 For Codex, inspect the currently loaded custom definition and the global and parent controls before dispatch. Custom `model` and `model_reasoning_effort` pins override caller controls. Model-neutral TOMLs omit BOTH pins; pass `model` and `reasoning_effort` explicitly to the supported spawn surface. Verify that the host permits those arguments and the requested fork or context mode. Do not imply that full-history forks accept overrides when this host rejects them. If the current host exposes fixed named-role definitions, treat their loaded controls as fixed until a verified reload; source edits alone do not prove that the registry reloaded. A fixed compatibility realization is usable only when its exact controls and authority match the selected task; otherwise block that lane. `alaa-prompting-guide references/11-codex-runtime-features.md` owns runtime precedence and current official evidence.
 
-Keep permissions separate from model choice. Inspect the effective sandbox or permission mode, parent overrides, and native and MCP grants. When enforcement is unknown, stay within the narrower role authority. Model choice changes no tools, required skills, verdicts or independent gates. Diagnose missing context, tool failures and specification ambiguity before you attribute a shortfall to capacity. Reassess only remaining work, under the allocation boundary.
+Keep permissions separate from model choice. Inspect the effective sandbox or permission mode, parent overrides, and native and MCP grants. When enforcement is unknown, stay within the narrower role authority.
 
 Report the configured and requested model and effort separately from the observed identity. An unknown observation stays unknown. Put the verdict or outcome first, then the metadata. /alaa-prompting-guide owns the rule-writer replacement-only contract.
 

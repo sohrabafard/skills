@@ -141,11 +141,11 @@ Stop successfully only when all of these hold:
 
 - acceptance is evidenced;
 - mandatory gates pass, and the final candidate's scope and proof satisfy repository policy and /alaa-testing-strategy;
-- the final diff scope is clean;
-- documentation is completed or explicitly skipped;
+- the final diff scope is clean, and final touched files match authorized scopes;
+- documentation ran, or was explicitly skipped for a grounded reason;
 - the final reusable-context gate reports its disposition: persisted, deferred, rejected or absent.
 
-Report requested integration accurately as authorized, declined or blocked. Local-only completion needs no integration prompt.
+Requested integration is complete, or explicitly reported as declined or blocked; report its status accurately. Local-only completion needs no integration prompt.
 
 Stop and report partial or blocked status when any of these occurs:
 

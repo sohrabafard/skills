@@ -192,16 +192,12 @@ Documentation changes, written after code review, require at least:
 
 ## Final success criteria
 
-Report completion only when:
+`SKILL.md` section 9 owns the stop conditions. Report completion only when they hold and also:
 
 - every acceptance criterion maps to evidence, each marked run, cited, or review-only with its review evidence; run or cited items carry their tier;
 - required final checks and proof levels passed on the final candidate, including a fresh exhaustive tier when required, with no unverified candidate changes afterward;
 - no mandatory command is failed, flaky, timed out, blocked or contaminated;
 - the verification that each task's decision and the floors require is complete; every finding has a recorded disposition, each finding triaged for fixing is fixed and proven, and each blocking floor-gate finding is confirmed fixed by that gate or explicitly accepted by the user;
-- final touched files match authorized scopes;
-- documentation ran or was explicitly skipped for a grounded reason;
-- the final reusable-context pass reported persisted, deferred, rejected or no admitted candidates;
 - no `pipeline reopen required` result remains unresolved;
 - canonical task progress and workflow status match what landed; every changed subtask has tested diff evidence and the declared boundary has attributable verification evidence; local checkpoints follow the main instruction rule independently of review status;
-- requested integration is complete or explicitly reported declined or blocked; local-only work needs no integration prompt;
 - no destructive or external action was performed without authorization.
