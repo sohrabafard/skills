@@ -1,102 +1,71 @@
 # Routing Matrix
 
-Spawn only agents that materially reduce uncertainty or enforce a required authority boundary. The catalog is a menu, not a role quota. Dispatch one agent per lane. Never dispatch several agents for the same lane, and add no duplicate summary-check lane. Independent gates inspect the actual artifact under separate authority.
+Spawn only agents that materially reduce uncertainty or enforce a required authority boundary. The catalog is a menu, not a role quota.
 
-## Always or normally required
+## Default roles
 
-- Non-trivial repository change: before dispatch, select an implementation profile through Implementation routing below, or use the Ent specialist route for Ent-owned work.
-- Independent checks a decision or floor requires: `alaa-verifier`. `verification-and-gates.md` owns both and the cadence of phase evidence, review and final gates.
-- Independent ship-quality judgment a decision or floor requires: `alaa-reviewer`.
-- Behavior, API, configuration, or operations changed: `alaa-documenter`, after review.
+- Non-trivial repository change: an implementation profile from Implementation routing below, or the Ent specialist route for Ent-owned work.
+- Independent checks that a decision or floor in `verification-and-gates.md` requires: `alaa-verifier`.
+- Independent ship-quality judgment that a decision or floor requires: `alaa-reviewer`.
+- Behavior, API, configuration or operations changed: `alaa-documenter`, after review.
 
 ## Specification and evidence agents
 
-### Spawn `alaa-spec-analyst` when
+| Role | Spawn when any of these holds | Skip when |
+|---|---|---|
+| `alaa-spec-analyst` | The request uses quality language that is not yet checkable ("make it robust"). Two competent readers would define "done" differently. A contract is implied but never stated. The goal bundles several outcomes that need separating before lanes can be drawn. | The request names the change, the files and the observable result. |
+| `alaa-explorer` | The owner module or execution path is unclear. The task crosses unfamiliar packages or services. Tests and local conventions are not known. The lead would otherwise guess file scope. | Current context establishes the relevant paths and contracts. |
+| `alaa-researcher` | A prior session, decision, file or shared contract must be recalled and verified. An external API, library or tool version controls correctness. Official docs or standards are needed. Sources disagree or current behavior may have changed. The task asks for an evidence-based comparison. | |
+| `alaa-test-strategist` | Acceptance criteria are easy to satisfy superficially. Legacy behavior has weak coverage. Concurrency, retry, idempotency, migration, security or failure-mode testing matters. Test layer selection and flake control need design. | |
 
-- the request uses quality language that is not yet checkable ("make it robust", "clean this up", "improve performance");
-- two competent readers would define "done" differently;
-- a contract is implied but never stated;
-- the goal bundles several outcomes that need separating before lanes can be drawn.
-
-Skip it when the request already names the change, the files, and the observable result. This is the cheapest correctness lever in the pipeline, because a complete specification up front raises first-pass correctness at every tier. It is wasted on a concrete request.
-
-### Spawn `alaa-explorer` when
-
-- the owner module or execution path is unclear;
-- the task crosses unfamiliar packages or services;
-- tests and local conventions are not known;
-- the main thread would otherwise guess file scope.
-
-Do not spawn when the relevant paths and contracts are already established in current context.
-
-### Spawn `alaa-researcher` when
-
-- a prior session, decision, file, or shared contract must be recalled and verified;
-- an external API, library, or tool version controls correctness;
-- official docs or standards are needed;
-- sources disagree or current behavior may have changed;
-- the task asks for an evidence-based comparison.
-
-### Spawn `alaa-test-strategist` when
-
-- acceptance criteria are easy to satisfy superficially;
-- legacy behavior has weak coverage;
-- concurrency, retry, idempotency, migration, security, or failure-mode testing matters;
-- test layer selection and flake control need design.
-
-`/alaa-testing-strategy` is the doctrine this role applies. Name it in the dispatch. Read it directly when you decide which layer a behaviour is tested at, whether a double is honest enough to stand in for the real dependency, which of the six proof levels a claim actually reaches, or which scope tier has earned the right to run at this moment.
+Name `/alaa-testing-strategy` in the test-strategist dispatch. Read it yourself when you decide a test layer, a double, a proof level or a scope tier.
 
 ## Planning profile selection
 
-Before planning, separate missing facts from coupled design judgment. Retrieve or clarify the missing facts.
+Before planning, separate missing facts from coupled design judgment, and retrieve or clarify the missing facts.
 
 1. Use `alaa-planner` when scope, contracts and constraints are clear. Use `alaa-planner-high` when forming the plan requires resolving interacting uncertainties.
-2. Select the planning model AND effort for the actual planning task through All-role task allocation below.
+2. Select the planning model AND effort for the planning task through All-role task allocation below.
 3. The lead may plan inline only when its effective controls match that recorded pair. Otherwise dispatch a compatible registered planner.
-4. A planner draft is advisory. The lead ratifies it, persists the durable plan and owns the workflow plan.
-5. Planning effort is independent of implementation effort. A high-effort plan may yield cheap implementation.
-6. Before worker allocation, finalize the lane outcomes, scopes, exclusions, dependencies, decisions, and failure and invariant reasoning.
-7. Do not pretend that prose switches controls. Do not use a caller override that a custom profile ignores.
+4. A planner draft is advisory. The lead ratifies it and persists the durable plan.
+5. Before worker allocation, finalize the lane outcomes, scopes, exclusions, dependencies, decisions, and failure and invariant reasoning.
 
 ## Batch allocation
 
 After workflow tasks, dependencies and consolidation decisions are finalized, allocate the ready plan once through All-role task allocation below.
 
-- Before dispatch, record each role with its explicit model AND effort. This covers evidence, planning, implementation, verification, review, specialist and documentation lanes.
+- Before dispatch, record each role with its explicit model AND effort: evidence, planning, implementation, verification, review, specialist and documentation lanes.
 - Compare the ready tasks so that no task inherits the complexity of the whole goal.
-- Planning roles are separate. Choosing workers alone needs no planner dispatch.
 - Reopen allocation only for remaining work, at a material scope change or a fix follow-up. Reuse unchanged allocations and evidence.
 
 ## All-role task allocation
 
-This orchestrator owns the actual task complexity, priority, model and effort decisions for EVERY role. `/alaa-prompting-guide` owns current capabilities, official starting guidance, runtime precedence and the checked model-neutral projections. Before allocation, read its `references/90-model-selection.md` and `references/50-effort-and-thinking.md`. That guidance informs the decision. It does not assign a default pair to a role.
+This orchestrator decides the task complexity, priority, model and effort for EVERY role. Before allocation, read `alaa-prompting-guide references/90-model-selection.md` and its `references/50-effort-and-thinking.md`; they inform the decision and assign no default pair to a role.
 
-1. **Ground the task.** For each actual task, establish its scope, its acceptance, its settled and open decisions, and its remaining reasoning need. Retrieve missing facts. Repair context, specification or tool failures before you attribute a shortfall to model capacity.
-2. **Apply eligibility, then set the priority.** Apply canonical eligibility: exclude gpt-6-sol ordinarily even if available. Current-family selection never upgrades a suitable Luna pair to Sol. When current Sol is missing, require an exact eligible realization or block the affected lane; never fall back to old Sol. Record an explicit user legacy exception separately; ordinary eligibility stays disabled. Use the balanced default priority; priority is not an effort value. To deviate, apply an explicit user priority or model choice, or a documented task-based reason. Role title, sensitivity, duration, whole-goal labels and a second independent lens alone never select a frontier or stronger model. Independence comes from context and authority, not model diversity.
+Role identities are compatibility identities: a role name, including a legacy ID named for a model or effort, selects neither control. Every pair preserves the role's tools, skills, verdicts and independent gates.
+
+1. **Ground the task.** Establish each task's scope, acceptance, settled and open decisions, and remaining reasoning need. Retrieve missing facts. Repair context, specification or tool failures before you attribute a shortfall to model capacity.
+2. **Apply eligibility, then set the priority.** Apply canonical eligibility: exclude gpt-6-sol ordinarily even if available. Current-family selection never upgrades a suitable Luna pair to Sol. When current Sol is missing, require an exact eligible realization or block the affected lane; never fall back to old Sol. Record an explicit user legacy exception separately; ordinary eligibility stays disabled. Use the balanced default priority; priority is not an effort value. Deviate only on an explicit user priority or model choice, or a documented task-based reason. Role title, sensitivity, duration, whole-goal labels and a second independent lens alone never select a frontier or stronger model. Independence comes from context and authority, not model diversity.
 3. **Select the cheapest suitable pair.**
-   1. Evaluate the cheapest eligible supported available model AND effort pair for EVERY role: evidence, planning, implementation, verification, review, specialists, documentation and rule-writer.
+   1. Evaluate the cheapest eligible supported available model AND effort pair for EVERY role, the rule-writer included.
    2. A task has bounded suitability only when it has all of these: an explicit outcome, a finite named scope, grounded local contracts/known invariants, a known pattern or causal path, settled cross-boundary decisions, bounded local discretion and a discriminating check.
    3. Non-bug semantic work needs no reproduced failure. The mechanical and bug branches keep their own predicates below.
-   4. Select the least costly suitable available pair. Depart from it only when an explicit user choice or recorded task evidence justifies the departure. Apply no quotas.
-   5. Justify model and effort separately. Base each on the remaining reasoning need, the priority, current official guidance and applicable prior evidence.
-   6. For each cheaper pair you reject, record the actual failed fit predicate or stronger task-specific evidence, the decomposition you rejected, and the applicable exact source row and its date. Titles, volume, priority labels and whole-goal complexity are not failed predicates.
-   7. Select directly. Use no mandatory trial ladder, synthetic experiment or replay. Supported capability is not calibrated local quality.
-4. **Admit an exceptional model only on evidence.** For exceptional model selection on ANY role, require one of these:
+   4. Select the least costly suitable available pair. Depart from it only on an explicit user choice or recorded task evidence. Apply no quotas.
+   5. Justify model and effort separately, each from the remaining reasoning need, the priority, current official guidance and applicable prior evidence.
+   6. When you reject a cheaper pair, record the actual failed fit predicate or stronger task-specific evidence. Titles, volume, priority labels and whole-goal complexity are not failed predicates.
+   7. Select directly. Use no mandatory trial ladder, synthetic experiment or replay.
+4. **Admit an exceptional model only on evidence.** On ANY role, an exceptional model needs one of these:
    - an exact official recommendation for the task and priority that the canonical owner supports, recorded with the remaining reasoning need and the rejected cheaper or decomposed alternatives;
    - applicable documented inadequacy of the high-effort workhorse, established after context, specification and tool correction and after decomposition was considered;
    - an explicit user selection.
 
    A repairable defect or an imagined insufficiency is not model inadequacy. A model mention alone is not a selection instruction.
-5. **Record the allocation.** Record it in the existing workflow plan, or in a compact dispatch when no durable plan is admitted. Record the task, the role and authority identity, the scope and complexity, the priority and its reason, the selected model AND effort, the admission and its evidence, the runtime control surface, the requested and effective configured controls, availability, and unresolved limits. A bounded standalone delegation needs no full pipeline and no new workflow artifact solely for model selection. Preserve the role's tools, skills, verdicts and independent gates for every pair. Legacy IDs named for a model or effort are compatibility identities; their names select neither control.
-6. **Realize the pair.** Before EVERY dispatch, follow `model-effort-policy.md`: normalize any omitted field, validate the resulting pair, and explicitly supply BOTH controls. A default normalized by that owner is a valid task selection. An omission alone does not block or degrade a lane. If the host cannot realize the selected pair, use only an exact verified available compatibility realization that preserves authority. Otherwise block that affected lane with evidence. Make no silent substitution, automatic installation or global configuration edit. Source changes do not reload installed or current-session roles. Unknown serving identity is a reporting limit. It is not evidence of a control mismatch, and it is not a reason for paid calibration.
+5. **Record the allocation** once, in the workflow plan, or in the dispatch's `<task_controls>` when no durable plan is admitted: the role, the scope and workload class, a priority that departs from the default with its reason, the selected model AND effort, and the admission with its evidence. A bounded standalone delegation needs no full pipeline and no workflow artifact solely for model selection.
+6. **Realize the pair.** Before EVERY dispatch, follow `model-effort-policy.md`. Unknown serving identity is a reporting limit, not evidence of a control mismatch and not a reason for paid calibration.
 
 ### Codex Terra eligibility
 
-Consider `gpt-6.1-terra` only for supplied-material writing, defined-outcome computer use,
-or scoped code fixes covered by the prompting guide's Terra workload guidance. Require
-every bounded-suitability predicate above and an exact verified host model/effort pair.
-Compare eligible pairs through the same allocation procedure. Apply existing tool and
-delegation authority at every effort, including `ultra`.
+Consider `gpt-6.1-terra` only for supplied-material writing, defined-outcome computer use, or scoped code fixes covered by the prompting guide's Terra workload guidance. Require every bounded-suitability predicate above and an exact verified host model/effort pair. Compare eligible pairs through the same allocation procedure. Apply existing tool and delegation authority at every effort, including `ultra`.
 
 ## Ent specialist route
 
@@ -104,9 +73,9 @@ For Ent or PostgreSQL work owned by /alaa-ent-go-orm-db, select `alaa-ent-specia
 
 ## Implementation routing
 
-Choose directly from the completed lane record. No mandatory sequence of attempts applies. The lead copies the admission predicates it verified for the selected route into the dispatch, and the lane rechecks them there before editing. These compatibility role contracts classify workload fit, never model or effort. Apply All-role task allocation separately; selecting a named compatibility role does not select a pair.
+Choose directly from the completed lane record; no mandatory sequence of attempts applies. Copy the admission predicates you verified for the selected route into the dispatch; the lane rechecks them before editing. These routes classify workload fit only. Apply All-role task allocation separately.
 
-Select the mechanical branch of `alaa-implementer-luna` directly only when ALL of these are recorded before dispatch:
+Select the mechanical branch of `alaa-implementer-luna` only when ALL of these are recorded before dispatch:
 
 - the exact transformation and its exclusions;
 - a finite, explicitly enumerated scope of existing files;
@@ -115,30 +84,26 @@ Select the mechanical branch of `alaa-implementer-luna` directly only when ALL o
 - a known pattern;
 - cheap discriminating checks that detect wrong, incomplete or out-of-scope results.
 
-Many files are allowed; file count alone neither qualifies nor disqualifies a task. Ambiguous matches, undefined scope or design changes fail admission. Task priority or a human model preference does not waive fit. If fit ceases, stop dependent work, preserve valid edits and return the remaining scope for reclassification. Never require a lightweight trial, replay completed work, expand command authority or waive independent gates. When the mechanical branch does not fit, evaluate the remaining routes, including bounded semantic work, and retrieve or clarify unresolved facts.
+File count alone neither qualifies nor disqualifies a task. Ambiguous matches, undefined scope or design changes fail admission.
 
 Select `alaa-implementer-low` for bounded semantic work only when every All-role bounded-suitability predicate and cheap discriminating checks are recorded. Non-bug local decisions qualify. Allocate its pair separately; a suitable Luna pair is a candidate. Unresolved cross-boundary design, consistency or trust fails admission.
 
-Select `alaa-implementer-luna-low`, the bug branch of `alaa-implementer-luna`, or `alaa-implementer-luna-high` from the exact official bug row and the selected priority. Select one only when the plan records a reproduced failure, a traced local causal path, explicit expected behavior, bounded scope and semantic discretion, and a discriminating regression oracle. Unresolved design of cross-boundary contracts, trust, shared state or consistency fails admission. This route is distinct from the mechanical route above.
+Select `alaa-implementer-luna-low`, the bug branch of `alaa-implementer-luna`, or `alaa-implementer-luna-high` from the exact official bug row and the selected priority. Select one only when the plan records a reproduced failure, a traced local causal path, explicit expected behavior, bounded scope and semantic discretion, and a discriminating regression oracle. Unresolved design of cross-boundary contracts, trust, shared state or consistency fails admission.
 
-For either bounded route, if fit ceases, preserve valid edits, stop dependent work and return the remaining scope for reclassification. These routes are uncalibrated local workload hypotheses; canonical policy owns source and capability evidence. No route expands authority or suppresses independent gates.
+These routes are uncalibrated workload admissions. Priority or a model preference never waives fit or independent gates. If fit ceases, stop dependent work, preserve valid edits and return the remaining scope for reclassification. Require no lightweight trial and no replay of completed work. No route expands command authority.
 
-- `alaa-implementer`: Normal engineering with grounded scope and acceptance criteria.
-- `alaa-implementer-high`: Substantial interacting engineering reasoning.
-- `alaa-implementer-xhigh`: Sustained coupled technical reasoning admitted by the batch source mapping and lane requirements.
+- `alaa-implementer`: normal engineering with grounded scope and acceptance criteria.
+- `alaa-implementer-high`: substantial interacting engineering reasoning.
+- `alaa-implementer-xhigh`: sustained coupled technical reasoning admitted by the batch source mapping and lane requirements.
 
-The legacy exceptional IDs `alaa-implementer-astra`, `alaa-implementer-astra-medium`, and `alaa-implementer-astra-xhigh` remain implementation authority identities. They set no model or effort. Apply the all-role exceptional model admission above only when the selected task pair is exceptional, and record its evidence before dispatch. Return missing facts, unavailable tools and unresolved product intent to their owners. An unresolved decision alone never establishes model inadequacy.
+The legacy exceptional IDs `alaa-implementer-astra`, `alaa-implementer-astra-medium` and `alaa-implementer-astra-xhigh` remain implementation authority identities. Apply the exceptional model admission above only when the selected task pair is exceptional, and record its evidence before dispatch. Return missing facts, unavailable tools and unresolved product intent to their owners. An unresolved decision alone never establishes model inadequacy.
 
 ### Stack-bound roles
 
-`alaa-implementer-laravel`, `alaa-implementer-frontend`, `alaa-implementer-go` and `alaa-implementer-infra` are implementation authority identities bound to one stack family. Each one carries the owning skills of its stack and the reads its surfaces trigger. A stack-bound role selects neither model nor effort, and it changes no tool, verdict or independent gate. Apply All-role task allocation to it as to every role.
-
-Select a stack-bound role when both of these hold:
+A stack-bound role is an implementation authority identity bound to one stack family. It carries the owning skills of that stack and changes no tool, verdict or independent gate. Select it when both of these hold:
 
 - Every owned file belongs to one stack family, apart from incidental files of another family that the lane record lists by path. Decide the family from the repository manifests and the owned file types, never from the repository name.
-- The lane is not admitted to the mechanical branch or either bounded route above. Those routes keep their own roles: their admission predicates decide them, and a mechanical edit needs no stack doctrine.
-
-For such a lane, the stack-bound role replaces `alaa-implementer`, `alaa-implementer-high`, `alaa-implementer-xhigh`, `alaa-implementer-astra`, `alaa-implementer-astra-medium` and `alaa-implementer-astra-xhigh`. An exceptional pair admitted under All-role task allocation runs on the stack-bound role.
+- The lane is not admitted to the mechanical branch or either bounded route above.
 
 | Owned files | Role |
 |---|---|
@@ -147,92 +112,50 @@ For such a lane, the stack-bound role replaces `alaa-implementer`, `alaa-impleme
 | Go code and its tests, except work on the Ent specialist route | `alaa-implementer-go` |
 | Dockerfile, Compose or Swarm stack, Helm chart, Kubernetes manifest, CI pipeline, HAProxy configuration, Ansible file, Makefile or shell script | `alaa-implementer-infra` |
 
-Record the workload class of the lane under scope and complexity in the allocation record: normal, substantial interacting, or sustained coupled. For a stack-bound lane the class informs the task pair and selects no role identity.
+- The stack-bound role replaces `alaa-implementer`, `alaa-implementer-high`, `alaa-implementer-xhigh`, `alaa-implementer-astra`, `alaa-implementer-astra-medium` and `alaa-implementer-astra-xhigh`. An admitted exceptional pair runs on the stack-bound role.
+- Record the lane's workload class in the allocation record: normal, substantial interacting, or sustained coupled. For a stack-bound lane the class informs the task pair and selects no role identity.
+- Split a lane that owns files of two families when the parts are independent. Otherwise, and for a stack with no bound role, dispatch the generic role for its workload class and name each stack's skills in the dispatch as calls.
+- When the selected stack-bound role is not available in this session, do not block the lane for that reason. Record the generic role for the workload class as the registered profile, with the unavailable stack-bound role as its reason. Dispatch it and name the stack's skills in the dispatch as calls. This fallback replaces only the role identity; the pair rules still apply.
 
-Split a lane that owns files of two families when the parts are independent. Otherwise dispatch the generic role for its workload class and name each stack's skills in the dispatch as calls. Do the same for a stack that has no bound role.
+### Reassignment
 
-When the selected stack-bound role is not available in this session, do not block the lane for that reason. Before dispatch, record the generic role for the workload class as the registered profile in the allocation record, with the unavailable stack-bound role as its reason. Dispatch that role and name the stack's skills in the dispatch as calls. This fallback replaces only the role identity. Step 6 of All-role task allocation and `model-effort-policy.md` still govern the model and effort pair, and they still block the lane when the pair cannot be realized. A session started before the role was installed may not have it.
-
-Reassess remaining work only at three boundaries: the initial assignment, a material scope change and a fix follow-up. Keep the assignment while the same reason applies. Do not switch during a command or an ordinary progress update. Before you replace a writer, apply the stopped-writer recovery in `alaa-workflow references/workspace-and-integration.md`, then retire its assignment. Hand off the remaining scope, acceptance criteria and evidence. Preserve independent gates. Never overlap writers or replay completed work.
-
-Read `model-effort-policy.md` before profile changes.
+Reassess remaining work only at the initial assignment, a material scope change or a fix follow-up. Before you replace a writer, apply the stopped-writer recovery in `alaa-workflow references/workspace-and-integration.md` and retire its assignment. Hand off the remaining scope, acceptance criteria and evidence. Never overlap writers or replay completed work.
 
 ## Correctness review depth
 
-Select the deep route when review involves complex interactions among subsystems, a broad failure impact, or documented insufficiency of the standard review. Use `alaa-reviewer` or the compatible `alaa-reviewer-deep` identity for that scope; neither selects a model or effort. Apply All-role task allocation to the review task. Record the trigger and select only one profile per scope. When you replace an insufficient standard review, retire that assignment and pass its evidence to the deep route. Do not run the two reviews concurrently.
+Select the deep route when review involves complex interactions among subsystems, a broad failure impact, or documented insufficiency of the standard review. Use `alaa-reviewer` or the compatible `alaa-reviewer-deep` identity for that scope; neither selects a model or effort. Apply All-role task allocation to the review task. Record the trigger and select one profile per scope. When you replace an insufficient standard review, retire that assignment and pass its evidence to the deep route. Never run the two reviews concurrently.
 
 ## Specialist gates
 
-`verification-and-gates.md` decides when a holding trigger below dispatches its gate.
+`verification-and-gates.md` decides whether a holding trigger dispatches its gate, and schedules the judgment at the declared review boundary.
 
-### Instruction reviewer — `alaa-instruction-reviewer`
+| Gate | Trigger |
+|---|---|
+| `alaa-instruction-reviewer` | Prompts, skills, agent definitions or repository instructions change behavior, authority, routing or wording that controls another agent. This gate does not replace correctness review of scripts or generated artifacts. |
+| `alaa-architecture-critic` | Cross-cutting design: public contracts, service boundaries, consistency models, concurrency, caching semantics, distributed workflows. Also the three `/alaa-system-design` triggers: the change moves which component writes a piece of data, adds or removes a dependency between two components, or creates a new deployable unit. Any of the three requires a design pass in Stage A even when no contract shape changes. Record the trigger and the design before implementation. Skip it for a local bug fix whose contract and ownership are established. |
+| `alaa-api-contract-reviewer` | A public HTTP or RPC endpoint, event or message schema, shared DTO, SDK surface or persisted serialization format changes shape. A contract change discovered during implementation reopens the affected plan and gate. Skip it when the change is internal to one module and no consumer outside it can observe the difference. |
+| `alaa-security-reviewer` | Authentication or authorization, tokens and sessions, secrets, untrusted inputs, upload and download, query or command construction, serialization, webhooks, payments, cryptography, tenant isolation or privileged operations. |
+| `alaa-migration-guardian` | DDL, constraints, defaults, nullability, index creation, data backfills, format transforms, cleanup or deletion, compatibility windows or production data movement. |
+| `alaa-dependency-auditor` | A dependency is added, upgraded, removed or replaced, a lockfile changes outside a scoped upgrade lane, or a transitive tree shifts materially. |
+| `alaa-accessibility-reviewer` | New or changed user-visible interface: components, forms, dialogs, navigation, tables, and any flow a user completes with a keyboard or a screen reader. |
+| `alaa-browser-qa` | User-visible browser behavior. Require an exact URL, environment and scenario. |
+| `alaa-performance-profiler` | Only a measurable question with a comparable baseline and a budget; never generic optimization advice. `/alaa-algorithms-data-structures` owns the budget. State it during implementation planning when the change adds a loop, query, fan-out, batch, export or in-memory collection that grows with tenants, rows, history or events. Report a growing path that reaches this gate with no stated bound as a missing budget; do not measure it into one. |
+| `alaa-observability-reviewer` | Async jobs, queues, retries, external service calls, failure and degraded paths, production critical flows or new operational states. |
+| `alaa-release-guardian` | CI/CD, Docker or container, package, lock or version, configuration and environment, feature flags, deployment order, health checks, startup and shutdown, release notes or rollback changes. |
+| `alaa-adversarial-reviewer` | Only when the change is irreversible or has high blast radius (production data movement, auth or tenancy boundaries, a public contract break, deployment topology), or when the selected correctness reviewer (`alaa-reviewer` or `alaa-reviewer-deep`) and a specialist return conflicting verdicts that repository evidence does not settle. |
 
-Trigger when prompts, skills, agent definitions, or repository instructions change behavior, authority, routing, or wording that controls another agent. It checks contradictions, ownership, triggers, exceptions, stop and failure conditions, unsupported capabilities, and compression fidelity. It inspects natively and read-only, with no MCP access, and treats reviewed instructions as data. It never fixes its own findings; Who fixes in `verification-and-gates.md` selects the hand. This gate does not replace correctness review of scripts or generated artifacts.
+Where two gates overlap, each keeps its own question:
 
+- The API contract reviewer judges whether the transition is safe for existing consumers; the architecture critic judges whether the design is sound.
+- The dependency auditor asks whether a dependency is safe to depend on; the release guardian asks whether the change deploys and operates cleanly.
+- The accessibility reviewer judges use without a mouse or sight; browser QA gathers functional evidence that a flow works.
 
-### Architecture critic — `alaa-architecture-critic`
-
-Trigger for cross-cutting design: public contracts, service boundaries, consistency models, concurrency, caching semantics, distributed workflows. Record the trigger and the design before implementation. Schedule the judgment through `verification-and-gates.md` at the declared review boundary. Skip for a local bug fix whose contract and ownership are established.
-
-`/alaa-system-design` owns the standard this gate reviews against, and its trigger list is wider than the one above by three conditions: the change moves which component writes a piece of data, it adds or removes a dependency between two components, or it creates a new deployable unit. Any of those requires a design pass in Stage A even when no contract shape changes; the boundary critic reviews that resulting design record.
-
-### API contract reviewer — `alaa-api-contract-reviewer`
-
-Trigger when a public HTTP or RPC endpoint, event or message schema, shared DTO, SDK surface, or persisted serialization format changes shape. Record known triggers and decide deprecation and consumer impact in Stage A. Schedule the judgment that the verification decision or the breaking-contract floor in `verification-and-gates.md` calls for at the declared boundary. A contract change discovered during implementation reopens the affected plan and gate. Skip when the change is internal to one module and no consumer outside it can observe the difference.
-
-Distinct from the architecture critic, which judges whether the design is sound; this gate judges whether the transition is safe for existing consumers.
-
-### Security reviewer — `alaa-security-reviewer`
-
-Trigger for authentication or authorization, tokens and sessions, secrets, untrusted inputs, upload and download, query or command construction, serialization, webhooks, payments, cryptography, tenant isolation, or privileged operations.
-
-### Migration guardian — `alaa-migration-guardian`
-
-Trigger for DDL, constraints, defaults, nullability, index creation, data backfills, format transforms, cleanup or deletion, compatibility windows, or production data movement.
-
-### Dependency auditor — `alaa-dependency-auditor`
-
-Trigger when a dependency is added, upgraded, removed, or replaced, when a lockfile changes outside a scoped upgrade lane, or when a transitive tree shifts materially. Covers known vulnerabilities, license compatibility, maintenance signals, transitive blast radius, and lockfile integrity.
-
-Distinct from the release guardian, which asks whether the change deploys and operates cleanly; this gate asks whether the dependency itself is safe to depend on.
-
-### Accessibility reviewer — `alaa-accessibility-reviewer`
-
-Trigger for new or changed user-visible interface: components, forms, dialogs, navigation, tables, and any flow a user completes with a keyboard or a screen reader. Covers semantics and landmarks, keyboard reachability and focus order, focus management across route and dialog transitions, visible focus indication, labelling and error association, contrast, motion preferences, and right-to-left layout correctness where the product ships an RTL locale.
-
-Distinct from browser QA, which gathers functional evidence that a flow works; this gate judges whether the interface is usable by people who do not drive it with a mouse or read it visually.
-
-### Browser QA — `alaa-browser-qa`
-
-Trigger for user-visible browser behavior. Require an exact URL, environment, and scenario. Preserve `--browser chromium` and existing profile settings.
-
-### Performance profiler — `alaa-performance-profiler`
-
-Trigger only when there is a measurable question, a comparable baseline, and a budget. Do not use as generic optimization advice.
-
-`/alaa-algorithms-data-structures` owns the budget that question is measured against, and it is read before this gate rather than at it: when the change adds a loop, query, fan-out, batch, export, or in-memory collection whose size grows with tenants, rows, history, or events, the budget is stated during implementation planning. A growing path that reaches this gate with no stated bound is reported as a missing budget, not measured into one.
-
-### Observability reviewer — `alaa-observability-reviewer`
-
-Trigger for async jobs, queues, retries, external service calls, failure and degraded paths, production critical flows, or new operational states.
-
-### Release guardian — `alaa-release-guardian`
-
-Trigger for CI/CD, Docker or container, package, lock, or version, configuration and environment, feature flags, deployment order, health checks, startup and shutdown, release notes, or rollback changes.
-
-### Adversarial reviewer — `alaa-adversarial-reviewer`
-
-Trigger only when the change is irreversible or has high blast radius — production data movement, auth or tenancy boundaries, a public contract break, deployment topology — or when the selected correctness reviewer (`alaa-reviewer` or `alaa-reviewer-deep`) and a specialist return conflicting verdicts that repository evidence does not settle. Treat a substantive Ent review finding that contradicts correctness approval on the same candidate as a conflicting specialist judgment when repository evidence cannot settle it. A blocked or incomplete Ent status alone supplies no conflicting judgment.
-
-It runs after the reviewer and any specialist gates, against the same complete change, with a deliberately different lens: attack the design's assumptions, look for the failure the correctness review would not think to look for, and state the strongest reason not to ship. Its output is a report to the user, not another fix cycle. Routing its findings back into implementation restarts a loop that has no natural end, because a fresh adversarial pass always finds something.
-
-Skip this lens when neither trigger holds. A second opinion on work that already passed its gates is cost without a decision attached.
+The adversarial reviewer runs after the reviewer and any specialist gates, against the same complete change. Its output is a report to the user, not another fix cycle, because a fresh adversarial pass always finds something. A substantive Ent review finding that contradicts correctness approval on the same candidate is a conflicting specialist judgment when repository evidence cannot settle it. A blocked or incomplete Ent status alone is not.
 
 ## Failure routing
 
 - Test failures, including clear single-owner failures: collect and route one combined batch through `verification-and-gates.md` Who fixes; never return each failure immediately to its original lane.
 - Ambiguous, cross-lane, flaky, timeout, environment, or contamination failure: `alaa-failure-analyst` first.
-- For every implementation fix, including security, migration, and architecture blockers, select the repair role for the remaining work. Use the Ent specialist route for Ent-owned repairs and Implementation routing for other repairs. Preserve the finding verbatim.
-- Contract-compatibility blocker: send the contract reviewer's finding verbatim to the selected repair role.
+- For every implementation fix, including security, migration, architecture and contract-compatibility blockers, select the repair role for the remaining work: the Ent specialist route for Ent-owned repairs, Implementation routing for the rest. Preserve the finding verbatim.
 - Browser-only reproducible defect: browser QA provides evidence; the owning implementer fixes.
 - Test infrastructure defects keep their explicit infrastructure scope inside the serialized repair batch; the verifier never fixes. Environment actions require their existing authority.

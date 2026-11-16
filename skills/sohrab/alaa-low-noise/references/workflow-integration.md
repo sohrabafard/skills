@@ -1,46 +1,23 @@
 # Workflow Integration
 
-Read this file only when `/alaa-workflow` or delegated execution is active.
-
 ## Ownership rule
 
-`/alaa-low-noise` owns context input and printed output.
-
-`/alaa-workflow` owns:
-
-- plan mode versus execution mode
-- durable artifact families and naming
-- resume and handoff continuity
-- parent versus child lane ownership
-
-Where they overlap, follow `/alaa-workflow` for artifact structure. Follow `/alaa-low-noise` for how much is read and printed. This skill never decides phases, plans, or state layout.
+`/alaa-workflow` owns plan versus execution mode, durable artifact families and naming, resume and handoff continuity, and lane ownership. Follow it for artifact structure, and this skill for how much is read and printed. This skill never decides phases, plans or state layout.
 
 ## Artifact routing
 
-When workflow has admitted durable state:
-
-- Keep durable reasoning in its existing workflow owner. Use the canonical plan reference, including
-  a Beads address for a Beads-native plan.
-- Do not duplicate that information in alternate notes.
-- Keep long logs in repo-local paths already used by the repository or workflow run.
-
-When workflow is inactive but a bulky artifact is useful, prefer existing repository conventions. Otherwise, prefer a small repo-local path such as `artifacts/` or `reports/`.
+- With admitted workflow state: keep durable reasoning in its workflow owner, and cite the canonical plan reference, which is a Beads address for a Beads-native plan. Duplicate nothing in alternate notes. Keep long logs in the repo-local paths that the repository or the workflow run already uses.
+- With no active workflow: put a useful bulky artifact where the repository convention says. Without a convention, use a small repo-local path such as `artifacts/` or `reports/`.
 
 ## Delegated lanes
 
-When delegating, prioritize keeping discovery out of the parent context over parallelism.
-The return enters the parent's context.
+The return of a lane enters the parent's context. Keeping discovery out of the parent therefore takes priority over parallelism.
 
+- Give each child an explicit return shape and a length bound in its dispatch: an unbounded return most often floods the parent's context.
+- A child returns findings, counts, verdicts or artifact paths. It never returns a transcript, full file contents, a full diff or a raw log.
+- A discovery lane reports conclusions and evidence locations, not what it read.
+- A writer lane keeps its output inside its owned surfaces and reports changed paths, not diffs.
 - The parent owns the concise synthesis and the user-facing report.
-- Children return findings, counts, verdicts, or artifact paths. Children never return transcripts, full file contents, full diffs, or raw logs.
-- Discovery lanes report conclusions and evidence locations, not what they read.
-- Writer lanes keep outputs within their owned surfaces. They report changed paths, not diffs.
-- Give each child an explicit return shape and length bound in its dispatch. Unbounded returns most often flood the parent's context.
-- Do not spawn a summary-only lane when the parent could obtain that summary in a couple of bounded reads.
+- Spawn no summary-only lane when the parent can get that summary in a couple of bounded reads.
 
-Route runtime-specific delegation authorization and capability through `/alaa-prompting-guide`. Both runtimes share the return contract above.
-
-## Caveats
-
-- Delegation polarity differs by model family and generation. Before assuming a cap or authorization is the right correction, read `alaa-prompting-guide references/06-invocation-and-composition.md`; it owns the polarity rule.
-- The `artifacts/` and `reports/` paths are fallbacks only. Repository conventions and any active workflow artifact family take precedence.
+Both runtimes share this return contract. Delegation polarity differs by model family and generation: before you assume that a cap or an authorization is the right correction, read `alaa-prompting-guide references/06-invocation-and-composition.md`. That skill also owns runtime-specific delegation authorization and capability.

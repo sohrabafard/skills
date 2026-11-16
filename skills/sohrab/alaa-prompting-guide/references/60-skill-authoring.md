@@ -1,176 +1,182 @@
 # Skill Authoring
 
-A skill is an execution contract, not a document. It states who the agent is for the duration of the task, what outcome counts as done, what it may and may not touch, how it validates its own work, and when it stops. The frontmatter is how the runtime finds and loads that contract, the `description` is how the model decides the contract applies, and the body is the contract itself. One package serves both runtimes: Claude Code implements the Agent Skills open standard and Codex reads the same `SKILL.md` shape.
+A skill is an execution contract, not a document. It states the agent's role for the task, the outcome that counts as done, what the agent may and may not touch, how it validates its work, and when it stops. The frontmatter lets the runtime find the contract, the `description` lets the model decide that it applies, and the body is the contract. One package serves both runtimes.
 
-When you are about to choose a directory layout, a discovery path, a frontmatter key, or a description length, read `references/61-skill-platform-mechanics.md` — every per-runtime value lives there and none is restated here. When a generated example must name a skill so that the skill actually activates, read `references/06-invocation-and-composition.md` for the invocation rule.
+- For a directory layout, a discovery path, a frontmatter key or a description length, read `references/61-skill-platform-mechanics.md`. It holds every per-runtime value; this file states none.
+- When an example must name a skill so that the skill activates, read `references/06-invocation-and-composition.md`.
 
 ## Should this be a skill at all?
 
-Four artifacts compete for the same job, and choosing wrong is the most common authoring defect. Decide by what the content is conditional on and who owns the context.
+Decide by the answer to "when does this apply?" and by who owns the context.
 
-- **A plain instruction** belongs in the prompt when it applies to one task and will never be reused. Do not package a one-off.
-- **An instruction file** (`AGENTS.md`, `CLAUDE.md`) holds what is true for *every* task in the repository, because it is always loaded and therefore always costs context. When the content is unconditional, read `references/70-agent-instruction-files.md` instead of continuing here.
-- **A skill** holds a procedure or body of knowledge that applies *conditionally* — to some tasks, in some repositories — and costs nothing until it applies. Claude Code's own guidance is explicit: a section of `CLAUDE.md` that has grown into a procedure should become a skill, because a skill's body loads only when used.
-- **A subagent** is right when the work needs its own context window, its own tool set, or an authority boundary the caller cannot cross. A skill changes how the current agent behaves; a subagent creates a different agent. When the answer is a subagent, read `references/80-subagent-authoring.md`.
+| Answer | Artifact | Notes |
+|---|---|---|
+| "Never again": one task, no reuse | A plain instruction in the prompt | Keep work inline when the current agent has the context and the authority and would finish in a handful of tool calls |
+| The steps never vary and need no judgment | A deterministic script | More reliable than an agent, and it costs no tokens |
+| "Always": true for every task in the repository | An instruction file (`AGENTS.md`, `CLAUDE.md`) | It always loads and always costs context. Read `references/70-agent-instruction-files.md` |
+| "Sometimes, and here is the trigger" | A skill | It costs nothing until it applies. A `CLAUDE.md` section that has grown into a procedure becomes a skill |
+| "When someone other than me must judge it" | A subagent | Read `references/80-subagent-authoring.md` |
 
-The test in one line: if the answer to "when does this apply?" is "always," it is an instruction file; if it is "never again," it is a prompt; if it is "sometimes, and here is the trigger," it is a skill; if it is "when someone other than me must judge it," it is a subagent.
+A subagent is right when at least one condition holds:
+
+- the work would flood the caller's context with search results, logs or file contents it never uses again;
+- the work needs a different tool set, above all a narrower one;
+- an agent that did not produce the work must judge it. Only a subagent meets this condition.
+
+A skill changes how the current agent behaves; a subagent is a different agent, and its definition can preload skills. An unneeded subagent multiplies latency and tokens, and a missing one collapses an authority boundary.
 
 ## The description carries the activation decision
 
-A description that only says what a skill does under-triggers, because the model has no phrase to match a user's actual request against. A description that only says "use when" over-triggers, because nothing tells the model where the boundary is. Write all three parts:
+Write all four parts:
 
-1. **What it is**, in one noun phrase, first, so truncation cannot remove it.
-2. **When to use it**, in the verbs a user would actually type, not the verbs you would use to describe your own architecture.
-3. **When not to use it**, naming the alternative skill where one exists. This is the part authors skip and the part that stops over-triggering, because naming the alternative gives the model somewhere to go instead of only somewhere not to go.
-4. **Any activation side effect.** A skill whose activation writes files must say so where the model reads before deciding, not only in the body it reads afterwards.
+1. **What it is,** in one leading noun phrase, so truncation cannot remove it.
+2. **When to use it,** in the verbs a user types, not the verbs of your architecture. Without this part the skill under-triggers: the model has no phrase to match a request against.
+3. **When not to use it,** naming the alternative skill where one exists. Without this part the skill over-triggers; a named alternative gives the model somewhere to go.
+4. **Any activation side effect.** A skill whose activation writes files says so here, where the model reads before it decides.
 
 ## Progressive disclosure
 
-The body is always paid for; a reference is paid for only when read. Once a skill loads its content stays in context across turns, so every body line is a recurring cost.
+The body is always paid for, and a loaded skill stays in context across turns. A reference is paid for only when read.
 
-**In the body:** the role and its authority limits; the operating modes; the decision procedure the agent walks every time; the pipeline or phase order; stop conditions; safety rules; and one-line pointers naming each reference and the condition under which to read it.
-
-**In a reference:** anything consulted rather than followed — lookup tables, per-ecosystem command matrices, failure taxonomies, catalogs of roles or triggers, long worked examples, installation detail. If the agent needs it in one run out of five, it is a reference.
-
-Ship deterministic work as a script rather than as prose, because a script is deterministic where a regenerated implementation is not. Reference its exact invocation from the body, state what a failure obliges the agent to do, and pre-approve it with `allowed-tools` so it runs without prompting.
+- **Body:** the role and its authority limits; the operating modes; the decision procedure the agent walks every time; the pipeline or phase order; stop conditions; safety rules; and one pointer per reference.
+- **Reference:** anything consulted, not followed: lookup tables, per-ecosystem command matrices, failure taxonomies, catalogs of roles or triggers, long worked examples, installation detail. Content the agent needs in one run out of five is a reference.
+- **Script:** deterministic work, because a regenerated implementation is not deterministic. The body names its exact invocation and what a failure obliges the agent to do, and `allowed-tools` pre-approves it.
 
 ## Reference decomposition
 
-This is the procedure for designing a low-volume, high-power skill: a body small enough to pay for on every run, with the detail still reachable when it is needed. Run it whenever a skill's subject is larger than one file.
+Apply this when a skill's subject is larger than one file.
 
-1. **Partition the subject into topics that do not overlap.** A topic is a question the agent arrives with, not a heading you would like to write. Two topics overlap when the same rule would be correct in either file; merge them, or move the rule to whichever topic owns the decision it drives.
-2. **Give each topic exactly one reference file.** One topic split across two files drifts, and the agent follows whichever it reads first. Two topics packed into one file force the agent to load both to use either, which is the cost the split existed to avoid.
-3. **Write the pointer from the body.** A pointer sentence carries three things: the observable situation that triggers the read, the path, and what the file decides once read. Without the situation the agent cannot know when to fire it; without what it decides the agent cannot tell whether reading it would answer the question in front of it.
-4. **Confirm the body now decides nothing it delegated.** A value left behind in the body after its topic moved is a second owner, and it will drift from the first.
+1. **Partition the subject into topics that do not overlap.** A topic is a question the agent arrives with, not a heading you want to write. Two topics overlap when one rule would be correct in either file: merge them, or move the rule to the topic that owns the decision it drives.
+2. **Give each topic exactly one reference file.** A topic split across two files drifts, and the agent follows the file it reads first. Two topics in one file make the agent load both to use either.
+3. **Write each pointer with three parts:** the observable situation that triggers the read, the path, and what the file decides. *"When you are about to choose a frontmatter key, read `references/61-skill-platform-mechanics.md`; it holds every per-runtime value"* routes. *"See also `references/61-skill-platform-mechanics.md` for platform details"* names no situation and no decision, so it fires never or on every run.
+4. **Leave in the body no value that a reference now owns.** A value left behind is a second owner, and it drifts.
 
-This routes: *"When you are about to choose a frontmatter key or a description length, read `references/61-skill-platform-mechanics.md` — it holds every per-runtime value and this file states none."* This does not: *"See also `references/61-skill-platform-mechanics.md` for platform details."* Same file, same topic. The second names no situation, so it fires either never or on every run, and "details" describes no decision the agent could be looking for.
+**Router.** Keep one router: a body table, or an external file with one short triggered body pointer. Choose by the always-loaded cost and the routing the skill needs, never by reference count alone. Keep an existing external router unless evidence justifies a move. Repository routing and retirement rules govern.
 
-The cost model decides it. Inlining a failure taxonomy into the body charges every run for it, including the four runs in five that never fail a check; moving it behind a pointer charges one line and buys the whole file conditionally.
-
-Choose router placement by actual always-loaded cost and selective routing needs, never reference count alone. Preserve an existing external router unless evidence justifies relocation. Keep one router: a body table or an external file with one short triggered body pointer. Relocation is a separate justified change, never compression; preserve every trigger and destination. Repository-specific routing and retirement rules govern.
+**Relocation is a separate justified change, never compression.** Preserve every trigger and destination. Write the new pointer's trigger as the union of the situations in which each moved item applied, and add no rule during the move. A narrower pointer reaches the moved content in fewer situations, and nothing errors.
 
 ## The draft-then-compress loop
 
-**The first text you write for any artifact that controls another agent's behavior is a draft, never the deliverable.** The shipped text is a deliberate rewrite of that draft: shorter, denser, fewer words, equal or greater power. Power is execution fidelity to the same intent — clearer, more precise, less ambiguous wording that makes the same behavior more reliable. It never authorizes stronger normative force, a new rule, a broader scope, a narrower exception, or a change to a threshold, an authority, a precedence, or a behavior; any change in a rule's force fails, weaker or stronger alike. A first draft shipped unrewritten is the defect this procedure exists to catch, and it survives review because a first draft reads fine — it is complete, it is accurate, and it is two to three times longer than the contract inside it. This applies to a repair as much as to a new artifact: an edited paragraph is a draft until it has been through pass two.
+**The first text you write for an artifact that controls another agent is a draft, never the deliverable.** Ship a deliberate rewrite of it: fewer words, equal or greater power. A first draft reads fine and survives review, yet it is two to three times as long as the contract inside it. A repair follows the same loop: an edited paragraph is a draft until it passes pass two.
 
-**Pass one — draft.** Get every decision onto the page. Write the rule, the scope it applies to, its reason, its stop condition, and the case that made you write it. Do not compress, do not remove a repetition, do not stop to phrase anything well. A decision omitted because it seemed obvious is the one the agent will get wrong, and no later pass can recover a decision that was never written down.
+**Power is execution fidelity to the same intent:** clearer, more exact wording that makes the same behavior more reliable. It authorizes no stronger normative force, no new rule, no broader scope, no narrower exception, and no change to a threshold, an authority, a precedence or a behavior. A change in a rule's force fails, weaker or stronger alike.
 
-**Pass two — compress.** Rewrite the draft, applying these in order:
+**Pass one: draft.** Write every decision down: the rule, its scope, its reason, its stop condition, and the case that made you write it. Do not compress yet. No later pass recovers a decision that was never written, and the decision omitted as obvious is the one the agent gets wrong.
 
-1. Delete a sentence stating a rule already stated elsewhere in the file, keeping the statement in the section that owns it.
-2. Delete a sentence that explains why the skill is worth having, reassures the reader, or previews what the next section will say.
-3. Delete an example that repeats a rule already given in prose without adding a case the rule does not cover.
-4. Collapse list items that differ only in wording into one item.
-5. Replace a paragraph of narration with the rule it was narrating, stated before its rationale.
-6. Cut a qualifier that changes no behavior — "generally", "it is worth noting", "in most cases" — unless the qualifier is the rule's scope.
+**Pass two: compress.** Rewrite the draft. Remove:
 
-**Never remove or weaken any of these, at any compression ratio:** a rule or obligation; a condition or trigger; an exception; a decision boundary or threshold; the scope a constraint applies to; the alternative a prohibition names; the reason attached to a rule; a stop condition; an authority limit; a source or verification date; or any other text whose change can alter agent behavior. The catch-all governs and the examples are non-exhaustive, because no list of kinds can cover every way a sentence carries behavior. Weakening is removal by another route — a constraint verb replaced by a preference verb, a scope or a trigger replaced by silence, two rules merged into one general rule that decides neither case. Each is load-bearing exactly when the agent is under pressure from a conflicting instruction, and each looks like padding while you are cutting. A shorter file that lost one of them is a worse file, not a leaner one.
+1. a sentence that states a rule already stated in the file; keep the statement in the section that owns the rule;
+2. a sentence that explains why the skill is worth having, reassures the reader, or previews the next section;
+3. an example that repeats a rule and adds no case the rule does not cover;
+4. list items that differ only in wording; merge them into one;
+5. narration; replace it with the rule it narrated, stated before its rationale;
+6. a qualifier that changes no behavior ("generally", "it is worth noting", "in most cases"), unless the qualifier is the rule's scope.
 
-**A compress pass relocates nothing.** Moving a rule can change its scope, its precedence, its loading condition, or its ownership, and each of those alters behavior with no word lost. A move is a separate change with its own reason and its own review. Cutting a rule because another file should own it, without the edit that puts it there, deletes it.
+**Never remove or weaken any of these, at any compression ratio:**
 
-**The done-test for the rewrite: the executing agent's behavior is unchanged.** Every sentence removed and every word replaced must leave it unchanged. Apply the test by walking the shipped text as the agent and naming, for each cut and each substitution, what it would now do differently; restore the original whenever you can name something. The rewrite is finished when the next change you can find fails this test. A word count is not this test — a file can lose 40% of its words and one stop condition, and the word count reports a success.
+- a rule or obligation;
+- a condition or trigger;
+- an exception;
+- a decision boundary or threshold;
+- the scope a constraint applies to;
+- the alternative a prohibition names;
+- the reason attached to a rule;
+- a stop condition;
+- an authority limit;
+- a source or verification date;
+- any other text whose change can alter agent behavior. This item governs; the others are examples.
 
-**A soft target yields; a hard limit does not.** An author target, a recommended line count, or a default word budget yields when required behavior-affecting content does not fit: exceed it, say so, and compress the rest as normal — yielding is never permission to stop compressing. A limit that rejects or truncates the artifact, such as a packaging validator or a runtime byte budget, cannot yield: meet it by restructuring without semantic loss, and report blocked when no restructuring satisfies both. Restructuring moves content, so it is a separate change with its own reason and not a compress pass.
+Weakening is removal by another route: a constraint verb replaced by a preference verb, a scope or a trigger replaced by silence, two rules merged into one general rule that decides neither case. Each item looks like padding while you cut, and each carries the load when a conflicting instruction presses the agent.
+
+**A compress pass relocates nothing.** A move can change a rule's scope, precedence, loading condition or ownership with no word lost. A move is a separate change with its own reason and its own review. To cut a rule because another file should own it, without the edit that puts it there, is to delete it.
+
+**The done-test: the executing agent's behavior is unchanged.** Walk the shipped text as the agent. For each cut and each substitution, name what the agent would now do differently, and restore the original wherever you can name something. The rewrite is finished when the next change you can find fails this test. A word count is not this test: a file can lose 40% of its words and one stop condition.
+
+**A soft target yields; a hard limit does not.**
+
+- A soft target is an author target, a recommended line count or a default word budget. When required behavior-affecting content does not fit, exceed the target, say so, and keep compressing the rest.
+- A hard limit rejects or truncates the artifact: a packaging validator, a runtime byte budget. Meet it by restructuring without semantic loss, and report blocked when no restructuring satisfies both. Restructuring moves content, so it is a separate change, not a compress pass.
 
 ## ASD-STE100 style
 
-Write every controlling text in ASD-STE100-style English. Put one idea in each sentence. Write complete sentences with their articles and verbs. A slash-joined noun stack or a clause with no verb fails the test in *The wording is the mechanism* below, because the reader must guess how its terms relate. Aim for 20 words or fewer in a procedure sentence. Exceed that when a split would separate a rule from its condition, scope or reason. Use the active voice and the command form for an action. Use one term for one concept and never rotate synonyms. Remove filler and idioms. Keep technical names, paths, commands and numbers exact. The style never overrides the done-test above: a shorter text that changes agent behavior fails.
+Write every controlling text in ASD-STE100-style English. The style never overrides the done-test: a shorter text that changes agent behavior fails.
+
+- Put one idea in each sentence. Write complete sentences with their articles and verbs. A slash-joined noun stack or a clause with no verb makes the reader guess how its terms relate.
+- Aim for 20 words or fewer in a procedure sentence. Exceed that when a split would separate a rule from its condition, scope or reason.
+- Use the active voice, and the command form for an action.
+- Use one term for one concept. Never rotate synonyms.
+- Remove filler and idioms.
+- Keep technical names, paths, commands and numbers exact.
+
+## The wording is the mechanism
+
+In a skill the words are the executable logic. No compiler enforces what a sentence failed to say. Test each sentence: **could a competent agent follow this exactly and still do the wrong thing?** If yes, the sentence is underspecified however well it reads. That question outranks any style rule. Six failure modes cause most hits, and each reads fine in review:
+
+| Failure | What happens | Write instead |
+|---|---|---|
+| A preference verb where a constraint was meant: "should ideally", "try to", "prefer to avoid" | It reads as optional and is dropped first under a conflicting instruction | "never", "must not", "always", or a fact about the system |
+| A rule with no stated scope: "Keep it concise" | A model applies an instruction where it appears and nowhere else, above all at lower effort | Name the scope: every section, every file, each finding, the final report only |
+| A negative-only instruction: "Do not use a purple gradient" | The model moves to a different fixed default, not to judgment | Pair the prohibition with what to do, or write the positive rule that makes it unnecessary. Keep a bare prohibition only for a real boundary, where no alternative action exists |
+| An abstract noun for an observable condition: "handle errors properly", "write clean code" | It can be neither complied with nor violated | The observable: which envelope, which budget, which rule. If you cannot name one, you have found a decision you have not made |
+| A constraint buried mid-paragraph | It is weighted like explanation | One rule per sentence, the rule before its rationale |
+| A rule that looks arbitrary and has no reason | It is rationalized away at the first unanticipated case | One clause of reason. A rule whose rationale is obvious needs none; a rule that looks like a preference needs one |
+
+When prose and example disagree, the example wins. Never ship an example that contradicts its rule.
 
 ## Evidence for instruction changes
 
-Extend the compression walkthrough to relevant ordinary, ambiguous and conflicting cases. Choose cases proportional to the changed decisions and the cost of a wrong outcome. Trace which owner the recipient selects and loads, what scope and authority it has, and when inherited review runs. Identify what evidence the recipient can report. Compare each decision with the intended contract and resolve discrepancies before shipping.
+- Extend the done-test walk to the ordinary, ambiguous and conflicting cases that the change touches. Choose cases in proportion to the changed decisions and the cost of a wrong outcome.
+- For each case, trace which owner the recipient selects and loads, what scope and authority it has, when inherited review runs, and what evidence it can report. Compare each decision with the intended contract, and resolve discrepancies before you ship.
+- Report static checks, source walkthroughs and observed agent runs separately. A static check establishes only the properties it checks. A walkthrough traces expected decisions from source. A claim about actual execution needs an observed run on the target surface.
 
-Report static checks, source walkthroughs and observed agent runs separately. A static check establishes only the properties it checks. A walkthrough traces expected decisions from source. Claims about actual execution require observed runs on the target surface.
+**Optional comparative evaluation.** This protocol is optional and is no dispatch admission requirement. When a comparison is authorized:
 
-### Optional comparative evaluation
-
-When a comparison is authorized, define a question and acceptance criteria before running it. Use representative tasks, including held-out cases. Match initial state, context, tools and authority across variants, except for the factor under comparison. Separate first-attempt success from success after repair. Record whole-task cost, elapsed time, interventions, failures and supporting evidence, including repairs. Disclose differences that limit attribution. Apply `alaa-testing-strategy references/110-execution-resources.md` for comparative timing. This protocol is optional and supplies no dispatch admission requirement.
+- define the question and the acceptance criteria before the run;
+- use representative tasks, held-out cases included;
+- match initial state, context, tools and authority across variants, except for the factor under comparison;
+- separate first-attempt success from success after repair;
+- record whole-task cost, elapsed time, interventions, failures and supporting evidence, repairs included;
+- disclose differences that limit attribution;
+- apply `alaa-testing-strategy references/110-execution-resources.md` for comparative timing.
 
 ## Carry-over review for a new model generation
 
-Run this review when a controlling text written for an earlier model will run on a newer one. This includes a prompt, a skill, an agent file, an instruction file, a memory and a note.
+Run this review when a controlling text written for an earlier model will run on a newer one: a prompt, a skill, an agent file, an instruction file, a memory or a note.
 
-A carry-over repair is a deliberate behavior change. The done-test above does not judge it. Judge it against the target model's reference and the declared intent of the text, and leave every other rule's behavior unchanged. Apply a check only when the target model's reference documents that behavior, and take the repair from that reference. For Fable 5.2 the reference is `references/43-fable-5-2.md`. Report a check the reference does not document as not applicable. A stale fact is the one check that applies to every model: replace it from the current source and date it.
+- **A carry-over repair is a deliberate behavior change, and the done-test does not judge it.** Judge it against the target model's reference and the declared intent of the text. Leave every other rule's behavior unchanged.
+- **Record each removal in the change's ledger or report:** the rule removed and the reason.
+- **Apply a check only when the target model's reference documents the behavior,** and take the repair from that reference: `references/43-fable-5-2.md` for Fable 5.2, `references/12-gpt-6.md` for GPT-6. For a file that several models load, apply a check only when every loading model's reference documents the behavior. Report an undocumented check as not applicable. The stale-fact check applies to every model: replace the fact from the current source and date it.
+- **A model upgrade removes no required test, independent gate, stop condition or authority limit.** `references/80-subagent-authoring.md` owns that distinction.
 
 | Check | Hit |
 |---|---|
 | Stale fact | A model name, version gate, default, limit or runtime behavior that the current source contradicts |
 | Standing delegation | A line that tells the agent to delegate and states no cost, no criteria and no case for inline work |
-| Absolute approval rule | "never" on an action the agent must keep through approval; a "never" that states a true invariant is not a hit |
+| Absolute approval rule | "never" on an action the agent must keep through approval. A "never" that states a true invariant is not a hit |
 | Thinking control in prose | A line that asks for less thinking, or asks the agent to write out its reasoning |
 | Token budget in the text | A token budget shown to the executing agent |
 | Hard style limit | A word or sentence cap with no exception |
 | Expired caution | A caution, note or stop condition whose stated reason no longer holds, or that states no scope or no reason |
+| Default-behaviour instruction | A line that tells the model to do what the weakest model loading the file does without being told. Source: [OpenAI skills blog](https://developers.openai.com/blog/rethinking-skills-and-prompts-for-gpt-6-astra), 16 November 2026 (remove instructions for behavior the model now does itself) |
+| Step-by-step itinerary | A procedure that fixes an order where order does not affect correctness. Source: the same blog, 16 November 2026 ("Avoid writing skills as step-by-step itineraries") |
 
 When a caution or stop condition states no reason, add its scope and reason, or ask its owner. Delete it only when its reason is stated and the evidence shows that the reason no longer holds.
 
-A model upgrade removes no required test, no independent gate, no stop condition and no authority limit. `references/80-subagent-authoring.md` owns that distinction.
-
-## Lean prompts must preserve behavior
-
-Current OpenAI guidance favors small routers, precise triggers, conditional reads, and lean
-instructions. This supports removing duplicated instructions and irrelevant examples; it does
-not prove a fixed quality or cost gain for every task. Keep every load-bearing condition,
-authority boundary, required check, and caveat through the compression test above.
-
-When selecting GPT-6 guidance, read `references/12-gpt-6.md`. Historical percentages measured on earlier prompts are
-not forecasts for this pack.
-
-## The wording is the mechanism
-
-**In a skill the words are the executable logic**, where in ordinary software prose is only commentary around it. There is no compiler underneath to enforce what the sentence failed to say, so a rule phrased ambiguously executes ambiguously — every time the skill loads, in every session, for as long as the file survives.
-
-Six failure modes account for most of it, and each is invisible in review because the sentence reads fine.
-
-**Preference verbs where a constraint was meant.** "Should ideally", "try to", "prefer to avoid" are read as optional and are the first things dropped when the model is under pressure from a conflicting instruction. Write a non-negotiable rule as non-negotiable — "never", "must not", "always" — or state it as a fact about the system rather than as a request.
-
-**Rules with no stated scope.** "Keep it concise" leaves the model to guess where. Models apply an instruction precisely where it appears and nowhere else, especially at lower effort. Name the scope: every section, every file, each finding, the final report only.
-
-**Negative-only instruction.** "Do not use a purple gradient" moves the model to a different fixed default rather than to good judgment, because the instruction removed one option without supplying a decision procedure. Pair every prohibition with what to do instead, or replace it with the positive rule that makes the prohibition unnecessary.
-
-**Abstract nouns standing in for observable conditions.** "Handle errors properly", "ensure good performance", "write clean code" cannot be complied with or violated, so they are decorative. Replace each with the observable: which envelope, which budget, which rule. If you cannot make it observable, you have found a decision you have not yet made.
-
-**Constraints buried mid-paragraph.** A rule inside a long explanatory sentence is weighted like explanation. One rule per sentence, and put the rule before its rationale — the reader who stops early should still have the rule.
-
-**Arbitrary-looking rules with no reason attached.** A rule whose purpose is invisible gets rationalized away the first time the model meets a situation the author did not anticipate. One clause of reason is usually enough to survive contact with a novel case. This is also why an example that contradicts its rule is so costly: when prose and example disagree, the example wins.
-
-The test to apply sentence by sentence: **could a competent agent follow this exactly and still do the wrong thing?** If yes, the sentence is underspecified however well it reads. That question is worth more than any style rule, and it is why skill authoring is a judgment lane rather than a transcription lane.
-
 ## Defects and fixes
 
-| Defect | Symptom | Fix |
-|---|---|---|
-| Description never triggers | The skill runs only when typed manually | Front-load a noun phrase and add the user's own trigger verbs; confirm the entry is not being shortened out of the listing |
-| Description over-triggers | The skill loads on unrelated requests | Add explicit negatives and name the alternative skill; narrow the scope noun; make the skill manual-only when it should never load automatically |
-| First draft shipped | The body reads well and is two to three times the length of the contract inside it | Run the compress pass and hold it to the done-test before shipping |
-| Rule weakened during compression | Same rules, softer verbs; the file passes review | Diff the verbs, the scopes, and the conditions, not the word count |
-| Reference nobody reads | A reference file exists and never loads | Rewrite the pointer to name the triggering situation and what the file decides |
-| Lookup table in the body | Every run pays for a matrix used in one run out of five | Move the table to its own reference and leave a pointer |
-| Relocated content with a narrower pointer | A moved table, list or checklist is reached in fewer situations than before, and nothing errors | Write the pointer's trigger as the union of the situations in which each moved item applies, and add no rule during the move |
-| Body duplicates a reference | The same rule in two files, drifting apart | Assign one owner per rule; leave a one-line pointer where the rule used to be |
-| Instruction stated more than once | Long body, degraded compliance | State each rule once; measure fidelity and required coverage |
-| Skill tries to be a whole workflow | The body sprawls into phases, state files, resumable plans | Split it, and route the durable multi-phase part to a workflow skill by name in the description |
-| Missing stopping conditions | Runs past the goal, or loops on an unreachable bar | Define both success-stop and blocked-stop; require a new stated reason for each further fix or review round, and a change of approach when the same kind of defect returns |
-| No failure behavior | The agent troubleshoots mid-goal instead of reporting | State the retry budget and the fallback in one sentence |
-| Unbounded authority | A destructive or external action taken without asking | Enumerate what proceeds freely and what requires permission; scope installation authority to named files |
-| Invented frontmatter key | Ignored in silence, or a hard packaging error | Use only documented keys — the surface per runtime is in `references/61-skill-platform-mechanics.md` |
-
-## Checklist
-
-1. The artifact passes the "should this be a skill" test rather than belonging in an instruction file, a prompt, or a subagent.
-2. Frontmatter uses documented keys only, and any runtime-specific key is deliberate and known to be inert or rejected elsewhere.
-3. The `description` front-loads what it is, gives the user's own trigger verbs, states at least one negative, names the alternative where one exists, and declares any activation side effect.
-4. The description fits the caps with room to spare, and the key use case survives shortening.
-5. The body carries role, goal, success criteria, constraints, authority limits, tool usage, retrieval rules, validation, output format, stop conditions, and failure behavior — each stated once.
-6. Every topic has exactly one owning file, and every pointer names the situation that triggers reading it and what the file decides.
-7. The shipped text is a compressed rewrite of a draft, and every cut and every substitution passes the done-test.
-8. No duplicated instruction, no decorative example, no explanation of why the skill is worth having.
-9. Deterministic work ships as a script with its exact invocation, pre-approved rather than described in prose.
-10. Every example that names a skill follows `references/06-invocation-and-composition.md`, and every version-sensitive claim carries a source or is marked unverified.
+| Symptom | Fix |
+|---|---|
+| The skill runs only when typed manually | Front-load a noun phrase and add the user's own trigger verbs. Confirm that the listing does not shorten the entry away |
+| The skill loads on unrelated requests | Add explicit negatives and name the alternative skill. Narrow the scope noun. Make the skill manual-only when it must never load automatically |
+| After compression the file has the same rules with softer verbs, and it passes review | Diff the verbs, the scopes and the conditions, not the word count |
+| The body sprawls into phases, state files and resumable plans | Split it, and route the durable multi-phase part to a workflow skill by name in the description |
+| The agent runs past the goal, or loops on an unreachable bar | Define a success stop and a blocked stop. Require a new stated reason for each further fix or review round, and a change of approach when the same kind of defect returns |
+| The agent troubleshoots mid-goal and does not report | State the retry budget and the fallback in one sentence |
+| A destructive or external action runs without a question | List what proceeds freely and what needs permission. Scope installation authority to named files |
 
 ## Freshness
 
-Authoring structure was verified on 6 August 2026; GPT-6 guidance refreshed on 25 September 2026. The carry-over review and the sentence-length default follow the Fable 5.2 prompting page fetched 14 November 2026. No earlier generation's evaluation percentages are promised here. Every runtime value this procedure depends on — caps, budgets, frontmatter surfaces, discovery paths — is held and dated in `references/61-skill-platform-mechanics.md`.
+Authoring structure was verified 6 August 2026 and GPT-6 guidance 25 September 2026. The carry-over review and the sentence-length default follow the Fable 5.2 prompting page fetched 14 November 2026. `references/12-gpt-6.md` holds the vendor lean-prompt guidance; percentages measured on earlier prompts forecast nothing for this pack.
 
 ## Sources
 
@@ -178,5 +184,4 @@ Authoring structure was verified on 6 August 2026; GPT-6 guidance refreshed on 2
 - [How Claude remembers your project (Claude Code)](https://code.claude.com/docs/en/memory)
 - [Build skills (OpenAI)](https://learn.chatgpt.com/docs/build-skills)
 - [Latest model guide (OpenAI)](https://developers.openai.com/api/docs/guides/latest-model)
-
 - [Rethinking skills and prompts for GPT-6 Astra](https://developers.openai.com/blog/rethinking-skills-and-prompts-for-gpt-6-astra)

@@ -1,60 +1,51 @@
 # Optional Prompt Generation
 
-Create a reusable prompt pack only on explicit request for an admitted execution family. For Markdown, use the same stem. For Beads-native work, cite the root address and the exact phase and task IDs in the requested deliverable. Create no companion plan for the pack.
+Create a reusable prompt pack only on explicit request, for an admitted execution family. A Markdown pack uses the plan's stem. For Beads-native work, cite the root address and the exact phase and task IDs in the requested deliverable. Create no companion plan for the pack.
 
 ## Freshness gate
 
-Before resolving any runtime, model, agent feature, or skill-trigger syntax:
+Before you resolve a runtime, model, agent feature or skill-trigger syntax:
 
 1. Load `/alaa-prompting-guide`.
-2. Verify the current official OpenAI and Anthropic documentation relevant to the selected runtimes.
-3. Record the resolved implementer runtime and model, the reviewer runtime and model, the effort levels, source URLs, and verification date in the generated pack.
-4. Leave a visible `NEEDS_LIVE_VERIFICATION` marker when live verification cannot be completed. Never guess.
+2. Verify the current official OpenAI and Anthropic documentation for the selected runtimes.
+3. Record in the generated pack the implementer and reviewer runtime and model, the effort levels, the source URLs and the verification date.
+4. When live verification cannot be completed, leave a visible `NEEDS_LIVE_VERIFICATION` marker. Never guess.
 
-**Resolved values belong in the generated prompt pack with their verification date, and never in stable skill text.** This is the rule that keeps this skill from decaying. A model name or effort level written into a reference file is wrong the next time either vendor ships, and it will be copied forward long after it stopped being true — into packs where nobody re-checked it, because it looked authoritative. Stable workflow files name the decision and point at its owner; only the dated pack carries the answer. Actual task model AND effort choices come from the active runtime orchestrator, never from role identity, memory or an older prompt pack.
+Resolved values belong only in the dated pack, never in stable skill text, because a model name or an effort level goes stale at the next vendor release. The task model AND effort come from the active runtime orchestrator, never from role identity, memory or an older prompt pack.
 In Codex, `/alaa-codex-orchestrator` owns `references/routing-matrix.md`.
 In Claude Code, `/alaa-cc-orchestrator` owns `references/routing-matrix.md`.
-Current `/alaa-prompting-guide` capabilities and mechanics inform those choices. Model and effort are two questions, not one; resolve them separately.
+Resolve model and effort as two separate questions.
 
 ## Roles
 
-- `implementer`: makes the in-scope change, validates it, and reports blockers.
-- `independent reviewer`: inspects the resulting artifact or diff without inheriting the implementer's conclusions.
-- `documenter` (optional): aligns repository documentation with the shipped phase. Include only when the phase alters behavior, APIs, configuration, or operations; route Ala-style documentation through `/alaa-repo-docs`.
+- `implementer`: makes the in-scope change, validates it and reports blockers.
+- `independent reviewer`: inspects the resulting artifact or diff without the implementer's conclusions.
+- `documenter` (optional): aligns repository documentation with the shipped phase. Include it only when the phase alters behavior, APIs, configuration or operations. Route Ala-style documentation through `/alaa-repo-docs`.
 
-Record the current runtime and both task-selected controls for every role only after the freshness gate, and use the trigger syntax that runtime accepts — `$name` in Codex, `/name` in Claude Code.
+Record the runtime and both task-selected controls for every role only after the freshness gate.
 
-When a phase runs through `/alaa-codex-orchestrator` (Codex) or `/alaa-cc-orchestrator` (Claude Code), these prompts feed that pack's role lanes; do not restate its dispatch machinery, review gate, roster, or role definitions. `/alaa-prompting-guide` owns capabilities, runtime precedence and checked model-neutral projections; the runtime orchestrator selects BOTH controls from the actual task. A prompt pack keeps only the three durable roles above; the orchestrator owns role triggers and chooses the runtime profile.
+When a phase runs through `/alaa-codex-orchestrator` (Codex) or `/alaa-cc-orchestrator` (Claude Code), these prompts feed that pack's role lanes. Never restate its dispatch machinery, review gate, roster or role definitions. A prompt pack keeps only the three roles above.
 
-Build prompts through `/alaa-prompting-guide` `references/06-invocation-and-composition.md`. Name the exact installed orchestrator, give it orchestration authority, and put implementation authority in the lane rules. The invocation owner decides goal composition for the selected surface.
+Build prompts through `/alaa-prompting-guide` `references/06-invocation-and-composition.md`. It decides goal composition and the trigger syntax that each runtime accepts. Name the exact installed orchestrator, give it orchestration authority, and put implementation authority in the lane rules.
 
 ## Compact prompt shape
 
-Each role prompt contains:
+Each role prompt has six fields: outcome, read-first context, scope and authority, validation, done condition and blocked condition.
 
-1. Outcome.
-2. Read-first context.
-3. Scope and authority.
-4. Validation.
-5. Done condition.
-6. Blocked condition.
+The read-first field carries:
 
-Within read-first, require /alaa-testing-strategy before designing implementation or verification.
+- /alaa-testing-strategy, required before designing implementation or verification;
+- the exact skill names of the selected phase or task, with their sources, load points, conditions and absence actions, or an exact reference to its populated Skill Bindings and task overrides. Resolve them from the plan; never write "use relevant skills";
+- the handoff-package facts that bear on the lane: confirmed facts with how they were verified, approaches ruled out and why, and the environment notes and traps for the surfaces this role owns. Copy the facts in, because the agent sees only this prompt and the files it names.
 
-Within read-first, give the exact skill names of the selected phase or task, with their sources, load points, conditions, and absence actions, or an exact reference to its populated Skill Bindings and task overrides. Resolve these from the plan rather than writing "use relevant skills". Keep this within the six fields; `references/companion-routing.md` owns the mapping contract.
+Every generated dispatch identifies the whole engagement, the current phase, task and subtask, the final phase and the declared review boundary from the plan. The reviewer prompt applies only at that boundary, and only when the runtime orchestrator's verification decision or a floor calls for a review. A nested invocation inherits the boundary; never infer a new final candidate from the prompt's local phase. Carry the plan's phase collection and repair/retest barriers and their evidence owner. Route scheduling to `alaa-codex-orchestrator` or `alaa-cc-orchestrator` `references/verification-and-gates.md`.
 
-Every generated dispatch identifies the whole engagement, the current phase, task and subtask, the final phase and the declared review boundary from the plan. The reviewer prompt applies only at that boundary, and only when the runtime orchestrator's verification decision or a floor calls for a review; a nested invocation inherits the boundary. Carry the plan's phase collection and repair/retest barriers and their evidence owner. Route scheduling to `alaa-codex-orchestrator` or `alaa-cc-orchestrator` `references/verification-and-gates.md`. Never infer a new final candidate from the prompt's local phase.
+For a Beads-bound dispatch, resolve the actor, the binding, the issue IDs, the ownership action and the `bd` flags through `references/task-tracking.md` `## Agent identity and ownership` and `## Beads capabilities in use`.
 
-For Beads-bound dispatches, resolve actor, binding, issue IDs, ownership action and the `bd` flags a lane without write or sync authority passes through `references/task-tracking.md` `## Agent identity and ownership` and `## Beads capabilities in use` before use.
+Start from `assets/phase-prompts-template.md`. Keep each role prompt at or below 250 words by default. Add only task-specific constraints that affect correctness, and put detailed checklists in the plan or the read-first sources. When required behavior-affecting content does not fit in 250 words, exceed the target, say so, and compress the rest.
 
-The read-first section must carry the handoff-package facts that bear on this lane: the confirmed facts with how they were verified, the approaches already ruled out and why, and the environment notes and traps that apply to the surfaces this role owns. The executing agent has no shared context — it sees this prompt and the files it names, and nothing else. Copy the facts in rather than pointing at a conversation it never had. A prompt that omits them buys a rediscovery, or a repeat of an experiment that already failed. Field semantics are in `references/context-continuity.md`.
-
-Start from `assets/phase-prompts-template.md`. Keep each role prompt at or below 250 words by default. Add only task-specific constraints that affect correctness. Put detailed checklists in the plan or read-first sources; do not repeat the plan, repository instructions, generic engineering advice, or the other role's prompt. The 250-word target yields whenever exhaustive or required behavior-affecting content does not fit: exceed it rather than drop any, say so, and compress the rest as normal.
-
-## Delegation in prompts
-
-`SKILL.md` owns which work may be delegated. What belongs in the prompt is the consequence: when a prompt authorizes delegation, it names the owned surfaces and who owns integration, because the executing agent cannot ask.
+A prompt that authorizes delegation names the owned surfaces and the integration owner, because the executing agent cannot ask.
 
 ## Bootstrap metadata
 
-The Markdown initializer accepts optional `--implementer-runtime`, `--implementer-model`, `--reviewer-runtime`, `--reviewer-model`, `--verified-on`, and repeatable `--verification-source` values. Supply all runtime and model values together after source verification, with `--implementer-effort` and `--reviewer-effort` for complete selected controls. Model-only legacy invocations remain draft with unresolved effort; partial effort input is rejected. Source metadata never proves effective runtime controls; the active orchestrator must verify those before every dispatch. Without them, the generated pack remains an explicit draft. `--documenter-runtime` and `--documenter-model` are optional, must be supplied together, and require the implementer and reviewer metadata; omitting them marks the documenter role as not included. Included documenters also require `--documenter-effort` to resolve their selected controls.
+The Markdown initializer accepts optional `--implementer-runtime`, `--implementer-model`, `--reviewer-runtime`, `--reviewer-model`, `--verified-on` and repeatable `--verification-source`. After source verification, supply all four runtime and model values together, with `--implementer-effort` and `--reviewer-effort` for complete selected controls. A model-only invocation stays a draft with unresolved effort; partial effort input is rejected. Without these values, the pack stays an explicit draft. `--documenter-runtime` and `--documenter-model` are optional, go together and require the implementer and reviewer metadata. An included documenter also requires `--documenter-effort`; omitting the documenter flags marks that role not included. Source metadata never proves effective runtime controls: the active orchestrator verifies them before every dispatch.

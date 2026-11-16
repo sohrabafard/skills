@@ -1,5 +1,9 @@
 # Changelog
 
+## 7.0.0 - 2026-11-17
+
+- Second-pass rewrite and rule pruning of contract assets, agent definitions, `SKILL.md` and references under the owner decision of 2026-11-17. Pruned rules are listed in `artifacts/core-skills-compression-20261116/`. The `README-fa.md` version line is `7.0.0`.
+
 ## 6.0.4 - 2026-11-15
 
 - No Codex change. `alaa-cc-orchestrator` 6.0.4 converts every Claude `skills:` preload entry to the plain name. Codex has no preload, so its role instructions keep the sentence that tells the lane to load each skill.

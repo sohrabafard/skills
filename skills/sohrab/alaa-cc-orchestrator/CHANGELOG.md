@@ -1,5 +1,9 @@
 # Changelog
 
+## 7.0.0 - 2026-11-17
+
+- Second-pass rewrite and rule pruning of contract assets, agent definitions, `SKILL.md` and references under the owner decision of 2026-11-17. Pruned rules are listed in `artifacts/core-skills-compression-20261116/`.
+
 ## 6.0.4 - 2026-11-15
 
 - Every `skills:` entry in every managed role is now the plain registered name: 79 entries in the role files and 40 in `assets/profile-wrappers.json`, after the routing entry in 6.0.1. Owner direction, 2026-11-15: use the correct form for all. Each listed skill's body now loads at the start of every run of its role; the summed `SKILL.md` size per role ran from about 3 KB to about 88 KB when measured that day. `scripts/check_agent_grants.py` rejects an entry with a leading slash.

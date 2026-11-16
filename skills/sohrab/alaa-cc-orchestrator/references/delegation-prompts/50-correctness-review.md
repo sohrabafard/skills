@@ -10,7 +10,7 @@
 <review_reason><what the author cannot see, or the floor></review_reason>
 <stance>Fresh context, read-only, findings-first, no fixes.</stance>
 <refuted_findings><after a prior round: key, one-line claim and one-line reason per refuted item; else none. Do not re-raise a listed item unless code at its location changed since the recorded snapshot or you have new evidence. Mark a re-raise `RE-RAISED: <key>` with that evidence.></refuted_findings>
-<review_depth>standard | deep, with the routing trigger and selected profile. Use only one correctness reviewer for this scope.</review_depth>
+<review_depth>standard | deep, with the routing trigger and selected profile</review_depth>
 ```
 
 ## Finding refuter
@@ -45,7 +45,7 @@ Dispatch a fresh instance of the lens-owning role under `alaa-workflow reference
 <prior_gates><verbatim correctness verdict and specialist reports, including the unresolved conflict when that is the trigger></prior_gates>
 <verification_evidence><observed evidence and its observer: verifier results, or the author's focused checks the lead accepted; and what each command actually exercised></verification_evidence>
 <blast_radius><what is irreversible, who is affected, and the cost of undoing it></blast_radius>
-<stance>Fresh independent lens, read-only, no fixes. Do not re-run the correctness review or restate findings `alaa-reviewer` already raised.</stance>
+<stance>Fresh independent lens, read-only, no fixes. Do not re-run the correctness review or restate findings the correctness reviewer already raised.</stance>
 <disposition>Reported to the user as a ship decision. Findings are not routed into another fix cycle.</disposition>
 <output>Use the role's native output contract, starting with its first-line VERDICT.</output>
 ```

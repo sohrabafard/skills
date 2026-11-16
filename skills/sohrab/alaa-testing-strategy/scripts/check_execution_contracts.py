@@ -24,7 +24,7 @@ CLASSIFICATION = "references/120-result-classification.md"
 REQUIREMENTS = MappingProxyType({
     "body": (
         "For any direct or delegated validation run",
-        "references/00-topic-map.md",
+        "references/100-test-execution.md",
         "python3 scripts/check_execution_contracts.py",
         "`0` clean, `1` findings, `2` unavailable",
         "Either nonzero blocks the affected claim",
@@ -34,14 +34,14 @@ REQUIREMENTS = MappingProxyType({
     "router": ("100-test-execution.md", "110-execution-resources.md", "120-result-classification.md"),
     "execution": (
         "Repository validation policy takes precedence",
-        "Runtime orchestrators own role authority, observer independence, allocation, and the scheduling of phases and reviews",
+        "This procedure grants no role authority, observer independence, allocation or scheduling",
         "Scope tiers: how much of the suite runs, and when",
         "A result stays valid until something named invalidates it",
         "A failing tier is classified before it is repaired",
-        "required gates, exact commands and scoped inputs, cwd, timeout, environment and resource limits, expected cases, declared case dependencies, aggregate-to-child coverage and eligible citations",
-        "Record each command's machine-readable reporter when available and retain its output",
-        "When no machine-readable reporter exists, retain the raw exit status and output",
-        "Record the tested content snapshot, relevant untracked inputs and tool versions",
+        "the required gates, with each exact command, its scoped inputs, cwd, timeout, environment and resource limits",
+        "the expected cases, declared case dependencies, aggregate-to-child coverage and eligible citations",
+        "each command's machine-readable reporter, with its output retained; without one, the raw exit status and output",
+        "the tested content snapshot, relevant untracked inputs and tool versions",
         "Keep check inputs stable during the pass",
         "For a new or changed test command, or one with a recorded harness failure, confirm selection before citing its result",
         "run that as a separate selection check before the first execution",
@@ -69,9 +69,10 @@ REQUIREMENTS = MappingProxyType({
         "Run any remaining checks whose preconditions are now satisfied",
         "Cite valid passing evidence unless fresh proof is required",
         "Repeat the whole list only when all its evidence is invalidated or the governing gate requires a fresh whole-list run",
+        "Extend coverage only for shared behavior, a newly reachable surface or a required uncovered claim",
         "Collect new failures within the existing budget",
         "Preserve the original result, repair and retest separately",
-        "Never weaken assertions, suppress findings, lower thresholds, widen tolerances, add assertion retries or alter fixtures to conceal failure",
+        "which also bans every change that conceals a failure",
         "Environment recovery changes require their own authority and evidence",
         "Unresolved required checks block acceptance",
         "is not reset by collection or a new agent",
@@ -88,7 +89,7 @@ REQUIREMENTS = MappingProxyType({
         "the tool, runner, and dependency versions",
         "the environment and service state the check depends on",
         "the flags, seed, configuration, and working directory it ran under",
-        "cite the result with its original command and timestamp",
+        "Cite a recorded result, with its original command and timestamp",
         "When one of them changes, say which one, and re-run every result downstream of it",
         "A failed, flaky, contaminated, timed-out or environment-blocked result cannot discharge a required check",
         "Reuse passing evidence only where its inputs, observer and freshness requirements still match",
@@ -103,7 +104,7 @@ REQUIREMENTS = MappingProxyType({
         "makes every later result over that state `CONTAMINATED`",
         "Classify first, then act",
         "Four classes stay separate",
-        "A tier is never made to pass by deleting an assertion, widening a tolerance, adding a retry, skipping a case, or lowering a threshold",
+        "Never make a check pass by deleting or weakening an assertion, suppressing a finding, lowering a threshold, widening a tolerance, adding an assertion retry, skipping a case, altering a fixture, hard-coding an expected result or lowering a review standard",
     ),
     "resources": (
         "OS process priority (`BelowNormal` by default, which is `nice 10`)",
@@ -134,7 +135,6 @@ REQUIREMENTS = MappingProxyType({
         "Unexpected tracked file changes contaminate the run",
         "Run only one CPU-heavy verification or profiling command at a time per host in this workflow",
         "A gate's supported internal parallel mode counts as that one command",
-        "Priority alone is not a CPU limit",
         "including container, VM and cgroup quotas, affinity restrictions and reserved capacity",
         "an unavailable capacity observation is unknown, never unlimited",
         "allocate explicit CPU budgets across every concurrent container and host worker",
@@ -195,9 +195,7 @@ REQUIREMENTS = MappingProxyType({
         "Confirm the command, working directory, environment and resource limits",
         "Compare the initial and final git status, and check for concurrent changes",
         "if one authorized rerun exists",
-        "Inspect the owning code, test or configuration path",
         "Classify the owner as product, test infrastructure, environment, or unresolved ownership",
-        "Route the smallest grounded next action",
         "recurring with the same first causal error earns no further full run",
         "within the active retry budget while safe independent checks continue",
     ),
@@ -235,10 +233,11 @@ REQUIREMENTS = MappingProxyType({
 # fragments, topic names, status headings and citations remain legal pointers.
 NORMATIVE_DUPLICATES = MappingProxyType({
     "execution": (
-        "Runtime orchestrators own role authority, observer independence, allocation, and the scheduling of phases and reviews",
-        "required gates, exact commands and scoped inputs, cwd, timeout, environment and resource limits, expected cases, declared case dependencies, aggregate-to-child coverage and eligible citations",
-        "Record each command's machine-readable reporter when available and retain its output",
-        "Record the tested content snapshot, relevant untracked inputs and tool versions",
+        "This procedure grants no role authority, observer independence, allocation or scheduling",
+        "the required gates, with each exact command, its scoped inputs, cwd, timeout, environment and resource limits",
+        "the expected cases, declared case dependencies, aggregate-to-child coverage and eligible citations",
+        "each command's machine-readable reporter, with its output retained; without one, the raw exit status and output",
+        "the tested content snapshot, relevant untracked inputs and tool versions",
         "Keep check inputs stable during the pass",
         "For a new or changed test command, or one with a recorded harness failure, confirm selection before citing its result",
         "otherwise compare the first run's selected cases with the recorded expected cases",
@@ -259,9 +258,9 @@ NORMATIVE_DUPLICATES = MappingProxyType({
         "Run any remaining checks whose preconditions are now satisfied",
         "Cite valid passing evidence unless fresh proof is required",
         "Repeat the whole list only when all its evidence is invalidated or the governing gate requires a fresh whole-list run",
+        "Extend coverage only for shared behavior, a newly reachable surface or a required uncovered claim",
         "Collect new failures within the existing budget",
         "Preserve the original result, repair and retest separately",
-        "Never weaken assertions, suppress findings, lower thresholds, widen tolerances, add assertion retries or alter fixtures to conceal failure",
         "Environment recovery changes require their own authority and evidence",
         "Unresolved required checks block acceptance",
     ),
@@ -282,7 +281,6 @@ NORMATIVE_DUPLICATES = MappingProxyType({
         "Unexpected tracked file changes contaminate the run",
         "Run only one CPU-heavy verification or profiling command at a time per host in this workflow",
         "A gate's supported internal parallel mode counts as that one command",
-        "Priority alone is not a CPU limit",
         "including container, VM and cgroup quotas, affinity restrictions and reserved capacity",
         "Their simultaneous allocations must fit effective host capacity with the declared reserve",
         "Set container `--cpus` limits below the host logical CPU count and within that effective budget",
@@ -326,9 +324,7 @@ NORMATIVE_DUPLICATES = MappingProxyType({
         "Identify the first causal error, not the last stack trace",
         "Confirm the command, working directory, environment and resource limits",
         "Compare the initial and final git status, and check for concurrent changes",
-        "Inspect the owning code, test or configuration path",
         "Classify the owner as product, test infrastructure, environment, or unresolved ownership",
-        "Route the smallest grounded next action",
     ),
     "doctrine": (
         "**Focused** | the smallest test, path or scenario that distinguishes the subtask's changed behavior",
@@ -337,16 +333,15 @@ NORMATIVE_DUPLICATES = MappingProxyType({
         "Labels never narrow an actual command's scope",
         "When one of them changes, say which one, and re-run every result downstream of it",
         "A failed, flaky, contaminated, timed-out or environment-blocked result cannot discharge a required check",
-        "a check outside the list runs only when the repair changes shared behaviour or proves a new reachable surface",
         "A phase transition, new agent or compaction alone invalidates nothing",
         "A case failing never stops an independent case from running",
         "Classify first, then act",
-        "A tier is never made to pass by deleting an assertion, widening a tolerance, adding a retry, skipping a case, or lowering a threshold",
+        "Never make a check pass by deleting or weakening an assertion, suppressing a finding, lowering a threshold, widening a tolerance, adding an assertion retry, skipping a case, altering a fixture, hard-coding an expected result or lowering a review standard",
     ),
 })
 
 # Frozen preservation baseline over every NORMATIVE_DUPLICATES clause.
-EXPECTED_NORMATIVE_INVENTORY_SHA256 = "f84a0f7394b6aa34f4500d90d87d16c43d4b03f75daab8822682de67f192df63"
+EXPECTED_NORMATIVE_INVENTORY_SHA256 = "3bd9f7ced7cdfe3dc6408c2521a77fc568196f5b856391b006267e270adc7b56"
 
 # These are contradictory positive instructions, not mere absent keywords.
 # Append them with all required clauses intact to prove contradiction detection.
@@ -370,6 +365,7 @@ CONTRADICTIONS = (
     "Compaction transfers live writer ownership",
     "Unknown ownership blocks all disjoint work",
     "Create a new worktree automatically on resume",
+    "Treat and report an unclassifiable case as a product defect",
 )
 
 

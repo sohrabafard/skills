@@ -1,74 +1,70 @@
 # Test Economy
 
-Read when deciding whether a candidate is owed a test, giving a test its selector, creating or sharing setup, repairing or deleting an existing test on a touched topic, choosing which commands a gate runs, or finding a build, compile, render, or image produced more than once in a pass. `SKILL.md` holds the binding rules: *Whether a test is owed* and non-negotiables 10, 13, and 14. This file holds the detail; the per-stack skills own the native mechanism for each rule.
+The per-stack skills own the native mechanism for each rule in this file.
 
 ## Candidates that are not owed a test
 
 | Kind | Example | What this project tests instead |
 |---|---|---|
 | Language or runtime behaviour | that a map lookup returns the stored value, that a type conversion rounds | nothing |
-| Framework behaviour | that the router dispatches, that the ORM persists a field, that the validator rejects a type mismatch, that the container injects a binding | the rule this project configured: the route's guard, the validation rule's boundary, the binding this project chose |
-| A shared kit or package its own suite proves | an alaa-go-chi middleware's envelope, trust-header parsing, outbox relay mechanics; an `@alaa/*` component's rendering | the consumer's use: the options it passes, the handler or policy it plugs in, the route family it chose, and the kit's required conformance harness |
-| A vendor library | a client's retry loop, a parser's grammar | the configuration chosen and the caller's handling of each response it uses; a double is bound per `30-doubles.md` |
-| Generated code | a generated client, mapper, or schema type | the generator's input, by the gate that regenerates and diffs it |
-| A declaration a gate already rejects | a typed field, a schema shape, a lint-enforced convention, a chart that fails to render | nothing beyond that gate |
+| Framework behaviour | that the router dispatches, the ORM persists a field, the validator rejects a type mismatch, the container injects a binding | what this project configured: the route's guard, the validation rule's boundary, the binding it chose |
+| A shared kit or package that its own suite proves | an alaa-go-chi middleware's envelope, trust-header parsing, outbox relay mechanics; an `@alaa/*` component's rendering | the consumer's use: the options it passes, the handler or policy it plugs in, the route family it chose, and the kit's required conformance harness |
+| A vendor library | a client's retry loop, a parser's grammar | the configuration chosen, and the caller's handling of each response it uses; bind a double per `30-doubles.md` |
+| Generated code | a generated client, mapper or schema type | the generator's input, by the gate that regenerates and diffs it |
+| A declaration that a gate already rejects | a typed field, a schema shape, a lint-enforced convention, a chart that fails to render | nothing beyond that gate |
 | An unreachable mode | input already refused by an owned, tested check upstream inside the same trust boundary; a dependency this path never calls; a configuration that never ships | nothing; record `not reachable: <reason>` |
 
-The always-owed tests in `SKILL.md` — named security controls, reported-defect regressions, untrusted-input boundaries, and the per-surface floor — are never placed in a row above.
+Never place an always-owed test from `SKILL.md` in a row above.
 
-**The boundary that decides a hard case: could this project's code be wrong in a way the test catches?** If only the dependency could be wrong, the dependency's suite owns the test. If this project's choice, input, or wiring could be wrong, the test is owed and it asserts that choice.
+**A hard case turns on one question: could this project's code be wrong in a way that the test catches?** If only the dependency could be wrong, the dependency's suite owns the test. If this project's choice, input or wiring could be wrong, the test is owed and asserts that choice.
 
-A test already in the suite that falls into a row above is reported as a finding with its reason, because it passes against every implementation this project can ship. It is deleted only after the lead, or the reviewer its verification decision names, accepts that finding, never by the lane whose change it is failing on, and never when it is an always-owed test.
+Report an existing test that falls into a row above as a finding with its reason. Delete it only after the lead, or the reviewer that its verification decision names, accepts the finding. The lane whose change it fails on never deletes it, and nobody deletes an always-owed test this way. A kit or package that is itself under development keeps the tests of the behaviour it owns.
 
-A failure alone never justifies deleting a test: a failing test is repaired, or classified under `50-flake.md`, whose quarantine deadline is the only failure-driven deletion. Every other deletion follows the independent-acceptance rule above and keeps the coverage obligations of `60-coverage.md`.
+A failure alone never justifies deleting a test. Repair a failing test, or classify it under `50-flake.md`, whose quarantine deadline is the only failure-driven deletion. Every other deletion follows the acceptance rule above and keeps the obligations of `60-coverage.md`.
 
 ## Existing tests on a touched topic
 
-Repair, in the same change, only the existing tests of topics the change touches, and only to: name the failure a test defends against, add its topic and layer selector, split independent scenarios into independent cases, and remove a duplicate that the layer discriminator in `SKILL.md` proves. Redesigning shared test infrastructure or migrating untouched topics is a separate task, recorded as a follow-up, because it widens the change's review scope and retest breadth beyond the behaviour that changed.
+In the same change, repair only the existing tests of topics the change touches, and only to:
+
+- name the failure a test defends against;
+- add its topic and layer selector;
+- split independent scenarios into independent cases;
+- remove a duplicate that the removal discriminator in `SKILL.md` *The core rule* proves.
+
+Record a redesign of shared test infrastructure, or a migration of untouched topics, as a separate follow-up task.
 
 ## Topic and layer selectors
 
-- **Every test belongs to one topic**: the behaviour or surface it defends, at the granularity a single change touches — a route family, a use case, a consumer, a policy, a migration.
-- **The topic is expressed through the runner's native selector**: a package or directory, a name prefix matched by the runner's filter, a group or tag, or a project. Layer is a second, independent selector, so the unit tests of one topic run without its integration tests.
-- **The repository records the selector map** — each topic and layer, and the exact command that runs it — in its validation policy. `/alaa-project-constitution` carries the slot. When a repository has no map, derive the selector from test location, use it, and report the missing map as a gap.
-- **Focused selects the smallest discriminating changed case; task acceptance combines bounded task coverage; affected selects reachable topics.** `SKILL.md` owns those scopes and the runtime orchestrators own scheduling. A whole-suite command remains exhaustive regardless of its label.
-- **A new test joins an existing topic** when its behaviour belongs to one; a new topic is created only for a new behaviour or surface.
+- **Every test belongs to one topic**: the behaviour or surface it defends, at the granularity one change touches, such as a route family, a use case, a consumer, a policy or a migration. Put a new test in an existing topic when its behaviour belongs to one.
+- **Express the topic through the runner's native selector**: a package or directory, a name prefix that the runner's filter matches, a group or tag, or a project. A test reachable only through the whole-suite command makes every change pay for the whole suite.
+- **Layer is a second, independent selector**, so that a topic's unit tests run without its integration tests.
+- **Record the selector map in the repository's validation policy**: each topic and layer, and the exact command that runs it. `/alaa-project-constitution` carries the slot. Without a map, derive the selector from the test's location, use it, and report the missing map as a gap.
 
 ## Setup once
 
-Expensive resettable infrastructure is an engine or container, a migrated schema, a booted application, a built artifact, or immutable fixture data. Non-negotiable 10 in `SKILL.md` requires it to be created once and shared. Per-test creation multiplies the suite's cost by its test count and buys no isolation that rollback or a namespace does not.
-
-Choose the widest scope at which the resource is reset-safe:
+Expensive resettable infrastructure is an engine or container, a migrated schema, a booted application, a built artifact, or immutable fixture data. Create it once and share it, at the widest scope at which it is reset-safe:
 
 | Scope | Holds |
 |---|---|
-| Run or session — where a runner executes each package as its own process, the package process | engine and broker processes, containers, the built artifact, immutable reference data |
+| Run or session; where a runner executes each package as its own process, the package process | engine and broker processes, containers, the built artifact, immutable reference data |
 | Package or module | a migrated schema, a booted application, a seeded read-only dataset |
 | Worker | one copy of each run- or package-scope resource per parallel worker, created once per worker |
 | Test | only the data the test asserts on |
 
-- **Isolate each test over shared infrastructure, in this order of preference**: a transaction rolled back after the test; a unique namespace — schema, key prefix, queue or topic name, tenant identifier; a reset of exactly the data the test touched. A fresh instance per test is used when creation is the behaviour under test; resources without safe reset follow the per-test exception below.
+- **Isolate each test over shared infrastructure, in this order of preference**: a transaction rolled back after the test; a unique namespace (schema, key prefix, queue or topic name, tenant identifier); a reset of exactly the data the test touched.
+- **Create a fresh instance per test only** when creation is the behaviour under test, or when the resource has no rollback, no namespace and no cheap reset. Record the reason beside that setup.
 - **Migrate once per run.** Re-migrate only when the migration sources changed since the last run.
-- **Shared fixture data is immutable.** A test that needs to change it builds its own copy through a factory.
-- **Prove a new shared resource reset-safe** by running its suite in the runner's seeded shuffle order once when it is introduced (`50-flake.md`, step 2), because shared state that leaks shows up first as order dependence.
-- **A setup that cannot be reset** — a resource with no rollback, no namespace, and no cheap reset — stays per test, and the reason is recorded beside it.
+- **Keep shared fixture data immutable.** A test that must change it builds its own copy through a factory.
+- **Prove a new shared resource reset-safe**: when you introduce it, run its suite once in the runner's seeded shuffle order (`50-flake.md`, step 2).
 
 ## Build once per tree state
 
-- **A test step that compiles is the compile check.** A separate build step remains only when it builds something the test step does not — the shipped binary or image.
-- **Type-check once.** Exactly one type-check runs per tree state over each project configuration. A separate type-check step is dropped only when the build runs the same checker over the same configurations.
-- **Render once.** Rendered manifests, configuration, or templates are written once, and every check reads that output.
-- **Build an image once and promote it by digest.** Every gate and environment that needs the image references that digest and never rebuilds it.
-- **Lanes and the verifier share the build cache** when they run in the same environment. A clean build is run only when a failure is classified as a contaminated tree or stale cache.
-- **Container gates of one pass share one container and one run of the CI job's setup.**
-- **The same suite never runs twice in one pass.** A sub-suite already included in a wider command of the same pass, such as a contract suite inside the whole-suite run, is cited from that run.
+Every lint, type, test and smoke step of a pass consumes the one build's output, cache or image digest.
 
-## Review checks
-
-Each is observable in a diff or a pipeline definition:
-
-1. Every new test names a failure that can reach this project's code under *Reachable failure*, or it is an always-owed test; otherwise it is a finding.
-2. No consumer test re-proves behaviour that a framework, a kit or package, a vendor library, or a generator owns. Test the consumer's configuration and wiring. Retain the tests of behaviour owned by a kit or package that is itself under development.
-3. Every new test is reachable through a topic selector narrower than the whole suite.
-4. No new setup creates an engine, container, schema, migration, or application boot per test without a recorded reason.
-5. No step of the pass rebuilds, re-renders, re-type-checks, or re-runs what another step of the same pass already produced.
+- **A test step that compiles is the compile check.** Keep a separate build step only when it builds something the test step does not, such as the shipped binary or image.
+- **Type-check once** per tree state over each project configuration. Drop a separate type-check step only when the build runs the same checker over the same configurations.
+- **Render once.** Write rendered manifests, configuration or templates once, and let every check read that output.
+- **Build an image once and promote it by digest.** Every gate and environment that needs the image references that digest.
+- **Share the build cache between lanes and the verifier** when they run in one environment. Run a clean build only when a failure is classified as a contaminated tree or a stale cache.
+- **Let the container gates of one pass share one container and one run of the CI job's setup.**
+- **Never run the same suite twice in one pass.** Cite a sub-suite that a wider command of the pass already ran, such as a contract suite inside the whole-suite run, from that run.
