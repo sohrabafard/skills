@@ -1,6 +1,6 @@
 # Result Classification
 
-Read before interpreting a check or repairing a failure. Use one primary classification per command and record secondary factors separately. This vocabulary applies with or without an orchestrator and allocates no repair authority.
+Use one primary classification per command and record secondary factors separately. This vocabulary applies with or without an orchestrator and allocates no repair authority.
 
 ## PASS
 
@@ -36,7 +36,7 @@ The check was explicitly not run. Record the reason and risk. Unexecuted checks 
 
 ## Host-environment sub-classes
 
-These are the failures most often misread as product defects, because the command that surfaced them is a product command. Each resolves to one primary class above; record the sub-class beside it so the same block is recognised on sight the second time.
+These failures are most often misread as product defects, because a product command surfaced them. Each resolves to one primary class above. Record the sub-class beside it, so that the same block is recognised on sight next time.
 
 | Observation | Primary class | Discriminator |
 |---|---|---|
@@ -47,9 +47,9 @@ These are the failures most often misread as product defects, because the comman
 | A build, dependency, module, or test cache served an artifact from before the change | `CONTAMINATED` | The outcome changes after the cache is cleared with no source edit |
 | The harness, fixture, factory, seed, or generated setup broke independently of the behaviour under test | `TEST-INFRA-FAILURE` | Reverting the change under test leaves the failure in place |
 
-Never repair the product in response to any row above: each names a cause outside product behavior, and a product edit made against one of them is a change with no defect behind it.
+Never repair the product in response to any row above: each names a cause outside product behavior, so a product edit against it has no defect behind it.
 
-Clearing a cache, installing a tool, changing a permission, or starting a service is a declared and reported action, never a silent retry step. A silent clear destroys the only evidence that the cache was the cause, and the same block then returns unrecognised on the next run.
+Clearing a cache, installing a tool, changing a permission, or starting a service is a declared and reported action, never a silent retry step. A silent clear destroys the only evidence of the cause, and the block returns unrecognised.
 
 ## Diagnostic sequence
 

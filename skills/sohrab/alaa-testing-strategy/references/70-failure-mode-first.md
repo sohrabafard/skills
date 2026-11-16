@@ -1,59 +1,50 @@
 # Failure-Mode-First Design
 
-Read at the start of every change, before any test is written. `SKILL.md` holds the binding rule: the test list is derived from the enumerated failure modes, and the happy path is added last as a control.
-
 ## One enumeration, two consumers
 
-`/alaa-observability-soc` requires every change to enumerate the failure modes it introduces and to name a signal for each. This skill requires every change to enumerate the failure modes it introduces and to name a test for each. **It is the same enumeration, produced once, and the enumeration table lives in that skill — `references/10-signal-model.md`, the section "Start from the diff, not from the question".**
+`/alaa-observability-soc` requires each change to enumerate the failure modes it introduces and name a signal for each. This skill names a test for each. **It is one enumeration, produced once, and its table lives in `alaa-observability-soc` `references/10-signal-model.md`, section "Start from the diff, not from the question".** Two lists would diverge invisibly, and each author would assume the other covered a mode. One list with both columns shows a dropped mode as an empty cell.
 
-Two lists would diverge, the divergence would be invisible because neither list names the other's gaps, and each list's author would assume the other had covered the mode. Producing one list with both columns makes a mode dropped from either half visible immediately, because the row exists with an empty cell.
-
-Do not restate that table here or in any service repository. Read it, and extend the row.
+Never restate that table here or in a service repository. Read it, and extend the row.
 
 ## The row
 
-One row per failure mode, five columns. The first three belong to observability, the last two to this skill.
+One row per failure mode, five columns. Observability owns the first three, this skill the last two.
 
 ```text
 mode | signal | query or alert | test that produces the mode | layer and proof level
 ```
 
-- **mode** — what goes wrong, stated as an observable outcome rather than a cause.
-- **signal** — the metric family, log event, or span that would show it.
-- **query or alert** — the exact query an operator would run, and whether it pages, alerts, or is diagnostic only.
-- **test that produces the mode** — the test that makes this mode happen on purpose and asserts what the system does. Its name, or `none` if it does not exist yet.
+- **mode** — what goes wrong, as an observable outcome, not a cause.
+- **signal** — the metric family, log event or span that would show it.
+- **query or alert** — the exact query an operator would run, and whether it pages, alerts or is diagnostic only.
+- **test that produces the mode** — the name of the test that causes this mode on purpose and asserts what the system does, or `none`.
 - **layer and proof level** — from `20-layers.md` and `40-proof-strength.md`.
 
-A mode that fails *Whether a test is owed* in `SKILL.md` carries `not written: <reason>` in its test cell; that is a recorded decision, not a gap. A row with an empty test cell is a gap reported at the severity of the mode. A row whose test cell says "existing tests cover it" names the existing test, or it is an empty cell — an unnamed claim of coverage is how the gap ships.
+A mode that fails `SKILL.md` *Whether a test is owed* carries `not written: <reason>` in its test cell, which is a recorded decision, not a gap. An empty test cell is a gap at the severity of the mode. A cell that says "existing tests cover it" names the test, or it counts as empty, because an unnamed coverage claim is how the gap ships.
 
 ## Deriving the test from the mode
 
-The enumeration produces modes; this converts each into a test.
-
-1. **Name the mode as an outcome**, not a cause. "The consumer processes the same message twice" rather than "the broker redelivers".
-2. **Name the mechanism that is supposed to prevent it.** If there is none, the mode is a design gap and the test cannot be written yet — report it and stop; writing a test for absent behaviour produces a test asserting the current wrong behaviour.
-3. **Name what must be real for the mode to be producible** — the placement procedure in `20-layers.md`. The mode usually fixes the layer by itself: a redelivery mode needs a real broker, a constraint-violation mode needs a real engine, a wrong-branch mode needs neither.
-4. **Name how the mode is caused on demand.** A double that produces it, an injected fault, a fixture in the offending state, two concurrent requests, a clock moved across a boundary. A mode with no way to cause it on demand is a mode with no test, and the way to cause it is what `30-doubles.md` calls the first legitimate reason to substitute.
-5. **Write the assertion as the mechanism's observable effect**, and separately assert the absence of the effect the mechanism was there to prevent — the two-property rule in `SKILL.md`.
+1. **Name the mode as an outcome**, not a cause: "the consumer processes the same message twice", not "the broker redelivers".
+2. **Name the mechanism that should prevent it.** If none exists, the mode is a design gap: report it and stop, because a test for absent behaviour asserts the current wrong behaviour.
+3. **Name what must be real for the mode to be producible**, by the placement procedure in `20-layers.md`. The mode usually fixes the layer: redelivery needs a real broker, a constraint violation needs a real engine, a wrong branch needs neither.
+4. **Name how to cause the mode on demand**: a double that produces it, an injected fault, a fixture in the offending state, two concurrent requests, a clock moved across a boundary. A mode with no way to cause it has no test. That way is the first legitimate reason to substitute in `30-doubles.md`.
+5. **Assert the mechanism's observable effect, and separately the absence of the effect it prevents**, under the two properties in `SKILL.md` *The core rule*.
 6. **Prove it by removal.** Remove the mechanism; the test must fail.
 
 ## Where the modes come from when the diff is small
 
-Three inputs, in this order, and all three are read:
+Read all three inputs, in this order:
 
 1. **The diff.** The enumeration table maps what a diff adds to the modes it introduces.
-2. **The incident and defect history of this surface.** Every mode that has already happened here is a mode with demonstrated probability, and a fix with no test is a fix that can be reverted silently — obligation 6 in `60-coverage.md`.
-3. **The dependencies the change touches.** Each dependency call carries the modes in `/alaa-reliability-sla`, `references/80-verification.md`, ordered there by how often they are missed. That skill owns which to inject; this file owns that they enter the enumeration.
+2. **The incident and defect history of this surface.** A mode that already happened here has demonstrated probability, and a fix with no test can be reverted silently (obligation 6 in `60-coverage.md`).
+3. **The dependencies the change touches.** Each dependency call carries the modes in `/alaa-reliability-sla` `references/80-verification.md`, ordered there by how often they are missed. That skill owns which to inject; this file owns that they enter the enumeration.
 
 ## Ordering, and what it prevents
 
-Write the failure tests first, then the happy path. The order is not a preference — it changes what gets written.
+Write the failure tests first, then the happy path, because the order changes what gets written. A suite started from the happy path takes the shape of what the code does, so the branches it does not take go unnoticed and each mode arrives later as an incident. A suite started from the failure modes takes the shape of what can go wrong, and the happy path is one more case in the list.
 
-- Starting from the happy path produces a suite shaped by what the code does, so the branches the code does not take are never noticed, and every mode arrives later as a production incident.
-- Starting from the failure modes produces a suite shaped by what can go wrong, and the happy path is then one more case in a list rather than the frame the whole suite is built in.
-
-The happy path still gets written, last, and its job is stated in `10-what-makes-a-test.md`: it proves the failure tests fail for the reason claimed rather than because the arrangement could never have succeeded.
+Write one happy-path test per behaviour, last. It proves that the failure tests fail for the reason claimed, not because the arrangement could never succeed: a failure test that passes against an arrangement no implementation could satisfy proves nothing. A suite of happy paths alone proves only that the routes are routed.
 
 ## The enumeration is part of the change
 
-A change ships with its enumeration recorded — in the merge request, the design note, or the repository's own change record. An enumeration held only in the author's head cannot be reviewed, cannot be checked for empty cells, and cannot be read by whoever handles the incident. A change with no recorded enumeration is reported as an unmet obligation, not as an oversight to raise informally.
+Record the enumeration with the change, in the merge request, the design note or the repository's change record. An enumeration held only in the author's head cannot be reviewed, checked for empty cells, or read during the incident. Report a change with no recorded enumeration as an unmet obligation.

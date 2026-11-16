@@ -1,23 +1,21 @@
 # Proof Strength
 
-Read before you assign or review a proof level, before reporting any claim as validated, and whenever an environment cannot reach the level a claim needs. `SKILL.md` names the six levels in order and holds the rule that a level never substitutes for a higher one. This file owns the definition of each level, the mapping from a claim to the minimum level that supports it, the escalation rule, and what to do when the level is unreachable.
-
-The vocabulary exists so that one word carries the same meaning in every service, language, and report in the fleet. A reviewer reading "level 2" knows what was ruled out and what was not, without asking. That is the entire value, and it is destroyed the moment one report uses a level name loosely.
+Use each level name with exactly the meaning below in every service, language and report, because a reviewer reading "level 2" must know what was ruled out without asking. One loose use destroys that value.
 
 ## The six levels
 
 The ordering is by what a level can rule out.
 
-1. **Static proof** — inspection only: the code, the configuration, the types, a linter, a schema validation. Proves an artifact says something. Proves nothing about behaviour.
-2. **Unit or in-memory proof** — the behaviour executed in process against in-memory or embedded substitutes: an embedded database standing in for the production engine, an in-memory broker, a controllable clock. Proves the logic. Proves nothing that the substituted engine decides.
-3. **Parity proof** — one suite run against the double and against the real implementation, with identical results required. Proves the double is honest, and proves nothing else.
-4. **Local smoke proof** — the built artifact started in its real container or process form and exercised from outside itself over its real interface. Proves it boots, wires, and answers.
-5. **In-runtime service proof** — the service running inside the composed local runtime with its declared dependencies present, exercised through its real transport. Proves the behaviour in the shape it is deployed in.
-6. **Live-dependency proof** — the behaviour exercised against the real production-grade dependency engine, with real drivers, transactions, ordering, and delivery. Proves what only that engine decides.
+1. **Static proof** — inspection only: the code, the configuration, the types, a linter, a schema validation. Proves that an artifact says something, and nothing about behaviour.
+2. **Unit or in-memory proof** — the behaviour executed in process against in-memory or embedded substitutes, such as an embedded database standing in for the production engine, an in-memory broker or a controllable clock. Proves the logic, and nothing that the substituted engine decides.
+3. **Parity proof** — one suite run against the double and the real implementation, with identical results required. Proves the double is honest, and nothing else.
+4. **Local smoke proof** — the built artifact started in its real container or process form and exercised from outside over its real interface. Proves it boots, wires and answers.
+5. **In-runtime service proof** — the service running inside the composed local runtime with its declared dependencies present, exercised through its real transport. Proves the behaviour in its deployed shape.
+6. **Live-dependency proof** — the behaviour exercised against the real production-grade dependency engine, with real drivers, transactions, ordering and delivery. Proves what only that engine decides.
 
 ## The mapping: which level a claim requires
 
-Find the claim being made. The level named is the **minimum**; a higher level satisfies the requirement and a lower one never does.
+Each level named is the **minimum**. A higher level satisfies it; a lower one never does.
 
 | The claim | Minimum level |
 |---|---|
@@ -38,31 +36,31 @@ Find the claim being made. The level named is the **minimum**; a higher level sa
 | "This control cannot be bypassed" | 6 wherever the datastore enforces it — a row-level policy, a unique constraint, a tenant filter; 2 only where the control is entirely in process. `/alaa-security-review` owns which controls exist and what each must refuse |
 | "Latency, throughput, pool, or contention behaviour is acceptable" | 6, under load, because the pool, planner, and lock behaviour is the claim |
 
-Two claims recur and have no level, because no test produces them: "this is fast enough" with no stated budget, and "this is secure". Convert each into a claim from the table above or record it as an unmade decision.
+Two recurring claims have no level, because no test produces them: "this is fast enough" with no stated budget, and "this is secure". Convert each into a claim from the table, or record it as an unmade decision.
 
 ## The escalation rule
 
-**A level is escalated when the substituted component is the one that decides the outcome.** That single question settles most disputes:
+**Escalate the level when the substituted component decides the outcome.**
 
-- An embedded database proves the calling code's logic and proves nothing about the production engine's planner, its constraint behaviour, its isolation semantics, or its type coercion. A claim about any of those escalates to level 6.
-- An in-memory broker proves the handler's logic and proves nothing about acknowledgement, redelivery, prefetch, or ordering. A claim about any of those escalates to level 6.
-- A stubbed HTTP client proves the caller's handling and proves nothing about the real endpoint's shape. A claim about the shape escalates to level 3 against the published schema, or to level 5 against the real service.
+- An embedded database proves the calling logic, and nothing about the production engine's planner, constraints, isolation semantics or type coercion. A claim about any of those needs level 6.
+- An in-memory broker proves the handler logic, and nothing about acknowledgement, redelivery, prefetch or ordering. A claim about any of those needs level 6.
+- A stubbed HTTP client proves the caller's handling, and nothing about the real endpoint's shape. A claim about the shape needs level 3 against the published schema, or level 5 against the real service.
 
 ## The prohibition, and what to report instead
 
-**Never report a proof at a level above the one that actually ran, and never describe a lower level in language that implies a higher one.** "Tested against the database" for an embedded substitute, and "verified end to end" for a local smoke run, are the two specific errors. A level is what a reviewer uses to decide whether to re-run a claim before trusting it; a mislabelled level removes that decision without the reviewer knowing it was removed.
+**Never describe a lower level in language that implies a higher one.** The two common errors are "tested against the database" for an embedded substitute and "verified end to end" for a local smoke run.
 
-When the required level cannot be reached in this environment, report all four of these:
+When this environment cannot reach the required level, report all four:
 
 1. the highest level actually reached, named;
 2. the level the claim requires, named;
-3. the blocker in one line — the runtime that would not start, the dependency absent, the credential missing, the platform unsupported;
+3. the blocker in one line: the runtime that would not start, the dependency absent, the credential missing, the platform unsupported;
 4. the claim recorded as a gap, at the severity the claim carries.
 
-Then write the test anyway at the required level and mark it with the repository's skip mechanism, carrying the blocker as its reason string. `80-evidence-and-reporting.md` owns that procedure. A test that exists and skips is recovered the moment the environment appears; a test never written is invisible forever.
+Then write the test at the required level anyway, under `80-evidence-and-reporting.md` *When a test cannot be run at all*.
 
 ## Where the runtimes come from
 
-Levels 4, 5, and 6 need a running local runtime. Obtain it through `/service-runtime-kit-governance` — its render, bootstrap, and validate path — rather than assembling one per service, because a per-service runtime makes level 5 mean something different in every repository and the vocabulary stops carrying information.
+Levels 4, 5 and 6 need a running local runtime. Obtain it through the render, bootstrap and validate path of `/service-runtime-kit-governance`, never assembled per service, because a per-service runtime makes level 5 mean something different in each repository.
 
-Level 6 needs the production-grade engine itself. Where the fleet's own release gates name the engines and the commands, `/alaa-controlled-ops` owns those gate lists; this file owns only what the resulting proof is called and what it rules out.
+Level 6 needs the production-grade engine itself. Where the fleet's release gates name the engines and commands, `/alaa-controlled-ops` owns those gate lists. This file owns only what the resulting proof is called and what it rules out.
