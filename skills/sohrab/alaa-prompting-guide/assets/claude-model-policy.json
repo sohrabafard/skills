@@ -1,6 +1,6 @@
 {
   "schema_version": 2,
-  "policy_version": "3.2.0",
+  "policy_version": "3.3.0",
   "surface": "claude-code",
   "verified_on": "2026-11-14",
   "sources": [
@@ -449,5 +449,5 @@
       ]
     }
   },
-  "notes": "Managed profiles register model-neutral authority roles and artifact identities, never task model/effort defaults. Both task controls must be chosen explicitly by the runtime orchestrator and realized on a verified compatible surface. Main controls remain externally configured. Existing model/effort-named role IDs are compatibility labels only. No runtime activation, account access or comparative calibration is established. Historical capability entries cannot authorize active selection; active Claude selection excludes Mythos."
+  "notes": "Managed profiles register model-neutral authority roles and artifact identities, never task model/effort defaults. Both task controls must be chosen explicitly by the runtime orchestrator and realized on a verified compatible surface. Main controls remain externally configured. A role ID selects no model or effort. No runtime activation, account access or comparative calibration is established. Historical capability entries cannot authorize active selection; active Claude selection excludes Mythos."
 }

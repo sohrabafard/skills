@@ -13,7 +13,7 @@ To choose between an inline instruction, a skill, a script and a subagent, read 
 - **Fields** (sub-agents page, 14 November 2026; the list was confirmed again 16 November 2026). Required: `name` and `description`. Optional: `tools`, `disallowedTools`, `model`, `permissionMode`, `maxTurns`, `autoCompactWindow`, `skills`, `mcpServers`, `hooks`, `memory`, `background`, `omitClaudeMd`, `effort`, `isolation`, `color`, `initialPrompt` and `experimental`. An unrecognized field is ignored without an error. Several fields are version-gated; check them against the running version.
 - **Body.** The markdown below the frontmatter is the subagent's whole system prompt. A subagent receives that prompt plus basic environment details, not the full Claude Code system prompt and not the parent's conversation history.
 
-`alaa-reviewer` is the worked example. It declares `tools: Read, Glob, Grep, Bash` and a `skills:` list that preloads the references it must apply; `Write` and `Edit` are absent. Its description states the role and ends with the boundary: "Never edits or fixes." Its model-neutral metadata are checked against `assets/claude-model-policy.json`.
+`alaa-reviewer` is the worked example. It declares `tools: Read, Glob, Grep, Bash` and a `skills:` list that preloads the doctrine every review applies; `Write` and `Edit` are absent. Its description states the role and ends with the boundary: "Never edits or fixes." Its model-neutral metadata are checked against `assets/claude-model-policy.json`.
 
 ### Codex: standalone TOML
 

@@ -1,6 +1,6 @@
 # بسته نهایی Alaa Codex Orchestrator
 
-نسخه: **7.1.0**
+نسخه: **8.0.0**
 
 این بسته یک Skill کامل برای تبدیل Codex اصلی به orchestrator و مسیردهی subagentهای تخصصی با نصب مجاز و صریح است.
 
@@ -79,7 +79,7 @@ Role triggers and actual task model AND effort allocation are owned by `referenc
 
 ## قرارداد گزارش نسخهٔ جدید
 
-در نقش‌های دارای verdict، گزارش با verdict شروع می‌شود. تنظیم‌های configured/requested جدا از هویت observed گزارش می‌شوند. مقدار غیرقابل‌مشاهده `unknown` است. profile استاندارد و deep برای یک scope هم‌زمان اجرا نمی‌شوند. نبود مدل یا نقش، fallback پنهانی یا مجوز نصب ایجاد نمی‌کند.
+در نقش‌های دارای verdict، گزارش با verdict شروع می‌شود. هیچ نقشی model یا effort خود را گزارش نمی‌کند؛ lead این دو را از dispatch خودش گزارش می‌کند. نقش فقط وقتی کنترل قابل‌مشاهده‌اش قابل تحقق نیست lane را block می‌کند. review استاندارد و deep برای یک scope هم‌زمان اجرا نمی‌شوند. نبود مدل یا نقش، fallback پنهانی یا مجوز نصب ایجاد نمی‌کند.
 
 ## تست نصب
 
