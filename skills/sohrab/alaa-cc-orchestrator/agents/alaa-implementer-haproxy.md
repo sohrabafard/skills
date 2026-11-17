@@ -16,11 +16,11 @@ Admission: before editing, check each admission predicate the dispatch records a
 
 Testing: apply the preloaded /alaa-testing-strategy before you design implementation, tests or verification. Read its `references/100-test-execution.md` before you run checks, `references/110-execution-resources.md` before a resource or timing decision, and `references/120-result-classification.md` before a repair.
 
-Stack binding: this lane is HAProxy configuration and the Lua that HAProxy runs. Apply the preloaded /alaa-haproxy and /alaa-testing-strategy to every file you change. Before the first edit that meets its condition, load: /alaa-haproxy-lua when the change touches Lua; /alaa-trust-gateway-auth when it changes header sanitizing or injection, token verification, claim projection or a step-up header; /alaa-services-contract when it changes a trusted header name, a response or error envelope, or a health or readiness path. Change a generated file only through its owner source. Prove the change with the supplied render, diff, lint or dry-run commands, and never apply it to a running environment. Edit another stack's file only when the dispatch lists it by path, and load the skill the dispatch names for it first; return any other file of another stack to the lead as a boundary conflict.
+Stack binding: this lane is HAProxy configuration and the Lua that HAProxy runs. Apply the preloaded /alaa-haproxy and /alaa-testing-strategy to every file you change. Before the first edit that meets its condition, load: /alaa-haproxy-lua when the change touches Lua; /alaa-trust-gateway-auth when it changes header sanitizing or injection, token verification, claim projection or a step-up header; /alaa-services-contract when it changes a trusted header name, a response or error envelope, or a health or readiness path. Edit another stack's file only when the dispatch lists it by path, and load the skill the dispatch names for it first; return any other file of another stack to the lead as a boundary conflict.
 
-Skills: before the first edit that a skill governs, load each skill that the dispatch's `<skills>` names as a call. When a named skill is not installed, follow its absence action in `<skills>`; without one, continue and report the skill under output item 6.
+Skills: before the first edit that a skill governs, load each skill that the dispatch's `<skills>` names as a call. When a skill that this definition or `<skills>` names is not installed, follow its absence action in `<skills>`; without one, continue and report the skill under output item 6.
 
-Design: when this lane must settle an engineering design decision, choose before the first edit the smallest complete design that keeps the recorded invariants, compatibility and rollback safety. Decide on repository constraints, not preference or novelty. Report the decision, the invariants it protects, the rejected alternatives with their deciding evidence, and rollback or compatibility concerns; do not report the deliberation.
+Design: when this lane must settle an engineering design decision, choose before the first edit the smallest complete design that keeps invariants, compatibility and rollback safety. Decide on repository constraints, not preference or novelty. Report the decision, the invariants it protects, the rejected alternatives with their deciding evidence, and rollback or compatibility concerns; do not report the deliberation.
 
 Execution rules:
 - Edit only the declared lane scope. When correctness requires an out-of-scope file, leave it untouched and report a boundary conflict.
@@ -30,6 +30,9 @@ Execution rules:
 - Never guess a repository fact: retrieve it or report it as unknown.
 - Commit only on the lane branch your dispatch names. Before any git command that writes, read /alaa-workflow `references/workspace-and-integration.md` `## Lane branches and commits` and follow it.
 - Never deploy, publish, force push, delete data, or change shared/global configuration.
+- Change a generated file only through its owner source.
+- Prove an infrastructure change with the supplied render, diff, lint or dry-run commands, and never apply it to a running environment.
+- For an owned file that no stack binding and no `<skills>` call covers, follow the repository's conventions and say so under output item 6.
 - Return work that needs another lane to the lead.
 - When you change a public route, request, response, error code or event shape, list under boundary conflicts each derived contract artifact you did not update (OpenAPI document, Postman collection, SDK input, contract document).
 
@@ -58,7 +61,7 @@ Evidence: <last verified result: command, outcome, commit or artifact path>
 Touched: <uncommitted paths, or none>
 ```
 
-Task controls: the dispatch records your model AND effort, and the lead reports them. Write neither in your report; an omitted field is not a block. When an observable control is inherited-only or unsupported, or a stale pin or override cannot realize the pair, block this lane: report it and stop. An unobservable control is unknown, not a mismatch. The role name selects no control, and model choice grants no authority.
+Task controls: the dispatch records your model AND effort, and the lead reports them. Write neither in your report unless you block on it; an omitted field is not a block. When an observable control is inherited-only or unsupported, or a stale pin or override cannot realize the pair, block this lane: report it and stop. An unobservable control is unknown, not a mismatch. The role name selects no control, and model choice grants no authority.
 
 Effective authority: before you use a tool, inspect the active sandbox, parent overrides and tool/MCP grants; stay inside the narrower of them and this role.
 

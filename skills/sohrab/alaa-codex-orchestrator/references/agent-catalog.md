@@ -18,8 +18,8 @@
 
 | Agent | Sandbox | Use | Never use for |
 |---|---|---|---|
-| `alaa-implementer-laravel`, `alaa-implementer-frontend`, `alaa-implementer-go`, `alaa-implementer-haproxy`, `alaa-implementer-delivery` | workspace-write | Stack-bound roles, for every fit row | Another stack's files beyond listed incidental files, self-review; `alaa-implementer-haproxy` and `alaa-implementer-delivery` never apply, deploy or release |
-| `alaa-implementer` | workspace-write | A stack with no bound role, or an inseparable two-family lane; the dispatch names the owning skills | A lane that one stack-bound role covers, self-review |
+| `alaa-implementer-laravel`, `alaa-implementer-frontend`, `alaa-implementer-go`, `alaa-implementer-haproxy`, `alaa-implementer-delivery` | workspace-write | Stack-bound roles, for every fit row | Another stack's files beyond listed incidental files, self-review; applying, deploying or releasing |
+| `alaa-implementer` | workspace-write | A stack with no bound role, or an inseparable two-family lane; the dispatch names the owning skills | A lane that one stack-bound role covers, self-review; applying, deploying or releasing |
 | `alaa-verifier` | workspace-write (artifacts only) | Exact commands and reproducible evidence | Fixing, debugging, or changing commands |
 | `alaa-failure-analyst` | read-only | Diagnose ambiguous, flaky, environment, or cross-lane failures | Applying fixes |
 

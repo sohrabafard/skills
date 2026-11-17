@@ -131,7 +131,7 @@ A stack-bound role is an implementation authority identity bound to one stack fa
 - For `alaa-implementer`, name the owning skill of each owned surface in the dispatch as a call: /alaa-bash-shell for a shell script, /alaa-makefile for a Makefile, /ansible-generator for a new Ansible file and /ansible-validator for an edited one.
 - Resolve the owning skills of any other stack through `alaa-workflow references/companion-routing.md`.
 - When a stack-bound role is not available in this session, do not block the lane for that reason. Record `alaa-implementer` as the registered profile, with the unavailable role as its reason. Dispatch it and name the stack's skills in the dispatch as calls. This fallback replaces only the role identity; the pair rules still apply.
-- A plan or an issue that names a retired implementation identity maps to the role of its owned files. Its recorded pair stands.
+- A plan or an issue that names a retired implementation identity maps to the role of its owned files. A retired planner identity maps to `alaa-planner`. A retired reviewer identity maps to `alaa-reviewer`. The recorded pair stands.
 
 ### Reassignment
 
@@ -158,7 +158,7 @@ Select the deep route when review involves complex interactions among subsystems
 | `alaa-performance-profiler` | Only a measurable question with a comparable baseline and a budget; never generic optimization advice. `/alaa-algorithms-data-structures` owns the budget. State it during implementation planning when the change adds a loop, query, fan-out, batch, export or in-memory collection that grows with tenants, rows, history or events. Report a growing path that reaches this gate with no stated bound as a missing budget; do not measure it into one. |
 | `alaa-observability-reviewer` | Async jobs, queues, retries, external service calls, failure and degraded paths, production critical flows or new operational states. |
 | `alaa-release-guardian` | CI/CD, Docker or container, package, lock or version, configuration and environment, feature flags, deployment order, health checks, startup and shutdown, release notes or rollback changes. |
-| `alaa-adversarial-reviewer` | Only when the change is irreversible or has high blast radius (production data movement, auth or tenancy boundaries, a public contract break, deployment topology), or when the selected correctness reviewer (`alaa-reviewer` or `alaa-reviewer-deep`) and a specialist return conflicting verdicts that repository evidence does not settle. |
+| `alaa-adversarial-reviewer` | Only when the change is irreversible or has high blast radius (production data movement, auth or tenancy boundaries, a public contract break, deployment topology), or when the selected correctness reviewer `alaa-reviewer` and a specialist return conflicting verdicts that repository evidence does not settle. |
 
 Where two gates overlap, each keeps its own question:
 

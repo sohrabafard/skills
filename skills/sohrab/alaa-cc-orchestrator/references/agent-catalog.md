@@ -18,8 +18,8 @@
 
 | Agent | Access | Use | Never use for |
 |---|---|---|---|
-| `alaa-implementer-laravel`, `alaa-implementer-frontend`, `alaa-implementer-go`, `alaa-implementer-haproxy`, `alaa-implementer-delivery` | workspace-write | Stack-bound roles, for every fit row | Another stack's files beyond listed incidental files, self-review; `alaa-implementer-haproxy` and `alaa-implementer-delivery` never apply, deploy or release |
-| `alaa-implementer` | workspace-write | A stack with no bound role, or an inseparable two-family lane; the dispatch names the owning skills | A lane that one stack-bound role covers, self-review |
+| `alaa-implementer-laravel`, `alaa-implementer-frontend`, `alaa-implementer-go`, `alaa-implementer-haproxy`, `alaa-implementer-delivery` | workspace-write | Stack-bound roles, for every fit row | Another stack's files beyond listed incidental files, self-review; applying, deploying or releasing |
+| `alaa-implementer` | workspace-write | A stack with no bound role, or an inseparable two-family lane; the dispatch names the owning skills | A lane that one stack-bound role covers, self-review; applying, deploying or releasing |
 | `alaa-verifier` | artifacts only | Exact commands and reproducible evidence | Fixing, debugging, or changing commands |
 | `alaa-failure-analyst` | read-only | Diagnose ambiguous, flaky, environment, or cross-lane failures | Applying fixes |
 
@@ -103,7 +103,7 @@ Before dispatch, verify the role can reach its bindings under `alaa-workflow ref
 Write every `skills:` entry as the plain registered skill name. Claude Code resolves the entry literally and preloads nothing for `/name` (headless probe, Claude Code 2.1.307, 2026-11-15). The whole body of each listed skill loads at the start of every run of the role, so list only what the role needs on every run: the routing contract, and the doctrine its verdict is measured against. Name any other skill in the role body; the role loads it through the `Skill` tool.
 
 - `alaa-verifier` and `alaa-instruction-reviewer` hold no `Skill` tool, so each lists every installed skill that its body names.
-- Every managed implementation role lists the testing doctrine. A stack-bound role also lists the skills that every lane of its stack applies, and names in its instructions, as a call with its condition, each skill that only some lanes need, because a lane often skips a skill that the dispatch only names. `alaa-implementer` lists no stack skill: its dispatch names them.
+- Every managed implementation role lists the testing doctrine. A stack-bound role also lists the owning skills of its stack, and names in its instructions, as a call with its condition, each skill that only some lanes need, because a lane often skips a skill that the dispatch only names. `alaa-implementer` lists no stack skill: its dispatch names them.
 - Every other managed role keeps `Skill`. Withholding it narrows nothing on a role that holds `Bash`, `Read`, `Write` and `Edit`, and it makes the dispatch's `skills` field unsatisfiable.
 - An inheriting role denies exactly three entries: Serena's shell tool, which bypasses the runtime's approval rules; the Hindsight server (`mcp__hindsight`), which would give the role write tools; and `Agent`, because nesting is on by default and a nested spawn escapes the lead's task allocation. Every allowlisted role omits `Agent` for the same reason.
 - The instruction reviewer has exactly `Read`, `Glob` and `Grep`, preloads /alaa-prompting-guide, and has no MCP grant.

@@ -22,6 +22,7 @@
 ```
 
 - Select the role from the lane's owned files through `routing-matrix.md` *Stack-bound roles*.
+- List each incidental file of another stack family by path in `<scope>`. Name its owning skill in `<skills>` as a call for that path, or write `repository conventions` when no skill owns it.
 - Record the verified admission predicates in `<task_controls>` before you send, because the lane checks them instead of reading `routing-matrix.md`. For the mechanical or the bounded branch, record the branch's own predicates with their recorded values. For every other lane, record the two fit facts and the stack family.
 - For a Beads-bound lane, fill `<beads_identity>` with the lane's own actor and the action `claim` for its leaf, under the common envelope's `<beads_identity>` rule.
 - Fill `<commit>` with the lane branch that `verification-and-gates.md` *Before any dispatch* prescribes, or with `none`.

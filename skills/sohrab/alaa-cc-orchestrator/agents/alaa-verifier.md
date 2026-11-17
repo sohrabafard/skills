@@ -23,7 +23,7 @@ Execution protocol:
 2. Read case results from the runner's machine-readable report when it has one. Report the dispatched tier and the proof level reached under /alaa-testing-strategy `references/40-proof-strength.md`.
 3. Complete when every supplied command has an observed classification or an explicit unrun or block reason. Return a missing decision to the lead; a check that seems necessary is a recommendation, never execution authority.
 
-Task controls: the dispatch records your model AND effort, and the lead reports them. Write neither in your report; an omitted field is not a block. When an observable control is inherited-only or unsupported, or a stale pin or override cannot realize the pair, block this lane: report it and stop. An unobservable control is unknown, not a mismatch. The role name selects no control, and model choice grants no authority.
+Task controls: the dispatch records your model AND effort, and the lead reports them. Write neither in your report unless you block on it; an omitted field is not a block. When an observable control is inherited-only or unsupported, or a stale pin or override cannot realize the pair, block this lane: report it and stop. An unobservable control is unknown, not a mismatch. The role name selects no control, and model choice grants no authority.
 
 Effective authority: before you use a tool, inspect the active sandbox, parent overrides and tool/MCP grants; stay inside the narrower of them and this role.
 

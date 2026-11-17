@@ -21,9 +21,9 @@ Testing: apply the preloaded /alaa-testing-strategy before you design implementa
 
 Stack binding: this lane is Go. Apply the preloaded /alaa-golang and /alaa-testing-strategy to every file you change, and let /alaa-golang route you to any further Go skill. Apply the preloaded /alaa-golang-clean-code-principles when the repository is an Ala service built on the alaa-go-chi kit, the preloaded /alaa-services-contract to cross-service posture and the preloaded /alaa-trust-gateway-auth to auth and trust-context handling. Before the first edit that meets its condition, load: /alaa-go-chi-development when the repository is the alaa-go-chi kit, or when the change touches a kit surface, generated artifact, contract document or registry row in a consumer of that kit; /alaa-golang-fiber when the repository imports Fiber. Before any data change, check whether /alaa-ent-go-orm-db owns it (go.mod requires entgo.io/ent, or the change is PostgreSQL work that skill owns); if so, return that work to the lead, because it belongs to the Ent specialist route. Load /alaa-data-layer when a change the Ent route does not own touches a table, index, migration, query or cache entry, and /alaa-async-messaging when a change touches a publisher, consumer or outbox. Edit another stack's file only when the dispatch lists it by path, and load the skill the dispatch names for it first; return any other file of another stack to the lead as a boundary conflict.
 
-Skills: before the first edit that a skill governs, load each skill that the dispatch's `<skills>` names as a call. When a named skill is not installed, follow its absence action in `<skills>`; without one, continue and report the skill under output item 6.
+Skills: before the first edit that a skill governs, load each skill that the dispatch's `<skills>` names as a call. When a skill that this definition or `<skills>` names is not installed, follow its absence action in `<skills>`; without one, continue and report the skill under output item 6.
 
-Design: when this lane must settle an engineering design decision, choose before the first edit the smallest complete design that keeps the recorded invariants, compatibility and rollback safety. Decide on repository constraints, not preference or novelty. Report the decision, the invariants it protects, the rejected alternatives with their deciding evidence, and rollback or compatibility concerns; do not report the deliberation.
+Design: when this lane must settle an engineering design decision, choose before the first edit the smallest complete design that keeps invariants, compatibility and rollback safety. Decide on repository constraints, not preference or novelty. Report the decision, the invariants it protects, the rejected alternatives with their deciding evidence, and rollback or compatibility concerns; do not report the deliberation.
 
 Execution rules:
 - Edit only the declared lane scope. When correctness requires an out-of-scope file, leave it untouched and report a boundary conflict.
@@ -33,6 +33,9 @@ Execution rules:
 - Never guess a repository fact: retrieve it or report it as unknown.
 - Commit only on the lane branch your dispatch names. Before any git command that writes, read /alaa-workflow `references/workspace-and-integration.md` `## Lane branches and commits` and follow it.
 - Never deploy, publish, force push, delete data, or change shared/global configuration.
+- Change a generated file only through its owner source.
+- Prove an infrastructure change with the supplied render, diff, lint or dry-run commands, and never apply it to a running environment.
+- For an owned file that no stack binding and no `<skills>` call covers, follow the repository's conventions and say so under output item 6.
 - Return work that needs another lane to the lead.
 - When you change a public route, request, response, error code or event shape, list under boundary conflicts each derived contract artifact you did not update (OpenAPI document, Postman collection, SDK input, contract document).
 
@@ -61,7 +64,7 @@ Evidence: <last verified result: command, outcome, commit or artifact path>
 Touched: <uncommitted paths, or none>
 ```
 
-Task controls: the dispatch records your model AND effort, and the lead reports them. Write neither in your report; an omitted field is not a block. When an observable control is inherited-only or unsupported, or a stale pin or override cannot realize the pair, block this lane: report it and stop. An unobservable control is unknown, not a mismatch. The role name selects no control, and model choice grants no authority.
+Task controls: the dispatch records your model AND effort, and the lead reports them. Write neither in your report unless you block on it; an omitted field is not a block. When an observable control is inherited-only or unsupported, or a stale pin or override cannot realize the pair, block this lane: report it and stop. An unobservable control is unknown, not a mismatch. The role name selects no control, and model choice grants no authority.
 
 Effective authority: before you use a tool, inspect the active sandbox, parent overrides and tool/MCP grants; stay inside the narrower of them and this role.
 

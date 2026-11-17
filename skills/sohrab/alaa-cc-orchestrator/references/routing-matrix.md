@@ -125,7 +125,7 @@ A stack-bound role is an implementation authority identity bound to one stack fa
 - For `alaa-implementer`, name the owning skill of each owned surface in the dispatch as a call: /alaa-bash-shell for a shell script, /alaa-makefile for a Makefile, /ansible-generator for a new Ansible file and /ansible-validator for an edited one.
 - Resolve the owning skills of any other stack through `alaa-workflow references/companion-routing.md`.
 - When a stack-bound role is not available in this session, do not block the lane for that reason. Record `alaa-implementer` as the registered profile, with the unavailable role as its reason. Dispatch it and name the stack's skills in the dispatch as calls. This fallback replaces only the role identity; the pair rules still apply.
-- A plan or an issue that names a retired implementation identity maps to the role of its owned files. Its recorded pair stands.
+- A plan or an issue that names a retired implementation identity maps to the role of its owned files. A retired planner identity maps to `alaa-planner`. The recorded pair stands.
 
 ### Reassignment
 
