@@ -111,6 +111,20 @@ On the branch after the review repairs, each exited `0`: the four repository che
 4. **Conditional preloads that remain.** `alaa-octane-performance`, `alaa-quasar-app-vite-v3`, `alaa-golang-clean-code-principles`, the migration guardian's `alaa-partitioned-table-fk-audit` and the architecture critic's `alaa-services-contract` are preloaded although each applies by condition.
 5. **Session evidence.** Remeasure skill loading by lane after a week of sessions, as the 2026-11-14 record did, to see whether the conditional calls are followed.
 
+## Merge and install
+
+The installed skill directories of both runtimes are symbolic links into this checkout, and agent definitions are copied. Skill text is therefore live at the merge, and the agents are live at the install. The work ran in a separate worktree so that `main` stayed unchanged until both could land together.
+
+- Merge: `work/agents-by-stack` merged into local `main` as `0f9414ed` with `git merge --no-ff`, by the owner's instruction of this session. `main` had not moved, so the merged tree equals the gated branch tip `686137d9`. The worktree and its branch were removed. Rollback of the skills: revert that merge commit.
+- Claude Code agents: `python3 scripts/install_claude_agents.py --apply`. Each of the 27 installed managed files has the SHA-256 that the 8.0.0 manifest records, and a second dry run reported 28 files unchanged, the rule-writer included. The eight retired definitions were moved to `agents-retired/20261117-agents-by-stack` under the Claude home, beside the agents directory, because that directory is scanned recursively.
+- Codex agents: `bash skills/sohrab/alaa-codex-orchestrator/scripts/install-agents.sh` exited 0 with 27 definitions installed or updated; the version marker reads 8.0.0. The twelve retired definitions were moved to `agents-retired/20261117-agents-by-stack` under the Codex home. The Codex rule-writer file was copied and equals its source.
+- Codex postcheck: the 27 installed files equal a fresh `check_agent_grants.py --materialize` output. `check_agent_grants.py --resolved-agents-dir` exits 1 with two findings only: `alaa-ent-specialist` and `alaa-rule-writer` are uncatalogued. Both are agents that this pack does not manage, and both were in that directory before this change.
+- Installation proves file placement, not agent behaviour.
+
+## Curation
+
+Final scan of this engagement under `/alaa-extract-agent-lessons`: no candidate was admitted for durable memory. One promotion candidate needs an owner: the Codex postcheck that `README-fa.md` documents fails whenever an agent of another owner (the Ent specialist, the rule-writer) is installed in the same directory, so a clean install cannot exit 0. The owner is the Codex pack's `scripts/check_agent_grants.py` and `references/installation.md`.
+
 ## Not done
 
-No push and no tag. No change to the Beads task-tracking block, the output rule or the implementer verification rules. The merge and the installation are recorded in the session's final report, not here.
+No push and no tag. No change to the Beads task-tracking block, the output rule or the implementer verification rules.
