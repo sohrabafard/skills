@@ -65,6 +65,20 @@ For an authorized install or update, run `python3 scripts/validate_pack.py` and 
 4. Plan through Planning profile selection in `references/routing-matrix.md`, then finalize and consolidate tasks and dependencies. Planning effort never sets worker effort. Worker selection alone needs no planner dispatch.
 5. Allocate the batch once through Batch allocation in that file, and record each role with its pair and the fit-table row and column that selected it in the plan. For EVERY dispatch, apply its model AND effort allocation and its role triggers, and realize the pair through `references/model-effort-policy.md`. Dispatch only catalog roles whose trigger holds.
 
+### Dispatch controls
+
+Pass `model` AND `effort` as parameters of the Agent call on EVERY dispatch. An omitted control inherits this session's value, which is usually stronger than the lane needs. This table is the short form of the fit table in `references/routing-matrix.md` *All-role task allocation*. That file governs: read it for the effort rules, the row of a lane that implements nothing, and the exceptional model.
+
+| Judgment left to the lane | Model | Ordinary effort |
+|---|---|---|
+| None: an exact transformation | `haiku` | `medium` |
+| Bounded local decisions with a discriminating check | `haiku` | `medium` |
+| Grounded everyday decisions | `sonnet` | `medium` |
+| Coupled or cross-boundary unresolved decisions | `opus` | `medium` |
+| Judgment-dense work that no check can catch | `opus` | `high` |
+
+Use `high` for a long, strict or hard-to-verify lane on any row. Use `low` for a short, fully specified lane on the first three rows only. An effort above `high` needs the recorded measured gain that the fit table requires.
+
 ### Dispatch discipline
 
 - **One agent per lane.** Dispatch no duplicate lane and no summary-check agent. A lane starts no subagent of its own. Independent verification and review inspect the actual artifact under separate authority. Keep inspection and the lead's own small correction inline.
@@ -90,7 +104,7 @@ Orchestrator mode keeps Stages A, B and E. Stages C and D run as the verificatio
 
 ## Final report
 
-Report outcome; independent lifecycle verdicts (`IMPLEMENTED`, `MERGE_CANDIDATE`, `RELEASE_CANDIDATE`, `PUBLISHED`) under `alaa-workflow references/workspace-and-integration.md`; lane changes and files; commands and results, marked run or cited, with tier; review and specialist verdicts and dispositions; each touched document's outcome and grade; curation as persisted, deferred or empty; risks, skipped checks, follow-ups. List each dispatched agent once with the model and effort you dispatched, taken from your allocation record, never from the lane's report; add each lane that blocked on its task controls, and the exceptional-model admission for each escalated dispatch.
+Report outcome; independent lifecycle verdicts (`IMPLEMENTED`, `MERGE_CANDIDATE`, `RELEASE_CANDIDATE`, `PUBLISHED`) under `alaa-workflow references/workspace-and-integration.md`; lane changes and files; commands and results, marked run or cited, with tier; review and specialist verdicts and dispositions; each touched document's outcome and grade; curation as persisted, deferred or empty; risks, skipped checks, follow-ups. List each dispatched agent once with the model and effort you dispatched, taken from your allocation record, never from the lane's report; add each lane that blocked on its task controls or reported a control mismatch, and the exceptional-model admission for each escalated dispatch.
 
 Write for a reader who saw no tool call and no lane report: outcome first, and a definition for each lane label or abbreviation the run invented.
 

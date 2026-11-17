@@ -647,6 +647,37 @@ def verification_sources() -> tuple[str, list[str], dict[str, str]]:
     )
 
 
+DISPATCH_ROWS = ("None:", "Bounded local decisions", "Grounded everyday decisions",
+                 "Coupled or cross-boundary", "Judgment-dense")
+
+
+def dispatch_controls_failures(skill: str, routing: str) -> list[str]:
+    """The body's short pair table must agree with the fit table it abbreviates."""
+    def rows(text: str) -> dict[str, list[str]]:
+        found = {}
+        for line in text.splitlines():
+            cells = [cell.strip() for cell in line.strip().strip("|").split("|")]
+            for key in DISPATCH_ROWS:
+                if line.lstrip().startswith("|") and cells[0].startswith(key):
+                    found[key] = cells
+        return found
+
+    if "### Dispatch controls" not in skill:
+        return ["missing dispatch controls short form in SKILL.md"]
+    short = rows(skill.split("### Dispatch controls", 1)[1].split("\n### ", 1)[0])
+    full = rows(routing.split("## All-role task allocation", 1)[-1])
+    errors = []
+    for key in DISPATCH_ROWS:
+        if key not in short or key not in full or len(short[key]) < 3 or len(full[key]) < 5:
+            errors.append(f"dispatch controls row missing: {key}")
+            continue
+        model, effort = short[key][1].strip("`"), short[key][2]
+        ordinary = full[key][3] if full[key][3] != "reclassify" else full[key][4]
+        if model.casefold().split("-")[-1] not in full[key][1].casefold() or effort != ordinary:
+            errors.append(f"dispatch controls short form differs from the fit table: {key}")
+    return errors
+
+
 def main() -> int:
     try:
         if sys.argv[1:]:
@@ -668,6 +699,9 @@ def main() -> int:
         errors.extend(task_allocation_failures(
             (ROOT / "references/routing-matrix.md").read_text(encoding="utf-8"),
             (ROOT / "references/model-effort-policy.md").read_text(encoding="utf-8")))
+        errors.extend(dispatch_controls_failures(
+            (ROOT / "SKILL.md").read_text(encoding="utf-8"),
+            (ROOT / "references/routing-matrix.md").read_text(encoding="utf-8")))
         errors.extend(economy_failures((ROOT / "SKILL.md").read_text(encoding="utf-8"),
             (ROOT / "references/verification-and-gates.md").read_text(encoding="utf-8")))
         for path in sorted((ROOT / "agents").glob("alaa-*")):

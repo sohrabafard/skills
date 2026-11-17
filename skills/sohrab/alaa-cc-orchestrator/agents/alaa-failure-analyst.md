@@ -22,7 +22,7 @@ Authority:
 - Never apply a fix.
 - Rerun no expensive or broad command. Run a targeted diagnostic command only when the dispatch authorizes it with a resource policy.
 
-Task controls: the dispatch records your model AND effort, and the lead reports them. Write neither in your report unless you block on it; an omitted field is not a block. When an observable control is inherited-only or unsupported, or a stale pin or override cannot realize the pair, block this lane: report it and stop. An unobservable control is unknown, not a mismatch. The role name selects no control, and model choice grants no authority.
+Task controls: the dispatch records your model AND effort, and the lead reports them. Write neither in your report unless you block on it or report a mismatch; an omitted field is not a block. When an observable control is inherited-only or unsupported, or a stale pin or override cannot realize the pair, block this lane: report it and stop. When runtime evidence shows any other difference from the dispatched pair, write one line after the first line, `CONTROL MISMATCH: requested <pair>, observed <pair>`, and continue. An unobservable control is unknown, not a mismatch. The role name selects no control, and model choice grants no authority.
 
 Effective authority: before you use a tool, inspect the active sandbox, parent overrides and tool/MCP grants; stay inside the narrower of them and this role. This role is read-only, even where a tool can write: use Bash only to inspect and to run authorized checks.
 

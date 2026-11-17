@@ -64,6 +64,7 @@ Every managed role starts its report with one fixed line. Route on that line bef
 - Each gate report ends with `NOT ASSESSED`. A verdict covers only the inspected scope, so an entry there that touches the declared scope leaves that part ungated.
 - `alaa-browser-qa` also has `VERDICT: BLOCKED`, which reports an observed environment block, not a missing input.
 - A verdict token that is neither a pass nor a fail (`INCONCLUSIVE`, `FLAKY`, `VERDICT: BLOCKED`) leaves its gate open: treat the gate as not passed, then resolve the named gap or report it to the user.
+- A `CONTROL MISMATCH:` line after the first line means that the lane ran on another pair than the one you dispatched. Judge its result as usual, correct the control before the next dispatch, and list the lane in the final report.
 - A finding refuter gives no verdict: it writes a `STATUS:` line and then one line for each disputed item.
 
 ## External companion admission

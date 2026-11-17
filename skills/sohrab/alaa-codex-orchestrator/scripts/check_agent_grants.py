@@ -190,6 +190,14 @@ def _agent_paths(agents_dir: str) -> list[str]:
     return paths
 
 
+# Roles that another skill owns and installs into the same directory. This pack neither
+# manages nor judges them; every other uncatalogued role, a retired one included, still fails.
+EXTERNAL_ROLES = {
+    "alaa-ent-specialist": "alaa-ent-go-orm-db",
+    "alaa-rule-writer": "alaa-prompting-guide",
+}
+
+
 def _template_failures(name: str, text: str, data: dict) -> list[str]:
     failures = []
     if name not in ROLE_POLICY:
@@ -356,6 +364,7 @@ def validate_resolved(
         print(exc, file=sys.stderr)
         return 2
     failures = []
+    paths = [path for path in paths if os.path.basename(path)[:-5] not in EXTERNAL_ROLES]
     actual_names = {os.path.basename(path)[:-5] for path in paths}
     if actual_names != set(ROLE_POLICY):
         failures.append("resolved roster differs from catalog")

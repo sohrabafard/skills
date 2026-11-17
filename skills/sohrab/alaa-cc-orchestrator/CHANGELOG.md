@@ -1,5 +1,12 @@
 # Changelog
 
+## 8.1.0 - 2026-11-17
+
+- Dispatch controls in the body, from session evidence of 2026-11-17: 209 of 557 dispatches in two days carried no model and 400 carried no effort, and a lead reported that it never read the allocation rule in `references/routing-matrix.md`. `SKILL.md` *Dispatch controls* now holds the short form of the fit table: one model and one ordinary effort for each row. `scripts/check_agent_contracts.py` `dispatch_controls_failures` fails when the short form and the fit table disagree. The fit table still governs.
+- Control mismatch line, owner decision of 2026-11-17. A lane that sees, on runtime evidence, a pair other than the dispatched one, outside the three block causes, writes `CONTROL MISMATCH: requested <pair>, observed <pair>` after its first line and continues. `references/agent-catalog.md` *Return header* states the lead's action. A normal return still carries no model or effort line.
+- Incidental file, owner decision of 2026-11-17. `references/routing-matrix.md` *Stack-bound roles*: a file of another family is incidental when no acceptance criterion of the lane is about it and the lane's own change forces its change.
+- `references/routing-matrix.md`: the exceptional-model admission names "the strongest non-exceptional model of the table at `high` effort or above" where it said "the high-effort workhorse". The catalog row that defined that term was retired in 8.0.0; step 4 of the same section already sets this bar.
+
 ## 8.0.0 - 2026-11-17
 
 - Lane returns carry exceptions only, owner direction of 2026-11-17. No definition asks for an agent, configured, requested or observed model and effort line, and the implementation contract drops its loaded-skills item. The lead reports each lane's model and effort from its own dispatch record (`SKILL.md` *Final report*, `references/model-effort-policy.md`). A lane still blocks when an observable control is inherited-only or unsupported, or when a stale pin or override cannot realize the pair, and an implementer names a required skill it did not load. `scripts/check_agent_contracts.py` `agent_failures` drops the six header literals and now rejects the retired header.

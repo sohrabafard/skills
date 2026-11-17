@@ -65,7 +65,7 @@ Role identities are compatibility identities: a role name selects neither contro
    - **Reclassify** marks two facts that contradict each other. Recheck both facts against the lane record, correct the one that the record does not support, then read the table again.
    - **Exceptional model.** It needs one of these, recorded before dispatch:
      - an exact official recommendation for the task and priority that the canonical owner supports, recorded with the remaining reasoning need and the rejected cheaper or decomposed alternatives;
-     - applicable documented inadequacy of the high-effort workhorse, established after context, specification and tool correction and after decomposition was considered;
+     - applicable documented inadequacy of the strongest non-exceptional model of the table at `high` effort or above, established after context, specification and tool correction and after decomposition was considered;
      - an explicit user selection.
 
      A repairable defect or an imagined insufficiency is not model inadequacy. A model mention alone is not a selection instruction. The official row *agent sessions that run for hours* supports the first arm only for a lane in the *Coupled or cross-boundary unresolved decisions* or *Judgment-dense work* row.
@@ -120,7 +120,7 @@ A stack-bound role is an implementation authority identity bound to one stack fa
 | Any other stack, such as Ansible, a standalone Makefile or shell script, or another language | `alaa-implementer` |
 
 - Every fit row runs on the role of its stack, the mechanical branch, the bounded branches and an exceptional pair included.
-- An incidental file of another family stays in the lane only when the lane record lists it by path. Name its owning skill in the dispatch as a call.
+- A file of another family is incidental when no acceptance criterion of the lane is about it and the lane's own change forces its change, such as a route registration, a configuration key or a fixture. An incidental file stays in the lane only when the lane record lists it by path. Name its owning skill in the dispatch as a call.
 - Split a lane that owns files of two families when the parts are independent. Otherwise dispatch `alaa-implementer`.
 - For `alaa-implementer`, name the owning skill of each owned surface in the dispatch as a call: /alaa-bash-shell for a shell script, /alaa-makefile for a Makefile, /ansible-generator for a new Ansible file and /ansible-validator for an edited one.
 - Resolve the owning skills of any other stack through `alaa-workflow references/companion-routing.md`.
