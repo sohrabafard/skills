@@ -75,7 +75,7 @@ Pass `model` AND `reasoning_effort` to the spawn surface on EVERY dispatch. An o
 | Coupled or cross-boundary unresolved decisions | `gpt-6.1-sol` | `medium` |
 | Judgment-dense work that no check can catch | `gpt-6.1-sol` | `high` |
 
-Move the effort one step up for a long, strict or hard-to-verify lane, and one step down for a short, fully specified one.
+Use `high` for a long, strict or hard-to-verify lane on any row. Use `low` for a short, fully specified lane on the first three rows only. An effort above `high` needs the recorded measured gain that the fit table requires.
 
 ### Dispatch discipline
 

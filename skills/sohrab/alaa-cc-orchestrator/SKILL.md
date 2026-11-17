@@ -77,7 +77,7 @@ Pass `model` AND `effort` as parameters of the Agent call on EVERY dispatch. An 
 | Coupled or cross-boundary unresolved decisions | `opus` | `medium` |
 | Judgment-dense work that no check can catch | `opus` | `high` |
 
-Move the effort one step up for a long, strict or hard-to-verify lane, and one step down for a short, fully specified one.
+Use `high` for a long, strict or hard-to-verify lane on any row. Use `low` for a short, fully specified lane on the first three rows only. An effort above `high` needs the recorded measured gain that the fit table requires.
 
 ### Dispatch discipline
 
