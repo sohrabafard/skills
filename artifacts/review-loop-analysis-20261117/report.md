@@ -84,3 +84,16 @@ shape is a hypothesis, not a proven cause.
   is not observable.
 - Not determined: the text of the 48 rejected findings of run 1, the advisor's message, and whether a commit
   hook of the client repository forbids a shared checkout.
+
+## Review of the change
+
+One instruction review ran on the branch (verdict: changes requested; 4 major, 6 minor, 1 nit). All eleven were
+applied; no confirmation pass ran. What changed because of it: the deviation sentence names what a lane
+actually reports ("changed or not met, under any heading"), the workflow line tells the lead to read the
+sections before it writes the script, the triage row also fires when the lead fixes inline or fixes nothing,
+the router reaches `## Before any dispatch`, `## Evidence` and `## Check collection` again, and the lockfile
+sentence is bounded to a locked install. `alaa-prompting-guide references/41-claude-code-runtime-features.md`
+now records where the `effort` option of a workflow `agent()` call is documented.
+
+Left as it is, reported to the owner: a finding triaged "fix it" does not hold the acceptance of the lane that
+reported it; `alaa-workflow references/review-mode.md` sets the fix deadline at the review boundary.
