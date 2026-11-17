@@ -10,6 +10,7 @@
 - `references/verification-and-gates.md` *Review boundary and execution cadence*: a native plan may have no phase milestone, and `Final phase` then names the root.
 - No equivalent here for the Claude Code pack's two advisor consultation points and its advisor rule for dispatches: this runtime has no native advisor. `references/model-effort-policy.md` and `references/delegation-prompts.md` gain no advisor text.
 - The `README-fa.md` version line is `7.1.0`.
+- After the independent review of 2026-11-17: duration selects the effort only, never the model; an explicit user choice still departs from the fit table; the table gains a tie rule between its first rows, a rule for roles that implement nothing, a named ordinary level for each row and a last column that needs a recorded measured gain; a role with no `Task tracking:` block in its definition gets the Beads action `none`.
 
 ## 7.0.0 - 2026-11-17
 
