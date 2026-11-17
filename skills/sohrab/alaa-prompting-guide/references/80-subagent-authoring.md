@@ -54,10 +54,9 @@ Keep contracts non-overlapping across the roster: each definition disclaims the 
 
 ## Configuration and observed identity
 
-- Record the requested role, model and effort separately from the observed runtime model and effort.
-- When the host exposes no observed value, report `unknown`. Never repeat a pin as proof of identity. Flag only an observable mismatch.
-- Put metadata after a required first-line verdict, so a report never demands two different first lines.
-- A replacement-only contract, such as `alaa-rule-writer`, emits no metadata; its caller records the requested settings in the roster.
+- The caller records the requested role, model and effort in its roster, from its own dispatch. A definition asks the agent for no model or effort line: the agent can rarely observe either, and the caller already holds both.
+- An agent reports a control only when runtime evidence shows that the requested pair cannot be realized. It then blocks its lane, after the required first-line token.
+- When the host exposes no observed value, the serving identity is `unknown`. Never repeat a pin as proof of identity.
 - Model resolution differs by runtime: read `references/11-codex-runtime-features.md` for Codex pin precedence and `references/41-claude-code-runtime-features.md` for Claude. Neither precedence proves which model served a response.
 
 ## Task model and effort

@@ -48,15 +48,16 @@ def contract_present(required: str, text: str) -> bool:
 
 def agent_failures(text: str) -> list[str]:
     errors = []
-    for required in ("CONFIGURED", "REQUESTED", "OBSERVED", "otherwise write unknown",
-                     "never from a pin or request",
-                     "Report metadata after the first line",
-                     "Effective authority:", "parent overrides", "tool/MCP grants",
+    for required in ("Effective authority:", "parent overrides", "tool/MCP grants",
                      "Task controls:", "model AND effort", "block this lane",
                      "an omitted field is not a block",
                      "The role name selects no control"):
         if required not in text:
-            errors.append(f"missing metadata/authority contract: {required}")
+            errors.append(f"missing control/authority contract: {required}")
+    # A lane reports no model or effort: the lead holds both in its dispatch.
+    for retired in ("Report metadata", "CONFIGURED", "OBSERVED model/effort"):
+        if retired in text:
+            errors.append(f"retired per-return metadata header: {retired}")
     if "missing, inherited, stale-pinned" in text:
         errors.append("omission blocked before owner normalization")
     if "Identity line: begin" in text:

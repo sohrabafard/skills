@@ -29,7 +29,7 @@ Never silently change the pair, install, mutate shared configuration or claim th
 
 Keep permissions separate from model choice. When enforcement is unknown, stay within the narrower role authority.
 
-Report the configured and requested model and effort separately from the observed identity. An unknown observation stays unknown.
+Report each lane's model and effort from your dispatch record: a lane writes neither in its report. The serving identity stays unknown unless a lane blocked on an observed control.
 
 ## Native Advisor consultation
 
