@@ -143,3 +143,23 @@ Not verified:
 - The fit table cannot be gated. The walks are the only evidence that a lead reads it as
   intended, and the review-lens lane stays ambiguous when a dispatch does not state the hardest
   decision under review.
+
+## Merge and install
+
+- Merge: `work/continuity-and-allocation` merged into `main` as `041e9ab3` with
+  `git merge --no-ff` on 2026-11-17, under the owner's instruction of that day to land on `main`
+  without waiting for the 7.0.0 project test. The merged tree equals the gated integration
+  tree. The worktree and its branch were removed. Rollback of the skills: revert that merge
+  commit.
+- Before the merge, both installers were preflighted from the integration branch: the Claude
+  dry-run exited 0, and the Codex grant materialization produced 37 definitions that parse as
+  TOML.
+- Claude Code agents: `python3 scripts/install_claude_agents.py --apply` exited 0. Each of the
+  33 installed managed files has the SHA-256 that the 7.1.0 manifest records, and the installed
+  rule-writer equals its source. Backup of the replaced files:
+  `alaa-agent-backups/install-x9s2xxc_` under the Claude home.
+- Codex agents: `bash skills/sohrab/alaa-codex-orchestrator/scripts/install-agents.sh` exited 0
+  with 37 definitions installed or updated; the version marker reads 7.1.0. The Codex installer
+  keeps no backup. The Codex rule-writer file was copied and equals its source.
+- A session that was already running keeps the agent definitions it loaded; start a fresh
+  session to use the new ones. Installation proves file placement, not agent behaviour.
