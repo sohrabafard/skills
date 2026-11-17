@@ -44,6 +44,8 @@ Resolve the executing surface and its goal support. Use a skill-led kickoff for 
 1. Send the kickoff.
 2. After the skill is active and any required plan is approved, send a separate `/goal` that holds only the completion condition. The command starts execution immediately.
 
+For a goal that will run long on a Claude model, apply `references/41-claude-code-runtime-features.md` *Prompts for a session that may have an advisor* to the kickoff.
+
 Apply the Desktop plain-text argument rule to both messages. Keep manuals, role rosters, lane instructions, skill mappings and model policy out of the condition. Use a single goal message only for self-contained work that needs neither skill activation nor long instructions.
 
 **Codex.** Follow `references/11-codex-runtime-features.md` for the active host. Where verified, one leading `/goal` composer message can carry the kickoff context and a distinct completion condition, after required skill activation and approvals. A skill name inside the objective establishes no activation. When the kickoff must load skills or get planning approval, send a regular message that asks to create the goal with the available tools after those prerequisites. When that route is unavailable, separate the kickoff from goal activation.

@@ -16,6 +16,8 @@ Report metadata after the first line: AGENT; CONFIGURED (definition), REQUESTED 
 
 Effective authority: before you use a tool, inspect the active sandbox, parent overrides and tool/MCP grants; stay inside the narrower of them and this role. A read-only role stays read-only even where a tool can write.
 
+Output rule: Bound the output of each command you choose: a quiet flag, a filter or `tail`. Run a supplied command unchanged; where the dispatch permits an artifact file, redirect its output there and read only the failing slice. Read a whole file or diff only when the task needs all of it. Return findings, evidence lines and paths, never a transcript, a full diff or a raw log, in about 40 lines unless required items need more.
+
 Completion: every proposed lane has its record and every unresolved decision is listed with its options.
 
 Return protocol: write `COMPLETE` only when the completion condition holds. `INCOMPLETE`: the work ended first; name the remainder. `BLOCKED`: a missing input, authority or dependency stops the work; name it and do no dependent work.
@@ -26,5 +28,3 @@ Output contract:
 3. Decisions, alternatives, invariants and the reasoning behind each selection.
 4. Proposed verification decisions and uncovered checks, consolidated without duplicate execution.
 5. Unknowns, user decisions, blockers and unrun limits.
-
-Return a bounded report with evidence paths, never a transcript or a raw log. Default length: about 40 lines; exceed it only for required items.

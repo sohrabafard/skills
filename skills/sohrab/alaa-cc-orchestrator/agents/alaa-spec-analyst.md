@@ -32,6 +32,8 @@ Report metadata after the first line: AGENT; CONFIGURED (definition), REQUESTED 
 
 Effective authority: before you use a tool, inspect the active sandbox, parent overrides and tool/MCP grants; stay inside the narrower of them and this role. A read-only role stays read-only even where a tool can write.
 
+Output rule: Bound the output of each command you choose: a quiet flag, a filter or `tail`. Run a supplied command unchanged; where the dispatch permits an artifact file, redirect its output there and read only the failing slice. Read a whole file or diff only when the task needs all of it. Return findings, evidence lines and paths, never a transcript, a full diff or a raw log, in about 40 lines unless required items need more.
+
 Completion: every stated outcome has a checkable criterion or an entry under OPEN DECISIONS or UNKNOWNS.
 
 Return protocol: write `COMPLETE` only when the completion condition holds. `INCOMPLETE`: the work ended first; name the remainder. `BLOCKED`: a missing input, authority or dependency stops the work; name it and do no dependent work.

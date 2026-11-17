@@ -9,14 +9,27 @@ Design target: any competent agent can resume the task from the canonical task a
 | Plan medium | Position | Knowledge |
 |---|---|---|
 | Markdown family | Checkpoint; the plan cursor under the `direct` profile | Handoff package, a section inside the plan and never a separate file |
-| Beads-native plan | Root `notes` | Six-field handoff in the root description |
-| Issue-only work | Issue `notes` | Issue comments |
+| Beads-native plan | The checkpoint block in the root `notes` and in each leaf's `notes` | Tagged comments on the root and on the leaf |
+| Issue-only work | The checkpoint block in the issue `notes` | Tagged comments on the issue |
 
 `references/task-tracking.md` owns the issue fields and the local fallback.
 
 ## Status and position
 
-In Beads, use the native issue status. The root notes name the exact IDs of the current phase, task and subtask (or `none`), the last verified evidence address, blockers, the next action, touched surfaces, and any pending review or commit. For concurrent lanes, the parent keeps the aggregate cursor and links to each lane's leaf notes. A task or subtask cursor names its actual ancestry. Clear a finished cursor before you advance.
+In Beads, use the native issue status. The claim holder appends this checkpoint block to the issue `notes` with `bd update <id> --if-assignee <actor> --append-notes`, plus the flags that `references/task-tracking.md` `## Agent identity and ownership` requires:
+
+```text
+Position: <what is done>
+Next: <the next action: command or edit target, and the expected result>
+Blockers: <none | each blocker and who can clear it>
+Evidence: <last verified result: command, outcome, commit or artifact path>
+Touched: <uncommitted paths, or none>
+```
+
+- The last block is the current one. The holder may replace the whole field with `--notes` to drop old blocks.
+- A leaf block states the position of that leaf only.
+- The root `notes` hold the same block for the engagement, with `Lead: <actor>` as its first line, plus one line per live leaf: `Lane: <leaf id> <actor>`. These lines are part of the root block, so only the lines of the last block are live. `references/task-tracking.md` `## Agent identity and ownership` states when the lead appends the root block. Name a pending review or commit in its `Next` line.
+- Append a block at each event in `## When to write` that moves the position. A dispatched write lane appends one before it returns or stops, because the lead and a later session read the lane's position from the leaf.
 
 In Markdown, the plan header owns the overall status, and the checkpoint and the JSON state project it. Every checkpoint names its exact `Plan`, status, last verified evidence address, blockers, next action, touched surfaces and update time. An execution checkpoint also names the current phase. A plan that has a checkpoint links to it and never copies the position. A `direct` profile keeps its cursor in its only plan file.
 
@@ -32,30 +45,45 @@ These rules apply only to Markdown execution:
 
 ## The handoff package
 
-| Field | Holds |
-|---|---|
-| Confirmed facts | Facts verified by inspection or execution, each with how it was verified. A fact without its method decays into an assumption |
-| Open assumptions | Unverified beliefs, each with what would verify it. Never mix them with confirmed facts |
-| Ruled out | Approaches tried and abandoned, each with the reason and the evidence. "Rejected: the ORM strips the CTE" is reusable; "did not work" is not |
-| Read first on resume | An ordered list of the two or three exact paths that the remaining work depends on |
-| Environment notes | Exact invocations that work here, and ones that look right but fail |
-| Traps | Anything that looks correct and is not: a test that passes for the wrong reason, a config overridden elsewhere, a name with two meanings |
+These six fields define what knowledge is, for every plan medium. A Markdown family holds them as its handoff section. Beads work holds each item as one comment that starts with the field's tag (`## Task resume and phase resume`).
 
-Keep all six fields present in an admitted handoff package. Write a field when you learn something that belongs in it, not on a schedule. Leave an empty field empty.
+| Field | Tag | Holds |
+|---|---|---|
+| Confirmed facts | `fact:` | Facts verified by inspection or execution, each with how it was verified. A fact without its method decays into an assumption |
+| Open assumptions | `assumption:` | Unverified beliefs, each with what would verify it. Never mix them with confirmed facts |
+| Ruled out | `ruled-out:` | Approaches tried and abandoned, each with the reason and the evidence. "Rejected: the ORM strips the CTE" is reusable; "did not work" is not |
+| Read first on resume | `read-first:` | An ordered list of the two or three exact paths that the remaining work depends on |
+| Environment notes | `env:` | Exact invocations that work here, and ones that look right but fail |
+| Traps | `trap:` | Anything that looks correct and is not: a test that passes for the wrong reason, a config overridden elsewhere, a name with two meanings |
+
+Keep all six fields present in an admitted Markdown handoff package. Write a field when you learn something that belongs in it, not on a schedule. Leave an empty field empty.
 
 ## Task resume and phase resume
 
 This section covers execution and issue-only work. Design uses the resume protocol below.
 
+**Find your work.** Under Beads, run these commands at session start, after a compaction, and whenever you cannot name your position:
+
+```bash
+bd list --status=in_progress --label "<project-label>" --assignee "<actor>"
+bd show <id>
+```
+
+- Run `bd show` for the root and for the leaf. One call prints the description, design, acceptance, notes and comments.
+- A new session has a new actor that holds nothing, so its list is empty. When the list is empty, or you cannot name your actor, run the list again without `--assignee`. Take the issue that the user, the dispatch or the handoff names, or find your leaf through the `Lane:` lines of the root. After a compaction, recover your actor under `references/task-tracking.md` `## Agent identity and ownership` before any write.
+- When more than one issue can be yours and neither the user nor a `Lane:` line decides it, ask before any write.
+- Position is the last checkpoint block in `notes` (`## Status and position`). Knowledge is the tagged comments. Before any write, compare the `Touched` line with `git status` and the diff, and apply stopped-writer recovery, under `## The resume protocol`. Then continue from the `Next` line.
+- A new session that finds its own earlier claim under an earlier actor takes it over before any write, under `references/task-tracking.md` `## Agent identity and ownership`.
+
 Task resume reads the issue's notes, comments, acceptance and relations. Phase resume reads the native phase and root, or the Markdown plan and checkpoint, through the resume protocol.
 
 Before you resume Beads mutations or transfer a task to another agent or device, apply `references/task-tracking.md` `## Agent identity and ownership`.
 
-Learned knowledge about a task goes to its issue comments for native or issue-only work, and to the plan handoff for Markdown. The native root handoff links to task findings when needed. Issue notes hold position only.
+**Write knowledge as tagged comments.** For native or issue-only work, any actor that may write to Beads, not only the claim holder, appends each learned item with `bd comments add <id>`, starting with its field's tag from `## The handoff package` or with `decision:`. Put engagement-wide knowledge on the root and task-local knowledge on the leaf. Rewrite nothing: correct an earlier comment with a new one. Issue notes hold position only. A Markdown family keeps learned knowledge in the plan handoff.
 
 ## Cross-PC handoff record
 
-A handoff to another PC records the responsible device, the Git sync state, the Dolt sync state where it applies, and whether the recipient can reach the code and the evidence. Record it in the task notes or the native root notes, or in the Markdown checkpoint or direct cursor. A sync record grants no sync authority.
+A handoff to another PC records the responsible device, the Git sync state, the Dolt sync state where it applies, and whether the recipient can reach the code and the evidence. Record it in the task notes or the native root notes, or in the Markdown checkpoint or direct cursor. In issue notes, append a current checkpoint block after it, so that the last block stays the position. A sync record grants no sync authority.
 
 ## When to write
 
@@ -74,7 +102,7 @@ Before a handoff, and before a long unattended stretch, ask one question of the 
 
 > Could a competent agent with no conversation history read these owners and take the next action correctly, without re-deriving expensive knowledge or repeating ruled-out work?
 
-If the answer is no, repair the canonical home: stale position in the cursor, unclear readiness in the task store, coarse phase design in the plan, a rejected approach in *Ruled out*, an unverified belief in *Open assumptions*.
+If the answer is no, repair the canonical home: stale position in the checkpoint block or the cursor, unclear readiness in the task store, coarse phase design in the plan, a rejected approach in *Ruled out*, an unverified belief in *Open assumptions*.
 
 The next action names its owned scope, its satisfied prerequisites, any open decision or blocker, the exact command or edit target, and the expected result. The plan identifies reusable evidence, its invalidation conditions and the progress paths of interrupted lanes. Repair gaps in existing fields. Add no resume artifact and no fresh agent for this test.
 
@@ -82,7 +110,7 @@ The next action names its owned scope, its satisfied prerequisites, any open dec
 
 Resolve the family and kind through `references/artifact-lifecycle.md`, then the task authority through `references/task-tracking.md`. Verify the binding before you read issue state.
 
-For a native plan, read the root by its `beads:<root-id>` address with its notes and handoff, then the selected phase, task and subtask with their comments, evidence, relations and skill bindings. Verify registration and ancestry. Reconcile pending outage records, ownership, readiness and phase barriers before dependent work. Issue-only work reads its issue, the linked evidence and its bindings.
+For a native plan, run the commands in `## Task resume and phase resume`. Read the root by its `beads:<root-id>` address with its checkpoint block and tagged comments, then the selected phase where one exists, the task and the subtask, with their checkpoint blocks, comments, evidence, relations and skill bindings. Verify registration and ancestry. Reconcile pending outage records, ownership, readiness and phase barriers before dependent work. Issue-only work reads its issue, the linked evidence and its bindings.
 
 For Markdown, read the owners that apply, in this order:
 
@@ -102,6 +130,7 @@ Before the next execution task, load its phase bindings and task overrides throu
 After compaction you continue in the same conversation and may not notice the loss.
 
 - Repeat the resume protocol and read each applicable owner again. A summary keeps the shape and drops the specifics, so trust the reconciled owners over your recollection.
+- Under Beads, recover your actor under `references/task-tracking.md` `## Agent identity and ownership` and list your work with it. Your claims are still yours, so run no transfer.
 - Never show a model raw context-budget numbers, because they cause premature stopping. When a model needs reassurance on a long run, state plainly that ample context remains and that it must not stop, summarise or suggest a new session because of context limits.
 
 ## Delegation is a context boundary
@@ -110,7 +139,7 @@ A dispatch is a one-way wall: the child sees only its dispatch text and cannot a
 
 - Write each dispatch for zero shared context: the outcome, the owned scope, the exclusions, the acceptance criteria, the verification commands and the handoff-package facts that bear on the lane. Copy those facts in; never point at a conversation that the child never had.
 - Set the return shape under /alaa-low-noise `references/workflow-integration.md` *Delegated lanes*. Record the return's evidence in the parent's artifacts, because a finding that lives only in a return is lost when the parent compacts.
-- A long-running or restart-sensitive lane records done items, remaining items and the last evidence address after each item. Name that record's owner in the dispatch: leaf notes for native work, or the admitted lane-local progress path for Markdown. After an interruption, reconcile the record, the files and the attributable evidence through `references/workspace-and-integration.md`. Keep valid completed work and dispatch only the remainder.
+- A long-running or restart-sensitive lane records done items, remaining items and the last evidence address after each item. Name that record's owner in the dispatch: the checkpoint block in the leaf notes for native work, or the admitted lane-local progress path for Markdown. After an interruption, reconcile the record, the files and the attributable evidence through `references/workspace-and-integration.md`. Keep valid completed work and dispatch only the remainder.
 
 ## What not to write
 

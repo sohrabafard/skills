@@ -36,7 +36,7 @@ After workflow tasks, dependencies and consolidation decisions are finalized, al
 
 - Before dispatch, record each role with its explicit model AND effort: evidence, planning, implementation, verification, review, specialist and documentation lanes.
 - Compare the ready tasks so that no task inherits the complexity of the whole goal.
-- Reopen allocation only for remaining work, at a material scope change or a fix follow-up. Reuse unchanged allocations and evidence.
+- Reopen allocation only for remaining work, at a material scope change, a fix follow-up or a lane return under step 4 of All-role task allocation. Reuse unchanged allocations and evidence.
 
 ## All-role task allocation
 
@@ -45,27 +45,45 @@ This orchestrator decides the task complexity, priority, model and effort for EV
 Role identities are compatibility identities: a role name, including a legacy ID named for a model or effort, selects neither control. Every pair preserves the role's tools, skills, verdicts and independent gates.
 
 1. **Ground the task.** Establish each task's scope, acceptance, settled and open decisions, and remaining reasoning need. Retrieve missing facts. Repair context, specification or tool failures before you attribute a shortfall to model capacity.
-2. **Apply eligibility, then set the priority.** Apply canonical eligibility: exclude gpt-6-sol ordinarily even if available. Current-family selection never upgrades a suitable Luna pair to Sol. When current Sol is missing, require an exact eligible realization or block the affected lane; never fall back to old Sol. Record an explicit user legacy exception separately; ordinary eligibility stays disabled. Use the balanced default priority; priority is not an effort value. Deviate only on an explicit user priority or model choice, or a documented task-based reason. Role title, sensitivity, duration, whole-goal labels and a second independent lens alone never select a frontier or stronger model. Independence comes from context and authority, not model diversity.
-3. **Select the cheapest suitable pair.**
-   1. Evaluate the cheapest eligible supported available model AND effort pair for EVERY role, the rule-writer included.
-   2. A task has bounded suitability only when it has all of these: an explicit outcome, a finite named scope, grounded local contracts/known invariants, a known pattern or causal path, settled cross-boundary decisions, bounded local discretion and a discriminating check.
-   3. Non-bug semantic work needs no reproduced failure. The mechanical and bug branches keep their own predicates below.
-   4. Select the least costly suitable available pair. Depart from it only on an explicit user choice or recorded task evidence. Apply no quotas.
-   5. Justify model and effort separately, each from the remaining reasoning need, the priority, current official guidance and applicable prior evidence.
-   6. When you reject a cheaper pair, record the actual failed fit predicate or stronger task-specific evidence. Titles, volume, priority labels and whole-goal complexity are not failed predicates.
-   7. Select directly. Use no mandatory trial ladder, synthetic experiment or replay.
-4. **Admit an exceptional model only on evidence.** On ANY role, an exceptional model needs one of these:
-   - an exact official recommendation for the task and priority that the canonical owner supports, recorded with the remaining reasoning need and the rejected cheaper or decomposed alternatives;
-   - applicable documented inadequacy of the high-effort workhorse, established after context, specification and tool correction and after decomposition was considered;
-   - an explicit user selection.
+2. **Apply eligibility, then set the priority.** Apply canonical eligibility: exclude gpt-6-sol ordinarily even if available. Current-family selection never upgrades a suitable Luna pair to Sol. When current Sol is missing, require an exact eligible realization or block the affected lane; never fall back to old Sol. Record an explicit user legacy exception separately; ordinary eligibility stays disabled. Use the balanced default priority; priority is not an effort value. Deviate only on an explicit user priority or model choice, or a documented task-based reason.
+3. **Select the pair that fits.** Record two facts for each lane. Then read the model AND effort pair for EVERY role from the fit table, the rule-writer included.
+   - **Judgment left to the lane** selects the model: the decisions that the lane must still make after the plan and the dispatch settled the rest.
+   - **Search and length** selects the effort: how far the lane must search, how long it runs, and whether a cheap check shows a wrong result.
 
-   A repairable defect or an imagined insufficiency is not model inadequacy. A model mention alone is not a selection instruction.
-5. **Record the allocation** once, in the workflow plan, or in the dispatch's `<task_controls>` when no durable plan is admitted: the role, the scope and workload class, a priority that departs from the default with its reason, the selected model AND effort, and the admission with its evidence. A bounded standalone delegation needs no full pipeline and no workflow artifact solely for model selection.
+   | Judgment left to the lane | Model | Short and fully specified | Ordinary | Long, multi-file, strict or hard to verify | Hardest long-running work, with a recorded measured gain | Support in `90-model-selection.md` |
+   |---|---|---|---|---|---|---|
+   | None: an exact transformation that meets the mechanical predicates of Implementation routing | `gpt-6-luna` | `low` | `medium` | `high` | reclassify | Official row *Small existing-file edits*: *Ordinary* is its balanced cell |
+   | Bounded local decisions with a discriminating check. This row applies only when every bounded-suitability predicate below is recorded for the lane; otherwise the next row applies | `gpt-6-luna`; `gpt-6.1-terra` only under *Codex Terra eligibility* below | `low` | `medium` | `high` | reclassify | Official row *Well-scoped bug* for a reproduced bug: *Ordinary* is its balanced cell. Non-bug work: local policy from that row |
+   | Grounded everyday decisions: known patterns, explicit contracts and acceptance | `gpt-6.1-sol` | `low` | `medium` | `high` | `xhigh` | Official rows *Application features*, *Research decisions/fact verification* and *Update/debug existing software*: *Ordinary* is their balanced cell |
+   | Coupled or cross-boundary unresolved decisions | `gpt-6.1-sol` | reclassify | `medium` | `high` | `xhigh` | Local policy, not a vendor row. Nearest row: *Update/debug existing software*. Guide prose: Sol medium for complex revisable technical work. Subagents page: `high` for tracing complex logic or edge cases |
+   | Judgment-dense work that no check can catch | `gpt-6.1-sol`, or the exceptional model under the last row | reclassify | reclassify | `high` | `xhigh` | Local policy, by analogy with *Adapt existing content* |
+   | Exceptional model, on ANY role, only on the evidence below this table | `gpt-6-astra` | `low` | `medium` | `high` | `xhigh` | An official row whose cell at the selected priority names Astra, for example *Complex polished deliverable* and *Polished application*: take that cell; an `xhigh` cell also needs a recorded measured gain. Otherwise local policy from the guide prose on Astra |
+
+   - **A lane that implements nothing.** An evidence or research lane whose question, sources and return form are given takes the *Grounded everyday decisions* row. A review lane takes the row of the hardest decision in the scope it reviews, never a later row because it is a second lens. The rule-writer takes the row of the text it rewrites.
+   - **Effort within a model.** Start at the *Ordinary* cell, which is the balanced cell of the official row named beside it, or local policy where the row says so. Move one column right for a long, strict or unverifiable lane: more than one working session of the lane, more than about ten files that depend on each other with no cheap discriminating check over them, or a result that no check can catch. Move one column left for a short, fully specified lane (a few steps, each named in the dispatch), or for one of many similar short lanes. A cheap discriminating check over an enumerated scope keeps a lane in *Ordinary*, whatever its file count. `max` and `ultra` need the same recorded measured gain as the last column.
+   - **Effort support.** Every cell that the row does not call official is local policy: one step from *Ordinary*, reasoned from the nearest official row and the [Codex subagents](https://learn.chatgpt.com/docs/agent-configuration/subagents) page (read 2026-11-17). It is not a vendor recommendation. For a long migration in the *Grounded everyday decisions* or *Coupled or cross-boundary unresolved decisions* row, *Long* is the balanced cell of the official row *App/service migration*.
+   - **Reclassify** marks two facts that contradict each other. Recheck both facts against the lane record, correct the one that the record does not support, then read the table again.
+   - **Exceptional model.** It needs one of these, recorded before dispatch:
+     - an exact official recommendation for the task and priority that the canonical owner supports, recorded with the remaining reasoning need and the rejected cheaper or decomposed alternatives;
+     - applicable documented inadequacy of the high-effort workhorse, established after context, specification and tool correction and after decomposition was considered;
+     - an explicit user selection.
+
+     A repairable defect or an imagined insufficiency is not model inadequacy. A model mention alone is not a selection instruction.
+   - **A pair that misses the lane in either direction is a defect.** Correct it before dispatch, unless a recorded reason selected it: an explicit user choice, the actual failed fit predicate or stronger task-specific evidence, such as a lane return under step 4. Titles, volume, priority labels and whole-goal complexity are not failed predicates. Apply no quotas.
+     - *Too strong:* a model from a later row than the lane's own, or an effort column right of the lane's own. Role title, sensitivity, duration, whole-goal labels and a second independent lens alone never select a frontier or stronger model. Independence comes from context and authority, not model diversity.
+     - *Too weak:* a model from an earlier row than the lane's own, or an effort column left of the lane's own; a cheap pair chosen while a fit predicate fails. Cost, volume and file count alone never select a weaker model or effort.
+   - **Bounded suitability.** A task has bounded suitability only when it has all of these: an explicit outcome, a finite named scope, grounded local contracts/known invariants, a known pattern or causal path, settled cross-boundary decisions, bounded local discretion and a discriminating check. Non-bug semantic work needs no reproduced failure. The mechanical and bug branches keep their own predicates below.
+   - Justify model and effort separately. Within a model, an explicit user priority picks the effort only when the lane's search and length fact admits two adjacent columns: take the lower-cost or the higher-quality cell. This is local policy.
+   - Select directly. Use no mandatory trial ladder, synthetic experiment or replay.
+4. **Use what returned lanes show.** When a lane returns in one of these two ways, adjust the pair of the remaining work only:
+   - A lane returned light or incomplete, and its dispatch was specific: raise one step for its remaining scope and for the remaining similar lanes. For a search shortfall (a skipped search, an early stop or a skipped check), raise the effort one column. For a judgment shortfall (a wrong or missing decision), raise to the next stronger model in the table; when the next row names the same model, raise the effort one column instead. Raise to the exceptional model only after a shortfall at `high` effort or above, with its evidence. A raise into the last column still needs its recorded measured gain.
+   - A lane finished trivially on a model above the first two rows, or at `high` effort or above: lower the pair one step for the remaining similar lanes, when every fit predicate of the lower cell is recorded for them.
+5. **Record the allocation** once, as one line for each lane, in the workflow plan, or in the dispatch's `<task_controls>` when no durable plan is admitted: the role, the selected model AND effort, and the fit-table row and column that selected them. Add the reason for a priority that departs from the default or for a departure from the table, and the evidence for an exceptional model. A bounded standalone delegation needs no full pipeline and no workflow artifact solely for model selection.
 6. **Realize the pair.** Before EVERY dispatch, follow `model-effort-policy.md`. Unknown serving identity is a reporting limit, not evidence of a control mismatch and not a reason for paid calibration.
 
 ### Codex Terra eligibility
 
-Consider `gpt-6.1-terra` only for supplied-material writing, defined-outcome computer use, or scoped code fixes covered by the prompting guide's Terra workload guidance. Require every bounded-suitability predicate above and an exact verified host model/effort pair. Compare eligible pairs through the same allocation procedure. Apply existing tool and delegation authority at every effort, including `ultra`.
+Consider `gpt-6.1-terra` only for supplied-material writing, defined-outcome computer use, or scoped code fixes covered by the prompting guide's Terra workload guidance. Require every bounded-suitability predicate above and an exact verified host model/effort pair. A Terra pair replaces the Luna pair of the *Bounded local decisions* row at the same column and is a recorded departure; its evidence is the Terra workload. Where the official row of the task names Terra at the selected priority (*Find visible controls in an app*, *Update specified records in an app*), take that cell. Apply existing tool and delegation authority at every effort, including `ultra`.
 
 ## Ent specialist route
 
@@ -73,9 +91,9 @@ For Ent or PostgreSQL work owned by /alaa-ent-go-orm-db, select `alaa-ent-specia
 
 ## Implementation routing
 
-Choose directly from the completed lane record; no mandatory sequence of attempts applies. Copy the admission predicates you verified for the selected route into the dispatch; the lane rechecks them before editing. These routes classify workload fit only. Apply All-role task allocation separately.
+Choose directly from the completed lane record; no mandatory sequence of attempts applies. Copy the admission predicates you verified for the selected route into the dispatch; the lane rechecks them before editing. A route selects the role identity only, from the two fit facts of All-role task allocation; the fit table selects the pair.
 
-Select the mechanical branch of `alaa-implementer-luna` only when ALL of these are recorded before dispatch:
+Select the mechanical branch of `alaa-implementer-luna`, fit row *None*, only when ALL of these are recorded before dispatch:
 
 - the exact transformation and its exclusions;
 - a finite, explicitly enumerated scope of existing files;
@@ -86,15 +104,15 @@ Select the mechanical branch of `alaa-implementer-luna` only when ALL of these a
 
 File count alone neither qualifies nor disqualifies a task. Ambiguous matches, undefined scope or design changes fail admission.
 
-Select `alaa-implementer-low` for bounded semantic work only when every All-role bounded-suitability predicate and cheap discriminating checks are recorded. Non-bug local decisions qualify. Allocate its pair separately; a suitable Luna pair is a candidate. Unresolved cross-boundary design, consistency or trust fails admission.
+Select `alaa-implementer-low`, fit row *Bounded local decisions*, for bounded semantic work only when every All-role bounded-suitability predicate and cheap discriminating checks are recorded. Non-bug local decisions qualify. Allocate its pair separately; a suitable Luna pair is a candidate. Unresolved cross-boundary design, consistency or trust fails admission.
 
-Select `alaa-implementer-luna-low`, the bug branch of `alaa-implementer-luna`, or `alaa-implementer-luna-high` from the exact official bug row and the selected priority. Select one only when the plan records a reproduced failure, a traced local causal path, explicit expected behavior, bounded scope and semantic discretion, and a discriminating regression oracle. Unresolved design of cross-boundary contracts, trust, shared state or consistency fails admission.
+Select `alaa-implementer-luna-low`, the bug branch of `alaa-implementer-luna`, or `alaa-implementer-luna-high`, in the same fit row, for a short, an ordinary or a long, strict or hard-to-verify search and length fact. Select one only when the plan records a reproduced failure, a traced local causal path, explicit expected behavior, bounded scope and semantic discretion, and a discriminating regression oracle. Unresolved design of cross-boundary contracts, trust, shared state or consistency fails admission.
 
 These routes are uncalibrated workload admissions. Priority or a model preference never waives fit or independent gates. If fit ceases, stop dependent work, preserve valid edits and return the remaining scope for reclassification. Require no lightweight trial and no replay of completed work. No route expands command authority.
 
-- `alaa-implementer`: normal engineering with grounded scope and acceptance criteria.
-- `alaa-implementer-high`: substantial interacting engineering reasoning.
-- `alaa-implementer-xhigh`: sustained coupled technical reasoning admitted by the batch source mapping and lane requirements.
+- `alaa-implementer`: fit row *Grounded everyday decisions*. Normal engineering with grounded scope and acceptance criteria.
+- `alaa-implementer-high`: fit row *Coupled or cross-boundary unresolved decisions*. Substantial interacting engineering reasoning.
+- `alaa-implementer-xhigh`: the same row or *Judgment-dense work*, with a long, strict or hard-to-verify search fact. Sustained coupled technical reasoning.
 
 The legacy exceptional IDs `alaa-implementer-astra`, `alaa-implementer-astra-medium` and `alaa-implementer-astra-xhigh` remain implementation authority identities. Apply the exceptional model admission above only when the selected task pair is exceptional, and record its evidence before dispatch. Return missing facts, unavailable tools and unresolved product intent to their owners. An unresolved decision alone never establishes model inadequacy.
 
@@ -113,13 +131,13 @@ A stack-bound role is an implementation authority identity bound to one stack fa
 | Dockerfile, Compose or Swarm stack, Helm chart, Kubernetes manifest, CI pipeline, HAProxy configuration, Ansible file, Makefile or shell script | `alaa-implementer-infra` |
 
 - The stack-bound role replaces `alaa-implementer`, `alaa-implementer-high`, `alaa-implementer-xhigh`, `alaa-implementer-astra`, `alaa-implementer-astra-medium` and `alaa-implementer-astra-xhigh`. An admitted exceptional pair runs on the stack-bound role.
-- Record the lane's workload class in the allocation record: normal, substantial interacting, or sustained coupled. For a stack-bound lane the class informs the task pair and selects no role identity.
-- Split a lane that owns files of two families when the parts are independent. Otherwise, and for a stack with no bound role, dispatch the generic role for its workload class and name each stack's skills in the dispatch as calls.
-- When the selected stack-bound role is not available in this session, do not block the lane for that reason. Record the generic role for the workload class as the registered profile, with the unavailable stack-bound role as its reason. Dispatch it and name the stack's skills in the dispatch as calls. This fallback replaces only the role identity; the pair rules still apply.
+- For a stack-bound lane the two fit facts select the task pair and no role identity.
+- Split a lane that owns files of two families when the parts are independent. Otherwise, and for a stack with no bound role, dispatch the generic role that the routes above name for its two fit facts, and name each stack's skills in the dispatch as calls.
+- When the selected stack-bound role is not available in this session, do not block the lane for that reason. Record the generic role that the routes above name for its two fit facts as the registered profile, with the unavailable stack-bound role as its reason. Dispatch it and name the stack's skills in the dispatch as calls. This fallback replaces only the role identity; the pair rules still apply.
 
 ### Reassignment
 
-Reassess remaining work only at the initial assignment, a material scope change or a fix follow-up. Before you replace a writer, apply the stopped-writer recovery in `alaa-workflow references/workspace-and-integration.md` and retire its assignment. Hand off the remaining scope, acceptance criteria and evidence. Never overlap writers or replay completed work.
+Reassess remaining work only at the initial assignment, a material scope change, a fix follow-up or a lane return under step 4 of All-role task allocation. Before you replace a writer, apply the stopped-writer recovery in `alaa-workflow references/workspace-and-integration.md` and retire its assignment. Hand off the remaining scope, acceptance criteria and evidence. Never overlap writers or replay completed work.
 
 ## Correctness review depth
 

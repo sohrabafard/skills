@@ -42,7 +42,7 @@ Before you replace or resume a stopped writer's overlapping scope:
 2. Observe that the scoped files, generated outputs and shared resources stay stable after those processes stop. Preserve surviving edits and compare them with the existing progress journal, bound issue and checkpoint. Create no journal or locking system for this check.
 3. Apply `references/task-tracking.md` `## Agent identity and ownership` for an authorized issue transfer. Only then assign the remaining overlapping writes to the replacement. Keep valid completed work; do not replay it or reset the diff.
 
-If liveness, stability or ownership remains ambiguous, block only overlapping writes and shared-resource use. Continue independently owned disjoint work. Recovery stays in the same checkout. Compaction does not transfer a living writer's ownership; recover the same actor and reconcile its active process before continuing.
+If liveness, stability or ownership remains ambiguous, block only overlapping writes and shared-resource use. Continue independently owned disjoint work. Recovery stays in the same checkout. Compaction does not transfer a living writer's ownership; recover the same actor and reconcile its active process before continuing (actor recovery: `references/task-tracking.md` `## Agent identity and ownership`).
 
 ## Record the tested state
 

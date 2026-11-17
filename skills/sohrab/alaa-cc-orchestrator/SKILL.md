@@ -47,7 +47,7 @@ Follow explicit wording. Otherwise choose the lowest-side-effect interpretation 
 
 When a plan is admitted, report the canonical plan address and recovery reference. Otherwise deliver the plan in the reply. Do not imply implementation occurred. When generating a goal condition, read `alaa-prompting-guide references/06-invocation-and-composition.md`.
 
-For native Claude Code Advisor consultation during execution, use the separate route in `references/model-effort-policy.md`.
+For native Claude Code Advisor consultation, including the lead's two consultation points, use the separate route in `references/model-effort-policy.md`.
 
 ## Role availability
 
@@ -63,7 +63,7 @@ For an authorized install or update, run `python3 scripts/validate_pack.py` and 
 2. Inspect guidance and affected paths. Settle outcome, acceptance, preserved behavior and irreversible actions.
 3. Before Stage A evidence dispatch, apply `/alaa-memory-os` when its trigger holds: make one bounded recall and verify useful claims in repository truth. Route unresolved prior-session, ownership and shared-contract questions to `alaa-researcher`. `alaa-explorer` uses memory only when the repository cannot answer. Apply `/alaa-code-intelligence-routing` before code-evidence selection and reuse its result.
 4. Plan through Planning profile selection in `references/routing-matrix.md`, then finalize and consolidate tasks and dependencies. Planning effort never sets worker effort. Worker selection alone needs no planner dispatch.
-5. Allocate the batch once through Batch allocation in that file, and record each role and its selection reason in the plan. For EVERY dispatch, apply its model AND effort allocation and its role triggers, and realize the pair through `references/model-effort-policy.md`. Dispatch only catalog roles whose trigger holds.
+5. Allocate the batch once through Batch allocation in that file, and record each role with its pair and the fit-table row and column that selected it in the plan. For EVERY dispatch, apply its model AND effort allocation and its role triggers, and realize the pair through `references/model-effort-policy.md`. Dispatch only catalog roles whose trigger holds.
 
 ### Dispatch discipline
 
@@ -71,7 +71,7 @@ For an authorized install or update, run `python3 scripts/validate_pack.py` and 
 - **Run independent lanes together.** Start a dependent lane as soon as the lanes it consumes finish. Join lanes behind one barrier only when the next step consumes all of their outputs.
 - **Count live lanes before each spawn or follow-up.** At the runtime's concurrency limit, wait for a running lane to finish before you start the next one. After a limit error, free a slot; never resend the same call unchanged. `alaa-prompting-guide references/41-claude-code-runtime-features.md` owns the limit values.
 - **After an interruption or a usage-limit error,** record the lane's last evidence in the plan or compact dispatch, and reconcile the transcript, the checkpoint and the surviving files before resuming writes. Apply the stopped-writer recovery in `alaa-workflow references/workspace-and-integration.md`, then dispatch only the remaining scope.
-- **Keep dispatches lean.** Word each dispatch under /alaa-prompting-guide. Carry lane facts only: outcome, owned files, exclusions, acceptance, commands, dependencies, resolved skills and return contract. Do not restate the native role definition. State each instruction once. Every dispatch carries `/alaa-low-noise`.
+- **Keep dispatches lean.** Word each dispatch under /alaa-prompting-guide. Carry lane facts only: outcome, owned files, exclusions, acceptance, commands, dependencies, resolved skills and return contract. Do not restate the native role definition. State each instruction once. Name `/alaa-low-noise` in a dispatch only for a discovery-heavy or log-heavy lane, because every agent definition carries the output rule.
 - **Decide verification per change.** Read `references/verification-and-gates.md` for the verification decision, the floors and who fixes.
 - **Correct sparingly.** Correct a statement only when its error changes user code, conclusions or decisions. State the correction once, then continue.
 

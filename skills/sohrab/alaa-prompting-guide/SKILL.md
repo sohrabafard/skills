@@ -21,6 +21,7 @@ This skill owns instruction authoring, model and effort capability evidence, and
 3. Resolve a version-sensitive fact from its source, never from recall. Before you state a price, limit, effort level, feature or version gate, default, discovery path or current recommendation, refresh the official source through `references/00-source-map.md`. A generated prompt on a volatile topic requires the executing agent to check freshness.
 4. Draft, then compress, every controlling artifact through `references/60-skill-authoring.md`, edits and dispatches included. Ship the fewest words that preserve behavior. A soft target yields. A hard limit requires equivalent restructuring or a blocked report. Conversational prose is exempt.
 5. Choose between a prompt, an instruction file, a skill, a script and a subagent through that same reference.
+6. For a Claude target, apply `references/41-claude-code-runtime-features.md` section *Prompts for a session that may have an advisor* before you ship a prompt, a system prompt or a dispatch.
 
 For a goal, take the kickoff and the completion condition from `references/06-invocation-and-composition.md`. For a rendered Claude condition, run `python3 scripts/check_goal_condition.py --surface claude-desktop-code --condition-file <path>` from this skill directory, with the observed surface substituted.
 

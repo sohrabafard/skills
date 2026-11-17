@@ -12,81 +12,45 @@ Project label: `repo:skills`
 
 Expected workspace: `/home/sohrab/project/alaa-task-hub/.beads`
 
-User, repository, and orchestrator constraints govern. This binding overrides conflicting upstream Beads skill or hook guidance and grants no additional authority.
+User, repository and orchestrator constraints govern. This binding overrides conflicting upstream Beads skill or hook guidance and grants no authority. Under Codex, read each `/name` as `$name`. A `##` name is a section of `/alaa-workflow` `references/task-tracking.md`, unless a file is named; if it cannot load, run no `bd` write.
 
-Beads is the task authority whenever it is available, as `/alaa-workflow` `references/task-tracking.md` `## Select before tracking-dependent work` defines. When it is not available, run no Beads command except the availability test, initialize no replacement database, and select the task store per `/alaa-workflow` `references/task-tracking.md` `## Select before tracking-dependent work`. Once Beads is available, register every new task there; a task lives in exactly one store.
+**Availability.** First, and again after a workspace or connection change, run `bd where` and verify the expected workspace, then `bd ping`. If both pass, Beads is the task authority. Otherwise report the failure, run no other `bd` command, initialize no database and change no connection, and select the store under `## Select before tracking-dependent work`.
 
-Under Codex, read each `/name` skill reference in this block as `$name`.
-
-### Start and resume
-
-Before planning or executing tracked work, and after compaction or session restart:
-
-1. Read `.agents/skills/beads/SKILL.md` unless its full instructions remain in context; hook output is not a substitute. If missing, report it. Then follow `/alaa-workflow` `references/task-tracking.md` `## Select before tracking-dependent work` to decide whether Beads is available.
-2. Before issuing other Beads commands, run `bd where` with the configured `BEADS_DIR` and verify the expected workspace, then run `bd ping`. Recheck after workspace or connection changes. On failure or mismatch, report it. Beads is then unavailable; apply the store-selection rule above. Never initialize another database or silently change the connection.
-3. Reuse current hook-injected `bd prime` context; run it manually only if missing or stale.
-4. Before Beads mutations, claims, ownership comparisons, resume or transfer, load `/alaa-workflow` `references/task-tracking.md` `## Agent identity and ownership`. It owns actor allocation, explicit mutation identity, guarded updates, transfer and closure coordination; its actor rules override actorless upstream examples. If that file cannot be loaded, stop the dependent Beads mutation. Keep the assigned actor in the existing dispatch or admitted handoff.
-5. When resuming, read the active issue and linked plan/checkpoint/handoff. Check worktree state, scope, ownership, and blockers before continuing. A conversation summary or `bd prime` cannot replace task-state recovery. Resolve an ambiguous active task before implementation.
-
-Pass every global flag that `/alaa-workflow` `references/task-tracking.md` `## Beads capabilities in use` requires. Batch `bd` mutations in one script only when every command passes `--actor`, the script runs with `set -euo pipefail`, prints each command's result, and stops at the first failure; read back changed issues afterwards. Add no per-command environment overrides.
-
-### Scope and issue lifecycle
-
-- Filter work selection (`ready`, `list`, `blocked`) by the project label using `--label`. Unfiltered hook output does not expand scope. Add this label to new project issues.
-- Before changing an existing issue, use `bd show` to verify its label and relevance to the authorized task. Never relabel it merely to bring it into scope. Other-project dependency reads are allowed; creating or changing other-project work requires explicit user authorization for that scope.
-- Search before creating. Reuse a matching issue or create one for new actionable work and discovered follow-ups. Recording a follow-up does not authorize its implementation.
-- Claim before implementation through `/alaa-workflow` `references/task-tracking.md` `## Agent identity and ownership`, and verify its readback. A failed or conflicting claim does not establish ownership.
-- Update status and blockers/dependencies when reality changes. Creating, claiming, and recording progress may precede completion. Keep incomplete or blocked work unclosed. Close only after acceptance criteria and required checks pass; handoff or compaction alone never justifies closure. Close reason: `/alaa-workflow` `references/task-tracking.md` `## Close reason` (verdict, reviewed version, evidence address).
-- Verify mutations succeeded. On failure, report the command, error, and pending update; never report unsaved state as saved.
-
-### Issue conventions
-
-Semantics: `/alaa-workflow` `references/task-tracking.md` `## Beads capabilities in use`.
-
-- For a file-backed plan, set `--spec-id "<repo-name>:<repo-relative plan path>"`. Use the project label suffix after `repo:` as `<repo-name>`. For a native plan, record `beads:<root-id>` in the issue description.
-- Type `decision` for a decision other tasks cite; `spike` for a time-boxed investigation.
-- Create each follow-up with `--deps "discovered-from:<origin-id>"` (provenance only, not a blocker).
-- Ownership-sensitive mutations follow `/alaa-workflow` `references/task-tracking.md` `## Agent identity and ownership`; guard mechanics and exit 13 follow its `## Beads capabilities in use`.
-- Run `bd lint <id>` before close or handoff (a finding blocks close or handoff, per `## Beads capabilities in use`), `bd stale` at handoff or resume review, `bd ready --explain` when readiness is unexpected.
-
-### Continuity and handoff
-
-- At meaningful progress, blocker, decision, or validation changes, update issue state and persist what is needed to resume. Refresh it before handoff or planned compaction; do not wait for a compaction warning.
-- Issue `notes` hold position, blockers, and next step only. Place learned knowledge through `alaa-workflow references/context-continuity.md` `## Task resume and phase resume`. Record a device handoff per its `## Cross-PC handoff record`.
-- At session end, report issue IDs/status, changed files, validation results and unrun checks, blockers, next action, and pending commit/push/sync. Report synchronization complete only when verified.
-
-### Ownership and authority
-
-- Beads owns newly tracked issue state and dependencies; do not add parallel durable TODO lists. Existing plans/checkpoints keep their already-recorded local tasks; do not import or duplicate their checklists during setup.
-- `alaa-workflow` and repository rules own planning, validation, completion criteria, and handoff structure. Task evidence follows `/alaa-workflow` `references/task-tracking.md` `## Acceptance and evidence by level`.
-- Route durable knowledge through `/alaa-memory-os`. `bd remember` only for a short reminder shared across the whole hub, with source, scope, and maintainer; write it without separate approval. Never put task status, evidence, lessons, or new rules in it; leaving it empty is correct. Owner: `/alaa-memory-os` `## Beads hub reminders and issue notes`. Keep issue descriptions and dependency explanations with their issues.
-- Local commits on the current work branch are pre-authorized: commit each finished, validated topic as it lands (one Conventional Commit per topic or lane), and let worktree lanes branch from the latest commit. Push, tag, merge into another branch, history rewrite and remote sync (Git or Dolt) still need explicit user authorization; a profile, hook, or skill grants none. Report unauthorized pending actions instead of executing them.
-- Beads (`bd`) commands that read or write the expected workspace are this repository's own task tracking. Do not count them as changes outside this repository or to another repository, even when a task, goal condition or completion check forbids such changes. This rule only classifies these commands: it grants no new authority, and the scope and remote-sync rules above still apply.
-
-### Quick Reference
-
-Replace `<project-label>` and `<id>` with verified values and `<actor>` with this agent's literal assigned actor from `/alaa-workflow` `references/task-tracking.md` `## Agent identity and ownership`. Its ownership checks, transfer and close coordination apply before these examples. Replace other placeholders with actual values. Run each command separately; all binding rules apply.
+**Resume.** Run these at session start, after a compaction, and whenever you cannot name your position:
 
 ```bash
-bd ready --label "<project-label>"
-bd list --status=in_progress --label "<project-label>"
-bd ready --explain --label "<project-label>"
-bd blocked --label "<project-label>"
-bd --sandbox --actor "<actor>" create "<title>" --description "<goal, scope, output, plan link>" --acceptance "<criterion or exact plan reference>" --labels "<project-label>" --type <type>
-# for a file-backed plan:  --spec-id "<repo-name>:<repo-relative plan path>"
-# add for a follow-up:     --deps "discovered-from:<origin-id>"
-bd show <id>
-bd --sandbox --actor "<actor>" update <id> --claim
-bd show <id>
-bd --sandbox --actor "<actor>" update <id> --if-assignee "<actor>" --if-status in_progress --append-notes "<position, blockers, next step>"
-bd show <id>
-bd lint <id>
-bd stale --label "<project-label>"
-bd show <id>
-bd --sandbox --actor "<actor>" close <id> --reason "<verdict>; <commit | HEAD+scoped sha256>; <evidence address>"
-bd show <id>
-bd prime
+bd list --status=in_progress --label "repo:skills" --assignee "<actor>"
+bd show <id>   # root, then leaf
 ```
+
+If the list is empty or your actor is unknown, omit `--assignee`; the user or the root's `Lane:` lines name your issue. Position is the last checkpoint block in `notes`; knowledge is tagged comments. No summary or `bd prime` replaces this read. Before you continue, check worktree state against the block's `Touched` line, scope, ownership and blockers. Owner: `/alaa-workflow` `references/context-continuity.md` `## Task resume and phase resume`; another PC: its `## Cross-PC handoff record`.
+
+**Work.**
+
+- Pass `--label "repo:skills"` to `ready`, `list` and `blocked`, and label each new issue. Verify an issue's label before you change it; never relabel one into scope. Other-project writes need the user's explicit authorization for that scope.
+- Search before you create. A follow-up takes `--deps "discovered-from:<origin-id>"` and authorizes no implementation.
+- Before any `bd` write, claim, resume or transfer, load `## Agent identity and ownership`: it states your distinct `<actor>`, the guards and the takeover.
+- Claim before you work, then read the issue back; a failed claim or guard mismatch gives no ownership.
+- Append a checkpoint block when the position changes and before you stop. Add each learned item as a tagged comment when you learn it (`/alaa-workflow` `references/context-continuity.md` `## Task resume and phase resume`).
+- Close only after acceptance, the required checks and `bd lint <id>` pass, never for a handoff or a compaction. Reason: `## Close reason`.
+- Commands: `## Beads capabilities in use`. Fields: `## Issue fields`. Evidence: `## Acceptance and evidence by level`. Failed write: `## Outage and uncertain writes`; never report unsaved state as saved.
+
+Every write takes `--sandbox` before the subcommand and `--actor "<actor>"` after it:
+
+```bash
+bd --sandbox create "<title>" --description "<goal, scope, output, plan link>" --acceptance "<criterion>" --labels "repo:skills" --actor "<actor>"
+bd --sandbox update <id> --claim --actor "<actor>"
+bd --sandbox update <id> --if-assignee "<actor>" --append-notes "<checkpoint block>" --actor "<actor>"
+bd --sandbox comments add <id> "<tag>: <item>" --actor "<actor>"
+bd --sandbox close <id> --reason "<verdict>; <tested version>; <evidence address>" --actor "<actor>"
+```
+
+**Authority.**
+
+- Local commits on the current work branch are pre-authorized: one Conventional Commit per finished, validated topic or lane.
+- Push, tag, merge into another branch, history rewrite and remote sync (Git or Dolt) need explicit user authorization; a profile, hook or skill grants none. Report a pending unauthorized action.
+- `bd` commands that read or write the expected workspace are this repository's own task tracking, not changes outside this repository, even when a task or goal forbids such changes. This classification grants no authority.
+- Durable knowledge and `bd remember`: `/alaa-memory-os`.
 
 <!-- END ALAA BEADS BINDING -->
 

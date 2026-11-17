@@ -7,6 +7,19 @@ description: Context economy and output discipline for non-trivial agent work in
 
 Bound what enters the context and what gets printed. Never bound the work: task effort, evidence, validation and reviewability stay whole. Both runtimes share this contract unless a rule names its runtime.
 
+## First rules
+
+These four rules save the most context. Each tool result costs context again on every later turn.
+
+1. **Bound each command's output at its source.** Use a quiet flag, a filter, a count or `tail`. Never dump an unbounded file, tree, manifest, diff or log.
+2. **Search or inventory before you read, then read the bounded slice around the match.** Read a whole file only when safe editing requires it. Stop at the first step that answers the question.
+3. **Save bulky output to a file and report its path.** Bulky output is logs, diffs, inventories and generated data. Save it to an authorized file, and inspect only its failing or relevant slice. Reason: terminal output is gone when the session ends.
+4. **Never paste output to prove that a command ran.** Report the command, the result, the one line that mattered and the path to the rest.
+
+**Default command-output budget: about 40 lines per command that enters the context.** Larger output goes to a file, and you read only its failing or relevant slice. Required evidence that exceeds it stays.
+
+Each agent definition of /alaa-cc-orchestrator and /alaa-codex-orchestrator carries its own output rule. For such a lane, the lead names this skill in the dispatch only when the lane is discovery-heavy or log-heavy. Every other dispatched lane names this skill in its dispatch.
+
 ## Contract
 
 - Trim introductions, repetition, proof-of-work narration, raw dumps and optional background first. Never trim required facts, decisions, caveats, validation, blockers or next steps.
@@ -16,12 +29,8 @@ Bound what enters the context and what gets printed. Never bound the work: task 
 
 ### Part 1 — Context economy: what enters the window
 
-Each tool result costs context again on every later turn.
-
-- Search or inventory first, then read the bounded slice around the match. Read a whole file only when safe editing requires it. Stop at the first step that answers the question.
 - Re-read only for a new reason: your own edit, a failed check or a changed hypothesis.
-- Use a scoped search with a few context lines, a changed-file list, a count, a diff stat or a path-scoped diff. Never dump an unbounded file, tree, manifest or log. Prefer one well-chosen query to several exploratory ones.
-- Save bulky output, such as logs, diffs, inventories and generated data, to an authorized file. Inspect only its failing or relevant slice, and report its path instead of printing it. Reason: terminal output is gone when the session ends.
+- Use a scoped search with a few context lines, a changed-file list, a count, a diff stat or a path-scoped diff. Prefer one well-chosen query to several exploratory ones.
 
 ### Part 2 — Output noise: what gets printed
 
@@ -30,7 +39,6 @@ Each tool result costs context again on every later turn.
 - Where a person follows the run, write a one-line opening and a one-line update every few tool calls. An unattended lane needs neither. Beyond those lines, report only milestones, blockers, scope changes, validation outcomes and useful artifact paths. Never duplicate status that the harness already shows.
 - **Default progress budget: 12 lines of prose and excerpts up to 20 lines.** It applies to progress reports, not to requested deliverables or required findings. Required content that exceeds it stays.
 - Do not narrate a plan before you run it, unless the user must decide something first. The opening line of an attended run is not such a plan.
-- Do not paste output to prove that a command ran. Report the command, the result, the one line that mattered and the path to the rest.
 - Do not restate a file that you just wrote or edited. Name its path and what changed.
 - Finish with changed paths, reasons, validation results, and remaining risks or blockers, written for a reader who saw no tool call. Never paste a large diff instead.
 - Keep an artifact only when it helps the user inspect or resume. Remove throwaway files before you finish, when that is safe. Keep implementation in normal repository files, never in temp, shell-history or off-repo state. Leave nothing durable only in the conversation.
