@@ -10,6 +10,7 @@ Run each from the repository root with `python3 -I`. The first takes an optional
 - `tool_usage.py [days]`: tool calls by scope, agent type, worktree and target type.
 - `availability_and_nudge.py`: tool availability in subagents, nudge follow-through, prompt-hook cost.
 - `reachability.py`: whether routing instructions reach subagents; re-reads after a CodeGraph call.
+- `dispatch_controls.py [days]`: Agent dispatches with and without an explicit model and effort, by agent type. Added 2026-11-17; its first result is in `artifacts/dispatch-controls-and-code-gate-20261117/report.md`.
 
 ## Baseline
 
