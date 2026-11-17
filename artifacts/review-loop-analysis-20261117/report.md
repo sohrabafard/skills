@@ -2,8 +2,9 @@
 
 Scope: one Claude Code session in the client repository (title "client: Admin users command center API wiring"),
 analysed read-only from its transcripts, and the pack change that followed. Times are UTC. The scripts under
-`tools/` and `outputs/20261115-code-intelligence-usage/reference_reach.py` reproduce the numbers; each takes
-the session directory or a day count as its argument.
+`tools/` and `outputs/20261115-code-intelligence-usage/reference_reach.py` reproduce the timeline, the per-phase
+costs and the baseline; each takes the session directory or a day count as its argument. The session totals
+and the file-overlap count came from one-off commands that were not kept.
 
 ## What the session did
 
@@ -97,3 +98,6 @@ now records where the `effort` option of a workflow `agent()` call is documented
 
 Left as it is, reported to the owner: a finding triaged "fix it" does not hold the acceptance of the lane that
 reported it; `alaa-workflow references/review-mode.md` sets the fix deadline at the review boundary.
+
+Body size after the change: the Claude orchestrator `SKILL.md` grew from 2,327 to 2,672 words and the Codex one
+from 2,292 to 2,537. The growth is pointer text and the workflow line; no rule text was added to a body.
