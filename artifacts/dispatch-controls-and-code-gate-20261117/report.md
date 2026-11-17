@@ -56,14 +56,23 @@ Both packs are at version 8.1.0.
 
 Source: the setup pack in the documentation repository, `vibe coding/setup`. Installed copies: the Claude and Codex homes.
 
-- `hooks/codegraph-nudge.py`, one script for both runtimes. Until an agent has made one CodeGraph call, a shell search or read of indexed code is denied, at most twice for that agent; afterwards the hook nudges as before. It never blocks a file with a non-code extension, a repository without an index, or a command that first changes into such a repository. It fails open. Fifteen behaviour cases passed against the script before it was copied.
+- `hooks/codegraph-nudge.py`, one script for both runtimes. Until an agent has made one CodeGraph call, a shell search or read of indexed code is denied, at most twice for that agent; afterwards the hook nudges as before. It never blocks a file with a non-code extension, a repository without an index, a worktree whose `.codegraph/` holds no `codegraph.db`, or a command that first changes into such a place. It fails open. Sixteen behaviour cases passed against the script.
 - Claude Code `settings.json`: one more `PreToolUse` entry, for `mcp__codegraph__.*`, so that the hook sees a CodeGraph call.
 - Codex `hooks.json`: a `PreToolUse` entry for `Bash|mcp__codegraph__.*`. Codex passes no agent identifier to this event (hooks page, read 2026-11-17), so the count is per session. Codex skips a new or changed hook until the user trusts it with `/hooks`.
 - `CLAUDE.md` and `AGENTS.md`: a *Subagent dispatch controls* block between its own markers. It points at the skill's short table and holds no model name. The CodeGraph block is unchanged.
 
 Hook facts were read on 2026-11-17 from the Claude Code hooks page (`agent_id` and `agent_type` in the input inside a subagent; `permissionDecision: "deny"` shows its reason to the model; tool events fire inside subagents) and from the Codex hooks page (regex matcher; the same deny shape; no agent identifier on `PreToolUse`).
 
+## Observed after installation
+
+- A subagent's shell search of a code file in this repository was denied with "block 1 of at most 2", and its state file carries the subagent's own identifier beside the session's. The gate is therefore per agent in Claude Code.
+- A CodeGraph MCP call in the lead's running session set that agent's state to used: the `mcp__codegraph__.*` entry is active without a restart.
+- The first live denials hit two false positives, both repaired: a dotted directory name read as a code extension, and a command that changed into another repository.
+- A lane on Haiku at low effort compared the seven source files of the setup pack with the installed copies: all identical.
+
 ## Limits
+
+- A fresh linked worktree has the tracked `.codegraph/` directory and no index file. The gate stays off there, because a CodeGraph call would first have to build the index under the routing skill's lane-worktree rule. Lanes that run in such a worktree are only nudged.
 
 - No session has run with the gate or the short table yet. Remeasure with the same scripts after a week: nudge follow-through, CodeGraph calls by subagents, and dispatches without a control.
 - The gate classifies by file extension. A code search whose pattern holds a dot and that names no code file passes ungated.
