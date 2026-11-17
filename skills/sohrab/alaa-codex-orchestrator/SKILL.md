@@ -63,6 +63,20 @@ For an authorized install or update, use the supported materializing installers 
 4. Plan through Planning profile selection in `references/routing-matrix.md`, then finalize and consolidate tasks and dependencies. Planning effort never sets worker effort. Worker selection alone needs no planner dispatch.
 5. Allocate the batch once through Batch allocation in that file, and record each role with its pair and the fit-table row and column that selected it in the plan. For EVERY dispatch, apply its model AND effort allocation and its role triggers, and realize the pair through `references/model-effort-policy.md`. Dispatch only catalog roles whose trigger holds.
 
+### Dispatch controls
+
+Pass `model` AND `reasoning_effort` to the spawn surface on EVERY dispatch. An omitted control inherits the parent agent's value, which is usually stronger than the lane needs. This table is the short form of the fit table in `references/routing-matrix.md` *All-role task allocation*. That file governs: read it for the effort rules, the row of a lane that implements nothing, and the exceptional model.
+
+| Judgment left to the lane | Model | Ordinary effort |
+|---|---|---|
+| None: an exact transformation | `gpt-6-luna` | `medium` |
+| Bounded local decisions with a discriminating check | `gpt-6-luna` | `medium` |
+| Grounded everyday decisions | `gpt-6.1-sol` | `medium` |
+| Coupled or cross-boundary unresolved decisions | `gpt-6.1-sol` | `medium` |
+| Judgment-dense work that no check can catch | `gpt-6.1-sol` | `high` |
+
+Move the effort one step up for a long, strict or hard-to-verify lane, and one step down for a short, fully specified one.
+
 ### Dispatch discipline
 
 - **One agent per lane.** Dispatch no duplicate lane and no summary-check agent. A lane starts no subagent of its own. Independent verification and review inspect the actual artifact under separate authority. Keep inspection and the lead's own small correction inline.
@@ -88,7 +102,7 @@ Orchestrator mode keeps Stages A, B and E. Stages C and D run as the verificatio
 
 ## Final report
 
-Report outcome; independent lifecycle verdicts (`IMPLEMENTED`, `MERGE_CANDIDATE`, `RELEASE_CANDIDATE`, `PUBLISHED`) under `alaa-workflow references/workspace-and-integration.md`; lane changes and files; commands and results, marked run or cited, with tier; review and specialist verdicts and dispositions; each touched document's outcome and grade; curation as persisted, deferred or empty; risks, skipped checks, follow-ups. List each dispatched agent once with the model and effort you dispatched, taken from your allocation record, never from the lane's report; add each lane that blocked on its task controls, and the exceptional-model admission for each escalated dispatch.
+Report outcome; independent lifecycle verdicts (`IMPLEMENTED`, `MERGE_CANDIDATE`, `RELEASE_CANDIDATE`, `PUBLISHED`) under `alaa-workflow references/workspace-and-integration.md`; lane changes and files; commands and results, marked run or cited, with tier; review and specialist verdicts and dispositions; each touched document's outcome and grade; curation as persisted, deferred or empty; risks, skipped checks, follow-ups. List each dispatched agent once with the model and effort you dispatched, taken from your allocation record, never from the lane's report; add each lane that blocked on its task controls or reported a control mismatch, and the exceptional-model admission for each escalated dispatch.
 
 Write for a reader who saw no tool call and no lane report: outcome first, and a definition for each lane label or abbreviation the run invented.
 

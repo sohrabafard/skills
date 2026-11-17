@@ -1,6 +1,6 @@
 # بسته نهایی Alaa Codex Orchestrator
 
-نسخه: **8.0.0**
+نسخه: **8.1.0**
 
 این بسته یک Skill کامل برای تبدیل Codex اصلی به orchestrator و مسیردهی subagentهای تخصصی با نصب مجاز و صریح است.
 
@@ -89,7 +89,7 @@ python3 ~/.codex/skills/alaa-codex-orchestrator/scripts/check_agent_grants.py --
 
 این دستور هر فایل `*.toml` در آن مسیر را می‌خواند و سه چیز را بررسی می‌کند:
 
-- مجموعهٔ نام agentها باید با کاتالوگ برابر باشد. نبود یک نقش یا وجود یک agent مدیریت‌نشده، دستور را `FAILED` می‌کند.
+- مجموعهٔ نام agentها باید با کاتالوگ برابر باشد. نبود یک نقش یا وجود یک agent مدیریت‌نشده، دستور را `FAILED` می‌کند. دو نقش `alaa-ent-specialist` و `alaa-rule-writer` استثنا هستند، چون skill های دیگری مالک آن‌ها هستند.
 - هر نقش لازم است اعلان `sandbox_mode` موردنیاز خود را داشته باشد.
 - هر override در `mcp_servers` باید با inventory زندهٔ MCP و grant کاتالوگ همان نقش یکی باشد.
 

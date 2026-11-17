@@ -55,7 +55,7 @@ Keep contracts non-overlapping across the roster: each definition disclaims the 
 ## Configuration and observed identity
 
 - The caller records the requested role, model and effort in its roster, from its own dispatch. A definition asks the agent for no model or effort line: the agent can rarely observe either, and the caller already holds both.
-- An agent reports a control only when runtime evidence shows that the requested pair cannot be realized. It then blocks its lane, after the required first-line token.
+- An agent reports a control only on runtime evidence. When the requested pair cannot be realized, it blocks its lane, after the required first-line token. For any other observed difference it writes one mismatch line after that token and continues.
 - When the host exposes no observed value, the serving identity is `unknown`. Never repeat a pin as proof of identity.
 - Model resolution differs by runtime: read `references/11-codex-runtime-features.md` for Codex pin precedence and `references/41-claude-code-runtime-features.md` for Claude. Neither precedence proves which model served a response.
 
