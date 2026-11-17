@@ -1,5 +1,11 @@
 # Changelog
 
+## 8.2.0 - 2026-11-17
+
+- Pointers that fire at an action, owner direction of 2026-11-17: a reference rule stays in its reference, and the pointer must make the lead open it when it is needed. Evidence: in one orchestrated session the lead opened no orchestrator reference; in 13 lead sessions of the week, `references/verification-and-gates.md` was opened before the first review dispatch in 4 of 10, and `alaa-workflow references/review-mode.md`, two hops from the body, in none (`artifacts/review-loop-analysis-20261117/report.md`). `SKILL.md` *Direct references* now says that the body holds none of those rules, names the section for each action, sends finding triage to its owner in one hop, and tells the lead not to act when the section cannot load. The *Dispatch discipline* line on verification points at that table. No rule moved into the body. `scripts/check_agent_contracts.py` pins the new line.
+- Lane-reported deviation: `references/verification-and-gates.md` *Stage B* treats a deviation from the dispatch or from an acceptance criterion that a lane reports as a finding, triaged before the lane is accepted. In the analysed session two lanes reported such deviations, the lead accepted both lanes, and each returned later as a late repair round.
+- The Claude pack gained a rule for Workflow scripts in the same change. Codex has no equivalent mechanism, so this pack takes no counterpart.
+
 ## 8.1.0 - 2026-11-17
 
 - Dispatch controls in the body, from session evidence of 2026-11-17: 209 of 557 dispatches in two days carried no model and 400 carried no effort, and a lead reported that it never read the allocation rule in `references/routing-matrix.md`. `SKILL.md` *Dispatch controls* now holds the short form of the fit table: one model and one ordinary effort for each row. `scripts/check_agent_contracts.py` `dispatch_controls_failures` fails when the short form and the fit table disagree. The fit table still governs.

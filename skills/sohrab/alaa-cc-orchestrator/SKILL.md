@@ -82,11 +82,12 @@ Use `high` for a long, strict or hard-to-verify lane on any row. Use `low` for a
 ### Dispatch discipline
 
 - **One agent per lane.** Dispatch no duplicate lane and no summary-check agent. A lane starts no subagent of its own. Independent verification and review inspect the actual artifact under separate authority. Keep inspection and the lead's own small correction inline.
+- **A workflow script is a set of dispatches.** Each `agent()` call in a Workflow script is a dispatch under this skill. Pass `model` and `effort` in its options from the table above, even where the runtime's workflow guidance says to omit them. `## Direct references` governs what the script reviews, verifies and repairs. An opt-in to workflows selects the mechanism. It does not change how much verification a change needs, unless the user asks for more.
 - **Run independent lanes together.** Start a dependent lane as soon as the lanes it consumes finish. Join lanes behind one barrier only when the next step consumes all of their outputs.
 - **Count live lanes before each spawn or follow-up.** At the runtime's concurrency limit, wait for a running lane to finish before you start the next one. After a limit error, free a slot; never resend the same call unchanged. `alaa-prompting-guide references/41-claude-code-runtime-features.md` owns the limit values.
 - **After an interruption or a usage-limit error,** record the lane's last evidence in the plan or compact dispatch, and reconcile the transcript, the checkpoint and the surviving files before resuming writes. Apply the stopped-writer recovery in `alaa-workflow references/workspace-and-integration.md`, then dispatch only the remaining scope.
 - **Keep dispatches lean.** Word each dispatch under /alaa-prompting-guide. Carry lane facts only: outcome, owned files, exclusions, acceptance, commands, dependencies, resolved skills and return contract. Do not restate the native role definition. State each instruction once. Name `/alaa-low-noise` in a dispatch only for a discovery-heavy or log-heavy lane, because every agent definition carries the output rule.
-- **Decide verification per change.** Read `references/verification-and-gates.md` for the verification decision, the floors and who fixes.
+- **Decide verification per change, and stop at each return.** This body holds none of those rules. `## Direct references` names the section to read before a plan, a dispatch, the acceptance of a return, and a fix or another review.
 - **Correct sparingly.** Correct a statement only when its error changes user code, conclusions or decisions. State the correction once, then continue.
 
 ## Pipeline
@@ -144,11 +145,17 @@ Stop and report partial or blocked status when any of these occurs:
 
 ## Direct references
 
+This body holds none of the rules in these files. Read the named section before the action in its row. When it cannot load, do not take the action: report that.
+
 | Before you | Read |
 |---|---|
 | Plan, allocate workers, reassess remaining work, choose review depth or decide a specialist trigger | `references/routing-matrix.md` |
-| Dispatch a role | `references/delegation-prompts.md` |
-| Start Stage A, decide a task's verification, consolidate checks, triage a finding or choose who fixes | `references/verification-and-gates.md` |
+| Write a plan with lanes, or choose the verification of a task | `references/verification-and-gates.md` `## The verification decision` and `## Floors` |
+| Write a dispatch for a role | `references/delegation-prompts.md` *Common dispatch envelope*, and the template it names for that role |
+| Accept a lane return, or continue after a lane reported a deviation, a blocker or an unrun check | `references/verification-and-gates.md` `## Stage B — Implementation` |
+| Dispatch a fix, a retest or another review after a finding or a failed check | `alaa-workflow references/review-mode.md` `## Finding triage`, then `references/verification-and-gates.md` `## After a fix` and `## Who fixes` |
+| Give a lane its own worktree or branch | `alaa-workflow references/workspace-and-integration.md` `## Lane branches and commits` |
+| Start a stage, consolidate checks or run final validation | that stage's section in `references/verification-and-gates.md` |
 | Realize a model and effort pair, or consult native Advisor | `references/model-effort-policy.md` |
 | Inspect role authority, output or grants, or route a returned report on its first-line `VERDICT` or `STATUS` | `references/agent-catalog.md` |
 | Set command priority, workers, timeout or resource limits | `references/resource-policy.md` |

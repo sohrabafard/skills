@@ -128,7 +128,7 @@ Stage A always runs first.
 2. A lane is ready only after its required dependency contracts are reconciled and the workflow plan shows no write-ownership or shared-resource conflict. Dispatch ready independent lanes together when observed host slots and declared resource ceilings permit. When capacity is not observable, record that and use the smallest supported batch until capacity is established. Invent no ceiling and assume no unlimited capacity.
 3. Reconcile at declared integration barriers before dependent work starts.
 4. Lanes run the subtask-end and task-end checks of the cadence table and no boundary affected/exhaustive check; reconcile every excluded command and unrun check before accepting the lane.
-5. Reconcile actual diffs and lane evidence, not summaries alone, to detect scope violations, accidental generated changes, contract mismatches and cross-lane breakage. Report a blocked lane as blocked, never as success. Record observed task progress and tested closure through `alaa-workflow references/task-tracking.md`.
+5. Reconcile actual diffs and lane evidence, not summaries alone, to detect scope violations, accidental generated changes, contract mismatches and cross-lane breakage. Report a blocked lane as blocked, never as success. A deviation from the dispatch or from an acceptance criterion that a lane reports is a finding: triage it under Findings before you accept the lane. Record observed task progress and tested closure through `alaa-workflow references/task-tracking.md`.
 
 ## Stage C — Verification
 
