@@ -36,7 +36,7 @@ After workflow tasks, dependencies and consolidation decisions are finalized, al
 
 - Before dispatch, record each role with its explicit model AND effort: evidence, planning, implementation, verification, review, specialist and documentation lanes.
 - Compare the ready tasks so that no task inherits the complexity of the whole goal.
-- Reopen allocation only for remaining work, at a material scope change or a fix follow-up. Reuse unchanged allocations and evidence.
+- Reopen allocation only for remaining work, at a material scope change, a fix follow-up or a lane return under step 4 of All-role task allocation. Reuse unchanged allocations and evidence.
 
 ## All-role task allocation
 
@@ -46,40 +46,38 @@ Role identities are compatibility identities: a role name, including a legacy ID
 
 1. **Ground the task.** Establish each task's scope, acceptance, settled and open decisions, and remaining reasoning need. Retrieve missing facts. Repair context, specification or tool failures before you attribute a shortfall to model capacity.
 2. **Set the priority.** Use the balanced default priority; priority is not an effort value. Deviate only on an explicit user priority or model choice, or a documented task-based reason.
-3. **Select the pair that fits.** A pair fits when it is neither stronger nor weaker than the lane needs. Record two facts for each lane. Then read the model AND effort pair for EVERY role from the fit table, the rule-writer included.
+3. **Select the pair that fits.** Record two facts for each lane. Then read the model AND effort pair for EVERY role from the fit table, the rule-writer included.
    - **Judgment left to the lane** selects the model: the decisions that the lane must still make after the plan and the dispatch settled the rest.
    - **Search and length** selects the effort: how far the lane must search, how long it runs, and whether a cheap check shows a wrong result.
 
-   | Judgment left to the lane | Model | Short and fully specified | Ordinary | Long, multi-file, strict or hard to verify | Hardest long-running work | Support in `90-model-selection.md` |
+   | Judgment left to the lane | Model | Short and fully specified | Ordinary | Long, multi-file, strict or hard to verify | Hardest long-running work, with a recorded measured gain | Support in `90-model-selection.md` |
    |---|---|---|---|---|---|---|
    | None: an exact transformation that meets the mechanical predicates of Implementation routing | Haiku 5.5 | `low` | `medium` | `high` | reclassify | *Real-time, bulk, cost-sensitive processing/subagents* |
-   | Bounded local decisions with a discriminating check: every bounded-suitability predicate below holds | Haiku 5.5 | `low` | `medium` | `high` | reclassify | *Efficiency-first prototypes, latency or straightforward bulk* |
-   | Grounded everyday decisions: known patterns, explicit contracts and acceptance. A lane with bounded decisions and no discriminating check belongs here | Sonnet 5.5 | `low` | `medium` | `high` | `xhigh` | *Everyday coding, analysis, content, vision, agent tools*; effort from the Sonnet prompting note under that table |
+   | Bounded local decisions with a discriminating check. This row applies only when every bounded-suitability predicate below is recorded for the lane; otherwise the next row applies | Haiku 5.5 | `low` | `medium` | `high` | reclassify | *Efficiency-first prototypes, latency or straightforward bulk* |
+   | Grounded everyday decisions: known patterns, explicit contracts and acceptance | Sonnet 5.5 | `low` | `medium` | `high` | `xhigh` | *Everyday coding, analysis, content, vision, agent tools*; effort from that row's *Effort evidence* cell |
    | Coupled or cross-boundary unresolved decisions | Opus 5.5 | reclassify | `medium` | `high` | `xhigh` | *Complex autonomous coding, broad refactors, systems, computer use*; effort from *Capability-first complex reasoning, accuracy or advanced autonomous coding* |
-   | Judgment-dense work that no check can catch, or hours of autonomous work | Opus 5.5, or the exceptional model under the last row | reclassify | reclassify | `high` | `xhigh` | *Capability-first complex reasoning, accuracy or advanced autonomous coding* |
+   | Judgment-dense work that no check can catch | Opus 5.5, or the exceptional model under the last row | reclassify | reclassify | `high` | `xhigh` | *Capability-first complex reasoning, accuracy or advanced autonomous coding* |
    | Exceptional model, on ANY role, only on the evidence below this table | Fable 5.2 | `low` | `medium` | `high` | `xhigh` | *Highest capability, agent sessions that run for hours, multistep deep research, finished documents*; *Demanding reasoning or long-horizon work that falls short on Opus at `xhigh` or `max`* |
 
-   - **Effort within a model.** Start at the *Ordinary* cell, which is the model's surface default in this runtime. Move one column right for a long, strict or unverifiable lane. Move one column left for a short, fully specified lane (a few steps, each named in the dispatch), or for one of many similar short lanes. A cheap discriminating check over an enumerated scope keeps a lane in *Ordinary*, whatever its file count. Use the last column or `max` only with a recorded measured gain.
-   - **Effort support.** Each model reference of `alaa-prompting-guide` holds that model's surface default and its guidance by level. Where the named row states no effort, the cell is local policy: one step from that default under `alaa-prompting-guide references/50-effort-and-thinking.md`.
-   - **Reclassify** marks two facts that contradict each other. Correct the judgment fact, then read the table again.
+   - **A lane that implements nothing.** An evidence or research lane whose question, sources and return form are given takes the *Grounded everyday decisions* row. A review lane takes the row of the hardest decision in the scope it reviews, never a later row because it is a second lens. The rule-writer takes the row of the text it rewrites.
+   - **Effort within a model.** Start at the *Ordinary* cell. Move one column right for a long, strict or unverifiable lane: more than one working session of the lane, more than about ten files that depend on each other with no cheap discriminating check over them, or a result that no check can catch. Move one column left for a short, fully specified lane (a few steps, each named in the dispatch), or for one of many similar short lanes. A cheap discriminating check over an enumerated scope keeps a lane in *Ordinary*, whatever its file count. `max` needs the same recorded measured gain as the last column.
+   - **Effort support.** *Ordinary* is each model's Claude Code default, stated in `alaa-prompting-guide references/36-haiku-5-5.md`, `31-sonnet-5-5.md`, `21-opus-5-5.md` and `43-fable-5-2.md`. Where the named row states no effort, the cell is local policy: one step from that default under `alaa-prompting-guide references/50-effort-and-thinking.md`.
+   - **Reclassify** marks two facts that contradict each other. Recheck both facts against the lane record, correct the one that the record does not support, then read the table again.
    - **Exceptional model.** It needs one of these, recorded before dispatch:
      - an exact official recommendation for the task and priority that the canonical owner supports, recorded with the remaining reasoning need and the rejected cheaper or decomposed alternatives;
      - applicable documented inadequacy of the high-effort workhorse, established after context, specification and tool correction and after decomposition was considered;
      - an explicit user selection.
 
-     A repairable defect or an imagined insufficiency is not model inadequacy. A model mention alone is not a selection instruction.
-   - **A pair that misses the lane in either direction is a defect.** Correct it before dispatch.
-     - *Too strong:* a model from a later row than the lane's own, or `high` effort or above, on a lane whose decisions are settled and whose check discriminates. It adds cost and long turns, and higher effort can widen a lane's edits without better acceptance. Role title, sensitivity, duration, whole-goal labels and a second independent lens alone never select a frontier or stronger model. Independence comes from context and authority, not model diversity.
-     - *Too weak:* a model of the first two rows on a lane that must settle coupled decisions; `low` or default effort on a long lane that no check can catch; a cheap pair chosen while a fit predicate fails. It skips a search or a check, or stops early, and the repair costs a second lane. Cost, volume and file count alone never select a weaker model or effort.
+     A repairable defect or an imagined insufficiency is not model inadequacy. A model mention alone is not a selection instruction. The official row *agent sessions that run for hours* supports the first arm only for a lane in the *Coupled or cross-boundary unresolved decisions* or *Judgment-dense work* row.
+   - **A pair that misses the lane in either direction is a defect.** Correct it before dispatch, unless a recorded reason selected it: an explicit user choice, the actual failed fit predicate or stronger task-specific evidence, such as a lane return under step 4. Titles, volume, priority labels and whole-goal complexity are not failed predicates. Apply no quotas.
+     - *Too strong:* a model from a later row than the lane's own, or an effort column right of the lane's own. Role title, sensitivity, duration, whole-goal labels and a second independent lens alone never select a frontier or stronger model. Independence comes from context and authority, not model diversity.
+     - *Too weak:* a model from an earlier row than the lane's own, or an effort column left of the lane's own; a cheap pair chosen while a fit predicate fails. Cost, volume and file count alone never select a weaker model or effort.
    - **Bounded suitability.** A task has bounded suitability only when it has all of these: an explicit outcome, a finite named scope, grounded local contracts/known invariants, a known pattern or causal path, settled cross-boundary decisions, bounded local discretion and a discriminating check. Non-bug semantic work needs no reproduced failure. The mechanical branch keeps its own predicates below.
-   - Justify model and effort separately: the model from the judgment fact, the effort from the search and length fact.
-   - When you depart from the table cell in either direction, record the actual failed fit predicate or stronger task-specific evidence. Titles, volume, priority labels and whole-goal complexity are not failed predicates. Apply no quotas.
+   - Justify model and effort separately. Within a model, an explicit user priority picks the effort only when the lane's search and length fact admits two adjacent columns: take the lower-cost or the higher-quality cell. This is local policy.
    - Select directly. Use no mandatory trial ladder, synthetic experiment or replay.
-4. **Use what returned lanes show.** At a reassessment point of Batch allocation or Reassignment, adjust the pair of the remaining work only:
-   - A lane returned light or incomplete, and its dispatch was specific: raise one step for the rest. For a search shortfall (a skipped search, an early stop or a skipped check), raise the effort one column. For a judgment shortfall (a wrong or missing decision), raise the model to the next one in the table. A raise to the exceptional model still needs its evidence.
-   - A lane finished trivially on a model above the first two rows, or at `high` effort or above: lower the pair one step for the remaining similar lanes, when the lower cell still fits them.
-
-   Completed work stays as it is, so this rule is feedback, not a trial ladder.
+4. **Use what returned lanes show.** When a lane returns in one of these two ways, adjust the pair of the remaining work only:
+   - A lane returned light or incomplete, and its dispatch was specific: raise one step for its remaining scope and for the remaining similar lanes. For a search shortfall (a skipped search, an early stop or a skipped check), raise the effort one column. For a judgment shortfall (a wrong or missing decision), raise to the next stronger model in the table; when the next row names the same model, raise the effort one column instead. Raise to the exceptional model only after a shortfall at `high` effort or above, with its evidence. A raise into the last column still needs its recorded measured gain.
+   - A lane finished trivially on a model above the first two rows, or at `high` effort or above: lower the pair one step for the remaining similar lanes, when every fit predicate of the lower cell is recorded for them.
 5. **Record the allocation** once, as one line for each lane, in the workflow plan, or in the dispatch's `<task_controls>` when no durable plan is admitted: the role, the selected model AND effort, and the fit-table row and column that selected them. Add the reason for a priority that departs from the default or for a departure from the table, and the evidence for an exceptional model. A bounded standalone delegation needs no full pipeline and no workflow artifact solely for model selection.
 6. **Realize the pair.** Before EVERY dispatch, follow `model-effort-policy.md`. Unknown serving identity is a reporting limit, not evidence of a control mismatch and not a reason for paid calibration.
 
@@ -89,7 +87,7 @@ For Ent or PostgreSQL work owned by /alaa-ent-go-orm-db, select `alaa-ent-specia
 
 ## Implementation routing
 
-Choose directly from the completed lane record; no mandatory sequence of attempts applies. Copy the admission predicates you verified for the selected route into the dispatch; the lane rechecks them before editing. A route selects the role identity only, from the two fit facts of All-role task allocation; the fit table selects the pair. Each route below names its fit-table row.
+Choose directly from the completed lane record; no mandatory sequence of attempts applies. Copy the admission predicates you verified for the selected route into the dispatch; the lane rechecks them before editing. A route selects the role identity only, from the two fit facts of All-role task allocation; the fit table selects the pair.
 
 Select the exact mechanical branch of `alaa-implementer-haiku`, fit row *None*, only when ALL of these are recorded before dispatch:
 
@@ -134,7 +132,7 @@ A stack-bound role is an implementation authority identity bound to one stack fa
 
 ### Reassignment
 
-Reassess remaining work only at the initial assignment, a material scope change or a fix follow-up. Before you replace a writer, apply the stopped-writer recovery in `alaa-workflow references/workspace-and-integration.md` and retire its assignment. Hand off the remaining scope, acceptance criteria and evidence. Never overlap writers or replay completed work.
+Reassess remaining work only at the initial assignment, a material scope change, a fix follow-up or a lane return under step 4 of All-role task allocation. Before you replace a writer, apply the stopped-writer recovery in `alaa-workflow references/workspace-and-integration.md` and retire its assignment. Hand off the remaining scope, acceptance criteria and evidence. Never overlap writers or replay completed work.
 
 ## Correctness review depth
 

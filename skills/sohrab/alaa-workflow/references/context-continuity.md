@@ -28,7 +28,7 @@ Touched: <uncommitted paths, or none>
 
 - The last block is the current one. The holder may replace the whole field with `--notes` to drop old blocks.
 - A leaf block states the position of that leaf only.
-- The root `notes` hold the same block for the engagement, plus one line per live leaf: `Lane: <leaf id> <actor>`. The `Lane:` lines are part of the root block, so only the lines of the last block are live. Name a pending review or commit in its `Next` line.
+- The root `notes` hold the same block for the engagement, with `Lead: <actor>` as its first line, plus one line per live leaf: `Lane: <leaf id> <actor>`. These lines are part of the root block, so only the lines of the last block are live. `references/task-tracking.md` `## Agent identity and ownership` states when the lead appends the root block. Name a pending review or commit in its `Next` line.
 - Append a block at each event in `## When to write` that moves the position. A dispatched write lane appends one before it returns or stops, because the lead and a later session read the lane's position from the leaf.
 
 In Markdown, the plan header owns the overall status, and the checkpoint and the JSON state project it. Every checkpoint names its exact `Plan`, status, last verified evidence address, blockers, next action, touched surfaces and update time. An execution checkpoint also names the current phase. A plan that has a checkpoint links to it and never copies the position. A `direct` profile keeps its cursor in its only plan file.
@@ -70,17 +70,16 @@ bd show <id>
 ```
 
 - Run `bd show` for the root and for the leaf. One call prints the description, design, acceptance, notes and comments.
-- The run part of the actor is the session identifier that the host exposes, so the same session derives the same actor after a compaction.
-- A new session has a new actor that holds nothing, so its list is empty. When the list is empty, or you cannot name your actor, run the list again without `--assignee`. Take the issue that the user, the dispatch or the handoff names, or find your leaf through the `Lane:` lines of the root.
+- A new session has a new actor that holds nothing, so its list is empty. When the list is empty, or you cannot name your actor, run the list again without `--assignee`. Take the issue that the user, the dispatch or the handoff names, or find your leaf through the `Lane:` lines of the root. After a compaction, recover your actor under `references/task-tracking.md` `## Agent identity and ownership` before any write.
 - When more than one issue can be yours and neither the user nor a `Lane:` line decides it, ask before any write.
-- Position is the last checkpoint block in `notes` (`## Status and position`). Knowledge is the tagged comments. Continue from the `Next` line.
+- Position is the last checkpoint block in `notes` (`## Status and position`). Knowledge is the tagged comments. Before any write, compare the `Touched` line with `git status` and the diff, and apply stopped-writer recovery, under `## The resume protocol`. Then continue from the `Next` line.
 - A new session that finds its own earlier claim under an earlier actor takes it over before any write, under `references/task-tracking.md` `## Agent identity and ownership`.
 
 Task resume reads the issue's notes, comments, acceptance and relations. Phase resume reads the native phase and root, or the Markdown plan and checkpoint, through the resume protocol.
 
 Before you resume Beads mutations or transfer a task to another agent or device, apply `references/task-tracking.md` `## Agent identity and ownership`.
 
-**Write knowledge as tagged comments.** For native or issue-only work, any actor that may write to Beads, not only the claim holder, appends each learned item with `bd comments add <id>` and starts it with one tag: `fact:` (with how it was verified), `assumption:` (with what would verify it), `ruled-out:` (with the reason), `read-first:` (a path), `env:` (an invocation that works or fails here), `trap:`, or `decision:`. The tags are the six handoff fields plus decisions. Put engagement-wide knowledge on the root and task-local knowledge on the leaf. Rewrite nothing: correct an earlier comment with a new one, so that writers never overwrite each other. Issue notes hold position only. A Markdown family keeps learned knowledge in the plan handoff.
+**Write knowledge as tagged comments.** For native or issue-only work, any actor that may write to Beads, not only the claim holder, appends each learned item with `bd comments add <id>`, starting with its field's tag from `## The handoff package` or with `decision:`. Put engagement-wide knowledge on the root and task-local knowledge on the leaf. Rewrite nothing: correct an earlier comment with a new one. Issue notes hold position only. A Markdown family keeps learned knowledge in the plan handoff.
 
 ## Cross-PC handoff record
 
@@ -131,7 +130,7 @@ Before the next execution task, load its phase bindings and task overrides throu
 After compaction you continue in the same conversation and may not notice the loss.
 
 - Repeat the resume protocol and read each applicable owner again. A summary keeps the shape and drops the specifics, so trust the reconciled owners over your recollection.
-- Under Beads, list your work with the same actor as before. Your claims are still yours, so run no transfer.
+- Under Beads, recover your actor under `references/task-tracking.md` `## Agent identity and ownership` and list your work with it. Your claims are still yours, so run no transfer.
 - Never show a model raw context-budget numbers, because they cause premature stopping. When a model needs reassurance on a long run, state plainly that ample context remains and that it must not stop, summarise or suggest a new session because of context limits.
 
 ## Delegation is a context boundary

@@ -14,7 +14,7 @@ Expected workspace: `/home/sohrab/project/alaa-task-hub/.beads`
 
 User, repository and orchestrator constraints govern. This binding overrides conflicting upstream Beads skill or hook guidance and grants no authority. Under Codex, read each `/name` as `$name`. A `##` name is a section of `/alaa-workflow` `references/task-tracking.md`, unless a file is named; if it cannot load, run no `bd` write.
 
-**Availability.** First run `bd where` and verify the expected workspace, then `bd ping`. If both pass, Beads is the task authority. Otherwise report the failure, run no other `bd` command, initialize no database and change no connection, and select the store under `## Select before tracking-dependent work`.
+**Availability.** First, and again after a workspace or connection change, run `bd where` and verify the expected workspace, then `bd ping`. If both pass, Beads is the task authority. Otherwise report the failure, run no other `bd` command, initialize no database and change no connection, and select the store under `## Select before tracking-dependent work`.
 
 **Resume.** Run these at session start, after a compaction, and whenever you cannot name your position:
 
@@ -23,16 +23,27 @@ bd list --status=in_progress --label "repo:skills" --assignee "<actor>"
 bd show <id>   # root, then leaf
 ```
 
-If the list is empty or your actor is unknown, omit `--assignee`; the user or the root's `Lane:` lines name your issue. Position is the last checkpoint block in `notes`; knowledge is tagged comments. No summary or `bd prime` replaces this read. Owner: `/alaa-workflow` `references/context-continuity.md` `## Task resume and phase resume`; another PC: its `## Cross-PC handoff record`.
+If the list is empty or your actor is unknown, omit `--assignee`; the user or the root's `Lane:` lines name your issue. Position is the last checkpoint block in `notes`; knowledge is tagged comments. No summary or `bd prime` replaces this read. Before you continue, check worktree state against the block's `Touched` line, scope, ownership and blockers. Owner: `/alaa-workflow` `references/context-continuity.md` `## Task resume and phase resume`; another PC: its `## Cross-PC handoff record`.
 
 **Work.**
 
-- Pass `--label "repo:skills"` to `ready`, `list` and `blocked`, and label each new issue. Verify an issue's label before you change it; never relabel one into scope. Other-project writes need the user's authorization.
+- Pass `--label "repo:skills"` to `ready`, `list` and `blocked`, and label each new issue. Verify an issue's label before you change it; never relabel one into scope. Other-project writes need the user's explicit authorization for that scope.
 - Search before you create. A follow-up takes `--deps "discovered-from:<origin-id>"` and authorizes no implementation.
-- Claim before you work, then read the issue back; a failed claim or guard mismatch gives no ownership. Write as `bd --sandbox <subcommand> --actor "<actor>"`. Guards and takeover: `## Agent identity and ownership`.
-- Append a checkpoint block when the position changes and before you stop.
+- Before any `bd` write, claim, resume or transfer, load `## Agent identity and ownership`: it states your distinct `<actor>`, the guards and the takeover.
+- Claim before you work, then read the issue back; a failed claim or guard mismatch gives no ownership.
+- Append a checkpoint block when the position changes and before you stop. Add each learned item as a tagged comment when you learn it (`/alaa-workflow` `references/context-continuity.md` `## Task resume and phase resume`).
 - Close only after acceptance, the required checks and `bd lint <id>` pass, never for a handoff or a compaction. Reason: `## Close reason`.
 - Commands: `## Beads capabilities in use`. Fields: `## Issue fields`. Evidence: `## Acceptance and evidence by level`. Failed write: `## Outage and uncertain writes`; never report unsaved state as saved.
+
+Every write takes `--sandbox` before the subcommand and `--actor "<actor>"` after it:
+
+```bash
+bd --sandbox create "<title>" --description "<goal, scope, output, plan link>" --acceptance "<criterion>" --labels "repo:skills" --actor "<actor>"
+bd --sandbox update <id> --claim --actor "<actor>"
+bd --sandbox update <id> --if-assignee "<actor>" --append-notes "<checkpoint block>" --actor "<actor>"
+bd --sandbox comments add <id> "<tag>: <item>" --actor "<actor>"
+bd --sandbox close <id> --reason "<verdict>; <tested version>; <evidence address>" --actor "<actor>"
+```
 
 **Authority.**
 

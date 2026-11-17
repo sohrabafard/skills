@@ -116,3 +116,64 @@ clause was reworded or deleted: no bound sentence changed. Paths are relative to
 | Push, tag, merge into another branch, history rewrite, Git or Dolt remote sync need explicit authorization; report a pending action | Kept |
 | `bd` commands on the expected workspace are this repository's own task tracking; the rule grants no authority | Kept |
 | Quick Reference command list | Removed (W1.6): the resume commands and the write form stay; each command is in its owner section |
+
+## Repair after the main review
+
+One row per rule changed by the repair of `review-main.md`. "F n" is finding n; "D n" is a lead decision of the repair dispatch. No checker clause was reworded or deleted: no bound sentence changed.
+
+| File and section | Old rule | New rule | Finding or decision |
+|---|---|---|---|
+| `references/task-tracking.md` `## Agent identity and ownership` | Use the host's session identifier as the run ID, so that the same session derives the same actor after a compaction | When the host exposes a session identifier, use it as the run ID; no claim that it survives a compaction | F 3, F 7, D12 |
+| same | The lead keeps one `Lane:` line per live leaf in the current root block | The lead appends a root block with one `Lane:` line per live leaf before it dispatches a write lane and again after each lane returns or merges | F 4, D8 |
+| same | An agent keeps its actor through compaction and resume; a replacement gets a new actor | Paragraph "Actor after a compaction": derive the actor from the session identifier when exposed, else read `Lead:` or `Lane:` from the last root block; never build a new actor for a session that holds claims; only a new session or a replacement gets a new actor and never writes with an actor read from Beads | F 3, F 7, F 40, D12 |
+| same | Never take another actor's issue except through the transfer or the takeover | The lead's release of a rejected leaf is the third exception | D13 |
+| same | `## Beads capabilities in use` rejects the force flags and limits `bd reclaim` | It rejects the force flags and `bd reclaim` | F 1, F 31, D5 |
+| same, Transfer | new | A stopped lane that never claimed its leaf gets no transfer: the replacement is dispatched with `claim` | F 4 |
+| same, Takeover | The guards refuse the transfer when the holder changed, and the transfer needs no force flag and no lease. After a compaction the session keeps its actor and runs no transfer | "The transfer needs no force flag." The guard fact stays in the capability row and the dated source line; the compaction rule is in the actor paragraph and in `context-continuity.md` `## After compaction, specifically` | F 40, F 41, D5 |
+| same, Takeover | new | After a root takeover, append a root block whose `Lead:` line names the new actor | D12 |
+| same, Reject | In `## Beads-native execution plan`: a rejected leaf stays unclosed and the repair is a follow-up with a `discovered-from` edge | The leaf stays unclosed; the lead records the rejection as a comment, then continues the same lane, or releases the leaf with a guarded `bd unclaim` when the lane has stopped; a follow-up is for new work only. Source and the untested non-holder release are stated | F 5, D13 |
+| `references/task-tracking.md` `## Beads-native execution plan` | Paragraph "A dispatched write lane owns its leaf ..." restated the claim, the lane checkpoint, the `Lane:` lines and the lead close | Removed: each rule stays in its owner (`## Agent identity and ownership`; `context-continuity.md` `## Status and position`) | F 38 |
+| same, root `notes` row | The block with one `Lane: <leaf id> <actor>` line per live leaf | The block with its `Lead:` and `Lane:` lines; the line format has one owner | D12, F 38 |
+| same | new | An agent claims the root or a leaf, never a phase milestone | D9 |
+| same | new | When the user changes an authority that a root field records, the lead changes the field through a guarded update, not only the notes | D9 |
+| `references/task-tracking.md` `## Beads capabilities in use` | The last row rejects every command and flag that no other row names | The intro sentence is removed; a command is used as its row states, with the flags that this skill and the binding block write for it; the last row rejects every other command and each flag it names | F 2, F 13, F 41 |
+| same, read-only row | `bd show <id>` prints five fields and `bd list --assignee` lists one actor's issues: the resume read. `bd show --long` shows the lease | Both commands are the resume read, by pointer to `context-continuity.md` `## Task resume and phase resume`; the lease sentence is removed | F 1, F 41, D5 |
+| same | Row `bd reclaim`: allowed inside stopped-writer recovery on an expired lease | Removed. `bd reclaim` is in the reject class "Takes or clears another actor's claim"; the guarded transfer replaces it | F 1, F 31, D5 |
+| `references/task-tracking.md` `## Outage and uncertain writes` | For a native plan or issue-only work, keep the pending list in the session or an authorized evidence-only artifact | Use an authorized evidence-only artifact; when none exists, ask the user for one and report the full list in each progress update | F 10 |
+| `references/context-continuity.md` `## Status and position` | Root block: the block plus one `Lane:` line per live leaf | The root block starts with `Lead: <actor>`; pointer to the owner of the append times | D12, D8 |
+| `references/context-continuity.md` `## Task resume and phase resume` | The run part of the actor is the session identifier, so the same session derives the same actor after a compaction | Removed; after a compaction the agent recovers its actor under `task-tracking.md` `## Agent identity and ownership` before any write | F 7, F 40, D12 |
+| same | Continue from the `Next` line | Before any write, compare `Touched` with `git status` and the diff and apply stopped-writer recovery under `## The resume protocol`; then continue from the `Next` line | F 6, F 15 |
+| same, knowledge comments | The paragraph listed the seven tags with their qualifiers | Each item starts with its field's tag from `## The handoff package` or with `decision:`; the reason clause of "Rewrite nothing" is kept | F 39 |
+| Root `AGENTS.md` block and `assets/beads-binding-template.md` | Availability test runs first | It runs first and again after a workspace or connection change | F 16, D6 |
+| same, Resume | new | Before you continue, check worktree state against the block's `Touched` line, scope, ownership and blockers | F 6, F 15, D6 |
+| same, Work | Other-project writes need the user's authorization | They need the user's explicit authorization for that scope | F 11, F 35, D6 |
+| same, Work | Write as `bd --sandbox <subcommand> --actor "<actor>"`. Guards and takeover: `## Agent identity and ownership` | Before any `bd` write, claim, resume or transfer, load `## Agent identity and ownership`; the block's existing sentence stops the write when a section cannot load | F 12, D6 |
+| same, Work | Append a checkpoint block when the position changes and before you stop | Also add each learned item as a tagged comment when you learn it, by pointer to `context-continuity.md` `## Task resume and phase resume` | F 8, F 14, D6 |
+| same | Write as `bd --sandbox <subcommand> --actor "<actor>"` | The same rule ("Every write takes `--sandbox` before the subcommand and `--actor` after it") heads five write forms: create, claim, checkpoint, comment, close | D6 |
+| `assets/beads-binding-template.md` allow-list note | `bd unclaim` and `bd reclaim` are rare, so a prompt is a useful check | Only `bd unclaim` is named | F 1, D5 |
+
+## Second repair round
+
+One row per rule changed after the verification of the first repair. A row here supersedes the row of the table above that names the same rule. No checker clause was reworded or deleted: no bound sentence changed.
+
+| File and section | Old rule | New rule | Finding or decision |
+|---|---|---|---|
+| `references/task-tracking.md` `## Agent identity and ownership`, actor paragraph | Derive the actor from the session identifier when the host exposes one; otherwise read it from the last root block | One condition: when the IDs that the host still exposes cannot rebuild the whole actor, read it from the last root block (`Lead:` or `Lane:`). The last two sentences are merged, so that "never writes with an actor that it read from Beads" names only the new session or the replacement | F 3, D12 |
+| same, Reject | When the lane has stopped, the lead releases the leaf with a guarded `bd unclaim` | When the lane has stopped, the lead moves the leaf to the replacement lane under Transfer. Only when no replacement follows, the lead releases it with the guarded `bd unclaim` and reads it back. A refused release blocks dependent work and is never forced | D13 narrowed by D5 |
+| `references/task-tracking.md` `## Beads capabilities in use`, guard row | A guard mismatch exits 13 and writes nothing | A guard mismatch writes nothing and exits 13 on `bd update`, 1 on `bd unclaim` (installed `bd unclaim --help`, bd 1.3.2, read 2026-11-17) | D13 |
+| same, last row | Class "Takes or clears another actor's claim" | Class "Takes or clears another actor's claim without its guard"; the command list is unchanged | D5, D13 |
+| `references/context-continuity.md` `## Task resume and phase resume`, knowledge comments | "Rewrite nothing: correct an earlier comment with a new one, so that writers never overwrite each other" | The reason clause is removed | F 39 |
+| `references/context-continuity.md` `## After compaction, specifically` | Under Beads, list your work with the same actor as before | Recover your actor under `task-tracking.md` `## Agent identity and ownership` and list your work with it | D12 |
+| `references/workspace-and-integration.md` `## Shared-file ownership and stopped-writer recovery` | After a compaction, recover the same actor (no route to the rule) | The same sentence, plus a pointer to `task-tracking.md` `## Agent identity and ownership` for the actor recovery. The bound clause `recover the same actor and reconcile its active process before continuing` is unchanged | F 7, D12 |
+| Root `AGENTS.md` block and `assets/beads-binding-template.md`, create form | `--description "<goal, scope, output>"` | `--description "<goal, scope, output, plan link>"` | D6 |
+
+## Lead edits after the second verification
+
+| File | Old rule | New rule | Reason | Checker clause |
+|---|---|---|---|---|
+| references/task-tracking.md | The first root checkpoint block came before the first write-lane dispatch | The lead appends it right after it claims the root; the block holds the `Lead:` line and the `Lane:` lines | Verifier: a lead that compacts before any dispatch had no block to read its actor from | none |
+| references/task-tracking.md | new | Work with no root reads its actor as the assignee of the in-progress issue that the user or the handoff gave the session | Verifier: single-issue work has no root block | none |
+| references/task-tracking.md | The heartbeat reason said that only `bd reclaim` reads the lease | Clause removed | sources.md Q4 names a second caller, and decision D5 removes lease pointers | none |
+| references/task-tracking.md | Release of a rejected leaf had no proof step | The lead applies stopped-writer recovery first; the source line states that the help text expects `--force` for a non-holder | Verifier, decision D13 | none |
+| references/task-tracking.md | "because a compaction erases the session" | "because a compaction can drop it from the session" | Contradicted context-continuity.md | none |
+| references/task-tracking.md | "The transfer needs no force flag." | removed | Finding 41: the guard row and the command already say it | none |
