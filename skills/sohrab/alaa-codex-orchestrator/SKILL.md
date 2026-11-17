@@ -88,7 +88,7 @@ Orchestrator mode keeps Stages A, B and E. Stages C and D run as the verificatio
 
 ## Final report
 
-Report outcome; independent lifecycle verdicts (`IMPLEMENTED`, `MERGE_CANDIDATE`, `RELEASE_CANDIDATE`, `PUBLISHED`) under `alaa-workflow references/workspace-and-integration.md`; lane changes and files; commands and results, marked run or cited, with tier; review and specialist verdicts and dispositions; each touched document's outcome and grade; curation as persisted, deferred or empty; risks, skipped checks, follow-ups. List each dispatched agent once with its configured and requested pair, separately observed identity or unknown, observable mismatches, and the exceptional-model admission for each escalated dispatch.
+Report outcome; independent lifecycle verdicts (`IMPLEMENTED`, `MERGE_CANDIDATE`, `RELEASE_CANDIDATE`, `PUBLISHED`) under `alaa-workflow references/workspace-and-integration.md`; lane changes and files; commands and results, marked run or cited, with tier; review and specialist verdicts and dispositions; each touched document's outcome and grade; curation as persisted, deferred or empty; risks, skipped checks, follow-ups. List each dispatched agent once with the model and effort you dispatched, taken from your allocation record, never from the lane's report; add each lane that blocked on its task controls, and the exceptional-model admission for each escalated dispatch.
 
 Write for a reader who saw no tool call and no lane report: outcome first, and a definition for each lane label or abbreviation the run invented.
 

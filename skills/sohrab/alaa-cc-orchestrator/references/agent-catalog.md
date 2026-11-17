@@ -10,19 +10,16 @@
 | `alaa-explorer` | read-only | Repository ownership and execution-path mapping | External research or design decisions |
 | `alaa-researcher` | read-only | Prior-context recall through `/alaa-memory-os`; official docs, versions, standards, third-party contracts | Memory writes, implementation, or final decision-making |
 | `alaa-test-strategist` | read-only | High-value test matrix before subtle work | Writing tests or running the final gate |
-| `alaa-planner` | read-only | Advisory plan with clear contracts and constraints | Editing or owning the durable plan |
-| `alaa-planner-high` | read-only | Advisory plan resolving interacting uncertainties | Editing or owning the durable plan |
+| `alaa-planner` | read-only | Advisory plan draft | Editing or owning the durable plan |
 
 ## Implementation and verification
 
-`routing-matrix.md` *Implementation routing* states the workload that admits each implementation role. No implementation role reviews its own work or runs without a recorded admission.
+`routing-matrix.md` *Implementation routing* selects the implementation role from the owned files. No implementation role reviews its own work or runs without a recorded admission.
 
 | Agent | Access | Use | Never use for |
 |---|---|---|---|
-| `alaa-implementer`, `alaa-implementer-sonnet-high`, `alaa-implementer-opus`, `alaa-implementer-opus-high` | workspace-write | Workhorse routes | Self-review |
-| `alaa-implementer-fable` | workspace-write | Compatibility implementation identity; an exceptional pair needs the all-role admission | Self-review |
-| `alaa-implementer-haiku`, `alaa-implementer-haiku-high` | workspace-write | Mechanical and bounded semantic branches | Semantic discretion on the mechanical branch; ambiguous scope, interacting design or wider authority on either branch |
-| `alaa-implementer-laravel`, `alaa-implementer-frontend`, `alaa-implementer-go`, `alaa-implementer-infra` | workspace-write | Stack-bound roles | Another stack's files, the mechanical or bounded branches, self-review; `alaa-implementer-infra` never applies, deploys or releases |
+| `alaa-implementer-laravel`, `alaa-implementer-frontend`, `alaa-implementer-go`, `alaa-implementer-haproxy`, `alaa-implementer-delivery` | workspace-write | Stack-bound roles, for every fit row | Another stack's files beyond listed incidental files, self-review; applying, deploying or releasing |
+| `alaa-implementer` | workspace-write | A stack with no bound role, or an inseparable two-family lane; the dispatch names the owning skills | A lane that one stack-bound role covers, self-review; applying, deploying or releasing |
 | `alaa-verifier` | artifacts only | Exact commands and reproducible evidence | Fixing, debugging, or changing commands |
 | `alaa-failure-analyst` | read-only | Diagnose ambiguous, flaky, environment, or cross-lane failures | Applying fixes |
 
@@ -80,12 +77,12 @@ Each managed agent file fixes which code-intelligence servers the role may reach
 | Agent | Structural and semantic | Framework context |
 |---|---|---|
 | `alaa-explorer` | CodeGraph | docs, routing |
-| `alaa-spec-analyst`, `alaa-planner`, `alaa-planner-high` | CodeGraph | docs |
+| `alaa-spec-analyst`, `alaa-planner` | CodeGraph | docs |
 | `alaa-architecture-critic`, `alaa-test-strategist`, `alaa-migration-guardian`, `alaa-reviewer`, `alaa-adversarial-reviewer`, `alaa-security-reviewer` | CodeGraph | docs, schema |
 | `alaa-api-contract-reviewer` | CodeGraph | docs, routing, schema |
 | `alaa-observability-reviewer`, `alaa-failure-analyst` | CodeGraph | docs, app-errors, browser |
 | `alaa-performance-profiler` | CodeGraph | docs, schema, app-errors |
-| `alaa-implementer` and every other `alaa-implementer-*` profile | full, minus Serena's shell tool and the Hindsight server | full |
+| Every `alaa-implementer*` role | full, minus Serena's shell tool and the Hindsight server | full |
 | `alaa-researcher`, `alaa-dependency-auditor`, `alaa-release-guardian` | none | docs |
 | `alaa-accessibility-reviewer`, `alaa-documenter` | none | docs, routing |
 | `alaa-browser-qa` | none | docs, routing, browser, app-errors |
@@ -106,7 +103,7 @@ Before dispatch, verify the role can reach its bindings under `alaa-workflow ref
 Write every `skills:` entry as the plain registered skill name. Claude Code resolves the entry literally and preloads nothing for `/name` (headless probe, Claude Code 2.1.307, 2026-11-15). The whole body of each listed skill loads at the start of every run of the role, so list only what the role needs on every run: the routing contract, and the doctrine its verdict is measured against. Name any other skill in the role body; the role loads it through the `Skill` tool.
 
 - `alaa-verifier` and `alaa-instruction-reviewer` hold no `Skill` tool, so each lists every installed skill that its body names.
-- Every managed implementation role lists the testing doctrine. A stack-bound role also names the owning skills of its stack in its instructions and loads them before the first edit, because a lane often skips a skill that the dispatch only names.
+- Every managed implementation role lists the testing doctrine. A stack-bound role also lists the owning skills of its stack, and names in its instructions, as a call with its condition, each skill that only some lanes need, because a lane often skips a skill that the dispatch only names. `alaa-implementer` lists no stack skill: its dispatch names them.
 - Every other managed role keeps `Skill`. Withholding it narrows nothing on a role that holds `Bash`, `Read`, `Write` and `Edit`, and it makes the dispatch's `skills` field unsatisfiable.
 - An inheriting role denies exactly three entries: Serena's shell tool, which bypasses the runtime's approval rules; the Hindsight server (`mcp__hindsight`), which would give the role write tools; and `Agent`, because nesting is on by default and a nested spawn escapes the lead's task allocation. Every allowlisted role omits `Agent` for the same reason.
 - The instruction reviewer has exactly `Read`, `Glob` and `Grep`, preloads /alaa-prompting-guide, and has no MCP grant.

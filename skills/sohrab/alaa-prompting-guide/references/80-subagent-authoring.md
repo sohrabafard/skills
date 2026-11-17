@@ -13,7 +13,7 @@ To choose between an inline instruction, a skill, a script and a subagent, read 
 - **Fields** (sub-agents page, 14 November 2026; the list was confirmed again 16 November 2026). Required: `name` and `description`. Optional: `tools`, `disallowedTools`, `model`, `permissionMode`, `maxTurns`, `autoCompactWindow`, `skills`, `mcpServers`, `hooks`, `memory`, `background`, `omitClaudeMd`, `effort`, `isolation`, `color`, `initialPrompt` and `experimental`. An unrecognized field is ignored without an error. Several fields are version-gated; check them against the running version.
 - **Body.** The markdown below the frontmatter is the subagent's whole system prompt. A subagent receives that prompt plus basic environment details, not the full Claude Code system prompt and not the parent's conversation history.
 
-`alaa-reviewer` is the worked example. It declares `tools: Read, Glob, Grep, Bash` and a `skills:` list that preloads the references it must apply; `Write` and `Edit` are absent. Its description states the role and ends with the boundary: "Never edits or fixes." Its model-neutral metadata are checked against `assets/claude-model-policy.json`.
+`alaa-reviewer` is the worked example. It declares `tools: Read, Glob, Grep, Bash` and a `skills:` list that preloads the doctrine every review applies; `Write` and `Edit` are absent. Its description states the role and ends with the boundary: "Never edits or fixes." Its model-neutral metadata are checked against `assets/claude-model-policy.json`.
 
 ### Codex: standalone TOML
 
@@ -54,10 +54,9 @@ Keep contracts non-overlapping across the roster: each definition disclaims the 
 
 ## Configuration and observed identity
 
-- Record the requested role, model and effort separately from the observed runtime model and effort.
-- When the host exposes no observed value, report `unknown`. Never repeat a pin as proof of identity. Flag only an observable mismatch.
-- Put metadata after a required first-line verdict, so a report never demands two different first lines.
-- A replacement-only contract, such as `alaa-rule-writer`, emits no metadata; its caller records the requested settings in the roster.
+- The caller records the requested role, model and effort in its roster, from its own dispatch. A definition asks the agent for no model or effort line: the agent can rarely observe either, and the caller already holds both.
+- An agent reports a control only when runtime evidence shows that the requested pair cannot be realized. It then blocks its lane, after the required first-line token.
+- When the host exposes no observed value, the serving identity is `unknown`. Never repeat a pin as proof of identity.
 - Model resolution differs by runtime: read `references/11-codex-runtime-features.md` for Codex pin precedence and `references/41-claude-code-runtime-features.md` for Claude. Neither precedence proves which model served a response.
 
 ## Task model and effort

@@ -1,6 +1,6 @@
 {
   "schema_version": 2,
-  "policy_version": "2.1.0",
+  "policy_version": "2.2.0",
   "surface": "codex",
   "verified_on": "2026-11-03",
   "sources": [
@@ -184,18 +184,18 @@
         "skills/sohrab/alaa-codex-orchestrator/agents/alaa-implementer-go.toml"
       ]
     },
-    "alaa-implementer-infra": {
+    "alaa-implementer-haproxy": {
       "kind": "agent",
       "selection_mode": "task-selected",
       "artifacts": [
-        "skills/sohrab/alaa-codex-orchestrator/agents/alaa-implementer-infra.toml"
+        "skills/sohrab/alaa-codex-orchestrator/agents/alaa-implementer-haproxy.toml"
       ]
     },
-    "alaa-implementer-astra": {
+    "alaa-implementer-delivery": {
       "kind": "agent",
       "selection_mode": "task-selected",
       "artifacts": [
-        "skills/sohrab/alaa-codex-orchestrator/agents/alaa-implementer-astra.toml"
+        "skills/sohrab/alaa-codex-orchestrator/agents/alaa-implementer-delivery.toml"
       ]
     },
     "alaa-verifier": {
@@ -217,13 +217,6 @@
       "selection_mode": "task-selected",
       "artifacts": [
         "skills/sohrab/alaa-codex-orchestrator/agents/alaa-reviewer.toml"
-      ]
-    },
-    "alaa-reviewer-deep": {
-      "kind": "agent",
-      "selection_mode": "task-selected",
-      "artifacts": [
-        "skills/sohrab/alaa-codex-orchestrator/agents/alaa-reviewer-deep.toml"
       ]
     },
     "alaa-adversarial-reviewer": {
@@ -324,76 +317,13 @@
         "skills/sohrab/alaa-codex-orchestrator/agents/alaa-instruction-reviewer.toml"
       ]
     },
-    "alaa-implementer-high": {
-      "kind": "agent",
-      "selection_mode": "task-selected",
-      "artifacts": [
-        "skills/sohrab/alaa-codex-orchestrator/agents/alaa-implementer-high.toml"
-      ]
-    },
     "alaa-planner": {
       "kind": "agent",
       "selection_mode": "task-selected",
       "artifacts": [
         "skills/sohrab/alaa-codex-orchestrator/agents/alaa-planner.toml"
       ]
-    },
-    "alaa-planner-high": {
-      "kind": "agent",
-      "selection_mode": "task-selected",
-      "artifacts": [
-        "skills/sohrab/alaa-codex-orchestrator/agents/alaa-planner-high.toml"
-      ]
-    },
-    "alaa-implementer-luna": {
-      "kind": "agent",
-      "selection_mode": "task-selected",
-      "artifacts": [
-        "skills/sohrab/alaa-codex-orchestrator/agents/alaa-implementer-luna.toml"
-      ]
-    },
-    "alaa-implementer-low": {
-      "kind": "agent",
-      "selection_mode": "task-selected",
-      "artifacts": [
-        "skills/sohrab/alaa-codex-orchestrator/agents/alaa-implementer-low.toml"
-      ]
-    },
-    "alaa-implementer-luna-high": {
-      "kind": "agent",
-      "selection_mode": "task-selected",
-      "artifacts": [
-        "skills/sohrab/alaa-codex-orchestrator/agents/alaa-implementer-luna-high.toml"
-      ]
-    },
-    "alaa-implementer-luna-low": {
-      "kind": "agent",
-      "selection_mode": "task-selected",
-      "artifacts": [
-        "skills/sohrab/alaa-codex-orchestrator/agents/alaa-implementer-luna-low.toml"
-      ]
-    },
-    "alaa-implementer-xhigh": {
-      "kind": "agent",
-      "selection_mode": "task-selected",
-      "artifacts": [
-        "skills/sohrab/alaa-codex-orchestrator/agents/alaa-implementer-xhigh.toml"
-      ]
-    },
-    "alaa-implementer-astra-medium": {
-      "kind": "agent",
-      "selection_mode": "task-selected",
-      "artifacts": [
-        "skills/sohrab/alaa-codex-orchestrator/agents/alaa-implementer-astra-medium.toml"
-      ]
-    },
-    "alaa-implementer-astra-xhigh": {
-      "kind": "agent",
-      "selection_mode": "task-selected",
-      "artifacts": [
-        "skills/sohrab/alaa-codex-orchestrator/agents/alaa-implementer-astra-xhigh.toml"
-      ]
     }
   },
-  "notes": "Managed profiles register model-neutral authority roles and artifact identities, never task model/effort defaults. Both task controls must be chosen explicitly by the runtime orchestrator and realized on a verified compatible surface. Main controls remain externally configured. Existing model/effort-named role IDs are compatibility labels only. No runtime activation, account access or comparative calibration is established. Historical capability entries cannot authorize active selection; active Claude selection excludes Mythos. Ordinary selection excludes gpt-6-sol; its effort snapshot remains history. Record explicit user legacy requests separately; ordinary eligibility stays disabled."
+  "notes": "Managed profiles register model-neutral authority roles and artifact identities, never task model/effort defaults. Both task controls must be chosen explicitly by the runtime orchestrator and realized on a verified compatible surface. Main controls remain externally configured. A role ID selects no model or effort. No runtime activation, account access or comparative calibration is established. Historical capability entries cannot authorize active selection; active Claude selection excludes Mythos. Ordinary selection excludes gpt-6-sol; its effort snapshot remains history. Record explicit user legacy requests separately; ordinary eligibility stays disabled."
 }

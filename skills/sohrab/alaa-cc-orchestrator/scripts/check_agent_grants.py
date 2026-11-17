@@ -118,13 +118,12 @@ EXPECTED_MCP = {
     "alaa-documenter": BOOST_DOCS | BOOST_ROUTING,
     "alaa-explorer": CODEGRAPH | BOOST_DOCS | BOOST_ROUTING | HINDSIGHT_READ,
     "alaa-failure-analyst": CODEGRAPH | BOOST_DOCS | BOOST_ERRORS | BOOST_BROWSER,
-    "alaa-implementer-opus": None,
-    "alaa-implementer-fable": None,
     "alaa-implementer": None,
     "alaa-implementer-laravel": None,
     "alaa-implementer-frontend": None,
     "alaa-implementer-go": None,
-    "alaa-implementer-infra": None,
+    "alaa-implementer-haproxy": None,
+    "alaa-implementer-delivery": None,
     "alaa-migration-guardian": CODEGRAPH | BOOST_DOCS | BOOST_SCHEMA,
     "alaa-observability-reviewer": CODEGRAPH | BOOST_DOCS | BOOST_ERRORS | BOOST_BROWSER,
     "alaa-performance-profiler": CODEGRAPH | BOOST_DOCS | BOOST_SCHEMA | BOOST_ERRORS,
@@ -141,9 +140,7 @@ EXPECTED_MCP = {
 # Preserve the authored native grants as well as MCP scope. An extra Write,
 # Agent, or unrestricted tool is authority drift even when MCP grants match.
 READ_NATIVE = {"Read", "Glob", "Grep", "Bash", "Skill"}
-EXPECTED_MCP.update({"alaa-implementer-haiku": None, "alaa-implementer-haiku-high": None, "alaa-implementer-sonnet-high": None, "alaa-implementer-opus-high": None,
-                     "alaa-planner": EXPECTED_MCP["alaa-spec-analyst"],
-                     "alaa-planner-high": EXPECTED_MCP["alaa-spec-analyst"]})
+EXPECTED_MCP["alaa-planner"] = EXPECTED_MCP["alaa-spec-analyst"]
 # Every role that holds CodeGraph also holds the language-service tool for exact semantics.
 EXPECTED_NATIVE = {name: READ_NATIVE | ({LSP_TOOL} if mcp and CODEGRAPH <= mcp else set())
                    for name, mcp in EXPECTED_MCP.items()}

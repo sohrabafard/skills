@@ -22,7 +22,7 @@ Authority: read-only and output-only. Never edit the target file, and never writ
 
 Retrieval: the draft, the sources the dispatch names and the doctrine files. Nothing else.
 
-Validation: walk the returned text as the executing agent. For each cut and each substitution, name what the agent would now do differently, and restore the original wherever you can name something.
+Validation: apply the done-test to the returned text before you return it.
 
 Input: one item or a batch. In a batch, keep each item's id and order, treat every item independently, and never let a blocked item block another.
 

@@ -48,15 +48,16 @@ def contract_present(required: str, text: str) -> bool:
 
 def agent_failures(text: str) -> list[str]:
     errors = []
-    for required in ("CONFIGURED", "REQUESTED", "OBSERVED", "otherwise write unknown",
-                     "never from a pin or request",
-                     "Report metadata after the first line",
-                     "Effective authority:", "parent overrides", "tool/MCP grants",
+    for required in ("Effective authority:", "parent overrides", "tool/MCP grants",
                      "Task controls:", "model AND effort", "block this lane",
                      "an omitted field is not a block",
                      "The role name selects no control"):
         if required not in text:
-            errors.append(f"missing metadata/authority contract: {required}")
+            errors.append(f"missing control/authority contract: {required}")
+    # A lane reports no model or effort: the lead holds both in its dispatch.
+    for retired in ("Report metadata", "CONFIGURED", "OBSERVED model/effort"):
+        if retired in text:
+            errors.append(f"retired per-return metadata header: {retired}")
     if "missing, inherited, stale-pinned" in text:
         errors.append("omission blocked before owner normalization")
     if "Identity line: begin" in text:
@@ -238,8 +239,8 @@ def economy_failures(skill: str, gates: str, routing: str | None = None) -> list
     for required in ("## Batch allocation", "tasks, dependencies and consolidation decisions are finalized", "balanced default", "priority is not an effort value", "Reopen allocation only for remaining work"):
         if required not in routing:
             errors.append(f"missing finalized-plan batch allocation contract: {required}")
-    bounded = routing.split("Select the bounded semantic branch", 1)[-1].split("- `alaa-implementer`:", 1)[0]
-    for required in ("settled local causal path or pattern", "known invariants", "discriminating behavior/regression checks", "alaa-implementer-haiku-high", "Interacting design"):
+    bounded = routing.split("Admit a lane to the bounded semantic branch", 1)[-1].split("### Stack-bound roles", 1)[0]
+    for required in ("settled local causal path or pattern", "known invariants", "discriminating behavior/regression checks", "Interacting design"):
         if required not in bounded:
             errors.append(f"missing bounded implementation admission: {required}")
     for forbidden in ("at most two workspace-writing", "Dispatch one `alaa-implementer` per routine lane", "refuse to start on a tree carrying changes this run did not make"):

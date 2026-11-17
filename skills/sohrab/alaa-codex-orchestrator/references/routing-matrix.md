@@ -24,7 +24,7 @@ Name `/alaa-testing-strategy` in the test-strategist dispatch. Read it yourself 
 
 Before planning, separate missing facts from coupled design judgment, and retrieve or clarify the missing facts.
 
-1. Use `alaa-planner` when scope, contracts and constraints are clear. Use `alaa-planner-high` when forming the plan requires resolving interacting uncertainties.
+1. Dispatch `alaa-planner` for an advisory plan draft. Interacting uncertainties that the plan must resolve select a later fit row, never another role.
 2. Select the planning model AND effort for the planning task through All-role task allocation below.
 3. The lead may plan inline only when its effective controls match that recorded pair. Otherwise dispatch a compatible registered planner.
 4. A planner draft is advisory. The lead ratifies it and persists the durable plan.
@@ -42,7 +42,7 @@ After workflow tasks, dependencies and consolidation decisions are finalized, al
 
 This orchestrator decides the task complexity, priority, model and effort for EVERY role. Before allocation, read `alaa-prompting-guide references/90-model-selection.md` and its `references/50-effort-and-thinking.md`; they inform the decision and assign no default pair to a role.
 
-Role identities are compatibility identities: a role name, including a legacy ID named for a model or effort, selects neither control. Every pair preserves the role's tools, skills, verdicts and independent gates.
+Role identities are compatibility identities: a role name selects neither control. Every pair preserves the role's tools, skills, verdicts and independent gates.
 
 1. **Ground the task.** Establish each task's scope, acceptance, settled and open decisions, and remaining reasoning need. Retrieve missing facts. Repair context, specification or tool failures before you attribute a shortfall to model capacity.
 2. **Apply eligibility, then set the priority.** Apply canonical eligibility: exclude gpt-6-sol ordinarily even if available. Current-family selection never upgrades a suitable Luna pair to Sol. When current Sol is missing, require an exact eligible realization or block the affected lane; never fall back to old Sol. Record an explicit user legacy exception separately; ordinary eligibility stays disabled. Use the balanced default priority; priority is not an effort value. Deviate only on an explicit user priority or model choice, or a documented task-based reason.
@@ -91,9 +91,9 @@ For Ent or PostgreSQL work owned by /alaa-ent-go-orm-db, select `alaa-ent-specia
 
 ## Implementation routing
 
-Choose directly from the completed lane record; no mandatory sequence of attempts applies. Copy the admission predicates you verified for the selected route into the dispatch; the lane rechecks them before editing. A route selects the role identity only, from the two fit facts of All-role task allocation; the fit table selects the pair.
+Choose directly from the completed lane record; no mandatory sequence of attempts applies. The owned files select the role identity through Stack-bound roles below. The two fit facts of All-role task allocation select the pair and no role identity. Copy the admission predicates you verified into the dispatch; the lane rechecks them before editing.
 
-Select the mechanical branch of `alaa-implementer-luna`, fit row *None*, only when ALL of these are recorded before dispatch:
+Admit a lane to the mechanical branch, fit row *None*, only when ALL of these are recorded before dispatch:
 
 - the exact transformation and its exclusions;
 - a finite, explicitly enumerated scope of existing files;
@@ -104,36 +104,34 @@ Select the mechanical branch of `alaa-implementer-luna`, fit row *None*, only wh
 
 File count alone neither qualifies nor disqualifies a task. Ambiguous matches, undefined scope or design changes fail admission.
 
-Select `alaa-implementer-low`, fit row *Bounded local decisions*, for bounded semantic work only when every All-role bounded-suitability predicate and cheap discriminating checks are recorded. Non-bug local decisions qualify. Allocate its pair separately; a suitable Luna pair is a candidate. Unresolved cross-boundary design, consistency or trust fails admission.
+Admit a lane to the bounded semantic branch, fit row *Bounded local decisions*, only when every All-role bounded-suitability predicate and cheap discriminating checks are recorded. Non-bug local decisions qualify. Allocate its pair separately; a suitable Luna pair is a candidate. Unresolved cross-boundary design, consistency or trust fails admission.
 
-Select `alaa-implementer-luna-low`, the bug branch of `alaa-implementer-luna`, or `alaa-implementer-luna-high`, in the same fit row, for a short, an ordinary or a long, strict or hard-to-verify search and length fact. Select one only when the plan records a reproduced failure, a traced local causal path, explicit expected behavior, bounded scope and semantic discretion, and a discriminating regression oracle. Unresolved design of cross-boundary contracts, trust, shared state or consistency fails admission.
+Admit a lane to the bug branch, in the same fit row, only when the plan records a reproduced failure, a traced local causal path, explicit expected behavior, bounded scope and semantic discretion, and a discriminating regression oracle. Its search and length fact selects the effort column. Unresolved design of cross-boundary contracts, trust, shared state or consistency fails admission.
 
-These routes are uncalibrated workload admissions. Priority or a model preference never waives fit or independent gates. If fit ceases, stop dependent work, preserve valid edits and return the remaining scope for reclassification. Require no lightweight trial and no replay of completed work. No route expands command authority.
+These branches are uncalibrated workload admissions. Priority or a model preference never waives fit or independent gates. If fit ceases, stop dependent work, preserve valid edits and return the remaining scope for reclassification. Require no lightweight trial and no replay of completed work. No branch expands command authority.
 
-- `alaa-implementer`: fit row *Grounded everyday decisions*. Normal engineering with grounded scope and acceptance criteria.
-- `alaa-implementer-high`: fit row *Coupled or cross-boundary unresolved decisions*. Substantial interacting engineering reasoning.
-- `alaa-implementer-xhigh`: the same row or *Judgment-dense work*, with a long, strict or hard-to-verify search fact. Sustained coupled technical reasoning.
-
-The legacy exceptional IDs `alaa-implementer-astra`, `alaa-implementer-astra-medium` and `alaa-implementer-astra-xhigh` remain implementation authority identities. Apply the exceptional model admission above only when the selected task pair is exceptional, and record its evidence before dispatch. Return missing facts, unavailable tools and unresolved product intent to their owners. An unresolved decision alone never establishes model inadequacy.
+Apply the exceptional model admission above only when the selected task pair is exceptional, and record its evidence before dispatch. Return missing facts, unavailable tools and unresolved product intent to their owners. An unresolved decision alone never establishes model inadequacy.
 
 ### Stack-bound roles
 
-A stack-bound role is an implementation authority identity bound to one stack family. It carries the owning skills of that stack and changes no tool, verdict or independent gate. Select it when both of these hold:
-
-- Every owned file belongs to one stack family, apart from incidental files of another family that the lane record lists by path. Decide the family from the repository manifests and the owned file types, never from the repository name.
-- The lane is not admitted to the mechanical branch or either bounded route above.
+A stack-bound role is an implementation authority identity bound to one stack family. It carries the owning skills of that stack and changes no tool, verdict or independent gate. Decide the family from the repository manifests and the owned file types, never from the repository name.
 
 | Owned files | Role |
 |---|---|
 | PHP or Laravel code, migrations and their tests | `alaa-implementer-laravel` |
 | Vue or Quasar frontend code in TypeScript or JavaScript, and its tests | `alaa-implementer-frontend` |
 | Go code and its tests, except work on the Ent specialist route | `alaa-implementer-go` |
-| Dockerfile, Compose or Swarm stack, Helm chart, Kubernetes manifest, CI pipeline, HAProxy configuration, Ansible file, Makefile or shell script | `alaa-implementer-infra` |
+| HAProxy configuration and the Lua that HAProxy runs | `alaa-implementer-haproxy` |
+| Dockerfile, Compose or Swarm stack, runtime-kit inputs, Helm chart, Kubernetes manifest or GitLab pipeline, with the shell scripts and Makefiles they call | `alaa-implementer-delivery` |
+| Any other stack, such as Ansible, a standalone Makefile or shell script, or another language | `alaa-implementer` |
 
-- The stack-bound role replaces `alaa-implementer`, `alaa-implementer-high`, `alaa-implementer-xhigh`, `alaa-implementer-astra`, `alaa-implementer-astra-medium` and `alaa-implementer-astra-xhigh`. An admitted exceptional pair runs on the stack-bound role.
-- For a stack-bound lane the two fit facts select the task pair and no role identity.
-- Split a lane that owns files of two families when the parts are independent. Otherwise, and for a stack with no bound role, dispatch the generic role that the routes above name for its two fit facts, and name each stack's skills in the dispatch as calls.
-- When the selected stack-bound role is not available in this session, do not block the lane for that reason. Record the generic role that the routes above name for its two fit facts as the registered profile, with the unavailable stack-bound role as its reason. Dispatch it and name the stack's skills in the dispatch as calls. This fallback replaces only the role identity; the pair rules still apply.
+- Every fit row runs on the role of its stack, the mechanical branch, the bounded branches and an exceptional pair included.
+- An incidental file of another family stays in the lane only when the lane record lists it by path. Name its owning skill in the dispatch as a call.
+- Split a lane that owns files of two families when the parts are independent. Otherwise dispatch `alaa-implementer`.
+- For `alaa-implementer`, name the owning skill of each owned surface in the dispatch as a call: /alaa-bash-shell for a shell script, /alaa-makefile for a Makefile, /ansible-generator for a new Ansible file and /ansible-validator for an edited one.
+- Resolve the owning skills of any other stack through `alaa-workflow references/companion-routing.md`.
+- When a stack-bound role is not available in this session, do not block the lane for that reason. Record `alaa-implementer` as the registered profile, with the unavailable role as its reason. Dispatch it and name the stack's skills in the dispatch as calls. This fallback replaces only the role identity; the pair rules still apply.
+- A plan or an issue that names a retired implementation identity maps to the role of its owned files. A retired planner identity maps to `alaa-planner`. A retired reviewer identity maps to `alaa-reviewer`. The recorded pair stands.
 
 ### Reassignment
 
@@ -141,7 +139,7 @@ Reassess remaining work only at the initial assignment, a material scope change,
 
 ## Correctness review depth
 
-Select the deep route when review involves complex interactions among subsystems, a broad failure impact, or documented insufficiency of the standard review. Use `alaa-reviewer` or the compatible `alaa-reviewer-deep` identity for that scope; neither selects a model or effort. Apply All-role task allocation to the review task. Record the trigger and select one profile per scope. When you replace an insufficient standard review, retire that assignment and pass its evidence to the deep route. Never run the two reviews concurrently.
+Select the deep route when review involves complex interactions among subsystems, a broad failure impact, or documented insufficiency of the standard review. Both routes use `alaa-reviewer`; select its model AND effort through All-role task allocation. Record the trigger and select one profile per scope. When you replace an insufficient standard review, retire that assignment and pass its evidence to the deep route. Never run the two reviews concurrently.
 
 ## Specialist gates
 
@@ -160,7 +158,7 @@ Select the deep route when review involves complex interactions among subsystems
 | `alaa-performance-profiler` | Only a measurable question with a comparable baseline and a budget; never generic optimization advice. `/alaa-algorithms-data-structures` owns the budget. State it during implementation planning when the change adds a loop, query, fan-out, batch, export or in-memory collection that grows with tenants, rows, history or events. Report a growing path that reaches this gate with no stated bound as a missing budget; do not measure it into one. |
 | `alaa-observability-reviewer` | Async jobs, queues, retries, external service calls, failure and degraded paths, production critical flows or new operational states. |
 | `alaa-release-guardian` | CI/CD, Docker or container, package, lock or version, configuration and environment, feature flags, deployment order, health checks, startup and shutdown, release notes or rollback changes. |
-| `alaa-adversarial-reviewer` | Only when the change is irreversible or has high blast radius (production data movement, auth or tenancy boundaries, a public contract break, deployment topology), or when the selected correctness reviewer (`alaa-reviewer` or `alaa-reviewer-deep`) and a specialist return conflicting verdicts that repository evidence does not settle. |
+| `alaa-adversarial-reviewer` | Only when the change is irreversible or has high blast radius (production data movement, auth or tenancy boundaries, a public contract break, deployment topology), or when the selected correctness reviewer `alaa-reviewer` and a specialist return conflicting verdicts that repository evidence does not settle. |
 
 Where two gates overlap, each keeps its own question:
 

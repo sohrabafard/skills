@@ -22,12 +22,7 @@ ROOT = Path(__file__).resolve().parent.parent
 AGENTS = ROOT / "agents"
 
 REQUIRED = {
-    "alaa-implementer-haiku",
-    "alaa-implementer-haiku-high",
-    "alaa-implementer-sonnet-high",
-    "alaa-implementer-opus-high",
     "alaa-planner",
-    "alaa-planner-high",
 
     "alaa-spec-analyst",
     "alaa-explorer",
@@ -37,9 +32,8 @@ REQUIRED = {
     "alaa-implementer-laravel",
     "alaa-implementer-frontend",
     "alaa-implementer-go",
-    "alaa-implementer-infra",
-    "alaa-implementer-opus",
-    "alaa-implementer-fable",
+    "alaa-implementer-haproxy",
+    "alaa-implementer-delivery",
     "alaa-verifier",
     "alaa-failure-analyst",
     "alaa-reviewer",

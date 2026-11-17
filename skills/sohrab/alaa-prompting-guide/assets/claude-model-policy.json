@@ -1,6 +1,6 @@
 {
   "schema_version": 2,
-  "policy_version": "3.2.0",
+  "policy_version": "3.3.0",
   "surface": "claude-code",
   "verified_on": "2026-11-14",
   "sources": [
@@ -296,11 +296,18 @@
         "skills/sohrab/alaa-cc-orchestrator/agents/alaa-implementer-go.md"
       ]
     },
-    "alaa-implementer-infra": {
+    "alaa-implementer-haproxy": {
       "kind": "agent",
       "selection_mode": "task-selected",
       "artifacts": [
-        "skills/sohrab/alaa-cc-orchestrator/agents/alaa-implementer-infra.md"
+        "skills/sohrab/alaa-cc-orchestrator/agents/alaa-implementer-haproxy.md"
+      ]
+    },
+    "alaa-implementer-delivery": {
+      "kind": "agent",
+      "selection_mode": "task-selected",
+      "artifacts": [
+        "skills/sohrab/alaa-cc-orchestrator/agents/alaa-implementer-delivery.md"
       ]
     },
     "alaa-failure-analyst": {
@@ -429,34 +436,6 @@
         "skills/sohrab/alaa-prompting-guide/assets/rule-writer/claude/alaa-rule-writer.md"
       ]
     },
-    "alaa-implementer-fable": {
-      "kind": "agent",
-      "selection_mode": "task-selected",
-      "artifacts": [
-        "skills/sohrab/alaa-cc-orchestrator/agents/alaa-implementer-fable.md"
-      ]
-    },
-    "alaa-implementer-opus": {
-      "kind": "agent",
-      "selection_mode": "task-selected",
-      "artifacts": [
-        "skills/sohrab/alaa-cc-orchestrator/agents/alaa-implementer-opus.md"
-      ]
-    },
-    "alaa-implementer-sonnet-high": {
-      "kind": "agent",
-      "selection_mode": "task-selected",
-      "artifacts": [
-        "skills/sohrab/alaa-cc-orchestrator/agents/alaa-implementer-sonnet-high.md"
-      ]
-    },
-    "alaa-implementer-opus-high": {
-      "kind": "agent",
-      "selection_mode": "task-selected",
-      "artifacts": [
-        "skills/sohrab/alaa-cc-orchestrator/agents/alaa-implementer-opus-high.md"
-      ]
-    },
     "main-deep": {
       "kind": "policy-only",
       "selection_mode": "externally-configured",
@@ -468,28 +447,7 @@
       "artifacts": [
         "skills/sohrab/alaa-cc-orchestrator/agents/alaa-planner.md"
       ]
-    },
-    "alaa-planner-high": {
-      "kind": "agent",
-      "selection_mode": "task-selected",
-      "artifacts": [
-        "skills/sohrab/alaa-cc-orchestrator/agents/alaa-planner-high.md"
-      ]
-    },
-    "alaa-implementer-haiku": {
-      "kind": "agent",
-      "selection_mode": "task-selected",
-      "artifacts": [
-        "skills/sohrab/alaa-cc-orchestrator/agents/alaa-implementer-haiku.md"
-      ]
-    },
-    "alaa-implementer-haiku-high": {
-      "kind": "agent",
-      "selection_mode": "task-selected",
-      "artifacts": [
-        "skills/sohrab/alaa-cc-orchestrator/agents/alaa-implementer-haiku-high.md"
-      ]
     }
   },
-  "notes": "Managed profiles register model-neutral authority roles and artifact identities, never task model/effort defaults. Both task controls must be chosen explicitly by the runtime orchestrator and realized on a verified compatible surface. Main controls remain externally configured. Existing model/effort-named role IDs are compatibility labels only. No runtime activation, account access or comparative calibration is established. Historical capability entries cannot authorize active selection; active Claude selection excludes Mythos."
+  "notes": "Managed profiles register model-neutral authority roles and artifact identities, never task model/effort defaults. Both task controls must be chosen explicitly by the runtime orchestrator and realized on a verified compatible surface. Main controls remain externally configured. A role ID selects no model or effort. No runtime activation, account access or comparative calibration is established. Historical capability entries cannot authorize active selection; active Claude selection excludes Mythos."
 }
