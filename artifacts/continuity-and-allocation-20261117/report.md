@@ -130,13 +130,16 @@ Not verified:
 
 ## Open items for the owner
 
-- Allow-list. The new flag order is `bd --sandbox <subcommand> ... --actor <actor>`. The project
-  allow-list of this repository lists the other order, and has no entry for `comments add`,
-  `dep add`, `search` or `dep cycles`. No settings file was changed; the template lists the
-  entries.
+- Allow-list. The new flag order is `bd --sandbox <subcommand> ... --actor <actor>`. The
+  owner's user-level allow-list, read on 2026-11-17, covers that order for `create`, `update`,
+  `close`, `dep add` and `unclaim`, but has no entry for `bd --sandbox comments add`, so a
+  tagged knowledge comment can ask for permission. The project allow-list of this repository
+  lists the other order. No settings file was changed; the template lists the entries.
 - Other repositories keep the old binding block. Their cited headings still exist and their
   `--append-notes` command stays correct. Rolling the new block out is a separate task.
 - `skills/sohrab/AGENTS.md` still says "Write all three parts" for a description; `60` lists four.
+- An external write role, such as the Ent specialist, carries no task-tracking block, so its
+  dispatch gives the Beads action `none` and the lead writes its checkpoint from the return.
 - The fit table cannot be gated. The walks are the only evidence that a lead reads it as
   intended, and the review-lens lane stays ambiguous when a dispatch does not state the hardest
   decision under review.
