@@ -70,6 +70,14 @@ Hook facts were read on 2026-11-17 from the Claude Code hooks page (`agent_id` a
 - The first live denials hit two false positives, both repaired: a dotted directory name read as a code extension, and a command that changed into another repository.
 - A lane on Haiku at low effort compared the seven source files of the setup pack with the installed copies: all identical.
 
+## Merge and install
+
+- Merge: `work/dispatch-controls` merged into local `main` as `a7c206ab` with `git merge --no-ff`, by the owner's instruction of this session. `main` had not moved; the merged tree equals the gated branch tip `a63c04c7`. The worktree and its branch were removed. No push.
+- Claude Code agents: `python3 scripts/install_claude_agents.py --apply`. Each of the 27 installed managed files has the SHA-256 that the 8.1.0 manifest records, and a second dry run reported no file to change.
+- Codex agents: `bash skills/sohrab/alaa-codex-orchestrator/scripts/install-agents.sh` exited 0 with 27 definitions; the version marker reads 8.1.0. `check_agent_grants.py --resolved-agents-dir` on the installed directory now exits 0 with the two external roles present.
+- The setup pack in the documentation repository holds the same hook, hook settings and global files as the installed copies. Those changes are uncommitted there.
+- Pending for the owner: Codex skips the new `PreToolUse` hook until it is trusted with `/hooks`.
+
 ## Limits
 
 - A fresh linked worktree has the tracked `.codegraph/` directory and no index file. The gate stays off there, because a CodeGraph call would first have to build the index under the routing skill's lane-worktree rule. Lanes that run in such a worktree are only nudged.
