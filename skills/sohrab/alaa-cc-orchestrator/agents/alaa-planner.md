@@ -1,6 +1,6 @@
 ---
 name: alaa-planner
-description: "Advisory read-only planner for clear scope, contracts and constraints. The lead ratifies and owns the durable plan; never implements or edits. The task, not this ID, selects model and effort."
+description: "Advisory read-only planner. The lead ratifies and owns the durable plan; never implements or edits. The task, not this ID, selects model and effort."
 tools: Read, Glob, Grep, Bash, Skill, LSP, mcp__codegraph, mcp__laravel-boost__search-docs, mcp__laravel-boost__application-info
 skills:
   - alaa-code-intelligence-routing

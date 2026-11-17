@@ -39,10 +39,12 @@ To restore a backup, inspect its contents and restore only to a vacant destinati
 overwrite a file created or changed by another tool or session. If a destination is occupied,
 compare it with the backup and decide manually which version to keep.
 
-Claude source version 5.0.0 keeps `alaa-implementer-opus` and adds `alaa-implementer-fable` with
-separate admission. Do not retire Opus. Inspect installed roles before a future explicitly
-authorized update; the shared installer updates present source wrappers but does not prove
-activation or remove unrelated files. Read
+Source version 8.0.0 of both orchestrator packs names each implementation role for its stack and
+retires the roles named for a model or an effort, the second planner role, and the Codex deep
+reviewer role. The installers remove no file: after an authorized update, move each installed
+definition whose role the source manifest no longer lists out of the agent discovery directory.
+Inspect installed roles before a future explicitly authorized update; the shared installer updates
+present source wrappers but does not prove activation or remove unrelated files. Read
 `skills/sohrab/alaa-cc-orchestrator/references/model-effort-policy.md` and its routing owner before
 dispatch. A source update does not install or retire agents on your machine.
 

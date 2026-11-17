@@ -141,7 +141,7 @@ Stage A always runs first.
 
 ## Stage D — Review and specialist gates
 
-1. At the inherited review boundary, once Check collection lets review start, dispatch the independent review and specialist gates that the tasks' decisions and the floors require, against the complete diff and lane plan. Spawn the one correctness reviewer that the routing matrix selects: `alaa-reviewer` or `alaa-reviewer-deep`. A diff reading by the lead that a decision chose happens at the same point.
+1. At the inherited review boundary, once Check collection lets review start, dispatch the independent review and specialist gates that the tasks' decisions and the floors require, against the complete diff and lane plan. Spawn one correctness reviewer, `alaa-reviewer`, with the pair that the routing matrix selects. A diff reading by the lead that a decision chose happens at the same point.
 2. Spawn `alaa-adversarial-reviewer` only when its condition in `references/routing-matrix.md` holds. Its conflicting-judgment arm, discovered here, fires without resetting the inherited boundary.
 3. `APPROVED` and `APPROVED-WITH-NITS` proceed. Under `CHANGES-REQUESTED`, route each finding triaged for fixing verbatim to the hand Who fixes selects.
 4. Present every finding this phase leaves open for the user as one decision set: each item with its severity per lens, the smallest fix that closes it, and its cost. Ask once, because each separate answer can move the tree and invalidate final evidence.

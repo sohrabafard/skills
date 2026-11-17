@@ -296,11 +296,18 @@
         "skills/sohrab/alaa-cc-orchestrator/agents/alaa-implementer-go.md"
       ]
     },
-    "alaa-implementer-infra": {
+    "alaa-implementer-haproxy": {
       "kind": "agent",
       "selection_mode": "task-selected",
       "artifacts": [
-        "skills/sohrab/alaa-cc-orchestrator/agents/alaa-implementer-infra.md"
+        "skills/sohrab/alaa-cc-orchestrator/agents/alaa-implementer-haproxy.md"
+      ]
+    },
+    "alaa-implementer-delivery": {
+      "kind": "agent",
+      "selection_mode": "task-selected",
+      "artifacts": [
+        "skills/sohrab/alaa-cc-orchestrator/agents/alaa-implementer-delivery.md"
       ]
     },
     "alaa-failure-analyst": {
@@ -429,34 +436,6 @@
         "skills/sohrab/alaa-prompting-guide/assets/rule-writer/claude/alaa-rule-writer.md"
       ]
     },
-    "alaa-implementer-fable": {
-      "kind": "agent",
-      "selection_mode": "task-selected",
-      "artifacts": [
-        "skills/sohrab/alaa-cc-orchestrator/agents/alaa-implementer-fable.md"
-      ]
-    },
-    "alaa-implementer-opus": {
-      "kind": "agent",
-      "selection_mode": "task-selected",
-      "artifacts": [
-        "skills/sohrab/alaa-cc-orchestrator/agents/alaa-implementer-opus.md"
-      ]
-    },
-    "alaa-implementer-sonnet-high": {
-      "kind": "agent",
-      "selection_mode": "task-selected",
-      "artifacts": [
-        "skills/sohrab/alaa-cc-orchestrator/agents/alaa-implementer-sonnet-high.md"
-      ]
-    },
-    "alaa-implementer-opus-high": {
-      "kind": "agent",
-      "selection_mode": "task-selected",
-      "artifacts": [
-        "skills/sohrab/alaa-cc-orchestrator/agents/alaa-implementer-opus-high.md"
-      ]
-    },
     "main-deep": {
       "kind": "policy-only",
       "selection_mode": "externally-configured",
@@ -467,27 +446,6 @@
       "selection_mode": "task-selected",
       "artifacts": [
         "skills/sohrab/alaa-cc-orchestrator/agents/alaa-planner.md"
-      ]
-    },
-    "alaa-planner-high": {
-      "kind": "agent",
-      "selection_mode": "task-selected",
-      "artifacts": [
-        "skills/sohrab/alaa-cc-orchestrator/agents/alaa-planner-high.md"
-      ]
-    },
-    "alaa-implementer-haiku": {
-      "kind": "agent",
-      "selection_mode": "task-selected",
-      "artifacts": [
-        "skills/sohrab/alaa-cc-orchestrator/agents/alaa-implementer-haiku.md"
-      ]
-    },
-    "alaa-implementer-haiku-high": {
-      "kind": "agent",
-      "selection_mode": "task-selected",
-      "artifacts": [
-        "skills/sohrab/alaa-cc-orchestrator/agents/alaa-implementer-haiku-high.md"
       ]
     }
   },

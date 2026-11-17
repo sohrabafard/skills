@@ -141,11 +141,6 @@ ROLE_POLICY: dict[str, dict[str, dict]] = {
         "codegraph": {}, "serena": _only(SERENA_READ),
         "laravel-boost": _only(BOOST_DOCS + BOOST_ERRORS + BOOST_BROWSER),
     },
-    "alaa-implementer-astra": {
-        "codegraph": {},
-        "serena": {"disabled_tools": ["execute_shell_command"]},
-        "laravel-boost": {},
-    },
     "alaa-implementer": {
         "codegraph": {},
         "serena": {"disabled_tools": ["execute_shell_command"]},
@@ -177,11 +172,9 @@ ROLE_POLICY: dict[str, dict[str, dict]] = {
     "alaa-verifier": {},
     "alaa-instruction-reviewer": {},
 }
-ROLE_POLICY["alaa-reviewer-deep"] = ROLE_POLICY["alaa-reviewer"]
-for name in ("alaa-implementer-luna", "alaa-implementer-high", "alaa-implementer-low", "alaa-implementer-luna-high", "alaa-implementer-luna-low", "alaa-implementer-xhigh", "alaa-implementer-astra-medium", "alaa-implementer-astra-xhigh", "alaa-implementer-laravel", "alaa-implementer-frontend", "alaa-implementer-go", "alaa-implementer-infra"):
+for name in ("alaa-implementer-laravel", "alaa-implementer-frontend", "alaa-implementer-go", "alaa-implementer-haproxy", "alaa-implementer-delivery"):
     ROLE_POLICY[name] = ROLE_POLICY["alaa-implementer"]
-for name in ("alaa-planner", "alaa-planner-high"):
-    ROLE_POLICY[name] = ROLE_POLICY["alaa-spec-analyst"]
+ROLE_POLICY["alaa-planner"] = ROLE_POLICY["alaa-spec-analyst"]
 
 
 def _agent_paths(agents_dir: str) -> list[str]:
@@ -201,7 +194,7 @@ def _template_failures(name: str, text: str, data: dict) -> list[str]:
     failures = []
     if name not in ROLE_POLICY:
         failures.append(f"{name}: uncatalogued role")
-    if name in {"alaa-instruction-reviewer", "alaa-planner", "alaa-planner-high"} and data.get("sandbox_mode") != "read-only":
+    if name in {"alaa-instruction-reviewer", "alaa-planner"} and data.get("sandbox_mode") != "read-only":
         failures.append(f"{name}: role requires read-only sandbox declaration")
     if TEMPLATE_MARKER not in text:
         failures.append(f"{name}: inherited MCP omission lacks the installer materialization marker")
@@ -285,7 +278,7 @@ def _resolved_failures(
     failures = []
     if name not in ROLE_POLICY:
         return [f"{name}: uncatalogued role"]
-    if name in {"alaa-instruction-reviewer", "alaa-planner", "alaa-planner-high"} and data.get("sandbox_mode") != "read-only":
+    if name in {"alaa-instruction-reviewer", "alaa-planner"} and data.get("sandbox_mode") != "read-only":
         failures.append(f"{name}: role requires read-only sandbox declaration")
     servers = data.get("mcp_servers")
     expected = _expected_overlay(name, inventory)

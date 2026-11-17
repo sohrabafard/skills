@@ -10,19 +10,16 @@
 | `alaa-explorer` | read-only | Repository ownership and execution-path mapping | External research or design decisions |
 | `alaa-researcher` | read-only | Prior-context recall through `/alaa-memory-os`; official docs, versions, standards, third-party contracts | Memory writes, implementation, or final decision-making |
 | `alaa-test-strategist` | read-only | High-value test matrix before subtle work | Writing tests or running the final gate |
-| `alaa-planner` | read-only | Advisory plan with clear contracts and constraints | Editing or owning the durable plan |
-| `alaa-planner-high` | read-only | Advisory plan resolving interacting uncertainties | Editing or owning the durable plan |
+| `alaa-planner` | read-only | Advisory plan draft | Editing or owning the durable plan |
 
 ## Implementation and verification
 
-`routing-matrix.md` *Implementation routing* states the workload that admits each implementation role. No implementation role reviews its own work or runs without a recorded admission.
+`routing-matrix.md` *Implementation routing* selects the implementation role from the owned files. No implementation role reviews its own work or runs without a recorded admission.
 
 | Agent | Sandbox | Use | Never use for |
 |---|---|---|---|
-| `alaa-implementer`, `alaa-implementer-high`, `alaa-implementer-xhigh` | workspace-write | Workhorse routes | Self-review |
-| `alaa-implementer-astra`, `alaa-implementer-astra-medium`, `alaa-implementer-astra-xhigh` | workspace-write | Compatibility implementation identities; an exceptional pair needs the all-role admission | Self-review |
-| `alaa-implementer-luna`, `alaa-implementer-low`, `alaa-implementer-luna-low`, `alaa-implementer-luna-high` | workspace-write | Mechanical, bounded semantic and bug routes | Semantic discretion on the mechanical branch; ambiguous scope, unresolved cross-boundary design or wider authority on any route |
-| `alaa-implementer-laravel`, `alaa-implementer-frontend`, `alaa-implementer-go`, `alaa-implementer-infra` | workspace-write | Stack-bound roles | Another stack's files, the mechanical or bounded branches, self-review; `alaa-implementer-infra` never applies, deploys or releases |
+| `alaa-implementer-laravel`, `alaa-implementer-frontend`, `alaa-implementer-go`, `alaa-implementer-haproxy`, `alaa-implementer-delivery` | workspace-write | Stack-bound roles, for every fit row | Another stack's files beyond listed incidental files, self-review; `alaa-implementer-haproxy` and `alaa-implementer-delivery` never apply, deploy or release |
+| `alaa-implementer` | workspace-write | A stack with no bound role, or an inseparable two-family lane; the dispatch names the owning skills | A lane that one stack-bound role covers, self-review |
 | `alaa-verifier` | workspace-write (artifacts only) | Exact commands and reproducible evidence | Fixing, debugging, or changing commands |
 | `alaa-failure-analyst` | read-only | Diagnose ambiguous, flaky, environment, or cross-lane failures | Applying fixes |
 
@@ -31,7 +28,6 @@
 | Agent | Sandbox | Verdict |
 |---|---|---|
 | `alaa-reviewer` | read-only | `APPROVED`, `APPROVED-WITH-NITS`, `CHANGES-REQUESTED` |
-| `alaa-reviewer-deep` | read-only | Same correctness contract and verdicts as `alaa-reviewer` |
 | `alaa-adversarial-reviewer` | read-only | `NO-BLOCKING-OBJECTION`, `OBJECTION-WITH-CONDITIONS`, `DO-NOT-SHIP` |
 | `alaa-documenter` | workspace-write (docs only) | Verified documentation only, never intended behavior |
 | `alaa-instruction-reviewer` | read-only native inspection | `APPROVED`, `APPROVED-WITH-NITS`, `CHANGES-REQUESTED` |
@@ -81,12 +77,12 @@ Each managed agent receives the narrowest live server grant that its question cl
 | Agent | Structural and semantic | Framework context |
 |---|---|---|
 | `alaa-explorer` | CodeGraph | docs, routing |
-| `alaa-spec-analyst`, `alaa-planner`, `alaa-planner-high` | CodeGraph | docs |
+| `alaa-spec-analyst`, `alaa-planner` | CodeGraph | docs |
 | `alaa-architecture-critic`, `alaa-test-strategist`, `alaa-migration-guardian` | CodeGraph | docs, schema |
 | `alaa-api-contract-reviewer` | CodeGraph | docs, routing, schema |
 | `alaa-observability-reviewer` | CodeGraph | docs, app-errors, browser |
 | `alaa-performance-profiler` | CodeGraph | docs, schema, app-errors |
-| `alaa-reviewer`, `alaa-reviewer-deep`, `alaa-adversarial-reviewer`, `alaa-security-reviewer` | CodeGraph + Serena read set | docs, schema |
+| `alaa-reviewer`, `alaa-adversarial-reviewer`, `alaa-security-reviewer` | CodeGraph + Serena read set | docs, schema |
 | `alaa-failure-analyst` | CodeGraph + Serena read set | docs, app-errors, browser |
 | Every registered implementer profile | full, minus Serena's shell tool | full |
 | `alaa-researcher`, `alaa-dependency-auditor`, `alaa-release-guardian` | none | docs |
@@ -108,4 +104,4 @@ After any change to `agents/`, run `python3 scripts/check_agent_grants.py`; the 
 
 Before dispatch, verify the role can reach its bindings under `alaa-workflow references/companion-routing.md`.
 
-A stack-bound role names the owning skills of its stack and the testing doctrine in its instructions and loads them before the first edit, because a lane often skips a skill that the dispatch only names.
+A stack-bound role names the owning skills of its stack and the testing doctrine in its instructions and loads them before the first edit, because a lane often skips a skill that the dispatch only names. `alaa-implementer` names no stack skill: its dispatch names them.

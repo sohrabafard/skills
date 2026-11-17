@@ -2,7 +2,7 @@
 
 ## Planner variants
 
-Select `alaa-planner` or `alaa-planner-high` through `routing-matrix.md` Planning profile selection. The parent ratifies the draft and owns durable plan and state writes.
+Dispatch `alaa-planner` under `routing-matrix.md` Planning profile selection. The parent ratifies the draft and owns durable plan and state writes.
 
 ```xml
 <task>Draft a grounded advisory plan for <outcome>.</task>

@@ -73,7 +73,7 @@ def expected_profiles(root, policy, kind):
     if set(specification) != {"profiles"} or not isinstance(specification["profiles"], dict):
         raise ValueError("invalid profile wrapper specification")
     managed = {name for name in policy["profiles"]
-               if name.startswith("alaa-implementer") or name in {"alaa-planner", "alaa-planner-high"}}
+               if name.startswith("alaa-implementer") or name == "alaa-planner"}
     if set(specification["profiles"]) != managed:
         raise ValueError("wrapper specification must cover every implementation and planner profile")
     outputs = {}
@@ -91,8 +91,8 @@ def expected_profiles(root, policy, kind):
             raise ValueError(f"invalid contract path: {contract}")
         body = path.read_text(encoding="utf-8")
         if "binding" in entry:
-            # Insert the stack binding immediately before the shared baseline it narrows.
-            binding, anchor = entry["binding"], "\nEngineering baseline:"
+            # Insert the stack binding immediately before the dispatch-driven skills rule it precedes.
+            binding, anchor = entry["binding"], "\nSkills:"
             if (not isinstance(binding, str) or not binding.startswith("Stack binding: ")
                     or binding != binding.strip() or len(binding.splitlines()) != 1
                     or relative.name != "implementation-contract.md" or body.count(anchor) != 1):

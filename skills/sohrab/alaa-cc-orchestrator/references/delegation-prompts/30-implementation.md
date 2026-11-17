@@ -21,8 +21,8 @@
 <commit><lane branch name: commit your owned paths by path when the focused checks pass> | <none: return the work uncommitted></commit>
 ```
 
-- Select the exact registered variant from the ratified lane record through `routing-matrix.md`. For a single-stack lane outside the mechanical and bounded branches, it is the stack-bound role.
-- Record the verified admission predicates in `<task_controls>` before you send, because the lane checks them instead of reading `routing-matrix.md`. For a mechanical or bounded route, record the route's own predicates with their recorded values. For a workhorse or stack-bound route, record the two fit facts and the stack-family test result.
+- Select the role from the lane's owned files through `routing-matrix.md` *Stack-bound roles*.
+- Record the verified admission predicates in `<task_controls>` before you send, because the lane checks them instead of reading `routing-matrix.md`. For the mechanical or the bounded branch, record the branch's own predicates with their recorded values. For every other lane, record the two fit facts and the stack family.
 - For a Beads-bound lane, fill `<beads_identity>` with the lane's own actor and the action `claim` for its leaf, under the common envelope's `<beads_identity>` rule.
 - Fill `<commit>` with the lane branch that `verification-and-gates.md` *Before any dispatch* prescribes, or with `none`.
 - Demanding work alone does not admit the exceptional implementation profile.

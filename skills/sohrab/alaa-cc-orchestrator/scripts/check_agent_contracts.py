@@ -239,8 +239,8 @@ def economy_failures(skill: str, gates: str, routing: str | None = None) -> list
     for required in ("## Batch allocation", "tasks, dependencies and consolidation decisions are finalized", "balanced default", "priority is not an effort value", "Reopen allocation only for remaining work"):
         if required not in routing:
             errors.append(f"missing finalized-plan batch allocation contract: {required}")
-    bounded = routing.split("Select the bounded semantic branch", 1)[-1].split("- `alaa-implementer`:", 1)[0]
-    for required in ("settled local causal path or pattern", "known invariants", "discriminating behavior/regression checks", "alaa-implementer-haiku-high", "Interacting design"):
+    bounded = routing.split("Admit a lane to the bounded semantic branch", 1)[-1].split("### Stack-bound roles", 1)[0]
+    for required in ("settled local causal path or pattern", "known invariants", "discriminating behavior/regression checks", "Interacting design"):
         if required not in bounded:
             errors.append(f"missing bounded implementation admission: {required}")
     for forbidden in ("at most two workspace-writing", "Dispatch one `alaa-implementer` per routine lane", "refuse to start on a tree carrying changes this run did not make"):
