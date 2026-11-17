@@ -26,7 +26,7 @@ This file owns Claude Code selection and activation mechanics. A model or API ca
 - On an older, forked or unsupported surface, use an available exact verified realization or block the affected lane. Never treat inheritance as selection. Main-session configuration stays external.
 - A model or API thinking control is no per-agent setting by inference. Refresh thinking inheritance against the actual runtime.
 
-**Workflow `agent()`** ([workflows](https://code.claude.com/docs/en/workflows), 14 November 2026) takes its model in the same order as a subagent. A model the script names counts as the per-invocation model; when nothing assigns one, the agent runs on the session's model. The page names no effort option for `agent()`.
+**Workflow `agent()`** ([workflows](https://code.claude.com/docs/en/workflows), 14 November 2026) takes its model in the same order as a subagent. A model the script names counts as the per-invocation model; when nothing assigns one, the agent runs on the session's model. The page names no effort option for `agent()`. The bundled `/workflow-authoring` reference, which the page names as the script-writing reference, lists `model` and `effort` among the `agent()` options (read 17 November 2026).
 
 **Identity.** Report identity through `references/80-subagent-authoring.md` *Configuration and observed identity*, and record the resolved controls too. Session status, subagent status and the response's `modelUsage` are evidence when available; an agent's self-description is not. A runtime activation check needs authorized execution, and it preserves the provider and account context, the control evidence and any observed mismatch.
 

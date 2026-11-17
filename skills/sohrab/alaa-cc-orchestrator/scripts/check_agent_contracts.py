@@ -374,7 +374,7 @@ def cadence_failures(skill: str, gates: str, dispatch: str,
     for clause in ("It makes its own corrections only under Who fixes",
                    "Correct sparingly", "Keep dispatches lean",
                    "Do not restate the native role definition",
-                   "for the verification decision, the floors and who fixes",
+                   "Decide verification per change, and read before you accept a return",
                    "references/110-execution-resources.md"):
         if not contract_present(clause, skill):
             errors.append(f"missing mirrored body contract: {clause}")
