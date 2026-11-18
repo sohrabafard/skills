@@ -87,7 +87,7 @@ documented; the stale-fact check always applies.
 |---|---|---|
 | Codex agent contracts, 19 hand-written definitions, delegation prompts, rule-writer | Stale fact | No hit: no model name, effort value or version gate in any definition |
 | Same | General concision line | No hit. The output rule is a consumer limit with an exception, not a style line |
-| Same | Propose-and-wait repair, self-contained final answer | Not applicable: every definition also runs on Luna and Terra, and no source documents these behaviors for them. The lead applies the repairs in the dispatch of a GPT-6.2 lane, because `SKILL.md` *Dispatch discipline* words each dispatch under the prompting guide |
+| Same | Propose-and-wait repair, self-contained final answer | Not applicable: every definition also runs on Luna and Terra, and no source documents these behaviors for them. The repairs are routed to the dispatch of a GPT-6.2 lane: `SKILL.md` *Dispatch discipline* words each dispatch under the prompting guide. No dispatch was observed |
 | Same | Step itinerary, default-behavior instruction | Not re-run. Their source is the skills blog of 16 November 2026, which this upgrade did not change, and the definitions were rewritten and pruned on 2026-11-17 (pack 8.0.0) |
 | Codex orchestrator routing | Ultra delegation | Repaired: no lane at `ultra` |
 | `alaa-testing-strategy` | Shared-machine advice | CPU and concurrency rules already present; the cleanup rule was absent and was added |
@@ -120,11 +120,20 @@ this repository, so the merge activates them.
   their original model identities and that cited results apply to the models and settings tested.
 - The Terra pair of the bounded row is uncalibrated here. Its cost is higher than the Luna pair.
 - Static gates prove no instruction compliance and no serving identity.
+- The smoke covered `codex exec -m` only. A lane spawned with `model` and `reasoning_effort` set,
+  the path that the orchestrator commands, was not observed on a GPT-6.2 model.
+- The Codex subagents page names `gpt-6.1-sol` for a custom agent that also runs in the IDE
+  extension. GPT-6.2 availability there is unverified. Where it is absent, the orchestrator blocks
+  a Sol or Astra lane, because a historical model is never a fallback.
+- `~/.codex/config.toml` on this host still holds one `"gpt-6.1-sol"` key in a host-managed table.
+  It was reported, not edited.
 - The Codex main session is configured outside this repository and was on `gpt-6.1-terra` at
   `medium` on this host. It was not changed.
 
 ## Open owner items
 
+0. IDE extension: accept blocked Sol and Astra lanes there, or record a standing legacy exception
+   for `gpt-6.1-sol` on that client.
 1. Main-session model in `~/.codex/config.toml` and its setup mirror: keep Terra or move to
    `gpt-6.2-sol`.
 2. Whether to add an assume-and-continue sentence to the implementation contract of both packs.
