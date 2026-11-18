@@ -50,6 +50,7 @@ Use repository commands, and do not introduce ParaTest or process isolation duri
 
 - Do not kill unrelated services, dev servers, containers, or processes.
 - Do not start duplicate services when a reusable declared service already exists.
+- Before you return, stop each background process that this run started, and remove each temporary file that it created outside the allowed artifact directory. Keep a process or a file that a declared reuse or a later step of the same engagement needs. Reason: agents that share a machine leave CPU, memory and ports to the other work ([Prompting GPT-6.2 in Codex](https://learn.chatgpt.com/guides/prompting-gpt-6-2-astra), 18 November 2026).
 
 ## Browser QA
 
