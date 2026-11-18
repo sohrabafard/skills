@@ -1,9 +1,10 @@
-# Topology: single node, replicas with Keeper, copies without Keeper
+# Topology: single node without Keeper, replicas with Keeper
 
 The environment declares the mode, `single-node` or `replicated`, with no default and no fallback
 (`/alaa-services-contract` `references/15-deployment-and-runtime-contract.md`). Read the declared
 mode before you choose an engine. A change of mode does not authorize conversion of a populated
-table. The infrastructure operator owns node count, Keeper placement, listeners and recovery; this
+table. The fleet supports no other mode: a design with more than one node and no Keeper has no
+replicas, so report it to the owner and do not design tables for it. The infrastructure operator owns node count, Keeper placement, listeners and recovery; this
 file states what the tables and the clients need from each mode.
 
 `90-source-map.md` holds the default of every setting named here. Read the effective value on the
@@ -11,13 +12,13 @@ target before you rely on one.
 
 ## What each mode gives and costs
 
-| | single node | replicated with Keeper | copies without Keeper |
-| --- | --- | --- | --- |
-| engine family | `MergeTree` | `Replicated*MergeTree` | `MergeTree` on each node |
-| insert deduplication on retry | off until the table sets a window | on by default, in a bounded window | off, and the nodes do not share it |
-| DDL | apply once | not replicated; apply to every replica | apply to every node yourself |
-| one node is lost | outage; recover from backup or re-ingest | reads and writes continue on the other replica | the other copy answers from its own data |
-| what the design must add | a deduplication window and a recovery path | a Keeper quorum, a quorum decision and lag monitoring | a named primary and a reconciliation procedure |
+| | `single-node`, no Keeper | `replicated`, with Keeper |
+| --- | --- | --- |
+| engine family | `MergeTree` | `Replicated*MergeTree` |
+| insert deduplication on retry | off until the table sets a window | on by default, in a bounded window |
+| DDL | apply once | not replicated; apply to every replica |
+| one node is lost | outage; recover from backup or re-ingest | reads and writes continue on the other replica |
+| what the design must add | a deduplication window and a recovery path | a Keeper quorum, a quorum decision and lag monitoring |
 
 ## One DDL file, both modes
 
@@ -26,7 +27,7 @@ part that differs. The DDL owner chooses and ratifies the substitution mechanism
 ratified engine RFC before you select an engine. Never fork the DDL file by mode, because two files
 drift.
 
-## Single node
+## Single node without Keeper
 
 - A plain `MergeTree` table deduplicates no retried insert until it sets
   `non_replicated_deduplication_window`. Propose the window for every table a retrying writer
@@ -97,26 +98,3 @@ drift.
   Never write a replica hostname into a service.
 - Node sizing, Keeper placement and the deployment manifests: `/caas-arvan-kuber` and
   `/alaa-k8s-helm`.
-
-## Copies without Keeper
-
-No replicated engine works without Keeper. What remains is a copy, not a replica:
-
-| Mechanism | What it does | Limit |
-| --- | --- | --- |
-| two sinks, two independent nodes | the pipeline writes each batch twice | a failure on one side diverges the nodes until someone reconciles them |
-| a `Distributed` table with `internal_replication=false`, the default | writes each insert to every listed replica | official: "the consistency of replicas is not checked and, over time, they will contain slightly different data" |
-| backup and restore to a standby | a point-in-time copy | loses every row after the last backup |
-
-Rules for a copy:
-
-- Name one node the primary. Serve a number that must be reproducible from the primary only.
-- After an outage of either side, rebuild the copy from the primary or re-ingest it. Never merge
-  the two by hand.
-- Each node deduplicates on its own; set the single-node window on both.
-- A `Distributed` table over `Replicated*` tables sets `internal_replication=true`, as the official
-  text requires; the default `false` is for non-replicated tables only.
-
-When the reason for "no Keeper" is the cost of a separate Keeper service, recommend Keeper embedded
-in the server processes with three voters instead. It gives real replicas for the same node count
-plus one small voter.

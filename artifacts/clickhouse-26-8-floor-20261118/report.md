@@ -10,14 +10,14 @@ the state of one repository at one commit.
 
 | Measure | Before | After |
 | --- | --- | --- |
-| `SKILL.md` plus `references/`, source words | 14,956 | 13306 |
+| `SKILL.md` plus `references/`, source words | 14,956 | 13035 |
 | reference files | 12 | 13 |
 | scripts | 3 | 2 |
 
 New capabilities, which are the reason two files and the body grew:
 
-1. **Topology.** `references/25-topology-and-replication.md`: single node, replicas with Keeper,
-   copies without Keeper, one DDL file for both declared modes, quorum and consistency decisions.
+1. **Topology.** `references/25-topology-and-replication.md`: single node without Keeper and
+   replicas with Keeper, one DDL file for both declared modes, quorum and consistency decisions.
 2. **Client lanes.** `references/85-access-and-configuration.md` now covers the Vector sink, the Go
    `chkit` lane and a PHP read lane over HTTP.
 3. **Defaults at the floor.** `references/90-source-map.md` holds one table of defaults read from
@@ -86,7 +86,7 @@ stops holding.
 | A3 | Replicated tables: `ENGINE = ReplicatedMergeTree` with no arguments under the server default path, in place of a hand-written Keeper path | `25`, `assets/templates/merge_tree_template.sql` | Defaults read from the floor binary |
 | A4 | A two-replica design needs a third Keeper voter; Keeper is a write dependency only | `25` | Quorum arithmetic is stated without an official page; marked in `90` |
 | A5 | Insert quorum and sequential reads are owner-ratified decisions; no quorum is proposed for `wa` unless its owner asks | `25` | New |
-| A6 | Copies without Keeper: named primary, rebuild after an outage, reproducible numbers from the primary only | `25` | New |
+| A6 | Withdrawn on 2026-11-18. The owner supports two modes only: single node without Keeper and replicated with Keeper. The "copies without Keeper" section and the `Distributed` source row were removed; a multi-node design without Keeper is reported to the owner | `25`, `90` | Owner correction |
 | A7 | A service-side `INSERT` is a new ingest path that needs the table owner's ratification | `30` | New policy; see "Owner decisions" |
 | A8 | Async inserts are on by default at the floor; the second remedy is reworded | `30` | Floor binary |
 | A9 | Size the deduplication window over the writer's whole retry horizon, buffered replay included; the table owner ratifies the window; check that the writer's insert mode uses it | `30`, `25` | New sizing rule. The synchronous case was observed on the floor binary; the asynchronous case is unverified |
@@ -164,8 +164,8 @@ Source words in `SKILL.md` plus `references/`, counted with `wc -w`:
 
 | File | Before | After |
 | --- | --- | --- |
-| `SKILL.md` | 762 | 869 |
-| `00-topic-map.md` | 346 | 362 |
+| `SKILL.md` | 762 | 868 |
+| `00-topic-map.md` | 346 | 357 |
 | `10-authority-and-change-path.md` | 1236 | 821 |
 | `15-fleet-clickhouse-boundary.md` | 882 | 530 |
 | `20-table-design.md` | 1945 | 1169 |
@@ -176,8 +176,8 @@ Source words in `SKILL.md` plus `references/`, counted with `wc -w`:
 | `70-failure-and-degradation.md` | 979 | 789 |
 | `80-proof-and-validation.md` | 1915 | 1726 |
 | `85-access-and-configuration.md` | 1108 | 1132 |
-| `90-source-map.md` | 1365 | 1583 |
-| `25-topology-and-replication.md` (new) | 0 | 1222 |
-| **Total** | 14956 | 13306 |
+| `90-source-map.md` | 1365 | 1559 |
+| `25-topology-and-replication.md` (new) | 0 | 981 |
+| **Total** | 14956 | 13035 |
 
-The total fell by 11 percent with the new topology file included. The twelve files that existed before fell from 14956 to 12084 words, 19 percent.
+The total fell by 12 percent with the new topology file included. The twelve files that existed before fell from 14956 to 12054 words, 19 percent.

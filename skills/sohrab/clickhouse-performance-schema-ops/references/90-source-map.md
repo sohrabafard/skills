@@ -96,7 +96,6 @@ version-sensitive claim.
 | without Keeper "you can't create replicated tables, and any existing replicated tables will be read-only"; an `INSERT` throws while Keeper is unavailable and `SELECT` does not use it; which statements replicate; conversion by `ATTACH TABLE … AS REPLICATED` or the `convert_to_replicated` flag; default engine arguments (2026-11-18) | https://clickhouse.com/docs/engines/table-engines/mergetree-family/replication |
 | Keeper runs standalone or "as an internal part of the ClickHouse server"; a 3-node cluster keeps working "if only 1 node crashes" (2026-11-18) | https://clickhouse.com/docs/guides/sre/keeper/clickhouse-keeper |
 | the `Replicated` database replicates metadata only (2026-11-18) | https://clickhouse.com/docs/engines/database-engines/replicated |
-| `Distributed` with `internal_replication=false` writes to all replicas and does not check their consistency; `true` is for replicated underlying tables (2026-11-18) | https://clickhouse.com/docs/engines/table-engines/special/distributed |
 | HTTP query parameters, credential headers, session rules, and "a HTTP 200 response code doesn't guarantee that a query was successful" (2026-11-18) | https://clickhouse.com/docs/interfaces/http |
 | ClickHouse maintains no listed PHP client (2026-11-18) | https://clickhouse.com/docs/interfaces/third-party/client-libraries |
 | quorum inserts and `select_sequential_consistency` requiring `insert_quorum_parallel` off (2026-11-18) | setting descriptions in `system.settings` of the floor binary |
