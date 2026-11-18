@@ -271,7 +271,7 @@ def verification_failures(gates: str, templates: list[str], roles: dict[str, str
 
 # Topic: omitted dispatch controls; layer: structural source contract.
 # This checks the prose owner, never supplies controls to a live invocation.
-DEFAULT_MODEL_CLAUSES = ("model = gpt-6.1-sol", "effort = medium", "sol-6.1-medium", "https://learn.chatgpt.com/docs/models")
+DEFAULT_MODEL_CLAUSES = ("model = gpt-6.2-sol", "effort = medium", "sol-6.2-medium", "https://learn.chatgpt.com/docs/models")
 DEFAULT_REQUIREMENTS = (
     "This file alone owns orchestration defaults for this runtime",
     "Preserve ordinary allocation when both controls are selected",
@@ -313,7 +313,7 @@ def task_allocation_failures(routing: str, controls: str) -> list[str]:
     for required in BOUNDED_REQUIREMENTS:
         if not contract_present(required, routing):
             errors.append(f"missing all-role bounded suitability: {required}")
-    if "exclude gpt-6-sol ordinarily even if available" not in routing:
+    if "exclude gpt-6-sol, gpt-6.1-sol and gpt-6-astra ordinarily even if available" not in routing:
         errors.append("missing ordinary/historical Sol eligibility boundary")
     for required in ("Before every dispatch", "Explicitly supply BOTH model AND effort",
                      "effective configured pair matches", "or block", "affected lane",
