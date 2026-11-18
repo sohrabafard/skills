@@ -1,5 +1,9 @@
 # Changelog
 
+## 8.3.0 - 2026-11-18
+
+- No equivalent here for the Codex pack's 8.3.0. That change follows the GPT-6.2 model generation and the refreshed OpenAI selector: new Codex model IDs, the *Bounded local decisions* row on Terra, the `high` start of a research lane that verifies facts, and the ban on a lane at `ultra`. The Claude model set and its official effort guidance did not change, and this runtime has no `ultra` effort. The fit table, the dispatch controls and every agent definition of this pack are unchanged; the version moves so that the pair stays aligned.
+
 ## 8.2.0 - 2026-11-17
 
 - Pointers that fire at an action, owner direction of 2026-11-17: a reference rule stays in its reference, and the pointer must make the lead open it when it is needed. Evidence: in one orchestrated session the lead opened no orchestrator reference; in 13 lead sessions of the week, `references/verification-and-gates.md` was opened before the first review dispatch in 4 of 10, and `alaa-workflow references/review-mode.md`, two hops from the body, in none (`artifacts/review-loop-analysis-20261117/report.md`). `SKILL.md` *Direct references* now names the section for each action, sends finding triage to its owner in one hop, and tells the lead not to act when the section cannot load. The *Dispatch discipline* line on verification points at that table. No rule moved into the body. `scripts/check_agent_contracts.py` pins the new line.

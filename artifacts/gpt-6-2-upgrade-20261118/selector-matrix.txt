@@ -1,0 +1,82 @@
+knowledge | Make small edits to existing files | usage luna low | balanced luna medium | quality luna high | basis user-directed
+  rationale: Luna scores 100 on surgical slide editing and workbook repair, matching Astra. These are bounded edits to existing files, not a general editing guarantee. November 13: Luna and Terra both scored 100 on the low-effort slide edit. Keep Luna as the starting model for bounded changes.
+
+knowledge | Create slides or spreadsheets | usage luna high | balanced sol62 high | quality astra62 high | basis user-directed
+  rationale: Luna medium passes the spreadsheet at 99 and the editable visual-brief deck at 100. Sol and Astra medium pass the spreadsheet at 100. Astra extra high is the closest tested reference reconstruction at 96.6; Sol extra high scores 96. These separately tested tasks do not establish a universal file-creation advantage.
+
+knowledge | Adapt existing content | usage terra61 medium | balanced sol62 medium | quality sol62 high | basis user-directed
+  rationale: Astra scores 100 on the structured handbook edit and 98.83 on audience-specific writing, retaining all 104 required facts. Sol omits a required qualification in the writing task. This is a fixed message packet, not a general writing guarantee. The matched writing review found that Terra was usually shorter. Preferences for audience fit, voice, and handoff detail varied. Terra medium is the lower-latency and cost starting point and the concise-writing alternative at the two Sol settings.
+
+knowledge | Create a coordinated set of files from input data | usage terra61 high | balanced sol62 high | quality astra62 high | basis user-directed
+  rationale: Astra medium and extra high score 99.5 and pass the linked decision-pack requirements. Sol and Luna fail required source mapping or changed-decision checks. No result is perfect; clarity or chart-label deductions remain. November 13: When multiple files need to agree, choose Astra for quality. On Multistep Professional Tasks at extra high, Astra scored 40.4% and Sol 35.2%. The earlier linked-file evaluation also caught broken source mappings.
+
+knowledge | Turn source material into a final output | usage sol62 medium | balanced sol62 high | quality astra62 high | basis user-directed
+  rationale: Astra completes the brand-and-narrative deck at 95. Sol omits required facts; Luna misses palette and handoff requirements. The broader final-output label generalizes from a presentation task and does not establish superior visual taste.
+
+knowledge | Create a high-quality, complex deliverable | usage sol62 high | balanced astra62 high | quality astra62 xhigh | basis user-directed
+  rationale: User-requested grouping for complex deliverables requiring exact source traceability or close visual matching. Astra extra high passed the tested document-lineage requirements and was the closest tested visual-reference reconstruction. This does not establish a general guarantee for every complex deliverable; the separate supply-chain source-coverage task remained incomplete for all models. November 13: On Multistep Professional Tasks, Astra scored 37.0% at high and 40.4% at extra high. Sol scored 34.6% and 35.2% at the same settings.
+
+knowledge | Other | usage terra61 medium | balanced sol62 medium | quality astra62 medium | basis editorial-fallback
+  rationale: Category-level fallback inferred from the reviewed tasks, not a separately measured benchmark result. More usage favors a smaller configuration; higher quality favors additional reasoning or a larger model for unspecified requirements.
+
+engineering | Fix a well-scoped bug | usage luna low | balanced terra61 low | quality sol62 low | basis user-directed
+  rationale: All four models score 100 in all three runs of the eight-patch portfolio. Requested fixes, regression behavior, and handoffs pass. The three runs reuse one small packet, so they show repeatability on that input rather than a general reliability rate. November 13: On the low-effort date-boundary fix, Terra scored 100 and Luna 37. The eight-patch portfolio still supports Luna for simple fixes. For changes needing more repository context, the FrontierCode 2.0 results support trying Sol.
+
+engineering | Update or debug existing software | usage terra61 medium | balanced sol62 medium | quality sol62 xhigh | basis user-directed
+  rationale: Luna, Sol and Astra score 100 at medium and extra high on the editor regression task. Medium service-release runs also score 100; the separate invoice-ledger migration was tested at extra high. Sol and Astra score 100 at low on the date-boundary repair, while Luna required a later medium probe under changed conditions. These results support scoped updates, not general software parity. November 13: For repository changes, FrontierCode 2.0 measured Sol at 43.8% and Astra at 44.2% at maximum effort, at estimated costs of $1.29 and $5.97 per rollout. This supports Sol as the balanced starting model.
+
+engineering | Build application features | usage sol62 low | balanced sol62 medium | quality sol62 xhigh | basis user-directed
+  rationale: Sol and Astra pass at 100 on the asynchronous UI and atomic-ledger contracts. Luna retains focus or diagnostic failures despite passing core behavior. The supporting results apply to these tasks, not every application feature. November 13: FrontierCode 2.0 supports Sol as a cost-conscious choice for repository changes. Its maximum-effort score was 43.8%, compared with 44.2% for Astra.
+
+engineering | Migrate an app or service | usage sol62 medium | balanced sol62 high | quality astra62 xhigh | basis user-directed
+  rationale: Astra scores 100 at medium and extra high on the job-queue migration. Sol scores 95 and Luna 93–94 with operational corrections remaining. All three score 100 on the separate invoice-ledger migration, so this is not a blanket migration advantage.
+
+engineering | Build polished applications | usage sol62 medium | balanced astra62 medium | quality astra62 xhigh | basis user-directed
+  rationale: Astra passes the booking app at 100 and the offline app at 96–97. Other models leave required UI or recovery defects. Astra still fails the dispatch-console task at 98. The polished-application label is editorial; these tasks measured completeness and recovery rather than general visual polish.
+
+engineering | Other | usage sol62 medium | balanced sol62 medium | quality astra62 xhigh | basis editorial-fallback
+  rationale: Category-level fallback inferred from the reviewed tasks, not a separately measured benchmark result. More usage favors a smaller configuration; higher quality favors additional reasoning or a larger model for unspecified requirements. The consolidated Software engineering category retains the former engineering fallback; named debugging tasks retain their task-specific settings.
+
+design | Design a page or interface | usage sol62 medium | balanced sol62 high | quality astra62 medium | basis editorial-fallback
+  rationale: Editorial starting points for page and interface design, informed by related app-interface and visual-brief tasks. This is not a separately measured design benchmark or a claim of general visual taste or measured gains from higher effort.
+
+design | Create editable 3D models | usage sol62 high | balanced astra62 medium | quality astra62 xhigh | basis user-directed
+  rationale: Sol and Astra score 100 on all six CAD parts and their revisions. Luna geometry matches but a required named parameter is absent. This tests the editing contract, not general spatial ability. November 13: BenchCAD 2.1 Core grades parts built from engineering drawings. Sol scored 41.2% at medium and 64.0% at high. Astra reached 77.6% at extra high, compared with Sol at 70.4%.
+
+design | Animate a 3D model | usage sol62 high | balanced sol62 xhigh | quality astra62 xhigh | basis user-directed
+  rationale: The animation settings come from editorial review. In the related mechanical-model task, Astra scores 98 with an accepted shape compromise. Luna scores 92 and needs intersection, diffuser, and cable-guide repairs; Sol scores 83 and fails mechanical requirements. One lamp does not establish a general animation or design hierarchy.
+
+design | Build interactive 3D experiences | usage sol62 medium | balanced sol62 high | quality astra62 xhigh | basis user-directed
+  rationale: Astra extra high scores 99.2 and fixes geometry and mobile inspection issues present at medium. Luna historically passing outputs still need geometry or mobile-tour repairs; Sol extra high fails the shoreline check. This is not a general 3D ranking or a perfect result.
+
+design | Other | usage sol62 medium | balanced sol62 high | quality astra62 xhigh | basis editorial-fallback
+  rationale: Category-level fallback inferred from the reviewed tasks, not a separately measured benchmark result. More usage favors a smaller configuration; higher quality favors additional reasoning or a larger model for unspecified requirements.
+
+research | Organize information and prioritize work | usage luna medium | balanced terra61 medium | quality terra61 high | basis user-directed
+  rationale: Luna, Sol and Astra score 100 on the fixed structured-extraction packet. Luna medium scores 98 on live-context triage and 100 on synthetic routing; Sol medium scores 100 on both. Sol and Astra score 100 on messy-data preparation while Luna scores 97. Medium accounts for preparation and prioritization beyond simple extraction.
+
+research | Search documents, messages, and emails | usage luna medium | balanced luna high | quality luna xhigh | basis user-directed
+  rationale: All four models scored 100 at extra high on the fixed long-context authority audit, including superseded decisions, dependencies, and deliberately unanswerable questions. Only extra high was tested. Medium and high are user-directed editorial alternatives for the lower-priority positions; their sufficiency is not established by this benchmark.
+
+research | Research decisions and verify facts | usage sol62 medium | balanced sol62 high | quality sol62 xhigh | basis user-directed
+  rationale: Sol medium scores 100 on vendor decisions and qualified-source contracts. On the conflicting product plan, Sol extra high scores 99 and Astra extra high scores 100. Sol and Astra also score 100 at low and medium on the fact-verification task. Higher effort is not required for every fact check. November 13: Harvey LAB-AA v1.1 checks source-grounded legal deliverables against every requirement. At high, Astra scored 13.3% and Sol 5.8%.
+
+research | Analyze data and solve problems | usage luna high | balanced terra61 high | quality sol62 xhigh | basis user-directed
+  rationale: Astra and Luna score 100 on activation diagnosis at extra high; Sol scores 99. Astra scores 100 on the causal study and inverse solver, while Sol scores 98.5 and 100 and Luna 97 and 99. Sol and Astra medium already score 100 on the planning and proof tasks. These are task-specific results, not a general mathematical ranking. November 13: For scientific work with verifiable outputs, Terminal-Bench Science 0.1 measured Astra at 77.1%, Sol at 68.0% and Terra at 58.3% at maximum effort. These results apply to that scientific benchmark.
+
+research | Other | usage terra61 medium | balanced sol62 medium | quality sol62 xhigh | basis editorial-fallback
+  rationale: Category-level fallback inferred from the reviewed tasks, not a separately measured benchmark result. More usage favors a smaller configuration; higher quality favors additional reasoning or a larger model for unspecified requirements. The consolidated research, decisions, and analysis category uses the former complex-analysis fallback to cover unspecified analytical work. This is an editorial default, not a measured result.
+
+computer | Find visible controls in an app | usage terra61 low | balanced terra61 medium | quality sol62 high | basis user-directed
+  rationale: The earlier choices used Sol medium as the default, Sol low when prioritizing lower latency and cost, and GPT-6.1 Sol high when prioritizing quality. These were user-directed editorial choices. Sol low hits 117 of 120 static targets and scores 99. Astra low hits all 120 and scores 100. Luna medium hits 118 and scores 99.3333. These results do not establish gains for the untested settings or live multi-step navigation performance. October 21 editorial update: use GPT-6.1 Terra medium for the balanced setting, informed by the matched reconstructed computer-use comparison. This applies to visible controls and specified record updates with saved-state verification, not arbitrary app navigation or recovery. November 13: The Terra launch measured 66.7% on OSWorld 2.1 Offline at medium effort. This supports Terra for finding controls and acting on a desktop.
+
+computer | Update specified records in an app | usage terra61 low | balanced terra61 medium | quality sol62 high | basis user-directed
+  rationale: Sol scores 100 on CRM reconciliation and scoped admin workflows. Luna scores 91 on CRM and 98 on admin, where saved actions pass but required screenshots are missing. This gap concerns evidence delivery, not incorrect saved values. October 21 editorial update: use GPT-6.1 Terra medium for the balanced setting, informed by the matched reconstructed computer-use comparison. This applies to visible controls and specified record updates with saved-state verification, not arbitrary app navigation or recovery. November 13: Keep Terra medium for specified record updates with a verifiable final state. Its OSWorld 2.1 Offline result at medium was 66.7%. The shared Terra CRM run had an unverified browser-only gate and supplies no comparable score.
+
+computer | Test an app or website | usage terra61 medium | balanced terra61 high | quality sol62 high | basis user-directed
+  rationale: Sol and Astra find all six seeded checkout defects. Sol scores 99.75 with whitespace-only and non-ASCII ZIP cases untested; Astra extra high scores 100. Luna misses the mobile defect and needs evidence work. Physical touch and full screen-reader behavior were outside scope.
+
+computer | Other | usage terra61 low | balanced terra61 medium | quality sol62 high | basis editorial-fallback
+  rationale: Category-level fallback inferred from the reviewed tasks, not a separately measured benchmark result. More usage favors a smaller configuration; higher quality favors additional reasoning or a larger model for unspecified requirements. November 13: For unspecified computer work spanning multiple business apps, AutomationBench 1.0.6 gives a nearby comparison. Astra scored 47.9% at high and 47.2% at extra high. Sol scored 40.2% at medium at an estimated $0.18 per task.
+
+policy: The November 13 editorial review sets all three slider positions for each task. The September task scores in each rationale retain their original model identities. The October shared-task results cover GPT-6 Luna, GPT-6.1 Terra, GPT-6.1 Sol and GPT-6 Astra. November launch benchmarks provide additional context in model-strengths.json. The cited results apply to the model versions and reasoning settings tested.

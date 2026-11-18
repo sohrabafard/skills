@@ -4,7 +4,7 @@ from __future__ import annotations
 import json
 from datetime import date
 from pathlib import Path
-from task_model_controls import validate_task_selection
+from task_model_controls import HISTORICAL_MODELS, validate_task_selection
 
 ARTIFACTS = {f"alaa-{role}": f"skills/sohrab/alaa-codex-orchestrator/agents/alaa-{role}.toml" for role in "spec-analyst explorer researcher test-strategist implementer implementer-laravel implementer-frontend implementer-go implementer-haproxy implementer-delivery verifier failure-analyst reviewer adversarial-reviewer documenter architecture-critic security-reviewer migration-guardian api-contract-reviewer dependency-auditor accessibility-reviewer browser-qa performance-profiler observability-reviewer release-guardian instruction-reviewer planner".split()}
 ARTIFACTS["alaa-rule-writer"] = "skills/sohrab/alaa-prompting-guide/assets/rule-writer/codex/alaa-rule-writer.toml"
@@ -52,11 +52,12 @@ def validate_policy(policy: dict) -> list[str]:
     if not isinstance(profiles, dict) or not profiles:
         return errors + ["profiles must be a nonempty object"]
     # Ordinary readers never promote a dated capability snapshot into task authority.
-    legacy = models.get("gpt-6-sol")
-    if not isinstance(legacy, dict) or legacy.get("selection_enabled") is not False:
-        errors.append("gpt-6-sol: historical support must remain selection-disabled")
+    for legacy in sorted(HISTORICAL_MODELS):
+        spec = models.get(legacy)
+        if not isinstance(spec, dict) or spec.get("selection_enabled") is not False:
+            errors.append(f"{legacy}: historical support must remain selection-disabled")
     for model, spec in models.items():
-        if model not in {"gpt-6-astra", "gpt-6-sol", "gpt-6.1-sol", "gpt-6.1-terra", "gpt-6-luna"}:
+        if model not in HISTORICAL_MODELS | {"gpt-6.2-astra", "gpt-6.2-sol", "gpt-6.1-terra", "gpt-6-luna"}:
             errors.append(f"{model}: unsupported exact model ID")
         if not isinstance(spec, dict):
             errors.append(f"{model}: model specification must be an object")

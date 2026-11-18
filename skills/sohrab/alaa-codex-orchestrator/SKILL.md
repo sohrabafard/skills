@@ -70,12 +70,12 @@ Pass `model` AND `reasoning_effort` to the spawn surface on EVERY dispatch. An o
 | Judgment left to the lane | Model | Ordinary effort |
 |---|---|---|
 | None: an exact transformation | `gpt-6-luna` | `medium` |
-| Bounded local decisions with a discriminating check | `gpt-6-luna` | `medium` |
-| Grounded everyday decisions | `gpt-6.1-sol` | `medium` |
-| Coupled or cross-boundary unresolved decisions | `gpt-6.1-sol` | `medium` |
-| Judgment-dense work that no check can catch | `gpt-6.1-sol` | `high` |
+| Bounded local decisions with a discriminating check | `gpt-6.1-terra` | `medium` |
+| Grounded everyday decisions | `gpt-6.2-sol` | `medium` |
+| Coupled or cross-boundary unresolved decisions | `gpt-6.2-sol` | `medium` |
+| Judgment-dense work that no check can catch | `gpt-6.2-sol` | `high` |
 
-Use `high` for a long, strict or hard-to-verify lane on any row. Use `low` for a short, fully specified lane on the first three rows only. An effort above `high` needs the recorded measured gain that the fit table requires.
+Use `high` for a long, strict or hard-to-verify lane on any row. Use `low` for a short, fully specified lane on the first three rows only. An effort above `high` needs the recorded measured gain that the fit table requires, and no lane runs at `ultra`.
 
 ### Dispatch discipline
 

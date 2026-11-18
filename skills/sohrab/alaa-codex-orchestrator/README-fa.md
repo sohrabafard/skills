@@ -1,6 +1,6 @@
 # بسته نهایی Alaa Codex Orchestrator
 
-نسخه: **8.2.0**
+نسخه: **8.3.0**
 
 این بسته یک Skill کامل برای تبدیل Codex اصلی به orchestrator و مسیردهی subagentهای تخصصی با نصب مجاز و صریح است.
 
