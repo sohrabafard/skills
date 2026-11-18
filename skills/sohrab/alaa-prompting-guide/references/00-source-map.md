@@ -7,7 +7,7 @@ This file decides which source wins and when recall is forbidden.
 1. Explicit user instructions for the current task.
 2. The target host's current tool schemas and effective configuration, for runtime availability.
 3. Live official documentation:
-   - GPT-6: `https://developers.openai.com/api/docs/guides/latest-model`, `https://developers.openai.com/api/docs/models`
+   - GPT-6: `https://developers.openai.com/api/docs/guides/latest-model`, `https://developers.openai.com/api/docs/models`, `https://learn.chatgpt.com/guides/prompting-gpt-6-2-astra`, `https://learn.chatgpt.com/docs/models`, `https://learn.chatgpt.com/docs/model-selection`
    - Codex and ChatGPT skills, commands and agent files: `https://learn.chatgpt.com/docs/build-skills`, `https://learn.chatgpt.com/docs/developer-commands`, `https://learn.chatgpt.com/docs/agent-configuration/subagents`, `https://learn.chatgpt.com/docs/agent-configuration/agents-md`, `https://learn.chatgpt.com/docs/config-file/config-reference`, `https://learn.chatgpt.com/docs/agent-approvals-security`, and the pages under `https://developers.openai.com/codex/` for `use-cases/follow-goals`, `subagents` and `config-reference`
    - Claude prompting: `https://platform.claude.com/docs/en/build-with-claude/prompt-engineering/claude-prompting-best-practices` plus the Opus 5.5, Fable 5.2, Haiku 5.5 and Sonnet 5.5 pages under that path
    - Claude facts and runtime: `https://platform.claude.com/docs/en/models/overview`, `https://platform.claude.com/docs/en/build-with-claude/effort`, and the `https://code.claude.com/docs/en/` pages `model-config`, `skills`, `sub-agents`, `env-vars`, `workflows`, `scheduled-tasks`, `permission-modes`, `ultraplan`, `goal` and `desktop`
@@ -46,7 +46,8 @@ In three areas a carried-forward value is a defect, because nothing errors when 
 
 Each reference keeps the date beside the fact it supports. The latest date per source group:
 
-- 17 November 2026: Code `advisor` page, Advisor tool page, Claude model selection, models overview and effort pages, the OpenAI served selector asset, and the Codex subagents page, for the facts dated 17 November 2026 in `41`, `50`, `90` and `12`.
+- 18 November 2026: the GPT-6.2 prompting guide, the OpenAI latest-model guide, the Codex models, model-selection and subagents pages, the GPT-6.2 API model pages, the served selector asset and the host model catalog, for the facts dated 18 November 2026 in `12`, `90` and `06`.
+- 17 November 2026: Code `advisor` page, Advisor tool page, Claude model selection, models overview and effort pages, for the facts dated 17 November 2026 in `41`, `50` and `90`.
 - 16 November 2026: Codex models page, Codex `AGENTS.md` page, OpenAI skills blog, Claude Code `skills` page, Agent Skills best practices, and the Claude subagent field list.
 - 14 November 2026: OpenAI latest-model and model-selection pages; Codex subagents, configuration reference, and sandbox and approvals pages; Claude Fable 5.2 prompting and migration, effort, model selection, and the Code `model-config`, `sub-agents`, `env-vars`, `workflows` and `advisor` pages (`https://code.claude.com/docs/en/advisor`, `https://platform.claude.com/docs/en/agents-and-tools/tool-use/advisor-tool`).
 - 3 November 2026: Codex Terra pages.

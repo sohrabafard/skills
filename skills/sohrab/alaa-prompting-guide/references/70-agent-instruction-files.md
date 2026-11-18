@@ -67,6 +67,7 @@ Apply the filter of Claude Code's `/doctor` trim check: cut what the agent can d
 - **Content the filesystem already gives:** a directory tree, a dependency list, a module summary, an architecture overview. It goes stale and costs tokens on every task.
 - **A rule the codebase violates.** It teaches the agent that the file's rules are advisory. Delete it or fix the codebase.
 - **General programming advice** such as "write clean code". The model knows it, and it displaces the repository facts the model lacks.
+- **A routine decision about how to do the work.** The Codex guide (18 November 2026) keeps the requirements and conventions that Codex cannot infer from the code, tests or docs, includes a workflow only when the project depends on it, and leaves routine decisions to Codex. Source: `references/12-gpt-6.md`.
 - **Skill content.** Name the skill and its trigger in one line; never summarize it.
 - **A long code sample.** Point at a real file that shows the pattern: the pointer costs one line and cannot go stale.
 - **Conditional content.** A multi-step procedure, or content for one part of the codebase, goes into a skill. In Claude Code a rule for some directories or file types can go in a path-scoped rule under `.claude/rules/` with a `paths:` frontmatter list.
