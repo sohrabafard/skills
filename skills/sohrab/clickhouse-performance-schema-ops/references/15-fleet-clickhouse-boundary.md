@@ -46,10 +46,13 @@ engine and settings change filed against the table owner, not a retry count. Rep
 duplicate-row consequence of a sink setting to the pipeline owner; never propose a sink setting from
 this skill.
 
-`<repo>/docs/DECISIONS.md` section 29 ratifies that counts and sums from `wa_raw` are billed and
-must be exact. A duplicated raw insert inflates a rollup measure that a materialized view already
-wrote, and no read-side rewrite corrects it. Treat insert deduplication on these tables as a
-correctness decision, not as tuning.
+`<repo>/docs/DECISIONS.md` section 29 ratifies WA ingest as best-effort analytics telemetry. Rows
+can be lost, and an insert whose response was lost can repeat. Raw and derived counts and sums are
+approximate and are excluded from billing and contractual settlement. Never present a number from
+these tables as exact, and do not design exactness into the ingest path against that decision. The
+same section keeps table-side deduplication and rebuild choices separate; they stay the table
+owner's decision. A duplicated raw insert inflates a rollup measure that a materialized view
+already wrote, and no read-side rewrite corrects it.
 
 Retry, backoff and timeout reasoning for producers: `/alaa-reliability-sla`. The Ala values those
 mechanisms use: `/alaa-services-contract`

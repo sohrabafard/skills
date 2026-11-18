@@ -36,7 +36,7 @@ hides the real dependency.
 
 ## Reporting a defect in a table you do not own
 
-State the file, the rule it violates, the failure the violation produces, and the replacement. Do
+State the file and line, the rule it violates, the failure the violation produces, and the replacement. Do
 not edit the file, and do not open a change against the owning repository from inside this task.
 That repository ratifies its schema in its own decision log, and an edit that skips the log is a
 change the next reader cannot audit.
@@ -53,8 +53,12 @@ migration directory. That is safe only while both conditions hold:
 
 `CREATE TABLE IF NOT EXISTS` does nothing when the table exists. A column added to the file after the
 first deployment therefore never reaches a deployed table, and nothing errors. While condition 2
-holds, apply a change to an existing table by dropping and recreating the database, because
-re-running the file leaves that table as it was.
+holds, a change to an existing table reaches a deployment only when the database is dropped and
+recreated, because re-running the file leaves that table as it was. Dropping a database destroys
+rows: do it on your own local instance only, and ask the table owner for explicit approval before
+any shared environment. On `wa` the reset is `--re-init`, which `<repo>/docs/DECISIONS.md` sections
+15.1 and 31 gate behind an environment flag and an interactive confirmation; an agent cannot run it
+and asks the operator.
 
 Direct editing ends at **the first environment whose rows cannot be re-ingested from the upstream
 source.** By then these artifacts must exist:
@@ -70,10 +74,10 @@ source.** By then these artifacts must exist:
 ## Retention on this pipeline is decided: never delete
 
 `<repo>/docs/DECISIONS.md` section 30 ratifies that WA analytics data is retained indefinitely, with
-no TTL on either raw table, because the data is a commercial record and a settlement needs the full
+no TTL on either raw table, because historical heatmaps and growth rates need the retained
 history. Do not add a TTL clause to a table on this pipeline, do not propose one, and do not report
 its absence as a gap.
 
-Do report the consequence the same decision names: storage grows without bound, and the repository
-states no backup path for either table. Its owner assigned that to the reliability owner. TTL
+Do report the consequence the same decision names: stored data grows without a time limit. The
+decision log still leaves backup and recovery of the stored rows to the reliability owner. TTL
 mechanics for a pipeline whose owner decided differently: `50-mvs-projections-and-ttl.md`.

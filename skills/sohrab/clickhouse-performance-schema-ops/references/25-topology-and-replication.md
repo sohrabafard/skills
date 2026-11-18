@@ -28,8 +28,10 @@ drift.
 
 ## Single node
 
-- Set `non_replicated_deduplication_window` on every table that a retrying writer inserts into. It
-  is off by default, so a retried insert duplicates rows. Sizing: `30-ingest-and-parts.md`.
+- A plain `MergeTree` table deduplicates no retried insert until it sets
+  `non_replicated_deduplication_window`. Propose the window for every table a retrying writer
+  inserts into; the table owner ratifies it. When the owner declines, state the duplicate exposure
+  in the change request. Sizing and the insert-mode check: `30-ingest-and-parts.md`.
 - One node is one failure domain. State the recovery path in the change request: a verified backup,
   or re-ingest from the upstream source.
 - An existing `MergeTree` table converts to replicated without re-ingest: `ATTACH TABLE … AS
@@ -41,8 +43,11 @@ drift.
 
 **Coordination.**
 
-- Every `Replicated*` engine needs ClickHouse Keeper. Without a configured Keeper, a replicated
-  table cannot be created and an existing one is read-only.
+- Every `Replicated*` engine needs ClickHouse Keeper, or ZooKeeper 3.4.5 or newer; use Keeper.
+  Without it, a replicated table cannot be created and an existing one is read-only.
+- Replication is per table, not per server. A server can hold replicated and non-replicated tables
+  at once, so a half-converted database is a reachable and silent state. List the engine of every
+  table after a conversion.
 - Keeper runs standalone or inside `clickhouse-server` through a `keeper_server` block. Either way
   it needs a majority of voters alive. Three voters survive the loss of one. Two data replicas that
   each embed Keeper are two voters and survive the loss of none, so a two-replica design needs a
@@ -70,9 +75,11 @@ drift.
 **Durability and consistency.** Each is a decision the table owner ratifies.
 
 - By default an `INSERT` is acknowledged after one replica writes it. If that replica is lost before
-  the other fetches the part, the acknowledged rows are gone. For a table whose numbers are billed,
-  set `insert_quorum` to `2` or `auto` on the writer identity. The cost: inserts fail while fewer
-  replicas are alive, and the ingest buffer must hold them.
+  the other fetches the part, the acknowledged rows are gone. For a table whose rows must survive
+  that loss, the owner sets `insert_quorum` to `2` or `auto` on the writer identity. The cost:
+  inserts fail while fewer replicas are alive, and the ingest buffer must hold them. `wa` ratified
+  best-effort ingest (`15-fleet-clickhouse-boundary.md`); propose no quorum there unless its owner
+  asks.
 - Replicas converge asynchronously, so a read on one replica can miss a row another replica already
   holds. Never make a request path depend on reading its own write. Sequential reads need quorum
   inserts plus `select_sequential_consistency=1` with `insert_quorum_parallel=0`; propose that only
@@ -88,6 +95,8 @@ drift.
   the official replication recovery procedure. Do not improvise it from a service repository.
 - A service lane holds one address. Which address fronts the replicas is the operator's decision.
   Never write a replica hostname into a service.
+- Node sizing, Keeper placement and the deployment manifests: `/caas-arvan-kuber` and
+  `/alaa-k8s-helm`.
 
 ## Copies without Keeper
 
@@ -101,7 +110,7 @@ No replicated engine works without Keeper. What remains is a copy, not a replica
 
 Rules for a copy:
 
-- Name one node the primary. Serve a billed or exact number from the primary only.
+- Name one node the primary. Serve a number that must be reproducible from the primary only.
 - After an outage of either side, rebuild the copy from the primary or re-ingest it. Never merge
   the two by hand.
 - Each node deduplicates on its own; set the single-node window on both.

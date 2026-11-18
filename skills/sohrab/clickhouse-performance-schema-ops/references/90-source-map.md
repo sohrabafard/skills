@@ -107,13 +107,29 @@ version-sensitive claim.
   survive no loss, follow from the engine's insert-trigger and majority-quorum design. Neither was
   read from a page on 2026-11-18. Confirm the first on a disposable two-replica instance before a
   design depends on it.
+- Observed on the floor binary on 2026-11-18 with `clickhouse local`: a repeated synchronous insert
+  into a plain `MergeTree` table doubled the rows without a window and did not with
+  `non_replicated_deduplication_window = 100`. Whether the window also covers an asynchronous insert
+  into a plain `MergeTree` table is unverified; the description of `deduplicate_insert` names
+  `Replicated*` tables. Do not state it either way.
 - Whether `result_overflow_mode = break` can return slightly more rows than `max_result_rows` is
   unverified; do not state it either way.
+
+## General landing pages
+
+- Best-practices index: https://clickhouse.com/docs/best-practices
+- MergeTree engine family: https://clickhouse.com/docs/engines/table-engines/mergetree-family/mergetree
+- Data-skipping indexes: https://clickhouse.com/docs/optimize/skipping-indexes
+- Query optimization: https://clickhouse.com/docs/optimize/query-optimization
+- System tables: https://clickhouse.com/docs/operations/system-tables
+- Changelog: https://clickhouse.com/docs/whats-new/changelog
 
 ## Repository sources this skill reads
 
 `alaa-go-chi` for the Go read lane (`chkit/`, `configkit/keys.go`, `docs/CONSUMERS.md`), read at
 commit `6abc1d4` on 2026-11-18. The ingest-pipeline repository `wa` for the data model
-(`<repo>/clickhouse/ddl/`, `<repo>/vector/`, `<repo>/docs/DECISIONS.md`). Read the source file,
+(`<repo>/clickhouse/ddl/`, `<repo>/vector/`, `<repo>/docs/DECISIONS.md`), read at commit `953dc32`
+on 2026-11-18: the sink batch values, and decision sections 1, 3, 5, 10, 15.1, 29, 30 and 31. `wa`
+moves faster than this skill; re-read a cited section before you repeat it. Read the source file,
 never a summary of it. A decision log records what a team chose, and the code records what runs;
 where they differ, the code is the fact and the difference is the finding.

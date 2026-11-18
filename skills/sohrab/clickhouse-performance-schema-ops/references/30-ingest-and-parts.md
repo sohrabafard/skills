@@ -16,7 +16,8 @@ bind table design:
   delivered row from a dropped event. Look for missing data in Vector's internal logs and
   dropped-event routing.
 - **Delivery is proved end to end.** Prove the source response and the database contents on success,
-  on transform abort and on sink failure.
+  on transform abort and on sink failure. Finalizer and acknowledgement semantics:
+  `vector-rust-observability-pipelines` `references/30-buffers-acks-and-backpressure.md`.
 
 **A service-side `INSERT` is a new ingest path.** A Go or PHP service that must record an event
 posts it to the pipeline's source. A direct `INSERT` from a service needs the table owner's
@@ -57,6 +58,10 @@ rows or leaves the rollups out of step with them.
 - A `Replicated*` table has a window by default. A plain `MergeTree` table has none until the table
   sets `non_replicated_deduplication_window`. A query setting or a token cannot create a window the
   table lacks.
+- Check that the writer's effective insert mode uses the window. A synchronous insert into a plain
+  `MergeTree` table with a window deduplicated on the floor binary. An asynchronous insert into such
+  a table is unverified (`90-source-map.md`), and async inserts are the default; prove it with the
+  real writer or have the writer identity insert synchronously.
 - Size the window to cover every insert into the table over the writer's whole retry horizon,
   buffered replay after an outage included. A retry that arrives after the window closed duplicates.
 - A retry deduplicates only when it repeats the same rows in the same order, with the same block
@@ -66,7 +71,9 @@ rows or leaves the rollups out of step with them.
   after a partial failure of a dependent view. Assert the rows in the source and the aggregates in
   every view target.
 
-Until that proof exists, treat the table as exposed to duplicates. Count logical events by a stable
+Until that proof exists, treat the table as exposed to duplicates. On `wa` the owner accepted that
+exposure for ingest (`15-fleet-clickhouse-boundary.md`); the table-side window stays the owner's
+choice. Count logical events by a stable
 event identifier where the measure is an event count; a sum and an already-written rollup row need
 reconciliation or a bounded rebuild. File the table change with its owner
 (`10-authority-and-change-path.md`).

@@ -44,7 +44,8 @@ ENGINE = MergeTree
 PARTITION BY toYYYYMM(event_date)
 ORDER BY (<tenant_column>, event_date, <dimension_column>)
 -- single-node mode only: a plain MergeTree deduplicates no retried insert until
--- this window is positive. Size it per references/30-ingest-and-parts.md.
+-- this window is positive. The table owner ratifies it; size it and check the
+-- writer's insert mode per references/30-ingest-and-parts.md.
 SETTINGS non_replicated_deduplication_window = <insert_count_over_retry_horizon>;
 
 -- Decisions this template has already made for you, and what changing one costs:
