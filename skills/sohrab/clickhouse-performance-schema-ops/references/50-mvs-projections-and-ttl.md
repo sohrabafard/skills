@@ -2,120 +2,86 @@
 
 ## Pick the cheapest mechanism that answers the question
 
-Work down this table and stop at the first row whose condition the task actually meets. Each row
-below the first costs more to build, more to operate, or both.
+Work down the table and stop at the first row whose condition the task meets. Each later row costs
+more to build, to operate, or both.
 
 | Mechanism | Use it when | It cannot |
 | --- | --- | --- |
-| a `MATERIALIZED` column | an expression is recomputed by many queries and depends only on columns of the same row | change what a query can prune unless it is also in the sort key |
-| a data-skipping index | the sort key already prunes well and one extra predicate needs block-level pruning | help a predicate that is not selective within a granule |
-| a projection | one table needs a second physical ordering, and you want the optimizer to pick it without any query changing | join, filter its own definition, chain, serve `FINAL` queries, or exist on a non-MergeTree engine |
-| an incremental materialized view | rows must be reshaped, filtered, joined, or aggregated at insert time into a table you name | react to `UPDATE` or `DELETE` on the source table |
-| a new base table fed by its own route | the two workloads want different sort keys, different retention, and different columns | share storage; you now maintain two ingest paths |
+| a `MATERIALIZED` column | many queries recompute an expression that depends only on columns of the same row | change what a query can prune, unless it is also in the sort key |
+| a data-skipping index | the sort key already prunes well and one more predicate needs block-level pruning | help a predicate that is not selective within a granule |
+| a projection | one table needs a second physical ordering and no query may change | join, filter its own definition, chain, serve a `FINAL` query, or exist on a non-MergeTree engine |
+| an incremental materialized view | rows must be reshaped, filtered, joined, or aggregated at insert time into a table you name | react to an `UPDATE` or `DELETE` on the source table |
+| a new base table fed by its own route | two workloads need different sort keys, retention and columns | share storage; you maintain two ingest paths |
 
-The pipeline on this fleet already took the last row deliberately: `<repo>/docs/DECISIONS.md`
-section 1 splits
-`watch_segment` events into their own table because "Segment workloads (heatmap/completion/rewatch)
-are hot-path analytics and benefit from typed columns and dedicated sort order." Two tables with two
-sort keys was the right answer there; it is not free, and it is not the default.
+The pipeline took the last row once, on purpose: `<repo>/docs/DECISIONS.md` section 1 splits
+`watch_segment` events into their own table. That is not the default.
 
 ## Materialized view versus projection
 
-Verified against the official comparison page:
+- Choose a projection when the base table's ordering is wrong for one access path and you cannot
+  change it. The optimizer selects it and the server keeps it in step with the base table.
+- Choose a materialized view when the shape of the answer differs from the shape of the row. Its
+  target is a different table that the query must name. A correction to the source leaves the
+  rollup wrong until someone rebuilds it.
+- A projection blocks a lightweight `DELETE` by default: the floor's
+  `lightweight_mutation_projection_mode` is `throw`.
+- `ALTER TABLE … MODIFY PROJECTION` changes projection settings, and merges apply them lazily.
+  Check the materialized parts and the optimizer's selection before you claim convergence.
 
-- A projection is **"automatically selected by ClickHouse's query optimizer"** and is **"transparent
-  in the sense that the user doesn't have to modify their queries"**. A materialized view's target
-  table is a different table and the query must name it.
-- A projection is **"automatically maintained and kept-in-sync"** with the base table. A
-  materialized view **"doesn't automatically react to `UPDATE` or `DELETE` operations"** on the
-  source, so a correction applied to the base table leaves the rollup wrong until it is rebuilt.
-- Projections are **"only available for MergeTree family table engines"**, cannot be chained, and
-  **"don't work with FINAL queries"**. They are also **"incompatible with `DELETED` rows (especially
-  lightweight deletes)"** by default.
-- Materialized views support `WHERE` filtering before materialization, joins, arbitrary target
-  engines, and chaining — **"the target table of one materialized view can be the source for another
-  materialized view, enabling multi-stage pipelines"**.
+## Building a materialized view
 
-Choose a projection when the base table's ordering is wrong for one access path and you cannot
-change it. Choose a materialized view when the shape of the answer differs from the shape of the
-row.
-
-For 26.8 and later, `ALTER TABLE … MODIFY PROJECTION` can change projection settings.
-Merges apply the settings lazily. Check materialized parts and optimizer selection before
-claiming convergence. For 26.9 and later, `REFRESH … APPEND INCREMENTAL` processes newly
-committed rows from one plain MergeTree source on a schedule. Check the required
-block-number and block-offset settings and the supported query shape before choosing
-it. Prove refresh progress and reconciliation after a failed refresh.
-
-## Building a materialized view without a self-inflicted incident
-
-- A materialized view fires on each inserted block, not on rows already present. Creating it changes
-  nothing about history; the backfill is a separate, explicit operation.
-- Pause and drain source writers before creating the live view. Keep them paused until
-  backfill and parity checks finish. For online backfill, prove a disjoint boundary before
-  creating the view. Apply complementary predicates to the live view and historical
-  backfill. Account for in-flight and late rows. Compare counts and exact unique-event
-  counts per rollup key on both sides of the boundary. Include an insert at the boundary
-  to catch double counting even when the unique count would hide it.
-- For atomic population in 26.8+, verify effective `materialized_views_populate_atomically=1`.
-  It applies to plain `CREATE MATERIALIZED VIEW … POPULATE` on snapshot-capable sources
-  and inserts through the same server. Use explicit backfill for Replicated databases,
-  remote inserts and `CREATE OR REPLACE`.
-- Declare the dedicated identity with `DEFINER = <user> SQL SECURITY DEFINER`. Grant it
-  source SELECT and target INSERT. Where required, grant the migration identity
-  `SET DEFINER` scoped to that user. After initial apply and every rerun, verify the
-  stored clauses with `SHOW CREATE TABLE` and verify effective grants. `IF NOT EXISTS`
-  can leave an older definition in place. Fail on drift and reconcile through an
-  approved migration. Prove the writer triggers the view and cannot write the target
-  directly. Keep `SQL SECURITY NONE` out of fleet templates.
-- On this pipeline a materialized view over the raw tables inherits their duplicate exposure from
-  retried inserts (`30-ingest-and-parts.md`), so build the aggregation to be correct under
-  duplicates — `uniqExact` over the event identifier rather than `count()` — or fix deduplication on
-  the base table first.
-- Every rollup that a request path will read must carry the tenant column in its own sort key, for
-  the same reason the base table does.
-- Preserve all independent grouping dimensions in the target merge key. For dimension proof,
-  checker limits and the effective engine guard, read `20-table-design.md` sections 3 and 6.
+- A view fires on each inserted block, not on rows already present. The backfill is a separate,
+  explicit operation.
+- Pause and drain the source writers before you create the live view, and keep them paused until
+  backfill and parity checks finish. For an online backfill, prove a disjoint boundary first: give
+  the live view and the historical backfill complementary predicates, and account for in-flight and
+  late rows. Compare counts and exact unique-event counts per rollup key on both sides of the
+  boundary. Insert one batch at the boundary to catch double counting that a unique count hides.
+- `CREATE MATERIALIZED VIEW … POPULATE` is atomic at the floor only for a snapshot-capable source
+  and inserts through the same server, with `materialized_views_populate_atomically=1` in effect.
+  Use an explicit backfill for a `Replicated` database, for remote inserts and for
+  `CREATE OR REPLACE`.
+- Declare the view's identity with `DEFINER = <user> SQL SECURITY DEFINER`. Grant that user `SELECT`
+  on the source and `INSERT` on the target, and grant the migration identity `SET DEFINER` scoped to
+  it where the server requires that. After the first apply and after every rerun, verify the stored
+  clauses with `SHOW CREATE TABLE` and the effective grants, because `IF NOT EXISTS` leaves an older
+  definition in place. Fail on drift and reconcile through an approved migration. Prove that the
+  writer triggers the view and cannot write the target directly. Keep `SQL SECURITY NONE` out of
+  fleet templates.
+- A view over a table that is exposed to duplicate inserts inherits the exposure
+  (`30-ingest-and-parts.md`). Until the base table deduplicates, write the aggregation to be correct
+  over duplicates: `uniqExact` over the event identifier, not `count()`.
+- Put the tenant column first in the sort key of every rollup a request path reads.
+- Keep every independent grouping dimension in the target's merge key: `20-table-design.md`
+  sections 3 and 6.
+- In `replicated` mode the target is replicated too: `25-topology-and-replication.md`.
 
 ## TTL
 
-**On this pipeline the retention decision is already made and it forbids a TTL**;
-`10-authority-and-change-path.md` states that ruling and what to do with it, and this file does not
-repeat it. Everything below is the mechanics a pipeline uses once its own owner has ratified a
-retention policy that deletes or tiers something.
+**On the `wa` pipeline the retention decision forbids a TTL** (`10-authority-and-change-path.md`).
+The rules below serve a pipeline whose owner ratified a policy that deletes or tiers data.
 
-These are the mechanics such a policy will use:
-
-- A `TTL … DELETE` expression removes rows during merges, so deletion is eventual and disk does not
-  drop at the moment the expression becomes true.
-- A `TTL … TO DISK` or `TO VOLUME` expression tiers data instead of deleting it, and needs a storage
-  policy defined on the server before the table can reference it.
-- A column-level TTL expires one column's values while keeping the row, which suits a wide
-  provenance column such as `raw_payload` far better than deleting whole events. In 26.10,
-  a TTL reset recomputes dependent `MATERIALIZED` columns during a merge or `MATERIALIZE TTL`.
-  Test the dependent expression with the expired column's default. An undefined result can
-  block the TTL merge.
-- Adding a TTL to a populated table triggers merges across the affected parts. Apply it during a
-  window where that IO is acceptable, and state which window in the change request.
+- `TTL … DELETE` removes rows during merges. Disk does not drop when the expression becomes true.
+- `TTL … TO DISK` or `TO VOLUME` tiers data and needs a storage policy on the server first.
+- A column-level TTL expires one column and keeps the row. It suits a wide provenance column better
+  than deleting whole events.
+- A TTL added to a populated table starts merges across the affected parts. Name the window in which
+  that IO is acceptable in the change request.
 
 ## Deleting data
 
-In ascending cost, and the cheapest that fits is the right one:
+Use the first mechanism that fits; each later one costs more.
 
-1. **`DROP PARTITION`.** Whole parts are removed with no merge and no rewrite. This is the reason
-   the partition key is a lifecycle decision (`20-table-design.md` section 5), and on a
-   monthly-partitioned table it is the natural way to expire a month.
-2. **Lightweight `DELETE`.** Verified: it "is implemented as a mutation that marks rows as deleted
-   but does not immediately physically delete them", using a hidden `_row_exists` column, and the
-   rows "will only happen during the next merge" to be removed physically. It is synchronous by
-   default, it does not work on tables with projections by default, and "deleting large volumes of
-   data with the lightweight `DELETE` statement can negatively affect `SELECT` query performance".
-3. **`ALTER TABLE … DELETE` / `UPDATE` (a mutation).** Verified: mutations "rewrite entire data
-   parts affected by the change", cause "a substantial spike in disk I/O", and "can't be rolled back
-   once submitted". Reserve them for one-off corrections with a named approver, and watch them
-   through `system.mutations` (`60-operations-and-diagnostics.md`).
+1. **`DROP PARTITION`.** It removes whole parts with no merge and no rewrite. This is why the
+   partition key is a lifecycle decision (`20-table-design.md` section 5).
+2. **Lightweight `DELETE`.** It marks rows through the hidden `_row_exists` column, and a later
+   merge removes them physically. At the floor it waits for all replicas by default
+   (`lightweight_deletes_sync=2`). It fails on a table with projections by default. A large
+   lightweight delete slows `SELECT` until merges catch up.
+3. **`ALTER TABLE … DELETE` or `UPDATE`, a mutation.** It rewrites every affected part, causes an IO
+   spike and, in the official words, "can't be rolled back once submitted". Reserve it for a
+   one-off correction with a named approver, and watch it in `system.mutations`
+   (`60-operations-and-diagnostics.md`).
 
-When a workload needs recurring corrections, the answer is an engine change — `ReplacingMergeTree`
-or a collapsing engine, per `20-table-design.md` section 6 — not a recurring mutation. The official
-guidance is explicit: prefer "alternative table engines such as ReplacingMergeTree or
-CollapsingMergeTree, which are designed to handle data corrections more efficiently".
+A workload that needs recurring corrections needs an engine change to `ReplacingMergeTree` or a
+collapsing engine (`20-table-design.md` section 6), not a recurring mutation.

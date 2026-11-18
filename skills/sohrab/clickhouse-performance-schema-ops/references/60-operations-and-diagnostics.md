@@ -1,121 +1,77 @@
 # Operations and diagnostics
 
-Start from a measurement, not a hypothesis. The queries below live in
-`assets/templates/diagnostic_queries.sql`; run them and paste the result before proposing a change,
-because a ClickHouse symptom has several causes that look identical from the outside.
+Start from a measurement. Run the matching query in `assets/templates/diagnostic_queries.sql` and
+paste its result before you propose a change, because one ClickHouse symptom has several causes
+that look the same from outside.
 
-## Where the evidence is
+`system.query_log`, `system.query_thread_log` and `system.part_log` are server-configured and can
+be off or truncated by retention. Establish that first, so an empty result reads as "logging is
+off" and not as "nothing happened". Read an effective setting from `system.settings` or
+`system.merge_tree_settings`, never from a quoted default.
 
-| Question | Table |
-| --- | --- |
-| what did this query actually read, and how long did it run | `system.query_log` |
-| where did the time go inside one query | `system.query_thread_log` |
-| how many parts exist, per table and per partition, and how big | `system.parts` |
-| when were parts written, merged, or removed, and how long did merges take | `system.part_log` |
-| is a mutation running, stuck, or failing | `system.mutations` |
-| is a merge running right now and how much memory is it using | `system.merges` |
-| is a replica behind, or is its queue growing | `system.replicas`, `system.replication_queue` |
-| what is the effective value of a setting on this server | `system.settings`, `system.merge_tree_settings` |
-| what does the deployed schema actually look like | `system.tables`, `system.columns` |
+## Playbook: inserts fail with `TOO_MANY_PARTS`
 
-Note which of these are enabled before relying on them: `query_log`, `query_thread_log`, and
-`part_log` are server-configured and can be off or truncated by retention. Establish that first, so
-an empty result reads as "logging is off" rather than "nothing happened".
+Entry condition: an insert returns the error, or part counts climb while the insert rate is flat.
 
-## Playbook: inserts are failing with `TOO_MANY_PARTS`
+1. Count active parts per partition, not per table. Many partitions with few parts each is a
+   partitioning problem. One partition with hundreds of parts is an insert-shape problem.
+2. Measure rows per insert and inserts per second at the writer against the bar in
+   `30-ingest-and-parts.md`. If rows per insert is below the bar, fix the writer. That is the whole
+   remedy in most cases.
+3. If the writer batches well, check whether one insert spreads across many partitions. An insert
+   that touches N partitions writes at least N parts. Narrow the partition key or the batch's key
+   range.
+4. Check `system.merges` and host CPU and IO to tell starved merges from overloaded merges.
+5. Only after steps 1 to 4, and with the owner's agreement recorded, consider a merge-tree setting.
 
-Entry condition: an insert returns the too-many-parts error, or part counts climb while the insert
-rate is flat.
+## Playbook: a mutation does not finish
 
-1. Count active parts per partition, not per table. A table with 40 partitions and 30 parts each is
-   a partitioning problem; one partition with 900 parts is an insert-shape problem.
-2. Measure rows per insert and inserts per second at the writer. Compare against the published bar
-   in `30-ingest-and-parts.md`: at least 1,000 rows per insert, ideally 10,000–100,000, and around
-   one insert per second.
-3. If rows per insert is below the bar, fix the writer. That is the whole remedy in the large
-   majority of cases.
-4. If the writer is already batching well, check whether one insert is spraying across many
-   partitions — an insert touching N partitions writes at least N parts. Narrow the partition key or
-   the batch's key range.
-5. Check `system.merges` and host CPU and IO before concluding that merges are starved rather than
-   overloaded.
-6. Only after 1–5 are answered, and with the owner's agreement recorded, consider merge-tree
-   settings. Raising `parts_to_throw_insert` silences the report and keeps the cause.
-
-## Playbook: a mutation is not finishing
-
-Entry condition: a row in `system.mutations` with `is_done = 0` older than the time the owner
-expected, or a non-empty `latest_fail_reason`.
+Entry condition: a row in `system.mutations` has `is_done = 0` past the time its owner expected, or
+has a non-empty `latest_fail_reason`.
 
 1. Read `latest_fail_reason` first. A failed mutation can retry and block later work.
-2. Check `is_done` on each relevant replica. A replicated mutation with `parts_to_do = 0` can
-   still wait for an in-flight insert. Check `system.columns` before adding optional metadata
-   fields to diagnostics. The 26.8 line adds `finish_time`, where zero means unfinished or
-   unknown. Keep the compatibility query on the common columns.
-3. Estimate touched parts and columns from the command, layout, and replicas. Heavy mutations
-   rewrite affected data and can amplify IO even for a small logical update.
-4. Decide with the table's owner whether to let it finish or to kill it. `KILL MUTATION` is a
-   shared-system action: name the mutation, name who approved it, and record what state the table is
-   left in, because a killed mutation leaves the table partly mutated.
-5. Ask why a mutation existed. Recurring mutations mean the engine choice is wrong
-   (`20-table-design.md` section 6) or the deletion mechanism is wrong
-   (`50-mvs-projections-and-ttl.md`).
+2. In `replicated` mode, check `is_done` on each replica. A mutation with `parts_to_do = 0` can
+   still wait for an in-flight insert. `finish_time` of zero means unfinished or unknown.
+3. Estimate the touched parts and columns from the command and the layout. A mutation rewrites
+   affected data and amplifies IO even for a small logical update.
+4. Decide with the table's owner whether it finishes or is killed. `KILL MUTATION` is a
+   shared-system action: name the mutation and its approver, and record the state the table is left
+   in, because a killed mutation leaves the table partly mutated.
+5. Ask why the mutation existed. A recurring mutation means the engine choice
+   (`20-table-design.md` section 6) or the deletion mechanism (`50-mvs-projections-and-ttl.md`) is
+   wrong.
 
 ## Playbook: one query is slow
 
-Entry condition: a named query exceeds the latency the owner expects, and you have its exact text.
+Entry condition: a named query exceeds the latency its owner expects, and you hold its exact text.
+Follow the four steps in `40-query-tuning-and-read-lane.md`, then prove the fix under "Compare bytes
+read, not wall time" in `80-proof-and-validation.md`.
 
-1. Pull its `system.query_log` row and compute `read_rows / result_rows`.
-2. Follow the four steps in `40-query-tuning-and-read-lane.md`, in order.
-3. Prove the fix by re-running the query and comparing `read_rows` and `read_bytes`, not wall time.
-   Wall time moves with cache state and with whatever else the cluster is doing; bytes read is the
-   quantity the design controls.
-
-## Playbook: disk is growing faster than rows
+## Playbook: disk grows faster than rows
 
 Entry condition: `sum(bytes_on_disk)` from `system.parts` grows faster than `sum(rows)` over the
 same window.
 
-1. Separate active from inactive parts. Inactive parts are retained for a configured period after a
-   merge and are not a leak.
+1. Separate active from inactive parts. The server keeps inactive parts for a configured period
+   after a merge; they are not a leak.
 2. Look for mutation write amplification in `system.mutations` and `system.part_log`.
-3. Look for a partition whose parts never merge to a large size — the too-many-partitions shape.
-4. Check the compression actually achieved per column against what the types imply. A wide
-   free-form `String` where a `LowCardinality(String)` belongs shows up here first.
+3. Look for a partition whose parts never merge to a large size: the too-many-partitions shape.
+4. Compare the compression each column achieves with what its type implies.
 
-## `OPTIMIZE FINAL` is not a performance fix
+## Playbook: a replica is read-only or behind
 
-Verified against the official guidance: `OPTIMIZE FINAL` "forces ClickHouse to merge all active
-parts into a single part", it **ignores** the roughly 150 GB merge-size safeguard, and it risks
-"long merge times, memory pressure, or even out-of-memory errors". It also creates one oversized
-part that is then hard to merge further, "potentially causing issues like duplicates accumulating
-for a ReplacingMergeTree".
+Entry condition: `system.replicas` shows `is_readonly = 1`, a growing `queue_size` or a rising
+`absolute_delay`. Follow "Replicated with Keeper" in `25-topology-and-replication.md`. A read-only
+replica with a reachable server means Keeper is unreachable or lost its quorum; that is the
+operator's incident, not a table defect.
 
-The only uses the official guidance sanctions are "finalizing data before freezing a table or
-exporting". Outside those two, let background merges run.
+## `OPTIMIZE … FINAL` is not a performance fix
 
-Keep the two ideas apart, because they share a word and nothing else: query-time `FINAL` gives one
-`SELECT` a deduplicated view of a collapsing or replacing engine and changes no stored bytes;
-`OPTIMIZE TABLE … FINAL` rewrites the table on disk.
+`OPTIMIZE … FINAL` merges all active parts into a single part, ignores the merge-size
+safeguard of about 150 GB, and risks long merges, memory pressure and out-of-memory failures. The
+oversized part then merges poorly, so duplicates accumulate in a `ReplacingMergeTree`. The official
+guidance sanctions it only for finalizing data before a table is frozen or exported. In every other
+case, let background merges run.
 
-## Sharp edges that recur
-
-- **`PRIMARY KEY` never enforces uniqueness**, and it is a sparse index over granules rather than a
-  row-addressable structure. An answer that depends on uniqueness needs an engine, not a key.
-- **A data-skipping index is not a secondary index.** It stores a summary per block and lets whole
-  blocks be skipped; it cannot find rows, and it earns nothing when the values it summarizes are
-  spread evenly across blocks.
-- **A materialized view does not see `UPDATE` or `DELETE` on its source.** Any correction to the
-  base table requires an explicit rebuild of the rollup.
-- **A dropped column is not a dropped cost until parts merge.** Storage falls as merges rewrite
-  parts, not at the moment of the `ALTER`.
-- **`skip_unknown_fields` on the writer hides a schema mismatch.** The write succeeds and the column
-  is empty (`30-ingest-and-parts.md`).
-
-## Using community sources
-
-Stack Overflow, GitHub issues, forum posts, and vendor blogs are legitimate for one purpose:
-generating hypotheses about an observed failure. Before any of it becomes a recommendation, confirm
-it against the official pages in `90-source-map.md` or against evidence from the cluster in front of
-you, and cite which one confirmed it. Version-specific behaviour changes, and an accepted answer
-carries no date the reader can see.
+Query-time `FINAL` is a different thing: it gives one `SELECT` a deduplicated view and changes no
+stored bytes.

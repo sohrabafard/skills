@@ -1,107 +1,93 @@
 # Failure behaviour and degradation
 
-Every ClickHouse read has four ways to end and each needs a decided answer before the code ships:
+A ClickHouse read ends in one of four ways, and each needs a decided answer before the code ships:
 it returns, it returns late, it returns an error, or it returns fewer rows than exist. The last one
-is the dangerous one, because it looks exactly like success.
+looks like success.
 
 ## The bounds a read runs inside
 
-`alaa-go-chi` `chkit` applies four bounds and each one has an owner:
+Every read lane applies four bounds. The Go lane's are below; a PHP lane reproduces the same four
+(`85-access-and-configuration.md`).
 
-| Bound | Where | What trips it |
+| Bound | Where on the Go lane | What trips it |
 | --- | --- | --- |
-| `DialTimeout` | `configkit` lane key `CLICKHOUSE_DIAL_TIMEOUT`, default `5s` | connection establishment |
-| `CallTimeout` | `chkit` `Config.CallTimeout` (context deadline per call, through row consumption) | the whole call, client-side |
-| `max_execution_time` | `chkit` `Config.Settings`, sent as a session setting | the query, server-side |
-| `max_result_rows` | `chkit` `Config.Settings`, sent as a session setting | the result size, server-side |
+| dial timeout | `configkit` lane key `CLICKHOUSE_DIAL_TIMEOUT` | connection establishment |
+| call timeout | `chkit` `Config.CallTimeout`, a context deadline through row consumption | the whole call, client-side |
+| `max_execution_time` | `chkit` `Config.Settings`, a session setting | the query, server-side |
+| `max_result_rows` | `chkit` `Config.Settings`, a session setting | the result size, server-side |
 
-Set `CallTimeout` above `max_execution_time`. The server-side bound produces a ClickHouse error
-naming the limit; the client-side deadline produces a context cancellation that says only that time
-ran out. When the client deadline fires first, every server-side diagnosis is thrown away.
+The server applies no execution-time limit and no result-row limit by default. A lane that sends
+neither has neither.
 
-## Exceeding `max_result_rows` throws — unless someone changes the overflow mode
+Set the call timeout above `max_execution_time`. The server-side bound returns a ClickHouse error
+that names the limit. The client deadline returns only a cancellation, and when it fires first, the
+server-side diagnosis is lost.
 
-Verified against the official query-complexity documentation: an overflow-mode setting takes one of
-two values — `throw`, which throws an exception and is the default, and `break`, which will "stop
-executing the query and return the partial result, as if the source data ran out".
+## A result over `max_result_rows` must throw
 
-`chkit` sets `max_result_rows` and does not set `result_overflow_mode`, so the default `throw`
-applies and a query over the cap fails loudly. Keep it that way, and treat any proposal to set
-`result_overflow_mode = break` or `timeout_overflow_mode = break` on a request path as a change that
-must be argued explicitly: under `break` a truncated result is returned with no error, no flag, and
-no way for the handler to tell it apart from a complete one. A dashboard fed by `break` shows a
-smaller number and no incident.
+An overflow-mode setting is `throw`, the default, or `break`, which will "stop executing the query
+and return the partial result, as if the source data ran out". `chkit` sets no overflow mode, and a
+PHP lane sets none, so a query over the cap fails loudly. Treat a proposal to set `result_overflow_mode = break`
+or `timeout_overflow_mode = break` on a request path as a change that needs an explicit argument:
+under `break` the handler cannot tell a truncated result from a complete one.
 
-If a query is tripping `max_result_rows`, the query is wrong. Aggregate server-side, narrow the time
-window, or page by sort-key range (`/alaa-keyset-pagination`).
+A query that trips `max_result_rows` is wrong. Aggregate server-side, narrow the time window, or
+page by sort-key range (`/alaa-keyset-pagination`).
 
 ## No hidden retries
 
-`chkit/doc.go:31-32`: "No hidden retries: a failed or timed-out query surfaces to the caller, which
-decides whether the read is retryable." So the handler decides, and the decision is made from the
-error class:
+The lane surfaces a failed or timed-out query to the caller. The handler decides from the error
+class:
 
 | The error says | Retry? | Because |
 | --- | --- | --- |
-| dial or connection failure | at most once, on a fresh deadline, and only if the caller's own deadline has room | the query never ran |
-| context deadline exceeded (client-side) | no | the caller has no time budget left to spend |
-| `max_execution_time` exceeded | no | the same query will exceed it again |
+| dial or connection failure | at most once, on a fresh deadline, and only while the caller's own deadline has room | the query never ran |
+| client-side deadline exceeded | no | the caller has no time budget left |
+| `max_execution_time` exceeded | no | the same query exceeds it again |
 | `max_result_rows` exceeded | no | the result size is a property of the query |
-| `TOO_MANY_SIMULTANEOUS_QUERIES` or memory limit | no immediate retry; shed instead | retrying adds load to an overloaded server |
+| `TOO_MANY_SIMULTANEOUS_QUERIES` or a memory limit | no immediate retry; shed | a retry adds load to an overloaded server |
 
-Retry budgets, backoff shape, breakers, and load shedding are doctrine, not mechanics:
-`/alaa-reliability-sla` `references/20-retries.md`,
-`references/30-breakers-and-bulkheads.md`, and `references/40-admission-and-shedding.md`.
+Retry budgets, backoff, breakers, and load shedding: `/alaa-reliability-sla`
+`references/20-retries.md`, `references/30-breakers-and-bulkheads.md`, and
+`references/40-admission-and-shedding.md`.
 
-## Readiness severity is a decision this skill makes decidable
+## Readiness severity
 
-`chkit/readiness.go:15-19` makes severity a caller parameter and states the intent: a service whose
-read surface **is** ClickHouse rollups registers `SeverityRequired`, while a service that only
-decorates responses with analytics registers `SeverityDegraded`, "so a ClickHouse blip degrades the
-pod instead of draining it". Unlike Redis, which the kit always treats as degraded because it is
-never truth, ClickHouse can be either.
+`chkit` makes readiness severity a caller parameter. Apply one test: **do the service's primary
+documented endpoints still return correct responses with ClickHouse absent?**
 
-Apply one test. **Ask whether the service's primary documented endpoints still return correct
-responses with ClickHouse absent.**
-
-- If any primary endpoint cannot answer correctly without ClickHouse, register `SeverityRequired`.
-  Draining the pod is right, because a pod that answers wrongly is worse than a pod removed from
-  rotation. `alaa-go-chi` `docs/CONSUMERS.md:23` records `wa-api` doing exactly this: "chkit
-  (`CLICKHOUSE_*` lane, ReadyCheck Required)" — its read surface is the analytics store.
+- If any primary endpoint cannot, register `SeverityRequired`. Draining the pod is right, because a
+  pod that answers wrongly is worse than a pod out of rotation. `wa-api` does this; its read surface
+  is the analytics store.
 - If every primary endpoint still answers correctly and only an optional enrichment is lost,
-  register `SeverityDegraded`, and then the degraded response must be specified: which field is
-  omitted, what the client sees in its place, and which telemetry records that the enrichment was
-  skipped.
+  register `SeverityDegraded`. Then specify the degraded response: which field is omitted, what the
+  client sees in its place, and which telemetry records the skip.
 
-Whichever you register, write the reason in a comment next to the registration, because the next
-reader cannot recover the test's answer from the constant.
+Write the reason in a comment beside the registration, because the constant does not carry it.
 
 ## What a consumer does while ClickHouse is unreachable
 
-1. **Fail at boot, not at first query, when the lane is unconfigured.** `chkit/doc.go:34-37`: the
-   lane is absent when `CLICKHOUSE_ADDR` is blank and `NewClient` then returns
-   `ErrNoClickHouseAddr`, "so a service that wires chkit without configuring the lane fails at boot
-   instead of at first query."
+1. **Fail at boot when the lane is unconfigured.** On the Go lane a blank `CLICKHOUSE_ADDR` makes
+   `NewClient` return `ErrNoClickHouseAddr`.
 2. **Never substitute a fabricated value for an analytics number.** A zero, an empty series, or a
-   stale cached figure rendered as if current turns an outage into a wrong answer that nobody
-   reports. Return the error, or return the response with the analytics field explicitly absent and
-   a stated reason.
-3. **Never fall back to a raw event table because the rollup is missing.** That converts an
-   analytics outage into a cluster-wide load event.
-4. **Never fall back to Postgres for an analytics answer that Postgres does not hold.** Which store
-   owns which fact: `/alaa-data-layer`.
-5. **Losing ClickHouse must not change owned state.** `chkit/doc.go:20-21`: "losing ClickHouse
-   degrades analytics, never correctness of owned state." If a write path depends on an analytics
-   read, that dependency is the defect.
+   stale cached figure shown as current turns an outage into a wrong answer nobody reports. Return
+   the error, or return the response with the analytics field explicitly absent and a stated reason.
+3. **Never fall back to a raw event table because the rollup is missing.** That turns an analytics
+   outage into a load event on the whole server.
+4. **Never fall back to Postgres for an answer Postgres does not hold.** Which store owns which
+   fact: `/alaa-data-layer`.
+5. **Losing ClickHouse must not change owned state.** A write path that depends on an analytics read
+   is the defect.
 
-Degradation doctrine — what a partial response is allowed to look like, and how a client is told:
-`/alaa-reliability-sla` `references/50-degradation.md`. Every platform
-value this skill does not state — timeout numbers, error budgets, load ceilings:
-`/alaa-services-contract`
-`references/22-failure-load-and-deprecation-contract.md`.
+In `replicated` mode a lagging replica returns an older answer with no error. State the staleness a
+response accepts: `25-topology-and-replication.md`.
+
+Degradation doctrine: `/alaa-reliability-sla` `references/50-degradation.md`. Every platform value
+this skill does not state, such as timeout numbers, error budgets and load ceilings:
+`/alaa-services-contract` `references/22-failure-load-and-deprecation-contract.md`.
 
 ## On the ingest side
 
-Use `30-ingest-and-parts.md` to trace how the producer sees delivery, backpressure and failures.
-Observe buffer fill before saturation, and prove duplicate handling on retry.
-Instrumentation belongs to `/alaa-observability-soc` `references/20-instrumentation-gates.md`.
+Trace how the producer sees delivery, backpressure and failure with `30-ingest-and-parts.md`.
+Observe buffer fill before saturation, and prove duplicate handling on retry. Instrumentation:
+`/alaa-observability-soc` `references/20-instrumentation-gates.md`.

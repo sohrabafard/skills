@@ -1,107 +1,119 @@
 # Source map and freshness
 
-Official ClickHouse documentation outranks blogs, conference talks, issue threads, Stack Overflow
-answers, and this skill. When the two disagree, the documentation wins and this file is wrong and
-must be corrected.
+Official ClickHouse documentation and the behaviour of the floor binary outrank blogs, talks, issue
+threads, forum answers, and this skill. When they disagree with this file, this file is wrong;
+correct it.
 
-## Fetch a current page before answering when the task involves
+Use a community source only to form a hypothesis about an observed failure. Confirm it against a
+page below or against evidence from the server in front of you before it becomes a recommendation,
+and say which one confirmed it.
+
+## Fetch a current page before you answer when the task involves
 
 a ClickHouse version number or the word "latest"; ClickHouse Cloud versus self-managed behaviour; a
-default value for any setting; merge-tree settings; object storage or tiered storage; async inserts;
-lightweight deletes; mutations; projections; materialized views; TTL; replication or Keeper;
-security, roles, or grants; or any system table or setting this skill does not name. Defaults and
-engine behaviour change between releases, and a number quoted without a date is a number nobody can
-audit.
+default value this file does not list; merge-tree settings; object or tiered storage; async inserts;
+lightweight deletes or updates; mutations; projections; materialized views; TTL; replication or
+Keeper; security, roles, or grants; or a system table or setting this skill does not name.
 
 ## Release evidence
 
-Snapshot verified **2026-11-04**. ClickHouse's [official packages index](https://packages.clickhouse.com/)
-lists **26.10.3.7 stable** (released 2026-10-25) and **26.8.36.3 LTS** (released 2026-10-26)
-as patched releases for CVE-2026-116366. The amd64 Debian channel indexes independently
-place them at the head of their respective channels. Recheck the channels when selecting a
-version. The previous skill recorded a documentation review on 2026-07-26 and no engine pin.
-The 26.7 release on 2026-07-22 is the earliest review boundary for this snapshot.
+**Floor: ClickHouse 26.8.39.19, the 26.8 LTS line.** The owner set it on 2026-11-18 and supports no
+server below it. Image `clickhouse/clickhouse-server:26.8.39-alpine`, digest
+`sha256:96e3f95c3110fd50626c3f45e060aa4ad5ca0f1169cd00c89d6aaf5a946c85f9`, pulled and cached in the
+fleet registry on that date. The floor includes the fix for CVE-2026-116366, first shipped on this
+line in 26.8.36.3.
 
-| Line | Upgrade checks from the [official 2026 changelog](https://clickhouse.com/docs/resources/changelogs/oss/2026) |
+On 2026-11-18 the [official packages index](https://packages.clickhouse.com/) listed 26.8.39.19 at
+the head of the LTS channel and 26.10.5.57 at the head of the stable channel. Recheck the channels
+when you select a version. A patch release on the 26.8 line replaces the floor only by an owner
+decision recorded here with its date.
+
+## Defaults at the floor
+
+Read on 2026-11-18 from `system.settings`, `system.merge_tree_settings` and
+`system.server_settings` of the floor image with `clickhouse local`. A profile, a table `SETTINGS`
+clause or a `compatibility` value overrides each one, so read the effective value on the target.
+
+| Setting | Default | Kind |
+| --- | --- | --- |
+| `async_insert`, `wait_for_async_insert` | `1`, `1` | query |
+| `async_insert_busy_timeout_max_ms`, `async_insert_max_data_size` | `200`, `10485760` | query |
+| `deduplicate_insert`, `deduplicate_blocks_in_dependent_materialized_views` | `enable`, `1` | query |
+| `non_replicated_deduplication_window` | `0`, which disables deduplication | merge-tree |
+| `replicated_deduplication_window`, `replicated_deduplication_window_seconds` | `10000` blocks, `3600` s | merge-tree |
+| `replicated_deduplication_window_for_async_inserts`, `…_seconds_for_async_inserts` | `10000` blocks, `604800` s | merge-tree |
+| `insert_quorum`, `insert_quorum_parallel`, `select_sequential_consistency` | `0`, `1`, `0` | query |
+| `max_execution_time`, `max_result_rows` | `0`, `0`: no limit | query |
+| `result_overflow_mode`, `timeout_overflow_mode` | `throw`, `throw` | query |
+| `parts_to_delay_insert`, `parts_to_throw_insert`, `max_parts_in_total` | `1000`, `3000`, `100000` | merge-tree |
+| `max_bytes_to_merge_at_max_space_in_pool` | `161061273600` (150 GiB) | merge-tree |
+| `allow_dimensions_outside_sorting_key` | `0` | merge-tree |
+| `materialized_views_populate_atomically` | `1` | query |
+| `lightweight_deletes_sync`, `mutations_sync` | `2`, `0` | query |
+| `lightweight_mutation_projection_mode`, `deduplicate_merge_projection_mode` | `throw`, `throw` | merge-tree |
+| `max_insert_threads` | `auto` | query |
+| `default_replica_path`, `default_replica_name` | `/clickhouse/tables/{uuid}/{shard}`, `{replica}` | server |
+| `distributed_ddl_output_mode` | `throw` | query |
+
+The floor binary lists every `Replicated*MergeTree` engine and the `Replicated` database engine. It
+lists no `SharedMergeTree`; that engine is ClickHouse Cloud only.
+
+## Releases past the floor
+
+Before a server moves past the 26.8 line, read every release note from the deployed version to the
+target in the [official 2026 changelog](https://clickhouse.com/docs/resources/changelogs/oss/2026).
+Inventory the deployed schema, settings, grants, backup and restore requirements, and client and
+server versions. Prove each applicable change on a disposable instance with
+`80-proof-and-validation.md`. Checks already known, reviewed 2026-11-04:
+
+| Line | Check before the upgrade |
 | --- | --- |
-| 26.7, 2026-07-22 | Recheck aggregate dimensions and the new `AggregatingMergeTree` creation guard in `20-table-design.md`. Audit old deduplication hash settings before startup. If migrating a configured legacy hash, follow the dual-hash bridge below before crossing 26.7. Check stored definitions for removed snowflake conversion functions. Audit storage identities for S3 user SQL and rotated system-log metadata before rollback below 26.3. |
-| 26.8 LTS, 2026-08-27 | Recheck `INSERT SELECT` backfill part count and resource use because `max_insert_threads` defaults to auto. Verify JSON numeric timestamps and response-format precedence if the ingest path depends on them. Check `system.users.valid_until` type and `system.mutations.finish_time` before reusing diagnostics. Rehearse patch-part compatibility before using lightweight updates with mixed versions or rollback. See `50-mvs-projections-and-ttl.md` for projection and materialized-view changes. |
-| 26.9, 2026-09-21 | Retire legacy analyzer configuration. Migrate CatBoost calls in stored keys, indexes, expressions and views, and remove old model privileges from all grant stores and access backups. Replace removed `WINDOW VIEW` syntax. Verify network codec and column compression separately. If persisted keys, indexes or TTLs use tuple subcolumns extracted from Variant, Dynamic, Nullable(Tuple), or untyped JSON paths, preserve their prior type before first startup using `allow_nullable_tuple_in_extracted_subcolumns=0` or the documented default-profile compatibility setting. A late setting change does not reattach detached parts. Check the Enum8 log-column migration for collectors. |
-| 26.10, 2026-10-22 | Enable the analyzer on all old nodes before mixed-version queries. Check named-collection overrides, SQL-user login constraints, definer grants and the package seccomp policy before startup. Check bucketed `system.metric_log`, renamed span-log metadata and rotated tables against collectors. Review join spill thresholds, aggregate/array result semantics, null parsing, column TTL dependencies, and expression skip indexes on merging engines. Mutation validation is unconditional. `--ignore-error` may report SQL failures on stderr and exit successfully. |
+| 26.9, 2026-09-21 | Retire legacy analyzer configuration. Migrate CatBoost calls in stored keys, indexes, expressions and views, and remove old model privileges from every grant store and access backup. Replace removed `WINDOW VIEW` syntax. Implicit MergeTree column compression becomes size-dependent at write time; verify network codec and column compression separately. If a persisted key, index or TTL uses a tuple subcolumn extracted from `Variant`, `Dynamic`, `Nullable(Tuple)` or an untyped JSON path, preserve its prior type before the first startup with `allow_nullable_tuple_in_extracted_subcolumns=0` or the documented default-profile compatibility setting; a late change does not reattach detached parts. Check the `Enum8` log-column migration for collectors. `REFRESH … APPEND INCREMENTAL` becomes available for one plain MergeTree source; check its block-number and block-offset settings and prove refresh progress and reconciliation after a failed refresh before you choose it. |
+| 26.10, 2026-10-22 | Enable the analyzer on every old node before mixed-version queries. Check named-collection overrides, SQL-user login constraints, definer grants and the package seccomp policy before startup; effective settings constraints can refuse a login, so prove login and grants for the migration, writer and reader identities. Check bucketed `system.metric_log`, renamed span-log metadata and rotated tables against collectors. Review join spill thresholds, aggregate and array result semantics, and expression skip indexes on merging engines. `input_format_null_as_default=0` rejects JSON null for a non-nullable numeric column, and `ALTER ADD/MODIFY COLUMN` honours `data_type_default_nullable`. Query-time `FINAL` on `SummingMergeTree` keeps rows whose summed columns are all zero, while merges still remove them; filter after summing if the result contract excludes all-zero groups. A TTL reset recomputes dependent `MATERIALIZED` columns; an undefined result can block the TTL merge. Mutation validation is unconditional. `--ignore-error` can report SQL failures on stderr and still exit successfully. |
 
-For an upgrade from an explicitly configured legacy insert hash, first run an intermediate
-release with `insert_deduplication_version=compatible_double_hashes`. For every replicated
-table, cover at least its effective `replicated_deduplication_window_seconds`. For every
-non-replicated table with deduplication enabled, process at least its effective
-`non_replicated_deduplication_window` inserts during the bridge. Complete both requirements
-where both table types are present. Before 26.7 startup, remove the setting or set it to
-`new_unified_hash`. See [the migration change](https://github.com/ClickHouse/ClickHouse/pull/108361).
+## Claims this skill states, and the source of each
 
-Use the release notes for the exact changed settings and prerequisites. Before a real upgrade,
-inventory the deployed schema, settings, grants, backup/restore requirements and client/server
-versions. Prove every applicable change on disposable instances using the procedure in
-`80-proof-and-validation.md`.
+Rows without a date were reviewed 2026-07-26. Re-read and date the source before you rely on a
+version-sensitive claim.
 
-**WA2 compatibility.** The handed-off WA2 fixture reports **24.8.14.39** and image digest
-`sha256:1ffa82edee000a42c09313bd9f1293d94c570aee74babc1b3ca9983a35fa597b`.
-That earlier observation is scoped to the recorded fixture. This review examined sources.
-Use 24.8-compatible SQL and settings for that fixture, and keep newer defaults, metadata,
-syntax and server protections outside its acceptance. In particular, do not rely on the
-26.7 aggregate-dimension guard or post-24.8 insert-deduplication defaults. For a planned
-upgrade from 24.8, review all intervening notes starting from its actual pin.
-
-## Claims this skill states, and the page that carries each one
-
-The original source review was **2026-07-26**. Rows marked 2026-11-04 were verified in the
-release refresh. Re-read and date the owning page before relying on a version-sensitive claim.
-
-| Claim used in this skill | Page |
+| Claim | Source |
 | --- | --- |
-| `readonly=2` means "Read data and Change settings queries are allowed"; DDL is not among them | https://clickhouse.com/docs/operations/settings/permissions-for-queries |
-| primary-key columns are chosen filter-first, correlation helps compression, and "4-5 [keys are] typically sufficient" | https://clickhouse.com/docs/best-practices/choosing-a-primary-key |
-| partitioning "is primarily a data management technique and not a query optimization tool"; "fewer than 100 - 1,000 distinct values" is usually optimal; parts are never merged across partitions; `parts_to_throw_insert` and `max_parts_in_total` are the thresholds | https://clickhouse.com/docs/best-practices/choosing-a-partitioning-key |
-| a `Nullable` column "creates a separate column of `UInt8` type" that "has to be processed every time", and "almost always negatively affects performance"; `LowCardinality` suits "fewer than approximately 10,000 unique values" | https://clickhouse.com/docs/best-practices/select-data-types |
-| insert "at least 1,000 rows, and ideally between 10,000–100,000 rows"; keep "around one insert query per second" | https://clickhouse.com/docs/optimize/bulk-inserts |
-| async inserts suit many producers sending small payloads when client-side batching is not feasible; `wait_for_async_insert=0` gives "no guarantee the data will be persisted" | https://clickhouse.com/docs/optimize/asynchronous-inserts |
-| Retry identity, window limits and view replay (release transition reviewed 2026-11-04) | https://clickhouse.com/docs/guides/developer/deduplicating-inserts-on-retries and the 2026 changelog, 26.1, 26.2, 26.3, 26.6 and 26.7 |
-| Explicit view security, definer privileges, partial insert failure and atomic population prerequisites (2026-11-04) | https://clickhouse.com/docs/reference/statements/create/view |
-| Native-client environment credentials (2026-11-04) | https://clickhouse.com/docs/concepts/features/interfaces/client and https://github.com/ClickHouse/ClickHouse/blob/v24.8.14.39-lts/programs/client/Client.cpp |
-| Per-replica mutation completion and diagnostics (2026-11-04) | https://clickhouse.com/docs/reference/system-tables/mutations and the 2026 changelog, 26.8 |
-| mutations "rewrite entire data parts affected by the change", "can't be rolled back once submitted", and `ReplacingMergeTree` or `CollapsingMergeTree` are the recommended alternatives | https://clickhouse.com/docs/best-practices/avoid-mutations |
-| `OPTIMIZE FINAL` merges "all active parts into a single part", ignores the ~150 GB merge safeguard, and is sanctioned only for "finalizing data before freezing a table or exporting" | https://clickhouse.com/docs/best-practices/avoid-optimize-final |
-| projections are optimizer-selected and auto-maintained but cannot join, filter their definition, chain, serve `FINAL`, or run on non-MergeTree; materialized views can filter, join, chain, and target any engine but "don't automatically react to `UPDATE` or `DELETE`" | https://clickhouse.com/docs/managing-data/materialized-views-versus-projections |
-| lightweight `DELETE` is "implemented as a mutation that marks rows as deleted", uses the hidden `_row_exists` column, removes rows physically only "during the next merge", and is synchronous by default | https://clickhouse.com/docs/guides/developer/lightweight-delete |
-| an overflow-mode setting is `throw` (default, raises an exception) or `break` ("stop executing the query and return the partial result, as if the source data ran out") | https://clickhouse.com/docs/operations/settings/query-complexity |
-| `ReplicatedMergeTree` needs ClickHouse Keeper or ZooKeeper 3.4.5+; replication is per table; `CREATE`, `DROP`, `ATTACH`, `DETACH`, `RENAME` are not replicated; `ATTACH TABLE … AS REPLICATED` converts an existing table | https://clickhouse.com/docs/engines/table-engines/mergetree-family/replication |
+| `readonly=2` allows reads and setting changes and no DDL; a non-`POST` HTTP request runs read-only (2026-11-18) | https://clickhouse.com/docs/operations/settings/permissions-for-queries |
+| filter-first primary-key columns; "4-5 [keys are] typically sufficient" | https://clickhouse.com/docs/best-practices/choosing-a-primary-key |
+| partitioning is a data-management technique; "fewer than 100 - 1,000 distinct values"; parts never merge across partitions | https://clickhouse.com/docs/best-practices/choosing-a-partitioning-key |
+| a `Nullable` column "creates a separate column of `UInt8` type"; `LowCardinality` suits "fewer than approximately 10,000 unique values" | https://clickhouse.com/docs/best-practices/select-data-types |
+| "at least 1,000 rows, and ideally between 10,000–100,000 rows"; "around one insert query per second" | https://clickhouse.com/docs/optimize/bulk-inserts |
+| `wait_for_async_insert=0` gives "no guarantee the data will be persisted" | https://clickhouse.com/docs/optimize/asynchronous-inserts |
+| plain `MergeTree` deduplicates nothing until its window is positive; a retry must repeat the same data, order and settings; dependent views deduplicate (2026-11-18) | https://clickhouse.com/docs/guides/developer/deduplicating-inserts-on-retries |
+| view security, definer privileges, partial insert failure, atomic population prerequisites (2026-11-04) | https://clickhouse.com/docs/reference/statements/create/view |
+| native-client environment credentials (2026-11-04) | https://clickhouse.com/docs/concepts/features/interfaces/client |
+| per-replica mutation completion and `finish_time` (2026-11-04) | https://clickhouse.com/docs/reference/system-tables/mutations |
+| mutations "rewrite entire data parts", "can't be rolled back once submitted" | https://clickhouse.com/docs/best-practices/avoid-mutations |
+| `OPTIMIZE FINAL` merges "all active parts into a single part", ignores the merge-size safeguard, and suits only "finalizing data before freezing a table or exporting" | https://clickhouse.com/docs/best-practices/avoid-optimize-final |
+| projection and materialized-view capabilities and limits | https://clickhouse.com/docs/managing-data/materialized-views-versus-projections |
+| lightweight `DELETE` marks rows through `_row_exists` and removes them at a later merge | https://clickhouse.com/docs/guides/developer/lightweight-delete |
+| overflow mode `break` will "stop executing the query and return the partial result, as if the source data ran out" | https://clickhouse.com/docs/operations/settings/query-complexity |
+| without Keeper "you can't create replicated tables, and any existing replicated tables will be read-only"; an `INSERT` throws while Keeper is unavailable and `SELECT` does not use it; which statements replicate; conversion by `ATTACH TABLE … AS REPLICATED` or the `convert_to_replicated` flag; default engine arguments (2026-11-18) | https://clickhouse.com/docs/engines/table-engines/mergetree-family/replication |
+| Keeper runs standalone or "as an internal part of the ClickHouse server"; a 3-node cluster keeps working "if only 1 node crashes" (2026-11-18) | https://clickhouse.com/docs/guides/sre/keeper/clickhouse-keeper |
+| the `Replicated` database replicates metadata only (2026-11-18) | https://clickhouse.com/docs/engines/database-engines/replicated |
+| `Distributed` with `internal_replication=false` writes to all replicas and does not check their consistency; `true` is for replicated underlying tables (2026-11-18) | https://clickhouse.com/docs/engines/table-engines/special/distributed |
+| HTTP query parameters, credential headers, session rules, and "a HTTP 200 response code doesn't guarantee that a query was successful" (2026-11-18) | https://clickhouse.com/docs/interfaces/http |
+| ClickHouse maintains no listed PHP client (2026-11-18) | https://clickhouse.com/docs/interfaces/third-party/client-libraries |
+| quorum inserts and `select_sequential_consistency` requiring `insert_quorum_parallel` off (2026-11-18) | setting descriptions in `system.settings` of the floor binary |
 
-## Unverified, and marked as such
+## Stated without an official source
 
-- The exact default values of `max_execution_time`, `max_result_rows`, `result_overflow_mode`, and
-  `timeout_overflow_mode` were **not** obtainable from the query-complexity page as fetched on
-  2026-07-26; only the overflow-mode semantics were. Read the effective values from
-  `system.settings` on the target server rather than quoting a default.
-- Whether `result_overflow_mode = break` can return slightly more rows than `max_result_rows`
-  because results are produced in whole blocks is **unverified**; do not state it either way.
-
-## General landing pages
-
-- Best-practices index: https://clickhouse.com/docs/best-practices
-- MergeTree engine family: https://clickhouse.com/docs/engines/table-engines/mergetree-family/mergetree
-- Data-skipping indexes: https://clickhouse.com/docs/optimize/skipping-indexes
-- Query optimization: https://clickhouse.com/docs/optimize/query-optimization
-- System tables: https://clickhouse.com/docs/operations/system-tables
-- Changelog: https://clickhouse.com/docs/whats-new/changelog
+- That a materialized view does not fire for parts a replica fetches, and that two Keeper voters
+  survive no loss, follow from the engine's insert-trigger and majority-quorum design. Neither was
+  read from a page on 2026-11-18. Confirm the first on a disposable two-replica instance before a
+  design depends on it.
+- Whether `result_overflow_mode = break` can return slightly more rows than `max_result_rows` is
+  unverified; do not state it either way.
 
 ## Repository sources this skill reads
 
-`alaa-go-chi` for the consumer read lane (its `chkit/`, `configkit/keys.go`, and `docs/CONSUMERS.md`),
-and the ingest-pipeline repository `wa` for the data model (`<repo>/clickhouse/ddl/`,
-`<repo>/vector/`, `<repo>/docs/DECISIONS.md`, `<repo>/samples/`). Read the source file, never a summary of it: a decision log records what a team chose,
-and the code records what runs. Where they differ, the code is the fact and the difference is the
-finding.
-
-## Community sources
-
-Use community sources only to form a hypothesis about an observed failure. Confirm against a page
-above or against evidence from the cluster in front of you before any of it becomes a
-recommendation, and say which one confirmed it.
+`alaa-go-chi` for the Go read lane (`chkit/`, `configkit/keys.go`, `docs/CONSUMERS.md`), read at
+commit `6abc1d4` on 2026-11-18. The ingest-pipeline repository `wa` for the data model
+(`<repo>/clickhouse/ddl/`, `<repo>/vector/`, `<repo>/docs/DECISIONS.md`). Read the source file,
+never a summary of it. A decision log records what a team chose, and the code records what runs;
+where they differ, the code is the fact and the difference is the finding.

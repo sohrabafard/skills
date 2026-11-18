@@ -1,122 +1,116 @@
-# Access, grants, and where every value lives
+# Client lanes, access, and where every value lives
 
-## Environment keys on the consumer read lane
+## Three client lanes
 
-These are the only ClickHouse environment keys `alaa-go-chi` defines
-(`configkit/keys.go:51-55`). There is no `CH_*` prefix; a variable named `CH_ADDR` is read by
-nothing.
+| Lane | Client | Protocol and address | Identity |
+| --- | --- | --- | --- |
+| ingest | Vector `clickhouse` sink in `wa` | HTTP, `CLICKHOUSE_ENDPOINT`, default `http://shared-clickhouse:8123` (`<repo>/docs/DECISIONS.md` section 10) | the writer role |
+| Go read | `alaa-go-chi` `chkit` | native protocol, `CLICKHOUSE_ADDR` as `host:port` with no scheme | the read role |
+| PHP read | no fleet kit exists | HTTP | a read role of its own |
+
+The two protocols use different ports, and a swapped value fails like a network fault.
+`CLICKHOUSE_USER` and `CLICKHOUSE_PASSWORD` exist on more than one lane and hold a different role on
+each. Never assume one value serves two lanes.
+
+## The Go read lane
+
+`alaa-go-chi` `configkit/keys.go` defines the only ClickHouse environment keys. No `CH_*` prefix
+exists.
 
 | Key | Meaning | Default |
 | --- | --- | --- |
-| `CLICKHOUSE_ADDR` | `host:port` of the **native-protocol** listener | none; blank means the lane is absent |
+| `CLICKHOUSE_ADDR` | `host:port` of the native-protocol listener | none; blank means the lane is absent |
 | `CLICKHOUSE_DATABASE` | database the read session opens | `default` |
 | `CLICKHOUSE_USER` | read role | `default` |
 | `CLICKHOUSE_PASSWORD` | that role's password | none |
 | `CLICKHOUSE_DIAL_TIMEOUT` | connection-establishment bound | `5s` |
 
-`chkit` reads no environment itself: `configkit` resolves the lane and `chkit.ConfigFrom` projects
-it (`chkit/config.go:63-65`, "the connection components are what configkit already resolved from
-the `CLICKHOUSE_*` lane, so chkit never re-reads the environment"). A consumer that reads
-`os.Getenv("CLICKHOUSE_ADDR")` directly has forked the lane; take the value from the resolved
-config.
+- `configkit` resolves the lane and `chkit.ConfigFrom` projects it. A consumer that reads
+  `os.Getenv("CLICKHOUSE_ADDR")` has forked the lane; take the value from the resolved config.
+- Bind values through the `args ...any` of `Query` and `QueryRow`.
+- The kit connects with `github.com/ClickHouse/clickhouse-go/v2`. `github.com/ClickHouse/ch-go` is
+  an indirect dependency and no second option. `/alaa-golang`
+  `references/40-production-ready-package-catalog.md` makes it conditional on a profiled ingest
+  bottleneck; do not introduce it without that profile.
+- A change to `chkit` behaviour is a change to the kit: `/alaa-go-chi-development`. A consumer that
+  needs a behaviour the kit lacks files the request there and never forks the client.
 
-A blank `CLICKHOUSE_ADDR` is not a soft failure: `NewClient` returns `ErrNoClickHouseAddr` and the
-service fails at boot rather than at the first query (`chkit/doc.go:34-37`).
+## The PHP read lane
 
-## The two ClickHouse endpoints are different endpoints
+No fleet kit pins this lane, and ClickHouse maintains no PHP client: its third-party client page
+says it "does not maintain the libraries listed below and hasn't done any extensive testing". The
+choice of a PHP library is therefore a dependency decision for the owner; ask before you add one.
+Whatever the library, the lane must meet these rules:
 
-The ingest side and the read side connect over different protocols and different ports, and mixing
-the values produces a connection error that reads like a network fault:
+- **The server enforces the limits, because no kit does.** The PHP read role gets a settings profile
+  that sets `readonly`, `max_execution_time` and `max_result_rows` with constraints the client
+  cannot loosen, and a `SELECT`-only grant on the rollup database. The owner of shared-instance
+  accounts provisions the role and the profile (`/alaa-services-contract`
+  `references/15-deployment-and-runtime-contract.md`). Do not ship a PHP reader on a role without
+  that profile.
+- **Bind every value** with a `{name:Type}` placeholder and its `param_name` request parameter.
+- **Send credentials in the `X-ClickHouse-User` and `X-ClickHouse-Key` headers,** never in the URL;
+  the official text warns that URL parameters are logged by proxies.
+- **An HTTP 200 does not prove success.** The server can fail after it sent the status line and then
+  writes the exception into the body. `wait_end_of_query=1` delays the status until the query ends,
+  but only while the result fits `http_response_buffer_size`. So also treat a body that carries the
+  exception marker named by the `X-ClickHouse-Exception-Tag` response header as a failure.
+- **Send no `session_id`.** A session runs one query at a time, and long-lived workers share it.
+- **Set the client timeout above `max_execution_time`,** and add no client retry
+  (`70-failure-and-degradation.md`).
+- Worker and connection lifetime under Octane: `/alaa-octane-performance`. Where the reader class
+  sits in the layer map: `/alaa-laravel-architecture`.
 
-| Side | Variable | Protocol and default |
-| --- | --- | --- |
-| ingest (Vector sink) | `CLICKHOUSE_ENDPOINT` | HTTP, `http://shared-clickhouse:8123` (`<repo>/docs/DECISIONS.md` section 10) |
-| consumer read lane (`chkit`) | `CLICKHOUSE_ADDR` | native protocol, `host:port` with no scheme |
-
-The ingest side also reads `CLICKHOUSE_USER` and `CLICKHOUSE_PASSWORD`, so those two names appear
-on both sides and may hold different credentials for different roles. Never assume one value serves
-both.
+Propose the registration of the lane's environment keys in `/alaa-services-contract` before the
+first PHP reader ships; do not invent key names in one service.
 
 ## Where every other knob lives
 
 | Knob | Lives in | Changed by |
 | --- | --- | --- |
-| per-call deadline (`CallTimeout`) | `chkit.Config` in the consumer's wiring | the consumer service |
-| pool bounds (`MaxOpenConns`, `MaxIdleConns`, `ConnMaxLifetime`) | `chkit.Config` | the consumer service |
-| `max_execution_time`, `max_result_rows` | `chkit.Config.Settings`, sent as session settings | the consumer service |
-| `readonly=2` | `chkit` internals | **nobody**; `chkit/config.go:109-110` records it as a kit invariant that "cannot be weakened through Config" |
-| readiness severity | the consumer's `ReadyCheck` call | the consumer service, using the test in `70-failure-and-degradation.md` |
+| call deadline, pool bounds (`MaxOpenConns`, `MaxIdleConns`, `ConnMaxLifetime`) | `chkit.Config` in the consumer's wiring | the consumer service |
+| `max_execution_time`, `max_result_rows` on the Go lane | `chkit.Config.Settings` | the consumer service |
+| `readonly=2` on the Go lane | `chkit` internals | **nobody**; it is a kit invariant |
+| readiness severity | the consumer's `ReadyCheck` call | the consumer service, with the test in `70-failure-and-degradation.md` |
 | batch size, flush interval, buffer, retries | the ingest topology's sink block | the ingest-pipeline repository |
-| `index_granularity`, engine, keys, codecs, TTL | the `SETTINGS` and clauses of the DDL | the ingest-pipeline repository |
-| server-level and merge-tree settings | the ClickHouse server configuration | whoever operates the cluster; a consumer cannot set them |
+| `index_granularity`, engine, keys, codecs, TTL, deduplication window | the DDL | the ingest-pipeline repository |
+| users, roles, profiles, quorum on a writer identity, server and merge-tree settings | the server configuration | the infrastructure operator; no consumer can set them |
 
-Changing anything in the `chkit` rows above means changing `alaa-go-chi` itself, which is governed:
-`/alaa-go-chi-development` owns what may change in the kit, how it is
-versioned, and how the change reaches consumers. A consumer that needs a `chkit` behaviour the kit
-does not offer files that request there rather than forking the client locally.
+A value in none of these rows that this skill does not state is a platform value. Take it from
+`/alaa-services-contract` `references/22-failure-load-and-deprecation-contract.md`, and request
+registration there when it is missing.
 
-A value that appears in none of these rows and that this skill does not state is a platform value:
-take it from `/alaa-services-contract`
-`references/22-failure-load-and-deprecation-contract.md`, and request registration there when it is
-missing rather than inventing one.
+## Grants: the part no repository here can verify
 
-## Grants: the part this skill cannot verify
+`chkit` documents the intended posture: a production role that is `SELECT`-only on the rollup
+database, plus the `readonly=2` pin. Only the pin is enforced by code you can read. Whether the role
+is `SELECT`-only is a property of the deployment's user and grant definitions.
 
-`chkit/config.go:70-71` states the intended posture: "The production role should be SELECT-only on
-the rollup database; chkit additionally pins every session to readonly=2." Two independent controls,
-and only one of them is enforced by code you can read.
+Do not assert it and do not assume it. The artifact that settles it is the output of
+`SHOW GRANTS FOR <the configured user>` on the target ClickHouse, or the grant statements in the
+repository that provisions the shared instance. When a task depends on the answer, ask for one of
+the two and record which one you received. An unverified grant treated as a control is how a read
+lane runs as `default` with full rights.
 
-- **Enforced and provable here.** `readonly=2` is pinned on every session and tested
-  (`10-authority-and-change-path.md`). It holds whatever role the deployment supplies.
-- **Not verifiable from this repository.** Whether the production role is actually SELECT-only is a
-  property of the ClickHouse deployment's user and grant definitions, which live outside both the
-  kit and the ingest-pipeline repository. Nothing in either repository can prove or disprove it.
-
-Because it is unverifiable here, do not assert it and do not assume it. The named artifact that
-settles it is the output of `SHOW GRANTS FOR <the configured user>` run against the target
-ClickHouse, or the grant statements in the infrastructure repository that provisions the shared
-instance. When a task depends on the answer, ask for one of those two artifacts and record which
-one you received. Treating an unverified grant as a control is how a read lane turns out to be
-running as `default` with full rights.
-
-Two further properties need the same evidence and get the same treatment: whether the ingest
-role and the read role are distinct roles, and whether the read role can see databases other than
-the one it queries.
+Two more properties need the same evidence: that the writer role and each read role are distinct
+roles, and that a read role cannot see a database other than the one it queries.
 
 ## Credentials
 
-Credentials reach the runtime from a secret, never from a file in the repository. On this platform
-the ingest side takes them from a shared secret named by the chart
-(`<repo>/docs/DECISIONS.md` section 10, default `shared-clickhouse-secrets`), and the consumer takes
-them from the `CLICKHOUSE_PASSWORD` lane key. A password committed to git outlives the commit that
-removed it, so the only remedy after an exposure is rotation, and rotation of a shared instance's
-credential affects every service on it — say so in the change request.
+Credentials reach the runtime from a secret, never from a file in the repository. The ingest side
+takes them from the shared secret the chart names (`<repo>/docs/DECISIONS.md` section 10), and a
+consumer takes them from its lane key. After an exposure the only remedy is rotation, and rotation
+of a shared instance's credential affects every service on it; say so in the change request.
 
-Threat classes, fail-closed doctrine, and when a change needs a security review at all:
-`/alaa-security-review`, with tenant isolation specifically in
-`references/40-authorization-and-tenancy.md`.
+Threat classes, fail-closed doctrine, and when a change needs a security review:
+`/alaa-security-review`; tenant isolation in its `references/40-authorization-and-tenancy.md`.
 
-### Native schema client and access checks
+### The schema client
 
-Use the operator-approved native address, TLS policy and migration identity. Give the
-client's `--user` and `--host` as nonsecret inputs. Supply the password through a
-process-scoped secret-backed `CLICKHOUSE_PASSWORD` with shell tracing disabled. Keep the
-password out of arguments, connection strings and logs. Validate required secrets before
-connecting. Omit `--ignore-error` from schema gates so failed SQL stops the run. Audit
-client configuration and arguments for a password that overrides the environment. Use a wrong-password failure and `SELECT currentUser()` with the supplied
-secret to prove the effective identity on the target client build.
-
-In 26.10, effective settings constraints can refuse login for a SQL-defined user and
-reject indirect changes through grants, roles or settings profiles. `compatibility` also
-leaves constrained settings unchanged when its proposed values are forbidden. Prove login
-and grants separately for the migration, writer and reader identities after a version change.
-See `90-source-map.md` for the native client and release sources.
-
-## Go client choice
-
-The kit connects with `github.com/ClickHouse/clickhouse-go/v2` (`go.mod:6`, imported at
-`chkit/config.go:9`). `github.com/ClickHouse/ch-go` is present in the module graph as an **indirect**
-dependency (`go.mod:34`) and is imported by no kit code; it is the low-level client that
-`clickhouse-go` builds on, not a second supported option. `/alaa-golang`
-`references/40-production-ready-package-catalog.md` records the same default and makes `ch-go`
-conditional on a profiled ingest bottleneck. Do not introduce it without that profile.
+Run DDL with the native client under the operator-approved address, TLS policy and migration
+identity. Pass `--user` and `--host` as arguments. Supply the password through a process-scoped,
+secret-backed `CLICKHOUSE_PASSWORD` with shell tracing off, and keep it out of arguments, connection
+strings and logs. Validate that the required secrets exist before you connect. Never pass
+`--ignore-error` in a schema gate, so that failed SQL stops the run. Audit the client configuration
+and arguments for a password that overrides the environment. Prove the effective identity with a
+wrong-password failure and with `SELECT currentUser()`.

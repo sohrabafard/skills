@@ -69,10 +69,10 @@ ORDER BY elapsed DESC;
 -- Playbook: a mutation is not finishing
 -- ---------------------------------------------------------------------------
 
--- Keep this query portable. Check system.columns before selecting optional
--- fields such as finish_time, added in 26.8.
+-- finish_time of zero means unfinished or unknown. In replicated mode run this
+-- on every replica.
 SELECT
-    database, table, mutation_id, command, create_time,
+    database, table, mutation_id, command, create_time, finish_time,
     is_done, parts_to_do, latest_fail_reason, latest_fail_time
 FROM system.mutations
 WHERE is_done = 0 OR latest_fail_reason != ''
@@ -164,6 +164,17 @@ FROM system.tables
 WHERE database = '<database>' AND name = '<table>';
 
 -- ---------------------------------------------------------------------------
+-- Playbook: a replica is read-only or behind (replicated mode only)
+-- ---------------------------------------------------------------------------
+
+SELECT
+    database, table, is_readonly, is_session_expired,
+    queue_size, absolute_delay, active_replicas, total_replicas
+FROM system.replicas
+WHERE is_readonly OR is_session_expired OR queue_size > 0 OR absolute_delay > 0
+ORDER BY absolute_delay DESC;
+
+-- ---------------------------------------------------------------------------
 -- Effective settings on this server, rather than a quoted default
 -- ---------------------------------------------------------------------------
 
@@ -172,8 +183,8 @@ FROM system.settings
 WHERE name IN (
     'max_execution_time', 'max_result_rows', 'result_overflow_mode',
     'timeout_overflow_mode', 'readonly', 'async_insert', 'wait_for_async_insert',
-    'insert_deduplicate', 'async_insert_deduplicate',
-    'deduplicate_insert', 'deduplicate_blocks_in_dependent_materialized_views'
+    'deduplicate_insert', 'deduplicate_blocks_in_dependent_materialized_views',
+    'insert_quorum', 'insert_quorum_parallel', 'select_sequential_consistency'
 );
 
 SELECT name, value, description

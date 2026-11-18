@@ -314,7 +314,7 @@ a licence to omit `project_id` from a `wa_agg` query.
 
 The three-way ClickHouse boundary itself is stated once, in `40-clickhouse-sink.md`, and is
 not restated here. What that statement leaves open, this file closes:
-`/clickhouse-performance-schema-ops` `SKILL.md:14-15`
+`/clickhouse-performance-schema-ops` `SKILL.md`, under "Two audiences, opposite authority",
 assigns the DDL directory and the Vector topology writing into it to "the ingest-pipeline
 repository". **In this fleet that repository is `wa`**, the same repository described above,
 holding both `<repo>/clickhouse/ddl/` and `<repo>/vector/wa-vector.yaml`. An agent looking

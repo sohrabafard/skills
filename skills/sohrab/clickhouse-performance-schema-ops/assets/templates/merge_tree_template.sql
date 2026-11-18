@@ -36,14 +36,16 @@ CREATE TABLE IF NOT EXISTS <database>.<table>
     -- version and part-size default.
     <payload_column> String CODEC(ZSTD(3))
 )
+-- single-node mode. In replicated mode the line below becomes
+--   ENGINE = ReplicatedMergeTree
+-- with no arguments; it needs ClickHouse Keeper and the {shard} and {replica}
+-- macros on every server (references/25-topology-and-replication.md).
 ENGINE = MergeTree
--- Cluster mode replaces the line above; replication needs ClickHouse Keeper or
--- ZooKeeper 3.4.5+ running first, and the {shard} and {replica} macros defined
--- on every server (references/10-authority-and-change-path.md):
--- ENGINE = ReplicatedMergeTree('/clickhouse/tables/{shard}/<database>/<table>', '{replica}')
 PARTITION BY toYYYYMM(event_date)
 ORDER BY (<tenant_column>, event_date, <dimension_column>)
-SETTINGS index_granularity = 8192;
+-- single-node mode only: a plain MergeTree deduplicates no retried insert until
+-- this window is positive. Size it per references/30-ingest-and-parts.md.
+SETTINGS non_replicated_deduplication_window = <insert_count_over_retry_horizon>;
 
 -- Decisions this template has already made for you, and what changing one costs:
 --   1. Tenant column first in ORDER BY. Removing it means every tenant query
