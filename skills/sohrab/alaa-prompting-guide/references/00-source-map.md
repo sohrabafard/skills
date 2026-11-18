@@ -46,7 +46,7 @@ In three areas a carried-forward value is a defect, because nothing errors when 
 
 Each reference keeps the date beside the fact it supports. The latest date per source group:
 
-- 18 November 2026: the GPT-6.2 prompting guide, the OpenAI latest-model guide, the Codex models, model-selection and subagents pages, the GPT-6.2 API model pages, the served selector asset and the host model catalog, for the facts dated 18 November 2026 in `12`, `90` and `06`.
+- 18 November 2026: the GPT-6.2 prompting guide, the OpenAI latest-model guide, the Codex models, model-selection and subagents pages, the GPT-6.2 API model pages, the served selector asset and the host model catalog, for the facts dated 18 November 2026 in `12`, `90`, `06` and `70`.
 - 17 November 2026: Code `advisor` page, Advisor tool page, Claude model selection, models overview and effort pages, for the facts dated 17 November 2026 in `41`, `50` and `90`.
 - 16 November 2026: Codex models page, Codex `AGENTS.md` page, OpenAI skills blog, Claude Code `skills` page, Agent Skills best practices, and the Claude subagent field list.
 - 14 November 2026: OpenAI latest-model and model-selection pages; Codex subagents, configuration reference, and sandbox and approvals pages; Claude Fable 5.2 prompting and migration, effort, model selection, and the Code `model-config`, `sub-agents`, `env-vars`, `workflows` and `advisor` pages (`https://code.claude.com/docs/en/advisor`, `https://platform.claude.com/docs/en/agents-and-tools/tool-use/advisor-tool`).

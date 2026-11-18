@@ -53,10 +53,11 @@ OpenAI matrix refreshed 18 November 2026; Claude rows refreshed 14 November 2026
 
 Limits of the matrix:
 
-- It is a dated editorial starting point. The asset says that its 13 November editorial review set all three positions for each task, that the task scores in each rationale keep their original model identities, and that the shared-task results cover GPT-6 Luna, GPT-6.1 Terra, GPT-6.1 Sol and GPT-6 Astra. No cell is a measured GPT-6.2 result.
+- It is a dated editorial starting point. The asset's policy note says: "The November 13 editorial review sets all three slider positions for each task. The September task scores in each rationale retain their original model identities. The October shared-task results cover GPT-6 Luna, GPT-6.1 Terra, GPT-6.1 Sol and GPT-6 Astra." It adds that November launch benchmarks give more context and that "the cited results apply to the model versions and reasoning settings tested". Read a score as a result of the model that it names.
 - Fix a well-scoped bug: all three cells are `low`, and the priority changes the model. The rationale still supports Luna for simple fixes and names Sol for a change that needs more repository context.
 - Research decisions and verify facts: the rationale says that higher effort is not required for every fact check.
 - Search: only xhigh was tested; the medium and high cells are editorial.
+- Find visible controls and Update specified records: the Terra cells cover visible controls and specified record updates with saved-state verification, "not arbitrary app navigation or recovery".
 - The animation choices and the rows marked editorial fallback are editorial.
 - No general reliability rate or saving follows.
 
