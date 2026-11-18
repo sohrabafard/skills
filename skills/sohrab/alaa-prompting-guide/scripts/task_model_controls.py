@@ -1,5 +1,8 @@
 """Static explicit-control validation; no role allocation or runtime discovery."""
 
+# Superseded Codex models: effort history only, never ordinary task selection.
+HISTORICAL_MODELS = frozenset({"gpt-6-sol", "gpt-6.1-sol", "gpt-6-astra"})
+
 
 def validate_task_selection(role, selection, policy, resolved=None):
     """Check a registered task role and BOTH requested controls; optional realized pair."""
@@ -13,8 +16,8 @@ def validate_task_selection(role, selection, policy, resolved=None):
     ):
         return [f"{role}: explicit model AND effort required; inheritance is not selection"]
     models = policy.get("models", {})
-    if policy.get("surface") == "codex" and selection["model"] == "gpt-6-sol":
-        return [f"{role}: historical Sol cannot authorize ordinary task selection"]
+    if policy.get("surface") == "codex" and selection["model"] in HISTORICAL_MODELS:
+        return [f"{role}: historical model cannot authorize ordinary task selection"]
     model = models.get(selection["model"]) if isinstance(models, dict) else None
     if not isinstance(model, dict) or model.get("selection_enabled") is not True:
         return [f"{role}: unsupported or inactive model"]
